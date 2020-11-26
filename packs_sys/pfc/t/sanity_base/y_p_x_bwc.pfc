@@ -1,0 +1,37 @@
+#!/usr/bin/env swipl
+%
+%  PFC is ':A' language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Still amodule scoping bug?
+%  was_module(y_p_x_t,[]).
+
+:- include(test_header).
+
+n3(':A',p,':B').
+n3(':B',p,':C'). 
+n3(':C',p,':D').
+n3(':D',p,':C'). 
+n3(':C',p,':B').
+n3(':B',p,':A').
+
+:- mpred_trace_exec.
+
+n3(X,p,Z)<-n3(Z,p,Y),n3(Y,p,X).
+
+% :- mpred_memo_bc(n3(_What,p,':A')).
+
+
+
+/*
+Expected:
+
+n3(':A',p,':A').
+n3(':B',p,':A').
+n3(':C',p,':A').
+n3(':D',p,':A').
+
+*/
+             

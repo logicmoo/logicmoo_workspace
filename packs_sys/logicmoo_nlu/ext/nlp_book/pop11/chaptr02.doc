@@ -1,0 +1,428 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Deterministic FSTNs in POP-11
+
+If a transition network is deterministic, it can be translated into a
+single POP-11 procedure for recognition quite straightforwardly.  In
+this procedure, the nodes of the network give rise to labels, while
+transitions between nodes are implemented by gotos.  Here is such a
+procedure for the TO-LAUGH-1 network (Figure 2.1):
+
+    define to_laugh_1(tape);
+    vars newtape;
+    l1: if tape matches [h ??newtape] then
+            newtape -> tape;
+            goto l2
+        else
+            goto fail
+        endif;
+    l2: if tape matches [a ??newtape] then
+            newtape -> tape;
+            goto l3
+        else
+            goto fail
+        endif;
+    l3: if tape matches [! ??newtape] then
+            newtape -> tape;
+            goto l4
+        elseif tape matches [h ??newtape] then
+            newtape -> tape;
+            goto l2
+        else
+            goto fail
+        endif;
+    l4: if tape = [] then
+            return(true)
+        endif;
+    fail: return(false)
+    enddefine;
+
+This procedure takes as argument a list of words representing a tape,                     
+such as
+
+    [h a h h a ! !]
+
+and returns true or false, according to whether the sequence of words
+is accepted by the TO-LAUGH-1 network.
+
+Although this approach works, it uses a pathological programming style
+and the resulting program is almost completely unstructured.  Apart
+from the fact that such a simple method of translation will not work
+when the network is non-deterministic, there are other reasons why
+this approach is not to be preferred:
+First of all, the size of the code that has to be written is
+significantly greater than that of the original network specification.
+Secondly, the code will only support one task - recognition.
+If we wish to use the network for some other purpose, such as random
+generation, we must produce completely new code.  So our approach here
+will be, instead of representing a network procedurally, to represent
+a network declaratively as a POP-11 data structure that can be
+examined and manipulated.  We will then write general-purpose
+recognition and generation programs that will work on any network
+represented as a data structure in the approved way.
+
+Non-deterministic FSTNs in POP-11
+
+Before we start writing general network traversal programs, we need to
+consider how we are going to represent transition networks as POP-11
+data structures.  If we ignore abbreviations for now, we will need to
+know the following about a network:
+
+    - What its initial nodes are.
+    - What its final nodes are.
+    - What its arcs are.
+
+Thus, we will represent a network as a list structure with three
+components, for the initial nodes, the final nodes and the transitions
+(arcs).  These components will be represented by lists in a format
+that is easy to remember and to type.  So here are some example
+networks:
+
+    vars swahili_1;
+    [[Initial 1]
+     [Final 5]
+      [From 1 to 2 by subj]
+      [From 2 to 3 by tense]
+      [From 3 to 4 by obj]                     
+      [From 4 to 5 by stem]] -> swahili_1;
+    vars english_1;
+    [  [Initial 1]
+       [Final 9]
+        [From 1 to 3 by NP]
+        [From 1 to 2 by DET]
+        [From 2 to 3 by N]
+        [From 3 to 4 by BV]
+        [From 4 to 5 by ADV]
+        [From 4 to 5 by #]
+        [From 5 to 6 by DET]
+        [From 5 to 7 by DET]
+        [From 5 to 8 by #]
+        [From 6 to 6 by MOD]
+        [From 6 to 7 by ADJ]
+        [From 7 to 9 by N]
+        [From 8 to 8 by MOD]
+        [From 8 to 9 by ADJ]
+        [From 9 to 4 by CNJ]
+        [From 9 to 1 by CNJ]] -> english_1;
+
+and here are the basic procedures for accessing the components of a
+network:
+
+    define initial_nodes(n) -> s;
+       n --> [== [Initial ??s] ==]
+    enddefine;
+
+    define final_nodes(n) -> s;
+       n --> [== [Final ??s] ==]
+    enddefine;
+
+    define transitions(n) -> t;
+       n --> [= = ??t]
+    enddefine;
+
+For abbreviations, we will introduce a global variable ABBREVIATIONS
+whose value will be a list of lists such as the following:
+
+    vars abbreviations;
+
+    [  [NP abbreviates kim sandy lee]
+       [DET abbreviates a the her]
+       [N abbreviates consumer man woman]
+       [BV abbreviates is was]
+       [CNJ abbreviates and or]
+       [ADJ abbreviates happy stupid]
+       [MOD abbreviates very]
+       [ADV abbreviates often always sometimes]
+    ] -> abbreviations;
+
+Traversing FSTNs in POP-11
+
+In this chapter and the next, we will develop a number of programs for
+performing useful tasks with various kinds of networks.  These
+programs will have a certain 'family resemblance' but will differ in
+their details.  The first task we will consider is using a network for
+recognition  (the task 'recognize').  The procedure recognize, given a
+network and a  'tape' (list of items), will return true or false,
+according to whether the list is accepted by the network.  Here is its
+definition:
+
+    define recognize(network, tape);
+       vars i;
+       for i in initial_nodes(network) do
+           recognize_next(i, tape, network)
+       endfor;
+       false
+    enddefine;
+
+Although the initial procedure called is recognize, the bulk of the
+work in this program is done by the procedure recognize_next.
+Recognize_next is given a node in the network, a tape (list of
+remaining words) and a network.  Its job is to explore all the ways
+the network can be traversed, starting at the given node and using up
+precisely the words that are on the tape.  So, initially we have to
+call recognize_next repeatedly, once with each initial node of the
+network.  This ensures that all possible paths are explored:
+
+    define recognize_next(node, tape, network);
+       vars newnode label newtape;
+       if tape = [] and member(node, final_nodes(network)) then
+          true;
+          exitfrom(recognize)
+       else
+          foreach [From ^node to ?newnode by ?label] in transitions(network) do
+             for newtape in [%recognize_move(label,tape)%] do
+                recognize_next(newnode, newtape, network)
+             endfor
+          endforeach
+       endif
+    enddefine;
+
+Looking first at the else part of the definition, we can see that
+recognize_next goes through the network arcs that originate from the
+node it is given. For each arc, it attempts to  'move the tape' as
+directed by the label on the arc.  Recognize_move returns all the
+possible new values of the tape and these are collected in a list by
+the [% ...  %]  brackets.  In fact, for recognition, there is always
+either one new value, if the required item is at the front of the
+tape, or no new value, if the required value is not.  Then, for each
+of these possible new versions of the tape, recognize_next is called                     
+recursively, with the destination of the arc and the new tape.  Thus,
+recognize_next finds all the possible ways of moving one step further
+in the network and, with each of these, delegates the problem of
+looking further to another call of recognize_next.
+
+In terms of our previous discussion, each call of recognize_next is in
+charge of a single state, whose node and tape are given by the first
+two arguments.  recognize_next works out what new states immediately
+follow from this and calls recognize_next on each of these in turn.
+
+Given that every call of recognize_next can end up calling another
+recognize_next, how does the program terminate?  If the network can
+indeed be traversed, we can hope that eventually a call of
+recognize_next will be generated where the node is a final node of the
+network and the tape is empty.  This is the case tested for by the if
+part of the definition.  If the test succeeds, it is now known that
+the network can be traversed, and no more searching needs to be done.
+In general, we will be quite deep in recursive calls of recognize_next
+when this happens, and so we need to stop any further work being done
+in any of them.  So, we use exitfrom to make the program abandon all
+of these, returning from the original call to recognize with the
+result true.  What if the network cannot be traversed using the given
+tape?  In this case, all the calls to recognize_next will eventually
+peter out, reaching states from which no further progress can be made.
+Once the whole set of possibilities has been searched and all calls of
+recognize_next have returned, we are back in the procedure recognize
+and can return the result false.  There is only one problem remaining.
+If there could be infinitely many paths to try in order to traverse                     
+the network, we will not be able to search through all of them before
+announcing false.  Indeed, we might spend so much time looking at
+infinite parts of the search space that we might never find a
+successful traversal, if it exists.  Fortunately, the only way this
+could happen would be through the network having cycles (circular
+sequences of arcs) consisting of arcs labelled '#'.  For instance, the
+network only needs to have a transition of the form:
+
+    [From n to n by #]
+
+for the search among all possible traversals to be infinite in some
+cases.  It is not a serious problem to avoid introducing cases like
+this into our networks.
+
+With a definition of recognize_move, our program will be complete.
+recognize_move returns a new tape or nothing, depending on the label
+and the existing tape.  If the first word in the tape is the same as
+the label (the SYM case), then the rest of the tape is returned.
+Similarly, if the next word is abbreviated by the label (the ABB
+case).  Finally, if the label is '#' (the JMP case), the tape is
+returned unchanged.  In all other cases, nothing is returned - we
+cannot take this arc in the network. Here is the definition of
+recognize_move:
+
+    define recognize_move(label, tape);
+       if tape matches [^label ==] then tl(tape)
+       elseif tape /= []
+        and abbreviations matches [== [^label == ^(hd(tape)) ==] ==] then
+          tl(tape)
+       elseif label = "#" then tape
+       else
+          ;;; return nothing
+       endif
+    enddefine;
+
+Let us consider now what has to be done if we wish to adapt this
+program for the exhaustive generation of all the sequences that are
+allowed by a transition network.  We still need to search all possible
+paths through the network, but now we are not constrained to traverse
+arcs that are compatible with an input tape.  For generation, we will
+use the tape to record the words generated so far.  Thus, the tape
+will start as the empty list and will get longer as we progress
+through the network.  Here is the procedure for generating possible
+new tapes (corresponding roughly to the procedure recognize_move):
+
+    define generate_move(label, tape);
+       vars x exps;
+       if label = "#" then tape
+       elseif abbreviations matches [== [^label abbreviates ??exps] ==] then
+          for x in exps do [^^tape ^x] endfor
+       else
+          [^^tape ^label]                     
+       endif
+    enddefine;
+
+Note that generate_move can produce several results.  When the label
+on the network arc is an abbreviation, any of the words abbreviated
+can appear in the output tape.  The procedures generate and
+generate_next used for exhaustive generation are very similar to the
+procedures recognize and recognize_next used for recognition.  Here
+are their definitions:
+
+    define generate_next(node, tape, network);
+       vars newnode label newtape;
+       if member(node, final_nodes(network)) then
+          tape =>
+       endif;
+       foreach [From ^node to ?newnode by ?label] in transitions(network) do
+          for newtape in [%generate_move(label, tape)%] do
+             generate_next(newnode, newtape, network)
+          endfor
+       endforeach
+    enddefine;
+
+    define generate(network);
+       vars i;
+       for i in initial_nodes(network) do
+          generate_next(i, [], network)
+       endfor
+    enddefine;
+
+Note how the initial calls to generate_next have [] as the tape
+argument and that the test for termination in generate_next does not
+have to specify anything about the tape.  In addition, since we are
+generating all the legal sequences, we do not want to exit back to the
+top procedure when we find a solution.  Instead, the program prints
+out the successful tape and keeps going.
+
+One trouble with exhaustive generation is that it cannot be allowed to
+run to completion if the network allows an infinite number of
+different strings.  Nevertheless, it can still be useful to run such a
+system for a while, to get an idea of the range of the strings allowed
+by a network.  If we try generating from the ENGLISH-1 network,
+however, we do not get any solutions and the program gets into an
+infinite loop.  The trouble is that there are places in the network
+that allow certain constructions to be iterated indefinitely in the
+language.  As the generate program makes choices in a fixed order, if
+it ever chooses to repeat a particular type of phrase, it will always
+choose to do this and so will try to produce an infinitely long
+sentence.
+
+If the transitions of a network are reordered to avoid non-productive
+infinite loops, there is still a problem in that the program does not
+produce a 'representative sample' of the strings allowed.  This is
+because, once the program has made a decision about part of the
+string, it is happy to go on investigating other decisions that it
+encounters later.  Only if for some reason all future possibilities
+fail to work out will it remake this decision.  Because of the way one
+call of generate_next has to return (exhaust all its possibilities)
+before another can run, the program will always focus on one
+alternative and further developments from it, before it tries other
+alternatives.
+
+Finite-state transducers
+
+An FST is a finite-state machine that deals with two tapes.  Thus, we
+can amend our programs to deal with FSTs, mainly by changing the
+tape-handling procedures.  Let us represent the 'tape' of a transducer
+as a list of the two actual tapes, each of which is a normal list of
+symbols.  Now the label on a network arc will need to specify
+constraints on the next symbol on both tapes.  We can show this by
+providing a pair of labels (list of two labels) or an abbreviation
+that stands for such a pair.  For instance, here is the network and
+abbreviations for the ENG_FRE-1 example:
+
+       [Final 5]
+       [From 1 to 2 by WHERE]
+       [From 2 to 3 by BE]
+       [From 3 to 4 by DET]
+       [From 4 to 5 by NOUN]] -> eng_fre1;
+
+    [[WHERE abbreviates [where ou]]
+     [BE abbreviates [is est]]
+     [DET abbreviates [the #]]
+     [NOUN abbreviates [exit 'la sortie'] [policeman 'le gendarme']
+         [shop 'la boutique'] [toilet 'la toilette']]] -> abbreviations;
+
+As before, the tape-handling procedures will depend on whether we wish
+to do recognition or generation.  With transducers, there are in fact
+more possibilities, as we may wish to recognize inputs on both tapes,
+generate output on both tapes or recognize input on one and produce
+output on the other.  Here is the tape-handling procedure for the case
+where we wish to recognize input on the first tape and produce output
+on the second:
+
+    define transduce_move(label, tape);
+       vars input output newinput newoutput l1 l2 e exps;
+       tape --> [?input ?output];
+       if label matches [?l1 ?l2] then
+          [% recognize_move(l1, input) %] -> newinput;
+          unless newinput = [] then
+             hd(newinput) -> newinput;                     
+             ;;; there is only one possibility
+             for newoutput in [% generate_move(l2, output) %] do
+                [^newinput ^newoutput]
+             endfor
+          endunless
+       elseif label = "#" then
+          tape
+       elseif abbreviations matches [== [^label abbreviates ??exps] ==] then
+          for e in exps do
+             transduce_move(e, tape)
+          endfor
+       endif
+    enddefine;
+
+We have made use here of the recognize_move and generate_move
+procedures previously developed for finite-state machines that are
+recognizing and generating (these appear in lib fstape).  In a network
+for an FST, a label on an arc will be (possibly an abbreviation for) a
+pair of labels.  We need to attempt to move the first (input) tape in
+accordance with the first label (this is what recognize_move does).
+If this is successful, we need to produce output on the second tape in
+accordance with what the second label dictates (this is what
+generate_move does).  If all goes well, we finally glue together the
+new input tape with each output tape in turn to give the list of new
+tapes.
+
+Here is the rest of the program.  As before, we have a main procedure
+and a next procedure.  The initial double-tape consists of the words
+to be analyzed (the input tape) and an empty list (the output tape so
+far).  The terminating condition on the double-tape is that the first
+component must be empty.  In this case, the second component is the
+complete sequence generated on the second tape.  This program stops as
+soon as one successful network traversal has occurred (as in the
+recognize case).
+
+    define transduce_next(node, tape, network);
+       vars newnode label newtape output;
+       if tape matches [[] ?output] and member(node, final_nodes(network)) then
+          output;
+          exitfrom(transduce)
+       else
+          foreach [From ^node to ?newnode by ?label] in transitions(network) do
+             for newtape in [%transduce_move(label, tape)%] do
+                 transduce_next(newnode, newtape, network)
+             endfor
+          endforeach
+       endif
+    enddefine;
+
+    define transduce(network, tape);
+       vars i;
+       for i in initial_nodes(network) do
+          transduce_next(i, [^tape []], network)
+       endfor;
+       false
+    enddefine;

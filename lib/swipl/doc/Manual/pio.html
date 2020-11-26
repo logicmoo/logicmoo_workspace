@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.31</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="persistency.html">
+<link rel="next" href="predicate_options.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="persistency.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="predicate_options.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:pio"><a id="sec:A.31"><span class="sec-nr">A.31</span> <span class="sec-title">library(pio): 
+Pure I/O</span></a></h2>
+
+<a id="sec:pio"></a>
+<a id="sec:lib:pio"></a>
+
+<p>This library provides pure list-based I/O processing for Prolog, 
+where the communication to the actual I/O device is performed 
+transparently through coroutining. This module itself is just an 
+interface to the actual implementation modules.
+
+<p><h3 id="sec:pureinput"><a id="sec:A.31.1"><span class="sec-nr">A.31.1</span> <span class="sec-title">library(pure_input): 
+Pure Input from files and streams</span></a></h3>
+
+<p><a id="sec:pureinput"></a>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Provide support for alternative input readers, e.g. reading terms, 
+tokens, etc.
+</dd>
+</dl>
+
+<p>This module is part of <code>pio.pl</code>, dealing with <i>pure</i> <i>input</i>: 
+processing input streams from the outside world using pure predicates, 
+notably grammar rules (DCG). Using pure predicates makes 
+non-deterministic processing of input much simpler.
+
+<p>Pure input uses attributed variables to read input from the external 
+source into a list <i>on demand</i>. The overhead of lazy reading is 
+more than compensated for by using block reads based on <a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a>.
+
+<p>Ulrich Neumerkel came up with the idea to use coroutining for 
+creating a
+<i>lazy list</i>. His implementation repositioned the file to deal with 
+re-reading that can be necessary on backtracking. The current 
+implementation uses destructive assignment together with more low-level 
+attribute handling to realise pure input on any (buffered) stream.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="phrase_from_file/2"><strong>phrase_from_file</strong>(<var>:Grammar, 
++File</var>)</a></dt>
+<dd class="defbody">
+Process the content of <var>File</var> using the DCG rule <var>Grammar</var>. 
+The space usage of this mechanism depends on the length of the not 
+committed part of <var>Grammar</var>. Committed parts of the temporary 
+list are reclaimed by the garbage collector, while the list is extended 
+on demand due to unification of the attributed tail variable. Below is 
+an example that counts the number of times a string appears in a file. 
+The library dcg/basics provides
+<a class="pred" href="basics.html#string//1">string//1</a> matching an 
+arbitrary string and <a class="pred" href="basics.html#remainder//1">remainder//1</a> 
+which matches the remainder of the input without parsing.
+
+<pre class="code">
+:- use_module(library(dcg/basics)).
+
+file_contains(File, Pattern) :-
+        phrase_from_file(match(Pattern), File).
+
+match(Pattern) --&gt;
+        string(_),
+        string(Pattern),
+        remainder(_).
+
+match_count(File, Pattern, Count) :-
+        aggregate_all(count, file_contains(File, Pattern), Count).
+</pre>
+
+<p>This can be called as (note that the pattern must be a string (code 
+list)):
+
+<pre class="code">
+?- match_count('pure_input.pl', `file`, Count).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="phrase_from_file/3"><strong>phrase_from_file</strong>(<var>:Grammar, 
++File, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a class="pred" href="pio.html#phrase_from_file/2">phrase_from_file/2</a>, 
+providing additional <var>Options</var>. <var>Options</var> are passed 
+to <a class="pred" href="IO.html#open/4">open/4</a>.</dd>
+<dt class="pubdef"><a id="phrase_from_stream/2"><strong>phrase_from_stream</strong>(<var>:Grammar, 
++Stream</var>)</a></dt>
+<dd class="defbody">
+Run Grammer against the character codes on <var>Stream</var>. <var>Stream</var> 
+must be buffered.</dd>
+<dt class="pubdef"><a id="syntax_error//1"><strong>syntax_error</strong>(<var>+Error</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Throw the syntax error <var>Error</var> at the current location of the 
+input. This predicate is designed to be called from the handler of <a class="pred" href="pio.html#phrase_from_file/3">phrase_from_file/3</a>.
+
+<dl class="tags">
+<dt class="tag">throws</dt>
+<dd>
+<code>error(syntax_error(Error), Location)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="lazy_list_location//1"><strong>lazy_list_location</strong>(<var>-Location</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Determine current (error) location in a lazy list. True when
+<var>Location</var> is an (error) location term that represents the 
+current location in the DCG list.
+<table class="arglist">
+<tr><td><var>Location</var> </td><td>is a term <code>file(Name, Line, LinePos, CharNo)</code> 
+or
+<code>stream(Stream, Line, LinePos, CharNo)</code> if no file is 
+associated to the stream RestLazyList. Finally, if the Lazy list is 
+fully materialized (ends in <code>[]</code>), <var>Location</var> is 
+unified with <code>end_of_file-CharCount</code>. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="pio.html#lazy_list_character_count//1">lazy_list_character_count//1</a> 
+only provides the character count.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="lazy_list_character_count//1"><strong>lazy_list_character_count</strong>(<var>-CharCount</var>)</a><code>//</code></dt>
+<dd class="defbody">
+True when <var>CharCount</var> is the current character count in the 
+Lazy list. The character count is computed by finding the distance to 
+the next frozen tail of the lazy list. <var>CharCount</var> is one of:
+
+<p>
+<ul class="compact">
+<li>An integer
+<li>A term end_of_file-Count
+</ul>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="pio.html#lazy_list_location//1">lazy_list_location//1</a> 
+provides full details of the location for error reporting.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="stream_to_lazy_list/2"><strong>stream_to_lazy_list</strong>(<var>+Stream, 
+-List</var>)</a></dt>
+<dd class="defbody">
+Create a lazy list representing the character codes in <var>Stream</var>.
+<var>List</var> is a partial list ending in an attributed variable. 
+Unifying this variable reads the next block of data. The block is stored 
+with the attribute value such that there is no need to re-read it.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+Unlike the previous version of this predicate this version does not 
+require a repositionable stream. It does require a buffer size of at 
+least the maximum number of bytes of a multi-byte sequence (6).
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

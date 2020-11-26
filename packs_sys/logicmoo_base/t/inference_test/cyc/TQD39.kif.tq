@@ -1,0 +1,608 @@
+(note TQD39)
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?AGT) 
+ (deviceUsed ?ATTACK ?DEVICE)) 
+ (possesses ?AGT ?DEVICE)) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance Bahrain Country) 
+
+(different Bahrain Iran) 
+
+(inRegion HYP-SomethingExisting-40233860 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-15705156 HYP-SomethingExisting-40233860) 
+
+(instance Iran Country) 
+
+(implies 
+ (possesses ?AGT ?THING) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?EVT 
+ (inputsDestroyed ?EVT ?THING))))) 
+
+(possesses Iran HYP-BiologicalWeapon-624717) 
+
+(desires Iran 
+ (not 
+ (thereExists ?EVT 
+ (inputsDestroyed ?EVT HYP-BiologicalWeapon-624717)))) 
+
+(instance HYP-AttackOnTangible-58360641 MilitaryAttack) 
+
+(implies 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (deviceUsed ?ATTACK ?WEAPON)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?DESTROY 
+ (inputsDestroyed ?DESTROY ?WEAPON)) likelihood)) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance Bahrain Country) 
+
+(different Bahrain Iran) 
+
+(inRegion HYP-SomethingExisting-12134345 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-58360641 HYP-SomethingExisting-12134345) 
+
+(instance Iran Country) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(instance Bahrain Agent) 
+
+(maleficiary HYP-AttackOnTangible-58360641 Bahrain) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON BiologicalWeapon) 
+ (agent ?ATTACK ?ATTACKING-AGENT)) 
+ (increasesImmediatelyCausally ?ATTACK 
+ (failureForAgents ?ATTACK ?ATTACKING-AGENT) likelihood)) 
+
+(instance HYP-AttackOnTangible-15705156 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-40637112 BiologicalWeapon) 
+
+(deviceUsed HYP-AttackOnTangible-15705156 HYP-BiologicalWeapon-40637112) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION Iran))) likelihood) 
+
+(instance Iran Agent) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT)))))) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(subrelation agent agent) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON BiologicalWeapon) 
+ (agent ?ATTACK ?ATTACKING-AGENT)) 
+ (increasesImmediatelyCausally ?ATTACK 
+ (failureForAgents ?ATTACK ?ATTACKING-AGENT) likelihood)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(increasesImmediatelyCausally #$HYP-AttackOnTangible-58360641 
+ (failureForAgents HYP-AttackOnTangible-58360641 Iran) likelihood) 
+
+(subrelation increasesImmediatelyCausally increasesCausally) 
+
+(implies 
+ (agent ?ACT ?AGT) 
+ (desires ?AGT 
+ (not 
+ (failureForAgents ?ACT ?AGT)))) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT)))))) 
+
+(instance Iran Agent) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance Bahrain Country) 
+
+(different Bahrain Iran) 
+
+(inRegion HYP-SomethingExisting-12134345 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-58360641 HYP-SomethingExisting-12134345) 
+
+(instance Iran Country) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(instance Bahrain Agent) 
+
+(maleficiary HYP-AttackOnTangible-58360641 Bahrain) 
+
+(desires Iran 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK Iran))))) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION Iran))) likelihood) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?AGT) 
+ (instance ?AGT Country)) 
+ (believes InternationalCommunity 
+ (agent ?ATTACK ?AGT))) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance Iran Country) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIO) 
+ (instance ?BIO BiologicalWeapon) 
+ (agent ?ATTACK ?COUNTRY) 
+ (obligatedAgent BiologicalAndToxinWeaponsConvention ?COUNTRY)) 
+ (actionViolatesObligation ?ATTACK BiologicalAndToxinWeaponsConvention)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(obligatedAgent BiologicalAndToxinWeaponsConvention Iran) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ?OB) 
+ (obligationParts ?WIDE ?OB)) 
+ (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 BiologicalAndToxinWeaponsConvention) 
+
+(obligationParts ModernInternationalRelationsCOC BiologicalAndToxinWeaponsConvention) 
+
+(believes InternationalCommunity 
+ (agent HYP-AttackOnTangible-58360641 Iran)) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 ModernInternationalRelationsCOC) 
+
+(instance Iran Country) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?AGT))) likelihood)) 
+
+(implies 
+ (instance ?COUNTRY Country) 
+ (desires ?COUNTRY 
+ (not 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?COUNTRY)))))) 
+
+(implies 
+ (and 
+ (instance ?GEOPOL GeopoliticalEntity) 
+ (obligatedAgent ?OBL ?GEOPOL) 
+ (enforcingAgent ?OBL ?ENFORCER)) 
+ (desires ?GEOPOL 
+ (not 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION ?ENFORCER) 
+ (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(instance Iran GeopoliticalEntity) 
+
+(obligatedAgent BiologicalAndToxinWeaponsConvention Iran) 
+
+(enforcingAgent BiologicalAndToxinWeaponsConvention UnitedNationsOrganization) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIO) 
+ (instance ?BIO BiologicalWeapon) 
+ (agent ?ATTACK ?COUNTRY) 
+ (obligatedAgent BiologicalAndToxinWeaponsConvention ?COUNTRY)) 
+ (actionViolatesObligation ?ATTACK BiologicalAndToxinWeaponsConvention)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(subrelation agent agent) 
+
+(implies 
+ (and 
+ (instance ?AGREE CodeOfConduct) 
+ (instance ?AGREE InternationalAgreement) 
+ (enforcingAgent ?AGREE ?GROUP) 
+ (actionViolatesObligation ?ACT ?AGREE) 
+ (agent ?ACT ?GEOPOL) 
+ (instance ?GEOPOL GeopoliticalEntity)) 
+ (increasesCausally ?ACT 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION ?GROUP) 
+ (maleficiary ?SANCTION ?GEOPOL))) likelihood)) 
+
+(instance BiologicalAndToxinWeaponsConvention CodeOfConduct) 
+
+(instance BiologicalAndToxinWeaponsConvention InternationalAgreement) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 BiologicalAndToxinWeaponsConvention) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(desires Iran 
+ (not 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION UnitedNationsOrganization) 
+ (maleficiary ?SANCTION Iran))))) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION UnitedNationsOrganization) 
+ (maleficiary ?SANCTION Iran))) likelihood) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?AGT) 
+ (instance ?AGT Country)) 
+ (believes InternationalCommunity 
+ (agent ?ATTACK ?AGT))) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance Iran Country) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(implies 
+ (instance ?GEOPOL GeopoliticalEntity) 
+ (desires ?GEOPOL 
+ (not 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(instance Iran GeopoliticalEntity) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIO) 
+ (instance ?BIO BiologicalWeapon) 
+ (agent ?ATTACK ?COUNTRY) 
+ (obligatedAgent BiologicalAndToxinWeaponsConvention ?COUNTRY)) 
+ (actionViolatesObligation ?ATTACK BiologicalAndToxinWeaponsConvention)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(obligatedAgent BiologicalAndToxinWeaponsConvention Iran) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ?OB) 
+ (obligationParts ?WIDE ?OB)) 
+ (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 BiologicalAndToxinWeaponsConvention) 
+
+(obligationParts ModernInternationalRelationsCOC BiologicalAndToxinWeaponsConvention) 
+
+(believes InternationalCommunity 
+ (agent HYP-AttackOnTangible-58360641 Iran)) 
+
+(desires Iran 
+ (not 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION Iran))))) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 ModernInternationalRelationsCOC) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION ?AGT))) likelihood)) 
+
+(implies 
+ (and 
+ (instance ?GEOPOL GeopoliticalEntity) 
+ (obligatedAgent ?OBL ?GEOPOL) 
+ (enforcingAgent ?OBL ?ENFORCER)) 
+ (desires ?GEOPOL 
+ (not 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP ?ENFORCER) 
+ (maleficiary ?MIL-OP ?GEOPOL)))))) 
+
+(instance Iran GeopoliticalEntity) 
+
+(obligatedAgent BiologicalAndToxinWeaponsConvention Iran) 
+
+(enforcingAgent BiologicalAndToxinWeaponsConvention UnitedNationsOrganization) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIO) 
+ (instance ?BIO BiologicalWeapon) 
+ (agent ?ATTACK ?COUNTRY) 
+ (obligatedAgent BiologicalAndToxinWeaponsConvention ?COUNTRY)) 
+ (actionViolatesObligation ?ATTACK BiologicalAndToxinWeaponsConvention)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(subrelation agent agent) 
+
+(implies 
+ (and 
+ (instance ?AGREE CodeOfConduct) 
+ (instance ?AGREE InternationalAgreement) 
+ (enforcingAgent ?AGREE ?GROUP) 
+ (actionViolatesObligation ?ACT ?AGREE) 
+ (agent ?ACT ?GEOPOL) 
+ (instance ?GEOPOL GeopoliticalEntity)) 
+ (increasesCausally ?ACT 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP ?GROUP) 
+ (maleficiary ?MIL-OP ?GEOPOL))) likelihood)) 
+
+(instance BiologicalAndToxinWeaponsConvention CodeOfConduct) 
+
+(instance BiologicalAndToxinWeaponsConvention InternationalAgreement) 
+
+(actionViolatesObligation HYP-AttackOnTangible-58360641 BiologicalAndToxinWeaponsConvention) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(desires Iran 
+ (not 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP UnitedNationsOrganization) 
+ (maleficiary ?MIL-OP Iran))))) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP UnitedNationsOrganization) 
+ (maleficiary ?MIL-OP Iran))) likelihood) 
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (agent ?ACT Iran) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET Bahrain) 
+       (deviceUsed ?ACT ?FORCE) 
+       (instance ?FORCE BiologicalWeapon)) 
+   (or 
+       (and 
+           (desires Iran ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires Iran 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood)))) 
+))
+
+(answer (list 
+ (thereExists ?DESTROY 
+ (inputsDestroyed ?DESTROY HYP-BiologicalWeapon-624717 
+)))
+)
+(answer (list  (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION Iran))))
+
+)
+(answer (list  (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME Iran))))
+
+)
+(answer (list  (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (directingAgent ?SANCTION UnitedNationsOrganization) 
+ (maleficiary ?SANCTION Iran))))
+
+)
+(answer (list   (thereExists ?SANCTION 
+ (and 
+ (instance ?SANCTION ImposingSanctions) 
+ (maleficiary ?SANCTION Iran))) )
+
+)
+(answer (list  (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (directingAgent ?MIL-OP UnitedNationsOrganization) 
+ (maleficiary ?MIL-OP Iran))))
+
+)(answer (list  (failureForAgents HYP-AttackOnTangible-58360641.
+Iran 
+))
+
+)
+
+
+(end_of_file)
+

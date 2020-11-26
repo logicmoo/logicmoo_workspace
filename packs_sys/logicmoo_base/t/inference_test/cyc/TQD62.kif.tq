@@ -1,0 +1,23 @@
+(note TQD62)
+
+(desires InternationalAtomicEnergyAgency "Enforce a system of safeguards to ensure that non-nuclear weapons states do not divert shipments of sensitive nuclear-related equipment from peaceful applications to the production of nuclear weapons.") 
+
+
+(desires InternationalAtomicEnergyAgency "Advise developing countries on nuclear power development, nuclear safety, radioactive waste management, and related efforts.") 
+
+
+(statementOfPurpose InternationalAtomicEnergyAgency "The IAEA seeks to accelerate and enlarge the contribution of atomic energy to peace, health and prosperity throughout the world. It shall ensure, so far as it is able, that assistance provided by it or at its request or under its supervision or control is not used in such a way as to further any military purpose.") 
+
+
+(query (findall ?X
+  (or 
+    (desires InternationalAtomicEnergyAgency ?X) 
+    (statementOfPurpose InternationalAtomicEnergyAgency ?X))))
+
+(answer "Enforce a system of safeguards to ensure that non-nuclear weapons states do not divert shipments of sensitive nuclear-related equipment from peaceful applications to the production of nuclear weapons.") 
+
+(answer "Advise developing countries on nuclear power development, nuclear safety, radioactive waste management, and related efforts.") 
+
+(answer "The IAEA seeks to accelerate and enlarge the contribution of atomic energy to peace, health and prosperity throughout the world. It shall ensure, so far as it is able, that assistance provided by it or at its request or under its supervision or control is not used in such a way as to further any military purpose.") 
+
+(end_of_file)

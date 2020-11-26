@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.10</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-shared.html">
+<link rel="next" href="tabling-preds.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-shared.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling-preds.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-restraints"><a id="sec:7.10"><span class="sec-nr">7.10</span> <span class="sec-title">Tabling 
+restraints: bounded rationality and tripwires</span></a></h2>
+
+<a id="sec:tabling-restraints"></a>
+
+<p>Tabling avoids non-termination due to <em>self-recursion</em>. As 
+Prolog allows for infinitely nested <em>compound terms</em> (<em>function 
+symbols</em> in logic) and arbitrary numbers, the set of possible 
+answers is not finite and thus there is no guaranteed termination.
+
+<p>This section describes <em>restraints</em>
+<cite><a class="cite" href="Bibliography.html#DBLP:conf/aaai/GrosofS13">Grosof &amp; 
+Swift, 2013</a></cite> that can be enforced to specific or all tabled 
+predicates. Currently there are three defined restraints, limiting (1) 
+the size of (the arguments to) goals, (2) the size of the answer 
+substitution added to a table and (3) the number of answers allowed in 
+any table. If any of these events occurs we can specify the action 
+taken. We distinguish two classes of actions. First, these events can 
+trap a <em>tripwire</em> which can be handled using a hook or a 
+predefined action such as raising an exception, printing a warning or 
+enter a <em>break level</em>. This can be used for limiting resources, 
+be notified of suspicious events (debugging) or dynamically adjust the 
+(tabling) strategy of the program. Second, they may continue the 
+computation that results in a partial answer (<em>bounded rationality</em>). 
+Unlike just not exploring part of the space though, we use the third 
+truth value of well founded semantics to keep track of answers that have 
+not been affected by the restraints and those that have been affected.
+
+<p>The tripwire actions apply for all restraints. If a tripwire action 
+is triggered, the system takes the steps below.
+
+<p>
+<ol class="latex">
+<li>Call the <a id="idx:prologtripwire2:2020"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
+hook.
+<li>If <a id="idx:prologtripwire2:2021"></a><a class="pred" href="tabling-restraints.html#prolog:tripwire/2">prolog:tripwire/2</a> 
+fails, take one of the predefined actions:
+
+<dl class="latex">
+<dt><strong>warning</strong></dt>
+<dd class="defbody">
+Print a message indicating the trapped tripwire and continue execution 
+as normal, i.e., the final answer is the same as if no restraint was 
+active.
+</dd>
+<dt><strong>error</strong></dt>
+<dd class="defbody">
+Throw an exception
+<code>error(resource_error(tripwire(Wire,Context)))</code>.
+</dd>
+<dt><strong>suspend</strong></dt>
+<dd class="defbody">
+Print a message and start a <em>break level</em> (see <a id="idx:break0:2022"></a><a class="pred" href="toplevel.html#break/0">break/0</a>).
+</dd>
+</dl>
+
+</ol>
+
+<dl class="latex">
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="prolog:tripwire/2"><strong>prolog:tripwire</strong>(<var>Wire, 
+Context</var>)</a></dt>
+<dd class="defbody">
+Called when tripwire <var>Wire</var> is trapped. <var>Context</var> 
+provides additional context for interpreting the tripwire. The hook can 
+take one of three actions:
+
+<p>
+<ul class="latex">
+<li>Succeed. In this case the tripwire is considered handled and 
+execution proceeds as if there was no tripwire. Note that tripwires only 
+trigger at the exact value, which implies that a wire on a count will be 
+triggered only once. The hook can install a new tripwire at a higher 
+count.
+<li>Fail. In this case the default action is taken.
+<li>Throw an exception. Exceptions are propagated normally.
+</ul>
+</dd>
+</dl>
+
+<p><em>Radial restraints</em> limit the sizes of subgoals or answers. 
+Abstraction of a term according to the size limit is implemented by
+<a id="idx:sizeabstractterm3:2023"></a><a class="pred" href="tabling-restraints.html#size_abstract_term/3">size_abstract_term/3</a>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="size_abstract_term/3"><strong>size_abstract_term</strong>(<var>+Size, 
++Term, -Abstract</var>)</a></dt>
+<dd class="defbody">
+The size of a term is defined as the number of compound subterms (<em>function 
+symbols</em>) that appear in term. <var>Abstract</var> is an abstract 
+copy of <var>Term</var> where each argument is abstracted by copying 
+only the first <var>Size</var> function symbols and constants. Excess 
+function symbols are replaced by fresh variables.
+
+<p>This predicate is a helper for tabling where <var>Term</var> is the
+<code>ret/N</code> <em>answer skeleton</em> that is added to the
+<em>answer table</em>. Examples:
+
+<p><table class="latex frame-void center">
+<tr><td align=center><b>Size</b> </td><td><b>Term</b> </td><td><b>Abstract</b> </td></tr>
+<tr class="hline"><td align=center>0</td><td>ret(f(x), a)</td><td>ret(_, 
+a) </td></tr>
+<tr><td align=center>1</td><td>ret(f(x), a)</td><td>ret(f(x), a) </td></tr>
+<tr><td align=center>1</td><td>ret(f(A), a)</td><td>ret(f(A), a) </td></tr>
+<tr><td align=center>1</td><td>ret(f(x), x(y(Z)))</td><td>ret(f(x), 
+x(_)) </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[undefined]</span><a id="radial_restraint/0"><strong>radial_restraint</strong></a></dt>
+<dd class="defbody">
+This predicate is <em>undefined</em> in the sense of well founded 
+semantics (see <a class="sec" href="WFS.html#sec:7.6">section 7.6</a> 
+and <a id="idx:undefined0:2024"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
+Any answer that depends on this condition is undefined because either 
+the restraint on the subgoal size or answer size was violated.
+</dd>
+</dl>
+
+<p><h3 id="sec:tabling-restraint-subgoal"><a id="sec:7.10.1"><span class="sec-nr">7.10.1</span> <span class="sec-title">Restraint 
+subgoal size</span></a></h3>
+
+<a id="sec:tabling-restraint-subgoal"></a>
+
+<p>Using the <code>subgoal_abstract(Size)</code> attribute, a tabled 
+subgoal that that is too large is <em>abstracted</em> by replacing 
+compound subterms of the goal with variables. In a nutshell, a goal
+<code>p(s(s(s(s(s(0))))))</code> is converted into the semantically 
+equivalent subgoal if the subgoal size is limited to&nbsp;3.
+
+<pre class="code">
+    ...,
+    p(s(s(s(X)))), X = s(s(0)),
+    ...,
+</pre>
+
+<p>As a result of this, terms stored in the <em>variant trie</em> that 
+maps goal variants into <em>answer tables</em> is limited. Note that 
+does not limit the number of answer tables as atomic values are never 
+abstracted and there are, for example, an infinite number of integers. 
+Note that restraining the subgoal size does not affect the semantics, 
+provided more general queries on the predicate include all answers that 
+more specific queries do. See also <em>call substitution</em> as 
+described in <a class="sec" href="tabling-subsumptive.html#sec:7.5">section 
+7.5</a>. In addition to the tripwire actions, the <a class="flag" href="flags.html#flag:max_table_subgoal_size_action">max_table_subgoal_size_action</a> 
+can be set to the value <code>abstract</code>:
+
+<dl class="latex">
+<dt><strong>abstract</strong></dt>
+<dd class="defbody">
+Abstract the goal as described above and provide correctness by adding 
+the required unification instructions after the goal.
+</dd>
+</dl>
+
+<p><h3 id="sec:tabling-restraint-answer-size"><a id="sec:7.10.2"><span class="sec-nr">7.10.2</span> <span class="sec-title">Restraint 
+answer size</span></a></h3>
+
+<a id="sec:tabling-restraint-answer-size"></a>
+
+<p>Using the <code>answer_abstract(Size)</code> attribute, a tabled 
+subgoal that produces answer substitutions (instances of the variables 
+in the goal) whose size exceed <var>Size</var> are trapped. In addition 
+to the tripwire actions, answer abstraction defines two additional modes 
+for dealing with too large answers as defines by the Prolog flag
+<a class="flag" href="flags.html#flag:max_table_answer_size_action">max_table_answer_size_action</a>:
+
+<dl class="latex">
+<dt><strong>fail</strong></dt>
+<dd class="defbody">
+Ignore the too large answer. Note that this is semantically incorrect.
+</dd>
+<dt><strong>bounded_rationality</strong></dt>
+<dd class="defbody">
+In this mode, the large answer is <em>abstracted</em> in the same way as 
+subgoals are abstracted (see <a class="sec" href="tabling-restraints.html#sec:7.10.1">section 
+7.10.1</a>). This is semantically incorrect, but our third truth value <em>undefined</em> 
+is used to remedy this problem. In other words, the abstracted value is 
+added to the table as <em>undefined</em> and all conclusions that depend 
+on usage of this abstracted value are thus undefined unless they can 
+also be proved some other way.
+</dd>
+</dl>
+
+<p><h3 id="sec:tabling-restraint-answer-count"><a id="sec:7.10.3"><span class="sec-nr">7.10.3</span> <span class="sec-title">Restraint 
+answer count</span></a></h3>
+
+<a id="sec:tabling-restraint-answer-count"></a>
+
+<p>Finally, using &ldquo;as <code>max_answers(Count)</code>&rdquo; or 
+the Prolog flag
+<a class="flag" href="flags.html#flag:max_answers_for_subgoal">max_answers_for_subgoal</a>, 
+the number of answers in a table is restrained. In addition to the 
+tripwire actions this restraint supports the action <code>bounded_rationality</code><sup class="fn">169<span class="fn-text">The 
+action <code>complete_soundly</code> is supported as a synonym for XSB 
+compatibility</span></sup>. If the restraint is reached in the bounded 
+rationality mode the system takes the following actions:
+
+<p>
+<ul class="latex">
+<li>Ignore the answer that triggered the restraint.
+<li>Prune the choice points of the tabled goal to avoid more answers.
+<li>Add an new answer to the table that does not bind any variables, 
+i.e., an empty answer substitution. This answer is conditional on <a id="idx:answercountrestraint0:2025"></a><a class="pred" href="tabling-restraints.html#answer_count_restraint/0">answer_count_restraint/0</a>.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[undefined]</span><a id="answer_count_restraint/0"><strong>answer_count_restraint</strong></a></dt>
+<dd class="defbody">
+This predicate is <em>undefined</em> in the sense of well founded 
+semantics (see <a class="sec" href="WFS.html#sec:7.6">section 7.6</a> 
+and <a id="idx:undefined0:2026"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>). 
+Any answer that depends on this condition is undefined because the <code>max_answers</code> 
+restraint on some table was violated.
+</dd>
+</dl>
+
+<p>The program and subsequent query below illustrate the behavior.
+
+<pre class="code">
+:- table p/2 as max_answers(3).
+
+p(M,N) :-
+    between(1,M,N).
+</pre>
+
+<pre class="code">
+?- p(1 000 000, X).
+X = 3 ;
+X = 2 ;
+X = 1 ;
+% WFS residual program
+    p(1000000, X) :-
+        answer_count_restraint.
+p(1000000, X).
+</pre>
+
+<p></body></html>

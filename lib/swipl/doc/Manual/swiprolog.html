@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 1.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="intro.html">
+<link rel="next" href="status.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="intro.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="status.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:swiprolog"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Positioning 
+SWI-Prolog</span></a></h2>
+
+<a id="sec:swiprolog"></a>
+
+<p>Most implementations of the Prolog language are designed to serve a 
+limited set of use cases. SWI-Prolog is no exception to this rule. 
+SWI-Prolog positions itself primarily as a Prolog environment for&lsquo;programming 
+in the large' and use cases where it plays a central role in an 
+application, i.e., where it acts as&lsquo;glue' between components. At 
+the same time, SWI-Prolog aims at providing a productive rapid 
+prototyping environment. Its orientation towards programming in the 
+large is backed up by scalability, compiler speed, program structuring 
+(modules), support for multithreading to accommodate servers, Unicode 
+and interfaces to a large number of document formats, protocols and 
+programming languages. Prototyping is facilitated by good development 
+tools, both for command line usage and for usage with graphical 
+development tools. Demand loading of predicates from the library and a&lsquo;make' 
+facility avoids the <em>requirement</em> for using declarations and 
+reduces typing.
+
+<p>SWI-Prolog is traditionally strong in education because it is free 
+and portable, but also because of its compatibility with textbooks and 
+its easy-to-use environment.
+
+<p>Note that these positions do not imply that the system cannot be used 
+with other scenarios. SWI-Prolog is used as an embedded language where 
+it serves as a small rule subsystem in a large application. It is also 
+used as a deductive database. In some cases this is the right choice 
+because SWI-Prolog has features that are required in the application, 
+such as threading or Unicode support. In general though, for example, 
+GNU-Prolog is more suited for embedding because it is small and can 
+compile to native code, XSB is better for deductive databases because it 
+provides a mature implementation of <em>tabling</em> including support 
+for incremental updates and <em>Well Founded Semantics</em><sup class="fn">1<span class="fn-text">Sponsored 
+by Kyndi and with help from the XSB developers Theresa Swift and David 
+S. Warren, SWI-Prolog now supports many of the XSB features.</span></sup>, 
+and ECLiPSe is better at constraint handling.
+
+<p>The syntax and set of built-in predicates is based on the ISO 
+standard
+<cite><a class="cite" href="Bibliography.html#stdprolog:98">Hodgson, 
+1998</a></cite>. Most extensions follow the&lsquo;Edinburgh tradition' 
+(DEC10 Prolog and C-Prolog) and Quintus Prolog <cite><a class="cite" href="Bibliography.html#QUINTUS:manual">Qui, 
+1997</a></cite>. The infrastructure for constraint programming is based 
+on hProlog
+<cite><a class="cite" href="Bibliography.html#Demoen:CW350">Demoen, 2002</a></cite>. 
+Some libraries are copied from the YAP<sup class="fn">2<span class="fn-text"><a class="url" href="http://www.dcc.fc.up.pt/\~{}vsc/Yap/">http://www.dcc.fc.up.pt/\~{}vsc/Yap/</a></span></sup> 
+system. Together with YAP we developed a portability framework (see
+<a class="sec" href="dialect.html#sec:C">section C</a>). This framework 
+has been filled for SICStus Prolog, YAP, IF/Prolog and Ciao. SWI-Prolog 
+version&nbsp;7 introduces various extensions to the Prolog language (see <a class="sec" href="extensions.html#sec:5">section 
+5</a>). The
+<em>string</em> data type and its supporting set of built-in predicates 
+is compatible with ECLiPSe.
+
+<p></body></html>

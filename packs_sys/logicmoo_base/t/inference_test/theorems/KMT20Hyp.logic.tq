@@ -1,0 +1,15 @@
+(note "Kalish & Montague, Theorem 20", Hypothetical)
+
+   (implies 
+       (instance ?X Dog) 
+       (not 
+           (instance ?X Dog))) 
+
+(queryyn  
+   (not 
+       (instance ?X Dog))
+) 
+
+(answer Yes)
+
+(end_of_file) 

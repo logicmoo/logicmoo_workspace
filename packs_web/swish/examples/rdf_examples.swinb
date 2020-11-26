@@ -1,0 +1,34 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Using SWISH with ClioPatria
+
+[SWISH](http://cplint.lamping.unife.it) (SWI-Prolog for SHaring) provides a Prolog shell over the web that allows you to formulate queries in a modular fashion and handle results in several ways:
+
+  - As plain Prolog results.
+  - Using the SWISH [C3](http://www.c3js.org) chart renderer.
+  - Download as CSV.
+  - Query through the [Pengines](http://pengines.swi-prolog.org) API, which
+    allows for creating interactive (HTML5) web applications.
+  - See also the [client repository](https://github.com/SWI-Prolog/swish/tree/master/client).
+
+The rationale behind ClioPatria and querying it using Prolog is explained in [ClioPatria: A Logical Programming Infrastructure for the Semantic Web](http://www.semantic-web-journal.net/content/cliopatria-logical-programming-infrastructure-semantic-web-0).
+
+The ClioPatria version of SWISH can operate in two modes:
+
+  - In _anonymous_ mode, the user can only pose queries that do not
+    modify the database and are considered harmless.
+  - When logged in with *admin rights*, arbitrary Prolog queries can
+    be posed, which implies loading RDF, rewriting RDF data, updating
+    the loaded Prolog code using make/0, etc.
+
+We have composed several notebooks that explain the basic functionality of the SWI-Prolog RDF interface.
+
+  - [Basic graph queries](example/basic_graph_examples.swinb)
+  - [Using RDF prefixes](example/prefix_examples.swinb)
+  - [Using RDF Literals](example/literal_examples.swinb)
+  - [Enumerating instances](example/enumerating_examples.swinb)
+  - [Charting results](example/c3_examples.swinb)
+</div>
+
+</div>

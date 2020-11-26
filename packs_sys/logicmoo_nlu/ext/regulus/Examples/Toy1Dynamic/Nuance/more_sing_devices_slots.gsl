@@ -1,0 +1,11 @@
+OTHER_NOUN_SWITCHABLE_SING:public [
+( radio )
+    {  < value radio > }  
+( stove )
+    {  < value stove > }  
+( cooker )
+    {  < value cooker > }  
+( fridge )
+    {  < value fridge > }  
+]
+

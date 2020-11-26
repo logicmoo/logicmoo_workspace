@@ -1,0 +1,447 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.51</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="varnumbers.html">
+<link rel="next" href="hack.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="varnumbers.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="hack.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:yall"><a id="sec:A.51"><span class="sec-nr">A.51</span> <span class="sec-title">library(yall): 
+Lambda expressions</span></a></h2>
+
+<p><a id="sec:yall"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Paulo Moura and Jan Wielemaker
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Extend optimization support
+</dd>
+</dl>
+
+<p>Prolog realizes <i>high-order</i> programming with meta-calling. The 
+core predicate of this is <a class="pred" href="metacall.html#call/1">call/1</a>, 
+which simply calls its argument. This can be used to define higher-order 
+predicates such as <a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+or <a class="pred" href="forall2.html#forall/2">forall/2</a>. The call/N 
+construct calls a <i>closure</i> with N-1 <i>additional arguments</i>. 
+This is used to define higher-order predicates such as the <a class="pred" href="apply.html#maplist/2">maplist/2</a>-5 
+family or <a class="pred" href="apply.html#foldl/4">foldl/4</a>-7.
+
+<p>The <i>closure</i> concept used here is somewhat different from the 
+closure concept from functional programming. The latter is a function 
+that is always evaluated in the context that existed at function 
+creation time. Here, a closure is a term of arity <i>0 <code>=&lt;</code> 
+L <code>=&lt;</code> K</i>. The term's functor is the name of a 
+predicate of arity <i>K</i> and the term's <i>L</i> arguments (where
+<i>L</i> could be 0) correspond to <i>L</i> leftmost arguments of said 
+predicate, bound to parameter values. For example, a closure involving
+<a class="pred" href="manipatom.html#atom_concat/3">atom_concat/3</a> 
+might be the term <code>atom_concat(prefix)</code>. In order of 
+increasing <i>L</i>, one would have increasingly more complete closures 
+that could be passed to <span class="pred-ext">call/3</span>, all giving 
+the same result:
+
+<pre class="code">
+call(atom_concat,prefix,suffix,R).
+call(atom_concat(prefix),suffix,R).
+call(atom_concat(prefix,suffix),R).
+call(atom_concat(prefix,suffix,R)).
+</pre>
+
+<p>The problem with higher order predicates based on call/N is that the 
+additional arguments are always added to the end of the closure's 
+argument list. This often requires defining trivial helper predicates to 
+get the argument order right. For example, if you want to add a common 
+postfix to a list of atoms you need to apply
+<code>atom_concat(In,Postfix,Out)</code>, but
+<code>maplist(atom_concat(Postfix),ListIn,ListOut)</code> calls
+<code>atom_concat(Postfix,In,Out)</code>. This is where <code>library(yall)</code> 
+comes in, where the module name, <i>yall</i>, stands for <i>Yet Another 
+Lambda Library</i>.
+
+<p>The library allows us to write a lambda expression that <i>wraps 
+around</i> the (possibly complex) goal to call:
+
+<pre class="code">
+?- maplist([In,Out]&gt;&gt;atom_concat(In,'_p',Out), [a,b], ListOut).
+ListOut = [a_p, b_p].
+</pre>
+
+<p>A bracy list <code>{...}</code> specifies which variables are <i>shared</i> 
+between the wrapped goal and the surrounding context. This allows us to 
+write the code below. Without the <code>{Postfix}</code> a fresh 
+variable would be passed to
+<a class="pred" href="manipatom.html#atom_concat/3">atom_concat/3</a>.
+
+<pre class="code">
+add_postfix(Postfix, ListIn, ListOut) :-
+    maplist({Postfix}/[In,Out]&gt;&gt;atom_concat(In,Postfix,Out),
+            ListIn, ListOut).
+</pre>
+
+<p>This introduces the second application area of lambda expressions: 
+the ability to confine variables to the called goal's context. This 
+features shines when combined with <a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+or <a class="pred" href="allsolutions.html#setof/3">setof/3</a> where 
+one normally has to list those variables whose bindings one is <i>not</i> 
+interested in using the
+<code>Var^Goal</code> construct (marking <var>Var</var> as existentially 
+quantified and confining it to the called goal's context). Lambda 
+expressions allow you to do the converse: specify the variables which 
+one <i>is</i> interested in. These variables are common to the context 
+of the called goal and the surrounding context.
+
+<p>Lambda expressions use the syntax below
+
+<pre class="code">
+{...}/[...]&gt;&gt;Goal.
+</pre>
+
+<p>The <code>{...}</code> optional part is used for lambda-free 
+variables (the ones shared between contexts). The order of variables 
+doesn't matter, hence the <code>{...}</code> set notation.
+
+<p>The <code>[...]</code> optional part lists lambda parameters. Here, 
+order of variables matters, hence the list notation.
+
+<p>As <code>/</code> and <code>&gt;&gt;</code> are standard infix 
+operators, no new operators are added by this library. An advantage of 
+this syntax is that we can simply unify a lambda expression with <code>{Free}/[Parameters]&gt;&gt;Lambda</code> 
+to access each of its components. Spaces in the lambda expression are 
+not a problem although the goal may need to be written between&rsquo;()'s. 
+Goals that are qualified by a module prefix also need to be wrapped 
+inside parentheses.
+
+<p>Combined with <code>library(apply_macros)</code>, <code>library(yall)</code> 
+allows writing one-liners for many list operations that have the same 
+performance as hand-written code.
+
+<p>This module implements <a class="url" href="https://logtalk.org/manuals/refman/grammar.html#lambda-expressions">Logtalk's 
+lambda expressions syntax</a>.
+
+<p>The development of this module was sponsored by Kyndi, Inc.
+
+<dl class="latex">
+<dt class="pubdef"><a id=">>/2"><var>+Parameters</var> <strong>&gt;&gt;</strong> <var>+Lambda</var></a></dt>
+<dt class="pubdef"><a id=">>/3"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1</var>)</a></dt>
+<dt class="pubdef"><a id=">>/4"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2</var>)</a></dt>
+<dt class="pubdef"><a id=">>/5"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2, ?A3</var>)</a></dt>
+<dt class="pubdef"><a id=">>/6"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2, ?A3, ?A4</var>)</a></dt>
+<dt class="pubdef"><a id=">>/7"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2, ?A3, ?A4, ?A5</var>)</a></dt>
+<dt class="pubdef"><a id=">>/8"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2, ?A3, ?A4, ?A5, ?A6</var>)</a></dt>
+<dt class="pubdef"><a id=">>/9"><strong>&gt;&gt;</strong>(<var>+Parameters, 
++Lambda, ?A1, ?A2, ?A3, ?A4, ?A5, ?A6, ?A7</var>)</a></dt>
+<dd class="defbody">
+Calls a copy of <var>Lambda</var>. This is similar to <code>call(Lambda,A1,...)</code>, 
+but arguments are reordered according to the list <var>Parameters</var>:
+
+<p>
+<ul class="latex">
+<li>The first <code>length(Parameters)</code> arguments from <var>A1</var>, 
+... are unified with (a copy of) <var>Parameters</var>, which <i>may</i> 
+share them with variables in <var>Lambda</var>.
+<li>Possible excess arguments are passed by position.
+</ul>
+<table class="arglist">
+<tr><td><var>Parameters</var> </td><td>is either a plain list of 
+parameters or a term
+<code>{Free}/List</code>. <var>Free</var> represents variables that are 
+shared between the context and the <var>Lambda</var> term. This is 
+needed for compiling <var>Lambda</var> expressions. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="//2"><var>+Free</var> <strong>/</strong> <var>:Lambda</var></a></dt>
+<dt class="pubdef"><a id="//3"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1</var>)</a></dt>
+<dt class="pubdef"><a id="//4"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2</var>)</a></dt>
+<dt class="pubdef"><a id="//5"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2, ?A3</var>)</a></dt>
+<dt class="pubdef"><a id="//6"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2, ?A3, ?A4</var>)</a></dt>
+<dt class="pubdef"><a id="//7"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2, ?A3, ?A4, ?A5</var>)</a></dt>
+<dt class="pubdef"><a id="//8"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2, ?A3, ?A4, ?A5, ?A6</var>)</a></dt>
+<dt class="pubdef"><a id="//9"><strong>/</strong>(<var>+Free, :Lambda, 
+?A1, ?A2, ?A3, ?A4, ?A5, ?A6, ?A7</var>)</a></dt>
+<dd class="defbody">
+Shorthand for <code>Free/[]&gt;&gt;Lambda</code>. This is the same as 
+applying call/N on <var>Lambda</var>, except that only variables 
+appearing in <var>Free</var> are bound by the call. For example
+
+<pre class="code">
+p(1,a).
+p(2,b).
+
+?- {X}/p(X,Y).
+X = 1;
+X = 2.
+</pre>
+
+<p>This can in particularly be combined with <a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+and <a class="pred" href="allsolutions.html#setof/3">setof/3</a> to
+<i>select</i> particular variables to be concerned rather than using 
+existential quantification (<span class="pred-ext">^/2</span>) to <i>exclude</i> 
+variables. For example, the two calls below are equivalent.
+
+<pre class="code">
+setof(X, Y^p(X,Y), Xs)
+setof(X, {X}/p(X,_), Xs)
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_lambda/1"><strong>is_lambda</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a valid Lambda expression.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="lambda_calls/2"><strong>lambda_calls</strong>(<var>+LambdaExpression, 
+-Goal</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="lambda_calls/3"><strong>lambda_calls</strong>(<var>+LambdaExpression, 
++ExtraArgs, -Goal</var>)</a></dt>
+<dd class="defbody">
+<var>Goal</var> is the goal called if call/N is applied to
+<var>LambdaExpression</var>, where <var>ExtraArgs</var> are the 
+additional arguments to call/N. <var>ExtraArgs</var> can be an integer 
+or a list of concrete arguments. This predicate is used for 
+cross-referencing and code highlighting.
+</dd>
+</dl>
+
+<p></body></html>

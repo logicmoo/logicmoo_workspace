@@ -1,0 +1,206 @@
+//
+// Lion-and-Mouse example.  One of Aesop's fables.
+//
+// Adapted from the work of Henrik Scharfe 
+// by Ulrik Petersen
+// Created: September 13, 2003
+// Last update: September 23, 2003
+//
+// Available in the AAU directory as Lion-and-Mouse.plgCG
+//
+// The text is:
+//
+// "A LION was awakened from sleep by a Mouse running over his face. 
+// Rising up angrily, he caught him and was about to kill him, when the 
+// Mouse piteously entreated, saying: "If you would only spare my life, 
+// I would be sure to repay your kindness." The Lion laughed and let him go.
+// It happened shortly after this that the Lion was caught by some hunters, 
+// who bound him by ropes to the ground. The Mouse, recognizing his roar,
+// came, gnawed the rope with his teeth, and set him free, exclaimed "You 
+// ridiculed the idea of my ever being able to help you, expecting to receive 
+// from me any repayment of your favor; now you know that it is possible 
+// for even a Mouse to help a Lion." 
+//
+
+// Type-hierarchy
+entity > physical, abstract.
+abstract > description, proposition, schema.
+description > manner, idea, attribute.
+manner > angrily, piteously.
+attribute > possible.
+proposition > if, then.
+schema > quantity.
+physical > process, object, situation, execution.
+process > act, life.
+object > animal, face, person, artefact, natural_resource, bodypart.
+situation > state.
+execution > kindness, temporal_reference.
+
+// Catalog of instances.
+
+animal = lion, mouse.
+person = hunters, you, me.
+act = run, caught, awakened, rising_up, entreated, spare, repay,
+          about_to_kill, laughed, let_go, bound, recognizing, roar, gnawed,
+          set_free, exclaimed, ridiculed, help, know.
+quantity = some.
+temporal_reference = shortly_after.
+artefact = ropes.
+natural_resource = ground.
+body_part = teeth.
+state = being_able.
+
+
+// Each fable has a part-number (e.g., pa1, pa2).
+// Each part corresponds to roughly one sentence.
+//
+
+fab4(pa1,
+
+    [act: awakened]-
+    -ptnt->[animal:lion],
+    -agnt->[animal:mouse],
+    -caus->[situation = [act:run]-
+      -agnt->[animal:mouse],
+      -path->[face]<-poss-[animal:lion]]).
+
+fab4(pa2,
+
+    [act:caught]-
+    -agnt->[animal:lion],
+    -ptnt->[animal:mouse],
+    -ptim->[act:rising_up]-
+      -agnt->[animal:lion],
+      -manr->[angrily]).
+
+fab4(pa3,
+
+    [act : entreated = 
+       [proposition = 
+          [if = [animal:lion]<-agnt-[act:spare]-thme->[life]<-poss-[animal:mouse]
+       ]-cond->[then = 
+          [act : repay]-
+            -agnt->[animal:mouse],
+            -thme->[kindness],
+            -rcpt->[animal:lion]
+                       ]
+       ]
+    ]-
+      -manr->[piteously],
+      -agnt->[animal:mouse],
+      -rcpt->[animal:lion],
+      -ptim->[act:about_to_kill]-
+        -agnt->[animal:lion],
+        -ptnt->[animal:mouse]).
+
+fab4(pa4,
+
+    [animal:lion]<-agnt-[act:laughed]).
+
+fab4(pa5,
+
+    [act:let_go]-
+    -ptnt->[animal:mouse],
+    -agnt->[animal:lion]).
+
+fab4(pa6,
+
+    [act:caught]-
+    -ptnt->[animal:lion],
+    -agnt->[person:hunters]-quan->[quantity:some],
+    -ptim->[temporal_reference:shortly_after]).
+
+fab4(pa7,
+
+    [act:bound]-
+    -agnt->[person:hunters],
+    -ptnt->[animal:lion],
+    -inst->[artefact:ropes],
+    -dest->[natural_resource:ground]).
+
+fab4(pa8,
+
+    [act:recognizing]-
+    -agnt->[animal:mouse],
+    -thme->[act:roar]-agnt->[animal:lion]).
+
+fab4(pa9,
+
+    [act:gnawed]-
+    -agnt->[animal:mouse],
+    -obj->[artefact:ropes],
+    -inst->[bodypart:teeth]).
+
+fab4(pa10,
+
+    [act:set_free]-
+    -agnt->[animal:mouse],
+    -ptnt->[animal:lion]).
+
+fab4(pa11,
+
+    [act : exclaimed = 
+       [person:you]<-agnt-[act : ridiculed = 
+         [idea = 
+              [state: being_able]-
+                  -thme->[situation = [act:help]-
+                                        -agnt->[person : me],
+                                        -rcpt->[person : you]],
+                  -expr->[person : me]
+              ]
+         ]]-
+    -agnt->[animal:mouse],
+    -rcpt->[animal:lion]).
+
+fab4(pa12,
+
+    [act : exclaimed = [act:know]-
+       -agnt->[person:you],
+       -thme->[situation = 
+                          [animal:mouse]<-agnt-[act:help]-benf->[animal:lion]
+                      ]-attr->[possible]
+    ]-
+    -agnt->[animal:mouse],
+    -rcpt->[animal:lion]).
+
+
+
+// Rules
+
+// Connect fable number, part, and graph
+fable(4, p, g) :- fab4(p, g).
+
+// X does Act Z to Y in graph G where Z and Y are connected by relation R
+doesHow(G, X, Y, Z, R) :-
+   subsume([entity]<-agnt-[act]-R->[entity], G),
+   branchOfCG([act : Z]-agnt->[entity : X], G),
+   branchOfCG([act : Z]-R->[entity : Y], G).
+
+// X does Act Z to Y in graph G where Y is a patient of Act Z
+doesPtnt(G, X, Y, Z) :-
+   doesHow(G, X, Y, Z, ptnt).
+
+// Lion does something (W) to the mouse, where the mouse is a patient of the act
+// in fable f, part p
+lion_mouse(f, p, W) :-
+   fable(f, p, G),
+   doesPtnt(G, lion, mouse, W).
+
+// Mouse does something (W) to lion where the lion is a patient of the act
+// in fable f, part p
+mouse_lion(f, p, W) :-
+   fable(f, p, G),
+   doesPtnt(G, mouse, lion, W).
+
+// X caught Y
+// in fable f, part p
+caught(f, p, X, Y) :-
+   fable(f, p, G),
+   doesPtnt(G, X, Y, caught).
+
+// X exclaimed W to Y
+// in fable f, part p
+exclaimed(f, p, X, Y, W) :-
+   fable(f, p, G),
+   doesHow(G, X, Y, exclaimed, rcpt),
+   concOfCG([act : exclaimed = W], G).

@@ -1,0 +1,92 @@
+
+
+Constant: denotationAndString.
+In Mt: BaseKB.
+f: (and (isa denotationAndString Predicate) (arity denotationAndString 6)).
+f: (and  (comment denotationAndString "A sextary #$NLSemanticPredicate that relates natural language words to CycL terms to which they correspond in a certain way.  Some words have multiple such denotations due to the fact that they possess multiple #$WordSenses (q.v.), which word-senses might or might not belong to the same parts of speech (i.e. nouns, verbs, adjectives etc.); thus #$denotation also has argument-places for specifying both a #$SpeechPart (q.v.) and a particular word-sense (as represented by an integer understood in relation to some standardized word-sense numbering scheme).<p>(#$denotation WORD SPEECH-PART N TERM) means that the CycL correlate (or \"denotation\") of WORD, with respect to SPEECH-PART and the corresponding word-sense numbered N, is TERM.  Examples: (1) #$Place-TheWord, an instance of #$EnglishWord, has the denotation #$PuttingSomethingSomewhere when used as a #$Verb with its word-sense 0, and the denotation #$Place when used as a #$CountNoun with that same word-sense; (2) #$Ring-TheWord currently has four denotation assertions in the Knowledge Base: #$EmittingSound (as a #$Verb with its word-sense 1); #$AudibleSound (as a #$CountNoun with its word-sense 1); #$RingShapedObject (as a #$CountNoun with its word-sense 0); and #$Ring-Jewelry (as a #$CountNoun with its word-sense 2).  An example of a #$denotation sentence that has a NAT (see #$CycLNonAtomicTerm) rather than a constant in its fourth argument-position is<p>	`(#$denotation #$Density-TheWord #$Adjective 0 (#$IntervalMinFn #$LowAmountFn #$Density))'.<p>Note that #$denotation is _not_ to be confused with #$denotes (q.v.), which relates denoting CycL terms to things \"out there in the world\" (i.e. in the intended model of the CycL language).")).
+f: (ist EnglishParaphraseMt 
+  (genFormat denotationAndString "~a (~a) includes ~a (agreement-attr ~a) which denotes ~a via ~a" 
+       (TheList 
+         (TheList 2 :EQUALS) 
+         (TheList 6 :EQUALS) 
+         (TheList 3 :A-THE-WORD) 
+                  4 
+         (TheList 5 :EQUALS)
+	 (TheList 6 :EQUALS)))).
+
+Direction: :forward.
+f: (implies 
+     (and 
+      (speechPartPreds ?POS ?AGREE) 
+      (ist ?MT (wordForms ?WORD ?AGREE ?STRING))
+      (ist-Asserted ?MT (denotation ?WORD ?POS ??SENSE-NBR ?THING)))
+   (ist ?MT (denotationAndString is-Underspecified ?WORD ?POS ?AGREE ?THING ?STRING))).
+
+
+
+Direction: :forward.
+f: (implies 
+     (and 
+      (speechPartPreds ?POS ?AGREE) 
+      (ist ?MT (wordForms ?WORD ?AGREE ?STRING))
+      (ist-Asserted ?MT (denotationRelatedTo ?WORD ?POS ??SENSE-NBR ?THING)))
+   (ist ?MT (denotationAndString denotationRelatedTo ?WORD ?POS ?AGREE ?THING ?STRING))).
+
+Direction: :forward.
+f: (implies 
+     (and 
+      (speechPartPreds ?POS ?AGREE) 
+      (ist ?MT (wordForms ?WORD ?AGREE ?STRING))
+      (ist-Asserted ?MT (denotationRelatedTo-New ?WORD ?POS ?THING)))
+   (ist ?MT (denotationAndString denotationRelatedTo-New ?WORD ?POS ?AGREE ?THING ?STRING))).
+
+
+f: (implies 
+     (and 
+      (genPhrase ?THING ?POS ?AGREE ?STRING)
+      (wordForms ?WORD ?AGREE ?STRING))
+   (denotationAndString is-Underspecified ?WORD ?POS ?AGREE ?THING ?STRING)).
+
+
+
+; f: (ist EnglishMt 
+;    (implies 
+;     (and 
+;      (speechPartPreds ?POS ?AGREE) 
+;      (wordForms ?WORD ?AGREE ?STRING) 
+;      (denotation ?WORD ?POS ??SENSE-NBR ?THING)) 
+;     (ist EnglishMt (denotationAndString is-Underspecified ?WORD ?POS ?AGREE ?THING ?STRING)))).
+
+
+
+
+;;f: (and  (arg1Isa denotationAndString Predicate)).
+;;f: (and  (arg2Isa denotationAndString LexicalWord)).
+;;f: (and  (arg3Isa denotationAndString SpeechPart)).
+;;f: (and  (arg4Isa denotationAndString NLAgreementPredicate)).
+;;f: (and  (arg5Isa denotationAndString Thing)).
+;;f: (and  (arg6Isa denotationAndString CharacterString)).
+;;f: (and  (isa denotationAndString FirstOrderCollectionPredicate)).
+f: (and  (isa denotationAndString NLSemanticPredicate)).
+f: (and  (isa denotationAndString Predicate)).
+;;f: (ist WebSearchEnhancementMt (sharedNotes denotationAndString NLAssertionsForQueryAugmentation)).
+;;f: (and  (transitiveViaArg denotationAndString genls 3)).
+;;f: (and  (transitiveViaArg denotationAndString genlPreds 4)).
+
+;  
+;  constant: FrameForWords.
+;  Mt : UniversalVocabularyMt.
+;  isa : LinguisticObjectType .
+;  genls :	SubcategorizationFrame .
+;  comment : "The class of SubcategorizationFrames which make sense for a generic word (these eventually specialize into the correct subcat frames)." .
+;  
+;  Direction: :forward.
+;  f: (implies 
+;     (and (denotationAndString ?PRED ?WORD ?POS ?AGREE ?THING ??STRING)
+;      (semTransPredForPOS ?POS ?SEMTRANS)
+;      (arg3Isa ?SEMTRANS)
+;     (?SEMTRANS ?WORD 666  (is-Underspecified :WORD ?THING))).
+;    
+;  constant: wordSemTrans.
+;  f: (argIsa wordSemTrans 3 FrameForWords).
+;  

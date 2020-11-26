@@ -1,0 +1,68 @@
+(note TQC29-a)
+
+(implies 
+ (instance ?ORG InternationalOrganizationOfCountries) 
+ (supplyFromThroughAmountDuring PlanetEarth ?PRODUCT-TYPE ?ORG ?PT ?TIME 
+ (PlusAll 
+ (TheSetOf ?COUNTRY 
+ (internationalOrg-MemberCountry ?ORG ?COUNTRY)) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?C ?A) 
+ (supplyFromThroughAmountDuring PlanetEarth ?PRODUCT-TYPE ?C ?PT ?TIME ?A)))))) 
+
+(instance GulfCooperationCouncil InternationalOrganizationOfCountries) 
+
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 27.5700)) 
+
+
+
+(instance 
+ (MillionBarrelsPerDay 14) FlowRate) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 14)) 
+
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct GulfCooperationCouncil StraitOfHormuz 
+ (YearFn 1995) 
+ (BarrelsPerDay 1.11396e+07)) 
+
+(productionCapacityDuring OPEC PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 31)) 
+
+
+
+(query (findall ?ANSWER  ?INCREASE ?LOSS ?RELATION ?TIME )
+ (thereExists ?IA1-TR-PRODUCT-AMOUNT 
+ (thereExists ?TR-PRODUCT-AMOUNT 
+ (thereExists ?IA3-PROD 
+ (thereExists ?IA3-CAP 
+ (and 
+ (instance ?TR-PRODUCT-AMOUNT FlowRate) 
+ (greaterThan ?INCREASE ?LOSS) 
+ (productionAmountDuring OPEC PetroleumProduct ?TIME ?IA3-PROD) 
+ (productionCapacityDuring OPEC PetroleumProduct ?TIME ?IA3-CAP) 
+ (supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz ?TIME ?TR-PRODUCT-AMOUNT) 
+ (supplyFromThroughAmountDuring PlanetEarth PetroleumProduct GulfCooperationCouncil StraitOfHormuz ?TIME ?IA1-TR-PRODUCT-AMOUNT) 
+ (evaluate ?LOSS 
+ (DifferenceFn ?TR-PRODUCT-AMOUNT ?IA1-TR-PRODUCT-AMOUNT)) 
+ (evaluate ?INCREASE 
+ (DifferenceFn ?IA3-CAP ?IA3-PROD)) 
+ (or 
+ (and 
+ (equals ?RELATION greaterThanOrEqualTo) 
+ (equals ?ANSWER Yes)) 
+ (and 
+ (equals ?RELATION lessThan) 
+ (equals ?ANSWER No))) 
+ (?RELATION ?INCREASE ?LOSS)))))))
+
+(answer Yes 3.43000  2.86038  greaterThanOrEqualTo 1995)  
+
+(end_of_file)

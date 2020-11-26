@@ -1,0 +1,48 @@
+
+% Things specific to "simplified German"
+
+% Extra rules
+
+% Replace gap rules, if we want to allow things like "TELEFON IST WO"
+% We may choose not to use these rules in the end.
+pp:[sem=Sem] -->
+	wh_pp:[sem=Sem].
+np:[sem=Sem] -->
+	wh_np:[sem=Sem].
+
+% Rules to ignore
+%ignore_item(wh_np_vp1_rule).
+%ignore_item(wh_np_vp2_rule).
+ignore_item(modal_vp_rule).
+%ignore_item(np_d_nbar_rule).
+
+ignore_item(particle_verb_rule).
+ignore_item(verb_particle).
+ignore_item(refl_verb_rule).
+ignore_item(complex_verb_rule).
+ignore_item(verb_word_order_rule).
+
+ignore_item(non_canonical_lex_macro).
+ignore_item(useless_lexicon_entry).
+ignore_item(non_canonical_lex_item).
+
+
+% Features
+ignore_feature(agr).
+ignore_feature(kasus).
+%ignore_feature(gapsin).
+%ignore_feature(gapsout).
+ignore_feature(takes_det_type).
+ignore_feature(det_type).
+ignore_feature(gender).
+ignore_feature(part_type).
+ignore_feature(is_refl).
+ignore_feature(syn_type).
+ignore_feature(has_spec).
+
+
+ignore_item(vp_pp_rule).
+
+
+
+ignore_item(prep_det_combo).

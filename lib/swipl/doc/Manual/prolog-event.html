@@ -1,0 +1,365 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section B.7</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="exception3.html">
+<link rel="next" href="intlibs.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="exception3.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="intlibs.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:prolog-event"><a id="sec:B.7"><span class="sec-nr">B.7</span> <span class="sec-title">Prolog 
+events</span></a></h2>
+
+<a id="sec:prolog-event"></a>
+
+<p>Version 8.1.9 introduces a uniform mechanism to listen to events that 
+happen in the Prolog engine. It replaces and generalises 
+prolog_event_hook/1 , a hook that was introduced to support the 
+graphical debugger. The current implementation deals with debug, thread 
+and dynamic database events. We expect this mechanism to deal with more 
+hooks in the future.
+
+<dl class="latex">
+<dt class="pubdef"><a id="prolog_listen/2"><strong>prolog_listen</strong>(<var>+Channel, 
+:Closure</var>)</a></dt>
+<dt class="pubdef"><a id="prolog_listen/3"><strong>prolog_listen</strong>(<var>+Channel, 
+:Closure, +Options</var>)</a></dt>
+<dd class="defbody">
+Call <var>Closure</var> if an event that matches <var>Channel</var> 
+happens inside Prolog. Possible choice points are pruned as by <a id="idx:once1:2574"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+Possible failure is ignored, but exceptions are propagated into the 
+environment. Multiple closures can be associated with the same channel. 
+Execution of the list of closures may be terminated by an exception. 
+Options:
+
+<dl class="latex">
+<dt><strong>as</strong>(<var>Location</var>)</dt>
+<dd class="defbody">
+<var>Location</var> is one of <code>first</code> (default) or <code>last</code> 
+and determines whether the new handler is expected as first or last.
+</dd>
+</dl>
+
+<p>Defined channels are described below. The <var>Channel</var> argument 
+is the name of the term listed below. The arguments are added as 
+additional arguments to the given <var>Closure</var>.
+
+<dl class="latex">
+<dt><strong>abort</strong></dt>
+<dd class="defbody">
+Called by <a id="idx:abort0:2575"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.</dd>
+<dt><strong>erase</strong>(<var>DbRef</var>)</dt>
+<dd class="defbody">
+Called on an erased recorded database reference or clause. Note that a 
+retracted clauses is not immediately removed. Clauses are reclaimed by
+<a id="idx:garbagecollectclauses0:2576"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>, 
+which is normally executed automatially in the <code>gc</code> thread. 
+This specific channel is used by <a id="idx:clauseinfo5:2577"></a><span class="pred-ext">clause_info/5</span> 
+to reclaim source layout of reclaimed clauses. User applications should 
+typically use the <var>PredicateIndicator</var> channel.</dd>
+<dt><strong>break</strong>(<var>Action, ClauseRef, PCOffset</var>)</dt>
+<dd class="defbody">
+Traps events related to Prolog break points. See library
+<code>library(prolog_breakpoints)</code></dd>
+<dt><strong>frame_finished</strong>(<var>FrameRef</var>)</dt>
+<dd class="defbody">
+Indicates that a stack frame that has been examined using
+<a id="idx:prologcurrentframe1:2578"></a><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a>, <a id="idx:prologframeattribute3:2579"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+and friends has been deleted. Used by the source level debugger to avoid 
+that the stack view references non-existing frames.</dd>
+<dt><strong>thread_exit</strong>(<var>Thread</var>)</dt>
+<dd class="defbody">
+Globally registered channel that is called by any thread just before the 
+thread is terminated.</dd>
+<dt><strong>this_thread_exit</strong></dt>
+<dd class="defbody">
+Thread local version of the <code>thread_exit</code> channel that is 
+also used by the <code>at_exit(Closure)</code> option of
+<a id="idx:threadcreate3:2580"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
+<dt><strong>PredicateIndicator</strong>(<var>Action, ClauseRef</var>)</dt>
+<dd class="defbody">
+Track changes to a (dynamic) predicate. For example:
+
+<pre class="code">
+:- dynamic p/1.
+:- prolog_listen(p/1, updated(p/1)).
+
+updated(Pred, Action, Context) :-
+    format('Updated ~p: ~p ~p~n', [Pred, Action, Context]).
+</pre>
+
+<pre class="code">
+?- assert(p(a)).
+Updated p/1: assertz &lt;clause&gt;(0x55db261709d0)
+?- retractall(p(_)).
+Updated p/1: retractall start(user:p(_12294))
+Updated p/1: retract &lt;clause&gt;(0x55db261719c0)
+Updated p/1: retractall end(user:p(_12294))
+</pre>
+
+<dl class="latex">
+<dt><strong>asserta</strong></dt>
+<dt><strong>assertz</strong></dt>
+<dd class="defbody">
+A new clauses has been added as first (last) for the given predicate.
+</dd>
+<dt><strong>retract</strong></dt>
+<dd class="defbody">
+A clause was retracted from the given predicate using either
+<a id="idx:retract1:2581"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:erase1:2582"></a><a class="pred" href="db.html#erase/1">erase/1</a> 
+or <a id="idx:retractall1:2583"></a><a class="pred" href="db.html#retractall/1">retractall/1</a>.
+</dd>
+<dt><strong>retractall</strong></dt>
+<dd class="defbody">
+The begining and end of <a id="idx:retractall1:2584"></a><a class="pred" href="db.html#retractall/1">retractall/1</a> 
+is indicated with the <var>Action</var> <code>retractall</code>. The 
+context argument is <code>start(Head)</code> or <code>end(Head)</code>.
+</dd>
+<dt><strong>rollback</strong>(<var>Action</var>)</dt>
+<dd class="defbody">
+Issued when rolling back (discarding) a transaction. <var>Action</var> 
+is the local action being reverted and is one of <code>asserta</code>,
+<code>assertz</code> or <code>retract</code>. Context is the involved 
+clause. See <a id="idx:transaction1:2585"></a><a class="pred" href="db.html#transaction/1">transaction/1</a> 
+and <a id="idx:snapshot1:2586"></a><a class="pred" href="db.html#snapshot/1">snapshot/1</a>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="prolog_unlisten/2"><strong>prolog_unlisten</strong>(<var>+Channel, 
+:Closure</var>)</a></dt>
+<dd class="defbody">
+Remove matching closures registered with <a id="idx:prologlisten3:2587"></a><a class="pred" href="prolog-event.html#prolog_listen/3">prolog_listen/3</a>.
+</dd>
+</dl>
+
+<p></body></html>

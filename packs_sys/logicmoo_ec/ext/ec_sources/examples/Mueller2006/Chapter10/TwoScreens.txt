@@ -1,0 +1,2974 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter10/TwoScreens.e
+loading foundations/Root.e
+loading foundations/EC.e
+652 variables and 4016 clauses
+relsat solver
+10 models
+---
+model 1:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O2, L4).
++At(O2, L5).
+Happens(Move(O1, L1, L2), 1).
+2
+-At(O1, L1).
++At(O1, L2).
+Happens(Move(O1, L2, L1), 2).
+3
+-At(O1, L2).
++At(O1, L1).
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 0).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 2:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O1, L1, L2), 0).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O1, L1).
+-At(O2, L4).
++At(O1, L2).
++At(O2, L5).
+2
+Happens(Move(O1, L2, L1), 2).
+3
+-At(O1, L2).
++At(O1, L1).
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 3:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O2, L4).
++At(O2, L5).
+2
+3
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 0).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 4:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O1, L1, L2), 0).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O1, L1).
+-At(O2, L4).
++At(O1, L2).
++At(O2, L5).
+Happens(Move(O1, L2, L1), 1).
+2
+-At(O1, L2).
++At(O1, L1).
+3
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 5:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O1, L1, L2), 0).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O1, L1).
+-At(O2, L4).
++At(O1, L2).
++At(O2, L5).
+2
+3
+4
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L2), 3).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 6:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O2, L4).
++At(O2, L5).
+Happens(Move(O1, L1, L2), 1).
+2
+-At(O1, L1).
++At(O1, L2).
+3
+4
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 0).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L2), 3).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 7:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O1, L1, L2), 0).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O1, L1).
+-At(O2, L4).
++At(O1, L2).
++At(O2, L5).
+Happens(Move(O1, L2, L1), 1).
+2
+-At(O1, L2).
++At(O1, L1).
+Happens(Move(O1, L1, L2), 2).
+3
+-At(O1, L1).
++At(O1, L2).
+4
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 3).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 8:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O2, L4, L5), 0).
+1
+-At(O2, L4).
++At(O2, L5).
+2
+Happens(Move(O1, L1, L2), 2).
+3
+-At(O1, L1).
++At(O1, L2).
+4
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 0).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 3).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 1).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 9:
+0
+At(O1, L1).
+At(O2, L4).
+Happens(Move(O1, L1, L2), 0).
+1
+-At(O1, L1).
++At(O1, L2).
+Happens(Move(O1, L2, L1), 1).
+Happens(Move(O2, L4, L5), 1).
+2
+-At(O1, L2).
+-At(O2, L4).
++At(O1, L1).
++At(O2, L5).
+3
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 0).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+---
+model 10:
+0
+At(O1, L1).
+At(O2, L4).
+1
+Happens(Move(O2, L4, L5), 1).
+2
+-At(O2, L4).
++At(O2, L5).
+3
+Happens(Move(O1, L1, L2), 3).
+4
+-At(O1, L1).
++At(O1, L2).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Adjacent(L3, L4).
+Adjacent(L4, L3).
+Adjacent(L4, L5).
+Adjacent(L5, L4).
+Equal(O1, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L1, L4).
+!Adjacent(L1, L5).
+!Adjacent(L2, L2).
+!Adjacent(L2, L4).
+!Adjacent(L2, L5).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Adjacent(L3, L5).
+!Adjacent(L4, L1).
+!Adjacent(L4, L2).
+!Adjacent(L4, L4).
+!Adjacent(L5, L1).
+!Adjacent(L5, L2).
+!Adjacent(L5, L3).
+!Adjacent(L5, L5).
+!Equal(O1, O2).
+!Equal(O2, O1).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L1), 2).
+!Happens(Move(O1, L1, L1), 3).
+!Happens(Move(O1, L1, L2), 0).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L2), 2).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L1, L3), 2).
+!Happens(Move(O1, L1, L3), 3).
+!Happens(Move(O1, L1, L4), 0).
+!Happens(Move(O1, L1, L4), 1).
+!Happens(Move(O1, L1, L4), 2).
+!Happens(Move(O1, L1, L4), 3).
+!Happens(Move(O1, L1, L5), 0).
+!Happens(Move(O1, L1, L5), 1).
+!Happens(Move(O1, L1, L5), 2).
+!Happens(Move(O1, L1, L5), 3).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L1), 2).
+!Happens(Move(O1, L2, L1), 3).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L2), 2).
+!Happens(Move(O1, L2, L2), 3).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L2, L3), 1).
+!Happens(Move(O1, L2, L3), 2).
+!Happens(Move(O1, L2, L3), 3).
+!Happens(Move(O1, L2, L4), 0).
+!Happens(Move(O1, L2, L4), 1).
+!Happens(Move(O1, L2, L4), 2).
+!Happens(Move(O1, L2, L4), 3).
+!Happens(Move(O1, L2, L5), 0).
+!Happens(Move(O1, L2, L5), 1).
+!Happens(Move(O1, L2, L5), 2).
+!Happens(Move(O1, L2, L5), 3).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L1), 2).
+!Happens(Move(O1, L3, L1), 3).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L2), 2).
+!Happens(Move(O1, L3, L2), 3).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O1, L3, L3), 2).
+!Happens(Move(O1, L3, L3), 3).
+!Happens(Move(O1, L3, L4), 0).
+!Happens(Move(O1, L3, L4), 1).
+!Happens(Move(O1, L3, L4), 2).
+!Happens(Move(O1, L3, L4), 3).
+!Happens(Move(O1, L3, L5), 0).
+!Happens(Move(O1, L3, L5), 1).
+!Happens(Move(O1, L3, L5), 2).
+!Happens(Move(O1, L3, L5), 3).
+!Happens(Move(O1, L4, L1), 0).
+!Happens(Move(O1, L4, L1), 1).
+!Happens(Move(O1, L4, L1), 2).
+!Happens(Move(O1, L4, L1), 3).
+!Happens(Move(O1, L4, L2), 0).
+!Happens(Move(O1, L4, L2), 1).
+!Happens(Move(O1, L4, L2), 2).
+!Happens(Move(O1, L4, L2), 3).
+!Happens(Move(O1, L4, L3), 0).
+!Happens(Move(O1, L4, L3), 1).
+!Happens(Move(O1, L4, L3), 2).
+!Happens(Move(O1, L4, L3), 3).
+!Happens(Move(O1, L4, L4), 0).
+!Happens(Move(O1, L4, L4), 1).
+!Happens(Move(O1, L4, L4), 2).
+!Happens(Move(O1, L4, L4), 3).
+!Happens(Move(O1, L4, L5), 0).
+!Happens(Move(O1, L4, L5), 1).
+!Happens(Move(O1, L4, L5), 2).
+!Happens(Move(O1, L4, L5), 3).
+!Happens(Move(O1, L5, L1), 0).
+!Happens(Move(O1, L5, L1), 1).
+!Happens(Move(O1, L5, L1), 2).
+!Happens(Move(O1, L5, L1), 3).
+!Happens(Move(O1, L5, L2), 0).
+!Happens(Move(O1, L5, L2), 1).
+!Happens(Move(O1, L5, L2), 2).
+!Happens(Move(O1, L5, L2), 3).
+!Happens(Move(O1, L5, L3), 0).
+!Happens(Move(O1, L5, L3), 1).
+!Happens(Move(O1, L5, L3), 2).
+!Happens(Move(O1, L5, L3), 3).
+!Happens(Move(O1, L5, L4), 0).
+!Happens(Move(O1, L5, L4), 1).
+!Happens(Move(O1, L5, L4), 2).
+!Happens(Move(O1, L5, L4), 3).
+!Happens(Move(O1, L5, L5), 0).
+!Happens(Move(O1, L5, L5), 1).
+!Happens(Move(O1, L5, L5), 2).
+!Happens(Move(O1, L5, L5), 3).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L1), 2).
+!Happens(Move(O2, L1, L1), 3).
+!Happens(Move(O2, L1, L2), 0).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L2), 2).
+!Happens(Move(O2, L1, L2), 3).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L1, L3), 2).
+!Happens(Move(O2, L1, L3), 3).
+!Happens(Move(O2, L1, L4), 0).
+!Happens(Move(O2, L1, L4), 1).
+!Happens(Move(O2, L1, L4), 2).
+!Happens(Move(O2, L1, L4), 3).
+!Happens(Move(O2, L1, L5), 0).
+!Happens(Move(O2, L1, L5), 1).
+!Happens(Move(O2, L1, L5), 2).
+!Happens(Move(O2, L1, L5), 3).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L1), 2).
+!Happens(Move(O2, L2, L1), 3).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L2), 2).
+!Happens(Move(O2, L2, L2), 3).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L2, L3), 1).
+!Happens(Move(O2, L2, L3), 2).
+!Happens(Move(O2, L2, L3), 3).
+!Happens(Move(O2, L2, L4), 0).
+!Happens(Move(O2, L2, L4), 1).
+!Happens(Move(O2, L2, L4), 2).
+!Happens(Move(O2, L2, L4), 3).
+!Happens(Move(O2, L2, L5), 0).
+!Happens(Move(O2, L2, L5), 1).
+!Happens(Move(O2, L2, L5), 2).
+!Happens(Move(O2, L2, L5), 3).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L1), 2).
+!Happens(Move(O2, L3, L1), 3).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L2), 2).
+!Happens(Move(O2, L3, L2), 3).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!Happens(Move(O2, L3, L3), 2).
+!Happens(Move(O2, L3, L3), 3).
+!Happens(Move(O2, L3, L4), 0).
+!Happens(Move(O2, L3, L4), 1).
+!Happens(Move(O2, L3, L4), 2).
+!Happens(Move(O2, L3, L4), 3).
+!Happens(Move(O2, L3, L5), 0).
+!Happens(Move(O2, L3, L5), 1).
+!Happens(Move(O2, L3, L5), 2).
+!Happens(Move(O2, L3, L5), 3).
+!Happens(Move(O2, L4, L1), 0).
+!Happens(Move(O2, L4, L1), 1).
+!Happens(Move(O2, L4, L1), 2).
+!Happens(Move(O2, L4, L1), 3).
+!Happens(Move(O2, L4, L2), 0).
+!Happens(Move(O2, L4, L2), 1).
+!Happens(Move(O2, L4, L2), 2).
+!Happens(Move(O2, L4, L2), 3).
+!Happens(Move(O2, L4, L3), 0).
+!Happens(Move(O2, L4, L3), 1).
+!Happens(Move(O2, L4, L3), 2).
+!Happens(Move(O2, L4, L3), 3).
+!Happens(Move(O2, L4, L4), 0).
+!Happens(Move(O2, L4, L4), 1).
+!Happens(Move(O2, L4, L4), 2).
+!Happens(Move(O2, L4, L4), 3).
+!Happens(Move(O2, L4, L5), 0).
+!Happens(Move(O2, L4, L5), 2).
+!Happens(Move(O2, L4, L5), 3).
+!Happens(Move(O2, L5, L1), 0).
+!Happens(Move(O2, L5, L1), 1).
+!Happens(Move(O2, L5, L1), 2).
+!Happens(Move(O2, L5, L1), 3).
+!Happens(Move(O2, L5, L2), 0).
+!Happens(Move(O2, L5, L2), 1).
+!Happens(Move(O2, L5, L2), 2).
+!Happens(Move(O2, L5, L2), 3).
+!Happens(Move(O2, L5, L3), 0).
+!Happens(Move(O2, L5, L3), 1).
+!Happens(Move(O2, L5, L3), 2).
+!Happens(Move(O2, L5, L3), 3).
+!Happens(Move(O2, L5, L4), 0).
+!Happens(Move(O2, L5, L4), 1).
+!Happens(Move(O2, L5, L4), 2).
+!Happens(Move(O2, L5, L4), 3).
+!Happens(Move(O2, L5, L5), 0).
+!Happens(Move(O2, L5, L5), 1).
+!Happens(Move(O2, L5, L5), 2).
+!Happens(Move(O2, L5, L5), 3).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L1), 3).
+!ReleasedAt(At(O1, L1), 4).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L2), 3).
+!ReleasedAt(At(O1, L2), 4).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O1, L3), 3).
+!ReleasedAt(At(O1, L3), 4).
+!ReleasedAt(At(O1, L4), 0).
+!ReleasedAt(At(O1, L4), 1).
+!ReleasedAt(At(O1, L4), 2).
+!ReleasedAt(At(O1, L4), 3).
+!ReleasedAt(At(O1, L4), 4).
+!ReleasedAt(At(O1, L5), 0).
+!ReleasedAt(At(O1, L5), 1).
+!ReleasedAt(At(O1, L5), 2).
+!ReleasedAt(At(O1, L5), 3).
+!ReleasedAt(At(O1, L5), 4).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L1), 3).
+!ReleasedAt(At(O2, L1), 4).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L2), 3).
+!ReleasedAt(At(O2, L2), 4).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+!ReleasedAt(At(O2, L3), 3).
+!ReleasedAt(At(O2, L3), 4).
+!ReleasedAt(At(O2, L4), 0).
+!ReleasedAt(At(O2, L4), 1).
+!ReleasedAt(At(O2, L4), 2).
+!ReleasedAt(At(O2, L4), 3).
+!ReleasedAt(At(O2, L4), 4).
+!ReleasedAt(At(O2, L5), 0).
+!ReleasedAt(At(O2, L5), 1).
+!ReleasedAt(At(O2, L5), 2).
+!ReleasedAt(At(O2, L5), 3).
+!ReleasedAt(At(O2, L5), 4).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+TwoScreens: 2 predicates, 0 functions, 1 fluents, 1 events, 15 axioms
+encoding 1.4s
+solution 0.1s
+total 2.8s
+Discrete Event Calculus Reasoner 1.0

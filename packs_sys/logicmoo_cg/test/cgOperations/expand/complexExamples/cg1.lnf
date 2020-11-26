@@ -1,0 +1,3 @@
+[Action] -
+    -obj->[Intelligent_System]-chrc->[Hard],
+    -agnt->[Man]

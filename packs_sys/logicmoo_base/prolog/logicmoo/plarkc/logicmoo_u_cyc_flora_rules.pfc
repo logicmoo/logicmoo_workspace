@@ -1,0 +1,412 @@
+/*
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
+:- iriprefix{dc = "http://purl.org/dc/elements/1.1/"}.
+:- iriprefix{imp = "http://www.s.com/silk/implementation/"}.
+:- iriprefix{swrlb = "http://www.w3.org/2003/11/swrlb"}.
+:- iriprefix{s = "http://sw.s.com/2009/04/07/concept/"}.
+:- iriprefix{silkb = "http://vulcan.com/2008/silk-builtins#"}.
+//:- use_argumentation_theory{ogcle} .
+//- [ogclpe>>ogcle] .
+\overrides(X,Y) :- silk#overrides(X,Y) .
+\overrides(X,Y,Z,W) :- silk#overrides(X,Y,Z,W) .
+:- iriprefix{swrlb = "http://www.w3.org/2003/11/swrlb"}.
+*/
+
+:- install_constant_renamer_until_eof.
+
+impPred(istAsserted) .
+
+impPred(queryMt) .
+
+impPred(directVisible) .
+directVisible(MT) :- queryMt(MT) .
+
+impPred(mtVisible) .
+mtVisible(MT) :- directVisible(MT) .
+mtVisible(GENL) :- directVisible(SPEC) & sbhlSentence(genlMt(SPEC, GENL)) .
+mtVisible(MT) :- queryMt(iEverythingPSC) & sbhlSentence(isa(MT, 'Microtheory')) .
+
+impPred(assertedVis) .
+assertedVis(P) :- istAsserted(MT, P) & mtVisible(MT) .
+
+impPred(lookupSentence) .
+lookupSentence(ASENT) :- assertedVis(ASENT) .
+lookupSentence(ASENT) :- forwardSentence(ASENT) .
+
+impPred(forwardSentence) .
+forwardSentence(arity(R, (2))) :- mtVisible(iBaseKB) & removalSentence(isa(R, 'BinaryRelation')) .
+forwardSentence(isa(NART, COL)) :- mtVisible(iBaseKB) & removalSentence(natFunction(NART, F)) & removalSentence(resultIsa(F, COL)) .
+
+
+impPred(destructureFormula) .
+destructureFormula(t(TERM), R, ARGS) :- nonvar(TERM),!,destructureFormula(TERM, R, ARGS)
+destructureFormula(TERM, R, ARGS) :- TERM =.. [t, R | ARGS],!.
+destructureFormula([R|ARGS], R, ARGS) :- !.
+destructureFormula(TERM, R, [A|RGS]) :- TERM =.. [R | [A|RGS]].
+/*
+destructureFormula(TERM, R, ARGS) :- TERM = t(R,A1,A2), ARGS = [A1,A2].
+destructureFormula(TERM, R, ARGS) :- TERM = t(R,A1,A2,A3), ARGS = [A1,A2,A3].
+destructureFormula(TERM, R, ARGS) :- TERM = t(R,A1,A2,A3,A4), ARGS = [A1,A2,A3,A4].
+destructureFormula(TERM, R, ARGS) :- TERM = t(R,A1,A2,A3,A4,A5), ARGS = [A1,A2,A3,A4,A5].
+destructureFormula(TERM, R, ARGS) :- TERM = t(R,A1,A2,A3,A4,A5,A6), ARGS = [A1,A2,A3,A4,A5,A6].
+*/
+
+impPred(ftNonAtomic) .
+ftNonAtomic(X) :- destructureFormula(X, _R, _ARGS) .
+ftNonAtomic(X) :- ftGround(X) & not_ftAtomic(X) .
+
+impPred(formulaArity) .
+formulaArity(FORM, ARITY) :- destructureFormula(FORM, RELN, ARGS) & listLength(ARITY, ARGS) .
+
+impPred(operatorFormulas) .
+operatorFormulas(R, TERM) :- not_ftGround(TERM) & destructureFormula(TERM, R, _ARGS) & ftGround(R) .
+operatorFormulas(R, TERM) :- ftGround(TERM) & ftNonAtomic(TERM) & arg0((1), TERM, R) .
+
+impPred(argN) .
+argN(ARG, ARGNUM, NAT) :- ftGround(ARGNUM) & ftInteger(ARGNUM) & ARGNUM  >=  (0) & ftGround(NAT) & ftNonAtomic(NAT) & _INDEX is (ARGNUM  +  (1)) & arg0(_INDEX, NAT, ARG) .
+argN(ARG, ARGNUM, NAT) :- ftGround(NAT) & ftNonAtomic(NAT) & not_ftGround(ARGNUM) & mud:listMember([(1), (2), (3), (4), (5), (6)], _INDEX) & arg0(_INDEX, NAT, ARG) & ARGNUM is (_INDEX  -  (1)) .
+
+impPred(listMember) .
+listMember(X, [X | _Y]) :- ftGround(X) .
+listMember(X, [_Y | Z]) :- listMember(X, Z) .
+
+impPred(setElement) .
+setElement(X, SetOfListMembersFn(LIST)) :- ftList(LIST) & listMember(X, LIST) .
+
+impPred(listLength) .
+listLength((0), []) .
+listLength(LEN, [_FIRST | REST]) :- listLength(RL, REST) & LEN is (RL  +  (1)) .
+
+impPred(setCardinality) .
+setCardinality(CARD, SetOfListMembersFn(LIST)) :- ftGround(LIST) & ftList(LIST) & listLength(CARD, LIST) .
+
+impPred(operatorInList) .
+operatorInList(FORMULA, LIST) :- operatorFormulas(RELN, FORMULA) & listMember(RELN, LIST) .
+
+impPred(digitString) .
+digitString((0), ("0")) .
+digitString((1), ("1")) .
+digitString((2), ("2")) .
+digitString((3), ("3")) .
+digitString((4), ("4")) .
+digitString((5), ("5")) .
+digitString((6), ("6")) .
+digitString((7), ("7")) .
+digitString((8), ("8")) .
+digitString((9), ("9")) .
+~ digitString(N, S) :- naf digitString(N, S) .
+
+impPred(toInteger) .
+toInteger(N, STRING) :- digitString(N, STRING) .
+toInteger(N, STRING) :- swrlb_stringLength((2), STRING) & digitString(TENS, TD) & swrlb_substring(TD, STRING, (1), (1)) & digitString(ONES, OD) & swrlb_substring(OD, STRING, (2), (1)) & N is (((10)  *  TENS)  +  ONES) .
+toInteger(N, STRING) :- swrlb_stringLength((3), STRING) & digitString(HUNS, HD) & swrlb_substring(HD, STRING, (1), (1)) & digitString(TENS, TD) & swrlb_substring(TD, STRING, (2), (1)) & digitString(ONES, OD) & swrlb_substring(OD, STRING, (3), (1)) & N is ((((100)  *  HUNS)  +  (((10)  *  TENS)  +  ONES))) .
+toInteger(N, STRING) :- swrlb_stringLength((2), STRING) & swrlb_substring(("-"), STRING, (1), (1)) & digitString(ONES, OD) & swrlb_substring(OD, STRING, (2), (1)) & N is ((-1)  *  ONES) .
+toInteger(N, STRING) :- swrlb_stringLength((3), STRING) & swrlb_substring(("-"), STRING, (1), (1)) & digitString(TENS, TD) & swrlb_substring(TD, STRING, (2), (1)) & digitString(ONES, OD) & swrlb_substring(OD, STRING, (3), (1)) & N is ((-1)  *  (((10)  *  TENS)  +  ONES)) .
+toInteger(N, STRING) :- swrlb_stringLength((4), STRING) & swrlb_substring(("-"), STRING, (1), (1)) & digitString(HUNS, HD) & swrlb_substring(HD, STRING, (2), (1)) & digitString(TENS, TD) & swrlb_substring(TD, STRING, (3), (1)) & digitString(ONES, OD) & swrlb_substring(OD, STRING, (4), (1)) & N is ((-1)  *  (((100)  *  HUNS)  +  (((10)  *  TENS)  +  ONES))) .
+~ toInteger(N, STRING) :- naf toInteger(N, STRING) .
+
+impPred(integerBetween) .
+integerBetween(LOW, LOW, HI) :- ftInteger(HI) & ftInteger(LOW) & HI  >=  LOW .
+integerBetween(LOW, MID, HI) :- ftInteger(HI) & ftInteger(LOW) & HI  >=  LOW & integerBetween(LOW, LOWMID, HI) & MID is LOWMID  +  (1) & HI  >=  MID .
+
+impPred(directIsa) .
+directIsa(OBJ, COL) :- lookupSentence(isa(OBJ, COL)) .
+directIsa(NAT, COL) :- operatorFormulas(FUNC, NAT) & lookupSentence(resultIsa(FUNC, COL)) .
+
+impPred(directQuotedIsa) .
+directQuotedIsa(OBJ, COL) :- lookupSentence(quotedIsa(OBJ, COL)) .
+
+impPred(directGenls) .
+directGenls(SPEC, GENL) :- lookupSentence(genls(SPEC, GENL)) .
+directGenls(NAT, COL) :- operatorFormulas(FUNC, NAT) & lookupSentence(resultGenl(FUNC, COL)) .
+
+impPred(disjointWithLink) .
+disjointWithLink(A, B) :- lookupSentence(disjointWith(A, B)) .
+disjointWithLink(A, B) :- lookupSentence(disjointWith(B, A)) .
+
+sbhlSentence(isa(OBJ, COL)) :- directIsa(OBJ, COL) .
+sbhlSentence(isa(X, Thing)) :- ftGround(X) .
+sbhlSentence(isa(OBJ, GENL)) :- ftGround(OBJ) & directIsa(OBJ, SPEC) & sbhlSentence(genls(SPEC, GENL)) .
+sbhlSentence(isa(OBJ, GENL)) :- ftGround(GENL) & not_ftGround(OBJ) & sbhlSentence(genls(SPEC, GENL)) & directIsa(OBJ, SPEC) .
+sbhlSentence(naf(isa(TERM, COL))) :- ftGround(TERM) & ftGround(COL) & naf sbhlSentence(isa(TERM, COL)) & directIsa(TERM, NEAR) & sbhlSentence(disjointWith(NEAR, COL)) .
+sbhlSentence(genls(SPEC, GENL)) :- directGenls(SPEC, GENL) .
+sbhlSentence(genls(COL, COL)) :- sbhlSentence(isa(COL, Collection)) .
+sbhlSentence(genls(LOW, HIGH)) :- ftGround(LOW) & directGenls(LOW, MID) & sbhlSentence(genls(MID, HIGH)) .
+sbhlSentence(genls(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & directGenls(MID, HIGH) & sbhlSentence(genls(LOW, MID)) .
+sbhlSentence(disjointWith(A, B)) :- not_ftGround(A) & ftGround(B) & sbhlSentence(disjointWith(B, A)) .
+sbhlSentence(disjointWith(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genls(LOWA, A)) & disjointWithLink(A, B) & sbhlSentence(genls(LOWB, B)) .
+sbhlSentence(genlPreds(SPEC, GENL)) :- lookupSentence(genlPreds(SPEC, GENL)) .
+sbhlSentence(genlPreds(P, P)) :- sbhlSentence(isa(P, Predicate)) .
+sbhlSentence(genlPreds(LOW, HIGH)) :- ftGround(LOW) & lookupSentence(genlPreds(LOW, MID)) & sbhlSentence(genlPreds(MID, HIGH)) .
+sbhlSentence(genlPreds(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & lookupSentence(genlPreds(MID, HIGH)) & sbhlSentence(genlPreds(LOW, MID)) .
+sbhlSentence(genlPreds(LOW, HIGH)) :- ftGround(LOW) & lookupSentence(genlInverse(LOW, MID)) & sbhlSentence(genlInverse(MID, HIGH)) .
+sbhlSentence(genlPreds(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & lookupSentence(genlInverse(MID, HIGH)) & sbhlSentence(genlInverse(LOW, MID)) .
+sbhlSentence(genlInverse(SPEC, GENL)) :- lookupSentence(genlInverse(SPEC, GENL)) .
+sbhlSentence(genlInverse(P, P)) :- sbhlSentence(isa(P, 'SymmetricBinaryPredicate')) .
+sbhlSentence(genlInverse(LOW, HIGH)) :- ftGround(LOW) & lookupSentence(genlPreds(LOW, MID)) & sbhlSentence(genlInverse(MID, HIGH)) .
+sbhlSentence(genlInverse(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & lookupSentence(genlPreds(MID, HIGH)) & sbhlSentence(genlInverse(LOW, MID)) .
+sbhlSentence(genlInverse(LOW, HIGH)) :- ftGround(LOW) & lookupSentence(genlInverse(LOW, MID)) & sbhlSentence(genlPreds(MID, HIGH)) .
+sbhlSentence(genlInverse(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & lookupSentence(genlInverse(MID, HIGH)) & sbhlSentence(genlPreds(LOW, MID)) .
+
+impPred(negationPredsLink) .
+negationPredsLink(A, B) :- lookupSentence(negationPreds(A, B)) .
+negationPredsLink(A, B) :- lookupSentence(negationPreds(B, A)) .
+
+impPred(negationInverseLink) .
+negationInverseLink(A, B) :- lookupSentence(negationInverse(A, B)) .
+negationInverseLink(A, B) :- lookupSentence(negationInverse(B, A)) .
+negationInverseLink(A, A) :- sbhlSentence(isa(A, 'AsymmetricBinaryPredicate')) .
+
+sbhlSentence(negationPreds(A, B)) :- not_ftGround(A) & ftGround(B) & sbhlSentence(negationPreds(B, A)) .
+sbhlSentence(negationPreds(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlPreds(LOWA, A)) & negationPredsLink(A, B) & sbhlSentence(genlPreds(LOWB, B)) .
+sbhlSentence(negationPreds(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlPreds(LOWA, A)) & negationInverseLink(A, B) & sbhlSentence(genlInverse(LOWB, B)) .
+sbhlSentence(negationPreds(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlInverse(LOWA, A)) & negationPredsLink(A, B) & sbhlSentence(genlInverse(LOWB, B)) .
+sbhlSentence(negationPreds(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlInverse(LOWA, A)) & negationInverseLink(A, B) & sbhlSentence(genlPreds(LOWB, B)) .
+sbhlSentence(negationInverse(A, B)) :- not_ftGround(A) & ftGround(B) & sbhlSentence(negationInverse(B, A)) .
+sbhlSentence(negationInverse(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlPreds(LOWA, A)) & negationInverseLink(A, B) & sbhlSentence(genlPreds(LOWB, B)) .
+sbhlSentence(negationInverse(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlPreds(LOWA, A)) & negationPredsLink(A, B) & sbhlSentence(genlInverse(LOWB, B)) .
+sbhlSentence(negationInverse(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlInverse(LOWA, A)) & negationPredsLink(A, B) & sbhlSentence(genlPreds(LOWB, B)) .
+sbhlSentence(negationInverse(LOWA, LOWB)) :- ftGround(LOWA) & sbhlSentence(genlInverse(LOWA, A)) & negationInverseLink(A, B) & sbhlSentence(genlInverse(LOWB, B)) .
+
+impPred(directGenlMt) .
+directGenlMt(SPEC, GENL) :- lookupSentence(genlMt(SPEC, GENL)) .
+directGenlMt(MtSpace(MONAD, MtTimeDimFn(TIME)), MONAD) :- ftGround(MONAD) & ftGround(TIME) & naf operatorInList(MONAD, [MtSpace, MtTimeDimFn]) .
+directGenlMt(MtSpace(MtTimeDimFn(TIME), MONAD), MONAD) :- ftGround(MONAD) & ftGround(TIME) & naf operatorInList(MONAD, [MtSpace, MtTimeDimFn]) .
+directGenlMt(MtSpace(MtTimeDimFn(TIME), MONAD), MtSpace(MONAD, MtTimeDimFn(TIME))) :- ftGround(MONAD) & ftGround(TIME) & naf operatorInList(MONAD, [MtSpace, MtTimeDimFn]) .
+directGenlMt(MtSpace(MONAD, MtTimeDimFn(TIME)), MtSpace(MtTimeDimFn(TIME), MONAD)) :- ftGround(MONAD) & ftGround(TIME) & naf operatorInList(MONAD, [MtSpace, MtTimeDimFn]) .
+
+sbhlSentence(genlMt(SPEC, GENL)) :- directGenlMt(SPEC, GENL) .
+sbhlSentence(genlMt(MT, MT)) :- sbhlSentence(isa(MT, 'Microtheory')) .
+sbhlSentence(genlMt(LOW, HIGH)) :- ftGround(LOW) & directGenlMt(LOW, MID) & sbhlSentence(genlMt(MID, HIGH)) .
+sbhlSentence(genlMt(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & directGenlMt(MID, HIGH) & sbhlSentence(genlMt(LOW, MID)) .
+
+impPred(indirectIsa) .
+indirectIsa(OBJ, FAR) :- ftGround(OBJ) & directIsa(OBJ, NEAR) & sbhlSentence(genls(NEAR, FAR)) & FAR != NEAR .
+indirectIsa(OBJ, FAR) :- not_ftGround(OBJ) & ftGround(FAR) & sbhlSentence(genls(NEAR, FAR)) & directIsa(OBJ, NEAR) & FAR != NEAR .
+sbhlSentence(nearestIsa(OBJ, NEAR)) :- directIsa(OBJ, NEAR) & naf indirectIsa(OBJ, NEAR) .
+
+impPred(indirectGenls) .
+indirectGenls(COL, FAR) :- ftGround(COL) & directGenls(COL, NEAR) & sbhlSentence(genls(NEAR, FAR)) & FAR != NEAR .
+indirectGenls(COL, FAR) :- not_ftGround(COL) & ftGround(FAR) & sbhlSentence(genls(NEAR, FAR)) & directGenls(COL, NEAR) & FAR != NEAR .
+sbhlSentence(nearestGenls(COL, NEAR)) :- directGenls(COL, NEAR) & naf indirectGenls(COL, NEAR) .
+
+impPred(quotedDefnAdmits) .
+quotedDefnAdmits(X, SubLInteger) :- ftGround(X) & ftInteger(X) .
+quotedDefnAdmits(X, SubLRealNumber) :- ftGround(X) & ftFloat(X) .
+quotedDefnAdmits(X, SubLString) :- ftGround(X) & ftString(X) .
+quotedDefnAdmits(X, ExtentionalList) :- ftGround(X) & ftList(X) .
+
+impPred(defnAdmits) .
+defnAdmits(X, Integer) :- quotedDefnAdmits(X, SubLInteger) .
+defnAdmits(X, RealNumber) :- quotedDefnAdmits(X, SubLRealNumber) .
+defnAdmits(X, CharacterString) :- quotedDefnAdmits(X, SubLString) .
+defnAdmits(X, List) :- quotedDefnAdmits(X, ExtentionalList) .
+
+impPred(quotedDefnSentence) .
+quotedDefnSentence(quotedIsa(X, COL)) :- quotedDefnAdmits(X, DCOL) & sbhlSentence(genls(DCOL, COL)) .
+quotedDefnSentence(naf(quotedIsa(X, COL))) :- quotedDefnAdmits(X, DCOL) & sbhlSentence(disjointWith(DCOL, COL)) .
+
+impPred(defnSentence) .
+defnSentence(isa(X, COL)) :- defnAdmits(X, DCOL) & sbhlSentence(genls(DCOL, COL)) .
+defnSentence(naf(isa(X, COL))) :- defnAdmits(X, DCOL) & sbhlSentence(disjointWith(DCOL, COL)) .
+sbhlSentence(quotedIsa(X, COL)) :- quotedDefnSentence(quotedIsa(X, COL)) .
+sbhlSentence(naf(quotedIsa(X, COL))) :- quotedDefnSentence(naf(quotedIsa(X, COL))) .
+directIsa(X, COL) :- defnAdmits(X, COL) .
+sbhlSentence(isa(X, COL)) :- defnSentence(isa(X, COL)) .
+sbhlSentence(naf(isa(X, COL))) :- defnSentence(naf(isa(X, COL))) .
+directQuotedIsa(X, COL) :- quotedDefnAdmits(X, COL) .
+sbhlSentence(quotedIsa(X, COL)) :- quotedDefnSentence(quotedIsa(X, COL)) .
+sbhlSentence(naf(quotedIsa(X, COL))) :- quotedDefnSentence(naf(quotedIsa(X, COL))) .
+defnAdmits(X, NonNegativeInteger) :- defnAdmits(X, Integer) & X  >=  (0) .
+defnAdmits(X, PositiveInteger) :- defnAdmits(X, Integer) & X  >  (0) .
+
+impPred(ftAtomicSentence) .
+ftAtomicSentence(ASENT) :- operatorFormulas(PRED, ASENT) & ftGround(PRED) .
+
+impPred(wffRejectedArgument) .
+wffRejectedArgument(TERM, N, RELN) :- ftGround(TERM) & sbhlSentence(isa(RELN, 'Relation')) & lookupSentence(argIsa(RELN, N, COL)) & sbhlSentence(naf(isa(TERM, COL))) .
+wffRejectedArgument(TERM, N, RELN) :- ftGround(TERM) & sbhlSentence(isa(RELN, 'Relation')) & lookupSentence(argGenl(RELN, N, COL)) & sbhlSentence(naf(genls(TERM, COL))) .
+
+impPred(wffAdmittedArgument) .
+wffAdmittedArgument(TERM, N, RELN) :- ftGround(TERM) & sbhlSentence(isa(RELN, 'Relation')) & lookupSentence(arity(RELN, MAX)) & integerBetween((1), N, MAX) & naf wffRejectedArgument(TERM, N, RELN) .
+
+impPred(wffRejectedSentence) .
+wffRejectedSentence(FORMULA) :- operatorFormulas(RELN, FORMULA) & formulaArity(FORMULA, ACTUAL) & lookupSentence(arity(RELN, ARITY)) & ARITY != ACTUAL .
+wffRejectedSentence(FORMULA) :- ftGround(FORMULA) & operatorFormulas(RELN, FORMULA) & formulaArity(FORMULA, ACTUAL) & integerBetween((1), N, ACTUAL) & argN(TERM, N, FORMULA) & wffRejectedArgument(TERM, N, RELN) .
+
+impPred(wffAdmittedSentence) .
+wffAdmittedSentence(SENT) :- naf rejectedSentence(SENT) .
+
+impPred(gpLookupSentence) .
+gpLookupSentence(ASENT) :- ftAtomicSentence(ASENT) & destructureFormula(ASENT, P, ARGS) & sbhlSentence(genlPreds(SPEC, P)) & destructureFormula(ASENT2, SPEC, ARGS) & lookupSentence(ASENT2) .
+gpLookupSentence(t(P,ARG1, ARG2)) :- sbhlSentence(isa(P, 'BinaryPredicate')) & sbhlSentence(genlInverse(SPEC, P)) & lookupSentence(t(P,ARG2, ARG1)) .
+gpLookupSentence(naf(ASENT)) :- ftAtomicSentence(ASENT) & destructureFormula(ASENT, P, ARGS) & sbhlSentence(genlPreds(P, GENL)) & destructureFormula(ASENT2, GENL, ARGS) & lookupSentence(naf(ASENT2)) .
+gpLookupSentence(naf(t(P,ARG1, ARG2))) :- sbhlSentence(isa(P, 'BinaryPredicate')) & sbhlSentence(genlInverse(P, GENL)) & lookupSentence(naf(t(GENL,ARG2, ARG1))) .
+
+impPred(transitivityLink) .
+transitivityLink(t(PTRANS,A, B)) :- gpLookupSentence(t(PTRANS,A, B)) .
+
+impPred(transitivityWalk1to2) .
+transitivityWalk1to2(t(PTRANS,A, B)) :- transitivityLink(t(PTRANS,A, B)) .
+transitivityWalk1to2(t(PTRANS,A, C)) :- transitivityLink(t(PTRANS,A, B)) & transitivityWalk1to2(t(PTRANS,C, C)) .
+
+impPred(transitivityWalk2to1) .
+transitivityWalk2to1(t(PTRANS,A, B)) :- transitivityLink(t(PTRANS,A, B)) .
+transitivityWalk2to1(t(PTRANS,A, C)) :- transitivityLink(t(PTRANS,B, C)) & transitivityWalk2to1(t(PTRANS,A, B)) .
+
+impPred(transitivityFanoutArg) .
+transitivityFanoutArg(PRED, N) :- lookupSentence(fanOutArg(PRED, N)) .
+transitivityFanoutArg(PRED, (1)) :- sbhlSentence(isa(PRED, 'BinaryPredicate')) & naf transitivityFanoutArg(PRED, (2)) .
+
+impPred(transitivitySentence) .
+transitivitySentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_hlPred(PTRANS) & ftGround(A) & not_ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivityLink(t(PTRANS,A, B)) & transitivityWalk1to2(t(PTRANS,B, C)) .
+transitivitySentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_ftGround(A) & ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivityLink(t(PTRANS,B, C)) & transitivityWalk2to1(t(PTRANS,A, B)) .
+transitivitySentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_hlPred(PTRANS) & ftGround(A) & ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivityFanoutArg(PTRANS, (1)) & transitivityLink(t(PTRANS,A, B)) & transitivityWalk1to2(t(PTRANS,B, C)) .
+transitivitySentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_hlPred(PTRANS) & ftGround(A) & ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivityFanoutArg(PTRANS, (2)) & transitivityLink(t(PTRANS,B, C)) & transitivityWalk2to1(t(PTRANS,A, B)) .
+
+impPred(decidableAsent) .
+decidableAsent(ASENT) :- ftGround(ASENT) & ftAtomicSentence(ASENT) & operatorFormulas(PRED, ASENT) & gpLookupSentence(completeExtentDecidable(PRED)) .
+decidableAsent(ASENT) :- not_ftGround(ASENT) & ftAtomicSentence(ASENT) & operatorFormulas(PRED, ASENT) & gpLookupSentence(completeExtentEnumerable(PRED)) .
+decidableAsent(isa(OBJ, COL)) :- not_ftGround(OBJ) & ftGround(COL) & gpLookupSentence(completelyEnumerableCollection(COL)) .
+decidableAsent(isa(OBJ, COL)) :- ftGround(OBJ) & ftGround(COL) & gpLookupSentence(completelyDecidableCollection(COL)) .
+
+impPred(tvaPredicate) .
+tvaPredicate(PRED) :- not_hlPred(PRED) & assertedVis(transitiveViaArg(PRED, _TRANS, _ARGNUM)) .
+tvaPredicate(PRED) :- not_hlPred(PRED) & assertedVis(transitiveViaArgInverse(PRED, _TRANS, _ARGNUM)) .
+
+impPred(tvaSentence) .
+tvaSentence(t(P,NEW1)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (1))) & removalSentence(t(LINK,ARG1, NEW1)) & ARG1 != NEW1 & removalSentence(t(P,ARG1)) .
+tvaSentence(t(P,NEW1, ARG2)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (1))) & removalSentence(t(P,ARG1, ARG2)) & ARG1 != NEW1 & removalSentence(t(LINK,ARG1, NEW1)) .
+tvaSentence(t(P,ARG1, NEW2)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (2))) & removalSentence(t(P,ARG1, ARG2)) & ARG1 != NEW2 & removalSentence(t(LINK,ARG2, NEW2)) .
+tvaSentence(t(P,NEW1, ARG2, ARG3)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (1))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG1 != NEW1 & removalSentence(t(LINK,ARG1, NEW1)) .
+tvaSentence(t(P,ARG1, NEW2, ARG3)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (2))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG2 != NEW2 & removalSentence(t(LINK,ARG2, NEW2)) .
+tvaSentence(t(P,ARG1, ARG2, NEW3)) :- tvaPredicate(P) & assertedVis(transitiveViaArg(P, LINK, (3))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG3 != NEW3 & removalSentence(t(LINK,ARG3, NEW3)) .
+tvaSentence(t(P,NEW1)) :- not_hlPred(P) & assertedVis(transitiveViaArgInverse(P, LINK, (1))) & removalSentence(t(LINK,NEW1, ARG1)) & ARG1 != NEW1 & removalSentence(t(P,ARG1)) .
+tvaSentence(t(P,NEW1, ARG2)) :- tvaPredicate(P) & assertedVis(transitiveViaArgInverse(P, LINK, (1))) & removalSentence(t(P,ARG1, ARG2)) & ARG1 != NEW1 & removalSentence(t(LINK,NEW1, ARG1)) .
+tvaSentence(t(P,ARG1, NEW2)) :- tvaPredicate(P) & assertedVis(transitiveViaArgInverse(P, LINK, (2))) & removalSentence(t(P,ARG1, ARG2)) & ARG2 != NEW2 & removalSentence(t(LINK,NEW2, ARG2)) .
+tvaSentence(t(P,NEW1, ARG2, ARG3)) :- tvaPredicate(P) & assertedVis(transitiveViaArgInverse(P, LINK, (1))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG1 != NEW1 & removalSentence(t(LINK,NEW1, ARG1)) .
+tvaSentence(t(P,ARG1, NEW2, ARG3)) :- tvaPredicate(P) & assertedVis(transitiveViaArgInverse(P, LINK, (2))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG2 != NEW2 & removalSentence(t(LINK,NEW2, ARG2)) .
+tvaSentence(t(P,ARG1, ARG2, NEW3)) :- tvaPredicate(P) & assertedVis(transitiveViaArgInverse(P, LINK, (3))) & removalSentence(t(P,ARG1, ARG2, ARG3)) & ARG3 != NEW3 & removalSentence(t(LINK,NEW3, ARG3)) .
+
+impPred(evaluatableFunction) .
+evaluatableFunction(F) :- sbhlSentence(isa(F, 'EvaluatableFunction')) .
+
+impPred(evaluatablePredicate) .
+evaluatablePredicate(P) :- sbhlSentence(isa(P, 'EvaluatablePredicate')) .
+
+impPred(evaluateTerm) .
+evaluateTerm(ANS, PlusFn(X, Y)) :- ftNumber(X) & ftNumber(Y) & ANS is (X  +  Y) .
+evaluateTerm(ANS, DifferenceFn(X, Y)) :- ftNumber(X) & ftNumber(Y) & ANS is (X  -  Y) .
+evaluateTerm(ANS, TimesFn(X, Y)) :- ftNumber(X) & ftNumber(Y) & ANS is (X  *  Y) .
+evaluateTerm(INT, QuotientFn(X, Y)) :- ftNumber(X) & ftNumber(Y) & ANS is (X  /  Y) & swrlb_round(INT, ANS) & X is (INT  *  Y) .
+evaluateTerm(ANS, QuotientFn(X, Y)) :- ftNumber(X) & ftNumber(Y) & ANS is (X  /  Y) & swrlb_round(INT, ANS) & naf X is (INT  *  Y) .
+
+impPred(evaluateSentence) .
+evaluateSentence(different(X1, X2)) :- ftGround([X1, X2]) & naf X1 =:= X2 .
+evaluateSentence(different(X1, X2, X3)) :- ftGround([X1, X2, X3]) & naf X1 =:= X2 & naf X1 =:= X3 & naf X2 =:= X3 .
+evaluateSentence(differentSymbols(X1, X2)) :- ftGround([X1, X2]) & X1 != X2 .
+evaluateSentence(differentSymbols(X1, X2, X3)) :- ftGround([X1, X2, X3]) & X1 != X2 & X1 != X3 & X2 != X3 .
+evaluateSentence(numericallyEqual(NUM1, NUM2)) :- ftGround([NUM1, NUM2]) & ftNumber(NUM1) & ftNumber(NUM2) & NUM1 = NUM2 .
+evaluateSentence(greaterThan(BIG, SMALL)) :- ftGround([BIG, SMALL]) & ftNumber(BIG) & ftNumber(SMALL) & BIG  >  SMALL .
+evaluateSentence(greaterThanOrEqualTo(BIG, SMALL)) :- evaluateSentence(greaterThan(BIG, SMALL)) .
+evaluateSentence(greaterThanOrEqualTo(BIG, SMALL)) :- evaluateSentence(numericallyEqual(BIG, SMALL)) .
+evaluateSentence(lessThan(SMALL, BIG)) :- evaluateSentence(greaterThan(BIG, SMALL)) .
+evaluateSentence(lessThanOrEqualTo(SMALL, BIG)) :- evaluateSentence(greaterThanOrEqualTo(BIG, SMALL)) .
+
+impPred(removalPredicate) .
+removalPredicate(P) :- ftGround(P) & naf impPred(P) & naf backchainRequired(P) .
+
+
+impPred(removalSentence) .
+t(P|Rest) :- removalPredicate(P) & removalSentence(t(P|Rest)) .
+t(P,ARG1) :- removalPredicate(P) & removalSentence(t(P,ARG1)) .
+t(P,ARG1, ARG2) :- removalPredicate(P) & removalSentence(t(P,ARG1, ARG2)) .
+t(P,ARG1, ARG2, ARG3) :- removalPredicate(P) & removalSentence(t(P,ARG1, ARG2, ARG3)) .
+t(P,ARG1, ARG2, ARG3, ARG4) :- removalPredicate(P) & removalSentence(t(P,ARG1, ARG2, ARG3, ARG4)) .
+~ t(P|Rest) :- removalPredicate(P) & removalSentence(naf(t(P|Rest))) .
+~ t(P,ARG1) :- removalPredicate(P) & removalSentence(naf(t(P,ARG1))) .
+~ t(P,ARG1, ARG2) :- removalPredicate(P) & removalSentence(naf(t(P,ARG1, ARG2))) .
+~ t(P,ARG1, ARG2, ARG3) :- removalPredicate(P) & removalSentence(naf(t(P,ARG1, ARG2, ARG3))) .
+~ t(P,ARG1, ARG2, ARG3, ARG4) :- removalPredicate(P) & removalSentence(naf(t(P,ARG1, ARG2, ARG3, ARG4))) .
+
+removalSentence(ASENT) :- ftAtomicSentence(ASENT) & lookupSentence(ASENT) .
+removalSentence(naf(ASENT)) :- ftAtomicSentence(ASENT) & lookupSentence(naf(ASENT)) .
+removalSentence(ASENT) :- ftAtomicSentence(ASENT) & gpLookupSentence(ASENT) .
+removalSentence(naf(t(P,ARG1))) :- not_hlPred(P) & sbhlSentence(negationPreds(P, NOTP)) & lookupSentence(t(NOTP,ARG1)) .
+removalSentence(naf(t(P,ARG1, ARG2))) :- not_hlPred(P) & sbhlSentence(negationPreds(P, NOTP)) & lookupSentence(t(NOTP,ARG1, ARG2)) .
+removalSentence(naf(t(P,ARG1, ARG2, ARG3))) :- not_hlPred(P) & sbhlSentence(negationPreds(P, NOTP)) & lookupSentence(t(NOTP,ARG1, ARG2, ARG3)) .
+removalSentence(naf(t(P,ARG1, ARG2))) :- not_hlPred(P) & sbhlSentence(negationInverse(P, NOTP)) & lookupSentence(t(NOTP,ARG2, ARG1)) .
+removalSentence(isa(OBJ, COL)) :- ftGround(OBJ) & ftGround(COL) & sbhlSentence(isa(OBJ, COL)) .
+removalSentence(naf(isa(OBJ, COL))) :- ftGround(OBJ) & ftGround(COL) & sbhlSentence(naf(isa(OBJ, COL))) .
+removalSentence(isa(OBJ, COL)) :- ftGround(OBJ) & not_ftGround(COL) & sbhlSentence(isa(OBJ, COL)) .
+removalSentence(isa(OBJ, COL)) :- ftGround(COL) & not_ftGround(OBJ) & sbhlSentence(isa(OBJ, COL)) .
+removalSentence(nearestIsa(OBJ, COL)) :- ftGround(OBJ) & not_ftGround(COL) & sbhlSentence(nearestIsa(OBJ, COL)) .
+removalSentence(genls(SPEC, GENL)) :- ftGround(SPEC) & ftGround(GENL) & sbhlSentence(genls(SPEC, GENL)) .
+removalSentence(naf(genls(SPEC, GENL))) :- ftGround(SPEC) & ftGround(GENL) & sbhlSentence(naf(genls(SPEC, GENL))) .
+removalSentence(genls(SPEC, GENL)) :- ftGround(SPEC) & not_ftGround(GENL) & sbhlSentence(genls(SPEC, GENL)) .
+removalSentence(genls(SPEC, GENL)) :- ftGround(GENL) & not_ftGround(SPEC) & sbhlSentence(genls(SPEC, GENL)) .
+removalSentence(disjointWith(COL1, COL2)) :- ftGround(COL1) & ftGround(COL2) & sbhlSentence(disjointWith(COL1, COL2)) .
+removalSentence(genlPreds(LOW, HIGH)) :- ftGround(LOW) & ftGround(HIGH) & sbhlSentence(genlPreds(LOW, HIGH)) .
+removalSentence(genlPreds(LOW, HIGH)) :- ftGround(LOW) & not_ftGround(HIGH) & sbhlSentence(genlPreds(LOW, HIGH)) .
+removalSentence(genlPreds(LOW, HIGH)) :- ftGround(HIGH) & not_ftGround(LOW) & sbhlSentence(genlPreds(LOW, HIGH)) .
+removalSentence(negationPreds(A, B)) :- ftGround(A) & ftGround(B) & sbhlSentence(negationPreds(A, B)) .
+removalSentence(genlMt(LOW, HIGH)) :- ftGround(LOW) & ftGround(HIGH) & sbhlSentence(genlMt(LOW, HIGH)) .
+removalSentence(genlMt(LOW, HIGH)) :- ftGround(LOW) & not_ftGround(HIGH) & sbhlSentence(genlMt(LOW, HIGH)) .
+removalSentence(genlMt(LOW, HIGH)) :- not_ftGround(LOW) & ftGround(HIGH) & sbhlSentence(genlMt(LOW, HIGH)) .
+removalSentence(termOfUnit(NART, NAUT)) :- ftGround(NART) & assertedVis(termOfUnit(NART, NAUT)) .
+removalSentence(natFunction(NART, F)) :- assertedVis(termOfUnit(NART, NAUT)) & operatorFormulas(F, NAUT) .
+removalSentence(EVASENT) :- ftGround(EVASENT) & operatorFormulas(P, EVASENT) & evaluatablePredicate(P) & evaluateSentence(EVASENT) .
+removalSentence(~(EVASENT)) :- ftGround(EVASENT) & operatorFormulas(P, EVASENT) & evaluatablePredicate(P) & naf evaluateSentence(EVASENT) .
+removalSentence(evaluate(ANS, EVAEXP)) :- ftGround(EVAEXP) & operatorFormulas(F, EVAEXP) & evaluatableFunction(F) & evaluateTerm(ANS, EVAEXP) .
+removalSentence(ASENT) :- ftGround(ASENT) & operatorFormulas(PRED, ASENT) & ftGround(PRED) & not_hlPred(PRED) & tvaPredicate(PRED) & tvaSentence(ASENT) .
+removalSentence(memberOfList(X, LIST)) :- ftGround(X) & ftGround(LIST) & ftList(LIST) & listMember(X, LIST) .
+removalSentence(memberOfList(X, LIST)) :- not_ftGround(X) & ftGround(LIST) & ftList(LIST) & listMember(X, LIST) .
+removalSentence(extentCardinality(SET, CARD)) :- ftGround(SET) & setCardinality(CARD, SET) .
+removalSentence(lengthOfList(LIST, LEN)) :- ftGround(LIST) & listLength(LEN, LIST) .
+removalSentence(elementOf(X, SET)) :- ftGround(X) & ftGround(SET) & setElement(X, SET) .
+removalSentence(elementOf(X, SET)) :- not_ftGround(X) & ftGround(SET) & setElement(X, SET) .
+removalSentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_hlPred(PTRANS) & ftGround(A) & not_ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivitySentence(t(PTRANS,A, C)) .
+removalSentence(t(PTRANS,A, C)) :- ftGround(PTRANS) & not_hlPred(PTRANS) & not_ftGround(A) & ftGround(C) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivitySentence(t(PTRANS,A, C)) .
+removalSentence(t(PTRANS,A, C)) :- ftGround(t(PTRANS,A, C)) & not_hlPred(PTRANS) & sbhlSentence(isa(PTRANS, 'TransitiveBinaryPredicate')) & transitivitySentence(t(PTRANS,A, C)) .
+removalSentence(t(PREF,A, B)) :- ftGround(PREF) & not_hlPred(PREF) & ftGround(A) & not_ftGround(B) & sbhlSentence(isa(PREF, 'ReflexiveBinaryPredicate')) & A = B .
+removalSentence(t(PREF,A, B)) :- ftGround(PREF) & not_hlPred(PREF) & not_ftGround(A) & ftGround(B) & sbhlSentence(isa(PREF, 'ReflexiveBinaryPredicate')) & A = B .
+removalSentence(t(PREF,A, A)) :- ftGround(PREF) & not_hlPred(PREF) & ftGround(A) & sbhlSentence(isa(PREF, 'ReflexiveBinaryPredicate')) .
+removalSentence(t(PSYM,A, B)) :- ftGround(PSYM) & not_hlPred(PSYM) & sbhlSentence(isa(PSYM, 'SymmetricBinaryPredicate')) & lookupSentence(t(PSYM,B, A)) .
+removalSentence(equalSymbols(X, Y)) :- ftGround(X) & ftGround(Y) & X = Y .
+removalSentence(equalSymbols(X, Y)) :- ftGround(X) & not_ftGround(Y) & X = Y .
+removalSentence(equalSymbols(X, Y)) :- not_ftGround(X) & ftGround(Y) & X = Y .
+removalSentence(t(PRED,INS, VAL)) :- ftGround(PRED) & ftGround(INS) & ftGround(VAL) & lookupSentence(relationAllInstance(PRED, COL, VAL)) & sbhlSentence(isa(INS, COL)) .
+removalSentence(t(PRED,INS, VAL)) :- ftGround(PRED) & ftGround(INS) & not_ftGround(VAL) & sbhlSentence(isa(INS, COL)) & lookupSentence(relationAllInstance(PRED, COL, VAL)) .
+removalSentence(naf(ASENT)) :- ftGround(ASENT) & ftAtomicSentence(ASENT) & wffRejectedSentence(ASENT) .
+removalSentence(naf(ASENT)) :- ftGround(ASENT) & decidableAsent(ASENT) & naf(removalSentence(ASENT)) .
+removalSentence(trueSentence(ASENT)) :- ftGround(ASENT) & ftAtomicSentence(ASENT) & removalSentence(ASENT) .
+removalSentence(unknownSentence(ASENT)) :- ftGround(ASENT) & ftAtomicSentence(ASENT) & naf(removalSentence(ASENT) ).
+removalSentence(assertedVis(ASENT)) :- ftAtomicSentence(ASENT) & lookupSentence(ASENT) .
+removalSentence(admittedArgument(TERM, N, RELN)) :- ftGround(TERM) & ftGround(N) & ftGround(RELN) & wffAdmittedArgument(TERM, N, RELN) .
+
+impPred(transformationPredicate) .
+transformationPredicate(P) :- ftGround(P) & not_hlPred(P) & naf backchainForbidden(P) .
+
+impPred(backwardSentence) .
+impPred(transformationSentence) .
+
+t(P|Rest) :- transformationPredicate(P) & transformationSentence(t(P|Rest)) .
+t(P,ARG1) :- transformationPredicate(P) & transformationSentence(t(P,ARG1)) .
+t(P,ARG1, ARG2) :- transformationPredicate(P) & transformationSentence(t(P,ARG1, ARG2)) .
+t(P,ARG1, ARG2, ARG3) :- transformationPredicate(P) & transformationSentence(t(P,ARG1, ARG2, ARG3)) .
+t(P,ARG1, ARG2, ARG3, ARG4) :- transformationPredicate(P) & transformationSentence(t(P,ARG1, ARG2, ARG3, ARG4)) .
+
+% Transformation preds support naf
+~ t(P|Rest) :- transformationPredicate(P) & naf(transformationSentence((t(P|Rest)))) .
+~ t(P,ARG1) :- transformationPredicate(P) & naf(transformationSentence(t(P,ARG1))) .
+~ t(P,ARG1, ARG2) :- transformationPredicate(P) & naf(transformationSentence(t(P,ARG1, ARG2))) .
+~ t(P,ARG1, ARG2, ARG3) :- transformationPredicate(P) & naf(transformationSentence(t(P,ARG1, ARG2, ARG3))) .
+~ t(P,ARG1, ARG2, ARG3, ARG4) :- transformationPredicate(P) & naf(transformationSentence(t(P,ARG1, ARG2, ARG3, ARG4))) .
+
+transformationSentence(ASENT) :- backwardSentence(ASENT) .
+naf(transformationSentence(ASENT)) :- backwardSentence(naf(ASENT)) .
+transformationSentence(ASENT) :- ftAtomicSentence(ASENT) & destructureFormula(ASENT, P, ARGS) & sbhlSentence(genlPreds(SPEC, P)) & SPEC != P & destructureFormula(ASENT2, SPEC, ARGS) & backwardSentence(ASENT2) .
+naf(transformationSentence(ASENT)) :- ftAtomicSentence(ASENT) & destructureFormula(ASENT, P, ARGS) & sbhlSentence(negationPreds(P, NP)) & destructureFormula(ASENT2, NP, ARGS) & backwardSentence(ASENT2) .
+transformationSentence(t(SP,ARG1, ARG2)) :- sbhlSentence(isa(SP, 'SymmetricBinaryPredicate')) & backwardSentence(t(SP,ARG2, ARG1)) .
+naf(transformationSentence(ASENT)) :- ftAtomicSentence(ASENT) & destructureFormula(ASENT, P, ARGS) & sbhlSentence(genlPreds(P, GENL)) & GENL != P & destructureFormula(ASENT2, GENL, ARGS) & backwardSentence(naf(ASENT2)) .
+

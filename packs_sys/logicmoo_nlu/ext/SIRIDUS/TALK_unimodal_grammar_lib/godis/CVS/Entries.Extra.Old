@@ -1,0 +1,16 @@
+/.cvsignore////
+/README////
+/search_paths_all.pl////
+/search_paths_aod.pl////
+/search_paths_basic.pl////
+/search_paths_grounding.pl////
+/search_paths_iod.pl////
+D/doc////
+D/general////
+D/godis-all////
+D/godis-aod////
+D/godis-basic////
+D/godis-grounding////
+D/godis-iod////
+/search_paths_common.pl////
+/LICENSE.txt////

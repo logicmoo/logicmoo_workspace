@@ -1,0 +1,69 @@
+non(b) :- b, !, fail.
+non(_).
+
+diff(p, p) :- !, fail.
+diff(_, _).
+	
+solution([s,e,n,d], [m,o,r,e], [m,o,n,e,y]) :- 
+   admissible(r1, 0, 0, m, 0),
+   admissible(r2, s, m, o, r1),
+   without_repetition([s,m,o]),	
+   admissible(r3, e, o, n, r2),
+   without_repetition([s,e,n,m,o]),		
+   admissible(r4, n, r, e, r3),
+   without_repetition([s,e,n,m,o,r]),
+   admissible(0, d, e, y, r4),
+   without_repetition([s,e,n,d,m,o,r,y]),
+   diff(s, 0),
+   diff(m, 0).
+
+admissible(0, u1, u2, u3, r) :- plus([0,u1], [0,u2], [r,u3]).
+admissible(1, u1, u2, u3, r) :-   
+   plus([0,u1], [0,u2], x),
+   plus_one(x, [r,u3]).
+
+without_repetition([]).
+without_repetition([u|v]) :-
+   out_of(u,v),
+   without_repetition(v).
+
+out_of(u, []).
+out_of(u, [v|w]) :- 
+   out_of(u, w),
+   diff(u,v).
+
+plus([0,0], x, x) :- less_than_twenty(x).
+plus(x1, y, z1) :-
+   plus_one(x, x1),
+   plus(x,y,z),
+   plus_one(z,  z1).
+
+less_than_twenty([0,0]).
+less_than_twenty(y) :-
+   plus_one(_, y).
+
+plus_one([0,0], [0,1]).
+plus_one([0,1], [0,2]).
+plus_one([0,2], [0,3]).
+plus_one([0,3], [0,4]).
+plus_one([0,4], [0,5]).
+plus_one([0,5], [0,6]).
+plus_one([0,6], [0,7]).
+plus_one([0,7], [0,8]).
+plus_one([0,8], [0,9]).
+
+plus_one([0,9], [1,0]).
+plus_one([1,0], [1,1]).
+plus_one([1,1], [1,2]).
+plus_one([1,2], [1,3]).
+plus_one([1,3], [1,4]).
+plus_one([1,4], [1,5]).
+plus_one([1,5], [1,6]).
+plus_one([1,6], [1,7]).
+plus_one([1,7], [1,8]).
+plus_one([1,8], [1,9]).
+
+
+
+
+ 

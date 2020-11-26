@@ -1,0 +1,24 @@
+(note TQD88-a)
+
+(contains Iraq Iraq) 
+
+(officialArmedForces UnitedNationsOrganization UN-Iraq-KuwaitObservationMission) 
+
+(jurisdictionRegion UN-Iraq-KuwaitObservationMission Iraq) 
+
+(instance UN-Iraq-KuwaitObservationMission PeaceKeepingForces) 
+
+
+(query (findall ?MIL-ORG 
+ (thereExists ?SUPERREG 
+   (and 
+       (instance ?MIL-ORG PeaceKeepingForces) 
+       (officialArmedForces UnitedNationsOrganization ?MIL-ORG) 
+       (contains ?SUPERREG Iraq) 
+       (jurisdictionRegion ?MIL-ORG ?SUPERREG)))
+))
+
+(answer UN-Iraq-KuwaitObservationMission
+)
+
+(end_of_file)

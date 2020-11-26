@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="overview.html">
+<link rel="next" href="initfile.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="overview.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="initfile.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:quickstart"><a id="sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">Getting 
+started quickly</span></a></h2>
+
+<a id="sec:quickstart"></a>
+
+<p><h3 id="sec:starting"><a id="sec:2.1.1"><span class="sec-nr">2.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog</span></a></h3>
+
+<a id="sec:starting"></a>
+
+<p><h4 id="sec:startunix"><a id="sec:2.1.1.1"><span class="sec-nr">2.1.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog on Unix</span></a></h4>
+
+<a id="sec:startunix"></a>
+
+<p>By default, SWI-Prolog is installed as&lsquo;swipl'. The command line 
+arguments of SWI-Prolog itself and its utility programs are documented 
+using standard Unix <b>man</b> pages. SWI-Prolog is normally operated as 
+an interactive application simply by starting the program:
+
+<pre class="code">
+$ swipl
+Welcome to SWI-Prolog ...
+...
+
+1 ?-
+</pre>
+
+<p>After starting Prolog, one normally loads a program into it using
+<a id="idx:consult1:7"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, 
+which may be abbreviated by putting the name of the program file between 
+square brackets. The following goal loads the file
+<a class="url" href="https://raw.githubusercontent.com/SWI-Prolog/swipl-devel/master/demo/likes.pl">likes.pl</a> 
+containing clauses for the predicates likes/2 :
+
+<pre class="code">
+?- [likes].
+true.
+
+?-
+</pre>
+
+<p>Alternatively, the source file may be given as command line 
+arguments:
+
+<pre class="code">
+$ swipl likes.pl
+Welcome to SWI-Prolog ...
+...
+
+1 ?-
+</pre>
+
+<blockquote> Both the above assume <code>likes.pl</code> is in your <em>working 
+directory</em>. If you use the command line version <b>swipl</b> the 
+working directory is the same as the shell from which you started 
+SWI-Prolog. If you started the GUI version (<b>swipl-win</b>) this 
+depends largely on the OS. You can use <a id="idx:pwd0:8"></a><span class="pred-ext">pwd/0</span> 
+and <a id="idx:cd0:9"></a><span class="pred-ext">cd/0</span> to find and 
+change the working directory. The utility <a id="idx:ls0:10"></a><span class="pred-ext">ls/0</span> 
+lists the contents of the working directory.
+
+<pre class="code">
+?- pwd.
+% /home/janw/src/swipl-devel/linux/
+true.
+?- cd('~/tmp').
+true.
+
+?- pwd.
+% /home/janw/tmp/
+true.
+</pre>
+
+<p>The file <code>likes.pl</code> is also installed in a subdirectory <code>demo</code> 
+insides SWI-Prolog's installation directory and may be loaded regardless 
+of the working directory using the command below. See
+<a id="idx:absolutefilename3:11"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+and <a id="idx:filesearchpath2:12"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+for details on how SWI-Prolog specifies file locations.
+
+<pre class="code">
+?- [swi(demo/likes)].
+true.
+</pre>
+
+<p></blockquote>
+
+<p>After this point, Unix and Windows users unite, so if you are using 
+Unix please continue at <a class="sec" href="quickstart.html#sec:2.1.2">section 
+2.1.2</a>.
+
+<p><h4 id="sec:startwin"><a id="sec:2.1.1.2"><span class="sec-nr">2.1.1.2</span> <span class="sec-title">Starting 
+SWI-Prolog on Windows</span></a></h4>
+
+<a id="sec:startwin"></a>
+
+<p>After SWI-Prolog has been installed on a Windows system, the 
+following important new things are available to the user:
+
+<p>
+<ul class="latex">
+<li>A folder (called <em>directory</em> in the remainder of this 
+document) called <code>swipl</code> containing the executables, 
+libraries, etc., of the system. No files are installed outside this 
+directory.
+<li>A program <b>swipl-win.exe</b>, providing a window for interaction 
+with Prolog. The program <b>swipl.exe</b> is a version of SWI-Prolog 
+that runs in a console window.
+<li>The file extension <code>.pl</code> is associated with the program
+<b>swipl-win.exe</b>. Opening a <code>.pl</code> file will cause
+<b>swipl-win.exe</b> to start, change directory to the directory in 
+which the file to open resides, and load this file.
+</ul>
+
+<p>The normal way to start the <code>likes.pl</code> file mentioned in
+<a class="sec" href="quickstart.html#sec:2.1.1.1">section 2.1.1.1</a> is 
+by simply double-clicking this file in the Windows explorer.
+
+<p><h3 id="sec:consultuser"><a id="sec:2.1.2"><span class="sec-nr">2.1.2</span> <span class="sec-title">Adding 
+rules from the console</span></a></h3>
+
+<a id="sec:consultuser"></a>
+
+<p>Although we strongly advice to put your program in a file, optionally 
+edit it and use <a id="idx:make0:13"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+to reload it (see <a class="sec" href="quickstart.html#sec:2.1.4">section 
+2.1.4</a>), it is possible to manage facts and rules from the terminal. 
+The most convenient way to add a few clauses is by consulting the pseudo 
+file
+<code>user</code>. The input is ended using the system end-of-file 
+character.
+
+<pre class="code">
+?- [user].
+|: hello :- format('Hello world~n').
+|: ^D
+true.
+
+?- hello.
+Hello world
+true.
+</pre>
+
+<p>The predicates <a id="idx:assertz1:14"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+and <a id="idx:retract1:15"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+are alternatives to add and remove rules and facts.
+
+<p><h3 id="sec:execquery"><a id="sec:2.1.3"><span class="sec-nr">2.1.3</span> <span class="sec-title">Executing 
+a query</span></a></h3>
+
+<a id="sec:execquery"></a>
+
+<p>After loading a program, one can ask Prolog queries about the 
+program. The query below asks Prolog what food&lsquo;sam' likes. The 
+system responds with <code>X = &lt;<var>value</var>&gt;</code> if it can 
+prove the goal for a certain
+<var>X</var>. The user can type the semi-colon (;) or spacebar<sup class="fn">7<span class="fn-text">On 
+most installations, single-character commands are executed without 
+waiting for the <span style="font-variant:small-caps">RETURN</span> key.</span></sup> 
+if (s)he wants another solution. Use the <span style="font-variant:small-caps">return</span> 
+key if you do not want to see more answers. Prolog completes the output 
+with a full stop (.) if the user uses the <span style="font-variant:small-caps">return</span> 
+key or Prolog
+<em>knows</em> there are no more answers. If Prolog cannot find (more) 
+answers, it writes <b>false.</b> Finally, Prolog answers using an error 
+message to indicate the query or program contains an error.
+
+<pre class="code">
+?- likes(sam, X).
+X = dahl ;
+X = tandoori ;
+...
+X = chips.
+
+?-
+</pre>
+
+<p>Note that the answer written by Prolog is a valid Prolog program 
+that, when executed, produces the same set of answers as the original 
+program.<sup class="fn">8<span class="fn-text">The SWI-Prolog top level 
+differs in several ways from traditional Prolog top level. The current 
+top level was designed in cooperation with Ulrich Neumerkel.</span></sup>
+
+<p><h3 id="sec:viewprogram"><a id="sec:2.1.4"><span class="sec-nr">2.1.4</span> <span class="sec-title">Examining 
+and modifying your program</span></a></h3>
+
+<a id="sec:viewprogram"></a>
+
+<p>If properly configured, the predicate <a id="idx:edit1:16"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+starts the built-in or user configured editor on the argument. The 
+argument can be anything that can be linked to a location: a file name, 
+predicate name, module name, etc. If the argument resolves to only one 
+location the editor is started on this location, otherwise the user is 
+presented a choice.
+
+<p>If a graphical user interface is available, the editor normally 
+creates a new window and the system prompts for the next command. The 
+user may edit the source file, save it and run <a id="idx:make0:17"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+to update any modified source file. If the editor cannot be opened in a 
+window, it opens in the same console and leaving the editor runs <a id="idx:make0:18"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+to reload any source files that have been modified.
+
+<pre class="code">
+?- edit(likes).
+
+true.
+?- make.
+% /home/jan/src/pl-devel/linux/likes compiled 0.00 sec, 0 clauses
+
+?- likes(sam, X).
+...
+</pre>
+
+<p>The program can also be <em>decompiled</em> using <a id="idx:listing1:19"></a><a class="pred" href="listing.html#listing/1">listing/1</a> 
+as below. The argument of <a id="idx:listing1:20"></a><a class="pred" href="listing.html#listing/1">listing/1</a> 
+is just a predicate name, a predicate
+<em>indicator</em> of the form <var>Name/Arity</var>, e.g., <code>?- 
+listing(<a id="idx:mild1:21"></a><span class="pred-ext">mild/1</span>).</code> 
+or a <em>head</em>, e.g., <code>?- listing(likes(sam, _)).</code>, 
+listing all <em>matching</em> clauses. The predicate <a id="idx:listing0:22"></a><a class="pred" href="listing.html#listing/0">listing/0</a>, 
+i.e., without arguments lists the entire program.<sup class="fn">9<span class="fn-text">This 
+lists several <em>hook</em> predicates that are defined by default and 
+is typically not very informative.</span></sup>
+
+<pre class="code">
+?- listing(mild).
+mild(dahl).
+mild(tandoori).
+mild(kurma).
+
+true.
+</pre>
+
+<p><h3 id="sec:halt"><a id="sec:2.1.5"><span class="sec-nr">2.1.5</span> <span class="sec-title">Stopping 
+Prolog</span></a></h3>
+
+<a id="sec:halt"></a>
+
+<p>The interactive toplevel can be stopped in two ways: enter the system 
+end-of-file character (typically <i>Control-D</i>) or by executing the
+<a id="idx:halt0:23"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a> 
+predicate:
+
+<pre class="code">
+?- halt.
+$
+</pre>
+
+<p></body></html>

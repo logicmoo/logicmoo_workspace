@@ -1,0 +1,14 @@
+Search for config file entries whose name matches the argument and
+display them. Matching is not case-sensitive.
+
+Example:
+\begin{verbatim}
+>> HELP_CONFIG tree 
+(Print help for config file entries whose name or description match the string)
+
+3 config file entries matching "tree":
+
+alterf_treebank_file
+ebl_treebank
+ellipsis_classes_treebank_file
+\end{verbatim}

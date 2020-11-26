@@ -1,0 +1,180 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md7">
+Predicting Product Success with Probabilistic Programming
+=========================================================
+
+In this notebook we translate into Probabilistic Logic Programming the Figaro example from Section 5.4 of [A. Pfeffer, Pratical Probabilistic Programming](https://www.manning.com/books/practical-probabilistic-programming), pages 155-161. 
+</div>
+
+<div class="nb-cell html" name="htm1">
+<p>Author: <a href="mailto:damiano.azzolini@student.unife.it">Damiano Azzolini</a></p>
+</div>
+
+<div class="nb-cell markdown" name="md10">
+
+Suppose you have just create a new product and you want to advertise it on 
+some social network and see how many people will like it or buy it. With this program you can predict this value given certain parameters, such as the popularity of the social network, the quality of the product and its affordability. Both quality and affordability are number between 0.0 and 1.0 where 0.0 means lowest quality (higher price) and 1.0 means higher quality (lower price). This is how the product success prediction network looks like:
+</div>
+
+<div class="nb-cell program" name="p4">
+:- use_rendering(graphviz).
+</div>
+
+<div class="nb-cell query" name="q6">
+X = dot("digraph G { 
+         TargetSocialNetwork-&gt;NumberFriendsLike;
+         TargetLikes-&gt;NumberFriendsLike;
+         NumberFriendsLike-&gt;NumberBuy}").
+</div>
+
+<div class="nb-cell markdown" name="md1">
+
+Performing inference
+--------------------
+Inference is executed by calling mc_expectation(numberBuy(0.9,0.7,15,N),100,N,E).
+
+Let's analyze the goal: with =mc_expectation= we compute the expectation of the value of argument =N= of query numberBuy(0.9,0.7,15,N) by sampling. The goal takes 100 samples of the query and sums up the value of =N= for each sample. The overall sum is divided by 100 to give the expected value =E= of the number of people that will buy the product.
+
+The predicate =numberBuy/4= takes three parameters as input: the quality of the product (in this example 0.9), the affordability of the product (0.7) and the average number of friends in the social network, i.e. the Social Network Popularity, and returns the number of people who will buy the product (=N=).
+</div>
+
+<div class="nb-cell markdown" name="md8">
+Results
+-------
+
+To compute the expected value of the predicate =numberBuy/4= we can run, for instance, the queries:
+
+</div>
+
+<div class="nb-cell query" name="q2">
+mc_expectation(numberBuy(0.9,0.5,100,N),100,N,E).
+</div>
+
+<div class="nb-cell query" name="q3">
+mc_expectation(numberBuy(0.5,0.9,100,N),100,N,E).
+</div>
+
+<div class="nb-cell query" name="q4">
+mc_expectation(numberBuy(0.9,0.5,10,N),100,N,E).
+</div>
+
+<div class="nb-cell query" name="q5">
+mc_expectation(numberBuy(0.5,0.9,10,N),100,N,E).
+</div>
+
+<div class="nb-cell markdown" name="md6">
+From these results we can see that the number of buyers if proportional to the affordability and the quality of the product (as we can imagine) but a small increase of the product quality drives to a huge increase of the number of buyers.
+</div>
+
+<div class="nb-cell markdown" name="md9">
+Code Description
+----------------
+The =newly_visited/6= predicate is used to compute the binomial distribution through the predicate binomial(Var,N,P) where =Var= follows a binomial distribution with parameters =N= and =P=.
+
+=networkPopularity/2= returns the number of people in the social network, assuming that this number follows a Poisson distribution.
+
+=flip/2= expresses whether if the target likes the product, depending on the product quality. In this case the target likes the product with probability equal to the product quality.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p2">
+:- use_module(library(mcintyre)).
+:- mc.
+:- begin_lpad.
+
+newly_visited(_,_,_,X,NTry,PS):binomial(X,NTry,PS).
+newly_likes(_,_,_,X,NTry,PS):binomial(X,NTry,PS).
+number_buy(X,NTry,PS):binomial(X,NTry,PS).
+
+networkPopularity(P,Lambda):poisson(P,Lambda).
+flip(1,ProductQuality):ProductQuality; flip(0,ProductQuality):1-ProductQuality.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+The recursive predicate =helper/6= computes the number of people that will like the product. It has 6 arguments: number of friend already visited, total number of likes, number of unprocessed likes, number of friend, product quality and number of friend who likes the product. The recursion ends when there are no people left to process; in this case the people who like the product
+is the number found so far. If there are some people left, first
+we compute the probability that a random person in the social
+network hasn't yet have been visited. Then we simulate the fact that
+the processed person promotes the product to two friends. The probability
+that each friend hasn't yet been visited is given by =UnvisitedFraction=.
+Then we compute the probability that a given person likes the product and
+recursively call the predicate with the new values. Here is the code with a little explanation:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+/*termination criterion: no people left to visit so the number of friend who like the product is the number found so far*/
+helper(_,TotalLikes,0,_,_,TotalLikes):-!. 
+helper(_,TotalLikes,_,1,_,TotalLikes):-!.
+
+helper(FriendVisited,TotalLikes,UnprocessedLikes,NumFriends,ProdQuality,NumberFriendsLike):-
+    /*compute the probability that a random friend in the social network won't yet have been visited*/
+    UnvisitedFraction is 1.0 - (FriendVisited-1)/(NumFriends-1),
+    
+    /*with this line we simulate the fact that a person promotes 
+    the product to two friend where the probability that each 
+    friend hasn't yet been visited is given by the value of unvisited fraction. b/6 is a predicate that simulate a binomial 
+    distribution, and in this case returns an argument (NewlyVisited) which follows a binomial distribution with 
+    parameters 2 and UnvisitedFraction*/
+    newly_visited(FriendVisited,TotalLikes,UnprocessedLikes,
+                  NewlyVisited,2,UnvisitedFraction),
+    
+    /*similar case: the probability that a person likes the product (NewlyLikes) is given by a binomial distribution with 
+    parameters NewlyVisited and ProductQuality*/
+    newly_likes(FriendVisited,TotalLikes,UnprocessedLikes,
+                  NewlyLikes,NewlyVisited,ProdQuality),
+   
+    /*update the number of friend visited and likes*/
+    Visited is FriendVisited + NewlyVisited,
+    Likes is TotalLikes + NewlyLikes,
+    
+    /*the new value of unprocessed person is given by the number of unprocessed likes plus the number of newly likes minus 
+    one which is the person just processed*/
+    Unprocessed is UnprocessedLikes + NewlyLikes - 1,
+    
+    /*recursive call with new parameters*/
+    helper(Visited,Likes,Unprocessed,NumFriends,ProdQuality,NumberFriendsLike).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+With this query we can compute the number of people who will like the product with quality 0.9, affordability 0.7 advertised on a social network with 15 people. In this case the query is sampled only one time and =L= is a list containing a single element, the value sampled.
+</div>
+
+<div class="nb-cell query" name="q1">
+mc_sample_arg_raw(numberBuy(0.9,0.7,15,N),1,N,L).
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Then we define the predicate =numberBuy/4=
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+numberBuy(ProdQuality,Affordability,AvgFriends,NumberBuy):-
+    /*the probability that the target likes the product is 0 or 1, based on the product quality*/
+    flip(TargetLikes,ProdQuality),
+    
+    /*here we calculate the number of friend, given the average number of friend, using a Poisson
+    distribution. This allow the number of friend to be more or less than the average, and makes 
+    the simulation more realistic*/
+    networkPopularity(NumFriends,AvgFriends), 
+    
+    helper(TargetLikes,TargetLikes,TargetLikes,NumFriends,ProdQuality,NumberFriendsLike),
+    
+    /*the number of people who buy the product is computed in this way: 
+    each person who likes 
+   	the product, will buy it with a probability equal to the value of the 
+    affordability parameter. 
+    The total number of people who buy (NumberBuy) is given by a binomial 
+    with parameters the 
+    number of friend who likes the product and the affordability of 
+    the product*/
+    number_buy(NumberBuy,NumberFriendsLike,Affordability).
+
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown" name="md5">
+First of all, we determine if the target likes the product and the  number of his friends in the social network. Then we sample the predicate =helper/6= and we obtain the number of friends that hopefully like the product and pass this value to the predicate =newly_visited/6= previously described.
+</div>
+
+</div>
+

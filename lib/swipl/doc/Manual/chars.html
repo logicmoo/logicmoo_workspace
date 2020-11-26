@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="preddesc.html">
+<link rel="next" href="consulting.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="preddesc.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="consulting.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:chars"><a id="sec:4.2"><span class="sec-nr">4.2</span> <span class="sec-title">Character 
+representation</span></a></h2>
+
+<a id="sec:chars"></a>
+
+<p>In traditional (Edinburgh) Prolog, characters are represented using
+<em>character codes</em>. Character codes are integer indices into a 
+specific character set. Traditionally the character set was 7-bit 
+US-ASCII. 8-bit character sets have been allowed for a long time, 
+providing support for national character sets, of which iso-latin-1 (ISO 
+8859-1) is applicable to many Western languages.
+
+<p>ISO Prolog introduces three types, two of which are used for 
+characters and one for accessing binary streams (see <a id="idx:open4:410"></a><a class="pred" href="IO.html#open/4">open/4</a>). 
+These types are:
+
+<p>
+<ul class="latex">
+<li><i>code</i><br>
+A <em>character code</em> is an integer representing a single character. 
+As files may use multi-byte encoding for supporting different character 
+sets (<a id="idx:utf8:411">utf-8</a> encoding for example), reading a 
+code from a text file is in general not the same as reading a byte.
+<li><i>char</i><br>
+Alternatively, characters may be represented as
+<em>one-character atoms</em>. This is a natural representation, hiding 
+encoding problems from the programmer as well as providing much easier 
+debugging.
+<li><i>byte</i><br>
+Bytes are used for accessing binary streams.
+</ul>
+
+<p>In SWI-Prolog, character codes are <em>always</em> the Unicode 
+equivalent of the encoding. That is, if <a id="idx:getcode1:412"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a> 
+reads from a stream encoded as
+<code>KOI8-R</code> (used for the Cyrillic alphabet), it returns the 
+corresponding Unicode code points. Similarly, assembling or 
+disassembling atoms using <a id="idx:atomcodes2:413"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a> 
+interprets the codes as Unicode points. See
+<a class="sec" href="widechars.html#sec:2.19.1">section 2.19.1</a> for 
+details.
+
+<p>To ease the pain of the two character representations (code and 
+char), SWI-Prolog's built-in predicates dealing with character data work 
+as flexible as possible: they accept data in any of these formats as 
+long as the interpretation is unambiguous. In addition, for output 
+arguments that are instantiated, the character is extracted before 
+unification. This implies that the following two calls are identical, 
+both testing whether the next input character is an <code>a</code>.
+
+<pre class="code">
+peek_code(Stream, a).
+peek_code(Stream, 97).
+</pre>
+
+<p>The two character representations are handled by a large number of 
+built-in predicates, all of which are ISO-compatible. For converting 
+between code and character there is <a id="idx:charcode2:414"></a><a class="pred" href="manipatom.html#char_code/2">char_code/2</a>. 
+For breaking atoms and numbers into characters there are <a id="idx:atomchars2:415"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>, <a id="idx:atomcodes2:416"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>,
+<a id="idx:numberchars2:417"></a><a class="pred" href="manipatom.html#number_chars/2">number_chars/2</a> 
+and <a id="idx:numbercodes2:418"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a>. 
+For character I/O on streams there are
+<a id="idx:getchar12:419"></a><a class="pred" href="chario.html#get_char/1">get_char/[1,2]</a>, <a id="idx:getcode12:420"></a><a class="pred" href="chario.html#get_code/1">get_code/[1,2]</a>, <a id="idx:getbyte12:421"></a><a class="pred" href="chario.html#get_byte/1">get_byte/[1,2]</a>, <a id="idx:peekchar12:422"></a><a class="pred" href="chario.html#peek_char/1">peek_char/[1,2]</a>,
+<a id="idx:peekcode12:423"></a><a class="pred" href="chario.html#peek_code/1">peek_code/[1,2]</a>, <a id="idx:peekbyte12:424"></a><a class="pred" href="chario.html#peek_byte/1">peek_byte/[1,2]</a>, <a id="idx:putcode12:425"></a><a class="pred" href="chario.html#put_code/1">put_code/[1,2]</a>, <a id="idx:putchar12:426"></a><a class="pred" href="chario.html#put_char/1">put_char/[1,2]</a> 
+and
+<a id="idx:putbyte12:427"></a><a class="pred" href="chario.html#put_byte/1">put_byte/[1,2]</a>. 
+The Prolog flag <a class="flag" href="flags.html#flag:double_quotes">double_quotes</a> 
+controls how text between double quotes is interpreted.
+
+<p></body></html>

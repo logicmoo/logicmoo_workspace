@@ -1,0 +1,25 @@
+(note TQF124c)
+(abort)
+
+(citizens Russia ColonelYesmev) 
+(acquaintedWith ColonelYesmev Y2Stage3-RussianMafiyaMember) 
+(rank-Military ColonelYesmev Colonel-Rank) 
+(instance ColonelYesmev MilitaryOfficer) 
+(directingAgent Y2Stage3-AnthraxTransportedToVolgograd ColonelYesmev) 
+(affiliatedWith StateResearchCenterForAppliedMicrobiology ColonelYesmev) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(query (findall ?DESCRIPTIVE-FORMULA (descriptionFormulas ColonelYesmev ?DESCRIPTIVE-FORMULA) ))
+(answer (list (citizens Russia ColonelYesmev) ))
+(answer (list (acquaintedWith ColonelYesmev Y2Stage3-RussianMafiyaMember)  ))
+(answer (list (rank-Military ColonelYesmev Colonel-Rank)  ))
+(answer (list (directingAgent Y2Stage3-AnthraxTransportedToVolgograd ColonelYesmev)  ))
+(answer (list (affiliatedWith StateResearchCenterForAppliedMicrobiology ColonelYesmev) 
+(answer (list (instance ColonelYesmev MilitaryOfficer)  ))
+
+
+(end_of_file)
+

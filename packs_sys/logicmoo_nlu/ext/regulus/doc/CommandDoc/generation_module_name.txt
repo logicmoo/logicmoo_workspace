@@ -1,0 +1,3 @@
+Relevant to applications that use generation (typically translation
+applications). Specifies the module name in the compiled generation
+grammar file. Default is generator.

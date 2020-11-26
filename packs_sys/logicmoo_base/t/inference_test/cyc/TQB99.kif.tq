@@ -1,0 +1,38 @@
+(note TQB99)
+
+
+
+(budgetExpenditures Bahrain GovernmentMilitaryOrganization 
+ (YearFn 1995) 
+ (MillionDollars 240)) 
+
+(budgetExpenditures Kuwait GovernmentMilitaryOrganization 
+ (YearFn 1995) 
+ (BillionDollars 2.90000)) 
+
+
+
+(query (findall ?GREATER  (findall ?TIME
+
+ (thereExists ?LESSER 
+ (thereExists ?GREATER-AMT 
+ (thereExists ?LESSER-AMT 
+ (and 
+ (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+ (budgetExpenditures ?GREATER GovernmentMilitaryOrganization ?TIME ?GREATER-AMT) 
+ (budgetExpenditures ?LESSER GovernmentMilitaryOrganization ?TIME ?LESSER-AMT) 
+ (or 
+ (and 
+ (equals Kuwait ?GREATER) 
+ (equals Bahrain ?LESSER)) 
+ (and 
+ (equals Bahrain ?GREATER) 
+ (equals Kuwait ?LESSER))))))) )))
+ 
+
+(answer Kuwait 1995)
+
+
+(end_of_file)
+
+

@@ -1,0 +1,44 @@
+(note TQE124a)
+(operatesInRegion CaspianPipelineConsortium Kazakhstan) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(memberStatusInOrganization Russia CaspianPipelineConsortium FoundingMember) 
+
+(hasMembers CaspianPipelineConsortium Kazakhstan) 
+
+(memberStatusInOrganization Oman CaspianPipelineConsortium FoundingMember) 
+(startingDate CaspianPipelineConsortium 
+ (YearFn 1992)) 
+
+(memberStatusInOrganization Kazakhstan CaspianPipelineConsortium FoundingMember) 
+
+(hasMembers CaspianPipelineConsortium Russia) 
+
+(instance CaspianPipelineConsortium PublicPrivateConsortium) 
+
+(hasMembers CaspianPipelineConsortium Oman) 
+
+(query (findall ?DESCRIPTIVE-FORMULA
+(descriptionFormulas CaspianPipelineConsortium ?DESCRIPTIVE-FORMULA)))
+
+(answer (list(operatesInRegion CaspianPipelineConsortium Kazakhstan)))
+(answer (list(memberStatusInOrganization Russia CaspianPipelineConsortium FoundingMember)))
+(answer (list(hasMembers CaspianPipelineConsortium Kazakhstan)))
+(answer (list(memberStatusInOrganization Oman CaspianPipelineConsortium FoundingMember)))
+(answer  (list (startingDate CaspianPipelineConsortium (YearFn 1992))))
+(answer  (list(memberStatusInOrganization Kazakhstan CaspianPipelineConsortium FoundingMember)))
+(answer (list(hasMembers CaspianPipelineConsortium Russia)))
+(answer (list(instance CaspianPipelineConsortium PublicPrivateConsortium)))
+(answer (list(hasMembers CaspianPipelineConsortium Oman))) 
+
+
+(end_of_file)
+
+
+ 
+ 
+
+

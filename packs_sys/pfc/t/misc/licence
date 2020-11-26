@@ -1,0 +1,223 @@
+
+                    Pfc LICENSE AGREEMENT 
+ 
+ 
+This Agreement is entered into this       day of            ,   
+19   , by and between Unisys Corporation, a Delaware corporation,
+having a place of business at Paoli, Pennsylvania (hereinafter
+referred to as "Licensor") and                                  
+having a place of business at                                   
+(hereinafter referred to as "Licensee").   
+ 
+1 Definitions: 
+ 
+	1.1 "Licensed Software Package" means the source code       
+     of the Pfc program, together with supporting
+     documentation,  which may include flowcharts,logic diagrams,
+     program listings, operating instructions and user manuals. 
+ 
+	1.2  "Licensed software" means the source code of the Pfc
+     Program 
+ 
+	1.3  "Proprietary Information" means the licensed software
+     package which  Licensor desires to protect against
+     unrestricted disclosure or competitive use and which is
+     designated as such by Licensor to Licensee.   
+ 
+	1.4  "Pfc core" includes the following items that will be
+     delivered to Licensee:
+
+		- The Pfc Prolog source code
+
+	1.5  "Changed" software means major changes to modules in
+     the Pfc core, to be determined by the sole opinion of
+     Licensor. 
+
+2  License Grant: 
+ 
+	2.1  Subject to the conditions herein, Licensor hereby
+     grants to Licensee a limited, non-transferable,
+     non-exclusive license for the Licensee's internal use of the
+     software. Licensee may make copies of the licensed software
+     for multiple workstations and for backup or archival
+     purposes only. Title to all copies of the licensed software
+     package remains in Licensor.  
+   
+	2.2  This license, the licensed software and the proprietary
+     information provided by Licensor to Licensee may not be
+     sold, leased, assigned, sublicensed or otherwise
+     transferred, in whole or in part by Licensee. 
+         
+	2.3  The purpose of this license is for research and
+     development to be conducted by the Licensee.  This license
+     is for the internal use of the Licensee and shall not be
+     used commercially (including embedding the licensed software
+     in a system) by the Licensee. This  license allows the
+     Licensee the right to modify the source code for research
+     purposes and if said modifications are major changes, as
+     defined herein, to the core of Pfc, as determined by the
+     sole opinion of Licensor, to release the "changed" software
+     subject to the provisions in section 5.5. 
+ 
+	2.4  In return for providing the Pfc package, Licensee
+     hereby grants to Licensor an unlimited, non-exclusive
+     license to use the "changed" software and with rights no
+     more restrictive than 5.5 below. 
+  
+3 Term of License: 
+ 
+	3.1  This license is for a term of three (3) years from date
+     of execution unless sooner terminated in accordance with
+     this Agreement, as defined in 3.2. 
+ 
+	3.2  Licensor may terminate this license upon thirty (30)
+     days written notice to Licensee, if Licensee fails to  
+     comply with any of the material terms and conditions of this
+     license and if such failure to comply is not corrected
+     within the said thirty (30) day notice period. 
+ 
+	3.3  Upon termination of this license, use of the licensed
+     software by  Licensee shall be discontinued.  In such event,
+     the license and rights granted hereunder shall expire and
+     Licensee shall have no further rights or access to the
+     licensed software.  All copies of the licensed software
+     package shall be returned to Licensor. 
+
+4 License Fees: 
+ 
+	4.1  The licensed software furnished hereunder shall be
+     licensed at a cost of                            dollars to
+     Licensee during the term hereof. 
+ 
+5 Proprietary Information: 
+ 
+	5.1  Licensor hereby states and Licensee hereby acknowledges
+     that the licensed software constitutes a highly valuable
+     asset and is to be considered  Proprietary Information. 
+ 
+	5.2  Licensee agrees to treat the Proprietary Information in
+     the same manner and with the same degree of care as it 
+     treats its own Proprietary Information.  Licensee shall not
+     use, disclose, any copies of the proprietary information, in
+     whole or in part, without authorization of Licensor,
+     including when "changed" software is transferred to a third
+     party.  
+ 
+	5.3  Licensee shall make reasonable efforts to notify and
+     inform its employees having access to the Proprietary
+     Information of Licensee's limitations, duties and
+     obligations regarding non-disclosure of the licensed
+     software package.  Proprietary Information shall be used
+     only by employees of Licensee.    
+ 
+	5.4  Licensor reserves the right to review and
+     approve/disapprove the release of all papers that evaluate
+     and/or characterize Pfc before release for publication, and
+     to approve/disapprove the use of the Unisys name or the Pfc
+     name in said publication.  Licensor will have thirty (30)
+     calendar days to approve/disapprove any papers falling within
+     this clause.  Failure to approve/disapprove a paper during
+     this period shall be deemed an approval for publication.
+  
+	5.5  Licensor reserves the right to review and/or test any
+     software that makes major changes to the core of Pfc
+     before said "changed" software is released to parties not
+     party to this agreement and to restrict the use of
+     Licensor's name or the Pfc name with said software. 
+
+	5.6  Notwithstanding any provisions herein concerning
+     non-disclosure and non-use of the Proprietary Information,
+     Licensee shall have no  obligation for non-disclosure or use
+     of any such information which  Licensee can show to have
+     been in his/her possession before receiving this Proprietary
+     Information  from Licensor or to have been independently
+     developed thereafter; nor shall it apply to Proprietary
+     Information which is or becomes freely available without an
+     obligation of confidentiality.
+ 
+	5.7  Licensee's obligations under this section shall survive
+     any termination of this agreement. 
+ 
+	5.8  Within thirty (30) days after termination of this
+     license, all proprietary information shall be returned to
+     Licensor. 
+ 
+	5.9  Licensee shall promptly notify Licensor if it
+     discontinues use of licensed software package. 
+ 
+6  Licensor's use of Enhancement: 
+ 
+	6.1  Licensor shall be provided access,if desired, to all
+     existing modifications, enhancements and extensions made to
+     the source code by the Licensee including flow charts,logic
+     diagrams, program listings, operating instructions and user
+     manuals. 
+  
+7  Reports: 
+ 
+	7.1  Licensee agrees to promptly notify Licensor of any
+     significant software  errors, problems, or any other
+     significant defects within the licensed software package.
+ 
+	7.2  Licensor reserves the right to request that the
+     Licensee provide to the Licensor copies of any
+     modifications, enhancements and documentation made by the
+     Licensee to the licensed software, no more frequently than
+     annually during the term of this agreement. 
+ 
+8  Disclaimer of Liability: 
+ 
+	8.1  Licensee acknowledges that the licensed software
+     package is an incomplete, early version of the software and
+     may contain coding and/or design errors.  Licensee agrees
+     that it will not use the licensed software package in a
+     manner that exposes valuable and irreplaceable data to loss
+     or damage by malfunctioning of the licensed software
+     package. The licensed software package is supplied "as is";
+     Licensor does not undertake to correct any or all errors
+     discovered or reported;  Licensor shall not be liable for
+     any direct, indirect, special, incidental or consequential
+     damages or loss of use, revenue or profit arising out of or
+     in connection with the use of the licensed software package,
+     even if the Licensor knew or should have known of such
+     damages; Licensor does not warrant that the licensed
+     software package will ever be released as a product by
+     Licensor; Licensor expressly disclaims any and all
+     warranties of merchantability and fitness for a particular
+     purpose  and Licensee's sole and exclusive remedy for breach
+     of this Agreement by Licensor, whether in tort, contract or
+     otherwise, is termination of the license agreement. 
+
+ 
+9   General Provisions: 
+ 
+	 9.1  This Agreement constitutes the entire Agreement
+     between the parties with respect to the subject matter
+     hereof, and it supersedes all other understandings between
+     the parties; this Agreement shall be governed by and
+     construed in accordance with the laws of the Commonwealth of
+     Pennsylvania; failure of either party to insist upon strict
+     performance of any term or covenant of this Agreement shall
+     not constitute a waiver of the right to restrict that term
+     or covenant in the future; this Agreement may not be
+     modified or amended, in whole or in part, except by written
+     instrument executed by the parties. 
+ 
+ 
+ 
+IN WITNESS WHEREOF, the parties have caused this license to be
+executed by their duly authorized representatives  
+ 
+For Unisys Corporation by:____________________________________  
+                        
+                          Title_______________________________ 
+          
+                          Date________________________________  
+ 
+ 
+    
+ 
+For ____________________    by:_________________________________ 
+
+Title___________________    Date________________________________ 
+

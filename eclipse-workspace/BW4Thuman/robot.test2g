@@ -1,0 +1,18 @@
+use bw4thuman.
+use robot as knowledge.
+use robotMain as module.
+timeout = 300.
+
+test robotMain with
+	pre { true }
+	in {				
+		% Assignment 3.1: insert test conditions for the mandatory requirements.
+			
+		% Assignment 3.2: insert any additional conditions for further requirements.
+		
+	}
+	post { true }
+	
+robot {
+	do robotMain. 
+}

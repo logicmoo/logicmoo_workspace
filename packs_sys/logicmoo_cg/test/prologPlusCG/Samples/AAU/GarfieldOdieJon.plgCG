@@ -1,0 +1,33 @@
+//
+// Example of exploiting transitivity of type-hierarchy
+// Available in the AAU directory as "GarfieldOdieJon.plgCG"
+
+// Type-hierarchy
+Entity > Animate, Act.
+Animate > Animal, Human. 
+Animal > Cat, Dog.
+
+// Catalog of instances
+Cat = Garfield.
+Dog = Odie.
+Human = Jon.
+Act = Kick, Like, Love.
+
+// Graphs
+
+// Garfield kicks Odie
+graph(gr1, [Cat: Garfield]<-AGNT-[Act: Kick]-PTNT->[Dog: Odie]).
+
+// Jon likes Garfield
+graph(gr2, [Human: Jon]<-AGNT-[Act: Like]-THME->[Cat: Garfield]).
+
+// Odie likes Garfield
+graph(gr3, [Dog: Odie]<-AGNT-[Act: Like]-THME->[Cat: Garfield]).
+
+// Garfield loves Garfield
+graph(gr4, [Cat: Garfield]<-AGNT-[Act: Love]-THME->[Cat: Garfield]).
+
+
+// Rules
+AnimalDoes(L,G) :- graph(L, G), subsume([Animal]<-AGNT-[Act], G).
+AnimateDoes(L,G) :- graph(L, G), subsume([Animate]<-AGNT-[Act], G).

@@ -1,0 +1,4 @@
+(note "Can Test 0") 
+
+(canonicalize (forAll ?X (=> (instance ?X nucleolus) (thereExists ?Y (and (instance ?Y centriole) (has ?X ?Y))))))
+

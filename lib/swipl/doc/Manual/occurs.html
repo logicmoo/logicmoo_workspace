@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.25</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="www_browser.html">
+<link rel="next" href="option.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="www_browser.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="option.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:occurs"><a id="sec:A.25"><span class="sec-nr">A.25</span> <span class="sec-title">library(occurs): 
+Finding and counting sub-terms</span></a></h2>
+
+<p><a id="sec:occurs"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>library(terms)</code> provides similar predicates and is probably 
+more wide-spread than this library.
+</dd>
+</dl>
+
+<p>This is a SWI-Prolog implementation of the corresponding Quintus 
+library, based on the generalised <a class="pred" href="manipterm.html#arg/3">arg/3</a> 
+predicate of SWI-Prolog.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="contains_term/2"><strong>contains_term</strong>(<var>+Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <var>Sub</var> is contained in <var>Term</var> (=, 
+deterministically)</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="contains_var/2"><strong>contains_var</strong>(<var>+Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <var>Sub</var> is contained in <var>Term</var> (==, 
+deterministically)</dd>
+<dt class="pubdef"><a id="free_of_term/2"><strong>free_of_term</strong>(<var>+Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Succeeds of <var>Sub</var> does not unify to any subterm of <var>Term</var></dd>
+<dt class="pubdef"><a id="free_of_var/2"><strong>free_of_var</strong>(<var>+Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Succeeds of <var>Sub</var> is not equal (<code>==</code>) to any subterm 
+of <var>Term</var></dd>
+<dt class="pubdef"><a id="occurrences_of_term/3"><strong>occurrences_of_term</strong>(<var>+SubTerm, 
++Term, ?Count</var>)</a></dt>
+<dd class="defbody">
+<var>Count</var> the number of SubTerms in <var>Term</var></dd>
+<dt class="pubdef"><a id="occurrences_of_var/3"><strong>occurrences_of_var</strong>(<var>+SubTerm, 
++Term, ?Count</var>)</a></dt>
+<dd class="defbody">
+<var>Count</var> the number of SubTerms in <var>Term</var></dd>
+<dt class="pubdef"><a id="sub_term/2"><strong>sub_term</strong>(<var>-Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Generates (on backtracking) all subterms of <var>Term</var>.</dd>
+<dt class="pubdef"><a id="sub_var/2"><strong>sub_var</strong>(<var>-Sub, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Generates (on backtracking) all subterms (<code>==</code>) of <var>Term</var>.
+</dd>
+</dl>
+
+<p></body></html>

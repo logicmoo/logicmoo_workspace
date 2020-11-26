@@ -1,0 +1,37 @@
+%
+% Startup MicroPrologII
+%
+    
+$ eq(X,X).
+$ neq(X,X):- !, fail.
+$ neq(X,Y).
+ 
+$ not(X) :- call(X), !, fail.
+$ not(X).
+
+$ repeat.
+$ repeat :- repeat.
+
+$ differents(L) :- freeze(L,differents1(L)).
+$ differents1([]).
+$ differents1([T|Q]) :- hors_de(T,Q), differents(Q).
+$ hors_de(X,L) :- freeze(L,hors_de1(X,L)).
+$ hors_de1(X,[]).
+$ hors_de1(X,[T|Q]) :- dif(X,T), hors_de(X,Q).
+
+$ freeze2_ou(X,Y,B) :- freeze(X,une_fois(B,V)),
+                       freeze(Y,une_fois(B,V)).
+$ une_fois(B,V) :- var(V), !, call(B), eq(V,deja_fait).
+$ une_fois(B,V).
+
+
+$ conc([],X,X) .
+$ conc([T|Q],L,[T|R]) :- conc(Q,L,R).
+$ element(X,[X|Y]).
+$ element(X,[Y|Z]) :- element(X,Z).
+$ del(X,[X|Y],Y).
+$ del(X,[Y|Z],[Y|R]) :- del(X,Z,R).
+
+$ wb(X) :- write(X), write(' ').
+$ wf(X) :- write(X), nl, fail.
+

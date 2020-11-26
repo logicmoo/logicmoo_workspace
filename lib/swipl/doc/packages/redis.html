@@ -1,0 +1,1132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>Redis -- a SWI-Prolog client for redis</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">Redis -- a SWI-Prolog client for redis</div>
+<div class="author">Jan Wielemaker <br>
+SWI-Prolog Solutions b.v. <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:jan@swi-prolog.org">jan@swi-prolog.org</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This package provides the 
+library <code>redis.pl</code> that implements a client for the 
+[redis](https://redis.io/), <i>&rdquo; An open source (BSD licensed), 
+in-memory data structure store, used as a database, cache and message 
+broker''</i>
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">About 
+the SWI-Prolog Redis client</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Redis 
+and threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">About 
+versions</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Redis 
+as a message brokering system</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">History</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(redis): 
+Redis client</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(redis_streams): 
+Using Redis streams</span></a></div>
+</div>
+
+<p><h2 id="sec:redis-overview"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">About 
+the SWI-Prolog Redis client</span></a></h2>
+
+<p><a id="sec:redis-overview"></a>
+
+<p><a class="url" href="https://redis.io">Redis</a> is an in-memory 
+key-value store. Redis can be operated as a simple store for managing 
+(notably) volatile persistent data. Redis can operate in serveral modes, 
+ranging from a single server to clusters organised in several different 
+ways to provide high availability, resilience and replicating the data 
+close to the involved servers. In addition to being a key-value store, 
+Redis enables additional communication between clients such as <i>publish/subscribe</i> 
+to message channels, <i>streams</i>, etc.
+
+<p>These features can be used to connect <i>micro services</i>, both for 
+sharing state, notifications and distributing tasks.
+
+<p><h3 id="sec:redis-threads"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Redis 
+and threads</span></a></h3>
+
+<p><a id="sec:redis-threads"></a>
+
+<p>The connection between the redis client and server uses a <i>stream 
+pair</i>. Although SWI-Prolog stream I/O is thread-safe, having multiple 
+threads using this same connection will mixup writes and their replies.
+
+<p>At the moment, the following locking is in place.
+
+<p>
+<ul class="latex">
+<li>Connections created using <a class="pred" href="#redis_connect/3">redis_connect/3</a> 
+are <i>not</i> locked. This implies the connection handle may be used 
+from a single thread only, or <a class="pred" href="#redis/3">redis/3</a> 
+requests must be protected using <span class="pred-ext">with_mutex/2</span>.
+<li>Redis/3 request using a <i>server name</i> established using <a class="pred" href="#redis_server/3">redis_server/3</a> 
+are locked using a mutex with the same name as the server name.
+</ul>
+
+<p><h3 id="sec:redis-versions"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">About 
+versions</span></a></h3>
+
+<p><a id="sec:redis-versions"></a>
+
+<p>The current stable version of Redis is 6. Many Linux distros still 
+ship with version 5. Both talk protocol version 2. Version 6 also 
+supports protocol version 3. The main differences are:
+
+<p>
+<ul class="latex">
+<li>The version 3 protocol has several improvements that notably 
+improvement passing large objects using a <i>streaming</i> protocol.
+<li>Hashes (maps) in the version 3 protocol are exchanged as lists of <i>pairs</i> 
+(<code>Name-Value</code>), while version 2 exchanges hashes as a list of 
+alternating names and values. This is visible to the user. High level 
+predicates such as <a class="pred" href="#redis_get_hash/3">redis_get_hash/3</a> 
+deal with both representations.
+<li>The version 3 protocol supports <i>push messages</i> to deal with
+<i>monitor</i> and <i>subscribe</i> events on the same connection as 
+used for handling normal requests.
+</ul>
+
+<p>New projects are encouraged to use Redis version 6 with the version 3 
+protocol. See <a class="pred" href="#redis_server/3">redis_server/3</a>.
+
+<p><h3 id="sec:redis-brokering"><a id="sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Redis 
+as a message brokering system</span></a></h3>
+
+<p><a id="sec:redis-brokering"></a>
+
+<p>Starting with Redis 5, redis supports <i>streams</i>. A stream is a 
+list of messages. Streams can be used as a reliable alternative to the 
+older Redis PUB/SUB (Publish Subscribe) mechanism that has no memory, 
+i.e., if a node is down when a message arrives the message is missed. In 
+addition, they can be used to have each message processed by a
+<i>consumer</i> that belongs to a <i>consumer group</i>. Both facilities 
+are supported by <code>library(redis_streams)</code> (<a class="sec" href="#sec:3">section 
+3</a>)
+
+<p>Redis streams provide all the low-level primitives to realise message 
+brokering. Putting it all together is non-trivial though. Notably:
+
+<p>
+<ul class="latex">
+<li>We must take care of messages that have been sent to some consumer 
+but the consumer fails to process the message and (thus) ACK it is 
+processed. This is handled by <a class="pred" href="#xlisten_group/5">xlisten_group/5</a> 
+using several options. Good defaults for these options are hard to give 
+as it depends on the required processing time for a message, how common 
+failures are and an acceptable delay time in case of a failure, what to 
+do in case of a persistent failure, etc.
+<li>Streams are independent from consumer groups and acknowledged 
+messages remain in the stream. <a class="pred" href="#xstream_set/3">xstream_set/3</a> 
+can be used to limit the length of the stream, discarding the oldest 
+messages. However, it is hard to give a sensible default. The required 
+queue length depends on the the size of the messages, whether messages 
+come in more or less randomly or in bursts (that cause the stream to 
+grow for a while), available memory, how bad it is if some messages get 
+lost, etc.
+</ul>
+
+<p>The directory <code>doc/packages/examples/redis</code> in the 
+installation provides an example using streams and consumer groups to 
+realise one or more clients connected to one or more compute nodes.
+
+<p><h3 id="sec:redis-history"><a id="sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">History</span></a></h3>
+
+<p><a id="sec:redis-history"></a>
+
+<p>This module is based on the <code>gpredis.pl</code> by Sean Charles 
+for GNU-Prolog. This file greatly helped me understanding what had to be 
+done, although, eventually, not much of the original interface is left. 
+The main difference to the original client are:
+
+<p>
+<ul class="latex">
+<li>Replies are not wrapped by type in a compound term.
+<li>String replies use the SWI-Prolog string type.
+<li>Values can be specified as <code>Value as prolog</code>, after which 
+they are returns as a (copy of) Value. This prefixes the value using "<code>\</code>u0000T<code>\</code>u0000".
+<li>Strings are in UTF-8 encoding to support full Unicode.
+<li>Using <a class="pred" href="#redis_server/3">redis_server/3</a>, 
+actual connections are established lazily and when a connection is lost 
+it is automatically restarted.
+<li>This library allows for using the Redis publish/subscribe interface. 
+Messages are propagated using <span class="pred-ext">broadcast/1</span>.
+</ul>
+
+<p><h2 id="sec:redis"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">library(redis): 
+Redis client</span></a></h2>
+
+<p><a id="sec:redis"></a>
+
+<p>This library is a client to <a class="url" href="https://redis.io">Redis</a>, 
+a popular key value store to deal with caching and communication between 
+micro services.
+
+<p>In the typical use case we register the details of one or more Redis 
+servers using <a class="pred" href="#redis_server/3">redis_server/3</a>. 
+Subsequenly, <a class="pred" href="#redis/2">redis/2</a>-3 is used to 
+issue commands on the server. For example:
+
+<pre class="code">
+?- redis_server(default, redis:6379, [password("secret")]).
+?- redis(default, set(user, "Bob")).
+?- redis(default, get(user), User).
+User = "Bob"
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_server/3"><strong>redis_server</strong>(<var>+ServerName, 
++Address, +Options</var>)</a></dt>
+<dd class="defbody">
+Register a redis server without connecting to it. The <var>ServerName</var> 
+acts as a lazy connection alias. Initially the <var>ServerName</var> <code>default</code> 
+points at <code>localhost:6379</code> with no connect options. The <code>default</code> 
+server is used for <a class="pred" href="#redis/1">redis/1</a> and <a class="pred" href="#redis/2">redis/2</a> 
+and may be changed using this predicate. <var>Options</var> are 
+described with <a class="pred" href="#redis_connect/3">redis_connect/3</a>.
+
+<p>Connections established this way are by default automatically 
+reconnected if the connection is lost for some reason unless a
+<code>reconnect(false)</code> option is specified.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_connect/1"><strong>redis_connect</strong>(<var>-Connection</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_connect/3"><strong>redis_connect</strong>(<var>+Address, 
+-Connection, +Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_connect/3"><strong>redis_connect</strong>(<var>-Connection, 
++Host, +Port</var>)</a></dt>
+<dd class="defbody">
+Connect to a redis server. The main mode is <code>redis_connect(+Address, -Connection, +Options)</code>. <a class="pred" href="#redis_connect/1">redis_connect/1</a> 
+is equivalent to
+<code>redis_connect(localhost:6379, Connection, [])</code>. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>reconnect</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, try to reconnect to the service when the 
+connection seems lost. Default is <code>true</code> for connections 
+specified using
+<a class="pred" href="#redis_server/3">redis_server/3</a> and <code>false</code> 
+for explictly opened connections.
+</dd>
+<dt><strong>user</strong>(<var>+User</var>)</dt>
+<dd class="defbody">
+If <code>version(3)</code> and <code>password(Password)</code> are 
+specified, these are used to authenticate using the <var>HELLO</var> 
+command.
+</dd>
+<dt><strong>password</strong>(<var>+Password</var>)</dt>
+<dd class="defbody">
+Authenticate using <var>Password</var>
+</dd>
+<dt><strong>version</strong>(<var>+Version</var>)</dt>
+<dd class="defbody">
+Specify the connection protocol version. Initially this is version 2. 
+Redis 6 also supports version 3. When specified as <code>3</code>, the <var>HELLO</var> 
+command is used to upgrade the protocol.
+</dd>
+</dl>
+
+<p>Instead of using these predicates, <a class="pred" href="#redis/2">redis/2</a> 
+and <a class="pred" href="#redis/3">redis/3</a> are normally used with a <i>server 
+name</i> argument registered using <a class="pred" href="#redis_server/3">redis_server/3</a>. 
+These predicates are meant for creating a temporary paralel connection 
+or using a connection with a <i>blocking</i> call.
+<table class="arglist">
+<tr><td><var>Address</var> </td><td>is a term <var>Host</var>:<var>Port</var>, <code>unix(File)</code> 
+or the name of a server registered using <a class="pred" href="#redis_server/3">redis_server/3</a>. 
+The latter realises a <i>new</i> connection that is typically used for 
+blocking redis commands such as listening for published messages, 
+waiting on a list or stream. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+<code>redis_connect(-Connection, +Host, +Port)</code> provides 
+compatibility to the original GNU-Prolog interface and is equivalent to <code>redis_connect(Host:Port, Connection, [])</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_disconnect/1"><strong>redis_disconnect</strong>(<var>+Connection</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_disconnect/2"><strong>redis_disconnect</strong>(<var>+Connection, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Disconnect from a redis server. The second form takes one option, 
+similar to <span class="pred-ext">close/2</span>:
+
+<dl class="latex">
+<dt><strong>force</strong>(<var>Force</var>)</dt>
+<dd class="defbody">
+When <code>true</code> (default <code>false</code>), do not raise any 
+errors if
+<var>Connection</var> does not exist or closing the connection raises a 
+network or I/O related exception. This version is used internally if a 
+connection is in a broken state, either due to a protocol error or a 
+network issue.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="redis/2"><strong>redis</strong>(<var>+Connection, 
++Request</var>)</a></dt>
+<dd class="defbody">
+This predicate is overloaded to handle two types of requests. First, it 
+is a shorthand for <code>redis(Connection, Command, _)</code> and 
+second, it can be used to exploit Redis <i>pipelines</i> and <i>transactions</i>. 
+The second form is acticated if <var>Request</var> is a <i>list</i>. In 
+that case, each element of the list is either a term <code>Command -&gt; Reply</code> 
+or a simple
+<var>Command</var>. Semantically this represents a sequence of <a class="pred" href="#redis/3">redis/3</a> 
+and
+<a class="pred" href="#redis/2">redis/2</a> calls. It differs in the 
+following aspects:
+
+<p>
+<ul class="latex">
+<li>All commands are sent in one batch, after which all replies are 
+read. This reduces the number of <i>round trips</i> and typically 
+greatly improves performance.
+<li>If the first command is <code>multi</code> and the last <code>exec</code>, 
+the commands are executed as a Redis <i>transaction</i>, i.e., they are 
+executed <i>atomically</i>.
+<li>If one of the commands returns an error, the subsequent commands
+<b>are still executed</b>.
+<li>You can not use variables from commands earlier in the list for 
+commands later in the list as a result of the above execution order.
+</ul>
+
+<p>Procedurally, the process takes the following steps:
+
+<p>
+<ol class="latex">
+<li>Send all commands
+<li>Read all replies and push messages
+<li>Handle all callbacks from push messages
+<li>Check whether one of the replies is an error. If so, raise this 
+error (subsequent errors are lost)
+<li>Bind all replies for the <code>Command -&gt; Reply</code> terms.
+</ol>
+
+<p>Examples
+
+<pre class="code">
+?- redis(default,
+         [ lpush(li,1),
+           lpush(li,2),
+           lrange(li,0,-1) -&gt; List
+         ]).
+List = ["2", "1"].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="redis/3"><strong>redis</strong>(<var>+Connection, 
++Command, -Reply</var>)</a></dt>
+<dd class="defbody">
+Execute a redis <var>Command</var> on Connnection. Next, bind <var>Reply</var> 
+to the returned result. <var>Command</var> is a callable term whose 
+functor is the name of the Redis command and whose arguments are 
+translated to Redis arguments according to the rules below. Note that 
+all text is always represented using UTF-8 encoding.
+
+<p>
+<ul class="latex">
+<li>Atomic values are emitted verbatim
+<li>A term A:B:... where all arguments are either atoms, strings or 
+integers (<b>no floats</b>) is translated into a string <code>"A:B:..."</code>. 
+This is a common shorthand for representing Redis keys.
+<li>A term Term as prolog is emitted as "<code>\</code>u0000T<code>\</code>u0000" 
+followed by Term in canonical form.
+<li>Any other term is emitted as <span class="pred-ext">write/1</span>.
+</ul>
+
+<p><var>Reply</var> is either a plain term (often a variable) or a term <code>Value as Type</code>. 
+In the latter form, <var>Type</var> dictates how the Redis <i>bulk</i> 
+reply is translated to Prolog. The default equals to <code>auto</code>, 
+i.e., as a number of the content satisfies the Prolog number syntax and 
+as an atom otherwise.
+
+<p>
+<ul class="latex">
+<li><code>status(Atom)</code> Returned if the server replies with <code>+ Status</code>. 
+Atom is the textual value of <var>Status</var> converted to lower case, 
+e.g., <code>status(ok)</code> or <code>status(pong)</code>.
+<li><code>nil</code> This atom is returned for a NIL/NULL value. Note 
+that if the reply is only <code>nil</code>, <a class="pred" href="#redis/3">redis/3</a> <i>fails</i>. 
+The <code>nil</code> value may be embedded inside lists or maps.
+<li>A number Returned if the server replies an integer (":Int"), double 
+(",Num") or big integer ("(Num")
+<li>A string Returned on a <i>bulk</i> reply. Bulk replies are supposed 
+to be in UTF-8 encoding. The the bulk reply starts with "<code>\</code>u0000T<code>\</code>u0000" 
+it is supposed to be a Prolog term. Note that this intepretation means 
+it is <b>not</b> possible to read arbitrary binary blobs.
+<li>A list of replies. A list may also contain <code>nil</code>. If <var>Reply</var> 
+as a whole would be <code>nil</code> the call fails.
+<li>A list of <i>pairs</i>. This is returned for the redis version 3 
+protocol "%Map". Both the key and value respect the same rules as above.
+</ul>
+
+<p>Redis <i>bulk</i> replies are translated depending on the <code>as</code> <var>Type</var> 
+as explained above.
+
+<dl class="latex">
+<dt><strong>string</strong></dt>
+<dt><strong>string</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+Create a SWI-Prolog string object interpreting the blob as following <var>Encoding</var>. <var>Encoding</var> 
+is a restricted set of SWI-Prolog's encodings: <code>bytes</code> (<code>iso_latin_1</code>), <code>utf8</code> 
+and <code>text</code> (the current locale translation).
+</dd>
+<dt><strong>atom</strong></dt>
+<dt><strong>atom</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+As above, producing an atom.
+</dd>
+<dt><strong>codes</strong></dt>
+<dt><strong>codes</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+As above, producing a list of integers (Unicode code points)
+</dd>
+<dt><strong>chars</strong></dt>
+<dt><strong>chars</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+As above, producing a list of one-character atoms.
+</dd>
+<dt><strong>integer</strong></dt>
+<dt><strong>float</strong></dt>
+<dt><strong>rational</strong></dt>
+<dt><strong>number</strong></dt>
+<dd class="defbody">
+Interpret the bytes as a string representing a number. If the string 
+does not represent a number of the requested type a <code>type_error(Type, String)</code> 
+is raised.
+</dd>
+<dt><strong>tagged_integer</strong></dt>
+<dd class="defbody">
+Same as integer, but demands the value to be between the Prolog flags <code>min_tagged_integer</code> 
+and <code>max_tagged_integer</code>, allowing the value to be used as a 
+dict key.
+</dd>
+<dt><strong>auto</strong></dt>
+<dd class="defbody">
+Same as <code>auto(atom, number)</code>
+</dd>
+<dt><strong>auto</strong>(<var>AsText, AsNumber</var>)</dt>
+<dd class="defbody">
+If the bulk string confirms the syntax of <var>AsNumber</var>, convert 
+the value to the requested numberical type. Else convert the value to 
+text according to <var>AsText</var>. This is similar to the Prolog 
+predicate <span class="pred-ext">name/2</span>.
+</dd>
+<dt><strong>dict_key</strong></dt>
+<dd class="defbody">
+Alias for <code>auto(atom,tagged_integer)</code>. This allows the value 
+to be used as a key for a SWI-Prolog dict.
+</dd>
+<dt><strong>pairs</strong>(<var>AsKey, AsValue</var>)</dt>
+<dd class="defbody">
+Convert a map or array of even length into pairs for which the key 
+satisfies <var>AsKey</var> and the value <var>AsValue</var>. The <code>pairs</code> 
+type can also be applied to a Redis array. In this case the array length 
+must be even. This notably allows fetching a Redis
+<i>hash</i> as pairs using <code>HGETALL</code> using version 2 of the 
+Redis protocol.
+</dd>
+<dt><strong>dict</strong>(<var>AsKey, AsValue</var>)</dt>
+<dd class="defbody">
+Similar to <code>pairs(AsKey, AsValue)</code>, but convert the resulting 
+pair list into a SWI-Prolog dict. <var>AsKey</var> must convert to a 
+valid dict key, i.e., an atom or tagged integer. See <code>dict_key</code>.
+</dd>
+<dt><strong>dict</strong>(<var>AsValue</var>)</dt>
+<dd class="defbody">
+Shorthand for <code>dict(dict_key, AsValue)</code>.
+</dd>
+</dl>
+
+<p>Here are some simple examples
+
+<pre class="code">
+?- redis(default, set(a, 42), X).
+X = status("OK").
+?- redis(default, get(a), X).
+X = "42".
+?- redis(default, get(a), X as integer).
+X = 42.
+?- redis(default, get(a), X as float).
+X = 42.0.
+?- redis(default, set(swipl:version, 8)).
+true.
+?- redis(default, incr(swipl:version), X).
+X = 9.
+</pre>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>redis_error(Code, String)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="redis/1"><strong>redis</strong>(<var>+Request</var>)</a></dt>
+<dd class="defbody">
+Connect to the default redis server, call <span class="pred-ext">redist/3</span> 
+using <var>Request</var>, disconnect and print the result. This 
+predicate is intended for interactive usage.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_write/2"><strong>redis_write</strong>(<var>+Redis, 
++Command</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_read/2"><strong>redis_read</strong>(<var>+Redis, 
+-Reply</var>)</a></dt>
+<dd class="defbody">
+Write command and read replies from a <var>Redis</var> server. These are 
+building blocks for subscribing to event streams.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_get_list/3"><strong>redis_get_list</strong>(<var>+Redis, 
++Key, -List</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_get_list/4"><strong>redis_get_list</strong>(<var>+Redis, 
++Key, +ChunkSize, -List</var>)</a></dt>
+<dd class="defbody">
+Get the content of a <var>Redis</var> list in <var>List</var>. If <var>ChunkSize</var> 
+is given and smaller than the list length, <var>List</var> is returned 
+as a <i>lazy list</i>. The actual values are requested using redis <code>LRANGE</code> 
+requests. Note that this results in O(N<code>^</code>2) complexity. 
+Using a lazy list is most useful for relatively short lists holding 
+possibly large items.
+
+<p>Note that values retrieved are <i>strings</i>, unless the value was 
+added using <code>Term as prolog</code>.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<span class="pred-ext">lazy_list/2</span> for a discussion on the 
+difference between lazy lists and normal lists.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_set_list/3"><strong>redis_set_list</strong>(<var>+Redis, 
++Key, +List</var>)</a></dt>
+<dd class="defbody">
+Associate a <var>Redis</var> key with a list. As <var>Redis</var> has no 
+concept of an empty list, if <var>List</var> is <code>[]</code>, <var>Key</var> 
+is <i>deleted</i>. Note that key values are always strings in <var>Redis</var>. 
+The same conversion rules as for
+<a class="pred" href="#redis/1">redis/1</a>-3 apply.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_get_hash/3"><strong>redis_get_hash</strong>(<var>+Redis, 
++Key, -Data:dict</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_set_hash/3"><strong>redis_set_hash</strong>(<var>+Redis, 
++Key, +Data:dict</var>)</a></dt>
+<dd class="defbody">
+Put/get a <var>Redis</var> hash as a Prolog dict. Putting a dict first 
+deletes
+<var>Key</var>. Note that in many cases applications will manage <var>Redis</var> 
+hashes by key. <a class="pred" href="#redis_get_hash/3">redis_get_hash/3</a> 
+is notably a user friendly alternative to the <var>Redis</var> <code>HGETALL</code> 
+command. If the <var>Redis</var> hash is not used by other (non-Prolog) 
+applications one may also consider using the
+<code>Term as prolog</code> syntax to store the Prolog dict as-is.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_array_dict/3"><strong>redis_array_dict</strong>(<var>?Array, 
+?Tag, ?Dict</var>)</a></dt>
+<dd class="defbody">
+Translate a Redis reply representing hash data into a SWI-Prolog dict. <var>Array</var> 
+is either a list of alternating keys and values or a list of <i>pairs</i>. 
+When translating to an array, this is always a list of alternating keys 
+and values.
+<table class="arglist">
+<tr><td><var>Tag</var> </td><td>is the SWI-Prolog dict tag. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_scan/3"><strong>redis_scan</strong>(<var>+Redis, 
+-LazyList, +Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_sscan/4"><strong>redis_sscan</strong>(<var>+Redis, 
++Set, -LazyList, +Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_hscan/4"><strong>redis_hscan</strong>(<var>+Redis, 
++Hash, -LazyList, +Options</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_zscan/4"><strong>redis_zscan</strong>(<var>+Redis, 
++Set, -LazyList, +Options</var>)</a></dt>
+<dd class="defbody">
+Map the <var>Redis</var> <code>SCAN</code>, <code>SSCAN</code>, <code>HSCAN</code> 
+and <var>ZSCAN</var>&lsquo;commands into a <i>lazy list</i>. For <a class="pred" href="#redis_scan/3">redis_scan/3</a> 
+and <a class="pred" href="#redis_sscan/4">redis_sscan/4</a> the result 
+is a list of strings. For <a class="pred" href="#redis_hscan/4">redis_hscan/4</a> 
+and <a class="pred" href="#redis_zscan/4">redis_zscan/4</a>, the result 
+is a list of <i>pairs</i>. <var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>match</strong>(<var>Pattern</var>)</dt>
+<dd class="defbody">
+Adds the <code>MATCH</code> subcommand, only returning matches for
+<var>Pattern</var>.
+</dd>
+<dt><strong>count</strong>(<var>Count</var>)</dt>
+<dd class="defbody">
+Adds the <code>COUNT</code> subcommand, giving a hint to the size of the 
+chunks fetched.
+</dd>
+<dt><strong>type</strong>(<var>Type</var>)</dt>
+<dd class="defbody">
+Adds the <code>TYPE</code> subcommand, only returning answers of the 
+indicated type.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<span class="pred-ext">lazy_list/2</span>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="redis_current_command/2"><strong>redis_current_command</strong>(<var>+Redis, 
+?Command</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="redis_current_command/3"><strong>redis_current_command</strong>(<var>+Redis, 
+?Command, -Properties</var>)</a></dt>
+<dd class="defbody">
+True when <var>Command</var> has <var>Properties</var>. Fails if <var>Command</var> 
+is not defined. The <a class="pred" href="#redis_current_command/3">redis_current_command/3</a> 
+version returns the command argument specification. See <var>Redis</var> 
+documentation for an explanation.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="redis_property/2"><strong>redis_property</strong>(<var>+Redis, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is a property of the <var>Redis</var> 
+server. Currently uses
+<code>redis(info, String)</code> and parses the result. As this is for 
+machine usage, properties names *_human are skipped.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_subscribe/4"><strong>redis_subscribe</strong>(<var>+Redis, 
++Channels, -Id, +Options</var>)</a></dt>
+<dd class="defbody">
+Subscribe to one or more <var>Redis</var> PUB/SUB channels. This 
+predicate creates a thread using <span class="pred-ext">thread_create/3</span> 
+with the given <var>Options</var>. Once running, the thread listens for 
+messages. The message content is a string or Prolog term as described in <a class="pred" href="#redis/3">redis/3</a>. 
+On receiving a message, the following message is broadcasted:
+
+<pre class="code">
+redis(Id, Channel, Data)
+</pre>
+
+<p>If <a class="pred" href="#redis_unsubscribe/2">redis_unsubscribe/2</a> 
+removes the last subscription, the thread terminates.
+
+<p>To simply print the incomming messages use e.g.
+
+<pre class="code">
+?- listen(redis(_, Channel, Data),
+          format('Channel ~p got ~p~n', [Channel,Data])).
+true.
+?- redis_subscribe(default, test, Id, []).
+Id = redis_pubsub_3,
+?- redis(publish(test, "Hello world")).
+Channel test got "Hello world"
+1
+true.
+</pre>
+
+<table class="arglist">
+<tr><td><var>Id</var> </td><td>is the thread identifier of the listening 
+thread. Note that the <var>Options</var> <code>alias(Name)</code> can be 
+used to get a system wide name. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_subscribe/2"><strong>redis_subscribe</strong>(<var>+Id, 
++Channels</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="redis_unsubscribe/2"><strong>redis_unsubscribe</strong>(<var>+Id, 
++Channels</var>)</a></dt>
+<dd class="defbody">
+Add/remove channels from for the subscription. If no subscriptions 
+remain, the listening thread terminates.
+<table class="arglist">
+<tr><td><var>Channels</var> </td><td>is either a single channel or a 
+list thereof. Each channel specification is either an atom or a term&lsquo;A:B:...`, 
+where all parts are atoms. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="redis_current_subscription/2"><strong>redis_current_subscription</strong>(<var>?Id, 
+?Channels</var>)</a></dt>
+<dd class="defbody">
+True when a PUB/SUB subscription with <var>Id</var> is listening on <var>Channels</var>.
+</dd>
+</dl>
+
+<p><h2 id="sec:redisstreams"><a id="sec:3"><span class="sec-nr">3</span> <span class="sec-title">library(redis_streams): 
+Using Redis streams</span></a></h2>
+
+<p><a id="sec:redisstreams"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="https://redis.io/topics/streams-intro">https://redis.io/topics/streams-intro</a>
+</dd>
+</dl>
+
+<p>A Redis stream is a set of messages consisting of key-value pairs 
+that are identified by a time and sequence number. Streams are powerful 
+objects that can roughly be used for three purposes:
+
+<p>
+<ul class="latex">
+<li>Maintain and query a log of events, i.e., a <i>timeline</i>.
+<li>Provide an alternative to Redis' publish/subscribe API that ensures 
+messages get delivered by all clients even if they are offline at the 
+moment an event is published.
+<li>Distribute messages over a group of clients. This mode assigns 
+messages to clients in a round-robin fashion. Clients confirm a specific 
+message is handled. Living clients can inspect the stream for possibly 
+dead clients and migrate the pending messages to other clients.
+</ul>
+
+<p>This library abstracts the latter two scenarios. The main predicates 
+are
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="#xadd/4">xadd/4</a> to add to a stream
+<li><a class="pred" href="#xlisten/3">xlisten/3</a> to read and 
+broadcast messages from a stream
+<li><a class="pred" href="#xlisten_group/5">xlisten_group/5</a> to act 
+as a <i>consumer</i> in a consumer group.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><a id="xstream_set/3"><strong>xstream_set</strong>(<var>+Redis, 
++Key, +Option</var>)</a></dt>
+<dd class="defbody">
+Set an option on for <var>Key</var> on <var>Redis</var>. Currently 
+supports:
+
+<dl class="latex">
+<dt><strong>maxlen</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Make <a class="pred" href="#xadd/4">xadd/4</a> add a <code>MAXLEN ~</code> <var>Count</var> 
+option to the <code>XADD</code> command, capping the length of the 
+stream. See also
+<var>Redis</var> as a message brokering system (<a class="sec" href="#sec:1.3">section 
+1.3</a>)
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xadd/4"><strong>xadd</strong>(<var>+Redis, 
++Key, ?Id, +Data:dict</var>)</a></dt>
+<dd class="defbody">
+Add a message to a the stream <var>Key</var> on <var>Redis</var>. The 
+length of the stream can be capped using the <a class="pred" href="#xstream_set/3">xstream_set/3</a> 
+option <code>maxlen(Count)</code>. If <var>Id</var> is unbound, 
+generating the id is left to the server and <var>Id</var> is unified 
+with the returned id. The returned id is a string consisting of the time 
+stamp in milliseconds and a sequence number. See <var>Redis</var> docs 
+for details.</dd>
+<dt class="pubdef"><a id="xlisten/3"><strong>xlisten</strong>(<var>+Redis, 
++Streams, +Options</var>)</a></dt>
+<dd class="defbody">
+Listen using <code>XREAD</code> on one or more <var>Streams</var> on the 
+server <var>Redis</var>. For each message that arrives, call <span class="pred-ext">broadcast/1</span>, 
+where Data is a dict representing the message.
+
+<pre class="code">
+broadcast(redis(Redis, Stream, Id, Data))
+</pre>
+
+<p><var>Options</var>:
+
+<dl class="latex">
+<dt><strong>count</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Process at most <var>Count</var> messages per stream for each request.
+</dd>
+<dt><strong>start</strong>(<var>+Start</var>)</dt>
+<dd class="defbody">
+Normally either <code>0</code> to start get all messages from the epoch 
+or <code>$</code> to get messages starting with the last. Default is <code>$</code>.
+</dd>
+<dt><strong>starts</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+May be used as an alternative to the <span class="pred-ext">start/1</span> 
+option to specify the start for each stream. This may be used to restart 
+listening if the application remembers the last processed id.
+</dd>
+</dl>
+
+<p>Note that this predicate does <b>not terminate</b>. It is normally 
+executed in a thread. The following call listens to the streams
+<code>key1</code> and <code>key2</code> on the default <var>Redis</var> 
+server. Using
+<code>reconnect(true)</code>, the client will try to re-establish a 
+connection if the collection got lost.
+
+<pre class="code">
+?- redis_connect(default, C, [reconnect(true)]),
+   thread_create(xlisten(C, [key1, key2], [start($)]),
+                 _, [detached(true)]).
+</pre>
+
+<table class="arglist">
+<tr><td><var>Redis</var> </td><td>is either a <var>Redis</var> server 
+name (see <a class="pred" href="#redis_server/3">redis_server/3</a>) or 
+an open connection. If it is a server name, a new connection is opened 
+that is closed if <a class="pred" href="#xlisten/3">xlisten/3</a> 
+completes. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#redis_subscribe/2">redis_subscribe/2</a> 
+implements the classical pub/sub system of
+<var>Redis</var> that does not have any memory.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="xlisten_group/5"><strong>xlisten_group</strong>(<var>+Redis, 
++Group, +Consumer, +Streams, +Options</var>)</a></dt>
+<dd class="defbody">
+Listen as <var>Consumer</var> to <var>Group</var>. This is similar to <a class="pred" href="#xlisten/3">xlisten/3</a>, 
+with the following differences:
+
+<p>
+<ul class="latex">
+<li>Instead of using <span class="pred-ext">broadcast/1</span>, <span class="pred-ext">broadcast_request/1</span> 
+is used and the message is only considered processed if <span class="pred-ext">broadcast_request/1</span> 
+succeeds. If the message is handled with success, an <code>XACK</code> 
+is sent to the server.
+</ul>
+
+<p><var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>block</strong>(<var>+Seconds</var>)</dt>
+<dd class="defbody">
+Causes <code>XREADGROUP</code> to return with timeout when no messages 
+arrive within <var>Seconds</var>. On a timeout, <span class="pred-ext">xidle_group/5</span> 
+is called which will try to handle messages to other consumers pending 
+longer than <var>Seconds</var>. Choosing the time depends on the 
+application. Notably:
+
+<p>
+<ul class="latex">
+<li>Using a time shorter than the required processing time will make the 
+job migrate from consumer to consumer until
+<code>max_deliveries(Count)</code> is exceeded. Note that the original 
+receiver does not notice that the job is claimed and thus multiple 
+consumers may ultimately answer the message.
+<li>Using a too long time causes an unnecessarily long delay if a node 
+fails.
+</ul>
+</dd>
+<dt><strong>max_deliveries</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Re-deliver (using <code>XCLAIM</code>) a message max <var>Count</var> 
+times. Exceeding this calls <a class="pred" href="#xhook/2">xhook/2</a>. 
+Default <var>Count</var> is <code>3</code>.
+</dd>
+<dt><strong>max_claim</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Do not claim more than <var>Count</var> messages during a single idle 
+action. Default is <code>10</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="xconsumer_stop/1"><strong>xconsumer_stop</strong>(<var>+Leave</var>)</a></dt>
+<dd class="defbody">
+May be called from a consumer listener to stop the consumer. This 
+predicate throws the exception <code>redis(stop(Leave))</code>, which is 
+caught by <a class="pred" href="#xlisten_group/5">xlisten_group/5</a>.</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="xhook/2"><strong>xhook</strong>(<var>+Stream, 
++Event</var>)</a></dt>
+<dd class="defbody">
+This multifile predicate is called on certain stream events. Defined 
+events are:
+
+<dl class="latex">
+<dt><strong>delivery_failed</strong>(<var>Id, Group, Delivered</var>)</dt>
+<dd class="defbody">
+A message was delivered more than specified by <span class="pred-ext">max_deliveries/1</span> 
+of <a class="pred" href="#xlisten_group/5">xlisten_group/5</a>. <var>Id</var> 
+is the message id, <var>Group</var> the group and
+<var>Delivered</var> the current delivery count. If the hooks fails, the 
+message is acknowledged using <code>XACK</code>. From <a class="url" href="https://redis.io/topics/streams-intro">introduction 
+to streams</a>:
+<blockquote> "So once the deliveries counter reaches a given large 
+number that you chose, it is probably wiser to put such messages in 
+another stream and send a notification to the system administrator. This 
+is basically the way that Redis streams implement the concept of the 
+dead letter."
+</blockquote>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#redis/1">redis/1</a></dt>
+<dt><a class="idx" href="#redis/2">redis/2</a></dt>
+<dt><a class="idx" href="#redis/3">redis/3</a></dt>
+<dt><a class="idx" href="#redis_array_dict/3">redis_array_dict/3</a></dt>
+<dt><a class="idx" href="#redis_connect/1">redis_connect/1</a></dt>
+<dt><a class="idx" href="#redis_connect/3">redis_connect/3</a></dt>
+<dt><a class="idx" href="#redis_current_command/2">redis_current_command/2</a></dt>
+<dt><a class="idx" href="#redis_current_command/3">redis_current_command/3</a></dt>
+<dt><a class="idx" href="#redis_current_subscription/2">redis_current_subscription/2</a></dt>
+<dt><a class="idx" href="#redis_disconnect/1">redis_disconnect/1</a></dt>
+<dt><a class="idx" href="#redis_disconnect/2">redis_disconnect/2</a></dt>
+<dt><a class="idx" href="#redis_get_hash/3">redis_get_hash/3</a></dt>
+<dt><a class="idx" href="#redis_get_list/3">redis_get_list/3</a></dt>
+<dt><a class="idx" href="#redis_get_list/4">redis_get_list/4</a></dt>
+<dt><a class="idx" href="#redis_hscan/4">redis_hscan/4</a></dt>
+<dt><a class="idx" href="#redis_property/2">redis_property/2</a></dt>
+<dt><a class="idx" href="#redis_read/2">redis_read/2</a></dt>
+<dt><a class="idx" href="#redis_scan/3">redis_scan/3</a></dt>
+<dt><a class="idx" href="#redis_server/3">redis_server/3</a></dt>
+<dt><a class="idx" href="#redis_set_hash/3">redis_set_hash/3</a></dt>
+<dt><a class="idx" href="#redis_set_list/3">redis_set_list/3</a></dt>
+<dt><a class="idx" href="#redis_sscan/4">redis_sscan/4</a></dt>
+<dt><a class="idx" href="#redis_subscribe/2">redis_subscribe/2</a></dt>
+<dt><a class="idx" href="#redis_subscribe/4">redis_subscribe/4</a></dt>
+<dt><a class="idx" href="#redis_unsubscribe/2">redis_unsubscribe/2</a></dt>
+<dt><a class="idx" href="#redis_write/2">redis_write/2</a></dt>
+<dt><a class="idx" href="#redis_zscan/4">redis_zscan/4</a></dt>
+<dt><a class="idx" href="#xadd/4">xadd/4</a></dt>
+<dt><a class="idx" href="#xconsumer_stop/1">xconsumer_stop/1</a></dt>
+<dt><a class="idx" href="#xhook/2">xhook/2</a></dt>
+<dt><a class="idx" href="#xlisten/3">xlisten/3</a></dt>
+<dt><a class="idx" href="#xlisten_group/5">xlisten_group/5</a></dt>
+<dt><a class="idx" href="#xstream_set/3">xstream_set/3</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

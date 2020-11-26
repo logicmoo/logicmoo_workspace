@@ -1,0 +1,168 @@
+/* <module>
+% =============================================
+% File 'mpred_builtin.pfc'
+% Purpose: Agent Reactivity for SWI-Prolog
+% Maintainer: Douglas Miles
+% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Version: 'interface' 1.0.0
+% Revision: $Revision: 1.9 $
+% Revised At: $Date: 2002/06/27 14:13:20 $
+% =============================================
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%         P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~ P =         test nesc false                        assert(~P),retract(P), disable(P)
+%
+%   ~ ~(P) =         test possible (via not impossible)      retract( ~(P)), enable(P).
+%  \+ ~(P) =         test impossiblity is unknown            retract( ~(P))
+%   ~ \+(P) =        same as P                               same as P
+%     \+(P) =        test naf(P)                             retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+*/
+
+%  was_module(header_sane,[]).
+
+:- include(test_header).
+
+:- op(500,fx,'~').
+:- op(1050,xfx,('==>')).
+:- op(1050,xfx,'<==>').
+:- op(1100,fx,('==>')).
+:- op(1150,xfx,('::::')).
+
+:- set_fileAssertMt(header_sane).
+
+:- file_begin(pfc).
+
+
+:- dynamic(full_name/2).
+
+
+% These tests mix singleValuedInArg and mdefault/1 is differnt ways
+
+
+% if we learn that something has a full name, then we guess it is a user_login object.  (in our version of reality)
+full_name(U,_) ==> user_login(U).
+
+
+% if we learn that something has a host name, then we guess it is a user_login object.
+host_name(U,_) ==> user_login(U).
+
+
+% when we know a user_login's full name and host name, make a user_name_host/3 assertion.
+(((user_login(User),
+  full_name(User,Name)/(Name\=isMissing),
+  host_name(User,Host)/(Host\=isMissing) ),
+  {ground(user_name_host(User,Name,Host))}) ==> user_name_host(User,Name,Host)).
+
+
+% the default full_name for a user_login is 'isMissing'.
+%user_login(User), ~full_name(User,X)/(X\=isMissing)==>full_name(User,isMissing).
+prologSingleValued(full_name).
+mdefault( user_login(User) ==> full_name(User,isMissing)).  
+
+
+% the default host_name for a user_login is 'isMissing'.
+%user_login(User), ~host_name(User,X)/(X\==isMissing) ==> host_name(User,isMissing).
+prologSingleValued(host_name).
+mdefault( user_login(User) ==> host_name(User,isMissing)).
+
+
+never_assert_u(full_name(finin,isMissing),too_much_forward_chaing).
+
+user_login(joe1).
+
+:- sanity(listing([full_name/2,host_name/2,user_login/1])).
+
+:- mpred_test(host_name(joe1,isMissing)).
+
+
+% (mpred_default1(P ==> Q),{mpred_literal_nv(Q),arg(N,Q,DEF),N>1,nonvar(DEF),replace_arg(Q,N,NEW,R)} ==> (P, ~R/(NEW\==DEF) ==> Q)).
+
+==> full_name(finin,'Tim Finin').
+
+:- mpred_test(user_login(finin)).
+:- mpred_test(host_name(finin,isMissing)).
+
+==> host_name(finin,antares).
+
+:- mpred_test(\+ host_name(finin,isMissing)).
+
+user_login(finin).
+
+:- mpred_test(\+ host_name(finin,isMissing)).
+:- mpred_test(\+ full_name(finin,isMissing)).
+
+
+
+==> full_name(robin,'Robin,McEntire').
+
+==> host_name(fritzson,hamlet).
+
+:- sanity(listing([full_name/2,host_name/2,user_login/1,user_name_host/3])).
+
+:- mpred_test(host_name(robin,isMissing)).
+
+==> host_name(robin,rmachine).
+
+:- mpred_test(\+ host_name(robin,isMissing)).
+
+:- mpred_trace_exec.
+:- debug_logicmoo(_).
+
+==> ~host_name(robin,rmachine).
+
+:- mpred_test(\+ host_name(robin,rmachine)).
+
+?- listing(host_name).
+
+==> \+ ~host_name(robin,rmachine).
+
+:- mpred_test(host_name(robin,isMissing)).
+
+
+/*
+
+meta_argtypes(idForTest(tBird,ftTerm)).
+
+singleValuedInArgDefault(idForTest,2,isMissing).
+
+tBird(iPeety).
+*/
+
+/*
+
+:- mpred_test(idForTest(iPeety,isMissing)).
+
+
+idForTest(iTweetyPie,foo1).
+
+:- mpred_test(\+ idForTest(iTweetyPie,isMissing)).
+
+:- mpred_test(idForTest(iTweetyPie,foo1)).
+
+
+:- show_call(why,listing(idForTest)).
+
+==> \+ idForTest(iTweetyPie,foo1).
+
+:- mpred_test(idForTest(iTweetyPie,isMissing)).
+:- mpred_test(\+ idForTest(iTweetyPie,foo1)).
+
+:- show_call(why,listing(idForTest)).
+
+*/
+
+
+

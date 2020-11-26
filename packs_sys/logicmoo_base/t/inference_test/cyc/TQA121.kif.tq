@@ -1,0 +1,31 @@
+(note TQA121)
+
+
+
+(actsInCapacity UnitedNationsOrganization mediators ResolveByMediation IntendedFunction) 
+
+(implies 
+ (actsInCapacity ?X ?ROLE ?Y IntendedFunction) 
+ (behaviorCapable ?X ?Y ?ROLE)) 
+
+(implies 
+ (and 
+ (instance ?SIT ?SIT-TYPE) 
+ (behaviorCapable ?X ?SIT-TYPE ?ROLE)) 
+ (capableOfDoing ?X ?SIT ?ROLE)) 
+
+(query (findall ?MEDIATORS (implies 
+   (and 
+       (instance ?CONFLICT TerritorialDispute) 
+       (instance ?RESOLUTION ResolveByMediation) 
+       (opponentsInConflict Iran Kuwait ?CONFLICT) 
+       (resolutionOfConflict ?RESOLUTION ?CONFLICT)) 
+   (capableOfDoing ?MEDIATORS ?RESOLUTION mediators)) ))
+
+(answer UnitedNationsOrganization )
+
+(end_of_file)
+
+
+
+

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <schema targetNamespace="urn:candc"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns1="urn:candc"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <!-- operation request element -->
+  <element name="parse_string">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_text -->
+     <element name="start" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_start -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_stringResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREstring::_result -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="parse_sentence">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_text -->
+     <element name="printer" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_printer -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_sentenceResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREsentence::_result -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="parse_oracle">
+   <complexType>
+    <sequence>
+     <element name="text" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_text -->
+     <element name="constraints" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_constraints -->
+     <element name="printer" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_printer -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="parse_oracleResponse">
+   <complexType>
+    <sequence>
+     <element name="result" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns1__parse_USCOREoracle::_result -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+

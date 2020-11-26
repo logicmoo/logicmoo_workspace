@@ -1,0 +1,12 @@
+% All modules are declared here so that this next lines dont have to be pasted into every file.
+% Since this list will need at least 160 entries to cover the obj classes rooms and commands, 
+% we add the modules here to not waste 160^2 lines of text and having to not 
+% update 160+ files whenever a new module is used
+%
+% Logicmoo Project PrologMUD: A MUD server written in Prolog
+% Maintainer: Douglas Miles
+% Dec 13, 2035
+%
+
+:- include('mpred_header.pro').
+

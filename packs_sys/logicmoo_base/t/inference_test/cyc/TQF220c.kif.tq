@@ -1,0 +1,313 @@
+(abort)
+(contains MiddleEast-Region UnitedArabEmirates) 
+
+(inverse contains inRegion) 
+
+(contains MiddleEast-Region Iran) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (inRegion ?STATE ?COMMON-REGION) 
+ (inRegion ?FRIEND ?COMMON-REGION) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (behaviorCapable ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) directingAgent)) 
+
+(instance UnitedArabEmirates GeopoliticalEntity) 
+
+(inRegion UnitedArabEmirates MiddleEast-Region) 
+
+(inRegion Iran MiddleEast-Region) 
+
+(instance Iran GeopoliticalEntity) 
+
+(instance DiplomaticRecognitionOfGovernment DiplomaticEvent-StateLevel-Positive) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (different ?FRIEND ?STATE) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (fosters-ActionTypeSitType ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent ?STATE ?FRIEND StateRelations) likelihood))))) 
+
+(behaviorCapable UnitedArabEmirates 
+ (CollectionSubsetFn DiplomaticRecognitionOfGovernment 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) directingAgent) 
+
+(subclass 
+ (CollectionSubsetFn DiplomaticRecognitionOfGovernment 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) DiplomaticEvent) 
+
+(fosters-ActionTypeSitType UnitedArabEmirates 
+ (CollectionSubsetFn DiplomaticRecognitionOfGovernment 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent UnitedArabEmirates Iran StateRelations) likelihood)))) 
+
+(contains MiddleEast-Region UnitedArabEmirates) 
+
+(inverse contains inRegion) 
+
+(contains MiddleEast-Region Iran) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (inRegion ?STATE ?COMMON-REGION) 
+ (inRegion ?FRIEND ?COMMON-REGION) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (behaviorCapable ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) directingAgent)) 
+
+(instance UnitedArabEmirates GeopoliticalEntity) 
+
+(inRegion UnitedArabEmirates MiddleEast-Region) 
+
+(inRegion Iran MiddleEast-Region) 
+
+(instance Iran GeopoliticalEntity) 
+
+(instance AppointingAmbassador DiplomaticEvent-StateLevel-Positive) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (different ?FRIEND ?STATE) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (fosters-ActionTypeSitType ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent ?STATE ?FRIEND StateRelations) likelihood))))) 
+
+(behaviorCapable UnitedArabEmirates 
+ (CollectionSubsetFn AppointingAmbassador 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) directingAgent) 
+
+(subclass 
+ (CollectionSubsetFn AppointingAmbassador 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) DiplomaticEvent) 
+
+(fosters-ActionTypeSitType UnitedArabEmirates 
+ (CollectionSubsetFn AppointingAmbassador 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent UnitedArabEmirates Iran StateRelations) likelihood)))) 
+
+(contains MiddleEast-Region UnitedArabEmirates) 
+
+(inverse contains inRegion) 
+
+(contains MiddleEast-Region Iran) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (inRegion ?STATE ?COMMON-REGION) 
+ (inRegion ?FRIEND ?COMMON-REGION) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (behaviorCapable ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) directingAgent)) 
+
+(instance UnitedArabEmirates GeopoliticalEntity) 
+
+(inRegion UnitedArabEmirates MiddleEast-Region) 
+
+(inRegion Iran MiddleEast-Region) 
+
+(instance Iran GeopoliticalEntity) 
+
+(instance HostingStateDelegation DiplomaticEvent-StateLevel-Positive) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (different ?FRIEND ?STATE) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (fosters-ActionTypeSitType ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent ?STATE ?FRIEND StateRelations) likelihood))))) 
+
+(behaviorCapable UnitedArabEmirates 
+ (CollectionSubsetFn HostingStateDelegation 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) directingAgent) 
+
+(subclass 
+ (CollectionSubsetFn HostingStateDelegation 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) DiplomaticEvent) 
+
+(fosters-ActionTypeSitType UnitedArabEmirates 
+ (CollectionSubsetFn HostingStateDelegation 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent UnitedArabEmirates Iran StateRelations) likelihood)))) 
+
+(contains MiddleEast-Region UnitedArabEmirates) 
+
+(inverse contains inRegion) 
+
+(contains MiddleEast-Region Iran) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (inRegion ?STATE ?COMMON-REGION) 
+ (inRegion ?FRIEND ?COMMON-REGION) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (behaviorCapable ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) directingAgent)) 
+
+(instance UnitedArabEmirates GeopoliticalEntity) 
+
+(inRegion UnitedArabEmirates MiddleEast-Region) 
+
+(inRegion Iran MiddleEast-Region) 
+
+(instance Iran GeopoliticalEntity) 
+
+(instance ProvidingDiplomaticAssistance DiplomaticEvent-StateLevel-Positive) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (different ?FRIEND ?STATE) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (fosters-ActionTypeSitType ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent ?STATE ?FRIEND StateRelations) likelihood))))) 
+
+(behaviorCapable UnitedArabEmirates 
+ (CollectionSubsetFn ProvidingDiplomaticAssistance 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) directingAgent) 
+
+(subclass 
+ (CollectionSubsetFn ProvidingDiplomaticAssistance 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) DiplomaticEvent) 
+
+(fosters-ActionTypeSitType UnitedArabEmirates 
+ (CollectionSubsetFn ProvidingDiplomaticAssistance 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent UnitedArabEmirates Iran StateRelations) likelihood)))) 
+
+(contains MiddleEast-Region UnitedArabEmirates) 
+
+(inverse contains inRegion) 
+
+(contains MiddleEast-Region Iran) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (inRegion ?STATE ?COMMON-REGION) 
+ (inRegion ?FRIEND ?COMMON-REGION) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (behaviorCapable ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) directingAgent)) 
+
+(instance UnitedArabEmirates GeopoliticalEntity) 
+
+(inRegion UnitedArabEmirates MiddleEast-Region) 
+
+(inRegion Iran MiddleEast-Region) 
+
+(instance Iran GeopoliticalEntity) 
+
+(instance ExtraditingForeignCriminals DiplomaticEvent-StateLevel-Positive) 
+
+(implies 
+ (and 
+ (instance ?STATE GeopoliticalEntity) 
+ (different ?FRIEND ?STATE) 
+ (instance ?FRIEND GeopoliticalEntity) 
+ (instance ?DIPLOMATIC-ACTION DiplomaticEvent-StateLevel-Positive)) 
+ (fosters-ActionTypeSitType ?STATE 
+ (CollectionSubsetFn ?DIPLOMATIC-ACTION 
+ (TheSetOf ?OBJ 
+ (beneficiary ?OBJ ?FRIEND))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent ?STATE ?FRIEND StateRelations) likelihood))))) 
+
+(behaviorCapable UnitedArabEmirates 
+ (CollectionSubsetFn ExtraditingForeignCriminals 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) directingAgent) 
+
+(subclass 
+ (CollectionSubsetFn ExtraditingForeignCriminals 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) DiplomaticEvent) 
+
+(fosters-ActionTypeSitType UnitedArabEmirates 
+ (CollectionSubsetFn ExtraditingForeignCriminals 
+ (TheSetOf ?OBJ-1 
+ (beneficiary ?OBJ-1 Iran))) 
+ (CollectionSubsetFn IncreaseEvent 
+ (TheSetOf ?OBJ 
+ (increases-Generic ?OBJ 
+ (hasStatusWithAgent UnitedArabEmirates Iran StateRelations) likelihood)))) 
+
+
+

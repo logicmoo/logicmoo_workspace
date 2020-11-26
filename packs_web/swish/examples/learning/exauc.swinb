@@ -1,0 +1,52 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Drawing the ROC and PR curves and computing the areas
+
+You have to provide a list of couples prob-example where 
+example is an =atom= for positive 
+examples and `\+(atom)` for negative examples such as 
+==
+[0.7 - a, 0.7 - a, 0.7 - \+(a), 0.6 - a, 
+0.6 - \+(a), 0.5 - a, 0.4 - \+(a)],
+==
+You can then draw the curves with R and compute the areas with
+</div>
+<div class="nb-cell query">
+main_R(AUCROC, AUCPR).
+</div>
+<div class="nb-cell markdown">
+You can then draw the curves with C3.js and compute the areas with
+</div>
+<div class="nb-cell query">
+main_c3js(AUCROC, ROC, AUCPR, PR). 
+</div>
+<div class="nb-cell markdown">
+### Code
+</div>
+<div class="nb-cell program prolog" data-background="true">
+:-use_module(library(auc)).
+:-use_module(library(cplint_r)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- endif.
+
+main_R(AUCROC, AUCPR) :-
+  compute_areas_diagrams_r(
+    % list of couples prob-example where example is an atom for positive 
+    % examples and \+(atom) for negative examples
+    [0.7 - a, 0.7 - a, 0.7 - \+(a), 0.6 - a, 
+     0.6 - \+(a), 0.5 - a, 0.4 - \+(a)],
+    AUCROC, AUCPR).
+
+main_c3js(AUCROC, ROC, AUCPR, PR):-
+  compute_areas_diagrams(
+    % list of couples prob-example where example is an atom for positive 
+    % examples and \+(atom) for negative examples
+    [0.7 - a, 0.7 - a, 0.7 - \+(a), 0.6 - a, 
+     0.6 - \+(a), 0.5 - a, 0.4 - \+(a)],
+    AUCROC, ROC, AUCPR, PR).
+</div>
+
+</div>

@@ -1,0 +1,1307 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.27</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="charconv.html">
+<link rel="next" href="miscarith.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="charconv.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="miscarith.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:arith"><a id="sec:4.27"><span class="sec-nr">4.27</span> <span class="sec-title">Arithmetic</span></a></h2>
+
+<a id="sec:arith"></a>
+
+<p>Arithmetic can be divided into some special purpose integer 
+predicates and a series of general predicates for integer, floating 
+point and rational arithmetic as appropriate. The general arithmetic 
+predicates all handle <var>expressions</var>. An expression is either a 
+simple number or a <var>function</var>. The arguments of a function are 
+expressions. The functions are described in <a class="sec" href="arith.html#sec:4.27.2.5">section 
+4.27.2.5</a>.
+
+<p><h3 id="sec:logic-int-arith"><a id="sec:4.27.1"><span class="sec-nr">4.27.1</span> <span class="sec-title">Special 
+purpose integer arithmetic</span></a></h3>
+
+<a id="sec:logic-int-arith"></a>
+
+<p>The predicates in this section provide more logical operations 
+between integers. They are not covered by the ISO standard, although 
+they are&lsquo;part of the community' and found as either library or 
+built-in in many other Prolog systems.
+
+<dl class="latex">
+<dt class="pubdef"><a id="between/3"><strong>between</strong>(<var>+Low, 
++High, ?Value</var>)</a></dt>
+<dd class="defbody">
+<var>Low</var> and <var>High</var> are integers, <var><var>High</var> &gt;=<var>Low</var></var>. 
+If
+<var>Value</var> is an integer, <var><var>Low</var> =&lt;<var>Value</var> 
+=&lt;<var>High</var></var>. When <var>Value</var> is a variable it is 
+successively bound to all integers between <var>Low</var> and <var>High</var>. 
+If <var>High</var> is <code>inf</code> or
+<code>infinite</code><sup class="fn">111<span class="fn-text">We prefer <code>infinite</code>, 
+but some other Prolog systems already use <code>inf</code> for infinity; 
+we accept both for the time being.</span></sup>
+<a id="idx:between3:1518"></a><a class="pred" href="arith.html#between/3">between/3</a> 
+is true iff <var><var>Value</var> &gt;=<var>Low</var></var>, a feature 
+that is particularly interesting for generating integers from a certain 
+value.</dd>
+<dt class="pubdef"><a id="succ/2"><strong>succ</strong>(<var>?Int1, 
+?Int2</var>)</a></dt>
+<dd class="defbody">
+True if <var><var>Int2</var> = <var>Int1</var> + 1</var> and <var><var>Int1</var> 
+&gt;= 0</var>. At least one of the arguments must be instantiated to a 
+natural number. This predicate raises the domain error <code>not_less_than_zero</code> 
+if called with a negative integer. E.g. <code>succ(X, 0)</code> fails 
+silently and <code>succ(X, -1)</code> raises a domain error.<sup class="fn">112<span class="fn-text">The 
+behaviour to deal with natural numbers only was defined by Richard 
+O'Keefe to support the common count-down-to-zero in a natural way. Up to 
+5.1.8, <a id="idx:succ2:1519"></a><a class="pred" href="arith.html#succ/2">succ/2</a> 
+also accepted negative integers.</span></sup></dd>
+<dt class="pubdef"><a id="plus/3"><strong>plus</strong>(<var>?Int1, 
+?Int2, ?Int3</var>)</a></dt>
+<dd class="defbody">
+True if <var><var>Int3</var> = <var>Int1</var> + <var>Int2</var></var>. 
+At least two of the three arguments must be instantiated to integers.</dd>
+<dt class="pubdef"><a id="divmod/4"><strong>divmod</strong>(<var>+Dividend, 
++Divisor, -Quotient, -Remainder</var>)</a></dt>
+<dd class="defbody">
+This predicate is a shorthand for computing both the <var>Quotient</var> 
+and
+<var>Remainder</var> of two integers in a single operation. This allows 
+for exploiting the fact that the low level implementation for computing 
+the quotient also produces the remainder. Timing confirms that this 
+predicate is almost twice as fast as performing the steps independently. 
+Semantically, <a id="idx:divmod4:1520"></a><a class="pred" href="arith.html#divmod/4">divmod/4</a> 
+is defined as below.
+
+<pre class="code">
+divmod(Dividend, Divisor, Quotient, Remainder) :-
+        Quotient  is Dividend div Divisor,
+        Remainder is Dividend mod Divisor.
+</pre>
+
+<p>Note that this predicate is only available if SWI-Prolog is compiled 
+with unbounded integer support. This is the case for all packaged 
+versions.</dd>
+<dt class="pubdef"><a id="nth_integer_root_and_remainder/4"><strong>nth_integer_root_and_remainder</strong>(<var>+N, 
++I, -Root, -Remainder</var>)</a></dt>
+<dd class="defbody">
+True when <var>Root ** N + Remainder = I</var>. <var>N</var> and <var>I</var> 
+must be integers.<sup class="fn">113<span class="fn-text">This predicate 
+was suggested by Markus Triska. The final name and argument order is by 
+Richard O'Keefe. The decision to include the remainder is by Jan 
+Wielemaker. Including the remainder makes this predicate about twice as 
+slow if <var>Root</var> is not exact.</span></sup>
+<var>N</var> must be one or more. If <var>I</var> is negative and
+<var>N</var> is <em>odd</em>, <var>Root</var> and <var>Remainder</var> 
+are negative, i.e., the following holds for <var><var>I</var> &lt; 0</var>:
+
+<pre class="code">
+%   I &lt; 0,
+%   N mod 2 =\= 0,
+    nth_integer_root_and_remainder(
+        N, I, Root, Remainder),
+    IPos is -I,
+    nth_integer_root_and_remainder(
+        N, IPos, RootPos, RemainderPos),
+    Root =:= -RootPos,
+    Remainder =:= -RemainderPos.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:arithpreds"><a id="sec:4.27.2"><span class="sec-nr">4.27.2</span> <span class="sec-title">General 
+purpose arithmetic</span></a></h3>
+
+<a id="sec:arithpreds"></a>
+
+<p>The general arithmetic predicates are optionally compiled (see
+<a id="idx:setprologflag2:1521"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+and the <strong>-O</strong> command line option). Compiled arithmetic 
+reduces global stack requirements and improves performance. 
+Unfortunately compiled arithmetic cannot be traced, which is why it is 
+optional.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=">/2"><var>+Expr1</var> <strong>&gt;</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a larger number than <var>Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="</2"><var>+Expr1</var> <strong>&lt;</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a smaller number than <var>Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="=</2"><var>+Expr1</var> <strong>=&lt;</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a smaller or equal 
+number to <var>Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=">=/2"><var>+Expr1</var> <strong>&gt;=</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a larger or equal 
+number to <var>Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="=\=/2"><var>+Expr1</var> <strong>=\=</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a number non-equal to
+<var>Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="=:=/2"><var>+Expr1</var> <strong>=:=</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+True if expression <var>Expr1</var> evaluates to a number equal to <var> 
+Expr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="is/2"><var>-Number</var> <strong>is</strong> <var>+Expr</var></a></dt>
+<dd class="defbody">
+True when <var>Number</var> is the value to which <var>Expr</var> 
+evaluates. Typically, <a id="idx:is2:1522"></a><a class="pred" href="arith.html#is/2">is/2</a> 
+should be used with unbound left operand. If equality is to be tested, <a class="pred" href="arith.html#=:=/2">=:=/2</a> 
+should be used. For example:
+
+<p><table class="latex frame-void center">
+<tr><td><code>?- 1 is sin(pi/2).</code> </td><td>Fails! sin(pi/2) 
+evaluates to the float 1.0, which does not unify with the integer 1. </td></tr>
+<tr><td><code>?- 1 =:= sin(pi/2).</code> </td><td>Succeeds as expected.</td></tr>
+</table>
+</dd>
+</dl>
+
+<p><h4 id="sec:artypes"><a id="sec:4.27.2.1"><span class="sec-nr">4.27.2.1</span> <span class="sec-title">Arithmetic 
+types</span></a></h4>
+
+<a id="sec:artypes"></a>
+
+<p><a id="idx:integerunbounded:1523"></a><a id="idx:rationalnumber:1524"></a><a id="idx:numberrational:1525"></a>SWI-Prolog 
+defines the following numeric types:
+
+<p>
+<ul class="latex">
+<li><i>integer</i><br>
+If SWI-Prolog is built using the <em>GNU multiple precision arithmetic 
+library</em> <a id="idx:GMP:1526"></a>(GMP), integer arithmetic is <em>unbounded</em>, 
+which means that the size of integers is limited by available memory 
+only. Without GMP, SWI-Prolog integers are 64-bits, regardless of the 
+native integer size of the platform. The type of integer support can be 
+detected using the Prolog flags <a class="flag" href="flags.html#flag:bounded">bounded</a>, <a class="flag" href="flags.html#flag:min_integer">min_integer</a> 
+and
+<a class="flag" href="flags.html#flag:max_integer">max_integer</a>. As 
+the use of GMP is default, most of the following descriptions assume 
+unbounded integer arithmetic.
+
+<p>Internally, SWI-Prolog has three integer representations. Small 
+integers (defined by the Prolog flag <a class="flag" href="flags.html#flag:max_tagged_integer">max_tagged_integer</a>) 
+are encoded directly. Larger integers are represented as 64-bit values 
+on the global stack. Integers that do not fit in 64 bits are represented 
+as serialised GNU MPZ structures on the global stack.
+
+<p>
+<li><i>rational number</i><br>
+Rational numbers (<var>Q</var>) are quotients of two integers (<var>N/M</var>). 
+Rational arithmetic is only provided if GMP is used (see above). 
+Rational numbers satisfy the type tests <a id="idx:rational1:1527"></a><a class="pred" href="typetest.html#rational/1">rational/1</a>, <a id="idx:number1:1528"></a><a class="pred" href="typetest.html#number/1">number/1</a> 
+and <a id="idx:atomic1:1529"></a><a class="pred" href="typetest.html#atomic/1">atomic/1</a> 
+and may satisfy the type test <a id="idx:integer1:1530"></a><a class="pred" href="typetest.html#integer/1">integer/1</a>, 
+i.e., integers are considered rational numbers. Rational numbers are 
+always kept in <em>canonical representation</em>, which means <var>M</var> 
+is positive and <var>N</var> and <var>M</var> have no common divisors. 
+Rational numbers are introduced into the computation using the functions
+<a class="function" href="arith.html#f-rational/1">rational/1</a>, <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
+or the <a class="function" href="arith.html#f-rdiv/2">rdiv/2</a> 
+(rational division) function. If the Prolog flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a> 
+is <code>true</code> (default), division (<a class="function" href="arith.html#f-//2">//2</a>) 
+and integer power (<a class="function" href="arith.html#f-^/2">^/2</a>) 
+also produce a rational number.
+
+<p>
+<li><i>float</i><br>
+Floating point numbers are represented using the C type <code>double</code>. 
+On most of today's platforms these are 64-bit IEEE floating point 
+numbers.
+</ul>
+
+<p>Arithmetic functions that require integer arguments accept, in 
+addition to integers, rational numbers with (canonical) denominator&lsquo;1'. 
+If the required argument is a float the argument is converted to float. 
+Note that conversion of integers to floating point numbers may raise an 
+overflow exception. In all other cases, arguments are converted to the 
+same type using the order below.
+<blockquote> integer <var>-&gt;</var> rational number <var>-&gt;</var> 
+floating point number
+</blockquote>
+
+<p><h4 id="sec:rational"><a id="sec:4.27.2.2"><span class="sec-nr">4.27.2.2</span> <span class="sec-title">Rational 
+number examples</span></a></h4>
+
+<a id="sec:rational"></a>
+
+<p>The use of rational numbers with unbounded integers allows for exact 
+integer or <em>fixed point</em> arithmetic under addition, subtraction, 
+multiplication, division and exponentiation (<a class="function" href="arith.html#f-^/2">^/2</a>). 
+Support for rational numbers depends on the Prolog flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a>. 
+If this is <code>true</code> (default), the number division function (<a class="function" href="arith.html#f-//2">//2</a>) 
+and exponentiation function (<a class="function" href="arith.html#f-^/2">^/2</a>) 
+generate a rational number on integer and rational arguments and <a id="idx:read1:1531"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and friends read <code>[-+][0-9_ ]+/[0-9_ ]+</code> into a rational 
+number. See also <a class="sec" href="syntax.html#sec:2.16.1.6">section 
+2.16.1.6</a>. Here are some examples.
+
+<p><table class="latex frame-void center">
+<tr><td>A is 2/6</td><td>A = 1/3 </td></tr>
+<tr><td>A is 4/3 + 1</td><td>A = 7/3 </td></tr>
+<tr><td>A is 4/3 + 1.5</td><td>A = 2.83333 </td></tr>
+<tr><td>A is 4/3 + rationalize(1.5)</td><td>A = 17/6 </td></tr>
+</table>
+
+<p>Note that floats cannot represent all decimal numbers exactly. The 
+function <a class="function" href="arith.html#f-rational/1">rational/1</a> 
+creates an <em>exact</em> equivalent of the float, while <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
+creates a rational number that is within the float rounding error from 
+the original float. Please check the documentation of these functions 
+for details and examples.
+
+<p>Rational numbers can be printed as decimal numbers with arbitrary 
+precision using the <a id="idx:format3:1532"></a><a class="pred" href="format.html#format/3">format/3</a> 
+floating point conversion:
+
+<pre class="code">
+?- A is 4/3 + rational(1.5),
+   format('~50f~n', [A]).
+2.83333333333333333333333333333333333333333333333333
+
+A = 17/6
+</pre>
+
+<p><h4 id="sec:rational-or-float"><a id="sec:4.27.2.3"><span class="sec-nr">4.27.2.3</span> <span class="sec-title">Rational 
+numbers or floats</span></a></h4>
+
+<a id="sec:rational-or-float"></a>
+
+<p>SWI-Prolog uses rational number arithmetic if the Prolog flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a> 
+is <code>true</code> and if this is defined for a function on the given 
+operants. This results in perfectly precise answers. Unfortunately 
+rational numbers can get really large and, if a precise answer is not 
+needed, a big waste of memory and CPU time. In such cases one should use 
+floating point arithmetic. The Prolog flag
+<a class="flag" href="flags.html#flag:max_rational_size">max_rational_size</a> 
+provides a <em>tripwire</em> to detect cases where rational numbers get 
+big and react on these events.
+
+<p>Floating point arithmetic can be forced by forcing a float into an 
+argument at any point, i.e., the result of a function with at least one 
+float is always float except for the float-to-integer rounding and 
+truncating functions such as <a class="function" href="arith.html#f-round/1">round/1</a>, <a class="function" href="arith.html#f-rational/1">rational/1</a> 
+or <a class="function" href="arith.html#f-float_integer_part/1">float_integer_part/1</a>.
+
+<p>Float arithmetic is typically forced by using a floating point 
+constant as initial value or operant. Alternatively, the <a class="function" href="arith.html#f-float/1">float/1</a> 
+function forces conversion of the argument.
+
+<p><h4 id="sec:ieee-float"><a id="sec:4.27.2.4"><span class="sec-nr">4.27.2.4</span> <span class="sec-title">IEEE 
+754 floating point arithmetic</span></a></h4>
+
+<a id="sec:ieee-float"></a>
+
+<p>The Prolog ISO standard defines that floating point arithmetic 
+returns a valid floating point number or raises an exception. IEEE 
+floating point arithmetic defines two modes: raising exceptions and 
+propagating the special float values <code>NaN</code>, <code>Inf</code>, <code>-Inf</code> 
+and
+<code>-0.0</code>. SWI-Prolog implements a part of the
+<a class="url" href="http://eclipseclp.org/Specs/core_update_float.html">ECLiPSe 
+proposal</a> to support non-exception based processing of floating point 
+numbers. There are four flags that define handling the four exceptional 
+events in floating point arithmetic, providing the choice between
+<code>error</code> and returning the IEEE special value. Note that these 
+flags <em>only</em> apply for floating point arithmetic. For example 
+rational division by zero always raises an exception.
+
+<p><table class="latex frame-void center">
+<tr><td><b>Flag</b> </td><td align=center><b>Default</b> </td><td align=center><b>Alternative</b> </td></tr>
+<tr><td><a class="flag" href="flags.html#flag:float_overflow">float_overflow</a> </td><td align=center>error</td><td align=center>infinity </td></tr>
+<tr><td><a class="flag" href="flags.html#flag:float_zero_div">float_zero_div</a> </td><td align=center>error</td><td align=center>infinity </td></tr>
+<tr><td><a class="flag" href="flags.html#flag:float_undefined">float_undefined</a> </td><td align=center>error</td><td align=center>nan </td></tr>
+<tr><td><a class="flag" href="flags.html#flag:float_underflow">float_underflow</a> </td><td align=center>ignore</td><td align=center>error </td></tr>
+</table>
+
+<p>The Prolog flag <a class="flag" href="flags.html#flag:float_rounding">float_rounding</a> 
+and the function
+<a class="function" href="arith.html#f-roundtoward/2">roundtoward/2</a> 
+control the rounding mode for floating point arithmetic. The default 
+rounding is <code>to_nearest</code> and the following alternatives are 
+provided: <code>to_positive</code>, <code>to_negative</code> and
+<code>to_zero</code>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="float_class/2"><strong>float_class</strong>(<var>+Float, 
+-Class</var>)</a></dt>
+<dd class="defbody">
+Wraps C99 fpclassify() to access the class of a floating point number. 
+Raises a type error if <var>Float</var> is not a float. Defined classes 
+are below.
+
+<dl class="latex">
+<dt><strong>nan</strong></dt>
+<dd class="defbody">
+<var>Float</var> is &ldquo;Not a number''. See <a class="function" href="arith.html#f-nan/0">nan/0</a>. 
+May be produced if the Prolog flag <a class="flag" href="flags.html#flag:float_undefined">float_undefined</a> 
+is set to <code>nan</code>. Although IEEE 754 allows NaN to carry a <em>payload</em> 
+and have a sign, SWI-Prolog has only a single NaN values. Note that two 
+NaN
+<em>terms</em> compare equal in the standard order of terms (<a class="pred" href="compare.html#==/2">==/2</a>, 
+etc.), they compare non-equal for arithmetic (<a class="pred" href="arith.html#=:=/2">=:=/2</a>, 
+etc.).</dd>
+<dt><strong>infinite</strong></dt>
+<dd class="defbody">
+<var>Float</var> is positive or negative infinity. See <a class="function" href="arith.html#f-inf/0">inf/0</a>. 
+May be produced if the Prolog flag <a class="flag" href="flags.html#flag:float_overflow">float_overflow</a> 
+or the flag <a class="flag" href="flags.html#flag:float_zero_div">float_zero_div</a> 
+is set to <code>infinity</code>.
+</dd>
+<dt><strong>zero</strong></dt>
+<dd class="defbody">
+<var>Float</var> is zero (0.0 or -0.0)
+</dd>
+<dt><strong>subnormal</strong></dt>
+<dd class="defbody">
+<var>Float</var> is too small to be represented in normalized format. 
+May <b>not</b> be produced if the Prolog flag
+<a class="flag" href="flags.html#flag:float_underflow">float_underflow</a> 
+is set to <code>error</code>.</dd>
+<dt><strong>normal</strong></dt>
+<dd class="defbody">
+<var>Float</var> is a normal floating point number.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="float_parts/4"><strong>float_parts</strong>(<var>+Float, 
+-Mantissa, -Base, -Exponent</var>)</a></dt>
+<dd class="defbody">
+True when <var>Mantissa</var> is the normalized fraction of <var>Float</var>,
+<var>Base</var> is the <em>radix</em> and <var>Exponent</var> is the 
+exponent. This uses the C function frexp(). If <var>Float</var> is NaN 
+or <var>&#177;</var>Inf
+<var>Mantissa</var> has the same value and <var>Exponent</var> is 0 
+(zero). In the current implementation <var>Base</var> is always 2. The 
+following relation is always true: 
+<blockquote><var>Float =:= Mantissa &times; Base^Exponent</var></blockquote>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="bounded_number/3"><strong>bounded_number</strong>(<var>?Low, 
+?High, +Num</var>)</a></dt>
+<dd class="defbody">
+True if <var>Low</var> &lt; <var>Num</var> &lt; <var>High</var>. Raises 
+a type error if <var>Num</var> is not a number. This predicate can be 
+used both to check and generate bounds across the various numeric types. 
+Note that a number cannot be bounded by itself and <code>NaN</code>, <code>Inf</code>, 
+and <code>-Inf</code> are not bounded numbers.
+
+<p>If <var>Low</var> and/or <var>High</var> are variables they will be 
+unified with <em>tightest</em> values that still meet the bounds 
+criteria. The generated bounds will be integers if <var>Num</var> is an 
+integer; otherwise they will be floats (also see <a class="function" href="arith.html#f-nexttoward/2">nexttoward/2</a> 
+for generating float bounds). Some examples:
+
+<pre class="code">
+?- bounded_number(0,10,1).
+true.
+
+?- bounded_number(0.0,1.0,1r2).
+true.
+
+?- bounded_number(L,H,1.0).
+L = 0.9999999999999999,
+H = 1.0000000000000002.
+
+?- bounded_number(L,H,-1).
+L = -2,
+H = 0.
+
+?- bounded_number(0,1r2,1).
+false.
+
+?- bounded_number(L,H,1.0Inf).
+false.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h4 id="sec:functions"><a id="sec:4.27.2.5"><span class="sec-nr">4.27.2.5</span> <span class="sec-title">Arithmetic 
+Functions</span></a></h4>
+
+<a id="sec:functions"></a>
+
+<p>Arithmetic functions are terms which are evaluated by the arithmetic 
+predicates described in <a class="sec" href="arith.html#sec:4.27.2">section 
+4.27.2</a>. There are four types of arguments to functions:
+
+<p><table class="latex frame-void center">
+<tr><td><var>Expr</var> </td><td>Arbitrary expression, returning either 
+a floating point value or an integer. </td></tr>
+<tr><td><var>IntExpr</var> </td><td>Arbitrary expression that must 
+evaluate to an integer. </td></tr>
+<tr><td><var>RatExpr</var> </td><td>Arbitrary expression that must 
+evaluate to a rational number. </td></tr>
+<tr><td><var>FloatExpr</var> </td><td>Arbitrary expression that must 
+evaluate to a floating point.</td></tr>
+</table>
+
+<p>For systems using bounded integer arithmetic (default is unbounded, 
+see <a class="sec" href="arith.html#sec:4.27.2.1">section 4.27.2.1</a> 
+for details), integer operations that would cause overflow automatically 
+convert to floating point arithmetic.
+
+<p>SWI-Prolog provides many extensions to the set of floating point 
+functions defined by the ISO standard. The current policy is to provide 
+such functions on&lsquo;as-needed' basis if the function is widely 
+supported elsewhere and notably if it is part of the
+<a class="url" href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf">C99</a> 
+mathematical library. In addition, we try to maintain compatibility with <a class="url" href="http://www.dcc.fc.up.pt/~vsc/Yap/">YAP</a>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f--/1"><strong>-</strong> <var>+Expr</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = -<var>Expr</var></var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-+/1"><strong>+</strong> <var>+Expr</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr</var></var>. Note that if <code><code>+</code></code> 
+is followed by a number, the parser discards the <code><code>+</code></code>. 
+I.e. <code>?- integer(+1)</code> succeeds.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-+/2"><var>+Expr1</var> <strong>+</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr1</var> + <var>Expr2</var></var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f--/2"><var>+Expr1</var> <strong>-</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr1</var> - <var>Expr2</var></var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-*/2"><var>+Expr1</var> <strong>*</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr1</var> &times; <var>Expr2</var></var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-//2"><var>+Expr1</var> <strong>/</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr1</var>/<var>Expr2</var></var>. If the 
+flag <a class="flag" href="flags.html#flag:iso">iso</a> is <code>true</code> 
+or one of the arguments is a float, both arguments are converted to 
+float and the return value is a float. Otherwise the result type depends 
+on the Prolog flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a>. 
+If <code>true</code>, the result is always a rational number. If <code>false</code> 
+the result is rational if at least one of the arguments is rational. 
+Otherwise (both arguments are integer) the result is integer if the 
+division is exact and float otherwise. See also <a class="sec" href="arith.html#sec:4.27.2.2">section 
+4.27.2.2</a>, <a class="function" href="arith.html#f-///2">///2</a>, and <a class="function" href="arith.html#f-rdiv/2">rdiv/2</a>.
+
+<p>The current default for the Prolog flag <a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a> 
+is
+<code>false</code>. Future version may switch this to <code>true</code>, 
+providing precise results when possible. The pitfall is that in general 
+rational arithmetic is slower and can become very slow and produce huge 
+numbers that require a lot of (global stack) memory. Code for which the 
+exact results provided by rational numbers is not needed should force 
+float results by making one of the operants float, for example by 
+dividing by
+<code>10.0</code> rather than <code>10</code> or by using <a class="function" href="arith.html#f-float/1">float/1</a>. 
+Note that when one of the arguments is forced to a float the division is 
+a float operation while if the result is forced to the float the 
+division is done using rational arithmetic.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-mod/2"><var>+IntExpr1</var> <strong>mod</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Modulo, defined as <var>Result</var> = <var>IntExpr1</var> - (<var>IntExpr1</var> 
+div <var>IntExpr2</var>) <var> &times; </var> <var>IntExpr2</var>, where <code>div</code> 
+is
+<em>floored</em> division.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-rem/2"><var>+IntExpr1</var> <strong>rem</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Remainder of integer division. Behaves as if defined by
+<var>Result</var> is <var>IntExpr1</var> - (<var>IntExpr1</var> // <var>IntExpr2</var>) <var> &times; </var> <var>IntExpr2</var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-///2"><var>+IntExpr1</var> <strong>//</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Integer division, defined as <var>Result</var> is <var>rnd_I</var>(<var>Expr1</var>/<var>Expr2</var>) 
+. The function <var>rnd_I</var> is the default rounding used by the C 
+compiler and available through the Prolog flag
+<a class="flag" href="flags.html#flag:integer_rounding_function">integer_rounding_function</a>. 
+In the C99 standard, C-rounding is defined as <code>towards_zero</code>.<sup class="fn">114<span class="fn-text">Future 
+versions might guarantee rounding towards zero.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-div/2"><strong>div</strong>(<var>+IntExpr1, 
++IntExpr2</var>)</a></dt>
+<dd class="defbody">
+Integer division, defined as <var>Result</var> is (<var>IntExpr1</var> - <var>IntExpr1</var> <var>mod</var> <var>IntExpr2</var>) 
+// <var>IntExpr2</var>. In other words, this is integer division that 
+rounds towards -infinity. This function guarantees behaviour that is 
+consistent with
+<a class="function" href="arith.html#f-mod/2">mod/2</a>, i.e., the 
+following holds for every pair of integers
+<var>X,Y</var> where <code>Y =\= 0</code>.
+
+<pre class="code">
+        Q is div(X, Y),
+        M is mod(X, Y),
+        X =:= Y*Q+M.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="f-rdiv/2"><var>+RatExpr</var> <strong>rdiv</strong> <var>+RatExpr</var></a></dt>
+<dd class="defbody">
+Rational number division. This function is only available if SWI-Prolog 
+has been compiled with rational number support. See
+<a class="sec" href="arith.html#sec:4.27.2.2">section 4.27.2.2</a> for 
+details.</dd>
+<dt class="pubdef"><a id="f-gcd/2"><var>+IntExpr1</var> <strong>gcd</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Result is the greatest common divisor of <var>IntExpr1</var> and
+<var>IntExpr2</var>. The GCD is always a positive integer. If either 
+expression evaluates to zero the GCD is the result of the other 
+expression.</dd>
+<dt class="pubdef"><a id="f-lcm/2"><var>+IntExpr1</var> <strong>lcm</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Result is the least common multiple of <var>IntExpr1</var>,
+<var>IntExpr2</var>.<sup class="fn">bug<span class="fn-text">If the 
+system is compiled for bounded integers only <a class="function" href="arith.html#f-lcm/2">lcm/2</a> 
+produces an integer overflow if the product of the two expressions does 
+not fit in a 64 bit signed integer. The default build with unbounded 
+integer support has no such limit.</span></sup> If either expression 
+evaluates to zero the LCM is zero.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-abs/1"><strong>abs</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr</var> and return the absolute value of it.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-sign/1"><strong>sign</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate to -1 if <var><var>Expr</var> &lt; 0</var>, 1 if <var><var>Expr</var> 
+&gt; 0</var> and 0 if
+<var><var>Expr</var> = 0</var>. If <var>Expr</var> evaluates to a float, 
+the return value is a float (e.g., -1.0, 0.0 or 1.0). In particular, 
+note that sign(-0.0) evaluates to 0.0. See also <a class="function" href="arith.html#f-copysign/2">copysign/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-copysign/2"><strong>copysign</strong>(<var>+Expr1, 
++Expr2</var>)</a></dt>
+<dd class="defbody">
+Evaluate to <var>X</var>, where the absolute value of <var>X</var> 
+equals the absolute value of <var>Expr1</var> and the sign of <var>X</var> 
+matches the sign of <var>Expr2</var>. This function is based on 
+copysign() from C99, which works on double precision floats and deals 
+with handling the sign of special floating point values such as -0.0. 
+Our implementation follows C99 if both arguments are floats. Otherwise, <a class="function" href="arith.html#f-copysign/2">copysign/2</a> 
+evaluates to <var>Expr1</var> if the sign of both expressions matches or 
+-<var>Expr1</var> if the signs do not match. Here, we use the extended 
+notion of signs for floating point numbers, where the sign of -0.0 and 
+other special floats is negative.</dd>
+<dt class="pubdef"><a id="f-nexttoward/2"><strong>nexttoward</strong>(<var>+Expr1, 
++Expr2</var>)</a></dt>
+<dd class="defbody">
+Evaluates to floating point number following <var>Expr1</var> in the 
+direction of <var>Expr2</var>. This relates to <a class="function" href="arith.html#f-epsilon/0">epsilon/0</a> 
+in the following way:
+
+<pre class="code">
+?- epsilon =:= nexttoward(1,2)-1.
+true.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="f-roundtoward/2"><strong>roundtoward</strong>(<var>+Expr1, 
++RoundMode</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr1</var> using the floating point rounding mode
+<var>RoundMode</var>. This provides a local alternative to the Prolog 
+flag
+<a class="flag" href="flags.html#flag:float_rounding">float_rounding</a>. 
+This function can be nested. The supported values for <var>RoundMode</var> 
+are the same as the flag values:
+<code>to_nearest</code>, <code>to_positive</code>, <code>to_negative</code> 
+or
+<code>to_zero</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-max/2"><strong>max</strong>(<var>+Expr1, 
++Expr2</var>)</a></dt>
+<dd class="defbody">
+Evaluate to the larger of <var>Expr1</var> and <var>Expr2</var>. Both 
+arguments are compared after converting to the same type, but the return 
+value is in the original type. For example, max(2.5, 3) compares the two 
+values after converting to float, but returns the integer 3.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-min/2"><strong>min</strong>(<var>+Expr1, 
++Expr2</var>)</a></dt>
+<dd class="defbody">
+Evaluate to the smaller of <var>Expr1</var> and <var>Expr2</var>. See
+<a class="function" href="arith.html#f-max/2">max/2</a> for a 
+description of type handling.</dd>
+<dt class="pubdef"><a id="f-./2"><strong>.</strong>(<var>+Int,[]</var>)</a></dt>
+<dd class="defbody">
+A list of one element evaluates to the element. This implies <code>"a"</code> 
+evaluates to the character code of the letter&lsquo;a' (97) using the 
+traditional mapping of double quoted string to a list of character 
+codes. Arithmetic evaluation also translates a string object (see
+<a class="sec" href="string.html#sec:5.2">section 5.2</a>) of one 
+character length into the character code for that character. This 
+implies that expression <code>"a"</code> also works of the Prolog flag <a class="flag" href="flags.html#flag:double_quotes">double_quotes</a> 
+is set to <code>string</code>. The recommended way to specify the 
+character code of the letter&lsquo;a' is
+<code>0'a</code>.</dd>
+<dt class="pubdef"><a id="f-random/1"><strong>random</strong>(<var>+IntExpr</var>)</a></dt>
+<dd class="defbody">
+Evaluate to a random integer <var>i</var> for which <var>0 =&lt; i &lt; <var>IntExpr</var></var>. 
+The system has two implementations. If it is compiled with support for 
+unbounded arithmetic (default) it uses the GMP library random functions. 
+In this case, each thread keeps its own random state. The default 
+algorithm is the <em>Mersenne Twister</em> algorithm. The seed is set 
+when the first random number in a thread is generated. If available, it 
+is set from <code>/dev/random</code>.<sup class="fn">115<span class="fn-text">On 
+Windows the state is initialised from CryptGenRandom().</span></sup> 
+Otherwise it is set from the system clock. If unbounded arithmetic is 
+not supported, random numbers are shared between threads and the seed is 
+initialised from the clock when SWI-Prolog was started. The predicate <a id="idx:setrandom1:1533"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
+can be used to control the random number generator.
+
+<p><b>Warning!</b> Although properly seeded (if supported on the OS), 
+the Mersenne Twister algorithm does <em>not</em> produce 
+cryptographically secure random numbers. To generate cryptographically 
+secure random numbers, use <a id="idx:cryptonrandombytes2:1534"></a><span class="pred-ext">crypto_n_random_bytes/2</span> 
+from library <code>library(crypto)</code> provided by the <code>ssl</code> 
+package.</dd>
+<dt class="pubdef"><a id="f-random_float/0"><strong>random_float</strong></a></dt>
+<dd class="defbody">
+Evaluate to a random float <var>I</var> for which <var>0.0 &lt; i &lt; 
+1.0</var>. This function shares the random state with <a class="function" href="arith.html#f-random/1">random/1</a>. 
+All remarks with the function <a class="function" href="arith.html#f-random/1">random/1</a> 
+also apply for <a class="function" href="arith.html#f-random_float/0">random_float/0</a>. 
+Note that both sides of the domain are <em>open</em>. This avoids 
+evaluation errors on, e.g., <a class="function" href="arith.html#f-log/1">log/1</a> 
+or <a class="function" href="arith.html#f-//2">//2</a> while no 
+practical application can expect 0.0.<sup class="fn">116<span class="fn-text">Richard 
+O'Keefe said: &ldquo;If you <em>are</em> generating IEEE doubles with 
+the claimed uniformity, then 0 has a 1 in <var>2^53 = 1 in 
+9,007,199,254,740,992</var> chance of turning up. No program that 
+expects [0.0,1.0) is going to be surprised when 0.0 fails to turn up in 
+a few millions of millions of trials, now is it? But a program that 
+expects (0.0,1.0) could be devastated if 0.0 did turn up.''</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-round/1"><strong>round</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr</var> and round the result to the nearest integer. 
+According to ISO, <a class="function" href="arith.html#f-round/1">round/1</a> 
+is defined as
+<code>floor(Expr+1/2)</code>, i.e., rounding <em>down</em>. This is an 
+unconventional choice under which the relation
+<code>round(Expr) == -round(-Expr)</code> does not hold. SWI-Prolog 
+rounds <em>outward</em>, e.g., <code>round(1.5) =:= 2</code> and
+<code>round(-1.5) =:= -2</code>.</dd>
+<dt class="pubdef"><a id="f-integer/1"><strong>integer</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="function" href="arith.html#f-round/1">round/1</a> 
+(backward compatibility).</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-float/1"><strong>float</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Translate the result to a floating point number. Normally, Prolog will 
+use integers whenever possible. When used around the 2nd argument of
+<a id="idx:is2:1535"></a><a class="pred" href="arith.html#is/2">is/2</a>, 
+the result will be returned as a floating point number. In other 
+contexts, the operation has no effect.</dd>
+<dt class="pubdef"><a id="f-rational/1"><strong>rational</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Convert the <var>Expr</var> to a rational number or integer. The 
+function returns the input on integers and rational numbers. For 
+floating point numbers, the returned rational number <em>exactly</em> 
+represents the float. As floats cannot exactly represent all decimal 
+numbers the results may be surprising. In the examples below, doubles 
+can represent 0.25 and the result is as expected, in contrast to the 
+result of <code>rational(0.1)</code>. The function <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
+remedies this. See <a class="sec" href="arith.html#sec:4.27.2.2">section 
+4.27.2.2</a> for more information on rational number support.
+
+<pre class="code">
+?- A is rational(0.25).
+
+A is 1 rdiv 4
+?- A is rational(0.1).
+A = 3602879701896397 rdiv 36028797018963968
+</pre>
+
+<p>For every <em>normal</em> float <var>X</var> the relation
+<var>X</var> <code><code>=:=</code></code> rational(<var>X</var>) holds.
+
+<p>This function raises an <code>evaluation_error(undefined)</code> if <var>Expr</var> 
+is NaN and <code>evaluation_error(rational_overflow)</code> if <var>Expr</var> 
+is Inf.</dd>
+<dt class="pubdef"><a id="f-rationalize/1"><strong>rationalize</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Convert the <var>Expr</var> to a rational number or integer. The 
+function is similar to <a class="function" href="arith.html#f-rational/1">rational/1</a>, 
+but the result is only accurate within the rounding error of floating 
+point numbers, generally producing a much smaller denominator.<sup class="fn">117<span class="fn-text">The 
+names <a class="function" href="arith.html#f-rational/1">rational/1</a> 
+and <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
+as well as their semantics are inspired by Common Lisp.</span></sup><sup class="fn">118<span class="fn-text">The 
+implementation of rationalize as well as converting a rational number 
+into a float is copied from ECLiPSe and covered by the <i>Cisco-style 
+Mozilla Public License Version 1.1</i>.</span></sup>
+
+<pre class="code">
+?- A is rationalize(0.25).
+
+A = 1 rdiv 4
+?- A is rationalize(0.1).
+
+A = 1 rdiv 10
+</pre>
+
+<p>For every <em>normal</em> float <var>X</var> the relation
+<var>X</var> <code><code>=:=</code></code> rationalize(<var>X</var>) 
+holds.
+
+<p>This function raises the same exceptions as <a class="function" href="arith.html#f-rational/1">rational/1</a> 
+on non-normal floating point numbers.</dd>
+<dt class="pubdef"><a id="f-numerator/1"><strong>numerator</strong>(<var>+RationalExpr</var>)</a></dt>
+<dd class="defbody">
+If <var>RationalExpr</var> evaluates to a rational number or integer, 
+evaluate to the top/left value. Evaluates to itself if
+<var>RationalExpr</var> evaluates to an integer. See also
+<a class="function" href="arith.html#f-denominator/1">denominator/1</a>. 
+The following is true for any rational
+<var>X</var>.
+
+<pre class="code">
+X =:= numerator(X)/denominator(X).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="f-denominator/1"><strong>denominator</strong>(<var>+RationalExpr</var>)</a></dt>
+<dd class="defbody">
+If <var>RationalExpr</var> evaluates to a rational number or integer, 
+evaluate to the bottom/right value. Evaluates to 1 (one) if
+<var>RationalExpr</var> evaluates to an integer. See also
+<a class="function" href="arith.html#f-numerator/1">numerator/1</a>. The 
+following is true for any rational <var>X</var>.
+
+<pre class="code">
+X =:= numerator(X)/denominator(X).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-float_fractional_part/1"><strong>float_fractional_part</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Fractional part of a floating point number. Negative if <var>Expr</var> 
+is negative, rational if <var>Expr</var> is rational and 0 if <var>Expr</var> 
+is integer. The following relation is always true:
+<var>X is float_fractional_part(X) + float_integer_part(X)</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-float_integer_part/1"><strong>float_integer_part</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Integer part of floating point number. Negative if <var>Expr</var> is 
+negative, <var>Expr</var> if <var>Expr</var> is integer.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-truncate/1"><strong>truncate</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Truncate <var>Expr</var> to an integer. If <var><var>Expr</var> &gt;= 0</var> 
+this is the same as <code>floor(Expr)</code>. For <var><var>Expr</var> &lt; 
+0</var> this is the same as
+<code>ceil(Expr)</code>. That is, <a class="function" href="arith.html#f-truncate/1">truncate/1</a> 
+rounds towards zero.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-floor/1"><strong>floor</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr</var> and return the largest integer smaller or equal 
+to the result of the evaluation.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-ceiling/1"><strong>ceiling</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr</var> and return the smallest integer larger or equal 
+to the result of the evaluation.</dd>
+<dt class="pubdef"><a id="f-ceil/1"><strong>ceil</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="function" href="arith.html#f-ceiling/1">ceiling/1</a> 
+(backward compatibility).</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f->>/2"><var>+IntExpr1</var> <strong>&gt;&gt;</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Bitwise shift <var>IntExpr1</var> by <var>IntExpr2</var> bits to the 
+right. The operation performs <em>arithmetic shift</em>, which implies 
+that the inserted most significant bits are copies of the original most 
+significant bits.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-<</2"><var>+IntExpr1</var> <strong>&lt;&lt;</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Bitwise shift <var>IntExpr1</var> by <var>IntExpr2</var> bits to the 
+left.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-\//2"><var>+IntExpr1</var> <strong>\/</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Bitwise&lsquo;or' <var>IntExpr1</var> and <var>IntExpr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-/\/2"><var>+IntExpr1</var> <strong>/\</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Bitwise&lsquo;and' <var>IntExpr1</var> and <var>IntExpr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-xor/2"><var>+IntExpr1</var> <strong>xor</strong> <var>+IntExpr2</var></a></dt>
+<dd class="defbody">
+Bitwise&lsquo;exclusive or' <var>IntExpr1</var> and <var>IntExpr2</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-\/1"><strong>\</strong> <var>+IntExpr</var></a></dt>
+<dd class="defbody">
+Bitwise negation. The returned value is the one's complement of
+<var>IntExpr</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-sqrt/1"><strong>sqrt</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = sqrt(<var>Expr</var>)</var>.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-sin/1"><strong>sin</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = sin(<var>Expr</var>)</var>. <var>Expr</var> is 
+the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-cos/1"><strong>cos</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = cos(<var>Expr</var>)</var>. <var>Expr</var> is 
+the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-tan/1"><strong>tan</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = tan(<var>Expr</var>)</var>. <var>Expr</var> is 
+the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-asin/1"><strong>asin</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arcsin(<var>Expr</var>)</var>. <var>Result</var> 
+is the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-acos/1"><strong>acos</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arccos(<var>Expr</var>)</var>. <var>Result</var> 
+is the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-atan/1"><strong>atan</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arctan(<var>Expr</var>)</var>. <var>Result</var> 
+is the angle in radians.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-atan2/2"><strong>atan2</strong>(<var>+YExpr, 
++XExpr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arctan(<var>YExpr</var>/<var>XExpr</var>)</var>. <var>Result</var> 
+is the angle in radians. The return value is in the range <var>[- pi ... 
+pi ]</var>. Used to convert between rectangular and polar coordinate 
+system.
+
+<p>Note that the ISO Prolog standard demands <code>atan2(0.0,0.0)</code> 
+to raise an evaluation error, whereas the C99 and POSIX standards demand 
+this to evaluate to 0.0. SWI-Prolog follows C99 and POSIX.
+</dd>
+<dt class="pubdef"><a id="f-atan/2"><strong>atan</strong>(<var>+YExpr, 
++XExpr</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="function" href="arith.html#f-atan2/2">atan2/2</a> 
+(backward compatibility).</dd>
+<dt class="pubdef"><a id="f-sinh/1"><strong>sinh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = sinh(<var>Expr</var>)</var>. The hyperbolic 
+sine of <var>X</var> is defined as <var>e ** X - e ** -X / 2</var>.
+</dd>
+<dt class="pubdef"><a id="f-cosh/1"><strong>cosh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = cosh(<var>Expr</var>)</var>. The hyperbolic 
+cosine of <var>X</var> is defined as <var>e ** X + e ** -X / 2</var>.
+</dd>
+<dt class="pubdef"><a id="f-tanh/1"><strong>tanh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = tanh(<var>Expr</var>)</var>. The hyperbolic 
+tangent of <var>X</var> is defined as <var>sinh( X ) / cosh( X )</var>.</dd>
+<dt class="pubdef"><a id="f-asinh/1"><strong>asinh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arcsinh(<var>Expr</var>)</var> (inverse 
+hyperbolic sine).
+</dd>
+<dt class="pubdef"><a id="f-acosh/1"><strong>acosh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arccosh(<var>Expr</var>)</var> (inverse 
+hyperbolic cosine).
+</dd>
+<dt class="pubdef"><a id="f-atanh/1"><strong>atanh</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = arctanh(<var>Expr</var>)</var>. (inverse 
+hyperbolic tangent).</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-log/1"><strong>log</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Natural logarithm. <var><var>Result</var> = ln(<var>Expr</var>)</var>
+</dd>
+<dt class="pubdef"><a id="f-log10/1"><strong>log10</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Base-10 logarithm. <var><var>Result</var> = log10(<var>Expr</var>)</var>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-exp/1"><strong>exp</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = e **<var>Expr</var></var></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-**/2"><var>+Expr1</var> <strong>**</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+<var><var>Result</var> = <var>Expr1</var>**<var>Expr2</var></var>. The 
+result is a float, unless SWI-Prolog is compiled with unbounded integer 
+support and the inputs are integers and produce an integer result. The 
+integer expressions <var>0 ** I</var>, <var>1 ** I</var> and <var>-1 ** 
+I</var> are guaranteed to work for any integer <var>I</var>. Other 
+integer base values generate a
+<code>resource</code> error if the result does not fit in memory.
+
+<p>The ISO standard demands a float result for all inputs and introduces
+<a class="function" href="arith.html#f-^/2">^/2</a> for integer 
+exponentiation. The function
+<a class="function" href="arith.html#f-float/1">float/1</a> can be used 
+on one or both arguments to force a floating point result. Note that 
+casting the <em>input</em> result in a floating point computation, while 
+casting the <em>output</em> performs integer exponentiation followed by 
+a conversion to float.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-^/2"><var>+Expr1</var> <strong>^</strong> <var>+Expr2</var></a></dt>
+<dd class="defbody">
+
+<p>In SWI-Prolog, <a class="function" href="arith.html#f-^/2">^/2</a> is 
+equivalent to <a class="function" href="arith.html#f-**/2">**/2</a>. The 
+ISO version is similar, except that it produces a evaluation error if 
+both
+<var>Expr1</var> and <var>Expr2</var> are integers and the result is not 
+an integer. The table below illustrates the behaviour of the 
+exponentiation functions in ISO and SWI. Note that if the exponent is 
+negative the behavior of <var>Int</var><code><code>^</code></code><var>Int</var> 
+depends on the flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a>, 
+producing either a rational number or a floating point number.
+
+<p><table class="latex frame-box center">
+<tr><td><var>Expr1</var> </td><td><var>Expr2</var> </td><td>Function</td><td>SWI</td><td>ISO </td></tr>
+<tr class="hline"><td>Int</td><td>Int</td><td><a class="function" href="arith.html#f-**/2">**/2</a> </td><td>Int 
+or Rational</td><td>Float </td></tr>
+<tr><td>Int</td><td>Float</td><td><a class="function" href="arith.html#f-**/2">**/2</a> </td><td>Float</td><td>Float </td></tr>
+<tr><td>Rational</td><td>Int</td><td><a class="function" href="arith.html#f-**/2">**/2</a> </td><td>Rational</td><td>- </td></tr>
+<tr><td>Float</td><td>Int</td><td><a class="function" href="arith.html#f-**/2">**/2</a> </td><td>Float</td><td>Float </td></tr>
+<tr><td>Float</td><td>Float</td><td><a class="function" href="arith.html#f-**/2">**/2</a> </td><td>Float</td><td>Float </td></tr>
+<tr class="hline"><td>Int</td><td>Int</td><td><a class="function" href="arith.html#f-^/2">^/2</a> </td><td>Int 
+or Rational</td><td>Int or error </td></tr>
+<tr><td>Int</td><td>Float</td><td><a class="function" href="arith.html#f-^/2">^/2</a> </td><td>Float</td><td>Float </td></tr>
+<tr><td>Rational</td><td>Int</td><td><a class="function" href="arith.html#f-^/2">^/2</a> </td><td>Rational</td><td>- </td></tr>
+<tr><td>Float</td><td>Int</td><td><a class="function" href="arith.html#f-^/2">^/2</a> </td><td>Float</td><td>Float </td></tr>
+<tr><td>Float</td><td>Float</td><td><a class="function" href="arith.html#f-^/2">^/2</a> </td><td>Float</td><td>Float </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="f-powm/3"><strong>powm</strong>(<var>+IntExprBase, 
++IntExprExp, +IntExprMod</var>)</a></dt>
+<dd class="defbody">
+<var><var>Result</var> = (<var>IntExprBase</var>**<var>IntExprExp</var>) 
+modulo <var>IntExprMod</var></var>. Only available when compiled with 
+unbounded integer support. This formula is required for Diffie-Hellman 
+key-exchange, a technique where two parties can establish a secret key 
+over a public network.
+<var>IntExprBase</var> and <var>IntExprExp</var> must be non-negative (<var>&gt;=0</var>),
+<var>IntExprMod</var> must be positive (<var>&gt;0</var>).<sup class="fn">119<span class="fn-text">The 
+underlying GMP mpz_powm() function allows negative values under some 
+conditions. As the conditions are expensive to pre-compute, error 
+handling from GMP is non-trivial and negative values are not needed for 
+Diffie-Hellman key-exchange we do not support these.</span></sup></dd>
+<dt class="pubdef"><a id="f-lgamma/1"><strong>lgamma</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Return the natural logarithm of the absolute value of the Gamma 
+function.<sup class="fn">120<span class="fn-text">Some interfaces also 
+provide the sign of the Gamma function. We cannot do that in an 
+arithmetic function. Future versions may provide a <em>predicate</em> 
+lgamma/3 that returns both the value and the sign.</span></sup></dd>
+<dt class="pubdef"><a id="f-erf/1"><strong>erf</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<a class="url" href="https://en.wikipedia.org/wiki/Error_function">Wikipedia</a>: &ldquo;In 
+mathematics, the error function (also called the Gauss error function) 
+is a special function (non-elementary) of sigmoid shape which occurs in 
+probability, statistics and partial differential equations.''</dd>
+<dt class="pubdef"><a id="f-erfc/1"><strong>erfc</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+<a class="url" href="https://en.wikipedia.org/wiki/Error_function">Wikipedia</a>: &ldquo;The 
+complementary error function.''</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-pi/0"><strong>pi</strong></a></dt>
+<dd class="defbody">
+Evaluate to the mathematical constant <var>pi</var> (3.14159 ... ).</dd>
+<dt class="pubdef"><a id="f-e/0"><strong>e</strong></a></dt>
+<dd class="defbody">
+Evaluate to the mathematical constant <var>e</var> (2.71828 ... ).</dd>
+<dt class="pubdef"><a id="f-epsilon/0"><strong>epsilon</strong></a></dt>
+<dd class="defbody">
+Evaluate to the difference between the float 1.0 and the first larger 
+floating point number. Deprecated. The function <a class="function" href="arith.html#f-nexttoward/2">nexttoward/2</a> 
+provides a better alternative.</dd>
+<dt class="pubdef"><a id="f-inf/0"><strong>inf</strong></a></dt>
+<dd class="defbody">
+Evaluate to positive infinity. See <a class="sec" href="syntax.html#sec:2.16.1.7">section 
+2.16.1.7</a> and
+<a class="sec" href="arith.html#sec:4.27.2.4">section 4.27.2.4</a>. This 
+value can be negated using <a class="function" href="arith.html#f--/1">-/1</a>.</dd>
+<dt class="pubdef"><a id="f-nan/0"><strong>nan</strong></a></dt>
+<dd class="defbody">
+Evaluate to <em>Not a Number</em>. See <a class="sec" href="syntax.html#sec:2.16.1.7">section 
+2.16.1.7</a> and
+<a class="sec" href="arith.html#sec:4.27.2.4">section 4.27.2.4</a>.</dd>
+<dt class="pubdef"><a id="f-cputime/0"><strong>cputime</strong></a></dt>
+<dd class="defbody">
+Evaluate to a floating point number expressing the <span style="font-variant:small-caps">CPU</span> 
+time (in seconds) used by Prolog up till now. See also <a id="idx:statistics2:1536"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+and <a id="idx:time1:1537"></a><a class="pred" href="statistics.html#time/1">time/1</a>.</dd>
+<dt class="pubdef"><a id="f-eval/1"><strong>eval</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+Evaluate <var>Expr</var>. Although ISO standard dictates that&lsquo;<var>A</var>=1+2, <var>B</var> 
+is
+<var>A</var>&rsquo;works and unifies <var>B</var> to 3, it is widely 
+felt that source level variables in arithmetic expressions should have 
+been limited to numbers. In this view the eval function can be used to 
+evaluate arbitrary expressions.<sup class="fn">121<span class="fn-text">The <a class="function" href="arith.html#f-eval/1">eval/1</a> 
+function was first introduced by ECLiPSe and is under consideration for 
+YAP.</span></sup>
+</dd>
+</dl>
+
+<p><b>Bitvector functions</b> 
+
+<p>The functions below are not covered by the standard. The
+<a class="function" href="arith.html#f-msb/1">msb/1</a> function also 
+appears in hProlog and SICStus Prolog. The <a class="function" href="arith.html#f-getbit/2">getbit/2</a> 
+function also appears in ECLiPSe, which also provides <code>setbit(Vector,Index)</code> 
+and <code>clrbit(Vector,Index)</code>. The others are SWI-Prolog 
+extensions that improve handling of ---unbounded--- integers as 
+bit-vectors.
+
+<dl class="latex">
+<dt class="pubdef"><a id="f-msb/1"><strong>msb</strong>(<var>+IntExpr</var>)</a></dt>
+<dd class="defbody">
+Return the largest integer <var>N</var> such that <code>(IntExpr &gt;&gt; N) /\ 1 =:= 1</code>. 
+This is the (zero-origin) index of the most significant 1 bit in the 
+value of <var>IntExpr</var>, which must evaluate to a positive integer. 
+Errors for 0, negative integers, and non-integers.</dd>
+<dt class="pubdef"><a id="f-lsb/1"><strong>lsb</strong>(<var>+IntExpr</var>)</a></dt>
+<dd class="defbody">
+Return the smallest integer <var>N</var> such that <code>(IntExpr &gt;&gt; N) /\ 1 =:= 1</code>. 
+This is the (zero-origin) index of the least significant 1 bit in the 
+value of <var>IntExpr</var>, which must evaluate to a positive integer. 
+Errors for 0, negative integers, and non-integers.</dd>
+<dt class="pubdef"><a id="f-popcount/1"><strong>popcount</strong>(<var>+IntExpr</var>)</a></dt>
+<dd class="defbody">
+Return the number of 1s in the binary representation of the non-negative 
+integer <var>IntExpr</var>.</dd>
+<dt class="pubdef"><a id="f-getbit/2"><strong>getbit</strong>(<var>+IntExprV, 
++IntExprI</var>)</a></dt>
+<dd class="defbody">
+Evaluates to the bit value (0 or 1) of the <var>IntExprI</var>-th bit of
+<var>IntExprV</var>. Both arguments must evaluate to non-negative 
+integers. The result is equivalent to <code>(IntExprV &gt;&gt; IntExprI)/\1</code>, 
+but more efficient because materialization of the shifted value is 
+avoided. Future versions will optimise <code>(IntExprV &gt;&gt; IntExprI)/\1</code> 
+to a call to <a class="function" href="arith.html#f-getbit/2">getbit/2</a>, 
+providing both portability and performance.<sup class="fn">122<span class="fn-text">This 
+issue was fiercely debated at the ISO standard mailinglist. The name <i>getbit</i> 
+was selected for compatibility with ECLiPSe, the only system providing 
+this support. Richard O'Keefe disliked the name and argued that 
+efficient handling of the above implementation is the best choice for 
+this functionality.</span></sup>
+</dd>
+</dl>
+
+<p></body></html>

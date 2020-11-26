@@ -1,0 +1,29 @@
+// AND-Template 
+//
+// Available in the AAU directory as And-template.plgCG
+//
+// Ulrik Petersen
+// Created: Mid-September 2003
+// Last update: September 18, 2003
+//
+
+
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Proposition, Attribute.
+Attribute > Mortal.
+Physical > Object.
+Object > Person.
+Person > Man.
+
+// Catalog of instances
+Person = Socrates.
+Man = Socrates.
+
+// Socrates is a man, and Socrates is Mortal
+graph(Socrates1, [Proposition =
+                                  [Man: Socrates]
+                             ]-AND->[Proposition =
+                                  [Person: Socrates]-ATTR->[Mortal]
+                             ]).

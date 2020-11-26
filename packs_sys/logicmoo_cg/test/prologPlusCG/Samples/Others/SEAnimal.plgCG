@@ -1,0 +1,41 @@
+"animal est carnivore" :- "animal mange viande".
+"animal est carnivore" :- 
+  "animal possed dents pointus", 
+  "animal possede griffe", 
+  "animal possede yeux percants".
+
+"animal est pingouin" :- 
+  "animal est oiseau", 
+  "animal nage", 
+  "animal est blanc et noir".
+
+"animal est ongule" :- "animal est mammifere", "animal possede sabot".
+"animal est ongule" :- "animal est mammifere", "animal rumine".
+
+"animal est mammifere" :- "animal possede cheveux".
+
+"animal est autruche" :- "animal est oiseau", "animal possede cou long", "animal possede longues jambes", "animal est blanc et noir".
+
+"animal est zebre" :- "animal est ongule", "animal possede traits noires".
+
+"animal est tigre" :- 
+  "animal est mammifere", 
+  "animal est carnivore", 
+  "animal possede couleur sauvage", 
+  "animal possede traits noires".
+
+"animal est guepard" :- 
+  "animal est mammifere", 
+  "animal est carnivore", 
+  "animal possede couleur sauvage", 
+  "animal possede endroits sombres".
+
+"animal est giraffe" :- 
+  "animal est ongule", 
+  "animal possede cou long", 
+  "animal possede longues jambes", 
+  "animal possede places sombres".
+
+"animal est oiseau" :- "animal possede plume".
+"animal est oiseau" :- "animal vole", "animal pond oeufs".
+

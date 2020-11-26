@@ -1,0 +1,234 @@
+(note TQC104)
+
+(temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) Stage2-VanBombingAttempt) 
+
+(actionExpressesFeelingToward Stage2-VanBombingAttempt Hostility SaudiArabia) 
+
+
+
+
+(temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) Stage2-TerroristAttackOnAramco) 
+
+(maleficiary Stage2-TerroristAttackOnAramco SaudiArabia) 
+
+
+
+
+(temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) Stage2-BWAttackAtRasTannurah) 
+
+(maleficiary Stage2-BWAttackAtRasTannurah SaudiArabia) 
+
+
+
+
+(temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) Stage2-TerroristAttackOnPorts) 
+
+(maleficiary Stage2-TerroristAttackOnPorts SaudiArabia) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?EVT Process) 
+ (instance ?N PositiveInteger) 
+ (greaterThanOrEqualTo ?N ?NUM-2) 
+ (greaterThanOrEqualTo ?END ?N) 
+ (subclass ?TYPE Date) 
+ (instance ?TYPE CalendarCoveringType) 
+ (endingDate ?EVT 
+ (DateInSituationFn ?TYPE ?NUM-2 ?SIT)) 
+ (instance ?SIT Situation-Temporal) 
+ (endingDate ?SIT 
+ (DateInSituationFn ?TYPE ?END ?SIT)) 
+ (startingDate ?EVT 
+ (DateInSituationFn ?TYPE ?NUM-1 ?SIT)) 
+ (greaterThanOrEqualTo ?NUM-1 ?M) 
+ (instance ?M PositiveInteger)) 
+ (temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn ?TYPE ?M ?SIT) 
+ (DateInSituationFn ?TYPE ?N ?SIT)) ?EVT)) 
+
+(instance Stage2-VanBombingAttempt Process) 
+
+(endingDate Stage2-VanBombingAttempt 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(startingDate Stage2-VanBombingAttempt 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(instance 25 PositiveInteger) 
+
+(greaterThanOrEqualTo 25 25) 
+
+(greaterThanOrEqualTo 36 25) 
+
+(subclass CalendarDay Date) 
+
+(instance CalendarDay CalendarCoveringType) 
+
+(instance HPKBScenarioConflict Situation-Temporal) 
+
+(endingDate HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+
+
+
+
+
+(instance Stage2-TerroristAttackOnAramco Process) 
+
+(endingDate Stage2-TerroristAttackOnAramco 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(startingDate Stage2-TerroristAttackOnAramco 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(instance Stage2-BWAttackAtRasTannurah Process) 
+
+(endingDate Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(startingDate Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(instance Stage2-TerroristAttackOnPorts Process) 
+
+(endingDate Stage2-TerroristAttackOnPorts 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(startingDate Stage2-TerroristAttackOnPorts 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+
+
+
+(dateOfEvent Stage2-VanBombingAttempt 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(subrelation dateOfEvent endingDate) 
+
+
+
+
+(dateOfEvent Stage2-TerroristAttackOnAramco 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+
+(dateOfEvent Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(dateOfEvent Stage2-TerroristAttackOnPorts 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(subrelation dateOfEvent endingDate) 
+
+
+
+
+(subrelation dateOfEvent startingDate) 
+
+
+
+
+
+(implies 
+ (and 
+ (instance ?ATTACK TerroristAct) 
+ (objectActedOn ?ATTACK ?FACILITIES) 
+ (instance ?COUNTRY Country) 
+ (industryFacilities 
+ (IndustryOfRegionFn ?INDUSTRY ?COUNTRY) ?FACILITIES)) 
+ (maleficiary ?ATTACK ?COUNTRY)) 
+
+(instance Stage2-BWAttackAtRasTannurah TerroristAct) 
+
+(objectActedOn Stage2-BWAttackAtRasTannurah SeaportOfRasTannurahSaudiArabia) 
+
+(instance SaudiArabia Country) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry SaudiArabia) SeaportOfRasTannurahSaudiArabia) 
+
+
+
+(damages Stage2-TerroristAttackOnPorts RasTannurahRefinery) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry SaudiArabia) RasTannurahRefinery) 
+
+(instance Stage2-TerroristAttackOnPorts TerroristAct) 
+
+
+(damages Stage2-TerroristAttackOnPorts SeaportOfAd-DammamSaudiArabia) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry SaudiArabia) SeaportOfAd-DammamSaudiArabia) 
+
+(damages Stage2-TerroristAttackOnPorts SeaportOfRasTannurahSaudiArabia) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry SaudiArabia) SeaportOfRasTannurahSaudiArabia) 
+
+
+(damages Stage2-TerroristAttackOnPorts #$CityOfRasTannurahSaudiArabia) 
+
+(subrelation damages objectActedOn) 
+
+(geopoliticalSubdivision SaudiArabia #$CityOfRasTannurahSaudiArabia) 
+
+
+(instance SaudiArabia PersianGulfCountry) 
+
+(subclass PersianGulfCountry Country) 
+
+(geopoliticalSubdivision SaudiArabia CityOfAd-DammamSaudiArabia) 
+
+(damages Stage2-TerroristAttackOnPorts CityOfAd-DammamSaudiArabia) 
+
+(subrelation geopoliticalSubdivision contains) 
+
+(inverse geopoliticalSubdivision inRegion) 
+
+(instance SaudiArabia IndependentCountry) 
+
+(subclass IndependentCountry Country) 
+
+(geopoliticalSubdivision SaudiArabia CityOfAd-DammamSaudiArabia) 
+
+
+
+
+(query (findall ?ACT
+
+ (and 
+ (or 
+ (maleficiary ?ACT SaudiArabia) 
+ (actionExpressesFeelingToward ?ACT Disapproval SaudiArabia) 
+ (actionExpressesFeelingToward ?ACT Hostility SaudiArabia)) 
+ (temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) ?ACT))))
+
+(answer Stage2-VanBombingAttempt)
+(answer Stage2-TerroristAttackOnAramco)
+(answer Stage2-BWAttackAtRasTannurah)
+(answer Stage2-TerroristAttackOnPorts)  
+
+(end_of_file)
+

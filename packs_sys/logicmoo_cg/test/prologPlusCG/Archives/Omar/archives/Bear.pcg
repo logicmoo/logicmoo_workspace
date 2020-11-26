@@ -1,0 +1,49 @@
+//Bear's diet 
+Bear( x, Food ):: [Bear : x] <-actor- [Eat] -obj-> [Food = ["fish", "honey", "Baies_Sauvages"]].
+
+// the shelter of the agent John
+Bear( x, State ):: [Bear : x] <-actor- [Live] -livesIn-> [Shelter = "hole"] -locatedIn-> [Location].
+
+//a constraint to specify that john is a bear
+Bear( John ).
+
+//the agent's  behaviour
+Bear( John, Personality):: [Bear : John] <-actor- [Character] -has-> [List = [Naive, dishonest, Vanity, Lasy]].
+
+//relationship with other animals
+Bear( John, Friend ):: [Bear : John] <-actor- [Friend] -has-> [List = [Arthur]].
+
+//knowledge of the agent
+Bear( John, Knowledge ):: [Bird : Arthur] -locatedIn-> [Position = [16,7]].
+Bear( John, Knowledge ):: [Bear : John] -locatedIn-> [CurrentPosition = [2, 11]].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 50].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 30].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 10].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "honey"] -quantityOf-> [Quantity = 80].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "honey"] -quantityOf-> [Quantity = 50].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "honey"] -quantityOf-> [Quantity = 20].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "fish"] -quantityOf-> [Quantity = 30].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "fish"] -quantityOf-> [Quantity = 20].
+Bear( John, Knowledge ):: [Bear : John] -has-> [Hungry] 
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "fish"] -quantityOf-> [Quantity = 5].
+
+Bear( John, Perception ):: [Bear : John] -has-> [Perception = 100].
+
+Bear(x,y)::B:-Animal(x,y)::B.

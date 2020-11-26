@@ -1,0 +1,14 @@
+  
+[Remainder:*a'*e';CGHSD2.3b&Concept|243|232,190,117,25|&]
+[Divisor:*b'*b';CGHSD2.3b&Concept|240|20,192,92,25|&]
+[Dividend:*c'*a';CGHSD2.3b&Concept|238|24,51,104,25|&]
+[Number:*d'*c';CGHSD2.3b&Concept|234|19,291,95,25|&]
+[Sum:*e'*g';CGHSD2.3b&Concept|231|458,51,68,25|&]
+[Quotient:*f'*d';CGHSD2.3b&Concept|229|238,50,103,25|&]
+[SquareRoot:*g'*f';CGHSD2.3b&Concept|227|358,292,121,25|&]
+<divide?c?b|?f?a;CGHSD2.3b&Actor|237|147,126,59,25|&>
+<sqrt?d|?g;CGHSD2.3b&Actor|233|213,292,41,25|&>
+<plus?g?f|?e;CGHSD2.3b&Actor|226|395,124,42,25|&>/*CGHSD2.3b&Graph|225|0,0,40,25|&*/
+
+
+

@@ -1,0 +1,30 @@
+% -*-Prolog-*-
+
+:- use_module(library(pfc)).
+
+:- op(1050,xfx,('===>')).
+
+(P ===> Q) ==> 
+  ( P ==>  Q),
+  (~Q ==> ~P).
+
+
+or(P,Q) ==> 
+  (~P ==> Q),
+  (~Q ==> P).
+		
+prove_by_contradiction(P) :- P.
+prove_by_contradiction(P) :-
+  \+ (~P ; P),
+  ain(~P),
+  P -> mpred_remove(~P)
+    ; (mpred_remove(~P),fail).
+
+==> or(p,q).
+==> (p ===> x).
+==> (q ===> x).
+
+
+try :- prove_by_contradiction(x).
+
+  

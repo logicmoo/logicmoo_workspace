@@ -1,0 +1,240 @@
+(note TQD22)
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityInfluenceFunction 
+ (LongTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate ?EMBARGOE ?PRODUCT ?PRICE)) StabilizingFunction)) 
+
+(instance HYP-EconomicEmbargo-37354604 EconomicEmbargo) 
+
+(maleficiary HYP-EconomicEmbargo-37354604 Libya) 
+
+(agent HYP-EconomicEmbargo-37354604 WesternEurope) 
+
+(targetedProductType HYP-EconomicEmbargo-37354604 PetroleumProduct) 
+
+(quantityInfluenceFunction 
+ (LongTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate Libya ?PRODUCT ?SUPPLY)) StabilizingFunction) 
+
+(implies 
+ (quantityInfluenceFunction ?TIME ?THING ?QUANTITY ?FUNCTION) 
+ (quantityInfluenceFunctionStrength ?TIME ?THING ?QUANTITY ?FUNCTION Positive)) 
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityInfluenceFunction 
+ (ShortTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate ?EMBARGOEE ?PRODUCT ?SUPPLY)) SpikeFunction)) 
+
+(agent HYP-EconomicEmbargo-37354604 WesternEurope) 
+
+(maleficiary HYP-EconomicEmbargo-37354604 Libya) 
+
+(targetedProductType HYP-EconomicEmbargo-37354604 PetroleumProduct) 
+
+(instance HYP-EconomicEmbargo-37354604 EconomicEmbargo) 
+
+(implies 
+ (quantityInfluenceFunction ?TIME ?THING ?QUANTITY ?FUNCTION) 
+ (quantityInfluenceFunctionStrength ?TIME ?THING ?QUANTITY ?FUNCTION Positive)) 
+
+(quantityInfluenceFunction 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate Libya ?PRODUCT ?SUPPLY)) SpikeFunction) 
+
+(quantityInfluenceFunctionStrength 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate Libya ?PRODUCT ?SUPPLY)) SpikeFunction Positive) 
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityInfluenceFunction 
+ (ShortTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate ?EMBARGOEE ?PRODUCT ?PRICE)) NetIncreasingFunction)) 
+
+(agent HYP-EconomicEmbargo-37354604 WesternEurope) 
+
+(maleficiary HYP-EconomicEmbargo-37354604 Libya) 
+
+(targetedProductType HYP-EconomicEmbargo-37354604 PetroleumProduct) 
+
+(instance HYP-EconomicEmbargo-37354604 EconomicEmbargo) 
+
+(implies 
+ (quantityInfluenceFunction ?TIME ?THING ?QUANTITY ?FUNCTION) 
+ (quantityInfluenceFunctionStrength ?TIME ?THING ?QUANTITY ?FUNCTION Positive)) 
+
+(quantityInfluenceFunction 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate Libya ?PRODUCT ?PRICE)) NetIncreasingFunction) 
+
+(quantityInfluenceFunctionStrength 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate Libya ?PRODUCT ?PRICE)) NetIncreasingFunction Positive) 
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityInfluenceFunction 
+ (LongTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate ?EMBARGOEE ?PRODUCT ?PRICE)) NetUnchangingFunction)) 
+
+(agent HYP-EconomicEmbargo-37354604 WesternEurope) 
+
+(maleficiary HYP-EconomicEmbargo-37354604 Libya) 
+
+(targetedProductType HYP-EconomicEmbargo-37354604 PetroleumProduct) 
+
+(instance HYP-EconomicEmbargo-37354604 EconomicEmbargo) 
+
+(implies 
+ (quantityInfluenceFunction ?TIME ?THING ?QUANTITY ?FUNCTION) 
+ (quantityInfluenceFunctionStrength ?TIME ?THING ?QUANTITY ?FUNCTION Positive)) 
+
+(quantityInfluenceFunction 
+ (LongTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate Libya ?PRODUCT ?PRICE)) NetUnchangingFunction) 
+
+(quantityInfluenceFunctionStrength 
+ (LongTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (supplyRate Libya ?PRODUCT ?PRICE)) NetUnchangingFunction Positive) 
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE) 
+ (importanceOfThingInSet ?EMBARGOER 
+ (TheSetOf ?X 
+ (importsFrom ?X PetroleumProduct Libya)) ?LEVEL)) 
+ (quantityInfluenceFunctionStrength 
+ (ShortTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate ?EMBARGOEE ?PRODUCT ?SUPPLY)) NetIncreasingFunction ?LEVEL)) 
+
+(maleficiary HYP-EconomicEmbargo-37354604 Libya) 
+
+(importanceOfThingInSet WesternEurope 
+ (TheSetOf ?X 
+ (importsFrom ?X PetroleumProduct Libya)) High) 
+
+(agent HYP-EconomicEmbargo-37354604 WesternEurope) 
+
+(targetedProductType HYP-EconomicEmbargo-37354604 PetroleumProduct) 
+
+(instance HYP-EconomicEmbargo-37354604 EconomicEmbargo) 
+
+(quantityInfluenceFunctionStrength 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?SUPPLY) 
+ (supplyRate Libya ?PRODUCT ?SUPPLY)) NetIncreasingFunction High) 
+
+(implies 
+ (and 
+ (industryProduces ?INDUSTRY ?PRODUCT) 
+ (temporallySubsumes ?TIME 
+ (userRightsRelation ?COUNTRY ?INDUSTRY FullUseRights))) 
+ (quantityInfluenceFunction ?TIME ?PRODUCT 
+ (Kappa 
+ (?PROD ?PRICE) 
+ (supplyRate ?COUNTRY ?PROD ?PRICE)) StabilizingFunction)) 
+
+(temporallySubsumes (MtTimeFn EIAPagesMt) 
+ (userRightsRelation Libya 
+ (IndustryOfRegionFn OilIndustry Libya) FullUseRights)) 
+
+(industryProduces 
+ (IndustryOfRegionFn OilIndustry Libya) PetroleumProduct) 
+
+(implies 
+ (quantityInfluenceFunction ?TIME ?THING ?QUANTITY ?FUNCTION) 
+ (quantityInfluenceFunctionStrength ?TIME ?THING ?QUANTITY ?FUNCTION Positive)) 
+
+(quantityInfluenceFunction 
+ (MtTimeFn EIAPagesMt) PetroleumProduct 
+ (Kappa 
+ (?PROD ?PRICE) 
+ (supplyRate Libya ?PROD ?PRICE)) StabilizingFunction) 
+
+(quantityInfluenceFunctionStrength 
+ (MtTimeFn EIAPagesMt) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT-1 ?PRICE-1) 
+ (supplyRate Libya ?PRODUCT-1 ?PRICE-1)) StabilizingFunction Positive) 
+
+
+(query (findall (?EFFECT-STRENGTH ?FUNCTION ?TIME)
+
+(quantityInfluenceFunctionStrength ?TIME PetroleumProduct 
+   (Kappa 
+       (?PROD ?PRICE) 
+       (supplyRate Libya ?PROD ?PRICE)) ?FUNCTION ?EFFECT-STRENGTH)
+))
+
+(answer Positive  StabilizingFunction (list
+ (LongTermFn #$HYP-EconomicEmbargo-37354604))
+
+)
+(answer Positive SpikeFunction (list 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604))
+
+)
+(answer Positive NetIncreasingFunction (list 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604))
+
+)
+(answer Positive NetUnchangingFunction (list
+ (LongTermFn #$HYP-EconomicEmbargo-37354604))
+
+
+)
+(answer High NetIncreasingFunction (list 
+ (ShortTermFn #$HYP-EconomicEmbargo-37354604))
+
+)
+(answer Positive StabilizingFunction (list (MtTimeFn EIAPagesMt) )
+
+)
+(end_of_file)

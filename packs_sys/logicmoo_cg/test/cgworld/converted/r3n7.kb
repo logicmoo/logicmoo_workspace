@@ -1,0 +1,9 @@
+% (provide[primary_market][capital*x1])(rcpt?x1[investment*x2])(attr?x2[new])
+cgc(219,simple,'primary_market',[fs(num,sing)],[]).
+cgc(220,simple,'capital',[fs(num,sing)],[]).
+cgc(222,simple,'investment',[fs(num,sing)],[]).
+cgc(223,simple,'new',[fs(num,sing)],[]).
+cg(221,[cgr(provide, [219, 220], _),
+        cgr(rcpt, [220, 222], _),cgr(attr, [222, 223], _)], 
+        [],
+        [fs(kind,normal)]).

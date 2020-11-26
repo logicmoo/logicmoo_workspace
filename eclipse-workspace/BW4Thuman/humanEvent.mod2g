@@ -1,0 +1,19 @@
+use robot as knowledge.
+use human as knowledge.
+use human as actionspec.
+use message.
+
+module humanEvent {
+	if bel(true) then message. % check received messages
+	% we need to copy percepts to beliefbase because we 
+	% may not be able to handle it right away and perceptbase is volatile.		
+	if percept(goTo(X,Y)) then insert(performGoTo(X,Y)).
+		
+	if percept(goTo(NavPoint)) then insert(performGoTo(NavPoint)).
+	
+	if percept(goToBlock(Block)) then insert(performGoToBlock(Block)).
+	
+	if percept(pickUp(Block)) then insert(performPickUp(Block)).
+	
+	if percept(putDown) then insert(performPutDown).
+}

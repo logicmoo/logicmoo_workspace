@@ -1,0 +1,86 @@
+(note TQF239e)
+
+(instance Iran Country) 
+(instance HYP-TransnationalCriminalOrganization-6041829 TransnationalCriminalOrganization) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY Country) 
+    (instance ?CRIMEORG TransnationalCriminalOrganization)) 
+  (or 
+    (goalCategoryForAgent ?COUNTRY 
+      (hasStatusWithAgent ?COUNTRY ?CRIMEORG 
+        (DeterrenceFn (OfFn (CrimeFn)))) ActionGuidingIdeology)
+    (interestsCompeteForAgentTypeBecause 
+      (DeterrenceFn (OfFn (CrimeFn))) 
+      (DeterrenceFn (OfFn (TerrorismFn))) 
+      (thereExists ?COUNTRY 
+        (thereExists ?CRIMEORG 
+          (not 
+            (goalCategoryForAgent ?COUNTRY 
+              (hasStatusWithAgent ?COUNTRY ?CRIMEORG 
+                (DeterrenceFn (OfFn (CrimeFn)))) ActionGuidingIdeology)))) Country)))
+
+(not 
+  (and 
+    (instance ?COUNTRY Country) 
+    (instance ?CRIMEORG TransnationalCriminalOrganization) 
+    (goalCategoryForAgent ?COUNTRY 
+      (hasStatusWithAgent ?COUNTRY ?CRIMEORG 
+        (DeterrenceFn (OfFn (CrimeFn)))) ActionGuidingIdeology))) 
+
+(instance Iran Country) 
+(instance TigersOfTheGulf TerroristGroup) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY Country) 
+    (instance ?TERRORISTGROUP TerroristGroup)) 
+  (goalCategoryForAgent ?COUNTRY 
+    (hasStatusWithAgent ?COUNTRY ?TERRORISTGROUP 
+      (DeterrenceFn (OfFn (TerrorismFn)))) ActionGuidingIdeology)) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY Country) 
+    (instance ?TERRORISTGROUP TerroristGroup) 
+    (goalCategoryForAgent ?COUNTRY 
+      (hasStatusWithAgent ?COUNTRY ?TERRORISTGROUP 
+        (DeterrenceFn 
+          (OfFn (TerrorismFn)))) ActionGuidingIdeology))
+  (interestsCompeteForAgentTypeBecause 
+    (DeterrenceFn (OfFn (CrimeFn))) 
+    (DeterrenceFn (OfFn (TerrorismFn))) 
+    (thereExists ?COUNTRY 
+      (thereExists ?TERRORISTGROUP 
+        (goalCategoryForAgent ?COUNTRY 
+          (hasStatusWithAgent ?COUNTRY ?TERRORISTGROUP 
+            (DeterrenceFn (OfFn (TerrorismFn)))) ActionGuidingIdeology))) Country))
+
+(query (findall (?BECAUSE)
+  (implies 
+    (and 
+      (instance ?TERRORISTGROUP TerroristGroup) 
+      (instance ?COUNTRY Country) 
+      (instance ?CRIMEORG TransnationalCriminalOrganization)) 
+    (interestsCompeteForAgentTypeBecause 
+      (DeterrenceFn (OfFn (CrimeFn))) 
+      (DeterrenceFn (OfFn (TerrorismFn))) ?BECAUSE Country))))
+
+(answer  
+  (thereExists ?COUNTRY 
+    (thereExists ?CRIMEORG 
+      (not 
+        (goalCategoryForAgent ?COUNTRY 
+          (hasStatusWithAgent ?COUNTRY ?CRIMEORG 
+            (DeterrenceFn (OfFn (CrimeFn)))) ActionGuidingIdeology)))) Country))))
+
+(answer  (list  
+  (thereExists ?COUNTRY 
+    (thereExists ?TERRORISTGROUP 
+      (goalCategoryForAgent ?COUNTRY 
+        (hasStatusWithAgent ?COUNTRY ?TERRORISTGROUP 
+          (DeterrenceFn (OfFn (TerrorismFn)))) ActionGuidingIdeology))) Country )))
+          
+(end_of_file)
+

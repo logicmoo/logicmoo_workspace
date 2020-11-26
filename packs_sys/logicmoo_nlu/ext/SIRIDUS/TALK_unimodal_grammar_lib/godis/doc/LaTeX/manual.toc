@@ -1,0 +1,139 @@
+\contentsline {chapter}{\numberline {1}Introduction}{9}
+\contentsline {chapter}{\numberline {2}Getting started}{11}
+\contentsline {section}{\numberline {2.1}Running an existing GoDiS application}{11}
+\contentsline {section}{\numberline {2.2}Copying and modifying an existing GoDiS application}{11}
+\contentsline {chapter}{\numberline {3}Elements of the information-state approach to dialogue management }{13}
+\contentsline {section}{\numberline {3.1}The information state approach}{13}
+\contentsline {section}{\numberline {3.2}\textsc {TrindiKit}{} and the information state approach}{14}
+\contentsline {section}{\numberline {3.3}Toolkits, dialogue systems and applications}{15}
+\contentsline {section}{\numberline {3.4}Genre-specific systems: \textsc {GoDiS}-IOD and \textsc {GoDiS}-AOD}{15}
+\contentsline {chapter}{\numberline {4}Elements of Issue-based dialogue management}{17}
+\contentsline {section}{\numberline {4.1}Total Information State}{17}
+\contentsline {subsection}{\numberline {4.1.1}Information state proper}{17}
+\contentsline {paragraph}{Agenda}{17}
+\contentsline {paragraph}{Plan}{18}
+\contentsline {paragraph}{Private beliefs}{18}
+\contentsline {paragraph}{Questions Under Discussion}{18}
+\contentsline {paragraph}{Issues}{19}
+\contentsline {paragraph}{Actions}{19}
+\contentsline {paragraph}{Shared Committments}{19}
+\contentsline {paragraph}{Latest utterance}{19}
+\contentsline {paragraph}{Temporary store}{19}
+\contentsline {paragraph}{Non-integrated moves}{20}
+\contentsline {paragraph}{Previous moves}{20}
+\contentsline {subsection}{\numberline {4.1.2}Module interface variables}{20}
+\contentsline {subsection}{\numberline {4.1.3}Resource interface variables}{20}
+\contentsline {section}{\numberline {4.2}Dialogue moves}{20}
+\contentsline {subsection}{\numberline {4.2.1}Core dialogue moves in \textsc {GoDiS}-IOD}{20}
+\contentsline {subsection}{\numberline {4.2.2}Grounding moves}{21}
+\contentsline {subsection}{\numberline {4.2.3}Additional moves in \textsc {GoDiS}-AOD}{21}
+\contentsline {section}{\numberline {4.3}Dialogue Move Engine}{22}
+\contentsline {subsection}{\numberline {4.3.1}Update module}{22}
+\contentsline {subsubsection}{Move integration}{22}
+\contentsline {subsubsection}{Grounding}{22}
+\contentsline {subsubsection}{Question accommodation}{22}
+\contentsline {subsubsection}{Plan execution}{22}
+\contentsline {subsubsection}{Downdating QUD, ISSUES and ACTIONS}{22}
+\contentsline {subsection}{\numberline {4.3.2}Selection module}{22}
+\contentsline {subsubsection}{Action selection}{22}
+\contentsline {subsubsection}{Move selection}{22}
+\contentsline {section}{\numberline {4.4}Resource interface}{22}
+\contentsline {section}{\numberline {4.5}Dialogue plans}{23}
+\contentsline {subsection}{\numberline {4.5.1}Action sequences and actions}{23}
+\contentsline {subsection}{\numberline {4.5.2}Actions connected to dialogue moves}{23}
+\contentsline {paragraph}{\textsf {findout($q$)}}{23}
+\contentsline {paragraph}{\textsf {raise($q$)}}{24}
+\contentsline {paragraph}{\textsf {respond($q$)}}{24}
+\contentsline {subsubsection}{Actions for manipulating the information state}{24}
+\contentsline {paragraph}{\textsf {bind($q$)}}{24}
+\contentsline {paragraph}{\textsf {protect($q$)}}{24}
+\contentsline {paragraph}{\textsf {forget($p$)}}{24}
+\contentsline {paragraph}{\textsf {forget\_all}}{24}
+\contentsline {paragraph}{\textsf {forget\_except($p$}}{24}
+\contentsline {paragraph}{\textsf {assume($p$)}}{24}
+\contentsline {paragraph}{\textsf {assume\_issue($q$)}}{24}
+\contentsline {subsection}{\numberline {4.5.3}Resource-related actions}{24}
+\contentsline {paragraph}{\textsf {consultDB($q$)}}{24}
+\contentsline {paragraph}{\textsf {dev\_do($dev, \alpha $)}}{25}
+\contentsline {paragraph}{\textsf {dev\_set($dev, var, val$)}}{25}
+\contentsline {paragraph}{\textsf {dev\_get($dev, var$)}}{25}
+\contentsline {paragraph}{\textsf {dev\_query($dev, q$)}}{25}
+\contentsline {paragraph}{\textsf {dev\_queryAll($dev, q$)}}{25}
+\contentsline {paragraph}{\textsf {change\_domain}}{25}
+\contentsline {paragraph}{\textsf {change\_language}}{25}
+\contentsline {subsubsection}{Conditionals}{25}
+\contentsline {paragraph}{\textsf {if\_then($p$, $a$)}}{25}
+\contentsline {paragraph}{\textsf {if\_then\_else($p$, $a_1$, $a_2$)}}{25}
+\contentsline {subsection}{\numberline {4.5.4}Some example plans}{26}
+\contentsline {section}{\numberline {4.6}Formal semantic representations}{26}
+\contentsline {subsection}{\numberline {4.6.1}Propositions}{27}
+\contentsline {subsection}{\numberline {4.6.2}Questions}{28}
+\contentsline {subsection}{\numberline {4.6.3}Domain ontology (semantic sortal restrictions)}{29}
+\contentsline {subsubsection}{Individuals and sorts}{29}
+\contentsline {subsubsection}{Sortal hierarchy}{29}
+\contentsline {subsubsection}{Sortal correctness of propositions}{29}
+\contentsline {chapter}{\numberline {5}Non-DME modules used by GoDiS}{31}
+\contentsline {section}{\numberline {5.1}Simple text input module}{31}
+\contentsline {section}{\numberline {5.2}Text input with simulated recognitions score}{32}
+\contentsline {section}{\numberline {5.3}Nuance ASR input}{32}
+\contentsline {section}{\numberline {5.4}A simple interpretation module}{32}
+\contentsline {section}{\numberline {5.5}A simple generation module}{32}
+\contentsline {section}{\numberline {5.6}Simple text output module}{33}
+\contentsline {subsection}{\numberline {5.6.1}Nuance Vocalizer output}{33}
+\contentsline {chapter}{\numberline {6}The components of a GoDiS application}{35}
+\contentsline {section}{\numberline {6.1}File structure}{35}
+\contentsline {section}{\numberline {6.2}The GoDiS application specification file}{36}
+\contentsline {subsection}{\numberline {6.2.1}Selecting a GoDiS variant}{36}
+\contentsline {section}{\numberline {6.3}The start file}{36}
+\contentsline {section}{\numberline {6.4}Resources and the GoDiS resource interface}{37}
+\contentsline {section}{\numberline {6.5}The domain resource}{37}
+\contentsline {subsection}{\numberline {6.5.1}Dialogue plans}{37}
+\contentsline {subsection}{\numberline {6.5.2}Sortal restrictions}{38}
+\contentsline {subsection}{\numberline {6.5.3}Sortal hierarchy}{38}
+\contentsline {section}{\numberline {6.6}The device/database resource}{39}
+\contentsline {section}{\numberline {6.7}The lexicon resource}{39}
+\contentsline {section}{\numberline {6.8}The speech recognition grammar resource}{39}
+\contentsline {chapter}{\numberline {A}Installation instructions}{41}
+\contentsline {section}{\numberline {A.1}Downloading and installing TrindiKit}{41}
+\contentsline {subsection}{\numberline {A.1.1}Prerequisites}{41}
+\contentsline {subsection}{\numberline {A.1.2}Installing a CVS client}{42}
+\contentsline {paragraph}{Windows}{42}
+\contentsline {paragraph}{UNIX/Linux}{42}
+\contentsline {subsection}{\numberline {A.1.3}Downloading and unzipping TrindiKit}{42}
+\contentsline {subsection}{\numberline {A.1.4}Accessing TrindiKit via anonymous CVS}{42}
+\contentsline {paragraph}{Windows}{42}
+\contentsline {paragraph}{UNIX/LINUX}{43}
+\contentsline {subsection}{\numberline {A.1.5}Installing \textsc {TrindiKit}}{43}
+\contentsline {subsubsection}{Setting the TRINDIKIT environment variable}{43}
+\contentsline {paragraph}{Windows}{43}
+\contentsline {paragraph}{UNIX/LINUX}{43}
+\contentsline {subsubsection}{Running the \textsc {TrindiKit}{} build script}{43}
+\contentsline {paragraph}{Windows}{43}
+\contentsline {subsection}{\numberline {A.1.6}\textsc {TrindiKit}{} directory structure (after installation)}{43}
+\contentsline {section}{\numberline {A.2}Downloading and installing GoDiS}{44}
+\contentsline {subsection}{\numberline {A.2.1}Prerequisites}{44}
+\contentsline {subsection}{\numberline {A.2.2}Accessing \textsc {GoDiS}{} via anonymous CVS}{44}
+\contentsline {paragraph}{Windows}{44}
+\contentsline {paragraph}{UNIX/LINUX}{45}
+\contentsline {subsection}{\numberline {A.2.3}Installing \textsc {GoDiS}}{45}
+\contentsline {subsubsection}{Setting the GODIS environment variable}{45}
+\contentsline {paragraph}{Windows}{45}
+\contentsline {subsubsection}{Running the build script}{45}
+\contentsline {paragraph}{Windows}{45}
+\contentsline {subsection}{\numberline {A.2.4}\textsc {GoDiS}{} directory structure}{45}
+\contentsline {chapter}{\numberline {B}Downloading and installing additional software}{47}
+\contentsline {section}{\numberline {B.1}Installing Java}{47}
+\contentsline {subsection}{\numberline {B.1.1}Windows}{47}
+\contentsline {section}{\numberline {B.2}Downloading and installing OAA}{48}
+\contentsline {section}{\numberline {B.3}Installing Nuance ASR}{48}
+\contentsline {subsection}{\numberline {B.3.1}Windows}{48}
+\contentsline {subsection}{\numberline {B.3.2}UNIX/Linux}{48}
+\contentsline {section}{\numberline {B.4}Installing Nuance Vocalizer}{48}
+\contentsline {subsection}{\numberline {B.4.1}Windows}{48}
+\contentsline {subsection}{\numberline {B.4.2}UNIX/Linux}{48}
+\contentsline {chapter}{\numberline {C}Using GoDiS with Nuance v8.0 and Vocalizer}{49}
+\contentsline {section}{\numberline {C.1}Getting Nuance and Vocalizer to run on your computer}{49}
+\contentsline {subsection}{\numberline {C.1.1}Testing Nuance ASR}{49}
+\contentsline {subsection}{\numberline {C.1.2}Testing Vocalizer}{50}
+\contentsline {section}{\numberline {C.2}Configuring your GoDiS application to use Nuance}{50}
+\contentsline {section}{\numberline {C.3}Running Nuance and Vocalizer with your application}{50}

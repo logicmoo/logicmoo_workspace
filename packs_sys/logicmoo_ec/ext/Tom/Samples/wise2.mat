@@ -1,0 +1,19 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% wise men puzzle for two wise men
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% \Box_a ( \neg w(a) \to \Box_b \neg w(a))
+box a : ( not w('$Ra') implies box b : not w('$Ra')).
+%%% \Box_a  \Box_b  (w(a) \vee w(b)). 
+box a : box b : (w('$Ra') or w('$Rb')).
+
+%%% \Box_a \neg (\Box_b  w(b)).
+box a : not ( box b : w('$Rb')).
+
+%%% \neg (\Box_a w(a)).
+not (box a: w('$Ra')).
+
+# modal_axiom_schema(reflexive,b).
+# modal_axiom_schema(reflexive,a).

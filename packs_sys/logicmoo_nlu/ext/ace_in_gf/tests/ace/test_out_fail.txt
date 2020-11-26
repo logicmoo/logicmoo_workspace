@@ -1,0 +1,822 @@
+     26 John in
+     16 how
+     14 there are a
+     14 John ,
+     10 not for
+     10 in
+      9 John knows that
+      8 there is a man whose
+      8 there is a man a
+      8 John should
+      8 is there
+      7 John believes that
+      7 for each of some
+      6 there is a man such
+      6 John and Mary ,
+      6 each of some men who
+      6 a man whose
+      6 a man usually
+      6 a man ,
+      5 there is a red card R
+      5 there is a man the
+      5 there are some men each
+      5 John patiently
+      5 John may
+      5 is it true that
+      5 if John =
+      5 for no
+      5 for everything
+      5 every person should
+      5 every man for
+      5 Christmases
+      5 a man the
+      5 a man M1
+      5 a man is interested-in
+      5 2 l
+      5 {
+      4 XJohn
+      4 there is X .
+      4 there are some men a
+      4 there are some cards a
+      4 somebody M
+      4 nobody believes that
+      4 John soundly
+      4 John likes Mary a
+      4 John is more fond-of
+      4 it is false that a man eats or that
+      4 for each of a
+      4 everybody whose
+      4 a man manually
+      3 there is a man who sees himself
+      3 there is a man that eats , and that
+      3 there is a man A
+      3 there is a black
+      3 there are which
+      3 there are some cards each
+      3 Mary knows that
+      3 John wants to
+      3 John usually
+      3 John quickly
+      3 John must manually
+      3 John is in Paris when
+      3 it is true that
+      3 it is recommended
+      3 it is false that there is a man and that
+      3 it is false that there is a dog , and that
+      3 it is false that a man eats and that
+      3 is it false that
+      3 if there are a
+      3 if someone
+      3 for everybody
+      3 for each of the
+      3 every pet is a dog or is a cat , and is
+      3 every man knows that
+      3 everybody X of
+      3 everybody of
+      3 a man sees himself
+      3 a man runs fast and quickly
+      3 a man is more interested-in
+      3 a man comes in a day A1
+      3 a girl whose
+      3 ""
+      2 XYZ
+      2 whose article whose
+      2 who is a child X whose
+      2 who gives who
+      2 who gives what
+      2 which man whose
+      2 which man the
+      2 which man gives which
+      2 which film
+      2 which dog of which
+      2 which customer does John not provably
+      2 which code does a customer have to
+      2 which card of who
+      2 where can which
+      2 where can an escaped
+      2 what must a
+      2 what can a
+      2 what are
+      2 the United-Nations
+      2 there is someone
+      2 there is no man who
+      2 there is nobody who
+      2 there is Mary's sister
+      2 there is John's dog
+      2 there is a name . there is a dog . ""
+      2 there is a man who is rich and famous
+      2 there is a day A1
+      2 there is a child X whose
+      2 there is a card such
+      2 there are X
+      2 there are some men who
+      2 there are some cities in
+      2 there are more than 2 kg
+      2 there are less than 2 kg
+      2 there are how
+      2 there are 2 tables such
+      2 Switzerland
+      2 some water of
+      2 someone
+      2 some men M1
+      2 some groups of
+      2 somebody sees himself
+      2 somebody is himself
+      2 somebody is big and small
+      2 Pi
+      2 not everyone
+      2 not each of
+      2 noone
+      2 Mary waits . XJohn
+      2 John waits in a kitchen
+      2 John vaguely
+      2 John strongly
+      2 John sees 3 men whose
+      2 John often
+      2 John is with no telescope
+      2 John is as fond-of
+      2 John is a rich customer . his wealth
+      2 John has a card every
+      2 John does not provably
+      2 it is not true that
+      2 it is false that there is a man , and that
+      2 it is false that if
+      2 if there is somebody A
+      2 if there is an animal that believes that
+      2 if it is false that X =
+      2 if Iokaste
+      2 if a customer has a card C
+      2 for all men
+      2 for all dogs
+      2 every man whose
+      2 every man should
+      2 every man owns each of at
+      2 every man likes himself
+      2 every man can want to
+      2 every manager manages
+      2 every lady
+      2 every goat likes some grass and likes some water and does
+      2 every customer has at least 2 cards and their associated codes
+      2 every customer believes that
+      2 everybody sees the United-Nations
+      2 everybody sees Christmases
+      2 each of 2 girls lifts herself
+      2 Bill knows that
+      2 Bill gives what to
+      2 a woman waits . a man is interested-in
+      2 at most 2 men give themselves
+      2 a rich man X's
+      2 are there
+      2 a number X is [
+      2 a message is from someone
+      2 a man X and Y's
+      2 a man who is happy or who is sad ,
+      2 a man sees everything X of
+      2 a man sees a mat on which
+      2 a man M
+      2 a man knows that
+      2 a man invites some friends the
+      2 a man eats how
+      2 a man does not know that
+      2 a man carefully
+      2 a man a
+      2 a dog D
+      2 "abc"
+      2 2 men X and Y's
+      2 2 men M1
+      2 2 men M
+      2 10 kg
+      2 [
+      1 Zürich
+      1 X weighs
+      1 who see themselves
+      1 who sees who
+      1 who sees himself
+      1 who sees herself
+      1 whose dogs
+      1 whose child is Mary and is nothing but Mary
+      1 who runs and hits himself
+      1 who likes nothing but raw meat
+      1 who likes nothing but Mary
+      1 who is somebody that somebody that knows who knows ?
+      1 who is mad-about
+      1 who is known by somebody that knows who ?
+      1 who is John fond-of
+      1 who hits who
+      1 who hits himself
+      1 who does not see himself
+      1 who are the children of
+      1 which men give which
+      1 which man's
+      1 which man likes who
+      1 which dog of who
+      1 which customer does not provably
+      1 which codes must a
+      1 which code does who
+      1 which code does a customer not have to
+      1 which cards must every
+      1 which card of which
+      1 where is Bill ?
+      1 where does Bill give what
+      1 where does a man quickly
+      1 where does a man A
+      1 where does a ball in
+      1 when is what
+      1 when is Christmas ?
+      1 when is a string a password of who
+      1 what sees itself
+      1 what is written by who
+      1 what is when
+      1 what is a dog living
+      1 what does who
+      1 what does John live in
+      1 what does a man look
+      1 VisaCards
+      1 the size of a box is 3 cm *
+      1 there is who
+      1 there is which
+      1 there is some water whose
+      1 there is some water a
+      1 there is some toxicity
+      1 there is something X1
+      1 there is some laundry . it sees itself
+      1 there is some fluid
+      1 there is somebody X's dog
+      1 there is somebody who
+      1 there is somebody such
+      1 there is somebody . somebody gives himself
+      1 there is somebody . somebody gives him himself
+      1 there is nothing .
+      1 there is no man that
+      1 there is no man .
+      1 there is no dog that
+      1 there is no customer who
+      1 there is nobody .
+      1 there is more than 1 kg
+      1 there is John's most fast
+      1 there is John's fast and
+      1 there is how
+      1 there is a young man who is more fond-of
+      1 there is a thing A
+      1 there is a red and blue
+      1 there is a price of a resource . the price of the resource is high
+      1 there is a price of a resource . the price of a resource is high
+      1 there is a park in
+      1 there is a paragraph
+      1 there is a number X . [
+      1 there is a man X . X's
+      1 there is a man X . there is some food of
+      1 there is a man X1
+      1 there is a man who walks or who talks , and who
+      1 there is a man who waits silently and patiently
+      1 there is a man who sleeps safely and soundly
+      1 there is a man who must wait patiently . there is a man who can sleep . John sees the man who must wait . Mary expects
+      1 there is a man who Mary is
+      1 there is a man who knows who ?
+      1 there is a man . who hits himself
+      1 there is a man who does not wait patiently . there is a man who does not sleep . John sees the man who does not wait . Mary expects
+      1 there is a man who does not wait patiently . there is a man who does not sleep . a girl sees the man who does not wait . a boy expects
+      1 there is a man who does not provably
+      1 there is a man . there is the man's dog
+      1 there is a man . there is his dog
+      1 there is a man . there is his card
+      1 there is a man . there is a man . there is the man's dog
+      1 there is a man . there is a man such
+      1 there is a man . there is a boy . the man sees himself
+      1 there is a man . there is a boy . he sees himself
+      1 there is a man . the man the
+      1 there is a man . the man sees himself
+      1 there is a man that must feed every dog . there is a man that must feed every cat . the man that must feed every dog feeds himself
+      1 there is a man or there is a dog that sees him or there is a cat that sees itself
+      1 there is a man . his dog X
+      1 there is a man . his brother sees himself
+      1 there is a man . he sees himself
+      1 there is a man . everybody of
+      1 there is a man B
+      1 there is a man at
+      1 there is a man 3
+      1 there is a machine . it controls
+      1 there is a long zip-code Z
+      1 there is a green card or there is a red card such
+      1 there is a girl's ball
+      1 there is a form . a man fills-in it
+      1 there is a dog . not for
+      1 there is a dog . not each of
+      1 there is a dog . for all dogs
+      1 there is a dog . each of some men who
+      1 there is a dog D
+      1 there is a day . a day follows
+      1 there is a customer such
+      1 there is a company that John awaits a
+      1 there is a company from
+      1 there is a comment
+      1 there is a code of a card . every card whose
+      1 there is a code of a card . every card a
+      1 there is a city in
+      1 there is a cat such
+      1 there is a cat . it sees itself
+      1 there is a car that John buys for
+      1 there is a boy . a man sees himself
+      1 there is a book . Mary is sent it
+      1 there is 5 men's dog
+      1 there is 2 kg
+      1 there is 1 man D
+      1 there is 1 kg of dirty laundry
+      1 there are who
+      1 there are some men whose
+      1 there are some men the
+      1 there are some men such
+      1 there are some men . for each of them
+      1 there are some men . for each of the
+      1 there are some cards the
+      1 there are some cards not
+      1 there are at most 2 men X and Y and Z
+      1 there are at most 2 men X and something Y and something Z
+      1 there are at most 2 kg
+      1 there are at least 2 kg
+      1 there are 5 big men such
+      1 there are 4 men . not for
+      1 there are 4 men . not each of
+      1 there are 3 things and 4 things .
+      1 there are 3 men . there are who
+      1 there are 3 men M3
+      1 there are 3 men . each of them
+      1 there are 3 men 3
+      1 there are 384
+      1 there are 2 kg of laundry X1
+      1 there are 2 kg of dirty laundry
+      1 there are 2 kg of apples of
+      1 there are 2 girls and there are 2 tables such
+      1 there are 1 kg
+      1 there are 1000000000000000000000000000000
+      1 there are 10
+      1 the man whose
+      1 the furniture
+      1 the dog of a man whose
+      1 the cat of a man whose
+      1 the card of which man whose
+      1 the card of which man the
+      1 the book is given John
+      1 Sun is the Sun
+      1 something sees itself
+      1 some men do wait
+      1 some men can see themselves
+      1 some men are sent a
+      1 some men ,
+      1 some laundry which sees itself
+      1 some laundry of
+      1 some dogs of
+      1 some customers ,
+      1 some contracts of
+      1 some books are quickly
+      1 some books are not quickly
+      1 somebody waits . somebody sees himself
+      1 somebody waits . somebody sees a dog of himself
+      1 somebody waits in himself
+      1 somebody waits . he sees himself
+      1 somebody waits . he sees a dog of himself
+      1 somebody sees a dog of himself
+      1 somebody of
+      1 somebody is interested-in
+      1 somebody is given something
+      1 somebody is big and eats and waits
+      1 somebody gives somebody himself
+      1 somebody gives himself
+      1 somebody A
+      1 somebody '
+      1 SimpleMat
+      1 should
+      1 One
+      1 nothing of
+      1 not everything sees itself
+      1 not all dogs
+      1 no password is "god"
+      1 no man sees himself
+      1 no man M
+      1 no man but
+      1 nobody sees himself
+      1 nobody sees herself
+      1 nobody of
+      1 no analysis
+      1 more than 3 kg
+      1 may
+      1 Mary who which women ask for
+      1 Mary sleeps . John sees himself
+      1 Mary sees herself
+      1 Mary is sent some
+      1 Mary is sent a
+      1 Mary is as young as who
+      1 Mary does not know that
+      1 Jyri's
+      1 JohnX
+      1 John wisely
+      1 John whose
+      1 John who is larger than his own brother can work carefully in a year that is not 2006 and that is not in [
+      1 John watches the man who sees himself
+      1 John watches a man who sees himself
+      1 John wants that
+      1 John waits patiently in a kitchen
+      1 John tries to walk
+      1 John tries to hurry
+      1 John tells that
+      1 John takes his own card and gets some money for himself
+      1 John stops
+      1 John's speed is 10 sec
+      1 John sleeps where
+      1 John's laundries
+      1 John's height is 180 cm
+      1 John sees some water of
+      1 John sees someone
+      1 John sees everybody '
+      1 John sees a water of himself
+      1 John sees a man who sleeps with his own eyes
+      1 John sees a man whose
+      1 John sees a man who does not sleep soundly and quickly
+      1 John sees a man who does not sleep in a bed soundly and quickly
+      1 John sees a girl in every park with no telescope
+      1 John's customer who is new inserts a valid card of Mary manually into a slot A
+      1 John says that
+      1 John says "Mary
+      1 John reads "تراجيديا
+      1 John rarely
+      1 John owns at most 3 cars that have at most 3 wheels
+      1 John owns at most 3 cars that do not start
+      1 John never
+      1 John mostly
+      1 John looks at at least 4 men at least
+      1 John likes Õnne
+      1 John likes nothing but raw meat
+      1 John likes nothing but meat
+      1 John likes nothing but Mary
+      1 John likes nobody but
+      1 John likes Mary +
+      1 John likes ( Mary
+      1 John likes Foo
+      1 John likes a town which he goes to .
+      1 John likes 3 dogs . not for
+      1 John likes 3 dogs . not each of
+      1 John likes 1 + Mary
+      1 John lifts 50.5 kg
+      1 John knows the United-Nations
+      1 John knows the Sun
+      1 John knows the Abcdef
+      1 John knows Abcdef
+      1 John is where
+      1 John is when
+      1 John is rich where
+      1 John is rich and richer
+      1 John is no hero at every time
+      1 John is liked by himself
+      1 John is ""John"
+      1 John is in a park hit
+      1 John is everything of
+      1 John is a customer of someone
+      1 John hits himself
+      1 John hates a man who John can
+      1 John has each of less
+      1 John has each of exactly
+      1 John has a card no
+      1 John has 1.83 kg
+      1 John feeds his own dogs
+      1 John eats nothing but raw and expensive
+      1 John does not quickly
+      1 John does not know that
+      1 John does not intentionally
+      1 John does not in
+      1 John does not believe that
+      1 John does like
+      1 John does have
+      1 John can travel
+      1 John can from
+      1 John beats the donkey of himself
+      1 John beats a donkey of himself
+      1 John beats a donkey of a wife of himself
+      1 John and some dogs of
+      1 John and Mary's dogs
+      1 John and Mary's contracts
+      1 John and Mary hit themselves
+      1 John and Mary a
+      1 John a
+      1 John"
+      1 John'
+      1 JJ1
+      1 Jimmy's
+      1 it is possible that John waits . it is not necessary that John enters a card and that
+      1 it is possible that John waits and that
+      1 it is possible that John should
+      1 it is possible that a man waits and that
+      1 it is not recommended
+      1 it is not provable that John waits or that
+      1 it is not provable that John waits and that
+      1 it is not possible that there is a number X and that
+      1 it is not necessary that John waits and that
+      1 it is not false that
+      1 it is necessary that John waits or that
+      1 it is necessary that John waits and that
+      1 it is necessary that a man waits and that
+      1 it is false that there is X .
+      1 it is false that there is a man or that
+      1 it is false that there is a dog and that
+      1 it is false that there is a dog A
+      1 it is false that there are a
+      1 it is false that there are 2 kg of dirty laundry
+      1 it is false that John sleeps and that
+      1 it is false that John likes a dog , and that
+      1 it is false that it is not provable that
+      1 it is false that it is necessary that
+      1 it is false that it is false that
+      1 it is false that for
+      1 it is false that a man who waits or who eats runs or sleeps and barks
+      1 it is false that a man who waits or who eats runs or sleeps , and barks
+      1 it is false that a man waits and that
+      1 it is false that 1 =
+      1 is S
+      1 is a customer not provably
+      1 Into
+      1 In
+      1 if X's
+      1 if X gives Y Z
+      1 if there is X then
+      1 if there is something that
+      1 if there is somebody X of
+      1 if there is somebody X1
+      1 if there is no man that
+      1 if there is nobody then
+      1 if there is nobody that
+      1 if there is a pet X then X is a dog or X is a cat , and it is false that X is a dog and that
+      1 if there is an animal such
+      1 if there is a man X1
+      1 if there is a man who is happy or who is sad , and the dog of who
+      1 if there is a man then the man sees a cow and it is false that the man likes a cat and that
+      1 if there is a man then it is false that the man likes a cat and that
+      1 if there is a man then it is false that it is possible
+      1 if there is a man then he sees a cat X and it is possible that X sees a mouse or that
+      1 if there is a man then he sees a cat X and it is possible that X sees a mouse and that
+      1 if there is a man then he sees a cat X and it is possible that X eats or that
+      1 if there is a man then he sees a cat X and it is possible that X eats and that
+      1 if there is a man then he sees a cat X and it is necessary that X sees a mouse or that
+      1 if there is a man then he sees a cat X and it is necessary that X sees a mouse and that
+      1 if there is a man then he sees a cat X and it is necessary that X eats or that
+      1 if there is a man then he sees a cat X and it is necessary that X eats and that
+      1 if there is a man then he sees a cat X and it is false that X sees a mouse or that
+      1 if there is a man then he sees a cat X and it is false that X sees a mouse and that
+      1 if there is a man then he sees a cat X and it is false that X eats or that
+      1 if there is a man then he sees a cat X and it is false that X eats and that
+      1 if there is a man such
+      1 if there is a dog A
+      1 if there is a declaration whose
+      1 if something X likes something Y and Y likes something Z
+      1 if somebody X's dog Y
+      1 if somebody '
+      1 if Socrates
+      1 if John works then he does not see himself
+      1 if John works in a bank then he does not commute
+      1 if it is false that there is something X1
+      1 if each of some men who
+      1 if a young child has a fever
+      1 if a user is authenticated and pays for a resource then he does not believe that
+      1 if a thing X likes a thing Y and Y likes a thing Z
+      1 if a person buys an object from a merchant and keeps it then the person owns the object . if a merchant sells an object to a person then the person buys the object from the merchant . John sells the book "XML
+      1 if a message is from someone
+      1 if a man runs , and walks or eats
+      1 if a man owns a book then he does not provably
+      1 if a group is {
+      1 if a customer does not transmit some money and it is not provable that he does not transmit the money then the bank assumes that
+      1 if a city overlaps-with
+      1 if a car X sees a branch Y and it is false that X sees a rental and that
+      1 if a car X sees a branch Y and it is false that X is something Z
+      1 if a card X1
+      1 if 2 l
+      1 Him
+      1 From
+      1 France
+      1 for nobody
+      1 for every man the man likes himself
+      1 for every man's
+      1 for every man he likes himself
+      1 for every man for each of some
+      1 for every integer X there are more than 2 integers Y such
+      1 for every code there is a clerk such
+      1 for every card does
+      1 for each process P
+      1 for each of John
+      1 for each card which
+      1 for all integers
+      1 for all clean
+      1 for all cats
+      1 "Fido"
+      1 every uncle of the children of somebody X is
+      1 everything that knows something that hears something sees itself
+      1 everything of
+      1 everything barks at itself
+      1 everything a
+      1 every program that calls
+      1 every pet is something that is a cat or that is a dog , and that
+      1 every pet is not a cow , and is a dog or is
+      1 every period
+      1 every mother of someone
+      1 every man works or eats or sleeps
+      1 every man works or eats , or sleeps
+      1 every man works or eats and sleeps
+      1 every man works or eats , and sleeps
+      1 every man works and eats or sleeps
+      1 every man works , and eats or sleeps
+      1 every man who waits is seen by himself
+      1 every man who sees himself
+      1 every man who owns a car that likes a cat is a dog that is hated by a bike or that likes itself
+      1 every man who owns a car is a dog that is hated by a bike or that likes itself
+      1 every man who in
+      1 every man wants to
+      1 every man waits-for
+      1 every man sleeps where
+      1 every man sees a dog that barks or sees himself
+      1 every man M
+      1 every man is who in
+      1 every man is where
+      1 every man is rich in the morning where
+      1 every man is in the morning where
+      1 every man is an adult
+      1 every man is a dog that is hated by a bike or that likes itself
+      1 every man is a dog that hates a bike or that likes itself
+      1 every man in
+      1 every man feeds a cat that sees the man and likes himself
+      1 every man an
+      1 every man a
+      1 every man ,
+      1 every friend of JohnX
+      1 every empty string is ""
+      1 every dot
+      1 every dog uses to
+      1 every dog that sees a cat that sees a rat sees itself
+      1 every comment
+      1 every city overlaps-with
+      1 every brother of somebody X is an uncle of the children of X .
+      1 everybody X's dog hates X's
+      1 everybody X likes X's
+      1 everybody who which women ask for
+      1 everybody a
+      1 everybody '
+      1 each of some men whose
+      1 each of some men sees himself
+      1 each of some men a
+      1 each of at
+      1 each of 5 clerks'
+      1 does John see that
+      1 does John not
+      1 does a code have to be entered by someone
+      1 Brend
+      1 Bill's age is a number X . John believes that
+      1 Bill lives in which
+      1 Bill gives which flowers to
+      1 Bill drinks or Mary knows that
+      1 a woman carries the woman from who
+      1 a value is - 3 kg
+      1 a value is - 3.5
+      1 Augusts
+      1 at most 3 men X wait . X are
+      1 at most 3 l
+      1 at most 1 kg
+      1 at least 5 men ,
+      1 at least 3 l
+      1 a text is "abcdef"
+      1 a string is "#"
+      1 a string is "/*
+      1 a space is "
+      1 a set is in itself
+      1 a set is a member in itself
+      1 a set exists in itself
+      1 a red and red
+      1 a quick and quick
+      1 a person sees himself
+      1 a person sees herself
+      1 a one-armed
+      1 a number N
+      1 an old and happy
+      1 an item
+      1 a mat on
+      1 a man X must wait . a man Y can sleep . John sees the man X . Mary expects
+      1 a man X gives his own wife Y a
+      1 a man X1
+      1 a man writes a book the text of which
+      1 a man writes a book the hero of which
+      1 a man works manually and quickly
+      1 a man who waits walks and eats and sleeps
+      1 a man who is happy and sad
+      1 a man who in
+      1 a man who a woman is
+      1 a man who a woman asks for
+      1 a man waits in a bank which likes itself
+      1 a man waits-for
+      1 a man waits carefully and manually
+      1 a man that waits ,
+      1 a man that sees a boy that waits hears himself
+      1 a man spends
+      1 a man silently
+      1 a man should
+      1 a man sees every mat on which
+      1 a man sees a dog and himself
+      1 a man's card sees itself
+      1 a man runs in the park manually and quickly
+      1 a man runs in a park fast and manually
+      1 a man runs and walks or sleeps
+      1 a man quickly
+      1 a man must quickly
+      1 a man looks-at
+      1 a man is seen by himself
+      1 a man is rich and famous
+      1 a man is himself
+      1 a man is good or is nice or is
+      1 a man is good or is nice , or is
+      1 a man is good and is nice or is
+      1 a man is good , and is nice or is
+      1 a man is fond-of
+      1 a man invites some friends a
+      1 a man in
+      1 a man hits a dog whose
+      1 a man hits a dog the
+      1 a man has 2 kg of dirty water
+      1 a man gives a woman "abc"
+      1 a man gives a bone to a dog manually and carefully
+      1 a man eats quickly and quickly
+      1 a man eats in a park in a morning how
+      1 a man eats in a park how
+      1 a man does not wait patiently . a man does not sleep . John sees the man who does not wait . Mary expects
+      1 a man does not wait patiently . a man does not sleep . a girl sees the man who does not wait . a boy expects
+      1 a man does not quickly
+      1 a man believes that
+      1 a man A
+      1 a man 3
+      1 all men see themselves
+      1 all men meet themselves
+      1 a girl sees every man whose
+      1 a dog that a man sees quickly
+      1 a dog that a man sees in
+      1 a dog of a man whose
+      1 a dog is good and bad
+      1 a doctor sees himself
+      1 a doctor sees herself
+      1 a doctor sees her /
+      1 a customer who manually
+      1 a customer manually
+      1 a customer enters a card X and a code Y . if Y is valid then SimpleMat
+      1 a customer enters a card X and a code Y . if the code Y is valid then SimpleMat
+      1 a customer enters a card of himself
+      1 a customer enters a card and a code . if it is valid then SimpleMat
+      1 a customer enters a card and a code . if a code is valid then SimpleMat
+      1 a customer can enter what
+      1 a customer and a clerk's contracts
+      1 a comment
+      1 a clerk enters the card of himself
+      1 a clerk enters every card of himself
+      1 a clerk enters a card of himself
+      1 a child of who is a patricide whose
+      1 a child C1
+      1 a car runs more speedily
+      1 a card X1
+      1 a card the
+      1 a card of which man whose
+      1 a card of which man the
+      1 a card of a man the
+      1 a card of a man is valid . which man's
+      1 a card of a man a
+      1 a card manually
+      1 a card is manually
+      1 a card C11234234243
+      1 a card C1
+      1 a card C
+      1 a book is quickly
+      1 a book is not quickly
+      1 a bank in
+      1 a ball where
+      1 a ball in
+      1 "a"
+      1 - 7 likes - 2.2
+      1 5 clerks' codes
+      1 3 kg of apples is
+      1 3 kg of apples are heavy
+      1 3 codes X and Y and Z
+      1 3.1415926536 approximates Pi
+      1 2 men X and Y wait . X sleep
+      1 2 men see themselves
+      1 2 men and M2
+      1 2 kg of water runs
+      1 2 kg of sugar are used by John for what
+      1 2 kg of laundry waits
+      1 2 kg of apples of
+      1 2 kg of apples exists
+      1 2.3 and 88 and "abc"
+      1 2 * ( 3 - 5 / 17 ) > =
+      1 1 kg of laundry wait
+      1 1 kg of apples wait
+      1 1 kg of apples exist
+      1 "123"
+      1 ( ( 1 + 2 ) -
+      1 1 = <
+      1 "1"
+      1 "#"
+      1 "&"
+      1 "\"
+      1 "."
+      1 "//"
+      1 "<"
+      1 "

@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.15</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="autoload.html">
+<link rel="next" href="syntax.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="autoload.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="syntax.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:packs"><a id="sec:2.15"><span class="sec-nr">2.15</span> <span class="sec-title">Packs: 
+community add-ons</span></a></h2>
+
+<a id="sec:packs"></a>
+
+<p>SWI-Prolog has a mechanism for easy incorporation of community 
+extensions. See the <a class="url" href="http://www.swi-prolog.org/pack/list">pack 
+landing page</a> for details and available packs. This section documents 
+the built-in predicates to attach packs. Predicates for creating, 
+registering and installing packs are provided by the library
+<code>library(prolog_pack)</code>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="attach_packs/0"><strong>attach_packs</strong></a></dt>
+<dd class="defbody">
+Attaches all packs in subdirectories of directories that are accessible 
+through the <em>file search path</em> (see <a id="idx:absolutefilename3:261"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>)
+<code>pack</code>. The default for this search path is given below. See
+<a id="idx:filesearchpath2:262"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+for the <code>app_data</code> search path.
+
+<pre class="code">
+user:file_search_path(pack, app_data(pack)).
+</pre>
+
+<p>The predicate <a id="idx:attachpacks0:263"></a><a class="pred" href="packs.html#attach_packs/0">attach_packs/0</a> 
+is called on startup of SWI-Prolog.</dd>
+<dt class="pubdef"><a id="attach_packs/1"><strong>attach_packs</strong>(<var>+Directory</var>)</a></dt>
+<dd class="defbody">
+Attach all packs in subdirectories of <var>Directory</var>. Same as
+<code>attach_packs(Directory,[])</code>.
+</dd>
+<dt class="pubdef"><a id="attach_packs/2"><strong>attach_packs</strong>(<var>+Directory, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Attach all packs in subdirectories of <var>Directory</var>. Options is 
+one of:
+
+<dl class="latex">
+<dt><strong>search</strong>(<var>+Where</var>)</dt>
+<dd class="defbody">
+Determines the order in which pack library directories are searched. 
+Default is to add new packages at the end (<code>last</code>). Using
+<code>first</code>, new packages are added at the start.</dd>
+<dt><strong>duplicate</strong>(<var>+Action</var>)</dt>
+<dd class="defbody">
+Determines what happens if a pack with the same name is already 
+attached. Default is <code>warning</code>, which prints a warning and 
+ignores the new pack. Other options are <code>keep</code>, which is like <code>warning</code> 
+but operates silently and <code>replace</code>, which detaches the old 
+pack and attaches the new.
+</dd>
+</dl>
+
+<p>The predicate <a id="idx:attachpacks2:264"></a><a class="pred" href="packs.html#attach_packs/2">attach_packs/2</a> 
+can be used to attach packages that are bundled with an application.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,106 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="54.0,12.0,38.0,37.0" attr="0">
+		<a class="port" id="2"/>
+	</a>
+	<a class="state" id="3" val="2" rect="54.0,96.0,38.0,37.0" attr="1">
+		<a class="port" id="4"/>
+	</a>
+	<a class="state" id="5" val="3" rect="54.0,186.0,38.0,37.0" attr="2">
+		<a class="port" id="6"/>
+	</a>
+	<a class="transState" id="7" val="4" rect="12.0,66.0,39.0,19.0" attr="3">
+		<a class="port" id="8"/>
+	</a>
+	<a class="transState" id="9" val="5" rect="96.0,66.0,39.0,19.0" attr="3">
+		<a class="port" id="10"/>
+	</a>
+	<a class="transState" id="11" val="6" rect="18.0,150.0,39.0,19.0" attr="3">
+		<a class="port" id="12"/>
+	</a>
+	<a class="transState" id="13" val="7" rect="96.0,156.0,39.0,19.0" attr="3">
+		<a class="port" id="14"/>
+	</a>
+	<a class="transitionEdge" id="15" val="8" src="2" tgt="8" pts="73.0,30.5,31.5,75.5" attr="4"/>
+	<a class="transitionEdge" id="16" val="8" src="8" tgt="4" pts="31.5,75.5,73.0,114.5" attr="4"/>
+	<a class="transitionEdge" id="17" val="8" src="4" tgt="12" pts="73.0,114.5,37.5,159.5" attr="4"/>
+	<a class="transitionEdge" id="18" val="8" src="12" tgt="6" pts="37.5,159.5,73.0,204.5" attr="4"/>
+	<a class="transitionEdge" id="19" val="8" src="6" tgt="14" pts="73.0,204.5,115.5,165.5" attr="4"/>
+	<a class="transitionEdge" id="20" val="8" src="14" tgt="4" pts="115.5,165.5,73.0,114.5" attr="4"/>
+	<a class="transitionEdge" id="21" val="8" src="4" tgt="10" pts="73.0,114.5,115.5,75.5" attr="4"/>
+	<a class="transitionEdge" id="22" val="8" src="10" tgt="2" pts="115.5,75.5,73.0,30.5" attr="4"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="file:/home/staff2/ron/workspace/GipoV2/jplan/domains/icons/icoRed.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="file:/home/staff2/ron/workspace/GipoV2/jplan/domains/icons/icoRed.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="file:/home/staff2/ron/workspace/GipoV2/jplan/domains/icons/icoRed.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="4">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+</attrs>
+<user>
+	<a key="5">
+		<a key="label" val="go10"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="1">
+		<a key="label" val="state0"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="4">
+		<a key="label" val="go01"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="6">
+		<a key="label" val="go12"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="3">
+		<a key="label" val="state2"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="7">
+		<a key="label" val="go21"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="2">
+		<a key="label" val="state1"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="8" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

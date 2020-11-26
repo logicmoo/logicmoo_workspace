@@ -1,0 +1,4 @@
+Every time you invoke the {\tt NUANCE\_\-PARSER} command, it starts up
+a new {\tt nl-tool} process. This command allows you to shut down
+all outstanding {\tt nl-tool} processes.
+

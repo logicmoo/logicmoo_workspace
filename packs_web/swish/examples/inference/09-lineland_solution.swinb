@@ -1,0 +1,151 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Lineland
+
+Consider a one-dimensional world, a world where the objects lie on a line and their position is defined by a single real coordinate.
+
+Objects appear in the world at random positions that follow a Gaussian distribution with mean 4 and variance 1.
+
+You want to know the real position of the objects but you can only observe them by means of an instrument that makes noisy observations. The instrument has a systematic error so the observation of each object is offset by a fixed amount, i.e.m the observed position is given by the true position plus the error. However, you don't know the amount, you only know that is Gaussian distributed with mean 0 and variance 0.5.
+
+Define a predicate left(A,P) that is true if the position of object =A= is on the left of point =P= and a predicate rel_left(A,B) that is true when object =A= is on the left of object =B=.
+
+Perform the following tasks:
+  - Draw the distribution of the position of object 1.
+  - Draw the distribution of the position of object 1 given that it is on the left of 3.
+  - Draw the distribution of the position of object 1 given that it is on the left of object 2 and object 2 is on the left of 3.
+  - Draw the distribution of the position of object 1 given that object 2 was observed at 1.
+  - Draw the distribution of the position of object 1 given that objects 2 and 3 were observed. How is it different from the previous one?
+
+
+You can use CLP(R) constraints as in http://cplint.eu/example/inference/kalman_filter.swinb
+</div>
+
+<div class="nb-cell program" name="p1">
+:- use_module(library(clpr)).
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- endif.
+
+
+:- mc.
+
+:- begin_lpad.
+
+% This is the real position of the object
+real_position(_,Pos):gaussian(Pos,4,1).
+
+% the random error of an observation
+err(Err):gaussian(Err,0,0.5).
+
+% this is the position we observe
+% i.e. real position + error
+position(P,PosInclError) :-
+    {PosInclError =:= RealPos + Err},
+    real_position(P,RealPos),
+    err(Err).
+% the error is the same for every object
+
+% True if the position of object A is on the left of _point_ P
+% (i.e. we compare object A with a point)
+left(A,P) :-
+        real_position(A,PosA), % here you need to use the 
+    % real position
+        PosA &lt; P.
+
+
+% rel_left(A,B) that is true when object A is on the left of _object_ B.
+% (i.e. we compare objects)
+rel_left(A,B) :-
+        real_position(A,PosA),
+        real_position(B,PosB),
+    % here you need to use the 
+    % real position
+        PosA &lt; PosB.
+
+
+:- end_lpad.
+
+% Draw the distribution of the position of object 1.
+draw_distribution1(Sample, Chart) :-
+    mc_sample_arg(real_position(1,P),Sample,P,V),
+    histogram(V,Chart).
+% here you need to use the 
+    % real position
+    
+% Draw the distribution of the position of object 1 
+% given that it is on the left of [position] 3.
+draw_distribution2(Sample, Chart) :- 
+    mc_mh_sample_arg(real_position(1,P),left(1,3),Sample,P,V),
+    histogram(V,Chart).
+% here you need to use the 
+    % real position
+    % 
+% Draw the distribution of the position of object 1 
+% given that it is on the left of object 2 and 
+% object 2 is on the left of [position] 3.
+draw_distribution3(Sample, Chart) :- 
+    mc_mh_sample_arg(real_position(1,P),(rel_left(1,2),left(2,3)),Sample,P,V),
+    histogram(V,Chart).
+% here you need to use the 
+    % real position
+ 
+% Draw the distribution of the position of object 1 
+% given that object 2 was observed at [position] 1.
+draw_distribution4(Sample, Chart) :- 
+    mc_lw_sample_arg(real_position(1,P),position(2,1),Sample,P,V),
+    histogram(V,Chart).
+
+
+% Draw the distribution of the position of object 1 
+% given that objects 2 and 3 were observed.
+draw_distribution5(Sample, Chart) :- 
+    mc_lw_sample_arg(real_position(1,P),(position(2,1),position(3,1)),Sample,P,V),
+    histogram(V,Chart).
+</div>
+
+<div class="nb-cell html" name="htm1">
+Draw the distribution of the position of object 1.
+</div>
+
+<div class="nb-cell query" name="q1">
+draw_distribution1(1000,Chart).
+</div>
+
+<div class="nb-cell html" name="htm2">
+Draw the distribution of the position of object 1 given that it is on the left of 3.
+</div>
+
+<div class="nb-cell query" name="q2">
+draw_distribution2(1000,Chart).
+</div>
+
+<div class="nb-cell html" name="htm3">
+Draw the distribution of the position of object 1 given that it is on the left of object 2 and object 2 is on the left of 3.
+</div>
+
+<div class="nb-cell query" name="q3">
+draw_distribution3(1000,Chart).
+</div>
+
+<div class="nb-cell html" name="htm4">
+Draw the distribution of the position of object 1 given that object 2 was observed at 1.
+</div>
+
+<div class="nb-cell query" name="q4">
+draw_distribution4(1000,Chart).
+</div>
+
+<div class="nb-cell html" name="htm5">
+Draw the distribution of the position of object 1 given that objects 2 and 3 were observed.
+</div>
+
+<div class="nb-cell query" name="q5">
+draw_distribution5(1000,Chart).
+</div>
+
+</div>

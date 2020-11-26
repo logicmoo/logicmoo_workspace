@@ -1,0 +1,2 @@
+
+The grammar can be parsed using either the left-corner parser (the default) or the DCG parser. The left-corner parser is faster, but the DCG parser can be useful for debugging. In particular, it can be used to parse non-top constituents ; the left-corner parser lacks this capability.

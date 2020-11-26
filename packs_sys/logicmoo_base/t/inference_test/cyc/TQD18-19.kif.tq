@@ -1,0 +1,23 @@
+(note TQD18-19)
+
+(changesQuantityInDirection HYP-TemporalThing-52062941 Iran MilitaryHardware Positive) 
+
+(considersAsEnemy SaudiArabia Iran) 
+
+(implies 
+ (and 
+ (considersAsEnemy ?SELF ?ENEMY) 
+ (changesQuantityInDirection ?TIME ?ENEMY MilitaryHardware Positive)) 
+ (changesQuantityInDirection ?TIME ?SELF MilitaryHardware Positive)) 
+
+
+( query (findall ?DIRECTION (implies 
+ (changesQuantityInDirection ?TIME Iran MilitaryHardware Positive) 
+ (changesQuantityInDirection ?TIME SaudiArabia MilitaryHardware ?DIRECTION))  
+))
+
+(answer Positive)
+
+(end_of_file)
+
+

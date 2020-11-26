@@ -1,0 +1,25 @@
+Definition of Pelican:
+[Beak] -
+    -attr->[Size = big],
+    <-poss-[Bird :super]<-agnt-[Eat #0]-obj->[Fish]
+
+
+Definition of PelicanScientist:
+[Study #0] -
+        -obj->[Pelican],
+        -pat->[Scientist :super]
+
+Definition of HardPelicanSCientist:
+[Beak] -
+    -attr->[Size = big],
+    <-poss-[Bird]-
+	<-agnt-[Eat #0]-obj->[Fish],
+	<-obj-[Study]-pat->[Scientist:super]<-agnt-[Work]-manr->[Hard]
+
+
+Definition of HPelicanSCientist:
+[Beak] -
+    -attr->[Size = big],
+    <-poss-[Bird]-
+	<-agnt-[Eat #0]-obj->[Fish],
+	<-obj-[Study]-pat->[Scientist:super]<-agnt-[Work]-manr->[Hard]

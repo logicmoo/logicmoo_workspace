@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.33</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="predicate_options.html">
+<link rel="next" href="prologpack.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="predicate_options.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="prologpack.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:prologjiti"><a id="sec:A.33"><span class="sec-nr">A.33</span> <span class="sec-title">library(prolog_jiti): 
+Just In Time Indexing (JITI) utilities</span></a></h2>
+
+<p><a id="sec:prologjiti"></a>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Use <a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+and dynamically figure out the column width.
+</dd>
+</dl>
+
+<p>This module provides utilities to examine just-in-time indexes 
+created by the system and can help diagnosing space and performance 
+issues.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="jiti_list/0"><strong>jiti_list</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="jiti_list/1"><strong>jiti_list</strong>(<var>:Spec</var>)</a></dt>
+<dd class="defbody">
+List the JITI (Just In Time Indexes) of selected predicates. The 
+predicate <a class="pred" href="prologjiti.html#jiti_list/0">jiti_list/0</a> 
+list all just-in-time indexed predicates. The predicate <a class="pred" href="prologjiti.html#jiti_list/1">jiti_list/1</a> 
+takes one of the patterns below. All parts except for Name can be 
+variables. The last pattern takes an arbitrary number of arguments.
+
+<p>
+<ul class="compact">
+<li>Module:Head
+<li>Module:Name/Arity
+<li>Module:Name
+</ul>
+
+<p>The columns use the following notation:
+
+<p>
+<ul class="latex">
+<li>The <i>Indexed</i> column describes the <code>argument(s)</code> 
+indexed:
+
+<p>
+<ul class="latex">
+<li>A plain integer refers to a 1-based argument number
+<li><i>A+B</i> is a multi-argument index on the arguments <i>A</i> and <i>B</i>.
+<li><i>A/B</i> is a deep-index on sub-argument <i>B</i> of argument <i>A</i>.
+</ul>
+
+<p>
+<li>The <i>Buckets</i> specifies the number of buckets of the hash table
+<li>The <i>Speedup</i> specifies the selectivity of the index
+<li>The <i>Flags</i> describes additional properties, currently:
+
+<p>
+<ul class="latex">
+<li><code>L</code> denotes that the index contains multiple compound 
+terms with the same name/arity that may be used to create deep indexes. 
+The deep indexes themselves are created as just-in-time indexes.
+</ul>
+</ul>
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+#
+# Makes CGIF graphs compatible with the 1999 dpANS document since at the
+# time of writing, pCG was not yet fully CGIF compliant with respect to the 
+# June 2001 CGIF specification.
+#
+# Reads from standard input or the specified files. Writes to standard output.
+#
+# Also need to fix single bare "Situation:" occurrence manually. This should 
+# be within '[' and ']'.
+#
+# dbenn, May 2001
+
+while (<>) {
+  my $line = $_;
+
+  if (m/\:lambda/) {
+    $line =~ s/:lambda//g; # replace "lambda" with nothing; can't use!
+  }
+  
+  print $line;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <link href="dist/yasr.min.css" rel="stylesheet" type="text/css" />
+  <!-- build:css -->
+  <link rel="stylesheet" href="//localhost/yasgui/yasqe/dist/yasqe.min.css">
+  <!-- endbuild -->
+  </head>
+  <body>
+  
+      	<div id="yasqe"></div>
+      	<div id="showcase"></div>
+
+<script src="dist/yasr.bundled.min.js"></script>
+<!-- build:js -->
+<script src="//localhost/yasgui/yasqe/dist/yasqe.bundled.js"></script>
+<!-- endbuild -->
+<script type="text/javascript">
+	var yasr, yasqe = {};
+	yasr = YASR(document.getElementById("showcase"));
+    yasqe = YASQE(document.getElementById("yasqe"), {
+    	sparql: {
+    		showQueryButton: true,
+    	}
+    });
+    
+    /**
+    * Set some of the hooks to link YASR and YASQE
+    */
+    yasr.options.getUsedPrefixes = yasqe.getPrefixesFromQuery;
+	yasqe.options.sparql.callbacks.complete = yasr.setResponse;
+	
+	if (!yasr.storage.get("yasr_showcase_results"))  yasqe.query();
+	/**
+	* A function to do some quick testing
+	*/
+	function testFile(testFile) {
+		$.get("test/" + testFile, function(data) {
+			yasr.setResponse(data);
+		});
+	}
+	
+</script>
+  </body>
+</html>
+
+
+
+
+
+

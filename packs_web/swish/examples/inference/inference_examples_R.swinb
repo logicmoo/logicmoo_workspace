@@ -1,0 +1,53 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Inference Examples with R Graphics
+
+Example programs for inference with  graphics elements produced by R.
+
+### Learning
+  - Bongard ([bongard_R.pl](example/learning/bongard_R.pl))
+### Complex graphics
+  - One-dimensional  Kalman filter
+  ([kalman_filter_R.pl](example/inference/kalman_filter_R.pl), PRISM syntax
+  [kalman_filterimsw_R.pl](example/inference/kalman_filtermsw_R.pl))
+  - Gaussian process regression ([gpr_R.pl](example/inference/gpr_R.pl))
+### Densities of continuous values
+  - Gaussian mixture model
+  ([gaussian_mixture_R.pl](example/inference/gaussian_mixture_R.pl))
+  - Posterior estimation in Bayesian models
+  ([gaussian_mean_est_R.pl](example/inference/gauss_mean_est_R.pl))
+  - Seven scientists, posterior estimation in Bayesian models
+  ([seven_scientists_R.pl](example/inference/seven_scientists_R.pl))
+  - Factory producing widgets
+  ([widget_R.pl](example/inference/widget_R.pl), PRISM syntax [widgetmsw_R.pl](example/inference/widgetmsw_R.pl))
+  - Mixture model from a Dirichlet process, ([dp_mix_R.pl](example/inference/dp_mix_R.pl))
+### Distributions of discrete values
+  - Dirichlet process ([dirichlet_process_R.pl](example/inference/dirichlet_process_R.pl)) with a stick breaking process
+  - Dirichlet process ([dp_chinese_R.pl](example/inference/dp_chinese_R.pl)) with a Chinese Restaurant Process
+  - Probabilistic Context Free Left Recursive Grammar
+  ([pcfglr_R.pl](example/inference/pcfglr_R.pl))
+  - Model checking of a Markov chain
+  ([markov_chain_R.pl](example/inference/markov_chain_R.pl)).
+  - Prefix probability computation ([prefix_R.pl](example/inference/prefix_R.pl))
+  - Existence uncertainty/unknown objects.
+   ([var_obj_R.pl](example/inference/var_obj_R.pl),
+  [var_obj_geom_R.pl](example/inference/var_obj_geom_R.pl))
+  - Probabilistic Left-Corner Grammar ([plcg_R.pl](example/inference/plcg_R.pl))
+  - Random arithmetic function
+  ([arithm_R.pl](example/inference/arithm_R.pl))
+  - Stochastic logic program ([slp_pdcg_R.pl](example/inference/slp_pdcg_R.pl))
+### Probability bars
+  - Coin ([coin_R.pl](example/inference/coin_R.pl), [coinmc_R.pl](example/inference/coinmc_R.pl) [coinmsw_R.pl](example/inference/coinmsw_R.pl))
+  - Dice ([dice_R.pl](example/inference/dice_R.pl))
+  - Epidemic ([epidemic_R.pl](example/inference/epidemic_R.pl))
+  - Earthquake ([earthquake_R.pl](example/inference/earthquake_R.pl))
+  - Eruption ([eruption_R.pl](example/inference/eruption_R.pl))
+  - Mendelian inheritance of human blood type ([bloodtype_R.pl](example/inference/bloodtype_R.pl))
+  - Alarm Bayesian network ([alarm_R.pl](example/inference/alarm_R.pl))
+  - Hidden Markov Model ([hmm_R.pl](example/inference/hmm_R.pl))
+  - Cora: entity resolution ([cora_R.pl](example/inference/cora_R.pl))
+  - Coins ([coin2_R.pl](example/inference/coin2_R.pl))
+</div>
+
+</div>

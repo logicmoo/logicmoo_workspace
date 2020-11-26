@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.36</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="prologxref.html">
+<link rel="next" href="random.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="prologxref.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="random.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:quasiquotations"><a id="sec:A.36"><span class="sec-nr">A.36</span> <span class="sec-title">library(quasi_quotations): 
+Define Quasi Quotation syntax</span></a></h2>
+
+<p><a id="sec:quasiquotations"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jan Wielemaker. Introduction of Quasi Quotation was suggested by Michael 
+Hendricks.
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://www.cs.tufts.edu/comp/150FP/archive/geoff-mainland/quasiquoting.pdf">Why 
+it's nice to be quoted: quasiquoting for haskell</a>
+</dd>
+</dl>
+
+<p>Inspired by
+<a class="url" href="http://www.haskell.org/haskellwiki/Quasiquotation">Haskell</a>, 
+SWI-Prolog support <i>quasi quotation</i>. Quasi quotation allows for 
+embedding (long) strings using the syntax of an external language (e.g., 
+HTML, SQL) in Prolog text and syntax-aware embedding of Prolog variables 
+in this syntax. At the same time, quasi quotation provides an 
+alternative to represent long strings and atoms in Prolog.
+
+<p>The basic form of a quasi quotation is defined below. Here, <var>Syntax</var> 
+is an arbitrary Prolog term that must parse into a <i>callable</i> (atom 
+or compound) term and Quotation is an arbitrary sequence of characters, 
+not including the sequence <code>|}</code>. If this sequence needs to be 
+embedded, it must be escaped according to the rules of the target 
+language or the&lsquo;quoter' must provide an escaping mechanism.
+
+<pre class="code">
+{|Syntax||Quotation|}
+</pre>
+
+<p>While reading a Prolog term, and if the Prolog flag <code>quasi_quotes</code> 
+is set to <code>true</code> (which is the case if this library is 
+loaded), the parser collects quasi quotations. After reading the final 
+full stop, the parser makes the call below. Here, <var>SyntaxName</var> 
+is the functor name of <var>Syntax</var> above and <var>SyntaxArgs</var> 
+is a list holding the arguments, i.e., <code>Syntax =.. [SyntaxName|SyntaxArgs]</code>. 
+Splitting the syntax into its name and arguments is done to make the 
+quasi quotation parser a predicate with a consistent arity 4, regardless 
+of the number of additional arguments.
+
+<pre class="code">
+call(+SyntaxName, +Content, +SyntaxArgs, +VariableNames, -Result)
+</pre>
+
+<p>The arguments are defined as
+
+<p>
+<ul class="latex">
+<li><var>SyntaxName</var> is the principal functor of the quasi 
+quotation syntax. This must be declared using <a class="pred" href="quasiquotations.html#quasi_quotation_syntax/1">quasi_quotation_syntax/1</a> 
+and there must be a predicate SyntaxName/4.
+<li><var>Content</var> is an opaque term that carries the content of the 
+quasi quoted material and position information about the source code. It 
+is passed to <span class="pred-ext">with_quasi_quote_input/3</span>.
+<li><var>SyntaxArgs</var> carries the additional arguments of the <var>Syntax</var>. 
+These are commonly used to make the parameter passing between the clause 
+and the quasi quotation explicit. For example:
+
+<pre class="code">
+    ...,
+    {|html(Name, Address)||
+     &lt;tr&gt;&lt;td&gt;Name&lt;td&gt;Address&lt;/tr&gt;
+     |}
+</pre>
+
+<p>
+<li><var>VariableNames</var> is the complete variable dictionary of the 
+clause as it is made available throug <a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+with the option
+<code>variable_names</code>. It is a list of terms <code>Name = Var</code>.
+<li><var>Result</var> is a variable that must be unified to resulting 
+term. Typically, this term is structured Prolog tree that carries a 
+(partial) representation of the abstract syntax tree with embedded 
+variables that pass the Prolog parameters. This term is normally either 
+passed to a predicate that serializes the abstract syntax tree, or a 
+predicate that processes the result in Prolog. For example, HTML is 
+commonly embedded for writing HTML documents (see
+<code>library(http/html_write)</code>). Examples of languages that may 
+be embedded for processing in Prolog are SPARQL, RuleML or regular 
+expressions.
+</ul>
+
+<p>The file <code>library(http/html_quasiquotations)</code> provides 
+the, suprisingly simple, quasi quotation parser for HTML.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="with_quasi_quotation_input/3"><strong>with_quasi_quotation_input</strong>(<var>+Content, 
+-Stream, :Goal</var>)</a></dt>
+<dd class="defbody">
+Process the quasi-quoted <var>Content</var> using <var>Stream</var> 
+parsed by <var>Goal</var>.
+<var>Stream</var> is a temporary stream with the following properties:
+
+<p>
+<ul class="latex">
+<li>Its initial <i>position</i> represents the position of the start of 
+the quoted material.
+<li>It is a text stream, using <code>utf8</code> <i>encoding</i>.
+<li>It allows for repositioning
+<li>It will be closed after <var>Goal</var> completes.
+</ul>
+<table class="arglist">
+<tr><td><var>Goal</var> </td><td>is executed as <code>once(Goal)</code>. <var>Goal</var> 
+must succeed. Failure or exceptions from <var>Goal</var> are interpreted 
+as syntax errors. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="quasiquotations.html#phrase_from_quasi_quotation/2">phrase_from_quasi_quotation/2</a> 
+can be used to process a quotation using a grammar.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="phrase_from_quasi_quotation/2"><strong>phrase_from_quasi_quotation</strong>(<var>:Grammar, 
++Content</var>)</a></dt>
+<dd class="defbody">
+Process the quasi quotation using the DCG <var>Grammar</var>. Failure of 
+the grammar is interpreted as a syntax error.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="quasiquotations.html#with_quasi_quotation_input/3">with_quasi_quotation_input/3</a> 
+for processing quotations from stream.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="quasi_quotation_syntax/1"><strong>quasi_quotation_syntax</strong>(<var>:SyntaxName</var>)</a></dt>
+<dd class="defbody">
+Declare the predicate <var>SyntaxName</var>/4 to implement the the quasi 
+quote syntax <var>SyntaxName</var>. Normally used as a directive.</dd>
+<dt class="pubdef"><a id="quasi_quotation_syntax_error/1"><strong>quasi_quotation_syntax_error</strong>(<var>+Error</var>)</a></dt>
+<dd class="defbody">
+Report <code>syntax_error(Error)</code> using the current location in 
+the quasi quoted input parser.
+
+<dl class="tags">
+<dt class="tag">throws</dt>
+<dd>
+<code>error(syntax_error(Error), Position)</code>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

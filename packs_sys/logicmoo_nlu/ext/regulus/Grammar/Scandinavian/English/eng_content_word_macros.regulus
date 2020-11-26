@@ -1,0 +1,88 @@
+% Also some Eng-specific function words
+
+macro(possessive(Word, Pron, Type),
+      ( possessive:[sem= @possessive_pron_sem(Pron), sem_n_type=Type] --> Word )).
+
+macro(possessive_pronoun(Word, Pron),
+      ( np:[sem= @np_possessive_nbar_sem(@possessive_pron_sem(Pron), @noun_sem(noun, one)),
+	    sem_n_type=(\(numeric)), agr=3,
+	    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+	    @takes_no_pps, gapsin=GIn, gapsout=GIn] -->
+	  Word )).
+
+%==========================================================================
+
+% Standard macros for nouns
+
+%----------------------------------------------------------
+
+% Noun with all inflected forms
+% 
+% @noun([headache, headaches],
+%       [symptom, headache], [symptom], [takes_det_type=null\/def\/indef, takes_loc_pp=y]).
+
+macro(noun(SurfaceForms, [SemType, SemConstant], [SortalType], OtherFeats),
+      @noun(SurfaceForms,
+	    [sem = @noun_sem(SemType, SemConstant),
+	     sem_n_type = SortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Noun with just singular or just plural
+%
+% @uninflected_noun(work,
+%                   [loc, work], [loc], sing, [takes_det_type=null]).
+
+macro(uninflected_noun(SurfaceForm, [SemType, SemConstant], [SortalType], Agr, OtherFeats),
+      ( n:[sem = @noun_sem(SemType, SemConstant),
+	   agr = Agr,
+	   sem_n_type = SortalType |
+	  OtherFeats] --> SurfaceForm )).
+
+%==========================================================================
+
+% Standard macro for adjectives
+%
+% @adjective(severe, [degree, severe], [symptom], [adjpos=prenom\/pred]).
+
+macro(adjective(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats),
+      ( adj:[sem= @adj_sem(SemType, SemConstant),
+	     subj_sem_n_type=SortalType |
+	    OtherFeats] --> SurfaceForm)).
+
+%----------------------------------------------------------
+
+% Verb taking object and particle
+% e.g. "you switch on the light", or "you switch the light on"
+%
+% v_object_particle([switch, switches, switched, switched, switching],
+%                   [action, switch], [agent, switchable, onoff], [takes_loc_pp=y]).
+
+macro(v_object_particle(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1pl\/nx0vplnx1,
+	     inv= @default_inv,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, 
+	     sem_p_type=ParticleType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% (Nonmodal) verb taking ing-VP, 
+% e.g. "John stopped sleeping" 
+%
+% @v_vp_ing([stop, stops, stopped, stopped, stopping], [state, stop_doing], [_AnyAgent], []).
+
+macro(v_vp_ing(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vvx1_nonmodal,
+	     inv= @default_inv,
+	     subj_sem_n_type=SubjSortalType,
+	     vp_vform=ing |
+	    OtherFeats])).
+
+

@@ -1,0 +1,10 @@
+In dialogue processing applications where expressions like ``today''
+or ``next week'' are used, it is necessary to know the current
+time. When doing regression testing, it is then useful to be able to
+set a notional time, so that responses to time-dependent utterances
+stay stable.
+
+The {\tt DIALOGUE\_\-TIME} command makes it possible to print the
+notional time from the command-line. The notional time can also be
+retrieved using the predicate {\tt get\_\-notional\_\-time/1} in {\tt
+PrologLib/utilities.pl}.

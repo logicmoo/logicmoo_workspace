@@ -1,0 +1,52 @@
+(note "TQB83b - unSkolemed")
+(abort)
+
+(thereExists (?X ?Y) 
+  (and
+    (instance ?X BallisticMissile))
+    (agent ?Y Iran) 
+    (deviceUsed ?Y ?X)
+    (instance ?Y AttackOnTangible))) 
+
+(subclass BallisticMissile Weapon) 
+(relationInstanceExistsMany possesses Iran BallisticMissile) 
+
+(implies 
+  (and 
+    (instance ?AGENT GeographicalAgent) 
+    (agent ?ATTACK ?AGENT) 
+    (instance ?ATTACK AttackOnTangible) 
+    (deviceUsed ?ATTACK ?WEAPON) 
+    (instance ?WEAPON ?WEAPONTYPE) 
+    (subclass ?WEAPONTYPE Weapon)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(instance Iran GeographicalAgent) 
+
+(query (findall ?WEAPON-TYPE
+  (implies 
+    (and 
+      (instance ?ACT BlockingTraffic) 
+      (objectActedOn ?ACT SuMedPipeline) 
+      (agent ?ACT Iran)) 
+    (or 
+      (and 
+        (subclass ?WEAPON-TYPE Weapon) 
+        (relationInstanceExistsMany possesses Iran ?WEAPON-TYPE) 
+        (thereExists ?WEAPON 
+          (and 
+            (instance ?WEAPON ?WEAPON-TYPE) 
+            (consistent 
+              (deviceUsed ?ACT ?WEAPON)))))
+      (and 
+        (subclass ?TYPE Object) 
+        (thereExists ?MEANS 
+          (and 
+            (instance ?MEANS ?TYPE) 
+            (consistent 
+              (instrument-Generic ?ACT ?MEANS)))))))))
+
+(answer BallisticMissile)
+
+(end_of_file)
+

@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.26</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="occurs.html">
+<link rel="next" href="optparse.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="occurs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="optparse.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:option"><a id="sec:A.26"><span class="sec-nr">A.26</span> <span class="sec-title">library(option): 
+Option list processing</span></a></h2>
+
+<p><a id="sec:option"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <code>library(record)</code> <br>
+- Option processing capabilities may be declared using the directive <a class="pred" href="predicate_options.html#predicate_options/3">predicate_options/3</a>.
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+We should consider putting many options in an assoc or record with 
+appropriate preprocessing to achieve better performance.
+</dd>
+</dl>
+
+<p>The <code>library(option)</code> provides some utilities for 
+processing option lists. Option lists are commonly used as an 
+alternative for many arguments. Examples of built-in predicates are <a class="pred" href="IO.html#open/4">open/4</a> 
+and <a class="pred" href="termrw.html#write_term/3">write_term/3</a>. 
+Naming the arguments results in more readable code, and the list nature 
+makes it easy to extend the list of options accepted by a predicate. 
+Option lists come in two styles, both of which are handled by this 
+library.
+
+<dl class="latex">
+<dt><b>Name(Value)</b></dt>
+<dd>
+This is the preferred style.
+</dd>
+<dt><b>Name = Value</b></dt>
+<dd>
+This is often used, but deprecated.
+</dd>
+</dl>
+
+<p>Processing options inside time-critical code (loops) can cause 
+serious overhead. One possibility is to define a record using <code>library(record)</code> 
+and initialise this using make_<var>&lt;</var>record<a class="pred" href="arith.html#>/2">&gt;/2</a>. 
+In addition to providing good performance, this also provides 
+type-checking and central declaration of defaults.
+
+<pre class="code">
+:- record atts(width:integer=100, shape:oneof([box,circle])=box).
+
+process(Data, Options) :-
+        make_atts(Options, Attributes),
+        action(Data, Attributes).
+
+action(Data, Attributes) :-
+        atts_shape(Attributes, Shape),
+        ...
+</pre>
+
+<p>Options typically have exactly one argument. The library does support 
+options with 0 or more than one argument with the following 
+restrictions:
+
+<p>
+<ul class="latex">
+<li>The predicate <a class="pred" href="option.html#option/3">option/3</a> 
+and <a class="pred" href="option.html#select_option/4">select_option/4</a>, 
+involving default are meaningless. They perform an <code>arg(1, Option, Default)</code>, 
+causing failure without arguments and filling only the first 
+option-argument otherwise.
+<li><a class="pred" href="option.html#meta_options/3">meta_options/3</a> 
+can only qualify options with exactly one argument.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="option/3"><strong>option</strong>(<var>?Option, 
++OptionList, +Default</var>)</a></dt>
+<dd class="defbody">
+Get an <var>Option</var> from <var>OptionList</var>. <var>OptionList</var> 
+can use the Name=Value as well as the Name(Value) convention.
+<table class="arglist">
+<tr><td><var>Option</var> </td><td>Term of the form Name(?Value). </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="option/2"><strong>option</strong>(<var>?Option, 
++OptionList</var>)</a></dt>
+<dd class="defbody">
+Get an <var>Option</var> from <var>OptionList</var>. <var>OptionList</var> 
+can use the Name=Value as well as the Name(Value) convention. Fails 
+silently if the option does not appear in <var>OptionList</var>.
+<table class="arglist">
+<tr><td><var>Option</var> </td><td>Term of the form Name(?Value). </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="select_option/3"><strong>select_option</strong>(<var>?Option, 
++Options, -RestOptions</var>)</a></dt>
+<dd class="defbody">
+Get and remove <var>Option</var> from an option list. As <a class="pred" href="option.html#option/2">option/2</a>, 
+removing the matching option from <var>Options</var> and unifying the 
+remaining options with <var>RestOptions</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="select_option/4"><strong>select_option</strong>(<var>?Option, 
++Options, -RestOptions, +Default</var>)</a></dt>
+<dd class="defbody">
+Get and remove <var>Option</var> with default value. As <a class="pred" href="option.html#select_option/3">select_option/3</a>, 
+but if <var>Option</var> is not in <var>Options</var>, its value is 
+unified with
+<var>Default</var> and <var>RestOptions</var> with <var>Options</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="merge_options/3"><strong>merge_options</strong>(<var>+New, 
++Old, -Merged</var>)</a></dt>
+<dd class="defbody">
+Merge two option lists. <var>Merged</var> is a sorted list of options 
+using the canonical format Name(Value) holding all options from <var>New</var> 
+and <var>Old</var>, after removing conflicting options from <var>Old</var>.
+
+<p>Multi-values options (e.g., <code>proxy(Host, Port)</code>) are 
+allowed, where both option-name and arity define the identity of the 
+option.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="meta_options/3"><strong>meta_options</strong>(<var>+IsMeta, 
+:Options0, -Options</var>)</a></dt>
+<dd class="defbody">
+Perform meta-expansion on options that are module-sensitive. Whether an 
+option name is module-sensitive is determined by calling <code>call(IsMeta, Name)</code>. 
+Here is an example:
+
+<pre class="code">
+        meta_options(is_meta, OptionsIn, Options),
+        ...
+
+is_meta(callback).
+</pre>
+
+<p>Meta-options must have exactly one argument. This argument will be 
+qualified.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Should be integrated with declarations from
+<a class="pred" href="predicate_options.html#predicate_options/3">predicate_options/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="dict_options/2"><strong>dict_options</strong>(<var>?Dict, 
+?Options</var>)</a></dt>
+<dd class="defbody">
+Convert between an option list and a dictionary. One of the arguments 
+must be instantiated. If the option list is created, it is created in 
+canonical form, i.e., using Option(Value) with the <var>Options</var> 
+sorted in the standard order of terms. Note that the conversion is not 
+always possible due to different constraints and conversion may thus 
+lead to (type) errors.
+
+<p>
+<ul class="latex">
+<li><var>Dict</var> keys can be integers. This is not allowed in 
+canonical option lists.
+<li><var>Options</var> can hold multiple options with the same key. This 
+is not allowed in dicts.
+<li><var>Options</var> can have more than one value (<code>name(V1,V2)</code>). 
+This is not allowed in dicts.
+</ul>
+
+<p>Also note that most system predicates and predicates using this 
+library for processing the option argument can both work with classical 
+Prolog options and dicts objects.
+</dd>
+</dl>
+
+<p></body></html>

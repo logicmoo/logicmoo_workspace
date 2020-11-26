@@ -1,0 +1,951 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Feature structures in POP-11
+
+We already saw in Chapter 4 how simple feature structures could be
+represented by POP-11 lists.  Now that the notion of DAGs has been
+introduced, it is easier to see what the notation means how it can be
+extended to handle more interesting cases.  We have represented
+collections of features and values using lists of lists, each sublist
+providing a feature name and value.  For instance, the following list:
+
+    [[person 3] [number sing]]
+
+represents something with PERSON and NUMBER features.  The values for
+these are, respectively, 3 and SING.  Where a value is itself a
+complex collection of features, an embedded list can be used for the
+appropriate element.  For instance, in the following:
+
+    [[cat V] [arg0 [[cat NP] [case nom] [number sing]]]]
+
+the value of the ARG0 feature is a complex object.  This has values
+for at least the features CAT, CASE and NUMBER.  Both of these two
+example descriptions are tree shaped, and in order to represent
+general DAGs we need to have a way of representing sharing between
+different parts of a category.  As we have seen, a variable symbol can
+be used to indicate that two features must be given the same value -
+that is, that the features share.  Thus:
+
+    [[cat VP] [head _x] [verb [[head _x]]]]
+
+represents a DAG in which the HEAD and the HEAD of the VERB share a
+value, whereas:
+
+    [[cat VP] [head _x] [verb [[head _y]]]]
+
+represents a DAG in which they do not.  In fact, since _x and _y only
+appear once each in the data structure, unless _x and _y are given
+some other significance, the information conveyed by this structure is
+exactly the same as that conveyed by:
+
+    [[cat VP]]
+
+Our implementation of DAGs needs to be able to capture the situation
+when two DAGs share a value, but where some information is already
+known about that value.  In such a case, we want to show all the known
+information about the value in both places and, in addition, indicate
+that the remainder of the description of the value is also shared.  We
+use a special notation for talking about the remainder of the
+information about a given item.  Where the special item & appears in
+the position normally occupied by a feature name in the last element
+of a list, the item following it is taken to denote the remainder of
+the appropriate description.  Where this remainder value is itself a
+list, it is as if that list was simply spliced on the end of the
+original list.  For instance:
+
+    [[cat V] [& [[number sing] [person 3] [& [[tense pres] [& _x]]]]]]
+
+means exactly the same as:
+
+    [[cat V] [number sing] [person 3] [tense pres] [& _x]]
+
+and we would not normally use such a long-winded form.  A more general
+situation is that where we put a variable symbol after the & and use
+multiple occurrences of the same symbol to indicate sharing of the
+remainder.  For instance:
+
+    [[cat VP]
+     [head [[number sing] [& _x]]]
+     [verb [[head [[number sing] [& _x]]]]]]
+
+denotes a structure where the HEAD shares with the HEAD of the VERB,
+but where in addition we know that the NUMBER of the HEAD is SING.  As
+a description, a DAG is always sideways open, which means that it can
+always be consistently extended by adding information about new
+features that are not mentioned in it.  So, where we have previously
+used a list without an explicit remainder entry:
+
+    [[person 3] [number sing]]
+
+for a description, we do not mean 'the PERSON is 3, the NUMBER is SING
+and no other features have values'.  What we actually mean by this is
+'the PERSON is 3, the NUMBER is SING and any other features could have
+any values'.  Therefore, we should really use an explicitly open-ended
+form with a remainder:
+
+    [[person 3] [number sing] [& _x]]
+
+The programs that we will develop for operating on DAGs will assume
+that DAGs are represented by lists with explicit remainders, and so we
+will adopt this more verbose representation from now on.
+
+Notice that it is quite possible to construct a POP-11 list using the
+& notation that does not correspond to any legal DAG.  Here are two
+examples of such illegal structures:
+
+    [[cat V] [& _x] [number sing] [& _y]]
+    [[cat VP] [head [[number sing] [& _x]]]
+              [verb [[head [[number plur] [& _x]]]]]]
+
+The first does not correspond straightforwardly to a DAG because we
+are given two different descriptions of the remainder; in fact, we
+would not allow it anyway because we require the only & to be in the
+final element.  The second involves two subDAGs that share their
+remainders but do not share their NUMBER features.  This cannot happen
+in a DAG (try drawing a picture of it!).  On the other hand, some
+possibly unexpected structures do indeed correspond to legal DAGs,
+such as the following:
+
+    [[cat V] [& [[number sing] [& [[person 3] [& _x]]]]]]
+    [[cat VP] [head [[number sing] [person 3] [& _x]]]
+              [verb [[head [[person 3] [number sing] [& _x]]]]] [& _y]]
+    _x
+
+The first of these is the same as:
+
+    [[cat V] [number sing] [person 3] [& _x]]
+
+whereas the last one illustrates the fact that we can use a simple
+variable symbol to denote a degenerate case of a DAG (one that
+provides no information whatsoever).
+
+Subsumption and unification
+
+Implementing a destructive form of unification unfortunately forces us
+to worry about low-level issues such as when data structures can be
+safely reused.  Because of this, we will use an implementation where
+(successful) unification results instead in an extension recipe for
+how to extend any of the two DAGs to produce the new DAG.  This
+contrasts with a destructive version of unification, which would
+actually change one of the lists to become the result of the
+unification.  If we actually want to construct the resulting DAG, we
+can then apply the recipe obtained from unification as a separate                     
+stage.
+
+How might we specify a recipe for extending a DAG into a new one?
+Such a recipe will have to indicate places in the original DAG where
+extra information has to be added, together with what that information
+is.  The obvious way to indicate places where information can be added
+in a DAG is to put variable symbols in those places.  An extension
+recipe, then, only needs to provide an association between (some of)
+the variables occurring in the original DAG and the information that
+is to be added in these places.  Such a recipe is called a
+substitution.  There are two consequences that follow from choosing
+this kind of extension recipe.  First of all, where two values share,
+the use of the same variable in both places will ensure that any
+substitution will put exactly the same information in both places.
+Secondly, if we do not provide an explicit variable for some open-
+ended part of a DAG - for example, for some remainder - we cannot
+expect the recipe to tell us what extra information needs to be added
+there.
+
+The library file lib subst provides a number of useful procedures for
+manipulating variable symbols and substitutions.  These procedures are
+used by a large number of our example programs.  A substitution is
+represented by a list of two-element lists.  Each two-element list
+contains a variable symbol and a (possibly atomic) DAG that is to be
+associated with it.  For instance, the result of unifying the two
+structures:
+
+    [[cat _x] [number 3] [& _z]]
+    [[number _y] [cat NP] [& _w]]
+
+is a substitution equivalent to:
+
+    [[_y 3] [_x np] [_z _w]]
+
+In fact, it is not necessary to know about the actual representation
+used to be able to use the procedures in lib subst; it suffices to
+know what results they compute and what kinds of arguments they must
+be provided with.  Here is a brief description of the most useful
+procedures in the library:
+
+    isvar(item) -> true/false
+        Tests whether a data structure is a variable symbol or not.
+
+    newvar() -> variable
+        Creates a new variable with a name different from any existing
+        one.  This procedure uses the library procedure gensym to
+        generate a new word that consists of a '_' followed by a number.
+
+    empty_subst
+        POP-11 variable holding the data structure representing the
+        empty substitution (which records no values as being
+        associated with variables)
+
+    lookup_subst(item, substitution) -> item
+        A procedure that, if the input item is a variable symbol,
+        retrieves whatever value is associated with it in the
+        substitution.  If the input item is not a variable symbol,
+        or if there is no associated value, then that item is
+        returned unchanged.
+
+    add_subst(variable, item, substitution) -> substitution
+        A procedure that produces a new substitution from an old
+        one.  The new substitution is just like the old one except
+        that, in addition, it associates the given item with the
+        given variable symbol.
+
+    apply_subst(substitution, structure) -> newstructure
+        A procedure that carries out the recipe provided by a
+        substitution, producing a new (extended) structure from
+        an old one.
+
+    compose_substs(substitution, substitution) -> substitution
+        A procedure that takes two substitutions and produces
+        a new one which, when applied, will carry out the
+        operations specified in the first recipe, followed by
+        those specified in the second recipe.
+
+Lib dagunify provides, among other things, a procedure unify that
+produces a substitution from two given DAGs (or false, if the DAGs do
+not unify).  Although it is not crucial to understand the details of
+the code, we will look at a short description that suggests the
+flavour of the approach.  The objective of unification is to build up
+a substitution that, if applied, will be able to transform both of the
+DAGs into the same extended DAG.  This substitution starts off as
+empty_subst, and each of the procedures invoked in unification takes
+the current value of the substitution as one of its arguments and
+returns a new extended substitution as its result (or false, if an
+inconsistency is detected).  The current substitution has to be
+constantly consulted during unification, as a variable could be
+encountered that has already been assigned a value by it.
+
+    define unify(dag1, dag2);
+       combine_values(dag1, dag2, empty_subst)
+    enddefine;
+
+The key procedure in unification is obviously combine_values, which
+takes two DAGs and the current substitution as arguments and returns a
+(possibly extended) substitution as its result:
+
+    define combine_values(dag1, dag2, substitution);
+       vars substitution feature value newvalue;
+       lookup_subst(dag1, substitution) -> dag1;
+       lookup_subst(dag2, substitution) -> dag2;
+       if dag1 = dag2 then
+          substitution
+       elseif isvar(dag1) then                     
+           add_subst(dag1, dag2, substitution)
+       elseif isvar(dag2) then
+           add_subst(dag2, dag1, substitution)
+       elseif islist(dag1) and islist(dag2) then
+          ;;; make sure everything in dag1 is in dag2
+          until isvar(dag1) do
+             dag1 --> [[?feature ?value] ??dag1];
+             if feature = "&" then
+                lookup_subst(value, substitution) -> dag1
+             else
+                lookup_subst(value, substitution) -> value;
+                put_value_in(feature, value, dag2, substitution)
+                  -> dag2 -> substitution;
+                unless substitution then return(false) endunless
+             endif
+          enduntil;
+          ;;; put the rest of dag2 at the end of dag1
+          add_subst(dag1, dag2, substitution);
+       else
+          false
+       endif
+    enddefine;
+
+If the two DAGs are already equal, then the existing substitution can
+be returned unchanged and all is well.  Alternatively, if one is a
+variable symbol - the procedure isvar from lib subst tests this - then
+it suffices to add an element to the substitution that associates this
+with the other DAG.  In any other case, both DAGs must be complex
+objects (lists) for unification to succeed.  What we need to do is to
+go through the explicit feature-value pairs mentioned in the first
+DAG, for each one adding to the substitution as necessary, so that the
+second DAG contains the same pair.  Finally, we add to the
+substitution to associate whatever information there is in the second
+DAG and which we have not already encountered with the remainder
+variable at the end of the first DAG.  For instance, with the two
+DAGs:
+
+    [[cat VP] [& _x]]  and  [[number sing] [& _y]])
+
+we start by putting into the substitution entries for extending the
+second DAG to contain the information explicitly encoded in the first.
+At this point, the substitution will be something like:
+
+    [[_y [[cat VP] [& _z]]]]
+
+If we now apply this substitution to the second DAG, the result (after
+some cosmetic flattening) would be:
+
+    [[number sing] [cat VP] [& _z]]
+
+We now associate with _x the parts of the second DAG that we have not
+already seen in the first DAG, adding to the substitution to make:
+
+    [[_x [[number sing] [& _z]]]
+      [_y [[cat VP] [& _z]]]]
+
+This substitution now has the property that it yields the same DAG,
+whichever of the two original DAGs it is applied to.  Combine_values
+iterates through the feature specifications (feature and value) found
+in the first DAG.  For each one, it attempts to add to the
+substitution in such a way that the second DAG will have the same
+value for this feature.  Procedure put_value_in is used for this.  As
+well as adding to the substitution as necessary, put_value_in also
+returns what remains of the second DAG if the entry for the given
+feature is removed.  As we cycle through the features of the first DAG
+in turn, each time we use (in the variable dag2) the result returned
+from the previous put_value_in, rather than the original DAG.  This
+means that dag2 gets smaller and smaller an so that, when we reach the
+end of dag1 it then holds all the featural information of the original
+dag2 which did not have any analogue in the original dag1.  It is this
+final value that we then associate with the remainder variable, which
+is now in dag1, of the original first DAG.
+
+Representing PATR grammars in POP-11
+
+A PATR grammar rule consists of two parts: a framework phrase
+structure rule and a set of extra conditions.  We can easily represent
+PATR conditions by POP-11 list structures.  For instance, the VP rule
+of Grammar4 can be represented as follows:
+
+            [Rule VP -> V X |
+             [VP cat] = VP,
+             [V cat] = V,
+             [V arg1] = [X cat],
+             [V slash] = 0,
+             [VP slash] = [X slash]]                     
+
+Notice that we spell out the CAT values explicitly in the POP-11
+notation and separate the conditions with commas.  Here is another
+rule - the 'slash elimination rule':
+
+            [Rule X0 -> |
+             [X0 cat] = [X0 slash],
+             [X0 empty] = yes]
+
+As before, we will represent a grammar as two lists, rules and
+lexical_rules.  The above list structure would be suitable as an
+element of rules, whereas the following would be a possible value for
+lexical_rules:
+
+           [[Word approved |
+             [cat] = V,
+             [slash] = 0,
+             [arg1] = PP]
+            [Word disapproved |
+             [cat] = V,
+             [slash] = 0,
+             [arg1] = PP]
+            [Word of |
+             [cat] = P,
+             [slash] = 0,
+             [arg1] = NP]
+            [Word Dr Chan |
+             [slash] = 0,
+             [cat] = NP]
+            [Word nurses |
+             [slash] = 0,
+             [cat] = NP]
+               ] -> lexical_rules;
+
+The lexicon and rules of Grammar4, apart from the conjunction rule,
+can be found in this POP-11 format in lib patrgram.  In fact, the
+moment we start wanting to do something with grammars, it becomes
+clear that extra information is needed for our programs to be able to
+present information to us in a concise and relevant way.  Our
+categories may now have entries for a number of different features,
+but usually we are only interested in seeing certain features in parse
+trees and other structures built by programs.  We will thus assume
+that every POP-11 PATR grammar comes equipped with two procedures, as
+follows:
+
+    category(dag, substitution) -> value;
+         Given a basic DAG and a substitution, possibly specifying
+         extra extensions to that DAG, extracts the main useful
+         category information.
+    tree(cat, subtrees) -> tree;
+         Given a value returned by category and a list of subtrees,
+         returns the parse tree with the value as its label and the
+         given subtrees.                     
+
+The appropriate procedures in lib patrgram are as follows:
+
+    define category(dag, subst);
+       vars cat slash;
+       find_feature_value("cat", dag, subst) -> cat;
+       find_feature_value("slash", dag, subst) -> slash;
+       if slash = 0 then
+          cat
+       else
+          [^cat / ^slash]
+       endif
+    enddefine;
+
+    define tree(cat, subtrees);
+       [^cat ^^subtrees]
+    enddefine;
+
+where find_feature_value (defined in lib dagunify) is used to extract
+the value of a given feature from a DAG.  So, we have decided that,
+for this grammar, we usually wish to see the values of the CAT and
+SLASH features, the '/' notation being used when SLASH is not 0.  In
+this case, we have decided to build parse trees conventionally, but
+with other grammars we may make other decisions - for instance, we may
+decide to suppress the subtrees when they are complex.
+
+To make use of PATR rules, we need to have a way of constructing DAGs
+that satisfies the sorts of conditions specified in rules, testing
+whether given DAGs satisfy the conditions and so on.  The file lib
+pop_patr contains a number of useful procedures, which will now be
+outlined (although a detailed understanding of the code is not
+important).  The key procedure that we will use is the procedure
+apply_condition which, given such a list of conditions, a dag and a
+current substitution, produces an extended substitution which, when
+applied to the DAG produces an extended DAG, in which the conditions
+are satisfied.  For instance:
+
+    [[VP _x] [V _y] [X _z] [& _r]] -> dag;
+    apply_condition([[VP slash] = [X slash],
+                     [V subcat] = [X cat],
+                     [V slash] = 0],
+                     dag,empty_subst) -> subst;
+    apply_subst(subst,dag) ==>
+
+produces a dag like the following:
+
+    ** [[VP [[slash _60994] [& _60989]]]
+        [V [[subcat _61002] [& [[slash 0] [& _61005]]]]]
+        [X [[slash _60994] [& [[cat _61002] [& _61001]]]]]
+        [& _r]]
+
+where the variables with numerical names arise because of the use of
+newvar to create new variables as the necessary extensions of the DAG                     
+are recorded.  Here is the definition of apply_condition.  There is
+actually one other clause in the definition, which we will come back
+to later.
+
+    define apply_condition(entry, dag, subst);
+       vars first rest end1 end2;
+       if entry matches [??first , ??rest] then
+          apply_condition(first, dag, subst) -> subst;
+          if subst then
+             apply_condition(rest, dag, subst)
+          else
+             false
+          endif
+       elseif entry matches [?first = ?rest] then
+          apply_path(first, dag, subst) -> subst -> end1;
+          if subst then
+             apply_path(rest, dag, subst) -> subst -> end2;
+             if subst then
+                combine_values(end1, end2, subst)
+             else
+                false
+             endif
+          else
+             false
+          endif
+       ...
+       else
+          mishap('ill-formed lexical entry', [^entry])
+       endif
+    enddefine;
+
+Most of the definition is taken up with pulling apart the list of
+conditions, looking for commas separating conditions, looking for the
+'=' signs, and so on.  The most interesting part deals with a
+condition of the form first = rest.  Each of first and rest may be a
+simple value, like S or no, or it may be a list of feature names, like
+[verb head number], specifying a value in a DAG by the path used to
+reach it.  The procedure apply_path is used to get hold of the values
+that first and rest indicate, these being put into the variables end1
+and end2.  Finally, the substitution is extended, by combine_values,
+to make these values unify.
+
+    define apply_path(path, dag, subst);
+       vars first rest val;
+       if isword(path) or isnumber(path) then
+          path, subst
+       elseif path = [] then
+          dag, subst
+       elseif path matches [?first ??rest] then
+          newvar() -> val;
+          get_value(first, dag, subst);
+          -> subst -> val;
+          if subst then                     
+             apply_path(rest, val, subst)
+          else
+             dag, false
+          endif
+       else
+          mishap('ill-formed path', [^path])
+       endif
+    enddefine;
+
+Apply_path actually needs to return two values.  Sometimes, if the DAG
+does not explicitly mention all the features necessary to follow the
+path, it may need to add to the current substitution in order to force
+the values to exist in the desired extension.  Therefore, it needs to
+return both the value found and the (possibly enlarged) substitution.
+
+With apply_condition, we have the raw material for making use of PATR
+rules.  Lib pop_patr contains definitions of two procedures,
+corresponding to the two main ways in which we need to use rules:
+
+    lhs_match(dag, rule) -> substitution -> daglist;
+    rhs_match(daglist, rule) -> substitution -> newdaglist;
+
+Lhs_match is used when we have a category (DAG) and wish to know
+whether a give rule might provide a way of rewriting this.  This would
+obviously be relevant to a top-down parser.  If successful, the
+procedure returns a list of DAGs corresponding to the RHS of the rule,
+together with a substitution that indicates necessary extensions to
+the original DAG.  For instance:
+
+    [[cat S] [& _r]] -> goal;
+    lhs_match(goal,
+       [Rule S -> NP VP | [S slash] = [VP slash],
+                          [NP slash] = 0,
+                          [S cat] = S,
+                          [NP cat] = NP,
+                          [VP cat] = VP]) -> subst -> rhs;
+    simplify_features(subst,goal) ==>
+    ** [[cat S] [slash _11] [& _6]]
+    rhs ==>
+    ** [[[slash 0] [cat NP] [& _20]] [[slash _11] [cat VP] [& _24]]]
+
+where simplify_features, defined in lib dagunify, is a version of
+apply_subst, which flattens out extra remainders in DAGs.  Given a DAG
+and a PATR rule, for instance:
+
+    [Rule VP -> V X |
+     [VP cat] = VP,
+     [V cat] = V,
+     [V arg1] = [X cat],
+     [V slash] = 0,
+     [VP slash] = [X slash]]
+
+Lhs_match operates by:
+Producing a skeleton DAG with top-level features named according to
+the phrase names in the rule (here, VP, V, X).
+In the skeleton, giving the LHS phrase name (here, VP) the DAG
+provided and giving each other feature a distinct variable as its
+value.
+Using apply_condition to produce a substitution enforcing the
+conditions of the rule.
+Applying this substitution to the skeleton DAG and extracting the
+components to form the output list.
+
+The procedure rhs_match works in a very similar way, but is the kind
+of thing that would be used by a bottom-up parser.  Given a list of
+DAGs and a PATR rule, it looks to see whether an initial sublist of
+the list could be extended to satisfy the conditions on the categories
+in the RHS of the rule.  In this case, it returns a list consisting of
+a DAG for the LHS of the rule, followed by the remaining DAGs of the
+original list.  It also returns the substitution needed to
+appropriately extend the used DAGs.
+
+Lib pop_patr does provide one other very useful procedure, make_dag,
+which allows us to construct a minimal DAG satisfying a given set of
+conditions.  Using make_dag takes much of the pain out of specifying
+DAGs for programs:
+
+    make_dag([[cat] = S,
+              [slash person] = 3,
+              [slash] = [predicate slash]]) ==>
+    ** [[cat S]
+        [slash [[person 3] [& _61040]]]
+        [predicate [[slash [[person 3] [& _61040]]] [& _61047]]]
+        [& _61044]]
+
+Random generation revisited
+
+How can we adapt our random generator to deal with the more
+interesting sorts of grammars exemplified by Grammar2, Grammar3 and
+Grammar4?  The basic generation algorithm can be used again, but we
+must be more sophisticated about representing and comparing complex
+categories.  When we are using a grammar rule for generation, we have
+to pay special attention to structures that share, which is denoted by
+multiple occurrences of the same variable.  Imagine we are trying to
+generate a phrase covered by the category:
+
+    [[cat S] [& _r]]
+
+and decide to use the following rule:
+
+    Rule {topicalization}
+        X0 -> X1  X2:
+            <X0 slash> = <X1 slash>
+            <X0 cat> = S
+            <X1 empty> = no                     
+            <X2 cat> = S
+            <X2 slash> = <X1 cat>
+            <X2 empty> = no.
+
+Using lhs_match on the POP-11 version of this rule, we obtain the
+following list of categories to generate from:
+
+    [[[slash 0] [empty no] [cat _x] [& _r1]]
+     [[cat S] [slash _x] [empty no] [& _r2]]]
+
+As we work through this list in order, we find that first of all
+something of the form:
+
+    [[slash 0] [empty no] [cat _x] [& _r1]]
+
+must be generated.  We have a completely free choice as to what '_x'
+must be, so it would be quite acceptable for us to generate something
+with 'cat NP', say.  When we come to the next part of the rule, we
+have to generate:
+
+    [[cat S] [slash _x] [empty no] [& _r2]]
+
+but we no longer have a free choice for '_x'.  Whatever '_x' is chosen
+here it must be the same as the '_x' that was chosen for the first
+subphrase - that is, NP.  We need to have a way of remembering what
+choice was made for the CAT feature of the first subphrase so that we
+can ensure that the SLASH feature of the second subphrase is the same.
+Fortunately, we have already marked this restriction in the DAGs by
+using the same variable symbol '_x' in both places.  All we need to do
+is to keep track of what value is associated with '_x' where it first
+arises and ensure that in subsequent occurrences of '_x' the same
+value is used.  We can keep track of the values associated with the
+variables in a rule by keeping a current substitution, which
+notionally has to be applied to each DAG we deal with.
+
+In our previous version of generate, we defined a procedure unify that
+tested whether the LHS of a rule was appropriate for generating from a
+given description, using '='.  Now that we allow arbitrary features,
+we could use our DAG version of unify, taking account of the fact that
+a category to be generated from an LHS of a rule may specify any
+number of features in any order.  In practice, however, the procedure
+lhs_match is just what we need, and we can use it to obtain, from an
+initial category, the RHS sequence of categories that a given rule
+specifies, if the category is matched with its LHS.  Here are the main
+procedures of the new generation program; the whole program is to be
+found in lib randgen.  They are very similar to the main procedures in
+lib randgen.
+
+    vars current_substitution;
+
+    define generate(dag) -> output;
+       vars rule mrules subst RHS;
+       if isword(dag) then                     
+          [^dag] -> output
+       else
+          matching_rules(dag) -> mrules;
+          if mrules /= [] then
+             oneof(mrules) -> rule;
+             lhs_match(dag, rule) -> subst -> RHS;
+             compose_substs(current_substitution, subst)
+               -> current_substitution;
+             generate_all(RHS) -> output
+          else
+             ;;; mishap('Cannot generate from dag', [^dag])
+             false; exitfrom(g)
+          endif
+       endif
+    enddefine;
+
+    define generate_all(RHS);
+       vars first rest;
+       if RHS matches [?first ??rest] then
+          generate(apply_subst(current_substitution, first))
+          <> generate_all(rest)
+       else
+          []
+       endif
+    enddefine;
+
+The main difference from the previous program is in the maintenance of
+the global variable current_substitution, which must hold any values
+already associated with variables that will be encountered later on in
+the generation process.  In generate, any assignments to variables
+obtained by unifying the DAG with the LHS of a rule must be added to
+the current substitution.  This is done by compose_substs, defined in
+lib subst.  In addition, before attempting to generate from a given
+DAG, in generate_all, we always apply the current substitution to it,
+to get the latest values associated with any variables.  The procedure
+matching_rules is much as before, although it uses lhs_match:
+
+    define matching_rules(dag);
+       vars rule subst x;
+       [% for rule in rules do
+             lhs_match(dag, rule) -> subst -> x;
+             if subst then rule endif
+          endfor;
+          for rule in lexical_rules do
+             lhs_match(dag, rule) -> subst -> x;
+             if subst then rule endif
+          endfor
+       %]
+    enddefine;
+
+The global variable current_substitution needs to be given an initial
+value before we can start generating.  It makes sense to put this
+initialization in a top-level procedure and always to invoke the                     
+generator through this procedure:
+
+    define g(dag);
+       empty_subst -> current_substitution;
+       generate(dag)
+    enddefine;
+
+Our new version of generate contains provision for the program to exit
+from G immediately if it ever comes to a DAG for which there are no
+matching rules.  This enables us to have loops like:
+
+    repeat
+       g(make_dag([[cat]=S])) =>
+    endrepeat
+
+and not to have the program mishap if it gets into a dead end.  But
+why do we get dead ends with this program?  This never used to happen
+in our earlier generation programs.  With Grammar4, dead ends occur
+through the interaction of several rules.  It is easier to demonstrate
+why dead ends occur by inventing a single rule that causes problems
+and might plausibly be in a grammar.
+
+Consider a language where verbs appear at the ends of verb phrases
+(there are many such Subject-Object-Verb (SOV) languages -- Eskimo,
+Japanese, Persian and Turkish to name just four).  For such a
+language, a grammar might include a rule like the following:
+
+    Rule {SOV VP expansion}
+        X0 -> X1  X2:
+            <X0 cat> = VP
+            <X2 cat> = V
+            <X2 subcat> = <X1 cat>.
+
+Imagine our program is generating a random VP and uses this rule.  It
+will end up with a list of two DAGs like the following to generate
+from:
+
+    [[cat _x] [& _r1]]
+    [[cat V] [subcat _x] [& _r2]]
+
+First of all, it has to generate a phrase of any category ('_x').
+Having done this (and necessarily obtained a value for '_x' in the
+current substitution), the program has to generate a verb whose SUBCAT
+feature has this same value.  Unfortunately, there are unlikely to be
+verbs with all possible SUBCAT values, and so for some '_x's that we
+choose (for instance, CONJ, N) it may be impossible to find an
+appropriate verb. We might be tempted to criticize the grammar for
+this problem: does not the grammar say that '_x' can have any value,
+and is not the rule thus incorrect?  But such a criticism would be
+wrong.  The rule should be read as saying '... is a legal phrase if
+... and the CAT feature of the first subphrase is the same as the
+SUBCAT feature of the second.'  It is our interpretation of this rule
+in procedural terms - namely, 'generate any phrase and then generate a                     
+phrase whose SUBCAT feature has the same value as the first phrase's
+CAT feature' - that is wrong.  This interpretation will always
+generate correct sentences, but sometimes it will get into hopeless
+dead ends.  A better implementation of random generation would have to
+build in some kind of search mechanism for trying different possible
+values of '_x'.
+
+You may well get frustrated running lib rangfgen, since, through
+randomness, it frequently gets into dead ends and often seems to avoid
+the most interesting sentence constructions.  One way out of this is
+to make the program less random.  For instance, you could define your
+own version of oneof which asks you which rule to choose, as follows:
+
+    define oneof(list);
+       vars rule_no len;
+       length(list) -> len;
+       if len = 1 then
+          list(1)
+       else
+          for rule_no from 1 to len do
+             pr([^rule_no ^(list(rule_no))]); nl(1)
+          endfor;
+          if getline('which rule') matches [?rule_no]
+             and isinteger(rule_no)
+             and rule_no > 0 and rule_no =< len
+             then list(rule_no)
+          else
+             oneof(list)
+          endif
+       endif
+    enddefine;
+
+Using this version of oneof, you can steer the program to generate any
+legal sentence, or you can reply with random numbers if you wish the
+machine to try making the decisions. (If you get tired with this way
+of running the program and wish to reinstate the original oneof, just
+load lib oneof.)
+
+A modified POP-11 chart parser
+
+Lib fchart presents a version of the chart parser of lib chart,
+modified to deal will full PATR style grammars.  The modifications are
+actually quite minor.  For instance, here is the part of the modified
+addedge which deals with applying the fundamental rule for an inactive
+edge:
+
+       if edge matches [?substart ?subfinish ?subgoal ?subfound []] then
+          ;;; inactive edge
+          foreach [?start ^substart ?label ?found [?subgoal1 ??rest]] do
+             unify(subgoal, subgoal1) -> subst;
+             if subst then
+                [^^found ^(tree(category(subgoal, subst), subfound))]
+                 -> subtrees;
+                agenda_add(rename(apply_subst(subst,
+                     [^start ^subfinish ^label ^subtrees ^rest])))
+
+The only real difference between this and the previous code is the use
+of unify to compare the category subgoal of the inactive edge with the
+first category subgoal1 required by the active edge.  If the
+unification succeeds, the resulting substitution subst needs to be
+applied to the whole of the new edge added to the agenda.  In
+addition, the whole edge is copied by the use of the procedure rename,
+defined in lib subst, so that no two edges in the chart ever have two
+variables in common.  Notice that every single edge of the chart has
+to be considered in the search for a relevant active edge - this chart
+parser employs no indexing mechanisms whatsoever.
+
+Here is the code implementing the top-down rule for the chart parser:
+
+    define active_edge_procedure(edge);
+       vars finish subgoal rule subst LHS RHS goal1 goal2;
+       edge --> [= ?finish = = [?subgoal ==]];
+       for rule in rules do
+          lhs_match(subgoal, rule) -> subst -> RHS;
+          if subst then
+             apply_subst(subst, subgoal) -> LHS;
+             [[CATEGORY ^LHS] [START ^finish] [& ^(newvar())]] -> goal2;
+             for goal1 in existing_goals do
+                if subsumes(goal1, goal2) then
+                    ;;; continue looking for rules
+                    nextloop(2)
+                endif
+             endfor;
+             agenda_add(rename([^finish ^finish ^LHS [] ^RHS]))
+          endif
+       endfor;
+       [[[CATEGORY ^subgoal] [START ^finish] [& ^(newvar())]]
+          ^^existing_goals] -> existing_goals;
+    enddefine;
+
+As with the random generator, we use lhs_match to attempt to match the
+desired category subgoal with the LHS of a rule.  This yields a
+substitution subst and a list of RHS DAGs.  At this point, we look to
+see whether we have already looked for a category subsuming this LHS
+at this position finish in the chart.  The parser maintains in the
+global variable existing_goals a list of DAGs representing the
+categories that have previously been sought and the relevant positions
+in the chart.  Each of these has entries for just two features,
+CATEGORY (a DAG representing the category sought) and START (the
+position where it has been looked for).  The procedure subsumes                     
+(defined in lib subsumes) is used to test whether the DAG for the
+current goal is subsumed by one of the previous ones.  Only if it is
+not is the new edge added to the agenda.
+
+Implementing a lexicon in POP-11
+
+The basic components for implementing a lexical component in POP-11
+have already been presented.  lib pop_patr, through procedures like
+apply_condition, allows us to construct list structures representing
+PATR conditions and then DAGs which satisfy the conditions.  In POP-
+11, we can associate PATR conditions with macro names by having a
+global property patr_macro:
+
+    vars patr_macro;
+    newproperty([], 100, false, true) -> patr_macro;
+
+      [[syn cat] = V,
+       [syn arg0 cat] = np,
+       [syn arg0 case] = nom] -> patr_macro("syn_iV");
+
+      [syn_iV,
+       [syn arg1 cat] = np,
+       [syn arg1 case] = acc] -> patr_macro("syn_tV");
+
+Moreover, we can extend apply_condition to automatically look up the
+definitions of macros appearing in conditions by adding an extra
+clause:
+
+       elseif entry matches [?first:isword] then
+          patr_macro(first) -> entry;
+          unless entry then
+             mishap('missing macro definition', [^first])
+          endunless;
+          apply_condition(entry, dag, subst)
+
+This is just what we need for a straightforward implementation of the
+kinds of lexical entries we have discussed.  Given such macro
+definitions, we can construct DAGs satisfying the macros, for
+instance:
+
+    apply_condition([syn_tV], _x, empty_subst) -> subst;
+    simplify_features(subst, _x) ==>
+    ** [[syn [[cat V]
+              [arg0 [[cat NP] [case nom] [& _17]]]
+              [arg1 [[cat NP] [case acc] [& _29]]]
+              [& _21]]]
+        [& _2]]
+
+where simplify_features is just like apply_subst, except that it
+removes unnecessary remainder entries in DAGs.  For actual lexical
+entries, we need to have another property, lexicon, say, that
+associates lexemes (represented by POP-11 words) with conditions:
+
+    vars lexicon;
+    newproperty([], 100, false, true) -> lexicon;
+
+      [[mor root] = love,
+       [sem] = love2a,
+       mor_regV,
+       syn_tV] -> lexicon("love");
+
+A WFC can be thought of as a set of conditions that must be satisfied
+for a particular relation to hold between a word and a lexeme.
+Alternatively, we can think of it as a set of conditions that can be
+satisfied by a particular kind of DAG that only has values for word
+and lexeme as its top-level features:
+
+    vars example_wfc;
+    [ [word mor form] = [lexeme mor form3],
+      [word syn] = [lexeme syn],
+      [word syn cat] = V,
+      [word syn arg0 per] = 3,
+      [word syn arg0 num] = sing,
+      [word syn tense] = pres,
+      [word sem] = [lexeme sem]
+    ] -> example_wfc;
+
+DAGs versus terms
+
+POP-11 vectors would be a good data structure to implement complex
+terms, because they are more compact than lists and permit the
+accessing of particular elements in constant time.  We will, however,
+use lists to represent complex terms, with the first element of a list
+being the function symbol and the subsequent elements the arguments,
+in order.  Thus, we will represent the term:
+
+    s(h(2, sing), x)
+
+by the following POP-11 data structure:
+
+    [s [h 2 sing] _x]
+
+We will make further use of complex terms in Chapters 9 and 10, and
+will make use there of lib tunify and lib tsubsume, which implement
+unification and subsumption of terms.  These library files define
+procedures termunify and termsubsumes, which behave just like unify
+and subsumes, except that they expect lists representing terms, rather
+than lists representing DAGs, as their arguments.  Finally, lib
+termify provides a procedure termify_dag which will translate a DAG
+into a term, according to a set of rules specified by the programmer.

@@ -1,0 +1,82 @@
+% Toy1-dependent declarations
+ 
+feature_value_space(n_type,[[switchable, dimmable]]).
+
+%--------------------------------------------------------------------------------------
+
+% Verbs
+
+% Transitive particle verb, e.g. "switch on the light/switch the light on"
+% v_object_particle(SurfaceForms,
+%                   [SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats)
+
+@v_object_particle([switch, switches, switched, switched, switching], 
+		   [action, switch], [agent, switchable, onoff],
+		   [takes_loc_pp=y, takes_time_pp=y]).
+@v_object_particle([turn, turns, turned, turned, turning], 
+		   [action, switch], [agent, switchable, onoff],
+		   [takes_loc_pp=y, takes_time_pp=y]).
+
+% Transitive verb, e.g. "dim the light"
+% v_transitive(SurfaceForms,
+%              [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats)
+
+@v_transitive([dim, dims, dimmed, dimmed, dimming],
+	      [action, dim], [agent, dimmable], [takes_loc_pp=y]).
+
+% "Be" subcategorizing for adjective, e.g. "is the light switched on"
+% be_adj([SemType, SemConstant], [SubjSortalType], OtherFeats)
+
+@be_adj([verb, be], [switchable\/dimmable], [takes_loc_pp=y]).
+
+%--------------------------------------------------------------------------------------
+
+% Nouns
+% noun(SurfaceForms,
+%      [SemType, SemConstant], [SortalType], OtherFeats)
+
+@noun([(living, room), (living, rooms)],
+      [location, living_room], [loc], [takes_det_type=def]).
+@noun([kitchen, kitchens],
+      [location, kitchen], [loc], [takes_det_type=def]).
+
+@noun([light, lights],
+      [device, light], [switchable\/dimmable], 
+      [takes_det_type=def\/numeric, n_pre_mod_type=loc, takes_loc_pp=y]).
+@noun([fan, fans],
+      [device, fan], [switchable],
+      [takes_det_type=def\/numeric, n_pre_mod_type=loc, takes_loc_pp=y]).
+
+%--------------------------------------------------------------------------------------
+
+% Prepositions
+% preposition(SurfaceForm, SemConstant, [SemPPType, NPSortalType], OtherFeats)
+
+% Locative preposition
+@preposition(in, in_loc, [loc, loc], []).
+
+@preposition(with, with, [with, loc], []).
+
+% Particles
+@preposition(on, on, [none, none], [sem_p_type=onoff]).
+@preposition(off, off, [none, none], [sem_p_type=onoff]).
+
+%--------------------------------------------------------------------------------------
+
+% Adjectives
+% adjective(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats)
+
+@adjective(on, [adj, on], [switchable\/dimmable], [adjpos=pred]).
+@adjective(off, [adj, off], [switchable\/dimmable], [adjpos=pred]).
+
+@adjective((switched, on), [adj, on], [switchable\/dimmable], [adjpos=pred]).
+@adjective((switched, off), [adj, off], [switchable\/dimmable], [adjpos=pred]).
+
+@adjective(japanese, [adj, japanese], [switchable\/dimmable], [adjpos=pred\/prenom, adjtype=nationality]).
+@adjective(big, [adj, big], [switchable\/dimmable], [adjpos=pred\/prenom, adjtype=size]).
+@adjective(cheerful, [adj, cheerful], [switchable\/dimmable], [adjpos=pred\/prenom, adjtype=judgement]).
+@adjective(red, [adj, red], [switchable\/dimmable], [adjpos=pred\/prenom, adjtype=colour]).
+
+@adverb(very, [degree, very], [degree], [advpos=preadj]).
+
+name:[sem=jackie, agr=(3/\sing), sem_n_type=agent] --> jackie.

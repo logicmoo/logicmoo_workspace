@@ -1,0 +1,391 @@
+
+feature_value_space(n_type, [[physical_object, abstract]]). 
+feature_value_space(p_type, [[up, down, off, over, back]]).
+
+% Verbs
+
+% pick up, put down, stack up, clear off
+% e.g. "pick up the block"
+% particle verb; subj=agent, particle_obj=object
+
+% Allow subject to be physical_object to get "can the table pick up blocks"
+
+@v_object_particle([pick, picks, picked, picked, picking],
+                   [action, pick_up], [agent\/physical_object, physical_object, up],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([stack, stacks, stacked, stacked, stacking],
+                   [action, stack_up], [agent\/physical_object, physical_object, up],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([put, puts, put, put, putting],
+                   [action, put_down], [agent\/physical_object, physical_object, down],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([put, puts, put, put, putting],
+                   [action, put_back], [agent\/physical_object, physical_object, back],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([clear, clears, cleared, cleared, clearing],
+                   [action, clear_off], [agent\/physical_object, physical_object, off],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([take, takes, took, taken, takeing],
+                   [action, take_off], [agent\/physical_object, physical_object, off],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([turn, turns, turned, turned, turning],
+                   [action, turn_over], [agent\/physical_object, physical_object, over],
+		   [takes_time_pp=y, can_be_postmod=n]).
+
+% grasp, hold, drop
+% e.g. "grasp the pyramid"
+% transitive verb; subj=agent, obj=physical_object
+
+macro(verb_like_grasp(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent\/physical_object, physical_object],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_grasp([grasp, grasps, grasped, grasped, grasping], grasp).
+@verb_like_grasp([hold, holds, held, held, holding], hold).
+@verb_like_grasp([drop, drops, dropped, dropped, dropping], drop).
+@verb_like_grasp([find, finds, found, found, finding], find).
+@verb_like_grasp([build, builds, built, built, building], build).
+% you touched the block
+@verb_like_grasp([touch, touchs, touched, touched, touching], touch).
+@verb_like_grasp([dismantle, dismantles, dismantled, dismantled, dismantling], dismantle).
+@verb_like_grasp([make, makes, made, made, making], make).
+@verb_like_grasp([lift, lifts, lifted, lifted, lifting], lift).
+@verb_like_grasp([invert, inverts, inverted, inverted, inverting], invert).
+@verb_like_grasp([empty, empties, emptied, emptied, emptying], empty).
+
+% arrange, place, stack
+% e.g. "arrange the blocks in a square"
+% transitive verb; subj=agent, obj=physical_object
+
+macro(verb_like_arrange(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent\/physical_object, physical_object],
+		    [takes_loc_pp=y, takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_arrange([stack, stacks, stacked, stacked, stacking], stack).
+@verb_like_arrange([place, places, placed, placed, moving], place).
+@verb_like_arrange([arrange, arranges, arranged, arranged, arranging], arrange).
+
+% put
+% e.g. "put the block into the box"
+% transitive verb; subj=agent, obj=physical_object. Also requires a loc/destination PP
+
+macro(verb_like_move(Forms, Sem),
+      @v_transitive(Forms,
+		    [action, Sem], [agent\/physical_object, physical_object],
+		    [takes_to_pp=y, takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_move([move, moves, moved, moved, moving], move).
+@verb_like_move([put, puts, put, put, putting], put).
+
+% set
+% e.g. "set the block on the box"
+% transitive verb; subj=agent, obj=physical_object. Also requires a loc PP
+
+@v_transitive([set, sets, set, set, setting],
+	      [action, set], [agent\/physical_object, physical_object],
+	      [takes_loc_pp=y, takes_time_pp=y, can_be_postmod=n]).
+
+% take
+% e.g. "take the block out of the box"
+% transitive verb; subj=agent, obj=physical_object. Can take a from PP
+
+@v_transitive([take, takes, took, taken, taking],
+	      [action, take], [agent\/physical_object, physical_object],
+	      [takes_from_pp=y, takes_time_pp=y, can_be_postmod=n]).
+
+% support, contain, touch
+% e.g. "what does the box contain"
+% transitive verb; subj=physical_object, obj=physical_object
+
+macro(verb_like_support(Forms, Sem),
+      @v_transitive(Forms, [state, Sem], [physical_object, physical_object],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_support([support, supports, supported, supported, supporting], support).
+@verb_like_support([contain, contains, contained, contained, containing], contain).
+% the pyramid touches the block
+@verb_like_support([touch, touchs, touched, touched, touching], touch).
+
+% sit
+% e.g. "which cube is sitting on the table"
+% intransitive verb; subj=physical_object. Also requires a loc/destination PP
+
+macro(verb_like_sit(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [physical_object],
+		    [takes_time_pp=y, takes_loc_pp=y, can_be_postmod=n])).
+
+@verb_like_sit([sit, sits, sat, sat, sitting], sit).
+
+% begin
+% e.g. "since we began"
+% intransitive verb; subj=agent.
+
+macro(verb_like_begin(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [agent],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_begin([begin, begins, began, begun, beginning], begin).
+
+% do
+% e.g. "why did you do that"
+% transitive verb; subj=agent, obj=abstract
+
+@v_transitive([do, does, did, did, doing],
+	      [action, do], [agent, abstract],
+	      [takes_to_pp=y, takes_time_pp=y, can_be_postmod=n]).
+
+% start (to)
+% verb taking to-VP; subj=agent
+
+macro(verb_like_start_to(Forms, Sem),
+      @v_to_vp(Forms, [event, Sem], [agent], [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_start_to([start, starts, started, started, starting], start_to).
+
+% start doing
+% verb taking ing-VP; subj=agent
+
+macro(verb_like_start_doing(Forms, Sem),
+      @v_vp_ing(Forms, [event, Sem], [agent], [can_be_postmod=n])).
+
+@verb_like_start_doing([start, starts, started, started, starting], start_doing).
+
+% Call that stack superblock
+@v_ditransitive([call, calls, called, called, calling],
+		[state, call], [agent, physical_object, physical_object], []).
+
+% be + loc
+@be_pp([state, be], [physical_object, loc], [takes_time_pp=y]).
+
+% physical_object is physical_object
+@be_np([state, be], [physical_object, physical_object], [takes_time_pp=y]).
+
+% physical_object is abstract (e.g. color)
+@be_np([state, be], [physical_object, abstract], [takes_time_pp=y]).
+
+% Copular be for adjectival predicates
+@be_adj([verb, be], 
+	[_AnySubjType], [takes_time_pp=y]).
+
+% ------------------------------------------------------
+
+% Nouns
+
+% block, pyramid, cube, steeple, stack
+% sort=physical_object
+
+macro(object_noun(Words, Sem),
+      @noun(Words, [object, Sem], [physical_object],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null, takes_loc_pp=y])).
+
+@object_noun([block, blocks], block).
+@object_noun([pyramid, pyramids], pyramid).
+@object_noun([cube, cubes], cube).
+@object_noun([steeple, steeples], steeple).
+@object_noun([ball, balls], ball).
+
+@object_noun([stack, stacks], stack).
+@object_noun([row, rows], row).
+@object_noun([square, squares], square).
+%@object_noun([superblock, superblocks], superblock).
+
+% thing, object
+% sort=physical_object
+
+@object_noun([thing, things], thing).
+@object_noun([object, objects], physical_object).
+
+% box, table
+% sort=physical_object
+
+macro(singular_object_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[object, Sem], [physical_object], sing, [takes_det_type=def])).
+
+@singular_object_noun(box, box).
+@singular_object_noun(table, table).
+
+% support
+% sort=physical_object
+
+% top, bottom
+% sort=physical_object
+
+macro(object_part_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[object_part, Sem], [physical_object], sing,
+			[takes_det_type=def, n_of_mod_type=physical_object, takes_loc_pp=y])).
+
+@object_part_noun(top, top).
+@object_part_noun(bottom, bottom).
+@object_part_noun(end, end).
+
+% color
+% sort=abstract
+
+macro(singular_abstract_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[abstract, Sem], [abstract], sing, [takes_det_type=def\/quant])).
+
+@singular_abstract_noun(color, color).
+
+macro(singular_time_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[time, Sem], [time], sing, [takes_det_type=null])).
+
+@singular_time_noun(now, now).
+@singular_time_noun(then, then).
+
+% ------------------------------------------------------
+
+% Names
+
+@name(superblock, [superblock], [physical_object], sing, []).
+
+% ------------------------------------------------------
+
+% Adjectives
+
+% big, large, small, little, short
+% sort=physical_object
+
+macro(size_adj(Word, Sem),
+      @adjective(Word, [size, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@size_adj(big, big).
+@size_adj(large, large).
+@size_adj(small, small).
+@size_adj(little, little).
+@size_adj(short, short).
+@size_adj(tall, tall).
+@size_adj(long, long).
+@size_adj(narrow, narrow).
+
+% taller, bigger, shorter, smaller
+% sort=physical_object
+
+@size_adj(bigger, bigger).
+@size_adj(larger, larger).
+@size_adj(smaller, smaller).
+@size_adj(shorter, shorter).
+@size_adj(taller, taller).
+@size_adj(longer, longer).
+@size_adj(narrower, narrower).
+
+% tallest, biggest, shortest, smallest
+% sort=physical_object
+
+@size_adj(biggest, biggest).
+@size_adj(largest, largest).
+@size_adj(smallest, smallest).
+@size_adj(shortest, shortest).
+@size_adj(tallest, tallest).
+@size_adj(longest, longest).
+@size_adj(narrowest, narrowest).
+
+% red, blue, green
+% sort=physical_object
+
+macro(color_adj(Word, Sem),
+      @adjective(Word, [color, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@color_adj(red, red).
+@color_adj(blue, blue).
+@color_adj(green, green).
+@color_adj(yellow, yellow).
+
+% empty
+% sort=physical_object
+
+macro(property_adj(Word, Sem),
+      @adjective(Word, [property, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@temporal_adj(empty, empty).
+@temporal_adj(visible, visible).
+
+% new
+% sort=physical_object
+
+macro(temporal_adj(Word, Sem),
+      @adjective(Word, [temporal, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@temporal_adj(new, new).
+
+% near, close
+% sort=physical_object
+
+macro(spatial_adj(Word, Sem),
+      @adjective(Word, [spatial, Sem], [physical_object], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@temporal_adj(near, near).
+@temporal_adj(close, close).
+
+@temporal_adj(nearer, nearer).
+@temporal_adj(closer, closer).
+
+@temporal_adj(nearest, nearest).
+@temporal_adj(closest, closest).
+
+% ------------------------------------------------------
+
+% Adverbs
+
+@adverb(ever, [temporal, ever], [temporal], [advpos=prev\/postv]).
+@adverb(still, [temporal, still], [temporal], [advpos=prev\/postv]).
+@adverb(again, [temporal, again], [temporal], [advpos=prev\/postv]).
+
+% ------------------------------------------------------
+
+% Prepositions
+
+% into, onto
+% to_pp, sort=physical_object
+
+@preposition(onto, onto_loc, [to, physical_object], []).
+@preposition(into, into_loc, [to, physical_object], []).
+
+% out of
+
+@preposition((out, of), out_of_loc, [from, physical_object], []).
+
+% on, in, on top of, to the left of, to the right of, behind, in front of
+% loc_pp, sort=physical_object
+
+@preposition(at, at_loc, [loc\/to, physical_object], []).
+@preposition(on, on_loc, [loc\/to, physical_object], []).
+@preposition(in, in_loc, [loc\/to, physical_object], []).
+@preposition(inside, inside_loc, [loc\/to, physical_object], []).
+@preposition(underneath, underneath_loc, [loc\/to, physical_object], []).
+@preposition(under, under_loc, [loc\/to, physical_object], []).
+@preposition(between, between_loc, [loc\/to, physical_object], []).
+@preposition((to, the, left, of), to_the_left_of_loc, [loc\/to, physical_object], []).
+@preposition((to, the, right, of), to_the_right_of_loc, [loc\/to, physical_object], []).
+@preposition((on, the, left, of), on_the_left_of_loc, [loc\/to, physical_object], []).
+@preposition((on, the, right, of), on_the_right_of_loc, [loc\/to, physical_object], []).
+@preposition((in, front, of), in_front_of_loc, [loc\/to, physical_object], []).
+@preposition((on, top, of), on_top_of_loc, [loc\/to, physical_object], []).
+@preposition(behind, behind_loc, [loc\/to, physical_object], []).
+@preposition((next, to), next_to_loc, [loc\/to, physical_object], []).
+@preposition(over, over_loc, [loc\/to, physical_object], []).
+
+@preposition(near, near_loc, [loc\/to, physical_object], []).
+@preposition(nearer, nearer_loc, [loc\/to, physical_object], []).
+@preposition(nearest, nearest_loc, [loc\/to, physical_object], []).
+
+@preposition(near, near_loc, [loc\/to, physical_object], []).
+@preposition(nearer, nearer_loc, [loc\/to, physical_object], []).
+@preposition(nearest, nearest_loc, [loc\/to, physical_object], []).
+
+@preposition((close, to), close_to_loc, [loc\/to, physical_object], []).
+@preposition((closer, to), closer_to_loc, [loc\/to, physical_object], []).
+@preposition((closest, to), closest_to_loc, [loc\/to, physical_object], []).
+
+% Particles
+
+% up, down, off
+
+@preposition(up, up, [none, physical_object], [sem_p_type=up]).
+@preposition(down, down, [none, physical_object], [sem_p_type=down]).
+@preposition(off, off, [none, physical_object], [sem_p_type=off]).
+@preposition(over, over, [none, physical_object], [sem_p_type=over]).
+@preposition(back, back, [none, physical_object], [sem_p_type=back]).

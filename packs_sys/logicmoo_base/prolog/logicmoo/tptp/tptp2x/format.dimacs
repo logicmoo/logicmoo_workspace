@@ -1,0 +1,115 @@
+%============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the DIMACS propsitional format
+%----
+%----Updated by Geoff Sutcliffe, July, 1996.
+%============================================================================
+%----------------------------------------------------------------------------
+%----Output literals, mapping predicates to integers
+output_dimacs_literals([],_):-
+    write(' 0'),
+    nl.
+
+%----Positive - write integer
+output_dimacs_literals([++Atom|RestOfLiterals],MappedPropositions):-
+    tptp2X_member(Atom/Number,MappedPropositions),
+    write(' '),
+    write(Number),
+    write(' '),
+    output_dimacs_literals(RestOfLiterals,MappedPropositions).
+
+%----Negative - write negative integer
+output_dimacs_literals([--Atom|RestOfLiterals],MappedPropositions):-
+    tptp2X_member(Atom/Number,MappedPropositions),
+    write('-'),
+    write(Number),
+    write(' '),
+    output_dimacs_literals(RestOfLiterals,MappedPropositions).
+%----------------------------------------------------------------------------
+%----Output each clause, mapping predicates to the integers
+output_dimacs_clauses([],_).
+
+output_dimacs_clauses([input_clause(_,_,[++ '$false'])|RestOfClauses],
+MappedPropositions):-
+    \+ tptp2X_member(input_clause(_,_,[-- '$false']),RestOfClauses),
+    !,
+    output_dimacs_clauses([input_clause(_,_,[++ '$false']),
+input_clause(_,_,[-- '$false'])|RestOfClauses],MappedPropositions).
+
+output_dimacs_clauses([input_clause(_Name,_Status,[++ '$true'])|RestOfClauses],
+MappedPropositions):-
+    !,
+    output_dimacs_clauses([input_clause(_,_,[++ '$true', -- '$true'])|
+RestOfClauses],MappedPropositions).
+
+output_dimacs_clauses([input_clause(_Name,_Status,Literals)|RestOfClauses],
+MappedPropositions):-
+%    write('c '), write(Name), write(' '), write(Status), nl,
+    output_dimacs_literals(Literals,MappedPropositions),
+    output_dimacs_clauses(RestOfClauses,MappedPropositions).
+%----------------------------------------------------------------------------
+%----Output 'a Problem'
+output_dimacs_problem(Clauses,MappedPropositions):-
+    nl,
+    write('p cnf '),
+%----Find number of propositions and number of clauses
+    tptp2X_length(MappedPropositions,NumberOfPropositions),
+    tptp2X_length(Clauses,NumberOfClauses),
+    write(NumberOfPropositions),
+    write(' '),
+    write(NumberOfClauses),
+    nl,
+    nl,
+    output_dimacs_clauses(Clauses,MappedPropositions).
+%----------------------------------------------------------------------------
+%----Take the predicate structures, of the form p/0 (all prop) and replace
+%----the 0 by a unique integer in sequence
+map_propositions_to_integers([],_,_).
+
+map_propositions_to_integers([FirstProposition|RestOfPropositions],
+PropositionNumber,[FirstProposition/PropositionNumber|
+RestOfMappedPropositions]):-
+    NextPropositionNumber is PropositionNumber + 1,
+    map_propositions_to_integers(RestOfPropositions,NextPropositionNumber,
+RestOfMappedPropositions).
+%----------------------------------------------------------------------------
+%----Extract predicates
+dimacs_proposition(Clauses,Proposition):-
+    tptp2X_member(input_clause(_,_,Literals),Clauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,Proposition].
+%----------------------------------------------------------------------------
+%----Output the clauses, preceded by the problem name as a comment.
+dimacs(dimacs,Clauses,_):-
+%----Check that they are EPR clauses
+    tptp_clauses(Clauses),
+    tptp_epr(Clauses),
+    !,
+%----Extract predicates
+    tptp2X_setof1(Proposition,dimacs_proposition(Clauses,Proposition),
+Propositions),
+%----Make mapping between predicates and integers
+    map_propositions_to_integers(Propositions,1,MappedPropositions),
+%----Output in that format
+    output_dimacs_problem(Clauses,MappedPropositions).
+
+%----Do nothing if not propositional - just leave a comment
+dimacs(dimacs,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('ERROR: No non-propositional format available in DIMACS'),
+    nl.
+
+%----Do nothing for FOF - just leave a comment
+dimacs(dimacs,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in DIMACS'),
+    nl.
+%----------------------------------------------------------------------------
+%----Provide information about the DFG format
+dimacs_format_information('c','.dimacs').
+%----------------------------------------------------------------------------
+%----Provide information about the DFG file
+dimacs_file_information(format,dimacs,'DIMACS format').
+%----------------------------------------------------------------------------

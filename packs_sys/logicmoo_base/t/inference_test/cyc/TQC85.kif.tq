@@ -1,0 +1,33 @@
+(note TQC85)
+(agent 
+ (SKF-29035958) Libya) 
+
+(instance 
+ (SKF-29035958) AttackOnTangible) 
+
+(deviceUsed 
+ (SKF-29035958) 
+ (SKF-45480073)) 
+
+(subrelation deviceUsed instrument-Generic) 
+
+(instance 
+ (SKF-45480073) WeaponOfMassDestruction) 
+
+
+
+
+(queryyn
+
+ (thereExists ?ACT 
+ (thereExists ?FORCE 
+ (and 
+ (agent ?ACT Libya) 
+ (instance ?ACT AttackOnTangible) 
+ (instance ?FORCE WeaponOfMassDestruction) 
+ (instrument-Generic ?ACT ?FORCE)))))
+
+(answer Yes)  
+
+(end_of_file)
+

@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.16</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="manipmodule.html">
+<link rel="next" href="tabling.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="manipmodule.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:modulecompat"><a id="sec:6.16"><span class="sec-nr">6.16</span> <span class="sec-title">Compatibility 
+of the Module System</span></a></h2>
+
+<a id="sec:modulecompat"></a>
+
+<p>The SWI-Prolog module system is largely derived from the Quintus 
+Prolog module system, which is also adopted by SICStus, Ciao and YAP. 
+Originally, the mechanism for defining meta-predicates in SWI-Prolog was 
+based on the <a id="idx:moduletransparent1:1979"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a> 
+directive and <a id="idx:stripmodule3:1980"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
+Since 5.7.4 it supports the de-facto standard <a id="idx:metapredicate1:1981"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+directive for implementing meta-predicates, providing much better 
+compatibility.
+
+<p>The support for the <a id="idx:metapredicate1:1982"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+mechanism, however, is considerably different. On most systems, the <em>caller</em> 
+of a meta-predicate is compiled differently to provide the required &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt; 
+qualification. This implies that the meta-declaration must be available 
+to the compiler when compiling code that calls a meta-predicate. In 
+practice, this implies that other systems pose the following 
+restrictions on meta-predicates:
+
+<p>
+<ul class="latex">
+<li>Modules that provide meta-predicates for a module to be compiled 
+must be loaded explicitly by that module.
+<li>The meta-predicate directives of exported predicates must follow the <a id="idx:module2:1983"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+directive immediately.
+<li>After changing a meta-declaration, all modules that <em>call</em> 
+the modified predicates need to be recompiled.
+</ul>
+
+<p>In SWI-Prolog, meta-predicates are also <em>module-transparent</em>, 
+and qualifying the module-sensitive arguments is done inside the 
+meta-predicate. As a result, the caller need not be aware that it is 
+calling a meta-predicate and none of the above restrictions hold for 
+SWI-Prolog. However, code that aims at portability must obey the above 
+rules.
+
+<p>Other differences are listed below.
+
+<p>
+<ul class="latex">
+<li>If a module does not define a predicate, it is searched for in the
+<em>import modules</em>. By default, the import module of any 
+user-defined module is the <code>user</code> module. In turn, the
+<code>user</code> module imports from the module <code>system</code> 
+that provides all built-in predicates. The auto-import hierarchy can be 
+changed using <a id="idx:addimportmodule3:1984"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
+and <a id="idx:deleteimportmodule2:1985"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.
+
+<p>This mechanism can be used to realise a simple object-oriented system 
+or a hierarchical module system.
+
+<p>
+<li>Operator declarations are local to a module and may be exported. In 
+Quintus and SICStus all operators are global. YAP and Ciao also use 
+local operators. SWI-Prolog provides global operator declarations from 
+within a module by explicitly qualifying the operator name with the <code>user</code> 
+module. I.e., operators are inherited from the
+<em>import modules</em> (see above).
+
+<pre class="code">
+:- op(precedence, type, user:(operatorname)).
+</pre>
+
+<p>
+</ul>
+
+<p></body></html>

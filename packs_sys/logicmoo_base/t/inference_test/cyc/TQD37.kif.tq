@@ -1,0 +1,86 @@
+(note TQD37)
+
+(positiveVestedInterest IslamicGroup Iran) 
+
+(instance IslamicGroup TerroristGroup) 
+
+(residenceOfOrganization IslamicGroup Maghreb-Region) 
+
+(inRegion Maghreb-Region Maghreb-Region) 
+
+(positiveVestedInterest ArmedIslamicGroup Iran) 
+
+(instance ArmedIslamicGroup TerroristGroup) 
+
+(residenceOfOrganization ArmedIslamicGroup Maghreb-Region) 
+
+(inRegion Maghreb-Region Maghreb-Region) 
+
+(positiveVestedInterest JihadGroup Iran) 
+
+(instance JihadGroup TerroristGroup) 
+
+(residenceOfOrganization JihadGroup Maghreb-Region) 
+
+(inRegion Maghreb-Region Maghreb-Region) 
+
+(positiveVestedInterest JihadGroup Iran) 
+
+(instance JihadGroup TerroristGroup) 
+
+(residenceOfOrganization JihadGroup Egypt) 
+
+(contains Maghreb-Region Egypt) 
+
+(inverse contains inRegion) 
+
+(positiveVestedInterest IslamicGroup Iran) 
+
+(instance IslamicGroup TerroristGroup) 
+
+(residenceOfOrganization IslamicGroup Egypt) 
+
+(contains Maghreb-Region Egypt) 
+
+(inverse contains inRegion) 
+
+(positiveVestedInterest ArmedIslamicGroup Iran) 
+
+(instance ArmedIslamicGroup TerroristGroup) 
+
+(residenceOfOrganization ArmedIslamicGroup Algeria) 
+
+(contains Maghreb-Region Algeria) 
+
+(inverse contains inRegion) 
+
+(query (findall (?AGENT ?AREA) 
+(and 
+   (residenceOfOrganization ?AGENT ?AREA) 
+   (inRegion ?AREA Maghreb-Region) 
+   (instance ?AGENT TerroristGroup) 
+   (or 
+       (thereExists ?SUPPORT 
+           (thereExists ?SUPP-TYPE 
+               (and 
+                   (instance ?SUPPORT ?SUPP-TYPE) 
+                   (givesSupportToAgent Sudan ?AGENT ?SUPPORT) 
+                   (followingValue 
+                       (MediumAmountFn ?SUPP-TYPE) ?SUPPORT)))) 
+       (positiveVestedInterest ?AGENT Iran)))
+))
+
+(answer IslamicGroup Maghreb-Region
+)
+(answer  ArmedIslamicGroup Maghreb-Region
+)
+(answer JihadGroup Maghreb-Region
+)
+(answer JihadGroup Egypt
+)
+(answer IslamicGroup  Egypt
+)
+(answer ArmedIslamicGroup Algeria
+)
+(end_of_file)
+

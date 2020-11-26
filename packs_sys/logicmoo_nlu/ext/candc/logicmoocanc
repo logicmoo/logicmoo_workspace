@@ -1,0 +1,33 @@
+#!/bin/bash
+#cd /devel/logicmoo/src_modules/candc
+function realpath()
+{
+    f=$@
+    if [ -d "$f" ]; then
+        base=""
+        dir="$f"
+    else
+        base="/$(basename "$f")"
+        dir=$(dirname "$f")
+    fi
+    dir=$(cd "$dir" && /bin/pwd)
+    echo "$dir$base"
+}
+cd "$(dirname "$(readlink -f "$0")")"
+cd "$(dirname "$(realpath "$0")")";
+if [ ! -z "$2" ]; then
+	bin/candc --models models/boxer --models models/questions --candc-printer boxer --input $1 --output $2
+else
+	bin/candc --models models/boxer --candc-printer boxer --input $1 
+fi
+
+if [ ! -z "$3" ]; then
+	bin/boxer_old --integrate --input $2 --output $3
+	bin/boxer_old --integrate --input $2 --semantics fol >> $3
+fi
+
+
+# after we path gsoap to prevent Detail: setsockopt unset IPV6_V6ONLY failed in soap_bind() we would use
+#bin/soap_client --url http://127.0.0.1:9066  --candc-printer boxer --input $1 --output $2
+#sed -i $2 -e "s|\\\'|-APOS-|g"
+

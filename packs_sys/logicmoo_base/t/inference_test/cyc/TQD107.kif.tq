@@ -1,0 +1,67 @@
+(note TQD107)
+
+(existant Stage3-SAAttackOnIran 
+ (DateInSituationFn CalendarDay 29 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instance IranianStudentAgriculturalCenter01 Object) 
+
+(damages Stage3-SAAttackOnIran IranianStudentAgriculturalCenter01) 
+
+(subProcess HPKBScenarioConflict Stage3-SAAttackOnIran) 
+
+(instance Stage3-SAAttackOnIran AttackOnTangible) 
+
+(deviceUsed Stage3-SAAttackOnIran 
+ (SKF-48156728)) 
+
+(subrelation deviceUsed instrument-Generic) 
+
+(instance 
+ (SKF-48156728) FighterPlane) 
+
+
+(existant Stage3-SAAttackOnIran 
+ (DateInSituationFn CalendarDay 29 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instance GroupOfIranianStudents01 Object) 
+
+(victim Stage3-SAAttackOnIran GroupOfIranianStudents01) 
+
+(subrelation victim damages) 
+
+(subProcess HPKBScenarioConflict Stage3-SAAttackOnIran) 
+
+(instance Stage3-SAAttackOnIran AttackOnTangible) 
+
+(deviceUsed Stage3-SAAttackOnIran 
+ (SKF-26144136)) 
+
+(subrelation deviceUsed instrument-Generic) 
+
+(instance 
+ (SKF-26144136) FighterPlane) 
+
+
+
+
+( query  (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (thereExists ?FORCE 
+ (and 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?FORCE FighterPlane))) 
+ (instance ?THING Object) 
+ (damages ?ACT ?THING) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 29 HPKBScenarioConflict) ?ACT)))  
+)
+
+(answer IranianStudentAgriculturalCenter01)
+
+(end_of_file)

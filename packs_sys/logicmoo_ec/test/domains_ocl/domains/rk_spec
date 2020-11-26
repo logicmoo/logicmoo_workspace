@@ -1,0 +1,61 @@
+% Rocket World (June, 1999)
+% -------------------------------------------------
+
+sorts(primitive_sorts,[rocket, location, cargo]).
+
+objects(rocket, [r1,r2]).
+objects(cargo, [c1, c2, c3, c4]).
+objects(location, [london,paris,jfk]).
+
+predicates([
+ at(cargo,location), 
+ position(rocket,location),
+ fuel_empty(rocket),
+ fuel_full(rocket),
+ in(cargo,rocket)] ).
+
+atomic_invariants( [ ]).
+
+substate_classes(cargo,Cargo,[
+	[at(Cargo,Loc)], 
+        [in(Cargo,Roc)]  ] ). 	
+
+substate_classes(rocket,R, [
+      [position(R,Loc), fuel_empty(R)],
+      [position(R,Loc), fuel_full(R)] ]).
+
+implied_invariant([],[]).
+
+inconsistent_constraint([at(X,P),at(X,R),ne(P,R)]).
+inconsistent_constraint([position(X,P),position(X,R),ne(P,R)]).
+inconsistent_constraint([at(C,L1),at(C,L2),ne(L1,L2)]).
+inconsistent_constraint([in(C,R),in(C,R1),ne(R,R1)]).
+inconsistent_constraint([fuel_empty(R),fuel_full(R)]).
+
+operator(move(R,A,B), 
+     % prevail
+     [],
+     % necessary
+     [sc(rocket,R,[position(R,A), fuel_full(R), ne(A,B)]=>
+	            [position(R,B), fuel_empty(R)])
+     ],
+     % conditional
+     []).
+
+operator(load(C,R,A), 
+     % prevail
+     [se(rocket,R,[position(R,A)])],
+     % necessary
+     [sc(cargo,C,[at(C,A)]=>[in(C,R)])],
+     % conditional
+     []) .
+
+operator(unload(C,R,A), 
+     % prevail
+     [se(rocket,R,[position(R,A)])],
+     % necessary
+     [sc(cargo,C,[in(C,R)]=>[at(C,A)])],
+     % conditional
+     []) .
+
+

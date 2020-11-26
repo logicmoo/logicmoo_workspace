@@ -1,0 +1,117 @@
+@import url("../node_modules/codemirror/lib/codemirror.css");
+@import url("../node_modules/codemirror/addon/hint/show-hint.css");
+@import url("../node_modules/codemirror/addon/dialog/dialog.css");
+@import url("../js/codemirror/theme/prolog.css");
+@import url("../js/codemirror/addon/hover/prolog-hover.css");
+@import url("../js/codemirror/addon/hint/templates-hint.css");
+@import url("../js/codemirror/addon/hint/show-context-info.css");
+@import url("../js/codemirror/mode/prolog/prolog-template-hint.css");
+
+.prolog-editor, .CodeMirror { height: 100%; }
+.CodeMirror pre.CodeMirror-placeholder { color: #999; }
+
+.CodeMirror .source-msg.error {
+  color: red;
+  border-left: 2px solid red;
+}
+
+.CodeMirror .source-msg {
+  position: relative;
+  border-left: 2px solid #000;
+  padding: 0px 5px;
+  background-color: #ddd;
+  cursor: hand; cursor: pointer;
+}
+
+.CodeMirror .source-msg > span.glyphicon {
+  color: #000;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.CodeMirror .source-msg-charmark {
+  height: 1.5ex;
+}
+
+.CodeMirror .source-msg:hover {
+  text-decoration: line-through;
+}
+
+.CodeMirror-hover {
+  outline:1px solid grey;
+}
+
+.CodeMirror-target-line {
+  background-color: yellow;
+}
+
+.CodeMirror-search-match {
+  background-color: yellow;
+}
+
+.CodeMirror-search-alt-match {
+  background-color: #bee;
+}
+
+		 /*******************************
+		 *	 DEBUGGER SUPPORT	*
+		 *******************************/
+
+.CodeMirror .trace.call      { background-color: #0f0; }
+.CodeMirror .trace.exit      { background-color: #0f0; }
+.CodeMirror .trace.fail      { background-color: #f00; }
+.CodeMirror .trace.redo      { background-color: #ff0; }
+.CodeMirror .trace.exception { background-color: #f0f; }
+
+.Prolog-breakpoints { width: 1em; }
+.breakpoint-marker
+{ color: #822;
+  padding-left: 4px;
+  font-size: 120%;
+  position: relative; top: -0.2em;
+}
+
+		 /*******************************
+		 *	       JUMP		*
+		 *******************************/
+
+div.edit-modal
+{ position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2000;
+}
+
+
+div.edit-modal > div.mask
+{ position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000;
+  opacity: 0.2;
+}
+
+div.edit-modal .goto-source
+{ position: absolute;
+  padding: 0.2em 0.5em 0em;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 10px 10px 5px #888888;
+  z-index: 2001;
+}
+
+		 /*******************************
+		 *	      DIALOG		*
+		 *******************************/
+
+div.CodeMirror-dialog
+{ border: 1px solid #888;
+  background: #f8f8f8;
+  box-shadow: 10px 10px 5px #888888;
+}

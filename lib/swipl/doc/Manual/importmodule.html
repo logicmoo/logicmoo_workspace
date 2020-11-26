@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.10</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="moduleop.html">
+<link rel="next" href="resmodules.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="moduleop.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="resmodules.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:importmodule"><a id="sec:6.10"><span class="sec-nr">6.10</span> <span class="sec-title">Dynamic 
+importing using import modules</span></a></h2>
+
+<a id="sec:importmodule"></a>
+
+<p>Until now we discussed the public module interface that is, at least 
+to some extent, portable between Prolog implementations with a module 
+system that is derived from Quintus Prolog. The remainder of this 
+chapter describes the underlying mechanisms that can be used to emulate 
+other module systems or implement other code-reuse mechanisms.
+
+<p>In addition to built-in predicates, imported predicates and locally 
+defined predicates, SWI-Prolog modules can also call predicates from its
+<em>import modules</em>. Each module has a (possibly empty) list of 
+import modules. In the default setup, each new module has a single 
+import module, which is <code>user</code> for all normal user modules 
+and
+<code>system</code> for all system library modules. Module <code>user</code> 
+imports from <code>system</code> where all built-in predicates reside. 
+These special modules are described in more detail in <a class="sec" href="resmodules.html#sec:6.11">section 
+6.11</a>.
+
+<p>The list of import modules can be manipulated and queried using the 
+following predicates, as well as using <a id="idx:setmodule1:1946"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="import_module/2"><strong>import_module</strong>(<var>+Module, 
+-Import</var>)</a></dt>
+<dd class="defbody">
+True if <var>Module</var> inherits directly from <var>Import</var>. All 
+normal modules only import from <code>user</code>, which imports from
+<code>system</code>. The predicates <a id="idx:addimportmodule3:1947"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
+and
+<a id="idx:deleteimportmodule2:1948"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a> 
+can be used to manipulate the import list. See also <a id="idx:defaultmodule2:1949"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[multi]</span><a id="default_module/2"><strong>default_module</strong>(<var>+Module, 
+-Default</var>)</a></dt>
+<dd class="defbody">
+True if predicates and operators in <var>Default</var> are visible in
+<var>Module</var>. Modules are returned in the same search order used 
+for predicates and operators. That is, <var>Default</var> is first 
+unified with <var>Module</var>, followed by the depth-first transitive 
+closure of <a id="idx:importmodule2:1950"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a>.</dd>
+<dt class="pubdef"><a id="add_import_module/3"><strong>add_import_module</strong>(<var>+Module, 
++Import, +StartOrEnd</var>)</a></dt>
+<dd class="defbody">
+If <var>Import</var> is not already an import module for <var>Module</var>, 
+add it to this list at the <code>start</code> or <code>end</code> 
+depending on
+<var>StartOrEnd</var>. See also <a id="idx:importmodule2:1951"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
+and <a id="idx:deleteimportmodule2:1952"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.</dd>
+<dt class="pubdef"><a id="delete_import_module/2"><strong>delete_import_module</strong>(<var>+Module, 
++Import</var>)</a></dt>
+<dd class="defbody">
+Delete <var>Import</var> from the list of import modules for <var>Module</var>. 
+Fails silently if <var>Import</var> is not in the list.
+</dd>
+</dl>
+
+<p>One usage scenario of import modules is to define a module that is a 
+copy of another, but where one or more predicates have an alternative 
+definition.
+
+<p></body></html>

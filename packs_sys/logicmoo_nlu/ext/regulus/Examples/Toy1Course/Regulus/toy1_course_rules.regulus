@@ -1,0 +1,75 @@
+% Declarations for Regulus course toy 1 grammar
+
+
+feature_value_space(vform_value, [[impératif, fini]]).
+feature_value_space(vtype_value, [[transitif]]).
+
+feature(vform, vform_value).
+feature(vtype, vtype_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(det, [sem]).
+category(sn, [sem]).
+category(location_sp, [sem]).
+category(nom, [sem]).
+category(verb, [sem, vform, vtype]).
+category(sv, [sem, vform]).
+
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	command:[sem=S].
+ 
+command:[sem=concat([[utterance_type, command]], SV)] -->
+	sv:[sem=SV, vform=impératif].
+
+
+sv:[sem=concat(V,SN), vform=VF] -->
+	verb:[sem=V, vform=VF],
+        sn:[sem=SN].
+
+sn:[sem=concat(Nom, Loc)] -->
+	?det:[sem=Sem],
+	nom:[sem=Nom],
+	?location_sp:[sem=Loc].
+
+location_sp:[sem=Loc] -->
+	in,
+	sn:[sem=Loc].
+
+
+% Lexicon
+
+%%Verbe
+% verb:[sem=[[action, repeat]], vform=impératif, vtype=transitif] --> repeat.
+verb:[sem=[[action, list]], vform=impératif, vtype=transitif] --> list.
+verb:[sem=[[action, show]], vform=impératif, vtype=transitif] --> show.
+
+%%NOM
+nom:[sem=[[entity, room]]] --> room.
+nom:[sem=[[entity, rooms]]] --> rooms.
+
+nom:[sem=[[entity, hotel]]] --> hotel.
+nom:[sem=[[entity, hotels]]] --> hotels.
+
+nom:[sem=[[location, town]]] --> town.
+nom:[sem=[[location, towns]]] --> towns.
+
+nom:[sem=[[entity, fare]]] --> fare.
+nom:[sem=[[entity, fares]]] --> fares.
+
+
+%%DET
+det:[sem=[]] --> the.
+det:[sem=[]] --> an.
+det:[sem=[]] --> a.
+ 
+

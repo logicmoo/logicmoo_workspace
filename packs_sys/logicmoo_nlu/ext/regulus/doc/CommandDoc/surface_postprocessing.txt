@@ -1,0 +1,7 @@
+Relevant to applications using surface processing. Points to a file
+that defines a post-processing predicate that can be applied to the
+results of surface processing. The file should define a predicate
+\begin{verbatim}
+surface_postprocess(Representation, 
+                    PostProcessedRepresentation).
+\end{verbatim}

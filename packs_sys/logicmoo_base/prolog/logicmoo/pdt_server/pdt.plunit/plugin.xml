@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+          point="org.eclipse.ui.popupMenus">
+       <objectContribution
+             adaptable="false"
+             id="pdt.junit.testcase.contribution"
+             objectClass="org.eclipse.jdt.junit.model.ITestCaseElement">
+          <action
+                class="org.cs3.plunit.actions.RunUnitTestOnConsoleAction"
+                id="org.cs3.pdt.console.internal.actions.RunUnitTestAction"
+                label="Run Test on Prolog Console">
+          </action>
+       </objectContribution>
+    </extension>
+ <extension
+         point="org.eclipse.ui.popupMenus">      
+       <objectContribution
+            adaptable="false"
+             id="pdt.junit.testcase.contribution"
+             objectClass="org.eclipse.jdt.junit.model.ITestCaseElement">
+          <action
+                class="org.cs3.plunit.actions.OpenJUnitWrapperAction"
+                id="org.cs3.pdt.internal.actions.OpenJUnitWrapperTest"
+                label="Open Prolog Test">
+          </action>
+            <action
+                class="org.cs3.plunit.actions.AbortTestAction"
+                id="org.cs3.pdt.internal.actions.AbortTestAction"
+                label="Abort Prolog Test">
+          </action>
+       </objectContribution>
+ </extension>
+</plugin>

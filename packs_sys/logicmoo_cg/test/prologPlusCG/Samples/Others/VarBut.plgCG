@@ -1,0 +1,15 @@
+papa(khalid, zohir).
+mama(khalid, fatima).
+soeur(khalid, hind).
+soeur(khalid, kaoutar).
+prof(khalid, hicham).
+prof(khalid, anbar).
+
+disjButs(L_Buts, x, y, z) :- soeur(x, y), member(B, L_Buts), B, prof(x, z).
+
+// disjButs((papa(x,y), mama(x,z)), x, v, w).
+
+
+
+
+

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="AceRules"
+	targetNamespace="http://attempto.ifi.uzh.ch/acerules"
+	xmlns:ar="http://attempto.ifi.uzh.ch/acerules"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+       <schema
+           targetNamespace="http://attempto.ifi.uzh.ch/acerules"
+           xmlns="http://www.w3.org/2001/XMLSchema">
+           
+           <element name="Request">
+               <complexType>
+                   <all>
+                       <element name="Program" type="string" minOccurs="1" maxOccurs="1"/>
+                       <element name="Mode" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="court"/>
+                             <enumeration value="stable"/>
+                             <enumeration value="stable_strong"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="UserLexiconURL" type="string" minOccurs="0" maxOccurs="1"/>
+                       <element name="Guess" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="MaxAnswers" type="int" minOccurs="0" maxOccurs="1"/>
+                       <element name="RulesOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="SimpleRulesOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="AnswersetOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="AnswertextOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="TraceOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                       <element name="ACETraceOutput" minOccurs="0" maxOccurs="1">
+                         <simpleType><restriction base="string">
+                             <enumeration value="on"/>
+                             <enumeration value="off"/>
+                         </restriction></simpleType>
+                       </element>
+                   </all>
+               </complexType>
+           </element>
+           
+           <element name="Reply">
+              <complexType>
+                  <sequence>
+                      <element name="Rules" minOccurs="0" maxOccurs="1" type="string"/>
+                      <element name="SimpleRules" minOccurs="0" maxOccurs="1" type="string"/>
+                      <element name="Answerset" minOccurs="0" maxOccurs="unbounded" type="string"/>
+                      <element name="Answertext" minOccurs="0" maxOccurs="unbounded" type="string"/>
+                      <element name="Trace" minOccurs="0" maxOccurs="1">
+                         <complexType>
+                             <sequence>
+                                 <element name="Step" minOccurs="1" maxOccurs="unbounded">
+                                     <complexType>
+                                         <sequence>
+                                             <element name="Raw" minOccurs="1" maxOccurs="1" type="string"/>
+                                             <element name="Delete" minOccurs="1" maxOccurs="1" type="string"/>
+                                             <element name="Consistent" minOccurs="1" maxOccurs="1" type="string"/>
+                                         </sequence>
+                                     </complexType>
+                                 </element>
+                             </sequence>
+                         </complexType>
+                     </element>
+                     <element name="ACETrace" minOccurs="0" maxOccurs="1">
+                         <complexType>
+                             <sequence>
+                                 <element name="Step" minOccurs="1" maxOccurs="unbounded">
+                                     <complexType>
+                                         <sequence>
+                                             <element name="Raw" minOccurs="1" maxOccurs="1" type="string"/>
+                                             <element name="Consistent" minOccurs="1" maxOccurs="1" type="string"/>
+                                         </sequence>
+                                     </complexType>
+                                 </element>
+                             </sequence>
+                         </complexType>
+                     </element>
+                  </sequence>
+              </complexType>
+           </element>
+           
+       </schema>
+    </types>
+
+    <message name="RequestMessage">
+        <part name="body" element="ar:Request"/>
+    </message>
+
+    <message name="ReplyMessage">
+        <part name="body" element="ar:Reply"/>
+    </message>
+
+    <portType name="AceRulesPortType">
+        <operation name="ProcessAceRulesProgram">
+           <input message="ar:RequestMessage"/>
+           <output message="ar:ReplyMessage"/>
+        </operation>
+    </portType>
+
+    <binding name="AceRulesSoapBinding" type="ar:AceRulesPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="ProcessAceRulesProgram">
+           <soap:operation soapAction="http://attempto.ifi.uzh.ch/acerules/Process"/>
+           <input>
+               <soap:body use="literal"/>
+           </input>
+           <output>
+               <soap:body use="literal"/>
+           </output>
+        </operation>
+    </binding>
+
+    <service name="AceRulesService">
+        <port name="AceRulesPort" binding="ar:AceRulesSoapBinding">
+           <soap:address location="http://attempto.ifi.uzh.ch/ws/acerules/acerulesws.perl"/>
+        </port>
+    </service>
+
+</definitions>

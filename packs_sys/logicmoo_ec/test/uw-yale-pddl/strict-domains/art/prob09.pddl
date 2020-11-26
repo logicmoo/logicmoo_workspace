@@ -1,0 +1,5 @@
+(define (problem art5a)
+    (:domain art)
+  (:init (q5))
+  (:goal (AND (g)))
+  (:length (:serial 5) (:parallel 5)))

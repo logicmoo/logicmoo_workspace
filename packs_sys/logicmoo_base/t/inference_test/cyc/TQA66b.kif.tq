@@ -1,0 +1,17 @@
+(note TQA66b)
+   
+(not (instance #$HYP-Process-64229754 Action)) 
+(arg1Isa agent Action) 
+(not (instance #$HYP-Process-64229754 Action)) 
+(arg1Isa agent Action) 
+
+(queryyn
+  (implies 
+    (damages ?ACTION PetrolinePipeline) 
+    (consistent (agent ?ACTION Iran))))
+
+(answer Unproven)
+
+(end_of_file)
+
+

@@ -1,0 +1,54 @@
+
+% Declarations
+ 
+feature_value_space(device_type_value, [[switchable, dimmable]]).
+
+feature(device_type, device_type_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(utterance, [sem]).
+category(command, [sem]).
+category(yn_question, [sem]).
+category(device, [sem, device_type]).
+category(location, [sem]).
+category(action, [sem, device_type]).
+category(onoff, [sem]).
+
+%---------------------------------------------------------------
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   yn_question:[sem=S]
+	;   command:[sem=S]
+	).
+
+yn_question:[sem=concat([[utterance_type, query], [state, be]], Device, OnOff, Location)] -->
+	'QUESTION',
+	device:[sem=Device],
+	onoff:[sem=OnOff],
+	?location:[sem=Location].
+
+command:[sem=concat([[utterance_type, command]], Action, Device, Location)] -->
+	'COMMAND',
+	action:[sem=Action, device_type=Type],
+	device:[sem=Device, device_type=Type],
+	?location:[sem=Location].
+
+action:[sem=[[action, switch_on]], device_type=switchable] --> 'switch-on'.
+action:[sem=[[action, switch_off]], device_type=switchable] --> 'switch-off'.
+action:[sem=[[action, dim]], device_type=dimmable] --> dim.
+
+device:[sem=[[device, light]], device_type=switchable\/dimmable] --> light.
+device:[sem=[[device, fan]], device_type=switchable] --> fan.
+
+location:[sem=[[location, kitchen]]] --> kitchen.
+location:[sem=[[location, living_room]]] --> 'living-room'.
+
+onoff:[sem=[[onoff, on]]] --> on.
+onoff:[sem=[[onoff, off]]] --> off.

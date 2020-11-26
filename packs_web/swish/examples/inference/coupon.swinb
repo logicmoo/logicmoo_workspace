@@ -1,0 +1,196 @@
+<div class="notebook">
+
+<div class="nb-cell html">
+<h2>The Coupon Collector Problem</h2>
+
+<p>From [1]:
+</p>
+<blockquote>Suppose each box of cereal contains
+one of N different coupons and once a consumer has collected a coupon of each
+type, he can trade them for a prize. The aim of the problem is determining the
+average number of cereal boxes the consumer should buy to collect all coupon
+types, assuming that each coupon type occurs with the same probability in the
+cereal boxes.</blockquote>
+<p>
+If there 5 different coupons, how many boxes do I have to buy to get the 
+prize?</p>
+</div>
+
+<div class="nb-cell query">
+mc_sample_arg_first(coupons(5,T),1,T,[NT-_]).
+</div>
+
+<div class="nb-cell markdown">
+If there are 5 different coupons, what is the distribution of the number of
+boxes I have to buy to get the prize?
+</div>
+
+<div class="nb-cell query">
+dist(5,1000,Chart).
+</div>
+
+<div class="nb-cell markdown">
+If there are 5 different coupons, what is the expected number of
+boxes I have to buy to get the prize?
+</div>
+
+<div class="nb-cell query">
+mc_expectation(coupons(5,T),100,T,Exp).
+</div>
+
+<div class="nb-cell markdown">
+Plot the dependency of the expected number of boxes from the number of coupons.
+</div>
+
+<div class="nb-cell query">
+boxes_vs_N(12,1,Chart).
+</div>
+
+<div class="nb-cell html">
+<script type="text/javascript">
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML",function() {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);});
+</script>
+<p>
+As indicated in [1], the number of boxes grows as \(O(N\log N)\) where \(N\) is the number of coupons. The graphs shows the accordance of the two curves.
+</p>
+<p>
+The coupon collector problem is similar to the sticker collector problem, 
+where you 
+have an album with a space for every different sticker, 
+you can buy stickers in 
+packs and your objective is to complete the album.
+</p>
+<p> A program for the coupon collector problem can be applied to solve the 
+sticker collector problem:
+if you have \(N\) different stickers and packs contain \(P\) stickers, solve
+the coupon collector problem for \(N\) coupons and get the number of boxes 
+\(B\). Then the number of packs you have to buy to complete the collection is
+\(\lceil B/P \rceil\).
+</p>
+<p>
+If there are 50 different stickers and pack contain 4 stickers, how many packs 
+do I have to buy to get the prize?
+</p>
+</div>
+
+<div class="nb-cell query">
+mc_sample_arg_first(stickers(50,4,T),1,T,[NP-_]).
+</div>
+
+<div class="nb-cell html">
+<h3>Code</h3>
+
+Preamble:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- endif.
+
+:- mc.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell markdown">
+Given the number of coupons N, T is the number of boxes to get all coupons.
+</div>
+
+<div class="nb-cell program" data-background="true">
+coupons(N,T):-
+  length(CP,N),
+  CPTerm=..[cp|CP],
+  new_coupon(N,CPTerm,0,N,T).
+</div>
+
+<div class="nb-cell markdown">
+If 0 coupons remain to be collected, the collection ends.
+</div>
+
+<div class="nb-cell program" data-background="true">
+new_coupon(0,_CP,T,_N,T).
+</div>
+
+<div class="nb-cell markdown">
+If N0 coupons remain to be collected, collect one and set to 1
+the cell of the CP array (stored as a term with arity N).
+</div>
+
+<div class="nb-cell program" data-background="true">
+new_coupon(N0,CP,T0,N,T):-
+  N0&gt;0,
+  collect(CP,N,T0,T1),
+  N1 is N0-1,
+  new_coupon(N1,CP,T1,N,T).
+</div>
+
+<div class="nb-cell markdown">
+Collect one new coupon and update the number of boxes bought.
+</div>
+
+<div class="nb-cell program" data-background="true">
+collect(CP,N,T0,T):-
+  pick_a_box(T0,N,I),
+  T1 is T0+1,
+  arg(I,CP,CPI),
+  (var(CPI)-&gt;
+    CPI=1,
+    T=T1
+  ;
+    collect(CP,N,T1,T)
+  ).
+
+pick_a_box(_,N,I):uniform(I,L):-numlist(1, N, L).
+
+:-end_lpad.
+</div>
+
+<div class="nb-cell markdown">
+Given the number of stickers N and the size of a pack P, T is the number of 
+packs to get all stickers.
+</div>
+
+<div class="nb-cell program" data-background="true">
+stickers(N,P,T):-
+  coupons(N,T0),
+  T is ceiling(T0/P).
+</div>
+
+<div class="nb-cell markdown">
+Plot the distribution of the number of boxes to collect N coupons by taking
+Samples samples.
+</div>
+
+<div class="nb-cell program" data-background="true">
+dist(N,Samples,Chart):-
+  mc_sample_arg_first(coupons(N,T),Samples,T,L),
+  density(L,Chart,[nbins(10)]).
+</div>
+
+<div class="nb-cell markdown">
+Plot the dependency of the number of boxes from the number of coupons.
+</div>
+
+<div class="nb-cell program" data-background="true">
+boxes_vs_N(MaxN,Step,Chart):-
+  NSteps is ceil((MaxN-1)/Step),
+  findall(E,(
+    between(0,NSteps,N0),N is 1+N0*Step,mc_expectation(coupons(N,T),10,T,E)
+  ),V),
+  findall(N,(between(0,NSteps,N0),N is 1+N0*Step),X),
+  findall(NlogN,(between(0,NSteps,N0),N is 1+N0*Step,NlogN is 1+1.2*N*log(N)),NLN),
+  Chart=c3{data:_{x:x, columns:[[x|X],['Expected number of boxes'|V],['1+1.2NlogN'|NLN]]}}.
+</div>
+
+<div class="nb-cell markdown">
+## References
+
+[1] Kaminski, B. L., Katoen, J.-P., Matheja, C., Olmedo, F., Weakest precondition reasoning for expected run-times of probabilistic programs. Programming languages and systems, LNCS, vol. 9632, pp. 364-389, 
+Springer, Heidelberg (2016)
+</div>
+
+</div>

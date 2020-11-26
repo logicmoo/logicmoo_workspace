@@ -1,0 +1,1663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform\aminePlatform\classes\aminePlatform\samples\ontology\issamOthmane\terrorismOnt.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>terrorisme</Language>
+  </Languages>
+  <MainLanguage>terrorisme</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>terrorisme</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>terrorisme</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>terrorisme</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>PhysObject</Key>
+        </Child>
+        <Child>
+          <Key>action</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>action</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>action</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>leave</Key>
+        </Child>
+        <Child>
+          <Key>carryOut</Key>
+        </Child>
+        <Child>
+          <Key>strans</Key>
+        </Child>
+        <Child>
+          <Key>nastyAction</Key>
+        </Child>
+        <Child>
+          <Key>explode</Key>
+        </Child>
+        <Child>
+          <Key>die</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>terrorisme</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>die</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>die</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>explode</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>explode</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>nastyAction</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>nastyAction</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[action :super &amp; 173 93]-agnt(169 105)(173 105)(165 106)-&gt;[human &amp; 123 102]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>detonate</Key>
+        </Child>
+        <Child>
+          <Key>threat</Key>
+        </Child>
+        <Child>
+          <Key>attack</Key>
+        </Child>
+        <Child>
+          <Key>fight</Key>
+        </Child>
+        <Child>
+          <Key>bombing</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bombing</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>bombing</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[nastyAction :super &amp; 138 90] -
+                           -obj(267 107)(243 101)(306 113)-&gt;[humanOrPlace &amp; 306 103],
+                           -inst(105 118)(155 106)(75 131)-&gt;[explosive &amp; 40 131]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>nastyAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>fight</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>fight</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>nastyAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>attack</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>attack</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[nastyAction :super &amp; 381 99]-obj(290 107)(381 113)(214 101)-&gt;[humanOrPlace &amp; 134 101]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>terroristeAct</Key>
+        </Child>
+        <Child>
+          <Key>destroy</Key>
+        </Child>
+        <Child>
+          <Key>ambush</Key>
+        </Child>
+        <Child>
+          <Key>injure</Key>
+        </Child>
+        <Child>
+          <Key>shoot</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>nastyAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>shoot</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>shoot</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[attack :super &amp; 149 120] -
+                       -inst(113 85)(149 123)(98 48)-&gt;[gun &amp; 70 37],
+                       -obj(237 112)(222 120)(267 104)-&gt;[human &amp; 267 102]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attack</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>injure</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>injure</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[attack :super]-obj-&gt;[human]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attack</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ambush</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>ambush</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[attack :super]-obj-&gt;[human]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attack</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>destroy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>destroy</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[attack :super]-obj-&gt;[physTarget]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>attack</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>terroristeAct</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>terroristeAct</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[attack :super]-agnt-&gt;[terrorist]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>hijacking</Key>
+        </Child>
+        <Child>
+          <Key>robbery</Key>
+        </Child>
+        <Child>
+          <Key>arson</Key>
+        </Child>
+        <Child>
+          <Key>murder</Key>
+        </Child>
+        <Child>
+          <Key>kidnapping</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>attack</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>kidnapping</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>kidnapping</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[terroristeAct :super]-obj-&gt;[human]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>terroristeAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>murder</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>murder</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[terroristeAct :super]-obj-&gt;[human]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>terroristeAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>arson</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>arson</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[terroristeAct :super]-obj-&gt;[building]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>terroristeAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>robbery</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>robbery</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>terroristeAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>hijacking</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>hijacking</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[terroristeAct :super]-obj-&gt;[transportVehicle]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>terroristeAct</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>threat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>threat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>nastyAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>detonate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>detonate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[nastyAction :super &amp; 237 92]-obj(178 103)(237 107)(133 100)-&gt;[bomb &amp; 97 100]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>nastyAction</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>strans</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>strans</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>think</Key>
+        </Child>
+        <Child>
+          <Key>stateBelief</Key>
+        </Child>
+        <Child>
+          <Key>request</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>request</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>request</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>strans</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>stateBelief</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>stateBelief</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>suspect</Key>
+        </Child>
+        <Child>
+          <Key>admit</Key>
+        </Child>
+        <Child>
+          <Key>claim</Key>
+        </Child>
+        <Child>
+          <Key>report</Key>
+        </Child>
+        <Child>
+          <Key>accuse</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>strans</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>accuse</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>accuse</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[stateBelief :super &amp; 148 25]-obj(257 65)(171 41)(358 89)-&gt;[human &amp; 337 89]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stateBelief</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>report</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>report</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[stateBelief :super &amp; 113 96]-obj(186 163)(140 112)(246 215)-&gt;[action &amp; 235 215]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stateBelief</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>claim</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>claim</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[stateBelief :super &amp; 357 54]-obj(272 86)(395 70)(164 102)-&gt;[responsability &amp; 128 102]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stateBelief</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>admit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>admit</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[stateBelief :super &amp; 30 30]-obj(108 72)(59 46)(171 99)-&gt;[action &amp; 165 99]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stateBelief</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>suspect</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>suspect</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[stateBelief :super &amp; 264 41]-obj(177 65)(276 57)(93 74)-&gt;[human &amp; 61 74]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stateBelief</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>think</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>think</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[strans :super &amp; 50 76]-obj(195 97)(128 92)(277 102)-&gt;[action &amp; 277 102]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>strans</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>carryOut</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>carryOut</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[action :super &amp; 358 40]-obj(224 59)(358 54)(104 64)-&gt;[action &amp; 65 64]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>leave</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>leave</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>PhysObject</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>PhysObject</Synonym>
+            <Synonym>anything</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>humanOrPlace</Key>
+        </Child>
+        <Child>
+          <Key>instrument</Key>
+        </Child>
+        <Child>
+          <Key>responsability</Key>
+        </Child>
+        <Child>
+          <Key>death</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>terrorisme</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>death</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>death</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PhysObject</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>responsability</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>responsability</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>PhysObject</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>instrument</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>instrument</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>bomb</Key>
+        </Child>
+        <Child>
+          <Key>explosive</Key>
+        </Child>
+        <Child>
+          <Key>gun</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>PhysObject</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>gun</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>gun</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>explosive</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>explosive</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bomb</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>bomb</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>humanOrPlace</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>humanOrPlace</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>place</Key>
+        </Child>
+        <Child>
+          <Key>humanOrofficial</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>PhysObject</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>humanOrofficial</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>humanOrofficial</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>human</Key>
+        </Child>
+        <Child>
+          <Key>activeMilitary</Key>
+        </Child>
+        <Child>
+          <Key>govOfficial</Key>
+        </Child>
+        <Child>
+          <Key>diplomat</Key>
+        </Child>
+        <Child>
+          <Key>politicalFigure</Key>
+        </Child>
+        <Child>
+          <Key>civillan</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>humanOrPlace</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>civillan</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>civillan</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>politicalFigure</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>politicalFigure</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>diplomat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>diplomat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>govOfficial</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>govOfficial</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>activeMilitary</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>activeMilitary</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>human</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>human</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>terrorist</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>humanOrofficial</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>terrorist</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>terrorist</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>place</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>place</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>town</Key>
+        </Child>
+        <Child>
+          <Key>city</Key>
+        </Child>
+        <Child>
+          <Key>country</Key>
+        </Child>
+        <Child>
+          <Key>physTarget</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>humanOrPlace</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>physTarget</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>physTarget</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>militaryInstalation</Key>
+        </Child>
+        <Child>
+          <Key>utility</Key>
+        </Child>
+        <Child>
+          <Key>transportRoute</Key>
+        </Child>
+        <Child>
+          <Key>transportVehicle</Key>
+        </Child>
+        <Child>
+          <Key>building</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>place</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>building</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>building</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>church</Key>
+        </Child>
+        <Child>
+          <Key>school</Key>
+        </Child>
+        <Child>
+          <Key>commercial</Key>
+        </Child>
+        <Child>
+          <Key>officeOrResidence</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>physTarget</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>officeOrResidence</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>officeOrResidence</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>building</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>commercial</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>commercial</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>building</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>school</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>school</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>building</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>church</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>church</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>building</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>transportVehicle</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>transportVehicle</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>physTarget</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>transportRoute</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>transportRoute</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>physTarget</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>utility</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>utility</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>energy</Key>
+        </Child>
+        <Child>
+          <Key>water</Key>
+        </Child>
+        <Child>
+          <Key>communication</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>physTarget</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>communication</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>communication</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>utility</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>water</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>water</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>utility</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>energy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>energy</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>utility</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>militaryInstalation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>militaryInstalation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>physTarget</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>country</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>country</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>place</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>city</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>city</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>place</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>town</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>town</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>place</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>inst</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>terrorisme</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>inst</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>inst</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>terrorisme</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

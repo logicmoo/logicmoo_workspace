@@ -1,0 +1,9 @@
+Switch on interlingua debugging; relevant to translation applications
+that use an interlingua checking grammar. In this mode, translations
+that give rise to interlingua that is ill-formed according to the 
+interlingua checking grammar are processed by subjecting the ill-formed
+interlingua to all possible insertions, deletions and substitutions of 
+a single interlingua element, until either a well-formed variant is
+discovered or a timeout is exceeded. The first well-formed variant
+found is displayed. 
+

@@ -1,0 +1,1284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>Pengines: Web Logic Programming Made Easy</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">Pengines: Web Logic Programming Made Easy</div>
+<div class="author">Torbj&ouml;rn Lager <br>
+University of Gothenburg <br>
+Sweden <br>
+E-mail: <a class="url" href="mailto:lager@ling.gu.se">lager@ling.gu.se</a> <br>
+Jan Wielemaker <br>
+VU University Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@vu.nl">J.Wielemaker@vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> Pengines is short for Prolog 
+Engines. The pengines package greatly simplifies (1) developing 
+JavaScript based web-applications that must talk to a Prolog server and 
+(2) realise distributed programming in Prolog by providing RPC (<em>Remote 
+Procedure Calling</em>) over HTTP.
+
+<p>See also <a class="url" href="http://www.swi-prolog.org/pengines">http://www.swi-prolog.org/pengines</a>.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">An 
+overview of Pengines</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Pengine 
+references</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Pengine 
+by examples</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Making 
+predicates available to clients</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Mapping 
+Prolog terms into JSON</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.5"><span class="sec-nr">1.5</span> <span class="sec-title">Pengine 
+settings</span></a></div>
+<div class="toc-h2"><a class="sec" href="#sec:2"><span class="sec-nr">2</span> <span class="sec-title">Pengine 
+libraries</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">library(pengines): 
+Pengines: Web Logic Programming Made Easy</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">library(term_to_json)</span></a></div>
+</div>
+
+<p><h2 id="sec:pengine-overview"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">An 
+overview of Pengines</span></a></h2>
+
+<p><a id="sec:pengine-overview"></a>
+
+<p>This package provides a powerful high-level programming abstraction 
+implemented on top of SWI-Prolog's thread predicates [1] and its HTTP 
+client and server libraries [2]. The package makes it easy to create and 
+query <i>Prolog engines</i> (or <i>Pengines</i> for short), over HTTP, 
+from an ordinary Prolog thread, from a pengine, or from JavaScript 
+running in a web client. Querying follows Prolog's default 
+one-tuple-at-a-time generation of solutions. I/O is also supported.
+
+<p>Possible applications abound, but in particular three kinds of 
+applications stick out: 1) The package provides us with a useful point 
+of departure for the design and implementation of more advanced 
+Prolog-based agent programming platforms, 2) it suggests an elegant and 
+very straightforward approach to the building of a Semantic Web which is 
+Prolog-based in a very radical sense, and, 3) it constitutes an ideal 
+way to interface Prolog with JavaScript, the programming language most 
+commonly available in web browsers.
+
+<p>A pengine is comprised of:
+
+<p>
+<ul class="latex">
+<li>A Prolog thread
+<li>A dynamic clause database, private to the pengine, into which other 
+processes may assert clauses. These clauses reside in the module <code>pengine_sandbox</code>.
+<li>A message queue for incoming requests
+<li>A message queue for outgoing responses
+</ul>
+
+<p>Everything needed to work with pengines is included in the package, 
+including a JavaScript library for creating and interacting with 
+pengines from a web client. However, the web server (in the file
+<code>examples/server.pl</code>) should only be regarded as a minimal 
+example.
+
+<p>Underlying the design of the package is a careful analysis of the 
+conversations taking place between Prolog and a user (which could be a 
+human or another piece of software). Such conversations follow a 
+communication protocol that we refer to as the Prolog Transport Protocol 
+(PLTP). The protocol has been modelled by means of so called
+<i>communicating finite-state machines</i> [3]. A slight modification of 
+the protocol -- referred to as PLTP(HTTP) -- enables us to synchronize 
+it with HTTP. The diagram below depicts the communicating finite-state 
+machines for PLTP(HTTP) and HTTP. Labels in bold indicate requests, and 
+labels with a slash in front indicate responses.
+
+<p><img src="pltpsynch.png">
+
+<p>The diagram below depicts a PLTP run (on the right) corresponding to 
+a user's interaction with Prolog (on the left).&lsquo;1234' is the 
+Pengine's identifier, which is a UUID in the actual implementation.
+
+<p><img src="pltpruncolour.png">
+
+<p>As for the relations between pengines, and for the time being, we 
+have opted for a simple <i>master-slave architecture</i>. Once the 
+master/slave relationships are established, the direction of control is 
+always from the master to the slaves. One or more pengines can be <i>orchestrated</i> 
+by a common master which can be an ordinary Prolog thread, another 
+pengine, or a JavaScript process. A slave is always a pengine, running 
+either locally or remotely with respect to its master. Subject to a 
+setting, slaves are also dependent on their masters in the sense that if 
+a master terminates, so do its slaves. (Note that in the source code we 
+often use the term <i>parent</i> instead of <i>master</i> and <i>child</i> 
+instead of <i>slave</i>. That is, we treat <i>parent/child</i> as 
+synonymous to <i>master/slave</i>.)
+
+<p><img src="penarch.png">
+
+<p>The transport format is different depending on the nature of the 
+master. If the master is a JavaScript process, it will (by default) 
+formulate its requests using Prolog syntax, and get responses back as 
+Prologs terms encoded in JSON. If the master is a Prolog process (a 
+Prolog thread or a pengine) it will (again only by default) get 
+responses back as Prolog terms.
+
+<p>Most of the pengine predicates are deterministic, yet they can 
+control one or more pengines solving possibly non-deterministic queries. 
+But the package also offers a number of non-deterministic predicates, 
+built on top of the deterministic ones, that can solve queries "the 
+Prolog way", binding query variables in the process, backtracking for 
+more solutions. Of these predicates, <a class="pred" href="#pengine_rpc/3">pengine_rpc/3</a> 
+is the most important. By means of
+<a class="pred" href="#pengine_rpc/3">pengine_rpc/3</a> a pengine 
+running in a pengine server A can call and try to solve a query in the 
+context of another pengine server B, taking advantage of the data being 
+offered by B, just as if the data was local to A. Thus, in theory, a 
+Prolog program, be it a pure Horn clause theory or not, can be as big as 
+the Web. This is something that should make us think about a <i>Semantic 
+Web</i>, especially when we consider the excellent fit between the 
+Pengine library and SWI-Prolog's Semantic Web Library [4]. Adding 
+Pengines functionality to the Cliopatria platform [5] is 
+straightforward.
+
+<p>A note about safety: Because PLTP is layered on top of HTTP, it may 
+utilize any standard HTTP security feature, such as HTTP authentication 
+or SSL. Moreover, subject to a setting, the library uses <span class="pred-ext">safe_goal/1</span> 
+[6], which determines whether it is safe for a slave pengine to try to 
+solve queries asked by a master.
+
+<p><h3 id="sec:pengine-references"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Pengine 
+references</span></a></h3>
+
+<p><a id="sec:pengine-references"></a>
+
+<p>
+<ol class="latex">
+<li><a class="url" href="http://www.swi-prolog.org/pldoc/man?section=threads">http://www.swi-prolog.org/pldoc/man?section=threads</a>
+<li><a class="url" href="http://www.swi-prolog.org/pldoc/package/http.html">http://www.swi-prolog.org/pldoc/package/http.html</a>
+<li>D. Brand and P. Zafiropulo. On communicating finite-state machines.
+<i>Journal of the ACM</i>, 30(2):323-342, 1983.
+<li><a class="url" href="http://www.swi-prolog.org/pldoc/package/semweb.html">http://www.swi-prolog.org/pldoc/package/semweb.html</a>
+<li><a class="url" href="http://cliopatria.swi-prolog.org/home">http://cliopatria.swi-prolog.org/home</a>
+<li><a class="url" href="http://www.swi-prolog.org/pldoc/doc/home/vnc/prolog/lib/swipl/library/sandbox.pl">http://www.swi-prolog.org/pldoc/doc/home/vnc/prolog/lib/swipl/library/sandbox.pl</a>
+</ol>
+
+<p><h3 id="sec:pengine-examples"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Pengine 
+by examples</span></a></h3>
+
+<p><a id="sec:pengine-examples"></a>
+
+<p>In this example we load the pengines library and use <a class="pred" href="#pengine_create/1">pengine_create/1</a> 
+to create a slave pengine in a remote pengine server, and inject a 
+number of clauses in it. We then use <a class="pred" href="#pengine_event_loop/2">pengine_event_loop/2</a> 
+to start an event loop that listens for three kinds of event terms. 
+Running <code>main/0</code> will write the terms <code>q(a)</code>, <code>q(b)</code> 
+and <code>q(c)</code> to standard output. Using
+<a class="pred" href="#pengine_ask/3">pengine_ask/3</a> with the option <code>template(X)</code> 
+would instead produce the output
+<code>a</code>, <code>b</code> and <code>c</code>.
+
+<pre class="code">
+:- use_module(library(pengines)).
+
+main :-
+    pengine_create([
+        server('https://pengines.swi-prolog.org'),
+        src_text("
+            q(X) :- p(X).
+            p(a). p(b). p(c).
+        ")
+    ]),
+    pengine_event_loop(handle, []).
+
+
+handle(create(ID, _)) :-
+    pengine_ask(ID, q(_X), []).
+handle(success(_ID, [X], false)) :-
+    writeln(X).
+handle(success(ID, [X], true)) :-
+    writeln(X),
+    pengine_next(ID, []).
+</pre>
+
+<p>Here is another example, showing how to create and interact with a 
+pengine from JavaScript in a way that seems ideal for Prolog programmers 
+and JavaScript programmers alike. Loading the page brings up the 
+browser's prompt dialog, waits for the user's input, and writes that 
+input in the browser window. If the input was&rsquo;stop', it stops 
+there, else it repeats. Note that I/O works as expected. All we need to 
+do is to use <span class="pred-ext">pengine_input/1</span> instead of <span class="pred-ext">read/1</span> 
+and
+<a class="pred" href="#pengine_output/1">pengine_output/1</a> instead of <span class="pred-ext">write/1</span>.
+
+<p><b>See Also:</b>
+
+<p>
+<ul class="compact">
+<li><a class="url" href="https://pengines.swi-prolog.org/docs/documentation.html">pengines.js 
+documentation</a>
+</ul>
+
+<pre class="code">
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Pengine Example&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+            &lt;h1&gt;Pengine Example&lt;/h1&gt;
+        &lt;div id="out"&gt;&lt;/div&gt;
+
+                &lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"&gt;&lt;/script&gt;
+        &lt;script src="https://pengines.swi-prolog.org/pengine/pengines.js"&gt;&lt;/script&gt;
+
+        &lt;script type="text/x-prolog"&gt;
+
+            main :-
+                repeat,
+                pengine_input(X),
+                pengine_output(X),
+                X == stop.
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            var pengine = new Pengine({
+                oncreate: handleCreate,
+                onprompt: handlePrompt,
+                onoutput: handleOutput
+            });
+            function handleCreate() {
+                pengine.ask('main');
+            }
+            function handlePrompt() {
+                pengine.input(prompt(this.data));
+            }
+            function handleOutput() {
+                $('#out').html(this.data);
+            }
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>Our third example shows that a non-deterministic predicate can be 
+called remotely by means of <a class="pred" href="#pengine_rpc/2">pengine_rpc/2</a>, 
+yet behave exactly as if called locally:
+
+<pre class="code">
+?- use_module(library(pengines)).
+
+?- member(X, [a, b, c, d]),
+   pengine_rpc('https://pengines.swi-prolog.org', p(X), [
+       src_list([p(b), p(c), p(d), p(e)])
+   ]),
+   member(X, [c, d, e, f]).
+X = c ;
+X = d.
+
+?-
+</pre>
+
+<p><h3 id="sec:pengine-server-code"><a id="sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Making 
+predicates available to clients</span></a></h3>
+
+<p><a id="sec:pengine-server-code"></a>
+
+<p>The code sent to a pengine is executed in the context of the module
+<code>pengine_sandbox</code> and the safety of goals is validated using <span class="pred-ext">safe_goal/1</span> 
+prior to execution. Any pengine has access to the safe predicates 
+defined in <code>library(sandbox)</code>. If a server wishes to extend 
+the set of predicates, it must:
+
+<p>
+<ol class="latex">
+<li>Define one or more modules that export the desired additional 
+predicates.
+<li>Makes this code available to the sandbox using the call below, 
+assuming that the additional predicates are defined in the Prolog module 
+file <code>domain_predicates.pl</code>
+
+<pre class="code">
+:- use_module(pengine_sandbox:domain_predicates).
+</pre>
+
+<p>
+<li>Register <b>safe</b> foreign predicates with <code>library(sandbox)</code>, 
+i.e., predicates that do not have side effects such as accessing the 
+file system, load foreign extensions, define other predicates outside 
+the sandbox environment, etc.
+
+<p>Note that the safety of Prolog predicate can typically be proven by <code>library(sandbox)</code>. 
+This may not be the case if untracktable forms of meta-calling are used. 
+In this case it is adviced to avoid such code. If this is not possible, 
+the code must be carefully reviewed by hand and of proven to be safe it 
+may be registered with the sandbox library.
+</ol>
+
+<p>For example, basic RDF access can be granted to pengines using the 
+code below. Please <b>study the sandboxing code carefully before adding 
+declarations</b>.
+
+<pre class="code">
+:- use_module(pengine_sandbox:library(semweb/rdf_db)).
+:- use_module(library(sandbox)).
+
+:- multifile sandbox:safe_primitive/1.
+
+sandbox:safe_primitive(rdf_db:rdf(_,_,_)).
+</pre>
+
+<p><h3 id="sec:prolog-canonical-json"><a id="sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Mapping 
+Prolog terms into JSON</span></a></h3>
+
+<p><a id="sec:prolog-canonical-json"></a>
+
+<p>In Prolog, solutions to queries are given as bindings which map 
+variable names into Prolog terms. A programmer using Pengines in a 
+JavaScript evironment needs to understand how bindings are converted 
+into JSON. For example, the programmer needs to understand that the 
+second solution to
+<code>append(Xs, Ys, [a,b,c])</code> is given by the bindings
+<code>['Xs'=[a],'Ys'=[b,c]]</code> and that these binding can be 
+represented in JSON as <code>{"Xs":["a"], "Ys":["b","c"]}</code>.
+
+<p>Pengines defines the following mapping between ground Prolog terms 
+and JSON.
+
+<p>
+<ul class="latex">
+<li>A Prolog atom is mapped to a JSON string.
+<li>A Prolog number is mapped to a JSON number.
+<li>A Prolog list is mapped to a JSON array.
+<li>The Prolog terms <code>@(true)</code> and <code>@(false)</code> are 
+mapped to the JSON constants <code>true</code> and <code>false</code>, 
+respectively.
+<li>The Prolog term <code>@(null)</code> is mapped to the JSON constant <code>null</code>.
+<li>A Prolog term <code>json(NameValueList)</code>, where <var>NameValueList</var> 
+is a list of <code>Name=Value</code> pairs, is mapped to a JSON object.
+<li>Any other complex Prolog term <var>T</var> is mapped to a JSON 
+object of the form <code>{"functor": F, "args": A}</code> where <var>F</var> 
+is a string representing the functor of <var>T</var> and <var>A</var> is 
+the list of JSON values representing <var>T</var>s arguments.
+</ul>
+
+<p><h3 id="sec:pengine-settings"><a id="sec:1.5"><span class="sec-nr">1.5</span> <span class="sec-title">Pengine 
+settings</span></a></h3>
+
+<p><a id="sec:pengine-settings"></a>
+
+<p>Settings currently recognized by the Pengines library:
+<blockquote>
+<table class="latex frame-box">
+<tr><td><b>Name</b> </td><td><b>Type</b> </td><td><b>Default</b> </td><td><b>Description</b> </td></tr>
+<tr><td>max_session_pengines</td><td>integer</td><td>1</td><td>Maximum 
+number of pengines a client can create. -1 is infinite </td></tr>
+<tr><td>time_limit</td><td>number</td><td>60</td><td>Maximum time 
+between output (in seconds) </td></tr>
+<tr><td>allow_from</td><td><code>list(atom)</code> </td><td>[*]</td><td>Specify 
+allowed IP addresses </td></tr>
+<tr><td>deny_from</td><td><code>list(atom)</code> </td><td><code>[]</code> </td><td>Specify 
+denied IP addresses. Applied after <code>allow_from</code>. </td></tr>
+</table>
+</blockquote>
+
+<p><h2 id="sec:pengine-libs"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">Pengine 
+libraries</span></a></h2>
+
+<p><a id="sec:pengine-libs"></a>
+<h3 id="sec:pengines"><a id="sec:2.1"><span class="sec-nr">2.1</span> <span class="sec-title">library(pengines): 
+Pengines: Web Logic Programming Made Easy</span></a></h3>
+
+<p><a id="sec:pengines"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Torbjörn Lager and Jan Wielemaker
+</dd>
+</dl>
+
+<p>The <code>library(pengines)</code> provides an infrastructure for 
+creating Prolog engines in a (remote) pengine server and accessing these 
+engines either from Prolog or JavaScript.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_create/1"><strong>pengine_create</strong>(<var>:Options</var>)</a></dt>
+<dd class="defbody">
+Creates a new pengine. Valid options are:
+
+<dl class="latex">
+<dt><strong>id</strong>(<var>-ID</var>)</dt>
+<dd class="defbody">
+<var>ID</var> gets instantiated to the id of the created pengine. <var>ID</var> 
+is atomic.
+</dd>
+<dt><strong>alias</strong>(<var>+Name</var>)</dt>
+<dd class="defbody">
+The pengine is named <var>Name</var> (an atom). A slave pengine (child) 
+can subsequently be referred to by this name.
+</dd>
+<dt><strong>application</strong>(<var>+Application</var>)</dt>
+<dd class="defbody">
+<var>Application</var> in which the pengine runs. See <a class="pred" href="#pengine_application/1">pengine_application/1</a>.
+</dd>
+<dt><strong>server</strong>(<var>+URL</var>)</dt>
+<dd class="defbody">
+The pengine will run in (and in the Prolog context of) the pengine 
+server located at <var>URL</var>.
+</dd>
+<dt><strong>src_list</strong>(<var>+List_of_clauses</var>)</dt>
+<dd class="defbody">
+Inject a list of Prolog clauses into the pengine.
+</dd>
+<dt><strong>src_text</strong>(<var>+Atom_or_string</var>)</dt>
+<dd class="defbody">
+Inject the clauses specified by a source text into the pengine.
+</dd>
+<dt><strong>src_url</strong>(<var>+URL</var>)</dt>
+<dd class="defbody">
+Inject the clauses specified in the file located at <var>URL</var> into 
+the pengine.
+</dd>
+<dt><strong>src_predicates</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Send the local predicates denoted by <var>List</var> to the remote 
+pengine.
+<var>List</var> is a list of predicate indicators.
+</dd>
+</dl>
+
+<p>Remaining options are passed to <span class="pred-ext">http_open/3</span> 
+(meaningful only for non-local pengines) and <span class="pred-ext">thread_create/3</span>. 
+Note that for <span class="pred-ext">thread_create/3</span> only options 
+changing the stack-sizes can be used. In particular, do not pass the 
+detached or alias options..
+
+<p>Successful creation of a pengine will return an <i>event term</i> of 
+the following form:
+
+<dl class="latex">
+<dt><strong>create</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that was created.
+<var>Term</var> is not used at the moment.
+</dd>
+</dl>
+
+<p>An error will be returned if the pengine could not be created:
+
+<dl class="latex">
+<dt><strong>error</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is invalid, since no pengine was created.
+<var>Term</var> is the exception's error term.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_ask/3"><strong>pengine_ask</strong>(<var>+NameOrID, 
+@Query, +Options</var>)</a></dt>
+<dd class="defbody">
+Asks pengine <var>NameOrID</var> a query <var>Query</var>.
+
+<p><var>Options</var> is a list of options:
+
+<dl class="latex">
+<dt><strong>template</strong>(<var>+Template</var>)</dt>
+<dd class="defbody">
+<var>Template</var> is a variable (or a term containing variables) 
+shared with the query. By default, the template is identical to the 
+query.
+</dd>
+<dt><strong>chunk</strong>(<var>+Integer</var>)</dt>
+<dd class="defbody">
+Retrieve solutions in chunks of <var>Integer</var> rather than one by 
+one. 1 means no chunking (default). Other integers indicate the maximum 
+number of solutions to retrieve in one chunk.
+</dd>
+<dt><strong>bindings</strong>(<var>+Bindings</var>)</dt>
+<dd class="defbody">
+Sets the global variable&rsquo;$variable_names' to a list of
+<code>Name = Var</code> terms, providing access to the actual variable 
+names.
+</dd>
+</dl>
+
+<p>Any remaining options are passed to <span class="pred-ext">pengine_send/3</span>.
+
+<p>Note that the predicate <a class="pred" href="#pengine_ask/3">pengine_ask/3</a> 
+is deterministic, even for queries that have more than one solution. 
+Also, the variables in <var>Query</var> will not be bound. Instead, 
+results will be returned in the form of <i>event terms</i>.
+
+<dl class="latex">
+<dt><strong>success</strong>(<var>ID, Terms, Projection, Time, More</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that succeeded in solving the 
+query.
+<var>Terms</var> is a list holding instantiations of <var>Template</var>. <var>Projection</var> 
+is a list of variable names that should be displayed. <var>Time</var> is 
+the CPU time used to produce the results and finally, <var>More</var> is 
+either <code>true</code> or <code>false</code>, indicating whether we 
+can expect the pengine to be able to return more solutions or not, would 
+we call
+<a class="pred" href="#pengine_next/2">pengine_next/2</a>.
+</dd>
+<dt><strong>failure</strong>(<var>ID</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that failed for lack of a 
+solutions.
+</dd>
+<dt><strong>error</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine throwing the exception.
+<var>Term</var> is the exception's error term.
+</dd>
+<dt><strong>output</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of a pengine running the query that called
+<a class="pred" href="#pengine_output/1">pengine_output/1</a>. <var>Term</var> 
+is the term that was passed in the first argument of <a class="pred" href="#pengine_output/1">pengine_output/1</a> 
+when it was called.
+</dd>
+<dt><strong>prompt</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that called <a class="pred" href="#pengine_input/2">pengine_input/2</a> 
+and <var>Term</var> is the prompt.
+</dd>
+</dl>
+
+<p>Defined in terms of <span class="pred-ext">pengine_send/3</span>, 
+like so:
+
+<pre class="code">
+pengine_ask(ID, Query, Options) :-
+    partition(pengine_ask_option, Options, AskOptions, SendOptions),
+    pengine_send(ID, ask(Query, AskOptions), SendOptions).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_next/2"><strong>pengine_next</strong>(<var>+NameOrID, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Asks pengine <var>NameOrID</var> for the next solution to a query 
+started by
+<a class="pred" href="#pengine_ask/3">pengine_ask/3</a>. Defined options 
+are:
+
+<dl class="latex">
+<dt><strong>chunk</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Modify the chunk-size to <var>Count</var> before asking the next set of 
+solutions.
+</dd>
+</dl>
+
+<p>Remaining options are passed to <span class="pred-ext">pengine_send/3</span>. 
+The result of re-executing the current goal is returned to the caller's 
+message queue in the form of <i>event terms</i>.
+
+<dl class="latex">
+<dt><strong>success</strong>(<var>ID, Terms, Projection, Time, More</var>)</dt>
+<dd class="defbody">
+See <a class="pred" href="#pengine_ask/3">pengine_ask/3</a>.
+</dd>
+<dt><strong>failure</strong>(<var>ID</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that failed for lack of more 
+solutions.
+</dd>
+<dt><strong>error</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine throwing the exception.
+<var>Term</var> is the exception's error term.
+</dd>
+<dt><strong>output</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of a pengine running the query that called
+<a class="pred" href="#pengine_output/1">pengine_output/1</a>. <var>Term</var> 
+is the term that was passed in the first argument of <a class="pred" href="#pengine_output/1">pengine_output/1</a> 
+when it was called.
+</dd>
+<dt><strong>prompt</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+<var>ID</var> is the id of the pengine that called <a class="pred" href="#pengine_input/2">pengine_input/2</a> 
+and <var>Term</var> is the prompt.
+</dd>
+</dl>
+
+<p>Defined in terms of <span class="pred-ext">pengine_send/3</span>, as 
+follows:
+
+<pre class="code">
+pengine_next(ID, Options) :-
+    pengine_send(ID, next, Options).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_stop/2"><strong>pengine_stop</strong>(<var>+NameOrID, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Tells pengine <var>NameOrID</var> to stop looking for more solutions to 
+a query started by <a class="pred" href="#pengine_ask/3">pengine_ask/3</a>. <var>Options</var> 
+are passed to <span class="pred-ext">pengine_send/3</span>.
+
+<p>Defined in terms of <span class="pred-ext">pengine_send/3</span>, 
+like so:
+
+<pre class="code">
+pengine_stop(ID, Options) :-
+    pengine_send(ID, stop, Options).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_abort/1"><strong>pengine_abort</strong>(<var>+NameOrID</var>)</a></dt>
+<dd class="defbody">
+Aborts the running query. The pengine goes back to state&lsquo;2', 
+waiting for new queries.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#pengine_destroy/1">pengine_destroy/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_destroy/1"><strong>pengine_destroy</strong>(<var>+NameOrID</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_destroy/2"><strong>pengine_destroy</strong>(<var>+NameOrID, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Destroys the pengine <var>NameOrID</var>. With the option <code>force(true)</code>, 
+the pengine is killed using <span class="pred-ext">abort/0</span> and <a class="pred" href="#pengine_destroy/2">pengine_destroy/2</a> 
+succeeds.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_self/1"><strong>pengine_self</strong>(<var>-Id</var>)</a></dt>
+<dd class="defbody">
+True if the current thread is a pengine with <var>Id</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_application/1"><strong>pengine_application</strong>(<var>+Application</var>)</a></dt>
+<dd class="defbody">
+Directive that must be used to declare a pengine application module. The 
+module must not be associated to any file. The default application is
+<code>pengine_sandbox</code>. The example below creates a new 
+application
+<code>address_book</code> and imports the API defined in the module file
+<code>adress_book_api.pl</code> into the application.
+
+<pre class="code">
+:- pengine_application(address_book).
+:- use_module(address_book:adress_book_api).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_pengine_application/1"><strong>current_pengine_application</strong>(<var>?Application</var>)</a></dt>
+<dd class="defbody">
+True when <var>Application</var> is a currently defined application.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#pengine_application/1">pengine_application/1</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="pengine_property/2"><strong>pengine_property</strong>(<var>?Pengine, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of the given <var>Pengine</var>. 
+Enumerates all pengines that are known to the calling Prolog process. 
+Defined properties are:
+
+<dl class="latex">
+<dt><strong>self</strong>(<var>ID</var>)</dt>
+<dd class="defbody">
+Identifier of the pengine. This is the same as the first argument, and 
+can be used to enumerate all known pengines.
+</dd>
+<dt><strong>alias</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+<var>Name</var> is the alias name of the pengine, as provided through 
+the
+<code>alias</code> option when creating the pengine.
+</dd>
+<dt><strong>thread</strong>(<var>Thread</var>)</dt>
+<dd class="defbody">
+If the pengine is a local pengine, <var>Thread</var> is the Prolog 
+thread identifier of the pengine.
+</dd>
+<dt><strong>remote</strong>(<var>Server</var>)</dt>
+<dd class="defbody">
+If the pengine is remote, the URL of the server.
+</dd>
+<dt><strong>application</strong>(<var>Application</var>)</dt>
+<dd class="defbody">
+<var>Pengine</var> runs the given application
+</dd>
+<dt><strong>module</strong>(<var>Module</var>)</dt>
+<dd class="defbody">
+Temporary module used for running the <var>Pengine</var>.
+</dd>
+<dt><strong>destroy</strong>(<var>Destroy</var>)</dt>
+<dd class="defbody">
+<var>Destroy</var> is <code>true</code> if the pengines is destroyed 
+automatically after completing the query.
+</dd>
+<dt><strong>parent</strong>(<var>Queue</var>)</dt>
+<dd class="defbody">
+Message queue to which the (local) pengine reports.
+</dd>
+<dt><strong>source</strong>(<var>?SourceID, ?Source</var>)</dt>
+<dd class="defbody">
+<var>Source</var> is the source code with the given <var>SourceID</var>. 
+May be present if the setting <code>debug_info</code> is present.
+</dd>
+<dt><strong>detached</strong>(<var>?Time</var>)</dt>
+<dd class="defbody">
+<var>Pengine</var> was detached at <var>Time</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_output/1"><strong>pengine_output</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Sends <var>Term</var> to the parent pengine or thread.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_debug/2"><strong>pengine_debug</strong>(<var>+Format, 
++Args</var>)</a></dt>
+<dd class="defbody">
+Create a message using <span class="pred-ext">format/3</span> from <var>Format</var> 
+and <var>Args</var> and send this to the client. The default JavaScript 
+client will call
+<code>console.log(Message)</code> if there is a console. The predicate
+<a class="pred" href="#pengine_rpc/3">pengine_rpc/3</a> calls <code>debug(pengine(debug), '~w', [Message])</code>. 
+The debug topic <code>pengine(debug)</code> is enabled by default.
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <span class="pred-ext">debug/1</span> and <span class="pred-ext">nodebug/1</span> 
+for controlling the <code>pengine(debug)</code> topic <br>
+- <span class="pred-ext">format/2</span> for format specifications
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[det,multifile]</span><a id="thread_pool:create_pool/1"><span class="module">thread_pool</span>:<strong>create_pool</strong>(<var>+Application</var>)</a></dt>
+<dd class="defbody">
+On demand creation of a thread pool for a pengine application.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prepare_module/3"><strong>prepare_module</strong>(<var>+Module, 
++Application, +Options</var>)</a></dt>
+<dd class="defbody">
+Hook, called to initialize the temporary private module that provides 
+the working context of a pengine. This hook is executed by the pengine's 
+thread. Preparing the source consists of three steps:
+
+<p>
+<ol class="latex">
+<li>Add <var>Application</var> as (first) default import module for <var>Module</var>
+<li>Call this hook
+<li>Compile the source provided by the the <code>src_text</code> and
+<code>src_url</code> options
+</ol>
+<table class="arglist">
+<tr><td><var>Module</var> </td><td>is a new temporary module (see
+<span class="pred-ext">in_temporary_module/3</span>) that may be 
+(further) prepared by this hook. </td></tr>
+<tr><td><var>Application</var> </td><td>(also a module) associated to 
+the pengine. </td></tr>
+<tr><td><var>Options</var> </td><td>is passed from the environment and 
+should (currently) be ignored. </td></tr>
+</table>
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prepare_goal/3"><strong>prepare_goal</strong>(<var>+Goal0, 
+-Goal1, +Options</var>)</a></dt>
+<dd class="defbody">
+Pre-preparation hook for running <var>Goal0</var>. The hook runs in the 
+context of the pengine. Goal is the raw goal given to <i>ask</i>. The 
+returned
+<var>Goal1</var> is subject to goal expansion (<span class="pred-ext">expand_goal/2</span>) 
+and sandbox validation (<span class="pred-ext">safe_goal/1</span>) prior 
+to execution. If this goal fails,
+<var>Goal0</var> is used for further processing.
+<table class="arglist">
+<tr><td><var>Options</var> </td><td>provides the options as given to <i>ask</i> </td></tr>
+</table>
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="not_sandboxed/2"><strong>not_sandboxed</strong>(<var>+User, 
++Application</var>)</a></dt>
+<dd class="defbody">
+This hook is called to see whether the Pengine must be executed in a 
+protected environment. It is only called after <a class="pred" href="#authentication_hook/3">authentication_hook/3</a> 
+has confirmed the authentity of the current user. If this hook succeeds, 
+both loading the code and executing the query is executed without 
+enforcing sandbox security. Typically, one should:
+
+<p>
+<ol class="latex">
+<li>Provide a safe user authentication hook.
+<li>Enable HTTPS in the server or put it behind an HTTPS proxy and 
+ensure that the network between the proxy and the pengine server can be 
+trusted.
+</ol>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_pull_response/2"><strong>pengine_pull_response</strong>(<var>+Pengine, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Pulls a response (an event term) from the slave <var>Pengine</var> if <var>Pengine</var> 
+is a remote process, else does nothing at all.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_input/2"><strong>pengine_input</strong>(<var>+Prompt, 
+-Term</var>)</a></dt>
+<dd class="defbody">
+Sends <var>Prompt</var> to the master (parent) pengine and waits for 
+input. Note that <var>Prompt</var> may be any term, compound as well as 
+atomic.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_respond/3"><strong>pengine_respond</strong>(<var>+Pengine, 
++Input, +Options</var>)</a></dt>
+<dd class="defbody">
+Sends a response in the form of the term <var>Input</var> to a slave 
+(child) pengine that has prompted its master (parent) for input.
+
+<p>Defined in terms of <span class="pred-ext">pengine_send/3</span>, as 
+follows:
+
+<pre class="code">
+pengine_respond(Pengine, Input, Options) :-
+    pengine_send(Pengine, input(Input), Options).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pengine_event_loop/2"><strong>pengine_event_loop</strong>(<var>:Closure, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Starts an event loop accepting event terms sent to the current pengine 
+or thread. For each such event E, calls <code>ignore(call(Closure, E))</code>. 
+A closure thus acts as a <i>handler</i> for the event. Some events are 
+also treated specially:
+
+<dl class="latex">
+<dt><strong>create</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+The <var>ID</var> is placed in a list of active pengines.
+</dd>
+<dt><strong>destroy</strong>(<var>ID</var>)</dt>
+<dd class="defbody">
+The <var>ID</var> is removed from the list of active pengines. When the 
+last pengine <var>ID</var> is removed, the loop terminates.
+</dd>
+<dt><strong>output</strong>(<var>ID, Term</var>)</dt>
+<dd class="defbody">
+The predicate <a class="pred" href="#pengine_pull_response/2">pengine_pull_response/2</a> 
+is called.
+</dd>
+</dl>
+
+<p>Valid options are:
+
+<dl class="latex">
+<dt><strong>autoforward</strong>(<var>+To</var>)</dt>
+<dd class="defbody">
+Forwards received event terms to slaves. <var>To</var> is either <code>all</code>,
+<code>all_but_sender</code> or a Prolog list of NameOrIDs. [not yet 
+implemented]
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="pengine_rpc/2"><strong>pengine_rpc</strong>(<var>+URL, 
++Query</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="pengine_rpc/3"><strong>pengine_rpc</strong>(<var>+URL, 
++Query, +Options</var>)</a></dt>
+<dd class="defbody">
+Semantically equivalent to the sequence below, except that the query is 
+executed in (and in the Prolog context of) the pengine server referred 
+to by <var>URL</var>, rather than locally.
+
+<pre class="code">
+  copy_term_nat(Query, Copy),  % attributes are not copied to the server
+  call(Copy),			 % executed on server at URL
+  Query = Copy.
+</pre>
+
+<p>Valid options are:
+
+<dl class="latex">
+<dt><strong>chunk</strong>(<var>+Integer</var>)</dt>
+<dd class="defbody">
+Can be used to reduce the number of network roundtrips being made. See <a class="pred" href="#pengine_ask/3">pengine_ask/3</a>.
+</dd>
+<dt><strong>timeout</strong>(<var>+Time</var>)</dt>
+<dd class="defbody">
+Wait at most <var>Time</var> seconds for the next event from the server. 
+The default is defined by the setting <code>pengines:time_limit</code>.
+</dd>
+</dl>
+
+<p>Remaining options (except the server option) are passed to
+<a class="pred" href="#pengine_create/1">pengine_create/1</a>.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prompt/3"><strong>prompt</strong>(<var>+ID, 
++Prompt, -Term</var>)</a></dt>
+<dd class="defbody">
+Hook to handle <a class="pred" href="#pengine_input/2">pengine_input/2</a> 
+from the remote pengine. If the hooks fails, <a class="pred" href="#pengine_rpc/3">pengine_rpc/3</a> 
+calls <span class="pred-ext">read/1</span> using the current prompt.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="output/2"><strong>output</strong>(<var>+ID, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Hook to handle <a class="pred" href="#pengine_output/1">pengine_output/1</a> 
+from the remote pengine. If the hook fails, it calls <span class="pred-ext">print/1</span> 
+on <var>Term</var>.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="write_result/3"><strong>write_result</strong>(<var>+Lang, 
++Event, +Dict</var>)</a></dt>
+<dd class="defbody">
+Hook that allows for different output formats. The core Pengines library 
+supports <code>prolog</code> and various JSON dialects. The hook
+<a class="pred" href="#event_to_json/3">event_to_json/3</a> can be used 
+to refine the JSON dialects. This hook must be used if a completely 
+different output format is desired.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="event_to_json/3"><strong>event_to_json</strong>(<var>+Event, 
+-JSONTerm, +Lang</var>)</a></dt>
+<dd class="defbody">
+Hook that translates a Pengine event structure into a term suitable for <span class="pred-ext">reply_json/1</span>, 
+according to the language specification <var>Lang</var>. This can be 
+used to massage general Prolog terms, notably associated with
+<code>success(ID, Bindings, Projection, Time, More)</code> and <code>output(ID, Term)</code> 
+into a format suitable for processing at the client side.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="authentication_hook/3"><strong>authentication_hook</strong>(<var>+Request, 
++Application, -User</var>)</a></dt>
+<dd class="defbody">
+This hook is called from the =/pengine/create= HTTP handler to discover 
+whether the server is accessed by an authorized user. It can react in 
+three ways:
+
+<p>
+<ul class="latex">
+<li>Succeed, binding <var>User</var> to a ground term. The authentity of 
+the user is available through <a class="pred" href="#pengine_user/1">pengine_user/1</a>.
+<li>Fail. The =/create= succeeds, but the pengine is not associated with 
+a user.
+<li>Throw an exception to prevent creation of the pengine. Two 
+meaningful exceptions are:
+
+<p>
+<ul class="compact">
+<li><code>throw(http_reply(authorise(basic(Realm))))</code> Start a 
+normal HTTP login challenge (reply 401)
+<li><code>throw(http_reply(forbidden(Path)))</code>) Reject the request 
+using a 403 repply.
+</ul>
+</ul>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<span class="pred-ext">http_authenticate/3</span> can be used to 
+implement this hook using default HTTP authentication data.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="pengine_user/1"><strong>pengine_user</strong>(<var>-User</var>)</a></dt>
+<dd class="defbody">
+True when the pengine was create by an HTTP request that authorized
+<var>User</var>.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="#authentication_hook/3">authentication_hook/3</a> 
+can be used to extract authorization from the HTTP header.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:termtojson"><a id="sec:2.2"><span class="sec-nr">2.2</span> <span class="sec-title">library(term_to_json)</span></a></h3>
+
+<p><a id="sec:termtojson"></a>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="term_to_json/3"><strong>term_to_json</strong>(<var>+Term, 
++Bindings, -JsonTerm</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="term_to_json/2"><strong>term_to_json</strong>(<var>+Term, 
+-JsonTerm</var>)</a></dt>
+<dd class="defbody">
+Convert any general Prolog term into a JSON term. Prolog lists are 
+treated in a special way. Also, JSON terms are not converted. Mapping:
+
+<p>
+<ul class="latex">
+<li>Variable: <code>{"type":"var", "name":&lt;string&gt;}</code>
+<li>Atom: <code>{"type":"atom", "value":&lt;string&gt;}</code>
+<li>Integer: <code>{"type":"integer", "value":&lt;integer&gt;}</code>
+<li>Float: <code>{"type":"float", "value":&lt;float&gt;}</code>
+<li>List: JSON array
+<li>Dict: a JSON object. Values are processed recursively. (the tag is 
+ignored)
+<li><code>json([Key=Value, ...])</code>: a JSON object Values are 
+processed recursively.
+<li>compound: <code>{"type":"compound", "functor":&lt;string&gt;, "args":&lt;array&gt;}</code>
+</ul>
+<table class="arglist">
+<tr><td><var>Bindings</var> </td><td>is a list of Name=Var terms for 
+variables that get their name from the environment. </td></tr>
+</table>
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#authentication_hook/3">authentication_hook/3</a></dt>
+<dt><a class="idx" href="#current_pengine_application/1">current_pengine_application/1</a></dt>
+<dt><a class="idx" href="#event_to_json/3">event_to_json/3</a></dt>
+<dt><a class="idx" href="#not_sandboxed/2">not_sandboxed/2</a></dt>
+<dt><a class="idx" href="#output/2">output/2</a></dt>
+<dt><a class="idx" href="#pengine_abort/1">pengine_abort/1</a></dt>
+<dt><a class="idx" href="#pengine_application/1">pengine_application/1</a></dt>
+<dt><a class="idx" href="#pengine_ask/3">pengine_ask/3</a></dt>
+<dt><a class="idx" href="#pengine_create/1">pengine_create/1</a></dt>
+<dt><a class="idx" href="#pengine_debug/2">pengine_debug/2</a></dt>
+<dt><a class="idx" href="#pengine_destroy/1">pengine_destroy/1</a></dt>
+<dt><a class="idx" href="#pengine_destroy/2">pengine_destroy/2</a></dt>
+<dt><a class="idx" href="#pengine_event_loop/2">pengine_event_loop/2</a></dt>
+<dt><a class="idx" href="#pengine_input/2">pengine_input/2</a></dt>
+<dt><a class="idx" href="#pengine_next/2">pengine_next/2</a></dt>
+<dt><a class="idx" href="#pengine_output/1">pengine_output/1</a></dt>
+<dt><a class="idx" href="#pengine_property/2">pengine_property/2</a></dt>
+<dt><a class="idx" href="#pengine_pull_response/2">pengine_pull_response/2</a></dt>
+<dt><a class="idx" href="#pengine_respond/3">pengine_respond/3</a></dt>
+<dt><a class="idx" href="#pengine_rpc/2">pengine_rpc/2</a></dt>
+<dt><a class="idx" href="#pengine_rpc/3">pengine_rpc/3</a></dt>
+<dt><a class="idx" href="#pengine_self/1">pengine_self/1</a></dt>
+<dt><a class="idx" href="#pengine_stop/2">pengine_stop/2</a></dt>
+<dt><a class="idx" href="#pengine_user/1">pengine_user/1</a></dt>
+<dt><a class="idx" href="#prepare_goal/3">prepare_goal/3</a></dt>
+<dt><a class="idx" href="#prepare_module/3">prepare_module/3</a></dt>
+<dt><a class="idx" href="#prompt/3">prompt/3</a></dt>
+<dt><a class="idx" href="#term_to_json/2">term_to_json/2</a></dt>
+<dt><a class="idx" href="#term_to_json/3">term_to_json/3</a></dt>
+<dt><a class="idx" href="#thread_pool:create_pool/1">thread_pool:create_pool/1</a></dt>
+<dt><a class="idx" href="#write_result/3">write_result/3</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

@@ -1,0 +1,8 @@
+In dialogue processing applications where words like ``I'' and ``me''
+are used, it can be important to know the identity of the speaker; for
+example, in the Calendar application, one could say ``When is my next
+meeting?'' or ``Am I attending a meeting on Friday?''  The {\tt
+DIALOGUE\_\-SPEAKER} command makes it possible to print the identity
+of the notional speaker from the command-line.  The notional speaker
+can also be retrieved using the predicate {\tt
+get\_\-notional\_\-speaker/1} in {\tt PrologLib/utilities.pl}.

@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# See README.txt for documentation
+
+mode=court
+output=normal
+
+if [ "$1" = "--stable" ]; then
+	mode=stable
+	shift
+fi
+
+if [ "$1" = "-s" ]; then
+	mode=stable
+	shift
+fi
+
+if [ "$1" = "--stable-strong" ]; then
+	mode=stable_strong
+	shift
+fi
+
+if [ "$1" = "-g" ]; then
+	mode=stable_strong
+	shift
+fi
+
+if [ "$1" = "--court" ]; then
+	mode=court
+	shift
+fi
+
+if [ "$1" = "-c" ]; then
+	mode=court
+	shift
+fi
+
+if [ "$1" = "--normal" ]; then
+	output=normal
+	shift
+fi
+
+if [ "$1" = "-n" ]; then
+	output=normal
+	shift
+fi
+
+if [ "$1" = "--debug" ]; then
+	output=debug
+	shift
+fi
+
+if [ "$1" = "-d" ]; then
+	output=debug
+	shift
+fi
+
+if [ "$1" = "--trace" ]; then
+	output=trace
+	shift
+fi
+
+if [ "$1" = "-t" ]; then
+	output=trace
+	shift
+fi
+
+if [ "$1" = "--ace-trace" ]; then
+	output=ace_trace
+	shift
+fi
+
+if [ "$1" = "-a" ]; then
+	output=ace_trace
+	shift
+fi
+
+if [ "$2" = "" ]; then
+	swipl -g "consult(run_acerules), run('$1', pipe(cat), $mode, $output), halt."
+	exit
+fi
+
+swipl -g "consult(run_acerules), run('$1', '$2', $mode, $output), halt."

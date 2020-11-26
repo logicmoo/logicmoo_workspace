@@ -1,0 +1,9 @@
+
+% Add these values to general list
+feature_value_space(sem_np_type_value, [[event]]).
+
+@simple_n(réunions, [event, réunion], event, 3/\pl/\fem, no).
+
+% quelles sont les réunions...
+@verb([êtes, est, sont, été, été, été, été, être,  étant], [state, être], 
+      [subcat=être, subj_sem_np_type=wh, obj_sem_np_type=event, aux_verb=avoir]).

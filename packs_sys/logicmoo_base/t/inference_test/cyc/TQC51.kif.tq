@@ -1,0 +1,13 @@
+(note TQC51)
+
+(queryyn 
+  (implies 
+    (and 
+      (instance ?ACTION FoundingAnOrganization) 
+      (instance ?ORG Coalition-International) 
+      (negativeVestedInterest ?ORG Iran) 
+      (outputsCreated ?ACTION ?ORG)) 
+    (consistent 
+      (agent ?ACTION SaudiArabia))))
+
+(answer Yes)  

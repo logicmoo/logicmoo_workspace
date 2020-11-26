@@ -1,0 +1,13 @@
+#include "../Generated/japanese_pcfg_trained/japanese_recogniser.grammar"
+
+#include "../SLM/japanese_generated_tagging.grammar"
+
+.MAIN_SLM SLMRule
+
+SLMRule:slm "../SLM/japanese_slm.pfsg" = DummyInterpretationGrammar
+
+DummyInterpretationGrammar
+        [ dummy ]
+
+UNK [ @reject@ ]
+

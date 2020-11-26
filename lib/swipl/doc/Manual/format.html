@@ -1,0 +1,647 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.32</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="forall2.html">
+<link rel="next" href="gvar.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="forall2.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="gvar.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:format"><a id="sec:4.32"><span class="sec-nr">4.32</span> <span class="sec-title">Formatted 
+Write</span></a></h2>
+
+<a id="sec:format"></a>
+
+<p>The current version of SWI-Prolog provides two formatted write 
+predicates. The&lsquo;writef' family (<a id="idx:writef1:1581"></a><a class="pred" href="format.html#writef/1">writef/1</a>, <a id="idx:writef2:1582"></a><a class="pred" href="format.html#writef/2">writef/2</a>, <a id="idx:swritef3:1583"></a><a class="pred" href="format.html#swritef/3">swritef/3</a>), 
+is compatible with Edinburgh C-Prolog and should be considered
+<em>deprecated</em>. The&lsquo;format' family (<a id="idx:format1:1584"></a><a class="pred" href="format.html#format/1">format/1</a>, <a id="idx:format2:1585"></a><a class="pred" href="format.html#format/2">format/2</a>, <a id="idx:format3:1586"></a><a class="pred" href="format.html#format/3">format/3</a>), 
+was defined by Quintus Prolog and currently available in many Prolog 
+systems, although the details vary.
+
+<p><h3 id="sec:writef"><a id="sec:4.32.1"><span class="sec-nr">4.32.1</span> <span class="sec-title">Writef</span></a></h3>
+
+<a id="sec:writef"></a>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="writef/1"><strong>writef</strong>(<var>+Atom</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>writef(Atom, []).</code> See <a id="idx:writef2:1587"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+for details.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="writef/2"><strong>writef</strong>(<var>+Format, 
++Arguments</var>)</a></dt>
+<dd class="defbody">
+Formatted write. <var>Format</var> is an atom whose characters will be 
+printed.
+<var>Format</var> may contain certain special character sequences which 
+specify certain formatting and substitution actions. <var>Arguments</var> 
+provides all the terms required to be output.
+
+<p>Escape sequences to generate a single special character:
+
+<p><table class="latex frame-box center">
+<tr><td><code>\n</code> </td><td>Output a newline character (see also <a id="idx:nl01:1588"></a><a class="pred" href="chario.html#nl/0">nl/[0,1]</a>) </td></tr>
+<tr><td><code>\l</code> </td><td>Output a line separator (same as <code>\n</code>) </td></tr>
+<tr><td><code>\r</code> </td><td>Output a carriage return character 
+(ASCII 13) </td></tr>
+<tr><td><code>\t</code> </td><td>Output the ASCII character TAB (9) </td></tr>
+<tr><td><code>\\</code> </td><td>The character <code><code>\</code></code> 
+is output </td></tr>
+<tr><td><code>\%</code> </td><td>The character <code><code>%</code></code> 
+is output </td></tr>
+<tr><td><code>\nnn</code> </td><td>where &lt;<var>nnn</var>&gt; is an 
+integer (1-3 digits); the character with code &lt;<var>nnn</var>&gt; is 
+output (NB : &lt;<var>nnn</var>&gt; is read as <strong>decimal</strong>) </td></tr>
+</table>
+
+<p>Note that <code>\l</code>, <code>\nnn</code> and <code>\\</code> are 
+interpreted differently when character escapes are in effect. See
+<a class="sec" href="syntax.html#sec:2.16.1.3">section 2.16.1.3</a>.
+
+<p>Escape sequences to include arguments from <var>Arguments</var>. Each 
+time a
+% escape sequence is found in <var>Format</var> the next argument from <var>Arguments</var> 
+is formatted according to the specification.
+
+<p><table class="latex frame-box center">
+<tr><td><code>%t</code> </td><td><a id="idx:print1:1589"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+the next item (mnemonic: term) </td></tr>
+<tr><td><code>%w</code> </td><td><a id="idx:write1:1590"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+the next item </td></tr>
+<tr><td><code>%q</code> </td><td><a id="idx:writeq1:1591"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a> 
+the next item </td></tr>
+<tr><td><code>%d</code> </td><td>Write the term, ignoring operators. See 
+also
+<a id="idx:writeterm2:1592"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+Mnemonic: old Edinburgh <a id="idx:display1:1593"></a><span class="pred-ext">display/1</span> </td></tr>
+<tr><td><code>%p</code> </td><td><a id="idx:print1:1594"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+the next item (identical to <code>%t</code>) </td></tr>
+<tr><td><code>%n</code> </td><td>Put the next item as a character (i.e., 
+it is a character code) </td></tr>
+<tr><td><code>%r</code> </td><td>Write the next item N times where N is 
+the second item (an integer) </td></tr>
+<tr><td><code>%s</code> </td><td>Write the next item as a String (so it 
+must be a list of characters) </td></tr>
+<tr><td><code>%f</code> </td><td>Perform a <a id="idx:ttyflush0:1595"></a><a class="pred" href="chario.html#ttyflush/0">ttyflush/0</a> 
+(no items used) </td></tr>
+<tr><td><code>%Nc</code> </td><td>Write the next item Centered in <var>N</var> 
+columns </td></tr>
+<tr><td><code>%Nl</code> </td><td>Write the next item Left justified in <var>N</var> 
+columns </td></tr>
+<tr><td><code>%Nr</code> </td><td>Write the next item Right justified in <var>N</var> 
+columns.
+<var>N</var> is a decimal number with at least one digit. The item must 
+be an atom, integer, float or string. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="swritef/3"><strong>swritef</strong>(<var>-String, 
++Format, +Arguments</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <a id="idx:writef2:1596"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+but &ldquo;writes'' the result on <var>String</var> instead of the 
+current output stream. Example:
+
+<pre class="code">
+?- swritef(S, '%15L%w', ['Hello', 'World']).
+
+S = "Hello          World"
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="swritef/2"><strong>swritef</strong>(<var>-String, 
++Format</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>swritef(String, Format, []).</code>
+</dd>
+</dl>
+
+<p><h3 id="sec:format-predicates"><a id="sec:4.32.2"><span class="sec-nr">4.32.2</span> <span class="sec-title">Format</span></a></h3>
+
+<a id="sec:format-predicates"></a>
+
+<p>The format family of predicates is the most versatile and portable<sup class="fn">132<span class="fn-text">Unfortunately 
+not covered by any standard.</span></sup> way to produce textual output.
+
+<dl class="latex">
+<dt class="pubdef"><a id="format/1"><strong>format</strong>(<var>+Format</var>)</a></dt>
+<dd class="defbody">
+Defined as&lsquo;<code>format(Format) :- format(Format, []).</code>&rsquo;. 
+See
+<a id="idx:format2:1597"></a><a class="pred" href="format.html#format/2">format/2</a> 
+for details.</dd>
+<dt class="pubdef"><a id="format/2"><strong>format</strong>(<var>+Format, 
+:Arguments</var>)</a></dt>
+<dd class="defbody">
+<var>Format</var> is an atom, list of character codes, or a Prolog 
+string.
+<var>Arguments</var> provides the arguments required by the format 
+specification. If only one argument is required and this single argument 
+is not a list, the argument need not be put in a list. Otherwise the 
+arguments are put in a list.
+
+<p>Special sequences start with the tilde (<code><code>~</code></code>), 
+followed by an optional numeric argument, optionally followed by a colon 
+modifier (:),
+<sup class="fn">133<span class="fn-text">The colon modifiers is a 
+SWI-Prolog extension, proposed by Richard O'Keefe.</span></sup> followed 
+by a character describing the action to be undertaken. A numeric 
+argument is either a sequence of digits, representing a positive decimal 
+number, a sequence <code>&lsquo;&lt;<var>character</var>&gt;</code>, 
+representing the character code value of the character (only useful for
+<code>~t</code>) or a asterisk (<code><code>*</code></code>), in which 
+case the numeric argument is taken from the next argument of the 
+argument list, which should be a positive integer. E.g., the following 
+three examples all pass 46 (<code><code>.</code></code>) to <code>~t</code>:
+
+<pre class="code">
+?- format('~w ~46t ~w~72|~n', ['Title', 'Page']).
+?- format('~w ~`.t ~w~72|~n', ['Title', 'Page']).
+?- format('~w ~*t ~w~72|~n', ['Title', 46, 'Page']).
+</pre>
+
+<p>Numeric conversion (<code>d</code>, <code>D</code>, <code>e</code>, <code>E</code>, <code>f</code>, <code>g</code> 
+and <code>G</code>) accept an arithmetic expression as argument. This is 
+introduced to handle rational numbers transparently (see
+<a class="sec" href="arith.html#sec:4.27.2.2">section 4.27.2.2</a>). The 
+floating point conversions allow for unlimited precision for printing 
+rational numbers in decimal form. E.g., the following will write as many 
+3's as you want by changing the&lsquo;50'.
+
+<pre class="code">
+?- format('~50f', [10 rdiv 3]).
+3.33333333333333333333333333333333333333333333333333
+</pre>
+
+<p>
+<ul class="latex">
+<li><code><code>~</code></code><br>
+Output the tilde itself.
+
+<p>
+<li><code>a</code><br>
+Output the next argument, which must be an atom. This option is 
+equivalent to <b>w</b>, except that it requires the argument to be an 
+atom.
+
+<p>
+<li><code>c</code><br>
+Interpret the next argument as a character code and add it to the 
+output. This argument must be a valid Unicode character code. Note that 
+the actually emitted bytes are defined by the character encoding of the 
+output stream and an exception may be raised if the output stream is not 
+capable of representing the requested Unicode character. See
+<a class="sec" href="widechars.html#sec:2.19.1">section 2.19.1</a> for 
+details.
+
+<p>
+<li><code>d</code><br>
+Output next argument as a decimal number. It should be an integer. If a 
+numeric argument is specified, a dot is inserted <var>argument</var> 
+positions from the right (useful for doing fixed point arithmetic with 
+integers, such as handling amounts of money).
+
+<p>The colon modifier (e.g., <code>~:d</code>) causes the number to be 
+printed according to the locale of the output stream. See <a class="sec" href="locale.html#sec:4.23">section 
+4.23</a>.
+
+<p>
+<li><code>D</code><br>
+Same as <b>d</b>, but makes large values easier to read by inserting a 
+comma every three digits left or right of the dot. This is the same as <code>~:d</code>, 
+but using the fixed English locale.
+
+<p>
+<li><code>e</code><br>
+Output next argument as a floating point number in exponential notation. 
+The numeric argument specifies the precision. Default is 6 digits. Exact 
+representation depends on the C library function printf(). This function 
+is invoked with the format
+<code>%.&lt;<var>precision</var>&gt;e</code>.
+
+<p>
+<li><code>E</code><br>
+Equivalent to <b>e</b>, but outputs a capital E to indicate the 
+exponent.
+
+<p>
+<li><code>f</code><br>
+Floating point in non-exponential notation. The numeric argument defines 
+the number of digits right of the decimal point. If the colon modifier 
+(:) is used, the float is formatted using conventions from the current 
+locale, which may define the decimal point as well as grouping of digits 
+left of the decimal point.
+
+<p>
+<li><code>g</code><br>
+Floating point in <b>e</b> or <b>f</b> notation, whichever is shorter.
+
+<p>
+<li><code>G</code><br>
+Floating point in <b>E</b> or <b>f</b> notation, whichever is shorter.
+
+<p>
+<li><code>i</code><br>
+Ignore next argument of the argument list. Produces no output.
+
+<p>
+<li><code>I</code><br>
+Emit a decimal number using Prolog digit grouping (the underscore,
+<code>_</code>). The argument describes the size of each digit group. 
+The default is 3. See also <a class="sec" href="syntax.html#sec:2.16.1.5">section 
+2.16.1.5</a>. For example:
+
+<pre class="code">
+?- A is 1&lt;&lt;100, format('~10I', [A]).
+1_2676506002_2822940149_6703205376
+</pre>
+
+<p>
+<li><code>k</code><br>
+Give the next argument to <a id="idx:writecanonical1:1598"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>.
+<li><code>n</code><br>
+Output a newline character.
+<li><code>N</code><br>
+Only output a newline if the last character output on this stream was 
+not a newline. Not properly implemented yet.
+<li><code>p</code><br>
+Give the next argument to <a id="idx:print1:1599"></a><a class="pred" href="termrw.html#print/1">print/1</a>.
+<li><code>q</code><br>
+Give the next argument to <a id="idx:writeq1:1600"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a>.
+
+<p>
+<li><code>r</code><br>
+Print integer in radix numeric argument notation. Thus
+<code>~16r</code> prints its argument hexadecimal. The argument should 
+be in the range <var>[2, ... , 36]</var>. Lowercase letters are used for 
+digits above 9. The colon modifier may be used to form locale-specific 
+digit groups.
+
+<p>
+<li><code>R</code><br>
+Same as <b>r</b>, but uses uppercase letters for digits above 9.
+<li><code>s</code><br>
+Output text from a list of character codes or a string (see <a id="idx:string1:1601"></a><a class="pred" href="typetest.html#string/1">string/1</a> 
+and
+<a class="sec" href="string.html#sec:5.2">section 5.2</a>) from the next 
+argument.<sup class="fn">134<span class="fn-text">The <b>s</b> modifier 
+also accepts an atom for compatibility. This is deprecated due to the 
+ambiguity of <code><code>[]</code></code>.</span></sup>
+<li><code>@</code><br>
+Interpret the next argument as a goal and execute it. Output written to 
+the <code>current_output</code> stream is inserted at this place. Goal 
+is called in the module calling <a id="idx:format3:1602"></a><a class="pred" href="format.html#format/3">format/3</a>. 
+This option is not present in the original definition by Quintus, but 
+supported by some other Prolog systems.
+<li><code>t</code><br>
+All remaining space between 2 tab stops is distributed equally over
+<code>~t</code> statements between the tab stops. This space is padded 
+with spaces by default. If an argument is supplied, it is taken to be 
+the character code of the character used for padding. This can be used 
+to do left or right alignment, centering, distributing, etc. See also <code>~|</code> 
+and <code>~+</code> to set tab stops. A tab stop is assumed at the start 
+of each line.
+<li><code><code>|</code></code><br>
+Set a tab stop on the current position. If an argument is supplied set a 
+tab stop on the position of that argument. This will cause all
+<code>~t</code>&rsquo;s to be distributed between the previous and this 
+tab stop.
+
+<p>
+<li><code><code>+</code></code><br>
+Set a tab stop (as <code>~|</code>) relative to the last tab stop or the 
+beginning of the line if no tab stops are set before the <code>~+</code>. 
+This constructs can be used to fill fields. The partial format sequence 
+below prints an integer right-aligned and padded with zeros in 6 
+columns. The ... sequences in the example illustrate that the integer is 
+aligned in 6 columns regardless of the remainder of the format 
+specification.
+
+<pre class="code">
+        format('...~|~`0t~d~6+...', [..., Integer, ...])
+</pre>
+
+<p>
+<li><code>w</code><br>
+Give the next argument to <a id="idx:write1:1603"></a><a class="pred" href="termrw.html#write/1">write/1</a>.
+<li><code>W</code><br>
+Give the next two arguments to <a id="idx:writeterm2:1604"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+For example,
+<code>format('~W', [Term, [numbervars(true)]])</code>. This option is 
+SWI-Prolog specific.
+</ul>
+
+<p>Example:
+
+<pre class="code">
+simple_statistics :-
+    &lt;obtain statistics&gt;         % left to the user
+    format('~tStatistics~t~72|~n~n'),
+    format('Runtime: ~`.t ~2f~34|  Inferences: ~`.t ~D~72|~n',
+                                            [RunT, Inf]),
+    ....
+</pre>
+
+<p>will output
+
+<pre class="code">
+                             Statistics
+
+Runtime: .................. 3.45  Inferences: .......... 60,345
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="format/3"><strong>format</strong>(<var>+Output, 
++Format, :Arguments</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:format2:1605"></a><a class="pred" href="format.html#format/2">format/2</a>, 
+but write the output on the given <var>Output</var>. The de-facto 
+standard only allows <var>Output</var> to be a stream. The SWI-Prolog 
+implementation allows all valid arguments for
+<a id="idx:withoutputto2:1606"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.<sup class="fn">135<span class="fn-text">Earlier 
+versions defined sformat/3 . These predicates have been moved to the 
+library <code>library(backcomp)</code>.</span></sup> For example:
+
+<pre class="code">
+?- format(atom(A), '~D', [1000000]).
+A = '1,000,000'
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:format-hook"><a id="sec:4.32.3"><span class="sec-nr">4.32.3</span> <span class="sec-title">Programming 
+Format</span></a></h3>
+
+<a id="sec:format-hook"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="format_predicate/2"><strong>format_predicate</strong>(<var>+Char, 
++Head</var>)</a></dt>
+<dd class="defbody">
+If a sequence <code>~c</code> (tilde, followed by some character) is 
+found, the <a id="idx:format3:1607"></a><a class="pred" href="format.html#format/3">format/3</a> 
+and friends first check whether the user has defined a predicate to 
+handle the format. If not, the built-in formatting rules described above 
+are used. <var>Char</var> is either a character code or a one-character 
+atom, specifying the letter to be (re)defined. <var>Head</var> is a 
+term, whose name and arity are used to determine the predicate to call 
+for the redefined formatting character. The first argument to the 
+predicate is the numeric argument of the format command, or the atom <code>default</code> 
+if no argument is specified. The remaining arguments are filled from the 
+argument list. The example below defines <code>~T</code> to print a 
+timestamp in ISO8601 format (see
+<a id="idx:formattime3:1608"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>). 
+The subsequent block illustrates a possible call.
+
+<pre class="code">
+:- format_predicate('T', format_time(_Arg,_Time)).
+
+format_time(_Arg, Stamp) :-
+        must_be(number, Stamp),
+        format_time(current_output, '%FT%T%z', Stamp).
+</pre>
+
+<pre class="code">
+?- get_time(Now),
+   format('Now, it is ~T~n', [Now]).
+Now, it is 2012-06-04T19:02:01+0200
+Now = 1338829321.6620328.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="current_format_predicate/2"><strong>current_format_predicate</strong>(<var>?Code, 
+?:Head</var>)</a></dt>
+<dd class="defbody">
+True when <code><code>~</code></code><var>Code</var> is handled by the 
+user-defined predicate specified by <var>Head</var>.
+</dd>
+</dl>
+
+<p></body></html>

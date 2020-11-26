@@ -1,0 +1,74 @@
+(note TQF202a)
+
+(fromLocation Y2Stage3-AnthraxTransportedToIran Russia) 
+(toLocation Y2Stage3-AnthraxTransportedToIran Iran) 
+(doneBy Y2Stage5-RussiaSharesIntelligenceWithUS RussianFederalSecurityBureau) 
+(instance Y2Stage5-RussiaSharesIntelligenceWithUS RevealingTrueInformation) 
+
+(implies 
+  (and 
+    (instance ?R ActorSlot) 
+    (?R ?SO ?X)) 
+  (playsRole ?SO ?X ?R)) 
+
+(implies 
+  (and 
+    (instance ?SIT ?ST) 
+    (playsRole ?SIT ?X ?R)) 
+  (behaviorCapable ?X ?ST ?R)) 
+
+(nearestIsa Y2Stage5-RussiaSharesIntelligenceWithUS RevealingTrueInformation) 
+(instance Y2Stage2-RussianMafiyaCell HPKB-ScenarioAgent) 
+(senderOfInfo Y2Stage5-RussiaSharesIntelligenceWithUS RussianFederalSecurityBureau) 
+
+(subOrganizations 
+ (GovernmentFn Russia) RussianFederalSecurityBureau) 
+
+(instance Y2Stage2-RussianMafiyaCell HPKB-ScenarioAgent) 
+
+(implies 
+  (instance ?RUS-FED-GOV-ORG RussianFederalGovernmentOrganization) 
+  (subOrganizations 
+   (GovernmentFn Russia) ?RUS-FED-GOV-ORG)) 
+
+(instance RussianFederalSecurityBureau RussianFederalGovernmentOrganization) 
+(inReactionTo Y2Stage5-RussiaSharesIntelligenceWithUS Y2Stage3-AnthraxTransportedToIran) 
+(driverActor Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownAzeriCourier) 
+(instance Y2Stage3-UnknownAzeriCourier HPKB-ScenarioAgent) 
+(transportees Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownQuantityOfAnthrax) 
+(instance Y2Stage3-UnknownQuantityOfAnthrax Anthrax-Bacterium) 
+
+(instance Y2Stage3-AnthraxTransportedToIran 
+ (SmugglingFn Anthrax-Bacterium)) 
+
+(query (findall ?IN-AN-ACTION-OF-THIS-TYPE ?RUSSIA-MIGHT-PLAY-THIS-ROLE)
+(or 
+       (thereExists ?INTRNATL-AGENT 
+           (thereExists ?SMUGGLE 
+               (thereExists ?ANTHRAX 
+                   (thereExists ?RUSSIAN-ORG 
+                       (thereExists ?INSTANCE-OF-TYPE 
+                           (and 
+                               (instance ?ANTHRAX Anthrax-Bacterium) 
+                               (instance ?INTRNATL-AGENT HPKB-ScenarioAgent) 
+                               (instance ?SMUGGLE 
+                                   (SmugglingFn Anthrax-Bacterium)) 
+                               (subOrganizations 
+                                   (GovernmentFn Russia) ?RUSSIAN-ORG) 
+                               (toLocation ?SMUGGLE Iran) 
+                               (fromLocation ?SMUGGLE Russia) 
+                               (transportees ?SMUGGLE ?ANTHRAX) 
+                               (doneBy ?INSTANCE-OF-TYPE ?RUSSIAN-ORG) 
+                               (nearestIsa ?INSTANCE-OF-TYPE ?IN-AN-ACTION-OF-THIS-TYPE) 
+                               (or 
+                                   (inReactionTo ?INSTANCE-OF-TYPE ?SMUGGLE) 
+                                   (reasonForAction ?INSTANCE-OF-TYPE knowsAbout ?RUSSIAN-ORG ?SMUGGLE)) 
+                               (behaviorCapable ?RUSSIAN-ORG ?IN-AN-ACTION-OF-THIS-TYPE ?RUSSIA-MIGHT-PLAY-THIS-ROLE))))))) 
+       (optionAvailableToAgent Russia ?WHAT agent) 
+       (optionAvailableToAgent Russia ?WHAT directingAgent)))
+
+(answer RevealingTrueInformation senderOfInfo)
+
+(end_of_file)
+
+

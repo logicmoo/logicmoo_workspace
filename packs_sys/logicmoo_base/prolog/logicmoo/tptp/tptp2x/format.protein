@@ -1,0 +1,200 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format compatible to 
+%----PROTEIN, the PROver with ThEorie INterface by K.Erk and 
+%----P.Baumgartner.
+%----It is mostly the same as mgtp, but with some slight modifications.
+%----
+%----Written by Olaf Menkens, July, 1994. 
+%----(Adapted from format.mgtp by Geoff Sutcliffe)
+%====================================================================
+%------------------------------------------------------------------------------
+%----Output variables
+protein_output_variable(Variable):-
+    write(Variable).
+%------------------------------------------------------------------------------
+protein_output_atom_list_by_hand([One]):-
+    !,
+    protein_output_atom_by_hand(One).
+
+protein_output_atom_list_by_hand([One,Two|Rest]):-
+    protein_output_atom_by_hand(One),
+    write(','),
+    protein_output_atom_list_by_hand([Two|Rest]).
+%------------------------------------------------------------------------------
+protein_output_atom_by_hand(Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    protein_output_variable(Variable).
+    
+protein_output_atom_by_hand(Integer):-
+    integer(Integer),
+    !,
+    write('protein_integer_'),
+    write(Integer).
+
+protein_output_atom_by_hand('$true'):-
+    !,
+    write(true).
+    
+protein_output_atom_by_hand('$false'):-
+    !,
+    write(false).
+    
+protein_output_atom_by_hand(Atom):-
+    atomic(Atom),
+    !,
+    write(Atom).
+    
+protein_output_atom_by_hand(Term):-
+    Term =.. [Functor|Arguments],
+    write(Functor),
+    write('('), 
+    protein_output_atom_list_by_hand(Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%----Write an atom for PROTEIN
+write_protein_atom(Atom):-
+    (Atom =.. ['$tptp_equal',LHS,RHS] ->
+%----Use the next line for writing equality in prefix notation
+%       write(Atom);
+%----Use the next three lines for writing equality in infix notation
+%% Peter - want parenthesis
+        (write('('), write(LHS),
+           write(' = '),
+           write(RHS), write(')'));
+    protein_output_atom_by_hand(Atom)).
+%----If integers give shit (as previously), change the writes to
+%----protein_output_atom_by_hand
+%------------------------------------------------------------------------------
+%----Output the atoms, separated and terminated as indicated.
+%----First case, there never were any of this sign.
+output_protein_atoms([],_,_,_,To_write_if_none,Terminator,no):-
+    !,
+    write(To_write_if_none),
+    write(Terminator).
+
+%----The last one, if there ever were any
+output_protein_atoms([One_atom],NL,Prefix,_,_,Terminator,yes):-
+    !,
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write_protein_atom(One_atom),
+    write(Terminator).
+
+%----More than one, write separated
+output_protein_atoms([One_atom,Two_atoms|Rest_of_atoms],NL,Prefix,
+Separator,_,Terminator,yes):-
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write_protein_atom(One_atom),
+    write(Separator),
+    output_protein_atoms([Two_atoms|Rest_of_atoms],yes,Prefix,
+    Separator,_,Terminator,_).
+%-------------------------------------------------------------------
+%----Output signed literals, separated and terminated appropriately
+output_protein_literals(Literals,Sign,NL,Prefix,Separator,
+To_write_if_none,Terminator,Next_NL):-
+    Template =.. [Sign,Atom],
+    findall(Atom,tptp2X_member(Template,Literals),Signed_atoms),
+    output_protein_atoms(Signed_atoms,NL,Prefix,Separator,
+To_write_if_none,Terminator,Next_NL).
+%-------------------------------------------------------------------
+%----Output each clause, preceded by a comment with it's name and
+%----status.
+    
+output_header_and_sort(Name, Status, Literals, Pos_atoms, Neg_atoms) :-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+%    write('('),
+    Pos_Template =.. [++, Atom], 
+    findall(Atom, tptp2X_member(Pos_Template, Literals), Pos_atoms),
+    Neg_Template =.. [--, Atom], 
+    findall(Atom, tptp2X_member(Neg_Template, Literals), Neg_atoms).
+
+%------------------------------------------------------------------------------
+output_protein_clause(Name, theorem, Literals) :-
+        !,
+    (theorem_found
+    -> writeln(stdout, '!!! WARNING !!! more than one theorem found, check query!')
+     ; true),
+    output_header_and_sort(Name, theorem, Literals, Pos_atoms, Neg_atoms),
+    assert(theorem_found),
+    (Pos_atoms == [] ->
+           write('?- ');
+           write('?- -')),
+    output_protein_atoms(Pos_atoms, no, '   -', ', ', '', '', Next_NL),
+    ((Pos_atoms == []; Neg_atoms == []) 
+           -> true
+        ; write(', ')),
+    output_protein_atoms(Neg_atoms, Next_NL,'    ', ', ', '', '.', _),
+    nl, nl.
+       
+%----Hack to output $false as a contradiction
+output_protein_clause(Name, Status, [++ '$false']):-
+    !,
+    output_protein_clause(Name,Status,[++dummy_for_contradiction]),
+    output_protein_clause(Name,Status,[--dummy_for_contradiction]).
+
+output_protein_clause(Name, Status, [++ '$true']):-
+    !,
+    output_protein_clause(Name,Status,[++dummy_for_tautology,
+--dummy_for_tautology]).
+
+output_protein_clause(Name, Status, Literals) :-
+    output_header_and_sort(Name, Status, Literals, Pos_atoms, Neg_atoms),
+    output_protein_atoms(Pos_atoms,no,'','; ','false','',Next_NL),
+    (Neg_atoms = [] ->
+    true;
+    write(' :- ')),
+    output_protein_atoms(Neg_atoms,Next_NL,'    ',', ','','.',_),
+    nl,
+    nl.
+
+%----
+
+output_each_protein_clause([]):-
+    !.
+
+output_each_protein_clause([input_clause(Name,Status,Literals)|
+Rest_of_clauses]):-
+    output_protein_clause(Name, Status, Literals),
+    output_each_protein_clause(Rest_of_clauses).
+%------------------------------------------------------------------------------
+protein_retract_all(Atom):-
+    retract(Atom),
+    !,
+    protein_retract_all(Atom).
+
+protein_retract_all(_).
+%------------------------------------------------------------------------------
+:-dynamic completions_file/1.
+protein(protein, Clauses, _):-
+    tptp_clauses(Clauses),
+    assert(theorem_found),% ECLiPSe needs that to know its dynamic.
+    protein_retract_all(theorem_found),
+    (retract(completions_file(CompletionsFileName)), 
+        %%% the directory is set if theory axioms were extracted
+     !,
+     write('read("'), write(CompletionsFileName), write('").'), nl, nl
+    ; nl),
+    output_each_protein_clause(Clauses).
+
+protein(protein, Formulae, _) :-
+    tptp_formulae(Formulae),
+    !,
+    write('%----FOF format not yet installed in PROTEIN'),
+    nl.
+
+%------------------------------------------------------------------------------
+protein_format_information('%','.tme').
+protein_file_information(format,protein,'PROTEIN format').
+%------------------------------------------------------------------------------
+

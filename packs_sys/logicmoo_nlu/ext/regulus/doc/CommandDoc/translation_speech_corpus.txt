@@ -1,0 +1,6 @@
+Relevant to translation applications. Points to a file of examples
+used as input to the TRANSLATE\_\-SPEECH\_\-CORPUS command. The format is
+$\langle$Wavfile$\rangle$ $\langle$Words$\rangle$, so for example a typical line would be
+\begin{verbatim}
+C:/Regulus/data/utt03.wav switch off the light
+\end{verbatim}

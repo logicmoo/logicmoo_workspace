@@ -1,0 +1,165 @@
+<jgx-1.01>
+<model>
+	<a class="transState" id="1" val="1" rect="504.0,216.0,61.0,31.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="432.0,144.0,66.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="432.0,282.0,68.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="transState" id="7" val="5" rect="372.0,216.0,61.0,31.0" attr="0">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transitionEdge" id="9" val="2" src="6" tgt="8" pts="466.0,300.5,402.5,231.5" attr="3"/>
+	<a class="transitionEdge" id="10" val="2" src="8" tgt="4" pts="402.5,231.5,465.0,162.5" attr="3"/>
+	<a class="transitionEdge" id="11" val="2" src="4" tgt="2" pts="465.0,162.5,534.5,231.5" attr="3"/>
+	<a class="transitionEdge" id="12" val="2" src="2" tgt="6" pts="534.5,231.5,466.0,300.5" attr="3"/>
+	<a class="transValue" id="13" val="6" rect="438.0,42.0,55.0,19.0" attr="4">
+		<a class="port" id="14" val="2"/>
+	</a>
+	<a class="transitionEdge" id="15" val="2" src="4" tgt="14" pts="465.0,162.5,465.5,51.5" attr="3"/>
+	<a class="transitionEdge" id="16" val="2" src="14" tgt="4" pts="465.5,51.5,465.0,162.5" attr="3"/>
+	<a class="state" id="17" val="7" rect="126.0,144.0,85.0,37.0" attr="5">
+		<a class="port" id="18" val="2"/>
+	</a>
+	<a class="transValue" id="19" val="8" rect="138.0,42.0,61.0,19.0" attr="6">
+		<a class="port" id="20" val="2"/>
+	</a>
+	<a class="transitionEdge" id="21" val="2" src="18" tgt="20" pts="168.5,162.5,168.5,51.5" attr="3"/>
+	<a class="transitionEdge" id="22" val="2" src="20" tgt="18" pts="168.5,51.5,168.5,162.5" attr="3"/>
+	<a class="OneWayMergeEdge" id="23" val="9" src="20" tgt="14" pts="168.5,51.5,369.5,51.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="24" val="10" src="18" tgt="8" pts="168.5,162.5,306.5,231.5" attr="7"/>
+	<a class="OneWayMergeEdge" id="25" val="11" src="18" tgt="2" pts="168.5,162.5,438.5,231.5" attr="7"/>
+	<a class="transValue" id="26" val="12" rect="138.0,222.0,61.0,19.0" attr="6">
+		<a class="port" id="27" val="2"/>
+	</a>
+	<a class="transitionEdge" id="28" val="2" src="18" tgt="27" pts="10.0,10.0,20.0,20.0" attr="3"/>
+	<a class="transitionEdge" id="29" val="2" src="27" tgt="18" pts="10.0,10.0,20.0,20.0" attr="3"/>
+	<a class="textNote" id="30" val="13" rect="144.0,348.0,0.0,0.0" attr="8"/>
+	<a class="textNote" id="31" val="14" rect="402.0,342.0,114.0,33.0" attr="8"/>
+	<a class="textNote" id="32" val="15" rect="138.0,342.0,70.0,33.0" attr="8"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="gradientColor" val=""/>
+		<a key="icon" val="/home/stef/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="2" pid="1">
+		<a key="icon" val="/home/stef/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="3">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="4" pid="0">
+		<a key="gradientColor" val="0,255,255"/>
+	</map>
+	<map id="5" pid="1">
+		<a key="icon" val="/home/stef/gipo/domains/icons/icoRed.png"/>
+	</map>
+	<map id="6" pid="4">
+		<a key="bordercolor" val="0,0,255"/>
+	</map>
+	<map id="7" pid="3">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="8">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+</attrs>
+<user>
+	<a key="4">
+		<a key="label" val="outsideTaxi"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="Property" val="pLocation"/>
+		<a key="Property+Type" val="location"/>
+	</a>
+	<a key="11">
+		<a key="label" val="-"/>
+	</a>
+	<a key="15" val="%3Chtml%3E%3Cbody+style%3D%22color%3Ared%3Bfont-size%3A20px%22%3E%5Btaxi%5D%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="14" val="%3Chtml%3E%3Cbody+style%3D%22color%3Ared%3Bfont-size%3A20px%22%3E%5Bperson%5D%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="5">
+		<a key="label" val="getIn"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="9">
+		<a key="label" val=""/>
+	</a>
+	<a key="7">
+		<a key="Property+Type2" val="fuel"/>
+		<a key="label" val="taxiState"/>
+		<a key="Property+Type" val="location"/>
+		<a key="Property2" val="tFuel"/>
+		<a key="Property" val="tLocation"/>
+		<a key="ObjectSort" val="taxi"/>
+	</a>
+	<a key="8">
+		<a key="ValueSort" val="tLocation"/>
+		<a key="label" val="move"/>
+		<a key="EdgeName" val="connects"/>
+		<a key="ValueSort2" val="tFuel"/>
+		<a key="EdgeName2" val="usefuel"/>
+		<a key="ObjectSort" val="taxi"/>
+	</a>
+	<a key="13" val="%3Chtml%3E%3Cbody+style%3D%22color%3A%23FF0000%3Bfont-size%3A20px%3E%5Btaxi%5D%3C%2Fbody%3E%3C%2Fhtml%3E"/>
+	<a key="6">
+		<a key="EdgeName" val="connects"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="ValueSort" val="pLocation"/>
+	</a>
+	<a key="12">
+		<a key="EdgeName" val="fillUpFuel"/>
+		<a key="label" val="fullFuel"/>
+		<a key="ObjectSort" val="taxi"/>
+		<a key="ValueSort" val="tFuel"/>
+	</a>
+	<a key="1">
+		<a key="label" val="getOut"/>
+		<a key="ObjectSort" val="person"/>
+	</a>
+	<a key="10">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="2" val=""/>
+	<a key="3">
+		<a key="label" val="insideTaxi"/>
+		<a key="ObjectSort" val="person"/>
+		<a key="Property" val="pLocation"/>
+		<a key="Property+Type" val="location"/>
+	</a>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

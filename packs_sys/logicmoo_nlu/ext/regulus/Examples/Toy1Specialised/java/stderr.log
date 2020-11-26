@@ -1,0 +1,45 @@
+Jul 11, 2006 4:15:19 PM net.sf.regulus.RegClient loadConfiguration
+INFO: Regulus base directory set to 'c:/speech/Regulus'
+Jul 11, 2006 4:15:19 PM net.sf.regulus.RegClient loadConfiguration
+INFO: Loading configuration from 'c:/speech/Regulus/RegulusSpeechServer/runtime/regulus.properties'
+Jul 11, 2006 4:15:19 PM net.sf.regulus.RegClient init
+INFO: Launching 'c:/speech/Regulus/RegulusSpeechServer/runtime/regserver -port 1975  -package ../Generated/recogniser audio.OutputVolume=50'
+Jul 11, 2006 4:15:19 PM net.sf.regulus.RegClient init
+INFO: Waiting 2000 msecs for regulus server to start up
+Jul 11, 2006 4:15:21 PM net.sf.regulus.RegClient init
+INFO: Connecting to 127.0.0.1:1975 (attemt no. 0)
+Jul 11, 2006 4:15:23 PM net.sf.regulus.RegClient init
+INFO: Waiting 2000 msecs for regulus server to start up
+Jul 11, 2006 4:15:25 PM net.sf.regulus.RegClient init
+INFO: Connecting to 127.0.0.1:1975 (attemt no. 1)
+Jul 11, 2006 4:15:26 PM net.sf.regulus.RegClient init
+INFO: Waiting 2000 msecs for regulus server to start up
+Jul 11, 2006 4:15:28 PM net.sf.regulus.RegClient init
+INFO: Connecting to 127.0.0.1:1975 (attemt no. 2)
+Jul 11, 2006 4:15:28 PM net.sf.regulus.RegClient init
+INFO: Waiting 2000 msecs for regulus server to start up
+Jul 11, 2006 4:15:30 PM net.sf.regulus.RegClient init
+INFO: Connecting to 127.0.0.1:1975 (attemt no. 3)
+Jul 11, 2006 4:15:31 PM net.sf.regulus.RegClient init
+SEVERE: Connection to '127.0.0.1:1975' failed
+java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:333)
+	at java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:195)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:182)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)
+	at java.net.Socket.connect(Socket.java:516)
+	at java.net.Socket.connect(Socket.java:466)
+	at java.net.Socket.<init>(Socket.java:366)
+	at java.net.Socket.<init>(Socket.java:179)
+	at net.sf.regulus.RegClient.init(RegClient.java:252)
+	at net.sf.regulus.RegClient.<init>(RegClient.java:117)
+	at Toy1Specialisedapp.<init>(Toy1Specialisedapp.java:59)
+	at Toy1Specialisedapp.main(Toy1Specialisedapp.java:303)
+Jul 11, 2006 4:15:31 PM net.sf.regulus.RegClient <init>
+SEVERE: Couldn't initialize regserver
+net.sf.regulus.RegClientException
+	at net.sf.regulus.RegClient.init(RegClient.java:292)
+	at net.sf.regulus.RegClient.<init>(RegClient.java:117)
+	at Toy1Specialisedapp.<init>(Toy1Specialisedapp.java:59)
+	at Toy1Specialisedapp.main(Toy1Specialisedapp.java:303)

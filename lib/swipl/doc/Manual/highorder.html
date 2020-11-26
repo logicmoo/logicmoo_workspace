@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.13</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="basics.html">
+<link rel="next" href="debug.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="basics.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="debug.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:highorder"><a id="sec:A.13"><span class="sec-nr">A.13</span> <span class="sec-title">library(dcg/high_order): 
+High order grammar operations</span></a></h2>
+
+<p><a id="sec:highorder"></a>
+
+<p>This library provides facilities comparable <a class="pred" href="apply.html#maplist/3">maplist/3</a>, <a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+and
+<a class="pred" href="aggregate.html#foreach/2">foreach/2</a> for DCGs.
+
+<p><b>STATUS</b>: This library is experimental. The interface and 
+implementation may change based on feedback. Please send feedback to the 
+mailinglist or the issue page of the <code>swipl-devel.git</code> 
+repository.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="sequence//2"><strong>sequence</strong>(<var>:Element, 
+?List</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Match or generate a sequence of <var>Element</var>. This predicate is 
+deterministic if <var>List</var> is fully instantiated and <var>Element</var> 
+is deterministic. When parsing, this predicate is <i>gready</i> and does 
+not prune choice points. For example:
+
+<pre class="code">
+?- phrase(sequence(digit, Digits), `123a`, L).
+Digits = "123",
+L = [97] ;
+Digits = [49, 50],
+L = [51, 97] ;
+...
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="sequence//3"><strong>sequence</strong>(<var>:Element, 
+:Sep, ?List</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Match or generate a sequence of <var>Element</var> where each pair of 
+elements is separated by <var>Sep</var>. When <i>parsing</i>, a matched <var>Sep</var> <i>commits</i>. 
+The final element is <i>not</i> committed. More formally, it matches the 
+following sequence:
+
+<pre class="code">
+Element?, (Sep,Element)*
+</pre>
+
+<p>See also <a class="pred" href="highorder.html#sequence//5">sequence//5</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="sequence//5"><strong>sequence</strong>(<var>:Start, 
+:Element, :Sep, :End, ?List</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Match or generate a sequence of <var>Element</var> enclosed by <var>Start</var> 
+end <var>End</var>, where each pair of elements is separated by <var>Sep</var>. 
+More formally, it matches the following sequence:
+
+<pre class="code">
+Start, Element?, (Sep,Element)*, End
+</pre>
+
+<p>The example below matches a Prolog list of integers:
+
+<pre class="code">
+?- phrase(sequence(("[",blanks),
+                   number, (",",blanks),
+                   (blanks,"]"), L),
+                   `[1, 2, 3 ] a`, Tail).
+L = [1, 2, 3],
+Tail = [32, 97].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="optional//2"><strong>optional</strong>(<var>:Match, 
+:Default</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Perform an optional match, executing <var>Default</var> if <var>Match</var> 
+is not matched. This is comparable to <a class="pred" href="metacall.html#ignore/1">ignore/1</a>. 
+Both <var>Match</var> and <var>Default</var> are DCG body terms. <var>Default</var> 
+is typically used to instantiate the output variables of <var>Match</var>, 
+but may also be used to match a default representation. Using <code>[]</code> 
+for <var>Default</var> succeeds without any additional actions if <var>Match</var> 
+fails. For example:
+
+<pre class="code">
+?- phrase(optional(number(X), {X=0}), `23`, Tail).
+X = 23,
+Tail = [].
+?- phrase(optional(number(X), {X=0}), `aap`, Tail).
+X = 0,
+Tail = `aap`.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="foreach//2"><strong>foreach</strong>(<var>:Generator, 
+:Element</var>)</a><code>//</code></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="foreach//3"><strong>foreach</strong>(<var>:Generator, 
+:Element, :Sep</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Generate a list from the solutions of <var>Generator</var>. This 
+predicate collects all solutions of <var>Generator</var>, applies <var>Element</var> 
+for each solution and <var>Sep</var> <i>between</i> each pair of 
+solutions. For example:
+
+<pre class="code">
+?- phrase(foreach(between(1,5,X), number(X), ", "), L).
+L = "1, 2, 3, 4, 5".
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

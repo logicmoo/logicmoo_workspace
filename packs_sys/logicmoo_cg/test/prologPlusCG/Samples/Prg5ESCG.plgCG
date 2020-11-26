@@ -1,0 +1,35 @@
+Universal > Objet, Animal, Personne, Action, Etat, Attribut.
+Objet > Cheveux, Viande, Dents, Griffe, Yeux.
+Animal > Mammifere, Carnivore, Guepard.
+Personne > Homme.
+Action > Manger.
+Etat > Appartenir.
+Attribut > Couleur, Partie, Sauvage, Sombre, Pointu, Percant.
+
+Homme = Robert.
+Animal = Yala.
+  
+[Animal : x]-is->[Guepard] :-
+   [Animal : x]-is->[Mammifere],
+   [Animal : x]-is->[Carnivore],
+   [Animal : x]-colorOf->[Couleur]-attr->[Sauvage],
+   [Animal : x]-partOf->[Partie]-attr->[Sombre].
+
+[Animal : x]-is->[Mammifere] :-
+   [Animal : x]-poss->[Cheveux].
+
+
+[Animal : x]-is->[Carnivore] :-
+   [Animal : x]<-agnt-[Manger]-obj->[Viande].
+
+[Animal : x]-is->[Carnivore] :-
+   [Animal : x]-poss->[Dents]-attr->[Pointu],
+   [Animal : x]-poss->[Griffe],
+   [Animal : x]-has->[Yeux]-attr->[Percant].
+
+
+[Animal : Yala]-
+            <-pat-[Appartenir]-bnfcre->[Homme : Robert],
+            -colorOf->[Couleur]-attr->[Sauvage],
+            -poss->[Dents]-attr->[Pointu],
+            -has->[Yeux]-attr->[Percant].

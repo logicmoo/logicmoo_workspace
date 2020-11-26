@@ -1,0 +1,53 @@
+(note TQD51)
+
+(allies Russia Iran) 
+
+(instance allies SymmetricRelation) 
+
+(instance Russia IndependentCountry) 
+
+(outputsCreated HYP-FoundingAnOrganization-30771715 HYP-Agent-18622096) 
+
+(agent HYP-FoundingAnOrganization-30771715 Iran) 
+
+(instance HYP-FoundingAnOrganization-30771715 FoundingAnOrganization) 
+
+(governedByAgreement HYP-FoundingAnOrganization-30771715 HYP-InternationalAgreement-23833808) 
+
+(instance HYP-InternationalAgreement-23833808 InternationalAgreement) 
+
+(implies 
+ (and 
+ (instance ?AGREEMENT InternationalAgreement) 
+ (governedByAgreement ?ESTABLISHING ?AGREEMENT) 
+ (instance ?ESTABLISHING FoundingAnOrganization) 
+ (agent ?ESTABLISHING ?FOUNDER) 
+ (outputsCreated ?ESTABLISHING ?COALITION) 
+ (allies ?FOUNDER ?MEMBER)) 
+ (capableOfDoing ?MEMBER ?AGREEMENT assistingAgent)) 
+
+(allies Iran Syria) 
+
+(instance Syria IndependentCountry) 
+
+
+(query (findall ?POTENTIALMEMBER 
+ (implies 
+   (and 
+       (instance ?ESTABLISHING FoundingAnOrganization) 
+       (instance ?AGREEMENT InternationalAgreement) 
+       (governedByAgreement ?ESTABLISHING ?AGREEMENT) 
+       (agent ?ESTABLISHING Iran) 
+       (outputsCreated ?ESTABLISHING ?COALITION) 
+       (negativeVestedInterest ?COALITION GulfCooperationCouncil)) 
+   (and 
+       (instance ?POTENTIALMEMBER IndependentCountry) 
+       (capableOfDoing ?POTENTIALMEMBER ?AGREEMENT assistingAgent))) 
+
+))
+
+(answer Syria
+)
+(answer Russia
+)
+(end_of_file)

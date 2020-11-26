@@ -1,0 +1,1045 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Vehicle</Key>
+        </Child>
+        <Child>
+          <Key>Object</Key>
+        </Child>
+        <Child>
+          <Key>Container</Key>
+        </Child>
+        <Child>
+          <Key>Math</Key>
+        </Child>
+        <Child>
+          <Key>Engine</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Engine</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Engine</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>PetrolEngine</Key>
+        </Child>
+        <Child>
+          <Key>RocketEngine</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>RocketEngine</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>RocketEngine</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[Engine :super] -
+             -fuel-&gt;[OxyHyd],
+             -force-&gt;[Strong]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@ed0338</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>OxyHyd</Key>
+        </Father>
+        <Father>
+          <Key>Engine</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@ed0338</Key>
+      <Content>
+        <Description>[RoadVehicle]-engn-&gt;[RocketEngine]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>RoadVehicle</Key>
+        </Father>
+        <Father>
+          <Key>RocketEngine</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>PetrolEngine</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>PetrolEngine</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[Engine :super] -
+             -fuel-&gt;[Gasoline],
+             -force-&gt;[Average]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@95c083</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Gasoline</Key>
+        </Father>
+        <Father>
+          <Key>Engine</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@95c083</Key>
+      <Content>
+        <Description>[RoadVehicle]-engn-&gt;[PetrolEngine]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>RoadVehicle</Key>
+        </Father>
+        <Father>
+          <Key>PetrolEngine</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>Math</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Math</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Operation</Key>
+        </Child>
+        <Child>
+          <Key>Number</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Number</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Number</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Average</Key>
+        </Child>
+        <Child>
+          <Key>Strong</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Math</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Strong</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Strong</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Number</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Average</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Average</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Number</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Operation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Operation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Add</Key>
+        </Child>
+        <Child>
+          <Key>Div</Key>
+        </Child>
+        <Child>
+          <Key>Mul</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Math</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mul</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Mul</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Operation</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Div</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Div</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Operation</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Add</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Add</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Operation</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Container</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Container</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1319c</Key>
+        </Child>
+        <Child>
+          <Key>GasTank</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>GasTank</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>GasTank</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@587c94</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Container</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@587c94</Key>
+      <Content>
+        <Description>[GasTank #0] -
+          -contents-&gt;[Gasoline],
+          -material-&gt;[material = steel]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>GasTank</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@1319c</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1319c</Key>
+      <Content>
+        <Description>[Container]-contents-&gt;[Object]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@587c94</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1ea5671</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1d9fd51</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Container</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1d9fd51</Key>
+      <Content>
+        <Description>[Vehicle #0] -
+          -fuelTank-&gt;[Container]-contents-&gt;[fuel #1]&lt;-fuel-[Engine]&lt;-engn-[Vehicle #0]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@1319c</Key>
+        </Father>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f99ff5</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1ea5671</Key>
+      <Content>
+        <Description>[Container #0] -
+            -contents-&gt;[Object]-state-&gt;[state = Explosive],
+            -strength-&gt;[Strong]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@1319c</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>Object</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Object</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Gasoline</Key>
+        </Child>
+        <Child>
+          <Key>OxyHyd</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>OxyHyd</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>OxyHyd</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[Object :super]-state-&gt;[state = Explosive]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>RocketEngine</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Gasoline</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Gasoline</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[Object :super]-state-&gt;[state = Volatile]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>PetrolEngine</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Vehicle</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Vehicle</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@f99ff5</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@f99ff5</Key>
+      <Content>
+        <Description>[Vehicle]-engn-&gt;[Engine]</Description>
+      </Content>
+      <Children>
+        <Child>
+          <Key>RoadVehicle</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1d9fd51</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1f26605</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Vehicle</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1f26605</Key>
+      <Content>
+        <Description>[Vehicle #0] -
+          -mass-&gt;[Number]-arg2-&gt;[Div #1] -
+                                      -outcome-&gt;[Number #2]&lt;-topSpeed-[Vehicle #0],
+                                      &lt;-arg1-[Number]&lt;-force-[Engine]&lt;-engn-[Vehicle #0]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f99ff5</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>RoadVehicle</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>RoadVehicle</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@ed0338</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@95c083</Key>
+        </Child>
+        <Child>
+          <Key>Bus</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>aminePlatform.kernel.ontology.Situation@f99ff5</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Bus</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Bus</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@10a2d64</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@10da5eb</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>RoadVehicle</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@10da5eb</Key>
+      <Content>
+        <Description>[Bus #0] -
+      -engn-&gt;[PetrolEngine],
+      -mass-&gt;[Average]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Bus</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@10a2d64</Key>
+      <Content>
+        <Description>[Bus #0] -
+      -engn-&gt;[RocketEngine],
+      -mass-&gt;[Average]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Bus</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>contents</Key>
+        </Child>
+        <Child>
+          <Key>fuel</Key>
+        </Child>
+        <Child>
+          <Key>fuelTank</Key>
+        </Child>
+        <Child>
+          <Key>strength</Key>
+        </Child>
+        <Child>
+          <Key>material</Key>
+        </Child>
+        <Child>
+          <Key>force</Key>
+        </Child>
+        <Child>
+          <Key>state</Key>
+        </Child>
+        <Child>
+          <Key>mass</Key>
+        </Child>
+        <Child>
+          <Key>topSpeed</Key>
+        </Child>
+        <Child>
+          <Key>arg1</Key>
+        </Child>
+        <Child>
+          <Key>arg2</Key>
+        </Child>
+        <Child>
+          <Key>outcome</Key>
+        </Child>
+        <Child>
+          <Key>engn</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>engn</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>engn</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>outcome</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>outcome</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>arg2</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>arg2</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>arg1</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>arg1</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>topSpeed</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>topSpeed</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>mass</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>mass</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>state</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>state</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>force</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>force</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>material</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>material</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>strength</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>strength</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>fuelTank</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>fuelTank</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>fuel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>fuel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>contents</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>contents</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

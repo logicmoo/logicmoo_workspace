@@ -1,0 +1,1190 @@
+:: ==================================================================
+:: Sigma Test Questions: a file of HPKB TQs in English:  and KIF formulations.
+:: These questions depend on information in the HPKBCrisis context (including also HPKBScenarioConflict 
+:: and others).
+:: The questions were answered by Cyc, and the questions have been answered by XSB queries run over 
+:: corresponding XSB data.
+:: For the Cyc answers to these queries, see the appropriate TQIdent justification files.
+:: Test results should be recorded.
+:: The (KIF) information needed to answer these questions resides in the file, HPKBCrisis_Context_TestInfo.kif
+:: Additional HPKBCrisis data, in KIF format, resides in HPKBCrisis_Context.kif. These files should
+:: be amalgamated, when testing.
+:: The XSB .P information needed to answer these question resides in the file, HPKBCrisis_Context_TestInfo.P
+:: This file (and other KIF files) can be 'cyclified' using the PERL tool, cycl.pl, for input to Sigma 
+:: (remove ":: KIF:", before use -- cycl.pl will remove the comments, here prefixed with "::").
+:: N.B. Some of the TQE and F queries below have a natural HiLog formulation in XSB.
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQA100-b
+
+:: English:  What bodies of water border on Saudi Arabia?
+
+:: KIF:(and (isa ?X BodyOfWater)  (bordersOn ?X SaudiArabia))
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQA62
+
+:: English:  What are the goals of the International Atomic Energy Agency (IAEA)?
+
+:: KIF:(statementOfPurpose InternationalAtomicEnergyAgency ?PURPOSE)
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQA70
+
+:: English:  Is the United States of America a member of the Organization for Economic Cooperation and Development (OECD)?
+
+:: KIF:(hasMembers OECD UnitedStatesOfAmerica)
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQA49
+
+:: English:  What terrorist group opposing the government of Bahrain exists within Bahrain?
+
+:: KIF:(and (residenceOfOrganization ?AGENT Bahrain) (isa ?AGENT TerroristGroup) (negativeVestedInterest ?AGENT Bahrain))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQA65
+
+:: English:  During the temporal extent of the Iran-Iraq War, did Iran ever attack using ballistic missiles?
+
+:: KIF:(thereExists ?ACT 
+                         (thereExists ?FORCE 
+                             (and 
+                                 (performedBy ?ACT Iran) 
+                                 (isa ?ACT AttackOnTangible) 
+                                 (isa ?FORCE BallisticMissile) 
+                                 (instrument-Generic ?ACT ?FORCE) 
+                                 (temporallySubsumes Iran-IraqWar ?ACT))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB5
+
+:: English:  What amount of Saudi Arabia's gross domestic product (GDP) comes from export of oil?
+
+:: KIF:(and 
+                         (isa ?AMOUNT Money) 
+                         (exportAmountDuring SaudiArabia PetroleumProduct ?TIME ?AMOUNT))
+
+
+:: ==================================================================
+
+
+
+:: ==================================================================
+:: TQ: TQB7
+
+:: English:  What amount of Saudi Arabia's export of oil is transported through the Petroline?
+
+:: KIF:(exportThroughAmountDuring SaudiArabia PetroleumProduct PetrolinePipeline ?TIME ?AMOUNT)
+
+
+:: ==================================================================
+
+
+
+:: ==================================================================
+:: TQ: TQB25
+
+:: English:  What goods are transported to the Mediterranean Sea via pipeline?
+
+:: KIF:(thereExists ?TRAN 
+                         (thereExists ?DEST 
+                             (and 
+                                 (pathTerminus ?TRAN RedSea) 
+                                 (primaryFunction ?TRAN 
+                                     (TransportFn ?PROD) conveyor-Stationary))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB37
+
+:: English:  What dissident group opposing the government of Iran exists within Iran?
+
+:: KIF:(and 
+                         (residenceOfOrganization ?AGENT Iran) 
+                         (isa ?AGENT DissidentGroup) 
+                         (hasStatusWithAgent ?AGENT Iran DissidentStatus) 
+                         (negativeVestedInterest ?AGENT Iran))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB42
+
+:: English:  After Day 20, what rewards would Iran expect in successful terrorist attacks against Kuwait's agriculture sector?
+
+:: KIF:(implies 
+                         (and 
+                             (performedBy ?ACT Iran) 
+                             (isa ?ACT TerroristAttack) 
+                             (damages ?ACT 
+                                 (IndustryOfRegionFn AgriculturalEconomicSector Kuwait)) 
+                             (startsAfterStartingOf ?ACT 
+                                 (DateInSituationFn CalendarDay 20 HPKBScenarioConflict))) 
+                         (or 
+                             (and 
+                                 (goals Iran ?PROP) 
+                                 (increasesCausally ?ACT ?PROP likelihood)) 
+                             (and 
+                                 (goals Iran 
+                                     (not ?PROP)) 
+                                 (decreasesCausally ?ACT ?PROP likelihood))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB43
+
+:: English:  During Days 1 through 16 in the Scenario, would Iran's conducting an air strike against Saudi Arabia be considered an escalation of the conflict with Saudi Arabia?
+
+:: KIF:(implies 
+                         (and 
+                             (isa ?ACT AerialAttack) 
+                             (performedBy ?ACT Iran) 
+                             (maleficiary ?ACT SaudiArabia) 
+                             (temporallySubsumes 
+                                 (TimeIntervalInclusiveFn 
+                                     (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+                                     (DateInSituationFn CalendarDay 16 HPKBScenarioConflict)) ?ACT)) 
+                         (increasesImmediatelyCausally ?ACT HPKBScenarioConflict conflictLevel))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQB49
+
+:: English:  What terrorist group opposing the government of Egypt exists within Egypt?
+
+:: KIF:(and 
+                         (residenceOfOrganization ?AGENT Egypt) 
+                         (isa ?AGENT TerroristGroup) 
+                         (negativeVestedInterest ?AGENT Egypt))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQB52
+
+:: English:  What rewards would Iran expect in establishing a coalition of states against the Gulf Cooperation Council (GCC)?
+
+:: KIF:(implies 
+                         (and 
+                             (performedBy ?ACT Iran) 
+                             (isa ?ACT FoundingAnOrganization) 
+                             (isa ?ORG Coalition-International) 
+                             (considersAsEnemy ?ORG GulfCooperationCouncil) 
+                             (outputsCreated ?ACT ?ORG)) 
+                         (or 
+                             (and 
+                                 (goals Iran ?PROP) 
+                                 (increasesCausally ?ACT ?PROP likelihood)) 
+                             (and 
+                                 (goals Iran 
+                                     (not ?PROP)) 
+                                 (decreasesCausally ?ACT ?PROP likelihood))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB53
+
+:: English:  What risks would Iran face in damaging the Petroline?
+
+:: KIF:(implies 
+                         (and 
+                             (performedBy ?ACT Iran) 
+                             (isa ?ACT AttackOnTangible) 
+                             (damages ?ACT PetrolinePipeline)) 
+                         (or 
+                             (and 
+                                 (goals Iran ?PROP) 
+                                 (decreasesCausally ?ACT ?PROP likelihood)) 
+                             (and 
+                                 (goals Iran 
+                                     (not ?PROP)) 
+                                 (increasesCausally ?ACT ?PROP likelihood))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB62
+
+:: English:  What are the goals of the International Criminal Police Organization (INTERPOL)?
+
+:: KIF:(statementOfPurpose INTERPOL ?PURPOSE)
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQB66a
+
+:: English:  What countries militarily opposed Kuwait during the Persian Gulf War?
+
+:: KIF:(thereExists ?ACTION 
+                         (and 
+                             (isa ?ACTION MilitaryEvent) 
+                             (performedBy ?ACTION ?COUNTRY) 
+                             (maleficiary ?ACTION Kuwait) 
+                             (isa ?COUNTRY IndependentCountry) 
+                             (different ?COUNTRY Kuwait) 
+                             (temporallySubsumes PersianGulfWar ?ACTION)))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB67a
+
+:: English:  What countries militarily opposed Saudi Arabia during the Persian Gulf War?
+
+:: KIF:(and 
+                         (isa ?COUNTRY IndependentCountry) 
+                         (opponentsInConflict ?COUNTRY SaudiArabia PersianGulfWar))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQB85
+
+:: English:  Has Iraq ever attacked using ballistic missiles?
+
+:: KIF:(thereExists ?ACT 
+                         (thereExists ?FORCE 
+                             (and 
+                                 (performedBy ?AC#$T Iraq) 
+                                 (isa ?ACT AttackOnTangible) 
+                                 (isa ?FORCE BallisticMissile) 
+                                 (instrument-Generic ?ACT ?FORCE))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQB107
+
+:: English:  In the Scenario, what is the number of dead caused by the truck bomb attack on the oil field during Day 25?
+
+:: KIF:(thereExists ?ACT 
+                         (and 
+                             (subEvents HPKBScenarioConflict ?ACT) 
+                             (isa ?ACT AttackOnTangible) 
+                             (temporallySubsumes 
+                                 (DateInSituationFn CalendarDay 25 HPKBScenarioConflict) ?ACT) 
+                             (deathToll ?ACT Person ?NUM) 
+                             (thereExists ?FORCE 
+                                 (and 
+                                     (isa ?FORCE TruckBomb) 
+                                     (instrument-Generic ?ACT ?FORCE)))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQB129
+
+:: English:  Is Oman near the Persian Gulf?
+
+:: KIF:(near Oman PersianGulf)
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC1
+
+:: English:  What major oil refineries are in Libya?
+
+:: KIF:(and 
+                                            (isa ?X OilRefinery) 
+                                            (inRegion ?X Libya))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC101a
+
+:: English:  What major oil refineries are in Algeria?
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC103
+
+:: English:  During Day 23, how does the United States of America respond to the weapons of mass destruction attack by Iran?
+
+:: KIF:(thereExists ?ACT 
+                         (and 
+                             (subEvents HPKBScenarioConflict ?ACT) 
+                             (isa ?ACT AttackOnTangible) 
+                             (thereExists ?FORCE 
+                                 (and 
+                                     (instrument-Generic ?ACT ?FORCE) 
+                                     (isa ?FORCE WeaponOfMassDestruction))) 
+                             (inReactionTo ?RESP ?ACT) 
+                             (deliberateActors ?ACT Iran) 
+                             (deliberateActors ?RESP UnitedStatesOfAmerica) 
+                             (temporallySubsumes 
+                                 (DateInSituationFn CalendarDay 23 HPKBScenarioConflict) ?RESP)))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC106
+
+:: English:  In the Scenario, what is the illness caused by the weapons of mass destruction attack during Day 22?
+
+:: KIF:(thereExists ?ACT 
+                         (and 
+                             (isa ?ACT AttackOnTangible) 
+                             (temporallySubsumes 
+                                 (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) ?ACT) 
+                             (thereExists ?WEAPON 
+                                 (and 
+                                     (instrument-Generic ?ACT ?WEAPON) 
+                                     (isa ?WEAPON WeaponOfMassDestruction))) 
+                             (thereExists ?NUMBER 
+                                 (casualtyCountByAilment ?ACT ?ILLNESS ?NUMBER))))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQC108
+
+:: English:  In the Scenario, what does United States of America claim to play the role of weapon in the weapons of mass destruction attack during Day 22?
+
+:: KIF:(thereExists ?ACT 
+                         (thereExists ?COMM 
+                             (thereExists ?FORCE 
+                                 (thereExists ?USAGENT 
+                                     (and 
+                                         (subEvents HPKBScenarioConflict ?ACT) 
+                                         (isa ?ACT AttackOnTangible) 
+                                         (instrument-Generic ?ACT ?FORCE) 
+                                         (isa ?FORCE WeaponOfMassDestruction) 
+                                         (isa ?COMM Communicating) 
+                                         (or 
+                                             (senderOfInfo ?COMM UnitedStatesOfAmerica) 
+                                             (and 
+                                                 (senderOfInfo ?COMM ?USAGENT) 
+                                                 (hasAgents UnitedStatesOfAmerica ?USAGENT))) 
+                                         (infoTransferred ?COMM 
+                                             (thereExists ?FORCE2 
+                                                 (and 
+                                                     (instrument-Generic ?ACT ?FORCE2) 
+                                                     (isa ?FORCE2 ?FORCE-TYPE)))))))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC111
+
+:: English:  In the Scenario, what kinds of objects play the role of weapon in a weapons of mass destruction attack during Day 22?
+
+:: KIF:(thereExists ?ACT 
+                         (thereExists ?ACTOR 
+                             (and 
+                                 (temporallySubsumes 
+                                     (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) ?ACT) 
+                                 (assertedFormula 
+                                     (isa ?ACTOR ?KIND)) 
+                                 (not 
+                                     (quotedCollection ?KIND)) 
+                                 (instrument-Generic ?ACT ?ACTOR) 
+                                 (isa ?ACTOR MilitaryHardware) 
+                                 (subEvents HPKBScenarioConflict ?ACT) 
+                                 (isa ?ACT AttackOnTangible) 
+                                 (thereExists ?FORCE 
+                                     (and 
+                                         (instrument-Generic ?ACT ?FORCE) 
+                                         (isa ?FORCE WeaponOfMassDestruction))))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC112
+
+:: English:  Would a chemical weapons attack make sense as a foreign policy tool for Kuwait?
+
+:: KIF:(viabilityOfAsForeignPolicyTool Kuwait ChemicalAttack ?ATTRIB)
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC115
+
+:: English:  How might an attack by Iran on Saudi Arabia using biological weapons affect the world's economic stability?
+
+:: KIF:(implies 
+                         (and 
+                             (isa ?ATTACK BiologicalAttack) 
+                             (maleficiary ?ATTACK SaudiArabia) 
+                             (performedBy ?ATTACK Iran)) 
+                         (holdsIn (STIF ?ATTACK) 
+                             (economicStability 
+                                 (EconomicSystemFn PlanetEarth) ?STABILITYRATE)))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQC117
+
+:: English:  Could chemical weapons play the role of weapon in a bombing mission?
+
+:: KIF:(#$typeBehaviorCapable ChemicalWeapon BombingMission deviceUsed)
+
+
+:: ==================================================================
+
+::  ==================================================================
+:: TQ: TQD101b
+
+:: English:  During Day 19, what actors compete regarding the well-being of their citizens?
+
+:: KIF:(thereExists ?PROTECT-ACTION 
+                         (thereExists ?SAFETY-GOAL 
+                             (and 
+                                 (isa ?PROTECT-ACTION Action) 
+                                 (performedBy ?PROTECT-ACTION ?AGENT) 
+                                 (goalCategoryForAgent ?AGENT ?SAFETY-GOAL CitizenSafetyGoal) 
+                                 (causes-PropProp 
+                                     (goals ?AGENT ?SAFETY-GOAL) 
+                                     (performedBy ?PROTECT-ACTION ?AGENT)) 
+                                 (temporallySubsumes 
+                                     (DateInSituationFn CalendarDay 19 HPKBScenarioConflict) ?PROTECT-ACTION))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQD102
+
+:: English:  During Day 16, does Iran have as an interest weapons of mass destruction?
+
+:: KIF:(thereExists ?WEAPON-TYPE 
+                         (thereExists ?DEVELOPER 
+                             (or 
+                                 (and 
+                                     (expertRegarding ?DEVELOPER ?WEAPON-TYPE) 
+                                     (genls ?WEAPON-TYPE WeaponOfMassDestruction) 
+                                     (holdsIn (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) 
+                                         (givesSupportToAgent Iran ?DEVELOPER 
+                                             (HighAmountFn EconomicSupport)))) 
+                                 (holdsIn (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) 
+                                     (goals Iran 
+                                         (relationInstanceExists possesses Iran WeaponOfMassDestruction))))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQE128
+
+:: English: What relationship exists between Al Qaida and Osama bin Laden?
+
+:: KIF: (thereExists ?AL-QAIDA-RELATED-TO-BIN-LADEN 
+                         (or 
+                             (?AL-QAIDA-RELATED-TO-BIN-LADEN AlQaida OsamaBinLaden) 
+                             (?BIN-LADEN-RELATED-TO-AL-QAIDA OsamaBinLaden AlQaida) 
+                             (?AL-QAIDA-RELATED-TO-BIN-LADEN AlQaida OsamaBinLaden ?DEGREE) 
+                             (?BIN-LADEN-RELATED-TO-AL-QAIDA OsamaBinLaden AlQaida ?DEGREE) 
+                             (?AL-QAIDA-RELATED-TO-BIN-LADEN AlQaida ?DEGREE OsamaBinLaden) 
+                             (?BIN-LADEN-RELATED-TO-AL-QAIDA OsamaBinLaden ?DEGREE AlQaida) 
+                             (?AL-QAIDA-RELATED-TO-BIN-LADEN ?DEGREE AlQaida OsamaBinLaden) 
+                             (?BIN-LADEN-RELATED-TO-AL-QAIDA ?DEGREE OsamaBinLaden AlQaida)))
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: TQE203
+
+:: English: During 2 August 1990 in the 1990-1 Persian Gulf War, what military actions occur in Kuwait?
+
+:: KIF: (and 
+                         (isa ?ACT MilitaryEvent) 
+                         (subEvents PersianGulfWar ?ACT) 
+                         (eventPartiallyOccursAt ?ACT Kuwait) 
+                         (happeningOnDate ?ACT 
+                             (DayFn 2 
+                                 (MonthFn August 
+                                     (YearFn 1990)))))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQF128c
+
+:: English:  What relationship exists between PFLP-GC and Iran?
+
+:: KIF:                       (thereExists ?IRAN-RELATION-TO-PFLP-GC 
+                         (or 
+                             (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand Iran) 
+                             (?IRAN-RELATION-TO-PFLP-GC Iran PFLP-GeneralCommand) 
+                             (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand Iran ?DEGREE) 
+                             (?IRAN-RELATED-TO-PFLP-GC Iran PFLP-GeneralCommand ?DEGREE) 
+                             (?PFLP-GC-RELATED-TO-IRAN PFLP-GeneralCommand ?OTHER Iran) 
+                             (?IRAN-RELATED-TO-PFLP-GC Iran ?OTHER PFLP-GeneralCommand) 
+                             (?PFLP-GC-RELATED-TO-IRAN ?OTHER PFLP-GeneralCommand Iran) 
+                             (?IRAN-RELATED-TO-PFLP-GC ?OTHER Iran PFLP-GeneralCommand)))
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: TQF253c
+
+:: English:  What are ways to attack using biological weapons?
+
+:: KIF: (typeBehaviorCapable ?BIOLOGICAL-WEAPON-TYPE BiologicalAttack ?BIOLOGICAL-ATTACK-METHOD)
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+:: ==================================================================
+:: TQ: 
+
+:: English:  
+
+:: KIF:
+
+
+:: ==================================================================
+
+
+
+
+(#$and (#$isa ?X #$BodyOfWater) (#$bordersOn ?X #$SaudiArabia))
+ (#$statementOfPurpose #$InternationalAtomicEnergyAgency ?PURPOSE)
+(#$hasMembers #$OECD #$UnitedStatesOfAmerica)
+(#$and (#$residenceOfOrganization ?AGENT #$Bahrain) (#$isa ?AGENT #$TerroristGroup) (#$negativeVestedInterest ?AGENT #$Bahrain))
+(#$thereExists ?ACT 
+             (#$thereExists ?FORCE 
+               (#$and 
+                 (#$performedBy ?ACT #$Iran) 
+                 (#$isa ?ACT #$AttackOnTangible) 
+                 (#$isa ?FORCE #$BallisticMissile) 
+                 (#$instrument-Generic ?ACT ?FORCE) 
+                 (#$temporallySubsumes #$Iran-IraqWar ?ACT))))
+(#$and 
+             (#$isa ?AMOUNT #$Money) 
+             (#$exportAmountDuring #$SaudiArabia #$PetroleumProduct ?TIME ?AMOUNT))
+(#$exportThroughAmountDuring #$SaudiArabia #$PetroleumProduct #$PetrolinePipeline ?TIME ?AMOUNT)
+(#$thereExists ?TRAN 
+             (#$thereExists ?DEST 
+               (#$and 
+                 (#$pathTerminus ?TRAN #$RedSea) 
+                 (#$primaryFunction ?TRAN 
+                   (#$TransportFn ?PROD) #$conveyor-Stationary))))
+(#$and 
+             (#$residenceOfOrganization ?AGENT #$Iran) 
+             (#$isa ?AGENT #$DissidentGroup) 
+             (#$hasStatusWithAgent ?AGENT #$Iran #$DissidentStatus) 
+             (#$negativeVestedInterest ?AGENT #$Iran))
+(#$implies 
+             (#$and 
+               (#$performedBy ?ACT #$Iran) 
+               (#$isa ?ACT #$TerroristAttack) 
+               (#$damages ?ACT 
+                 (#$IndustryOfRegionFn #$AgriculturalEconomicSector #$Kuwait)) 
+               (#$startsAfterStartingOf ?ACT 
+                 (#$DateInSituationFn #$CalendarDay 20 #$HPKBScenarioConflict))) 
+             (#$or 
+               (#$and 
+                 (#$goals #$Iran ?PROP) 
+                 (#$increasesCausally ?ACT ?PROP #$likelihood)) 
+               (#$and 
+                 (#$goals #$Iran 
+                   (#$not ?PROP)) 
+                 (#$decreasesCausally ?ACT ?PROP #$likelihood))))
+(#$implies 
+             (#$and 
+               (#$isa ?ACT #$AerialAttack) 
+               (#$performedBy ?ACT #$Iran) 
+               (#$maleficiary ?ACT #$SaudiArabia) 
+               (#$temporallySubsumes 
+                 (#$TimeIntervalInclusiveFn 
+                   (#$DateInSituationFn #$CalendarDay 1 #$HPKBScenarioConflict) 
+                   (#$DateInSituationFn #$CalendarDay 16 #$HPKBScenarioConflict)) ?ACT)) 
+             (#$increasesImmediatelyCausally ?ACT #$HPKBScenarioConflict #$conflictLevel))
+(#$and 
+             (#$residenceOfOrganization ?AGENT #$Egypt) 
+             (#$isa ?AGENT #$TerroristGroup) 
+             (#$negativeVestedInterest ?AGENT #$Egypt))
+(#$implies 
+             (#$and 
+               (#$performedBy ?ACT #$Iran) 
+               (#$isa ?ACT #$FoundingAnOrganization) 
+               (#$isa ?ORG #$Coalition-International) 
+               (#$considersAsEnemy ?ORG #$GulfCooperationCouncil) 
+               (#$outputsCreated ?ACT ?ORG)) 
+             (#$or 
+               (#$and 
+                 (#$goals #$Iran ?PROP) 
+                 (#$increasesCausally ?ACT ?PROP #$likelihood)) 
+               (#$and 
+                 (#$goals #$Iran 
+                   (#$not ?PROP)) 
+                 (#$decreasesCausally ?ACT ?PROP #$likelihood))))
+(#$implies 
+             (#$and 
+               (#$performedBy ?ACT #$Iran) 
+               (#$isa ?ACT #$AttackOnTangible) 
+               (#$damages ?ACT #$PetrolinePipeline)) 
+             (#$or 
+               (#$and 
+                 (#$goals #$Iran ?PROP) 
+                 (#$decreasesCausally ?ACT ?PROP #$likelihood)) 
+               (#$and 
+                 (#$goals #$Iran 
+                   (#$not ?PROP)) 
+                 (#$increasesCausally ?ACT ?PROP #$likelihood))))
+(#$statementOfPurpose #$INTERPOL ?PURPOSE)
+(#$thereExists ?ACTION 
+             (#$and 
+               (#$isa ?ACTION #$MilitaryEvent) 
+               (#$performedBy ?ACTION ?COUNTRY) 
+               (#$maleficiary ?ACTION #$Kuwait) 
+               (#$isa ?COUNTRY #$IndependentCountry) 
+               (#$different ?COUNTRY #$Kuwait) 
+               (#$temporallySubsumes #$PersianGulfWar ?ACTION)))
+(#$and 
+             (#$isa ?COUNTRY #$IndependentCountry) 
+             (#$opponentsInConflict ?COUNTRY #$SaudiArabia #$PersianGulfWar))
+(#$thereExists ?ACT 
+             (#$thereExists ?FORCE 
+               (#$and 
+                 (#$performedBy ?AC#$T #$Iraq) 
+                 (#$isa ?ACT #$AttackOnTangible) 
+                 (#$isa ?FORCE #$BallisticMissile) 
+                 (#$instrument-Generic ?ACT ?FORCE))))
+(#$thereExists ?ACT 
+             (#$and 
+               (#$subEvents #$HPKBScenarioConflict ?ACT) 
+               (#$isa ?ACT #$AttackOnTangible) 
+               (#$temporallySubsumes 
+                 (#$DateInSituationFn #$CalendarDay 25 #$HPKBScenarioConflict) ?ACT) 
+               (#$deathToll ?ACT #$Person ?NUM) 
+               (#$thereExists ?FORCE 
+                 (#$and 
+                   (#$isa ?FORCE #$TruckBomb) 
+                   (#$instrument-Generic ?ACT ?FORCE)))))
+(#$near #$Oman #$PersianGulf)
+(#$and 
+                      (#$isa ?X #$OilRefinery) 
+                      (#$inRegion ?X #$Libya))
+(#$thereExists ?ACT 
+             (#$and 
+               (#$subEvents #$HPKBScenarioConflict ?ACT) 
+               (#$isa ?ACT #$AttackOnTangible) 
+               (#$thereExists ?FORCE 
+                 (#$and 
+                   (#$instrument-Generic ?ACT ?FORCE) 
+                   (#$isa ?FORCE #$WeaponOfMassDestruction))) 
+               (#$inReactionTo ?RESP ?ACT) 
+               (#$deliberateActors ?ACT #$Iran) 
+               (#$deliberateActors ?RESP #$UnitedStatesOfAmerica) 
+               (#$temporallySubsumes 
+                 (#$DateInSituationFn #$CalendarDay 23 #$HPKBScenarioConflict) ?RESP)))
+(#$thereExists ?ACT 
+             (#$and 
+               (#$isa ?ACT #$AttackOnTangible) 
+               (#$temporallySubsumes 
+                 (#$DateInSituationFn #$CalendarDay 22 #$HPKBScenarioConflict) ?ACT) 
+               (#$thereExists ?WEAPON 
+                 (#$and 
+                   (#$instrument-Generic ?ACT ?WEAPON) 
+                   (#$isa ?WEAPON #$WeaponOfMassDestruction))) 
+               (#$thereExists ?NUMBER 
+                 (#$casualtyCountByAilment ?ACT ?ILLNESS ?NUMBER))))
+(#$thereExists ?ACT 
+             (#$thereExists ?COMM 
+               (#$thereExists ?FORCE 
+                 (#$thereExists ?USAGENT 
+                   (#$and 
+                     (#$subEvents #$HPKBScenarioConflict ?ACT) 
+                     (#$isa ?ACT #$AttackOnTangible) 
+                     (#$instrument-Generic ?ACT ?FORCE) 
+                     (#$isa ?FORCE #$WeaponOfMassDestruction) 
+                     (#$isa ?COMM #$Communicating) 
+                     (#$or 
+                       (#$senderOfInfo ?COMM #$UnitedStatesOfAmerica) 
+                       (#$and 
+                         (#$senderOfInfo ?COMM ?USAGENT) 
+                         (#$hasAgents #$UnitedStatesOfAmerica ?USAGENT))) 
+                     (#$infoTransferred ?COMM 
+                       (#$thereExists ?FORCE2 
+                         (#$and 
+                           (#$instrument-Generic ?ACT ?FORCE2) 
+                           (#$isa ?FORCE2 ?FORCE-TYPE)))))))))
+(#$thereExists ?ACT 
+             (#$thereExists ?ACTOR 
+               (#$and 
+                 (#$temporallySubsumes 
+                   (#$DateInSituationFn #$CalendarDay 22 #$HPKBScenarioConflict) ?ACT) 
+                 (#$assertedFormula 
+                   (#$isa ?ACTOR ?KIND)) 
+                 (#$not 
+                   (#$quotedCollection ?KIND)) 
+                 (#$instrument-Generic ?ACT ?ACTOR) 
+                 (#$isa ?ACTOR #$MilitaryHardware) 
+                 (#$subEvents #$HPKBScenarioConflict ?ACT) 
+                 (#$isa ?ACT #$AttackOnTangible) 
+                 (#$thereExists ?FORCE 
+                   (#$and 
+                     (#$instrument-Generic ?ACT ?FORCE) 
+                     (#$isa ?FORCE #$WeaponOfMassDestruction))))))
+(#$viabilityOfAsForeignPolicyTool #$Kuwait #$ChemicalAttack ?ATTRIB)
+(#$implies 
+             (#$and 
+               (#$isa ?ATTACK #$BiologicalAttack) 
+               (#$maleficiary ?ATTACK #$SaudiArabia) 
+               (#$performedBy ?ATTACK #$Iran)) 
+             (#$holdsIn (#$STIF ?ATTACK) 
+               (#$economicStability 
+                 (#$EconomicSystemFn #$PlanetEarth) ?STABILITYRATE)))
+(#$typeBehaviorCapable #$ChemicalWeapon #$BombingMission #$deviceUsed)
+(#$thereExists ?PROTECT-ACTION 
+             (#$thereExists ?SAFETY-GOAL 
+               (#$and 
+                 (#$isa ?PROTECT-ACTION #$Action) 
+                 (#$performedBy ?PROTECT-ACTION ?AGENT) 
+                 (#$goalCategoryForAgent ?AGENT ?SAFETY-GOAL #$CitizenSafetyGoal) 
+                 (#$causes-PropProp 
+                   (#$goals ?AGENT ?SAFETY-GOAL) 
+                   (#$performedBy ?PROTECT-ACTION ?AGENT)) 
+                 (#$temporallySubsumes 
+                   (#$DateInSituationFn #$CalendarDay 19 #$HPKBScenarioConflict) ?PROTECT-ACTION))))
+(#$thereExists ?WEAPON-TYPE 
+             (#$thereExists ?DEVELOPER 
+               (#$or 
+                 (#$and 
+                   (#$expertRegarding ?DEVELOPER ?WEAPON-TYPE) 
+                   (#$genls ?WEAPON-TYPE #$WeaponOfMassDestruction) 
+                   (#$holdsIn (#$DateInSituationFn #$CalendarDay 16 #$HPKBScenarioConflict) 
+                     (#$givesSupportToAgent #$Iran ?DEVELOPER 
+                       (#$HighAmountFn #$EconomicSupport)))) 
+                 (#$holdsIn (#$DateInSituationFn #$CalendarDay 16 #$HPKBScenarioConflict) 
+                   (#$goals #$Iran 
+                     (#$relationInstanceExists #$possesses #$Iran #$WeaponOfMassDestruction))))))
+ (#$thereExists ?AL-QAIDA-RELATED-TO-BIN-LADEN 
+             (#$or 
+               (?AL-QAIDA-RELATED-TO-BIN-LADEN #$AlQaida #$OsamaBinLaden) 
+               (?BIN-LADEN-RELATED-TO-AL-QAIDA #$OsamaBinLaden #$AlQaida) 
+               (?AL-QAIDA-RELATED-TO-BIN-LADEN #$AlQaida #$OsamaBinLaden ?DEGREE) 
+               (?BIN-LADEN-RELATED-TO-AL-QAIDA #$OsamaBinLaden #$AlQaida ?DEGREE) 
+               (?AL-QAIDA-RELATED-TO-BIN-LADEN #$AlQaida ?DEGREE #$OsamaBinLaden) 
+               (?BIN-LADEN-RELATED-TO-AL-QAIDA #$OsamaBinLaden ?DEGREE #$AlQaida) 
+               (?AL-QAIDA-RELATED-TO-BIN-LADEN ?DEGREE #$AlQaida #$OsamaBinLaden) 
+               (?BIN-LADEN-RELATED-TO-AL-QAIDA ?DEGREE #$OsamaBinLaden #$AlQaida)))
+ (#$and 
+             (#$isa ?ACT #$MilitaryEvent) 
+             (#$subEvents #$PersianGulfWar ?ACT) 
+             (#$eventPartiallyOccursAt ?ACT #$Kuwait) 
+             (#$happeningOnDate ?ACT 
+               (#$DayFn 2 
+                 (#$MonthFn #$August 
+                   (#$YearFn 1990)))))
+            (#$thereExists ?IRAN-RELATION-TO-PFLP-GC 
+             (#$or 
+               (?PFLP-GC-RELATED-TO-IRAN #$PFLP-GeneralCommand #$Iran) 
+               (?IRAN-RELATION-TO-PFLP-GC #$Iran #$PFLP-GeneralCommand) 
+               (?PFLP-GC-RELATED-TO-IRAN #$PFLP-GeneralCommand #$Iran ?DEGREE) 
+               (?IRAN-RELATED-TO-PFLP-GC #$Iran #$PFLP-GeneralCommand ?DEGREE) 
+               (?PFLP-GC-RELATED-TO-IRAN #$PFLP-GeneralCommand ?OTHER #$Iran) 
+               (?IRAN-RELATED-TO-PFLP-GC #$Iran ?OTHER #$PFLP-GeneralCommand) 
+               (?PFLP-GC-RELATED-TO-IRAN ?OTHER #$PFLP-GeneralCommand #$Iran) 
+               (?IRAN-RELATED-TO-PFLP-GC ?OTHER #$Iran #$PFLP-GeneralCommand)))
+ (#$typeBehaviorCapable ?BIOLOGICAL-WEAPON-TYPE #$BiologicalAttack ?BIOLOGICAL-ATTACK-METHOD)

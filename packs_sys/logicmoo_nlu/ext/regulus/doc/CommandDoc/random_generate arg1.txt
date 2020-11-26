@@ -1,0 +1,12 @@
+Randomly generate valid sentences from the currently loaded
+grammar. Here is an example using the Toy1 grammar:
+\begin{verbatim}
+>> RANDOM_GENERATE 5
+(Randomly generate and print the specified number of sentences)
+.....
+are the fans on
+is the fan off
+dim the light
+switch on the lights
+are the lights in the living room in the living room switched off
+\end{verbatim} 

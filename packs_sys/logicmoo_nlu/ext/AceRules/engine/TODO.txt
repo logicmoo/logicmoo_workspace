@@ -1,0 +1,28 @@
+---++ Todo-List
+
+---+++ Bugs
+
+* Bugs of the grouping step:
+  * Sort predicates inside of a group
+  * No template can be a subset of another template (cf "Every user has something. John has nothing.").
+* Allow the verb "overrides" only for priority statements
+* "If there is someone X then X waits and X sleeps." should fail
+* Simple rules are not equivalent to the internal rule format
+* If group variables are outside the group but inside another group then the parsing succeeds, but it should not.
+
+
+---+++ Modifications/Extensions
+
+* CLP iterpreter should process auxiliary rules in a special way, in order to hide their existence
+* Integrate well-founded semantics (smodels & lparse)
+* Integrate defeasible logic interpreter (delores)
+* Integrate Situated Courteous Logic Programs
+* CLP: support for mutual exclusions
+* Should we allow that-subordination?
+* Verbalization of the group templates?
+
+
+---+++ Clean-up and Documentation
+
+* Update condensation.txt
+* Documentation of the verbalizer modules

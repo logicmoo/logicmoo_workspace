@@ -1,0 +1,83 @@
+
+:- include(test_header).
+
+end_of_file.
+
+:- if(false).
+
+
+
+:- if(exists_source(library(logicmoo_user))).
+
+:- use_module(library(logicmoo_user)).
+
+
+/*
+% From HCMa:
+
+ someFunnyRel(R1,R2,x,y) = 
+   (forall x y z . (R1(x,y) & R1(y,z) -> R1(x,z))) 
+ & (forall p qa . R1(p,qa) -> R2(p,qa)) 
+ & (forall Q . 
+       ((forall a b c . 
+          (Q(a,b) & Q(b,c) -> Q(a,c)))
+        & (forall m n . 
+           Q(m,n)->R2(m,n)) -> (forall l g . Q(l,g) -> R1(l,g)))).
+
+*/
+
+
+wasHCMA(
+ someFunnyRel(R1,R2,X,Y) <=>
+   (all([ X,Y,Z ], (R1(X,Y) & R1(Y,Z) => R1(X,Z)))) 
+ & (all([ P,QA ], R1(P,QA) => R2(P,QA)))
+ & (all([ Q ], 
+       ((all([ A,B,C ], 
+          (Q(A,B) & Q(B,C) => Q(A,C)))
+           & (all([ M, N ], Q(M,N)=>R2(M,N)) => (all([ L,G ], Q(L,G) => R1(L,G))))))))).
+
+/*
+asDefaulted(
+ someFunnyRel(R1,R2,X,Y) <=>
+  ((R1(X,Y) & R1(Y,Z) => R1(X,Z))
+ & (R1(P,QA) => R2(P,QA))
+ & (all(Q
+      (Q(A,B) & Q(B,C) => Q(A,C))
+   & ((Q(M,N)=>R2(M,N)) => (Q(L,G) => R1(L,G))))))).
+*/
+
+;; SomeFunnyRel(R1,R2,x,y) = 
+(forall x y z . 
+   (R1(x,y) & R1(y,z) -> R1(x,z))) 
+& (forall p q . R2(p,q) -> R1(p,q)) & 
+  (forall Q . ((forall a b c . (Q(a,b) & Q(b,c) -> Q(a,c))) 
+      & (forall m n . R2(m,n) -> Q(m,n)) -> (forall l g . R1(l,g) -> Q(l,g))))
+
+asHolds3(
+ someFunnyRel(R1,R2,X,Y) <=>
+  ((holds(R1,X,Y) & holds(R1,Y,Z) => holds(R1,X,Z))
+ & (holds(R2,P,Qa) => holds(R1,P,Qa))
+ & (holds(Q,A,B) & holds(Q,B,C) => holds(Q,A,C))
+ & ((holds(Q,M,N) => holds(R2,M,N)) => (holds(Q,L,G) => holds(R1,L,G))))).
+
+:- asHolds3(FOL),kif_to_boxlog(FOL,Entailments),wdmsgl(Entailments).
+
+
+/*
+createTC(R1,RPlus) <=>
+  exists(RPlus,
+      trans(R1,X,Y) => RPlus(X,Y)).
+
+trans(R,X,Z) <=> ( R(X,Z) v (R(X,Y) & R(Y,Z) => R(X,Z))).
+*/
+
+createTC(R1,RPlus) <=>
+  exists(RPlus,
+      trans(R1,X,Y) => holds(RPlus,X,Y)).
+
+trans(R,X,Z) <=> ( holds(R,X,Z) v (holds(R,X,Y) & holds(R,Y,Z) => holds(R,X,Z))).
+
+
+
+:- endif.
+:- endif.

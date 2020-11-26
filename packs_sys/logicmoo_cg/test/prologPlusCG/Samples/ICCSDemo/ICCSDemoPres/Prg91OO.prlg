@@ -1,0 +1,20 @@
+Rectangle(H, W)::[Rectangle : super] -
+                                      -permOf->[Perimeter],
+                                      -surfOf->[Surface],
+                                      -widthOf->[Width = W],
+                                      -heigthOf->[Heigth = H] :- not(inf(W, H)).
+Rectangle(H, W)::Perimeter(P) :- val(P, mul(2, add(H, W))).
+Rectangle(H, W)::Surface(S) :- val(S, mul(H, W)).
+
+Square = sq1, sq2.
+
+sq2 <- Square(8).
+
+Square(_)::[Square]-attr->[Beautiful].
+
+Universal > Form.
+Form > Rectangle.
+Rectangle > Square.
+
+Square(C) <- Rectangle(C, C).
+

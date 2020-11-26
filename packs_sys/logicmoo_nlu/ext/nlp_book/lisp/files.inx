@@ -1,0 +1,54 @@
+airdb1.lsp [9] example database about airline companies
+airdb2.lsp [9] example rulebase about airline companies
+airlines.lsp [8] PATR grammar, with semantics, for question-answering
+atnarcs1.lsp [3] example ATN
+atnarcs2.lsp [3] extended ATN
+atnrecog.lsp [3] parsing using an ATN
+bckinfer.lsp [9] backwards inference engine
+bubrecog.lsp [5] bottom-up, breadth-first recognition for a CF-PSG
+buparse1.lsp [5] bottom-up parsing for a CF-PSG
+buparse2.lsp [5] bottom-up parser CF-PSG with less redundancy
+burecog.lsp [5] bottom-up recognition for a CF-PSG
+cfpsgram.lsp [4] example context free grammar in list format
+chart.lsp [6] simple chart parser
+dagunify.lsp [7] unification for dags
+dbq.lsp [9] database query language evaluator
+disambig.lsp [8] PATR grammar showing disambiguation by semantic features
+eng_fre1.lsp [2] simple FST for English-French translation
+eng_fre2.lsp [3] simple PT for English-French translation
+english1.lsp [2] FSTN for a fragment of English
+english2.lsp [3] RTN for a fragment of English
+europe.lsp [9] example database for question-answering
+families.lsp [9] inference rules for family relationships
+fburecog.lsp [7] bottom-up recognition for PATR grammars
+fchart.lsp [7] chart parser for PATR grammars
+featexp.lsp [4] expanding a feature-based grammar into a CF-PSG
+finite.lsp [2] utilities for finite state networks
+forinfer.lsp [9] forwards inference engine
+fsbgen.lsp [2] breadth-first generation of sentences from a FSTN
+fsgen.lsp [2] exhaustive generation of sentences from a FSTN
+fsrecog.lsp [2] finite state recognition
+fstape.lsp [2] tape-moving procedures for finite state networks
+fstgen.lsp [2] exhaustive generation of sentence pairs from a FST
+fstrans.lsp [2] finite state transduction
+inherits.lsp [9] simple semantic net with default inheritance
+lexicon.lsp [7] example lexical entries
+lisppatr.lsp [7] PATR rules and conditions
+patrgram.lsp [7] simple PATR grammar
+pdtransd.lsp [3] push-down transduction
+plan.lsp [10] simple generation of illocutionary act plans
+predict.lsp [10] prediction by plausible inference rules
+presupp.lsp [10] presupposition grammar and inference rules
+randfgen.lsp [7] random generation of sentences from a PATR grammar
+randftre.lsp [7] random generation of trees from a PATR grammar
+randgen.lsp [4] random generation from a CF-PSG
+randtree.lsp [4] random generation of parse trees from a CF-PSG
+rtnrecog.lsp [3] recognition using RTNs
+scripts.lsp [10] script matching
+subst.lsp [7] substitution utilities
+subsumes.lsp [7] subsumption for dags
+tdparse.lsp [5] top-down parser for a CF-PSG
+tdrecog.lsp [5] top-down recognition for a CF-PSG
+termify.lsp [7] translation from dags to terms
+tsubsume.lsp [7] subsumption for terms
+tunify.lsp [7] term unification

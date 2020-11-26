@@ -1,0 +1,49 @@
+(note TQF128b)
+
+(residenceOfOrganization Taliban Afghanistan) 
+
+(residenceOfOrganization AlQaida Afghanistan) 
+
+(subBeliefSystem Islam SunniIslam) 
+
+(subBeliefSystem IslamicSocietyIdeology Islam) 
+
+(hasBeliefSystems Taliban SunniIslam) 
+
+(hasBeliefSystems AlQaida IslamicSocietyIdeology) 
+
+(query (findall ?COMMON-RELIGION ?RELATION ?RESIDENCE)
+ (thereExists ?RELATING 
+   (thereExists ?CO-RELATING 
+       (thereExists ?AL-QAIDA-TRAIT 
+           (thereExists ?TALIBAN-TRAIT 
+               (or 
+                   (?AL-QAIDA-RELATED-TO-TALIBAN AlQaida Taliban) 
+                   (?TALIBAN-RELATED-TO-AL-QAIDA Taliban AlQaida) 
+                   (?AL-QAIDA-RELATED-TO-TALIBAN AlQaida Taliban ?OTHER) 
+                   (?TALIBAN-RELATED-TO-AL-QAIDA Taliban AlQaida ?OTHER) 
+                   (?AL-QAIDA-RELATED-TO-TALIBAN AlQaida ?OTHER Taliban) 
+                   (?TALIBAN-RELATED-TO-AL-QAIDA Taliban ?OTHER AlQaida) 
+                   (?AL-QAIDA-RELATED-TO-TALIBAN ?OTHER AlQaida Taliban) 
+                   (?TALIBAN-RELATED-TO-AL-QAIDA ?OTHER Taliban AlQaida) 
+                   (and 
+                       (?RELATION ?CORRELATE AlQaida) 
+                       (?RELATION ?CORRELATE Taliban)) 
+                   (and 
+                       (?RELATION AlQaida ?RESIDENCE) 
+                       (?RELATION Taliban ?RESIDENCE) 
+                       (not 
+                           (quotedCollection ?RESIDENCE))) 
+                   (and 
+                       (?RELATING AlQaida ?AL-QAIDA-TRAIT) 
+                       (?RELATING Taliban ?TALIBAN-TRAIT) 
+                       (?CO-RELATING ?AL-QAIDA-TRAIT ?COMMON-RELIGION) 
+                       (?CO-RELATING ?COMMON-RELIGION ?TALIBAN-TRAIT) 
+                       (different ?RELATING instance) 
+                       (not 
+                           (quotedCollection ?COMMON-RELIGION)))))))))
+
+(answer Islam residenceOfOrganization Afghanistan)
+
+(end_of_file)
+

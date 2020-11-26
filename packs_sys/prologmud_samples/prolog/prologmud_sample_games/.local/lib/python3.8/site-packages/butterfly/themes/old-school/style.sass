@@ -1,0 +1,75 @@
+/* An old_school theme */
+/* Inspired by */
+/* http://blog.carbonfive.com/2015/01/07/vintage-terminal-effect-in-css3/ */
+/* http://www.htmlfivewow.com/demos/terminal/terminal.html */
+
+@import url(https://fonts.googleapis.com/css?family=VT323)
+
+$fg: #0b0
+$bg: #010
+$font-family: "VT323"
+$font-size: 2em
+$font-line-height: 1
+$shadow: 8px
+$shadow-alpha: 1
+
+$colors: #001100, #007700, #00bb00, #007700, #009900, #00bb00, #005500, #00bb00, #007700, #007700, #00bb00, #007700, #009900, #00bb00, #005500, #00ff00
+
+@import variables
+@import styles
+
+.bold
+  font-weight: normal !important
+
+body
+  animation: pulse 5s linear infinite
+
+  &:before
+    position: fixed
+    width: 100%
+    height: 100%
+    content: ''
+    display: block
+    pointer-events: none
+    background: url(on-off.png) top left repeat
+
+  /* Fixed is broken by parent scaling */
+  #popup
+    position: absolute
+    bottom: 50vh
+    height: auto
+
+
+html:after
+  content: ''
+  position: fixed
+  top: 0
+  width: 100%
+  height: 5px
+  background: rgba(#fff, .1)
+  box-shadow: 0 0 5px rgba(#fff, .1)
+  animation: vline 1.5s linear infinite
+
+@keyframes pulse
+  0%
+    transform: scale(1.001)
+    opacity: 1
+  8%
+    transform: scale(1.000)
+    opacity: .97
+  15%
+    transform: scale(1.004)
+    opacity: .99
+  30%
+    transform: scale(1.002)
+    opacity: .95
+  100%
+    transform: scale(1.000)
+    opacity: .99
+
+@keyframes vline
+  0%
+    top: 0
+  100%
+    top: 100%
+

@@ -1,0 +1,60 @@
+
+INPUT TEXT:
+If someone has a card then every customer waits.
+If someone has a code then no clerk waits.
+John has a card and has a code.
+Bill is a customer. Mary is a customer.
+Sue is a clerk.
+
+RULES:
+-group([pred_mod(wait,A,[])]) <- [pred_mod(have,B,C,[]), object(B,D,E,F,G,H), object(C,code,countable,na,eq,1), object(A,clerk,countable,na,eq,1)].
+group([pred_mod(wait,A,[])]) <- [pred_mod(have,B,C,[]), object(B,D,E,F,G,H), object(C,card,countable,na,eq,1), object(A,customer,countable,na,eq,1)].
+pred_mod(have,named('John'),v(0),[]).
+pred_mod(have,named('John'),v(1),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),customer,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Mary'),customer,countable,na,eq,1).
+object(named('Sue'),'Sue',named,na,eq,1).
+object(named('Sue'),clerk,countable,na,eq,1).
+object(v(0),code,countable,na,eq,1).
+object(v(1),card,countable,na,eq,1).
+
+SIMPLE RULES:
+-wait(A,[]) <- [have(B,C,[]), something(B), code(C), clerk(A)].
+wait(A,[]) <- [have(B,C,[]), something(B), card(C), customer(A)].
+have(named('John'),v(0),[]).
+have(named('John'),v(1),[]).
+customer(named('Bill')).
+customer(named('Mary')).
+clerk(named('Sue')).
+code(v(0)).
+card(v(1)).
+
+ANSWERSET #1:
+-group([pred_mod(wait,named('Sue'),[])]).
+group([pred_mod(wait,named('Bill'),[])]).
+group([pred_mod(wait,named('Mary'),[])]).
+pred_mod(have,named('John'),v(0),[]).
+pred_mod(have,named('John'),v(1),[]).
+object(named('Bill'),'Bill',named,na,eq,1).
+object(named('Bill'),customer,countable,na,eq,1).
+object(named('John'),'John',named,na,eq,1).
+object(named('Mary'),'Mary',named,na,eq,1).
+object(named('Mary'),customer,countable,na,eq,1).
+object(named('Sue'),'Sue',named,na,eq,1).
+object(named('Sue'),clerk,countable,na,eq,1).
+object(v(0),code,countable,na,eq,1).
+object(v(1),card,countable,na,eq,1).
+
+ANSWERTEXT #1:
+Sue is a clerk.
+Mary is a customer.
+Bill is a customer.
+John has a card.
+John has a code.
+Mary waits.
+Bill waits.
+It is false that Sue waits.
+

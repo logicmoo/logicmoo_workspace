@@ -1,0 +1,449 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 3.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="IDE.html">
+<link rel="next" href="usingmodules.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="IDE.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="usingmodules.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:projectfiles"><a id="sec:3.1"><span class="sec-nr">3.1</span> <span class="sec-title">The 
+project source files</span></a></h2>
+
+<a id="sec:projectfiles"></a>
+
+<p>Organisation of source files depends largely on the size of your 
+project. If you are doing exercises for a Prolog course you'll normally 
+use one file for each exercise. If you have a small project you'll work 
+with one directory holding a couple of files and some files to link it 
+all together. Even bigger projects will be organised in sub-projects, 
+each using its own directory.
+
+<p><h3 id="sec:filelocs"><a id="sec:3.1.1"><span class="sec-nr">3.1.1</span> <span class="sec-title">File 
+Names and Locations</span></a></h3>
+
+<a id="sec:filelocs"></a>
+
+<p><h4 id="sec:fileext"><a id="sec:3.1.1.1"><span class="sec-nr">3.1.1.1</span> <span class="sec-title">File 
+Name Extensions</span></a></h4>
+
+<a id="sec:fileext"></a>
+
+<p><a id="idx:pl:357"></a><a id="idx:pro:358"></a>The first 
+consideration is what extension to use for the source files. Tradition 
+calls for <code>.pl</code>, but conflicts with Perl force the use of 
+another extension on systems where extensions have global meaning, such 
+as MS-Windows. On such systems <code>.pro</code> is the common 
+alternative. On MS-Windows, the alternative extension is stored in the 
+registry key
+<code>HKEY_CURRENT_USER/Software/SWI/Prolog/fileExtension</code> or
+<code>HKEY_LOCAL_MACHINE/Software/SWI/Prolog/fileExtension</code>. All 
+versions of SWI-Prolog load files with the extension <code>.pl</code> as 
+well as with the registered alternative extension without explicitly 
+specifying the extension. For portability reasons we propose the 
+following convention:
+
+<dl class="latex">
+<dt><b>If there is no conflict</b></dt>
+<dd>
+because you do not use a conflicting application or the system does not 
+force a unique relation between extension and application, use <code>.pl</code>.</dd>
+<dt><b>With a conflict</b></dt>
+<dd>
+choose <code>.pro</code> and use this extension for the files you want 
+to load through your file manager. Use
+<code>.pl</code> for all other files for maximal portability.
+</dd>
+</dl>
+
+<p><h4 id="sec:projectdirs"><a id="sec:3.1.1.2"><span class="sec-nr">3.1.1.2</span> <span class="sec-title">Project 
+Directories</span></a></h4>
+
+<a id="sec:projectdirs"></a>
+
+<p><a id="idx:Sdiv:359"></a><a id="idx:chrSneg:360"></a>Large projects 
+are generally composed of sub-projects, each using its own directory or 
+directory structure. If nobody else will ever touch your files and you 
+use only one computer, there is little to worry about, but this is 
+rarely the case with a large project.
+
+<p>To improve portability, SWI-Prolog uses the POSIX notation for 
+filenames, which uses the forward slash (<code><code>/</code></code>) to 
+separate directories. Just before reaching the file system, SWI-Prolog 
+uses
+<a id="idx:prologtoosfilename2:361"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a> 
+to convert the filename to the conventions used by the hosting operating 
+system. It is <em>strongly</em> advised to write paths using the <code><code>/</code></code>, 
+especially on systems using the
+<code><code>\</code></code> for this purpose (MS-Windows). Using <code><code>\</code></code> 
+violates the portability rules and requires you to <em>double</em> the <code><code>\</code></code> 
+due to the Prolog quoted-atom escape rules.
+
+<p>Portable code should use <a id="idx:prologtoosfilename2:362"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a> 
+to convert computed paths into system paths when constructing commands 
+for <a id="idx:shell1:363"></a><a class="pred" href="system.html#shell/1">shell/1</a> 
+and friends.
+
+<p><h4 id="sec:projectpaths"><a id="sec:3.1.1.3"><span class="sec-nr">3.1.1.3</span> <span class="sec-title">Sub-projects 
+using search paths</span></a></h4>
+
+<a id="sec:projectpaths"></a>
+
+<p>Thanks to Quintus, Prolog adapted an extensible mechanism for 
+searching files using <a id="idx:filesearchpath2:364"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>. 
+This mechanism allows for comfortable and readable specifications.
+
+<p>Suppose you have extensive library packages on graph algorithms, set 
+operations and GUI primitives. These sub-projects are likely candidates 
+for re-use in future projects. A good choice is to create a directory 
+with sub-directories for each of these sub-projects.
+
+<p>Next, there are three options. One is to add the sub-projects to the 
+directory hierarchy of the current project. Another is to use a 
+completely dislocated directory. Third, the sub-project can be added to 
+the SWI-Prolog hierarchy. Using local installation, a typical <a id="idx:filesearchpath2:365"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+is:
+
+<pre class="code">
+:- prolog_load_context(directory, Dir),
+   asserta(user:file_search_path(myapp, Dir)).
+
+user:file_search_path(graph, myapp(graph)).
+user:file_search_path(ui,    myapp(ui)).
+</pre>
+
+<p>When using sub-projects in the SWI-Prolog hierarchy, one should use 
+the path alias <code>swi</code> as basis. For a system-wide 
+installation, use an absolute path.
+
+<p>Extensive sub-projects with a small well-defined API should define a 
+load file with calls to <a id="idx:usemodule1:366"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+to import the various library components and export the API.
+
+<p><h3 id="sec:project-special-files"><a id="sec:3.1.2"><span class="sec-nr">3.1.2</span> <span class="sec-title">Project 
+Special Files</span></a></h3>
+
+<a id="sec:project-special-files"></a>
+
+<p>There are a number of tasks you typically carry out on your project, 
+such as loading it, creating a saved state, debugging it, etc. Good 
+practice on large projects is to define small files that hold the 
+commands to execute such a task, name this file after the task and give 
+it a file extension that makes starting easy (see
+<a class="sec" href="projectfiles.html#sec:3.1.1.1">section 3.1.1.1</a>). 
+The task <em>load</em> is generally central to these tasks. Here is a 
+tentative list:
+
+<p>
+<ul class="latex">
+<li><i><code>load.pl</code></i><br>
+Use this file to set up the environment (Prolog flags and file search 
+paths) and load the sources. Quite commonly this file also provides 
+convenient predicates to parse command line options and start the 
+application.
+
+<p>
+<li><i><code>run.pl</code></i><br>
+Use this file to start the application. Normally it loads <code>load.pl</code> 
+in silent-mode, and calls one of the starting predicates from
+<code>load.pl</code>.
+
+<p>
+<li><i><code>save.pl</code></i><br>
+Use this file to create a saved state of the application by loading
+<code>load.pl</code> and calling <a id="idx:qsaveprogram2:367"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+to generate a saved state with the proper options.
+
+<p>
+<li><i><code>debug.pl</code></i><br>
+Loads the program for debugging. In addition to loading <code>load.pl</code> 
+this file defines rules for <a id="idx:portray1:368"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+to modify printing rules for complex terms and customisation rules for 
+the debugger and editing environment. It may start some of these tools.
+</ul>
+
+<p><h3 id="sec:intsrcfile"><a id="sec:3.1.3"><span class="sec-nr">3.1.3</span> <span class="sec-title">International 
+source files</span></a></h3>
+
+<a id="sec:intsrcfile"></a>
+
+<p>As discussed in <a class="sec" href="widechars.html#sec:2.19">section 
+2.19</a>, SWI-Prolog supports international character handling. Its 
+internal encoding is UNICODE. I/O streams convert to/from this internal 
+format. This section discusses the options for source files not in 
+US-ASCII.
+
+<p>SWI-Prolog can read files in any of the encodings described in
+<a class="sec" href="widechars.html#sec:2.19">section 2.19</a>. Two 
+encodings are of particular interest. The
+<code>text</code> encoding deals with the current <em>locale</em>, the 
+default used by this computer for representing text files. The encodings
+<code>utf8</code>, <code>unicode_le</code> and <code>unicode_be</code> 
+are
+<em>UNICODE</em> encodings: they can represent---in the same 
+file---characters of virtually any known language. In addition, they do 
+so unambiguously.
+
+<p>If one wants to represent non US-ASCII text as Prolog terms in a 
+source file, there are several options:
+
+<p>
+<ul class="latex">
+<li><i>Use escape sequences</i><br>
+This approach describes NON-ASCII as sequences of the form
+<code>\</code><i>octal</i><code>\</code>. The numerical argument is 
+interpreted as a UNICODE character.<sup class="fn">39<span class="fn-text">To 
+my knowledge, the ISO escape sequence is limited to 3 octal digits, 
+which means most characters cannot be represented.</span></sup> The 
+resulting Prolog file is strict 7-bit US-ASCII, but if there are many 
+NON-ASCII characters it becomes very unreadable.
+
+<p>
+<li><i>Use local conventions</i><br>
+Alternatively the file may be specified using local conventions, such as 
+the EUC encoding for Japanese text. The disadvantage is portability. If 
+the file is moved to another machine, this machine must use the same <em>locale</em> 
+or the file is unreadable. There is no elegant way if files from 
+multiple locales must be united in one application using this technique. 
+In other words, it is fine for local projects in countries with uniform 
+locale conventions.
+
+<p>
+<li><i>Using UTF-8 files</i><br>
+The best way to specify source files with many NON-ASCII characters is 
+definitely the use of UTF-8 encoding. Prolog can be notified of this 
+encoding in two ways, using a UTF-8 <em>BOM</em> (see <a class="sec" href="widechars.html#sec:2.19.1.1">section 
+2.19.1.1</a>) or using the directive <code>:- encoding(utf8).</code> 
+Many of today's text editors, including PceEmacs, are capable of editing 
+UTF-8 files. Projects that were started using local conventions can be 
+re-coded using the Unix
+<b>iconv</b> tool or often using commands offered by the editor.
+</ul>
+
+<p></body></html>

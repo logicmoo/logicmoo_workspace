@@ -1,0 +1,1617 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="compilation.html">
+<link rel="next" href="hooks.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="compilation.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="hooks.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:flags"><a id="sec:2.12"><span class="sec-nr">2.12</span> <span class="sec-title">Environment 
+Control (Prolog flags)</span></a></h2>
+
+<a id="sec:flags"></a>
+
+<p>The predicates <a id="idx:currentprologflag2:90"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+and <a id="idx:setprologflag2:91"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+allow the user to examine and modify the execution environment. It 
+provides access to whether optional features are available on this 
+version, operating system, foreign code environment, command line 
+arguments, version, as well as runtime flags to control the runtime 
+behaviour of certain predicates to achieve compatibility with other 
+Prolog environments.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="current_prolog_flag/2"><strong>current_prolog_flag</strong>(<var>?Key, 
+-Value</var>)</a></dt>
+<dd class="defbody">
+The predicate <a id="idx:currentprologflag2:92"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+defines an interface to installation features: options compiled in, 
+version, home, etc. With both arguments unbound, it will generate all 
+defined Prolog flags. With <var>Key</var> instantiated, it unifies <var>Value</var> 
+with the value of the Prolog flag or fails if the <var>Key</var> is not 
+a Prolog flag.
+
+<p>Flags marked <em>changeable</em> can be modified by the user using
+<a id="idx:setprologflag2:93"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a>. 
+Flag values are typed. Flags marked as <code>bool</code> can have the 
+values <code>true</code> or <code>false</code>. The predicate
+<a id="idx:createprologflag3:94"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
+may be used to create flags that describe or control behaviour of 
+libraries and applications. The library
+<code>library(settings)</code> provides an alternative interface for 
+managing notably application parameters.
+
+<p>Some Prolog flags are not defined in all versions, which is normally 
+indicated in the documentation below as <i> &ldquo;if present and true''</i>. 
+A boolean Prolog flag is true iff the Prolog flag is present
+<b>and</b> the <var>Value</var> is the atom <code>true</code>. Tests for 
+such flags should be written as below:
+
+<pre class="code">
+        (   current_prolog_flag(windows, true)
+        -&gt;  &lt;Do MS-Windows things&gt;
+        ;   &lt;Do normal things&gt;
+        )
+</pre>
+
+<p>Some Prolog flags are scoped to a source file. This implies that if 
+they are set using a directive inside a file, the flag value encountered 
+when loading of the file started is restored when loading of the file is 
+completed. Currently, the following flags are scoped to the source file:
+<a class="flag" href="flags.html#flag:generate_debug_info">generate_debug_info</a> 
+and <a class="flag" href="flags.html#flag:optimise">optimise</a>.
+
+<p>A new thread (see <a class="sec" href="threads.html#sec:10">section 
+10</a>) <em>copies</em> all flags from the thread that created the new 
+thread (its <em>parent</em>).<sup class="fn">16<span class="fn-text">This 
+is implemented using the copy-on-write technique.</span></sup> As a 
+consequence, modifying a flag inside a thread does not affect other 
+threads.
+
+<dl class="latex">
+<dt class="pubdef"><a id="flag:abi_version"><strong>abi_version</strong>(<var>dict</var>)</a></dt>
+<dd class="defbody">
+The flag value is a dict with keys that describe the version of the 
+various Application Binary Interface (ABI) components. See
+<a class="sec" href="abi-versions.html#sec:2.22">section 2.22</a> for 
+details.</dd>
+<dt class="pubdef"><a id="flag:access_level"><strong>access_level</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag defines a normal&lsquo;user' view (<code>user</code>, default) 
+or a&lsquo;system' view. In system view all system code is fully 
+accessible as if it was normal user code. In user view, certain 
+operations are not permitted and some details are kept invisible. We 
+leave the exact consequences undefined, but, for example, system code 
+can be traced using system access and system predicates can be 
+redefined.</dd>
+<dt class="pubdef"><a id="flag:address_bits"><strong>address_bits</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Address size of the hosting machine. Typically 32 or 64. Except for the 
+maximum stack limit, this has few implications to the user. See also the 
+Prolog flag <a class="flag" href="flags.html#flag:arch">arch</a>.</dd>
+<dt class="pubdef"><a id="flag:agc_margin"><strong>agc_margin</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+If this amount of atoms possible garbage atoms exist perform atom 
+garbage collection at the first opportunity. Initial value is 10,000. 
+May be changed. A value of 0 (zero) disables atom garbage collection. 
+See also <a class="func" href="foreigninclude.html#PL_register_atom()">PL_register_atom()</a>.<sup class="fn">17<span class="fn-text">Given 
+that SWI-Prolog has no limit on the length of atoms, 10,000 atoms may 
+still occupy a lot of memory. Applications using extremely large atoms 
+may wish to call <a id="idx:garbagecollectatoms0:95"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
+explicitly or lower the margin.</span></sup></dd>
+<dt class="pubdef"><a id="flag:allow_dot_in_atom"><strong>allow_dot_in_atom</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), dots may be embedded 
+into atoms that are not quoted and start with a letter. The embedded dot
+<em>must</em> be followed by an identifier continuation character (i.e., 
+letter, digit or underscore). The dot is allowed in identifiers in many 
+languages, which can make this a useful flag for defining DSLs. Note 
+that this conflicts with cascading functional notation. For example,
+<code>Post.meta.author</code> is read as <code>.(Post,&rsquo;meta.author'</code> 
+if this flag is set to <code>true</code>.</dd>
+<dt class="pubdef"><a id="flag:allow_variable_name_as_functor"><strong>allow_variable_name_as_functor</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If true (default is false), <code>Functor(arg)</code> is read as if it 
+were written <code>&rsquo;Functor'(arg)</code>. Some applications use 
+the Prolog <a id="idx:read1:96"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+predicate for reading an application-defined script language. In these 
+cases, it is often difficult to explain to non-Prolog users of the 
+application that constants and functions can only start with a lowercase 
+letter. Variables can be turned into atoms starting with an uppercase 
+atom by calling <a id="idx:readterm2:97"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+using the option <code>variable_names</code> and binding the variables 
+to their name. Using this feature, F(x) can be turned into valid syntax 
+for such script languages. Suggested by Robert van Engelen. SWI-Prolog 
+specific.</dd>
+<dt class="pubdef"><a id="flag:android"><strong>android</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If present and true, it indicates we are running on the Android OS. The 
+flag is not present in other operating systems.</dd>
+<dt class="pubdef"><a id="flag:android_api"><strong>android_api</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+If running on Android, it indicates the compile-time API Level defined 
+by the C macro <code>__ANDROID_API__</code>. It is not defined if 
+running on other operating systems. The API level may or may not match 
+the API level of the running device, since it is the API level at 
+compile time.</dd>
+<dt class="pubdef"><a id="flag:answer_write_options"><strong>answer_write_options</strong>(<var>term</var>, changeable)</a></dt>
+<dd class="defbody">
+This argument is given as option-list to <a id="idx:writeterm2:98"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+for printing results of queries. Default is <code>[quoted(true), 
+portray(true), max_depth(10), attributes(portray)]</code>.</dd>
+<dt class="pubdef"><a id="flag:apple"><strong>apple</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+<a id="idx:MacOS:99"></a>If present and <code>true</code>, the operating 
+system is MacOSX. Defined if the C compiler used to compile this version 
+of SWI-Prolog defines
+<code>__APPLE__</code>. Note that the <a class="flag" href="flags.html#flag:unix">unix</a> 
+is also defined for MacOSX.</dd>
+<dt class="pubdef"><a id="flag:arch"><strong>arch</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Identifier for the hardware and operating system SWI-Prolog is running 
+on. Used to select foreign files for the right architecture. See also
+<a class="sec" href="foreignlink.html#sec:12.2.3">section 12.2.3</a> and <a id="idx:filesearchpath2:100"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+<dt class="pubdef"><a id="flag:argv"><strong>argv</strong>(<var>list</var>, changeable)</a></dt>
+<dd class="defbody">
+List is a list of atoms representing the application command line 
+arguments. Application command line arguments are those that have
+<em>not</em> been processed by Prolog during its initialization. Note 
+that Prolog's argument processing stops at <code>--</code> or the first 
+non-option argument. See also <a class="flag" href="flags.html#flag:os_argv">os_argv</a>.<sup class="fn">18<span class="fn-text">Prior 
+to version 6.5.2, <a class="flag" href="flags.html#flag:argv">argv</a> 
+was defined as <a class="flag" href="flags.html#flag:os_argv">os_argv</a> 
+is now. The change was made for compatibility reasons and because the 
+current definition is more practical.</span></sup></dd>
+<dt class="pubdef"><a id="flag:associated_file"><strong>associated_file</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Set if Prolog was started with a prolog file as argument. Used by e.g., <a id="idx:edit0:101"></a><a class="pred" href="edit.html#edit/0">edit/0</a> 
+to edit the initial file.</dd>
+<dt class="pubdef"><a id="flag:autoload"><strong>autoload</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag controls autoloading predicates based on <a id="idx:autoload1:102"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
+and
+<a id="idx:autoload2:103"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+as well as predicates from <em>autoload libraries</em>. It has the 
+following values:
+
+<dl class="latex">
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+Predicates are never auto-loaded. If predicates have been imported 
+before using <a id="idx:autoload12:104"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/[1,2]</a>, 
+load the referenced files immediately using
+<a id="idx:usemodule12:105"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>. 
+Note that most of the development utilities such as
+<a id="idx:listing1:106"></a><a class="pred" href="listing.html#listing/1">listing/1</a> 
+have to be explicitly imported before they can be used at the toplevel.</dd>
+<dt><strong>explicit</strong></dt>
+<dd class="defbody">
+Do not autoload from <em>autoload libraries</em>, but do use lazy 
+loading for predicates imported using <a id="idx:autoload12:107"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/[1,2]</a>.</dd>
+<dt><strong>user</strong></dt>
+<dd class="defbody">
+As <code>false</code>, but to autoload library predicates into the 
+global
+<code>user</code> module. This makes the development tools and library 
+implicitly available to the toplevel, but not to modules.</dd>
+<dt><strong>user_or_explicit</strong></dt>
+<dd class="defbody">
+Combines <code>explicit</code> with <code>user</code>, providing lazy 
+loading of predicates imported using <a id="idx:autoload12:108"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/[1,2]</a> 
+and implicit access to the whole library for the toplevel.</dd>
+<dt><strong>true</strong></dt>
+<dd class="defbody">
+Provide full autoloading everywhere. This is the default.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="flag:back_quotes"><strong>back_quotes</strong>(<var>codes,chars,string,symbol_char</var>, changeable)</a></dt>
+<dd class="defbody">
+Defines the term-representation for back-quoted material. The default is <code>codes</code>. 
+If <strong>--traditional</strong> is given, the default is <code>symbol_char</code>, 
+which allows using <code>`</code> in operators composed of symbols.<sup class="fn">19<span class="fn-text">Older 
+versions had a boolean flag <code>backquoted_strings</code>, which 
+toggled between <code>string</code> and <code>symbol_char</code></span></sup> 
+See also <a class="sec" href="string.html#sec:5.2">section 5.2</a>.</dd>
+<dt class="pubdef"><a id="flag:backtrace"><strong>backtrace</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), print a backtrace on an uncaught 
+exception.</dd>
+<dt class="pubdef"><a id="flag:backtrace_depth"><strong>backtrace_depth</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+If backtraces on errors are enabled, this flag defines the maximum 
+number of frames that is printed (default&nbsp;20).</dd>
+<dt class="pubdef"><a id="flag:backtrace_goal_depth"><strong>backtrace_goal_depth</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+The frame of a backtrace is printed after making a shallow copy of the 
+goal. This flag determines the depth to which the goal term is copied. 
+Default is&lsquo;3'.</dd>
+<dt class="pubdef"><a id="flag:backtrace_show_lines"><strong>backtrace_show_lines</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), try to reconstruct the line number at 
+which the exception happened.</dd>
+<dt class="pubdef"><a id="flag:bounded"><strong>bounded</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+ISO Prolog flag. If <code>true</code>, integer representation is bound 
+by
+<a class="flag" href="flags.html#flag:min_integer">min_integer</a> and <a class="flag" href="flags.html#flag:max_integer">max_integer</a>. 
+If <code>false</code> integers can be arbitrarily large and the <a class="flag" href="flags.html#flag:min_integer">min_integer</a> 
+and
+<a class="flag" href="flags.html#flag:max_integer">max_integer</a> are 
+not present. See <a class="sec" href="arith.html#sec:4.27.2.1">section 
+4.27.2.1</a>.</dd>
+<dt class="pubdef"><a id="flag:break_level"><strong>break_level</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Current break-level. The initial top level (started with
+<strong>-t</strong>) has value 0. See <a id="idx:break0:109"></a><a class="pred" href="toplevel.html#break/0">break/0</a>. 
+This flag is absent from threads that are not running a top-level loop.</dd>
+<dt class="pubdef"><a id="flag:c_cc"><strong>c_cc</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Name of the C compiler used to compile SWI-Prolog. Normally either gcc 
+or cc. See <a class="sec" href="plld.html#sec:12.5">section 12.5</a>.</dd>
+<dt class="pubdef"><a id="flag:c_cflags"><strong>c_cflags</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+CFLAGS used to compile SWI-Prolog. See <a class="sec" href="plld.html#sec:12.5">section 
+12.5</a>.</dd>
+<dt class="pubdef"><a id="flag:c_ldflags"><strong>c_ldflags</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+LDFLAGS used to link SWI-Prolog. See <a class="sec" href="plld.html#sec:12.5">section 
+12.5</a>.</dd>
+<dt class="pubdef"><a id="flag:c_libplso"><strong>c_libplso</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Libraries needed to link extensions (shared object, DLL) to SWI-Prolog. 
+Typically empty on ELF systems and <code>-lswipl</code> on COFF-based 
+systems. See <a class="sec" href="plld.html#sec:12.5">section 12.5</a>.</dd>
+<dt class="pubdef"><a id="flag:c_libs"><strong>c_libs</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Libraries needed to link executables that embed SWI-Prolog. Typically
+<code>-lswipl</code> if the SWI-Prolog kernel is a shared (DLL). If the 
+SWI-Prolog kernel is in a static library, this flag also contains the 
+dependencies.</dd>
+<dt class="pubdef"><a id="flag:char_conversion"><strong>char_conversion</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines whether character conversion takes place while reading terms. 
+See also <a id="idx:charconversion2:110"></a><a class="pred" href="charconv.html#char_conversion/2">char_conversion/2</a>.</dd>
+<dt class="pubdef"><a id="flag:character_escapes"><strong>character_escapes</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), <a id="idx:read1:111"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+interprets <code>\</code> escape sequences in quoted atoms and strings. 
+May be changed. This flag is local to the module in which it is changed. 
+See <a class="sec" href="syntax.html#sec:2.16.1.3">section 2.16.1.3</a>.</dd>
+<dt class="pubdef"><a id="flag:colon_sets_calling_context"><strong>colon_sets_calling_context</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Using the construct &lt;<var>module</var>&gt;:&lt;<var>goal</var>&gt; 
+sets the <em>calling context</em> for executing &lt;<var>goal</var>&gt;. 
+This flag is defined by ISO/IEC 13211-2 (Prolog modules standard). See <a class="sec" href="modules.html#sec:6">section 
+6</a>.</dd>
+<dt class="pubdef"><a id="flag:color_term"><strong>color_term</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag is managed by library <code>library(ansi_term)</code>, which 
+is loaded at startup if the two conditions below are both true. Note 
+that this implies that setting this flag to <code>false</code> from the 
+system or personal initialization file (see <a class="sec" href="initfile.html#sec:2.2">section 
+2.2</a> disables colored output. The predicate <a id="idx:messageproperty2:112"></a><a class="pred" href="printmsg.html#message_property/2">message_property/2</a> 
+can be used to control the actual color scheme depending in the message 
+type passed to
+<a id="idx:printmessage2:113"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
+
+<p>
+<ul class="latex">
+<li><code>stream_property(current_output, tty(true))</code>
+<li><code>\+ current_prolog_flag(color_term, false)</code>
+</ul>
+</dd>
+<dt class="pubdef"><a id="flag:compile_meta_arguments"><strong>compile_meta_arguments</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Experimental flag that controls compilation of arguments passed to 
+meta-calls marked&lsquo;0' or&lsquo;<code><code>^</code></code>&rsquo;(see <a id="idx:metapredicate1:114"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>). 
+Supported values are:
+
+<dl class="latex">
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+(default). Meta-arguments are passed verbatim.
+</dd>
+<dt><strong>control</strong></dt>
+<dd class="defbody">
+Compile meta-arguments that contain control structures ((A,B), (A;B), 
+(A-&gt;B;C), etc.). If not compiled at compile time, such arguments are 
+compiled to a temporary clause before execution. Using this option 
+enhances performance of processing complex meta-goals that are known at 
+compile time.
+</dd>
+<dt><strong>true</strong></dt>
+<dd class="defbody">
+Also compile references to normal user predicates. This harms 
+performance (a little), but enhances the power of poor-mens consistency 
+check used by <a id="idx:make0:115"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+and implemented by <a id="idx:listundefined0:116"></a><a class="pred" href="check.html#list_undefined/0">list_undefined/0</a>.
+</dd>
+<dt><strong>always</strong></dt>
+<dd class="defbody">
+Always create an intermediate clause, even for system predicates. This 
+prepares for replacing the normal head of the generated predicate with a 
+special reference (similar to database references as used by, e.g.,
+<a id="idx:assert2:117"></a><a class="pred" href="db.html#assert/2">assert/2</a>) 
+that provides direct access to the executable code, thus avoiding 
+runtime lookup of predicates for meta-calling.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="flag:compiled_at"><strong>compiled_at</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Describes when the system has been compiled. Only available if the C 
+compiler used to compile SWI-Prolog provides the __DATE__ and __TIME__ 
+macros.</dd>
+<dt class="pubdef"><a id="flag:console_menu"><strong>console_menu</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Set to <code>true</code> in <b>swipl-win.exe</b> to indicate that the 
+console supports menus. See also <a class="sec" href="system.html#sec:4.35.3">section 
+4.35.3</a>.</dd>
+<dt class="pubdef"><a id="flag:cpu_count"><strong>cpu_count</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Number of physical CPUs or cores in the system. The flag is marked 
+read-write both to allow pretending the system has more or less 
+processors. See also <a id="idx:threadsetconcurrency2:118"></a><a class="pred" href="threadcreate.html#thread_setconcurrency/2">thread_setconcurrency/2</a> 
+and the library
+<code>library(thread)</code>. This flag is not available on systems 
+where we do not know how to get the number of CPUs. This flag is not 
+included in a saved state (see <a id="idx:qsaveprogram1:119"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/1</a>).</dd>
+<dt class="pubdef"><a id="flag:dde"><strong>dde</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Set to <code>true</code> if this instance of Prolog supports DDE as 
+described in <a class="sec" href="DDE.html#sec:4.43">section 4.43</a>.</dd>
+<dt class="pubdef"><a id="flag:debug"><strong>debug</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Switch debugging mode on/off. If debug mode is activated the system 
+traps encountered spy points (see <a id="idx:spy1:120"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>) 
+and break points. In addition, last-call optimisation is disabled and 
+the system is more conservative in destroying choice points to simplify 
+debugging.
+
+<p>Disabling these optimisations can cause the system to run out of 
+memory on programs that behave correctly if debug mode is off.</dd>
+<dt class="pubdef"><a id="flag:debug_on_error"><strong>debug_on_error</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, start the tracer after an error is detected. 
+Otherwise just continue execution. The goal that raised the error will 
+normally fail. See also the Prolog flag <a class="flag" href="flags.html#flag:report_error">report_error</a>. 
+Default is <code>true</code>.</dd>
+<dt class="pubdef"><a id="flag:debugger_show_context"><strong>debugger_show_context</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, show the context module while printing a 
+stack-frame in the tracer. Normally controlled using the&lsquo;C' option 
+of the tracer.</dd>
+<dt class="pubdef"><a id="flag:debugger_write_options"><strong>debugger_write_options</strong>(<var>term</var>, changeable)</a></dt>
+<dd class="defbody">
+This argument is given as option-list to <a id="idx:writeterm2:121"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+for printing goals by the debugger. Modified by the&lsquo;w',&lsquo;p' 
+and&lsquo;&lt;<var>N</var>&gt; d' commands of the debugger. Default is <code>[quoted(true), 
+portray(true), max_depth(10), attributes(portray)]</code>.</dd>
+<dt class="pubdef"><a id="flag:dialect"><strong>dialect</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Fixed to <code>swi</code>. The code below is a reliable and portable way 
+to detect SWI-Prolog.
+
+<pre class="code">
+is_dialect(swi) :-
+        catch(current_prolog_flag(dialect, swi), _, fail).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="flag:double_quotes"><strong>double_quotes</strong>(<var>codes,chars,atom,string</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag determines how double quoted strings are read by Prolog and is 
+---like <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+and <a class="flag" href="flags.html#flag:back_quotes">back_quotes</a>--- 
+maintained for each module. The default is <code>string</code>, which 
+produces a string as described in <a class="sec" href="string.html#sec:5.2">section 
+5.2</a>. If
+<strong>--traditional</strong> is given, the default is <code>codes</code>, 
+which produces a list of character codes, integers that represent a 
+Unicode code-point. The value <code>chars</code> produces a list of 
+one-character atoms and the value <code>atom</code> makes double quotes 
+the same as single quotes, creating a atom. See also <a class="sec" href="extensions.html#sec:5">section 
+5</a>.</dd>
+<dt class="pubdef"><a id="flag:editor"><strong>editor</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines the editor used by <a id="idx:edit1:122"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+See <a class="sec" href="edit.html#sec:4.4.1">section 4.4.1</a> for 
+details on selecting the editor used.</dd>
+<dt class="pubdef"><a id="flag:emacs_inferior_process"><strong>emacs_inferior_process</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If true, SWI-Prolog is running as an <em>inferior process</em> of 
+(GNU/X-)Emacs. SWI-Prolog assumes this is the case if the environment 
+variable <code>EMACS</code> is <code>t</code> and <code>INFERIOR</code> 
+is <code>yes</code>.</dd>
+<dt class="pubdef"><a id="flag:encoding"><strong>encoding</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Default encoding used for opening files in <code>text</code> mode. The 
+initial value is deduced from the environment. See <a class="sec" href="widechars.html#sec:2.19.1">section 
+2.19.1</a> for details.</dd>
+<dt class="pubdef"><a id="flag:executable"><strong>executable</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Pathname of the running executable. Used by <a id="idx:qsaveprogram2:123"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+as default emulator.</dd>
+<dt class="pubdef"><a id="flag:exit_status"><strong>exit_status</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Set by <a id="idx:halt1:124"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+to its argument, making the exit status available to hooks registered 
+with <a id="idx:athalt1:125"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>.</dd>
+<dt class="pubdef"><a id="flag:file_name_case_handling"><strong>file_name_case_handling</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag defines how Prolog handles the case of file names. The flag is 
+used for case normalization and to determine whether two names refer to 
+the same file.<sup class="fn">bug<span class="fn-text">Note that file 
+name case handling is typically a properly of the filesystem, while 
+Prolog only has a global flag to determine its file handling.</span></sup> 
+It has one of the following values:
+
+<dl class="latex">
+<dt><strong>case_sensitive</strong></dt>
+<dd class="defbody">
+The filesystem is fully case sensitive. Prolog does not perform any case 
+modification or case insensitive matching. This is the default on Unix 
+systems.
+</dd>
+<dt><strong>case_preserving</strong></dt>
+<dd class="defbody">
+The filesystem is case insensitive, but it preserves the case with which 
+the user has created a file. This is the default on Windows systems.
+</dd>
+<dt><strong>case_insensitive</strong></dt>
+<dd class="defbody">
+The filesystem doesn't store or match case. In this scenario Prolog maps 
+all file names to lower case.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="flag:file_name_variables"><strong>file_name_variables</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), expand <code>$\arg{varname}</code> 
+and <code><code>~</code></code> in arguments of built-in predicates that 
+accept a file name (<a id="idx:open3:126"></a><a class="pred" href="IO.html#open/3">open/3</a>, <a id="idx:existsfile1:127"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a>, <a id="idx:accessfile2:128"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>, 
+etc.). The predicate
+<a id="idx:expandfilename2:129"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a> 
+can be used to expand environment variables and wildcard patterns. This 
+Prolog flag is intended for backward compatibility with older versions 
+of SWI-Prolog.</dd>
+<dt class="pubdef"><a id="flag:file_search_cache_time"><strong>file_search_cache_time</strong>(<var>number</var>, changeable)</a></dt>
+<dd class="defbody">
+Time in seconds for which search results from <a id="idx:absolutefilename3:130"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+are cached. Within this time limit, the system will first check that the 
+old search result satisfies the conditions. Default is 10 seconds, which 
+typically avoids most repetitive searches for (library) files during 
+compilation. Setting this value to 0 (zero) disables the cache.</dd>
+<dt class="pubdef"><a id="flag:float_max"><strong>float_max</strong>(<var>float</var>)</a></dt>
+<dd class="defbody">
+The biggest representable floating point number.</dd>
+<dt class="pubdef"><a id="flag:float_max_integer"><strong>float_max_integer</strong>(<var>float</var>)</a></dt>
+<dd class="defbody">
+The highest integer that can be represented precisely as a floating 
+point number.</dd>
+<dt class="pubdef"><a id="flag:float_min"><strong>float_min</strong>(<var>float</var>)</a></dt>
+<dd class="defbody">
+The smallest representable floating point number above 0.0. See also
+<a class="function" href="arith.html#f-nexttoward/2">nexttoward/2</a>.</dd>
+<dt class="pubdef"><a id="flag:float_overflow"><strong>float_overflow</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+One of <code>error</code> (default) or <code>infinity</code>. The first 
+is ISO compliant. Using <code>infinity</code>, floating point overflow 
+is mapped to positive or negative <code>Inf</code>. See <a class="sec" href="arith.html#sec:4.27.2.4">section 
+4.27.2.4</a>.</dd>
+<dt class="pubdef"><a id="flag:float_rounding"><strong>float_rounding</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Defines how arithmetic rounds to a float. Defined values are
+<code>to_nearest</code> (default), <code>to_positive</code>, <code>to_negative</code> 
+or <code>to_zero</code>. For most scenarios the function
+<a class="function" href="arith.html#f-roundtoward/2">roundtoward/2</a> 
+provides a safer and faster alternative.</dd>
+<dt class="pubdef"><a id="flag:float_undefined"><strong>float_undefined</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+One of <code>error</code> (default) or <code>nan</code>. The first is 
+ISO compliant. Using <code>nan</code>, undefined operations such as
+<code>sqrt(-2.0)</code> is mapped to <code>NaN</code>. See <a class="sec" href="arith.html#sec:4.27.2.4">section 
+4.27.2.4</a>.</dd>
+<dt class="pubdef"><a id="flag:float_underflow"><strong>float_underflow</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+One of <code>error</code> or <code>ignore</code> (default). The second 
+is ISO compliant, binding the result to 0.0.</dd>
+<dt class="pubdef"><a id="flag:float_zero_div"><strong>float_zero_div</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+One of <code>error</code> (default) or <code>infinity</code>. The first 
+is ISO compliant. Using <code>infinity</code>, division by 0.0 is mapped 
+to positive or negative <code>Inf</code>. See <a class="sec" href="arith.html#sec:4.27.2.4">section 
+4.27.2.4</a>.</dd>
+<dt class="pubdef"><a id="flag:gc"><strong>gc</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If true (default), the garbage collector is active. If false, neither 
+garbage collection, nor stack shifts will take place, even not on 
+explicit request. May be changed.</dd>
+<dt class="pubdef"><a id="flag:gc_thread"><strong>gc_thread</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default if threading is enabled), atom and clause 
+garbage collection are executed in a separate thread with the
+<em>alias</em> <code>gc</code>. Otherwise the thread that detected 
+sufficient garbage executes the garbage collector. As running these 
+global collectors may take relatively long, using a separate thread 
+improves real time behaviour. The <code>gc</code> thread can be 
+controlled using
+<a id="idx:setprologgcthread1:131"></a><a class="pred" href="memory.html#set_prolog_gc_thread/1">set_prolog_gc_thread/1</a>.</dd>
+<dt class="pubdef"><a id="flag:generate_debug_info"><strong>generate_debug_info</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default) generate code that can be debugged using
+<a id="idx:trace0:132"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>, <a id="idx:spy1:133"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, 
+etc. Can be set to <code>false</code> using the
+<strong>--no-debug</strong>. This flag is scoped within a source file. 
+Many of the libraries have
+<code>:- set_prolog_flag(generate_debug_info, false)</code> to hide 
+their details from a normal trace.<sup class="fn">20<span class="fn-text">In 
+the current implementation this only causes a flag to be set on the 
+predicate that causes children to be hidden from the debugger. The name 
+anticipates further changes to the compiler.</span></sup></dd>
+<dt class="pubdef"><a id="flag:gmp_version"><strong>gmp_version</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+If Prolog is linked with GMP, this flag gives the major version of the 
+GMP library used. See also <a class="sec" href="foreigninclude.html#sec:12.4.9">section 
+12.4.9</a>.</dd>
+<dt class="pubdef"><a id="flag:gui"><strong>gui</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Set to <code>true</code> if XPCE is around and can be used for graphics.</dd>
+<dt class="pubdef"><a id="flag:history"><strong>history</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+If <var><var>integer</var>&gt; 0</var>, support Unix <b>csh(1)</b>-like 
+history as described in <a class="sec" href="history.html#sec:2.8">section 
+2.8</a>. Otherwise, only support reusing commands through the command 
+line editor. The default is to set this Prolog flag to 0 if a command 
+line editor is provided (see Prolog flag
+<a class="flag" href="flags.html#flag:readline">readline</a>) and 15 
+otherwise.</dd>
+<dt class="pubdef"><a id="flag:home"><strong>home</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+SWI-Prolog's notion of the home directory. SWI-Prolog uses its home 
+directory to find its startup file as <code>&lt;<var>home</var>&gt;/boot.prc</code> 
+and to find its library as <code>&lt;<var>home</var>&gt;/library</code>. 
+Some installations may put architecture independent files in a <em>shared 
+home</em> and also define <a class="flag" href="flags.html#flag:shared_home">shared_home</a>. 
+System files can be found using
+<a id="idx:absolutefilename3:134"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+as <code>swi(file)</code>. See <a id="idx:filesearchpath2:135"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+<dt class="pubdef"><a id="flag:hwnd"><strong>hwnd</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+In <b>swipl-win.exe</b>, this refers to the MS-Windows window handle of 
+the console window.</dd>
+<dt class="pubdef"><a id="flag:integer_rounding_function"><strong>integer_rounding_function</strong>(<var>down,toward_zero</var>)</a></dt>
+<dd class="defbody">
+ISO Prolog flag describing rounding by <code>//</code> and <code>rem</code> 
+arithmetic functions. Value depends on the C compiler used.</dd>
+<dt class="pubdef"><a id="flag:iso"><strong>iso</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Include some weird ISO compatibility that is incompatible with normal 
+SWI-Prolog behaviour. Currently it has the following effect:
+<ul class="latex">
+<li>The <code><code>/</code>/2</code> (float division) <em>always</em> 
+returns a float, even if applied to integers that can be divided.
+<li>In the standard order of terms (see <a class="sec" href="compare.html#sec:4.6.1">section 
+4.6.1</a>), all floats are before all integers.
+<li><a id="idx:atomlength2:136"></a><a class="pred" href="manipatom.html#atom_length/2">atom_length/2</a> 
+yields a type error if the first argument is a number.
+<li><a id="idx:clause23:137"></a><a class="pred" href="examineprog.html#clause/2">clause/[2,3]</a> 
+raises a permission error when accessing static predicates.
+<li><a id="idx:abolish12:138"></a><a class="pred" href="db.html#abolish/1">abolish/[1,2]</a> 
+raises a permission error when accessing static predicates.
+<li>Syntax is closer to the ISO standard:
+<ul class="latex">
+<li>Unquoted commas and bars appearing as atoms are not allowed. Instead 
+of
+<code>f(,,a)</code> now write <code>f(',',a)</code>. Unquoted commas can 
+only be used to separate arguments in functional notation and list 
+notation, and as a conjunction operator. Unquoted bars can only appear 
+within lists to separate head and tail, like <code>[Head|Tail]</code>, 
+and as infix operator for alternation in grammar rules, like <code>a --&gt; 
+b | c.</code>
+<li>Within functional notation and list notation terms must have 
+priority below 1000. That means that rules and control constructs 
+appearing as arguments need bracketing. A term like <code>[a :- b, c].</code> 
+must now be disambiguated to mean <code>[(a :- b), c].</code> or <code>[(a 
+:- b, c)].</code>
+<li>Operators appearing as operands must be bracketed. Instead of <code>X 
+== -, true.</code> write <code>X == (-), true.</code> Currently, this is 
+not entirely enforced.
+<li>Backslash-escaped newlines are interpreted according to the ISO 
+standard. See <a class="sec" href="syntax.html#sec:2.16.1.3">section 
+2.16.1.3</a>.
+</ul>
+</ul>
+</dd>
+<dt class="pubdef"><a id="flag:large_files"><strong>large_files</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If present and <code>true</code>, SWI-Prolog has been compiled with
+<em>large file support</em> (LFS) and is capable of accessing files 
+larger than 2GB. This flag is always <code>true</code> on 64-bit 
+hardware and true on 32-bit hardware if the configuration detected 
+support for LFS. Note that it may still be the case that the <em>file 
+system</em> on which a particular file resides puts limits on the file 
+size.</dd>
+<dt class="pubdef"><a id="flag:last_call_optimisation"><strong>last_call_optimisation</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines whether or not last-call optimisation is enabled. Normally 
+the value of this flag is the negation of the <a class="flag" href="flags.html#flag:debug">debug</a> 
+flag. As programs may run out of stack if last-call optimisation is 
+omitted, it is sometimes necessary to enable it during debugging.</dd>
+<dt class="pubdef"><a id="flag:max_answers_for_subgoal"><strong>max_answers_for_subgoal</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Limit the number of answers in a table. The atom
+<code>infinite</code> clears the flag. By default this flag is not 
+defined. See <a class="sec" href="tabling-restraints.html#sec:7.10">section 
+7.10</a> for details.</dd>
+<dt class="pubdef"><a id="flag:max_answers_for_subgoal_action"><strong>max_answers_for_subgoal_action</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+The action taken when a table reaches the number of answers specified in <a class="flag" href="flags.html#flag:max_answers_for_subgoal">max_answers_for_subgoal</a>. 
+Supported values are <code>bounded_rationality</code>, <code>error</code> 
+(default) or
+<code>suspend</code>.</dd>
+<dt class="pubdef"><a id="flag:max_arity"><strong>max_arity</strong>(<var>unbounded</var>)</a></dt>
+<dd class="defbody">
+ISO Prolog flag describing there is no maximum arity to compound terms.</dd>
+<dt class="pubdef"><a id="flag:max_integer"><strong>max_integer</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Maximum integer value if integers are <em>bounded</em>. See also the 
+flag <a class="flag" href="flags.html#flag:bounded">bounded</a> and <a class="sec" href="arith.html#sec:4.27.2.1">section 
+4.27.2.1</a>.</dd>
+<dt class="pubdef"><a id="flag:max_rational_size"><strong>max_rational_size</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Limit the size in bytes for rational numbers. This <em>tripwire</em> can 
+be used to identify cases where setting the Prolog flag
+<a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a> 
+to <code>true</code> creates excessively big rational numbers and, if 
+precision is not required, one should use floating point arithmetic.</dd>
+<dt class="pubdef"><a id="flag:max_rational_size_action"><strong>max_rational_size_action</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Action when the <a class="flag" href="flags.html#flag:max_rational_size">max_rational_size</a> 
+tripwire is exceeded. Possible values are <code>error</code> (default), 
+which throws a tripwire resource error and <code>float</code>, which 
+converts the rational number into a floating point number. Note that 
+rational numbers may exceed the range for floating point numbers.</dd>
+<dt class="pubdef"><a id="flag:max_table_answer_size"><strong>max_table_answer_size</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Limit the size of an answer substitution for tabling. The atom
+<code>infinite</code> clears the flag. By default this flag is not 
+defined. See <a class="sec" href="tabling-restraints.html#sec:7.10">section 
+7.10</a> for details.</dd>
+<dt class="pubdef"><a id="flag:max_table_answer_size_action"><strong>max_table_answer_size_action</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+The action taken if an answer substitution larger than
+<a class="flag" href="flags.html#flag:max_table_answer_size">max_table_answer_size</a> 
+is added to a table. Supported values are <code>error</code> (default), <code>bounded_rationality</code>,
+<code>suspend</code> and <code>fail</code>.</dd>
+<dt class="pubdef"><a id="flag:max_table_subgoal_size"><strong>max_table_subgoal_size</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Limit the size of a goal term accessing a table. The atom
+<code>infinite</code> clears the flag. By default this flag is not 
+defined. See <a class="sec" href="tabling-restraints.html#sec:7.10">section 
+7.10</a> for details.</dd>
+<dt class="pubdef"><a id="flag:max_table_subgoal_size_action"><strong>max_table_subgoal_size_action</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+The action taken if a tabled goal exceeds
+<a class="flag" href="flags.html#flag:max_table_subgoal_size">max_table_subgoal_size</a>. 
+Supported values are <code>error</code> (default), <code>abstract</code> 
+and <code>suspend</code>.</dd>
+<dt class="pubdef"><a id="flag:max_tagged_integer"><strong>max_tagged_integer</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Maximum integer value represented as a&lsquo;tagged' value. Tagged 
+integers require one word storage. Larger integers are represented as&lsquo;indirect 
+data' and require significantly more space.</dd>
+<dt class="pubdef"><a id="flag:message_context"><strong>message_context</strong>(<var>list(atom)</var>, changeable)</a></dt>
+<dd class="defbody">
+Context information to add to messages of the levels <code>error</code> 
+and
+<code>warning</code>. The list may contain the elements <code>thread</code> 
+to add the thread that generates the message to the message, <code>time</code> 
+or <code>time(Format)</code> to add a time stamp. The default time 
+format is <code>%T.%3f</code>. The default is <code>[thread]</code>. See 
+also <a id="idx:formattime3:139"></a><a class="pred" href="system.html#format_time/3">format_time/3</a> 
+and <a id="idx:printmessage2:140"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.</dd>
+<dt class="pubdef"><a id="flag:min_integer"><strong>min_integer</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Minimum integer value if integers are <em>bounded</em>. See also the 
+flag <a class="flag" href="flags.html#flag:bounded">bounded</a> and <a class="sec" href="arith.html#sec:4.27.2.1">section 
+4.27.2.1</a>.</dd>
+<dt class="pubdef"><a id="flag:min_tagged_integer"><strong>min_tagged_integer</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Start of the tagged-integer value range.</dd>
+<dt class="pubdef"><a id="flag:mitigate_spectre"><strong>mitigate_spectre</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+When <code>true</code> (default <code>false</code>), enforce mitigation 
+against the
+<a class="url" href="https://en.wikipedia.org/wiki/Spectre_(security_vulnerability)">Spectre</a> 
+timing-based security vulnerability. Spectre based attacks can extract 
+information from memory owned by the process that should remain 
+invisible, such as passwords or the private key of a web server. The 
+attacks work by causing speculative access to sensitive data, and 
+leaking the data via side-channels such as differences in the duration 
+of successive instructions. An example of a potentially vulnerable 
+application is <a class="url" href="https://swish.swi-prolog.org">SWISH</a>. 
+SWISH allows users to run Prolog code while the swish server must 
+protect the privacy of other users as well as its HTTPS private keys, 
+cookies and passwords.
+
+<p>Currently, enabling this flag reduces the resolution of <a id="idx:gettime1:141"></a><a class="pred" href="system.html#get_time/1">get_time/1</a> 
+and
+<a id="idx:statistics2:142"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+CPU time to <var>20&mus</var>.
+
+<p><b>WARNING</b>: Although a coarser timer makes a successful attack of 
+this type harder, it does not reliably prevent such attacks in general. 
+Full mitigation may require compiler support to disable speculative 
+access to sensitive data.</dd>
+<dt class="pubdef"><a id="flag:occurs_check"><strong>occurs_check</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag controls unification that creates an infinite tree (also 
+called <em>cyclic term</em>) and can have three values. Using
+<code>false</code> (default), unification succeeds, creating an infinite 
+tree. Using <code>true</code>, unification behaves as <a id="idx:unifywithoccurscheck2:143"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a>, 
+failing silently. Using <code>error</code>, an attempt to create a 
+cyclic term results in an <code>occurs_check</code> exception. The 
+latter is intended for debugging unintentional creations of cyclic 
+terms. Note that this flag is a global flag modifying fundamental 
+behaviour of Prolog. Changing the flag from its default may cause 
+libraries to stop functioning properly.</dd>
+<dt class="pubdef"><a id="flag:open_shared_object"><strong>open_shared_object</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If true, <a id="idx:opensharedobject2:144"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
+and friends are implemented, providing access to shared libraries (<code>.so</code> 
+files) or dynamic link libraries (<code>.DLL</code> files).</dd>
+<dt class="pubdef"><a id="flag:optimise"><strong>optimise</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, compile in optimised mode. The initial value is
+<code>true</code> if Prolog was started with the <strong>-O</strong> 
+command line option. The <a class="flag" href="flags.html#flag:optimise">optimise</a> 
+flag is scoped to a source file.
+
+<p>Currently optimised compilation implies compilation of arithmetic, 
+and deletion of redundant <a id="idx:true0:145"></a><a class="pred" href="control.html#true/0">true/0</a> 
+that may result from <a id="idx:expandgoal2:146"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a>.
+
+<p>Later versions might imply various other optimisations such as 
+integrating small predicates into their callers, eliminating constant 
+expressions and other predictable constructs. Source code optimisation 
+is never applied to predicates that are declared dynamic (see
+<a id="idx:dynamic1:147"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>).</dd>
+<dt class="pubdef"><a id="flag:os_argv"><strong>os_argv</strong>(<var>list</var>, changeable)</a></dt>
+<dd class="defbody">
+List is a list of atoms representing the command line arguments used to 
+invoke SWI-Prolog. Please note that <b>all</b> arguments are included in 
+the list returned. See <a class="flag" href="flags.html#flag:argv">argv</a> 
+to get the application options.</dd>
+<dt class="pubdef"><a id="flag:packs"><strong>packs</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If <code>true</code>, extension packs (add-ons) are attached. Can be set 
+to
+<code>false</code> using the <strong>--no-packs</strong>.</dd>
+<dt class="pubdef"><a id="flag:pid"><strong>pid</strong>(<var>int</var>)</a></dt>
+<dd class="defbody">
+Process identifier of the running Prolog process. Existence of this flag 
+is implementation-defined.</dd>
+<dt class="pubdef"><a id="flag:pipe"><strong>pipe</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If true, <code>open(pipe(command), mode, Stream)</code>, etc. are 
+supported. Can be changed to disable the use of pipes in applications 
+testing this feature. Not recommended.</dd>
+<dt class="pubdef"><a id="flag:portable_vmi"><strong>portable_vmi</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), generate <code>.qlf</code> files and 
+saved states that run both on 32 bit and 64-bit hardware. If <code>false</code>, 
+some optimized virtual machine instructions are only used if the integer 
+argument is within the range of a tagged integer for 32-bit machines.</dd>
+<dt class="pubdef"><a id="flag:posix_shell"><strong>posix_shell</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Path to a POSIX compatible shell. This default is typically
+<code>/bin/sh</code>. This flag is used by <a id="idx:shell1:148"></a><a class="pred" href="system.html#shell/1">shell/1</a> 
+and <a id="idx:qsaveprogram2:149"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.</dd>
+<dt class="pubdef"><a id="flag:prefer_rationals"><strong>prefer_rationals</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Only provided if the system is compiled with unbounded and rational 
+arithmetic support (see <a class="flag" href="flags.html#flag:bounded">bounded</a>). 
+If <code>true</code>, prefer arithmetic to produce rational numbers over 
+floats. This implies:
+
+<p>
+<ul class="latex">
+<li>Division (<a class="function" href="arith.html#f-//2">//2</a>) of 
+two integers produces a rational number.
+<li>Power (<a class="function" href="arith.html#f-^/2">^/2</a>) of two 
+integers produces a rational number, <em>also</em> if the second operant 
+is a negative number. For example, <code>2^(-2)</code> evaluates to
+<code>1/4</code>.
+</ul>
+
+<p>Using <code>true</code> can create excessively large rational 
+numbers. The Prolog flag <a class="flag" href="flags.html#flag:max_rational_size">max_rational_size</a> 
+can be used to detect and act on this <em>tripwire</em>.
+
+<p>If <code>false</code>, rational numbers can only be created using the 
+functions <a class="function" href="arith.html#f-rational/1">rational/1</a>, <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
+and
+<a class="function" href="arith.html#f-rdiv/2">rdiv/2</a> or by reading 
+them. See also
+<a class="flag" href="flags.html#flag:rational_syntax">rational_syntax</a>, <a class="sec" href="syntax.html#sec:2.16.1.6">section 
+2.16.1.6</a> and
+<a class="sec" href="arith.html#sec:4.27.2.2">section 4.27.2.2</a>.
+
+<p>The current default is <code>false</code>. We consider changing this 
+to
+<code>true</code> in the future. Users are strongly encouraged to set 
+this flag to <code>true</code> and report issues this may cause.</dd>
+<dt class="pubdef"><a id="flag:print_write_options"><strong>print_write_options</strong>(<var>term</var>, changeable)</a></dt>
+<dd class="defbody">
+Specifies the options for <a id="idx:writeterm2:150"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+used by <a id="idx:print1:151"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+and <a id="idx:print2:152"></a><a class="pred" href="termrw.html#print/2">print/2</a>.</dd>
+<dt class="pubdef"><a id="flag:prompt_alternatives_on"><strong>prompt_alternatives_on</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+<a id="idx:promptalternatives:153"></a>Determines prompting for 
+alternatives in the Prolog top level. Default is
+<code>determinism</code>, which implies the system prompts for 
+alternatives if the goal succeeded while leaving choice points. Many 
+classical Prolog systems behave as <code>groundness</code>: they prompt 
+for alternatives if and only if the query contains variables.</dd>
+<dt class="pubdef"><a id="flag:protect_static_code"><strong>protect_static_code</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), <a id="idx:clause2:154"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+does not operate on static code, providing some basic protection from 
+hackers that wish to list the static code of your Prolog program. Once 
+the flag is
+<code>true</code>, it cannot be changed back to <code>false</code>. 
+Protection is default in ISO mode (see Prolog flag <a class="flag" href="flags.html#flag:iso">iso</a>). 
+Note that many parts of the development environment require <a id="idx:clause2:155"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+to work on static code, and enabling this flag should thus only be used 
+for production code.</dd>
+<dt class="pubdef"><a id="flag:qcompile"><strong>qcompile</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This option provides the default for the <code>qcompile(+Atom)</code> 
+option of <a id="idx:loadfiles2:156"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.</dd>
+<dt class="pubdef"><a id="flag:rational_syntax"><strong>rational_syntax</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines the read and write syntax for rational numbers. Possible 
+values are <code>natural</code> (e.g., <code>1/3</code>) or <code>compatibility</code> 
+(e.g., <code>1r3</code>). The <code>compatibility</code> syntax is 
+always accepted. This flag is module sensitive.
+
+<p>The default for this flag is currently <code>compatibility</code>, 
+which reads and writes rational numbers as e.g., <code>1R3</code>.<sup class="fn">21<span class="fn-text">There 
+is still some discussion on the separating character. See <a class="sec" href="syntax.html#sec:2.16.1.6">section 
+2.16.1.6</a>.</span></sup> We will consider <code>natural</code> as a 
+default in the future. Users are strongly encouraged to set this flag to
+<code>natural</code> and report issues this may cause.</dd>
+<dt class="pubdef"><a id="flag:readline"><strong>readline</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Specifies which form of command line editing is provided. Possible 
+values are below. The flag may be set from the user's init file (see
+<a class="sec" href="initgoal.html#sec:2.3">section 2.3</a>) to one of <code>false</code>, <code>readline</code> 
+or
+<code>editline</code>. This causes the toplevel not to load a command 
+line editor (<code>false</code>) or load the specified one. If loading 
+fails the flag is set to <code>false</code>.
+
+<dl class="latex">
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+No command line editing is available.</dd>
+<dt><strong>readline</strong></dt>
+<dd class="defbody">
+The library <code>library(readline)</code> is loaded, providing line 
+editing based on the GNU readline library.</dd>
+<dt><strong>editline</strong></dt>
+<dd class="defbody">
+The library <code>library(editline)</code> is loaded, providing line 
+editing based on the BSD libedit. This is the default if <code>library(editline)</code> 
+is available and can be loaded.</dd>
+<dt><strong>swipl_win</strong></dt>
+<dd class="defbody">
+SWI-Prolog uses its own console (<b>swipl-win.exe</b> on Windows, the Qt 
+based <b>swipl-win</b> on MacOS) which provides line editing.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="flag:report_error"><strong>report_error</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, print error messages; otherwise suppress them. May 
+be changed. See also the <a class="flag" href="flags.html#flag:debug_on_error">debug_on_error</a> 
+Prolog flag. Default is <code>true</code>, except for the runtime 
+version.</dd>
+<dt class="pubdef"><a id="flag:resource_database"><strong>resource_database</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Set to the absolute filename of the attached state. Typically this is 
+the file <code>boot32.prc</code>, the file specified with <strong>-x</strong> 
+or the running executable. See also <a id="idx:resource3:157"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a>.</dd>
+<dt class="pubdef"><a id="flag:runtime"><strong>runtime</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If present and <code>true</code>, SWI-Prolog is compiled with 
+-DO_RUNTIME, disabling various useful development features (currently 
+the tracer and profiler).</dd>
+<dt class="pubdef"><a id="flag:sandboxed_load"><strong>sandboxed_load</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), <a id="idx:loadfiles2:158"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+calls hooks to allow library(sandbox) to verify the safety of 
+directives.</dd>
+<dt class="pubdef"><a id="flag:saved_program"><strong>saved_program</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+If present and <code>true</code>, Prolog has been started from a state 
+saved with <a id="idx:qsaveprogram12:159"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>.</dd>
+<dt class="pubdef"><a id="flag:shared_home"><strong>shared_home</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Indicates that part of the SWI-Prolog system files are installed in
+<code>&lt;<var>prefix</var>&gt;/share/swipl</code> instead of in the 
+home at the
+<code>&lt;<var>prefix</var>&gt;/lib/swipl</code>. This flag indicates 
+the location of this
+<em>shared home</em> and the directory is added to the file search path
+<code>swi</code>. See <a id="idx:filesearchpath2:160"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+and the flag <a class="flag" href="flags.html#flag:home">home</a>.</dd>
+<dt class="pubdef"><a id="flag:shared_object_extension"><strong>shared_object_extension</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Extension used by the operating system for shared objects. <code>.so</code> 
+for most Unix systems and <code>.dll</code> for Windows. Used for 
+locating files using the <code>file_type</code> <code>executable</code>. 
+See also
+<a id="idx:absolutefilename3:161"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>.</dd>
+<dt class="pubdef"><a id="flag:shared_object_search_path"><strong>shared_object_search_path</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Name of the environment variable used by the system to search for shared 
+objects.</dd>
+<dt class="pubdef"><a id="flag:shared_table_space"><strong>shared_table_space</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Space reserved for storing shared answer tables. See
+<a class="sec" href="tabling-shared.html#sec:7.9">section 7.9</a> and 
+the Prolog flag <a class="flag" href="flags.html#flag:table_space">table_space</a>.</dd>
+<dt class="pubdef"><a id="flag:signals"><strong>signals</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Determine whether Prolog is handling signals (software interrupts). This 
+flag is <code>false</code> if the hosting OS does not support signal 
+handling or the command line option <strong>--no-signals</strong> is 
+active. See
+<a class="sec" href="foreigninclude.html#sec:12.4.23.1">section 
+12.4.23.1</a> for details.</dd>
+<dt class="pubdef"><a id="flag:stack_limit"><strong>stack_limit</strong>(<var>int</var>, changeable)</a></dt>
+<dd class="defbody">
+Limits the combined sizes of the Prolog stacks for the current thread. 
+See also <strong>--stack-limit</strong> and <a class="sec" href="limits.html#sec:2.20.1">section 
+2.20.1</a>.</dd>
+<dt class="pubdef"><a id="flag:stream_type_check"><strong>stream_type_check</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Defines whether and how strictly the system validates that byte I/O 
+should not be applied to text streams and text I/O should not be applied 
+to binary streams. Values are <code>false</code> (no checking), <code>true</code> 
+(full checking) and <code>loose</code>. Using checking mode <code>loose</code> 
+(default), the system accepts byte I/O from text stream that use ISO 
+Latin-1 encoding and accepts writing text to binary streams.</dd>
+<dt class="pubdef"><a id="flag:string_stack_tripwire"><strong>string_stack_tripwire</strong>(<var>int</var>, changeable)</a></dt>
+<dd class="defbody">
+Maintenance for foreign language string management. Prints a warning if 
+the string stack depth hits the tripwire value. See
+<a class="sec" href="foreigninclude.html#sec:12.4.12">section 12.4.12</a> 
+for details.</dd>
+<dt class="pubdef"><a id="flag:system_thread_id"><strong>system_thread_id</strong>(<var>int</var>)</a></dt>
+<dd class="defbody">
+Available in multithreaded version (see <a class="sec" href="threads.html#sec:10">section 
+10</a>) where the operating system provides system-wide integer thread 
+identifiers. The integer is the thread identifier used by the operating 
+system for the calling thread. See also <a id="idx:threadself1:162"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>.</dd>
+<dt class="pubdef"><a id="flag:table_incremental"><strong>table_incremental</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Set the default for whether to use incremental tabling or not. Initially 
+set to <code>false</code>. See <a id="idx:table1:163"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+<dt class="pubdef"><a id="flag:table_shared"><strong>table_shared</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Set the default for whether to use shared tabling or not. Initially set 
+to <code>false</code>. See <a id="idx:table1:164"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+<dt class="pubdef"><a id="flag:table_space"><strong>table_space</strong>(<var>integer</var>, changeable)</a></dt>
+<dd class="defbody">
+Space reserved for storing answer tables for <em>tabled predicates</em> 
+(see <a id="idx:table1:165"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>).<sup class="fn">bug<span class="fn-text">Currently 
+only counts the space occupied by the nodes in the answer tries.</span></sup> 
+When exceeded a
+<code>resource_error(table_space)</code> exception is raised.</dd>
+<dt class="pubdef"><a id="flag:table_subsumptive"><strong>table_subsumptive</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Set the default choice between <em>variant</em> tabling and
+<em>subsumptive</em> tabling. Initially set to <code>false</code>. See
+<a id="idx:table1:166"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+<dt class="pubdef"><a id="flag:threads"><strong>threads</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+True when threads are supported. If the system is compiled without 
+thread support the value is <code>false</code> and read-only. Otherwise 
+the value is <code>true</code> unless the system was started with the
+<strong>--no-threads</strong>. Threading may be disabled only if no 
+threads are running. See also the <a class="flag" href="flags.html#flag:gc_thread">gc_thread</a> 
+flag.</dd>
+<dt class="pubdef"><a id="flag:timezone"><strong>timezone</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+Offset in seconds west of GMT of the current time zone. Set at 
+initialization time from the <code>timezone</code> variable associated 
+with the POSIX tzset() function. See also <a id="idx:formattime3:167"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>.</dd>
+<dt class="pubdef"><a id="flag:tmp_dir"><strong>tmp_dir</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Path to the temporary directory. initialised from the environment 
+variable <code>TMP</code> or <code>TEMP</code> in windows. If this 
+variable is not defined a default is used. This default is typically <code>/tmp</code> 
+or
+<code>c:/temp</code> in windows.</dd>
+<dt class="pubdef"><a id="flag:toplevel_goal"><strong>toplevel_goal</strong>(<var>term</var>, changeable)</a></dt>
+<dd class="defbody">
+Defines the goal that is executed after running the initialization goals 
+and entry point (see <strong>-g</strong>, <a id="idx:initialization2:168"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+and
+<a class="sec" href="compilation.html#sec:2.11.2.1">section 2.11.2.1</a>. 
+The initial value is <code>default</code>, starting a normal interactive 
+session. This value may be changed using the command line option <strong>-t</strong>. 
+The explicit value <code>prolog</code> is equivalent to <code>default</code>. 
+If <code>initialization(Goal,main)</code> is used and the toplevel is <code>default</code>, 
+the toplevel is set to
+<code>halt</code> (see <a id="idx:halt0:169"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a>).</dd>
+<dt class="pubdef"><a id="flag:toplevel_list_wfs_residual_program"><strong>toplevel_list_wfs_residual_program</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default) and the answer is <em>undefined</em> 
+according to the Well Founded Semantics (see <a class="sec" href="WFS.html#sec:7.6">section 
+7.6</a>), list the
+<em>residual program</em> before the answer. Otherwise the answer 
+terminated with <b>undefined</b>. See also <a id="idx:undefined0:170"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>.</dd>
+<dt class="pubdef"><a id="flag:toplevel_mode"><strong>toplevel_mode</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>backtracking</code> (default), the toplevel backtracks after 
+completing a query. If <code>recursive</code>, the toplevel is 
+implemented as a recursive loop. This implies that global variables set 
+using
+<a id="idx:bsetval2:171"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
+are maintained between queries. In <em>recursive</em> mode, answers to 
+toplevel variables (see <a class="sec" href="topvars.html#sec:2.9">section 
+2.9</a>) are kept in backtrackable global variables and thus <b>not 
+copied</b>. In
+<em>backtracking</em> mode answers to toplevel variables are kept in the 
+recorded database (see <a class="sec" href="db.html#sec:4.14.2">section 
+4.14.2</a>).
+
+<p>The recursive mode has been added for interactive usage of CHR (see
+<a class="sec" href="chr.html#sec:9">section 9</a>),<sup class="fn">22<span class="fn-text">Suggested 
+by Falco Nogatz</span></sup> which maintains the global constraint store 
+in backtrackable global variables.</dd>
+<dt class="pubdef"><a id="flag:toplevel_print_anon"><strong>toplevel_print_anon</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, top-level variables starting with an underscore (<code>_</code>) 
+are printed normally. If <code>false</code> they are hidden. This may be 
+used to hide bindings in complex queries from the top level.</dd>
+<dt class="pubdef"><a id="flag:toplevel_print_factorized"><strong>toplevel_print_factorized</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>) show the internal 
+sharing of subterms in the answer substitution. The example below 
+reveals internal sharing of leaf nodes in <em>red-black trees</em> as 
+implemented by the
+<code>library(rbtrees)</code> predicate rb_new/1 :
+
+<pre class="code">
+?- set_prolog_flag(toplevel_print_factorized, true).
+?- rb_new(X).
+X = t(_S1, _S1), % where
+    _S1 = black('', _G387, _G388, '').
+</pre>
+
+<p>If this flag is <code>false</code>, the <code>% where</code> notation 
+is still used to indicate cycles as illustrated below. This example also 
+shows that the implementation reveals the internal cycle length, and <em>not</em> 
+the minimal cycle length. Cycles of different length are 
+indistinguishable in Prolog (as illustrated by <code>S == R</code>).
+
+<pre class="code">
+?- S = s(S), R = s(s(R)), S == R.
+S = s(S),
+R = s(s(R)).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="flag:toplevel_prompt"><strong>toplevel_prompt</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Define the prompt that is used by the interactive top level. The 
+following <code>~</code> (tilde) sequences are replaced:
+
+<p><table class="latex frame-hsides center">
+<tr><td><code><code>~</code></code>m</td><td><em>Type in</em> module if 
+not <code>user</code> (see <a id="idx:module1:172"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>) </td></tr>
+<tr><td><code><code>~</code></code>l</td><td><em>Break level</em> if not 
+0 (see <a id="idx:break0:173"></a><a class="pred" href="toplevel.html#break/0">break/0</a>) </td></tr>
+<tr><td><code><code>~</code></code>d</td><td><em>Debugging state</em> if 
+not normal execution (see <a id="idx:debug0:174"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>, <a id="idx:trace0:175"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>) </td></tr>
+<tr><td><code><code>~</code></code>!</td><td><em>History event</em> if 
+history is enabled (see flag <a class="flag" href="flags.html#flag:history">history</a>) </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="flag:toplevel_var_size"><strong>toplevel_var_size</strong>(<var>int</var>, changeable)</a></dt>
+<dd class="defbody">
+Maximum size counted in literals of a term returned as a binding for a 
+variable in a top-level query that is saved for re-use using the
+<code><code>$</code></code> variable reference. See <a class="sec" href="topvars.html#sec:2.9">section 
+2.9</a>.</dd>
+<dt class="pubdef"><a id="flag:trace_gc"><strong>trace_gc</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), garbage collections 
+and stack-shifts will be reported on the terminal. May be changed. 
+Values are reported in bytes as <var>G</var>+<var>T</var>, where <var>G</var> 
+is the global stack value and <var>T</var> the trail stack value.&lsquo;Gained' 
+describes the number of bytes reclaimed.&lsquo;used' the number of bytes 
+on the stack after GC and&lsquo;free' the number of bytes allocated, but 
+not in use. Below is an example output.
+
+<pre class="code">
+% GC: gained 236,416+163,424 in 0.00 sec;
+      used 13,448+5,808; free 72,568+47,440
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="flag:traditional"><strong>traditional</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Available in SWI-Prolog version&nbsp;7. If <code>true</code>,&lsquo;traditional' 
+mode has been selected using <strong>--traditional</strong>. Notice that 
+some SWI7 features, like the functional notation on dicts, do not work 
+in this mode. See also <a class="sec" href="extensions.html#sec:5">section 
+5</a>.</dd>
+<dt class="pubdef"><a id="flag:tty_control"><strong>tty_control</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines whether the terminal is switched to raw mode for
+<a id="idx:getsinglechar1:176"></a><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a>, 
+which also reads the user actions for the trace. May be set. If this 
+flag is <code>false</code> at startup, command line editing is disabled. 
+See also the <strong>--no-tty</strong> command line option.</dd>
+<dt class="pubdef"><a id="flag:unix"><strong>unix</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+<a id="idx:unix:177"></a>If present and <code>true</code>, the operating 
+system is some version of Unix. Defined if the C compiler used to 
+compile this version of SWI-Prolog either defines <code>__unix__</code> 
+or <code>unix</code>. On other systems this flag is not available. See 
+also <a class="flag" href="flags.html#flag:apple">apple</a> and <a class="flag" href="flags.html#flag:windows">windows</a>.</dd>
+<dt class="pubdef"><a id="flag:unknown"><strong>unknown</strong>(<var>fail,warning,error</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines the behaviour if an undefined procedure is encountered. If
+<code>fail</code>, the predicate fails silently. If <code>warn</code>, a 
+warning is printed, and execution continues as if the predicate was not 
+defined, and if <code>error</code> (default), an <code>existence_error</code> 
+exception is raised. This flag is local to each module and inherited 
+from the module's <em>import-module</em>. Using default setup, this 
+implies that normal modules inherit the flag from <code>user</code>, 
+which in turn inherit the value <code>error</code> from <code>system</code>. 
+The user may change the flag for module <code>user</code> to change the 
+default for all application modules or for a specific module. It is 
+strongly advised to keep the <code>error</code> default and use <a id="idx:dynamic1:178"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+and/or <a id="idx:multifile1:179"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a> 
+to specify possible non-existence of a predicate.</dd>
+<dt class="pubdef"><a id="flag:unload_foreign_libraries"><strong>unload_foreign_libraries</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), unload all loaded 
+foreign libraries. Default is <code>false</code> because modern OSes 
+reclaim the resources anyway and unloading the foreign code may cause 
+registered hooks to point to no longer existing data or code.</dd>
+<dt class="pubdef"><a id="flag:user_flags"><strong>user_flags</strong>(<var>Atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Define the behaviour of <a id="idx:setprologflag2:180"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+if the flag is not known. Values are <code>silent</code>, <code>warning</code> 
+and <code>error</code>. The first two create the flag on-the-fly, where <code>warning</code> 
+prints a message. The value <code>error</code> is consistent with ISO: 
+it raises an existence error and does not create the flag. See also <a id="idx:createprologflag3:181"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a>. 
+The default is <code>silent</code>, but future versions may change that. 
+Developers are encouraged to use another value and ensure proper use of <a id="idx:createprologflag3:182"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
+to create flags for their library.</dd>
+<dt class="pubdef"><a id="flag:var_prefix"><strong>var_prefix</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), variables must start 
+with an underscore (<code>_</code>). May be changed. This flag is local 
+to the module in which it is changed. See <a class="sec" href="syntax.html#sec:2.16.1.8">section 
+2.16.1.8</a>.</dd>
+<dt class="pubdef"><a id="flag:verbose"><strong>verbose</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+This flag is used by <a id="idx:printmessage2:183"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+If its value is <code>silent</code>, messages of type <code>informational</code> 
+and <code>banner</code> are suppressed. The <strong>-q</strong> switches 
+the value from the initial
+<code>normal</code> to <code>silent</code>.</dd>
+<dt class="pubdef"><a id="flag:verbose_autoload"><strong>verbose_autoload</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> the normal consult message will be printed if a 
+library is autoloaded. By default this message is suppressed. Intended 
+to be used for debugging purposes.</dd>
+<dt class="pubdef"><a id="flag:verbose_file_search"><strong>verbose_file_search</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), print messages 
+indicating the progress of <a id="idx:absolutefilename23:184"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/[2,3]</a> 
+in locating files. Intended for debugging complicated file-search paths. 
+See also <a id="idx:filesearchpath2:185"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+<dt class="pubdef"><a id="flag:verbose_load"><strong>verbose_load</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Determines messages printed for loading (compiling) Prolog files. 
+Current values are <code>full</code> (print a message at the start and 
+end of each file loaded), <code>normal</code> (print a message at the 
+end of each file loaded), <code>brief</code> (print a message at end of 
+loading the toplevel file), and <code>silent</code> (no messages are 
+printed, default). The value of this flag is normally controlled by the 
+option
+<code>silent(Bool)</code> provided by <a id="idx:loadfiles2:186"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.</dd>
+<dt class="pubdef"><a id="flag:version"><strong>version</strong>(<var>integer</var>)</a></dt>
+<dd class="defbody">
+The version identifier is an integer with value: 
+<blockquote><var>10000 &times; <var>Major</var> + 100 &times; <var>Minor</var> 
++ <var>Patch</var></var></blockquote>
+</dd>
+<dt class="pubdef"><a id="flag:version_data"><strong>version_data</strong>(<var>swi(Major, Minor, Patch, Extra)</var>)</a></dt>
+<dd class="defbody">
+Part of the dialect compatibility layer; see also the Prolog flag
+<a class="flag" href="flags.html#flag:dialect">dialect</a> and <a class="sec" href="dialect.html#sec:C">section 
+C</a>. <var>Extra</var> provides platform-specific version information 
+as a list. <var>Extra</var> is used for
+<em>tagged versions</em> such as &ldquo;7.4.0-rc1'', in which case
+<var>Extra</var> contains a term <code>tag(rc1)</code>.</dd>
+<dt class="pubdef"><a id="flag:version_git"><strong>version_git</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Available if created from a git repository. See <b>git-describe</b> for 
+details.</dd>
+<dt class="pubdef"><a id="flag:warn_override_implicit_import"><strong>warn_override_implicit_import</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code> (default), a warning is printed if an implicitly 
+imported predicate is clobbered by a local definition. See
+<a id="idx:usemodule1:187"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+for details.</dd>
+<dt class="pubdef"><a id="flag:win_file_access_check"><strong>win_file_access_check</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Controls the behaviour or <a id="idx:accessfile2:188"></a><a class="pred" href="files.html#access_file/2">access_file/2</a> 
+under Windows. There is no reliable way to check access to files and 
+directories on Windows. This flag allows for switching between three 
+alternative approximations.
+
+<dl class="latex">
+<dt><strong>access</strong></dt>
+<dd class="defbody">
+Use Windows _waccess() function. This ignores ACLs (Access Control List) 
+and thus may indicate that access is allowed while it is not.
+</dd>
+<dt><strong>getfilesecurity</strong></dt>
+<dd class="defbody">
+Use the Windows GetFileSecurity() function. This does not work on all 
+file systems, but is probably the best choice on file systems that do 
+support it, notably local NTFS volumes.
+</dd>
+<dt><strong>openclose</strong></dt>
+<dd class="defbody">
+Try to open the file and close it. This works reliable for files, but 
+not for directories. Currently directories are checked using _waccess(). 
+This is the default.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="flag:windows"><strong>windows</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+<a id="idx:windows:189"></a>If present and <code>true</code>, the 
+operating system is an implementation of Microsoft Windows. This flag is 
+only available on MS-Windows based versions. See also <a class="flag" href="flags.html#flag:unix">unix</a>.</dd>
+<dt class="pubdef"><a id="flag:wine_version"><strong>wine_version</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+If present, SWI-Prolog is the MS-Windows version running under the <a class="url" href="https://www.winehq.org/">Wine</a> 
+emulator.</dd>
+<dt class="pubdef"><a id="flag:write_attributes"><strong>write_attributes</strong>(<var>atom</var>, changeable)</a></dt>
+<dd class="defbody">
+Defines how <a id="idx:write1:190"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+and friends write attributed variables. The option values are described 
+with the <code>attributes</code> option of
+<a id="idx:writeterm2:191"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+Default is <code>ignore</code>.</dd>
+<dt class="pubdef"><a id="flag:write_help_with_overstrike"><strong>write_help_with_overstrike</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Internal flag used by <a id="idx:help1:192"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
+when writing to a terminal. If present and <code>true</code> it prints 
+bold and underlined text using
+<em>overstrike</em>.</dd>
+<dt class="pubdef"><a id="flag:xpce"><strong>xpce</strong>(<var>bool</var>)</a></dt>
+<dd class="defbody">
+Available and set to <code>true</code> if the XPCE graphics system is 
+loaded.</dd>
+<dt class="pubdef"><a id="flag:xpce_version"><strong>xpce_version</strong>(<var>atom</var>)</a></dt>
+<dd class="defbody">
+Available and set to the version of the loaded XPCE system.</dd>
+<dt class="pubdef"><a id="flag:xref"><strong>xref</strong>(<var>bool</var>, changeable)</a></dt>
+<dd class="defbody">
+If <code>true</code>, source code is being read for <em>analysis</em> 
+purposes such as cross-referencing. Otherwise (default) it is being read 
+to be compiled. This flag is used at several places by <a id="idx:termexpansion2:193"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+and
+<a id="idx:goalexpansion2:194"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+hooks, notably if these hooks use side effects. See also the libraries <code>library(prolog_source)</code> 
+and <code>library(prolog_xref)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="set_prolog_flag/2"><strong>set_prolog_flag</strong>(<var>:Key, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Define a new Prolog flag or change its value. <var>Key</var> is an atom. 
+If the flag is a system-defined flag that is not marked
+<em>changeable</em> above, an attempt to modify the flag yields a
+<code>permission_error</code>. If the provided <var>Value</var> does not 
+match the type of the flag, a <code>type_error</code> is raised.
+
+<p>Some flags (e.g., <a class="flag" href="flags.html#flag:unknown">unknown</a>) 
+are maintained on a per-module basis. The addressed module is determined 
+by the <var>Key</var> argument.
+
+<p>In addition to ISO, SWI-Prolog allows for user-defined Prolog flags. 
+The type of the flag is determined from the initial value and cannot be 
+changed afterwards. Defined types are <code>boolean</code> (if the 
+initial value is one of <code>false</code>, <code>true</code>, <code>on</code> 
+or <code>off</code>),
+<code>atom</code> if the initial value is any other atom, <code>integer</code> 
+if the value is an integer that can be expressed as a 64-bit signed 
+value. Any other initial value results in an untyped flag that can 
+represent any valid Prolog term.
+
+<p>The behaviour when <var>Key</var> denotes a non-existent key depends 
+on the Prolog flag <a class="flag" href="flags.html#flag:user_flags">user_flags</a>. 
+The default is to define them silently. New code is encouraged to use <a id="idx:createprologflag3:195"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
+for portability.</dd>
+<dt class="pubdef"><span class="pred-tag">[YAP]</span><a id="create_prolog_flag/3"><strong>create_prolog_flag</strong>(<var>+Key, 
++Value, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new Prolog flag. The ISO standard does not foresee creation of 
+new flags, but many libraries introduce new flags. <var>Options</var> is 
+a list of the options below. See also <a class="flag" href="flags.html#flag:user_flags">user_flags</a>.
+
+<dl class="latex">
+<dt><strong>access</strong>(<var>+Access</var>)</dt>
+<dd class="defbody">
+Define access rights for the flag. Values are <code>read_write</code> 
+and <code>read_only</code>. The default is <code>read_write</code>.</dd>
+<dt><strong>type</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Define a type restriction. Possible values are
+<code>boolean</code>, <code>atom</code>, <code>integer</code>, <code>float</code> 
+and <code>term</code>. The default is determined from the initial value. 
+Note that <code>term</code> restricts the term to be ground.</dd>
+<dt><strong>keep</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, do not modify the flag if it already exists. 
+Otherwise (default), this predicate behaves as <a id="idx:setprologflag2:196"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+if the flag already exists.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

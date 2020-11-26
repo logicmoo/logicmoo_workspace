@@ -1,0 +1,102 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter6/ThielscherCircuit1.e
+loading foundations/Root.e
+loading foundations/EC.e
+loading foundations/ECCausal.e
+480 variables and 1498 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Closed(S2).
+Closed(S3).
+Happens(Activate(R), 0).
+Happens(Close(S1), 0).
+Happens(Open(S2), 0).
+1
+-Closed(S2).
++Activated(R).
++Closed(S1).
+P
+Initiated(Activated(R), 0).
+Initiated(Activated(R), 1).
+Initiated(Closed(S1), 0).
+Initiated(Closed(S1), 1).
+Initiated(Closed(S3), 0).
+Initiated(Closed(S3), 1).
+Started(Activated(R), 0).
+Started(Activated(R), 1).
+Started(Closed(S1), 0).
+Started(Closed(S1), 1).
+Started(Closed(S2), 0).
+Started(Closed(S3), 0).
+Started(Closed(S3), 1).
+Stopped(Activated(R), 0).
+Stopped(Closed(S1), 0).
+Stopped(Closed(S2), 0).
+Stopped(Closed(S2), 1).
+Stopped(Lit(L), 0).
+Stopped(Lit(L), 1).
+Terminated(Closed(S2), 0).
+Terminated(Closed(S2), 1).
+Terminated(Lit(L), 0).
+Terminated(Lit(L), 1).
+!Happens(Activate(R), 1).
+!Happens(Close(S1), 1).
+!Happens(Close(S2), 0).
+!Happens(Close(S2), 1).
+!Happens(Close(S3), 0).
+!Happens(Close(S3), 1).
+!Happens(Light(L), 0).
+!Happens(Light(L), 1).
+!Happens(Open(S1), 0).
+!Happens(Open(S1), 1).
+!Happens(Open(S2), 1).
+!Happens(Open(S3), 0).
+!Happens(Open(S3), 1).
+!Initiated(Closed(S2), 0).
+!Initiated(Closed(S2), 1).
+!Initiated(Lit(L), 0).
+!Initiated(Lit(L), 1).
+!ReleasedAt(Activated(R), 0).
+!ReleasedAt(Activated(R), 1).
+!ReleasedAt(Closed(S1), 0).
+!ReleasedAt(Closed(S1), 1).
+!ReleasedAt(Closed(S2), 0).
+!ReleasedAt(Closed(S2), 1).
+!ReleasedAt(Closed(S3), 0).
+!ReleasedAt(Closed(S3), 1).
+!ReleasedAt(Lit(L), 0).
+!ReleasedAt(Lit(L), 1).
+!Started(Closed(S2), 1).
+!Started(Lit(L), 0).
+!Started(Lit(L), 1).
+!Stopped(Activated(R), 1).
+!Stopped(Closed(S1), 1).
+!Stopped(Closed(S3), 0).
+!Stopped(Closed(S3), 1).
+!Terminated(Activated(R), 0).
+!Terminated(Activated(R), 1).
+!Terminated(Closed(S1), 0).
+!Terminated(Closed(S1), 1).
+!Terminated(Closed(S3), 0).
+!Terminated(Closed(S3), 1).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ECCausal: 4 predicates, 0 functions, 0 fluents, 0 events, 4 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ThielscherCircuit1: 0 predicates, 0 functions, 3 fluents, 4 events, 13 axioms
+encoding 0.5s
+solution 0.0s
+total 1.0s
+Discrete Event Calculus Reasoner 1.0

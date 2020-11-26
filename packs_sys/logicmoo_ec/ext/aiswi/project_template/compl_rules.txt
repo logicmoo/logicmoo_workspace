@@ -1,0 +1,79 @@
+% Specifica la cella iniziale
+H(start,0.0)
+ /\ begin(X, Y, C, F)
+--->E(sono(X, Y, C, F), 0).
+
+% Cella iniziale di default 0,0
+H(start,0.0)
+ /\ not clause(begin(_,_,_,_), true)
+---> E(sono(0,0,_,_),0.0).
+
+% Specifica la cella di arrivo
+H(start,0.0)
+ /\ end(X, Y, C, F)
+--->E(sono(X,Y,C,F),T) /\ T > 0
+ /\EN(sono(_,_,_,_),T2) /\ T2 > T.
+
+% Cella finale di default 7,7
+H(start,0.0)
+ /\ not clause(end(_,_,_,_), true)
+--->E(sono(7,7,_,_),T) 
+ /\ T > 0 
+ /\EN(sono(_,_,_,_),T2) 
+ /\ T2 > T.
+
+% Specifica il massimo numero di mosse
+H(start,0.0)
+ /\ maxmove(MAXT)
+--->EN(sono(_,_,_,_),T2)
+ /\ T2 > MAXT.
+
+% Specifica il minimo numero di mosse
+H(start,0.0)
+ /\ minmove(MINT)
+--->E(sono(_,_,_,_),T2)
+ /\ T2 > MINT.
+
+% Mossa che devi fare entro DELAY mosse
+H(start,0.0)
+ /\ force([X,Y,C,F],[X2,Y2,C2,F2], DELAY)
+ /\ H(sono(X,Y,C,F),T)	
+--->E(sono(X2,Y2,C2,F2),T2) 
+ /\ T2 > T 
+ /\ T2 <= T+DELAY.
+
+% Mossa che NON puoi fare per DELAY mosse
+H(start,0.0)
+ /\ ban([X,Y,C,F],[X2,Y2,C2,F2], DELAY)
+ /\ H(sono(X,Y,C,F),T)	
+--->EN(sono(X2,Y2,C2,F2),T2) 
+ /\ T2 > T 
+ /\ T2 <= T+DELAY.
+
+% Mossa che devi aver fatto prima
+% di andare su una cella
+H(start,0.0)
+ /\ prereq([X,Y,C,F],[X2,Y2,C2,F2])
+ /\ H(sono(X,Y,C,F),T)
+--->E(sono(X2,Y2,C2,F2),T2) 
+ /\ T2 < T.
+
+% Stabilisce come DEVO spostarmi 
+% rispetto all'ultimo click
+H(start,0.0)
+ /\ move_rules([X,Y,C,F], COND, DELAY)
+ /\ H(sono(X,Y,C,F),T)
+--->E(sono(X2,Y2,C2,F2),T2) 
+ /\ T2 > T 
+ /\ T2 <= T+DELAY 
+ /\ call(COND, X, Y, X2, Y2).
+
+% Stabilisce come NON POSSO spostarmi 
+% rispetto all'ultimo click
+H(start,0.0)
+ /\ not_move_rules([X,Y,C,F], COND, DELAY)
+ /\ H(sono(X,Y,C,F),T)
+--->EN(sono(X2,Y2,C2,F2),T2) 
+ /\ T2 > T 
+ /\ T2 <= T+DELAY 
+ /\ call(COND, X, Y, X2, Y2).

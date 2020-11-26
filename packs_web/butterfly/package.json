@@ -1,0 +1,25 @@
+{
+  "name": "butterfly",
+  "version": "3.0.0",
+  "description": "A sleek web based terminal emulator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paradoxxxzero/butterfly.git"
+  },
+  "private": true,
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/paradoxxxzero/butterfly/issues"
+  },
+  "homepage": "https://github.com/paradoxxxzero/butterfly",
+  "devDependencies": {
+    "coffeelint": "^1.15.7",
+    "grunt": "^1.0.1",
+    "grunt-coffeelint": "0.0.15",
+    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-sass": "^2.1.0"
+  }
+}

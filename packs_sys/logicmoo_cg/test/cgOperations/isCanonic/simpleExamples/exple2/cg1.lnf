@@ -1,0 +1,4 @@
+[Man]<-agnt-[Work]-
+	  		-obj->[Job],
+	  		-manr->[Book]
+

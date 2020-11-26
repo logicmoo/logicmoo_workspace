@@ -1,0 +1,189 @@
+//--------------------------------------------------G1------------------------------------------------------------
+event(gg1, [Act = [Propel]-
+                  -actor->[Human :Mike = [Human: Mike ]-
+			-Age->[Age:Adult],
+			-Hair->[Hair]-Color->[Color:Brown],
+			-ID->[ID:Human001]
+		                            ],
+                  -object->[Cup = [Cup]-
+		                  -Composition->[Composition : glass],
+		                  -Color->[Color : Clear],
+		                  -Owner->[Human :Mike = [Human: Mike ]-
+					-Age->[Age:Adult],
+					-Hair->[Hair]-Color->[Color:Brown],
+					-ID->[ID:Human001]
+				         ],
+		                 -ID->[ID:Glass001]
+	                   ],
+                  -to->[Floor]
+							     	
+      ]-after->[State = [Broken]-                 
+		 -object->[Cup = [Cup]-
+				-Composition->[Composition : glass],
+				-Color->[Color : Clear],
+				-Owner->[Human :Mike = [Human: Mike ]-
+						-Age->[Age:Adult],
+						-Hair->[Hair]-Color->[Color:Brown],
+						-ID->[ID:Human001]
+						],
+				-ID->[ID:Glass001]
+				]
+		        ]).
+//--------------------------------------------------G2--------------------------------------------------------------
+
+event(gg2, [Act = [Propel]-
+                  -actor->[Cat :Jill = [Cat: Jill ]-
+			-Age->[Age:Kitten],
+			-Hair->[Hair]-Color->[Color:Tan],
+			-ID->[ID:Cat002]
+		        ],
+                  -object->[Vase = [Vase]-
+			-Composition->[Composition : glass],
+			-Color->[Color : Red],
+			-Owner->[Human :Chris = [Human: Chris]-
+					-Age->[Age:Adult],
+					-Hair->[Hair]-Color->[Color:Brown],
+					-ID->[ID:Human002]
+					],
+			-ID->[ID:Glass002]
+		        ],
+
+                  -to->[Table]
+							     	
+      ]-after->[State = [Broken]-                 
+		 -object->[Vase = [Vase]-
+				-Composition->[Composition : glass],
+				-Color->[Color : Red],
+				-Owner->[Human :Chris = [Human: Chris  ]-
+						-Age->[Age:Adult],
+						-Hair->[Hair]-Color->[Color:Brown],
+						-ID->[ID:Human002]
+						],
+				-ID->[ID:Glass002]
+			]
+		        ]).
+//---------------------------------------------------G3-------------------------------------------------------------
+event(gg3, [Act = [Propel]-
+                  -actor->[Human :Mike = [Human: Mike ]-
+						-Age->[Age:Adult],
+						-Hair->[Hair]-Color->[Color:Brown],
+						-ID->[ID:Human001]
+		        ],
+                  -object->[Bowl = [Bowl]-
+					-Color->[Color : Clear],
+					-Composition->[Composition : glass],
+					-Owner->[Cat :Jill = [Cat: Jill ]-
+						-Age->[Age:Kitten],
+						-Hair->[Hair]-Color->[Color:Tan],
+						-ID->[ID:Cat002]
+						],
+					-ID->[ID:Glass003]
+		        ],
+
+                  -to->[Floor]
+							     	
+      ]-after->[State = [Broken]-                 
+			 -object->[Bowl = [Bowl]-
+					-Color->[Color : Clear],
+					-Composition->[Composition : glass],
+					-Owner->[Cat :Jill = [Cat: Jill ]-
+						-Age->[Age:Kitten],
+						-Hair->[Hair]-Color->[Color:Tan],
+						-ID->[ID:Cat002]
+						],
+					-ID->[ID:Glass003]
+					]
+		        ]).			
+//---------------------------------------------------B1-------------------------------------------------------------
+event(bb1, [State = [Broken]-                 
+			 -object->[Watch = [Watch]-
+					-Composition->[Composition : plastic],
+					-Color->[Color : White],
+					-Owner->[Human :Chris = [Human: Chris ]-
+						-Age->[Age:Adult],
+						-Hair->[Hair]-Color->[Color:Brown],
+						-ID->[ID:Human002]
+						],
+					-ID->[ID:watch001]
+					]
+	     ]-after->[Affect = [angry]-                 
+			 	-actor->[Human :Chris = [Human: Chris ]-
+						-Age->[Age:Adult],
+						-Hair->[Hair]-Color->[Color:Brown],
+						-ID->[ID:Human002]
+		       			 ]
+		        ]).	//---------------------------------------------------B2-------------------------------------------------------------	
+event(bb2, [State = [Broken]-                 
+			 -object->[Pencil = [Pencil]-
+					-Color->[Color : Yellow],
+					-Composition->[Composition : wood],
+					-Owner->[Human :Lynn = [Human: Lynn ]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-ID->[ID:Human003]
+						],
+					-ID->[ID:pencil001]
+					]
+	     ]-after->[Affect = [angry]-                 
+			 	-actor->[Human :Lynn = [Human: Lynn ]-
+						-Age->[Age:Kid],
+						-Hair->[Hair]-Color->[Color:Blond],
+						-ID->[ID:Human003]
+		       			 ]
+		        ]).
+//---------------------------------------------------E1-------------------------------------------------------------
+event(ee1, [Act = [Propel]-
+                  -actor->[Cat :Jill = [Cat: Jill ]-
+						-Age->[Age:Kitten],
+						-Hair->[Hair]-Color->[Color:Tan],
+						-ID->[ID:Cat002]
+		        ],
+                  -object->[Vase = [Vase]-
+					-Color->[Color : Red],
+					-Composition->[Composition : glass],
+					-Owner->[Human :Chris = [Human: Chris ]-
+								-Age->[Age:Adult],
+								-Hair->[Hair]-Color->[Color:Brown],
+								-ID->[ID:Human002]
+						                ],
+					-ID->[ID:Glass002]
+		        ],
+
+                  -to->[table]
+							     	
+      ]-after->[Affect = [angry]-                 
+			 	-actor->[Human :Chris = [Human: Chris ]-
+							-Age->[Age:Adult],
+							-Hair->[Hair]-Color->[Color:Brown],
+							-ID->[ID:Human002]
+		       			 ]
+		        ]).
+//------------------------------------------------GenRules----------------------------------------------------------
+genRule([Act = [_Act]-object->[_Object = _obj]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-object->[_Object]]-result->[_State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]]).
+
+genRule([Act = [_Act]-to->[_Object = _obj]]-after->[State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object = _obj]],
+        [_Act = [_Act]-to->[_Object]]-result->[_State = 	
+                                            [State_Value: _StValue]<-State_Value-[_State]-object->[_Object]]).
+
+genRule([Act = [_Act]-object->[_Object = _obj]]-after->[Affect = 	
+                                         [Affect_Value: _AfValue]<-Affect_Value-[_Affect]-actor->[_Actor = _actorDescr]],
+        [_Act = [_Act]-object->[_Object]]-result->[_Affect = 	
+                                            [Affect_Value: _AfValue]<-Affect_Value-[_Affect]-actor->[_actorDescr]]).
+
+genRule([Act = [_Act]-to->[_Object = _obj]]-after->[Affect = 	
+                                         [Affect_Value: _AfValue]<-Affect_Value-[_Affect]-actor->[_Actor = _actorDescr]],
+        [_Act = [_Act]-to->[_Object]]-result->[_Affect = 	
+                                            [Affect_Value: _AfValue]<-Affect_Value-[_Affect]-actor->[_actorDescr]]).
+
+//--------------------------------------------Causal Pattern---------------------------------------------------------
+
+
+
+
+		
+
+

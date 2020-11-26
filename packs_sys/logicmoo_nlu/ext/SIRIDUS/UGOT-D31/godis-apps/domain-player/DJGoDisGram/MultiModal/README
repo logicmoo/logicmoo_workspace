@@ -1,0 +1,20 @@
+This is where the clicks will go.
+
+The idea would be
+
+abs
+clickAction : Request; ??
+
+
+swe
+clickAction action = {s = ["menu(button,"] ++ action.s ++ ")"]; ??
+
+
+pro
+
+clickAction action = {s = action.s};
+
+
+
+or something like it. 
+

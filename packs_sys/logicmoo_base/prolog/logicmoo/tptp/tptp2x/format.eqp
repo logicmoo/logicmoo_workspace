@@ -1,0 +1,146 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ANL EQP system.
+%----
+%----Written by Geoff Sutcliffe, July, 2000.
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+output_eqp_options([]):-
+    write('end_of_commands.'),
+    nl,
+    nl.
+
+output_eqp_options([FirstOption|RestOfOptions]):-
+    write(FirstOption),
+    write('.'),
+    nl,
+    output_eqp_options(RestOfOptions).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Output of equality literals
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive
+output_eqp_literal(--'$tptp_equal'(LHS,RHS)):-
+    write(LHS),
+    write(' != '),
+    write(RHS).
+
+output_eqp_literal(++'$tptp_equal'(LHS,RHS)):-
+    write(LHS),
+    write(' = '),
+    write(RHS).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_eqp_clauses([]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_eqp_clauses([input_clause(Name,Status,[Literal])|
+RestOfClauses]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_eqp_literal(Literal),
+    !,
+    write('.'),
+    nl,
+    nl,
+    output_eqp_clauses(RestOfClauses).
+
+output_eqp_clauses(_):-
+    write('ERROR: EQP only does UEQ (maybe you forgot -t rm_equality:rstfp)'),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%======================================================================
+%----Output of EQP lists
+%======================================================================
+%------------------------------------------------------------------------------
+%----Output the clauses for the given list, selected by status
+output_eqp_list(Clauses,List):-
+    write('list('),
+    write(List),
+    write(').'),
+    nl,
+    nl,
+    output_eqp_clauses(Clauses),
+    write('end_of_list.'),
+    nl,
+    nl.
+%------------------------------------------------------------------------------
+%-----Check all the literals have this sign
+eqp_check_sign_of_literals(_,[]):-
+    !.
+
+eqp_check_sign_of_literals(Sign,[FirstLiteral|RestOfLiterals]):-
+    FirstLiteral =.. [Sign,_],
+    check_sign_of_literals(Sign,RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Decide if a formula or clause is in the SoS
+in_eqp_SoS(input_clause(_,negated_conjecture,_),conjecture).
+
+in_eqp_SoS(input_clause(_,Status,_),hypothesis):-
+    tptp2X_member(Status,[hypothesis,negated_conjecture]).
+
+in_eqp_SoS(input_clause(_,_,Literals),positive):-
+    check_sign_of_literals(++,Literals).
+
+in_eqp_SoS(input_clause(_,_,Literals),negative):-
+    check_sign_of_literals(--,Literals).
+
+in_eqp_SoS(input_clause(_,_,[_]),unit).
+
+in_eqp_SoS(_,all).
+%------------------------------------------------------------------------------
+%----Extract the clauses for the SoS, based on the specifier
+extract_eqp_sos([],_,[],[]):-
+    !.
+
+%----In the SoS
+extract_eqp_sos([FirstInputFormula|RestOfInputFormulae],
+SoSSpecifiers,[FirstInputFormula|RestOfSoS],Usable):-
+    tptp2X_member(SoSSpecifier,SoSSpecifiers),
+    in_eqp_SoS(FirstInputFormula,SoSSpecifier),
+    !,
+    extract_eqp_sos(RestOfInputFormulae,SoSSpecifiers,RestOfSoS,Usable).
+
+%----Not in the SoS
+extract_eqp_sos([FirstInputFormula|RestOfInputFormulae],
+SoSSpecifiers,SoS,[FirstInputFormula|RestOfUsable]):-
+    extract_eqp_sos(RestOfInputFormulae,SoSSpecifiers,SoS,RestOfUsable).
+%------------------------------------------------------------------------------
+%----Output all the clauses in EQP format
+eqp(eqp,Clauses,_):-
+    tptp_clauses(Clauses),
+%    tptp2X_member(SoSSpecifier,[conjecture,hypothesis,positive,negative,
+%unit,none,all]),
+    output_eqp_options([set(prolog_style_variables),set(lrpo),
+set(basic_paramod),set(functional_subsume),set(ordered_paramod),
+set(prime_paramod),set(para_pairs),assign(pick_given_ratio, 4),
+clear(print_kept),clear(print_new_demod),clear(print_back_demod),
+clear(print_given),assign(max_mem,64000)]),
+    extract_eqp_sos(Clauses,[all],SoS,Usable),
+    output_eqp_list(Usable,usable),
+    output_eqp_list(SoS,sos).
+
+%----Do nothing for FOF - just leave a comment
+eqp(eqp,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in EQP'),
+    nl.
+%------------------------------------------------------------------------------
+%----Provide information about the EQP format
+eqp_format_information('%','.eqp').
+%------------------------------------------------------------------------------
+%----Provide information about the EQP file
+eqp_file_information(format,eqp:conjecture:'clear(print_given),set(auto)',
+'SoS is one of conjecture, hypothesis, positive, negative, unit, none, all Flags can be added').
+%------------------------------------------------------------------------------

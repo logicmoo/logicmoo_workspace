@@ -1,0 +1,19 @@
+#!/bin/bash
+
+mkdir -p /tmp/boxer/
+
+# INFILE=`mktemp --tmpdir=/tmp/boxer --suffix=.txt`
+
+INFILE=/tmp/boxer/input.txt
+OUTFILE=/tmp/boxer/output.txt
+
+echo "$* " >> $INFILE
+
+cat $INFILE | bin/candc --models models/boxer --candc-printer boxer > $OUTFILE
+
+cat $INFILE | bin/candc --models models/boxer --candc-printer boxer | bin/boxer --stdin  --copula true --integrate --box >> $OUTFILE
+
+cat $OUTFILE
+
+# rm -f $WORKFILE
+

@@ -1,0 +1,30 @@
+Universal > Animate, Inanimate, Action.
+Action > Extract.
+Animate > Person.
+Person > Student, Employee.
+Student > ResearchAssistant.
+Employee > ResearchAssistant.
+Inanimate > MailBox, Text.
+Text > Book.
+
+ResearchAssistant::[ResearchAssistant]-has->[MailBox].
+
+[ResearchAssistant]-has->[MailBox].
+
+Extract(canon)::[Extract]-
+	        -agnt->[Person],
+	        -obj->[Inanimate].
+Extract(schema)::[Extract]-
+	        -agnt->[Person],
+	        -obj->[Text],
+	        -target->[Book].
+Extract(schema)::[Extract]-
+	        -agnt->[Person],
+	        -obj->[Inanimate : *1],
+	        -manr->[Strong],
+	        -target->[Inanimate]-on->[Inanimate : *1]. 
+
+checkSchemas(T, v_schema)::G :-
+        term_list(v_term, (T, schema)),
+        v_term::v_schema,
+        eq(G, v_schema).

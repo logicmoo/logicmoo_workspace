@@ -1,0 +1,4 @@
+
+Load parse preferences and/or nbest preference files if they are
+defined. These files are specified by the parameters {\tt
+parse\_\-preferences} and {\tt nbest\_\-preferences} respectively.

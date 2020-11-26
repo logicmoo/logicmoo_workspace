@@ -1,0 +1,11 @@
+% (provide[primary_market*x0][investment*x1])(attr?x1[new])(operate_with?x0[stock*x3])(attr?x3[newly_issued])
+cgc(224,simple,'primary_market',[fs(num,sing)],[]).
+cgc(225,simple,'investment',[fs(num,sing)],[]).
+cgc(227,simple,'new',[fs(num,sing)],[]).
+cgc(228,simple,'stock',[fs(num,sing)],[]).
+cgc(229,simple,'newly_issued',[fs(num,sing)],[]).
+cg(226,[cgr(provide, [224, 225], _),
+        cgr(attr, [225, 227], _),cgr(operate_with, [224, 228], _),
+        cgr(attr, [228, 229], _)], 
+        [],
+        [fs(kind,normal)]).

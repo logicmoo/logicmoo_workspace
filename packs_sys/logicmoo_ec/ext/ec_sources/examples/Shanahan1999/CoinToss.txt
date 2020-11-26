@@ -1,0 +1,252 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1999/CoinToss.e
+loading foundations/Root.e
+loading foundations/EC.e
+25 variables and 66 clauses
+relsat solver
+8 models
+---
+model 1:
+0
+Heads().
+ItsHeads().
+1
+-ItsHeads().
+Happens(Toss(), 1).
+2
+-Heads().
+Happens(Toss(), 2).
+3
++ItsHeads().
+Happens(Toss(), 3).
+4
++Heads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 2:
+0
+Heads().
+ItsHeads().
+1
+Happens(Toss(), 1).
+2
+-ItsHeads().
+Happens(Toss(), 2).
+3
+-Heads().
++ItsHeads().
+Happens(Toss(), 3).
+4
++Heads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 3:
+0
+Heads().
+ItsHeads().
+1
+-ItsHeads().
+Happens(Toss(), 1).
+2
+-Heads().
+Happens(Toss(), 2).
+3
+Happens(Toss(), 3).
+4
++ItsHeads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 4:
+0
+Heads().
+ItsHeads().
+1
+Happens(Toss(), 1).
+2
+-ItsHeads().
+Happens(Toss(), 2).
+3
+-Heads().
+Happens(Toss(), 3).
+4
++ItsHeads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 5:
+0
+Heads().
+ItsHeads().
+1
+-ItsHeads().
+Happens(Toss(), 1).
+2
+-Heads().
++ItsHeads().
+Happens(Toss(), 2).
+3
++Heads().
+Happens(Toss(), 3).
+4
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 6:
+0
+Heads().
+ItsHeads().
+1
+Happens(Toss(), 1).
+2
+Happens(Toss(), 2).
+3
+Happens(Toss(), 3).
+4
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 7:
+0
+Heads().
+ItsHeads().
+1
+-ItsHeads().
+Happens(Toss(), 1).
+2
+-Heads().
++ItsHeads().
+Happens(Toss(), 2).
+3
+-ItsHeads().
++Heads().
+Happens(Toss(), 3).
+4
+-Heads().
++ItsHeads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+---
+model 8:
+0
+Heads().
+ItsHeads().
+1
+Happens(Toss(), 1).
+2
+Happens(Toss(), 2).
+3
+-ItsHeads().
+Happens(Toss(), 3).
+4
+-Heads().
++ItsHeads().
+P
+ReleasedAt(ItsHeads(), 0).
+ReleasedAt(ItsHeads(), 1).
+ReleasedAt(ItsHeads(), 2).
+ReleasedAt(ItsHeads(), 3).
+ReleasedAt(ItsHeads(), 4).
+!Happens(Toss(), 0).
+!Happens(Toss(), 4).
+!ReleasedAt(Heads(), 0).
+!ReleasedAt(Heads(), 1).
+!ReleasedAt(Heads(), 2).
+!ReleasedAt(Heads(), 3).
+!ReleasedAt(Heads(), 4).
+CoinToss: 0 predicates, 0 functions, 2 fluents, 1 events, 8 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

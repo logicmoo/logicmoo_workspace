@@ -1,0 +1,366 @@
+\section{Examples}
+
+\subsection{Factorial and Fibonacci}
+
+These examples show that the \pfc\ backward chaining facility can do
+such standard examples as the factorial and Fibonacci functions.  
+
+Here is a simple example of a \pfc\ backward chaining rule to compute
+the Fibonacci series.
+\example
+fib(0,1).
+fib(1,1).
+fib(N,M) <= 
+  N1 is N-1,
+  N2 is N-2,
+  fib(N1,M1),
+  fib(N2,M2),
+  M is M1+M2.
+\end{verbatim}\end{quote}
+
+
+Here is a simple example of a \pfc\ backward chaining rule to compute
+the factorial function.
+
+\example
+=> fact(0,1).
+fact(N,M) <=
+  N1 is N-1,
+  fact(N1,M1),
+  M is N*M1.
+\end{verbatim}\end{quote}
+
+
+\subsection{Default Reasoning}
+
+This example shows how to define a default rule.  Suppose we would
+like to have a default rule that holds in the absence of contradictory
+evidence. We might like to state, for example, that an we should
+assume that a bird can fly unless we know otherwise.  This could be
+done as:
+
+\example
+bird(X), ~not(fly(X)) => fly(X).
+\end{verbatim}\end{quote}
+We can, for our convenience, define a {\em default} operator which
+takes a \pfc\ rule and qualifies it to make it a default rule.  This
+can be done as follows:
+\example
+default((P => Q)),{pfcAtom(Q)} => (P, ~not(Q) => Q).
+\end{verbatim}\end{quote}
+where \prolog{pfcAtom(X)} holds if \prolog{X} is a ``logical atom''
+with respect to \pfc\ (i.e . not a conjunction, disjunction, negation,
+etc).
+
+
+One we have defined this, we can use it to state that birds fly by
+default, but penguins do not.
+\example
+% birds fly by default.
+=> default((bird(X) => fly(X))).
+
+isa(C1,C2) =>
+  % here's one way to do an isa hierarchy.
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X]},
+  (P1 => P2).
+
+=> isa(canary,bird).
+=> isa(penguin,bird).
+
+% penguins do not fly.
+penguin(X) => not(fly(X)).
+
+% chilly is a penguin.
+=> penguin(chilly).
+
+% tweety is a canary.
+=> canary(tweety).
+\end{verbatim}\end{quote}
+
+
+\subsection{KR example}
+
+isa hierarchy. roles.  types. classification. etc.
+
+\subsection{Maintaining Functional Dependencies}
+
+\label{sec:funcdep}
+
+One useful thing that \pfc\ can be used for is to automatically
+maintain function Dependencies in the light of a dynamic database of
+fact. The builtin truth maintenance system does much of this.
+However, it is often useful to do more.  For example, suppose we want
+to maintain the constraint that a particular object can only be
+located in one place at a given time.  We might record an objects
+location with an assertion \prolog{at(Obj,Loc)} which states that the
+current location of the object \prolog{Obj} is the location
+\prolog{Loc}.  
+
+Suppose we want to define a \pfc\ rule which will be triggered
+whenever an \prolog{at/2} assertion is made and will remove any
+previous assertion about the same object's location.  Thus to reflect
+that an object has moved from location A to location B, we need merely
+add the new information that it is at location B.  If we try to do
+this with the \pfc\ rule:
+\example
+at(Obj,Loc1),
+at(Obj,Loc2),
+{Loc1\==Loc2}
+=> 
+~at(Obj,Loc1).
+\end{verbatim}\end{quote}
+we may or may not get the desired result.  This rule will in fact
+maintain the constraint that the database have at most one
+\prolog{at/2} assertion for a given object, but whether the one kept
+is the old or the new depends on the particular search strategy being
+used by \pfc\.  In fact, under the current default strategy, the new
+assertion will be the one retracted.
+
+We can achieve the desired result with the following rule:
+\example
+at(Obj,NewLoc), 
+{at(Obj,OldLoc), OldLoc\==NewLoc}
+  =>
+  ~at(Obj,OldLoc).
+\end{verbatim}\end{quote}
+This rule causes the following behavior. Whenever a new assertion
+\prolog{at(O,L)} is made, a Prolog search is made for an assertion that
+object O is located at some other location.  If one is found, then it
+is removed.
+
+We can generalize on this rule to define a meta-predicate
+\prolog{function(P)} which states that the predicate whose name is
+\prolog{P} represents a function.  That is, \prolog{P} names a
+relation of arity two whose first argument is the domain of the
+function and whose second argument is the function's range.  Whenever
+an assertion \prolog{P(X,Y)} is made, any old assertions matching
+\prolog{P(X,\_)} are removed.  Here is the \pfc\ rule:
+\example
+function(P) =>
+  {P1 =.. [P,X,Y],
+   P2 =.. [P,X,Z]},
+  (P1,{P2,Y\==Z} => ~P2).
+\end{verbatim}\end{quote}
+
+We can try this with the following results:
+\example
+| ?- add(function(age)).
+Adding (u) function(age)
+Adding age(A,B),{age(A,C),B\==C}=> ~age(A,C)
+yes
+
+| ?- add(age(john,30)).
+Adding (u) age(john,30)
+yes
+
+| ?- add(age(john,31)).
+Adding (u) age(john,31)
+Removing age(john,30).
+yes
+\end{verbatim}\end{quote}
+
+Of course, this will only work for functions of exactly one argument,
+which in Prolog are represented as relations of arity two.  We can
+further generalize to functions of any number of arguments (including
+zero), with the following rule:
+
+\example
+
+function(Name,Arity) =>
+  {functor(P1,Name,Arity),
+   functor(P2,Name,Arity),
+   arg(Arity,P1,PV1),
+   arg(Arity,P2,PV2),
+   N is Arity-1,
+   merge(P1,P2,N)},
+  (P1,{P2,PV1\==PV2} => ~P2).
+
+
+merge(_,_,N) :- N<1.
+merge(T1,T2,N) :-
+  N>0,
+  arg(N,T1,X),
+  arg(N,T2,X),
+  N1 is N-1,
+  merge(T1,T2,N1).
+
+\end{verbatim}\end{quote}
+The result is that adding the fact \prolog{function(P,N)} declares P
+to be the name of a relation of arity N such that only the most recent
+assertion of the form $P(a_{1},a_{2},\ldots,a_{n-1},a_{n})$ for a
+given set of constants $a_{1},\ldots,a_{n-1}$ will be in the database.
+The following examples show how we might use this to define a
+predicate \prolog{current\_president/1} that identifies the current
+U.S. president and \prolog{governor/3} that relates state, a year and
+the name of its governor.
+\example
+% current_president(Name)
+| ?- add(function(current_president,1)).
+Adding (u) function(current_president,1)
+Adding current_president(A),
+       {current_president(B),A\==B}
+	=> 
+        ~current_president(B)
+yes
+
+| ?- add(current_president(reagan)).
+Adding (u) current_president(reagan)
+yes
+
+| ?- add(current_president(bush)).
+Adding (u) current_president(bush)
+Removing current_president(reagan).
+yes
+
+% governor(State,Year,Governor)
+| ?- add(function(governor,3)).
+Adding (u) function(governor,3)
+Adding governor(A,B,C),{governor(A,B,D),C\==D}=> ~governor(A,B,D)
+yes
+
+| ?- add(governor(pennsylvania,1986,thornburg)).
+Adding (u) governor(pennsylvania,1986,thornburg)
+yes
+
+| ?- add(governor(pennsylvania,1987,casey)).
+Adding (u) governor(pennsylvania,1987,casey)
+yes
+
+% oops, we misspelled thornburgh!
+| ?- add(governor(pennsylvania,1986,thornburgh)).
+Adding (u) governor(pennsylvania,1986,thornburgh)
+Removing governor(pennsylvania,1986,thornburg).
+yes
+\end{verbatim}\end{quote}
+
+\subsection{Spreadsheets}
+
+One common kind of constraints is often found in spreadsheets in
+which one value is determined from a set of other values in which the
+size of the set can vary.  This is typically found in spread sheets
+where one cell can be defined as the sum of a column of cells.  This
+example shows how this kind of constraint can be defined in \pfc\ as well.
+Suppose we have a relation \prolog{income/4} which records a person's
+income for a year by source.  For example, we might have assertions like:
+\example
+income(smith,salary,1989,50000).
+income(smith,interest,1989,500).
+income(smith,dividends,1989,1200).
+income(smith,consulting,1989,2000).
+\end{verbatim}\end{quote}
+We might also with to have a relation \prolog{total\_income/3} which
+records a person's total income for each year.  Given the database
+above, this should be:
+\example
+total_income(smith,1989,53700).
+\end{verbatim}\end{quote}
+
+One way to do this in \pfc\ is as follows:
+\example
+income(Person,Source,Year,Dollars) => {increment_income(Person,Year,Dollars)}.
+
+=> pfcUndoMethod(increment_income(P,Y,D),decrement_income(P,Y,D)).
+
+increment_income(P,Y,D) :-
+  (retract(total_income(P,Y,Old)) -> New is Old+D ; New = D),
+  assert(total_income(P,Y,New)).
+
+decrement_income(P,Y,D) :-
+  retract(total_income(P,Y,Old)),
+  New is Old-D,
+  assert(total_income(P,Y,New)).
+\end{verbatim}\end{quote}
+We would probably want to use the \pfc\ rule for maintaining
+functional Dependencies described in Section~\ref{sec:funcdep} as
+well, adding the rule:
+\example
+=> function(income,4).
+\end{verbatim}\end{quote}
+
+\subsection{Extended Reasoning Capability}
+
+The truth maintenance system in \pfc\ makes it possible to do some
+reasoning that Prolog does not allow.  From the facts
+\begin{quote}
+$p \vee q$ \\
+$p \rightarrow r$ \\
+$q \rightarrow r$ \\
+\end{quote}
+it follows that $r$ is true.  However, it is not possible to directly
+encode this in Prolog so that it can be proven.  We can encode these
+facts in \pfc\ and use a simple proof by contradiction strategy
+embodied in the following Prolog predicate:
+\example
+prove_by_contradiction(P) :- P.
+prove_by_contradiction(P) :-
+  \+ (not(P) ; P)
+  add(not(P)),
+    P       -> rem(not(P))
+  otherwise -> (rem(not(P)),fail).
+\end{verbatim}\end{quote}
+This procedure works as follows.  In trying to prove P, succeed
+immediately if P is a know fact.  Otherwise, providing that
+\prolog{not(P)} is not a know fact, add it as a fact and see if this
+gives rise to a proof for \prolog(P).  if it did, then we have derived
+a contradiction from assuming that \prolog{not(P)} is true and
+\prolog{P} must be true.  In any case, remove the temporary assertion
+\prolog{not(P)}.
+
+In order to do the example above, we need to add the following rule or
+\prolog{or} and a rule for general implication (encoded using the
+infix operator \prolog{==>}) which generates a regular forward
+chaining rule and its counterfactual rule.
+\example
+:- op(1050,xfx,('==>')).
+
+(P ==> Q) => 
+  (P => Q),
+  (not(Q) => not(P)).
+
+or(P,Q) => 
+  (not(P) => Q),
+  (not(Q) => P).
+\end{verbatim}\end{quote}
+With this, we can encode the problem as:
+\example
+=> or(p,q).
+=> (p ==> x).
+=> (q ==> x).
+\end{verbatim}\end{quote}
+
+When these facts are added, the following trace ensues:
+\example
+Adding (u) (A==>B)=>(A=>B), (not(B)=>not(A)) 
+Adding (u) or(A,B)=>(not(A)=>B), (not(B)=>A) 
+Adding (u) or(p,q) 
+Adding not(p)=>q
+Adding not(q)=>p 
+Adding (u) p==>x 
+Adding p=>x 
+Adding not(x)=>not(p)
+Adding (u) q==>x 
+Adding q=>x 
+Adding not(x)=>not(q)
+\end{verbatim}\end{quote}
+
+Then, we can call \prolog{prove\_by\_contradiction/1} to show that
+\prolog{p} must be true:
+\example
+| ?- prove_by_contradiction(x).
+Adding (u) not(x)
+Adding not(p)
+Adding q
+Adding x
+Adding not(q)
+Adding p
+Removing not(x).
+Removing not(p).
+Removing q.
+Removing not(q).
+Removing p.
+Removing x.
+yes
+\end{verbatim}\end{quote}
+
+% \subsection{Parsing}

@@ -1,0 +1,38 @@
+(note TQD15a)
+
+(instance EuroMedPipelineSystem PipingSystem-Generic) 
+
+(pathFromToInSystem GazoducMaghreb-EuropePipeline
+Algeria Spain EuroMedPipelineSystem) 
+
+(instance GazoducMaghreb-EuropePipeline GasPipeline) 
+
+
+(query (findall (?HOW-MUCH ?PIPE) 
+
+(and 
+   (thereExists ?SYSTEM-1 
+       (thereExists ?SOURCE-1 
+           (thereExists ?DEST-1 
+               (and 
+                   (instance ?SYSTEM-1 PipingSystem-Generic) 
+                   (instance ?PIPE GasPipeline) 
+                   (pathFromToInSystem ?PIPE Algeria Spain ?SYSTEM-1))))) 
+   (evaluate ?HOW-MUCH 
+       (PlusAll 
+           (TheSetOf ?PIPE-1 
+               (thereExists ?SYSTEM-2 
+                   (thereExists ?SOURCE-2 
+                       (thereExists ?DEST-2 
+                           (and 
+                               (instance ?SYSTEM-2 PipingSystem-Generic) 
+                               (instance ?PIPE-1 GasPipeline) 
+                               (pathFromToInSystem ?PIPE-1 Algeria Spain ?SYSTEM-2)))))) 
+           (FunctionToArg 2 flowCapacity))))
+))
+
+(answer 6.95000e+08 GazoducMaghreb-EuropePipeline
+
+)
+
+(end_of_file)

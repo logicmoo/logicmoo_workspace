@@ -1,0 +1,2 @@
+(provide [secondary_market] [situation: (convert_into [security] [cash])])
+(rcpt [situation: (convert_into [security] [cash])] [investor])

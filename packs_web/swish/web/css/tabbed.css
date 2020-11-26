@@ -1,0 +1,185 @@
+/* Support tabs in panes */
+
+div.tabbed {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  -ms-flex-flow: column;
+}
+
+div.tab-content	{
+  height: calc(100% - 40px);
+  flex: 1;
+  -ms-flex: 1;
+}
+
+/* Make CodeMirror scrollable inside a flex environment.
+   See https://discuss.codemirror.net/t/size-inside-flexbox/1359/4
+*/
+
+.codeArea {
+  flex:1 1 auto;
+  margin-top: 0;
+  height: 100%;
+  position: relative;
+}
+
+.tab-pane, .tab-pane > div > .CodeMirror {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+
+
+div.tab-pane {
+  position: relative;
+  height: 100%;
+}
+
+span.glyphicon.xclose:hover {
+  opacity: 0.8;
+}
+
+span.glyphicon.xclose {
+  margin-left: 5px;
+  opacity: 0.2;
+}
+
+a.tab-new.compact > span {
+  padding: 6px 0px;
+}
+
+.nav > li > a.compact {
+  padding: 0px 5px;	/* top/bottom left/right */
+}
+
+span.tab-dirty {
+  display: none;
+  background-image: url("../icons/wip.png");
+  padding: 0px;
+  background-repeat: no-repeat;
+  background-size: 90% 60%;
+  background-position: 0% 40%;
+  vertical-align: middle;
+  height: 30px;
+  width: 21px;
+}
+
+.nav > li > a.compact.data-dirty > span.tab-dirty {
+  display: inline-block;
+}
+
+a.tab-chat {
+  display: none;
+}
+
+a.tab-chat.chat-available {
+  display: inline-block;
+  height: 30px;
+  width: 22px;
+}
+
+.tabbed-select {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+a.tab-chat.chat-alert {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  height: 30px;
+  width: 22px;
+}
+
+a.tab-chat .glyphicon,
+span.tab-chat-count
+{ position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 30px;
+}
+
+a.tab-chat .glyphicon {
+  font-size: 140%;
+  color: #f00;
+}
+
+span.tab-chat-count {
+  font-size: 80%;
+  font-weight: bold;
+  color: #fff;
+  z-index: 10;
+}
+
+
+.tabbed-create {
+  margin: 2em 0px 1em;
+  text-align: center;
+}
+
+/*
+.tabbed-create label {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+*/
+
+label.tabbed-left {
+  text-align: right;
+  margin-right: 0.6em;
+  white-space: nowrap;
+  width: 5em;
+}
+
+label.tabbed-right {
+  text-align: left;
+  margin-left: 0.6em;
+  white-space: nowrap;
+  width: 5em;
+}
+
+.tabbed-profile > label {
+  font-style: italic;
+  font-weight: normal;
+  color: #888;
+}
+
+.tab-icon {
+  padding: 0px;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: 50% 40%;
+  display: inline-block;
+  vertical-align: middle;
+  height: 30px;
+  width: 30px;
+}
+
+.tabbed-profile {
+  width: 100%;
+  text-align: center;
+}
+
+.tabbed-profile .select-profile {
+  display: inline-block;
+}
+
+form.search-sources {
+  margin: 3em auto 1em;
+  width: 80%;
+}
+
+div.restore-tab {
+  text-align: center;
+  margin-top: 2em;
+  font-size: 200%;
+}

@@ -1,0 +1,15 @@
+*~
+RDF-store
+cache
+settings.db
+users.db
+.pl-history
+httpd.log
+doc/Makefile
+doc/config.log
+doc/config.status
+doc/serql.tex
+run.pl
+daemon.pl
+config-enabled
+cpack-mirrors

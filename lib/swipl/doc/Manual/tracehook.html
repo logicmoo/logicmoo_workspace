@@ -1,0 +1,398 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section B.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ancestral-cut.html">
+<link rel="next" href="breakpoint.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ancestral-cut.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="breakpoint.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tracehook"><a id="sec:B.3"><span class="sec-nr">B.3</span> <span class="sec-title">Intercepting 
+the Tracer</span></a></h2>
+
+<a id="sec:tracehook"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="prolog_trace_interception/4"><strong>prolog_trace_interception</strong>(<var>+Port, 
++Frame, +Choice, -Action</var>)</a></dt>
+<dd class="defbody">
+Dynamic predicate, normally not defined. This predicate is called from 
+the SWI-Prolog debugger just before it would show a port. If this 
+predicate succeeds, the debugger assumes that the trace action has been 
+taken care of and continues execution as described by <var>Action</var>. 
+Otherwise the normal Prolog debugger actions are performed.
+
+<p><var>Port</var> denotes the reason to activate the tracer (`port' in 
+the 4/5-port, but with some additions):
+
+<dl class="latex">
+<dt><strong>call</strong></dt>
+<dd class="defbody">
+Normal entry through the call port of the 4-port debugger.</dd>
+<dt><strong>redo</strong>(<var>PC</var>)</dt>
+<dd class="defbody">
+Normal entry through the redo port of the 4-port debugger. The
+<code>redo</code> port signals resuming a predicate to generate 
+alternative solutions. If <var>PC</var> is 0 (zero), clause indexing has 
+found another clause that will be tried next. Otherwise, <var>PC</var> 
+is the program counter in the current clause where execution continues. 
+This implies we are dealing with an in-clause choice point left by, 
+e.g., <a class="pred" href="control.html#;/2">;/2</a>. Note that 
+non-determinism in foreign predicates are also handled using an 
+in-clause choice point.</dd>
+<dt><strong>unify</strong></dt>
+<dd class="defbody">
+The unify port represents the <em>neck</em> instruction, signalling the 
+end of the head-matching process. This port is normally invisible. See
+<a id="idx:leash1:2542"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
+and <a id="idx:visible1:2543"></a><a class="pred" href="debugger.html#visible/1">visible/1</a>.</dd>
+<dt><strong>exit</strong></dt>
+<dd class="defbody">
+The exit port signals the goal is proved. It is possible for the goal to 
+have alternatives. See <a id="idx:prologframeattribute3:2544"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+to examine the goal stack.</dd>
+<dt><strong>fail</strong></dt>
+<dd class="defbody">
+The fail port signals final failure of the goal.</dd>
+<dt><strong>exception</strong>(<var>Except</var>)</dt>
+<dd class="defbody">
+An exception is raised and still pending. This port is activated on each 
+parent frame of the frame generating the exception until the exception 
+is caught or the user restarts normal computation using
+<code>retry</code>. <var>Except</var> is the pending exception term.</dd>
+<dt><strong>break</strong>(<var>PC</var>)</dt>
+<dd class="defbody">
+A <code>break</code> instruction is executed. <var>PC</var> is program 
+counter. This port is used by the graphical debugger.</dd>
+<dt><strong>cut_call</strong>(<var>PC</var>)</dt>
+<dd class="defbody">
+A cut is encountered at <var>PC</var>. This port is used by the 
+graphical debugger to visualise the effect of the cut.</dd>
+<dt><strong>cut_exit</strong>(<var>PC</var>)</dt>
+<dd class="defbody">
+A cut has been executed. See <code>cut_call(PC)</code> for more 
+information.
+</dd>
+</dl>
+
+<p><var>Frame</var> is a reference to the current local stack frame, 
+which can be examined using <a id="idx:prologframeattribute3:2545"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a>. <var>Choice</var> 
+is a reference to the last choice point and can be examined using
+<a id="idx:prologchoiceattribute3:2546"></a><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a>. <var>Action</var> 
+must be unified with a term that specifies how execution must continue. 
+The following actions are defined:
+
+<dl class="latex">
+<dt><strong>abort</strong></dt>
+<dd class="defbody">
+Abort execution. See <a id="idx:abort0:2547"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>.
+</dd>
+<dt><strong>continue</strong></dt>
+<dd class="defbody">
+Continue (i.e., <em>creep</em> in the command line debugger).
+</dd>
+<dt><strong>fail</strong></dt>
+<dd class="defbody">
+Make the current goal fail.
+</dd>
+<dt><strong>ignore</strong></dt>
+<dd class="defbody">
+Step over the current goal without executing it.
+</dd>
+<dt><strong>nodebug</strong></dt>
+<dd class="defbody">
+Continue execution in normal nodebugging mode. See <a id="idx:nodebug0:2548"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a>.
+</dd>
+<dt><strong>retry</strong></dt>
+<dd class="defbody">
+Retry the current frame.
+</dd>
+<dt><strong>retry</strong>(<var>Frame</var>)</dt>
+<dd class="defbody">
+Retry the given frame. This must be a parent of the current frame.
+</dd>
+<dt><strong>skip</strong></dt>
+<dd class="defbody">
+Skip over the current goal (i.e., <em>skip</em> in the command line 
+debugger).
+</dd>
+<dt><strong>up</strong></dt>
+<dd class="defbody">
+Skip to the parent goal (i.e., <em>up</em> in the command line 
+debugger).
+</dd>
+</dl>
+
+<p>Together with the predicates described in <a class="sec" href="debugger.html#sec:4.39">section 
+4.39</a> and the other predicates of this chapter, this predicate 
+enables the Prolog user to define a complete new debugger in Prolog. 
+Besides this, it enables the Prolog programmer to monitor the execution 
+of a program. The example below records all goals trapped by the tracer 
+in the database.
+
+<pre class="code">
+prolog_trace_interception(Port, Frame, _PC, continue) :-
+        prolog_frame_attribute(Frame, goal, Goal),
+        prolog_frame_attribute(Frame, level, Level),
+        recordz(trace, trace(Port, Level, Goal)).
+</pre>
+
+<p>To trace the execution of&lsquo;go' this way the following query 
+should be given:
+
+<pre class="code">
+?- trace, go, notrace.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="prolog_skip_frame/1"><strong>prolog_skip_frame</strong>(<var>-Frame</var>)</a></dt>
+<dd class="defbody">
+Indicate <var>Frame</var> as a skipped frame and set the&lsquo;skip 
+level' (see
+<a id="idx:prologskiplevel2:2549"></a><a class="pred" href="tracehook.html#prolog_skip_level/2">prolog_skip_level/2</a> 
+to the recursion depth of <var>Frame</var>. The effect of the skipped 
+flag is that a redo on a child of this frame is handled differently. 
+First, a <code>redo</code> trace is called for the child, where the skip 
+level is set to <code>redo_in_skip</code>. Next, the skip level is set 
+to skip level of the skipped frame.</dd>
+<dt class="pubdef"><a id="prolog_skip_level/2"><strong>prolog_skip_level</strong>(<var>-Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Old</var> with the old value of&lsquo;skip level' and then 
+set this level according to <var>New</var>. <var>New</var> is an 
+integer, the atom
+<code>very_deep</code> (meaning don't skip) or the atom <code>skip_in_redo</code> 
+(see <a id="idx:prologskipframe1:2550"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>). 
+The&lsquo;skip level' is a setting of each Prolog thread that disables 
+the debugger on all recursion levels deeper than the level of the 
+variable. See also <a id="idx:prologskipframe1:2551"></a><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a>.
+</dd>
+</dl>
+
+<p></body></html>

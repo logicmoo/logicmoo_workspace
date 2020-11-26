@@ -1,0 +1,49 @@
+(note TQA21)
+
+(industryFractionOfGDP SaudiArabia IndustrialEconomicSector 
+  (YearFn 1994) 
+  (Percent 50)) 
+
+(grossDomesticProduct SaudiArabia 
+ (YearFn 1994) 
+ (BillionDollars 189.300)) 
+
+(implies 
+ (and 
+   (grossDomesticProduct ?GE (YearFn ?X) ?GDP) 
+   (realGDPGrowthRateDuring ?GE (YearFn ?X) ?GROWTH-RATE)) 
+ (grossDomesticProduct ?GE 
+   (YearFn (DifferenceFn ?X 1)) 
+   (QuotientFn ?GDP (PlusFn ?GROWTH-RATE 1)))) 
+
+(realGDPGrowthRateDuring SaudiArabia 
+ (YearFn 1995) 
+ (Percent 0)) 
+
+(grossDomesticProduct SaudiArabia 
+ (YearFn 1995) 
+ (BillionDollars 189.300 )) 
+
+(implies 
+  (and 
+    (grossDomesticProduct ?REGION ?TIME ?GDP) 
+    (industryFractionOfGDP ?REGION ?IND-TYPE ?TIME ?FRACTION)) 
+  (productionValueOfIndustryDuring ?REGION ?IND-TYPE ?TIME 
+    (TimesFn ?GDP ?FRACTION))) 
+
+(query (findall (?PRODUCT ?YEAR)
+  (thereExists (?MEASURE ?TIME ?PRODUCT-AMOUNT)
+    (and 
+      (grossDomesticProduct SaudiArabia ?TIME ?MEASURE) 
+      (productionValueOfIndustryDuring SaudiArabia IndustrialEconomicSector ?TIME ?PRODUCT-AMOUNT)
+      (evaluate ?PRODUCT ?PRODUCT-AMOUNT)
+      (evaluate ?YEAR ?TIME)))))
+
+(answer 94650000000 1994)
+	       
+(end_of_file)
+
+
+
+
+  

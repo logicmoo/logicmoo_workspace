@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="mt-xpce.html">
+<link rel="next" href="engine-examples.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="mt-xpce.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="engine-examples.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:engines"><a id="sec:11"><span class="sec-nr">11</span> <span class="sec-title">Coroutining 
+using Prolog engines</span></a></h1>
+
+<a id="sec:engines"></a>
+
+<p>Where the term <em>coroutine</em> in Prolog typically refer to hooks 
+triggered by <em>attributed variables</em> (<a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>), SWI-Prolog provides two other forms of coroutines. Delimited 
+continuations (see
+<a class="sec" href="delcont.html#sec:4.9">section 4.9</a>) allow 
+creating coroutines that run in the same Prolog engine by capturing and 
+restarting the <em>continuation</em>. This section discusses <em>engines</em>, 
+also known as <em>interactors</em>. The idea was pinned by Paul Tarau <cite><a class="cite" href="Bibliography.html#DBLP:conf/coordination/Tarau11">Tarau, 
+2011</a></cite>. The API described in this chapter has been established 
+together with Paul Tarau and Paulo Moura.
+
+<p>Engines are closely related to <em>threads</em> (<a class="sec" href="threads.html#sec:10">section 
+10</a>). An engine is a Prolog virtual machine that has its own stacks 
+and (virtual) machine state. Unlike normal Prolog threads though, they 
+are not associated with an operating system thread. Instead, you <em>ask</em> 
+an engine for a next answer (<a id="idx:enginenext2:2279"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>). 
+Asking an engine for the next answer attaches the engine to the calling 
+operating system thread and cause it to run until the engine calls <a id="idx:engineyield1:2280"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+or its associated goal completes with an answer, failure or an 
+exception. After the engine yields or completes, it is detached from the 
+operating system thread and the answer term is made available to the 
+calling thread. Communicating with an engine is similar to communicating 
+with a Prolog system though the terminal. In this sense engines are 
+related to <em>Pengines</em> as provided by library <code>library(pengines)</code>, 
+but where Pengines aim primarily at accessing Prolog engines through the 
+network, engines are in-process entities.
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="engine-examples.html"><span class="sec-nr">11.1</span> <span class="sec-title">Examples 
+using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.1"><span class="sec-nr">11.1.1</span> <span class="sec-title">Aggregation 
+using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.2"><span class="sec-nr">11.1.2</span> <span class="sec-title">State 
+accumulation using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.3"><span class="sec-nr">11.1.3</span> <span class="sec-title">Scalable 
+many-agent applications</span></a></div>
+<div class="toc-h2"><a class="sec" href="engine-resources.html"><span class="sec-nr">11.2</span> <span class="sec-title">Engine 
+resource usage</span></a></div>
+<div class="toc-h2"><a class="sec" href="engine-predicates.html"><span class="sec-nr">11.3</span> <span class="sec-title">Engine 
+predicate reference</span></a></div>
+</div>
+</body></html>

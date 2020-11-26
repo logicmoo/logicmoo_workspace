@@ -1,0 +1,888 @@
+#!/usr/bin/env swipl
+%
+%  PFC is ':A' language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Still amodule scoping bug? Nope
+%  was_module(y_p_x_t,[]).
+
+:- include(test_header).
+
+n3(':A',p,':B').
+n3(':B',p,':C'). 
+n3(':C',p,':D').
+n3(':D',p,':C'). 
+n3(':C',p,':B').
+n3(':B',p,':A').
+
+% :- mpred_trace_exec.
+
+:- prolog_statistics:time((ain((n3(Z,p,Y),n3(Y,p,X)==>n3(X,p,Z))))).
+
+
+
+
+
+/*
+Expected:
+
+n3(':A',p,':A').
+n3(':B',p,':A').
+n3(':C',p,':A').
+n3(':D',p,':A').
+
+*/
+
+:- listing(spft).
+
+:- mpred_why_all(n3(_What1,p,_What2)),nl.
+
+:- printAll(n3(_What1,p,_What2)).
+            
+end_of_file.
+
+:- dynamic spft/3.
+:- multifile spft/3.
+:- public spft/3.
+:- module_transparent spft/3.
+
+spft(_, _, _) :-
+        fail,
+        infoF(createdFor(create_predicate_istAbove(y_p_x_t, spft, 3))).
+spft(A, B, C) :-
+        istAbove(y_p_x_t, spft(A, B, C)).
+spft(n3(':A', p, ':B'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 13), ax).
+spft(n3(':B', p, ':C'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 14), ax).
+spft(n3(':C', p, ':D'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 15), ax).
+spft(n3(':D', p, ':C'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 16), ax).
+spft(n3(':C', p, ':B'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 17), ax).
+spft(n3(':B', p, ':A'), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 18), ax).
+spft((n3(C, p, A), n3(A, p, B)==>n3(B, p, C)), mfl(prolog_statistics, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 22), ax).
+spft(mpred_prop(n3, 3, pfcRHS), why_marked(mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 22)), ax).
+spft(mpred_prop(n3, 3, pfcCreates), mpred_prop(n3, 3, pfcRHS), pt(mpred_prop(n3, 3, pfcRHS), rhs([mpred_prop(n3, 3, pfcCreates)]))).
+spft(mpred_prop(n3, 3, pfcLHS), why_marked(((n3(C, p, A), n3(A, p, B)==>n3(B, p, C)), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 22))), ax).
+spft(arity(n3, 3), mpred_prop(n3, 3, pfcLHS), pt(mpred_prop(n3, 3, pfcLHS), rhs([arity(n3, 3), functorIsMacro(n3), mpred_prop(n3, 3, pfcWatches)]))).
+spft(functorIsMacro(n3), mpred_prop(n3, 3, pfcLHS), pt(mpred_prop(n3, 3, pfcLHS), rhs([arity(n3, 3), functorIsMacro(n3), mpred_prop(n3, 3, pfcWatches)]))).
+spft(mpred_prop(n3, 3, pfcWatches), mpred_prop(n3, 3, pfcLHS), pt(mpred_prop(n3, 3, pfcLHS), rhs([arity(n3, 3), functorIsMacro(n3), mpred_prop(n3, 3, pfcWatches)]))).
+spft(mpred_prop(n3, 3, pfcPosTrigger), why_marked(((n3(C, p, A), n3(A, p, B)==>n3(B, p, C)), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 22))), ax).
+spft(mpred_prop(n3, 3, pfcWatches), mpred_prop(n3, 3, pfcPosTrigger), pt(mpred_prop(n3, 3, pfcPosTrigger), rhs([mpred_prop(n3, 3, pfcWatches)]))).
+spft(pt(n3(C, p, A), pt(n3(A, p, B), rhs([n3(B, p, C)]))),  (n3(F, p, D), n3(D, p, E)==>n3(E, p, F)), mfl(y_p_x_t, '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc', 22)).
+spft(pt(n3(':B', p, A), rhs([n3(A, p, ':A')])), n3(':A', p, ':B'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':C', p, ':A'), n3(':B', p, ':C'), pt(n3(':B', p, A), rhs([n3(A, p, ':A')]))).
+spft(pt(n3(':A', p, A), rhs([n3(A, p, ':C')])), n3(':C', p, ':A'), pt(n3(':C', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':C')])))).
+spft(n3(':B', p, ':C'), n3(':A', p, ':B'), pt(n3(':A', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':A', p, ':A'), n3(':B', p, ':A'), pt(n3(':B', p, A), rhs([n3(A, p, ':A')]))).
+spft(pt(n3(':A', p, A), rhs([n3(A, p, ':A')])), n3(':A', p, ':A'), pt(n3(':A', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':A')])))).
+spft(n3(':B', p, ':A'), n3(':A', p, ':B'), pt(n3(':A', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':A', p, ':A'), n3(':A', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':A', p, ':C'), n3(':A', p, ':A'), pt(n3(':A', p, ':A'), rhs([n3(':A', p, ':C')]))).
+spft(pt(n3(':C', p, A), rhs([n3(A, p, ':A')])), n3(':A', p, ':C'), pt(n3(':A', p, ':C'), pt(n3(':C', p, A), rhs([n3(A, p, ':A')])))).
+spft(n3(':D', p, ':A'), n3(':C', p, ':D'), pt(n3(':C', p, A), rhs([n3(A, p, ':A')]))).
+spft(pt(n3(':A', p, A), rhs([n3(A, p, ':D')])), n3(':D', p, ':A'), pt(n3(':D', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':D')])))).
+spft(n3(':B', p, ':D'), n3(':A', p, ':B'), pt(n3(':A', p, A), rhs([n3(A, p, ':D')]))).
+spft(pt(n3(':D', p, A), rhs([n3(A, p, ':B')])), n3(':B', p, ':D'), pt(n3(':B', p, ':D'), pt(n3(':D', p, A), rhs([n3(A, p, ':B')])))).
+spft(n3(':C', p, ':B'), n3(':D', p, ':C'), pt(n3(':D', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':A', p, ':B'), n3(':D', p, ':A'), pt(n3(':D', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':D', p, ':A'), n3(':B', p, ':D'), pt(n3(':B', p, ':D'), rhs([n3(':D', p, ':A')]))).
+spft(n3(':A', p, ':D'), n3(':A', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':D')]))).
+spft(pt(n3(':D', p, A), rhs([n3(A, p, ':A')])), n3(':A', p, ':D'), pt(n3(':A', p, ':D'), pt(n3(':D', p, A), rhs([n3(A, p, ':A')])))).
+spft(n3(':C', p, ':A'), n3(':D', p, ':C'), pt(n3(':D', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':A', p, ':A'), n3(':D', p, ':A'), pt(n3(':D', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':D', p, ':C'), n3(':A', p, ':D'), pt(n3(':A', p, ':D'), rhs([n3(':D', p, ':C')]))).
+spft(n3(':D', p, ':A'), n3(':A', p, ':D'), pt(n3(':A', p, ':D'), rhs([n3(':D', p, ':A')]))).
+spft(n3(':D', p, ':D'), n3(':A', p, ':D'), pt(n3(':A', p, ':D'), rhs([n3(':D', p, ':D')]))).
+spft(pt(n3(':D', p, A), rhs([n3(A, p, ':D')])), n3(':D', p, ':D'), pt(n3(':D', p, ':D'), pt(n3(':D', p, A), rhs([n3(A, p, ':D')])))).
+spft(n3(':C', p, ':D'), n3(':D', p, ':C'), pt(n3(':D', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':A', p, ':D'), n3(':D', p, ':A'), pt(n3(':D', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':D', p, ':D'), n3(':D', p, ':D'), pt(n3(':D', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':D', p, ':B'), n3(':D', p, ':D'), pt(n3(':D', p, ':D'), rhs([n3(':D', p, ':B')]))).
+spft(pt(n3(':B', p, A), rhs([n3(A, p, ':D')])), n3(':D', p, ':B'), pt(n3(':D', p, ':B'), pt(n3(':B', p, A), rhs([n3(A, p, ':D')])))).
+spft(n3(':C', p, ':D'), n3(':B', p, ':C'), pt(n3(':B', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':A', p, ':D'), n3(':B', p, ':A'), pt(n3(':B', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':D', p, ':D'), n3(':B', p, ':D'), pt(n3(':B', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':B', p, ':B'), n3(':D', p, ':B'), pt(n3(':D', p, ':B'), rhs([n3(':B', p, ':B')]))).
+spft(pt(n3(':B', p, A), rhs([n3(A, p, ':B')])), n3(':B', p, ':B'), pt(n3(':B', p, ':B'), pt(n3(':B', p, A), rhs([n3(A, p, ':B')])))).
+spft(n3(':C', p, ':B'), n3(':B', p, ':C'), pt(n3(':B', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':A', p, ':B'), n3(':B', p, ':A'), pt(n3(':B', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':D', p, ':B'), n3(':B', p, ':D'), pt(n3(':B', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':B', p, ':B'), n3(':B', p, ':B'), pt(n3(':B', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':B', p, ':A'), n3(':B', p, ':B'), pt(n3(':B', p, ':B'), rhs([n3(':B', p, ':A')]))).
+spft(n3(':B', p, ':D'), n3(':B', p, ':B'), pt(n3(':B', p, ':B'), rhs([n3(':B', p, ':D')]))).
+spft(n3(':B', p, ':A'), n3(':D', p, ':B'), pt(n3(':D', p, ':B'), rhs([n3(':B', p, ':A')]))).
+spft(n3(':B', p, ':D'), n3(':D', p, ':B'), pt(n3(':D', p, ':B'), rhs([n3(':B', p, ':D')]))).
+spft(n3(':D', p, ':A'), n3(':D', p, ':D'), pt(n3(':D', p, ':D'), rhs([n3(':D', p, ':A')]))).
+spft(n3(':C', p, ':D'), n3(':A', p, ':C'), pt(n3(':A', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':B', p, ':A'), n3(':C', p, ':B'), pt(n3(':C', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':A', p, ':A'), n3(':C', p, ':A'), pt(n3(':C', p, A), rhs([n3(A, p, ':A')]))).
+spft(n3(':C', p, ':C'), n3(':A', p, ':C'), pt(n3(':A', p, ':C'), rhs([n3(':C', p, ':C')]))).
+spft(pt(n3(':C', p, A), rhs([n3(A, p, ':C')])), n3(':C', p, ':C'), pt(n3(':C', p, ':C'), pt(n3(':C', p, A), rhs([n3(A, p, ':C')])))).
+spft(n3(':D', p, ':C'), n3(':C', p, ':D'), pt(n3(':C', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':B', p, ':C'), n3(':C', p, ':B'), pt(n3(':C', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':A', p, ':C'), n3(':C', p, ':A'), pt(n3(':C', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':C', p, ':C'), n3(':C', p, ':C'), pt(n3(':C', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':C', p, ':A'), n3(':C', p, ':C'), pt(n3(':C', p, ':C'), rhs([n3(':C', p, ':A')]))).
+spft(n3(':C', p, ':A'), n3(':A', p, ':C'), pt(n3(':A', p, ':C'), rhs([n3(':C', p, ':A')]))).
+spft(pt(n3(':C', p, A), rhs([n3(A, p, ':B')])), n3(':B', p, ':C'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':D', p, ':B'), n3(':C', p, ':D'), pt(n3(':C', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':B', p, ':B'), n3(':C', p, ':B'), pt(n3(':C', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':A', p, ':B'), n3(':C', p, ':A'), pt(n3(':C', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':C', p, ':B'), n3(':C', p, ':C'), pt(n3(':C', p, A), rhs([n3(A, p, ':B')]))).
+spft(pt(n3(':D', p, A), rhs([n3(A, p, ':C')])), n3(':C', p, ':D'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':C', p, ':C'), n3(':D', p, ':C'), pt(n3(':D', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':A', p, ':C'), n3(':D', p, ':A'), pt(n3(':D', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':D', p, ':C'), n3(':D', p, ':D'), pt(n3(':D', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':B', p, ':C'), n3(':D', p, ':B'), pt(n3(':D', p, A), rhs([n3(A, p, ':C')]))).
+spft(pt(n3(':C', p, A), rhs([n3(A, p, ':D')])), n3(':D', p, ':C'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':D', p, ':D'), n3(':C', p, ':D'), pt(n3(':C', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':B', p, ':D'), n3(':C', p, ':B'), pt(n3(':C', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':A', p, ':D'), n3(':C', p, ':A'), pt(n3(':C', p, A), rhs([n3(A, p, ':D')]))).
+spft(n3(':C', p, ':D'), n3(':C', p, ':C'), pt(n3(':C', p, A), rhs([n3(A, p, ':D')]))).
+spft(pt(n3(':B', p, A), rhs([n3(A, p, ':C')])), n3(':C', p, ':B'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':C', p, ':C'), n3(':B', p, ':C'), pt(n3(':B', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':A', p, ':C'), n3(':B', p, ':A'), pt(n3(':B', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':D', p, ':C'), n3(':B', p, ':D'), pt(n3(':B', p, A), rhs([n3(A, p, ':C')]))).
+spft(n3(':B', p, ':C'), n3(':B', p, ':B'), pt(n3(':B', p, A), rhs([n3(A, p, ':C')]))).
+spft(pt(n3(':A', p, A), rhs([n3(A, p, ':B')])), n3(':B', p, ':A'), pt(n3(D, p, B), pt(n3(B, p, C), rhs([n3(C, p, D)])))).
+spft(n3(':B', p, ':B'), n3(':A', p, ':B'), pt(n3(':A', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':A', p, ':B'), n3(':A', p, ':A'), pt(n3(':A', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':C', p, ':B'), n3(':A', p, ':C'), pt(n3(':A', p, A), rhs([n3(A, p, ':B')]))).
+spft(n3(':D', p, ':B'), n3(':A', p, ':D'), pt(n3(':A', p, A), rhs([n3(A, p, ':B')]))).
+
+% /home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc:40
+% :- mpred_why(n3(':A', p, ':B')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            13).
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(_23906, p, _23910), n3(_23910, p, _23918)==>n3(_23918, p, _23906).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(_23816, p, _23820), n3(_23820, p, _23828)==>n3(_23828, p, _23816).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(_23726, p, _23730), n3(_23730, p, _23738)==>n3(_23738, p, _23726).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(_23636, p, _23640), n3(_23640, p, _23648)==>n3(_23648, p, _23636).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':A', p, ':B').
+
+% :- mpred_why(n3(':B', p, ':C')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            14).
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(_2982, p, _2986), n3(_2986, p, _2994)==>n3(_2994, p, _2982).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(_2892, p, _2896), n3(_2896, p, _2904)==>n3(_2904, p, _2892).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(_2802, p, _2806), n3(_2806, p, _2814)==>n3(_2814, p, _2802).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(_2712, p, _2716), n3(_2716, p, _2724)==>n3(_2724, p, _2712).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':B', p, ':C').
+
+% :- mpred_why(n3(':C', p, ':D')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            15).
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(_20400, p, _20404), n3(_20404, p, _20412)==>n3(_20412, p, _20400).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(_20310, p, _20314), n3(_20314, p, _20322)==>n3(_20322, p, _20310).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(_20220, p, _20224), n3(_20224, p, _20232)==>n3(_20232, p, _20220).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(_20130, p, _20134), n3(_20134, p, _20142)==>n3(_20142, p, _20130).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':C', p, ':D').
+
+% :- mpred_why(n3(':D', p, ':C')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            16).
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(_37854, p, _37858), n3(_37858, p, _37866)==>n3(_37866, p, _37854).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(_37764, p, _37768), n3(_37768, p, _37776)==>n3(_37776, p, _37764).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(_37674, p, _37678), n3(_37678, p, _37686)==>n3(_37686, p, _37674).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(_37584, p, _37588), n3(_37588, p, _37596)==>n3(_37596, p, _37584).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':D', p, ':C').
+
+% :- mpred_why(n3(':C', p, ':B')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            17).
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(_55344, p, _55348), n3(_55348, p, _55356)==>n3(_55356, p, _55344).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(_55254, p, _55258), n3(_55258, p, _55266)==>n3(_55266, p, _55254).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(_55164, p, _55168), n3(_55168, p, _55176)==>n3(_55176, p, _55164).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(_55074, p, _55078), n3(_55078, p, _55086)==>n3(_55086, p, _55074).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':C', p, ':B').
+
+% :- mpred_why(n3(':B', p, ':A')).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            18).
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(_11338, p, _11342), n3(_11342, p, _11350)==>n3(_11350, p, _11338).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(_11248, p, _11252), n3(_11252, p, _11260)==>n3(_11260, p, _11248).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(_11158, p, _11162), n3(_11162, p, _11170)==>n3(_11170, p, _11158).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(_11068, p, _11072), n3(_11072, p, _11080)==>n3(_11080, p, _11068).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':B', p, ':A').
+
+% :- mpred_why(n3(':C', p, ':A')).
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(_28900, p, _28904), n3(_28904, p, _28912)==>n3(_28912, p, _28900).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(_28810, p, _28814), n3(_28814, p, _28822)==>n3(_28822, p, _28810).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(_28720, p, _28724), n3(_28724, p, _28732)==>n3(_28732, p, _28720).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(_28630, p, _28634), n3(_28634, p, _28642)==>n3(_28642, p, _28630).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':C', p, ':A').
+
+% :- mpred_why(n3(':A', p, ':A')).
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(_46168, p, _46172), n3(_46172, p, _46180)==>n3(_46180, p, _46168).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(_46078, p, _46082), n3(_46082, p, _46090)==>n3(_46090, p, _46078).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(_45988, p, _45992), n3(_45992, p, _46000)==>n3(_46000, p, _45988).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(_45898, p, _45902), n3(_45902, p, _45910)==>n3(_45910, p, _45898).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':A', p, ':A').
+
+% :- mpred_why(n3(':A', p, ':C')).
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(_2028, p, _2032), n3(_2032, p, _2040)==>n3(_2040, p, _2028).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(_1938, p, _1942), n3(_1942, p, _1950)==>n3(_1950, p, _1938).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(_1848, p, _1852), n3(_1852, p, _1860)==>n3(_1860, p, _1848).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(_1758, p, _1762), n3(_1762, p, _1770)==>n3(_1770, p, _1758).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':A', p, ':C').
+
+% :- mpred_why(n3(':D', p, ':A')).
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(_18552, p, _18556), n3(_18556, p, _18564)==>n3(_18564, p, _18552).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(_18462, p, _18466), n3(_18466, p, _18474)==>n3(_18474, p, _18462).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(_18372, p, _18376), n3(_18376, p, _18384)==>n3(_18384, p, _18372).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(_18282, p, _18286), n3(_18286, p, _18294)==>n3(_18294, p, _18282).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':D', p, ':A').
+
+% :- mpred_why(n3(':B', p, ':D')).
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(_35928, p, _35932), n3(_35932, p, _35940)==>n3(_35940, p, _35928).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(_35838, p, _35842), n3(_35842, p, _35850)==>n3(_35850, p, _35838).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(_35748, p, _35752), n3(_35752, p, _35760)==>n3(_35760, p, _35748).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(_35658, p, _35662), n3(_35662, p, _35670)==>n3(_35670, p, _35658).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':B', p, ':D').
+
+% :- mpred_why(n3(':A', p, ':D')).
+'' :-
+        n3(':A', p, ':A').
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(_53340, p, _53344), n3(_53344, p, _53352)==>n3(_53352, p, _53340).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(_53250, p, _53254), n3(_53254, p, _53262)==>n3(_53262, p, _53250).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(_53160, p, _53164), n3(_53164, p, _53172)==>n3(_53172, p, _53160).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(_53070, p, _53074), n3(_53074, p, _53082)==>n3(_53082, p, _53070).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':A', p, ':D').
+
+% :- mpred_why(n3(':D', p, ':D')).
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(':D', p, ':A').
+'' :-
+        n3(_8666, p, _8670), n3(_8670, p, _8678)==>n3(_8678, p, _8666).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(_8576, p, _8580), n3(_8580, p, _8588)==>n3(_8588, p, _8576).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(_8486, p, _8490), n3(_8490, p, _8498)==>n3(_8498, p, _8486).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(_8396, p, _8400), n3(_8400, p, _8408)==>n3(_8408, p, _8396).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':D', p, ':D').
+
+% :- mpred_why(n3(':D', p, ':B')).
+'' :-
+        n3(':D', p, ':D').
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(_26150, p, _26154), n3(_26154, p, _26162)==>n3(_26162, p, _26150).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(_26060, p, _26064), n3(_26064, p, _26072)==>n3(_26072, p, _26060).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(_25970, p, _25974), n3(_25974, p, _25982)==>n3(_25982, p, _25970).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':D').
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(_25880, p, _25884), n3(_25884, p, _25892)==>n3(_25892, p, _25880).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':D', p, ':B').
+
+% :- mpred_why(n3(':B', p, ':B')).
+'' :-
+        n3(':D', p, ':B').
+'' :-
+        n3(':B', p, ':D').
+'' :-
+        n3(_43670, p, _43674), n3(_43674, p, _43682)==>n3(_43682, p, _43670).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(':B', p, ':B').
+'' :-
+        n3(_43580, p, _43584), n3(_43584, p, _43592)==>n3(_43592, p, _43580).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(_43490, p, _43494), n3(_43494, p, _43502)==>n3(_43502, p, _43490).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':A', p, ':B').
+'' :-
+        n3(':B', p, ':A').
+'' :-
+        n3(_43400, p, _43404), n3(_43404, p, _43412)==>n3(_43412, p, _43400).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':B', p, ':B').
+
+% :- mpred_why(n3(':C', p, ':C')).
+'' :-
+        n3(':A', p, ':C').
+'' :-
+        n3(':C', p, ':A').
+'' :-
+        n3(_1530, p, _1534), n3(_1534, p, _1542)==>n3(_1542, p, _1530).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(':C', p, ':C').
+'' :-
+        n3(_1440, p, _1444), n3(_1444, p, _1452)==>n3(_1452, p, _1440).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':D', p, ':C').
+'' :-
+        n3(':C', p, ':D').
+'' :-
+        n3(_1350, p, _1354), n3(_1354, p, _1362)==>n3(_1362, p, _1350).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+'' :-
+        n3(':B', p, ':C').
+'' :-
+        n3(':C', p, ':B').
+'' :-
+        n3(_1260, p, _1264), n3(_1264, p, _1272)==>n3(_1272, p, _1260).
+'' :-
+        mfl(y_p_x_t,
+            '/home/prologmud_server/lib/swipl/pack/pfc/t/sanity_base/y_p_x_16.pfc',
+            22).
+% result=n3(':C', p, ':C').
+
+
+y_p_x_t:n3(':A', p, ':B').
+y_p_x_t:n3(':B', p, ':C').
+y_p_x_t:n3(':C', p, ':D').
+y_p_x_t:n3(':D', p, ':C').
+y_p_x_t:n3(':C', p, ':B').
+y_p_x_t:n3(':B', p, ':A').
+y_p_x_t:n3(':C', p, ':A').
+y_p_x_t:n3(':A', p, ':A').
+y_p_x_t:n3(':A', p, ':C').
+y_p_x_t:n3(':D', p, ':A').
+y_p_x_t:n3(':B', p, ':D').
+y_p_x_t:n3(':A', p, ':D').
+y_p_x_t:n3(':D', p, ':D').
+y_p_x_t:n3(':D', p, ':B').
+y_p_x_t:n3(':B', p, ':B').
+y_p_x_t:n3(':C', p, ':C').
+
+ /* found 16 for y_p_x_t:n3(_8854,p,_8876).
+ */
+% 16 + 6 = 22 Proofs
+% 141,728 inferences, 0.091 CPU in 0.091 seconds (100% CPU, 1553865 Lips)
+

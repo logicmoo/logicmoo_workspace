@@ -1,0 +1,174 @@
+%==============================================================================
+%----Procedures for writing out formulae in MetiTarski format
+%----
+%----Written by Geoff Sutcliffe, February 2010
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+tptp_to_metitarski(TPTPBinary,Arity,MetiTarskiInfix):-
+    tptp2X_member(TPTPBinary/Arity-MetiTarskiInfix,[
+%----These are in the TPTP language
+'$less'/2-'<',
+'$lesseq'/2-'<=',
+'$greater'/2-'>',
+'$greatereq'/2-'>=',
+'$sum'/2-'+',
+'$difference'/2-'-',
+'$product'/2-'*',
+'$uminus'/1-'-',
+%----These are available in MetiTarski
+'$pi'/0-pi,
+'$quotient'/2-'/',
+'$abs'/1-abs,
+'$pow'/2-'^',
+'$sqrt'/1-sqrt,
+'$exp'/1-exp,
+'$ln'/1-ln,
+'$sin'/1-sin,
+'$cos'/1-cos,
+'$tan'/1-tan,
+'$arctan'/1-arctan,
+'$sinh'/1-sinh,
+'$cosh'/1-cosh,
+'$tanh'/1-tanh
+]).
+
+%------------------------------------------------------------------------------
+%----Output variables 
+metitarski_output_variable(_Langauge,Variable):-
+    tptp_output_variable(Variable).
+
+metitarski_output_variable(Variable):-
+    tptp_output_variable(Variable).
+%------------------------------------------------------------------------------
+metitarski_output_atom_list(Langauge,[One]):-
+    !,
+    metitarski_output_atom(Langauge,One).
+
+metitarski_output_atom_list(Langauge,[One,Two|Rest]):-
+    metitarski_output_atom(Langauge,One),
+    write(','),
+    metitarski_output_atom_list(Langauge,[Two|Rest]).
+%------------------------------------------------------------------------------
+metitarski_output_atom(Language,Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    metitarski_output_variable(Language,Variable).
+
+metitarski_output_atom(_Language,Atom):-
+    atomic(Atom),
+    tptp_to_metitarski(Atom,0,MetiTarskiAtom),
+    !,
+    write('('),
+    write(' '),write(MetiTarskiAtom),write(' '),
+    write(')').
+
+metitarski_output_atom(_Language,Atom):-
+    atomic(Atom),
+    !,
+    write(Atom).
+
+%----Rational terms
+metitarski_output_atom(Language,Numerator/Denominator):-
+    metitarski_output_atom(Language,Numerator),
+    write('/'),
+    metitarski_output_atom(Language,Denominator).
+
+metitarski_output_atom(Language,'$tptp_equal'(X,Y)):-
+    !,
+    metitarski_output_atom(Language,X),
+    write(' = '),
+    metitarski_output_atom(Language,Y).
+
+metitarski_output_atom(Language,X = Y):-
+    !,
+    metitarski_output_atom(Language,X),
+    write(' = '),
+    metitarski_output_atom(Language,Y).
+
+metitarski_output_atom(Language,'$tptp_not_equal'(X,Y)):-
+    !,
+    metitarski_output_atom(Language,X),
+    write(' != '),
+    metitarski_output_atom(Language,Y).
+
+metitarski_output_atom(Language,X != Y):-
+    !,
+    metitarski_output_atom(Language,X),
+    write(' != '),
+    metitarski_output_atom(Language,Y).
+
+metitarski_output_atom(Language,Term):-
+    Term =.. [TPTPUnary,Operand],
+    tptp_to_metitarski(TPTPUnary,1,MetiTarskiPrefix),
+    !,
+    write(' '),write(MetiTarskiPrefix),write('('),
+    metitarski_output_atom(Language,Operand),
+    write(')').
+    
+metitarski_output_atom(Language,Term):-
+    Term =.. [TPTPBinary,LHS,RHS],
+    tptp_to_metitarski(TPTPBinary,2,MetiTarskiInfix),
+    !,
+    write('('),
+    metitarski_output_atom(Language,LHS),
+    write(' '),write(MetiTarskiInfix),write(' '),
+    metitarski_output_atom(Language,RHS),
+    write(')').
+    
+metitarski_output_atom(Language,Term):-
+    Term =.. [Functor|Arguments],
+    write(Functor),
+    write('('),
+    metitarski_output_atom_list(Language,Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF format
+%==============================================================================
+%------------------------------------------------------------------------------
+metitarski_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula).
+
+metitarski_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS).
+
+metitarski_unary_formula(UnaryFormula,UnaryConnective,Formula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in MetiTarski format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+metitarski_quantified_format(FormulaPrefix,VariablesPrefix,VariablesSeparator,
+VariablesSuffix,FormulaSuffix):-
+    tptp_quantified_format(FormulaPrefix,VariablesPrefix,VariablesSeparator,
+VariablesSuffix,FormulaSuffix).
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+metitarski_binary_format(FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,
+FormulaSuffix):-
+    tptp_binary_format(FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,
+FormulaSuffix).
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+metitarski_unary_format(FormulaPrefix,ConnectiveSuffix,FormulaSuffix):-
+    tptp_unary_format(FormulaPrefix,ConnectiveSuffix,FormulaSuffix).
+%------------------------------------------------------------------------------
+metitarski(metitarski,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    convert_formulae_to_tptp(Formulae,TSTPFormulae),
+    output_tptp_formulae(metitarski,short,TSTPFormulae).
+
+metitarski(metitarski,_,_):-
+    !,
+    write('%----ERROR: No MetiTarski format for that type of file'),
+    nl.
+%------------------------------------------------------------------------------
+%----Provide information about the MetiTarski format
+metitarski_format_information('%','.mski').
+%------------------------------------------------------------------------------
+%----Provide information about the TSTP file
+metitarski_file_information(format,metitarski,'MetiTarski').
+%------------------------------------------------------------------------------

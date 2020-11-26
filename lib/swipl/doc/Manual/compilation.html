@@ -1,0 +1,473 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.11</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="debugoverview.html">
+<link rel="next" href="flags.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="debugoverview.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="flags.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:compilation"><a id="sec:2.11"><span class="sec-nr">2.11</span> <span class="sec-title">Compilation</span></a></h2>
+
+<a id="sec:compilation"></a>
+
+<p><h3 id="sec:develcomp"><a id="sec:2.11.1"><span class="sec-nr">2.11.1</span> <span class="sec-title">During 
+program development</span></a></h3>
+
+<a id="sec:develcomp"></a>
+
+<p>During program development, programs are normally loaded using the 
+list abbreviation (<code>?- [load].</code>). It is common practice to 
+organise a project as a collection of source files and a <em>load file</em>, 
+a Prolog file containing only <a id="idx:usemodule12:81"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a> 
+or <a id="idx:ensureloaded1:82"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a> 
+directives, possibly with a definition of the <em>entry point</em> of 
+the program, the predicate that is normally used to start the program. 
+This file is often called <code>load.pl</code>. If the entry point is 
+called
+<em>go</em>, a typical session starts as:
+
+<pre class="code">
+% swipl
+&lt;banner&gt;
+
+1 ?- [load].
+&lt;compilation messages&gt;
+true.
+
+2 ?- go.
+&lt;program interaction&gt;
+</pre>
+
+<p>When using Windows, the user may open <code>load.pl</code> from the 
+Windows explorer, which will cause <b>swipl-win.exe</b> to be started in 
+the directory holding <code>load.pl</code>. Prolog loads <code>load.pl</code> 
+before entering the top level. If Prolog is started from an interactive 
+shell, one may choose the type <code>swipl -s load.pl</code>.
+
+<p><h3 id="sec:runcomp"><a id="sec:2.11.2"><span class="sec-nr">2.11.2</span> <span class="sec-title">For 
+running the result</span></a></h3>
+
+<a id="sec:runcomp"></a>
+
+<p>There are various options if you want to make your program ready for 
+real usage. The best choice depends on whether the program is to be used 
+only on machines holding the SWI-Prolog development system, the size of 
+the program, and the operating system (Unix vs. Windows).
+
+<p><h4 id="sec:plscript"><a id="sec:2.11.2.1"><span class="sec-nr">2.11.2.1</span> <span class="sec-title">Using 
+PrologScript</span></a></h4>
+
+<a id="sec:plscript"></a>
+
+<p>A Prolog source file can be used directly as a Unix program using the 
+Unix <code>#!</code> magic start. The Unix <code>#!</code> magic is 
+allowed because if the first letter of a Prolog file is <code>#</code>, 
+the first line is treated as a comment.<sup class="fn">13<span class="fn-text">The <code>#</code>-sign 
+can be the legal start of a normal Prolog clause. In the unlikely case 
+this is required, leave the first line blank or add a header comment.</span></sup> 
+To create a Prolog script, use one of the two alternatives below as 
+first line. The first can be used to bind a script to a specific Prolog 
+installation, while the latter uses the default prolog installed in <code>$PATH</code>.
+
+<pre class="code">
+#!/path/to/swipl
+#!/usr/bin/env swipl
+</pre>
+
+<p>The interpretation of arguments to the executable in the
+<em>HashBang</em> line differs between Unix-derived systems. For 
+portability, the <code>#!</code> must be followed immediately with an 
+absolute path to the executable and should have none or one argument. 
+Neither the executable path, nor the argument shall use quotes or 
+spaces. When started this way, the Prolog flag <a class="flag" href="flags.html#flag:argv">argv</a> 
+contains the command line arguments that follow the script invocation.
+
+<p>Starting with version 7.5.8, <a id="idx:initialization2:83"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+support the <var>When</var> options <code>program</code> and <code>main</code>, 
+allowing for the following definition of a Prolog script that evaluates 
+an arithmetic expression on the command line. Note that <a id="idx:main0:84"></a><a class="pred" href="main.html#main/0">main/0</a> 
+is defined lib the library
+<code>library(main)</code>. It calls <a id="idx:main1:85"></a><span class="pred-ext">main/1</span> 
+with the command line arguments after disabling signal handling.
+
+<pre class="code">
+#!/usr/bin/env swipl
+
+:- initialization(main, main).
+
+main(Argv) :-
+        concat_atom(Argv, ' ', SingleArg),
+        term_to_atom(Term, SingleArg),
+        Val is Term,
+        format('~w~n', [Val]).
+</pre>
+
+<p>And here are two example runs:
+
+<pre class="code">
+% ./eval 1+2
+3
+% ./eval foo
+ERROR: is/2: Arithmetic: `foo/0' is not a function
+</pre>
+
+<p>Prolog script may be launched for debugging or inspection purposes 
+using the <strong>-l</strong> or <strong>-t</strong>. For example,
+<strong>-l</strong> merely loads the script, ignoring <code>main</code> 
+and
+<code>program</code> initialization.
+
+<pre class="code">
+swipl -l eval 1+1
+&lt;banner&gt;
+
+?- main.
+2
+true.
+
+?-
+</pre>
+
+<p>We can also force the program to enter the interactive toplevel after 
+the application is completed using <code>-t prolog</code>:
+
+<pre class="code">
+swipl -t prolog eval 1+1
+2
+?-
+</pre>
+
+<p>The Windows version simply ignores the <code>#!</code> line.<sup class="fn">14<span class="fn-text">Older 
+versions extracted command line arguments from the <em>HashBang</em> 
+line. As of version 5.9 all relevant setup can be achieved using <em>directives</em>. 
+Due to the compatibility issues around <em>HashBang</em> line 
+processing, we decided to remove it completely.</span></sup>
+
+<p><h4 id="sec:shellscript"><a id="sec:2.11.2.2"><span class="sec-nr">2.11.2.2</span> <span class="sec-title">Creating 
+a shell script</span></a></h4>
+
+<a id="sec:shellscript"></a>
+
+<p>With the introduction of <em>PrologScript</em> (see <a class="sec" href="compilation.html#sec:2.11.2.1">section 
+2.11.2.1</a>), using shell scripts as explained in this section has 
+become redundant for most applications.
+
+<p>Especially on Unix systems and not-too-large applications, writing a 
+shell script that simply loads your application and calls the entry 
+point is often a good choice. A skeleton for the script is given below, 
+followed by the Prolog code to obtain the program arguments.
+
+<pre class="code">
+#!/bin/sh
+
+base=&lt;absolute-path-to-source&gt;
+PL=swipl
+
+exec $PL -q -f "$base/load" --
+</pre>
+
+<pre class="code">
+:- initialization go.
+
+go :-
+        current_prolog_flag(argv, Arguments),
+        go(Arguments).
+
+go(Args) :-
+        ...
+</pre>
+
+<p>On Windows systems, similar behaviour can be achieved by creating a 
+shortcut to Prolog, passing the proper options or writing a <code>.bat</code> 
+file.
+
+<p><h4 id="sec:makestate"><a id="sec:2.11.2.3"><span class="sec-nr">2.11.2.3</span> <span class="sec-title">Creating 
+a saved state</span></a></h4>
+
+<a id="sec:makestate"></a>
+
+<p>For larger programs, as well as for programs that are required to run 
+on systems that do not have the SWI-Prolog development system installed, 
+creating a saved state is the best solution. A saved state is created 
+using <a id="idx:qsaveprogram12:86"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
+or the <strong>-c</strong> command line option. A saved state is a file 
+containing machine-independent<sup class="fn">15<span class="fn-text">The 
+saved state does not depend on the CPU instruction set or endianness. 
+Saved states for 32- and 64-bits are not compatible. Typically, saved 
+states only run on the same version of Prolog on which they have been 
+created.</span></sup> intermediate code in a format dedicated for fast 
+loading. Optionally, the emulator may be integrated in the saved state, 
+creating a single file, but machine-dependent, executable. This process 
+is described in <a class="sec" href="runtime.html#sec:13">chapter 13</a>.
+
+<p><h4 id="sec:cmdlinecomp"><a id="sec:2.11.2.4"><span class="sec-nr">2.11.2.4</span> <span class="sec-title">Compilation 
+using the -c command line option</span></a></h4>
+
+<a id="sec:cmdlinecomp"></a>
+
+<p>This mechanism loads a series of Prolog source files and then creates 
+a saved state as <a id="idx:qsaveprogram2:87"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+does. The command syntax is:
+
+<pre class="code">
+% swipl [option ...] [-o output] -c file.pl ...
+</pre>
+
+<p>The <var>options</var> argument are options to <a id="idx:qsaveprogram2:88"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+written in the format below. The option names and their values are 
+described with
+<a id="idx:qsaveprogram2:89"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.
+<blockquote>
+<code>--</code><em>option-name</em><code>=</code><em>option-value
+</em></blockquote>
+
+<p>For example, to create a stand-alone executable that starts by 
+executing main/0 and for which the source is loaded through
+<code>load.pl</code>, use the command
+
+<pre class="code">
+% swipl --goal=main --stand_alone=true -o myprog -c load.pl
+</pre>
+
+<p>This performs exactly the same as executing
+
+<pre class="code">
+% swipl
+&lt;banner&gt;
+
+?- [load].
+?- qsave_program(myprog,
+                 [ goal(main),
+                   stand_alone(true)
+                 ]).
+?- halt.
+</pre>
+
+<p></body></html>

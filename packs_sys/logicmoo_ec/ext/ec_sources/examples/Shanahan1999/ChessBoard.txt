@@ -1,0 +1,101 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1999/ChessBoard.e
+loading foundations/Root.e
+loading foundations/EC.e
+27 variables and 52 clauses
+relsat solver
+3 models
+---
+model 1:
+0
+ItsBlack().
+ItsWhite().
+1
+-ItsWhite().
+Happens(Throw(), 1).
+2
++ItsWhite().
++OnBlack().
+P
+ReleasedAt(ItsBlack(), 0).
+ReleasedAt(ItsBlack(), 1).
+ReleasedAt(ItsBlack(), 2).
+ReleasedAt(ItsWhite(), 0).
+ReleasedAt(ItsWhite(), 1).
+ReleasedAt(ItsWhite(), 2).
+!Happens(Throw(), 0).
+!Happens(Throw(), 2).
+!ReleasedAt(OnBlack(), 0).
+!ReleasedAt(OnBlack(), 1).
+!ReleasedAt(OnBlack(), 2).
+!ReleasedAt(OnWhite(), 0).
+!ReleasedAt(OnWhite(), 1).
+!ReleasedAt(OnWhite(), 2).
+---
+model 2:
+0
+ItsBlack().
+ItsWhite().
+1
+-ItsBlack().
+Happens(Throw(), 1).
+2
++ItsBlack().
++OnWhite().
+P
+ReleasedAt(ItsBlack(), 0).
+ReleasedAt(ItsBlack(), 1).
+ReleasedAt(ItsBlack(), 2).
+ReleasedAt(ItsWhite(), 0).
+ReleasedAt(ItsWhite(), 1).
+ReleasedAt(ItsWhite(), 2).
+!Happens(Throw(), 0).
+!Happens(Throw(), 2).
+!ReleasedAt(OnBlack(), 0).
+!ReleasedAt(OnBlack(), 1).
+!ReleasedAt(OnBlack(), 2).
+!ReleasedAt(OnWhite(), 0).
+!ReleasedAt(OnWhite(), 1).
+!ReleasedAt(OnWhite(), 2).
+---
+model 3:
+0
+ItsBlack().
+ItsWhite().
+1
+Happens(Throw(), 1).
+2
++OnBlack().
++OnWhite().
+P
+ReleasedAt(ItsBlack(), 0).
+ReleasedAt(ItsBlack(), 1).
+ReleasedAt(ItsBlack(), 2).
+ReleasedAt(ItsWhite(), 0).
+ReleasedAt(ItsWhite(), 1).
+ReleasedAt(ItsWhite(), 2).
+!Happens(Throw(), 0).
+!Happens(Throw(), 2).
+!ReleasedAt(OnBlack(), 0).
+!ReleasedAt(OnBlack(), 1).
+!ReleasedAt(OnBlack(), 2).
+!ReleasedAt(OnWhite(), 0).
+!ReleasedAt(OnWhite(), 1).
+!ReleasedAt(OnWhite(), 2).
+ChessBoard: 0 predicates, 0 functions, 4 fluents, 1 events, 10 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

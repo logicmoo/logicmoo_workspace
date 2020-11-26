@@ -1,0 +1,35 @@
+(note TQD43)
+
+(maleficiary HYP-DeclaringWar-66495572 Iran) 
+
+(agent HYP-DeclaringWar-66495572 SaudiArabia) 
+
+(subrelation agent agent) 
+
+(opponentsInConflict SaudiArabia Iran HPKBScenarioConflict) 
+
+(instance HYP-DeclaringWar-66495572 DeclaringWar) 
+
+(implies 
+ (and 
+ (instance ?ACT DeclaringWar) 
+ (agent ?ACT ?AGENT1) 
+ (maleficiary ?ACT ?AGENT2) 
+ (opponentsInConflict ?AGENT1 ?AGENT2 ?CONFLICT)) 
+ (increasesImmediatelyCausally ?ACT ?CONFLICT conflictLevel)) 
+
+(queryyn
+ (implies 
+   (and 
+       (instance ?ACT DeclaringWar) 
+       (agent ?ACT SaudiArabia) 
+       (maleficiary ?ACT Iran) 
+       (temporallySubsumes 
+           (DateInSituationFn CalendarDay 23 HPKBScenarioConflict) ?ACT)) 
+   (increasesImmediatelyCausally ?ACT HPKBScenarioConflict conflictLevel)) 
+)	   
+
+(answer Yes)
+
+(end_of_file)
+

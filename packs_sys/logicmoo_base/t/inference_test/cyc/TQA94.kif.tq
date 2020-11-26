@@ -1,0 +1,233 @@
+(note TQA94)
+(abort)
+
+(consistent 
+ (deviceUsed #$HYP-AttackOnTangible-60934925 
+ (SKF-9578001) )) 
+
+(instance 
+ (SKF-9578001)  ProjectileWeapon) 
+
+(subclass ProjectileWeapon Weapon) 
+
+(relationInstanceExistsMany possesses Iran ProjectileWeapon) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (agent ?ATTACK ?AGENT) 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ?WEAPONTYPE) 
+ (subclass ?WEAPONTYPE Weapon)) 
+ (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(subclass ProjectileWeapon Weapon) 
+
+(instance 
+ (SKF-9578001)  ProjectileWeapon) 
+
+(deviceUsed 
+ (#$SKF-33611041)  
+ (#$SKF-9578001)) 
+
+(instance Iran GeographicalAgent) 
+
+(agent 
+ (#$SKF-33611041)  Iran) 
+
+(instance 
+ (SKF-33611041)  AttackOnTangible) 
+
+
+
+
+(consistent 
+ (deviceUsed #$HYP-AttackOnTangible-60934925 
+ (SKF-9578001) )) 
+
+(instance 
+ (SKF-9578001)  Missile) 
+
+(subclass Missile Weapon) 
+
+(relationInstanceExistsMany possesses Iran Missile) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (agent ?ATTACK ?AGENT) 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ?WEAPONTYPE) 
+ (subclass ?WEAPONTYPE Weapon)) 
+ (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(subclass Missile Weapon) 
+
+(instance 
+ (SKF-9578001)  Missile) 
+
+(deviceUsed 
+ (#$SKF-33611041)  
+ (#$SKF-9578001)) 
+
+(instance Iran GeographicalAgent) 
+
+(agent 
+ (#$SKF-33611041)  Iran) 
+
+(instance 
+ (SKF-33611041)  AttackOnTangible) 
+
+
+
+
+(consistent 
+ (deviceUsed #$HYP-AttackOnTangible-60934925 
+ (SKF-9578001) )) 
+
+(instance 
+ (SKF-9578001)  IndirectFireWeapon) 
+
+(subclass IndirectFireWeapon Weapon) 
+
+(relationInstanceExistsMany possesses Iran IndirectFireWeapon) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (agent ?ATTACK ?AGENT) 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ?WEAPONTYPE) 
+ (subclass ?WEAPONTYPE Weapon)) 
+ (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(subclass IndirectFireWeapon Weapon) 
+
+(instance 
+ (SKF-9578001)  IndirectFireWeapon) 
+
+(deviceUsed 
+ (#$SKF-33611041)  
+ (#$SKF-9578001)) 
+
+(instance Iran GeographicalAgent) 
+
+(agent 
+ (#$SKF-33611041)  Iran) 
+
+(instance 
+ (SKF-33611041)  AttackOnTangible) 
+
+
+
+
+(consistent 
+ (deviceUsed #$HYP-AttackOnTangible-60934925 
+ (SKF-9578001) )) 
+
+(instance 
+ (SKF-9578001)  BallisticMissile) 
+
+(subclass BallisticMissile Weapon) 
+
+(relationInstanceExistsMany possesses Iran BallisticMissile) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (agent ?ATTACK ?AGENT) 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ?WEAPONTYPE) 
+ (subclass ?WEAPONTYPE Weapon)) 
+ (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(subclass BallisticMissile Weapon) 
+
+(instance 
+ (SKF-9578001) BallisticMissile) 
+
+(deviceUsed 
+ (#$SKF-33611041)  
+ (#$SKF-9578001)) 
+
+(instance Iran GeographicalAgent) 
+
+(agent 
+ (#$SKF-33611041)  Iran) 
+
+(instance 
+ (SKF-33611041)  AttackOnTangible) 
+
+
+
+
+(consistent 
+ (deviceUsed #$HYP-AttackOnTangible-60934925 
+ (SKF-9578001) )) 
+
+(instance 
+ (SKF-9578001)  MilitaryWeapon) 
+
+(subclass MilitaryWeapon Weapon) 
+
+(relationInstanceExistsMany possesses Iran MilitaryWeapon) 
+
+(implies 
+ (and 
+ (instance ?AGENT GeographicalAgent) 
+ (agent ?ATTACK ?AGENT) 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?WEAPON) 
+ (instance ?WEAPON ?WEAPONTYPE) 
+ (subclass ?WEAPONTYPE Weapon)) 
+ (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+(subclass MilitaryWeapon Weapon) 
+
+(instance 
+ (SKF-9578001)  MilitaryWeapon) 
+
+(deviceUsed 
+ (#$SKF-33611041)  
+ (#$SKF-9578001)) 
+
+(instance Iran GeographicalAgent) 
+
+(agent 
+ (#$SKF-33611041)  Iran) 
+
+(instance 
+ (SKF-33611041)  AttackOnTangible) 
+
+
+(query (findall ?WEAPON-TYPE
+ (implies 
+ (and 
+ (instance ?ACT AttackOnTangible) 
+ (agent ?ACT Iran) 
+ (damages ?ACT ?TARGET) 
+ (inRegion ?TARGET 
+ (NorthernRegionFn 
+ (CoastlineFn SaudiArabia)))) 
+ (and 
+ (subclass ?WEAPON-TYPE Weapon) 
+ (relationInstanceExistsMany possesses Iran ?WEAPON-TYPE) 
+ (thereExists ?WEAPON 
+ (and 
+ (instance ?WEAPON ?WEAPON-TYPE) 
+ (consistent 
+ (deviceUsed ?ACT ?WEAPON)))))) )  )
+
+(answer ProjectileWeapon)
+(answer Missile)
+(answer IndirectFireWeapon)
+(answer BallisticMissile)
+(answer MilitaryWeapon)
+
+(end_of_file)
+
+

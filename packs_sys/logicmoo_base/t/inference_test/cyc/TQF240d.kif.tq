@@ -1,0 +1,56 @@
+(note TQF240d)
+
+(goalCategoryForAgent Iran 
+  (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) NationalDefenseGoal)
+
+(implies 
+  (instance ?COUNTRY WesternCountry) 
+  (goalCategoryForAgent Libya 
+    (powerInRegion-Geopolitical ?COUNTRY MiddleEast-Region Low) ActionGuidingIdeology))
+
+(instance UnitedStatesOfAmerica WesternCountry) 
+
+(goalCategoryForAgent Libya 
+  (powerInRegion-Geopolitical UnitedStatesOfAmerica MiddleEast-Region Low) ActionGuidingIdeology)
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) StrategicInterest) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) OrganizationalProsperityGoal) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) SelfPreservationGoal) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) StrategicNationalInterest) 
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) VitalNationalInterest) 
+
+(query (findall ( ?IRANATTRIBUTEUS ?IRANCATEGORY ?IRANREGIONUS   ?LIBYAATTRIBUTEUS ?LIBYACATEGORY ?LIBYAREGIONUS )
+  (or 
+    (goalCategoryForAgent Libya 
+      (powerInRegion-Geopolitical UnitedStatesOfAmerica ?LIBYAREGIONUS ?LIBYAATTRIBUTEUS) ?LIBYACATEGORY) 
+    (goalCategoryForAgent Iran 
+      (powerInRegion-Geopolitical UnitedStatesOfAmerica ?IRANREGIONUS ?IRANATTRIBUTEUS) ?IRANCATEGORY))))
+
+(answer Low StrategicNationalInterest PersianGulfRegion ?? ?? ??)
+(answer Low VitalNationalInterest PersianGulfRegion ?? ?? ??)
+(answer Low NationalDefenseGoal PersianGulfRegion ?? ?? ??)
+(answer Low SelfPreservationGoal PersianGulfRegion ?? ?? ??)
+(answer Low OrganizationalProsperityGoal PersianGulfRegion ?? ?? ??)
+(answer Low StrategicInterest PersianGulfRegion ?? ?? ??)
+(answer ?? ?? ?? Low ActionGuidingIdeology MiddleEast-Region)
+
+(end_of_file)
+

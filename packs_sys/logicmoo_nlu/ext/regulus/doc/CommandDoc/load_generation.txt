@@ -1,0 +1,4 @@
+Compile and load the current generation grammar, defined by the {\tt
+regulus\_\-grammar} or {\tt generation\_\-regulus\_\-grammar} config
+file entry. The resulting compiled generation grammar is placed in the
+file defined by the {\tt generation\_\-grammar} config file entry.

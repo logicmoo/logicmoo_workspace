@@ -1,0 +1,48 @@
+
+ff: parsing domain file
+domain 'ZEON' defined
+ ... done.
+ff: parsing problem file
+problem 'P4' defined
+ ... done.
+
+
+
+Cueing down from goal distance:   13 into depth [1][2]
+                                  12            [1]
+                                  11            [1]
+                                  10            [1]
+                                   9            [1]
+                                   8            [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1]
+                                   4            [1]
+                                   3            [1]
+                                   2            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step    0: FLY PLANE1 CITY0 CITY1 FL6 FL5
+        1: BOARD PERSON1 PLANE1 CITY1
+        2: FLY PLANE1 CITY1 CITY2 FL5 FL4
+        3: DEBARK PERSON1 PLANE1 CITY2
+        4: BOARD PERSON1 PLANE1 CITY2
+        5: FLY PLANE1 CITY2 CITY3 FL4 FL3
+        6: DEBARK PERSON1 PLANE1 CITY3
+        7: BOARD PERSON1 PLANE1 CITY3
+        8: FLY PLANE1 CITY3 CITY4 FL3 FL2
+        9: DEBARK PERSON1 PLANE1 CITY4
+       10: BOARD PERSON1 PLANE1 CITY4
+       11: FLY PLANE1 CITY4 CITY0 FL2 FL1
+       12: DEBARK PERSON1 PLANE1 CITY0
+     
+
+time spent:    0.00 seconds instantiating 2098 easy, 0 hard action templates
+               0.00 seconds reachability analysis, yielding 100 facts and 658 actions
+               0.01 seconds creating final representation with 100 relevant facts
+               0.01 seconds building connectivity graph
+               0.06 seconds searching, evaluating 57 states, to a max depth of 2
+               0.08 seconds total time
+

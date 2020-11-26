@@ -1,0 +1,72 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
+
+% %  was_module(sanity,[]).
+
+:- include(test_header).
+
+:- op(500,fx,'-').
+:- op(300,fx,'~').
+:- op(1050,xfx,('==>')).
+:- op(1050,xfx,'<==>').
+:- op(1050,xfx,('<-')).
+:- op(1100,fx,('==>')).
+:- op(1150,xfx,('::::')).
+
+
+:- dynamic((foob/1,if_missing/2,good/1)).
+
+
+:- mpred_trace.
+:- mpred_watch.
+
+:- dynamic((foob/1,if_missing/2)).
+
+% :- begin_pfc.
+
+% this should have been ok
+% (if_missing(Missing,Create) ==> ((\+ Missing/(Missing\==Create), \+ Create , \+ ~(Create)) ==> Create)).
+
+:- mpred_ain((if_missing(Missing,Create) ==> 
+ ( ( \+ Missing/(Missing\=@=Create)) ==> Create))).
+
+:- mpred_ain((good(X) ==> if_missing(foob(_),foob(X)))).
+
+:- mpred_ain(good(az)).
+
+:- mpred_why(foob(az)).
+
+
+:- ain(foob(b)).
+
+:- call(\+foob(az)).
+
+
+
+:- ain(==> (\+ foob(b))).
+
+
+
+:- mpred_why(foob(az)).
+
+:-  (mpred_withdraw( good(az) )).
+
+% :- listing([foob,good]).
+
+:- call( \+foob(az)).
+
+:- mpred_ain(~ foob(b)).
+
+% :- pp_DB_Current.
+
+:- mpred_why(~foob(b)).
+
+:- mpred_ain(good(az)).
+
+:- mpred_why(foob(az)).
+

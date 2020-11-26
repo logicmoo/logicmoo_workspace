@@ -1,0 +1,16 @@
+boucle(0).
+
+boucle(_N) :- 
+	sup(_N,0,true), 
+	_NN is _N-1, 
+	random(_X), 
+	writeln(_X), 
+	boucle(_NN).
+
+random(X) :-
+	Y is "java.util.Random":new(),
+	X is Y:nextInt().
+
+sup(_X, _Y, _Z) :- _Z is _X > _Y.
+egal(_X, _Y, _Z) :- _Z is _X = _Y.
+

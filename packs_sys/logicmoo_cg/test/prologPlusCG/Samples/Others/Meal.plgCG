@@ -1,0 +1,58 @@
+meal(a, r, m, d) :- appetizer(a), main(r, m), val(x, add(3,4)), dessert(d).
+
+main(r, m) :- drink(r), principal(m).
+main(r, m) :- drink(r), meat(m).
+
+principal((m, m2)) :- fish(m), fish2(m2).
+
+drink(Coke).
+drink(Beer).
+
+appetizer(radishes).
+appetizer(pate).
+
+fish(sole).
+fish(tuna).
+
+fish2(titi).
+fish2(tata).
+
+meat(pork).
+meat(beef).
+
+dessert(cake).
+dessert(fruit).
+
+little_sum(1, _x, _y) :- little_successor(_x, _y).
+little_sum(_x1, _y, _z1) :- 
+   little_successor(_x, _x1),
+   little_sum(_x, _y, _z),
+   little_successor(_z, _z1).
+
+little_successor(1,2).
+little_successor(2,3).
+little_successor(3,4).
+little_successor(4,5).
+little_successor(5,6).
+little_successor(6,7).
+little_successor(7,8).
+little_successor(8,9).
+
+light_meal(a, m, d) :-
+   meal(a, m, d),
+   units(a, x),
+   units(m, y),
+   little_sum(x, y, u),
+   units(d, z),
+   little_sum(z, u, v).
+
+// units avec deux arguments.
+units(beef, 3).
+units(fruit, 1).
+units(cake, 5).
+units(pate, 6).
+units(pork, 7).
+units(radishes, 1).
+units(sole, 2).
+units(tuna, 4).
+

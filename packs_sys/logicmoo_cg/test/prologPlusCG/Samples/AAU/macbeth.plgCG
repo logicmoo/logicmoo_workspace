@@ -1,0 +1,78 @@
+//
+// macbeth.plgCG
+//
+// Written by Henrik Scharfe, September 2003
+// Last update: September 23, 2003
+//
+
+// Type hierarchy
+universal > object, process, proposition.
+object > person, artifact.
+person > pronoun.
+artifact > weapon.
+weapon > dagger.
+process > act, state.
+
+// Catalogue of individuals
+act = ask, hacked, say.
+person = Macbeth.
+pronoun = pn_I, pn_me, pn_my.
+
+// Graphs
+
+gr(act2,
+  [act: ask]-
+        -agnt->[person: Macbeth],
+        -thme->[proposition = 
+                    [act: see]-
+                       -agnt->[person: pn_I]
+                       -obj->[object: *x]-
+                                 -bfore->[person: pn_me],
+                                 -type->[dagger]]).
+
+gr(act5,
+  [act: say]-
+    -agnt->[person: Macbeth],
+    -thme->[proposition = 
+               [act: will_fight]-
+                   -agnt->[person: pn_I],
+                   -until->[state =
+                               [act:hacked]-
+                                    -ptnt->[flesh]<-poss-[person: pn_my],
+                                    -from->[bone: {}]<-poss-[person: pn_my]]]).
+
+
+// predicates
+
+branches(B):-
+gr(L,G),
+branchOfCG(B,G).
+
+concepts(C):-
+gr(L,G),
+concOfCG(C,G).
+
+//extracting the concepts in the embedded graph
+conceptsProp(C):-
+gr(L,G),
+subsume([proposition],G),
+branchOfCG([proposition = P], G),
+concOfCG(C, P).
+
+//extracting all concepts
+AllConcepts(C):-
+concepts(C).
+AllConcepts(C):-
+conceptsProp(C).
+
+// Subsuming action
+action(G):-
+gr(L,G),
+subsume([act]-agnt->[person],G).
+
+// extracting referents
+actor(a,b):-
+gr(L,G),
+subsume([act]-agnt->[person],G),
+branchOfCG([act:a]-agnt->[person: b],G).
+

@@ -1,0 +1,8 @@
+Relevant to translation applications. Points to a file of examples
+used as input to the parameterised command TRANSLATE\_\-CORPUS
+$\langle$Arg$\rangle$. The format is sent(Atom), so for example a
+typical line would be
+\begin{verbatim}
+sent('switch off the light').
+\end{verbatim}
+(note the closing period).

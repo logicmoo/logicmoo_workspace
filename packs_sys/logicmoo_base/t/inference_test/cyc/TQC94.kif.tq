@@ -1,0 +1,74 @@
+(note TQC94)
+
+(relationInstanceExistsMany possesses SaudiArabia TornadoIDS) 
+
+(subclass TornadoIDS MilitaryHardware) 
+
+(relationAllInstance vehicleRange TornadoIDS 
+ (Kilometer 1390)) 
+
+(distanceBetween SaudiArabia Iran 
+ (Kilometer 541 973)) 
+
+
+
+
+(relationInstanceExistsMany possesses SaudiArabia F-15-Fighter) 
+
+(subclass F-15-Fighter MilitaryHardware) 
+
+(relationAllInstance vehicleRange F-15-Fighter 
+ (Mile 3450)) 
+
+
+
+
+
+
+
+(relationInstanceExistsMany possesses SaudiArabia TornadoADV) 
+
+(subclass TornadoADV MilitaryHardware) 
+
+(relationAllInstance vehicleRange TornadoADV 
+ (Mile 2000)) 
+
+
+
+
+(relationAllInstance weaponEffectiveRange-Max BallisticMissile-CSS2 
+ (Kilometer 2800)) 
+
+(subclass BallisticMissile-CSS2 MilitaryHardware) 
+
+(relationInstanceExistsMany possesses SaudiArabia BallisticMissile-CSS2) 
+
+
+
+
+
+(query (findall (?DISTANCE ?RANGE ?WEAPON)
+
+ (or 
+ (and 
+ (subclass ?WEAPON MilitaryHardware) 
+ (relationAllInstance weaponEffectiveRange-Max ?WEAPON ?RANGE) 
+ (distanceBetween SaudiArabia Iran ?DISTANCE) 
+ (not 
+ (lessThan ?RANGE ?DISTANCE)) 
+ (relationInstanceExistsMany possesses SaudiArabia ?WEAPON)) 
+ (and 
+ (subclass ?WEAPON MilitaryHardware) 
+ (relationAllInstance vehicleRange ?WEAPON ?RANGE) 
+ (distanceBetween SaudiArabia Iran ?DISTANCE) 
+ (not 
+ (lessThan ?RANGE ?DISTANCE)) 
+ (relationInstanceExistsMany possesses SaudiArabia ?WEAPON)))))
+
+(answer (list (Kilometer 541 973)) 1390 TornadoIDS)
+(answer (list (Kilometer 541 973))  3450 F-15-Fighter)
+(answer (list (Kilometer 541 973))  2000 TornadoADV)
+(answer (list (Kilometer 541 973))  2800 BallisticMissile-CSS2)  
+
+(end_of_file)
+

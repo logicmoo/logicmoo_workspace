@@ -1,0 +1,32 @@
+---+ An Linked Open Piracy tutorial
+
+This tutorial explains the basics of installing ClioPatria and applying
+it to analyze RDF data and write a small web-service.
+
+  1. [[Preparations for the pirates demo][InstallPiracy.txt]]
+  2. [[Load and explore the pirate data][LoadPirates.txt]]
+  3. [[Query the pirate data with Prolog][QueryPirates.txt]]
+  4. [[Pack your queries as Prolog predicates][PiratePredicates.txt]]
+  5. [[Serve a web-page][PiratePage.txt]]
+  6. [[More exercises][PirateExercises.txt]]
+
+---++ Further reading
+
+The pirates domain is a geospatial domain. To keep this tutorial simple
+and considering the size of the dataset, we use naive Prolog
+generate-and-test for answering queries. In realistic settings one needs
+proper spatial indexing. This is implemented in the [[space
+pachkage][http://www.swi-prolog.org/pldoc/package/space.html]]
+
+An LOP demo is [[online][http://semanticweb.cs.vu.nl/poseidon/ns]]
+
+---++++ Acknowledgements
+
+We are grateful to the [[Poseidon
+project][http://www.esi.nl/short/poseidon/]] for making the RDF data
+available. Willem Robert van Hage convinced me using this data. This
+material was used in guest lecture by Frank van Harmelen and Jan
+Wielemaker, part of a Prolog course at the [[VU][http://www.vu.nl]]
+organised by Stefan Schlobach and Annette ten Teije.
+
+@see [[The ClioPatria whitepaper][<../help/whitepaper.txt>]]

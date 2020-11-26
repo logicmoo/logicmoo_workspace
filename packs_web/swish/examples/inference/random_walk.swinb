@@ -1,0 +1,99 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# One-Dimensional Random Walk 
+
+
+A particle starts at position
+x = 10 and moves with equal probability one unit to the left or one unit to the right in each
+turn. The random walk stops if the particle reaches position x = 0.
+
+
+The walk terminates with probability one [2] but requires, on
+average, an infinite time to do so [1], i.e., the expected number of turns is
+infinite.
+
+How many turns does a walk take?
+</div>
+
+<div class="nb-cell query">
+mc_sample_arg_first(walk(T),1,T,[NT-_]).
+</div>
+
+<div class="nb-cell markdown">
+## Code
+
+Preamble:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- endif.
+
+:- mc.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell markdown">
+The walk starts at time=0 and X=0.
+</div>
+
+<div class="nb-cell program" data-background="true">
+walk(T):-
+  walk(10,0,T).
+</div>
+
+<div class="nb-cell markdown">
+If X is 0, the walk ends.
+</div>
+
+<div class="nb-cell program" data-background="true">
+walk(0,T,T).
+</div>
+
+<div class="nb-cell markdown">
+If X&gt;0, the particle makes a move.
+</div>
+
+<div class="nb-cell program" data-background="true">
+walk(X,T0,T):-
+  X&gt;0,
+  move(T0,Move),
+  T1 is T0+1,
+  X1 is X+Move,
+  walk(X1,T1,T).
+</div>
+
+<div class="nb-cell markdown">
+The move is either one step to the left or to the right with equal probability.
+</div>
+
+<div class="nb-cell program" data-background="true">
+move(T,1):0.5; move(T,-1):0.5.
+</div>
+
+<div class="nb-cell markdown">
+Epilogue:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:-end_lpad.
+</div>
+
+<div class="nb-cell markdown">
+## References
+
+[1] Kaminski, B. L., Katoen, J.-P., Matheja, C., Olmedo, F., Weakest precondition reasoning for expected run-times of probabilistic programs. Programming languages and systems, LNCS, vol. 9632, pp. 364-389, 
+Springer, Heidelberg (2016)
+
+[2] Hurd, J.: A formal approach to probabilistic termination. In: Carreno, V.A.,
+Munoz, C.A., Tahar, S. (eds.) TPHOLs 2002. LNCS, vol. 2410, pp. 230-245,
+Springer, Heidelberg (2002)
+</div>
+
+</div>
+

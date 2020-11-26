@@ -1,0 +1,717 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns="http://www.ling.gu.se/projekt/talk/owl-godis#"
+  xml:base="http://www.ling.gu.se/projekt/talk/owl-godis">
+  <owl:Ontology rdf:about=""/>
+  <owl:Class rdf:ID="PP__Prep_PN">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="PP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="ConsultDB">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Construct"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Phrase">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Syntax"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="NP__Det_optAdj_Noun_optCompl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="NP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Place">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Location"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="WhNP__Det_optAdj_Noun_Prep_WhNP">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="WhNP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Predicate"/>
+  <owl:Class rdf:ID="WhQ__WhNP_is_Compl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="WhQ"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Device"/>
+  <owl:Class rdf:ID="VP__is_Compl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="VP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Adv">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Compl"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Bind">
+    <rdfs:subClassOf rdf:resource="#Construct"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Sort"/>
+  <owl:Class rdf:about="#Compl">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Clause__it_is_X_that_is_Compl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Clause"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#WhQ"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#VP">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Number">
+    <rdfs:subClassOf rdf:resource="#Sort"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Street">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Location"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Noun">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="SubjNP">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="DevQuery">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="DeviceConstruct"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Time">
+    <rdfs:subClassOf rdf:resource="#Number"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Route">
+    <rdfs:subClassOf rdf:resource="#Sort"/>
+  </owl:Class>
+  <owl:Class rdf:ID="PN">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#NP"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#WhQ">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Clause__SubjNP_Verb_X_optCompl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Clause"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Date">
+    <rdfs:subClassOf rdf:resource="#Number"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Line">
+    <rdfs:subClassOf rdf:resource="#Sort"/>
+  </owl:Class>
+  <owl:Class rdf:ID="WhQ__WhNP_does_SubjNP_Verb_HOLE_optCompl">
+    <rdfs:subClassOf rdf:resource="#WhQ"/>
+  </owl:Class>
+  <owl:Class rdf:about="#PP">
+    <rdfs:subClassOf rdf:resource="#Compl"/>
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Clause__SubjNP_is_X">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Clause"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#WhNP">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="PP__Prep_Det_optAdj_Noun_optCompl">
+    <rdfs:subClassOf rdf:resource="#PP"/>
+  </owl:Class>
+  <owl:Class rdf:ID="BusLine">
+    <rdfs:subClassOf rdf:resource="#Line"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Plan"/>
+  <owl:Class rdf:ID="WhNP__which_optAdj_Noun_optPP">
+    <rdfs:subClassOf rdf:resource="#WhNP"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Raise">
+    <rdfs:subClassOf rdf:resource="#Construct"/>
+  </owl:Class>
+  <owl:Class rdf:ID="City">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Location"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Leg">
+    <rdfs:subClassOf rdf:resource="#Sort"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Adj">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="TramLine">
+    <rdfs:subClassOf rdf:resource="#Line"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Action"/>
+  <owl:Class rdf:about="#DeviceConstruct">
+    <rdfs:subClassOf rdf:resource="#Construct"/>
+  </owl:Class>
+  <owl:Class rdf:ID="TramStop">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Stop"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Stop">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Location"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Pron">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#NP"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="FerryLine">
+    <rdfs:subClassOf rdf:resource="#Line"/>
+  </owl:Class>
+  <owl:Class rdf:ID="BusStop">
+    <rdfs:subClassOf rdf:resource="#Stop"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Verb">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Variable">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="ObjNP"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Prep"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Syntax"/>
+    <rdfs:subClassOf rdf:resource="#SubjNP"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="WhPron"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#WhQ"/>
+    <rdfs:subClassOf rdf:resource="#PP"/>
+    <rdfs:subClassOf rdf:resource="#Adv"/>
+    <rdfs:subClassOf rdf:resource="#Noun"/>
+    <rdfs:subClassOf rdf:resource="#VP"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Det"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Compl"/>
+    <rdfs:subClassOf rdf:resource="#WhNP"/>
+    <rdfs:subClassOf rdf:resource="#Adj"/>
+    <rdfs:subClassOf rdf:resource="#Verb"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#NP"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Clause"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Pron"/>
+    <rdfs:subClassOf rdf:resource="#PN"/>
+  </owl:Class>
+  <owl:Class rdf:ID="DeviceCommand"/>
+  <owl:Class rdf:about="#Det">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#ObjNP">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+    <rdfs:subClassOf rdf:resource="#Compl"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Location">
+    <rdfs:subClassOf rdf:resource="#Sort"/>
+  </owl:Class>
+  <owl:Class rdf:ID="PP__Prep_Pron">
+    <rdfs:subClassOf rdf:resource="#PP"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Clause__it_is_X_that_Verb_optObjNP_optCompl">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Clause"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Clause">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Clause__SubjNP_wants_to_Verb_X_optCompl">
+    <rdfs:subClassOf rdf:resource="#Clause"/>
+  </owl:Class>
+  <owl:Class rdf:ID="VP__Verb_optObjNP_optCompl">
+    <rdfs:subClassOf rdf:resource="#VP"/>
+  </owl:Class>
+  <owl:Class rdf:ID="FerryStop">
+    <rdfs:subClassOf rdf:resource="#Stop"/>
+  </owl:Class>
+  <owl:Class rdf:ID="WhQ__WhNP_does_Verb_optObjNP_optCompl">
+    <rdfs:subClassOf rdf:resource="#WhQ"/>
+  </owl:Class>
+  <owl:Class rdf:about="#WhPron">
+    <rdfs:subClassOf rdf:resource="#WhNP"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Lexicon"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="DevDo">
+    <rdfs:subClassOf rdf:resource="#DeviceConstruct"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Findout">
+    <rdfs:subClassOf rdf:resource="#Construct"/>
+  </owl:Class>
+  <owl:Class rdf:about="#NP">
+    <rdfs:subClassOf rdf:resource="#Phrase"/>
+    <rdfs:subClassOf rdf:resource="#SubjNP"/>
+    <rdfs:subClassOf rdf:resource="#ObjNP"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Lexicon">
+    <rdfs:subClassOf rdf:resource="#Syntax"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Prep">
+    <rdfs:subClassOf rdf:resource="#Lexicon"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Area">
+    <rdfs:subClassOf rdf:resource="#Location"/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:ID="questionPhrase">
+    <rdfs:domain rdf:resource="#Predicate"/>
+    <rdfs:range rdf:resource="#WhQ"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrPN">
+    <rdfs:range rdf:resource="#PN"/>
+    <rdfs:domain rdf:resource="#PP__Prep_PN"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="route_leg">
+    <rdfs:domain rdf:resource="#Route"/>
+    <rdfs:range rdf:resource="#Leg"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="answerPhrase">
+    <rdfs:range rdf:resource="#Clause"/>
+    <rdfs:domain rdf:resource="#Predicate"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrSubjNP">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Clause__SubjNP_is_X"/>
+          <owl:Class rdf:about="#Clause__SubjNP_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#Clause__SubjNP_wants_to_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:range rdf:resource="#SubjNP"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrVerb">
+    <rdfs:range rdf:resource="#Verb"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Clause__it_is_X_that_Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#Clause__SubjNP_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#Clause__SubjNP_wants_to_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#VP__Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_Verb_optObjNP_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="leg_line">
+    <rdfs:range rdf:resource="#Line"/>
+    <rdfs:domain rdf:resource="#Leg"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrDet">
+    <rdfs:range rdf:resource="#Det"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#NP__Det_optAdj_Noun_optCompl"/>
+          <owl:Class rdf:about="#WhNP__Det_optAdj_Noun_Prep_WhNP"/>
+          <owl:Class rdf:about="#PP__Prep_Det_optAdj_Noun_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="parameter">
+    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:domain rdf:resource="#Predicate"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="leg_end_stop">
+    <rdfs:domain rdf:resource="#Leg"/>
+    <rdfs:range rdf:resource="#Stop"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="leg_start_stop">
+    <rdfs:range rdf:resource="#Stop"/>
+    <rdfs:domain rdf:resource="#Leg"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="valid">
+    <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:domain rdf:resource="#Predicate"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrNoun">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#NP__Det_optAdj_Noun_optCompl"/>
+          <owl:Class rdf:about="#WhNP__Det_optAdj_Noun_Prep_WhNP"/>
+          <owl:Class rdf:about="#WhNP__which_optAdj_Noun_optPP"/>
+          <owl:Class rdf:about="#PP__Prep_Det_optAdj_Noun_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:range rdf:resource="#Noun"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="predicate">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Findout"/>
+          <owl:Class rdf:about="#Raise"/>
+          <owl:Class rdf:about="#Bind"/>
+          <owl:Class rdf:about="#ConsultDB"/>
+          <owl:Class rdf:about="#DevQuery"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:range rdf:resource="#Predicate"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="command">
+    <rdfs:range rdf:resource="#DeviceCommand"/>
+    <rdfs:domain rdf:resource="#DevDo"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="precond">
+    <rdfs:domain rdf:resource="#Construct"/>
+    <rdfs:range rdf:resource="#Construct"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrPP">
+    <rdfs:range rdf:resource="#PP"/>
+    <rdfs:domain rdf:resource="#WhNP__which_optAdj_Noun_optPP"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="actionPhrase">
+    <rdfs:range rdf:resource="#VP"/>
+    <rdfs:domain rdf:resource="#Action"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrPron">
+    <rdfs:domain rdf:resource="#PP__Prep_Pron"/>
+    <rdfs:range rdf:resource="#Pron"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrCompl">
+    <rdfs:range rdf:resource="#Compl"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Clause__it_is_X_that_is_Compl"/>
+          <owl:Class rdf:about="#Clause__it_is_X_that_Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#Clause__SubjNP_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#Clause__SubjNP_wants_to_Verb_X_optCompl"/>
+          <owl:Class rdf:about="#NP__Det_optAdj_Noun_optCompl"/>
+          <owl:Class rdf:about="#PP__Prep_Det_optAdj_Noun_optCompl"/>
+          <owl:Class rdf:about="#VP__is_Compl"/>
+          <owl:Class rdf:about="#VP__Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_is_Compl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrWhNP">
+    <rdfs:range rdf:resource="#WhNP"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_is_Compl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_SubjNP_Verb_HOLE_optCompl"/>
+          <owl:Class rdf:about="#WhNP__Det_optAdj_Noun_Prep_WhNP"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="construct">
+    <rdfs:range rdf:resource="#Construct"/>
+    <rdfs:domain rdf:resource="#Plan"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrPrep">
+    <rdfs:range rdf:resource="#Prep"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#PP__Prep_PN"/>
+          <owl:Class rdf:about="#WhNP__Det_optAdj_Noun_Prep_WhNP"/>
+          <owl:Class rdf:about="#PP__Prep_Pron"/>
+          <owl:Class rdf:about="#PP__Prep_Det_optAdj_Noun_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrObjNP">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Clause__it_is_X_that_Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#VP__Verb_optObjNP_optCompl"/>
+          <owl:Class rdf:about="#WhQ__WhNP_does_Verb_optObjNP_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:range rdf:resource="#ObjNP"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="device">
+    <rdfs:range rdf:resource="#Device"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#DeviceConstruct"/>
+          <owl:Class rdf:about="#DeviceCommand"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="dtrAdj">
+    <rdfs:range rdf:resource="#Adj"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#NP__Det_optAdj_Noun_optCompl"/>
+          <owl:Class rdf:about="#WhNP__Det_optAdj_Noun_Prep_WhNP"/>
+          <owl:Class rdf:about="#WhNP__which_optAdj_Noun_optPP"/>
+          <owl:Class rdf:about="#PP__Prep_Det_optAdj_Noun_optCompl"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:ID="leg_length">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    <rdfs:domain rdf:resource="#Leg"/>
+  </owl:DatatypeProperty>
+  <Action rdf:ID="help">
+    <actionPhrase>
+      <VP__Verb_optObjNP_optCompl rdf:ID="help_me">
+        <dtrVerb>
+          <Verb rdf:ID="help_V"/>
+        </dtrVerb>
+        <dtrObjNP>
+          <Pron rdf:ID="i"/>
+        </dtrObjNP>
+      </VP__Verb_optObjNP_optCompl>
+    </actionPhrase>
+  </Action>
+  <Clause__SubjNP_wants_to_Verb_X_optCompl rdf:ID="i_want_to_go_from_X">
+    <dtrSubjNP rdf:resource="#i"/>
+    <dtrVerb>
+      <Verb rdf:ID="go_from_V"/>
+    </dtrVerb>
+  </Clause__SubjNP_wants_to_Verb_X_optCompl>
+  <Verb rdf:ID="go_to_V"/>
+  <City rdf:ID="lerum"/>
+  <Findout rdf:ID="findout_destination">
+    <predicate>
+      <Predicate rdf:ID="destination">
+        <valid rdf:resource="#TramStop"/>
+        <valid rdf:resource="#FerryStop"/>
+        <parameter rdf:resource="#Location"/>
+        <questionPhrase>
+          <WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl rdf:ID="which_stop_do_you_want_to_go_from">
+            <dtrWhNP>
+              <WhNP__which_optAdj_Noun_optPP rdf:ID="which_stop">
+                <dtrNoun>
+                  <Noun rdf:ID="stop_N"/>
+                </dtrNoun>
+              </WhNP__which_optAdj_Noun_optPP>
+            </dtrWhNP>
+            <dtrVerb rdf:resource="#go_from_V"/>
+            <dtrSubjNP>
+              <Pron rdf:ID="you"/>
+            </dtrSubjNP>
+          </WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl>
+        </questionPhrase>
+        <answerPhrase>
+          <Clause__SubjNP_wants_to_Verb_X_optCompl rdf:ID="i_want_to_go_to_X">
+            <dtrVerb rdf:resource="#go_to_V"/>
+            <dtrSubjNP rdf:resource="#i"/>
+          </Clause__SubjNP_wants_to_Verb_X_optCompl>
+        </answerPhrase>
+      </Predicate>
+    </predicate>
+  </Findout>
+  <BusStop rdf:ID="hogenskildsgatan"/>
+  <City rdf:ID="partille"/>
+  <PP__Prep_Det_optAdj_Noun_optCompl rdf:ID="to_Y">
+    <dtrPrep>
+      <Prep rdf:ID="to_Prep"/>
+    </dtrPrep>
+  </PP__Prep_Det_optAdj_Noun_optCompl>
+  <City rdf:ID="kungalv"/>
+  <FerryStop rdf:ID="lilla_bommen"/>
+  <Plan rdf:ID="find_route">
+    <construct>
+      <Findout rdf:ID="findout_departure">
+        <predicate>
+          <Predicate rdf:ID="departure">
+            <parameter rdf:resource="#Location"/>
+            <valid rdf:resource="#FerryStop"/>
+            <valid rdf:resource="#TramStop"/>
+            <questionPhrase>
+              <WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl rdf:ID="which_stop_du_you_want_to_go_to">
+                <dtrWhNP rdf:resource="#which_stop"/>
+                <dtrSubjNP rdf:resource="#you"/>
+                <dtrVerb rdf:resource="#go_to_V"/>
+              </WhQ__WhNP_does_SubjNP_want_to_Verb_HOLE_optCompl>
+            </questionPhrase>
+            <answerPhrase rdf:resource="#i_want_to_go_from_X"/>
+          </Predicate>
+        </predicate>
+      </Findout>
+    </construct>
+    <construct>
+      <DevDo rdf:ID="do_draw_route">
+        <precond>
+          <DevQuery rdf:ID="query_shortest_route">
+            <precond rdf:resource="#findout_departure"/>
+            <predicate>
+              <Predicate rdf:ID="shortest_route">
+                <questionPhrase>
+                  <WhQ__WhNP_is_Compl rdf:ID="which_is_the_shortest_route">
+                    <dtrWhNP>
+                      <WhPron rdf:ID="which"/>
+                    </dtrWhNP>
+                    <dtrCompl>
+                      <NP__Det_optAdj_Noun_optCompl rdf:ID="the_shortest_route">
+                        <dtrDet>
+                          <Det rdf:ID="the_sg"/>
+                        </dtrDet>
+                        <dtrNoun>
+                          <Noun rdf:ID="route_N"/>
+                        </dtrNoun>
+                        <dtrAdj>
+                          <Adj rdf:ID="short_A"/>
+                        </dtrAdj>
+                      </NP__Det_optAdj_Noun_optCompl>
+                    </dtrCompl>
+                  </WhQ__WhNP_is_Compl>
+                </questionPhrase>
+                <valid rdf:resource="#Route"/>
+                <answerPhrase>
+                  <Clause__SubjNP_is_X rdf:ID="the_shortest_route_is_X">
+                    <dtrSubjNP rdf:resource="#the_shortest_route"/>
+                  </Clause__SubjNP_is_X>
+                </answerPhrase>
+                <parameter rdf:resource="#Route"/>
+              </Predicate>
+            </predicate>
+            <precond rdf:resource="#findout_destination"/>
+            <device>
+              <Device rdf:ID="tram_solver"/>
+            </device>
+          </DevQuery>
+        </precond>
+        <command>
+          <DeviceCommand rdf:ID="draw_route">
+            <device rdf:resource="#tram_solver"/>
+          </DeviceCommand>
+        </command>
+        <device rdf:resource="#tram_solver"/>
+      </DevDo>
+    </construct>
+    <construct rdf:resource="#findout_destination"/>
+    <construct rdf:resource="#query_shortest_route"/>
+  </Plan>
+  <Street rdf:ID="ceresgatan"/>
+  <Action rdf:ID="top">
+    <actionPhrase>
+      <VP__Verb_optObjNP_optCompl rdf:ID="restart">
+        <dtrVerb>
+          <Verb rdf:ID="restart_V"/>
+        </dtrVerb>
+      </VP__Verb_optObjNP_optCompl>
+    </actionPhrase>
+  </Action>
+  <Area rdf:ID="majorna"/>
+  <BusStop rdf:ID="brunnsparken">
+    <rdf:type rdf:resource="#Place"/>
+    <rdf:type rdf:resource="#TramStop"/>
+  </BusStop>
+  <Area rdf:ID="skargarden"/>
+  <City rdf:ID="alingsas"/>
+  <FerryLine rdf:ID="alvsnabben_ferry"/>
+  <Leg rdf:ID="brunnsparken_korsvagen">
+    <leg_line>
+      <TramLine rdf:ID="tram_5"/>
+    </leg_line>
+    <leg_start_stop rdf:resource="#brunnsparken"/>
+    <leg_end_stop>
+      <TramStop rdf:ID="korsvagen">
+        <rdf:type rdf:resource="#BusStop"/>
+        <rdf:type rdf:resource="#Street"/>
+      </TramStop>
+    </leg_end_stop>
+  </Leg>
+  <FerryStop rdf:ID="rosenlund"/>
+  <Area rdf:ID="centrum"/>
+  <BusLine rdf:ID="bus_16"/>
+  <City rdf:ID="goteborg"/>
+  <TramStop rdf:ID="valand"/>
+  <Route rdf:ID="lindholmen_korsvagen">
+    <route_leg>
+      <Leg rdf:ID="lindholmen_brunnsparken">
+        <leg_line rdf:resource="#bus_16"/>
+        <leg_end_stop rdf:resource="#brunnsparken"/>
+        <leg_start_stop>
+          <FerryStop rdf:ID="lindholmen">
+            <rdf:type rdf:resource="#BusStop"/>
+            <rdf:type rdf:resource="#Area"/>
+          </FerryStop>
+        </leg_start_stop>
+      </Leg>
+    </route_leg>
+    <route_leg rdf:resource="#brunnsparken_korsvagen"/>
+  </Route>
+  <BusLine rdf:ID="bus_60"/>
+  <FerryStop rdf:ID="klippan"/>
+  <City rdf:ID="kungsbacka"/>
+  <Clause__SubjNP_wants_to_Verb_X_optCompl rdf:ID="i_want_to_go_from_X_to_Y">
+    <dtrSubjNP rdf:resource="#i"/>
+    <dtrVerb rdf:resource="#go_from_V"/>
+    <dtrCompl rdf:resource="#to_Y"/>
+  </Clause__SubjNP_wants_to_Verb_X_optCompl>
+  <City rdf:ID="molndal"/>
+  <Area rdf:ID="hisingen"/>
+  <Variable rdf:ID="variable"/>
+  <TramLine rdf:ID="tram_4"/>
+  <TramStop rdf:ID="kungsportsplatsen"/>
+  <Noun rdf:ID="path_N"/>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.2, Build 304)  http://protege.stanford.edu -->

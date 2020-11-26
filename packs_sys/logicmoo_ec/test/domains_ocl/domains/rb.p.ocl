@@ -1,0 +1,51 @@
+
+planner_task(1,
+[se(box,box1,[at_door(box1,door24,room2)]),
+ se(box,box2,[in_room(box2,room5),at_door(box2,door56,room5)]),
+ se(box,big_box,[in_room(big_box,room2),at_door(big_box,door12,room2)])],
+
+[ss(robot,tom,[robot_in(tom,room2)]),
+ ss(box,box1,[in_room(box1,room2),at_door(box1,door23,room2)]),
+ ss(box,box2,[in_room(box2,room5)]),
+ ss(box,big_box,[in_room(big_box,room4),at_door(big_box,door24,room4)])
+]).
+
+planner_task(2,
+[se(box,box1,[in_room(box1,room6)])],
+
+[ss(robot,tom,[robot_in(tom,room2)]),
+ ss(box,box1,[in_room(box1,room2),at_door(box1,door23,room2)]),
+ ss(box,box2,[in_room(box2,room6)]),
+ ss(box,big_box,[in_room(big_box,room7),at_door(big_box,door57,room7)])
+]).
+
+planner_task(3,
+[se(robot,tom,[robot_in(tom,room3),robot_near(tom,big_box)]),
+ se(box,box2,[in_room(box2,room6),at_door(box2,door67,room6)])],
+
+[ss(robot,tom,[robot_in(tom,room1),robot_near(tom,box1)]),
+ ss(box,box1,[in_room(box1,room1)]),
+ ss(box,box2,[in_room(box2,room7),at_door(box2,door67,room7)]),
+ ss(box,big_box,[in_room(big_box,room4)])
+]).
+
+planner_task(4,
+[se(box,box1,[in_room(box1,room2)])],
+
+[ss(robot,tom,[robot_in(tom,room4),robot_near(tom,box2)]),
+ ss(box,box1,[in_room(box1,room5)]),
+ ss(box,box2,[in_room(box2,room4)]),
+ ss(box,big_box,[in_room(big_box,room4)])
+]).
+
+planner_task(5,
+[se(robot,tom,[robot_in(tom,room5)]),
+se(box,box2,[in_room(box2,room6),at_door(box2,door56,room6)]),
+se(box,big_box,[in_room(big_box,room1)]]],
+
+[ss(robot,tom,[robot_in(tom,room2),robot_near(tom,box1)]),
+ ss(box,box1,[in_room(box1,room2),at_door(box1,door25,room2)]),
+ ss(box,box2,[in_room(box2,room6)]),
+ ss(box,big_box,[in_room(big_box,room4),at_door(big_box,door24,room4)])
+]).
+

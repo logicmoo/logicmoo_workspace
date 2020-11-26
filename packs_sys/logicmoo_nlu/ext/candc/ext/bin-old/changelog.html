@@ -1,0 +1,255 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Robert A. van Engelen">
+   <meta name="GENERATOR" content="Mozilla/4.76 [en] (X11; U; SunOS 5.8 sun4u) [Netscape]">
+</head>
+<body background="canvas.gif">
+
+<h1>Changelog</h1>
+
+<ul>
+<li>Version 1.1</li>
+<ul>
+<li>Added typedef conventions</li>
+<li>Added enumerations</li>
+<li>Added hexBinary encoding</li>
+<li>Added base64 encoding</li>
+<li>Enable pass by reference operator (&amp;) for output parameter</li>
+<li>Enable specification of methods in classes</li>
+</ul>
+<li>Version 1.2 (9/9/2001)</li>
+<ul>
+<li>Added WSDL&nbsp;generator</li>
+</ul>
+<li>Version 1.2w (9/14/2001)</li>
+<ul>
+<li>Win32 port</li>
+<li>Fixed a socket communication problem in win32 version</li>
+<li>Added namespace name pattern matching to ease validation</li>
+</ul>
+<li>Version 1.2.1 (10/24/2001)</li>
+<ul>
+<li>Chunked HTTP 1.1 transfer support</li>
+<li>Improved buffering</li>
+<li>Fixed a problem with nested vector allocation</li>
+</ul>
+<li>Version 1.2.2 (11/2/2001)</li>
+<ul>
+<li>Support for special XML element names with dots, underscores, and center dots (see documentation section 5.3)</li>
+<li>Fixed a decoding problem with dynamic array of pointers to polymorphic objects</li>
+<li>Fixed an encoding problem with enumerations</li>
+<li>Added a "safe-mode" flag to disable serialization of multi-referenced objects:
+<pre>
+soap_disable_href = 1;
+</pre>
+You can set this global flag anywere in the code, but at least before serialization is performed.
+It will disable the use of href attributes when sending multi-reference data. Instead, the data is copied
+in the payload.
+<b>When set, this flag will hang the serializer when sending cyclic data structures.</b>
+</li>
+</ul>
+<li>Version 1.2.3 (12/5/2001)</li>
+<ul>
+<li>Added <i>bool</i> type encoding/decoding.</li>
+<li>Added dynamic multi-dimensional arrays.</li>
+<li>Added support for primitive polymorphic types.</li>
+<li>Added full support for CDATA content decoding.</li>
+<li>More convenient customization of SOAP Headers and Faults. No separate <tt>soapheader.h</tt> and <tt>soapfault.h</tt> files
+required (and therefore no <tt>.cpp</tt> files have to be created for these). Instead, the compiler generates customized SOAP
+Header and SOAP Fault marshalling routines when struct/class <tt>SOAP_ENV__Fault</tt> and/or <tt>SOAP_ENV__Header</tt> are
+specified in the header file input to the compiler.
+</li>
+<li>On-demand generation of the marshalling routines for the primitive types, which reduces the size of the executables.</li>
+<li>Fixed a WSDL incompatibility problem in the WSDL generator.</li>
+<li>Improved decoding of multi-reference elements (no <tt>xsi:type</tt> required anymore in receiving message so gSOAP does not break).</li> 
+<li>Improved support for encoding/decoding indirect data (e.g. pointers to pointers to data).</li>
+<li>
+Improved encoding of data with the same pointers to shared data but with the shared data declared with different XML schema types
+(formerly encoded as multi-reference data which could cause type incmpatibilities at the receiving side).  For example, in the
+declarations <tt>typedef char *xsd__NCName; xsd__NCName *s="SOAP"; char *t = s;</tt> the pointers <tt>s</tt> and <tt>t</tt> point
+to the same data, but will not be encoded as multi-reference data since the types are different.
+</li>
+<li>Added flag:
+<pre>
+soap_enable_null = 1;
+</pre>
+When set, all NULL pointers will be explicitly encoded. By default, NULL pointers are omitted from the SOAP payload.  For example,
+with this flag set all NULL strings and other NULL pointer data will appear as nil values in the SOAP payload.
+</li>
+<li>Added flag:
+<pre>
+soap_enable_embedding = 1;
+</pre>
+When set, multi-reference data will be encoded inline which will guarantee the exact preservation of the structure of the data
+transmitted. However, some SOAP implementations do not support embedding inline multi-reference data although this encoding style
+is likely to be included in future verions of the SOAP protocol.  The flag is useful when creating C++ applications that need to
+communicate data to eachother and the data structures need to be preserved. Setting this flag may cause a duplication of
+multi-reference data by the receiver created with the SOAP stub compiler when the data is part of a struct/class or array.  The
+data is not copied by the receiver when the struct/class or arrays use pointers to the data type.
+</li>
+<li>Added the ability to declare virtual destructors.</li>
+<li>Fixed a compilation error with fixed-size array of pointers.</li>
+<li>Fixed a problem with padding in Base64 (en/de)coding.</li>
+<li>Fixed XML entity decoding (hexadecimal).</li>
+<li>Added encoding of sparse arrays. A sparse array MUST be declared as a (fixed-size of dynamic) array of pointers. NULL pointer
+values are omitted from the output and SOAP-ENC:position attributes are used for non-NULL elements.</li>
+<li>Changed soap_put and soap_get functions to include explicit schema type parameters.  This fixed a problem with Web services that need to return typedef-ed XML schema types The new stdsoap.cpp and stdsoap.h files are incompatible with the previous version(s).
+</li>
+<li>Added the ability to ignore the names of accessors when decoding fields through the use of a leading
+<tt>_</tt> in a field name. For example:
+<pre>
+ns__mymethod(xsd__string in, xsd__string &amp;_return);
+</pre>
+When used to invoke a remote method, the actual element name of the remote return parameter used by the service is insignificant.
+</li>
+<li>Improved memory management. Added new function: <tt>soap_destroy()</tt> to remove all class instances.</li>
+<li>Improved documentation.</li>
+<li>Added <i>time_t</i> type support, but still need to add encoding/decoding routines to the runtime (next version).</li>
+<li>Added <i>wchar_t</i> type support, but still need to add encoding/decoding routines to the runtime (next version).</li>
+</ul>
+<li>Version 1.2.4 (12/17/2001)</li>
+<ul>
+<li>Added support for wide character strings (<i>wchar_t*</i>).</li>
+<li>Added support for <i>time_t</i> type.</li>
+<li>Added support for SOAP literal encoding.</li>
+<li>Fixed an obscure bug in the deserialization of data from the SOAP4R toolkit that caused the deserializer to hang.</li>
+<li>Fixed a problem with the soap_disable_href flag.</li>
+<li>Fixed a problem with the position attributes in sparse multi-dimensional arrays.</li>
+<li>Fixed a problem with the generation of .nsmap files.</li>
+<li>Fixed a problem with mixed content decoding in strings.</li>
+</ul>
+<li>Version 1.2.5 (12/27/2001)</li>
+<ul>
+<li>Fixed a memory leak in the block allocation scheme used for strings, hexBinary, and base64 types.</li>
+<li>Fixed a bug in the WSDL generator for fixed-size arrays.</li>
+<li>Fixed a problem with the use of trailing underscores in field names in struct/class declarations.</li>
+</ul>
+<li>Version 1.2.6 (1/25/2002)</li>
+<ul>
+<li>Improved portability.</li>
+<li>Improved id/href hash table efficiency and storage.</li>
+<li>Improved namespace URI matching with wildcards.</li>
+<li>Improved stand-alone deployment.</li>
+<li>Added <tt>soap_disable_response_count</tt> flag.</li>
+<li>Fixed operator declaration parsing (cast operators).</li>
+<li>Fixed a WSDL generator bug for output parameters and enumeration types.</li>
+<li>Renamed function <tt>soap_return_fault()</tt> into <tt>soap_send_fault()</tt>.</li>
+</ul>
+<li>Version 2.0 (2/2/2002)</li>
+<ul>
+<li>Thread safe.</li>
+</ul>
+<li>Versions 1.2.7 and 2.0.1 (2/11/2002)</li>
+<ul>
+<li>Added compiler options (-h -c -d -p).</li>
+<li>Added optional specification of service name, location, and namespace URI in header file.</li>
+<li>Improved interoperability.</li>
+</ul>
+<li>Versions 1.2.8 and 2.0.2 (2/24/2002)</li>
+<ul>
+<li>Added function callbacks to support customized I/O and HTTP operations. This allows for plug-in HTTP code, NSAPI interface code,
+reading/writing from/to files or string buffers, etc.</li>
+<li>Added HTTP 1.0/1.1 keep-alive support.</li>
+<li>Added HTTP 1.1 chunked transfer support.</li>
+<li>Added <tt>soap_disable_request_count</tt> flag.</li>
+<li>Added <tt>soap_enable_array_overflow</tt> flag.</li>
+<li>Added type naming conventions to serialize elements without generating <tt>xsi:type</tt> attributes.</li>
+<li>Fixed a fixed-size array decoding problem (type mismatch).</li>
+<li>Fixed &lt;/sequence/&gt; bug in the WSDL generators.</li>
+</ul>
+<li>Versions 1.3 and 2.1 (3/10/2002)</li>
+<ul>
+<li>Added client-side SSL (HTTPS) support (thanks to Massimo Cafaro for his suggestions).</li>
+<li>Added a naming convention for dynamic array <tt>__ptr</tt> fields which enables the naming of the XML tags of array elements.</li>
+<li>Added WSDL Header and Fault schema generation.</li>
+<li>Improved doc/literal encoding style.</li>
+<li>Improved WSDL service/schema namespace generation.</li>
+<li>Fixed SOAP-ENV:Headers to be self contained.</li>
+<li>Fixed WSDL generation of xsd schema types declared as string.</li>
+<li>Fixed a method overriding type clash for derived classes.</li>
+<li>Fixed spurious occurrence of id="-1" with soap_enable_null flag enabled.</li>
+<li>Fixed a front-end gSOAP compiler problem with forward and cyclic struct declarations.</li>
+</ul>
+<li>Versions 1.3.1 and 2.1.1 (3/25/2002)</li>
+<ul>
+<li>Added header file source constructs to support transient data types and transient struct/class fields to control gSOAP's code generatiion window for (de)serialization routines.</li>
+<li>Added callback for handling XML elements that are ignored on the receiving side (e.g. because of schema type problems). This feature is intended to enhance the reliability of services/clients.</li>
+<li>Added server-side SSL support and included an example multi-threaded stand-alone SSL secure SOAP server example.</li>
+<li>Added proxy server support.</li>
+<li>Improved message logging in gSOAP 2.1.1 (thanks to Jessie Ragsdale for his suggestions).</li>
+<li>Fixed WSDL generation for dynamic arrays.</li>
+<li>Fixed deserialization of empty multi-ref derived class instances.</li>
+</ul>
+<li>Versions 1.3.2 and 2.1.2 (4/15/2002)</li>
+<ul>
+<li>Added socket timeout management.</li>
+<li>Added optional client and server cookie support.</li>
+<li>Added support for maxOccurs="unbounded" for arbitrary elements in complexTypes (not just limited to SOAP arrays).</li>
+<li>Improved generation of schema &lt;extension&gt; definitions to allow XML validation in the presence of class overriding.</li>
+<li>Fixed ULONG64 type handling.</li>
+<li>Fixed light validation problem (now rejects invalid XML schema URIs).</li>
+<li>Fixed a deserialization type mismatch with typedef-ed pointer primitives.</li>
+<li>Fixed WSDL and schema interoperability problems.</li>
+</ul>
+<li>Versions 1.3.3 and 2.1.3 (4/27/2002)</li>
+<ul>
+<li>Added 'mustUnderstand' declaration qualifier for SOAP Header processing.</li>
+<li>Added soap.actor attribute for SOAP Header processing.</li>
+<li>Added method-header-part directive to identify methods with header message associations (WSDL requirement).</li>
+<li>Added bitmask (de)serialization.</li>
+<li>Added FastCGI support.</li>
+<li>Improved DLL build support (gSOAP 2.1.3 only).</li>
+<li>Improved WinCE support (gSOAP 2.1.3 only, thanks to Sean Ryan for his suggestions).</li>
+<li>Improved Mac OS X support.</li>
+<li>WSDL generator improvements and fixes.</li>
+<li>Workaround a bug in .NET SOAP Headers (non-unique id name values in .NET).</li>
+<li>Fixed disable_href=1 bug.</li>
+<li>Fixed `XML in string parsing' code generation problem.</li>
+</ul>
+<li>Versions 1.3.4 and 2.1.4 (6/9/2002)</li>
+<ul>
+<li>Added non-blocking soap_accept() with timeout management.</li>
+<li>Added support for SOAP Header and Fault declared as classes.</li>
+<li>Added syntax for 'extern' declarations for transient types and fields.</li>
+<li>Added support for SOAP Headers in SOAP Fault messages.</li>
+<li>Added one-way SOAP messages (2.1.4 only).</li>
+<li>Added support for user-defined (de)serializers (2.1.4 only).</li>
+<li>Improved object memory management.</li>
+<li>Improved support for AIX and HP platforms.</li>
+<li>Fixed proxy server connect bug.</li>
+<li>Fixed an OpenSSL bug.</li>
+<li>Fixed soap_instantiate_ClassX() derived class allocation problem.</li>
+<li>Fixed generation of spurious .xsd files when lots of trailing underscores are used by identifiers in the header file.</li>
+<li>Fixed syntax error that occured with header files containing cyclic class declarations.</li>
+<li>Fixed 'class in struct' and 'vector of classes' VMT initialization bugs.</li>
+</ul>
+<li>Version 2.1.5 (6/22/2002)</li>
+<ul>
+<li>Added non-blocking remote method calls (not supported in win32 version).</li>
+<li>Added specification of default values for struct/class fields.</li>
+<li>Added specification of minOccurs and maxOccurs for struct/class fields.</li>
+<li>Added resolution operator '::' parsing.</li>
+<li>Added abstract method declaration support.</li>
+<li>Fixed WSDL generation of SOAP doc/lit.</li>
+<li>Fixed WITH_FASTCGI option.</li>
+</ul>
+<li>Version 2.1.6 (7/10/2002)</li>
+<ul>
+<li>Added DIME attachment support.</li>
+<li>Added win32 non-blocking sockets.</li>
+<li>Changed "%lld"/"%llu" format strings into "%I64d"/"%I64u" format string for win32.</li>
+<li>Improved I/O.</li>
+<li>Fixed multi-dimensional dynamic array (de)serialization.</li>
+<li>Fixed WSDL enum and header namespace generation.</li>
+</ul>
+<li>Version 2.1.6b (?/??/2002)</li>
+<ul>
+<li>Added compiler option -m (malloc() memory control).</li>
+<li>Fixed uninitialized '//gsoap..executable:' string which caused sporadic exits.</li>
+</ul>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+(note TQC43)
+
+(implies 
+  (and 
+    (instance ?ACT ViolentAction) 
+    (agent ?ACT ?AGENT1) 
+    (maleficiary ?ACT ?AGENT2) 
+    (opponentsInConflict ?AGENT1 ?AGENT2 ?CONFLICT)) 
+  (increasesImmediatelyCausally ?ACT ?CONFLICT conflictLevel)) 
+
+(subclass TerroristAct ViolentAction) 
+(opponentsInConflict Iran SaudiArabia HPKBScenarioConflict) 
+
+(implies 
+  (and 
+    (instance ?ACT ViolentAction) 
+    (agent ?ACT ?AGENT1) 
+    (instrument-Generic ?ACT ?WEAPON) 
+    (instance ?WEAPON WeaponOfMassDestruction) 
+    (maleficiary ?ACT ?AGENT2) 
+    (opponentsInConflict ?AGENT1 ?AGENT2 ?CONFLICT)) 
+  (increasesImmediatelyCausally ?ACT ?CONFLICT conflictLevel)) 
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict SaudiArabia Iran HPKBScenarioConflict) 
+
+(implies 
+ (sponsorsAgentInAction ?SPONSOR ?DOER ?ACT) 
+ (agent ?ACT ?SPONSOR)) 
+
+(query
+  (implies 
+    (and 
+      (instance ?TERRORIST TerroristAgent) 
+      (instance ?ACT TerroristAct) 
+      (maleficiary ?ACT SaudiArabia) 
+      (sponsorsAgentInAction Iran ?TERRORIST ?ACT) 
+      (instance ?FORCE BiologicalWeapon) 
+      (instrument-Generic ?ACT ?FORCE) 
+      (temporallySubsumes 
+        (DateInSituationFn CalendarDay 28 HPKBScenarioConflict) ?ACT)) 
+    (increasesImmediatelyCausally ?ACT HPKBScenarioConflict conflictLevel)))
+
+(answer yes)  

@@ -1,0 +1,166 @@
+PSA only:
+
+ -- Read file(s): 374 declarations, 68 non-lexical rules, 778 lexical rules, 396 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_trees.pl.
+
+32 items, 1.48 secs
+
+EBL training complete, 0.87 secs
+
+   -- Filtering complete: 225 categories, 382 rules
+
+Compilation finished, 3.65 secs
+
+nuance-compile ../GeneratedFiles/psa_original_recogniser English.America -auto_pron -dont_flatten 
+                         Processing grammars.
+
+	Node array optimization (553 nodes) ... 
+		Removed 35 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 17 successor nodes
+		Merged 11 successor nodes
+		Merged 7 successor nodes
+		Merged 0 successor nodes
+		Removed 228 unreachables
+	After optimization: 361 nodes
+
+---------------------------------------------------------------------------------------
+
+PSA + HOUSE:
+
+ -- Read file(s): 370 declarations, 72 non-lexical rules, 778 lexical rules, 396 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_trees.pl.
+
+32 items, 1.72 secs
+
+EBL training complete, 1.17 secs
+
+   -- Filtering complete: 257 categories, 439 rules
+
+Compilation finished, 4.58 secs
+
+	Node array optimization (637 nodes) ... 
+		Removed 48 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 35 successor nodes
+		Merged 15 successor nodes
+		Merged 7 successor nodes
+		Merged 0 successor nodes
+		Removed 307 unreachables
+	After optimization: 398 nodes
+
+---------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS:
+
+ -- Read file(s): 360 declarations, 106 non-lexical rules, 779 lexical rules, 396 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_travel_deals_trees.pl.
+
+32 items, 5.61 secs
+
+EBL training complete, 3.38 secs
+
+   -- Filtering complete: 267 categories, 457 rules
+
+Compilation finished, 7.04 secs
+
+	Node array optimization (668 nodes) ... 
+		Removed 52 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 41 successor nodes
+		Merged 20 successor nodes
+		Merged 9 successor nodes
+		Merged 3 successor nodes
+		Merged 0 successor nodes
+		Removed 341 unreachables
+	After optimization: 432 nodes
+
+---------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED:
+
+ -- Read file(s): 352 declarations, 127 non-lexical rules, 779 lexical rules, 396 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_med_trees.pl.
+
+32 items, 9.50 secs
+
+EBL training complete, 4.78 secs
+
+   -- Filtering complete: 267 categories, 457 rules
+
+Compilation finished, 8.87 secs
+
+	Node array optimization (668 nodes) ... 
+		Removed 52 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 41 successor nodes
+		Merged 20 successor nodes
+		Merged 9 successor nodes
+		Merged 3 successor nodes
+		Merged 0 successor nodes
+		Removed 341 unreachables
+	After optimization: 432 nodes
+
+---------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED + CHECKLIST:
+
+ -- Read file(s): 344 declarations, 139 non-lexical rules, 779 lexical rules, 398 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_checklist_trees.pl.
+
+32 items, 10.48 secs
+
+EBL training complete, 7.68 secs
+
+   -- Filtering complete: 1041 categories, 2162 rules
+
+Compilation finished, 17.93 secs
+
+	Node array optimization (771 nodes) ... 
+		Removed 68 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 53 successor nodes
+		Merged 34 successor nodes
+		Merged 5 successor nodes
+		Merged 2 successor nodes
+		Merged 0 successor nodes
+		Removed 464 unreachables
+	After optimization: 430 nodes
+
+---------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED + CHECKLIST + MOBILE_AGENTS:
+
+ -- Read file(s): 344 declarations, 145 non-lexical rules, 779 lexical rules, 398 distinct vocabulary items.
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_mobile_agents_trees.pl.
+
+32 items, 12.54 secs
+
+EBL training complete, 9.02 secs
+
+   -- Filtering complete: 1041 categories, 2162 rules
+
+Compilation finished, 21.67 secs
+
+	Node array optimization (771 nodes) ... 
+		Removed 68 unreachables
+		Merged 7 successor nodes
+		Merged 3 predecessor nodes
+		Merged 53 successor nodes
+		Merged 34 successor nodes
+		Merged 5 successor nodes
+		Merged 2 successor nodes
+		Merged 0 successor nodes
+		Removed 464 unreachables
+	After optimization: 430 nodes

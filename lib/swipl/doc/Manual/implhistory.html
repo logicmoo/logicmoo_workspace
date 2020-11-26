@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 1.5</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="sponsor.html">
+<link rel="next" href="acknowledge.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="sponsor.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="acknowledge.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:implhistory"><a id="sec:1.5"><span class="sec-nr">1.5</span> <span class="sec-title">Implementation 
+history</span></a></h2>
+
+<a id="sec:implhistory"></a>
+
+<p>SWI-Prolog started back in 1986 with the requirement for a Prolog 
+that could handle recursive interaction with the C-language: Prolog 
+calling C and C calling Prolog recursively. In those days Prolog systems 
+were not very aware of their environment and we needed such a system to 
+support interactive applications. Since then, SWI-Prolog's development 
+has been guided by requests from the user community, especially 
+focussing on (in arbitrary order) interaction with the environment, 
+scalability, (I/O) performance, standard compliance, teaching and the 
+program development environment.
+
+<p>SWI-Prolog is based on a simple Prolog virtual machine called ZIP
+<cite><a class="cite" href="Bibliography.html#Bowen:83">Bowen <em>et al.</em>, 
+1983</a>, <a class="cite" href="Bibliography.html#Neumerkel:93">Neumerkel, 
+1993</a></cite> which defines only 7 instructions. Prolog can easily be 
+compiled into this language, and the abstract machine code is easily 
+decompiled back into Prolog. As it is also possible to wire a standard 
+4-port debugger in the virtual machine, there is no need for a 
+distinction between compiled and interpreted code. Besides simplifying 
+the design of the Prolog system itself, this approach has advantages for 
+program development: the compiler is simple and fast, the user does not 
+have to decide in advance whether debugging is required, and the system 
+only runs slightly slower in debug mode compared to normal execution. 
+The price we have to pay is some performance degradation (taking out the 
+debugger from the VM interpreter improves performance by about 20%) and 
+somewhat additional memory usage to help the decompiler and debugger.
+
+<p>SWI-Prolog extends the minimal set of instructions described in
+<cite><a class="cite" href="Bibliography.html#Bowen:83">Bowen <em>et al.</em>, 
+1983</a></cite> to improve performance. While extending this set, care 
+has been taken to maintain the advantages of decompilation and tracing 
+of compiled code. The extensions include specialised instructions for 
+unification, predicate invocation, some frequently used built-in 
+predicates, arithmetic, and control (<a class="pred" href="control.html#;/2">;/2</a>, <a class="pred" href="control.html#|/2">|/2</a>), 
+if-then (<a class="pred" href="control.html#->/2">-&gt;/2</a>) and 
+negation-by-failure (<a class="pred" href="control.html#\+/1">\+/1</a>).
+
+<p>SWI-Prolog implements <em>attributed variables</em> (constraints) and
+<em>delimited continuations</em> following the design in hProlog by Bart 
+Demoen. The <em>engine</em> implementation follows the design proposed 
+by Paul Tarau. Tabling was implemented by Benoit Desouter based on 
+delimited continuations. Tabling has been extended with <em>answer 
+subsumption</em> by Fabrizio Riguzzi. The implementation of <em>well 
+founded semantics</em> and <em>incremental tabling</em> follows XSB and 
+has been sponsored by Kyndi and mode possible by technical support from 
+notably Theresa Swift and David S. Warren.
+
+<p></body></html>

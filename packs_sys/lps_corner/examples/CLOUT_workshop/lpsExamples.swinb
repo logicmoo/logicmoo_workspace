@@ -1,0 +1,119 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Welcome to LPS on SWISH
+
+This notebook gives an overview of some LPS example programs.
+
+- *Fire*
+ 
+ In both of these examples, there are two ways to react to a fire, by eliminating it, or by escaping from it.
+ The order in which the two clauses are written determines the order in which they are tried.
+ The preferred way is to deal with fire by eliminating the fire, which terminates the fire. 
+ In the first example, there is only one fire. See what happens if you change the order of the two clauses.
+ In the second example, there are two fires caused by igniting a flammable object.
+ The situation is complicated (and made more interesting) by the causal laws that require the availability of water to eliminate a fire.
+
+	- [Simple fire](example/fireSimple.pl)
+	
+	- [Recurrent fire](example/fireRecurrent.pl)
+	
+- *Trash* 
+
+This example is typical of the kind of programs written in AI agent programming languages. 
+In LPS, the order in which facts and clauses are written indicates the preferred order of use. 
+In this example, the order of facts in the initial state gives preference to disposing trash in container1 over container2. 
+But this is not possible while container1 is locked. However, LPS has an even higher preference for solving problems as soon as possible. So it uses container2 instead. 
+In other AI agent languages, this kind of behaviour needs to be programmed using complicated "plan repair". 
+You can check this behaviour by commenting out or deleting the fact `locked(container1)` in the initial state.
+
+    - [Trash disposal](example/trash.pl)
+	
+- *Map colouring*  
+
+ This example is motivated by the famous map colouring problem in mathematics:
+ https://en.wikipedia.org/wiki/Four_color_theorem
+ Adjacent countries cannot be painted with the same colour at the same time. What do you think will happen if we add an extra constraint that only one country can be painted at a time?
+   - [Four countries, three colours](example/mapColouring.pl)
+   
+- *Dining Philosophers*
+
+This is a famous problem in concurrent programming
+https://en.wikipedia.org/wiki/Dining_philosophers_problem
+The LPS solution is possibly the simplest and most transparent solution possible.
+It consists simply of the top-level goal that all philosophers should dine, and a single plan for each philosopher to dine by picking up two adjacent forks simultaneously and (after eating) putting the two forks down simultaneously. The usual solutions in conventional programming languages incorporate into the program details that are part of the general-purpose implementation of LPS.
+    - [Five hungry philosophers](example/diningPhilosophers.pl)
+   
+- *Banking*
+
+  In this example, fariba and bob alternate transfering money to one another, until fariba runs out of money.
+  Most of the code is in the causal laws, which update bank balances and prevent concurrent transfers that would complicate the computation of updated bank balances. In conventional database programming languages the code for transfering money incorporates implementation details that are catered for in LPS by the general-purpose implementation of LPS. 
+      - [Bank transfers](example/bankTransfer.pl)
+	  
+- *Prisoner's Dilemma* 
+ 
+ This is arguably the most famous problem in the field of Game Theory:
+ https://en.wikipedia.org/wiki/Prisoner%27s_dilemma
+ The LPS program illustrates a solution for the iterated prisoner's dilemma using the tit-for-tat stratetgy. 
+ The program also includes clauses for adding up the total number of years each prisoner has to spend in jail.
+     - [Tit for tat strategy](example/prisoners.pl)
+	  
+- *Sorting*
+  Here are two very different sorting programs. 
+  The first program represents a sequence of letters with a relational data structure `location(letter, position)`.
+  The reactive rule is like a while loop in an imperative programming language.
+  Logically, the goal of the reactive rule is to ensure that, whenever two adjacent letters are out of order, then the position of the two letters is eventually swapped. There are two ways this can happen: by performing a  swap action directly, or by simply noticing that the swapping has been done indirectly as a side effect of other previously executed actions.
+  Notice  that the LPS interpreter swaps the contents of several pairs of positions concurrently, provided they do not share the same position.
+  
+  The second program is a reactive rule that calls a conventional recursive, (SWI) Prolog program for quicksort, using a data structure in which
+  [X|Xs] represents a list with first element X, followed by list Xs. [] represents the empty list.
+    - [Bubble sort](example/bubbleSort.pl)
+    - [Quicksort](example/quicksort.pl)
+
+- *Blocks World*
+
+This is a variant of the famous Blocks World planning problem in AI, investigated since the early 1970s:
+https://en.wikipedia.org/wiki/Blocks_world
+In this variant, two towers have to be constructed, and they are constructed concurrently.
+The LPS program is not a planner, but a plan executor. The plan for building a tower involves subplans for making a block on top of a place and for making a place clear. In both cases, the simplest case is when the goal is already true without the need to perform any actions. For simplicity, the floor is assumed to be always clear, so there is always space to put a block on it.
+    - [Make tower](example/concurrentTowers.pl)
+ 
+- *Game of Life*
+
+This is another famous example in Mathematics:
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+ The "game" is "played" by inputting an initial state and observing how the state evolves.  The state transitions are determined by reactive rules, which make a cell alive or dead in the next state, depending on the number of neighboring live cells in the current state. The unique characteristic of the LPS representation is the way in which it combines top-level reactive rules with lower-level logic programs (in SWI Prolog).
+    - [Blinker](example/life.pl)
+	
+- *Turing Test*
+
+This is definitely not a serious example either of the Turing test or of a program that conducts a dialogue in English. However, it does show that in LPS the same definitions (in this case the definitions of sentence, noun phrase, etc.) can be used both to recognise complex external events and to generate complex plans of actions. Arguably, no other computer language comes close to realising such possibilities.
+You may think that the robot's reaction to the string of words input by Turing is non-sensical. Think again. But if you are still convinced that the robot's reaction doesn't make any sense, then improve the grammar, for example, by adding an extra condition that every sentence ends with a full stop "." .
+    - [Silly dialogue](example/turingTest.pl)
+
+- *Visualization*
+
+LPS on SWISH has an experimental alternative visualization (in addition to the fluent/event timelines you've seen by now): 
+if fluents and/or events for a particular example can be visualized naturally on a 2-dimentional space, then by defining a few
+declarative display rules one can specify a full 2D world animation of the LPS execution.
+The rules map LPS literals into HTML5 Canvas objects, powered by [paperjs](http://paperjs.org) 
+    - A 2d world visualisation example: [burning.pl](example/burning.pl); another: ["dad switching lights off"](example/badlight.pl).
+    - How to [write display specifications](https://bitbucket.org/lpsmasters/lps_corner/src/HEAD/swish/2dWord.md?at=master&fileviewer=file-view-default).
+
+- *Ballot*
+
+LPS version of an Ethereum Solidity example.
+	- [Ballot](example/ballot.pl).	
+
+- *Insulin*
+
+This example illustrates a simple alternative to the value-based argumentation proposed in Bench-Capon, 
+Persuasion in practical argument using value-based argumentation
+frameworks [Journal of Logic and Computation, 13(3):429–448, 2003](https://academic.oup.com/logcom/article-pdf/13/3/429/4241286/130429.pdf). In this representation, different values are represented by different or additional goals and constraints.
+All goals and constraints must be satisfied, without argument.
+	- [Needs insulin](example/use_insulin.pl)
+
+	
+</div>
+
+</div>

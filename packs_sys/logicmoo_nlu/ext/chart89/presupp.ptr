@@ -1,0 +1,133 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% presupp.ptr [Chapter 10] Presupposition grammar and inference rules
+
+R ule IMP ---> [V, NP, PP] :-
+   V : cat === v,
+   V : p === PP : p,
+   V : arg1 === NP : referent,
+   V : arg2 === PP : arg1,
+   PP : cat === pp,
+   NP : cat === np,
+   IMP : cat === vp,
+   IMP : sem === V : sem,
+   IMP : sem : arg0 === addressee,
+   IMP : pre : connective === and,
+   IMP : pre : prop1 === V : pre,
+   IMP : pre : prop2 : connective === and,
+   IMP : pre : prop2 : prop1 === NP : pre,
+   IMP : pre : prop2 : prop2 === PP : np_pre.
+
+R ule NP ---> [DET, N] :-
+   DET : cat === det,
+   N : cat === n,
+   NP : cat === np,
+   NP : pre === N : pre,
+   NP : referent === N : referent.
+
+R ule NP1 ---> [NP2, PP] :-
+   NP1 : cat === np,
+   NP2 : cat === np,
+   PP : cat === pp,
+   NP1 : referent === NP2 : referent,
+   NP1 : referent === PP : arg0,
+   NP1 : pre : connective === and,
+   NP1 : pre : prop1 === NP2 : pre,
+   NP1 : pre : prop2 : connective === and,
+   NP1 : pre : prop2 : prop1 === PP : p_pre,
+   NP1 : pre : prop2 : prop2 === PP : np_pre.
+
+R ule PP ---> [P, NP] :-
+   P : cat === p,
+   NP : cat === np,
+   PP : cat === pp,
+   PP : arg0 === P : arg0,
+   PP : arg1 === NP : referent,
+   PP : arg1 === P : arg1,
+   PP : p === P : p,
+   PP : np_pre === NP : pre,
+   PP : p_pre === P : pre.
+
+W ord in :-
+   W : cat === p,
+   W : p  === in,
+   W : pre : predicate === in,
+   W : pre : arg0 === W : arg0,
+   W : pre : arg1 === W : arg1.
+W ord on :-
+   W : cat === p,
+   W : p === on,
+   W : pre : predicate === on,
+   W : pre : arg0 === W : arg0,
+   W : pre : arg1 === W : arg1.
+W ord to :-
+   W : cat === p,
+   W : p === to,
+   W : pre : predicate === true.
+W ord fix :-
+   W : cat === v,
+   W : sem : predicate === fix,
+   W : sem : arg1 === W : arg1,
+   W : sem : arg2 === W : arg2,
+   W : pre : predicate === manipulate,
+   W : pre : arg0 === W : arg1.
+W ord put :-
+   W : cat === v,
+   W : p === in,
+   W : sem : predicate === put_in,
+   W : sem : arg1 === W : arg1,
+   W : sem : arg2 === W : arg2,
+   W : pre : predicate === fit_in,
+   W : pre : arg0 === W : arg1,
+   W : pre : arg1 === W : arg2.
+W ord put :-
+   W : cat === v,
+   W : p === on,
+   W : sem : predicate === put_on,
+   W : sem : arg1 === W : arg1,
+   W : sem : arg2 === W : arg2,
+   W : pre : predicate === fit_on,
+   W : pre : arg0 === W : arg1,
+   W : pre : arg1 === W : arg2.
+W ord box :-
+   W : cat === n,
+   W : pre : predicate === box,
+   W : pre : arg0 === W : referent.
+W ord screw :-
+   W : cat === n,
+   W : pre : predicate === screw,
+   W : pre : arg0 === W : referent.
+W ord washer :-
+   W : cat === n,
+   W : pre : predicate === washer,
+   W : pre : arg0 === W : referent.
+W ord hole :-
+   W : cat === n,
+   W : pre : predicate === hole,
+   W : pre : arg0 === W : referent.
+W ord the :-
+   W : cat === det.                     
+W ord it :-
+   W : cat === np,
+   W : pre : predicate === true.
+
+% inference rules
+
+manipulate(X) :- screw(X).
+manipulate(X) :- washer(X).
+fit_in(washer1,hole1).
+fit_in(screw2,hole1).
+fit_in(X,box1) :- screw(X).
+fit_in(X,box1) :- washer(X).
+fit_on(X,_) :- washer(X).
+on(washer1,screw1).
+screw(screw1).
+screw(screw2).
+washer(washer1).
+hole(hole1).
+box(box1).
+true(X).

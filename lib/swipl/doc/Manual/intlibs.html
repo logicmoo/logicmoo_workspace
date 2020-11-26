@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section B.8</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="prolog-event.html">
+<link rel="next" href="loadfilehook.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="prolog-event.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="loadfilehook.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:intlibs"><a id="sec:B.8"><span class="sec-nr">B.8</span> <span class="sec-title">Hooks 
+for integrating libraries</span></a></h2>
+
+<a id="sec:intlibs"></a>
+
+<p>Some libraries realise an entirely new programming paradigm on top of 
+Prolog. An example is XPCE which adds an object system to Prolog as well 
+as an extensive set of graphical primitives. SWI-Prolog provides several 
+hooks to improve the integration of such libraries. See also
+<a class="sec" href="listing.html#sec:A.20">section A.20</a> for editing 
+hooks and <a class="sec" href="printmsg.html#sec:4.11">section 4.11</a> 
+for hooking into the message system.
+
+<dl class="latex">
+<dt class="pubdef"><a id="prolog_list_goal/1"><strong>prolog_list_goal</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Hook, normally not defined. This hook is called by the&rsquo;L' command 
+of the tracer in the module <code>user</code> to list the currently 
+called predicate. This hook may be defined to list only relevant clauses 
+of the indicated <var>Goal</var> and/or show the actual source code in 
+an editor. See also <a id="idx:portray1:2588"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+and <a id="idx:multifile1:2589"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.</dd>
+<dt class="pubdef"><a id="prolog:debug_control_hook/1"><strong>prolog:debug_control_hook</strong>(<var>:Action</var>)</a></dt>
+<dd class="defbody">
+Hook for the debugger control predicates that allows the creator of more 
+high-level programming languages to use the common front-end predicates 
+to control the debugger. For example, XPCE uses these hooks to allow for 
+spying methods rather than predicates. <var>Action</var> is one of:
+
+<dl class="latex">
+<dt><strong>spy</strong>(<var>Spec</var>)</dt>
+<dd class="defbody">
+Hook in <a id="idx:spy1:2590"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>. 
+If the hook succeeds <a id="idx:spy1:2591"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+takes no further action.
+</dd>
+<dt><strong>nospy</strong>(<var>Spec</var>)</dt>
+<dd class="defbody">
+Hook in <a id="idx:nospy1:2592"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>. 
+If the hook succeeds <a id="idx:nospy1:2593"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a> 
+takes no further action. If <a id="idx:spy1:2594"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+is hooked, it is advised to place a complementary hook for
+<a id="idx:nospy1:2595"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>.
+</dd>
+<dt><strong>nospyall</strong></dt>
+<dd class="defbody">
+Hook in <a id="idx:nospyall0:2596"></a><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a>. 
+Should remove all spy points. This hook is called in a failure-driven 
+loop.
+</dd>
+<dt><strong>debugging</strong></dt>
+<dd class="defbody">
+Hook in <a id="idx:debugging0:2597"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>. 
+It can be used in two ways. It can report the status of the additional 
+debug points controlled by the above hooks and fail to let the system 
+report the others, or it succeeds, overruling the entire behaviour of <a id="idx:debugging0:2598"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="prolog:help_hook/1"><strong>prolog:help_hook</strong>(<var>+Action</var>)</a></dt>
+<dd class="defbody">
+Hook into <a id="idx:help0:2599"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
+and <a id="idx:help1:2600"></a><a class="pred" href="online-help.html#help/1">help/1</a>. 
+If the hook succeeds, the built-in actions are not executed. For 
+example, <code>?- help(picture).</code> is caught by the XPCE help hook 
+to give help on the class <em>picture</em>. Defined actions are:
+
+<dl class="latex">
+<dt><strong>help</strong></dt>
+<dd class="defbody">
+User entered plain <a id="idx:help0:2601"></a><a class="pred" href="online-help.html#help/0">help/0</a> 
+to give default help. The default performs
+<code>help(<a id="idx:help1:2602"></a><a class="pred" href="online-help.html#help/1">help/1</a>)</code>, 
+giving help on help.
+</dd>
+<dt><strong>help</strong>(<var>What</var>)</dt>
+<dd class="defbody">
+Hook in <a id="idx:help1:2603"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
+on the topic <var>What</var>.
+</dd>
+<dt><strong>apropos</strong>(<var>What</var>)</dt>
+<dd class="defbody">
+Hook in <a id="idx:apropos1:2604"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
+on the topic <var>What</var>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

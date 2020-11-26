@@ -1,0 +1,4 @@
+Compile current specialised Regulus grammar into Gemini form. Same as
+the {\tt GEMINI} command, but for the specialised grammar. The base name of
+the Gemini files produced is defined by the {\tt ebl\_\-gemini\_\-grammar} config
+file entry.

@@ -1,0 +1,164 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# The table render plugin
+
+This plugin requires a two-deminsional array of terms.
+
+#### Synopsis
+
+    :- use_rendering(table).
+    :- use_rendering(table, Options).
+
+#### Options supported
+
+   - header(HeaderSpec)
+     Specify the header for a table whos rows match the structure of
+     HeaderSpec.  Each column header may be an arbitrary Prolog
+     term.  Multiple instances of this option are allowed.  The
+     first one where the number of columns of the header match the
+     number of columns in the table is used.
+
+     If no match is found and `header(first_row)` is present, the
+     first row is used to create the header.
+     
+   - align(AlignSpec)
+     Specify column alignment and format options.  The matching
+     rules are the same as for header(HeaderSpec).  Each element
+     is one of `l`, `c`, `r` or the verbatim version `left`, `center`,
+     `right`.  Optionally an element caries an argument to specify
+     format/2 options for formatting _atomic_ values.  E.g., `right('~D')`
+     results in a right aligned column with integer values displayed
+     using grouping.
+     
+   - float_format(+Format)
+     Render floating point numbers using `format(Format,Float)`
+
+Other options are passed to write_term/2
+
+#### Reconised terms
+
+The table render plugin expects a proper list of _rows_.  Each row must have the same
+number of columns and, if a header is provided, the header list must have the same length as the number of columns.  Each *Row* must have the same shape and contain the same number of columns.  The following terms are supported to represent a row:
+
+  - A _list_
+  - A _compound term_, using any functor
+  - A _dict_.  In this case the keys of the dict are using to add a header.
+  
+#### Alignment and formatting
+
+The align(Alignment) option can be used to specify alignment and formatting.  If nothing is specified, heuristics are applied to the values.  Currently this supports
+columns of only integers and columns of integers and floats.  In the latter case the system attempts to establish a reasonable value for the _precision_ and sets the alignment to `right('~Nf')`, where _N_ is the precision.  If ths fails, `left('~g')` is used.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+## Examples
+
+The table render plugin is used in the demo program [Einstein's Riddle](example/houses_puzzle.pl).  Try the `?- houses(Houses).` query.
+
+We start with an example from the [rendering overview](rendering.swinb).  As
+defined above, we can use both lists and terms for the table.  The latter is illustrated in the second query.  We use the _pair_ representation as this data structure is produced by many libraries.
+</div>
+
+<div class="nb-cell program" name="p1">
+:- use_rendering(table).
+</div>
+
+<div class="nb-cell query" name="q1">
+X = [ [ 'Amsterdam', 'The Netherlands' ],
+      [ 'London', 'United Kingdom' ],
+      [ 'Paris', 'France' ]
+    ].
+</div>
+
+<div class="nb-cell query" name="q2">
+X = [ 'Amsterdam' - 'The Netherlands',
+      'London' - 'United Kingdom',
+      'Paris' - 'France'
+    ].
+</div>
+
+<div class="nb-cell markdown" name="md3">
+### Specify column headers
+
+Next, we use the header(Columns) option to specify the column header.
+</div>
+
+<div class="nb-cell program" name="p2">
+:- use_rendering(table, [header('Capital' - 'Country')]).
+</div>
+
+<div class="nb-cell query" name="q3">
+X = [ 'Amsterdam' - 'The Netherlands',
+      'London' - 'United Kingdom',
+      'Paris' - 'France'
+    ].
+</div>
+
+<div class="nb-cell markdown" name="md4">
+*If* we specify a header, only data with a matching number of columns is rendered as a table.  The query below will *not show a table* because the row terms do not match the
+header('Capital' - 'Country') header.
+</div>
+
+<div class="nb-cell query" name="q4">
+X = [ capital('Amsterdam', 'The Netherlands', 825 080),
+      capital('London', 'United Kingdom', 8 416 535),
+      capital('Paris', 'France', 2 241 346)
+    ].
+</div>
+
+<div class="nb-cell markdown" name="md5">
+We can make the table render again by specifying the proper row term.  Multiple header options may be provided to specify the rendering of rows of different shapes.
+</div>
+
+<div class="nb-cell program" name="p3">
+:- use_rendering(table,
+                 [ header('Capital' - 'Country'),
+                   header(capital('Capital', 'Country', 'Population'))
+                 ]).
+</div>
+
+<div class="nb-cell query" name="q5">
+X = [ capital('Amsterdam', 'The Netherlands', 825 080),
+      capital('London', 'United Kingdom', 8 416 535),
+      capital('Paris', 'France', 2 241 346)
+    ].
+</div>
+
+<div class="nb-cell markdown" name="md7">
+## Alignment and formatting
+
+As stated with the options, alignment and formatting can be specified per column and defaults apply.  Below are some examples.
+</div>
+
+<div class="nb-cell program" name="p5">
+:- use_rendering(table).
+</div>
+
+<div class="nb-cell query" name="q7">
+findall(I-V, (between(1, 32, I), V is 2^I), Table).
+</div>
+
+<div class="nb-cell program" name="p6">
+:- use_rendering(table, [align(r-r('~2f'))]).
+</div>
+
+<div class="nb-cell query" name="q8">
+findall(Y-V, (between(1, 30, Y), V is 1.04^Y), Table).
+</div>
+
+<div class="nb-cell markdown" name="md6">
+## Any term may appear in a cell
+
+Neither columns nor cell values are restricted to simple types.  The cell content is simply passed to the generic term rendering.
+</div>
+
+<div class="nb-cell program" name="p4">
+:- use_rendering(table).
+</div>
+
+<div class="nb-cell query" name="q6">
+findall(row(Len,List), (between(1,10,Len), length(List,Len)), Rows).
+</div>
+
+</div>

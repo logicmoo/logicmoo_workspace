@@ -1,0 +1,123 @@
+//
+// macbeth2.plgCG
+//
+// Written by Henrik Scharfe, September 2003
+// Last update: September 23, 2003
+//
+
+universal > object, process, proposition.
+object > person, artifact.
+person > pronoun, royal, man.
+man > king.
+royal > king.
+artifact > weapon.
+weapon > dagger.
+process > act, state.
+
+// Catalogue of individuals
+act = ask, hacked, say, will_fight, see.
+person = Macbeth.
+pronoun = pn_I, pn_me, pn_my.
+
+
+ gr(act2,
+  [act: ask]-
+        -agnt->[person: Macbeth],
+        -thme->[proposition = 
+                [act: see]-
+                        -agnt->[person: pn_I]
+                        -obj->[object: *x]-
+                                -bfore->[person: pn_me],
+                                -type->[dagger]]).
+
+ gr(act5,
+  [act: say]-
+    -agnt->[person: Macbeth],
+    -thme->[proposition = 
+               [act: will_fight]-
+                    -agnt->[person: pn_I],
+                    -until->[state =
+                                 [act:hacked]-
+                                    -ptnt->[flesh]<-poss-[person: pn_my],
+                                    -from->[bone: {}]<-poss-[person: pn_my]]]).
+
+
+com(act2, [man: Macbeth]).
+com(act5, [royal: Macbeth]).
+
+
+// predicates
+
+branches(B):-
+gr(L,G),
+branchOfCG(B,G).
+
+concepts(C):-
+gr(L,G),
+concOfCG(C,G).
+
+//extracting the concepts in the embedded graph
+conceptsProp(C):-
+gr(L,G),
+subsume([proposition],G),
+branchOfCG([proposition = P], G),
+concOfCG(C, P).
+
+//extracting all concepts
+AllConcepts(C):-
+concepts(C).
+AllConcepts(C):-
+conceptsProp(C).
+// Subsuming action
+action(G):-
+gr(L,G),
+subsume([act]-agnt->[person],G).
+
+// extracting referents
+actor(a,b):-
+gr(L,G),
+subsume([act]-agnt->[person],G),
+branchOfCG([act:a]-agnt->[person: b],G).
+
+com2(a):-
+com(act2,a).
+
+com5(b):-
+com(act5,b).
+
+join(J):-
+com2(a),
+com5(b),
+maximalJoin(a,b,J).
+
+// Generalizing the graphs. The generalization of graphs 2 and 3 
+// reveals that thay have more in common than just a person 
+// saying something...
+
+act2(a):-
+gr(act2,a).
+
+act5(b):-
+gr(act5,b).
+
+
+general(G):-
+act2(A),
+act5(B),
+generalize(A,B,G).
+
+isSubType(dagger, weapon).
+
+weapon(A) :-
+  AllConcepts(A),
+  eq(G, A-dummy->[universal]),
+  branchOfCG([T:R]-dummy->[universal], G),
+  isSuperType(weapon, T).
+
+object(A) :-
+  AllConcepts(A),
+  eq(G, A-dummy->[universal]),
+  branchOfCG([T:R]-dummy->[universal], G),
+  isSuperType(object, T).
+
+  

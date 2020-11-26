@@ -1,0 +1,125 @@
+(note TQC113) 
+
+(desires InternationalMonetaryFund "To promote exchange 
+stability, to maintain orderly exchange arrangements among members, and to 
+avoid competitive exchange depreciation.") 
+
+(desires 
+InternationalMonetaryFund "To facilitate the expansion and balanced growth 
+of international trade, and to contribute thereby to the promotion and 
+maintenance of high levels of employment and real income and to the 
+development of the productive resources of all members as primary 
+objectives of economic policy.") 
+
+(desires InternationalMonetaryFund "To 
+promote international monetary cooperation through a permanent institution 
+which provides the machinery for consultation and collaboration on 
+international monetary problems.") 
+
+(statementOfPurpose InternationalMonetaryFund "(i) 
+ To promote international monetary cooperation through a
+ permanent institution which provides the machinery for
+ consultation and collaboration on international monetary
+ problems. 
+ (ii) 
+ To facilitate the expansion and balanced growth of international
+ trade, and to contribute thereby to the promotion and
+ maintenance of high levels of employment and real income and
+ to the development of the productive resources of all members as
+ primary objectives of economic policy. 
+ (iii) 
+ To promote exchange stability, to maintain orderly exchange
+ arrangements among members, and to avoid competitive
+ exchange depreciation. 
+ (iv) 
+ To assist in the establishment of a multilateral system of
+ payments in respect of current transactions between members
+ and in the elimination of foreign exchange restrictions which
+ hamper the growth of world trade. 
+ (v) 
+ To give confidence to members by making the general resources
+ of the Fund temporarily available to them under adequate
+ safeguards, thus providing them with opportunity to correct
+ maladjustments in their balance of payments without resorting to
+ measures destructive of national or international prosperity. 
+ (vi) 
+ In accordance with the above, to shorten the duration and lessen
+ the degree of disequilibrium in the international balances of
+ payments of members.") 
+
+
+(desires InternationalMonetaryFund "To assist in the establishment of a 
+multilateral system of payments in respect of current transactions between 
+members and in the elimination of foreign exchange restrictions which 
+hamper the growth of world trade.") 
+
+(desires InternationalMonetaryFund "To shorten the duration and lessen the 
+degree of disequilibrium in the international balances of payments of 
+members.") 
+
+(desires InternationalMonetaryFund "To give confidence to members by making 
+the general resources of the Fund temporarily available to them under 
+adequate safeguards, thus providing them with opportunity to correct 
+maladjustments in their balance of payments without resorting to measures 
+destructive of national or international prosperity.") 
+
+(statementOfPurpose InternationalMonetaryFund "to promote world monetary 
+stability and economic development--a UN specialized agency") 
+
+(query (findall ?X
+  (or 
+    (statementOfPurpose InternationalMonetaryFund ?X) 
+    (desires InternationalMonetaryFund ?X))))
+
+(answer (list "To promote exchange stability, to maintain orderly exchange 
+arrangements among members, and to avoid competitive exchange 
+depreciation.")) 
+
+(answer (list "To facilitate the expansion and balanced growth of 
+international trade, and to contribute thereby to the promotion and 
+maintenance of high levels employment and real income and to the 
+development of the productive resources of all members as primary 
+objectives of economic policy.")) 
+
+(answer (list "To promote international monetary cooperation through a 
+permanent institution which provides the machinery for consultation and 
+collaboration on international monetary problems.")) 
+
+(answer (list "(i) To promote international monetary cooperation through a 
+permanent institution which provides the machinery for consultation and 
+collaboration international monetary problems.  (ii) To facilitate the 
+expansion and balanced growth of international trade, and to contribute 
+thereby to the promotion and maintenance of high levels of employment and 
+real income and to the development of the productive resources of all 
+members as primary objectives of economic policy.  (iii) To promote 
+exchange stability, to maintain orderly exchange arrangements among 
+members, and to avoid competitive exchange depreciation.  (iv) To assist 
+in the establishment of a multilateral system of payments in respect of 
+current transactions between members and in the elimination of foreign 
+exchange restrictions which hamper the growth of world trade.  (v) To give 
+confidence to members by making the general resources of the Fund 
+temporarily available to them under adequate safeguards, thus providing 
+them with opportunity to correct maladjustments in their balance of 
+payments without resorting to measures destructive of national or 
+international prosperity.  (vi) In accordance with the above, to shorten 
+the duration and lessen the degree of disequilibrium in the international 
+balances of payments of members.")) 
+
+(answer (list "To assist in the establishment of a multilateral system of 
+payments in respect of current transactions between members and in the 
+elimination of foreign exchange restrictions which hamper the growth of 
+world trade.")) 
+ 
+(answer (list "To shorten the duration and lessen the degree of 
+disequilibrium in the international balances of payments of members.")) 
+ 
+(answer (list "To give confidence to members by making the general 
+resources of the Fund temporarily available to them under adequate 
+safeguards, thus providing them with opportunity to correct maladjustments 
+in their balance of payments without resorting to measures destructive of 
+national or international prosperity.")) 
+
+(answer (list "to promote world monetary stability and economic 
+development--a UN specialized agency")) 
+
+(end_of_file)

@@ -1,0 +1,34 @@
+% -*-Prolog-*-
+
+% some grist for the kinship mill.
+
+=> parent(tim,peter).
+=> parent(tim,katie).
+=> father(tim,clare).
+
+=> female(janet).
+=> mother(janet,katie).
+=> parent(janet,clare).
+=> parent(janet,peter).
+
+=> spouse(tim,janet).
+
+=> parent(tom,tim).
+=> gender(tom,male).
+=> parent(tom,carol).
+=> parent(tom,jeannie).
+
+=> parent(dorothy,tim).
+=> parent(dorothy,carol).
+=> parent(dorothy,jeannie).
+=> female(dorothy).	
+
+=> parent(carol,julia).
+=> parent(carol,laura).
+
+=> parent(ed,janet).
+=> parent(blanche,janet).
+=> spouse(ed,blanche).
+=> parent(ed,mark).
+
+

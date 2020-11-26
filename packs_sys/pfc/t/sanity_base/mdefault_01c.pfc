@@ -1,0 +1,34 @@
+
+:- include(test_header).
+
+functorDeclares(tFish).
+functorDeclares(tSwim).
+
+:- dmsg("tweety and chilly are fish.").
+tFish(iTweety).
+tFish(iChilly).
+
+:- dmsg("fish swim by default.").
+mdefault(( tFish(X) ==> tSwim(X))).
+
+/*
+:- header_sane:listing(header_sane:nt/3).
+:- header_sane:listing(header_sane:spft/3).
+:- header_sane:listing(header_sane:tSwim/1).
+:- header_sane:listing(header_sane:pt/2).
+:- header_sane:listing(header_sane:mdefault/1).
+*/
+
+:- dmsg("make sure *both* can swim (this no longer exposes a potential bug in monadic predicates)").
+:- mpred_test((tSwim(iTweety))).
+:- mpred_test((tSwim(iChilly))).
+
+
+:- mpred_trace_exec.
+% withdraw all support if all user
+%   else withdraw all support if all deductions
+\+ tSwim(iTweety).
+               
+:- mpred_test( \+ (tSwim(iTweety))).
+:- mpred_test( (tSwim(iChilly))).
+

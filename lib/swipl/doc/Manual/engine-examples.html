@@ -1,0 +1,490 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 11.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="engines.html">
+<link rel="next" href="engine-resources.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="engines.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="engine-resources.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:engine-examples"><a id="sec:11.1"><span class="sec-nr">11.1</span> <span class="sec-title">Examples 
+using engines</span></a></h2>
+
+<a id="sec:engine-examples"></a>
+
+<p>We introduce engines by describing application areas and providing 
+simple example programs. The predicates are defined in
+<a class="sec" href="engine-predicates.html#sec:11.3">section 11.3</a>. 
+We identify the following application areas for engines.
+
+<p>
+<ol class="latex">
+<li>Aggregating solutions from one or more goals. See
+<a class="sec" href="engine-examples.html#sec:11.1.1">section 11.1.1</a>.
+<li>Access the terms produced in <em>forward execution</em> through 
+backtracking without collecting all of them first. <a class="sec" href="engine-examples.html#sec:11.1.1">Section 
+11.1.1</a> illustrates this as well.
+<li>State accumulation and sharing. See <a class="sec" href="engine-examples.html#sec:11.1.2">section 
+11.1.2</a>.
+<li>Scalable many-agent applications. See <a class="sec" href="engine-examples.html#sec:11.1.3">section 
+11.1.3</a>.
+</ol>
+
+<p><h3 id="sec:engine-aggregation"><a id="sec:11.1.1"><span class="sec-nr">11.1.1</span> <span class="sec-title">Aggregation 
+using engines</span></a></h3>
+
+<a id="sec:engine-aggregation"></a>
+
+<p>Engines can be used to reason about solutions produced by a goal 
+through backtracking. In this scenario we create an engine with the goal 
+we wish to backtrack over and we enumerate all its solution using <a id="idx:enginenext2:2281"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>. 
+This usage scenario competes with the all solution predicates (<a id="idx:findall3:2282"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:bagof3:2283"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
+etc.) and the predicates from library
+<code>library(aggregate)</code>. Below we implement <a id="idx:findall3:2284"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+using engines.
+
+<pre class="code">
+findall(Templ, Goal, List) :-
+        setup_call_cleanup(
+            engine_create(Templ, Goal, E),
+            get_answers(E, List),
+            engine_destroy(E)).
+
+get_answers(E, [H|T]) :-
+        engine_next(E, H), !,
+        get_answers(E, T).
+get_answers(_, []).
+</pre>
+
+<p>The above is not a particularly attractive alternative for the 
+built-in
+<a id="idx:findall3:2285"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>. 
+It is mostly slower due to time required to create and destroy the 
+engine as well as the (currently<sup class="fn">187<span class="fn-text">The 
+current implementation of engines is built on top of primitives that are 
+not optimal for the engine use case. There is considerable opportunity 
+to reduce the overhead.</span></sup>) higher overhead of copying terms 
+between engines than the overhead required by the dedicated 
+representation used by
+<a id="idx:findall3:2286"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>.
+
+<p>It gets more interesting if we wish to combine answers from multiple 
+backtracking predicates. Assume we have two predicates that, on 
+backtracking, return ordered solutions and we wish to merge the two 
+answer streams into a single ordered stream of answers. The solution in 
+classical Prolog is below. It collects both answer sets, merges them 
+using ordered set merging and extract the answers. The code is clean and 
+short, but it doesn't produce any answers before both generators are 
+fully enumerated and it uses memory that is proportional to the combined 
+set of answers.
+
+<pre class="code">
+:- meta_predicate merge(?,0, ?,0, -).
+
+merge_answers(T1,G1, T2,G2, A) :-
+        findall(T1, G1, L1),
+        findall(T2, G2, L2),
+        ord_union(L1, L2, Ordered),
+        member(A, Ordered).
+</pre>
+
+<p>We can achieve the same using engines. We create two engines to 
+generate the solutions to both our generators. Now, we can ask both for 
+an answer, put the smallest in the answer set and ask the engine that 
+created the smallest for its next answer, etc. This way we can create an 
+ordered list of answers as above, but now without creating intermediate 
+lists. We can avoid creating the intermediate list by introducing a 
+third engine that controls the two generators and <em>yields</em> the 
+answers rather than putting them in a list. This is a general example of 
+turning a predicate that builds a set of terms into a non-deterministic 
+predicate that produces the results on backtracking. The full code is 
+below. Merging the answers of two generators, each generating a set of 
+10,000 integers is currently about 20% slower than the code above, but 
+the engine-based solution runs in constant space and generates the first 
+solution immediately after both our generators have produced their first 
+solution.
+
+<pre class="code">
+:- meta_predicate merge(?,0, ?,0, -).
+
+merge(T1,G1, T2,G2, A) :-
+        engine_create(A, merge(T1,G1, T2,G2), E),
+        repeat,
+            (   engine_next(E, A)
+            -&gt;  true
+            ;   !, fail
+            ).
+
+merge(T1,G1, T2,G2) :-
+        engine_create(T1, G1, E1),
+        engine_create(T2, G2, E2),
+        (   engine_next(E1, S1)
+        -&gt;  (   engine_next(E2, S2)
+            -&gt;  order_solutions(S1, S2, E1, E2)
+            ;   yield_remaining(S1, E1)
+            )
+        ;   engine_next(E2, S2),
+            yield_remaining(S2, E2)
+        ).
+
+order_solutions(S1, S2, E1, E2) :- !,
+        (   S1 @=&lt; S2
+        -&gt;  engine_yield(S1),
+            (   engine_next(E1, S11)
+            -&gt;  order_solutions(S11, S2, E1, E2)
+            ;   yield_remaining(S2, E2)
+            )
+        ;   engine_yield(S2),
+            (   engine_next(E2, S21)
+            -&gt;  order_solutions(S1, S21, E1, E2)
+            ;   yield_remaining(S1, E1)
+            )
+        ).
+
+yield_remaining(S, E) :-
+        engine_yield(S),
+        engine_next(E, S1),
+        yield_remaining(S1, E).
+</pre>
+
+<p><h3 id="sec:engine-state"><a id="sec:11.1.2"><span class="sec-nr">11.1.2</span> <span class="sec-title">State 
+accumulation using engines</span></a></h3>
+
+<a id="sec:engine-state"></a>
+
+<p>Applications that need to manage a state can do so by passing the 
+state around in an additional argument, storing it in a global variable 
+or update it in the dynamic database using <a id="idx:assertz1:2287"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+and <a id="idx:retract1:2288"></a><a class="pred" href="db.html#retract/1">retract/1</a>. 
+Both using an additional argument and a global variable (see <a id="idx:bsetval2:2289"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>), 
+make the state subject to backtracking. This may or may not be 
+desirable. If having a state is that subject to backtracking is 
+required, using an additional argument or backtrackable global variable 
+is the right approach. Otherwise, non-backtrackable global variables (<a id="idx:nbsetval2:2290"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>) 
+and dynamic database come into the picture, where global variables are 
+always local to a thread and the dynamic database may or may not be 
+shared between threads (see <a id="idx:threadlocal1:2291"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>).
+
+<p>Engines bring an alternative that packages a state inside the engine 
+where it is typically represented in a (threaded) Prolog variable. The 
+state may be updated, while controlled backtracking to a previous state 
+belongs to the possibilities. It can be accessed and updated by anyone 
+with access to the engines' handle. Using an engine to represent state 
+has the following advantages:
+
+<p>
+<ul class="latex">
+<li>The programming style needed inside the engine is much more&lsquo;Prolog 
+friendly', using <a id="idx:enginefetch1:2292"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
+to read a request and
+<a id="idx:engineyield1:2293"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+to reply to it.
+<li>The state is packaged and subject to (atom) garbage collection.
+<li>The state may be accessed from multiple threads. Access to the state 
+is synchronized without the need for explicit locks.
+</ul>
+
+<p>The example below implements a shared priority heap based on library
+<code>library(heaps)</code>. The predicate update_heap/1 shows the 
+typical update loop for maintaining state inside an engine: fetch a 
+command, update the state, yield with the reply and call the updater 
+recursively. The update step is guarded against failure. For robustness 
+one may also guard it against exceptions using <a id="idx:catch3:2294"></a><a class="pred" href="exception.html#catch/3">catch/3</a>. 
+Note that heap_get/3 passes the <var>Priority</var> and <var>Key</var> 
+it wishes to delete from the heap such that if the unification fails, 
+the heap remains unchanged.
+
+<p>The resulting heap is a global object with either a named or 
+anonymous handle that evolves independently from the Prolog thread(s) 
+that access it. If the heap is anonymous, it is subject to (atom) 
+garbage collection.
+
+<pre class="code">
+:- use_module(library(heaps)).
+
+create_heap(E) :-
+        empty_heap(H),
+        engine_create(_, update_heap(H), E).
+
+update_heap(H) :-
+        engine_fetch(Command),
+        (   update_heap(Command, Reply, H, H1)
+        -&gt;  true
+        ;   H1 = H,
+            Reply = false
+        ),
+        engine_yield(Reply),
+        update_heap(H1).
+
+update_heap(add(Priority, Key), true, H0, H) :-
+        add_to_heap(H0, Priority, Key, H).
+update_heap(get(Priority, Key), Priority-Key, H0, H) :-
+        get_from_heap(H0, Priority, Key, H).
+
+heap_add(Priority, Key, E) :-
+        engine_post(E, add(Priority, Key), true).
+
+heap_get(Priority, Key, E) :-
+        engine_post(E, get(Priority, Key), Priority-Key).
+</pre>
+
+<p><h3 id="sec:engine-agents"><a id="sec:11.1.3"><span class="sec-nr">11.1.3</span> <span class="sec-title">Scalable 
+many-agent applications</span></a></h3>
+
+<a id="sec:engine-agents"></a>
+
+<p>The final application area we touch are agent systems were we wish to 
+capture an agent in a Prolog goal. Such systems can be implemented using 
+threads (see <a class="sec" href="threads.html#sec:10">section 10</a>) 
+that use <a id="idx:threadsendmessage2:2295"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a> 
+and
+<a id="idx:threadgetmessage1:2296"></a><a class="pred" href="threadcom.html#thread_get_message/1">thread_get_message/1</a> 
+to communicate. The main problem is that each thread is associated by an 
+operating system thread. OS threads are, depending on the OS, relatively 
+expensive. Scalability of this design typically ends, depending on OS 
+and hardware, somewhere between 1,000 and 100,000 agents.
+
+<p>Engines provide an alternative. A detached Prolog engine currently 
+requires approximately 20&nbsp;Kbytes memory on 64&nbsp;bit hardware, 
+growing with the size of the Prolog stacks. The Prolog stacks may be 
+minimised by calling <a id="idx:garbagecollect0:2297"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
+followed by <a id="idx:trimstacks0:2298"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a>, 
+providing a
+<em>deep sleep</em> mode. The set of agents, each represented by an 
+engine can be controlled by a static or dynamic pool of threads. 
+Scheduling the execution of agents and their communication is completely 
+open and can be optimised to satisfy the requirements of the 
+application.
+<blockquote> This section needs an example. Preferably something that 
+fits on one page and would not scale using threads. Engines might work 
+nice to implement <i>Antrank: An ant colony algorithm for ranking web 
+pages</i>.<sup class="fn">188<span class="fn-text"><a class="url" href="http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf">http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf</a></span></sup>
+</blockquote>
+
+<p></body></html>

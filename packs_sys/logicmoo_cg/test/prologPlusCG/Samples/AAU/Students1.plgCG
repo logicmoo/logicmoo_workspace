@@ -1,0 +1,4 @@
+student(Lisa, 5).
+student(Martin, 3).
+student(John, 3).
+student(Edward, 7).

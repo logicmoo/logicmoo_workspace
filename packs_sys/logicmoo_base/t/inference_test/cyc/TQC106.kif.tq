@@ -1,0 +1,37 @@
+(note TQC106)
+
+
+(existant Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(instrument-Generic Stage2-BWAttackAtRasTannurah Stage2-BiologicalWeapon1) 
+
+(instance Stage2-BiologicalWeapon1 WeaponOfMassDestruction) 
+
+(instance Stage2-BWAttackAtRasTannurah AttackOnTangible) 
+
+(casualtyCountByAilment Stage2-BWAttackAtRasTannurah FluLikeSymptoms Hundreds-Quant) 
+
+
+
+
+(query (findall ?ILLNESS
+
+ (thereExists ?ACT 
+ (and 
+ (instance ?ACT AttackOnTangible) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) ?ACT) 
+ (thereExists ?WEAPON 
+ (and 
+ (instrument-Generic ?ACT ?WEAPON) 
+ (instance ?WEAPON WeaponOfMassDestruction))) 
+ (thereExists ?NUMBER 
+ (casualtyCountByAilment ?ACT ?ILLNESS ?NUMBER))))))
+
+(answer FluLikeSymptoms)
+
+(end_of_file)
+  

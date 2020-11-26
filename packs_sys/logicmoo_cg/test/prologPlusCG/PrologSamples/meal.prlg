@@ -1,0 +1,38 @@
+meal(a, m, d) :- appetizer(a), main(m), dessert(d).
+
+main(m) :- fish(m).
+main(m) :- meat(m).
+
+appetizer(radishes).
+appetizer(pate).
+
+fish(sole).
+fish(mirlan).
+fish(pageot).
+fish(tuna).
+
+meat(pork).
+meat(beef).
+
+dessert(cake).
+dessert(fruit).
+
+light_meal(a, m, d, w) :-
+   meal(a, m, d),
+   units(a, x),
+   units(m, y),
+   u is x + y,
+   units(d, z),
+   v is z + u,
+   v < w.
+
+// units avec deux arguments.
+units(beef, 3).
+units(pork, 7).
+units(fruit, 1).
+units(cake, 5).
+units(pate, 6).
+units(radishes, 1).
+units(sole, 2).
+units(tuna, 4).
+

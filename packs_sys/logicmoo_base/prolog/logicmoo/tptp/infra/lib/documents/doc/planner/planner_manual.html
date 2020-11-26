@@ -1,0 +1,922 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <link rel=stylesheet type="text/css" href="manual.css">
+   <title>Liner Planning System &ndash; User Manual</title>
+</head>
+<body>
+
+
+<h1>Liner Planning System &ndash; User Manual (Draft)</h1>
+
+<p>
+The
+<i>Liner</i> planning system is a prototype implementation of the
+<i>linear backward chaining (LBC)</i> planning algorithm <a
+href="#refs">[Fronh&ouml;fer96]</a>, which is based on the <i>linear
+connection method</i> <a href="#refs">[Bibel86]</a>.  The system performs
+partial-order planning and includes a constraint handling interface, for
+example to integrate arithmetic evaluation.  It runs in the <a
+href="http://www.swi-prolog.org">SWI-Prolog</a> environment.  Outputs are
+represented by Prolog terms.  Plans can also be displayed as images of graphs.
+
+<p>The system was originally written in 1999 in Eclipse-Prolog, has been
+ported to <a href="http://www.swi-prolog.org">SWI-Prolog</a> in 2002 and
+adapted to recent versions of SWI-Prolog in 2007. The 1999 Eclipse version of
+the system (called
+<i>LBCP</i> at that time) along with performance results is described in <a
+href="#refs">[Wernhard99]</a>.  The performance of the system is comparable to
+state-of-the-art planners around that time.  The implementation proceeds
+by compiling planning tasks to Prolog code, similar to the <a
+href="http://www.ai.sri.com/~stickel/pttp.html">Prolog Technology Theorem
+Prover (PTTP)</a> by Mark Stickel.
+
+
+<p><i>Liner</i> is embedded into <a
+href="http://www.infraengine.com">InfraEngine</a>, an experimental prototype
+of a Semantic Web inference engine with <a
+href="http://www.w3.org/RDF/">RDF</a> interfaces.
+
+<p>It is released under the GNU General Public License.
+
+
+    <h2>Contents</h2>
+
+<ul>
+<li><a href="#inst">1. Installation</a>
+<ul>
+<li><a href="#inst-sw">1.1 Required Further Software</a>
+<li><a href="#inst-setup">1.2 Setting up the System</a>
+</ul>
+
+<li><a href="#use">2. Invocation</a>
+<li><a href="#overview">3. Overview: Resource Oriented View of Planning</a>
+<li><a href="#rulebase">4. Rulebase</a>
+<li><a href="#constr">5. Constraints</a>
+<li><a href="#preds">6. Predicates</a>
+<li><a href="#opt">7. Planning Options</a>
+<ul>
+<li><a href="#opt-plan">7.1 Planning Options: Plan Construction</a>
+<li><a href="#opt-outputs">7.2 Planning Options: Further Outputs</a>
+<li><a href="#opt-cpsort">7.3 Planning Options: Contrapositive Sorting</a>
+<li><a href="#opt-sgsort">7.4 Planning Options: Subgoal Sorting</a>
+<li><a href="#opt-id">7.5 Planning Options: Controlling Iterative
+Deepening</a>
+<li><a href="#opt-constr">7.6 Planning Options: Constraint Handling</a>
+<li><a href="#opt-incomplete">7.7 Planning Options: Incomplete
+Heuristics</a> 
+<li><a href="#opt-gencode">7.8 Planning Options: Handling Generated
+Code</a>
+</ul>
+
+<li><a href="#ex">8. Examples</a>
+<ul>
+<li><a href="#ex-sussman">8.1 Example: Sussman Anomaly</a>
+<li><a href="#ex-pop">8.2 Example: Partial-Order Planning</a>
+<li><a href="#ex-cop">8.3 Example: Constraints, Output Pool</a>
+</ul>
+<li><a href="#refs">References</a>
+</ul>
+
+<h2><a name="inst">1. Installation</a></h2>
+
+<h3><a name="inst-sw">1.1 Required Further Software</a></h3>
+
+
+<p>The system has been tested on Debian Linux and Mac OS-X platforms, details
+on requirements are shown in the following table.  It should be possible to
+install the system analogously also on other Linux platforms and on Windows
+with <a href="http://www.cygwin.com/">Cygwin</a>.
+<p>
+
+<table border=2>
+<tr><th>Software</th>
+<th>Tested versions</th>
+<th>For <a href="http://www.debian.org">Debian</a> 4.0 &ldquo;etch&rdquo;</th>
+<th>For Mac OS-X 10.4 with <a href="http://www.finkproject.org">Fink</a> 0.8.1</th>
+</tr>
+<tr><td>SWI-Prolog</td>
+    <td>5.6.40</td>
+    <td><ol>
+<li>Download the stable release of <i>SWI-Prolog/XPCE
+ for Linux (RPM package)</i> from
+<a href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
+<li>Convert the RPM package to a DEB package by calling alien as root, e.g.:
+
+<pre># alien -v pl-5.6.40-290.i586.rpm</pre>
+<li> Install the DEB package, e.g.:
+
+   <pre># dpkg -i pl_5.6.40-291_i386.deb</pre>
+</ol>
+</td>
+    <td>Download and install the stable release of 
+       <i>SWI-Prolog/XPCE for MacOS X 10.4</i> from
+       <a href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
+    </td>
+</tr>
+
+<tr><td>dot</td>
+    <td>1.16 and 2.8</td>
+    <td>Package graphviz</td>
+    <td>Fink package graphviz</td>
+</tr>
+
+<tr><td>Courier-Bold font for dot</td>
+    <td>-</td>
+    <td>Packages gsfonts</td>
+    <td>Fink package msttcorefonts
+
+<p>
+The <code>dot</code> program must find the font. This 
+requires that <code>courier-bold.ttf</code> 
+is in the directory 
+<code>$DOTFONTPATH</code>.
+
+A way to achieve this is by copying the font to some directory:
+<pre>
+$ mkdir ~/my-fonts-for-dot
+$ cp /sw/lib/X11/fonts/msttf/courbd.ttf ~/my-fonts-for-dot/courier-bold.ttf
+</pre>
+
+and setting <code>DOTFONTPATH</code> e.g. by the following line 
+in <code>~/.bash_profile</code>:
+<pre>export DOTFONTPATH="${HOME}/my-fonts-for-dot"</pre>
+
+</td>
+</tr>
+
+<tr><td>xli</td>
+    <td>1.17</td>
+    <td>Package xli</td>
+    <td>Fink package xli
+<p>Package xli is unfortunately only in unstable.
+You can also configure another program, for example
+<i>display</i> from package <i>imagemagick</i>, as
+viewer by modifying the entry
+<pre>
+  config:config(planner_image_viewer, xli).
+</pre>
+in file <code>infra/src/load_just_planner.pl</code>
+appropriately.
+
+</td>
+</tr>
+
+</table>
+
+<h3><a name="inst-setup">1.2 Setting up the System</a></h3>
+
+The planning system is packed with the InfraEngine system.
+
+<ol>
+<li>
+Unpack the distribution archive. A directory <code>infra</code>
+is created. The source files can be found (along with the sources of
+other modules of the InfraEngine system) in <code>infra/src</code>.
+<pre>$ tar xzvf infra.tgz</pre>
+</ol>
+
+
+<h2><a name="use">2. Invocation</a></h2>
+
+<ol>
+
+<li>Start SWI-Prolog and consult <code>infra/src/load_just_planner.pl</code>:
+
+<pre>
+    ?- consult('~/infra/src/load_just_planner').
+</pre>
+
+<p>
+A convenient alternative 
+way to do this is running SWI-Prolog from Emacs, loading
+<code>infra/src/load_just_planner.pl</code> into an Emacs buffer and
+calling the Emacs function <code>prolog-consult-file</code>, which
+is possibly bound to <code>"\C-c\C-l"</code> in Prolog mode.
+
+<li>The planner can then be controlled by
+evaluating Prolog queries.
+
+<p>The system runs in the SWI-Prolog environment. It accepts as inputs Prolog
+terms that are read in by SWI-Prolog interpreter.  Thus we describe the input
+syntax of the planning systems abstractly, with the notions <i>term</i>,
+<i>atom</i>, <i>variable</i>,
+<i>non-variable term</i> and <i>list</i> in the sense of the underlying Prolog
+system.
+
+</ol>
+
+
+<h2><a name="overview">3. Overview: Resource Oriented View of Planning</a></h2>
+
+In this section we outline the basic concepts of the &ldquo;resource oriented
+view&rdquo; of planning that is adopted by our system.  It is related to linear
+logic. As shown
+in  <a
+href="#refs">[H&ouml;lldoblerSchneeberger89]</a>,
+it is equivalent to the
+<a href="http://en.wikipedia.org/wiki/Situation_calculus">
+situation calculus</a>, which was the original formulation of planning and is
+used as basis for many transition system languages, for example the <a
+href="http://www.mel.nist.gov/psl/">NIST Process Specification Language
+(PSL)</a>.  See <a href="#refs">[Fronh&ouml;fer96]</a> for a precise
+account of the notion of planning rules adopted here.
+
+<p>
+<b>States and Actions.</b> Executing an <i>action</i> leads from a
+<i>state</i> of the world to a successor state. A state is represented by a <a
+href="http://en.wikipedia.org/wiki/Multiset">multiset</a> of <i>fluents</i>,
+facts whose truth value is state dependent.
+
+<p>
+<b>Planning Rules.</b> The effects of an action are specified by a set of
+<i>planning rules</i> for that action. A planning rule has two main parts, its
+<i>antecedent</i> and its <i>consequent</i>. Both parts are
+multisets of fluents.
+
+<p>
+<b>Operational Reading of Rules.</b> The fluents in the antecedent are
+matched against the fluents in the initial state: for each fluent in the
+antecedent, a matching fluent in the state is removed. The fluents in the
+consequent are then added to the state, to yield the successor state. Matching
+is performed with <i>unification</i>: rules and states may contain <i>logic
+variables</i> which are bound during matching.
+
+<p>Fluents are considered as resources, objects that can be consumed and
+provided. A rule application means, that the fluents of the consequent
+are provided, after the fluents in the antecedent have been consumed.
+
+<p>
+<b>Planning Tasks and Plans.</b>
+
+Given a set of rules, a start state and a goal state, a
+<i>planning task</i> is to determine, whether there exists a
+sequence of rule applications that leads from the start to the goal
+state.
+
+A <i>plan</i> is the proof graph of such a solution. Its nodes are labeled by
+actions. An action in our system is represented by a term, that may share
+variables with its rules. The plan represents a partial ordering of action
+instances (i.e. nodes labeled with actions). Any sequence of action
+applications compatible with the partial ordering leads from the start to the
+goal state.
+
+<h2><a name="rulebase">4. Rulebase</a></h2>
+
+We call the set of planning rules used for a planning task a <i>rulebase</i>.
+The following definitions make this precise.
+
+
+<ol>
+<li>A <a name="def-rb"><i>rulebase</i></a> is a list
+of <a href="#def-rule">rules</a>,
+<a href="#def-fact">facts</a> and
+<a href="#def-decl">fluent declarations</a>.
+<p>
+
+Variables in elements of <i>rulebase</i> have scopes that just cover the
+respective element.
+
+<p>
+<li>A <a name="def-rule"><i>rule</i></a> represents a planning rule.
+It is a term 
+<p>
+<div align="center">
+rule(<i>Action</i>, <i>Consequent</i>, <i>Antecedent</i>, <i>Constraints</i>)</div>
+
+where
+
+<p>
+<ul>
+<li><i>Action</i> is a non-variable term that
+denotes the action represented by the rule.  Instances of it,
+corresponding to rule applications, become node labels of computed plans.
+Different rules may have the same action term.
+<p>
+Action terms whose main functor starts with <i>$</i> are reserved
+for internal use.
+
+
+<p>
+<li><i>Consequent</i> is a list of 
+<a href="#def-lit">literals</a>, understood 
+as a multiset of the fluents that are
+produced by an application of the rule.
+
+<p>
+<li><i>Antecedent</i> is a list of 
+<a href="#def-lit">literals</a>, understood
+as a multiset that contains the fluents that are
+consumed by an application of the rule and the facts that must be true for the
+rule to be applicable.
+<p>The empty list as <i>Antecedent</i> is currently only supported if
+<i>Consequent</i> contains a single literal. The rule
+then is equivalent to a <a href="#def-fact">fact</a>, except that
+the action is recorded in the plan.
+
+<p>
+<li><i>Constraints</i> is a list of <a
+href="#constr">constraints</a> that restrict the rule.
+</ul>
+
+<p>
+Variables can be shared between all the arguments of a rule.
+
+<p>
+<li>A <a name="def-fact"><i>fact</i></a> 
+asserts that a literal is consumable in 
+unlimited amounts (or true in all states). It is a term
+<p>
+<div align="center">
+     fact(<i>Fact</i>, <i>Constraints</i>),
+</div>
+where 
+<ul>
+<li><i>Fact</i>
+is a <a href="#def-lit">literal</a> that is understood
+as a fact.
+<p>
+<li><i>Constraints</i> is a list of <a
+href="#constr">constraints</a> that restrict the fact.
+</ul>
+
+<p>
+<li>A <a name="def-decl"><i>fluent declaration</i></a> is a term 
+<pre>        declare(fluent, <i>Fluent</i>),</pre>
+where <i>Fluent</i> 
+is a <a href="#def-lit">literal</a>.
+<p>
+This declaration is required to specify that <i>Fluent</i> is
+understood as a fluent (in contrast to a fact) 
+in cases where <i>Fluent</i> does
+not occur in the <i>Consequent</i> of some rule.
+(It affects literals that unify with <i>Fluent</i>
+in the input states of a planning task.)
+
+<p>
+<li>A <a name="def-lit"><i>literal</i></a> 
+is a non-variable term that
+represents a fluent (consumable and
+producible resource; possibly true
+at some states and false at others) 
+or a fact (a resource that is consumable in unlimited
+amounts; always true).
+<p>
+Literals whose main functor starts with <i>$</i> are reserved
+for internal use.
+
+</ol>
+
+<p>
+
+<h2><a name="constr">5. Constraints</a></h2>
+
+The planning system extend the basic linear backward chaining mechanism
+by support for constraint handling, which can for example be
+used to integrate arithmetic evaluation into planning.
+<p>
+Note: This was implemented before SWI-Prolog featured
+constraint handling rules, so it should probably be
+revised.
+<p>
+The <i>Constraints</i> argument of <a href="#def-rule">rules</a>, <a
+href="#def-fact">facts</a> and the predicate <a href="#def-plan5">plan/5</a>
+is a list of constraint specifications of the following forms:
+
+<p>
+<dl>
+<dt><a name="aconstr">cs(<i>ActiveConstraints</i>)</a></dt>
+<dd>
+
+<i>ActiveConstraints</i> is an active constraint term, that is processed by a
+constraint handling module, which defaults to <i>planner_cs_simple</i>,
+described below.
+
+<p>A <i>Constraints</i> argument may contain at most one occurrence
+of cs(<i>ActiveConstraints</i>).
+	
+<p>The constraint handling module <i>planner_cs_simple</i>
+  is a dummy implementation that just
+  evaluates constraints as soon as they are sufficiently
+  instantiated.  (An experimental linear equation solver can be found as
+  module <i>planner_cs_linear</i> in the source directory.)
+  An active constraint term processed by <i>planner_cs_simple</i> is a list of 
+  terms whose meaning is analogous to
+  the corresponding predicates in SWI-Prolog.
+<p>
+  The following terms are supported:
+  <dl>
+  <dt>Arithmetics: =:=/2, &gt;/2, &lt;/2, &gt;=/2, =&lt;/2, =\=/2</dt>
+  <dd>
+    <p> =:=/2 is evaluated using is/2 as soon as one side is ground
+     and the other a variable. If both sides are ground, it is
+     evaluated using =:=/2. So arithmetic compound terms should
+     only appear within the constraints, i.e., the planning rules
+     should not bind variables to arithmetic compound terms.<p>
+ </dd>
+
+  <dt>Term Operations: \=/2 (non-unifiability)</dt><dd><p></dd>
+  <dd>Atom number conversion: atom_number/2</dd>		   
+</dl>
+<p>Other terms just remain unsolved.
+
+<p>
+<dt>neq(<i>X</i>,<i>Y</i>)</dt>
+<dd>
+<p>Heuristic hint that the constraint should fail if
+terms <i>X</i> and <i>Y</i> are instantiated to
+syntactically identical values. This is not enforced:
+arguments can be instantiated to identical values after
+explicit processing of the constraint has been performed. 
+<p>
+</dd>
+<dt>type(<i>Type</i>,<i>Variable</i>)</dt>
+<dd><p>Declare variable <i>Variable</i> as being of type
+<i>Type</i>.  Effects compilation
+of <i>Variable</i>
+into a functor wrapped variable.
+<i>Type</i> can be an atom or list, e.g.  <code>t1</code> for
+<code>t1(X)</code>, and <code>[t1, t2, t3]</code> for
+<code>t1(t2(t3(X)))</code>.  Non-variable objects have to be explicitly
+written in the functor wrapped forms.
+</dd>
+</dl>
+
+
+<h2><a name="preds">6. Predicates</a></h2>
+
+
+<dl>
+<dt><a name="def-plan5">plan(<i>+Options</i>, <i>+GoalMultiset</i>,
+ <i>+StartMultiset</i>, 
+<i>+Constraints</i>, <i>+Rulebase</i>)</a></dt>
+<dd>
+<p>Call the planner on the task specified by the arguments.
+
+<p>Solutions are returned as bindings of variables in <i>Planning Options</i>.
+Alternative solutions are enumerated by Prolog backtracking.
+<p>
+The planner is complete in the sense that if a plan for the task
+exists, then it outputs a plan after a finite number of steps.
+Otherwise it may fail or not terminate.
+<p>
+This predicate is in module <i>planner_run</i>.
+
+
+<ul>
+<li>
+<i>Options</i> is a list of <a href="#opt">planning options</a>.
+
+<p><li><i>GoalMultiset</i> is a list of <a href="#def-lit">literals</a>,
+understood as a multiset that contains the fluents that must
+be consumable in the goal state of the planning tasks and facts
+that must be true.
+
+<p><li><i>StartMultiset</i> is a list of <a href="#def-lit">literals</a>,
+understood as a multiset of the fluents that are consumable in the start state
+of the planning task.
+
+<p><li><i>Constraints</i> is a list of <a
+href="#constr">constraints</a> that restrict the fluents and facts
+in <i>GoalMultiset</i> and <i>StartMultiset</i>.
+<p>
+It can involve variables from both <i>GoalMultiset</i> and 
+<i>StartMultiset</i>.
+
+
+<p><li><i>Rulebase</i> is a <a href="#def-rb">rulebase</a> that
+specifies the rules, facts and fluents of the planning task.
+<p>
+</ul>
+</dd>
+
+
+<dt><a name="def-pool_literal3">pool_literal(<i>+Module</i>, <i>+Pool</i>,
+<i>?Literal</i>)</a></dt> 
+<dd>
+<p>Enumerates the literals in the result pool of a planning task.  
+
+<p>The generated code for the planning task code must still be installed in
+the module specified by <i>Module</i>.
+<p>
+This predicate is in module <i>planner_run</i>.
+<p>
+<ul>
+<li><i>Module</i> is a module in which generated planner code is installed.
+The predicate <a href="#def-plan5">plan/5</a> effects this in the module
+specified by the <a href="#opt-module">module(<i>Module</i>)</a> 
+planning option.
+
+<p><li><i>Pool</i> is a pool representation returned as binding of the <a
+href="#opt-pool">pool(<i>Pool</i>)</a> planning option.
+
+<p><li><i>Literal</i> is successively bound to each member of
+the multiset pool represented by <i>Pool</i>.
+</ul>
+<p>
+<dt>view_plan(<i>Plan</i>)</dt>
+<dd>
+<p>Displays a plan as a graph.
+<ul>
+<li><i>Plan</i> is a plan representation returned as binding of the <a
+href="#opt-plan">p(<i>Plan</i>)</a> planning option.
+</ul>
+<p>
+This predicate is in module <i>planner_dotgraph</i>.
+<p>
+This predicate makes use of the <i>Graphviz</i> system and
+an external program for image viewing. Its behavior
+can be configured by predicate config/2 in module <i>config</i>.
+Example settings are:
+<pre>    config:config(planner_dotgraph_fontname, 'Courier-Bold').
+    config:config(planner_dotgraph_fontsize, '11').
+    config:config(planner_image_viewer, xli).
+</pre>
+</dd>
+</dl>
+
+<h2><a name="opt">7. Planning Options</a></h2>
+
+The following options can be specified in
+the <a href="#def-plan5">plan/5</a> predicate.
+
+<h3><a name="opt-plan">7.1 Planning Options: Plan Construction</a></h3>
+<dl>
+<dt>p(<i>Plan</i>)<dt>
+  <dd>Create a plan and bind <i>Plan</i> to it.
+<p>
+<dt>pxo</dt>
+  <dd>Create plan with partial-order information. Requires <i>p(Plan)</i>.
+</dd>
+</dl>
+
+<h3><a name="opt-outputs">7.2 Planning Options: Further Outputs</a></h3>
+<dl>
+<dt><a name="opt-pool">pool(<i>Pool</i>)</a><dt> 
+<dd>Bind <i>Pool</i> to a representation the pool (multiset of facts
+available for consumption) at the solution state.
+The predicate <a href="#def-pool_literal3">pool_literal/3</a> is
+provided to access these pool representations.
+<dd>
+
+<p>
+<dt>infs(<i>Infs</i>)</dt>
+<dd>Bind <i>Infs</i> to the infs at the solution state. (Q: what
+are infs?)</dd>
+</dl>
+
+<h3><a name="opt-cpsort">7.3 Planning Options: Contrapositive Sorting</a></h3>
+
+<dl>
+<dt>o1, o2, o3</dt> 
+<dd>Different ways of heuristic contrapositive sorting (o1
+is the default).
+<p>
+</dd>
+<dt>or</dt><dd>Random contrapositive sorting.</dd>
+</dl>
+
+<h3><a name="opt-sgsort">7.4 Planning Options: Subgoal Sorting</a></h3>
+
+<dl>
+<dt>s1</dt><dd>Heuristic subgoal sorting (default).<p></dd>
+<dt>sn</dt><dd>No subgoal sorting (use as sorted in the input).<p></dd>
+<dt>sr</dt><dd>Random subgoal sorting.</dd>
+</dl>
+
+<h3><a name="opt-id">7.5 Planning Options: Controlling Iterative
+Deepening</a></h3>
+
+<dl>
+<dt>bd</dt><dd>Use a depth bound for iterative deepening.
+Both <i>bj</i> and <i>bd</i> or none of them can be specified.
+(Q: what does this mean?)
+<p>
+</dd>
+
+<dt>bj</dt><dd>Use an inference bound for iterative deepening. 
+Both <i>bj</i> and <i>bd</i> or none of
+them can be specified.<p></dd>
+
+<dt>bdxs</dt><dd>If 
+ <i>bd</i> is present: use clause size instead of 1 to
+  decrement depth value for iterative deepening.<p></dd>
+
+<dt>bjxs</dt><dd>If 
+ <i>bj</i> is present: use clause size instead of 1 to
+  decrement inference count for iterative deepening.<p></dd>
+
+<dt>dj(<i>DJSpec</i>)</dt>
+<dd>Used at runtime to specify how depth and inference count are
+incremented. The following definition of the predicate
+<pre>
+    gen_dj(+DJSpec, -Depth, -Inferences)
+</pre>
+shows possible values of <i>DJSpec</i> and their effects:
+
+<pre>
+    gen_dj(d, N, M) :- maxdj(M), countup(0, N).
+    gen_dj(j, M, N) :- maxdj(M), countup(0, N).
+    gen_dj(d(B), N, M) :- maxdj(M), countup(B, N).
+    gen_dj(j(B), M, N) :- maxdj(M), countup(B, N).
+    gen_dj(dkj(K), K, J) :- countup(0, J).
+    gen_dj(djk(K), D, K) :- countup(0, D).
+    gen_dj(dkjk(D,J), D, J).
+
+    maxdj(N) :- prolog_flag(max_tagged_integer, N).
+
+    countup(N, N).
+    countup(N, N1) :- N2 is 1 + N, countup(N2, N1).
+</pre>
+</dd>
+
+</dl>
+
+
+<h3><a name="opt-constr">7.6 Planning Options: Constraint Handling</a></h3>
+
+<dl>
+<dt><a name="opt-cs">cs(<i>UnsolvedActiveConstraints</i>)</a></dt><dd>Take 
+<a href="#aconstr">active constraints</a> into
+account. Bind <i>UnsolvedActiveConstraints</i>, 
+which must be a variable, to a 
+<a href="#aconstr">active constraint term</a>
+representing the unsolved constraints of the solution.
+<p>
+This option must be supplied to effect correct handling of active constraints.
+<p>
+</dd>
+
+<dt>cs_module(<i>Module</i>)</dt><dd>Specify that
+<i>Module</i> is the module that implements
+constraint handling. The default is
+<code>planner_cs_simple</code>.
+Loading of the module must be ensured manually.
+</dd>
+</dl>
+
+<h3><a name="opt-incomplete">7.7 Planning Options: Incomplete
+Heuristics</a></h3> 
+<dl>
+<dt>cxc</dt><dd>Do not generate circular contrapositives.
+<b>The planner is incomplete with this option!</b>
+
+<p><dt>cxp</dt><dd>Perform a cut after a subgoal
+can be solved by consuming a fact from the pool.
+<b>The planner is incomplete with this option!</b>
+</dl>
+
+<h3><a name="opt-gencode">7.8 Planning Options: Handling Generated
+Code</a></h3>
+
+ <dl> <dt>out(<i>Output</i>)</dt>
+   <dd>Specifies how generated Prolog code is passed to the runtime system.
+     If <i>Output</i> is a
+     variable, it will be bound to the generated code as a list of
+     terms.  Otherwise, <i>Output</i> must be the name of a file, 
+     as atom, to which
+     the generated code is written.  Default is
+     <code>'/tmp/out_planner.pl'</code>.<p></dd>
+<dt><a name="opt-module">module(<i>Module</i>)</a></dt> 
+   <dd>Specifies the module where the generated code is installed.  Default
+   is <code>out_planner</code>.
+<p>
+<dt>run</dt>
+<dd>Just install a precompiled file (specified by <i>out(Filename)</i>) 
+and run the query.
+Intended for debugging with hand edited compiler outputs.</dd>
+</dl>
+
+
+<h2><a name="ex">8. Examples</a></h2>
+
+<h3><a name="ex-sussman">8.1 Example: Sussman Anomaly</a></h3>
+
+
+The following predicate <i>sussman/1</i> shows how a blocks world planning
+problem, the so-called <a
+href="http://en.wikipedia.org/wiki/Sussman_Anomaly">Sussman anomaly</a> is
+expressed. (This problem is also used as example in
+<a href="#refs">[Fronh&ouml;fer96]</a>.) 
+<p>
+<pre>
+sussman(Plan) :-
+	Options = [p(Plan), pxo, bd, o1, s1],
+	GoalMultiset = [ on(a, b),
+			 on(b, c) ],
+	StartMultiset = [ on(b, table),
+			  clear(b),
+	                  on(a, table),
+			  on(c, a),
+			  clear(c) ],
+	Constraints = [],
+	Rulebase = [ rule( puton(Block, From, To),
+		           [on(Block, To), clear(From), clear(Block)],
+		           [on(Block, From), clear(Block), clear(To) ],
+	                   [] ),
+	             fact( clear(table), [] )
+		   ],
+	plan(Options, GoalMultiset, StartMultiset, Constraints, Rulebase).
+</pre>
+
+<p>
+The problem starts with <i>b</i> on the table, <i>c</i> on top of
+<i>a</i>, and <i>a</i> on the table.  
+The agent must stack the blocks such
+that <i>a</i> is on top of <i>b</i> is on top of <i>c</i>.
+<div align="center">
+<img src="images/sussman_problem.png" alt="[Sussman Problem]">
+</div>
+
+<p>
+Loading the definition of <i>sussman/1</i> and invoking it from Prolog
+with
+<pre>    ?- sussman(Plan), view_plan(Plan).
+</pre>
+effects that a plan is computed and displayed as image:
+<p>
+<div align="center">
+<img src="images/sussman_plan.gif" alt="[Sussman Plan]" border=1>
+</div>
+
+<h3><a name="ex-pop">8.2 Example: Partial-Order Planning</a></h3>
+
+The system perform partial-order planning.
+The following predicate <i>shoes/1</i> shows how the
+partial-order planning problem of putting on a
+pair of shoes from 
+<a href="http://aima.cs.berkeley.edu/newchap11.pdf">
+the <i>Planning</i> chapter</a> of the book by Russell and Norvig
+<a href="#refs">[RussellNorvig02]</a> can be expressed.
+
+<pre>
+shoes(Plan) :-
+	Options = [p(Plan), pxo, bd, o1, s1],
+	GoalMultiset = [ shoe_on(right), shoe_on(left) ],
+	StartMultiset = [ bare(right), bare(left) ],
+	Constraints = [],
+	Rulebase = [ rule( shoe(RL),
+			   [ shoe_on(RL) ],
+			   [ sock_on(RL) ],
+	                   [] ),
+		     rule( sock(RL),
+			   [ sock_on(RL) ],
+			   [ bare(RL) ],
+	                   [] ),
+		     declare(fluent, bare(_))
+		   ],
+	plan(Options, GoalMultiset, StartMultiset, Constraints, Rulebase).
+</pre>
+
+Some remarks on the differences of this formulation
+to that by Russell and Norvig:
+
+<ul>
+<li>The variable <i>RL</i> is used to avoid the duplication of the <i>shoe</i>
+and <i>sock</i> rules for right and left.
+<p>
+<li>The literals <i>bare(RL)</i> and <i>sock_on(RL)</i> are fluents,
+representing that the foot is bare, and has a sock &ndash; but not a shoe
+&ndash; on, respectively. They are consumed (become false) by action
+<i>sock</i> and <i>shoe</i> respectively. Otherwise, plans that include
+putting on a second sock over a shoe, etc., would be valid solutions.  
+</ul>
+
+<p>
+Loading the definition of <i>shoes/1</i> and invoking it from Prolog
+with
+<pre>    ?- shoes(Plan), view_plan(Plan).
+</pre>
+effects that a partial-order plan is computed and displayed as image:
+<p>
+<div align="center">
+<img src="images/shoes_plan.gif" alt="[Shoes Plan]" border=1>
+</div>
+
+<h3><a name="ex-cop">8.3 Example: Constraints, Output Pool</a></h3>
+
+The following predicate <i>table/1</i> illustrates the use of
+constraints and the output pool.
+
+<p>
+The goal of the plannng task is having a table. In the start situation
+there is a budget of 100 Euros. A solution is buying a table board and
+four table legs, and assembling these.
+<p>
+<pre>
+table(Plan, OutPool, OutConstraints) :-
+	Options = [p(Plan), pool(OutPool), cs(OutConstraints),
+		   pxo, bd, o1, s1],
+	GoalMultiset = [ have(table) ],
+	StartMultiset = [ budget(100) ],
+	InputConstraints = [],
+	Rulebase = [ rule( buy(Object, Price),
+			   [ have(Object),
+			     budget(NewBudget) ],
+			   [ offered(Object, Price),
+			     budget(OldBudget) ],
+			   [ cs([NewBudget =:= OldBudget - Price]) ] ),
+		     rule( assemble_table,
+			   [ have(table) ],
+			   [ have(table_board),
+			     have(table_leg),
+			     have(table_leg),
+			     have(table_leg),
+			     have(table_leg) ],
+			   [] ),
+		     fact( offered(table_board, 10), [] ),
+		     fact( offered(table_leg, 5), [] )
+		   ],
+	plan(Options,
+	     GoalMultiset,
+	     StartMultiset,
+	     InputConstraints,
+	     Rulebase).
+</pre>
+
+
+<p>
+Loading the definition of <i>table/3</i> and invoking it from Prolog
+with
+<pre>    ?- table(Plan, _OutPool, _OutCs), view_plan(Plan).
+</pre>
+effects that a plan is computed and displayed as image:
+<p>
+<div align="center">
+<img src="images/table_plan.gif" alt="[Table Plan]" border=1>
+</div>
+
+<p>The <i>budget</i> fluents create dependencies that prevent the
+generation of a partial-order plan abstracting from the order of
+the purchases.
+
+<p>The output pool contains a <i>budget</i> fluent
+representing the remaining budget. It can be accessed with the following query:
+
+<pre>    ?- table(_Plan, OutPool, _OutCs), !, pool_literal(out_planner, OutPool, L).
+    ...
+    L = budget(70)
+</pre>
+
+<p>Output constraints <i>OutCs</i> is the empty list, since all constraints can
+be evaluated. If, however, in the definition of <i>table/3</i> 
+the constraint of the rule for <i>buy</i> were instead defined as
+<pre>
+       [ cs([OldBudget =:= NewBudget + Price]) ]
+</pre>
+then the <i>planner_cs_simple</i> constraint solver can not
+evaluate them, and the following results would be obtained:
+
+<pre>    ?- table(_Plan, OutPool, OutCs), !, pool_literal(out_planner, OutPool, L), pp(L-OutCs).
+    ...
+    budget(A) -
+    [ B =:= A + 5,
+      C =:= B + 5,
+      D =:= C + 5,
+      E =:= D + 5,
+      100 =:= E + 10]
+    ...
+</pre>
+
+
+
+<h2><a name="refs">References</a></h2>
+
+<dl>
+<dt>[Bibel86]</dt> <dd>Wolfgang Bibel. A deductive solution for plan
+generation. <i>New Generation Computing, 4:115-132</i>, 1986.</dd>
+
+<dt>[Fronh&ouml;fer96]</dt><dd>
+Bertram Fronh&ouml;fer.
+<a href="http://dspace.lib.fcu.edu.tw:8080/dspace/bitstream/2377/2418/1/ce07ics001996000071.pdf">Cutting connections in
+linear connection proofs.</a> In <i>International
+Computer Symposium '96</i>, pages 109-117, 1996.</dd>
+
+<dt>[H&ouml;lldoblerSchneeberger89]</dt> <dd>Steffen H&ouml;lldobler and Josef
+Schneeberger.  A New Deductive Approach to Planning.  In <i>GWAI-89:
+Proceedings of the 13th German Workshop on Artificial Intelligence</i>, pages
+63-73, Informatik Fachberichte 214, Springer, 1989</dd>
+
+<dt>[RussellNorvig02]</dt> <dd>
+Stuart Russell and Peter Norvig.
+Artificial Intelligence: A Modern Approach (Second Edition).
+Prentice Hall, 2002.
+The chapter on planning is available at
+<a href="http://aima.cs.berkeley.edu/newchap11.pdf">
+http://aima.cs.berkeley.edu/newchap11.pdf</a>.
+</dd>
+
+<dt>[Wernhard99]</dt><dd>Christoph Wernhard. 
+<a href="http://www.uni-koblenz.de/~wernhard/drafts/exp.ps">Experiments with a linear
+backward chaining planner.</a> Unpublished working paper, 1999.
+Available at <a href="http://www.uni-koblenz.de/~wernhard/drafts/exp.ps">http://www.uni-koblenz.de/~wernhard/drafts/exp.ps</a>.
+</dd> 
+</dl>
+
+<p>
+<hr>
+Christoph Wernhard 
+(<a href="mailto:info@cs.christophwernhard.com">info@cs.christophwernhard.com</a>)
+
+</body>
+</html>

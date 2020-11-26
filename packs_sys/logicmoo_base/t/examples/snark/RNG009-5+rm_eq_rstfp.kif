@@ -1,0 +1,60 @@
+;--------------------------------------------------------------------------
+; File     : RNG009-5 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Ring Theory
+; Problem  : If X*X*X = X then the ring is commutative
+; Version  : [Peterson & Stickel,1981] (equality) axioms : 
+;            Reduced > Incomplete.
+; English  : Given a ring in which for all x, x * x * x = x, prove that 
+;            for all x and y, x * y = y * x.
+
+; Refs     : [PS81]  Peterson & Stickel (1981), Complete Sets of Reductions
+;          : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+;          : [Zha93] Zhang (1993), Automated Proofs of Equality Problems in
+; Source   : [Ove90]
+; Names    : CADE-11 Competition Eq-7 [Ove90]
+;          : THEOREM EQ-7 [LM93]
+;          : PROBLEM 7 [Zha93]
+
+; Status   : unsatisfiable
+; Rating   : 0.67 v2.2.0, 0.71 v2.1.0, 1.00 v2.0.0
+; Syntax   : Number of clauses    :    9 (   0 non-Horn;   9 unit;   1 RR)
+;            Number of literals   :    9 (   9 equality)
+;            Maximal clause size  :    1 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 2-2 arity)
+;            Number of functors   :    6 (   3 constant; 0-2 arity)
+;            Number of variables  :   17 (   0 singleton)
+;            Maximal term depth   :    3 (   2 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp RNG009-5.p 
+;--------------------------------------------------------------------------
+; right_identity, axiom.
+(or (= (add ?A additive_identity) ?A))
+
+; right_additive_inverse, axiom.
+(or (= (add ?A (additive_inverse ?A)) additive_identity))
+
+; distribute1, axiom.
+(or (= (multiply ?A (add ?B ?C)) (add (multiply ?A ?B) (multiply ?A ?C))))
+
+; distribute2, axiom.
+(or (= (multiply (add ?A ?B) ?C) (add (multiply ?A ?C) (multiply ?B ?C))))
+
+; associative_addition, axiom.
+(or (= (add (add ?A ?B) ?C) (add ?A (add ?B ?C))))
+
+; commutative_addition, axiom.
+(or (= (add ?A ?B) (add ?B ?A)))
+
+; associative_multiplication, axiom.
+(or (= (multiply (multiply ?A ?B) ?C) (multiply ?A (multiply ?B ?C))))
+
+; x_cubed_is_x, hypothesis.
+(or (= (multiply ?A (multiply ?A ?A)) ?A))
+
+; prove_commutativity, conjecture.
+(or (/= (multiply a b) (multiply b a)))
+
+;--------------------------------------------------------------------------

@@ -1,0 +1,12 @@
+(note "TQB66b - consistant - will fail")
+
+(queryyn
+  (implies 
+    (damages ?ACTION BaniyasPipeline) 
+    (consistent (agent ?ACTION Iran))))
+
+(answer Yes)
+
+(end_of_file)
+
+

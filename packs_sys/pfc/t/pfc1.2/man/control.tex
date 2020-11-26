@@ -1,0 +1,48 @@
+\subsection{Control Predicates}
+
+This section describes predicates to control the forward chaining
+search strategy and truth maintenance operations.
+
+\gloss{pfcSearch(P)}
+
+This predicate is used to set the search strategy that \pfc\ uses in
+doing forward chaing.  The argument should be one of
+{direct,depth,breadth}.
+
+\gloss{pfcTmsMode(Mode)}
+
+This predicate controls the method used for truth maintenaance.  The
+three options are {none,local,cycles}. Calling pfcTmsMode with an
+instantiated argument will set the mode to that argument. 
+\begin{itemize}
+
+\item {\bf none} means that no truth maintenance will be done.
+
+\item {\bf local} means that limited truth maintenance will be done. Specifically, no cycles will be checked.
+
+\item {\bf cycles} means that full truth maintenance will be done,
+including a check that all facts are well grounded.
+
+\end{itemize}
+
+
+\gloss{pfcHalt}
+
+Immediately stop the forward chainging process.
+
+\gloss{pfcRun}
+
+Continue the forward chainging process.
+
+\gloss{pfcStep}
+
+Do one iteration of the forward chainging process.
+
+\gloss{pfcSelect(P)}
+
+Select next fact for forward chaining (user defined)
+
+\gloss{pfcWarnings\\pfcNoWarnings}
+
+
+

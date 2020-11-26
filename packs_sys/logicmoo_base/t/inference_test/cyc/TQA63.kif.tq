@@ -1,0 +1,17 @@
+(note TQA63)
+
+(instance InternationalSeabedAuthority Agent) 
+
+(agent BombingOfSANGHeadquarters-1995 ?PERSON) 
+
+
+(query (findall ?ACT
+ (or 
+ (agent ?ACT InternationalSeabedAuthority) 
+ (performedByPart ?ACT InternationalSeabedAuthority))))
+
+(answer BombingOfSANGHeadquarters-1995)  
+
+(end_of_file)
+
+

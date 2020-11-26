@@ -1,0 +1,9 @@
+Relevant to applications that use generation (typically translation
+applications). Value should be a list of three positive numbers
+[$\langle$Start$\rangle$, $\langle$Increment$\rangle$, $\langle$Max$\rangle$], such that both $\langle$Start$\rangle$ and $\langle$Increment$\rangle$
+are less than or equal to $\langle$Max$\rangle$. Generation uses an iterative
+deepening algorithm, which initially sets a maximum derivation length
+of $\langle$Start$\rangle$, and increases it in increments of $\langle$Increment$\rangle$ until it
+exceeds $\langle$Max$\rangle$.
+
+Default value is [5, 5, 50].

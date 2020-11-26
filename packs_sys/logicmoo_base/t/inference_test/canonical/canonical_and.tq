@@ -1,0 +1,5 @@
+(note  "Canonical Test:  [ A(x) ^ B(x) ]")
+
+(canonicalize (and (Pred1 ?X) (Pred2 ?X)))
+
+

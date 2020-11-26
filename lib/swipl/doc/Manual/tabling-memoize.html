@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling.html">
+<link rel="next" href="tabling-non-termination.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling-non-termination.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-memoize"><a id="sec:7.1"><span class="sec-nr">7.1</span> <span class="sec-title">Example 
+1: using tabling for memoizing</span></a></h2>
+
+<a id="sec:tabling-memoize"></a>
+
+<p>As a first classical example we use tabling for <em>memoizing</em> 
+intermediate results. We use Fibonacci numbers to illustrate the 
+approach. The Fibonacci number <var>I</var> is defined as the sum of the 
+Fibonacci numbers for <var>I-1</var> and <var>I-2</var>, while the 
+Fibonacci number of 0 and 1 are both defined to be 1. This can be 
+translated naturally into Prolog:
+
+<pre class="code">
+fib(0, 1) :- !.
+fib(1, 1) :- !.
+fib(N, F) :-
+        N &gt; 1,
+        N1 is N-1,
+        N2 is N-2,
+        fib(N1, F1),
+        fib(N2, F2),
+        F is F1+F2.
+</pre>
+
+<p>The complexity of executing this using SLD resolution however is <var>2^N</var> 
+and thus becomes prohibitively slow rather quickly, e.g., the execution 
+time for <var>N=30</var> is already 0.4 seconds. Using tabling, <code>fib(N,F)</code> 
+for each value of <var>N</var> is computed only once and the algorithm 
+becomes linear. Tabling effectively inverts the execution order for this 
+case: it suspends the final addition (F is F1+F2) until the two 
+preceding Fibonacci numbers have been added to the answer tables. Thus, 
+we can reduce the complexity from the show-stopping <var>2^N</var> to 
+linear by adding a tabling directive and otherwise not changing the 
+algorithm. The code becomes:
+
+<pre class="code">
+:- table fib/2.
+
+fib(0, 1) :- !.
+fib(1, 1) :- !.
+fib(N, F) :-
+        N &gt; 1,
+        N1 is N-1,
+        N2 is N-2,
+        fib(N1, F1),
+        fib(N2, F2),
+        F is F1+F2.
+</pre>
+
+<p>The price that we pay is that a table <code>fib(I,F)</code> is 
+created for each <var>I</var> in <var>0..N</var>. The execution time for <var>N=30</var> 
+is now 1 millisecond and computing the Fibonacci number for <var>N=1000</var> 
+is doable (output edited for readability).
+
+<pre class="code">
+1 ?- time(fib(1000, X)).
+% 52,991 inferences, 0.013 CPU in 0.013 seconds
+X = 70330367711422815821835254877183549770181269836358
+    73274260490508715453711819693357974224949456261173
+    34877504492417659910881863632654502236471060120533
+    74121273867339111198139373125598767690091902245245
+    323403501.
+</pre>
+
+<p>In the case of Fibonacci numbers we can still rather easily achieve 
+linear complexity using program transformation, where we use bottom-up 
+instead of top-down evaluation, i.e., we compute <code>fib(N,F)</code> 
+for growing <var>N</var>, where we pass the last two Fibonacci numbers 
+to the next iteration. Not having to create the tables and not having to 
+suspend and resume goals makes this implementation about 25 times faster 
+than the tabled one. However, even in this simple case the 
+transformation is not obvious and it is far more difficult to recognise 
+the algorithm as an implementation of Fibonacci numbers.
+
+<pre class="code">
+fib(0, 1) :- !.
+fib(1, 1) :- !.
+fib(N, F) :-
+        fib(1,1,1,N,F).
+
+fib(_F, F1, N, N, F1) :- !.
+fib(F0, F1, I, N, F) :-
+        F2 is F0+F1,
+        I2 is I + 1,
+        fib(F1, F2, I2, N, F).
+</pre>
+
+<p></body></html>

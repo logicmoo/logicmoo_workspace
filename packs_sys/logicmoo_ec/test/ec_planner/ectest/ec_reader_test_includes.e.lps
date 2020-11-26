@@ -1,0 +1,1129 @@
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',262).
+% From E: 
+% 
+% :-call_pel_directive(translate(unskipped,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).
+:- call_pel_directive(translate(unskipped,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).
+:-include(library('ec_planner/ec_test_incl')).
+:-expects_dialect(lps).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',262).
+% From E: 
+% 
+% :-call_pel_directive(translate(begining,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).
+:- call_pel_directive(translate(begining,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).
+% Sat, 10 Oct 2020 15:32:28 GMT File: <stream>(0x559e4b1d7100)%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/sorts.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',7).
+% sort rule,subject,object,action,ruleeffect,policy,policyset
+% From E: 
+% 
+% sort(rule).
+sort(rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',7).
+% From E: 
+% 
+% sort(subject).
+sort(subject).
+% From E: 
+% 
+% sort(object).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',7).
+sort(object).
+% From E: 
+% 
+% sort(action).
+sort(action).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',7).
+% From E: 
+% 
+% sort(ruleeffect).
+sort(ruleeffect).
+% From E: 
+% 
+% sort(policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',7).
+sort(policy).
+% From E: 
+% 
+% sort(policyset).
+sort(policyset).
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/RulesPatterns/ruleOutput.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',25).
+% fluent F_RuleDenied(rule)
+% From E: 
+% 
+% fluent(f_ruleDenied(rule)).
+mpred_prop(f_ruleDenied(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',25).
+fluents([f_ruleDenied/1]).
+
+% fluent F_RulePermitted(rule)
+% From E: 
+% 
+% fluent(f_rulePermitted(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',25).
+mpred_prop(f_rulePermitted(rule),fluent).
+fluents([f_rulePermitted/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',28).
+% event Epermit(rule)
+% From E: 
+% 
+% event(epermit(rule)).
+mpred_prop(epermit(rule),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',28).
+events([epermit/1]).
+
+% event EDeny(rule)
+% From E: 
+% 
+% event(eDeny(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',28).
+mpred_prop(eDeny(rule),event).
+events([eDeny/1]).
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',31).
+% [rule,time]
+ % Initiates(EDeny(rule),F_RuleDenied(rule),time).
+% From E: 
+% 
+% initiates_at(
+%    eDeny(Rule), 
+%    f_ruleDenied(Rule), 
+%    Time).
+ %   [Time].
+eDeny(Rule)initiates f_ruleDenied(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',31).
+
+ /*  initiated(happens(eDeny(Rule),Time_From,Time_Until),
+   	  f_ruleDenied(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [rule,time]
+ % Initiates(Epermit(rule),F_RulePermitted(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',31).
+% From E: 
+% 
+% initiates_at(
+%    epermit(Rule), 
+%    f_rulePermitted(Rule), 
+%    Time).
+ %   [Time].
+epermit(Rule)initiates f_rulePermitted(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',31).
+
+ /*  initiated(happens(epermit(Rule),Time_From,Time_Until),
+   	  f_rulePermitted(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',35).
+% [rule]
+ % !HoldsAt(F_RulePermitted(rule),0).
+% From E: 
+% 
+% holds_at(not(f_rulePermitted(Rule)),0).
+initially not f_rulePermitted(Rule).
+ %  initial_state([not(f_rulePermitted(Rule))]).
+ %  "% =================================".
+
+
+% [rule]
+ % !HoldsAt(F_RuleDenied(rule),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',35).
+% From E: 
+% 
+% holds_at(not(f_ruleDenied(Rule)),0).
+initially not f_ruleDenied(Rule).
+ %  initial_state([not(f_ruleDenied(Rule))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',49).
+%;[rule] HoldsAt(F_RulePermitted(rule),3) | HoldsAt(F_RuleDenied(rule),3).
+%;[rule,time] Happens(RuleDeny(rule), time) |  Happens(RulePermit(rule), time) -> time=2.
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/RulesPatterns/targetHolds.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',57).
+% fluent F_TargetHolds(rule)
+% From E: 
+% 
+% fluent(f_targetHolds(rule)).
+mpred_prop(f_targetHolds(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',57).
+fluents([f_targetHolds/1]).
+
+% fluent F_TargetDoesntHolds(rule)
+% From E: 
+% 
+% fluent(f_targetDoesntHolds(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',57).
+mpred_prop(f_targetDoesntHolds(rule),fluent).
+fluents([f_targetDoesntHolds/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',60).
+% event E_MatchRuleParametters(rule)
+% From E: 
+% 
+% event(e_matchRuleParametters(rule)).
+mpred_prop(e_matchRuleParametters(rule),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',60).
+events([e_matchRuleParametters/1]).
+
+% event E_DontMatchRuleParametters(rule)
+% From E: 
+% 
+% event(e_dontMatchRuleParametters(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',60).
+mpred_prop(e_dontMatchRuleParametters(rule),event).
+events([e_dontMatchRuleParametters/1]).
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',63).
+% [rule,time]
+ % Initiates(E_MatchRuleParametters(rule),F_TargetHolds(rule),time).
+% From E: 
+% 
+% initiates_at(
+%    e_matchRuleParametters(Rule), 
+%    f_targetHolds(Rule), 
+%    Time).
+ %   [Time].
+e_matchRuleParametters(Rule)initiates f_targetHolds(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',63).
+
+ /*  initiated(happens(e_matchRuleParametters(Rule),
+   		  Time_From,
+   		  Time_Until),
+   	  f_targetHolds(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [rule,time]
+ % Initiates(E_DontMatchRuleParametters(rule),F_TargetDoesntHolds(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',63).
+% From E: 
+% 
+% initiates_at(
+%    e_dontMatchRuleParametters(Rule), 
+%    f_targetDoesntHolds(Rule), 
+%    Time).
+ %   [Time].
+e_dontMatchRuleParametters(Rule)initiates f_targetDoesntHolds(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',63).
+
+ /*  initiated(happens(e_dontMatchRuleParametters(Rule),
+   		  Time_From,
+   		  Time_Until),
+   	  f_targetDoesntHolds(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [rule,time]
+ % Happens(E_MatchRuleParametters(rule), time) -> !HoldsAt(F_TargetHolds(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',65).
+% From E: 
+% 
+% '->'(
+%    happens_at(e_matchRuleParametters(Rule),Time), 
+%    holds_at(not(f_targetHolds(Rule)),Time)).
+ %   [Time].
+not f_targetHolds(Rule)if e_matchRuleParametters(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',65).
+
+ /*  l_int(holds(not(f_targetHolds(Rule)),Time_At),
+         [ happens(e_matchRuleParametters(Rule),
+   		Time_At,
+   		Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',67).
+% [rule,time]
+ % Happens(E_DontMatchRuleParametters(rule), time) -> !HoldsAt(F_TargetDoesntHolds(rule),time).
+% From E: 
+% 
+% '->'(
+%    happens_at(e_dontMatchRuleParametters(Rule),Time), 
+%    holds_at(not(f_targetDoesntHolds(Rule)),Time)).
+ %   [Time].
+not f_targetDoesntHolds(Rule)if e_dontMatchRuleParametters(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',67).
+
+ /*  l_int(holds(not(f_targetDoesntHolds(Rule)),Time_At),
+         [ happens(e_dontMatchRuleParametters(Rule),
+   		Time_At,
+   		Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+% [rule]
+ % !HoldsAt(F_TargetHolds(rule),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',69).
+% From E: 
+% 
+% holds_at(not(f_targetHolds(Rule)),0).
+initially not f_targetHolds(Rule).
+ %  initial_state([not(f_targetHolds(Rule))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',71).
+% [rule]
+ % !HoldsAt(F_TargetDoesntHolds(rule),0).
+% From E: 
+% 
+% holds_at(not(f_targetDoesntHolds(Rule)),0).
+initially not f_targetDoesntHolds(Rule).
+ %  initial_state([not(f_targetDoesntHolds(Rule))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',75).
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/RulesPatterns/ConditionsVerification.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',78).
+% fluent F_ConditionSatisfied(rule)
+% From E: 
+% 
+% fluent(f_conditionSatisfied(rule)).
+mpred_prop(f_conditionSatisfied(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',78).
+fluents([f_conditionSatisfied/1]).
+
+
+%;event E_ConditionSatisfied(rule)
+%;[rule,time] Initiates(E_ConditionSatisfied(rule),F_ConditionSatisfied(rule),time).
+%;[rule,time] Happens(E_ConditionSatisfied(rule),time) -> HoldsAt(F_TargetHolds(rule),time).
+%;[rule,time] Happens(E_ConditionSatisfied(rule), time) -> !HoldsAt(F_ConditionSatisfied(rule),time).
+% [rule]
+ % HoldsAt(F_ConditionSatisfied(rule),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',88).
+% From E: 
+% 
+% holds_at(f_conditionSatisfied(Rule),0).
+initially f_conditionSatisfied(Rule).
+ %  initial_state([f_conditionSatisfied(Rule)]).
+ %  "% =================================".
+
+
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/RulesPatterns/ruleModel.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',96).
+% fluent F_RuleEffectPermitted(rule)
+% From E: 
+% 
+% fluent(f_ruleEffectPermitted(rule)).
+mpred_prop(f_ruleEffectPermitted(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',96).
+fluents([f_ruleEffectPermitted/1]).
+
+
+%; prédéfinies
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',98).
+% fluent F_RuleEffectNOTpermitted(rule) 
+% From E: 
+% 
+% fluent(f_ruleEffectNOTpermitted(rule)).
+mpred_prop(f_ruleEffectNOTpermitted(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',98).
+fluents([f_ruleEffectNOTpermitted/1]).
+
+
+%;prédéfinies
+
+% fluent F_RuleDenied(rule)
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',101).
+% From E: 
+% 
+% fluent(f_ruleDenied(rule)).
+mpred_prop(f_ruleDenied(rule),fluent).
+fluents([f_ruleDenied/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',103).
+% fluent F_RulePermitted(rule)
+% From E: 
+% 
+% fluent(f_rulePermitted(rule)).
+mpred_prop(f_rulePermitted(rule),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',103).
+fluents([f_rulePermitted/1]).
+
+% fluent F_RuleNotApplicable(rule)
+% From E: 
+% 
+% fluent(f_ruleNotApplicable(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',103).
+mpred_prop(f_ruleNotApplicable(rule),fluent).
+fluents([f_ruleNotApplicable/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',108).
+% event Epermit(rule)
+% From E: 
+% 
+% event(epermit(rule)).
+mpred_prop(epermit(rule),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',108).
+events([epermit/1]).
+
+% event EDeny(rule)
+% From E: 
+% 
+% event(eDeny(rule)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',108).
+mpred_prop(eDeny(rule),event).
+events([eDeny/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',110).
+% event ERuleDoesNotApply(rule)
+% From E: 
+% 
+% event(eRuleDoesNotApply(rule)).
+mpred_prop(eRuleDoesNotApply(rule),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',110).
+events([eRuleDoesNotApply/1]).
+
+
+% [rule,time]
+ % Initiates(EDeny(rule),F_RuleDenied(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',112).
+% From E: 
+% 
+% initiates_at(
+%    eDeny(Rule), 
+%    f_ruleDenied(Rule), 
+%    Time).
+ %   [Time].
+eDeny(Rule)initiates f_ruleDenied(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',112).
+
+ /*  initiated(happens(eDeny(Rule),Time_From,Time_Until),
+   	  f_ruleDenied(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',114).
+% [rule,time]
+ % Initiates(Epermit(rule),F_RulePermitted(rule),time).
+% From E: 
+% 
+% initiates_at(
+%    epermit(Rule), 
+%    f_rulePermitted(Rule), 
+%    Time).
+ %   [Time].
+epermit(Rule)initiates f_rulePermitted(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',114).
+
+ /*  initiated(happens(epermit(Rule),Time_From,Time_Until),
+   	  f_rulePermitted(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [rule,time]
+ % Initiates(ERuleDoesNotApply(rule),F_RuleNotApplicable(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',114).
+% From E: 
+% 
+% initiates_at(
+%    eRuleDoesNotApply(Rule), 
+%    f_ruleNotApplicable(Rule), 
+%    Time).
+ %   [Time].
+eRuleDoesNotApply(Rule)initiates f_ruleNotApplicable(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',114).
+
+ /*  initiated(happens(eRuleDoesNotApply(Rule),
+   		  Time_From,
+   		  Time_Until),
+   	  f_ruleNotApplicable(Rule),
+   	  []).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',118).
+% [rule,time]
+ % Happens(EDeny(rule),time) -> HoldsAt(F_TargetHolds(rule),time)
+%                                             & HoldsAt(F_ConditionSatisfied(rule),time)
+%                                             & HoldsAt(F_RuleEffectNOTpermitted(rule),time).
+% From E: 
+% 
+% '->'(
+%    happens_at(eDeny(Rule),Time), 
+%    (holds_at(f_targetHolds(Rule),Time) , 
+%      holds_at(f_conditionSatisfied(Rule),Time) , 
+%     holds_at(f_ruleEffectNOTpermitted(Rule),Time))).
+ %   [Time].
+if eDeny(Rule)then f_targetHolds(Rule), f_conditionSatisfied(Rule), f_ruleEffectNOTpermitted(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',118).
+
+ /*  reactive_rule([ happens(eDeny(Rule),
+   			Time_From,
+   			Time_Until)
+   	      ],
+   	      [ holds(f_targetHolds(Rule),Time_At),
+   		f_conditionSatisfied(Rule),
+   		f_ruleEffectNOTpermitted(Rule)
+   	      ]).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',123).
+% [rule,time]
+ % Happens(Epermit(rule),time) -> HoldsAt(F_TargetHolds(rule),time)
+%                                             & HoldsAt(F_ConditionSatisfied(rule),time)
+%                                             & HoldsAt(F_RuleEffectPermitted(rule),time).
+% From E: 
+% 
+% '->'(
+%    happens_at(epermit(Rule),Time), 
+%    (holds_at(f_targetHolds(Rule),Time) , 
+%      holds_at(f_conditionSatisfied(Rule),Time) , 
+%     holds_at(f_ruleEffectPermitted(Rule),Time))).
+ %   [Time].
+if epermit(Rule)then f_targetHolds(Rule), f_conditionSatisfied(Rule), f_ruleEffectPermitted(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',123).
+
+ /*  reactive_rule([ happens(epermit(Rule),
+   			Time_From,
+   			Time_Until)
+   	      ],
+   	      [ holds(f_targetHolds(Rule),Time_At),
+   		f_conditionSatisfied(Rule),
+   		f_ruleEffectPermitted(Rule)
+   	      ]).
+ */
+ %  "% =================================".
+
+
+% [rule,time]
+ % Happens(ERuleDoesNotApply(rule),time) -> HoldsAt(F_TargetDoesntHolds(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',126).
+% From E: 
+% 
+% '->'(
+%    happens_at(eRuleDoesNotApply(Rule),Time), 
+%    holds_at(f_targetDoesntHolds(Rule),Time)).
+ %   [Time].
+f_targetDoesntHolds(Rule)if eRuleDoesNotApply(Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',126).
+
+ /*  l_int(holds(f_targetDoesntHolds(Rule),Time_At),
+         [ happens(eRuleDoesNotApply(Rule),
+   		Time_At,
+   		Time_At)
+         ]).
+ */
+ %  "% =================================".
+
+
+% [rule]
+ % !HoldsAt(F_RulePermitted(rule),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',130).
+% From E: 
+% 
+% holds_at(not(f_rulePermitted(Rule)),0).
+initially not f_rulePermitted(Rule).
+ %  initial_state([not(f_rulePermitted(Rule))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',132).
+% [rule]
+ % !HoldsAt(F_RuleDenied(rule),0).
+% From E: 
+% 
+% holds_at(not(f_ruleDenied(Rule)),0).
+initially not f_ruleDenied(Rule).
+ %  initial_state([not(f_ruleDenied(Rule))]).
+ %  "% =================================".
+
+
+% [rule]
+ % !HoldsAt(F_RuleNotApplicable(rule),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',132).
+% From E: 
+% 
+% holds_at(not(f_ruleNotApplicable(Rule)),0).
+initially not f_ruleNotApplicable(Rule).
+ %  initial_state([not(f_ruleNotApplicable(Rule))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',138).
+%;********************************************************************************************************************
+%;--------------------------------------------------------------------------------------------------------------------
+%;********************************************************************************************************************
+%;[rule] HoldsAt(F_RulePermitted(rule),3) | HoldsAt(F_RuleDenied(rule),3).
+%;[rule,time] Happens(RuleDeny(rule), time) |  Happens(RulePermit(rule), time) -> time=2.
+%;[rule,time,ruleeffect] Happens(EDeny(rule),time) -> HoldsAt(F_TargetHolds(rule),time)
+                                                %;    & HoldsAt(F_ConditionSatisfied(rule),time)
+                                                %;    & ruleeffect=Deny.
+%;[rule,time,ruleeffect] Happens(Epermit(rule),time) -> HoldsAt(F_TargetHolds(rule),time)
+                                               %;    & HoldsAt(F_ConditionSatisfied(rule),time)
+                                               %;    & ruleeffect=Permit.
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/ordering.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+% [rule,time]
+ 
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',163).
+% Happens(E_MatchRuleParametters(rule), time) | Happens(E_DontMatchRuleParametters(rule), time) -> time = 0.
+% From E: 
+% 
+% '->'(
+%    (happens_at(e_matchRuleParametters(Rule),Time) ; 
+%     happens_at(e_dontMatchRuleParametters(Rule),Time)), 
+%    Time=0).
+ %   [Time].
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',163).
+false((not(happens_at(e_matchRuleParametters(Rule), Time)), not(happens_at(e_dontMatchRuleParametters(Rule), Time)))) ->
+    Time=0.
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',165).
+% [rule,time]
+ % Happens(EDeny(rule), time) | Happens(Epermit(rule), time) | Happens(ERuleDoesNotApply(rule), time) -> time = 1.
+% From E: 
+% 
+% '->'(
+%    (happens_at(eDeny(Rule),Time) ; 
+%      happens_at(epermit(Rule),Time) ; 
+%     happens_at(eRuleDoesNotApply(Rule),Time)), 
+%    Time=1).
+ %   [Time].
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',165).
+happens_at(eDeny(Rule), Time);false((not(happens_at(epermit(Rule), Time)), not(happens_at(eRuleDoesNotApply(Rule), Time)))) ->
+    Time=1.
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',167).
+%;[policy,time] Happens(E_policyPermit(policy), time) | Happens(E_policyDeny(policy), time) | Happens(E_PolicyDoesNotApply(policy),time) -> time = 2.
+%;[policyset,time] Happens(E_policysetPermit(policyset), time) | Happens(E_policysetDeny(policyset), time) | Happens(E_policysetDontApply(policyset),time) -> time = 3.
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/PolicySetPatterns/policySetModel.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',177).
+% event E_policysetPermit(policyset)
+% From E: 
+% 
+% event(e_policysetPermit(policyset)).
+mpred_prop(e_policysetPermit(policyset),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',177).
+events([e_policysetPermit/1]).
+
+% event E_policysetDeny(policyset)
+% From E: 
+% 
+% event(e_policysetDeny(policyset)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',177).
+mpred_prop(e_policysetDeny(policyset),event).
+events([e_policysetDeny/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',179).
+% event E_policysetDontApply(policyset)
+% From E: 
+% 
+% event(e_policysetDontApply(policyset)).
+mpred_prop(e_policysetDontApply(policyset),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',179).
+events([e_policysetDontApply/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',181).
+% fluent F_policysetPermitted(policyset)
+% From E: 
+% 
+% fluent(f_policysetPermitted(policyset)).
+mpred_prop(f_policysetPermitted(policyset),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',181).
+fluents([f_policysetPermitted/1]).
+
+% fluent F_policysetDenied(policyset)
+% From E: 
+% 
+% fluent(f_policysetDenied(policyset)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',181).
+mpred_prop(f_policysetDenied(policyset),fluent).
+fluents([f_policysetDenied/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',183).
+% fluent F_policySetNotApplicable(policyset)
+% From E: 
+% 
+% fluent(f_policySetNotApplicable(policyset)).
+mpred_prop(f_policySetNotApplicable(policyset),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',183).
+fluents([f_policySetNotApplicable/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',185).
+% predicate PolicysetHaspolicies(policyset,policy)
+% From E: 
+% 
+% predicate(policysetHaspolicies(policyset,policy)).
+mpred_prop(policysetHaspolicies(policyset,policy),predicate).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',185).
+predicates([policysetHaspolicies/2]).
+
+
+% [policyset,time]
+ % Initiates(E_policysetPermit(policyset),F_policysetPermitted(policyset),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',187).
+% From E: 
+% 
+% initiates_at(
+%    e_policysetPermit(Policyset), 
+%    f_policysetPermitted(Policyset), 
+%    Time).
+ %   [Time].
+e_policysetPermit(Policyset)initiates f_policysetPermitted(Policyset).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',187).
+
+ /*  initiated(happens(e_policysetPermit(Policyset),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policysetPermitted(Policyset),
+   	  []).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',189).
+% [policyset,time]
+ % Initiates(E_policysetDeny(policyset),F_policysetDenied(policyset),time).
+% From E: 
+% 
+% initiates_at(
+%    e_policysetDeny(Policyset), 
+%    f_policysetDenied(Policyset), 
+%    Time).
+ %   [Time].
+e_policysetDeny(Policyset)initiates f_policysetDenied(Policyset).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',189).
+
+ /*  initiated(happens(e_policysetDeny(Policyset),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policysetDenied(Policyset),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [policyset,time]
+ % Initiates(E_policysetDontApply(policyset),F_policySetNotApplicable(policyset),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',189).
+% From E: 
+% 
+% initiates_at(
+%    e_policysetDontApply(Policyset), 
+%    f_policySetNotApplicable(Policyset), 
+%    Time).
+ %   [Time].
+e_policysetDontApply(Policyset)initiates f_policySetNotApplicable(Policyset).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',189).
+
+ /*  initiated(happens(e_policysetDontApply(Policyset),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policySetNotApplicable(Policyset),
+   	  []).
+ */
+ %  "% =================================".
+
+
+%; 'policies combaning algorithm (stategy) : All Permit'
+% [policyset,policy,time]
+ % Happens(E_policysetPermit(policyset),time) & PolicysetHaspolicies(policyset,policy) -> HoldsAt(F_policyPermitted(policy),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',195).
+% From E: 
+% 
+% '->'(
+%    (happens_at(e_policysetPermit(Policyset),Time) , 
+%     policysetHaspolicies(Policyset,Policy)), 
+%    holds_at(f_policyPermitted(Policy),Time)).
+ %   [Time].
+if e_policysetPermit(Policyset), policysetHaspolicies(Policyset, Policy)then f_policyPermitted(Policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',195).
+
+ /*  reactive_rule([ happens(e_policysetPermit(Policyset),
+   			Time_From,
+   			Time_Until),
+   		policysetHaspolicies(Policyset,Policy)
+   	      ],
+   	      [f_policyPermitted(Policy)]).
+ */
+ %  "% =================================".
+
+
+%; 'policies combaning algorithm (stategy) : Deny override'
+% [policyset,time]
+ % Happens(E_policysetDeny(policyset),time) -> {policy}  PolicysetHaspolicies(policyset,policy) & HoldsAt(F_policyDenied(policy),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',199).
+% From E: 
+% 
+% '->'(
+%    happens_at(e_policysetDeny(Policyset),Time), 
+%    exists(
+%       [Policy], 
+%       (policysetHaspolicies(Policyset,Policy) , 
+%        holds_at(f_policyDenied(Policy),Time)))).
+ %   [Time].
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',199).
+e_policysetDeny(Policyset) ->
+    exists([Policy],
+            (policysetHaspolicies(Policyset, Policy), f_policyDenied(Policy))).
+
+
+%; 'policies combaning algorithm (stategy) : All Permit'
+% [policyset,policy,time]
+ % Happens(E_policysetDontApply(policyset),time) & PolicysetHaspolicies(policyset,policy) -> HoldsAt(F_policyNotApplicable(policy),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',203).
+% From E: 
+% 
+% '->'(
+%    (happens_at(e_policysetDontApply(Policyset),Time) , 
+%     policysetHaspolicies(Policyset,Policy)), 
+%    holds_at(f_policyNotApplicable(Policy),Time)).
+ %   [Time].
+if e_policysetDontApply(Policyset), policysetHaspolicies(Policyset, Policy)then f_policyNotApplicable(Policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',203).
+
+ /*  reactive_rule([ happens(e_policysetDontApply(Policyset),
+   			Time_From,
+   			Time_Until),
+   		policysetHaspolicies(Policyset,Policy)
+   	      ],
+   	      [f_policyNotApplicable(Policy)]).
+ */
+ %  "% =================================".
+
+
+% [policyset]
+% !HoldsAt(F_policysetPermitted(policyset),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',205).
+% From E: 
+% 
+% holds_at(not(f_policysetPermitted(Policyset)),0).
+initially not f_policysetPermitted(Policyset).
+ %  initial_state([not(f_policysetPermitted(Policyset))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',207).
+% [policyset]
+% !HoldsAt(F_policysetDenied(policyset),0).
+% From E: 
+% 
+% holds_at(not(f_policysetDenied(Policyset)),0).
+initially not f_policysetDenied(Policyset).
+ %  initial_state([not(f_policysetDenied(Policyset))]).
+ %  "% =================================".
+
+
+% [policyset]
+% !HoldsAt(F_policySetNotApplicable(policyset),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',207).
+% From E: 
+% 
+% holds_at(not(f_policySetNotApplicable(Policyset)),0).
+initially not f_policySetNotApplicable(Policyset).
+ %  initial_state([not(f_policySetNotApplicable(Policyset))]).
+ %  "% =================================".
+
+
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/PolicyPatterns/policyModel.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',215).
+% event E_policyPermit(policy)
+% From E: 
+% 
+% event(e_policyPermit(policy)).
+mpred_prop(e_policyPermit(policy),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',215).
+events([e_policyPermit/1]).
+
+% event E_policyDeny(policy)
+% From E: 
+% 
+% event(e_policyDeny(policy)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',215).
+mpred_prop(e_policyDeny(policy),event).
+events([e_policyDeny/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',217).
+% event E_PolicyDoesNotApply(policy)
+% From E: 
+% 
+% event(e_policyDoesNotApply(policy)).
+mpred_prop(e_policyDoesNotApply(policy),event).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',217).
+events([e_policyDoesNotApply/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',219).
+% fluent F_policyPermitted(policy)
+% From E: 
+% 
+% fluent(f_policyPermitted(policy)).
+mpred_prop(f_policyPermitted(policy),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',219).
+fluents([f_policyPermitted/1]).
+
+% fluent F_policyDenied(policy)
+% From E: 
+% 
+% fluent(f_policyDenied(policy)).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',219).
+mpred_prop(f_policyDenied(policy),fluent).
+fluents([f_policyDenied/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',221).
+% fluent F_policyNotApplicable(policy)
+% From E: 
+% 
+% fluent(f_policyNotApplicable(policy)).
+mpred_prop(f_policyNotApplicable(policy),fluent).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',221).
+fluents([f_policyNotApplicable/1]).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',223).
+% predicate PolicyHasRules(policy,rule)
+% From E: 
+% 
+% predicate(policyHasRules(policy,rule)).
+mpred_prop(policyHasRules(policy,rule),predicate).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',223).
+predicates([policyHasRules/2]).
+
+
+% [policy,time]
+ % Initiates(E_policyPermit(policy),F_policyPermitted(policy),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',225).
+% From E: 
+% 
+% initiates_at(
+%    e_policyPermit(Policy), 
+%    f_policyPermitted(Policy), 
+%    Time).
+ %   [Time].
+e_policyPermit(Policy)initiates f_policyPermitted(Policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',225).
+
+ /*  initiated(happens(e_policyPermit(Policy),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policyPermitted(Policy),
+   	  []).
+ */
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',227).
+% [policy,time]
+ % Initiates(E_policyDeny(policy),F_policyDenied(policy),time).
+% From E: 
+% 
+% initiates_at(
+%    e_policyDeny(Policy), 
+%    f_policyDenied(Policy), 
+%    Time).
+ %   [Time].
+e_policyDeny(Policy)initiates f_policyDenied(Policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',227).
+
+ /*  initiated(happens(e_policyDeny(Policy),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policyDenied(Policy),
+   	  []).
+ */
+ %  "% =================================".
+
+
+% [policy,time]
+ % Initiates(E_PolicyDoesNotApply(policy),F_policyNotApplicable(policy),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',227).
+% From E: 
+% 
+% initiates_at(
+%    e_policyDoesNotApply(Policy), 
+%    f_policyNotApplicable(Policy), 
+%    Time).
+ %   [Time].
+e_policyDoesNotApply(Policy)initiates f_policyNotApplicable(Policy).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',227).
+
+ /*  initiated(happens(e_policyDoesNotApply(Policy),
+   		  Time_From,
+   		  Time_Until),
+   	  f_policyNotApplicable(Policy),
+   	  []).
+ */
+ %  "% =================================".
+
+
+%; 'Rule combaning algorithm (stategy) : All Permit'
+% [policy,rule,time]
+ % Happens(E_policyPermit(policy),time) & PolicyHasRules(policy,rule) -> HoldsAt(F_RulePermitted(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',233).
+% From E: 
+% 
+% '->'(
+%    (happens_at(e_policyPermit(Policy),Time) , 
+%     policyHasRules(Policy,Rule)), 
+%    holds_at(f_rulePermitted(Rule),Time)).
+ %   [Time].
+f_rulePermitted(Rule)if e_policyPermit(Policy), policyHasRules(Policy, Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',233).
+
+ /*  l_int(holds(f_rulePermitted(Rule),Time_At),
+         [ happens(e_policyPermit(Policy),
+   		Time_At,
+   		Time_At),
+   	policyHasRules(Policy,Rule)
+         ]).
+ */
+ %  "% =================================".
+
+
+%; 'Rule combaning algorithm (stategy) : Deny override (s il existe au moin une règle satisfaite)'
+% [policy,time]
+ % Happens(E_policyDeny(policy),time) -> {rule}  PolicyHasRules(policy,rule) & HoldsAt(F_RuleDenied(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',237).
+% From E: 
+% 
+% '->'(
+%    happens_at(e_policyDeny(Policy),Time), 
+%    exists(
+%       [Rule], 
+%       (policyHasRules(Policy,Rule) , 
+%        holds_at(f_ruleDenied(Rule),Time)))).
+ %   [Time].
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',237).
+e_policyDeny(Policy) ->
+    exists([Rule],
+            (policyHasRules(Policy, Rule), f_ruleDenied(Rule))).
+
+
+%; 'Rule combaning algorithm (stategy) : All not Applicable'
+% [policy,time,rule]
+ % Happens(E_PolicyDoesNotApply(policy),time) & PolicyHasRules(policy,rule) -> HoldsAt(F_RuleNotApplicable(rule),time).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',241).
+% From E: 
+% 
+% '->'(
+%    (happens_at(e_policyDoesNotApply(Policy),Time) , 
+%     policyHasRules(Policy,Rule)), 
+%    holds_at(f_ruleNotApplicable(Rule),Time)).
+ %   [Time].
+f_ruleNotApplicable(Rule)if e_policyDoesNotApply(Policy), policyHasRules(Policy, Rule).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',241).
+
+ /*  l_int(holds(f_ruleNotApplicable(Rule),Time_At),
+         [ happens(e_policyDoesNotApply(Policy),
+   		Time_At,
+   		Time_At),
+   	policyHasRules(Policy,Rule)
+         ]).
+ */
+ %  "% =================================".
+
+
+% [policy]
+% !HoldsAt(F_policyPermitted(policy),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',243).
+% From E: 
+% 
+% holds_at(not(f_policyPermitted(Policy)),0).
+initially not f_policyPermitted(Policy).
+ %  initial_state([not(f_policyPermitted(Policy))]).
+ %  "% =================================".
+
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',245).
+% [policy]
+% !HoldsAt(F_policyDenied(policy),0).
+% From E: 
+% 
+% holds_at(not(f_policyDenied(Policy)),0).
+initially not f_policyDenied(Policy).
+ %  initial_state([not(f_policyDenied(Policy))]).
+ %  "% =================================".
+
+
+% [policy]
+% !HoldsAt(F_policyNotApplicable(policy),0).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',245).
+% From E: 
+% 
+% holds_at(not(f_policyNotApplicable(Policy)),0).
+initially not f_policyNotApplicable(Policy).
+ %  initial_state([not(f_policyNotApplicable(Policy))]).
+ %  "% =================================".
+
+
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; FILE: includes/SaaSPatterns/input.e
+%; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',253).
+% subject Navas
+% From E: 
+% 
+% t(subject,navas).
+subject(navas).
+
+% object Gloves
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',253).
+% From E: 
+% 
+% t(object,gloves).
+object(gloves).
+
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',255).
+% action Get
+% From E: 
+% 
+% t(action,get).
+action(get).
+:-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',257).
+% From E: 
+% 
+% :-call_pel_directive(translate(ending,'/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).
+:- call_pel_directive(translate(ending,
+                                '/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.lps')).

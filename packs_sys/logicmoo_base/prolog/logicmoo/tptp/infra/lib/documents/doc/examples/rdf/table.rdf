@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF SYSTEM "table_generated.dtd" [
+         <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+         <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#"> 
+]>
+
+<rdf:RDF
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:inf="http://www.infraengine.com/planner/"
+  xml:base="http://www.infraengine.com/examples/table"
+  xmlns:ex="http://www.infraengine.com/examples/table#" >
+
+
+  <!-- ================================================================== -->
+  <!-- Objects in the World -->
+  <!-- ================================================================== -->
+
+  <rdfs:Class rdf:ID="WorldObject"
+    rdfs:comment="A world object."/>
+  
+
+  <!-- ================================================================== -->
+  <!-- Fluents -->
+  <!-- ================================================================== -->
+    
+  <!-- Fluent "have(object:WorldObject)" -->
+
+  <rdfs:Class rdf:ID="have" 
+    rdfs:comment="Fluent: The agent has a world object at his disposal."/>
+  
+  <rdf:Property rdf:ID="haveObject"
+    rdfs:comment="Fluent parameter: The world object." >
+    <rdfs:domain rdf:resource="#have" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+  <!-- Fluent "budget(amount:Number)" -->
+
+  <rdfs:Class rdf:ID="budget" 
+    rdfs:comment="Fluent: The agent has an amount of Euros at his disposal."/>
+  
+  <rdf:Property rdf:ID="budgetAmount"
+    rdfs:comment="Fluent parameter: The amount of Euros." >
+    <rdfs:domain rdf:resource="#budget" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- Fluent "offered(object:WorldObject, price:Number)" -->
+
+  <rdfs:Class rdf:ID="offered" 
+    rdfs:comment="Fluent: A world object is on offer at a certain price."/>
+  
+  <rdf:Property rdf:ID="offeredObject"
+    rdfs:comment="Fluent parameter: The offered world object." >
+    <rdfs:domain rdf:resource="#offered" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+  <rdf:Property rdf:ID="offeredPrice"
+    rdfs:comment="Fluent parameter: The price of the offering." >
+    <rdfs:domain rdf:resource="#offered" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+
+  <!-- ================================================================== -->
+  <!-- Actions -->
+  <!-- ================================================================== -->
+
+  <!-- Action "Buy(object:WorldObject, price:Literal)" -->
+
+  <rdfs:Class rdf:ID="Buy"
+    rdfs:comment="Action: The agent buys a world object." >
+  </rdfs:Class>
+
+  <rdf:Property rdf:ID="buyObject"
+    rdfs:comment="Action parameter: The bought world object.">
+    <rdfs:domain rdf:resource="#Buy" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+  <rdf:Property rdf:ID="buyPrice"
+    rdfs:comment="Action parameter: The price.">
+    <rdfs:domain rdf:resource="#Buy" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- Action "AssembleTable" -->
+
+  <rdfs:Class rdf:ID="AssembleTable"
+    rdfs:comment="Action: The agent assembles a table." >
+  </rdfs:Class>
+
+
+  <!-- ================================================================== -->
+  <!-- Rules -->
+  <!-- ================================================================== -->
+
+  <!-- Rule 1: The agent buys a world object. -->
+
+  <inf:Rule rdf:about="buyingRule"
+    rdfs:comment="The agent buys a world object.">
+
+    <inf:action rdf:parseType="Literal">
+      <ex:Buy>
+	<ex:buyObject><ex:WorldObject inf:var="Object"/></ex:buyObject>
+	<ex:buyPrice><inf:Literal inf:var="Price" /></ex:buyPrice>
+      </ex:Buy>
+    </inf:action>
+
+    <inf:after rdf:parseType="Literal">
+      <ex:have>
+	<ex:haveObject><ex:WorldObject inf:var="Object" /></ex:haveObject>
+      </ex:have>
+      <ex:budget>
+	<ex:budgetAmount>
+           <inf:Literal inf:var="NewBudget" />
+        </ex:budgetAmount>
+      </ex:budget>
+    </inf:after>
+
+    <inf:before rdf:parseType="Literal">
+      <ex:offered>
+	<ex:offeredObject>
+          <ex:WorldObject inf:var="Object" />
+       </ex:offeredObject>
+	<ex:offeredPrice>
+          <inf:Literal inf:var="Price" />
+        </ex:offeredPrice>
+      </ex:offered>
+      <ex:budget>
+	<ex:budgetAmount>
+          <inf:Literal inf:var="OldBudget" />
+        </ex:budgetAmount>
+      </ex:budget>
+    </inf:before>
+
+    <inf:constrained rdf:parseType="Literal">
+      <inf:ArithmeticConstraint
+	    inf:expression="NewBudget =:= OldBudget - Price" />
+      <inf:ArithmeticConstraint
+	    inf:expression="NewBudget >= 0" />
+    </inf:constrained>
+
+  </inf:Rule>
+
+
+  <!-- Rule 2: The agent assembles a table. -->
+
+  <inf:Rule rdf:about="assembleTableRule"
+    rdfs:comment="The agent assembles a table from four legs and a board.">
+
+    <inf:action rdf:parseType="Literal">
+      <ex:AssembleTable />
+    </inf:action>
+
+    <inf:after rdf:parseType="Literal">
+      <ex:have><ex:haveObject rdf:resource="#table" /></ex:have>
+    </inf:after>
+
+    <inf:before rdf:parseType="Literal">
+      <ex:have><ex:haveObject rdf:resource="#tableBoard" /></ex:have>
+      <ex:have><ex:haveObject rdf:resource="#tableLeg" /></ex:have>
+      <ex:have><ex:haveObject rdf:resource="#tableLeg" /></ex:have>
+      <ex:have><ex:haveObject rdf:resource="#tableLeg" /></ex:have>
+      <ex:have><ex:haveObject rdf:resource="#tableLeg" /></ex:have>
+    </inf:before>
+
+  </inf:Rule>
+
+
+  <!-- Facts -->
+
+  <inf:Rule rdf:about="offeredTableBoardFact">
+    <inf:after rdf:parseType="Literal">
+      <ex:offered> 
+         <ex:offeredObject rdf:resource="#tableBoard" />
+         <ex:offeredPrice>10</ex:offeredPrice>
+      </ex:offered>
+    </inf:after>
+  </inf:Rule>
+
+  <inf:Rule rdf:about="offeredTableLegFact">
+    <inf:after rdf:parseType="Literal">
+      <ex:offered> 
+         <ex:offeredObject rdf:resource="#tableLeg" />
+         <ex:offeredPrice>5</ex:offeredPrice>
+      </ex:offered>
+    </inf:after>
+  </inf:Rule>
+
+
+
+  <!-- ================================================================== -->
+  <!-- Queries -->
+  <!-- ================================================================== -->
+
+  <inf:Query rdf:ID="queryTable"
+    rdfs:comment="From a given budget to having a world object.">
+
+    <inf:parameter>
+      <inf:Parameter
+	inf:parameterVar="GoalObject"
+	rdfs:comment="The goal is having this world object."
+	inf:parameterDefaultValue="http://www.infraengine.com/examples/table#table" />
+    </inf:parameter>
+
+    <inf:parameter>
+      <inf:Parameter
+	inf:parameterVar="StartBudget"
+	rdfs:comment="The initially given budget."
+	inf:parameterDefaultValue="100" />
+    </inf:parameter>
+
+    <inf:goal rdf:parseType="Literal">
+      <ex:have>
+        <ex:haveObject>
+          <ex:WorldObject inf:var="GoalObject" />
+        </ex:haveObject>
+      </ex:have>
+    </inf:goal>
+
+    <inf:start rdf:parseType="Literal">
+      <ex:budget>
+	<ex:budgetAmount>
+           <inf:Literal inf:var="StartBudget" />
+        </ex:budgetAmount>
+      </ex:budget>
+    </inf:start>
+
+
+<!-- Fixed Values instead of Parameters:
+
+    <inf:goal rdf:parseType="Literal">
+      <ex:have>
+        <ex:haveObject rdf:resource="#table" />
+      </ex:have>
+    </inf:goal>
+
+
+    <inf:start rdf:parseType="Literal">
+      <ex:budget>
+	<ex:budgetAmount>100</ex:budgetAmount>
+      </ex:budget>
+    </inf:start>
+-->
+
+  </inf:Query>
+
+</rdf:RDF>
+
+

@@ -1,0 +1,972 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%      Extracts from the book "Natural Language Processing in LISP"     %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Feature structures in LISP
+
+We already saw in Chapter 4 how simple feature structures could be
+represented by LISP lists.  Now that the notion of dags has been
+introduced, it is easier to see what the notation means and easier to
+extend it to handle more interesting cases.  We have represented
+collections of features and values using association lists, each
+sublist providing a feature name and value.  For instance, the
+following list:
+
+    ((person 3) (number sing))
+
+represents something with person and number features.  The values for
+these are respectively 3 and sing.  Where a value is itself a complex
+collection of features, an embedded list can be used for the
+appropriate element.  For instance, in the following:
+
+    ((cat V) (arg0 ((cat np) (case nom) (number sing))))
+
+the value of the arg0 feature is a complex object.  This has values
+for at least the features cat, case and number.  Both of these two
+example descriptions are tree-shaped, and in order to represent
+general dags we need to have a way of representing sharing between
+different parts of a category.  As we have seen, a variable symbol can
+be used to indicate that two features must be given the same value,
+i.e. that the features share.  Thus
+
+    ((cat VP) (head _x) (verb ((head _x))))
+
+represents a dag in which the head and the head of the verb share a
+value, whereas:
+
+    ((cat VP) (head _x) (verb ((head _y))))
+
+represents a dag in which they may not.  In fact, since _x and _y only
+appear once each in the data structure, unless _x and _y are given
+some other significance the information conveyed by this structure is
+exactly the same as that conveyed by:
+
+    ((cat VP))
+
+Our implementation of dags needs to be able to describe the situation
+when two dags share a value, but where some information is already
+known about that value.  In such a case we want to show all the known
+information about the value in both places but in addition want to
+indicate that the remainder of the description of the value is also
+shared.  We use a special notation for talking about the remainder of
+the information about a given item.  Where & appears in the position
+normally occupied by a feature name in the last element of a list, the
+item following it is taken to denote the rest of the appropriate
+description.  When this remainder value is itself a list, it is as if
+that list was simply spliced on the end of the original list.  For
+instance:
+
+    ((cat V) (& ((number sing) (person 3) (& ((tense pres) (& _x))))))
+
+means exactly the same as:
+
+    ((cat V) (number sing) (person 3) (tense pres) (& _x))
+
+and we would not normally use such a long-winded form.  Normally, we
+put a variable symbol after the & and use multiple occurrences of the
+same symbol to indicate sharing of the remainder.  For instance:
+
+    ((cat VP)
+     (head ((number sing) (& _x)))
+     (verb ((head ((number sing) (& _x))))))
+
+denotes a structure where the head shares with the head of the verb,
+but where in addition we know that the number of the head is sing.  As
+a description, a dag is always sideways open, which means that it can
+always be consistently extended by adding information about new
+features that are not mentioned in it.  So where we have previously
+used a list without an explicit remainder entry:
+
+    ((person 3) (number sing))
+
+for a description, we do not mean 'the person is 3 and the number is
+SING, and no other features have values'.  What we actually mean by
+this is 'the person is 3, the number is sing and any other features
+could have any values'.  Therefore we should really use an explicitly
+open-ended form with a remainder:
+
+    ((person 3) (number sing) (& _x))
+
+The programs that we will develop for operating on dags will assume
+that dags are represented by lists with explicit remainders, and so we
+will adopt this more verbose representation from now on.
+
+Notice that it is quite possible to construct a LISP list using the &
+notation that does not correspond to any legal dag.  Here are two
+examples of such illegal structures:
+
+    ((cat V) (& _x) (number sing) (& _y))
+    ((cat VP) (head ((number sing) (& _x)))
+              (verb ((head ((number plur) (& _x))))))
+
+The first does not correspond straightforwardly to a dag because we
+are given two different descriptions of the remainder (in fact, we
+would not allow it anyway because we require the only & to be in the
+final element).  The second involves two subdags which share their
+remainders but which do not share their number features.  This cannot
+happen in a dag (try drawing a picture of it!).  On the other hand,
+some possibly unexpected structures do indeed correspond to legal
+dags, for instance the following:
+
+    ((cat V) (& ((number sing) (& ((person 3) (& _x))))))
+    ((cat VP) (head ((number sing) (person 3) (& _x)))
+              (verb ((head ((person 3) (number sing) (& _x))))) (& _y))
+    _x
+
+The first of these is the same as
+
+    ((cat V) (number sing) (person 3) (& _x))
+
+and the last one illustrates the fact that we can use a simple
+variable symbol to denote a degenerate case of a dag (one which
+provides no information whatsoever).
+
+Subsumption and unification
+
+Implementing a destructive form of unification unfortunately forces us
+to worry about low-level issues about when data structures can be
+safely reused.  Because of this we will use an implementation where
+(successful) unification results instead in an extension recipe for
+extending either of the two dags to produce the new dag.  This
+contrasts with a destructive version of unification, which would
+actually change one of the lists to become the result of the
+unification.  If we actually want to construct the resulting dag, we
+can then apply the recipe obtained from unification as a separate                     
+stage.
+
+How might we specify a recipe for extending a dag into a new one?
+Such a recipe will have to indicate places in the original dag where
+extra information has to be added, together with what that information
+is.  The obvious way to indicate places in a dag where information can
+be added is to put variable symbols in those places.  An extension
+recipe then only needs to provide an association between (some of) the
+variables occurring in the original dag and the information that is to
+be added in these places.  Such a recipe is called a substitution.
+There are two consequences that follow from choosing this kind of
+\xtension recipe.  First of all, where two values share, the use of
+the same variable in both places will ensure that any substitution
+will put exactly the same information in both places.  Secondly, if we
+do not provide an explicit variable for some open-ended part of a dag
+(e.g. for some remainder), we cannot expect the recipe to tell us what
+extra information needs to be added there.
+
+The library file lib subst provides a number of useful functions for
+manipulating variable symbols and substitutions.  These functions are
+used by a large number of our example programs.  A substitution is
+represented by an association list (in fact, the functions we define
+may create substitutions with extra nil elements at the end as well).
+Each two element sublist contains a variable symbol and a (possibly
+atomic) dag that is to be associated with it.  For instance, the
+result of unifying the two structures:
+
+    ((cat _x) (number 3) (& _z))
+    ((number _y) (cat np) (& _w))
+
+is a substitution equivalent to:
+
+    ((_y 3) (_x np) (_z _w))
+
+In fact, it is not necessary to know about the representation used in
+order to use the functions in lib subst; it suffices to know what
+results they compute and what kinds of arguments they must be provided
+with.  Here is a brief description of the most useful functions in the
+library:
+
+    (isvar item) returns t/nil
+        tests whether a data structure is a variable symbol or not.
+
+    (newvar) returns a variable.
+        Creates a new variable with a name different from any existing one.
+        This function uses the LISP function gensym to generate a new
+        symbol that consists of a '_' followed by a number.
+
+    empty_subst
+        A LISP variable holding the data structure representing the
+        empty substitution (which records no values as being
+        associated with variables)
+
+    (lookup_subst item substitution) returns an item.
+        A function which, if the input item is a variable symbol,
+        retrieves whatever value is associated with it in the
+        substitution.  If the input item is not a variable symbol,
+        or if there is no associated value, that item is returned
+        unchanged.
+
+    (add_subst variable item substitution) returns a substitution.
+        A function which produces a new substitution from an old
+        one.  The new substitution is just like the old one except
+        that, in addition, it associates the given item with the
+        given variable symbol.
+
+    (apply_subst substitution structure) returns a new structure.
+        A function which carries out the recipe provided by a
+        substitution, producing a new (extended) structure from
+        an old one
+
+    (compose_substs substitution substitution) returns a substitution.
+        A function which takes two substitutions and produces
+        a new one which, when applied, will carry out the
+        operations specified in the first recipe followed by
+        those specified in the second recipe
+
+lib dagunify provides, amongst other things, a function unify which
+produces a substitution from two given dags (or nil, if the dags do
+not unify).  Although it is not important to understand the details of
+the code, we will give a short description that suggests the flavour
+of the approach.  The objective of unification is to build up a
+substitution that, if applied, will be able to transform both of the
+dags into the same extended dag.  This substitution starts off as
+empty_subst, and each of the functions invoked in unification takes
+the current value of the substitution as one of its arguments and
+returns a new extended substitution as its result (or nil, if an
+inconsistency is detected).  The current substitution has to be
+constantly consulted during unification, as a variable could be
+encountered that has already been assigned a value by it.
+
+    (defun unify (dag1 dag2)
+      (combine_values dag1 dag2 empty_subst))
+
+The key function in unification is obviously combine_values, which
+takes two dags and the current substitution as arguments and returns a
+(possibly extended) substitution as its result.
+
+    (defun combine_values (dag1 dag2 substitution)
+      (let* (
+         (realdag1 (lookup_subst dag1 substitution))
+         (realdag2 (lookup_subst dag2 substitution)))
+        (if (equal realdag1 realdag2)
+          substitution
+          (if (isvar realdag1)
+            (add_subst realdag1 realdag2 substitution)                     
+            (if (isvar realdag2)
+              (add_subst realdag2 realdag1 substitution)
+              (if (and (listp realdag1) (listp realdag2))
+                ;; make sure that everything in dag1 is in dag2
+                (do
+                  ((subst substitution))
+                  ((isvar realdag1)
+                   ;; finally put the rest of dag2 at the end of dag1
+                   ;; (as long as subst is not nil)
+                   (and subst (add_subst realdag1 realdag2 subst)))
+                  (let* (
+                     (feature (caar realdag1))
+                     (value (lookup_subst (cadar realdag1) subst)))
+                    (if (equal feature '&)
+                      (setq realdag1 value)
+                      (let (
+                         (subst_dag2 (put_value_in (list feature value) realdag2 subst)))
+                        (setq realdag2 (cadr subst_dag2))
+                        (setq subst (car subst_dag2))
+                        (setq realdag1 (cdr realdag1))
+                        (if (null subst) (return nil))))))
+                nil))))))
+
+If the two dags are already equal, then the existing substitution can
+be returned unchanged and all is well.  Alternatively, if one is a
+variable symbol (function isvar from lib subst tests this) then it
+suffices to add an element to the substitution that associates this
+with the other dag.  In any other case, both dags must be complex
+objects (i.e. lists) for unification to succeed.  What we need to do
+is go through the explicit feature/value pairs mentioned in the first
+dag, for each one adding to the substitution as necessary so that the
+second dag contains the same pair.  Finally, we add to the
+substitution to associate whatever information there is in the second
+dag and which we have not already encountered with the remainder
+variable at the end of the first dag. For instance with the two dags:
+
+    ((cat VP) (& _x))    ((number sing) (& _y))).
+
+we start by putting into the substitution entries for extending the
+second dag to contain the information explicitly encoded in the first.
+At this point the substitution will be something like:
+
+    ((_y ((cat VP) (& _z))))
+
+If we applied this substitution to the second dag at this point, the
+result (after some cosmetic flattening) would be:
+
+    ((number sing) (cat VP) (& _z))
+
+We now associate with the remainder variable _x the parts of the
+second dag that we have not already seen in the first dag, adding to
+the substitution to make:
+
+    ((_x ((number sing) (& _z)))
+     (_y ((cat VP) (& _z))))
+
+This substitution now has the property that it yields the same dag,
+whichever of the two original dags it is applied to.  combine_values
+iterates through the feature specifications (feature and value) found
+in the first dag.  For each one, it attempts to add to the
+substitution in such a way that the second dag will have the same
+value for this feature.  Procedure put_value_in is used for this.  As
+well as adding to the substitution as necessary, put_value_in also
+returns what remains of the second dag if the entry for the given
+feature is removed.  As we cycle through the features of the first dag
+in turn, each time we use (in the variable dag2) the result returned
+from the previous put_value_in, rather than the original dag.  This
+means that dag2 gets smaller and smaller and, when we reach the end of
+dag1 it then holds all the featural information of the original dag2
+which did not have any analogue in the original dag1.  It is this
+final value that we then associate with the remainder variable (now in
+dag1) of the original first dag.
+
+Representing PATR grammars in LISP
+
+A PATR grammar rule consists of two parts - a framework phrase-
+structure rule and a set of extra conditions.  We can easily represent
+PATR conditions by LISP list structures.  For instance, the VP rule of
+Grammar4 can be represented as follows:
+
+           (Rule (VP  -> V X)
+                 (VP cat) = VP
+                 (V cat) = V
+                 (V arg1) = (X cat)
+                 (V slash) = 0
+                 (VP slash) = (X slash))
+
+Notice that we spell out the cat values explicitly in the LISP
+notation.  Here is another rule - the slash elimination rule:
+
+           (Rule (X0  -> )
+                 (X0 cat) = (X0 slash)
+                 (X0 empty) = yes)
+
+As before we will represent a grammar as two lists rules and
+lexical_rules.  The above list structure would be suitable as an
+element of rules whereas the following would be a possible value for
+lexical_rules:
+
+    (setq lexical_rules
+      '((Word (approved)
+            (cat) = V
+            (slash) = 0
+            (arg1) = PP)
+        (Word (disapproved)
+            (cat) = V
+            (slash) = 0
+            (arg1) = PP)
+        (Word (of)
+            (cat) = P
+            (slash) = 0
+            (arg1) = NP)
+        (Word (Dr Chan)
+            (slash) = 0
+            (cat) = NP)
+        (Word (nurses)
+            (slash) = 0
+            (cat) = NP)
+            (cat) = NP)))
+
+The lexicon and rules of Grammar4, apart from the conjunction rule,
+can be found in this LISP format in lib patrgram.  In fact, the moment
+we start wanting to do something with grammars, it becomes clear that
+extra information is needed for our programs to be able to present
+information to us in a concise and relevant way.  Our categories may
+now have entries for a number of different features, but usually we
+are only interested in seeing certain features in parse trees and
+other structures built by programs.  We will thus assume that every
+LISP PATR grammar comes equipped with two functions, as follows:
+
+    (category dag substitution) returns a printable value;
+         Given a basic dag and a substitution possibly specifying
+         extra extensions to that dag, extracts the main useful
+         category information.
+    (tree cat subtrees) returns a tree;
+         Given a value returned by category and a list of subtrees,
+         returns the parse tree with the value as its label and the
+         given subtrees.
+
+The appropriate functions in lib patrgram are as follows:
+
+    (defun category (d subst)
+      (let (
+         (cat (find_feature_value 'cat d subst))
+         (slash (find_feature_value 'slash d subst)))
+        (if (equal slash 0)
+          cat
+          (list cat '/ slash))))
+
+    (defun tree (cat subtrees)
+      (cons cat subtrees))
+
+where find_feature_value (defined in lib dagunify) is used to extract
+the value of a given feature from a dag.  So we have decided that, for
+this grammar, we usually wish to see the values of the cat and slash
+features, the '/' notation being used when the slash is not 0.  In
+this case, we have decided to build parse trees conventionally, but
+with other grammars we may make other decisions, for instance we may
+decide to suppress the subtrees when they are complex.
+
+In order to make use of PATR rules, we need to have a way of
+constructing dags which satisfy the sorts of conditions specified in
+rules, testing whether given dags satisfy the conditions and so on.
+The file lib lisppatr contains a number of useful functions, which we
+will now outline (although a detailed understanding of the code is not
+important).  The key function that we will use is the function
+apply_condition which, given such a list of conditions, a dag and a
+current substitution, produces an extended substitution which, when
+applied to the dag produces an extended dag in which the conditions
+are satisfied.  For instance:
+
+    (setq dag '((VP _x) (V _y) (X _z) (& _r)))
+    (setq subst
+      (apply_condition '((VP slash) = (X slash)
+         (V subcat) = (X cat)
+         (V slash) = 0) dag empty_subst))
+    (apply_subst subst dag)
+
+produces a dag like the following:
+
+    ((VP ((SLASH #:_814) (& #:_811)))
+     (V ((SUBcat #:_818) (& ((SLASH 0) (& #:_819)))))
+     (X ((SLASH #:_814) (& ((cat #:_818) (& #:_817)))))
+     (& _R))
+
+where the variables like '#:_814' arise because of the use of newvar
+to create new variables as the necessary extensions of the dag are
+recorded.  (Note that these symbols, created by gensym, are not
+'interned', which means that if you try to read in two occurrences of
+'#:_814' you will get two different symbols; if you want to read in
+structures like this and be able to name multiple occurrences of the
+same symbol, you should first remove the '#:' prefixes).  Here is the
+definition of apply_condition.  There is actually one other clause in
+the definition, which we will come back to later.
+
+    (defun apply_condition (entry dag subst)
+      (if (null entry)
+        subst
+        (if (consp (car entry))
+          ;; path1 = path2
+          (let*
+            ((end1_subst1 (apply_path (car entry) dag subst))
+             (end1 (car end1_subst1))
+             (subst1 (cadr end1_subst1)))
+            (if subst1
+              (let*
+                ((end2_subst2 (apply_path (nth 2 entry) dag subst1))
+                 (end2 (car end2_subst2))
+                 (subst2 (cadr end2_subst2)))
+                (if subst2
+                  (let ((newsubst (combine_values end1 end2 subst2)))
+                    (if newsubst
+                      (apply_condition (cdddr entry) dag newsubst)
+                      nil))
+                  nil))
+              nil))
+            (error "Illegal PATR entry ~S" entry)))))
+
+The most interesting part deals with a condition of the form 'first =
+rest'.  Each of first and rest may be a list of feature names, like
+(verb head number), specifying a value in a dag by the path used to
+reach it, and rest may alternatively be a simple value, like S or no.
+The function apply_path is used to get hold of the values that first
+and rest indicate, these being put into the variables end1 and end2.
+Finally, the substitution is extended (by combine_values) in order to
+make these values unify.
+
+    (defun apply_path (path dag subst)
+      (if (null path)
+        (list dag subst)
+        (if (atom path)
+          (list path subst)
+          (if (consp path)
+            (let ((subst_val (get_value (car path) dag subst)))                     
+              (if (car subst_val)
+                (apply_path (cdr path) (car subst_val) (cadr subst_val))
+                subst_val))
+            (error "Ill-formed path ~S" path)))))
+
+The function apply_path actually needs to return two values.
+Sometimes, if the dag does not explicitly mention all the features
+necessary to follow the path, it may need to add to the current
+substitution in order to force the values to exist in the desired
+extension.  Therefore it returns a list containing both the value
+found and the (possibly enlarged) substitution.
+
+With apply_condition, we have the raw material for making use of PATR
+rules.  lib lisppatr contains definitions of two functions,
+corresponding to the two main ways in which we need to use rules:
+
+    (lhs_match dag rule) returns (substitution daglist)
+    (rhs_match daglist rule) returns (substitution newdaglist)
+
+The function lhs_match is used when we have a category (dag) and wish
+to know whether a given rule might provide a way of rewriting this.
+This would obviously be relevant to a top-down parser.  If successful,
+the function returns a list of dags corresponding to the RHS of the
+rule, together with a substitution that indicates necessary extensions
+to the original dag.  For instance:
+
+    (let* (
+       (goal '((cat S) (& _r)))
+       (subst_rhs
+         (lhs_match
+           '((cat S) (& _r))
+           '(Rule (S -> NP VP)
+               (S slash) = (VP slash)
+               (NP slash) = 0
+               (S cat) = S
+               (NP cat) = NP
+               (VP cat) = VP))))
+      (print (simplify_features (car subst_rhs) goal))
+      (print (cadr subst_rhs))
+      t)
+
+    ((CAT S) (SLASH #:_34) (& #:_31))
+    (((SLASH 0) (CAT NP) (& #:_37)) ((SLASH #:_34) (CAT VP) (& #:_39))) T
+
+where simplify_features (defined in lib dagunify) is a version of
+apply_subst that flattens out extra remainders in dags. Given a dag
+and a PATR rule, for instance:
+
+    ((VP -> V X)
+       (VP cat) = VP
+       (V cat) = V
+       (V arg1) = (X cat)
+       (V slash) = 0
+       (VP slash) = (X slash))
+
+lhs_match  operates by:
+
+(1)  producing a skeleton dag with top-level features named according
+     to the phrase names in the rule (here, VP, V, X),
+
+(2)  in the skeleton, giving the LHS phrase name (here, VP) the dag
+     provided, and giving each other feature a distinct variable as
+     its value,
+
+(3)  using apply_condition to produce a substitution enforcing the
+     conditions of the rule, and
+
+(4)  applying this substitution to the skeleton dag and extracting the
+     components to form the output list.
+
+The function rhs_match works in a very similar way, but is the kind of
+thing that would be used by a bottom-up parser.  Given a list of dags
+and a PATR rule, it looks to see whether an initial sublist of the
+list could be extended to satisfy the conditions on the categories in
+the RHS of the rule.  In this case, it constructs a list consisting of
+a dag for the LHS of the rule, followed by the remaining dags of the
+original list.  It bundles this, together with the substitution needed
+to appropriately extend the used dags, into a single list which serves
+as its result.
+
+Lib lisppatr does provide one other very useful function, make_dag,
+which allows one to construct a minimal dag satisfying a given set of
+conditions.  Using make_dag takes much of the pain out of specifying
+dags for programs:
+
+    (make_dag '((cat) = S (slash person) = 3 (slash) = (pred slash)))
+    ((cat S)
+
+    (SLASH ((PERSON 3) (& #:_2123)))
+    (PRED ((SLASH ((PERSON 3) (& #:_2123))) (& #:_2127)))
+    (& #:_2125))
+
+Random generation revisited      
+
+How can we adapt our random generator to deal with the more
+interesting sorts of grammars exemplified by Grammar2, Grammar3 and
+Grammar4?  The basic generation algorithm can be used again, but we
+must be more sophisticated about representing and comparing complex
+categories.  When we are using a grammar rule for generation, we have
+to pay special attention to structures that share (denoted by multiple
+occurrences of the same variable).  Imagine we are trying to generate                     
+a phrase covered by the category:
+
+    ((cat S) (& _r))
+
+and decide to use the following rule:
+
+    Rule {topicalization}
+        X0 -> X1  X2:
+            <X0 slash> = <X1 slash>
+            <X0 cat> = S
+            <X1 empty> = no
+            <X2 cat> = S
+            <X2 slash> = <X1 cat>
+            <X2 empty> = no.
+
+Using lhs_match on the LISP version of this rule, we obtain the
+following list of categories to generate from:
+
+    (((SLASH 0) (EMPTY NO) (CAT _x) (& _r1))
+     ((CAT S) (SLASH _x) (EMPTY NO) (& _r2)))
+
+As we work through this list in order, we find that first of all
+something of the form:
+
+    ((SLASH 0) (EMPTY NO) (CAT _x) (& _r1))
+
+must be generated.  We have a completely free choice as to what _x
+must be, so it would be quite acceptable for us to generate something
+with 'cat NP', say.  When we come to the next part of the rule, we
+have to generate:
+
+    ((CAT S) (SLASH _x) (EMPTY NO) (& _r2))
+
+but we no longer have a free choice for _x.  Whatever _x is chosen
+here must be the same as the _x that was chosen (i.e. NP) for the
+first subphrase.  We need to have a way of remembering what choice was
+made for the cat feature of the first subphrase so that we can ensure
+that the slash feature of the second subphrase is the same.
+Fortunately, we have already marked this restriction in the dags by
+using the same variable symbol _x in both places.  All we need to do
+is keep track of what value is associated with _x where it first
+arises and ensure that in subsequent occurrences of _x the same value
+is used.  We can keep track of the values associated with the
+variables in a rule by keeping a current substitution which notionally
+has to be applied to each dag we deal with.
+
+In our previous version of generate, we defined a function unify that
+tested whether the LHS of a rule was appropriate for generating from a
+given description, using '='.  Now that we allow arbitrary features,
+we could use our dag version of unify, taking account of the fact that
+the LHS of a rule may specify any number of features in any order.  In
+practice, however, the function lhs_match is just what we need, and we
+can use that to obtain from an initial category the RHS sequence of                     
+categories that a given rule specifies if the category is matched with
+its LHS.  Here are the main functions of the new generation program
+(the whole program is to be found in lib randfgen).  They are very
+similar to the main functions in lib randgen:
+
+    (defvar current_substitution)
+
+    (defun generate (dag)
+      (if (atom dag)
+        (list dag)
+        (let ((rs (matching_rules dag)))
+          (if (null rs)
+            (throw 'generate nil)
+            (let ((subst_rhs (lhs_match dag (oneof rs))))
+              (setq current_substitution
+                (compose_substs current_substitution (car subst_rhs)))
+              (generate_all (cadr subst_rhs)))))))
+
+    (defun generate_all (body)
+      (if (null body)
+        '()
+        (append
+          (generate (apply_subst current_substitution (car body)))
+          (generate_all (cdr body)))))
+
+The main difference from the previous program is in the maintenance of
+the global variable current_substitution, which must hold any values
+already associated with variables that will be encountered later on in
+the generation process.  In generate, any assignments to variables
+obtained by unifying the dag with the LHS of a rule must be added to
+the current substitution.  This is done by compose_substs, defined in
+lib subst.  In addition, before attempting to generate from a given
+dag (in generate_all) we always apply the current substitution to it,
+in order to get the latest values associated with any variables.  The
+function matching_rules is much as before (although it uses
+lhs_match):
+
+    (defun matching_rules (dag)
+      (let ((results ()))
+        (dolist (rule rules)
+          (let ((subst_rhs (lhs_match dag rule)))
+            (if (car subst_rhs)
+              (setq results (cons rule results)))))
+        (dolist (rule lexical_rules)
+          (let ((subst_rhs (lhs_match dag rule)))
+            (if (car subst_rhs)
+              (setq results (cons rule results)))))
+        results))
+
+The global variable current_substitution needs to be given an initial
+value before we can start generating.  It makes sense to put this
+initialization in a top-level function and always to invoke the
+generator through this function:                     
+
+    (defun g (description)
+      (setq current_substitution empty_subst)
+      (catch 'generate
+        (generate description)))
+
+Our new version of generate contains provision for the program
+immediately to exit from g if it ever comes to a dag for which there
+are no matching rules.  This enables us to have loops like:
+
+    (loop (print (g (make_dag '((cat) = S (slash) = 0)))))
+
+and not to have the program mishap if it gets into a dead end.  But
+why do we get dead ends with this program?  This never used to happen
+in our earlier generation programs.  With Grammar4, dead ends occur
+through the interaction of several rules.  It is easier to demonstrate
+why dead ends occur by inventing a single rule that causes problems
+and might plausibly be in a grammar.  Consider a language where verbs
+appear at the ends of verb phrases (there are many such Subject-
+Object-Verb (SOV) languages -- Eskimo, Japanese, Persian and Turkish
+to name just four).  For such a language, a grammar might include a
+rule like the following:
+
+    Rule {SOV VP expansion}
+        X0 -> X1  X2:
+            <X0 cat> = VP
+            <X2 cat> = V
+            <X2 subcat> = <X1 cat>.
+
+Imagine our program is generating a random VP and uses this rule.  It
+will end up with a list of two dags like the following to generate
+from:
+
+    ((cat _x) (& _r1))
+    ((cat V) (subcat _x) (& _r2))
+
+First of all, it has to generate a phrase of any category (_x).
+Having done this (and necessarily obtained a value for _x in the
+current substitution), the program has to generate a verb whose subcat
+feature has this same value.  Unfortunately there are unlikely to be
+verbs with all possible subcat values, and so for some _xs that we
+choose (for instance, conj, N) it may be impossible to find an
+appropriate verb.  One might be tempted to criticise the grammar for
+this problem: the grammar says that _x can have any value, and the
+rule is thus incorrect.  But such a criticism is based on a
+misunderstanding.  The rule should be read as saying '.... is a legal
+phrase if .... and the cat feature of the first subphrase is the same
+as the subcat feature of the second'.  It is our interpretation of
+this rule in procedural terms ('generate any phrase and then generate
+a phrase whose subcat feature has the same value as the first phrase's
+CAT feature') that is wrong.  This interpretation will always generate
+correct sentences, but sometimes it will get into hopeless dead ends.
+A better implementation of random generation would have to build in                     
+some kind of search mechanism for trying different possible values of
+_x.
+
+You may well get frustrated running lib randfgen - through randomness,
+it frequently gets into dead ends and often seems to avoid the most
+interesting sentence constructions.  One way out of this is to make
+the program less random.  For instance, you could define your own
+version of oneof which asks you which rule to choose, as follows:
+
+    (defun oneof (list)
+      (if (equal (length list) 1)
+        (car list)
+        (let ((n 1))
+          (dolist (x list)
+            (print (list n x))
+            (setq n (+ 1 n)))
+          (print '(which one ?))
+          (let ((input (read)))
+            (if (and (integerp input) (< 0 input) (<= input (length list)))
+              (nth (- input 1) list)
+              (oneof list))))))
+
+Using this version of oneof, you can steer the program to generate any
+legal sentence, or you can reply with random numbers if you wish the
+machine to try making the decisions. (If you get tired with this way
+of running the program and wish to reinstate the original oneof, just
+load lib oneof).
+
+A modified LISP chart parser
+
+Lib fchart presents a version of the chart parser of lib chart,
+modified to deal will full PATR style grammars.  The modifications are
+actually quite minor.  For instance, here is the revised function
+check_and_combine, which deals with applying the fundamental rule:
+
+    (defun check_and_combine (active_edge inactive_edge)
+      (if (equal (start inactive_edge) (finish active_edge))
+        (let ((subst (unify (label inactive_edge) (car (tofind active_edge)))))
+          (if subst
+            (let (
+               (subtrees
+                 (append (found active_edge)
+                   (list
+                     (tree
+                       (category (label inactive_edge) subst)
+                       (found inactive_edge))))))
+              (agenda_add
+                (rename
+                  (apply_subst subst
+                    (list                         ;; new edge                     
+                      (start active_edge)
+                      (finish inactive_edge)
+                      (label active_edge)
+                      subtrees
+                      (cdr (tofind active_edge)))))))))))
+
+The only real difference from the previous code is the use of unify to
+compare the label of the inactive edge with the first tofind category
+of the active edge.  If the unification succeeds, the resulting
+substitution subst needs to be applied to the whole of the new edge
+added to the agenda.  In addition, the whole edge is copied by the use
+of the function rename (defined in lib subst), so that no two edges in
+the chart ever have two variables in common.  As in the previous chart
+parser, in add_edge, when an edge is added, every edge of the chart
+has to be considered in the search for a relevant edge that could
+combine with it - this chart parser employs no indexing mechanisms
+whatsoever.
+
+Although a top-down definition of active_edge_procedure can be taken
+across directly from our simple chart parser, we now introduce into
+add_rules_to_expand a test to check that edges being added to the
+chart are not subsumed by existing edges.  For this, it is sufficient
+to make sure that the label on a new arc (the LHS of the rule) is not
+subsumed by a category that has already been sought at that particular
+vertex.  As with the random generator, the function uses lhs_match to
+attempt to match the goal with the LHS of a rule.  This yields the
+pair subst_rhs, consisting of a substitution and a list of RHS dags.
+At this point, we look to see whether we have already looked for a
+category subsuming this LHS at this position in the chart (function
+subsumed_goal).  If so, we do not add the new edge.  Having worked our
+way through all the rules, we then record the fact that we have tried
+all rules for this category at this point (function record_goal):
+
+    (defun add_rules_to_expand (goal vertex)
+      (dolist (rule rules)
+        (let
+          ((subst_rhs (lhs_match goal rule)))
+          (if (car subst_rhs)
+            (let* (
+               (LHS (apply_subst (car subst_rhs) goal))
+               (RHS (cadr subst_rhs)))
+              (if (not (subsumed_goal LHS vertex))
+                (agenda_add
+                  (rename
+                    (list
+                      vertex
+                      LHS
+                      nil
+                      RHS))))))))
+      (record_goal goal vertex))
+
+The parser maintains in the global variable existing_goals a list of
+dags representing the categories that have previously been sought and
+the relevant positions in the chart.  Each of these has entries for
+just two features, goal (a dag representing the category sought) and
+vertex (the position where it has been looked for).  The functions
+subsumed_goal and record_goal simply access this global variable:
+
+    (defun subsumed_goal (goal vertex)
+      (let ((goaldag
+           (list
+             (list 'goal goal)
+             (list 'vertex vertex)
+             (list '& (newvar)))))
+        (dolist (g existing_goals nil)
+          (if (subsumes g goaldag)
+            (return t)))))
+
+    (defun record_goal (goal vertex)
+      (setq existing_goals
+        (cons
+          (list
+            (list 'goal goal)
+            (list 'vertex vertex)
+            (list '& (newvar)))
+          existing_goals)))
+
+The function subsumes (defined in lib subsumes) is used to test
+whether the dag for the current goal is subsumed by one of the
+previous ones.  Only if it is not is the new edge added to the agenda.
+
+Implementing a lexicon in LISP       
+
+The basic components for implementing a lexical component in LISP have
+already been presented.  Lib lisppatr, through functions like
+apply_condition, allows one to construct list structures representing
+PATR conditions and then to construct dags which satisfy the
+conditions.  In LISP, we can associate PATR conditions with macro
+names by using a property patr_macro:
+
+    (setf (get 'syn_iV 'patr_macro)
+      '((syn cat) = V
+        (syn arg0 cat) = np
+        (syn arg0 case) = nom))
+
+    (setf (get 'syn_tV 'patr_macro)
+      '( syn_iV
+        (syn arg1 cat) = np
+        (syn arg1 case) = acc))
+
+Moreover, we can extend apply_condition (which, as we have seen, takes
+a list of PATR conditions and a dag and returns a substitution
+extending the dag so that it satisfies the conditions) to look up the
+definitions of macros appearing in conditions.  This just involves
+adding an extra clause:
+
+      (let
+        ((newsubst
+           (apply_condition (get (car entry) 'patr_macro) dag subst)))
+        (if newsubst
+          (apply_condition (cdr entry) dag newsubst)
+          nil))
+     ...
+
+This is what we need for a straightforward implementation of the kinds
+of lexical entries we have discussed.  Given such macro definitions,
+we can construct dags satisfying the macros, for instance:
+
+    (setq subst (apply_condition '(syn_tV) '_x empty_subst))
+    (simplify_features subst '_x)
+
+    ((SYN ((CAT V)
+           (ARG0 ((CAT NP) (CASE NOM) (& #:_14)))
+           (ARG1 ((CAT NP) (CASE ACC) (& #:_20)))
+           (& #:_16)))
+     (& #:_6))
+
+Here, simplify_features is just like apply_subst, except that it
+removes unnecessary remainder entries in dags.  For actual lexical
+entries, we need to have a function, lookup_conditions, that
+associates lexemes (represented by LISP symbols) with conditions.  One
+way of implementing this would be to use the property list of lexemes
+(represented as LISP symbols):
+
+    (defun lookup_conditions (lex)
+      (get lex 'lexicon))
+
+    (defun set_conditions (lex conds)
+      (setf (get lex 'lexicon) conds))
+
+We can then set up lexical entries as follows:
+
+    (set_conditions 'love
+      '((mor root) = love
+        (sem) = love2a
+        mor_regV
+        syn_tV           ))
+
+A WFC can be thought of as a set of conditions that must be satisfied
+for a particular relationship to hold between a word and a lexeme.
+Alternatively, we can think of it as a set of conditions that can be
+satisfied by a particular kind of dag that only has values for word
+and lexeme as its top-level features:
+
+    (setq example_wfc
+      '((word mor form) = (lexeme mor form3)
+        (word syn) = (lexeme syn)
+        (word syn cat) = V
+        (word syn arg0 per) = 3
+        (word syn arg0 num) = sing
+        (word syn tense) = pres
+        (word sem) = (lexeme sem)           ))
+
+Dags versus terms
+
+LISP arrays would be a good data structure to implement complex terms,
+because they are more compact than lists and permit the accessing of
+particular elements in constant time.  We will, however, use lists to
+represent complex terms, with the first element of a list being the
+function symbol and the subsequent elements the arguments, in order.
+Thus we will represent the term:
+
+    s(h(2,sing),x)
+
+by the following LISP data structure:
+
+    (s (h 2 sing) _x)
+
+We will make further use of complex terms in Chapters 9 and 10, and
+will make use there of lib tunify and lib tsubsume, which implement
+unification between and subsumption of terms.  These library files
+define functions termunify and termsubsumes that behave just like
+unify and subsumes, except that they expect lists representing terms,
+rather than lists representing dags, as their arguments.  Finally, lib
+termify provides a function termify_dag which will translate a dag
+into a term, according to a set of rules specified by the programmer.

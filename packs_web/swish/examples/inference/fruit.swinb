@@ -1,0 +1,92 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Fruit selling 
+
+From 
+ - Steffen Michels, Arjen Hommersom, Peter J. F. Lucas, Marina Velikova:
+   A new probabilistic constraint logic programming language based on a generalised distribution semantics.   
+   Artif. Intell. 228: 1-44 (2015)
+
+We want to compute the likelihood of a consumer to buy a certain fruit. 
+The price of the fruit depends on its yield, that is modeled with a 
+Gaussian distribution.
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- endif.
+
+:- mc.
+:- begin_lpad.
+yield(apple,Y): gaussian(Y,12000.0, 1000.0).
+yield(banana,Y): gaussian(Y,10000.0, 1500.0).
+</div>
+<div class="nb-cell markdown">
+The government may or may not support the market, this is modeled with discrete random variables.
+</div>
+
+<div class="nb-cell program" data-background="true">
+support(apple): 0.3.
+support(banana):0.5.
+</div>
+<div class="nb-cell markdown">
+The basic price is computed on the basis of the yield with a linear function.
+</div>
+
+<div class="nb-cell program" data-background="true">
+basic_price(apple,B):- 
+  yield(apple,Y),
+  {B=:=250-0.007 * Y}.
+basic_price(banana,B):- 
+  yield(banana,Y),
+  {B=:=200-0.006 * Y}.
+</div>
+<div class="nb-cell markdown">
+The actual price is computed from the basic price by raising by a fixed amount in case of government support:
+</div>
+
+<div class="nb-cell program" data-background="true">
+price(Fruit,P):- 
+  basic_price(Fruit,B),
+  support(Fruit), 
+  {P=:=B+50}.
+price(Fruit,B):- 
+  basic_price(Fruit,B),
+  \+ support(Fruit).
+</div>
+<div class="nb-cell markdown">
+A customer buys a certain fruit provided that its price is below a maximum:
+</div>
+
+<div class="nb-cell program" data-background="true">
+buy(Fruit):-
+  price(Fruit,P),
+  max_price(Fruit,M),{P =< M}.
+</div>
+<div class="nb-cell markdown">
+The maximum price follows a gamma distribution:
+</div>
+
+<div class="nb-cell program" data-background="true">
+max_price(apple,M):gamma(M,10.0, 18.0).
+max_price(banana,M): gamma(M,12.0, 10.0).
+:- end_lpad.
+</div>
+<div class="nb-cell markdown">
+We can now ask for the probability of the customer of buying a certain fruit.
+</div>
+<div class="nb-cell query">
+mc_sample(buy(apple),1000,Prob).
+</div>
+
+<div class="nb-cell query">
+mc_sample(buy(banana),1000,Prob).
+</div>
+</div>
+
+	

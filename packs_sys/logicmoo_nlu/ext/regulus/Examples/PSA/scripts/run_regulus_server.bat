@@ -1,0 +1,2 @@
+del /q C:\Temp\RegulusFiletalk\*.txt
+cmd /k %REGULUS%\RegulusSpeechServer\runtime\RegulusServer.exe regulus_server.cfg -package %REGULUS%\Examples\PSA\GeneratedFiles\psa_specialised_recogniser -log_dir ..\logfiles audio.Provider=native client.WriteWaveforms=TRUE rec.ConfidenceRejectionThreshold=0 rec.Pruning=800 rec.BacktraceFinalsOnly=FALSE client.TTSAddresses=localhost:32323 

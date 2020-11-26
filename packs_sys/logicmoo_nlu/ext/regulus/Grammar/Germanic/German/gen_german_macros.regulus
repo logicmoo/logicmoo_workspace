@@ -1,0 +1,92 @@
+
+%VERBS --------------------------------------------------------------------------------------
+%Core verb macro
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem,Feats), 
+      ( v:[sem=Sem, vform=base, vfinal=y, Feats] --> Base ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=inf, vfinal=y,Feats] --> Base) ).      
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=finite, agr=(1/\sing), vfinal=y, Feats] --> Pres_1_Sing ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=finite, agr=(2/\sing), vfinal=y, Feats] --> Pres_2_Sing ) ).      
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=finite, agr=(3/\sing), vfinal=y, Feats] --> Pres_3_Sing ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=finite, agr=((1/\plur)\/(3/\plur)), vfinal=y, Feats] --> Pres_Formal ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=finite, agr=(2/\plur), vfinal=y, Feats] --> Pres_2_Plur ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=participle, vfinal=y, Feats] --> Participle ) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=imp, agr=(2/\sing), vfinal=y, Feats] --> Imp_2_Sing) ).
+macro(verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], Sem, Feats), 
+      ( v:[sem=Sem, vform=imp, agr=(2/\plur), vfinal=y, Feats] --> Imp_2_Plur) ).
+
+%Modal verb       
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=base, vfinal=y] --> Base ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=inf, vfinal=y] --> Base) ).      
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=finite, agr=(1/\sing), vfinal=y] --> Pres_1_Sing ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=finite, agr=(2/\sing), vfinal=y] --> Pres_2_Sing ) ).      
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle],SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=finite, agr=(3/\sing), vfinal=y] --> Pres_3_Sing ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=finite, agr=((1/\plur)\/(3/\plur)), vfinal=y] --> Pres_Formal ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=finite, agr=(2/\plur), vfinal=y, subj_case=SubjCase] --> Pres_2_Plur ) ).
+macro(modal_verb([Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle], SemConstant), 
+      ( v:[sem=[[modal, SemConstant]], subcat=nx0vvx1_modal, vform=participle, vfinal=y] --> Participle ) ).
+%Specific verb types
+macro(transitive_verb(VerbForms, [SemType, SemConstant], [Subj, Obj], [SubjCase,ObjCase], Feats), @verb(VerbForms, [[SemType, SemConstant]],[subj_sem_n_type=Subj, obj_sem_n_type=Obj, subj_case=SubjCase, obj_case=ObjCase, subcat=nx0vnx1 | Feats])).
+
+macro(intransitive_verb(VerbForms, [SemType, SemConstant], [Subj], [SubjCase], Feats), @verb(VerbForms, [[SemType, SemConstant]],[subj_sem_n_type=Subj, subj_case=SubjCase, subcat=nx0v | Feats])).
+
+macro(ditransitive_verb(VerbForms, [SemType, SemConstant], [Subj, Obj, IndirObj], [SubjCase,ObjCase, IndirObjCase], Feats), @verb(VerbForms, [[SemType, SemConstant]],[subj_sem_n_type=Subj, obj_sem_n_type=Obj, indir_obj_sem_n_type=IndirObj, subj_case=SubjCase, obj_case=ObjCase, indir_obj_case=IndirObjCase, subcat=nx0vnx1nx2 | Feats])).
+
+%NOUNS ---------------------------------------------------------------------------------------
+
+
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal, agr=3/\sing, case=nom, gender=Gender, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant), Feats] --> NomSing ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype,[SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\sing, case=acc,gender=Gender, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant), Feats] --> AccSing ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\sing, case=dat,gender=Gender, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant), Feats] --> DatSing ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\sing, case=gen,gender=Gender, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant), Feats] --> GenSing ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\plur,gender=Gender, case=nom\/acc, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant),  Feats] --> PlurNomAcc ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\plur,gender=Gender, case=dat, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant),  Feats] --> PlurDat ) ).
+macro(gendered_noun([NomSing, AccSing, DatSing, GenSing, PlurNomAcc, PlurDat, PlurGen],Gender, Ntype, [SemType, SemConstant], Feats), ( n:[nform=normal,agr=3/\plur,gender=Gender, case=gen, sem_n_type=Ntype, sem=@noun_sem(SemType, SemConstant),  Feats] --> PlurGen ) ).
+
+%DETERMINERS -------------------------------------------------------------------------------------
+%Definite Determiners (der words)
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=nom, gender=Gender,def=def, Feats] --> Nom)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=acc, gender=Gender, def=def, Feats] --> Acc)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=dat, gender=Gender, def=def, Feats] --> Dat)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=gen,gender=Gender, def=def, Feats] --> Gen)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\plur, sem=[[quant,Sem]], case=nom\/acc, gender=Gender, def=def, Feats] --> PlurNomAcc)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\plur, sem=[[quant,Sem]], case=dat, gender=Gender, def=def, Feats] --> PlurDat)).
+macro(def_det([Nom, Acc, Dat, Gen, PlurNomAcc, PlurDat, PlurGen], Sem, Gender, Feats), (d:[agr=3/\plur, sem=[[quant,Sem]], case=gen, gender=Gender, def=def, Feats] --> PlurGen)).
+
+%Indefinite Determiners (ein words)
+macro(indef_det([Nom, Acc, Dat, Gen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=nom, gender=Gender,def=indef, Feats] --> Nom)).
+macro(indef_det([Nom, Acc, Dat, Gen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=acc, gender=Gender, def=indef, Feats] --> Acc)).
+macro(indef_det([Nom, Acc, Dat, Gen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=dat, gender=Gender, def=indef, Feats] --> Dat)).
+macro(indef_det([Nom, Acc, Dat, Gen], Sem, Gender, Feats), (d:[agr=3/\sing, sem=[[quant,Sem]], case=gen,gender=Gender, def=indef, Feats] --> Gen)).
+
+
+%COMPLEMENTIZER ------------------------------------------------------------------------------------
+
+macro(comp([Comp], Sem, Feats), (c:[sem=Sem] --> Comp)).
+
+%ADVERB-----------------------------------------------------------------------------------------------
+
+macro(adv([Adv], Sem, AdvType, Feats), (adv:[sem=[Sem], advtype=AdvType, Feats] --> Adv)).
+
+%PRONOUNS---------------------------------------------------------------------------------------------
+macro(personal_pronoun([Nom, Acc, Dat], Sem, Gender, [Pers, Num], Feats), (d:[agr=Pers/\Num, sem=[[pronoun,Sem]], case=nom, gender=Gender,def=def, Feats] --> Nom)).
+macro(personal_pronoun([Nom, Acc, Dat], Sem, Gender, [Pers, Num], Feats), (d:[agr=Pers/\Num, sem=[[pronoun,Sem]], case=acc, gender=Gender,def=def, Feats] --> Acc)).
+macro(personal_pronoun([Nom, Acc, Dat], Sem, Gender, [Pers, Num], Feats), (d:[agr=Pers/\Num, sem=[[pronoun,Sem]], case=dat, gender=Gender,def=def, Feats] --> Dat)).
+
+%PREPOSITIONS---------------------------------------------------------------------------------------
+
+macro(prep([Preposition], Prep, PPType, Complement, CompCase),(p:[sem=Prep, pp_type=PPType, takes_dp_type=Complement, obj_case=CompCase] --> Preposition)).

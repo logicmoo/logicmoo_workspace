@@ -1,0 +1,76 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Exercises/TeacherTells.e
+loading foundations/Root.e
+loading foundations/EC.e
+64 variables and 258 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+InRoom(Student, Classroom).
+InRoom(Teacher, Classroom).
+ListeningTo(Student, Student).
+ListeningTo(Student, Teacher).
+ListeningTo(Teacher, Student).
+ListeningTo(Teacher, Teacher).
+Happens(Tell(Teacher, Student, Fact1), 0).
+1
++Know(Student, Fact1).
+P
+!Happens(Tell(Student, Student, Fact1), 0).
+!Happens(Tell(Student, Student, Fact1), 1).
+!Happens(Tell(Student, Student, Fact2), 0).
+!Happens(Tell(Student, Student, Fact2), 1).
+!Happens(Tell(Student, Teacher, Fact1), 0).
+!Happens(Tell(Student, Teacher, Fact1), 1).
+!Happens(Tell(Student, Teacher, Fact2), 0).
+!Happens(Tell(Student, Teacher, Fact2), 1).
+!Happens(Tell(Teacher, Student, Fact1), 1).
+!Happens(Tell(Teacher, Student, Fact2), 0).
+!Happens(Tell(Teacher, Student, Fact2), 1).
+!Happens(Tell(Teacher, Teacher, Fact1), 0).
+!Happens(Tell(Teacher, Teacher, Fact1), 1).
+!Happens(Tell(Teacher, Teacher, Fact2), 0).
+!Happens(Tell(Teacher, Teacher, Fact2), 1).
+!ReleasedAt(InRoom(Student, Classroom), 0).
+!ReleasedAt(InRoom(Student, Classroom), 1).
+!ReleasedAt(InRoom(Student, Kitchen), 0).
+!ReleasedAt(InRoom(Student, Kitchen), 1).
+!ReleasedAt(InRoom(Teacher, Classroom), 0).
+!ReleasedAt(InRoom(Teacher, Classroom), 1).
+!ReleasedAt(InRoom(Teacher, Kitchen), 0).
+!ReleasedAt(InRoom(Teacher, Kitchen), 1).
+!ReleasedAt(Know(Student, Fact1), 0).
+!ReleasedAt(Know(Student, Fact1), 1).
+!ReleasedAt(Know(Student, Fact2), 0).
+!ReleasedAt(Know(Student, Fact2), 1).
+!ReleasedAt(Know(Teacher, Fact1), 0).
+!ReleasedAt(Know(Teacher, Fact1), 1).
+!ReleasedAt(Know(Teacher, Fact2), 0).
+!ReleasedAt(Know(Teacher, Fact2), 1).
+!ReleasedAt(ListeningTo(Student, Student), 0).
+!ReleasedAt(ListeningTo(Student, Student), 1).
+!ReleasedAt(ListeningTo(Student, Teacher), 0).
+!ReleasedAt(ListeningTo(Student, Teacher), 1).
+!ReleasedAt(ListeningTo(Teacher, Student), 0).
+!ReleasedAt(ListeningTo(Teacher, Student), 1).
+!ReleasedAt(ListeningTo(Teacher, Teacher), 0).
+!ReleasedAt(ListeningTo(Teacher, Teacher), 1).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+TeacherTells: 0 predicates, 0 functions, 3 fluents, 1 events, 6 axioms
+encoding 0.1s
+solution 0.0s
+total 0.2s
+Discrete Event Calculus Reasoner 1.0

@@ -1,0 +1,9 @@
+﻿prologCGData((23, John, "John is the Hero", false, "ImgPrlg.png", 
+             (iccs,2000), book(John, KR, 2000),
+             [Write]-
+                  -obj->[Book]-attr->[New],
+                  -agnt->[Man : John])).
+
+dataExample(x) :-
+       prologCGData(D),
+       member(x, D).

@@ -1,0 +1,35 @@
+(note TQA14)
+(abort) 
+(instance Kirkuk-CeyhanPipeline Conveyance) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry Iraq) Kirkuk-CeyhanPipeline) 
+
+(instance Iraq PersianGulfCountry) 
+
+(instance PetrolinePipeline Conveyance) 
+
+(industryFacilities 
+ (IndustryOfRegionFn OilIndustry SaudiArabia) PetrolinePipeline) 
+
+(instance SaudiArabia PersianGulfCountry) 
+
+(query (findall ?COUNTRY  (findall ?MEANS
+  (and 
+    (instance ?MEANS Conveyance) 
+    (instance ?COUNTRY PersianGulfCountry) 
+    (industryFacilities 
+      (IndustryOfRegionFn OilIndustry ?COUNTRY) ?MEANS) 
+    (consistent 
+      (thereExists ?TRANSPORT 
+        (and 
+          (instance ?TRANSPORT ImportExportEvent) 
+          (instance ?TRANSPORT (TransportFn PetroleumProduct)) 
+          (fromLocation ?TRANSPORT ?COUNTRY) 
+          (conveyor-Generic ?TRANSPORT ?MEANS))))))))
+
+(answer Iraq Kirkuk-CeyhanPipeline)
+(answer SaudiArabia PetrolinePipeline)
+
+(end_of_file)
+

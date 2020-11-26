@@ -1,0 +1,23 @@
+HELP                  - print this message
+DEBUG                 - set debug mode (default)
+EDIT                  - set edit mode
+LOAD                  - load unspecialised Regulus grammar
+LOAD_GENERATION       - load unspecialised Regulus generation grammar
+EBL_LOAD              - load specialised Regulus grammar
+EBL_LOAD_GENERATION   - load specialised Regulus generation grammar
+LEX WordOrWords       - add item for WordOrWords, e.g. 'LEX pain' or 'LEX bright light'
+GAP                   - add item for gap expression	      
+PARSE WordOrWords     - add item formed by parsing WordOrWords, e.g. 'PARSE where is the pain'
+GENERATE ID           - add all items formed by generating from ID, e.g. 'GENERATE 1'
+COMBINE IDOrIDs	      - combine items into a new item, e.g. 'COMBINE 1' or 'COMBINE 1 3'
+CUT ID Node	      - cut item ID at Node, e.g. 'CUT 2 3'. In edit mode, only add a cut marking.
+UNCUT ID Node	      - remove cut marking on item ID at Node, e.g. 'UNCUT 2 3' [only meaningful in edit mode]
+JOIN ID1 Node ID2     - attach item ID2 under Node of ID1, e.g. 'JOIN 1 15 4'
+JOIN ID1 ID2          - attach item ID2 under ID1, e.g. 'JOIN 1 4'       
+SHOW ID               - show item ID, e.g. 'SHOW 1'
+SHOW ID Node          - show material under Node of item ID, e.g. 'SHOW 1 15'
+RULE ID Node          - show rule at Node of item ID, e.g. 'RULE 1 15'
+DELETE IDOrIDs        - delete item ID or IDs, e.g. 'DELETE 1' or 'DELETE 1 2'
+DELETE_ALL            - delete all items
+SUMMARY               - print summary for each item
+EXIT                  - leave stepper

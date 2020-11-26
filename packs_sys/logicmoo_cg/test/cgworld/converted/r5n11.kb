@@ -1,0 +1,13 @@
+% (trade[negotiated_market*x0][security])(method?x0[bargain*x2])(agnt?x2[seller])(rcpt?x2[buyer])(attr?x2[direct])
+cgc(230,simple,'negotiated_market',[fs(num,sing)],[]).
+cgc(231,simple,'security',[fs(num,sing)],[]).
+cgc(233,simple,'bargain',[fs(num,sing)],[]).
+cgc(234,simple,'seller',[fs(num,sing)],[]).
+cgc(235,simple,'buyer',[fs(num,sing)],[]).
+cgc(236,simple,'direct',[fs(num,sing)],[]).
+cg(232,[cgr(trade, [230, 231], _),
+        cgr(method, [230, 233], _),
+        cgr(agnt, [233, 234], _),cgr(rcpt, [233, 235], _),
+        cgr(attr, [233, 236], _)], 
+        [],
+        [fs(kind,normal)]).

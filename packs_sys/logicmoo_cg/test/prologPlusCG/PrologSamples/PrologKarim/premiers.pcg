@@ -1,0 +1,30 @@
+pg(X,X).
+
+//rajouter X<21
+pg(X,Y) :- 
+	X1=X+1,
+	X1<21,
+	pg(X1,Y).
+
+nombre(X) :- pg(0,X).
+
+divise(X,Y) :- 
+	Y<>0, 
+	nombre(M),
+	M<=X,
+	X=Y*M.
+
+nonpremier(X) :- 
+	nombre(Y), 
+	Y<>0, 
+	Y<>1, 
+	Y<X,
+	divise(X,Y).
+
+//utiliser not implique que X soit li‚
+//on appelle donc d'abord nombre(X) pour qu'il ait une valeur
+premier(X) :- 
+	nombre(X), 
+	X<>0, 	
+	X<>1,
+	not(nonpremier(X)).

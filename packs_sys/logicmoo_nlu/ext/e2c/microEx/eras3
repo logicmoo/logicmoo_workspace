@@ -1,0 +1,27 @@
+% le crible d'Eratosthene 
+% version avec geler de Le Huitouze et Ridoux
+% Attention : cas pathologique.
+% Processus perpetuel completement deterministe qui passe
+% sa vie a geler et degeler des buts.
+% En consequence, attention a la taille des piles :
+%          TR rien car deterministe
+%           L un tout petit peu
+%          FR une infinite
+%           G une infinite aussi car pas de gc sur pile globale
+
+
+$ eras :- freeze(L,prem(L)), liste_entiers(2,L).
+
+$ prem([X|L]) :- write(X), nl, 
+               freeze(L,crible(X,L,L1)),
+               freeze(L1,prem(L1)).
+
+$ crible(F,[X|L],Y) :- mod(X,F,0), !, freeze(L,crible(F,L,Y)).
+$ crible(F,[X|L],[X|Y]) :- freeze(L,crible(F,L,Y)).
+ 
+$ liste_entiers(X,[X|L]) :- 
+      plus(X,1,X1),
+      frozen_goals, get(_),
+      liste_entiers(X1,L).
+
+

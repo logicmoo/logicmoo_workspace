@@ -1,0 +1,748 @@
+
+feature_value_space(n_type, [[card, suit, holding, bid, abstract, hand, trick, play]]). 
+feature_value_space(p_type, [[up, down, off, over, back]]).
+feature_value_space(adv_types, [[distribution, manner]]).
+
+% Verbs
+
+% Verbs
+
+% take back, have back etc
+% e.g. "can i have that card back"
+% particle verb; subj=agent, particle_obj=card\/suit
+
+@v_object_particle([take, takes, took, taken, taking],
+                   [action, take_back], [agent, card\/suit, back],
+		   [takes_time_pp=y, can_be_postmod=n]).
+@v_object_particle([have, has, had, had, having],
+                   [action, have_back], [agent, card\/suit, back],
+		   [takes_time_pp=y, can_be_postmod=n]).
+
+% put
+% e.g. "put the king on it"
+% transitive verb; subj=agent, obj=card\/suit. Also requires a loc/destination PP
+
+macro(verb_like_put(Forms, Sem),
+      @v_transitive(Forms,
+		    [action, Sem], [agent, card\/suit],
+		    [takes_loc_pp=y, takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_put([put, puts, put, put, putting], put).
+
+% hold
+% e.g. "who holds the queen"
+% transitive verb; subj=agent, obj=card\/holding\/suit\/trick
+
+macro(verb_like_hold(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/holding\/suit\/trick\/hand\/abstract],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_hold([hold, holds, held, held, holding], hold).
+@verb_like_hold([have, has, had, had, having], have).
+
+% take
+% e.g. "take a trick/finesse"
+% transitive verb; subj=agent, obj=trick\/play
+
+macro(verb_like_take(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, trick\/play],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_take([take, takes, took, taken, taking], take).
+
+% bid
+% e.g. "who bid"
+% transitive verb; subj=agent, obj=bid
+
+macro(verb_like_bid(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, bid],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_bid([say, says, said, said, saying], say).
+
+% ruff
+% e.g. "ruff the queen"
+% transitive verb; subj=agent, obj=card\/suit
+
+macro(verb_like_ruff(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/suit],
+		    [takes_time_pp=y, takes_loc_pp=y, takes_attrib_pp=y, can_be_postmod=n])).
+
+@verb_like_ruff([ruff, ruffs, ruffed, ruffed, ruffing], ruff).
+@verb_like_ruff([trump, trumps, trumped, trumped, trumping], trump).
+@verb_like_ruff([cover, covers, covered, covered, covering], cover).
+@verb_like_ruff([discard, discards, discarded, discarded, discarding], discard).
+
+% win
+% e.g. "win the trick/heart lead"
+% transitive verb; subj=agent, obj=card\/suit\/trick
+
+macro(verb_like_win(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/suit\/trick],
+		    [takes_time_pp=y, takes_loc_pp=y, takes_attrib_pp=y, can_be_postmod=n])).
+
+@verb_like_win([win, wins, won, won, winning], win).
+
+% establish
+% e.g. "establish the spades"
+% transitive verb; subj=agent, obj=card\/suit
+
+macro(verb_like_establish(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/suit],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_establish([establish, establishes, established, established, establishing], establish).
+
+% lead
+% e.g. "lead a spade from dummy"
+% transitive verb; subj=agent, obj=card\/suit
+
+macro(verb_like_lead(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/suit],
+		    [takes_time_pp=y, takes_from_pp=y, takes_to_pp=y, can_be_postmod=n])).
+
+@verb_like_lead([lead, leads, led, led, leading], lead).
+@verb_like_lead([play, plays, played, played, playing], play).
+@verb_like_lead([run, runs, ran, ran, running], run).
+@verb_like_lead([cash, cashes, cashed, cashed, cashing], cash).
+
+% develop
+% e.g. "develop spades/a trick"
+% transitive verb; subj=agent, obj=suit
+
+macro(verb_like_develop(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, suit\/trick],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_develop([develop, develops, developed, developed, developing], develop).
+
+% establish
+% e.g. "establish spades"
+% transitive verb; subj=agent, obj=suit
+
+macro(verb_like_establish(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, suit],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_establish([establish, establishs, established, established, establishing], establish).
+@verb_like_establish([eliminate, eliminates, eliminated, eliminated, eliminating], eliminate).
+@verb_like_establish([clear, clears, cleared, cleared, clearing], clear).
+@verb_like_establish([block, blocks, blocked, blocked, blocking], block).
+
+% endplay
+% e.g. "endplay east in spades"
+% transitive verb; subj=agent, obj=agent
+
+macro(verb_like_endplay(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, agent],
+		    [takes_time_pp=y, takes_loc_pp=y, can_be_postmod=n])).
+
+@verb_like_endplay([endplay, endplays, endplayed, endplayed, endplaying], endplay).
+
+% capture
+% e.g. "capture the queen [with the king]"
+% transitive verb; subj=agent, obj=card
+
+macro(verb_like_capture(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card],
+		    [takes_time_pp=y, takes_loc_pp=y, takes_attrib_pp=y, can_be_postmod=n])).
+
+@verb_like_capture([capture, captures, captured, captured, capturing], capture).
+@verb_like_capture([drop, drops, dropped, dropped, dropping], drope).
+
+% finesse
+% e.g. "finesse the queen/finesse in spades"
+% transitive verb; subj=agent, obj=card\/suit
+
+macro(verb_like_finesse(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, card\/suit],
+		    [takes_time_pp=y, can_be_postmod=n])).
+macro(verb_like_finesse(Forms, Sem),
+      @v_intransitive(Forms, [action, Sem], [agent],
+		    [takes_time_pp=y, takes_loc_pp=y, can_be_postmod=n])).
+
+@verb_like_finesse([finesse, finesses, finessed, finessed, finessing], finesse).
+
+% Transitive/intransitive bidding actions
+
+macro(verb_like_redouble(Forms, Sem),
+      @v_intransitive(Forms, [action, Sem], [agent],
+		    [takes_time_pp=y, takes_attrib_pp=y, can_be_postmod=n])).
+macro(verb_like_redouble(Forms, Sem),
+      @v_transitive(Forms, [action, Sem], [agent, bid],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_redouble([open, opens, opened, opened, opening], open).
+@verb_like_redouble([overcall, overcalls, overcalled, overcalled, overcalling], overcall).
+@verb_like_redouble([double, doubles, doubled, doubled, doubling], double).
+@verb_like_redouble([redouble, redoubles, redoubled, redoubled, redoubling], redouble).
+@verb_like_redouble([bid, bids, bid, bid, bidding], bid).
+@verb_like_redouble([respond, responds, responded, responded, responding], respond).
+@verb_like_redouble([pass, passes, passed, passed, passing], pass).
+@verb_like_redouble([preempt, preempts, preempted, preempted, preempting], preempt).
+@verb_like_redouble([jump, jumps, jumped, jumped, jumping], jump).
+@verb_like_redouble([(jump, shift), (jump, shifts), (jump, shifted), (jump, shifted), (jump, shifting)], jump_shift).
+@verb_like_redouble([(jump, raise), (jump, raises), (jump, raised), (jump, raised), (jump, raising)], jump_raise).
+
+% "Make". You can make a trick, a bid, a contract, a card, a play, etc. It can also be used intransitively.
+
+@v_intransitive([make, makes, made, made, making], [action, make],
+		[agent],
+		[takes_time_pp=y, takes_attrib_pp=y, can_be_postmod=n]).
+@v_transitive([make, makes, made, made, making], [action, make],
+	      [agent, trick\/bid\/abstract\/play\/suit\/card],
+	      [takes_time_pp=y, takes_attrib_pp=y, can_be_postmod=n]).
+
+% "Play". You can also play a contract, a finesse, etc. 
+
+@v_transitive([play, plays, plays, plays, playing], [action, play],
+	      [agent, bid\/abstract\/play],
+	      [takes_time_pp=y, can_be_postmod=n]).
+
+% Intransitive suit states
+
+macro(verb_like_break(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [suit],
+		    [takes_time_pp=y, can_be_postmod=n])).
+macro(verb_like_break(Forms, Sem),
+      @v_adj(Forms, [state, Sem], [suit],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_break([break, breaks, broke, broke, breaking], break).
+@verb_like_break([split, splits, split, split, spliting], split).
+
+% Intransitive player actions
+% e.g. "can i claim"
+% intransitive verb; subj=agent.
+
+macro(verb_like_claim(Forms, Sem),
+      @v_intransitive(Forms, [action, Sem], [agent],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_claim([begin, begins, began, begun, beginning], begin).
+@verb_like_claim([claim, claims, claimed, claimed, claiming], claim).
+@verb_like_claim([(cash, out), (cashed, out), (cashed, out), (cashed, out), (cashing, out)], cash_out).
+
+% Intransitive play actions
+% e.g. "the finesse works"
+% intransitive verb; subj=play
+
+macro(verb_like_work(Forms, Sem),
+      @v_intransitive(Forms, [state, Sem], [play],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_work([work, works, worked, worked, working], work).
+
+% Intransitive abstract actions
+% e.g. "what happens"
+% intransitive verb; subj=abstract.
+
+macro(verb_like_happen(Forms, Sem),
+      @v_intransitive(Forms, [action, Sem], [abstract],
+		    [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_happen([happen, happens, happened, happened, happening], happen).
+
+% do
+% e.g. "why did you do that"
+% transitive verb; subj=agent, obj=abstract
+
+@v_transitive([do, does, did, did, doing],
+	      [action, do], [agent, abstract],
+	      [takes_to_pp=y, takes_time_pp=y, can_be_postmod=n]).
+
+% Verbs taking PP complement
+% "cross" e.g. "cross to dummy with the king of diamonds"
+
+@v_pp([cross, crosses, crossed, crossed, crossing],
+      [action, cross], [agent, to],
+      [takes_attrib_pp=y, can_be_gerund=n]).
+
+% "short" e.g. "cross to a spade"
+@v_pp([shift, shiftes, shifted, shifted, shifting],
+      [action, shift], [agent, to],
+      [can_be_gerund=n]).
+
+% start (to)
+% verb taking to-VP; subj=agent
+
+macro(verb_like_start_to(Forms, Sem),
+      @v_to_vp(Forms, [event, Sem], [agent], [takes_time_pp=y, can_be_postmod=n])).
+
+@verb_like_start_to([start, starts, started, started, starting], start_to).
+
+% start doing
+% verb taking ing-VP; subj=agent
+
+macro(verb_like_start_doing(Forms, Sem),
+      @v_vp_ing(Forms, [event, Sem], [agent], [can_be_postmod=n])).
+
+@verb_like_start_doing([start, starts, started, started, starting], start_doing).
+
+% be + loc
+@be_pp([state, be], [card, loc], [takes_time_pp=y]).
+
+% be + on_lead, in_hand etc
+@be_pp([state, be], [agent, attribution\/loc], [takes_time_pp=y]).
+
+% suit is suit
+@be_np([state, be], [suit, suit], [takes_time_pp=y]).
+% who is declarer
+@be_np([state, be], [agent, agent], [takes_time_pp=y]).
+% two hearts is a weak two
+@be_np([state, be], [bid, bid], [takes_time_pp=y]).
+% what is the safety play
+@be_np([state, be], [play, play], [takes_time_pp=y]).
+
+% Copular be for adjectival predicates
+@be_adj([verb, be], 
+	[_AnySubjType], [takes_time_pp=y]).
+
+% ------------------------------------------------------
+
+% Nouns
+
+% north, south, east, west, hand
+% sort=agent
+
+macro(agent_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[agent, Sem], [agent], sing, [takes_det_type=null])).
+
+@agent_noun(north, north).
+@agent_noun(south, south).
+@agent_noun(east, east).
+@agent_noun(west, west).
+@agent_noun((north, south), north_south).
+@agent_noun((east, west), east_west).
+@agent_noun(hand, own_hand).
+@agent_noun(dummy, dummy).
+@agent_noun(table, table).
+@agent_noun(declarer, declarer).
+@agent_noun(dealer, dealer).
+
+macro(relative_agent_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[agent, Sem], [agent], sing,
+			[n_poss_type=agent, takes_det_type=null])).
+
+@agent_noun((l, h, o), l_h_o).
+@agent_noun((left, hand, opponent), l_h_o).
+@agent_noun((r, h, o), r_h_o).
+@agent_noun((right, hand, opponent), r_h_o).
+@agent_noun(partner, partner).
+
+macro(definite_agent_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[agent, Sem], [agent], sing,
+			[n_poss_type=agent, takes_det_type=def])).
+
+@definite_agent_noun((closed, hand), closed_hand).
+@definite_agent_noun((danger, hand), danger_hand).
+
+macro(noun_like_opponent(Words, Sem),
+      @noun(Words,
+	    [agent, Sem], [agent], 
+	    [n_poss_type=agent, takes_det_type=def\/indef\/quant])).
+
+@noun_like_opponent([opponent, opponents], opponent).
+@noun_like_opponent([defender, defenders], defender).
+@noun_like_opponent([(opening, bidder), (opening, bidders)], opening_bidders).
+
+% hand nouns
+% sort=hand
+
+macro(hand_noun(Words, Sem),
+      @noun(Words, [hand, Sem], [hand],
+	    [takes_det_type=def\/indef\/null, takes_attrib_pp=y])).
+
+@hand_noun([hand, hands], hand).
+@hand_noun([maximum, maximums], maximum).
+@hand_noun([minimum, minimums], minimum).
+
+% trick nouns
+% sort=trick
+
+macro(trick_noun(Words, Sem),
+      @noun(Words, [trick, Sem], [trick],
+	    [takes_det_type=def\/indef\/quant\/null, n_poss_type=agent])).
+
+@trick_noun([trick, tricks], trick).
+@trick_noun([overtrick, overtricks], overtrick).
+@trick_noun([undertrick, undertricks], undertrick).
+@trick_noun([(top, trick), (top, tricks)], top_trick).
+
+% play nouns
+% sort=play
+
+macro(play_noun(Words, Sem),
+      @noun(Words, [play, Sem], [play],
+	    [takes_det_type=def\/indef\/quant\/null, takes_loc_pp=y, n_poss_type=agent])).
+
+@play_noun([ruff, ruffs], ruff).
+@play_noun([finesse, finesses], finesse).
+@play_noun([(ruffing, finesse), (ruffing, finesses)], ruffing_finesse).
+@play_noun([(deep, finesse), (deep, finesses)], deep_finesse).
+@play_noun([(double, finesse), (double, finesses)], double_finesse).
+@play_noun([(safety, play), (safety, plays)], safety_play).
+@play_noun([(discovery, play), (discovery, plays)], discovery_play).
+@play_noun([crossruff, crossruffs], crossruff).
+@play_noun([(dummy, reversal), (dummy, reversals)], dummy_reversal).
+
+macro(play_noun_like_lead(Words, Sem),
+      @noun(Words, [play, Sem], [play],
+	    [takes_det_type=def\/indef\/quant\/null,
+	     takes_loc_pp=y, n_poss_type=agent])).
+
+@play_noun_like_lead([lead, leads], lead).
+@play_noun_like_lead([discard, discards], discard).
+@play_noun_like_lead([defence, defences], defence).
+
+macro(play_noun_like_endplay(Words, Sem),
+      @noun(Words, [play, Sem], [play],
+	    [takes_det_type=def\/indef\/quant\/null,
+	     takes_loc_pp=y, takes_to_pp=y, n_poss_type=agent])).
+
+@play_noun_like_endplay([squeeze, squeezes], squeeze).
+@play_noun_like_endplay([(double, squeeze), (double, squeezes)], double_squeeze).
+@play_noun_like_endplay([endplay, endplays], endplay).
+
+% suit nouns
+% sort=suit
+
+macro(suit_noun(Words, Sem),
+      @noun(Words, [suit, Sem], [suit],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null, takes_loc_pp=y])).
+
+@suit_noun([club, clubs], club).
+@suit_noun([diamond, diamonds], diamond).
+@suit_noun([heart, hearts], heart).
+@suit_noun([spade, spades], spade).
+@suit_noun([trump, trumps], trump).
+@suit_noun([suit, suits], suit).
+
+% holding nouns
+% sort=suit
+
+macro(holding_noun(Words, Sem),
+      @noun(Words, [holding, Sem], [holding],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null, takes_loc_pp=y])).
+
+@holding_noun([void, voids], void).
+@holding_noun([singleton, singletons], singleton).
+@holding_noun([doubleton, doubletons], doubleton).
+@holding_noun([tripleton, tripletons], tripleton).
+
+macro(noun_like_entry(Words, Sem),
+      @noun(Words, [holding, Sem], [holding],
+	    [takes_det_type=def\/indef\/quant\/numeric,
+	     takes_loc_pp=y, takes_to_pp=y])).
+
+@noun_like_entry([entry, entries], entry).
+
+% abstract nouns
+% sort=abstract
+
+macro(abstract_noun(Words, Sem),
+      @noun(Words, [abstract, Sem], [abstract],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null, takes_loc_pp=y])).
+
+@abstract_noun([(high, card, point), (high, card, points)], high_card_points).
+@abstract_noun([contract, contracts], contract).
+@abstract_noun([(final, contract), (final, contracts)], final_contract).
+
+% card nouns
+% sort=card
+
+macro(card_noun(Words, Sem),
+      @noun(Words, [card, Sem], [card],
+	    [takes_det_type=def\/indef\/quant\/numeric\/null,
+	     n_pre_mod_type=suit, n_of_mod_type=suit, takes_loc_pp=y])).
+
+@card_noun([ace, aces], a).
+@card_noun([king, kings], k).
+@card_noun([queen, queens], q).
+@card_noun([jack, jacks], j).
+@card_noun([ten, tens], 10).
+
+@card_noun([honour, honours], honour).
+
+@card_noun([card, cards], card).
+
+macro(uninflected_card_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[card, Sem], [card], sing,
+			[takes_det_type=def\/indef\/quant\/numeric\/null,
+			 n_pre_mod_type=suit, n_of_mod_type=suit, takes_loc_pp=y])).
+
+@uninflected_card_noun(nine, 9).
+@uninflected_card_noun(eight, 8).
+@uninflected_card_noun(seven, 7).
+@uninflected_card_noun(six, 6).
+@uninflected_card_noun(five, 5).
+@uninflected_card_noun(four, 4).
+@uninflected_card_noun(three, 3).
+@uninflected_card_noun(two, 2).
+
+macro(bid_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[bid, Sem], [bid], sing,
+			[takes_det_type=def\/null])).
+
+@bid_noun((one, club), 'one_c').
+@bid_noun((one, diamond), 'one_d').
+@bid_noun((one, heart), 'one_h').
+@bid_noun((one, spade), 'one_s').
+@bid_noun((one, no, trump), 'one_nt').
+
+@bid_noun((two, clubs), 'two_c').
+@bid_noun((two, diamonds), 'two_d').
+@bid_noun((two, hearts), 'two_h').
+@bid_noun((two, spades), 'two_s').
+@bid_noun((two, no, trumps), 'two_nt').
+
+@bid_noun((three, clubs), 'three_c').
+@bid_noun((three, diamonds), 'three_d').
+@bid_noun((three, hearts), 'three_h').
+@bid_noun((three, spades), 'three_s').
+@bid_noun((three, no, trumps), 'three_nt').
+
+@bid_noun((four, clubs), 'four_c').
+@bid_noun((four, diamonds), 'four_d').
+@bid_noun((four, hearts), 'four_h').
+@bid_noun((four, spades), 'four_s').
+@bid_noun((four, no, trumps), 'four_nt').
+
+@bid_noun((five, clubs), 'five_c').
+@bid_noun((five, diamonds), 'five_d').
+@bid_noun((five, hearts), 'five_h').
+@bid_noun((five, spades), 'five_s').
+@bid_noun((five, no, trumps), 'five_nt').
+
+@bid_noun((six, clubs), 'six_c').
+@bid_noun((six, diamonds), 'six_d').
+@bid_noun((six, hearts), 'six_h').
+@bid_noun((six, spades), 'six_s').
+@bid_noun((six, no, trumps), 'six_nt').
+
+@bid_noun((seven, clubs), 'seven_c').
+@bid_noun((seven, diamonds), 'seven_d').
+@bid_noun((seven, hearts), 'seven_h').
+@bid_noun((seven, spades), 'seven_s').
+@bid_noun((seven, no, trumps), 'seven_nt').
+
+macro(convention_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[convention, Sem], [bid], sing,
+			[takes_det_type=null])).
+
+@convention_noun(stayman, stayman).
+@convention_noun(blackwood, blackwood).
+
+macro(bid_type_noun(Words, Sem),
+      @noun(Words,
+	    [bid_type, Sem], [bid], [n_poss_type=agent, takes_det_type=def\/indef])).
+
+@bid_type_noun([bid, bids], bid).
+@bid_type_noun([transfer, transfers], transfer).
+@bid_type_noun([(game, invite), (game, invites)], game_invite).
+@bid_type_noun([(game, force), (game, forces)], game_force).
+@bid_type_noun([(slam, invite), (slam, invites)], slam_invite).
+@bid_type_noun([(slam, force), (slam, forces)], slam_force).
+@bid_type_noun([(weak, two), (weak, twos)], weak_two).
+@bid_type_noun([preempt, preempts], preempt).
+@bid_type_noun([(cue, bid), (cue, bids)], cue_bid).
+@bid_type_noun([overbid, overbids], overbid).
+@bid_type_noun([underbid, underbids], underbid).
+@bid_type_noun([signoff, signoffs], signoff).
+@bid_type_noun([(change, of, suit), (change, of, suit)], change_of_suit).
+@bid_type_noun([jump, jumps], jump).
+@bid_type_noun([(jump, shift), (jump, shifts)], jump_shift).
+
+% color
+% sort=abstract
+
+macro(singular_time_noun(Word, Sem),
+      @uninflected_noun(Word,
+			[time, Sem], [time], sing, [takes_det_type=null])).
+
+@singular_time_noun(now, now).
+@singular_time_noun(then, then).
+
+% ------------------------------------------------------
+
+% Names
+
+%@name(partner, [partner], [agent], sing, []).
+
+% ------------------------------------------------------
+
+% Adjectives
+
+% long, short, strong etc
+% sort=suit
+
+macro(suit_adj(Word, Sem),
+      @adjective(Word, [suit_quality, Sem], [suit], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@suit_adj(long, long).
+@suit_adj(short, short).
+@suit_adj(strong, strong).
+@suit_adj(good, good).
+
+@suit_adj(longer, longer).
+@suit_adj(shorter, shorter).
+@suit_adj(stronger, stronger).
+@suit_adj(better, better).
+
+@suit_adj(longest, longest).
+@suit_adj(shortest, shortest).
+@suit_adj(strongest, strongest).
+@suit_adj(best, best).
+
+% two two, three two, etc
+% sort=suit
+
+macro(suit_distribution_adj(Word, Sem),
+      @adjective(Word, [suit_distribution, Sem], [suit], [adjpos=postnom\/pred, can_be_nbar=n])).
+
+@suit_distribution_adj((one, one), distributed_1_1).
+@suit_distribution_adj((two, nil), distributed_2_0).
+@suit_distribution_adj((three, nil), distributed_3_0).
+@suit_distribution_adj((four, nil), distributed_4_0).
+@suit_distribution_adj((five, nil), distributed_5_0).
+@suit_distribution_adj((six, nil), distributed_6_0).
+@suit_distribution_adj((two, one), distributed_2_1).
+@suit_distribution_adj((three, one), distributed_3_1).
+@suit_distribution_adj((four, one), distributed_4_1).
+@suit_distribution_adj((five, one), distributed_5_1).
+@suit_distribution_adj((six, one), distributed_6_1).
+@suit_distribution_adj((two, two), distributed_2_2).
+@suit_distribution_adj((three, two), distributed_3_2).
+@suit_distribution_adj((four, two), distributed_4_2).
+@suit_distribution_adj((five, two), distributed_5_2).
+@suit_distribution_adj((six, two), distributed_6_2).
+@suit_distribution_adj((three, three), distributed_3_3).
+@suit_distribution_adj((four, three), distributed_4_3).
+@suit_distribution_adj((five, three), distributed_5_3).
+@suit_distribution_adj((six, three), distributed_6_3).
+@suit_distribution_adj((four, four), distributed_4_4).
+@suit_distribution_adj((five, four), distributed_5_4).
+@suit_distribution_adj((six, four), distributed_6_4).
+@suit_distribution_adj((five, five), distributed_5_5).
+@suit_distribution_adj((six, five), distributed_6_5).
+
+% balanced, unbalanced etc
+% sort=hand
+
+macro(hand_adj(Word, Sem),
+      @adjective(Word, [hand_quality, Sem], [hand], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@hand_adj(balanced, balanced).
+@hand_adj(unbalanced, unbalanced).
+
+% bare etc
+% sort=card
+
+macro(card_adj(Word, Sem),
+      @adjective(Word, [card_quality, Sem], [card], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@card_adj(bare, bare).
+
+% small
+% sort=card
+% can be used as a noun
+
+macro(card_adj_like_small(Word, Sem),
+      @adjective(Word, [card_quality, Sem], [card], [adjpos=prenom\/pred, can_be_nbar=y])).
+
+@card_adj_like_small(small, small).
+@card_adj_like_small(high, high).
+
+% unusual etc
+% sort=bid
+
+macro(bid_adj(Word, Sem),
+      @adjective(Word, [bid_quality, Sem], [bid], [adjpos=prenom\/pred, can_be_nbar=n])).
+
+@bid_adj(unusual, unusual).
+@bid_adj(competitive, competitive).
+@bid_adj(constructive, constructive).
+@bid_adj(obstructive, obstructive).
+@bid_adj(gambling, gambling).
+@bid_adj(balancing, balancing).
+@bid_adj(artificial, artificial).
+@bid_adj(preemptive, preemptive).
+@bid_adj(cold, cold).
+@bid_adj(forcing, forcing).
+
+macro(pred_bid_adj(Word, Sem),
+      @adjective(Word, [bid_quality, Sem], [bid], [adjpos=postnom\/pred, can_be_nbar=n])).
+
+@pred_bid_adj((forcing, to, game), forcing_to_game).
+@pred_bid_adj((forcing, to, slam), forcing_to_slam).
+
+% ------------------------------------------------------
+
+% Adverbs
+
+@adverb(ever, [temporal, ever], [temporal], [advpos=prev\/postv]).
+@adverb(immediately, [temporal, immediately], [temporal], [advpos=prev\/postv\/postvp]).
+
+@adverb(evenly, [distribution, evenly], [distribution], [advpos=prev\/postv\/postvp]).
+@adverb((double, dummy), [distribution, double_dummy], [manner], [advpos=prev\/postv\/postvp]).
+
+% ------------------------------------------------------
+
+% Prepositions
+
+% in, on
+% to_pp, sort=physical_object
+
+@preposition(in, in_suit, [loc, suit], []).
+@preposition(on, on_suit_or_card, [loc, suit\/card], []).
+
+@preposition(to, to_agent, [to, agent], []).
+@preposition(to, to_suit, [to, suit], []).
+
+@preposition(against, against_agent, [to, agent], []).
+
+@preposition(in, in_hand, [loc, hand], []).
+
+@preposition(with, with_card, [attribution, suit\/card], []).
+
+@preposition(with, with_bid, [attribution, bid], []).
+
+@preposition(on, on_play, [attribution, play], []).
+
+% Particles
+
+% up, down, off
+
+@preposition(back, back, [none, suit\/card], [sem_p_type=back]).
+
+% ------------------------------------------------------
+
+% Lexical PPs
+
+@lexical_pp((in, hand), [loc, in_hand], [loc], []).
+@lexical_pp((on, table), [loc, on_table], [loc], []).
+@lexical_pp((in, dummy), [loc, in_dummy], [loc], []).
+
+@lexical_pp((on, side), [loc, on_side], [loc], []).
+@lexical_pp(offside, [loc, off_side], [loc], []).
+
+@lexical_pp((from, hand), [loc, from_hand], [from], []).
+@lexical_pp((from, table), [loc, from_table], [from], []).
+@lexical_pp((from, dummy), [loc, from_dummy], [from], []).
+
+@lexical_pp((on, lead), [loc, on_lead], [attribution], []).
+
+% ------------------------------------------------------
+
+% Adverbs
+
+@adverb(instead, [manner, instead], [temporal], [advpos=prev\/postv\/postvp]).
+
+% ------------------------------------------------------
+

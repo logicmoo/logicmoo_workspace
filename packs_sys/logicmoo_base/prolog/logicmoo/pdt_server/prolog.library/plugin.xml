@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin
+   id="org.cs3.prolog.library"
+   name="PrologLibrary"
+   version="3.1.2.qualifier"
+>
+   <extension
+         point="org.cs3.pdt.connector.bootstrapContribution">
+      <fileSearchPathContribution
+            alias="pdt_prolog_library"
+            id="prolog.library"
+            path="pl/">
+      </fileSearchPathContribution>
+      <fileContribution
+            id="prolog.library.fileContribution"
+            path="pl/_load.pl">
+      </fileContribution>
+   </extension>
+</plugin>

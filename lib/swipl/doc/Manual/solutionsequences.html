@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.44</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="simplex.html">
+<link rel="next" href="tables.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="simplex.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tables.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:solutionsequences"><a id="sec:A.44"><span class="sec-nr">A.44</span> <span class="sec-title">library(solution_sequences): 
+Modify solution sequences</span></a></h2>
+
+<p><a id="sec:solutionsequences"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- all solution predicates <a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a class="pred" href="allsolutions.html#bagof/3">bagof/3</a> 
+and <a class="pred" href="allsolutions.html#setof/3">setof/3</a>. <br>
+- <code>library(aggregate)</code>
+</dd>
+</dl>
+
+<p>The meta predicates of this library modify the sequence of solutions 
+of a goal. The modifications and the predicate names are based on the 
+classical database operations DISTINCT, LIMIT, OFFSET, ORDER BY and 
+GROUP BY.
+
+<p>These predicates were introduced in the context of the
+<a class="url" href="http://swish.swi-prolog.org">SWISH</a> Prolog 
+browser-based shell, which can represent the solutions to a predicate as 
+a table. Notably wrapping a goal in <a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a> 
+avoids duplicates in the result table and using
+<a class="pred" href="solutionsequences.html#order_by/2">order_by/2</a> 
+produces a nicely ordered table.
+
+<p>However, the predicates from this library can also be used to stay 
+longer within the clean paradigm where non-deterministic predicates are 
+composed from simpler non-deterministic predicates by means of 
+conjunction and disjunction. While evaluating a conjunction, we might 
+want to eliminate duplicates of the first part of the conjunction. Below 
+we give both the classical solution for solving variations of (<code>a(X)</code>,
+<code>b(X)</code>) and the ones using this library side-by-side.
+
+<dl class="latex">
+<dt><b>Avoid duplicates of earlier steps</b></dt>
+<dd>
+
+<pre class="code">
+  setof(X, a(X), Xs),               distinct(a(X)),
+  member(X, Xs),                    b(X)
+  b(X).
+</pre>
+
+<p>Note that the <a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a> 
+based solution returns the first result of <code>distinct(a(X))</code> 
+immediately after <span class="pred-ext">a/1</span> produces a result, 
+while the <a class="pred" href="allsolutions.html#setof/3">setof/3</a> 
+based solution will first compute all results of <span class="pred-ext">a/1</span>.
+</dd>
+<dt><b>Only try <code>b(X)</code> only for the top-10 <code>a(X)</code></b></dt>
+<dd>
+
+<pre class="code">
+  setof(X, a(X), Xs),               limit(10, order_by([desc(X)], a(X))),
+  reverse(Xs, Desc),                b(X)
+  first_max_n(10, Desc, Limit),
+  member(X, Limit),
+  b(X)
+</pre>
+
+<p>Here we see power of composing primitives from this library and 
+staying within the paradigm of pure non-deterministic relational 
+predicates.
+</dd>
+</dl>
+
+<dl class="latex">
+<dt class="pubdef"><a id="distinct/1"><strong>distinct</strong>(<var>:Goal</var>)</a></dt>
+<dt class="pubdef"><a id="distinct/2"><strong>distinct</strong>(<var>?Witness, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+True if <var>Goal</var> is true and no previous solution of <var>Goal</var> 
+bound
+<var>Witness</var> to the same value. As previous answers need to be 
+copied, equivalence testing is based on <i>term variance</i> (<a class="pred" href="compare.html#=@=/2">=@=/2</a>). 
+The variant <a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a> 
+is equivalent to <code>distinct(Goal,Goal)</code>.
+
+<p>If the answers are ground terms, the predicate behaves as the code 
+below, but answers are returned as soon as they become available rather 
+than first computing the complete answer set.
+
+<pre class="code">
+distinct(Goal) :-
+    findall(Goal, Goal, List),
+    list_to_set(List, Set),
+    member(Goal, Set).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="reduced/1"><strong>reduced</strong>(<var>:Goal</var>)</a></dt>
+<dt class="pubdef"><a id="reduced/3"><strong>reduced</strong>(<var>?Witness, 
+:Goal, +Options</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a>, 
+but does not guarantee unique results in return for using a limited 
+amount of memory. Both <a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a> 
+and
+<a class="pred" href="solutionsequences.html#reduced/1">reduced/1</a> 
+create a table that block duplicate results. For
+<a class="pred" href="solutionsequences.html#distinct/1">distinct/1</a>, 
+this table may get arbitrary large. In contrast,
+<a class="pred" href="solutionsequences.html#reduced/1">reduced/1</a> 
+discards the table and starts a new one of the table size exceeds a 
+specified limit. This filter is useful for reducing the number of 
+answers when processing large or infinite long tail distributions. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>size_limit</strong>(<var>+Integer</var>)</dt>
+<dd class="defbody">
+Max number of elements kept in the table. Default is 10,000.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="limit/2"><strong>limit</strong>(<var>+Count, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Limit the number of solutions. True if <var>Goal</var> is true, 
+returning at most <var>Count</var> solutions. Solutions are returned as 
+soon as they become available.
+<table class="arglist">
+<tr><td><var>Count</var> </td><td>is either <code>infinite</code>, 
+making this predicate equivalent to
+<a class="pred" href="metacall.html#call/1">call/1</a> or an integer. If <i><var>Count</var> <var>&lt;</var> 
+1</i> this predicate fails immediately. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="offset/2"><strong>offset</strong>(<var>+Count, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Ignore the first <var>Count</var> solutions. True if <var>Goal</var> is 
+true and produces more than <var>Count</var> solutions. This predicate 
+computes and ignores the first <var>Count</var> solutions.</dd>
+<dt class="pubdef"><a id="call_nth/2"><strong>call_nth</strong>(<var>:Goal, 
+?Nth</var>)</a></dt>
+<dd class="defbody">
+True when <var>Goal</var> succeeded for the <var>Nth</var> time. If <var>Nth</var> 
+is bound on entry, the predicate succeeds deterministically if there are 
+at least <var>Nth</var> solutions for <var>Goal</var>.</dd>
+<dt class="pubdef"><a id="order_by/2"><strong>order_by</strong>(<var>+Spec, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Order solutions according to <var>Spec</var>. <var>Spec</var> is a list 
+of terms, where each element is one of. The ordering of solutions of <var>Goal</var> 
+that only differ in variables that are <i>not</i> shared with <var>Spec</var> 
+is not changed.
+
+<dl class="latex">
+<dt><strong>asc</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+Order solution according to ascending <var>Term</var>
+</dd>
+<dt><strong>desc</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+Order solution according to descending <var>Term</var>
+</dd>
+</dl>
+
+<p>This predicate is based on <a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+and (thus) variables in answers are <i>copied</i>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="group_by/4"><strong>group_by</strong>(<var>+By, 
++Template, :Goal, -Bag</var>)</a></dt>
+<dd class="defbody">
+Group bindings of <var>Template</var> that have the same value for <var>By</var>. 
+This predicate is almost the same as <a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
+but instead of specifying the existential variables we specify the free 
+variables. It is provided for consistency and complete coverage of the 
+common database vocabulary.
+</dd>
+</dl>
+
+<p></body></html>

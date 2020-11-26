@@ -1,0 +1,15 @@
+(note modus ponens)
+
+(forall (?X ?Y) (=> (f ?X ?Y) (g ?X ?Y)))
+
+(exists (?X ?Y) (f ?X ?Y))
+
+(queryyn (exists (?X ?Y) (g ?X ?Y)) )
+
+(answer Yes)
+
+
+(end_of_file)
+
+
+

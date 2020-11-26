@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-about.html">
+<link rel="next" href="attvar.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-about.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="attvar.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:clp"><a id="sec:8"><span class="sec-nr">8</span> <span class="sec-title">Constraint 
+Logic Programming</span></a></h1>
+
+<a id="sec:clp"></a>
+<a id="idx:CLP:2043"></a><a id="idx:constraintprogramming:2044"></a>This 
+chapter describes the extensions primarily designed to support
+<b>constraint logic programming</b>&nbsp;(CLP), an important declarative 
+programming paradigm with countless practical applications.
+
+<p>CLP(<var>X</var>) stands for constraint logic programming over the 
+domain&nbsp;<var>X</var>. Plain Prolog can be regarded as&nbsp;CLP(<var>H</var>), 
+where <var>H</var> stands for
+<i>Herbrand&nbsp;terms</i><a id="idx:Herbrandterm:2045"></a>. Over this 
+domain,
+<a class="pred" href="compare.html#=/2">=/2</a> and <a id="idx:dif2:2046"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+are the most important constraints that express, respectively, equality 
+and disequality of&nbsp;terms. Plain Prolog can thus be regarded as a 
+special&nbsp;case of&nbsp;CLP.
+
+<p>There are dedicated constraint solvers for several important domains:
+
+<p>
+<ul class="latex">
+<li>CLP(FD) for <b>integers</b> (<a class="sec" href="clpfd.html#sec:A.9">section 
+A.9</a>)
+<li>CLP(B) for <b>Boolean</b> variables (<a class="sec" href="clpb.html#sec:A.8">section 
+A.8</a>)
+<li>CLP(Q) for <b>rational</b> numbers (<a class="sec" href="clpqr.html#sec:A.10">section 
+A.10</a>)
+<li>CLP(R) for <b>floating point</b> numbers (<a class="sec" href="clpqr.html#sec:A.10">section 
+A.10</a>).
+</ul>
+
+<p>In addition, CHR (<a class="sec" href="chr.html#sec:9">chapter 9</a>) 
+provides a general purpose constraint handling language to reason over 
+user-defined constraints.
+
+<p>Constraints blend in naturally into Prolog programs, and behave 
+exactly like plain Prolog predicates in those cases that can also be 
+expressed without constraints. However, there are two key differences 
+between constraints and plain Prolog predicates:
+
+<p>
+<ul class="latex">
+<li>Constraints can <i>delay</i> checks until their truth can be safely 
+decided. This feature can significantly increase the
+<i>generality</i> of your programs, and preserves their relational 
+nature.
+
+<p>
+<li>Constraints can take into account everything you state about the 
+entities you reason about, independent of the order in which you state 
+it, both <i>before</i> and also <i>during</i> any search for concrete 
+solutions. Using available information to prune parts of the search 
+space is called constraint
+<em>propagation</em><a id="idx:propagation:2047"></a>, and it is 
+performed automatically by the available constraint solvers for their 
+respective domains. This feature can significantly increase the
+<i>performance</i> of your programs.
+</ul>
+
+<p>Due to these two key advantages over plain Prolog, CLP has become an 
+extremely important declarative programming paradigm in practice.
+
+<p>Among its most important and typical instances is CLP(FD), constraint 
+logic programming over&nbsp;<i>integers</i>. For example, using 
+constraints, you can state in the most general way that a variable&nbsp;<var>X</var> 
+is an integer greater than&nbsp;0. If, later, <var>X</var> is bound to a 
+concrete integer, the constraint solver automatically ensures this. If 
+you in addition constrain&nbsp;<var>X</var> to integers less than&nbsp;3, 
+the constraint solver combines the existing knowledge to infer that <var>X</var> 
+is either 1 or&nbsp;2 (see below). To obtain concrete values for&nbsp;<var>X</var>, 
+you can ask the solver to <em>label</em>&nbsp;<var>X</var> and produce 1 
+and 2 on backtracking. See&nbsp;<a class="sec" href="clpfd.html#sec:A.9">section 
+A.9</a>.
+
+<pre class="code">
+?- use_module(library(clpfd)).
+...
+true.
+
+?- X #&gt; 0, X #&lt; 3.
+X in 1..2.
+
+?- X #&gt; 0, X #&lt; 3, indomain(X).
+X = 1 ;
+X = 2.
+</pre>
+
+<p>Contrast this with plain Prolog, which has no efficient means to deal 
+with (integer) <var>X &gt; 0</var> and <var>X &lt; 3</var>. At best it 
+could translate <var>X &gt; 0</var> to <code>between(1, infinite, X)</code> 
+and a similar primitive for <var>X &lt; 3</var>. If the two are combined 
+it has no choice but to generate and test over this infinite 
+two-dimensional space.
+
+<p>Using constraints therefore makes your program more
+<em>declarative</em><a id="idx:declarative:2048"></a> in that it frees 
+you from some procedural aspects and limitations of Prolog.
+
+<p>When working with constraints, keep in mind the following:
+
+<p>
+<ul class="latex">
+<li>As with plain Prolog, <a class="pred" href="control.html#!/0">!/0</a> 
+also destroys the declarative semantics of constraints. A cut after a 
+goal that is delayed may prematurely prune the search space, because the 
+truth of delayed goals is not yet established. There are several ways to 
+avoid cuts in constraint logic programs, retaining both generality and 
+determinism of your programs. See for example <a id="idx:zcompare3:2049"></a><a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a>.
+<li>Term-copying operations (<a id="idx:assertz1:2050"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>, <a id="idx:retract1:2051"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:findall3:2052"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>,
+<a id="idx:copyterm2:2053"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, 
+etc.) generally also copy constraints. The effect varies from ok, silent 
+copying of huge constraint networks to violations of the internal 
+consistency of constraint networks. As a rule of thumb, copying terms 
+holding attributes must be deprecated. If you need to reason about a 
+term that is involved in constraints, use <a id="idx:copyterm3:2054"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+to obtain the constraints as Prolog goals, and use these goals for 
+further processing.
+</ul>
+
+<p>All of the mentioned constraint solvers are implemented using the 
+attributed variables interface described in&nbsp;<a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>. These are lower-level predicates that are mainly intended for 
+library authors, not for typical Prolog programmers.
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="attvar.html"><span class="sec-nr">8.1</span> <span class="sec-title">Attributed 
+variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.1"><span class="sec-nr">8.1.1</span> <span class="sec-title">Attribute 
+manipulation predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.2"><span class="sec-nr">8.1.2</span> <span class="sec-title">Attributed 
+variable hooks</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.3"><span class="sec-nr">8.1.3</span> <span class="sec-title">Operations 
+on terms with attributed variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.4"><span class="sec-nr">8.1.4</span> <span class="sec-title">Special 
+purpose predicates for attributes</span></a></div>
+<div class="toc-h2"><a class="sec" href="coroutining.html"><span class="sec-nr">8.2</span> <span class="sec-title">Coroutining</span></a></div>
+</div>
+</body></html>

@@ -1,0 +1,472 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <link rel=stylesheet type="text/css" href="manual.css">
+   <title>InfraEngine User Manual</title>
+</head>
+<body>
+
+<h1>InfraEngine User Manual (Draft)</h1>
+
+<i>InfraEngine</i> is a working prototype of a Semantic Web 
+engine that combines
+<ul>
+<li>RDF Schema browsing, where
+<ul>
+<li>Semantic Web processing is integrated with
+&ldquo;normal&rdquo; browsing
+<li>RDF objects can be displayed in
+different views: tabular, as graph and as RDF
+expression
+<li>User interface functionality is realized by additional
+specialized views for
+RDF objects of certain types,
+such as classes and properties
+<li>Schema inferences corresponding to the model theoretic semantics of RDF
+are transparently performed
+<li>Knowledge is organized into
+multiple knowledgebases, each of which is
+related to a set of RDF documents
+</ul>
+<li>with a planning engine, where
+<ul>
+<li>Inputs to planning tasks &ndash; rules, and
+specifications for start and goal states &ndash;
+are represented by RDF documents
+in a distributed way
+<li>Outputs of planning tasks &ndash; partial-order plans &ndash;
+have RDF representations
+<li>The evaluation of planning queries and the
+inspection of result plans is integrated into
+RDF schema browsing
+<li>RDF schema information is utilized by the planning engine.
+</ul>
+</ul>
+
+<p>The system runs as a Web server, providing a Web user interface.  It is
+implemented in <a href="http://www.swi-prolog.org">SWI Prolog</a>.  It is
+released under the GNU General Public License.
+<p>The system was originally written in 2002, the underlying 
+planning system in 1999. It has been slightly revised and
+adapted to recent versions of SWI-Prolog in 2007.
+
+<p>
+Homepage: <a
+href="http://www.infraengine.com/">http://www.infraengine.com/</a>,
+Contact: <a
+href="mailto:info@cs.christophwernhard.com">info@cs.christophwernhard.com</a>
+
+
+<h2>Related Documents</h2>
+
+<ul>
+<li> <a href="tour-browsing.html">Guided Tour: 
+RDF Schema Browsing with InfraEngine</a>
+<li> <a href="tour-planning.html">Guided Tour: 
+Planning with InfraEngine</a>
+<li> <a href="examples/examples.html">InfraEngine Example RDF Documents</a>
+<li> <a href="http://www.infraengine.com/papers/infra.pdf">InfraEngine:
+Inferencing in the Semantic Web by Planning (PDF)</a>
+<li> <a href="planner/planner_manual.html"><i>Liner</i> Planning System
+&ndash; User Manual</a>
+</ul>
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#inst">1. Installation</a>
+<ul>
+  <li><a href="#inst-sw">1.1 Required Further Software</a>
+  <li><a href="#inst-setup">1.2 Setting up the System</a>
+</ul>
+<li><a href="#use">2. Usage</a>
+  <ul>
+  <li><a href="#use-invoc">2.1 Invocation</a>
+  <li><a href="#use-sec">2.2 Password Protection</a>
+  </ul>
+<li><a href="#pages">3. Top Level Page Types</a>
+  <ul>
+  <li><a href="#classes"><i>Classes</i> Page</a>
+  <li><a href="#properties"><i>Properties</i> Page</a>
+  <li><a href="#namespaces"><i>Namespaces</i> Page</a>
+  <li><a href="#kbs"><i>Knowledgebases</i> Page</a>
+  <li><a href="#queries"><i>Queries</i> Page</a>
+  <li><a href="#solutions"><i>Solutions</i> Page</a>
+  <li><a href="#main"><i>Main</i> Page</a>
+  </ul>
+<li><a href="#pages-specific">4. Specialized Object Views</a>
+  <ul>
+  <li><a href="#class"><i>Class</i> View</a>
+  <li><a href="#property"><i>Property</i> View</a>
+  <li><a href="#kb"><i>Knowledgebase</i> View</a>
+  <li><a href="#query"><i>Query</i> View</a>
+  <li><a href="#solution"><i>Solution</i> View</a>
+  </ul>
+<li><a href="#view">5. Generic Object Views</a>
+  <ul>
+  <li><a href="#object"><i>Object</i> View</a>
+  <li><a href="#rdf"><i>RDF</i> View</a>
+  <li><a href="#plrdf"><i>PLRDF</i> View</a>
+  <li><a href="#graph"><i>Graph</i> View</a>
+  </ul>
+<li><a href="#use-commands">6. Commands</a>
+  <ul>
+  <li><a href="#cmd-createkb"><i>Create Knowledgebase</i> Command</a>
+  <li><a href="#cmd-deletekb"><i>Delete Knowledgebase</i> Command</a>
+  <li><a href="#cmd-add-documents"><i>Add Documents</i> Command</a>
+  <li><a href="#cmd-browse"><i>Browse the Web</i> Command</a>
+  <li><a href="#cmd-reload"><i>Reload Documents</i> Command</a>
+  <li><a href="#cmd-add-namespace"><i>Add Namespace</i> Command</a>
+  </ul>
+</ul>
+
+<h2><a name="inst">1. Installation</a></h2>
+
+The system has been tested on Debian Linux and Mac OS-X platforms, details on
+requirements are shown in the table in <a href="#inst-sw">Section 1.1</a>.
+It should be possible to install the system analogously also on other Linux
+platforms and on Windows with <a href="http://www.cygwin.com/">Cygwin</a>.
+
+<h3><a name="inst-sw">1.1 Required Further Software</a></h3>
+
+
+<table border=2>
+<tr><th>Software</th>
+<th>Tested versions</th>
+<th>For <a href="http://www.debian.org">Debian</a> 4.0 &ldquo;etch&rdquo;</th>
+<th>For Mac OS-X 10.4 with <a href="http://www.finkproject.org">Fink</a> 0.8.1</th>
+</tr>
+<tr><td>SWI-Prolog</td>
+    <td>5.6.43</td>
+    <td><ol>
+<li>Download the stable release of <i>SWI-Prolog/XPCE
+ for Linux (RPM package)</i> from
+<a href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
+<li>Convert the RPM package to a DEB package by calling alien as root, e.g.:
+
+<pre># alien -v pl-5.6.40-290.i586.rpm</pre>
+<li> Install the DEB package, e.g.:
+
+   <pre># dpkg -i pl_5.6.40-291_i386.deb</pre>
+</ol>
+</td>
+
+    <td>Download and install the stable release of 
+       <i>SWI-Prolog/XPCE for MacOS X 10.4</i> from
+       <a href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
+       <p>
+        Unfortunately version 5.6.43 seems to require a 
+        newer version of libXft.2.dylib
+	than that provided by Apple. With 
+        <a href="http://darwinports.com/">Darwinports</a> it
+        can be installed by
+        <pre>$ sudo port install xft2</pre>
+              
+        <p>Version 5.6.40 works out of the box.
+    </td>
+</tr>
+
+<tr><td>dot</td>
+    <td>1.16 and 2.8</td>
+    <td>Package graphviz</td>
+    <td>Fink package graphviz</td>
+</tr>
+
+<tr><td>Arial and Courier-Bolds fonts for dot</td>
+    <td>-</td>
+    <td>Packages gsfonts and msttcorefonts</td>
+    <td>Fink package msttcorefonts
+
+<p>
+The <code>dot</code> program must find the fonts. This 
+requires that files <code>arial.ttf</code> and
+<code>courier-bold.ttf</code> 
+are in the directory 
+<code>$DOTFONTPATH</code>.
+
+A way to achieve this is by copying the two fonts to some directory:
+<pre>
+$ mkdir ~/my-fonts-for-dot
+$ cp /sw/lib/X11/fonts/msttf/arial.ttf ~/my-fonts-for-dot/
+$ cp /sw/lib/X11/fonts/msttf/courbd.ttf ~/my-fonts-for-dot/courier-bold.ttf
+</pre>
+
+and setting <code>DOTFONTPATH</code> e.g. by the following line 
+in <code>~/.bash_profile</code>:
+<pre>export DOTFONTPATH="${HOME}/my-fonts-for-dot"</pre>
+
+</td>
+</tr>
+
+<tr><td>wget</td>
+    <td>GNU Wget 1.10.2</td>
+    <td>Package wget</td>
+    <td>Fink package wget</td>
+</tr>
+
+<tr><td>htpasswd</td>
+    <td>unspecified</td>
+    <td>Package apache2-utils</td>
+    <td>Comes with OS-X as <code>/usr/bin/htpasswd</code></td>
+</tr>
+
+</table>
+
+<h3><a name="inst-setup">1.2 Setting up the System</a></h3>
+
+<ol>
+<li>Unpack the distribution archive. A directory <code>infra</code>
+is created.
+<pre>$ tar xzvf infra.tgz</pre>
+
+<li>Move the <code>infra</code> directory to some place. Write access to the
+<code>infra</code> directory is not required. 
+By default, the application assumes
+<code>infra</code> is placed directly in your home directory.  If another
+location is used, set the environment variable <code>INFRADIR</code>, for
+example by a line like the following in <code>~/.bash_profile</code>:
+
+<pre>export INFRADIR=/usr/local/software/infra</pre>
+
+<li>Create the user specific directory <code>~/.infra</code> with
+configuration files and stores for temporary data with the command
+
+<pre>$ infra/bin/install-infra-skel.sh</pre>
+
+This command creates a password file <code>~/.infra/passwd</code> with
+an entry for a single user of the Web server interface of the system.  The
+user name is by default the value of <code>$USER</code>, but can also be
+supplied as optional argument to <code>install-infra-skel.sh</code>.  The
+password is prompted by <code>install-infra-skel.sh</code>.
+
+<p>
+If <code>~/.infra</code> already exists, then 
+<code>install-infra-skel.sh</code>
+aborts without any effect.
+
+<p>
+Configuration settings are in  <code>~/.infra/config.rdf</code>. This file
+can of course be manually adapted to specific needs.
+</ol>
+
+
+<h2><a name="use">2. Usage</a></h2>
+
+<h3><a name="use-invoc">2.1 Invocation</a></h3>
+
+<ol>
+<li> Start the Web server with
+<pre>$ infra/bin/infra-server.sh</pre>
+
+Optionally a port number can be given as argument to
+<code>infra-server.sh</code>. The default port is <code>2210</code>.
+
+<p>
+<li>Open the root page of the server in a Web browser. For the
+default port, its URL is:
+<pre><a href="http://localhost:2210/">http://localhost:2210/</a></pre>
+</ol>
+
+<h3><a name="use-sec">2.2 Password Protection</a></h3>
+
+Access to the server is password protected as configured in
+a password file, which by default is <code>~/.infra/passwd</code>.
+This is implemented with the <code>basic</code> method of the <a
+href="http://www.swi-prolog.org/packages/http.html#sec:3.4">HTTP
+authentication of the SWI-Prolog HTTP support library</a>.
+
+
+<h2><a name="pages">3. Top Level Page Types</a></h2>
+
+The following page types are accessible from the top level menu links.
+
+The <i>Knowledgebase</i> top level menu link indicate the <i>current</i>
+knowledgebase, to which the respective page refers.
+
+Namespace abbreviations in all of these page types link to a <a
+href="#namespaces"><i>Namespaces</i></a> page.  A <a
+href="#kbs"><i>Knowledgebases</i></a> page can be used to navigate to a
+different current knowledgebase.
+
+<h3 class=styclass><a name="classes"><i>Classes</i></a> Page</h3>
+
+Displays classes in the current knowledgebase, indendation indicating subclass
+relations. Class names link to the respective <a
+href="#class"><i>Class</i></a> pages.
+
+<p>
+[See also: <a href="tour-browsing.html#classes">an example</a>.]
+
+<p>[Deficiencies: Classes which are populated with direct
+instances should be indicated.]
+
+
+<h3 class=styproperty><a name="properties"><i>Properties</i></a> Page</h3>
+
+Displays properties in the current knowledgebase, indendation indicating
+sub-property relations. Property names link to the respective <a
+href="#property"><i>Property</i></a> pages.
+
+<p>[See also: <a href="tour-browsing.html#properties">an example</a>.]
+
+<h3 class=stynamespace><a name="namespaces"><i>Namespaces</i></a> Page</h3>
+Displays namespace abbreviations defined in the current knowledgebase.
+Access to the 
+<a href="#cmd-add-namespace"><i>Add Namespace</i></a> command.
+
+<p>[See also: <a href="tour-browsing.html#namespaces">an example</a>.]
+
+<h3 class=stykb><a name="kbs"><i>Knowledgebases</i></a> Page</h3>
+
+<p>[To be written; for now see this <a
+href="tour-browsing.html#kbs">example</a>.]
+
+<h3 class=styquery><a name="queries"><i>Queries</i></a> Page</h3>
+<p>[To be written. For now see this <a
+href="tour-planning.html#img-queries">example</a>.]
+
+<h3 class=styquery><a name="solutions"><i>Solutions</i></a> Page</h3>
+<p>[To be written. For now see this <a
+href="tour-planning.html#img-solutions">example</a>.]
+
+<h3 class=stymain><a name="main"><i>Main</i></a> Page</h3>
+<p>[To be written; for now see this <a
+href="tour-browsing.html#main">example</a>.]
+
+<h2><a name="pages-specific">4. Specialized Object Views</a></h2>
+
+<h3 class=styclass><a name="class"><i>Class</i></a> View</h3>
+
+[To be written; for now see this
+ <a href="tour-browsing.html#class">example</a>.]
+
+<h3 class=styproperty><a name="property"><i>Property</i></a> View</h3>
+
+[To be written; similar to the <i>Class</i> view.]
+
+<h3 class=stykb><a name="kb"><i>Knowledgebase</i></a> View</h3>
+
+[To be written; for now see this
+ <a href="tour-browsing.html#kb">example</a>.]
+
+<h3 class=styquery><a name="query"><i>Query</i></a> View</h3>
+
+[To be written; for now see this
+ <a href="tour-planning.html#img-query">example</a>.]
+
+<h3 class=styquery><a name="solution"><i>Solution</i></a> View</h3>
+
+[To be written; for now see this
+ <a href="tour-planning.html#img-solution">example</a>.]
+
+
+<h2><a name="view">5. Generic Object Views</a></h2>
+
+<h3 class=styobject><a name="object"><i>Object</i> View</a></h3>
+[To be written; for now see this
+ <a href="tour-browsing.html#object">example</a>.]
+
+<h3 class=styobject><a name="rdf"><i>RDF</i> View</a></h3>
+[To be written; for now see this
+ <a href="tour-browsing.html#rdf">example</a>.]
+
+<h3 class=styobject><a name="plrdf"><i>PLRDF</i> View</a></h3>
+[To be written; for now see this
+ <a href="tour-browsing.html#plrdf">example</a>.]
+
+<h3 class=styobject><a name="graph"><i>Graph</i> View</a></h3>
+[To be written; for now see this
+ <a href="tour-browsing.html#graph">example</a>.]
+
+<h2><a name="use-commands">6. Commands</a></h2>
+
+The following operations can be invoked by Web forms on <i>Command</i> pages.
+Submission leads to a <a name="result"><i>Result</i></a> page reporting
+the outcome.
+
+<ul>
+<li><a href="#cmd-createkb"><i>Create Knowledgebase</i></a>
+<li><a href="#cmd-deletekb"><i>Delete Knowledgebase</i></a>
+<li><a href="#cmd-add-documents"><i>Add Documents</i></a>
+<li><a href="#cmd-browse"><i>Browse the Web</i></a>
+<li><a href="#cmd-reload"><i>Reload Documents</i></a>
+<li><a href="#cmd-add-namespace"><i>Add Namespace</i></a>
+</ul>
+
+
+<h3 class=stycommand><a name="cmd-createkb"><i>Create Knowledgebase</i> Command</a></h3>
+
+<p>Create a knowledge base.  The knowledge base is identified by an URI
+<code>http://www.infraengine.com/user#ID</code> (or <code>user:ID</code> if
+namespace abbreviations are used), where <code>ID</code> is the value submitted
+to the
+<i>Identifier</i> field. The value of <i>Comment</i> is text that is
+associated with the knowledgebase with the <code>rdfs:comment</code> property.
+
+<p>Accessible from <a href="#main"><i>Main</i></a>,
+<a href="#kbs"><i>Knowledgebases</i></a> and
+<a href="#kb"><i>Knowledgebase</i></a> pages.
+
+
+<h3 class=stycommand><a name="cmd-deletekb"><i>Delete Knowledgebase</i> Command</a></h3>
+
+<p>Delete the current knowledgebase. 
+
+<p>Accessible from <a href="#kb"><i>Knowledgebase</i></a> pages.
+
+
+<h3 class=stycommand><a name="cmd-add-documents"><i>Add Documents</i> Command</a></h3> Add the
+triples of one or more specified RDF documents to a knowledgebase.  The
+document is then associated with the knowledgebase via the
+<code>http://www.infraengine.com/system#document</code> property.
+
+<p>In some contexts, <i>Newly Generated</i> can be chosen as
+knowledgebase. A new knowledgebase is then created that
+contains just these triples.
+
+<p>Accessible from <a href="#kb"><i>Knowledgebase</i></a> pages and
+from
+the modified Web pages delivered by
+<a href="#cmd-browse"><i>Browse the Web</i></a>.
+
+<h3 class=stycommand><a name="cmd-browse"><i>Browse the Web</i> Command</a></h3>
+
+<p>Browse the Web through a proxy that decorates pages with headers that allow
+to perform <a href="#cmd-add-documents"><i>Add Documents</i></a> on RDF
+documents linked from them.
+
+<p>Accessible from <a href="#main"><i>Main</i></a> and
+<a href="#kb"><i>Knowledgebase</i></a> pages.
+
+<p>[Deficiencies: A mouse-right menu entry on the link would be better than the
+header. Current implementation does not work with many web pages.]
+
+<h3 class=stycommand><a name="cmd-reload"><i>Reload Documents</i> Command</a></h3>
+
+Clear the knowledgebase and add the triples from all RDF documents
+associated with the knowledgebase via the 
+<code>http://www.infraengine.com/system#document</code> property.
+
+<p>Accessible from <a href="#kb"><i>Knowledgebase</i></a> pages.
+
+<p>[Deficiencies: Information added for example by the <a
+href="#cmd-add-namespace"><i>Add Namespace</i></a> command gets lost.  It
+should be clarified where this extra information is kept.]
+
+<h3 class=stycommand><a name="cmd-add-namespace"><i>Add Namespace</i> Command</a></h3>
+
+Add a namespace abbreviation for a URI prefix to the current knowledgebase.
+The abbreviation is then used to display objects from the knowledgebase.  The
+URI form field is defaulted by suggestions inferred from the knowledgebase.
+
+<p>Accessible from <a href="#namespaces"><i>Namespaces</i></a> pages.
+
+
+<p>
+<hr>
+
+Christoph Wernhard 
+(<a href="mailto:info@cs.christophwernhard.com">info@cs.christophwernhard.com</a>)
+
+</body>
+</html>

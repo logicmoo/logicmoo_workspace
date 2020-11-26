@@ -1,0 +1,52 @@
+(note TQA107-a)
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict) Stage2-TerroristAttackOnAramco) 
+
+(existant Stage2-TerroristAttackOnAramco 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(subProcess HPKBScenarioConflict Stage2-TerroristAttackOnAramco) 
+
+(objectActedOn Stage2-TerroristAttackOnAramco SaudiAramcoHQ) 
+
+(damages Stage2-TerroristAttackOnAramco SaudiAramcoHQ) 
+
+(subrelation damages objectActedOn) 
+
+(instrument-Generic Stage2-TerroristAttackOnAramco Stage2-TruckBomb) 
+
+(deviceUsed Stage2-TerroristAttackOnAramco Stage2-TruckBomb) 
+
+(subrelation deviceUsed instrument-Generic) 
+
+(instance SaudiAramcoHQ Object) 
+
+(instance Stage2-TerroristAttackOnAramco AttackOnTangible) 
+
+(inputsDestroyed Stage2-TerroristAttackOnAramco SaudiAramcoHQ) 
+
+(instance Stage2-TruckBomb TruckBomb) 
+
+
+(query (findall ?THING  (thereExists ?ACT 
+   (and 
+       (subProcess HPKBScenarioConflict ?ACT) 
+       (instance ?ACT AttackOnTangible) 
+       (instance ?THING Object) 
+       (temporallySubsumes 
+           (DateInSituationFn CalendarDay 25 HPKBScenarioConflict) ?ACT) 
+       (inputsDestroyed ?ACT ?THING) 
+       (thereExists ?FORCE 
+           (and 
+               (instance ?FORCE TruckBomb) 
+               (objectActedOn ?ACT ?THING) 
+               (instrument-Generic ?ACT ?FORCE)))))  )
+)
+
+(answer SaudiAramcoHQ )
+
+(end_of_file)
+

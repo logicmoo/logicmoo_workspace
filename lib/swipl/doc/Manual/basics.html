@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.12</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="csv.html">
+<link rel="next" href="highorder.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="csv.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="highorder.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:basics"><a id="sec:A.12"><span class="sec-nr">A.12</span> <span class="sec-title">library(dcg/basics): 
+Various general DCG utilities</span></a></h2>
+
+<p><a id="sec:basics"></a>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+This is just a starting point. We need a comprehensive set of generally 
+useful DCG primitives.
+</dd>
+</dl>
+
+<p>This library provides various commonly used DCG primitives acting on 
+list of character <b>codes</b>. Character classification is based on
+<a class="pred" href="chartype.html#code_type/2">code_type/2</a>.
+
+<p>This module started its life as <code>library(http/dcg_basics)</code> 
+to support the HTTP protocol. Since then, it was increasingly used in 
+code that has no relation to HTTP and therefore this library was moved 
+to the core library.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="string_without//2"><strong>string_without</strong>(<var>+EndCodes, 
+-Codes</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Take as many codes from the input until the next character code appears 
+in the list <var>EndCodes</var>. The terminating code itself is left on 
+the input. Typical use is to read upto a defined delimiter such as a 
+newline or other reserved character. For example:
+
+<pre class="code">
+    ...,
+    string_without("\n", RestOfLine)
+</pre>
+
+<table class="arglist">
+<tr><td><var>EndCodes</var> </td><td>is a list of character codes. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="basics.html#string//1">string//1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="string//1"><strong>string</strong>(<var>-Codes</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Take as few as possible tokens from the input, taking one more each time 
+on backtracking. This code is normally followed by a test for a 
+delimiter. For example:
+
+<pre class="code">
+upto_colon(Atom) --&gt;
+        string(Codes), ":", !,
+        { atom_codes(Atom, Codes) }.
+</pre>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="basics.html#string_without//2">string_without//2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="blanks//0"><strong>blanks</strong></a><code>//</code></dt>
+<dd class="defbody">
+Skip zero or more white-space characters.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="blank//0"><strong>blank</strong></a><code>//</code></dt>
+<dd class="defbody">
+Take next <code>space</code> character from input. Space characters 
+include newline.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="basics.html#white//0">white//0</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nonblanks//1"><strong>nonblanks</strong>(<var>-Codes</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Take all <code>graph</code> characters</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="nonblank//1"><strong>nonblank</strong>(<var>-Code</var>)</a><code>//</code></dt>
+<dd class="defbody">
+<var>Code</var> is the next non-blank (<code>graph</code>) character.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="blanks_to_nl//0"><strong>blanks_to_nl</strong></a><code>//</code></dt>
+<dd class="defbody">
+Take a sequence of <a class="pred" href="basics.html#blank//0">blank//0</a> 
+codes if blanks are followed by a newline or end of the input.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="whites//0"><strong>whites</strong></a><code>//</code></dt>
+<dd class="defbody">
+Skip white space <i>inside</i> a line.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="basics.html#blanks//0">blanks//0</a> also skips 
+newlines.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="white//0"><strong>white</strong></a><code>//</code></dt>
+<dd class="defbody">
+Take next <code>white</code> character from input. White characters do
+<i>not</i> include newline.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="alpha_to_lower//1"><strong>alpha_to_lower</strong>(<var>?C</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Read a letter (class <code>alpha</code>) and return it as a lowercase 
+letter. If <var>C</var> is instantiated and the DCG list is already 
+bound,
+<var>C</var> must be <code>lower</code> and matches both a lower and 
+uppercase letter. If the output list is unbound, its first element is 
+bound to <var>C</var>. For example:
+
+<pre class="code">
+?- alpha_to_lower(0'a, `AB`, R).
+R = [66].
+?- alpha_to_lower(C, `AB`, R).
+C = 97, R = [66].
+?- alpha_to_lower(0'a, L, R).
+L = [97|R].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="digits//1"><strong>digits</strong>(<var>?Chars</var>)</a><code>//</code></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="digit//1"><strong>digit</strong>(<var>?Char</var>)</a><code>//</code></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="integer//1"><strong>integer</strong>(<var>?Integer</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Number processing. The predicate <a class="pred" href="basics.html#digits//1">digits//1</a> 
+matches a posibly empty set of digits, <a class="pred" href="basics.html#digit//1">digit//1</a> 
+processes a single digit and integer processes an optional sign followed 
+by a non-empty sequence of digits into an integer.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="float//1"><strong>float</strong>(<var>?Float</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Process a floating point number. The actual conversion is controlled by <a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="number//1"><strong>number</strong>(<var>+Number</var>)</a><code>//</code></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="number//1"><strong>number</strong>(<var>-Number</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Generate extract a number. Handles both integers and floating point 
+numbers.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xinteger//1"><strong>xinteger</strong>(<var>+Integer</var>)</a><code>//</code></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xinteger//1"><strong>xinteger</strong>(<var>-Integer</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Generate or extract an integer from a sequence of hexadecimal digits. 
+Hexadecimal characters include both uppercase (A-F) and lowercase (a-f) 
+letters. The value may be preceeded by a sign (+/-)</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xdigit//1"><strong>xdigit</strong>(<var>-Weight</var>)</a><code>//</code></dt>
+<dd class="defbody">
+True if the next code is a hexdecimal digit with <var>Weight</var>. <var>Weight</var> 
+is between 0 and 15. Hexadecimal characters include both uppercase (A-F) 
+and lowercase (a-f) letters.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xdigits//1"><strong>xdigits</strong>(<var>-WeightList</var>)</a><code>//</code></dt>
+<dd class="defbody">
+List of weights of a sequence of hexadecimal codes. <var>WeightList</var> 
+may be empty. Hexadecimal characters include both uppercase (A-F) and 
+lowercase (a-f) letters.</dd>
+<dt class="pubdef"><a id="eos//0"><strong>eos</strong></a><code>//</code></dt>
+<dd class="defbody">
+Matches end-of-input. The implementation behaves as the following 
+portable implementation:
+
+<pre class="code">
+eos --&gt; call(eos_).
+eos_([], []).
+</pre>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+This is a difficult concept and violates the <i>context free</i> 
+property of DCGs. Explain the exact problems.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="remainder//1"><strong>remainder</strong>(<var>-List</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Unify <var>List</var> with the remainder of the input.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="prolog_var_name//1"><strong>prolog_var_name</strong>(<var>-Name:atom</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Matches a Prolog variable name. Primarily intended to deal with quasi 
+quotations that embed Prolog variables.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="atom//1"><strong>atom</strong>(<var>++Atom</var>)</a><code>//</code></dt>
+<dd class="defbody">
+Generate codes of <var>Atom</var>. Current implementation uses <a class="pred" href="termrw.html#write/1">write/1</a>, 
+dealing with any Prolog term. <var>Atom</var> must be ground though.
+</dd>
+</dl>
+
+<p></body></html>

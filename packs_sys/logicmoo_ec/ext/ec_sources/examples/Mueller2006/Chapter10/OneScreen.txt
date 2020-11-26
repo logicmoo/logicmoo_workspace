@@ -1,0 +1,107 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter10/OneScreen.e
+loading foundations/Root.e
+loading foundations/EC.e
+160 variables and 836 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+At(O1, L1).
+At(O2, L1).
+Happens(Move(O1, L1, L2), 0).
+Happens(Move(O2, L1, L2), 0).
+1
+-At(O1, L1).
+-At(O2, L1).
++At(O1, L2).
++At(O2, L2).
+Happens(Move(O1, L2, L3), 1).
+Happens(Move(O2, L2, L3), 1).
+2
+-At(O1, L2).
+-At(O2, L2).
++At(O1, L3).
++At(O2, L3).
+P
+Adjacent(L1, L2).
+Adjacent(L2, L1).
+Adjacent(L2, L3).
+Adjacent(L3, L2).
+Equal(O1, O1).
+Equal(O1, O2).
+Equal(O2, O1).
+Equal(O2, O2).
+!Adjacent(L1, L1).
+!Adjacent(L1, L3).
+!Adjacent(L2, L2).
+!Adjacent(L3, L1).
+!Adjacent(L3, L3).
+!Happens(Move(O1, L1, L1), 0).
+!Happens(Move(O1, L1, L1), 1).
+!Happens(Move(O1, L1, L2), 1).
+!Happens(Move(O1, L1, L3), 0).
+!Happens(Move(O1, L1, L3), 1).
+!Happens(Move(O1, L2, L1), 0).
+!Happens(Move(O1, L2, L1), 1).
+!Happens(Move(O1, L2, L2), 0).
+!Happens(Move(O1, L2, L2), 1).
+!Happens(Move(O1, L2, L3), 0).
+!Happens(Move(O1, L3, L1), 0).
+!Happens(Move(O1, L3, L1), 1).
+!Happens(Move(O1, L3, L2), 0).
+!Happens(Move(O1, L3, L2), 1).
+!Happens(Move(O1, L3, L3), 0).
+!Happens(Move(O1, L3, L3), 1).
+!Happens(Move(O2, L1, L1), 0).
+!Happens(Move(O2, L1, L1), 1).
+!Happens(Move(O2, L1, L2), 1).
+!Happens(Move(O2, L1, L3), 0).
+!Happens(Move(O2, L1, L3), 1).
+!Happens(Move(O2, L2, L1), 0).
+!Happens(Move(O2, L2, L1), 1).
+!Happens(Move(O2, L2, L2), 0).
+!Happens(Move(O2, L2, L2), 1).
+!Happens(Move(O2, L2, L3), 0).
+!Happens(Move(O2, L3, L1), 0).
+!Happens(Move(O2, L3, L1), 1).
+!Happens(Move(O2, L3, L2), 0).
+!Happens(Move(O2, L3, L2), 1).
+!Happens(Move(O2, L3, L3), 0).
+!Happens(Move(O2, L3, L3), 1).
+!ReleasedAt(At(O1, L1), 0).
+!ReleasedAt(At(O1, L1), 1).
+!ReleasedAt(At(O1, L1), 2).
+!ReleasedAt(At(O1, L2), 0).
+!ReleasedAt(At(O1, L2), 1).
+!ReleasedAt(At(O1, L2), 2).
+!ReleasedAt(At(O1, L3), 0).
+!ReleasedAt(At(O1, L3), 1).
+!ReleasedAt(At(O1, L3), 2).
+!ReleasedAt(At(O2, L1), 0).
+!ReleasedAt(At(O2, L1), 1).
+!ReleasedAt(At(O2, L1), 2).
+!ReleasedAt(At(O2, L2), 0).
+!ReleasedAt(At(O2, L2), 1).
+!ReleasedAt(At(O2, L2), 2).
+!ReleasedAt(At(O2, L3), 0).
+!ReleasedAt(At(O2, L3), 1).
+!ReleasedAt(At(O2, L3), 2).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+OneScreen: 2 predicates, 0 functions, 1 fluents, 1 events, 16 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.2s
+solution 0.0s
+total 0.5s
+Discrete Event Calculus Reasoner 1.0

@@ -1,0 +1,19 @@
+;;; a script to run some SNARK examples
+;;; usage:
+;;;   cd snark
+;;;   lisp < examples/snark-test >& examples/snark-test.out &
+
+#-snark (load "snark-system.lisp")
+#-snark (make-snark-system)
+(in-package :snark-user)
+(default-print-row-wffs-prettily nil)
+(overbeek-test)
+(time (steamroller-example))
+(time (front-last-example))
+(time (reverse-example))
+(time (reverse-example :magic t))
+(time (hot-drink-example))
+(coder-test)
+(time (snark-dpll::queens-problem 8 :find-all-models -1))
+(generate-latin-squares 7)
+(quit)

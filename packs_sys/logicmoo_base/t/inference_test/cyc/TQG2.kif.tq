@@ -1,0 +1,7 @@
+(note TQG2)
+
+(mother Foo-Mom Bar-Child)
+
+(query (not (father Foo-Mom Bar-Child)))
+
+(answer Yes)

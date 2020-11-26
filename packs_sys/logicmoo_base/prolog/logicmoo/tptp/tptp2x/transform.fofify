@@ -1,0 +1,429 @@
+%==============================================================================
+%----Procedures to convert CNF to FOF
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Separate out the positive and negative literals
+split_atoms_by_sign([],[],[]):-
+    !.
+
+split_atoms_by_sign([++Atom|RestOfLiterals],[Atom|RestOfPositive],Negative):-
+    split_atoms_by_sign(RestOfLiterals,RestOfPositive,Negative).
+
+split_atoms_by_sign([--Atom|RestOfLiterals],Positive,[Atom|RestOfNegative]):-
+    split_atoms_by_sign(RestOfLiterals,Positive,RestOfNegative).
+%------------------------------------------------------------------------------
+%----Use connective to link these atoms
+connect([Atom],_,Atom):-
+    !.
+
+connect([Atom|RestOfAtoms],Connective,Connected):-
+    connect(RestOfAtoms,Connective,RestConnected),
+    Connected =.. [Connective,Atom,RestConnected].
+%------------------------------------------------------------------------------
+%----Convert literals to a FOF
+%----Positive and negative makes an implication
+implify_literals(Literals,(Conjunction => Disjunction)):-
+    split_atoms_by_sign(Literals,[Postive1|PositiveRest],
+[Negative1|NegativeRest]),
+    !,
+    connect([Postive1|PositiveRest],'|',Disjunction),
+    connect([Negative1|NegativeRest],'&',Conjunction).
+
+%----Positive is disjoined
+implify_literals(Literals,Disjunction):-
+    split_atoms_by_sign(Literals,Positive,[]),
+    !,
+    connect(Positive,'|',Disjunction).
+
+%----Negative is negated conjunction
+implify_literals(Literals,~Conjunction):-
+    split_atoms_by_sign(Literals,[],Negative),
+    connect(Negative,'&',Conjunction).
+%------------------------------------------------------------------------------
+convert_to_FOF_literals([],[]).
+
+convert_to_FOF_literals([++Atom|RestOfLiterals],[Atom|RestOfFOFLiterals]):-
+    !,
+    convert_to_FOF_literals(RestOfLiterals,RestOfFOFLiterals).
+
+convert_to_FOF_literals([--Atom|RestOfLiterals],[~Atom|RestOfFOFLiterals]):-
+    convert_to_FOF_literals(RestOfLiterals,RestOfFOFLiterals).
+%------------------------------------------------------------------------------
+fofify_literals(Literals,Disjunction):-
+    convert_to_FOF_literals(Literals,FOFLiterals),
+    connect(FOFLiterals,'|',Disjunction).
+%------------------------------------------------------------------------------
+conjoin_clauses([input_clause(_,_,Literals)],Disjunction):-
+    !,
+    fofify_literals(Literals,Disjunction).
+
+conjoin_clauses([input_clause(_,_,Literals)|RestOfClauses],
+(Disjunction & RestOfConjunction)):-
+    fofify_literals(Literals,Disjunction),
+    conjoin_clauses(RestOfClauses,RestOfConjunction).
+%------------------------------------------------------------------------------
+%----Extract all the conjecture clauses
+extract_conjecture_clauses(Clauses,[input_clause(Name,negated_conjecture,
+Literals)|RestOfConjectureClauses],OtherClauses):-
+    tptp2X_select(input_clause(Name,negated_conjecture,Literals),Clauses,
+RestOfClauses),
+    !,
+    extract_conjecture_clauses(RestOfClauses,RestOfConjectureClauses,
+OtherClauses).
+
+extract_conjecture_clauses(Clauses,[],Clauses).
+%------------------------------------------------------------------------------
+universally_quantify(Formula,(! [OneVariable|RestOfVariables] : (Formula))):-
+    tptp2X_syntax_extract_variables(Formula,_,[OneVariable|RestOfVariables]),
+    !.
+
+universally_quantify(Formula,Formula).
+%------------------------------------------------------------------------------
+existentially_quantify(Formula,(? [OneVariable|RestOfVariables] : (Formula))):-
+    tptp2X_syntax_extract_variables(Formula,_,[OneVariable|RestOfVariables]),
+    !.
+
+existentially_quantify(Formula,Formula).
+%------------------------------------------------------------------------------
+obvious_make_conjecture([input_clause(Name,negated_conjecture,Literals)],
+NegatedFOFedLiterals,Name):-
+    !,
+    implify_literals(Literals,FOFedLiterals),
+    negate(FOFedLiterals,NegatedFOFedLiterals).
+
+obvious_make_conjecture([input_clause(Name,negated_conjecture,Literals)|
+RestOfConjectureClauses],(NegatedFOFedLiterals '|' RestOfConjecture),
+CombinedName):-
+    implify_literals(Literals,FOFedLiterals),
+    negate(FOFedLiterals,NegatedFOFedLiterals),
+    obvious_make_conjecture(RestOfConjectureClauses,RestOfConjecture,RestOfName),
+    concatenate_atoms([Name,'__',RestOfName],CombinedName).
+%------------------------------------------------------------------------------
+obvious_translate_conjecture_clauses_to_fof([],[]):-
+    !.
+
+obvious_translate_conjecture_clauses_to_fof(ConjectureClauses,
+[fof(CombinedName,conjecture,QuantifiedFormula)]):-
+    obvious_make_conjecture(ConjectureClauses,ConjectureFormula,CombinedName),
+    existentially_quantify(ConjectureFormula,QuantifiedFormula).
+%------------------------------------------------------------------------------
+obvious_translate_axioms_to_fof([],[]).
+
+obvious_translate_axioms_to_fof([input_clause(Name,Status,Literals)|
+RestOfFormulae],[fof(Name,Status,QuantifiedFormula)|RestOfTranslated]):-
+    !,
+    implify_literals(Literals,Formula),
+    universally_quantify(Formula,QuantifiedFormula),
+    obvious_translate_axioms_to_fof(RestOfFormulae,RestOfTranslated).
+
+obvious_translate_axioms_to_fof([NonClause|RestOfFormulae],
+[NonClause|RestOfTranslated]):-
+    obvious_translate_axioms_to_fof(RestOfFormulae,RestOfTranslated).
+%------------------------------------------------------------------------------
+direct_translate_to_fof([],[]).
+
+direct_translate_to_fof([FirstClause|RestOfClauses],[FirstFOF|RestOfFOF]):-
+    FirstClause =.. [input_clause,Name,Role,Literals|Rest],
+    !,
+    fofify_literals(Literals,Disjunction),
+    universally_quantify(Disjunction,LogicFormula),
+    FirstFOF =.. [fof,Name,Role,LogicFormula|Rest],
+    direct_translate_to_fof(RestOfClauses,RestOfFOF).
+
+direct_translate_to_fof([NonClause|RestOfClauses],[NonClause|RestOfFOF]):-
+    direct_translate_to_fof(RestOfClauses,RestOfFOF).
+%------------------------------------------------------------------------------
+%----Convert a set of clauses to formulae
+translate_cnf_to_fof([],_,[]):-
+    !.
+
+translate_cnf_to_fof(Clauses,direct,FOFFormulae):-
+    direct_translate_to_fof(Clauses,FOFFormulae).
+
+translate_cnf_to_fof(Clauses,obvious,FOFFormulae):-
+%----Extract the conjecture clauses
+    extract_conjecture_clauses(Clauses,ConjectureClauses,OtherFormulae),
+    obvious_translate_axioms_to_fof(OtherFormulae,AxiomFormulae),
+    obvious_translate_conjecture_clauses_to_fof(ConjectureClauses,
+ConjectureFormulae),
+    tptp2X_append(AxiomFormulae,ConjectureFormulae,FOFFormulae).
+
+translate_cnf_to_fof(Clauses,proving,[fof(combined,conjecture,
+~QuantifiedFormula)]):-
+    conjoin_clauses(Clauses,Formula),
+    universally_quantify(Formula,QuantifiedFormula).
+%------------------------------------------------------------------------------
+fofify(Clauses,Dictionary,fofify:Algorithm,FOFFormulae,Dictionary,
+NameSuffix):-
+    translate_cnf_to_fof(Clauses,Algorithm,FOFFormulae),
+    concatenate_atoms(['+fof_',Algorithm],NameSuffix).
+%------------------------------------------------------------------------------
+make_tff_fof_sort_atoms([],_,[],[]).
+
+%----Ignore unsorted variables
+make_tff_fof_sort_atoms([Variable|RestOfTFFVariables],KnownTypes,[Variable|
+RestOfFOFVariables],SortAtoms):-
+    looks_like_a_variable(Variable),
+    !,
+    make_tff_fof_sort_atoms(RestOfTFFVariables,KnownTypes,RestOfFOFVariables,
+SortAtoms).
+
+%----Ignore variables with built-in sorts
+make_tff_fof_sort_atoms([Variable:Sort|RestOfTFFVariables],KnownTypes,
+[Variable|RestOfFOFVariables],SortAtoms):-
+    _ =.. [Sort,Variable],
+    tptp2X_member(Sort,KnownTypes),
+    !,
+    make_tff_fof_sort_atoms(RestOfTFFVariables,KnownTypes,RestOfFOFVariables,
+SortAtoms).
+
+%----Make sort atoms for all other sorted variables
+make_tff_fof_sort_atoms([Variable:Sort|RestOfTFFVariables],KnownTypes,
+[Variable|RestOfFOFVariables],[SortAtom|RestOfSortAtoms]):-
+    SortAtom =.. [Sort,Variable],
+    make_tff_fof_sort_atoms(RestOfTFFVariables,KnownTypes,RestOfFOFVariables,
+RestOfSortAtoms).
+%------------------------------------------------------------------------------
+conjoin_sort_atoms([OneAtom],OneAtom).
+
+conjoin_sort_atoms([Atom|RestOfAtoms],(Atom & RestOfConjunction)):-
+    conjoin_sort_atoms(RestOfAtoms,RestOfConjunction).
+%------------------------------------------------------------------------------
+make_tff_sorted_formula([],FOFLogic,_,FOFLogic):-
+    !.
+
+make_tff_sorted_formula(SortAtoms,FOFLogic,Connective,FOFFormula):-
+    conjoin_sort_atoms(SortAtoms,SortConjunction),
+    FOFFormula =.. [Connective,SortConjunction,FOFLogic].
+%------------------------------------------------------------------------------
+translate_tff_logic_to_fof(Variable,_,Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+translate_tff_logic_to_fof(! TFFVariables : TFFLogic,KnownTypes,
+! FOFVariables : FOFFormula):-
+    !,
+    make_tff_fof_sort_atoms(TFFVariables,KnownTypes,FOFVariables,SortAtoms),
+    translate_tff_logic_to_fof(TFFLogic,KnownTypes,FOFLogic),
+    make_tff_sorted_formula(SortAtoms,FOFLogic,'=>',FOFFormula).
+
+translate_tff_logic_to_fof(? TFFVariables : TFFLogic,KnownTypes,
+? FOFVariables : FOFFormula):-
+    !,
+    make_tff_fof_sort_atoms(TFFVariables,KnownTypes,FOFVariables,SortAtoms),
+    translate_tff_logic_to_fof(TFFLogic,KnownTypes,FOFLogic),
+    make_tff_sorted_formula(SortAtoms,FOFLogic,'&',FOFFormula).
+
+translate_tff_logic_to_fof(TFFBinaryFormula,KnownTypes,FOFBinaryFormula):-
+    tptp_binary_formula(TFFBinaryFormula,Connective,TFFLHS,TFFRHS),
+    !,
+    translate_tff_logic_to_fof(TFFLHS,KnownTypes,FOFLHS),
+    translate_tff_logic_to_fof(TFFRHS,KnownTypes,FOFRHS),
+    FOFBinaryFormula =.. [Connective,FOFLHS,FOFRHS].
+
+translate_tff_logic_to_fof(TFFUnaryFormula,KnownTypes,FOFUnaryFormula):-
+    tptp_unary_formula(TFFUnaryFormula,Connective,TFFFormula),
+    !,
+    translate_tff_logic_to_fof(TFFFormula,KnownTypes,FOFFormula),
+    FOFUnaryFormula =.. [Connective,FOFFormula].
+
+translate_tff_logic_to_fof(AtomicFormula,_,AtomicFormula).
+%------------------------------------------------------------------------------
+look_for_individual_TLT('$i',TLTsSoFar,TLTsSoFar):-
+    tptp2X_member('$i',TLTsSoFar),
+    !.
+
+look_for_individual_TLT('$i',TLTsSoFar,['$i'|TLTsSoFar]):-
+    !.
+
+look_for_individual_TLT(_,TLTsSoFar,TLTsSoFar).
+%------------------------------------------------------------------------------
+make_signature_sort_atom(Type,KnownTypes,'$true',_):-
+    tptp2X_member(Type,KnownTypes),
+    !.
+
+make_signature_sort_atom(Type,_,SortAtom,Variable):-
+    SortAtom =.. [Type,Variable].
+%------------------------------------------------------------------------------
+%DEBUG translate_tff_signature_to_fof(T,_,_,_):-write('TTSTF '),display(T),nl,fail.
+
+translate_tff_signature_to_fof((RestOfTypes * Type),KnownTypes,Variables,
+(RestOfConjunction & SortAtom),TLTsSoFar,TopLevelTypes):-
+    !,
+    make_signature_sort_atom(Type,KnownTypes,SortAtom,Variable),
+    look_for_individual_TLT(Type,TLTsSoFar,IndividualTLTs),
+    translate_tff_signature_to_fof(RestOfTypes,KnownTypes,RestOfVariables,
+RestOfConjunction,IndividualTLTs,TopLevelTypes),
+    tptp2X_append(RestOfVariables,[Variable],Variables).
+
+translate_tff_signature_to_fof(OneType,KnownTypes,[Variable],SortAtom,
+TLTsSoFar,TopLevelTypes):-
+    look_for_individual_TLT(OneType,TLTsSoFar,TopLevelTypes),
+    make_signature_sort_atom(OneType,KnownTypes,SortAtom,Variable).
+%------------------------------------------------------------------------------
+%----Declarations of types specify non-empty domains
+translate_tff_type_to_fof(Type : '$tType',_KnownTypes,
+? [X] : SortAtom,TLTsSoFar,[Type|TLTsSoFar]):-
+    !,
+%----Reject duplicate declarations of types
+    \+ tptp2X_member(Type,TLTsSoFar),
+    SortAtom =.. [Type,X].
+
+%----Subtypes become implications. Remove subtype as TLT
+translate_tff_type_to_fof(Subtype << Type,_KnownTypes,
+! [X] : (SubsortAtom => SortAtom),TLTsSoFar,TopLevelTypes):-
+    !,
+    tptp2X_select(Subtype,TLTsSoFar,LessTLTsSoFar),
+    look_for_individual_TLT(Type,LessTLTsSoFar,TopLevelTypes),
+    SubsortAtom =.. [Subtype,X],
+    SortAtom =.. [Type,X].
+
+%----Signatures get converted to sort atoms.
+translate_tff_type_to_fof(Symbol : Arguments > Result,KnownTypes,
+! Variables : ( SortConjunction => SortAtom ),TLTsSoFar,TopLevelTypes):-
+    !,
+    translate_tff_signature_to_fof(Arguments,KnownTypes,Variables,
+SortConjunction,TLTsSoFar,TopLevelTypes),
+    Function =.. [Symbol|Variables],
+    make_signature_sort_atom(Result,KnownTypes,SortAtom,Function).
+
+translate_tff_type_to_fof(AtomSymbol : Type,KnownTypes,SortAtom,TLTsSoFar,
+TopLevelTypes):-
+    !,
+    look_for_individual_TLT(Type,TLTsSoFar,TopLevelTypes),
+    make_signature_sort_atom(Type,KnownTypes,SortAtom,AtomSymbol).
+%------------------------------------------------------------------------------
+%DEBUG translate_tff_to_fof([F|_],_,_,_,_):-write('TTTF '),write(F),nl,fail.
+
+translate_tff_to_fof([],_,[],TopLevelTypes,TopLevelTypes).
+
+%----Skip predicate declarations
+translate_tff_to_fof([TFFFormula|RestOfTFFFormulae],KnownTypes,
+RestOfFOFFormulae,TLTsSoFar,TopLevelTypes):-
+    TFFFormula =.. [tff,_,type,_ : '$o'|_],
+    !,
+    translate_tff_to_fof(RestOfTFFFormulae,KnownTypes,RestOfFOFFormulae,
+TLTsSoFar,TopLevelTypes).
+
+translate_tff_to_fof([TFFFormula|RestOfTFFFormulae],KnownTypes,
+RestOfFOFFormulae,TLTsSoFar,TopLevelTypes):-
+    TFFFormula =.. [tff,_,type,_ : (Arguments > '$o') |_],
+    translate_tff_signature_to_fof(Arguments,KnownTypes,_,_,TLTsSoFar,MoreTLTs),
+    !,
+    translate_tff_to_fof(RestOfTFFFormulae,KnownTypes,RestOfFOFFormulae,
+MoreTLTs,TopLevelTypes).
+
+%----Do all other types
+translate_tff_to_fof([TFFFormula|RestOfTFFFormulae],KnownTypes,[FOFFormula|
+RestOfFOFFormulae],TLTsSoFar,TopLevelTypes):-
+    TFFFormula =.. [tff,Name,type,TFFType|_],
+    !,
+%DEBUG write('translates type '),write(TFFType),nl,
+%DEBUG write('old TLTS '),write(TLTsSoFar),nl,
+    translate_tff_type_to_fof(TFFType,KnownTypes,FOFLogic,TLTsSoFar,NewTLTs),
+%DEBUG write('translated type '),write(FOFLogic),nl,
+%DEBUG write('new TLTS '),write(NewTLTs),nl,
+    concatenate_atoms(['fof_',Name],FOFName),
+    FOFFormula =.. [fof,FOFName,axiom,FOFLogic,
+inference(tff2fof,[status(thm)],[Name])],
+    translate_tff_to_fof(RestOfTFFFormulae,KnownTypes,RestOfFOFFormulae,
+NewTLTs,TopLevelTypes).
+
+%----Do regular tff formulae
+translate_tff_to_fof([TFFFormula|RestOfTFFFormulae],KnownTypes,[FOFFormula|
+RestOfFOFFormulae],TLTsSoFar,TopLevelTypes):-
+    TFFFormula =.. [tff,Name,Role,TFFLogic|_],
+    !,
+%DEBUG write('translate '),write(TFFLogic),nl,
+    translate_tff_logic_to_fof(TFFLogic,KnownTypes,FOFLogic),
+%DEBUG write('translated '),write(FOFLogic),nl,
+    concatenate_atoms(['fof_',Name],FOFName),
+    FOFFormula =.. [fof,FOFName,Role,FOFLogic,
+inference(tff2fof,[status(thm)],[Name])],
+    translate_tff_to_fof(RestOfTFFFormulae,KnownTypes,RestOfFOFFormulae,
+TLTsSoFar,TopLevelTypes).
+
+%----Ignore others - help, what are they?
+translate_tff_to_fof([Formula|RestOfTFFFormulae],KnownTypes,
+[Formula|RestOfFOFFormulae],TLTsSoFar,TopLevelTypes):-
+write('HELP, what is this doing here'),nl,write(Formula),nl,
+    translate_tff_to_fof(RestOfTFFFormulae,KnownTypes,RestOfFOFFormulae,
+TLTsSoFar,TopLevelTypes).
+%------------------------------------------------------------------------------
+translate_tff_top_level_types(TopLevelTypes,_,with,
+fof(Name,axiom,
+! [X,Y] : ( (FirstAtom & SecondAtom) => '$tptp_not_equal'(X,Y) ) )
+):-
+    tptp2X_append(_,[FirstType|RestOfTypes],TopLevelTypes),
+    tptp2X_member(SecondType,RestOfTypes),
+    FirstAtom =.. [FirstType,X],
+    SecondAtom =.. [SecondType,Y],
+    concatenate_atoms([FirstType,'_',SecondType,'_distinct'],Name).
+
+translate_tff_top_level_types(Types,TFFFormulae,_,DisjointFormula):-
+    tptp2X_member(Type,Types),
+    findall(Subtype,tptp2X_member(tff(_,type,Subtype << Type),TFFFormulae),
+SubtypesOfType),
+    translate_tff_top_level_types(SubtypesOfType,TFFFormulae,with,
+DisjointFormula).
+%------------------------------------------------------------------------------
+tff2fof_known_types([],[]).
+
+tff2fof_known_types([$(Type)|RestKnownTypes],[AtomicType|
+RestAtomicKnownTypes]):-
+    !,
+    concatenate_atoms(['$',Type],AtomicType),
+    tff2fof_known_types(RestKnownTypes,RestAtomicKnownTypes).
+
+tff2fof_known_types([AtomicKnownType|RestKnownTypes],[AtomicKnownType|
+RestAtomicKnownTypes]):-
+    tff2fof_known_types(RestKnownTypes,RestAtomicKnownTypes).
+%------------------------------------------------------------------------------
+tff2fof(TFFFormulae,Dictionary,tff2fof:WithOrWithoutInequalities,FOFFormulae,
+FOFDictionary,Extension):-
+   tptp2X_member(WithOrWithoutInequalities,[with,without]),
+   tff2fof(TFFFormulae,Dictionary,
+tff2fof:WithOrWithoutInequalities:['$int','$rat','$real','$i'],
+FOFFormulae,FOFDictionary,Extension).
+
+tff2fof(TFFFormulae,Dictionary,tff2fof,FOFFormulae,FOFDictionary,Extension):-
+   tff2fof(TFFFormulae,Dictionary,tff2fof:with:['$int','$rat','$real','$i'],
+FOFFormulae,FOFDictionary,Extension).
+
+tff2fof(TFFFormulae,Dictionary,tff2fof:WithOrWithoutInequalities:KnownTypes,
+FOFFormulae,Dictionary,'+tff2fof'):-
+%DEBUG write('TFFFormulae '),write(TFFFormulae),nl,
+%DEBUG write('Dictionary '),write(Dictionary),nl,
+    tff2fof_known_types(KnownTypes,AtomicKnownTypes),
+    tptp_formulae_language(TFFFormulae,[tff]),
+    !,
+    tptp_complete_types(TFFFormulae,CompletedTypeDeclarations,
+CompletedLogicalFormulae),
+    tptp2X_append(CompletedTypeDeclarations,CompletedLogicalFormulae,
+CompletedTFFFormulae),
+%DEBUG write('CompletedTFFFormulae '),write(CompletedTFFFormulae),nl,
+    translate_tff_to_fof(CompletedTFFFormulae,AtomicKnownTypes,TFFFOFFormulae,
+[],TopLevelTypes),
+%DEBUG write('TFFFOFFormulae '),write(TFFFOFFormulae),nl,
+   findall(DisjointFormula,translate_tff_top_level_types(TopLevelTypes,
+TFFFormulae,WithOrWithoutInequalities,DisjointFormula),DisjointFormulae),
+%DEBUG write('Disjoints '),write(DisjointFormulae),nl,
+    tptp2X_append(TFFFOFFormulae,DisjointFormulae,FOFFormulae).
+
+tff2fof(Formulae,Dictionary,tff2fof,Formulae,Dictionary,'').
+%------------------------------------------------------------------------------
+axiomate(Formulae,Dictionary,axiomate,AxiomFormulae,Dictionary,NameSuffix):-
+    tptp_formulae(Formulae),
+    tptp2X_select(fof(_,conjecture,_),Formulae,DeConjecturedFormulae),
+    !,
+    axiomate(DeConjecturedFormulae,Dictionary,axiomate,AxiomFormulae,
+Dictionary,NameSuffix).
+
+axiomate(Formulae,Dictionary,axiomate,Formulae,Dictionary,'+axed').
+%------------------------------------------------------------------------------
+fofify_file_information(transform,fofify:obvious,'obvious or proving').
+
+fofify_file_information(transform,axiomate,'Removes the conjecture').
+
+fofify_file_information(transform,tff2fof,'Converts TFF to FOF').
+%------------------------------------------------------------------------------

@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section F.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="library.html">
+<link rel="next" href="opsummary.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="library.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="opsummary.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:funcsummary"><a id="sec:F.3"><span class="sec-nr">F.3</span> <span class="sec-title">Arithmetic 
+Functions</span></a></h2>
+
+<a id="sec:funcsummary"></a>
+<table>
+<tr><td><a class="function" href="arith.html#f-*/2">*/2</a></td><td>Multiplication</td></tr>
+<tr><td><a class="function" href="arith.html#f-**/2">**/2</a></td><td>Power 
+function</td></tr>
+<tr><td><a class="function" href="arith.html#f-+/1">+/1</a></td><td>Unary 
+plus (No-op)</td></tr>
+<tr><td><a class="function" href="arith.html#f-+/2">+/2</a></td><td>Addition</td></tr>
+<tr><td><a class="function" href="arith.html#f--/1">-/1</a></td><td>Unary 
+minus</td></tr>
+<tr><td><a class="function" href="arith.html#f--/2">-/2</a></td><td>Subtraction</td></tr>
+<tr><td><a class="function" href="arith.html#f-//2">//2</a></td><td>Division</td></tr>
+<tr><td><a class="function" href="arith.html#f-///2">///2</a></td><td>Integer 
+division</td></tr>
+<tr><td><a class="function" href="arith.html#f-/\/2">/\/2</a></td><td>Bitwise 
+and</td></tr>
+<tr><td><a class="function" href="arith.html#f-<</2">&lt;&lt;/2</a></td><td>Bitwise 
+left shift</td></tr>
+<tr><td><a class="function" href="arith.html#f->>/2">&gt;&gt;/2</a></td><td>Bitwise 
+right shift</td></tr>
+<tr><td><a class="function" href="arith.html#f-./2">./2</a></td><td>List 
+of one character: character code</td></tr>
+<tr><td><a class="function" href="arith.html#f-\/1">\/1</a></td><td>Bitwise 
+negation</td></tr>
+<tr><td><a class="function" href="arith.html#f-\//2">\//2</a></td><td>Bitwise 
+or</td></tr>
+<tr><td><a class="function" href="arith.html#f-^/2">^/2</a></td><td>Power 
+function</td></tr>
+<tr><td><a class="function" href="arith.html#f-abs/1">abs/1</a></td><td>Absolute 
+value</td></tr>
+<tr><td><a class="function" href="arith.html#f-acos/1">acos/1</a></td><td>Inverse 
+(arc) cosine</td></tr>
+<tr><td><a class="function" href="arith.html#f-acosh/1">acosh/1</a></td><td>Inverse 
+hyperbolic cosine</td></tr>
+<tr><td><a class="function" href="arith.html#f-asin/1">asin/1</a></td><td>Inverse 
+(arc) sine</td></tr>
+<tr><td><a class="function" href="arith.html#f-asinh/1">asinh/1</a></td><td>Inverse 
+(arc) sine</td></tr>
+<tr><td><a class="function" href="arith.html#f-atan/1">atan/1</a></td><td>Inverse 
+hyperbolic sine</td></tr>
+<tr><td><a class="function" href="arith.html#f-atan/2">atan/2</a></td><td>Rectangular 
+to polar conversion</td></tr>
+<tr><td><a class="function" href="arith.html#f-atanh/1">atanh/1</a></td><td>Inverse 
+hyperbolic tangent</td></tr>
+<tr><td><a class="function" href="arith.html#f-atan2/2">atan2/2</a></td><td>Rectangular 
+to polar conversion</td></tr>
+<tr><td><a class="function" href="arith.html#f-ceil/1">ceil/1</a></td><td>Smallest 
+integer larger than arg</td></tr>
+<tr><td><a class="function" href="arith.html#f-ceiling/1">ceiling/1</a></td><td>Smallest 
+integer larger than arg</td></tr>
+<tr><td><a class="function" href="arith.html#f-cos/1">cos/1</a></td><td>Cosine</td></tr>
+<tr><td><a class="function" href="arith.html#f-cosh/1">cosh/1</a></td><td>Hyperbolic 
+cosine</td></tr>
+<tr><td><a class="function" href="arith.html#f-copysign/2">copysign/2</a></td><td>Apply 
+sign of N2 to N1</td></tr>
+<tr><td><a class="function" href="arith.html#f-cputime/0">cputime/0</a></td><td>Get 
+CPU time</td></tr>
+<tr><td><a class="function" href="arith.html#f-denominator/1">denominator/1</a></td><td>Denominator 
+of a rational number (N/D)</td></tr>
+<tr><td><a class="function" href="arith.html#f-div/2">div/2</a></td><td>Integer 
+division</td></tr>
+<tr><td><a class="function" href="arith.html#f-e/0">e/0</a></td><td>Mathematical 
+constant</td></tr>
+<tr><td><a class="function" href="arith.html#f-erf/1">erf/1</a></td><td>Gauss 
+error function</td></tr>
+<tr><td><a class="function" href="arith.html#f-erfc/1">erfc/1</a></td><td>Complementary 
+error function</td></tr>
+<tr><td><a class="function" href="arith.html#f-epsilon/0">epsilon/0</a></td><td>Floating 
+point precision</td></tr>
+<tr><td><a class="function" href="arith.html#f-eval/1">eval/1</a></td><td>Evaluate 
+term as expression</td></tr>
+<tr><td><a class="function" href="arith.html#f-exp/1">exp/1</a></td><td>Exponent 
+(base <var>e</var>)</td></tr>
+<tr><td><a class="function" href="arith.html#f-float/1">float/1</a></td><td>Explicitly 
+convert to float</td></tr>
+<tr><td><a class="function" href="arith.html#f-float_fractional_part/1">float_fractional_part/1</a></td><td>Fractional 
+part of a float</td></tr>
+<tr><td><a class="function" href="arith.html#f-float_integer_part/1">float_integer_part/1</a></td><td>Integer 
+part of a float</td></tr>
+<tr><td><a class="function" href="arith.html#f-floor/1">floor/1</a></td><td>Largest 
+integer below argument</td></tr>
+<tr><td><a class="function" href="arith.html#f-gcd/2">gcd/2</a></td><td>Greatest 
+common divisor</td></tr>
+<tr><td><a class="function" href="arith.html#f-getbit/2">getbit/2</a></td><td>Get 
+bit at index from large integer</td></tr>
+<tr><td><a class="function" href="arith.html#f-inf/0">inf/0</a></td><td>Positive 
+infinity</td></tr>
+<tr><td><a class="function" href="arith.html#f-integer/1">integer/1</a></td><td>Round 
+to nearest integer</td></tr>
+<tr><td><a class="function" href="arith.html#f-lgamma/1">lgamma/1</a></td><td>Log 
+of gamma function</td></tr>
+<tr><td><a class="function" href="arith.html#f-log/1">log/1</a></td><td>Natural 
+logarithm</td></tr>
+<tr><td><a class="function" href="arith.html#f-log10/1">log10/1</a></td><td>10 
+base logarithm</td></tr>
+<tr><td><a class="function" href="arith.html#f-lcm/2">lcm/2</a></td><td>Least 
+Common Multiple</td></tr>
+<tr><td><a class="function" href="arith.html#f-lsb/1">lsb/1</a></td><td>Least 
+significant bit</td></tr>
+<tr><td><a class="function" href="arith.html#f-max/2">max/2</a></td><td>Maximum 
+of two numbers</td></tr>
+<tr><td><a class="function" href="arith.html#f-min/2">min/2</a></td><td>Minimum 
+of two numbers</td></tr>
+<tr><td><a class="function" href="arith.html#f-msb/1">msb/1</a></td><td>Most 
+significant bit</td></tr>
+<tr><td><a class="function" href="arith.html#f-mod/2">mod/2</a></td><td>Remainder 
+of division</td></tr>
+<tr><td><a class="function" href="arith.html#f-nan/0">nan/0</a></td><td>Not 
+a Number (NaN)</td></tr>
+<tr><td><a class="function" href="arith.html#f-nexttoward/2">nexttoward/2</a></td><td>Next 
+float in some direction</td></tr>
+<tr><td><a class="function" href="arith.html#f-numerator/1">numerator/1</a></td><td>Numerator 
+of a rational number (N/D)</td></tr>
+<tr><td><a class="function" href="arith.html#f-powm/3">powm/3</a></td><td>Integer 
+exponent and modulo</td></tr>
+<tr><td><a class="function" href="arith.html#f-random/1">random/1</a></td><td>Generate 
+random number</td></tr>
+<tr><td><a class="function" href="arith.html#f-random_float/0">random_float/0</a></td><td>Generate 
+random number</td></tr>
+<tr><td><a class="function" href="arith.html#f-rational/1">rational/1</a></td><td>Convert 
+to rational number</td></tr>
+<tr><td><a class="function" href="arith.html#f-rationalize/1">rationalize/1</a></td><td>Convert 
+to rational number</td></tr>
+<tr><td><a class="function" href="arith.html#f-rdiv/2">rdiv/2</a></td><td>Ration 
+number division</td></tr>
+<tr><td><a class="function" href="arith.html#f-rem/2">rem/2</a></td><td>Remainder 
+of division</td></tr>
+<tr><td><a class="function" href="arith.html#f-round/1">round/1</a></td><td>Round 
+to nearest integer</td></tr>
+<tr><td><a class="function" href="arith.html#f-roundtoward/2">roundtoward/2</a></td><td>Float 
+arithmetic with specified rounding</td></tr>
+<tr><td><a class="function" href="arith.html#f-truncate/1">truncate/1</a></td><td>Truncate 
+float to integer</td></tr>
+<tr><td><a class="function" href="arith.html#f-pi/0">pi/0</a></td><td>Mathematical 
+constant</td></tr>
+<tr><td><a class="function" href="arith.html#f-popcount/1">popcount/1</a></td><td>Count 
+1s in a bitvector</td></tr>
+<tr><td><a class="function" href="arith.html#f-sign/1">sign/1</a></td><td>Extract 
+sign of value</td></tr>
+<tr><td><a class="function" href="arith.html#f-sin/1">sin/1</a></td><td>Sine</td></tr>
+<tr><td><a class="function" href="arith.html#f-sinh/1">sinh/1</a></td><td>Hyperbolic 
+sine</td></tr>
+<tr><td><a class="function" href="arith.html#f-sqrt/1">sqrt/1</a></td><td>Square 
+root</td></tr>
+<tr><td><a class="function" href="arith.html#f-tan/1">tan/1</a></td><td>Tangent</td></tr>
+<tr><td><a class="function" href="arith.html#f-tanh/1">tanh/1</a></td><td>Hyperbolic 
+tangent</td></tr>
+<tr><td><a class="function" href="arith.html#f-xor/2">xor/2</a></td><td>Bitwise 
+exclusive or</td></tr>
+</table>
+
+<p></body></html>

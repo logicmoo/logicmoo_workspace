@@ -1,0 +1,2676 @@
+
+\section{{\tt ANSWER\_\-ELLIPSIS\_\-OFF}}
+\label{Section:ANSWER--ELLIPSIS--OFF}
+
+{\em [Switch off answer ellipsis (default).]}
+
+The converse of {\tt ANSWER\_ELLIPSIS\_ON}. Relevant to bidirectional translation applications.
+
+
+
+
+See Section~\ref{Section:AnswerEllipsis}.
+
+\section{{\tt ANSWER\_\-ELLIPSIS\_\-ON}}
+\label{Section:ANSWER--ELLIPSIS--ON}
+
+{\em [Switch on answer ellipsis.]}
+
+In bidirectional translation applications, it is possible to use ``answer ellipsis'': one user asks a question, and non-sentential responses are treated as ellipsis. For example, in an English-to-French translator, the question ``Where is the pain?'' might be translated as ``Où avez-vous mal?'' Then, if answer ellipsis is switched on and there are suitable ellipsis declarations loaded, ``le soir'' might be interpreted as ``J'ai mal le soir''. 
+
+
+
+See Section~\ref{Section:AnswerEllipsis}.
+
+\section{{\tt BATCH\_\-DIALOGUE Arg1}}
+\label{Section:BATCH--DIALOGUEArg1}
+
+{\em [Process dialogue corpus with specified ID.]}
+
+Parameterised version of BATCH\_\-DIALOGUE. Process the default dialogue
+mode development corpus, defined by the dialogue\_\-corpus($\langle$Arg$\rangle$) config
+file entry. The output file, defined by the
+dialogue\_\-corpus\_\-results($\langle$Arg$\rangle$) config file entry, contains question
+marks for dialogue processing steps that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', or 'bad',
+the new judgements can be incorporated into the dialogue judgements
+file (defined by the dialogue\_\-corpus\_\-judgements config file entry)
+using the command UPDATE\_\-DIALOGUE\_\-JUDGEMENTS $\langle$Arg$\rangle$.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-DIALOGUE}}
+\label{Section:BATCH--DIALOGUE}
+
+{\em [Process dialogue corpus.]}
+
+Process the default dialogue mode development corpus, defined by the
+dialogue\_\-corpus config file entry. The output file, defined by the
+dialogue\_\-corpus\_\-results config file entry, contains question marks for
+dialogue processing steps that have not yet been judged. If these are
+replaced by valid judgements, currently 'good', or 'bad', the new
+judgements can be incorporated into the dialogue judgements file
+(defined by the dialogue\_\-corpus\_\-judgements config file entry) using
+the command UPDATE\_\-DIALOGUE\_\-JUDGEMENTS.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-DIALOGUE\_\-SPEECH Arg1}}
+\label{Section:BATCH--DIALOGUE--SPEECHArg1}
+
+{\em [Process dialogue speech corpus with specified ID.]}
+
+Parameterised speech mode version of BATCH\_\-DIALOGUE. Process the
+default dialogue mode speech corpus, defined by the
+dialogue\_\-corpus($\langle$Arg$\rangle$) config file entry. The output file, defined by
+the dialogue\_\-speech\_\-corpus\_\-results($\langle$Arg$\rangle$) config file entry, contains
+question marks for dialogue processing steps that have not yet been
+judged. If these are replaced by valid judgements, currently 'good',
+or 'bad', the new judgements can be incorporated into the dialogue
+judgements file (defined by the dialogue\_\-corpus\_\-judgements config file
+entry) using the command UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH $\langle$Arg$\rangle$.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-DIALOGUE\_\-SPEECH}}
+\label{Section:BATCH--DIALOGUE--SPEECH}
+
+{\em [Process dialogue speech corpus.]}
+
+Speech mode version of BATCH\_\-DIALOGUE. Process the default dialogue
+mode speech corpus, defined by the dialogue\_\-speech\_\-corpus config file
+entry. The output file, defined by the dialogue\_\-speechcorpus\_\-results
+config file entry, contains question marks for dialogue processing
+steps that have not yet been judged. If these are replaced by valid
+judgements, currently 'good', or 'bad', the new judgements can be
+incorporated into the dialogue judgements file (defined by the
+dialogue\_\-corpus\_\-judgements config file entry) using the command
+UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-DIALOGUE\_\-SPEECH\_\-AGAIN Arg1}}
+\label{Section:BATCH--DIALOGUE--SPEECH--AGAINArg1}
+
+{\em [Process dialogue speech corpus with specified ID, using recognition results from previous run.]}
+
+Like {\tt BATCH\_DIALOGUE\_SPEECH\_AGAIN}, but uses the version of the speech corpus tagged {\tt Arg1}. Input is taken from the transcriptions file specified by the config parameter
+\begin{verbatim}
+dialogue_speech_corpus(Arg1)
+\end{verbatim}
+and output is written to the file specified by the config parameter
+\begin{verbatim}
+dialogue_speech_corpus_results(Arg1)
+\end{verbatim}
+
+The config file also needs to define all the entries associated with spoken dialogue applications.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-DIALOGUE\_\-SPEECH\_\-AGAIN}}
+\label{Section:BATCH--DIALOGUE--SPEECH--AGAIN}
+
+{\em [Process dialogue speech corpus, using recognition results from previous run.]}
+
+Version of BATCH\_\-DIALOGUE\_\-SPEECH that skips the speech recognition
+stage, and instead uses stored results from the previous run.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt BATCH\_\-HELP Arg1}}
+\label{Section:BATCH--HELPArg1}
+
+{\em [Process help corpus with specified ID.]}
+
+Like {\tt BATCH\_HELP}, but input is taken from the file defined by
+\begin{verbatim}
+help_corpus(Arg1)
+\end{verbatim}
+and output is written to the file defined by
+\begin{verbatim}
+help_corpus_results(Arg1)
+\end{verbatim}
+
+
+
+See Section~\ref{Section:HelpSystemCommandLine}.
+
+\section{{\tt BATCH\_\-HELP}}
+\label{Section:BATCH--HELP}
+
+{\em [Process help corpus.]}
+
+Relevant to applications using targeted help. The corpus defined by the config file parameter
+\begin{verbatim}
+help_corpus
+\end{verbatim}
+which should be in \verb!sent(...)! form, is passed through help processing, and the results
+are written out to the file defined by
+config file parameter
+\begin{verbatim}
+help_corpus_results
+\end{verbatim}
+Help resources must be defined and loaded.
+
+
+
+See Section~\ref{Section:HelpSystemCommandLine}.
+
+\section{{\tt BIDIRECTIONAL\_\-OFF}}
+\label{Section:BIDIRECTIONAL--OFF}
+
+{\em [Switch off bidirectional mode (default).]}
+
+Relevant to bidirectional translation applications: switches off the mode switched on by {\tt BIDIRECTIONAL\_ON}.
+
+
+
+See Section~\ref{Section:Bidirectional}.
+
+\section{{\tt BIDIRECTIONAL\_\-ON}}
+\label{Section:BIDIRECTIONAL--ON}
+
+{\em [Switch on bidirectional\_\-mode.]}
+
+Relevant to bidirectional translation applications: switches on a mode where input can be passed to either side of the bidirectional system. Commands for the ``question'' side are prefaced with ``Q:'', e.g.
+\begin{verbatim}
+Q: LOAD_TRANSLATE
+
+Q: where is the pain
+\end{verbatim}
+while commands for the `answer'' side are prefaced with ``A:'', e.g.
+\begin{verbatim}
+A: EBL_LOAD
+
+Q: en la cabeza
+\end{verbatim}
+
+
+
+See Section~\ref{Section:Bidirectional}.
+
+\section{{\tt CAT Arg1}}
+\label{Section:CATArg1}
+
+{\em [Display information for specified category.]}
+
+When doing grammar development, this command lets you display the list of features associated with a given syntactic category. It requires a grammar to be loaded. Here is an example with the English grammar:
+\begin{verbatim}
+>> CAT np
+(Display information for specified category)
+
+Features for category "np": [agr,case,conj,def,gapsin,gapsout,
+nform,pronoun,sem,sem_n_type,takes_attrib_pp,takes_frequency_pp,
+takes_loc_pp,takes_partitive,takes_post_mods,takes_to_pp,
+takes_with_pp,wh]
+\end{verbatim}
+
+
+
+See Section~\ref{Section:GrammarDebuggingCommands}.
+
+\section{{\tt CHECK\_\-ALTERF\_\-PATTERNS}}
+\label{Section:CHECK--ALTERF--PATTERNS}
+
+{\em [Check the consistency of the current Alterf patterns file.]}
+
+Check the consistency of the current Alterf patterns file, defined by
+the {\tt alterf\_\-patterns\_\-file config} file entry. Records in the
+file should have the format
+\begin{verbatim}
+alterf_pattern(<Pattern>, <Atom>, <Sent>).
+\end{verbatim}
+or
+\begin{verbatim}
+alterf_pattern(<Pattern>, <Atom>, <Sent>) :- <Conds>.
+\end{verbatim}
+where \verb!<Pattern>! is the Alterf pattern, \verb!<Atom>! is the semantic
+atom it corresponds to, \verb!<Sent>! is an example sentence illustrating
+the patterns, and \verb!<Conds>! are optional Prolog conditions.
+
+The command parses each \verb!<Sent>! using the currently loaded
+grammar, and checks that the \verb!<Pattern>! matches it. It warns
+about patterns that fail to match, and print summary statistics.
+
+
+
+See Section~\ref{Section:LFPatterns}.
+
+\section{{\tt CHECK\_\-BACKTRANSLATION Arg1}}
+\label{Section:CHECK--BACKTRANSLATIONArg1}
+
+{\em [Process Lang -$\rangle$ Lang output in Lang -$\rangle$ Int environment to check that back-translations parse.]}
+
+Command relevant to interlingua-based translation applications which
+use backtranslation (cf. Section~\ref{Section:Backtranslation}). The
+assumption is that translation is from Source to Interlingua, and
+backtranslation is thus from Interlingua to Source.
+
+The argument to the command should be an output file produced by doing 
+{\tt TRANSLATE\_\-CORPUS} (cf. Section~\ref{Section:TRANSLATE--CORPUS})
+in the Source $\rightarrow$ Source environment. The command is however run
+in the Source $\rightarrow$ Interlingua environment. The intent is to
+check that the result of backtranslation is an expression which, when
+parsed in the Source language and translated back into Interlingua,
+would produce the same Interlingua representation as the one produced by performing
+the Source $\rightarrow$ Source translation. Examples which fail to
+give a match are flagged.
+
+
+
+See Section~\ref{Section:TranslationRegressionText}.
+
+\section{{\tt CHECK\_\-PARAPHRASES}}
+\label{Section:CHECK--PARAPHRASES}
+
+{\em [Check that transcription paraphrases are in coverage.]}
+
+Command used for regression testing in speech translation
+applications, when employing a paraphrase file
+(cf. Section~\ref{Section:TranslationRegressionParaphrases}). 
+There will typically be some out-of-coverage utterances which are
+still close enough that they will successfully go through speech
+understanding. However, since the transcription is out-of-coverage,
+the scoring routines will have no way to know that the result
+is incorrect, since the transcription produces no reference 
+output to compare with.
+
+Under these circumstances, it is possible to declare a {\em paraphrase
+file}, which associates in-coverage sentences with out-of-coverage
+transcriptions. A paraphrase file record has the following format:
+\begin{verbatim}
+paraphrase(<TranscriptAtom>, <ParaphraseAtom>)
+\end{verbatim}
+where \verb!<TranscriptAtom>! is the transcription and \verb!<ParaphraseAtom>!
+is the paraphrase.
+
+The command {\tt CHECK\_\-PARAPHRASES} assumes that a grammar is loaded.
+It parses the \verb!<ParaphraseAtom>! fields in the paraphrase file, and
+checks that they are all in coverage, issuing warnings for the ones that are not.
+
+
+
+
+See Section~\ref{Section:TranslationRegressionParaphrases}.
+
+\section{{\tt CLOSE\_\-DOWN\_\-RECOGNITION}}
+\label{Section:CLOSE--DOWN--RECOGNITION}
+
+{\em [Close down recognition resources: license manager, recserver, TTS and regserver.]}
+
+If you are doing recognition from the Regulus command-line (cf. Section~\ref{Section:CommandLineSpeechInput}), you may want to use this command to close down the relevant processes after you are finished. This command lets you do it, though it currently only works under Windows/Cygwin.
+
+
+
+
+
+See Section~\ref{Section:SpeechInput}.
+
+\section{{\tt COMPACTION}}
+\label{Section:COMPACTION}
+
+{\em [Switch on compaction processing for Regulus to Nuance conversion (default).]}
+
+Thie command is mostly included for historical reasons. You should not want to switch off compaction under normal circumstances.
+
+
+
+See Section~\ref{Section:UGToGSL}.
+
+\section{{\tt COMPILE\_\-ELLIPSIS\_\-PATTERNS}}
+\label{Section:COMPILE--ELLIPSIS--PATTERNS}
+
+{\em [Compile patterns used for ellipsis processing.]}
+
+
+Compile the patterns used for ellipsis processing, which are defined by the ellipsis\_\-classes config file entry. The compiled patterns will be loaded next time you invoke LOAD\_\-TRANSLATE. 
+
+
+
+See Section~\ref{Section:TranslationEllipsis}.
+
+\section{{\tt COMPILE\_\-HELP}}
+\label{Section:COMPILE--HELP}
+
+{\em [Compile material for targeted help.]}
+
+This command compiles run-time targeted help resources for a specific
+language pair in a speech translation application. It expects the
+following config file parameters to be defined:
+
+\begin{itemize}
+
+\item {\tt targeted\_\-help\_\-source\_\-files} A list of the form
+\begin{verbatim}
+[use_combined_interlingua_corpus(<SourceLang>, <TargetLang>),
+ <CombinedInterlinguaCorpus>]
+\end{verbatim}
+
+where {\tt $langle$CombinedInterlinguaCorpus$\rangle$} is a combined interlingua
+corpus (cf.~\ref{Section:InterlinguaCentredDevelopment}) and
+{\tt $langle$SourceLang$\rangle$}, {\tt $langle$TargetLang$\rangle$} are identifiers for the
+source and target languages. The combined interlingua corpus must be
+created first, and contain the relevant languages.
+
+\item {\tt targeted\_\-help\_\-classes\_\-file} A file of targeted
+help class declarations for the source language.
+
+\end{itemize}
+
+
+
+See Section~\ref{Section:HelpSystemConstruction}.
+
+\section{{\tt DCG}}
+\label{Section:DCG}
+
+{\em [Use DCG parser.]}
+
+
+The grammar can be parsed using either the left-corner parser (the default) or the DCG parser. The left-corner parser is faster, but the DCG parser can be useful for debugging. In particular, it can be used to parse non-top constituents ; the left-corner parser lacks this capability.
+
+
+
+See Section~\ref{Section:DCGParser}.
+
+\section{{\tt DIALOGUE}}
+\label{Section:DIALOGUE}
+
+{\em [Do dialogue-style processing on input sentences.]}
+
+
+In this mode, the sentence is parsed using the current parser. If any parses are found, the first one is processed through the code defined by the dialogue\_\-files config file entry.
+
+
+
+See Section~\ref{Section:CommandLineOverview}.
+
+\section{{\tt DIALOGUE\_\-SPEAKER}}
+\label{Section:DIALOGUE--SPEAKER}
+
+{\em [Show notional speaker (if any) currently being used for dialogue processing.]}
+
+In dialogue processing applications where words like ``I'' and ``me''
+are used, it can be important to know the identity of the speaker; for
+example, in the Calendar application, one could say ``When is my next
+meeting?'' or ``Am I attending a meeting on Friday?''  The {\tt
+DIALOGUE\_\-SPEAKER} command makes it possible to print the identity
+of the notional speaker from the command-line.  The notional speaker
+can also be retrieved using the predicate {\tt
+get\_\-notional\_\-speaker/1} in {\tt PrologLib/utilities.pl}.
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt DIALOGUE\_\-TIME}}
+\label{Section:DIALOGUE--TIME}
+
+{\em [Show time (notional or real) currently being used for dialogue processing.]}
+
+In dialogue processing applications where expressions like ``today''
+or ``next week'' are used, it is necessary to know the current
+time. When doing regression testing, it is then useful to be able to
+set a notional time, so that responses to time-dependent utterances
+stay stable.
+
+The {\tt DIALOGUE\_\-TIME} command makes it possible to print the
+notional time from the command-line. The notional time can also be
+retrieved using the predicate {\tt get\_\-notional\_\-time/1} in {\tt
+PrologLib/utilities.pl}.
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt DOC Arg1}}
+\label{Section:DOCArg1}
+
+{\em [Print documentation for command or config file entry.]}
+
+The {\tt DOC} command prints out detailed documentation for a command
+or config file entry, when this is available. For example
+\begin{verbatim}
+DOC DIALOGUE_TIME
+\end{verbatim}
+
+
+
+See Section~\ref{Section:CommandLineDoc}.
+
+\section{{\tt DUMP\_\-NBEST\_\-TRAINING\_\-DATA\_\-OFF}}
+\label{Section:DUMP--NBEST--TRAINING--DATA--OFF}
+
+{\em [Don't write out training data when doing batch processing of N-best results (default).]}
+
+
+When doing batch speech translation, using {\tt
+TRANSLATE\_\-SPEECH\_\-CORPUS} and allied commands, it is optionally
+possible to write out N-best training data if the config file
+parameter {\tt nbest\_\-training\_\-data\_\-file} is defined. Output
+is written to the file in question. This command turns off the
+behaviour.
+
+
+
+
+See Section~\ref{Section:DialogueNBest}.
+
+\section{{\tt DUMP\_\-NBEST\_\-TRAINING\_\-DATA\_\-ON}}
+\label{Section:DUMP--NBEST--TRAINING--DATA--ON}
+
+{\em [Write out training data when doing batch processing of N-best results.]}
+
+When doing batch speech translation, using {\tt
+TRANSLATE\_\-SPEECH\_\-CORPUS} and allied commands, it is optionally
+possible to write out N-best training data if the config file
+parameter {\tt nbest\_\-training\_\-data\_\-file} is defined. Output
+is written to the file in question. This command turns on the
+behaviour.
+
+
+
+See Section~\ref{Section:DialogueNBest}.
+
+\section{{\tt EBL}}
+\label{Section:EBL}
+
+{\em [Do main EBL processing: equivalent to LOAD, EBL\_\-TREEBANK, EBL\_\-TRAIN, EBL\_\-POSTPROCESS, EBL\_\-NUANCE.]}
+
+
+This command does all the processing needed to build a specialised
+Nuance grammar from scratch. You will need to have defined at least 
+the following config file parameters:
+\begin{itemize}
+
+\item {\tt ebl\_\-corpus} The training corpus, which should consist of Prolog records of the form {\tt sent(...)}.
+
+\item {\tt ebl\_\-operationality} The file defining the operationality criteria.
+
+\item {\tt ebl\_\-nuance\_\-grammar} The output file which will contains the final Nuance grammar.
+
+\end{itemize}
+
+In many applications, you will also want the following:
+
+\begin{itemize}
+
+\item {\tt ebl\_\-include\_\-lex} A file of ``include-lex'' definitions, which specify lexical entries to be included directly.
+
+\item {\tt ebl\_\-regulus\_\-component\_\-grammar} The specialised grammar that will be loaded by the {\tt EBL\_LOAD} command, if it is not the default one.
+
+\item {\tt ebl\_\-ignore\_\-feats} Features to ignore when performing Regulus-to-Nuance compilation on the specialised grammar.
+
+\end{itemize}
+
+
+
+
+\section{{\tt EBL\_\-ANALYSIS}}
+\label{Section:EBL--ANALYSIS}
+
+{\em [Do main EBL processing, except for creation of Nuance grammar: equivalent to LOAD, EBL\_\-TREEBANK, EBL\_\-TRAIN, EBL\_\-POSTPROCESS.]}
+
+
+This command does all the processing needed to build a specialised
+Regulus grammar from scratch. You will need to have defined at least 
+the following config file parameters:
+\begin{itemize}
+
+\item {\tt ebl\_\-corpus} The training corpus, which should consist of Prolog records of the form {\tt sent(...)}.
+
+\item {\tt ebl\_\-operationality} The file defining the operationality criteria.
+
+\end{itemize}
+
+In many applications, you will also want the following:
+
+\begin{itemize}
+
+\item {\tt ebl\_\-include\_\-lex} A file of ``include-lex'' definitions, which specify lexical entries to be included directly.
+
+\item {\tt ebl\_\-regulus\_\-component\_\-grammar} The specialised grammar that will be loaded by the {\tt EBL\_LOAD} command, if it is not the default one.
+
+\end{itemize}
+
+
+
+
+See Section~\ref{Section:InvokingSpecialisation}.
+
+\section{{\tt EBL\_\-GEMINI}}
+\label{Section:EBL--GEMINI}
+
+{\em [Compile current specialised Regulus grammar into Gemini form.]}
+
+Compile current specialised Regulus grammar into Gemini form. Same as
+the {\tt GEMINI} command, but for the specialised grammar. The base name of
+the Gemini files produced is defined by the {\tt ebl\_\-gemini\_\-grammar} config
+file entry.
+
+
+
+See Section~\ref{Section:Gemini}.
+
+\section{{\tt EBL\_\-GENERATION}}
+\label{Section:EBL--GENERATION}
+
+{\em [Do main generation EBL processing: equivalent to LOAD, EBL\_\-TREEBANK, EBL\_\-TRAIN, EBL\_\-POSTPROCESS, EBL\_\-LOAD\_\-GENERATION.]}
+
+This command does all the processing needed to build a specialised
+Nuance generation grammar from scratch. You will need to have defined at least 
+the following config file parameters:
+\begin{itemize}
+
+\item {\tt ebl\_\-corpus} The training corpus, which should consist of Prolog records of the form {\tt sent(...)}.
+
+\item {\tt ebl\_\-operationality} The file defining the operationality criteria.
+
+\item {\tt generation\_\-grammar} The output file which will contain the generation grammar.
+
+\end{itemize}
+
+In many applications, you will also want the following:
+
+\begin{itemize}
+
+\item {\tt ebl\_\-include\_\-lex} A file of ``include-lex'' definitions, which specify lexical entries to be included directly.
+
+\item {\tt ebl\_\-regulus\_\-component\_\-grammar} The specialised grammar that will be loaded by the {\tt EBL\_LOAD} command, if it is not the default one.
+
+\item {\tt generation\_\-incremental\_\-deepening\_\-parameters} Settings to control incremental deepening during generation. A typical value is {\tt [0, 50, 50]}.
+
+\end{itemize}
+
+
+
+
+See Section~\ref{Section:InvokingSpecialisation}.
+
+\section{{\tt EBL\_\-GRAMMAR\_\-PROBS}}
+\label{Section:EBL--GRAMMAR--PROBS}
+
+{\em [Create Nuance grammar probs training set from current EBL training set or grammar\_\-probs\_\-data file.]}
+
+Convert the current EBL training set, defined by the {\tt ebl\_\-corpus}
+config file entry, into a form that can be used as training data by
+the Nuance {\tt compute-grammar-probs utility}. The output training data is
+placed in the file defined by the {\tt ebl\_\-grammar\_\-probs} config file entry.
+
+
+
+See Section~\ref{Section:PCFG}.
+
+\section{{\tt EBL\_\-LOAD}}
+\label{Section:EBL--LOAD}
+
+{\em [Load current specialised Regulus grammar in DCG and left-corner form.]}
+
+Load current specialised Regulus grammar in DCG and left-corner
+form. Same as the {\tt LOAD} command, but for the specialised grammar. 
+
+The specialised grammar is taken from the setting of the {\tt
+ebl\_\-regulus\_\-component\_\-grammar} if it is defined.
+
+
+
+See Section~\ref{Section:SpecialisedParsing}.
+
+\section{{\tt EBL\_\-LOAD\_\-GENERATION Arg1}}
+\label{Section:EBL--LOAD--GENERATIONArg1}
+
+{\em [Compile and load designated version of current specialised Regulus grammar for generation.]}
+
+Parameterised version of {\tt EBL\_\-LOAD\_\-GENERATION}: compile and
+load the specialised generation grammar for the subdomain tag
+{\tt $\langle$SubdomainTag$\rangle$}. This will be the file
+{\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-$\langle$SubdomainTag$\rangle$.regulus},
+where {\tt $\langle$prefix$\rangle$} is the value of the config file entry
+{\tt working\_\-file\_\-prefix}. The resulting compiled generation grammar
+is placed in the file defined by the
+{\tt generation\_\-grammar($\langle$SubdomainTag$\rangle$)} config file
+entry. 
+
+Note that {\tt EBL\_\-LOAD\_\-GENERATION $\langle$SubdomainTag$\rangle$}
+places the compiled generation grammar in the same place as
+{\tt LOAD\_\-GENERATION $\langle$SubdomainTag$\rangle$}.
+
+
+
+See Section~\ref{Section:SpecialisedGeneration}.
+
+\section{{\tt EBL\_\-LOAD\_\-GENERATION}}
+\label{Section:EBL--LOAD--GENERATION}
+
+{\em [Compile and load current specialised Regulus grammar for generation.]}
+
+Compile and load the current specialised generation grammar. This will
+be the file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-default.regulus},
+where {\tt $\langle$prefix$\rangle$} is the value of the config file
+entry {\tt working\_\-file\_\-prefix}. The resulting compiled
+generation grammar is placed in the file defined by the {\tt
+generation\_\-rules} config file entry.
+
+Note that {\tt EBL\_\-LOAD\_\-GENERATION} places the compiled
+generation grammar in the same place as LOAD\_\-GENERATION.
+
+
+
+See Section~\ref{Section:SpecialisedGeneration}.
+
+\section{{\tt EBL\_\-MODE}}
+\label{Section:EBL--MODE}
+
+{\em [Do EBL processing on input sentences.]}
+
+Put the top-loop in a mode where it shows the results of doing
+EBL-based processing on input sentences. For this to make sense,
+you need to have loaded a general grammar and have a config file
+entry for {\tt ebl\_\-operationality}.
+
+When the top loop is in EBL mode, input sentences are parsed
+and then subjected to EBL generalisation, using the rules in
+{\tt ebl\_\-operationality}. The file is reloaded each time.
+The learned rules are printed in schematic form, as they
+are in the files output by the {EBL\_\-POSTPROCESS} and
+related commands. Each rule is paired with the phrase used
+to induce it.
+
+
+
+See Section~\ref{Section:CommandLineOverview}.
+
+\section{{\tt EBL\_\-NUANCE}}
+\label{Section:EBL--NUANCE}
+
+{\em [Compile current specialised Regulus grammar into Nuance GSL form.]}
+
+Compile current specialised Regulus grammar into Nuance GSL form. Same
+as the {\tt NUANCE} command, but for the specialised grammar. The
+input is the file created by the {\tt EBL\_\-POSTPROCESS command}; the
+output Nuance GSL grammar is placed in the file defined by the {\tt
+ebl\_\-nuance\_\-grammar} config file entry.
+
+
+
+See Section~\ref{Section:SpecialisedRecognition}.
+
+\section{{\tt EBL\_\-POSTPROCESS}}
+\label{Section:EBL--POSTPROCESS}
+
+{\em [Postprocess results of EBL training into specialised Regulus grammar.]}
+
+Create one or more specialised Regulus grammars out of the results produced by
+the {EBL\_\-TRAIN} command. The grammars are created in two forms.
+The file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-$\langle$tag$\rangle$.regulus}
+is the original one; the file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-$\langle$tag$\rangle$.regulus}
+has been subjected to a binarisation transformation, so that no rule has more than
+two daughters. The binarised version is the one passed to the {\tt EBL\_\-NUANCE}
+command, and is also the default file loaded by {\tt EBL\_\-LOAD}.
+
+
+
+See Section~\ref{Section:InvokingSpecialisation}.
+
+\section{{\tt EBL\_\-TRAIN}}
+\label{Section:EBL--TRAIN}
+
+{\em [Do EBL training on current treebank.]}
+
+Takes the file built using the {\tt EBL\_\-TREEBANK} command and
+performs EBL generalisation using operationality criteria defined
+by {\tt ebl\_\-operationality}. The output needs to be processed further 
+by the {\tt EBL\_\-POSTPROCESS} command.
+
+
+
+
+See Section~\ref{Section:InvokingSpecialisation}.
+
+\section{{\tt EBL\_\-TREEBANK}}
+\label{Section:EBL--TREEBANK}
+
+{\em [Parse all sentences in current EBL training set into treebank form.]}
+
+Parse all sentences in current EBL training set, defined by the {\tt
+ebl\_\-corpus} config file entry, to create a treebank file. Sentences that
+fail to parse are printed out with warning messages, and a summary
+statistic is produced at the end of the run. This is very useful for
+checking where you are with coverage.
+
+
+
+See Section~\ref{Section:InvokingSpecialisation}.
+
+\section{{\tt ECHO\_\-OFF}}
+\label{Section:ECHO--OFF}
+
+{\em [Don't echo input sentences (default).]}
+
+Switch off functionality to echo input text.
+ 
+
+
+
+See Section~\ref{Section:RegulusBatch}.
+
+\section{{\tt ECHO\_\-ON}}
+\label{Section:ECHO--ON}
+
+{\em [Echo input sentences (normally useful only in batch mode).]}
+
+Switch on echoing of input text. In this mode, each input text string 
+(as opposed to Regulus command) is printed out before being processed.
+This is normally only useful when running in batch mode.
+
+
+
+See Section~\ref{Section:RegulusBatch}.
+
+\section{{\tt FEAT Arg1}}
+\label{Section:FEATArg1}
+
+{\em [Display information for specified feature.]}
+
+If the argument is a feature in the currently loaded grammar,
+print information showing the range of permitted values for 
+that feature. For example:
+\begin{verbatim}
+>> FEAT agr
+(Display information for specified feature)
+
+Feature values for feature "agr": [[1,2,3],[masc,fem],[sg,pl]]
+\end{verbatim}
+
+
+
+See Section~\ref{Section:GrammarDebuggingCommands}.
+
+\section{{\tt GEMINI}}
+\label{Section:GEMINI}
+
+{\em [Compile current Regulus grammar into Gemini form.]}
+
+The grammar defined by the parameter {\tt regulus\_\-grammar} is
+translated into Gemini form. The base name for the output grammar
+file needs to be specified using the parameter {\tt gemini\_\-grammar}.
+
+
+
+See Section~\ref{Section:Gemini}.
+
+\section{{\tt GENERATE\_\-TRACE\_\-OFF}}
+\label{Section:GENERATE--TRACE--OFF}
+
+{\em [Switch off generation tracing (default).]}
+
+In translation mode, switch off printing of the generation trace.
+
+
+
+See Section~\ref{Section:GenerationTrace}.
+
+\section{{\tt GENERATE\_\-TRACE\_\-ON}}
+\label{Section:GENERATE--TRACE--ON}
+
+{\em [Switch on generation tracing.]}
+
+In translation mode, switch on printing of generation tracing. Each
+example processed prints the tree for the generated target, together
+with preference information. If multiple target sentences are
+produced, the tree and preference information is printed for each one.
+
+
+
+See Section~\ref{Section:GenerationTrace}.
+
+\section{{\tt GENERATION}}
+\label{Section:GENERATION}
+
+{\em [Generate from parsed input sentences.]}
+
+Run the system in ``generation mode''. Each input sentence is
+analysed. If any parses are found, the first one is generated back
+using the currently loaded generation grammar, showing all possible
+generated strings. This is normally used for debugging the generation
+grammar.
+
+
+
+See Section~\ref{Section:CommandLineOverview}.
+
+\section{{\tt HELP Arg1}}
+\label{Section:HELPArg1}
+
+{\em [Print help for commands whose name or description match the string.]}
+
+The argument is matched against all commands and their short descriptions, and 
+matching examples are displayed. Matching is not case-sensitive.
+
+Example:
+\begin{verbatim}
+>> HELP trace
+(Print help for commands whose name or description match the string)
+
+6 commands matching "trace":
+
+GENERATE_TRACE_OFF (Switch off generation tracing (default))
+GENERATE_TRACE_ON (Switch on generation tracing)
+INTERLINGUA_TRACE_OFF (Switch off interlingua tracing (default))
+INTERLINGUA_TRACE_ON (Switch on interlingua tracing)
+TRANSLATE_TRACE_OFF (Switch off translation tracing (default))
+TRANSLATE_TRACE_ON (Switch on translation tracing)
+\end{verbatim}
+
+
+
+See Section~\ref{Section:CommandLineHelp}.
+
+\section{{\tt HELP}}
+\label{Section:HELP}
+
+{\em [Print help for all commands.]}
+
+Print all available commands, together with short descriptions of what
+they do. It is usually preferable to restrict the search by giving an
+argument to {\tt HELP}, since there are many commands.
+
+
+
+
+See Section~\ref{Section:CommandLineHelp}.
+
+\section{{\tt HELP\_\-CONFIG Arg1}}
+\label{Section:HELP--CONFIGArg1}
+
+{\em [Print help for config file entries whose name or description match the string.]}
+
+Search for config file entries whose name matches the argument and
+display them. Matching is not case-sensitive.
+
+Example:
+\begin{verbatim}
+>> HELP_CONFIG tree 
+(Print help for config file entries whose name or description match the string)
+
+3 config file entries matching "tree":
+
+alterf_treebank_file
+ebl_treebank
+ellipsis_classes_treebank_file
+\end{verbatim}
+
+
+
+See Section~\ref{Section:CommandLineHelp}.
+
+\section{{\tt HELP\_\-RESPONSE\_\-OFF}}
+\label{Section:HELP--RESPONSE--OFF}
+
+{\em [Switch off help response in main loop (default off).]}
+
+Switch off help processing for top-level inputs. This only makes
+sense if help resources are loaded.
+
+
+
+See Section~\ref{Section:HelpSystemCommandLine}.
+
+\section{{\tt HELP\_\-RESPONSE\_\-ON}}
+\label{Section:HELP--RESPONSE--ON}
+
+{\em [Switch on help response in main loop (default off).]}
+
+Switch on help processing for top-level inputs. This only makes sense
+if help resources have been loaded using the {\tt LOAD\_\-HELP} command.
+In that case, help processing is applied first, and the top 5 help
+responses are printed together with trace information. After that,
+normal processing is carried out.
+
+
+
+See Section~\ref{Section:HelpSystemCommandLine}.
+
+\section{{\tt INCREMENTAL\_\-TREEBANKING\_\-OFF}}
+\label{Section:INCREMENTAL--TREEBANKING--OFF}
+
+{\em [Don't try to reuse old treebank material (default on).]}
+
+Invoking this command forces the {\tt EBL\_\-TREEBANK} command to reparse the
+whole of the training corpus. By default, it attempts to reuse old analyses when
+it considers that they should be reliable.
+
+
+
+See Section~\ref{Section:IncrementalTreebanking}.
+
+\section{{\tt INCREMENTAL\_\-TREEBANKING\_\-ON}}
+\label{Section:INCREMENTAL--TREEBANKING--ON}
+
+{\em [Try to reuse old treebank material when possible (default on).]}
+
+When incremental treebanking is on (default), the {\tt
+EBL\_\-TREEBANK} command attempts to reuse stored analyses of corpus
+examples rather than parsing them again. It considers an analysis of a
+sentence S safe a) if the only grammar rules that have changed since the
+stored parse was created are lexical ones involving words not occuring
+in S, b) the config file and the files it includes have not changed,
+c) the analysis preferences have not changed.
+ 
+
+
+
+See Section~\ref{Section:IncrementalTreebanking}.
+
+\section{{\tt INIT\_\-DIALOGUE Arg1}}
+\label{Section:INIT--DIALOGUEArg1}
+
+{\em [Initialise the dialogue state, passing it the given argument.]}
+
+In dialogue mode, initialises the dialogue state, passing it the
+specified argument. For this to make sense, you need to have 
+previously invoked the {\tt LOAD\_\-DIALOGUE} command, and 
+the predicate {\tt initial\_\-dialogue\_\-state/2} needs to be
+defined. This predicate will be called to obtain the new dialogue
+state and perform any relevant initialisation. The argument
+to {\tt INIT\_\-DIALOGUE} is passed as the first argument, and
+the state is returned as the second argument.
+
+
+
+See Section~\ref{Section:DialogueMode}.
+
+\section{{\tt INIT\_\-DIALOGUE}}
+\label{Section:INIT--DIALOGUE}
+
+{\em [Initialise the dialogue state.]}
+
+In dialogue mode, initialises the dialogue state. For this to make
+sense, you need to have previously invoked the {\tt LOAD\_\-DIALOGUE}
+command, and the predicate {\tt initial\_\-dialogue\_\-state/1} needs
+to be defined. This predicate will be called to obtain the new
+dialogue state.
+
+
+
+See Section~\ref{Section:DialogueMode}.
+
+\section{{\tt INTERLINGUA}}
+\label{Section:INTERLINGUA}
+
+{\em [Perform translation through interlingua.]}
+
+
+Do translation through interlingua, i.e.\ by first applying
+source-to-interlingua rules (from the file that {\tt
+to\_\-interlingua\_\-rules} points to) and then interlingua-to-target
+rules ((from the file that {\tt from\_\-interlingua\_\-rules} points
+to). This applies both to interactive processing in translate mode,
+and to batch processing using commands like {\tt TRANSLATE\_\-CORPUS},
+{\tt TRANSLATE\_\-SPEECH\_\-CORPUS} and {\tt
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN}.
+
+
+
+See Section~\ref{Section:Interlingua}.
+
+\section{{\tt INTERLINGUA\_\-DEBUGGING\_\-OFF}}
+\label{Section:INTERLINGUA--DEBUGGING--OFF}
+
+{\em [Switch off interlingua debugging (default).]}
+
+Converse of {\tt INTERLINGUA\_\-DEBUGGING\_\-ON}.
+
+
+
+See Section~\ref{Section:InterlinguaDebugging}.
+
+\section{{\tt INTERLINGUA\_\-DEBUGGING\_\-ON}}
+\label{Section:INTERLINGUA--DEBUGGING--ON}
+
+{\em [Switch on interlingua debugging.]}
+
+Switch on interlingua debugging; relevant to translation applications
+that use an interlingua checking grammar. In this mode, translations
+that give rise to interlingua that is ill-formed according to the 
+interlingua checking grammar are processed by subjecting the ill-formed
+interlingua to all possible insertions, deletions and substitutions of 
+a single interlingua element, until either a well-formed variant is
+discovered or a timeout is exceeded. The first well-formed variant
+found is displayed. 
+
+
+
+
+See Section~\ref{Section:InterlinguaDebugging}.
+
+\section{{\tt INTERLINGUA\_\-TRACE\_\-OFF}}
+\label{Section:INTERLINGUA--TRACE--OFF}
+
+{\em [Switch off interlingua tracing (default).]}
+
+Converse of {\tt INTERLINGUA\_\-TRACE\_\-ON}.
+
+
+
+\section{{\tt INTERLINGUA\_\-TRACE\_\-ON}}
+\label{Section:INTERLINGUA--TRACE--ON}
+
+{\em [Switch on interlingua tracing.]}
+
+Relevant to translation applications using an interlingua checking
+grammar.  If interlingua checking succeeds, print the interlingua
+checking grammar's analysis tree.
+
+
+
+
+\section{{\tt KILL\_\-NUANCE\_\-PARSERS}}
+\label{Section:KILL--NUANCE--PARSERS}
+
+{\em [Kill any outstanding nl-tool processes (may be necessary after doing NUANCE\_\-PARSER).]}
+
+Every time you invoke the {\tt NUANCE\_\-PARSER} command, it starts up
+a new {\tt nl-tool} process. This command allows you to shut down
+all outstanding {\tt nl-tool} processes.
+
+
+
+
+See Section~\ref{Section:NuanceParser}.
+
+\section{{\tt LC}}
+\label{Section:LC}
+
+{\em [Use left-corner parser.]}
+
+
+Sets the current parser back to the default left-corner parser. This is normally
+used after invoking the {\tt DCG} or {\tt NUANCE\_\-PARSER} commands.
+
+
+
+See Section~\ref{Section:LCParser}.
+
+\section{{\tt LF\_\-POST\_\-PROCESSING\_\-OFF}}
+\label{Section:LF--POST--PROCESSING--OFF}
+
+{\em [Switch off semantic post-processing of LFs.]}
+
+
+The grammar processing mechanism currently supports three main types
+of semantics: linear, Almost Flat Functional (AFF) and RIACS. For
+AFF and RIACS semantics, the original logical form produced by the
+grammar needs to be post-processed.
+
+This command switches off post-processing of LFs, making it possible
+to examine the original logical form, and is in particular useful when
+you suspect a post-processing bug.
+
+
+
+
+See Section~\ref{Section:GrammarDebuggingCommandLine}.
+
+\section{{\tt LF\_\-POST\_\-PROCESSING\_\-ON}}
+\label{Section:LF--POST--PROCESSING--ON}
+
+{\em [Switch on semantic post-processing of LFs (default).]}
+
+
+Converse of {\tt LF\_\-POST\_\-PROCESSING\_\-OFF}.
+
+
+
+See Section~\ref{Section:GrammarDebuggingCommandLine}.
+
+\section{{\tt LINE\_\-INFO\_\-OFF}}
+\label{Section:LINE--INFO--OFF}
+
+{\em [Don't print line and file info for rules and lex entries in parse trees.]}
+
+A typical parse tree printed without line info will look like this:
+\begin{verbatim}
+.MAIN
+   utterance
+      command
+      /  verb lex(switch)
+      |  onoff null lex(on)
+      |  np
+      |  /  lex(the)
+      |  |  noun lex(light)
+      \  \  null
+\end{verbatim}
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt LINE\_\-INFO\_\-ON}}
+\label{Section:LINE--INFO--ON}
+
+{\em [Print line and file info for rules and lex entries in parse trees (default).]}
+
+A typical parse tree printed with line info will look like this:
+\begin{verbatim}
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+\end{verbatim}
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt LIST\_\-MISSING\_\-HELP\_\-DECLARATIONS}}
+\label{Section:LIST--MISSING--HELP--DECLARATIONS}
+
+{\em [Write out a list of lexical items that are not listed in targeted help declarations.]}
+
+Relevant to applications that use targeted help; a grammar must be
+loaded, and the parameters {\tt targeted\_\-help\_\-classes\_\-file} and {\tt
+missing\_\-help\_\-class\_\-decls} need to be defined. The help classes file is
+searched, and all lexical items in the grammar that are not defined
+are listed in the missing decls file.
+
+
+
+See Section~\ref{Section:HelpSystemClasses}.
+
+\section{{\tt LOAD}}
+\label{Section:LOAD}
+
+{\em [Load current Regulus grammar in DCG and left-corner form.]}
+
+
+Compile and load the Regulus grammar defined by the {\tt
+regulus\_\-grammar} config file entry in DCG and left-corner form. If
+the grammar files and the config file have not been modified since the
+last invocation of the {\tt LOAD} command, left-corner compilation is
+not performed, and the stored version of the compiled grammar is used.
+
+If parse preferences and/or nbest preference files are defined, these
+are also loaded. These files are specified by the parameters {\tt
+parse\_\-preferences} and {\tt nbest\_\-preferences} respectively, and
+can be also loaded using the {\tt LOAD\_\-PREFERENCES} command.
+
+
+
+
+
+See Section~\ref{Section:LoadGrammar}.
+
+\section{{\tt LOAD\_\-DEBUG}}
+\label{Section:LOAD--DEBUG}
+
+{\em [Load current Regulus grammar in DCG and left-corner form, including extra debugging rules in left-corner grammar.]}
+
+
+Compile and load the Regulus grammar defined by the {\tt
+regulus\_\-grammar} config file entry in DCG and left-corner form,
+including extra rules useful for grammar debugging. This makes
+parsing slightly slower.
+
+When the grammar is loaded in this form, a top-level input of the form
+\begin{verbatim}
+<CategoryName> <Sentence> 
+\end{verbatim} 
+is treated as a request to parse {\tt $\langle$Sentence$\rangle$} as an instance of
+{\tt $\langle$CategoryName$\rangle$}, printing out semantic and feature values. 
+\ref{Figure:LOAD-DEBUG-example} shows an example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> LOAD_DEBUG
+
+(...)
+
+>> np the light
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[device,light]]
+
+Global value: []
+
+Syn features: [sem_np_type=switchable\/dimmable,singplur=sing]
+
+Parse tree:
+
+np [TOY1_RULES:25-29]
+/  lex(the)
+\  noun lex(light) [TOY1_LEXICON:16-17]
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+\end{verbatim} 
+\caption{Example showing use of {\tt LOAD\_DEBUG}}
+\label{Figure:LOAD-DEBUG-example}
+\end{figure}
+
+
+
+See Section~\ref{Section:LoadGrammar}.
+
+\section{{\tt LOAD\_\-DIALOGUE}}
+\label{Section:LOAD--DIALOGUE}
+
+{\em [Load dialogue-related files.]}
+
+Relevant to dialogue applications: compile the files defined by the
+{\tt dialogue\_\-files} config file entry. These should at a minimum
+define the predicates {\tt lf\_\-to\_\-dialogue\_\-move}, {\tt
+initial\_\-dialogue\_\-state}, {\tt update\_\-dialogue\_\-state} and {\tt
+abstract\_\-action\_\-to\_\-action} with appropriate arities.
+
+
+
+
+See Section~\ref{Section:DialogueMode}.
+
+\section{{\tt LOAD\_\-GENERATION Arg1}}
+\label{Section:LOAD--GENERATIONArg1}
+
+{\em [Compile and load current generator grammar, and store as designated subdomain grammar.]}
+
+Compile and load the current generation grammar, defined by the
+{\tt generation\_\-grammar} config file entry. The resulting compiled
+generation grammar is placed in the file defined by the
+{\tt generation\_\-grammar($\langle$Arg$\rangle$)} config file entry. This can
+be useful if you are normally using grammar specialisation to build
+the generation grammar.
+
+
+
+See Section~\ref{Section:Generation}.
+
+\section{{\tt LOAD\_\-GENERATION}}
+\label{Section:LOAD--GENERATION}
+
+{\em [Compile and load current generator grammar.]}
+
+Compile and load the current generation grammar, defined by the {\tt
+regulus\_\-grammar} or {\tt generation\_\-regulus\_\-grammar} config
+file entry. The resulting compiled generation grammar is placed in the
+file defined by the {\tt generation\_\-grammar} config file entry.
+
+
+
+See Section~\ref{Section:Generation}.
+
+\section{{\tt LOAD\_\-HELP}}
+\label{Section:LOAD--HELP}
+
+{\em [Load compiled material for targeted help.]}
+
+Relevant to applications using targeted help. Loads the help resources
+previously build by invoking the {\tt COMPILE\_\-HELP} command.
+
+
+
+
+See Section~\ref{Section:HelpSystemCommandLine}.
+
+\section{{\tt LOAD\_\-PREFERENCES}}
+\label{Section:LOAD--PREFERENCES}
+
+{\em [Load parse and N-best preference files.]}
+
+
+Load parse preferences and/or nbest preference files if they are
+defined. These files are specified by the parameters {\tt
+parse\_\-preferences} and {\tt nbest\_\-preferences} respectively.
+
+
+
+See Section~\ref{Section:ParsePreferences}.
+
+\section{{\tt LOAD\_\-RECOGNITION Arg1}}
+\label{Section:LOAD--RECOGNITIONArg1}
+
+{\em [Load recognition resources: license manager, recserver, TTS and regserver, using specified port for Regserver.]}
+
+
+
+
+See Section~\ref{Section:SpeechInput}.
+
+\section{{\tt LOAD\_\-RECOGNITION}}
+\label{Section:LOAD--RECOGNITION}
+
+{\em [Load recognition resources: license manager, recserver, TTS and regserver.]}
+
+Start Nuance speech resources to enable speech processing from the
+Regulus command-line. The following are required: 
+\begin{itemize}
+
+\item The file {\tt \$REGULUS/scripts/run\_\-license.bat} needs to exist
+and contain a valid invocation of the license manager. Typical
+contents (not a real licence code) might be
+\begin{verbatim}
+nlm C:/Nuance/Vocalizer4.0/license.txt abc12-1234-a-ab12
+\end{verbatim}
+
+\item One of the parameters {\tt translation\_\-rec\_\-params} and {\tt
+dialogue\_\-rec\_\-params} needs to exist, and have an appropriate
+value which specifies the recognition package to use and the Nuance
+parameters to pass the recogniser invocation. A typical value might be
+\begin{verbatim}
+[package=callslt_runtime(recogniser), grammar='.MAIN',
+'rec.Pruning=1600', 'rec.DoNBest=TRUE', 'rec.NumNBest=6',
+'rec.ConfidenceRejectionThreshold=0',
+'ep.EndSeconds=1.5']).
+\end{verbatim}
+
+\item If the application is to use TTS, an appropriate invocation
+to start Vocalizer must be supplied as the value of the parameter
+{\tt tts\_\-command}. A typical value to start the English version
+of Vocalizer 4.0 would be
+\begin{verbatim}
+'vocalizer -num_channels 1 -voice enhancedlaurie 
+-voices_from_disk'
+\end{verbatim}
+
+\end{itemize}
+
+
+
+See Section~\ref{Section:SpeechInput}.
+
+\section{{\tt LOAD\_\-RECOGNITION\_\-GENERATION}}
+\label{Section:LOAD--RECOGNITION--GENERATION}
+
+{\em [Compile and load current generator grammar(s) for converting recognition results to other scripts.]}
+
+Relevant to applications which use multiple parallel grammars, and
+need to convert recognition results either to the {\em original
+script} or to the {\em gloss script}. The parallel original script and
+gloss script grammars first need to be compiled into generation
+grammar form.  They must then be declared using one or both of the
+parameters {\tt original\_\-script\_\-recognition\_\-generation\_\-rules} and
+{\tt gloss\_\-recognition\_\-generation\_\-rules}. The command
+{\tt LOAD\_\-RECOGNITION\_\-GENERATION} loads any parallel
+generation grammars that may be declared.
+
+
+
+
+See Section~\ref{Section:Generation}.
+
+\section{{\tt LOAD\_\-SURFACE\_\-PATTERNS}}
+\label{Section:LOAD--SURFACE--PATTERNS}
+
+{\em [Load current surface patterns and associated files.]}
+
+Relevant to applications which do surface parsing using Alterf; load
+the Alterf surface pattern files. You can then parse in surface mode
+using the {\tt SURFACE} command. The following config file entries
+must be defined:
+\begin{itemize}
+\item {\tt surface\_\-patterns}
+
+\item {\tt tagging\_\-grammar} 
+
+\item {\tt target\_\-model} 
+
+\item {\tt discriminants} 
+
+\item {\tt surface\_\-postprocessing} 
+\end{itemize}
+
+
+
+See Section~\ref{Section:AlterfOverview}.
+
+\section{{\tt LOAD\_\-TRANSLATE}}
+\label{Section:LOAD--TRANSLATE}
+
+{\em [Load translation-related files.]}
+
+
+Load all translation-related files defined in the currently valid
+config file. These consist of a subset of the following; the set of
+files required depends on whether translation is interlingua-based or
+direct, and whether translation is from source to target, from source
+to interlingua, or from interlingua to target.
+
+\begin{itemize} 
+
+\item An interlingua checking grammar compiled into generation form,
+defined by the {\tt interlingua\_\-structure} config file
+entry. Required if translation is interlingua-based.
+
+item An interlingua declarations file defined by the
+{\tt interlingua\_\-declarations} config file entry. Required
+if translation is interlingua-based.
+
+\item One or more to\_\-interlingua rules files defined by the {\tt
+to\_\-interlingua\_\-rules} config file entry. Required if
+translation is interlingua-based.
+
+\item One or more from\_\-interlingua rules files defined by the {\tt
+from\_\-interlingua\_\-rules} config file entry.  Required if
+translation is interlingua-based.
+
+\item An ellipsis classes file (optional) defined by the
+{\tt ellipsis\_\-classes} config file entry. If this is defined, you need to
+compile it first using the {\tt COMPILE\_\-ELLIPSIS\_\-PATTERNS} command.
+
+\item A generation grammar file (required, unless translation is from
+source to interlingua) defined by the {\tt generation\_\-rules} config
+file entry. This should be the compiled form of a Regulus grammar for
+the target language. The compiled generation grammar must first be
+created using the {\tt LOAD\_\-GENERATION} command.
+
+\item A generation preferences file (optional) defined by the
+{\tt generation\_\-preferences} config file entry.
+
+\item A collocations file (optional) defined by the
+{\tt collocation\_\-rules} config file entry.
+
+\item An orthography rules file (optional) defined by the
+{\tt orthography\_\-rules} config file entry.  
+
+\item One or more transfer rules files defined by the
+{\tt transfer\_\-rules} config file entry. This is only
+required for direct (i.e.\ non-interlingua-based) translation
+applications.
+ 
+\end{itemize}
+
+If the config file entries {\tt wavfile\_\-directory} and
+{\tt wavfile\_\-recording\_\-script} are defined, implying that output
+speech will be produced using recorded wavfiles, this command also
+produces a new version of the file defined by
+{\tt wavfile\_\-recording\_\-script}.
+
+
+
+See Section~\ref{Section:TranslationMode}.
+
+\section{{\tt MAKE\_\-TARGET\_\-GRAMMAR\_\-PROBS\_\-CORPUS Arg1}}
+\label{Section:MAKE--TARGET--GRAMMAR--PROBS--CORPUSArg1}
+
+{\em [Create Nuance grammar probs training set for given grammar from translation output.]}
+
+Relevant to translation applications. Take the results held in the
+file indicated by {\tt translation\_\-corpus\_\-results} and turn them into
+a training file for Nuance PCFG tuning, using the argument as the
+relevant Nuance grammar. Put the result in the file indicated by
+{\tt target\_\-grammar\_\-probs}. Thus, for example, the call
+\begin{verbatim}
+MAKE_TARGET_GRAMMAR_PROBS_CORPUS .MAIN
+\end{verbatim}
+will create a file where, for each translation {\tt $\langle$Sent$\rangle$}
+in {\tt translation\_\-corpus\_\-results}, the file {\tt target\_\-grammar\_\-probs}
+will contain a record of the form
+\begin{verbatim}
+.MAIN <Sent>
+\end{verbatim}
+
+
+
+See Section~\ref{Section:PCFG}.
+
+\section{{\tt MAKE\_\-TARGET\_\-SENT\_\-CORPUS}}
+\label{Section:MAKE--TARGET--SENT--CORPUS}
+
+{\em [Create sent-formatted corpus from translation output.]}
+
+Relevant to translation applications. Take the results held in the
+file indicated by {\tt translation\_\-corpus\_\-results} and turn them
+into a sent-formatted file. Put the result in the file indicated by
+{\tt target\_\-sent\_\-corpus}. Thus, for example, the call
+\begin{verbatim}
+MAKE_TARGET_SENT_CORPUS .MAIN
+\end{verbatim}
+will create a file where, for each translation {\tt $\langle$Sent$\rangle$}
+in {\tt translation\_\-corpus\_\-results}, the file {\tt target\_\-sent\_\-corpus}
+will contain a record of the form
+\begin{verbatim}
+sent(<Sent>).
+\end{verbatim}
+
+
+
+See Section~\ref{Section:PCFG}.
+
+\section{{\tt NORMAL\_\-PROCESSING}}
+\label{Section:NORMAL--PROCESSING}
+
+{\em [Do normal processing on input sentences.]}
+
+Switch sentence processing in the Regulus top-level back to the
+default behaviour: the system attempts to parse the sentence using the
+current parser. If successful, it prints relevant information, in
+particular the logical form(s), the associated analysis tree(s),
+and any associated preference information.
+
+
+
+
+See Section~\ref{Section:CommandLineOverview}.
+
+\section{{\tt NO\_\-COMPACTION}}
+\label{Section:NO--COMPACTION}
+
+{\em [Switch off compaction processing for Regulus to Nuance conversion.]}
+
+Switch off the grammar compaction step at the end of Regulus-to-Nuance
+compilation, as for example invoked by the {\tt NUANCE} command. 
+
+You should not normally wish to do this, since compaction is almost
+always beneficial and is very stable.
+
+
+
+See Section~\ref{Section:UGToGSL}.
+
+\section{{\tt NO\_\-ELLIPSIS\_\-PROCESSING}}
+\label{Section:NO--ELLIPSIS--PROCESSING}
+
+{\em [Unload any ellipsis processing rules that may be loaded.]}
+
+Relevant to translation applications: remove any currently loaded
+ellipsis rules. These rules will have been compiled by the command
+{\tt COMPILE\_\-ELLIPSIS\_\-PATTERNS} and loaded by the command {\tt
+LOAD\_\-TRANSLATE}.
+
+
+
+
+See Section~\ref{Section:TranslationEllipsis}.
+
+\section{{\tt NO\_\-INTERLINGUA}}
+\label{Section:NO--INTERLINGUA}
+
+{\em [Perform translation directly, i.e. not through interlingua.]}
+
+Applies to translation applications: converse of the command {\tt
+INTERLINGUA}, it sets the translation processing mode to perform
+direct translation from source to target, i.e.\ not through the
+interlingua. It follows that the current config file must define a
+value for the parameter {\tt transfer\_\-rules}, which should point to
+a file of direct translation rules.
+
+This applies both to interactive processing when the TRANSLATE command
+is in effect, and to batch processing using commands like
+{\tt TRANSLATE\_\-CORPUS}, {\tt TRANSLATE\_\-SPEECH\_\-CORPUS} and
+{\tt TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN}.
+
+
+
+See Section~\ref{Section:Interlingua}.
+
+\section{{\tt NUANCE}}
+\label{Section:NUANCE}
+
+{\em [Compile current Regulus grammar into Nuance GSL form.]}
+
+
+Compile current Regulus grammar into Nuance GSL form. You won't be
+able to use this command in conjunction with a large general grammar,
+since it currently runs out of memory during compilation --- this why
+we need EBL. The {\tt NUANCE} command is useful for smaller Regulus
+grammars, e.g. the Toy1 grammar.
+
+The current Regulus grammar is defined by the {\tt regulus\_\-grammar}
+config file entry, and the location of the generated Nuance grammar by
+the {\tt nuance\_\-grammar} config file entry.
+
+
+
+See Section~\ref{Section:UGToGSL}.
+
+\section{{\tt NUANCE\_\-COMPILE}}
+\label{Section:NUANCE--COMPILE}
+
+{\em [Compile Nuance grammar into recogniser package.]}
+
+Compile the generated Nuance grammar, defined by the
+{\tt ebl\_\-nuance\_\-grammar} or {\tt nuance\_\-grammar} config file entry, into
+a recognition package with the same name. This will be done using the
+Nuance language pack defined by the {\tt nuance\_\-language\_\-pack} config
+file entry and the extra parameters defined by the
+{\tt nuance\_\-compile\_\-params} config file entry. Typical values for
+these parameters are as follows: 
+\begin{verbatim}
+regulus_config(nuance_language_pack, 'English.America').
+regulus_config(nuance_compile_params, 
+               ['-auto_pron', '-dont_flatten']).  
+\end{verbatim}
+
+
+
+See Section~\ref{Section:GSLToNuance}.
+
+\section{{\tt NUANCE\_\-COMPILE\_\-WITH\_\-PCFG}}
+\label{Section:NUANCE--COMPILE--WITH--PCFG}
+
+{\em [Compile Nuance grammar into recogniser package, first doing PCFG training.]}
+
+First perform PCFG training on the generated Nuance grammar, defined
+by the {\tt ebl\_\-nuance\_\-grammar} or {\tt nuance\_\-grammar} config file
+entry. The training data is taken from the file defined by the
+{\tt ebl\_\-grammar\_\-probs} config file entry.
+
+Next, compile the PCFG-trained version of the Nuance grammar, produced
+by the first step, into a recognition package with the same name. This
+will be done using the Nuance language pack defined by the
+{\tt nuance\_\-language\_\-pack} config file entry and the extra parameters
+defined by the {\tt nuance\_\-compile\_\-params} config file entry. Typical
+values for these parameters are as follows: 
+\begin{verbatim}
+regulus_config(nuance_language_pack, 'English.America').
+regulus_config(nuance_compile_params, 
+               ['-auto_pron', '-dont_flatten']).  
+\end{verbatim}
+
+
+
+See Section~\ref{Section:GSLToNuance}.
+
+\section{{\tt NUANCE\_\-PARSER}}
+\label{Section:NUANCE--PARSER}
+
+{\em [Start new Nuance nl-tool process and use it as parser.]}
+
+
+Start an {\tt nl-tool} process, and use it to do parsing. Any old {\tt nl-tool} processes
+are first killed. The current config file needs to include either a 
+{\tt dialogue\_\-rec\_\-params} declaration (for dialogue apps) or a {\tt translation\_\-rec\_\-params}
+declaration (for speech translation apps); the declaration must 
+contain definitions for {\tt 'package'} and {\tt 'grammar'}. The following is a 
+typical example of a suitable declaration:
+
+\begin{verbatim}
+regulus_config(dialogue_rec_params,
+               [package=calendar_runtime(recogniser), 
+                grammar='.MAIN',
+                'rec.Pruning=1600', 'rec.DoNBest=TRUE', 
+                'rec.NumNBest=6']).
+\end{verbatim}
+Notes: 
+\begin{itemize}
+\item After {\tt NUANCE\_\-PARSER} is successfully invoked, {\tt nl-tool} is used for
+ALL parsing, including batch processing with commands like {\tt TRANSLATE\_\-CORPUS}
+and Prolog calls to {\tt parse\_\-with\_\-current\_\-parser/6}.
+\item The Nuance parser only returns logical forms, not parse trees.
+\end{itemize}
+
+
+
+See Section~\ref{Section:NuanceParser}.
+
+\section{{\tt PARSE\_\-HISTORY Args}}
+\label{Section:PARSE--HISTORYArgs}
+
+{\em [Show parse history for examples matching specified string.]}
+
+Search the parsing history file created by the {\tt EBL\_\-MAKE\_\-TREEBANK}
+command to find matching example. The argument is treated as a list of
+words, which may optionally contain wildcards, and matching is performed
+at the word (opposed to character) level. Each matching example is printed 
+together with a date-stamp showing when it last produced a parse.
+Here is a typical invocation:
+\begin{verbatim}
+>> PARSE_HISTORY i would * cheese
+(Show parse history for examples matching specified string)
+
+--- Read parsing history file (394 records) 
+d:/call-slt/eng/generatedfiles/callslt_parsing_history.pl
+
+Found 2 records matching pattern
+
+2010-06-01_15-41-03 1 i would like the cheese plate
+2010-06-01_15-41-06 1 i would like the macaroni cheese
+
+\end{verbatim}
+
+
+
+See Section~\ref{Section:ParseHistory}.
+
+\section{{\tt PRINT\_\-TREE\_\-CATEGORIES\_\-OFF}}
+\label{Section:PRINT--TREE--CATEGORIES--OFF}
+
+{\em [Don't print categories in parse trees (default).]}
+
+Converse of {\tt PRINT\_\-TREE\_\-CATEGORIES\_\-ON}.
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt PRINT\_\-TREE\_\-CATEGORIES\_\-ON}}
+\label{Section:PRINT--TREE--CATEGORIES--ON}
+
+{\em [Print categories in parse trees.]}
+
+When printing parse trees at top level, also show all the categories
+in the tree. \ref{Figure:PRINT-TREE-CATEGORIES-example} shows an
+example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> PRINT_TREE_CATEGORIES_ON
+(Print categories in parse trees)
+
+--- Performed command PRINT_TREE_CATEGORIES_ON, time = 0.02 seconds
+
+>> switch on the light     
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[action,switch],[device,light],
+               [onoff,on],[utterance_type,command]]
+
+Global value: []
+
+Syn features: []
+
+Parse tree:
+
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+
+Categories:
+
+[('.MAIN':[]), 
+ (command:[]), 
+ (noun:[sem_np_type=switchable,singplur=sing]), 
+ (np:[sem_np_type=switchable,singplur=sing]), 
+ (onoff:[]), 
+ (utterance:[]), 
+ (verb:[obj_sem_np_type=switchable,singplur=sing,
+        vform=imperative,vtype=switch])]
+\end{verbatim} 
+\caption{Example showing use of {\tt PRINT\_TREE\_CATEGORIES\_ON}}
+\label{Figure:PRINT-TREE-CATEGORIES-example}
+\end{figure}
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt PRINT\_\-TREE\_\-SUMMARY\_\-OFF}}
+\label{Section:PRINT--TREE--SUMMARY--OFF}
+
+{\em [Don't print summary versions of parse trees (default).]}
+
+Converse of {\tt PRINT\_\-TREE\_\-SUMMARY\_\-ON}.
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt PRINT\_\-TREE\_\-SUMMARY\_\-ON}}
+\label{Section:PRINT--TREE--SUMMARY--ON}
+
+{\em [Print summary versions of parse trees.]}
+
+When processing input sentences from the Regulus top-level, print a
+summary of each parse tree. This is primarily useful if you need to
+add {\tt tree\_\-includes\_\-structure} or {\tt tree\_\-doesnt\_\-include\_\-structure}
+constraints in an EBL training corpus. \ref{Figure:PRINT-TREE-SUMMARY-example} shows an
+example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> PRINT_TREE_SUMMARY_ON
+(Print summary versions of parse trees)
+
+--- Performed command PRINT_TREE_SUMMARY_ON, time = 0.00 seconds
+
+>> switch on the light
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[action,switch],[device,light],
+               [onoff,on],[utterance_type,command]]
+
+Global value: []
+
+Syn features: []
+
+Parse tree:
+
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+
+Summary:
+
+('.MAIN' < 
+ [(utterance < 
+   [command<[verb<lex(switch),
+                  onoff<lex(on),
+                  np<[lex(the),
+                      noun<lex(light),
+                      empty_constituent]]])])
+\end{verbatim} 
+\caption{Example showing use of {\tt PRINT\_TREE\_SUMMARY\_ON}}
+\label{Figure:PRINT-TREE-SUMMARY-example}
+\end{figure}
+
+
+
+See Section~\ref{Section:ParseTrees}.
+
+\section{{\tt RANDOM\_\-GENERATE Arg1 Arg2}}
+\label{Section:RANDOM--GENERATEArg1Arg2}
+
+{\em [Randomly generate and print the specified number of sentences, with specified maximum depth.]}
+
+Like {\tt RANDOM\_\-GENERATE Arg1 Arg2}, but use the second argument
+to limit the maximum depth of the generated tree.
+
+
+
+
+See Section~\ref{Section:RandomGenerationRegulus}.
+
+\section{{\tt RANDOM\_\-GENERATE Arg1}}
+\label{Section:RANDOM--GENERATEArg1}
+
+{\em [Randomly generate and print the specified number of sentences.]}
+
+Randomly generate valid sentences from the currently loaded
+grammar. Here is an example using the Toy1 grammar:
+\begin{verbatim}
+>> RANDOM_GENERATE 5
+(Randomly generate and print the specified number of sentences)
+.....
+are the fans on
+is the fan off
+dim the light
+switch on the lights
+are the lights in the living room in the living room switched off
+\end{verbatim} 
+
+
+
+See Section~\ref{Section:RandomGenerationRegulus}.
+
+\section{{\tt RECOGNISE}}
+\label{Section:RECOGNISE}
+
+{\em [Take next loop input from live speech.]}
+
+Assumed that recognition resources have been loaded using the {\tt
+LOAD\_\-RECOGNITION} command; uses the current recogniser to 
+perform recognition, then treats the 1-best recognition result 
+as though it had been top-level text input. The {\tt RECOGNISE}
+command can be used in any top-level mode.
+
+
+
+
+See Section~\ref{Section:SpeechInput}.
+
+\section{{\tt RELOAD\_\-CFG}}
+\label{Section:RELOAD--CFG}
+
+{\em [Reload current config file.]}
+
+Reload the current Regulus config file, plus any files it may include.
+
+
+
+See Section~\ref{Section:CommandLineIntro}.
+
+\section{{\tt SET\_\-BATCH\_\-DIALOGUE\_\-FORMAT Arg1}}
+\label{Section:SET--BATCH--DIALOGUE--FORMATArg1}
+
+{\em [Set format for printing batch dialogue results. Default is "normal".]}
+
+By default, the output of invoking {\tt BATCH\_\-DIALOGUE} and similar commands is to print all processing information. This command can be used to select other output formats, or to revert to the default format. The currently supported alternatives are the following:
+\begin{itemize}
+
+\item {\tt normal} Default format.
+
+\item {\tt no\_paraphrases} Suppress printing of fields related to paraphrasing.
+
+\item {\tt no\_datastructures} Suppress printing of all fields related to intermediate datastructures.
+
+\end{itemize}
+
+
+
+See Section~\ref{Section:SettingBatchDialogueFormat}.
+
+\section{{\tt SET\_\-NBEST\_\-N Arg1}}
+\label{Section:SET--NBEST--NArg1}
+
+{\em [Set the maximum number of hypotheses used for N-best processing.]}
+
+For offline speech processing commands, the parameters
+{\tt translation\_\-rec\_\-params} and {\tt
+dialogue\_\-rec\_\-params} control, among other things,
+the number of N-best alternatives generated by Nuance.
+For example, the value
+\begin{verbatim}
+[package=callslt_runtime(recogniser), grammar='.MAIN',
+'rec.Pruning=1600', 'rec.DoNBest=TRUE', 'rec.NumNBest=6']).
+\end{verbatim}
+produces a maximum of 6 hypotheses.
+
+This command makes it possible to reduce the number of N-best
+hyptheses considered by language processing. Evidently, the number
+cannot be increased.
+
+
+
+
+See Section~\ref{Section:DialogueNBest}.
+
+\section{{\tt SET\_\-NOTIONAL\_\-SPEAKER Arg1}}
+\label{Section:SET--NOTIONAL--SPEAKERArg1}
+
+{\em [Set notional name of speaker for dialogue processing..]}
+
+In dialogue processing applications where words like ``I'' and ``me''
+are used, it can be important to know the identity of the speaker; for
+example, in the Calendar application, one could say ``When is my next
+meeting?'' or ``Am I attending a meeting on Friday?'' When doing
+regression testing, it is then useful to be able to set a notional
+speaker, so that responses to time-dependent utterances stay stable.
+
+The {\tt SET\_\-NOTIONAL\_\-SPEAKER} command makes it possible to set the identity 
+of the notional speaker from the command-line. The argument should be an atom, e.g.
+\begin{verbatim}
+SET_NOTIONAL_SPEAKER manny
+\end{verbatim}
+The notional speaker can be retrieved using the predicate 
+{\tt get\_\-notional\_\-time/1} in {\tt PrologLib/utilities.pl}.
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt SET\_\-NOTIONAL\_\-TIME Arg1}}
+\label{Section:SET--NOTIONAL--TIMEArg1}
+
+{\em [Set notional time for dialogue processing. Format = YYYY-MM-DD\_\-HH-MM-SS, e.g. 2006-12-31\_\-23-59-59.]}
+
+In dialogue processing applications where expressions like ``today''
+or ``next week'' are used, it is necessary to know the current
+time. When doing regression testing, it is then useful to be able to
+set a notional time, so that responses to time-dependent utterances
+stay stable.
+
+The {\tt SET\_\-NOTIONAL\_\-TIME} command makes it possible to set the identity 
+of the notional time from the command-line. The format is 
+YYYY-MM-DD\_HH-MM-SS, e.g.
+\begin{verbatim}
+SET_NOTIONAL_TIME 2010-08-04_15-17-55
+\end{verbatim}
+The notional time can be retrieved using the predicate 
+{\tt get\_\-notional\_\-time/1} in {\tt PrologLib/utilities.pl}.
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt SET\_\-REGSERVER\_\-TIMEOUT Arg1}}
+\label{Section:SET--REGSERVER--TIMEOUTArg1}
+
+{\em [Set the time the system waits before starting up the Regserver.]}
+
+When recognition resources are started by the {\tt
+LOAD\_\-RECOGNITION} command, specify the number of
+seconds to wait before starting the Regserver process.
+The default value is 60.
+
+
+
+
+See Section~\ref{Section:SpeechInput}.
+
+\section{{\tt SPLIT\_\-SPEECH\_\-CORPUS Arg1 Arg2 Arg3 Arg4}}
+\label{Section:SPLIT--SPEECH--CORPUSArg1Arg2Arg3Arg4}
+
+{\em [Split speech corpus into in-coverage and out-of-coverage pieces with respect to the specified grammar. Arguments: $\langle$GrammarAtom$\rangle$, $\langle$CorpusId$\rangle$, $\langle$InCoverageCorpusId$\rangle$ $\langle$OutOfCoverageCorpusId$\rangle$.]}
+
+Splits the speech translation corpus output file, defined by the {\tt
+translation\_\-speech\_\-corpus($\langle$Arg2$\rangle$)} config file
+entry, into 
+\begin{itemize} 
+\item an in-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg3$\rangle$)}
+config file entry, and
+
+\item an out-of-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg4$\rangle$)}
+config file entry.  
+\end{itemize}
+Coverage is with respect to the top-level grammar {\tt
+$\langle$GrammarName$\rangle$} (Arg1), which must be loaded.
+
+Typical call: 
+\begin{verbatim}
+SPLIT_SPEECH_CORPUS .MAIN corpus2 in_coverage2 out_of_coverage2
+\end{verbatim}
+
+
+
+See Section~\ref{Section:SplittingCorpora}.
+
+\section{{\tt SPLIT\_\-SPEECH\_\-CORPUS Arg1 Arg2 Arg3}}
+\label{Section:SPLIT--SPEECH--CORPUSArg1Arg2Arg3}
+
+{\em [Split default speech corpus into in-coverage and out-of-coverage pieces with respect to the specified grammar. Arguments: $\langle$GrammarAtom$\rangle$, $\langle$InCoverageCorpusId$\rangle$ $\langle$OutOfCoverageCorpusId$\rangle$.]}
+
+Splits the speech translation corpus output file, defined by the {\tt
+translation\_\-speech\_\-corpus} config file entry, into 
+\begin{itemize} 
+\item an in-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg2$\rangle$)}
+config file entry, and
+
+\item an out-of-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg3$\rangle$)}
+config file entry.  
+\end{itemize}
+Coverage is with respect to the top-level grammar {\tt
+$\langle$Arg1$\rangle$}, which must be loaded.
+
+Typical call: 
+\begin{verbatim}
+SPLIT_SPEECH_CORPUS .MAIN in_coverage out_of_coverage
+\end{verbatim}
+
+
+
+See Section~\ref{Section:SplittingCorpora}.
+
+\section{{\tt SPLIT\_\-SPEECH\_\-CORPUS training\_\-corpus Arg1 Arg2 Arg3}}
+\label{Section:SPLIT--SPEECH--CORPUStraining--corpusArg1Arg2Arg3}
+
+{\em [Split speech corpus into in-training and out-of-training pieces with respect to EBL training corpus. Arguments: $\langle$FromCorpusId$\rangle$, $\langle$InTrainingCorpusId$\rangle$ $\langle$OutOfTrainingCorpusId$\rangle$.]}
+
+
+
+
+See Section~\ref{Section:SplittingCorpora}.
+
+\section{{\tt STEPPER}}
+\label{Section:STEPPER}
+
+{\em [Start grammar stepper.]}
+
+
+
+
+See Section~\ref{Section:GrammarDebuggingStepper}.
+
+\section{{\tt STORE\_\-TRANSLATION\_\-TARGET\_\-VOCAB Arg1}}
+\label{Section:STORE--TRANSLATION--TARGET--VOCABArg1}
+
+{\em [Process Source -$\rangle$ Target output and store target vocabulary items in the predicate regulus\_\-preds:target\_\-vocabulary\_\-item.]}
+
+
+
+
+See Section~\ref{Section:TranslationRegressionText}.
+
+\section{{\tt SURFACE}}
+\label{Section:SURFACE}
+
+{\em [Use surface pattern-matching parser.]}
+
+This assumes that surface pattern files have been loaded, using the
+LOAD\_\-SURFACE\_\-PATTERNS command.
+
+
+
+See Section~\ref{Section:AlterfOverview}.
+
+\section{{\tt TRANSLATE}}
+\label{Section:TRANSLATE}
+
+{\em [Do translation-style processing on input sentences.]}
+
+
+In this mode, the sentence is parsed using the current parser. If any parses are found, the first one is processed through translation and generation. Translation is performed using interlingual rules if the INTERLINGUA command has been applied, otherwise using direct transfer.
+
+
+
+See Section~\ref{Section:CommandLineOverview}.
+
+\section{{\tt TRANSLATE\_\-CORPUS Arg1}}
+\label{Section:TRANSLATE--CORPUSArg1}
+
+{\em [Process text translation corpus with specified ID.]}
+
+
+Parameterised version of TRANSLATE\_\-CORPUS. Process the text mode
+translation corpus with ID $\langle$Arg$\rangle$, defined by the
+parameterised config file entry
+translation\_\-corpus($\langle$Arg$\rangle$). The output file, defined
+by the parameterised config file entry
+translation\_\-corpus\_\-results($\langle$Arg$\rangle$), contains
+question marks for translations that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', 'ok' or
+'bad', the new judgements can be incorporated into the translation
+judgements file (defined by the translation\_\-corpus\_\-judgements
+config file entry) using the parameterised command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS $\langle$Arg$\rangle$.
+
+
+
+See Section~\ref{Section:TranslationRegressionText}.
+
+\section{{\tt TRANSLATE\_\-CORPUS}}
+\label{Section:TRANSLATE--CORPUS}
+
+{\em [Process text translation corpus.]}
+
+
+Process the default text mode translation corpus, defined by the
+translation\_\-corpus config file entry. The output file, defined by
+the translation\_\-corpus\_\-results config file entry, contains
+question marks for translations that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', 'ok' or
+'bad', the new judgements can be incorporated into the translation
+judgements file (defined by the translation\_\-corpus\_\-judgements
+config file entry) using the command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS.
+
+
+
+See Section~\ref{Section:TranslationRegressionText}.
+
+\section{{\tt TRANSLATE\_\-PARSE\_\-TIMES Arg1}}
+\label{Section:TRANSLATE--PARSE--TIMESArg1}
+
+{\em [Print parse times for latest run on text translation corpus with specified ID.]}
+
+
+
+
+See Section~\ref{Section:TranslationRegressionTextTimes}.
+
+\section{{\tt TRANSLATE\_\-PARSE\_\-TIMES}}
+\label{Section:TRANSLATE--PARSE--TIMES}
+
+{\em [Print parse times for latest run on text translation corpus.]}
+
+
+
+
+See Section~\ref{Section:TranslationRegressionTextTimes}.
+
+\section{{\tt TRANSLATE\_\-SPEECH\_\-CORPUS Arg1}}
+\label{Section:TRANSLATE--SPEECH--CORPUSArg1}
+
+{\em [Process speech translation corpus with specified ID.]}
+
+Parameterised version of TRANSLATE\_\-SPEECH\_\-CORPUS. Process speech mode
+translation corpus, defined by the translation\_\-speech\_\-corpus($\langle$Arg$\rangle$)
+config file entry. The output file, defined by the
+translation\_\-speech\_\-corpus\_\-results($\langle$Arg) config file entry, contains
+question marks for translations that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', 'ok' or
+'bad', the new judgements can be incorporated into the stored
+translation judgements file using the command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH $\langle$Arg$\rangle$. A second output file,
+defined by the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements($\langle$Arg$\rangle$)
+config file entry, contains "blank" recognition judgements: here, the
+question marks should be replaced with either 'y' (acceptable
+recognition), or 'n' (unacceptable recognition). Recognition
+judgements can be updated using the UPDATE\_\-RECOGNITION\_\-JUDGEMENTS
+$\langle$Arg$\rangle$ command.
+
+
+
+See Section~\ref{Section:TranslationRegressionSpeech}.
+
+\section{{\tt TRANSLATE\_\-SPEECH\_\-CORPUS}}
+\label{Section:TRANSLATE--SPEECH--CORPUS}
+
+{\em [Process speech translation corpus.]}
+
+Process speech mode translation corpus, defined by the
+translation\_\-speech\_\-corpus config file entry. The output file, defined
+by the translation\_\-speech\_\-corpus\_\-results config file entry, contains
+question marks for translations that have not yet been judged. If
+these are replaced by valid judgements, currently 'good', 'ok' or
+'bad', the new judgements can be incorporated into the stored
+translation judgements file using the command
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH. A second output file, defined by
+the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements config file entry,
+contains "blank" recognition judgements: here, the question marks
+should be replaced with either 'y' (acceptable recognition), or 'n'
+(unacceptable recognition). Recognition judgements can be updated
+using the UPDATE\_\-RECOGNITION\_\-JUDGEMENTS command.
+
+
+
+See Section~\ref{Section:TranslationRegressionSpeech}.
+
+\section{{\tt TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN Arg1}}
+\label{Section:TRANSLATE--SPEECH--CORPUS--AGAINArg1}
+
+{\em [Process speech translation corpus with specified ID, using recognition results from previous run.]}
+
+Parameterised version of TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN. Process speech mode translation corpus, starting from the results saved from the most recent invocation of the TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ command. This is useful if you are testing speech translation performance, but have only changed the translation or generation files. The output files are the same as for the TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ command.
+
+
+
+See Section~\ref{Section:TranslationRegressionSpeechRerun}.
+
+\section{{\tt TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN}}
+\label{Section:TRANSLATE--SPEECH--CORPUS--AGAIN}
+
+{\em [Process speech translation corpus, using recognition results from previous run.]}
+
+Process speech mode translation corpus, starting from the results
+saved from the most recent invocation of the TRANSLATE\_\-SPEECH\_\-CORPUS
+command. This is useful if you are testing speech translation
+performance, but have only changed the translation or generation
+files. The output files are the same as for the
+TRANSLATE\_\-SPEECH\_\-CORPUS command.
+
+
+
+See Section~\ref{Section:TranslationRegressionSpeechRerun}.
+
+\section{{\tt TRANSLATE\_\-TRACE\_\-OFF}}
+\label{Section:TRANSLATE--TRACE--OFF}
+
+{\em [Switch off translation tracing (default).]}
+
+
+
+
+See Section~\ref{Section:TranslationTrace}.
+
+\section{{\tt TRANSLATE\_\-TRACE\_\-ON}}
+\label{Section:TRANSLATE--TRACE--ON}
+
+{\em [Switch on translation tracing.]}
+
+
+
+
+See Section~\ref{Section:TranslationTrace}.
+
+\section{{\tt UNSET\_\-NOTIONAL\_\-SPEAKER}}
+\label{Section:UNSET--NOTIONAL--SPEAKER}
+
+{\em [Remove setting of notional name for dialogue processing.]}
+
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt UNSET\_\-NOTIONAL\_\-TIME}}
+\label{Section:UNSET--NOTIONAL--TIME}
+
+{\em [Use real as opposed to notional time for dialogue processing.]}
+
+
+
+
+See Section~\ref{Section:SettingDialogueContext}.
+
+\section{{\tt UPDATE\_\-DIALOGUE\_\-JUDGEMENTS Arg1}}
+\label{Section:UPDATE--DIALOGUE--JUDGEMENTSArg1}
+
+{\em [Update dialogue judgements file with specified ID from annotated dialogue corpus output.]}
+
+Parameterised version of UPDATE\_\-DIALOGUE\_\-JUDGEMENTS. Update the
+dialogue judgements file, defined by the dialogue\_\-corpus\_\-judgements
+config file entry, from the output of the dialogue corpus output file
+with ID $\langle$Arg$\rangle$, defined by the parameterised config file entry
+dialogue\_\-corpus\_\-results($\langle$Arg$\rangle$). This command should be used after
+editing the output file produced by the parameterised command
+BATCH\_\-DIALOGUE $\langle$Arg$\rangle$. Editing should replace question marks by valid
+judgements, currently 'good' or 'bad'.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt UPDATE\_\-DIALOGUE\_\-JUDGEMENTS}}
+\label{Section:UPDATE--DIALOGUE--JUDGEMENTS}
+
+{\em [Update dialogue judgements file from annotated dialogue corpus output.]}
+
+Update the dialogue judgements file, defined by the
+dialogue\_\-corpus\_\-judgements config file entry, from the output of the
+default text dialogue corpus output file, defined by the
+dialogue\_\-corpus\_\-results config file entry. This command should be used
+after editing the output file produced by the BATCH\_\-DIALOGUE
+command. Editing should replace question marks by valid judgements,
+currently 'good', or 'bad'.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH Arg1}}
+\label{Section:UPDATE--DIALOGUE--JUDGEMENTS--SPEECHArg1}
+
+{\em [Update dialogue judgements file with specified ID from annotated speech dialogue corpus output.]}
+
+Parameterised version of UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH. Update the
+dialogue judgements file, defined by the dialogue\_\-corpus\_\-judgements
+config file entry, from the output of the dialogue corpus output file
+with ID $\langle$Arg$\rangle$, defined by the parameterised config file entry
+dialogue\_\-corpus\_\-results($\langle$Arg$\rangle$). This command should be used after
+editing the output file produced by the parameterised command
+BATCH\_\-DIALOGUES\_\-SPEECH $\langle$Arg$\rangle$. Editing should replace question marks by
+valid judgements, currently 'good' or 'bad'.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH}}
+\label{Section:UPDATE--DIALOGUE--JUDGEMENTS--SPEECH}
+
+{\em [Update dialogue judgements file from annotated speech dialogue corpus output.]}
+
+Update the dialogue judgements file, defined by the
+dialogue\_\-corpus\_\-judgements config file entry, from the output of the
+default speech dialogue corpus output file, defined by the
+dialogue\_\-speech\_\-corpus\_\-results config file entry. This command should
+be used after editing the output file produced by the
+BATCH\_\-DIALOGUES\_\-SPEECH command. Editing should replace question marks
+by valid judgements, currently 'good', or 'bad'.
+
+
+
+See Section~\ref{Section:RegressionTestingDialogue}.
+
+\section{{\tt UPDATE\_\-RECOGNITION\_\-JUDGEMENTS Arg1}}
+\label{Section:UPDATE--RECOGNITION--JUDGEMENTSArg1}
+
+{\em [Update recognition judgements file from temporary translation corpus recognition judgements with specified ID.]}
+
+Parameterised version of UPDATE\_\-RECOGNITION\_\-JUDGEMENTS. Update
+recognition judgements file, defined by the
+translation\_\-corpus\_\-recognition\_\-judgements config file entry, from the
+temporary translation corpus recognition judgements file, defined by
+the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements($\langle$Arg$\rangle$) config file
+entry and produced by the TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN $\langle$Arg$\rangle$ commands. This command should be
+used after editing the temporary translation corpus recognition
+judgements file. Editing should replace question marks by valid
+judgements, currently 'y' or 'n'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-RECOGNITION\_\-JUDGEMENTS}}
+\label{Section:UPDATE--RECOGNITION--JUDGEMENTS}
+
+{\em [Update recognition judgements file from temporary translation corpus recognition judgements.]}
+
+Update recognition judgements file, defined by the
+translation\_\-corpus\_\-recognition\_\-judgements config file entry, from the
+temporary translation corpus recognition judgements file, defined by
+the translation\_\-corpus\_\-tmp\_\-recognition\_\-judgements config file entry
+and produced by the TRANSLATE\_\-SPEECH\_\-CORPUS or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN commands. This command should be used
+after editing the temporary translation corpus recognition judgements
+file. Editing should replace question marks by valid judgements,
+currently 'y' or 'n'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS Arg1}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTSArg1}
+
+{\em [Update translation judgements file from annotated translation corpus output with specified ID.]}
+
+Parameterised version of UPDATE\_\-TRANSLATION\_\-JUDGEMENTS. Update
+the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the text translation corpus output file with ID
+$\langle$Arg$\rangle$, defined by the parameterised config file entry
+translation\_\-corpus\_\-results($\langle$Arg$\rangle$). This command
+should be used after editing the output file produced by the
+parameterised command TRANSLATE\_\-CORPUS
+$\langle$Arg$\rangle$. Editing should replace question marks by valid
+judgements, currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS}
+
+{\em [Update translation judgements file from annotated translation corpus output.]}
+
+
+Update the translation judgements file,  defined by the translation\_\-corpus\_\-judgements config file entry, from the output of the default text translation corpus output file, defined by the translation\_\-corpus\_\-results config file entry. This command should be used after editing the output file produced by the TRANSLATE\_\-CORPUS command. Editing should replace question marks by valid judgements, currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-CSV Arg1}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--CSVArg1}
+
+{\em [Update translation judgements file from CSV version of annotated translation corpus output with specified ID.]}
+
+Parameterised version of
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-CSV. Update the translation
+judgements file, defined by the translation\_\-corpus\_\-judgements
+config file entry, from the output of the text translation corpus
+output file with ID $\langle$Arg$\rangle$, defined by the
+parameterised config file entry
+translation\_\-corpus\_\-results($\langle$Arg$\rangle$). This command
+should be used after editing the CSV version of the output file
+produced by the parameterised command TRANSLATE\_\-CORPUS
+$\langle$Arg$\rangle$. Editing should replace question marks in the
+first column by valid judgements, currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingCSV}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-CSV}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--CSV}
+
+{\em [Update translation judgements file from CSV version of annotated translation corpus output.]}
+
+
+Update the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the default text translation corpus output file, defined by the
+translation\_\-corpus\_\-results config file entry. This command
+should be used after editing the CSV version of the output file
+produced by the TRANSLATE\_\-CORPUS command. Editing should replace
+question marks in the first column by valid judgements, currently
+'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingCSV}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH Arg1}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--SPEECHArg1}
+
+{\em [Update translation judgements file from annotated speech translation corpus output with specified ID.]}
+
+Parameterised version of UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH. Update
+the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output of
+the speech translation corpus output file, defined by the
+translation\_\-speech\_\-corpus\_\-results($\langle$Arg$\rangle$) config file entry. This
+command should be used after editing the output file produced by the
+TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ or TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN $\langle$Arg$\rangle$
+command. Editing should replace question marks by valid judgements,
+currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--SPEECH}
+
+{\em [Update translation judgements file from annotated speech translation corpus output.]}
+
+Update the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output of
+the speech translation corpus output file, defined by the
+translation\_\-speech\_\-corpus\_\-results config file entry. This command
+should be used after editing the output file produced by the
+TRANSLATE\_\-SPEECH\_\-CORPUS or TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN
+command. Editing should replace question marks by valid judgements,
+currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingProlog}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH\_\-CSV Arg1}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--SPEECH--CSVArg1}
+
+{\em [Update translation judgements file from CSV version of annotated speech translation corpus output with specified ID.]}
+
+Parameterised version of
+UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH\_\-CSV. Update the
+translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the speech translation corpus output file, defined by the
+translation\_\-speech\_\-corpus\_\-results($\langle$Arg$\rangle$)
+config file entry. This command should be used after editing the CSV
+version of the output file produced by the
+TRANSLATE\_\-SPEECH\_\-CORPUS $\langle$Arg$\rangle$ or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN $\langle$Arg$\rangle$
+command. Editing should replace question marks in the first column by
+valid judgements, currently 'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingCSV}.
+
+\section{{\tt UPDATE\_\-TRANSLATION\_\-JUDGEMENTS\_\-SPEECH\_\-CSV}}
+\label{Section:UPDATE--TRANSLATION--JUDGEMENTS--SPEECH--CSV}
+
+{\em [Update translation judgements file from CSV version of annotated speech translation corpus output.]}
+
+Update the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the speech translation corpus output file, defined by the
+translation\_\-speech\_\-corpus\_\-results config file entry. This
+command should be used after editing the CSV version of the output
+file produced by the TRANSLATE\_\-SPEECH\_\-CORPUS or
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN command. Editing should replace
+question marks in the first column by valid judgements, currently
+'good', 'ok' or 'bad'.
+
+
+
+See Section~\ref{Section:TranslationJudgingCSV}.
+
+\section{{\tt WAVFILES Arg1}}
+\label{Section:WAVFILESArg1}
+
+{\em [Show most recent N wavfiles recorded from speech input at top-level.]}
+
+
+Show the last $\langle$Arg$\rangle$ wavfiles recorded using
+recognition from the top-level (the RECOGNISE command). Each file is
+displayed together with a timestamp and associated text. The
+associated text is a transcription if one is available, or the
+recognition result otherwise.
+
+The files shown by this command can be used as top-level 
+recorded speech input by typing
+\begin{verbatim}
+WAVFILE <Wavfile>
+\end{verbatim}
+e.g.
+\begin{verbatim}
+WAVFILE c:/Regulus/recorded_wavfiles/2008-04-24_22-36-03/utt05.wav
+\end{verbatim}
+
+
+
+See Section~\ref{Section:RecordedWavfiles}.
+
+\section{{\tt WAVFILES}}
+\label{Section:WAVFILES}
+
+{\em [Show wavfiles recorded from speech input at top-level.]}
+
+
+Show wavfiles recorded using recognition from the top-level
+(the RECOGNISE command). Each file is displayed together with
+a timestamp and associated text. The associated text is a 
+transcription if one is available, or the recognition result
+otherwise. 
+
+The files shown by this command can be used as top-level 
+recorded speech input by typing
+\begin{verbatim}
+WAVFILE <Wavfile>
+\end{verbatim}
+e.g.
+\begin{verbatim}
+WAVFILE c:/Regulus/recorded_wavfiles/2008-04-24_22-36-03/utt05.wav
+\end{verbatim}
+
+
+
+See Section~\ref{Section:RecordedWavfiles}.

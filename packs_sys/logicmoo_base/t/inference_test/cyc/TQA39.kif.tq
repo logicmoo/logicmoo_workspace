@@ -1,0 +1,147 @@
+(note TQA39)
+   
+(believes InternationalCommunity 
+ (agent #$HYP-HelpingAnAgent-67047990 Iran)) 
+
+(actionViolatesObligation #$HYP-HelpingAnAgent-67047990 ModernInternationalRelationsCOC) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE)) 
+
+(obligationParts ModernInternationalRelationsCOC ModernInternationalRelationsCOC) 
+(actionViolatesObligation #$HYP-HelpingAnAgent-67047990 DontSupportTerrorism) 
+
+(implies 
+  (and 
+    (instance ?SUPPORT HelpingAnAgent) 
+    (beneficiary ?SUPPORT ?TERR-GR) 
+    (instance ?TERR-GR TerroristGroup) 
+    (agent ?SUPPORT ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+  (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+ 
+(beneficiary #$HYP-HelpingAnAgent-67047990 #$HYP-TerroristGroup-48088572) 
+(agent #$HYP-HelpingAnAgent-67047990 Iran) 
+(instance #$HYP-TerroristGroup-48088572 TerroristGroup) 
+(instance #$HYP-HelpingAnAgent-67047990 HelpingAnAgent) 
+
+(obligationParts DontSupportTerrorism DontSupportTerrorism) 
+(obligationParts ModernInternationalRelationsCOC DontSupportTerrorism) 
+(instance Iran Country) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?BLAME 
+      (and 
+        (instance ?BLAME Censuring-CommunicationAct) 
+        (senderOfInfo ?BLAME InternationalCommunity) 
+        (maleficiary ?BLAME ?AGT))) likelihood)) 
+
+(implies 
+  (instance ?COUNTRY Country) 
+  (desires ?COUNTRY 
+    (not 
+      (thereExists ?BLAME 
+        (and 
+          (instance ?BLAME Censuring-CommunicationAct) 
+          (senderOfInfo ?BLAME InternationalCommunity) 
+          (maleficiary ?BLAME ?COUNTRY)))))) 
+
+(instance Iran GeopoliticalEntity) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT DontSupportTerrorism) 
+    (instance ?AGT Country) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?MIL-OP 
+      (and 
+        (instance ?MIL-OP MilitaryOperation) 
+        (maleficiary ?MIL-OP ?AGT))) likelihood)) 
+
+(implies 
+  (instance ?AGT GeopoliticalEntity) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?MIL-OP 
+        (and 
+          (instance ?MIL-OP MilitaryOperation) 
+          (maleficiary ?MIL-OP ?AGT)))))) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION ?AGT))) likelihood)) 
+
+(implies 
+  (instance ?GEOPOL GeopoliticalEntity) 
+  (desires ?GEOPOL 
+    (not 
+      (thereExists ?SANCTION 
+        (and 
+          (instance ?SANCTION ImposingSanctions) 
+          (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (instance ?GROUP TerroristGroup) 
+      (instance ?REVEAL InformationTransferEvent) 
+      (recipientOfInfo ?REVEAL InternationalCommunity) 
+      (instance ?ACT HelpingAnAgent) 
+      (beneficiary ?ACT ?GROUP) 
+      (agent ?ACT Iran) 
+      (performsInsAtLocation ?GROUP TerroristAct Bahrain) 
+      (infoTransferred ?REVEAL 
+        (agent ?ACT Iran)) 
+      (believes InternationalCommunity 
+        (agent ?ACT Iran)) 
+      (temporallySubsumes 
+        (TimeIntervalInclusiveFn 
+          (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+          (DateInSituationFn CalendarDay 20 HPKBScenarioConflict)) ?REVEAL))
+    (or 
+      (and 
+        (desires Iran ?PROP) 
+        (decreasesCausally ?ACT ?PROP likelihood)) 
+      (and 
+        (desires Iran (not ?PROP)) 
+        (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list (thereExists ?BLAME 
+           (and 
+               (instance ?BLAME Censuring-CommunicationAct) 
+               (senderOfInfo ?BLAME InternationalCommunity) 
+               (maleficiary ?BLAME ?AGT))) ))
+               
+(answer (list (thereExists ?MIL-OP 
+           (and 
+               (instance ?MIL-OP MilitaryOperation) 
+               (maleficiary ?MIL-OP ?AGT))) ))
+
+(answer (list (thereExists ?SANCTION 
+           (and 
+               (instance ?SANCTION ImposingSanctions) 
+               (maleficiary ?SANCTION ?AGT))) ))
+
+
+(end_of_file)
+
+
+
+

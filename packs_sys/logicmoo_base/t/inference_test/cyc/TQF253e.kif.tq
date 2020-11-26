@@ -1,0 +1,49 @@
+(note TQF253e)
+
+(geopoliticalSubdivision Azerbaijan CityOfBakuAzerbaijan) 
+(inverse geopoliticalSubdivision inRegion) 
+(pathTerminus Baku-SupsaOilPipeline CityOfBakuAzerbaijan) 
+(instance Baku-SupsaOilPipeline OilPipeline) 
+(transportedInTypes Petroleum-CrudeOil OilPipeline) 
+(contains Azerbaijan SeaportOfBakuAzerbaijan) 
+(inRegion SeaportOfBakuAzerbaijan SeaportOfBakuAzerbaijan) 
+(transportFacilityFor SeaportOfBakuAzerbaijan OilTanker) 
+(transportedInTypes Petroleum-CrudeOil OilTanker) 
+
+(implies 
+  (and 
+    (inRegion ?OBJ ?SUB) 
+    (contains ?REGION ?SUB)) 
+  (inRegion ?OBJ ?REGION)) 
+
+(implies 
+  (instance ?FACIL OilTerminal) 
+  (transportFacilityFor ?FACIL OilTanker)) 
+
+(instance SeaportOfBakuAzerbaijan OilTerminal) 
+
+(query (findall (?WAY-TO-TRANSPORT-OIL)
+  (exists 
+    (?CONVEYOR) 
+    (exists 
+      (?FACILITY) 
+      (exists 
+        (?REGION) 
+        (and 
+          (transportedInTypes Petroleum-CrudeOil ?WAY-TO-TRANSPORT-OIL) 
+          (or 
+            (and 
+              (instance ?CONVEYOR ?WAY-TO-TRANSPORT-OIL) 
+              (inRegion ?CONVEYOR Azerbaijan)) 
+            (and 
+              (instance ?CONVEYOR ?WAY-TO-TRANSPORT-OIL) 
+              (pathTerminus ?CONVEYOR ?REGION) 
+              (inRegion ?REGION Azerbaijan)) 
+            (and 
+              (inRegion ?FACILITY Azerbaijan) 
+              (transportFacilityFor ?FACILITY ?WAY-TO-TRANSPORT-OIL)))))))))
+
+(answer OilTanker)
+(answer OilPipeline)
+
+(end_of_file)

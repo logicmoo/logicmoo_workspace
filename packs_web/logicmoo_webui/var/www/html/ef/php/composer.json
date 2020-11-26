@@ -1,0 +1,10 @@
+{
+    "require": {
+        "google/apiclient": "^2.0",
+        "google/apiclient-services": "^0.11.0",
+        "nao-pon/flysystem-google-drive": "^1.1",
+        "kunalvarma05/dropbox-php-sdk": "^0.2.0",
+        "nao-pon/elfinder-flysystem-driver-ext": "^1.0",
+        "barryvdh/elfinder-flysystem-driver":">=0.1"
+    }
+}

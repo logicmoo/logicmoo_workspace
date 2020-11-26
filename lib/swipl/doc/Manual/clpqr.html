@@ -1,0 +1,519 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.10</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="clpfd.html">
+<link rel="next" href="csv.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="clpfd.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="csv.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:clpqr"><a id="sec:A.10"><span class="sec-nr">A.10</span> <span class="sec-title">library(clpqr): 
+Constraint Logic Programming over Rationals and Reals</span></a></h2>
+
+<a id="sec:clpqr"></a>
+<a id="sec:lib:clpqr"></a>
+<blockquote> Author: <em>Christian Holzbaur</em>, ported to SWI-Prolog 
+by <em>Leslie De Koninck</em>, K.U. Leuven
+</blockquote>
+
+<p>This CLP(Q,R) system is a port of the CLP(Q,R) system of Sicstus 
+Prolog by Christian Holzbaur: Holzbaur C.: OFAI clp(q,r) Manual, Edition 
+1.3.3, Austrian Research Institute for Artificial Intelligence, Vienna, 
+TR-95-09, 1995.<sup class="fn">205<span class="fn-text">http://www.ai.univie.ac.at/cgi-bin/tr-online?number+95-09</span></sup> 
+This manual is roughly based on the manual of the above mentioned 
+CLP(Q,R) implementation.
+
+<p>The CLP(Q,R) system consists of two components: the CLP(Q) library 
+for handling constraints over the rational numbers and the CLP(R) 
+library for handling constraints over the real numbers (using floating 
+point numbers as representation). Both libraries offer the same 
+predicates (with exception of
+<a class="pred" href="clpqr.html#bb_inf/4">bb_inf/4</a> in CLP(Q) and <a class="pred" href="clpqr.html#bb_inf/5">bb_inf/5</a> 
+in CLP(R)). It is allowed to use both libraries in one program, but 
+using both CLP(Q) and CLP(R) constraints on the same variable will 
+result in an exception.
+
+<p>Please note that the <code>library(clpqr)</code> library is <em>not</em> 
+an
+<em>autoload</em> library and therefore this library must be loaded 
+explicitly before using it:
+
+<pre class="code">
+:- use_module(library(clpq)).
+</pre>
+
+<p>or
+
+<pre class="code">
+:- use_module(library(clpr)).
+</pre>
+
+<p><h3 id="sec:clpqr-predicates"><a id="sec:A.10.1"><span class="sec-nr">A.10.1</span> <span class="sec-title">Solver 
+predicates</span></a></h3>
+
+<a id="sec:clpqr-predicates"></a> The following predicates are provided 
+to work with constraints:
+
+<dl class="latex">
+<dt class="pubdef"><a id="{}/1"><strong>{}</strong>(<var>+Constraints</var>)</a></dt>
+<dd class="defbody">
+Adds the constraints given by <var>Constraints</var> to the constraint 
+store.</dd>
+<dt class="pubdef"><a id="entailed/1"><strong>entailed</strong>(<var>+Constraint</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <var>Constraint</var> is necessarily true within the current 
+constraint store. This means that adding the negation of the constraint 
+to the store results in failure.</dd>
+<dt class="pubdef"><a id="inf/2"><strong>inf</strong>(<var>+Expression, 
+-Inf</var>)</a></dt>
+<dd class="defbody">
+Computes the infimum of <var>Expression</var> within the current state 
+of the constraint store and returns that infimum in <var>Inf</var>. This 
+predicate does not change the constraint store.</dd>
+<dt class="pubdef"><a id="sup/2"><strong>sup</strong>(<var>+Expression, 
+-Sup</var>)</a></dt>
+<dd class="defbody">
+Computes the supremum of <var>Expression</var> within the current state 
+of the constraint store and returns that supremum in <var>Sup</var>. 
+This predicate does not change the constraint store.</dd>
+<dt class="pubdef"><a id="minimize/1"><strong>minimize</strong>(<var>+Expression</var>)</a></dt>
+<dd class="defbody">
+Minimizes <var>Expression</var> within the current constraint store. 
+This is the same as computing the infimum and equating the expression to 
+that infimum.</dd>
+<dt class="pubdef"><a id="maximize/1"><strong>maximize</strong>(<var>+Expression</var>)</a></dt>
+<dd class="defbody">
+Maximizes <var>Expression</var> within the current constraint store. 
+This is the same as computing the supremum and equating the expression 
+to that supremum.</dd>
+<dt class="pubdef"><a id="bb_inf/5"><strong>bb_inf</strong>(<var>+Ints, 
++Expression, -Inf, -Vertex, +Eps</var>)</a></dt>
+<dd class="defbody">
+This predicate is offered in CLP(R) only. It computes the infimum of
+<var>Expression</var> within the current constraint store, with the 
+additional constraint that in that infimum, all variables in <var>Ints</var> 
+have integral values. <var>Vertex</var> will contain the values of <var>Ints</var> 
+in the infimum. <var>Eps</var> denotes how much a value may differ from 
+an integer to be considered an integer. E.g. when
+<var>Eps</var> = 0.001, then X = 4.999 will be considered as an integer 
+(5 in this case). <var>Eps</var> should be between 0 and 0.5.</dd>
+<dt class="pubdef"><a id="bb_inf/4"><strong>bb_inf</strong>(<var>+Ints, 
++Expression, -Inf, -Vertex</var>)</a></dt>
+<dd class="defbody">
+This predicate is offered in CLP(Q) only. It behaves the same as
+<a class="pred" href="clpqr.html#bb_inf/5">bb_inf/5</a> but does not use 
+an error margin.</dd>
+<dt class="pubdef"><a id="bb_inf/3"><strong>bb_inf</strong>(<var>+Ints, 
++Expression, -Inf</var>)</a></dt>
+<dd class="defbody">
+The same as <a class="pred" href="clpqr.html#bb_inf/5">bb_inf/5</a> or <a class="pred" href="clpqr.html#bb_inf/4">bb_inf/4</a> 
+but without returning the values of the integers. In CLP(R), an error 
+margin of 0.001 is used.</dd>
+<dt class="pubdef"><a id="dump/3"><strong>dump</strong>(<var>+Target, 
++Newvars, -CodedAnswer</var>)</a></dt>
+<dd class="defbody">
+Returns the constraints on <var>Target</var> in the list <var>CodedAnswer</var> 
+where all variables of <var>Target</var> have been replaced by <var>NewVars</var>. 
+This operation does not change the constraint store. E.g. in
+
+<pre class="code">
+dump([X,Y,Z],[x,y,z],Cons)
+</pre>
+
+<p><code>Cons</code> will contain the constraints on X, Y and Z, where 
+these variables have been replaced by atoms x, y and z.
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:clpqr-arg-syntax"><a id="sec:A.10.2"><span class="sec-nr">A.10.2</span> <span class="sec-title">Syntax 
+of the predicate arguments</span></a></h3>
+
+<a id="sec:clpqr-arg-syntax"></a> The arguments of the predicates 
+defined in the subsection above are defined in <a class="tab" href="clpqr.html#tab:clpqrbnf">table 
+10</a>. Failing to meet the syntax rules will result in an exception.
+<div style="text-align:center">
+<table class="latex frame-box">
+<tr><td>&lt;<var>Constraints</var>&gt; </td><td align=right>::=</td><td>&lt;<var>Constraint</var>&gt; </td><td>single 
+constraint </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Constraint</var>&gt; , &lt;<var>Constraints</var>&gt; </td><td>conjunction </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Constraint</var>&gt; ; &lt;<var>Constraints</var>&gt; </td><td>disjunction </td></tr>
+<tr><td>
+
+<p>&lt;<var>Constraint</var>&gt; </td><td align=right>::=</td><td>&lt;<var>Expression</var>&gt; <code>&lt;</code> &lt;<var>Expression</var>&gt; </td><td>less 
+than </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; <code>&gt;</code> &lt;<var>Expression</var>&gt; </td><td>greater 
+than </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; <code>=&lt;</code> &lt;<var>Expression</var>&gt; </td><td>less 
+or equal </td></tr>
+<tr><td></td><td align=right>|</td><td><code>&lt;=</code>(&lt;<var>Expression</var>&gt;, &lt;<var>Expression</var>&gt;)</td><td>less 
+or equal </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; <code>&gt;=</code> &lt;<var>Expression</var>&gt; </td><td>greater 
+or equal </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; <code>=\=</code> &lt;<var>Expression</var>&gt; </td><td>not 
+equal </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; =:= &lt;<var>Expression</var>&gt; </td><td>equal </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; = &lt;<var>Expression</var>&gt; </td><td>equal </td></tr>
+<tr><td>
+
+<p>&lt;<var>Expression</var>&gt; </td><td align=right>::=</td><td>&lt;<var>Variable</var>&gt; </td><td>Prolog 
+variable </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Number</var>&gt; </td><td>Prolog 
+number </td></tr>
+<tr><td></td><td align=right>|</td><td>+&lt;<var>Expression</var>&gt; </td><td>unary 
+plus </td></tr>
+<tr><td></td><td align=right>|</td><td>-&lt;<var>Expression</var>&gt; </td><td>unary 
+minus </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; + &lt;<var>Expression</var>&gt; </td><td>addition </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; - &lt;<var>Expression</var>&gt; </td><td>substraction </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; * &lt;<var>Expression</var>&gt; </td><td>multiplication </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; / &lt;<var>Expression</var>&gt; </td><td>division </td></tr>
+<tr><td></td><td align=right>|</td><td>abs(&lt;<var>Expression</var>&gt;)</td><td>absolute 
+value </td></tr>
+<tr><td></td><td align=right>|</td><td>sin(&lt;<var>Expression</var>&gt;)</td><td>sine </td></tr>
+<tr><td></td><td align=right>|</td><td>cos(&lt;<var>Expression</var>&gt;)</td><td>cosine </td></tr>
+<tr><td></td><td align=right>|</td><td>tan(&lt;<var>Expression</var>&gt;)</td><td>tangent </td></tr>
+<tr><td></td><td align=right>|</td><td>exp(&lt;<var>Expression</var>&gt;)</td><td>exponent </td></tr>
+<tr><td></td><td align=right>|</td><td>pow(&lt;<var>Expression</var>&gt;)</td><td>exponent </td></tr>
+<tr><td></td><td align=right>|</td><td>&lt;<var>Expression</var>&gt; <code>^</code> &lt;<var>Expression</var>&gt; </td><td>exponent </td></tr>
+<tr><td></td><td align=right>|</td><td>min(&lt;<var>Expression</var>&gt;, &lt;<var>Expression</var>&gt;)</td><td>minimum </td></tr>
+<tr><td></td><td align=right>|</td><td>max(&lt;<var>Expression</var>&gt;, &lt;<var>Expression</var>&gt;)</td><td>maximum </td></tr>
+</table>
+<div class="caption"><b>Table 10 : </b>CLP(Q,R) constraint BNF</div>
+<a id="tab:clpqrbnf"></a>
+</div>
+
+<p><h3 id="sec:clpqr-unification"><a id="sec:A.10.3"><span class="sec-nr">A.10.3</span> <span class="sec-title">Use 
+of unification</span></a></h3>
+
+<a id="sec:clpqr-unification"></a>
+
+<p>Instead of using the <a class="pred" href="clpqr.html#{}/1">{}/1</a> 
+predicate, you can also use the standard unification mechanism to store 
+constraints. The following code samples are equivalent:
+
+<p>
+<ul class="latex">
+<li><i>Unification with a variable</i><br>
+
+<pre class="code">
+{X =:= Y}
+{X = Y}
+X = Y
+</pre>
+
+<p>
+<li><i>Unification with a number</i><br>
+
+<pre class="code">
+{X =:= 5.0}
+{X = 5.0}
+X = 5.0
+</pre>
+
+<p>
+</ul>
+
+<p><h3 id="sec:clpqr-non-linear"><a id="sec:A.10.4"><span class="sec-nr">A.10.4</span> <span class="sec-title">Non-linear 
+constraints</span></a></h3>
+
+<a id="sec:clpqr-non-linear"></a> The CLP(Q,R) system deals only 
+passively with non-linear constraints. They remain in a passive state 
+until certain conditions are satisfied. These conditions, which are 
+called the isolation axioms, are given in
+<a class="tab" href="clpqr.html#tab:clpqraxioms">table 11</a>.
+<div style="text-align:center">
+<table class="latex frame-box">
+<tr><td><var>A = B * C</var> </td><td>B or C is ground</td><td>A = 5 * C 
+or A = B * 4 </td></tr>
+<tr><td></td><td>A and (B or C) are ground</td><td>20 = 5 * C or 20 = B 
+* 4 </td></tr>
+<tr class="hline"><td><var>A = B / C</var> </td><td>C is ground</td><td>A 
+= B / 3 </td></tr>
+<tr><td></td><td>A and B are ground</td><td>4 = 12 / C </td></tr>
+<tr class="hline"><td><var>X = min(Y,Z)</var> </td><td>Y and Z are 
+ground</td><td>X = min(4,3) </td></tr>
+<tr><td><var>X = max(Y,Z)</var> </td><td>Y and Z are ground</td><td>X = 
+max(4,3) </td></tr>
+<tr><td><var>X = abs(Y)</var> </td><td>Y is ground</td><td>X = abs(-7) </td></tr>
+<tr class="hline"><td><var>X = pow(Y,Z)</var> </td><td>X and Y are 
+ground</td><td>8 = 2 <code>^</code> Z </td></tr>
+<tr><td><var>X = exp(Y,Z)</var> </td><td>X and Z are ground</td><td>8 = 
+Y <code>^</code> 3 </td></tr>
+<tr><td><var>X = Y</var> <code>^</code> <var>Z</var> </td><td>Y and Z 
+are ground</td><td>X = 2 <code>^</code> 3 </td></tr>
+<tr class="hline"><td><var>X = sin(Y)</var> </td><td>X is ground</td><td>1 
+= sin(Y) </td></tr>
+<tr><td><var>X = cos(Y)</var> </td><td>Y is ground</td><td>X = 
+sin(1.5707) </td></tr>
+<tr><td><var>X = tan(Y)</var> </td><td></td></tr>
+</table>
+<div class="caption"><b>Table 11 : </b>CLP(Q,R) isolating axioms</div>
+<a id="tab:clpqraxioms"></a>
+</div>
+
+<p><h3 id="sec:clpqr-status"><a id="sec:A.10.5"><span class="sec-nr">A.10.5</span> <span class="sec-title">Status 
+and known problems</span></a></h3>
+
+<a id="sec:clpqr-status"></a>
+
+<p>The clpq and clpr libraries are&lsquo;orphaned', i.e., they currently 
+have no maintainer.
+
+<p>
+<ul class="latex">
+<li><i>Top-level output</i><br>
+The top-level output may contain variables not present in the original 
+query:
+
+<pre class="code">
+?- {X+Y&gt;=1}.
+{Y=1-X+_G2160, _G2160&gt;=0}.
+
+?-
+</pre>
+
+<p>Nonetheless, for linear constraints this kind of answer means 
+unconditional satisfiability.
+
+<p>
+<li><i>Dumping constraints</i><br>
+The first argument of <a id="idx:dump3:2515"></a><a class="pred" href="clpqr.html#dump/3">dump/3</a> 
+has to be a list of free variables at call-time:
+
+<pre class="code">
+?- {X=1},dump([X],[Y],L).
+ERROR: Unhandled exception: Unknown message:
+       instantiation_error(dump([1],[_G11],_G6),1)
+?-
+</pre>
+
+<p>
+</ul>
+</body></html>

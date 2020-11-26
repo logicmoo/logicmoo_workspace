@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\Ex2017.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>Fr</Language>
+    <Language>En</Language>
+  </Languages>
+  <MainLanguage>Fr</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Univ</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Univ</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Univ</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Lieu</Key>
+        </Child>
+        <Child>
+          <Key>Ingredient</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Ingredient</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Ingredient</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Epice</Key>
+        </Child>
+        <Child>
+          <Key>Legume</Key>
+        </Child>
+        <Child>
+          <Key>Viande</Key>
+        </Child>
+        <Child>
+          <Key>Fruit</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Univ</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Fruit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Fruit</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Viande</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Viande</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Legume</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Legume</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Tomate</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Tomate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Tomate</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Tomate25</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Legume</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Tomate25</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Tomate25</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Tomate</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Tomate</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Epice</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Epice</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Ingredient</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Lieu</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Lieu</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Univ</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Univ</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

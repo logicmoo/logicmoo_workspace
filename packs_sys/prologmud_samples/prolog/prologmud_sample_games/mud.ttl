@@ -1,0 +1,6091 @@
+# modelName=urn:ftd:cogchar.org:2012:runtime#lifter_sheet_22
+# modelSize=4974
+
+@base               <mud> .
+@prefix        owl: <http://www.w3.org/2002/07/owl#> .
+@prefix        xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix       rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix        rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix         dc: <http://purl.org/dc/elements/1.1/> .
+@prefix    knowrob: <http://ias.cs.tum.edu/kb/knowrob.owl#> .
+@prefix computable: <http://ias.cs.tum.edu/kb/computable.owl#> .
+@prefix        mud: <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#> .
+@prefix ccrt:    <urn:ftd:cogchar.org:2012:runtime#> .
+@prefix cs:      <http://www.cogchar.org/schema/scene#> .
+@prefix lc:      <http://www.cogchar.org/lift/config#> .
+@prefix lci:     <http://www.cogchar.org/lift/config/instance#> .
+@prefix liftcmd:  <http://www.cogchar.org/lift/config/command#> .
+@prefix liftconfig:  <http://www.cogchar.org/lift/config/configroot#> .
+@prefix liftqa:  <http://www.cogchar.org/lift/question_and_answer#> .
+@prefix liftquery:  <http://www.cogchar.org/lift/action/query#> .
+@prefix liftreg:  <http://www.cogchar.org/lift/action/registration#> .
+@prefix liftsessionvar:  <http://www.cogchar.org/lift/config/sessionVariable#> .
+@prefix liftvar:  <http://www.cogchar.org/lift/config/variable#> .
+@prefix path:    <http://www.cogchar.org/schema/path/definition#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix scenetrig:  <http://www.cogchar.org/schema/scene/trigger#> .
+@prefix thinganim:  <http://www.cogchar.org/schema/thinganim/definition#> .
+
+liftconfig:_M1L1P2
+      rdf:type ccrt:liftconfig ;
+      lc:template (liftvar:a liftvar:b liftvar:c liftvar:d)
+
+
+@base               <mud> .
+@prefix        owl: <http://www.w3.org/2002/07/owl#> .
+@prefix        xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix       rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix        rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix         dc: <http://purl.org/dc/elements/1.1/> .
+@prefix    knowrob: <http://ias.cs.tum.edu/kb/knowrob.owl#> .
+@prefix computable: <http://ias.cs.tum.edu/kb/computable.owl#> .
+@prefix        mud: <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#> .
+
+# Named toplevel resources (665)
+
+mud:Area1000
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  mud:region ,
+	  knowrob:Area ,
+	  knowrob:SpaceInAHOC ;
+	mud:height 0 ;
+	mud:nameStrings "Main Engineering"^^xsd:string ;
+	mud:opaqueness 1 ;
+	rdfs:comment "At the far end of the room you see the warp core, a large pulsating vertical tube"^^xsd:string ,
+		     "Computer terminals cover all the walls, and a large table built into the floor sits in the middle of the room"^^xsd:string ,
+		     "Main Engineering"^^xsd:string ,
+		     "The room is longer than it is wide, and it has fairly low ceilings"^^xsd:string ,
+		     "You find yourself in the middle of main engineering"^^xsd:string .
+
+mud:Area1001
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Geordi's Quarters"^^xsd:string ;
+	rdfs:comment "A neatly made bed has been placed against the northern wall"^^xsd:string ,
+		     "A small personal computer sits on a desk against the western wall, in between two windows that look out into space"^^xsd:string ,
+		     "Geordi's Quarters"^^xsd:string ,
+		     "The room is sparsely decorated, due to the fact that Geordi is blind"^^xsd:string ,
+		     "You're in the middle of Geordi's quarters"^^xsd:string .
+
+mud:Area1002
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string .
+
+mud:Area1003
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Data's Quarters"^^xsd:string ;
+	rdfs:comment "Data's Quarters"^^xsd:string ,
+		     "In front of the screen is a large desk, which is covered in computer controls"^^xsd:string ,
+		     "Some easils and paintings have been left scattered around the southern part of the room, while a huge computer screen showing a cross section of the Enterprise covers the entire northern wall"^^xsd:string ,
+		     "You can't see a bed in this room, but you figure it's because Data doesn't sleep"^^xsd:string ,
+		     "You're in the middle of Data's quarters"^^xsd:string .
+
+mud:Area1004
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "A computer control panel is situated in the northwestern corner of the room, which is where the force fields for the cells are controlled"^^xsd:string ,
+			    "This is where all the criminals and prisoners are kept while on board the Enterprise"^^xsd:string ;
+	mud:nameStrings "The Brig"^^xsd:string ;
+	rdfs:comment <The panel says:u000du000au000du000a***************************************************u000du000a*                                                 *u000du000a*            NCC-1701-D - ENTERPRISE              *u000du000a*                                                 *u000du000a*              *****                              *u000du000a*      **********************                     *u000du000a*      ***********************  _________         *u000du000a*              *****        ***(___  ____(        *u000du000a*                            ***** \\ \\*           *u000du000a*                             **********          *u000du000a*                                                 *u000du000a*          You are currently on deck 1            *u000du000a*                                                 *u000du000a***************************************************u000du000a> ,
+		     "A computer control panel is situated in the northwestern corner of the room, which is where the force fields for the cells are controlled"^^xsd:string ,
+		     "The Brig"^^xsd:string ,
+		     "The panel says:\r\n\r\n***************************************************\r\n*                                                 *\r\n*            NCC-1701-D - ENTERPRISE              *\r\n*                                                 *\r\n*              *****                              *\r\n*      **********************                     *\r\n*      ***********************  _________         *\r\n*              *****        ***(___  ____(        *\r\n*                            ***** \\ \\*           *\r\n*                             **********          *\r\n*                                                 *\r\n*          You are currently on deck 1            *\r\n*                                                 *\r\n***************************************************\r\n"^^xsd:string ,
+		     "This is where all the criminals and prisoners are kept while on board the Enterprise"^^xsd:string ,
+		     "Three fairly large cells can been seen in the southern part of the room, and they're all empty"^^xsd:string ,
+		     "You're in the dimly lit Brig"^^xsd:string .
+
+mud:Area1005
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string ,
+		     "You notice a tiny computer panel embedded into the wall"^^xsd:string .
+
+mud:Area1006
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "A computer terminal is sitting near the southern wall, where the transporter chief can control the transporters"^^xsd:string ;
+	mud:nameStrings "Transporter Room"^^xsd:string ;
+	rdfs:comment "A computer terminal is sitting near the southern wall, where the transporter chief can control the transporters"^^xsd:string ,
+		     "Eight round transport pads have been arranged in a circle, on a raised platform against the northern wall"^^xsd:string ,
+		     "Transporter Room"^^xsd:string ,
+		     "You're in the Enterprise transporter room"^^xsd:string .
+
+mud:Area1007
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "school"^^xsd:string ;
+	mud:nameStrings "School"^^xsd:string ;
+	rdfs:comment "School"^^xsd:string ,
+		     "Several computer consoles with a children's interface on them can be seen on the tables"^^xsd:string ,
+		     "Various tables and chairs are set up all around the room, and many paintings and drawings have been attached to the walls"^^xsd:string ,
+		     "You step through the doors and find yourself in a large school room"^^xsd:string .
+
+mud:Area1008
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string ,
+		     "You see the holodeck's control panel beside the holodeck door, and it has some information on it"^^xsd:string .
+
+mud:Area1009
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "This is where different programs can be loaded and experienced, which seem totally real"^^xsd:string ;
+	mud:nameStrings "Holodeck 2"^^xsd:string ;
+	rdfs:comment <u000du000a***************************************************u000du000a*                                                 *u000du000a*            NCC-1701-D - "ENTERPRISE"            *u000du000a*                    HOLODECK 2                   *u000du000a*                                                 *u000du000a*              STATUS : Inactive                  *u000du000a*     CURRENT PROGRAM : N/A                       *u000du000a*            SAFETIES : N/A                       *u000du000a*                                                 *u000du000a*    NOTE: Starfleet is not responsible for       *u000du000a*          any injuries incurred while on this    *u000du000a*          holodeck!                              *u000du000a*                                                 *u000du000a* WARNING: While the safeties are disabled, you   *u000du000a*          CAN be injured, or even killed.        *u000du000a*                                                 *u000du000a***************************************************> ,
+		     "\r\n***************************************************\r\n*                                                 *\r\n*            NCC-1701-D - \"ENTERPRISE\"            *\r\n*                    HOLODECK 2                   *\r\n*                                                 *\r\n*              STATUS : Inactive                  *\r\n*     CURRENT PROGRAM : N/A                       *\r\n*            SAFETIES : N/A                       *\r\n*                                                 *\r\n*    NOTE: Starfleet is not responsible for       *\r\n*          any injuries incurred while on this    *\r\n*          holodeck!                              *\r\n*                                                 *\r\n* WARNING: While the safeties are disabled, you   *\r\n*          CAN be injured, or even killed.        *\r\n*                                                 *\r\n***************************************************"^^xsd:string ,
+		     "Holodeck 2"^^xsd:string ,
+		     "Right now, this holodeck is not functioning"^^xsd:string ,
+		     "The room is just a large cube, with jet black walls and a yellow grid painted on the floors, the walls, and the ceiling"^^xsd:string ,
+		     "This is where different programs can be loaded and experienced, which seem totally real"^^xsd:string ,
+		     "You're now on Holodeck 2"^^xsd:string .
+
+mud:Area1010
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "turbolift"^^xsd:string ;
+	mud:nameStrings "Turbolift"^^xsd:string ;
+	rdfs:comment "From here, you can access the other decks on the Enterprise"^^xsd:string ,
+		     "Several vertical rows of lights make this place very well lit"^^xsd:string ,
+		     "The turbolift walls have been rounded off, making it in the shape of a tube"^^xsd:string ,
+		     "Turbolift"^^xsd:string ,
+		     "You're in the turbolift"^^xsd:string .
+
+mud:Area1011
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "turbolift"^^xsd:string ;
+	mud:nameStrings "Turbolift"^^xsd:string ;
+	rdfs:comment "From here, you can accessthe other decks on the Enterprise"^^xsd:string ,
+		     "Several vertical rows of lights make this place very well lit"^^xsd:string ,
+		     "The turbolift walls have been rounded off, making it in the shape of a tube"^^xsd:string ,
+		     "Turbolift"^^xsd:string ,
+		     "You're in the turbolift"^^xsd:string .
+
+mud:Area1012
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Cargo Bay 1"^^xsd:string ;
+	rdfs:comment "Cargo Bay 1"^^xsd:string ,
+		     "It's quite a large room, with a very high ceiling and a lot of floor space"^^xsd:string ,
+		     "You can see several hundred plastic crates and barrels with the Starfleet insignia on them stacked right up to the ceiling"^^xsd:string ,
+		     "You're in the main cargo bay of the Enterprise"^^xsd:string .
+
+mud:Area1013
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string ,
+		     "You notice a tiny computer panel embedded into the wall"^^xsd:string .
+
+mud:Area1014
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Riker's Quarters"^^xsd:string ;
+	rdfs:comment "A small partition at the northern part of the room seperates his sleeping area with the rest of the room"^^xsd:string ,
+		     "Riker's Quarters"^^xsd:string ,
+		     "The room is very neat and tidy, with a couch and several chairs aranged around a coffee table by the eastern wall"^^xsd:string ,
+		     "You've arrived in Riker's quarters"^^xsd:string .
+
+mud:Area1015
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Sick Bay"^^xsd:string ;
+	rdfs:comment <u000du000a***************************************************u000du000a*                                                 *u000du000a*            NCC-1701-D - "ENTERPRISE"            *u000du000a*                    HOLODECK 4                   *u000du000a*                                                 *u000du000a*              STATUS : Active                    *u000du000a*     CURRENT PROGRAM : Sherlock Holmes (19th     *u000du000a*                       century London)           *u000du000a*            SAFETIES : Disabled                  *u000du000a*                                                 *u000du000a*    NOTE: Starfleet is not responsible for       *u000du000a*          any injuries incurred while on this    *u000du000a*          holodeck!                              *u000du000a*                                                 *u000du000a* WARNING: While the safeties are disabled, you   *u000du000a*          CAN be injured, or even killed.        *u000du000a*                                                 *u000du000a*             ---ENTER WHEN READY---              *u000du000a*                                                 *u000du000a***************************************************u000du000a> ,
+		     "\r\n***************************************************\r\n*                                                 *\r\n*            NCC-1701-D - \"ENTERPRISE\"            *\r\n*                    HOLODECK 4                   *\r\n*                                                 *\r\n*              STATUS : Active                    *\r\n*     CURRENT PROGRAM : Sherlock Holmes (19th     *\r\n*                       century London)           *\r\n*            SAFETIES : Disabled                  *\r\n*                                                 *\r\n*    NOTE: Starfleet is not responsible for       *\r\n*          any injuries incurred while on this    *\r\n*          holodeck!                              *\r\n*                                                 *\r\n* WARNING: While the safeties are disabled, you   *\r\n*          CAN be injured, or even killed.        *\r\n*                                                 *\r\n*             ---ENTER WHEN READY---              *\r\n*                                                 *\r\n***************************************************\r\n"^^xsd:string ,
+		     "A large glass window in the northern part of the room separates the doctor's office with the rest of the room"^^xsd:string ,
+		     "About a dozen beds are arranged along the walls of the room, while several carts covered with medical supplies are scattered around the room"^^xsd:string ,
+		     "Sick Bay"^^xsd:string ,
+		     "You're in the middle of the Enterprise's Sick Bay"^^xsd:string .
+
+mud:Area1016
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string ,
+		     "You see the holodeck's control panel beside the holodeck door, and it has some information on it"^^xsd:string .
+
+mud:Area1017
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Holodeck 4 Entrance - A Narrow Alley"^^xsd:string ;
+	rdfs:comment "Holodeck 4 Entrance - A Narrow Alley"^^xsd:string ,
+		     "Tall dark brick buildings block your way north and south"^^xsd:string ,
+		     "The archway leading out of the holodeck is west"^^xsd:string ,
+		     "The smell from the rotting food and garbage mixing with the foul water on the ground is unbearable"^^xsd:string ,
+		     "You can hear the sounds of a bustling marketpace to the east"^^xsd:string ,
+		     "You can see that the windows on the buildings are fairly high, and some have been boarded up"^^xsd:string ,
+		     "You emerge into a dark narrow alley"^^xsd:string .
+
+mud:Area1018
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Crusher's Quarters"^^xsd:string ;
+	rdfs:comment "A neatly made bed is located by the northern wall, in between two large windows looking out into space"^^xsd:string ,
+		     "Crusher's Quarters"^^xsd:string ,
+		     "Several different paintings are attached to the walls, and you also notice a few sculptures"^^xsd:string ,
+		     "You're in Doctor Crusher's quarters"^^xsd:string .
+
+mud:Area1019
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string .
+
+mud:Area1020
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Enterprise Security"^^xsd:string ;
+	rdfs:comment "Enterprise Security"^^xsd:string ,
+		     "Three long tables surrounded by chairs stretch across the room"^^xsd:string ,
+		     "Weapons lockers cover all of the walls, except along the northern wall, where a large glass window protects dozens of different phasors, blaster rifles, and other high tech weapons"^^xsd:string ,
+		     "You're standing in the dimly lit Enterprise Security"^^xsd:string .
+
+mud:Area1021
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "It's very noisy in here, due to all the talking and laughing"^^xsd:string ;
+	mud:nameStrings "Ten Forward"^^xsd:string ;
+	rdfs:comment "A long bar spans almost the entire length of the southern part of the room, and about two dozen bar stools are sitting in front of it"^^xsd:string ,
+		     "It's very noisy in here, due to all the talking and laughing"^^xsd:string ,
+		     "Many round metal tables are scattered around the room, surrounded by metal chairs"^^xsd:string ,
+		     "Ten Forward"^^xsd:string ,
+		     "The entire northern wall is covered with windows looking out into space, while two large wooden doors with the Starfleet insignia stamped on them face south"^^xsd:string ,
+		     "You're now in Ten Forward, the entertainment room of the Enterprise"^^xsd:string .
+
+mud:Area1022
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Shuttle Bay"^^xsd:string ;
+	rdfs:comment "A large grey door leads into space"^^xsd:string ,
+		     "It's quite a large room, with a very high ceiling and a lot of floor space"^^xsd:string ,
+		     "Shuttle Bay"^^xsd:string ,
+		     "You can see three different shuttle crafts sitting here, waiting to be flown"^^xsd:string ,
+		     "You're in the main shuttle bay of the Enterprise"^^xsd:string .
+
+mud:Area1023
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Troi's Quarters"^^xsd:string ;
+	rdfs:comment "A neatly made bed is partially hidden behind a curtain at the northern part of the room"^^xsd:string ,
+		     "Several different paintings have been hung from the walls, and a small couch and a recliner are positioned around a coffee table"^^xsd:string ,
+		     "Troi's Quarters"^^xsd:string ,
+		     "You're in Counselor Deanna Troi's quarters"^^xsd:string .
+
+mud:Area1024
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string ,
+		     "You notice a tiny computer panel embedded into the wall"^^xsd:string .
+
+mud:Area1025
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Worf's Quarters"^^xsd:string ;
+	rdfs:comment "A small table is sitting in the southeastern corner, and on it is a small potted plant"^^xsd:string ,
+		     "An impressive selection of Klingon weapons have been mounted on the northern wall, and a partition splits this room with Worf's bedroom to the east"^^xsd:string ,
+		     "Worf's Quarters"^^xsd:string ,
+		     "You're in Worf's quarters"^^xsd:string .
+
+mud:Area1026
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Enterprise Gym"^^xsd:string ;
+	rdfs:comment "A set of lockers against the southern wall contain all of the necessary equipment needed for using the gym"^^xsd:string ,
+		     "A thick stack of mats have been piled high in one corner, which can be used for different activities"^^xsd:string ,
+		     "Captain Picard likes to come here to practice his fencing"^^xsd:string ,
+		     "Enterprise Gym"^^xsd:string ,
+		     "The room is quite large, with a soft grey floor"^^xsd:string ,
+		     "You emerge into the Enterprise gym"^^xsd:string .
+
+mud:Area1027
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "\r\n***************************************************\r\n*                                                 *\r\n*            NCC-1701-D - ENTERPRISE            *\r\n*                                                 *\r\n*              *****                              *\r\n*      **********************                     *\r\n*      ***********************  _________         *\r\n*              *****        ***(___  ____(        *\r\n*                            ***** \\ \\*           *\r\n*                             **********          *\r\n*                                                 *\r\n*          You are currently on deck 3            *\r\n*                                                 *\r\n***************************************************\r\n"^^xsd:string ,
+		     "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string .
+
+mud:Area1028
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Picard's Quarters"^^xsd:string ;
+	rdfs:comment "A comfortable looking recliner with a matching footrest sits beside the door, along with a bright reading lamp and end table"^^xsd:string ,
+		     "A small partition at the northern part of the room contains Picard's sleeping area"^^xsd:string ,
+		     "He isn't very fond of visitors, but you decide to stay and have a look around"^^xsd:string ,
+		     "Picard's Quarters"^^xsd:string ,
+		     "Two large windows offer a great view of space"^^xsd:string ,
+		     "You can see several different ancient artifacts on tables and small pedestals, and a large wooden wardrobe is facing south"^^xsd:string ,
+		     "You find yourself standing by the door of Captain Picard's quarters"^^xsd:string .
+
+mud:Area1029
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Science Lab"^^xsd:string ;
+	rdfs:comment "A complex looking computer console is facing this machine"^^xsd:string ,
+		     "A strange looking machine sits in the middle of the room, up on a slightly raised platform"^^xsd:string ,
+		     "Around the rest of the room are counterops with with the odd computer terminal"^^xsd:string ,
+		     "It looks as though something(or someone) could be placed inside, hooked up to the multitude of wires and cables, and have scientific tests performed on it(or them)"^^xsd:string ,
+		     "Science Lab"^^xsd:string ,
+		     "You're in the Enterprise science lab"^^xsd:string .
+
+mud:Area1030
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "A Corridor"^^xsd:string ;
+	rdfs:comment "A Corridor"^^xsd:string ,
+		     "It isn't very wide, and the light beige walls have been rounded, making the corridor an oval shape"^^xsd:string ,
+		     "You find yourself in the middle of a well lit corridor on the Enterprise"^^xsd:string .
+
+mud:Area1031
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:nameStrings "Cargo Bay 2"^^xsd:string ;
+	rdfs:comment "Cargo Bay 2"^^xsd:string ,
+		     "It's quite a large room, with a very high ceiling and a lot of floor space"^^xsd:string ,
+		     "You can see several hundred plastic crates and barrels with the Starfleet insignia on them stacked right up to the ceiling"^^xsd:string ,
+		     "You're in the cargo bay 2 of the Enterprise"^^xsd:string .
+
+mud:Area1032
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "turbolift"^^xsd:string ;
+	mud:nameStrings "Turbolift"^^xsd:string ;
+	rdfs:comment "From here, you can access the other decks on the Enterprise"^^xsd:string ,
+		     "Several vertical rows of lights make this place very well lit"^^xsd:string ,
+		     "The turbolift walls have been rounded off, making it in the shape of a tube"^^xsd:string ,
+		     "Turbolift"^^xsd:string ,
+		     "You're in the turbolift"^^xsd:string .
+
+mud:Area1033
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "turbolift"^^xsd:string ;
+	mud:nameStrings "Turbolift"^^xsd:string ;
+	rdfs:comment "From here, you can access the other decks on the Enterprise"^^xsd:string ,
+		     "Several vertical rows of lights make this place very well lit"^^xsd:string ,
+		     "The turbolift walls have been rounded off, making it in the shape of a tube"^^xsd:string ,
+		     "Turbolift"^^xsd:string ,
+		     "You're in the turbolift"^^xsd:string .
+
+mud:Area1034
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:keyword "turbolift"^^xsd:string ;
+	mud:nameStrings "Turbolift"^^xsd:string ;
+	rdfs:comment "From here, you can access the other decks on the Enterprise"^^xsd:string ,
+		     "Several vertical rows of lights make this place very well lit"^^xsd:string ,
+		     "The turbolift walls have been rounded off, making it in the shape of a tube"^^xsd:string ,
+		     "Turbolift"^^xsd:string ,
+		     "You're in the turbolift"^^xsd:string .
+
+mud:Area1035
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "This is where the Captain makes all of his important decisions"^^xsd:string ;
+	mud:nameStrings "Picard's Ready Room"^^xsd:string ;
+	rdfs:comment "A long couch has been placed beside the door, while a large U shaped desk is located by the northern wall"^^xsd:string ,
+		     "A single high window beside the desk looks into space, and a fish tank is located in the northwestern corner of the room"^^xsd:string ,
+		     "A small computer screen is sitting on the desk, as well as several other papers and documents"^^xsd:string ,
+		     "Picard's Ready Room"^^xsd:string ,
+		     "This is where the Captain makes all of his important decisions"^^xsd:string ,
+		     "You're standing in Captain Picard's ready room"^^xsd:string .
+
+mud:Area1036
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "The entire southern wall is covered with computer consoles, where the ship's main systems are controlled"^^xsd:string ;
+	mud:nameStrings "Main Bridge - Upper Half"^^xsd:string ;
+	rdfs:comment "Directly in front of you is a thick railing that contains many different computer panels used for the tactical systems of the ship"^^xsd:string ,
+		     "Main Bridge - Upper Half"^^xsd:string ,
+		     "The entire southern wall is covered with computer consoles, where the ship's main systems are controlled"^^xsd:string ,
+		     "Two small curved ramps on either side of the room lead north to the lower part of the bridge, and a large circular skylight shows the space outside the ship"^^xsd:string ,
+		     "You find yourself on the upper half of the main bridge of the USS Enterprise"^^xsd:string .
+
+mud:Area1037
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "This is where the senior officers of the Enterprise meet and discuss important issues"^^xsd:string ;
+	mud:nameStrings "Conference Room"^^xsd:string ;
+	rdfs:comment "A large glass rectangular table sits in the middle of the room, surrounded by about a dozen comfortable looking office chairs"^^xsd:string ,
+		     "Conference Room"^^xsd:string ,
+		     "The entire eastern wall is covered with windows, looking out into space"^^xsd:string ,
+		     "This is where the senior officers of the Enterprise meet and discuss important issues"^^xsd:string ,
+		     "You're in the conference room of the Enterprise"^^xsd:string .
+
+mud:Area1038
+	a mud:BPVLocation ,
+	  mud:Indoors-IsolatedFromOutside ,
+	  knowrob:SpaceInAHOC ;
+	mud:descriptionHere "This is where the Captain, Commander Riker, and Counselor Troi sit"^^xsd:string ,
+			    "This is where the ship's pilot and information officer sit"^^xsd:string ;
+	mud:nameStrings "Main Bridge - Lower Half"^^xsd:string ;
+	rdfs:comment "An enormous view screen covers almost the entire northern wall, and is currently displaying a view of the stars rushing by"^^xsd:string ,
+		     "Main Bridge - Lower Half"^^xsd:string ,
+		     "This is where the Captain, Commander Riker, and Counselor Troi sit"^^xsd:string ,
+		     "This is where the ship's pilot and information officer sit"^^xsd:string ,
+		     "Three large chairs in the northern part of the room, in front of the railing, face the screen"^^xsd:string ,
+		     "Two computer consoles with built in chairs rest about ten feet in front of the chairs, also facing the view screen"^^xsd:string ,
+		     "You find yourself on the lower half of the main bridge of the USS Enterprise"^^xsd:string .
+
+mud:Area1039
+	a mud:BPVLocation ,
+	  mud:FreeSpaceContent ;
+	mud:descriptionHere "You can see stars in every direction, which provide the only light here"^^xsd:string ;
+	mud:nameStrings "Outer Space by the Enterprise"^^xsd:string ;
+	rdfs:comment "A large grey door leads into the Enterprise's Shuttle Bay"^^xsd:string ,
+		     "Outer Space by the Enterprise"^^xsd:string ,
+		     "You can see stars in every direction, which provide the only light here"^^xsd:string ,
+		     "You feel very cold"^^xsd:string ,
+		     "You're floating in outer space right beside the USS Enterprise"^^xsd:string .
+
+mud:Area1040
+	a mud:BPVLocation ,
+	  mud:FreeSpaceContent ;
+	mud:descriptionHere "You can see stars in every direction, which provide the only light here"^^xsd:string ;
+	mud:nameStrings "Outer Space"^^xsd:string ;
+	rdfs:comment "Outer Space"^^xsd:string ,
+		     "You can see stars in every direction, which provide the only light here"^^xsd:string ,
+		     "You feel very cold"^^xsd:string ,
+		     "You're floating in outer space right above the USS Enterprise"^^xsd:string .
+
+mud:Area1041
+	a mud:BPVLocation ,
+	  mud:FreeSpaceContent ;
+	mud:descriptionHere "You can see stars in every direction, which provide the only light here"^^xsd:string ;
+	mud:nameStrings "Outer Space"^^xsd:string ;
+	rdfs:comment "Outer Space"^^xsd:string ,
+		     "You can see stars in every direction, which provide the only light here"^^xsd:string ,
+		     "You feel very cold"^^xsd:string ,
+		     "You're floating in outer space right above the USS Enterprise"^^xsd:string .
+
+mud:Area1042
+	a mud:BPVLocation ,
+	  mud:FreeSpaceContext ;
+	mud:nameStrings "Transporter Beam"^^xsd:string ;
+	rdfs:comment "All you can see is blue flashing light"^^xsd:string ,
+		     "As you try to look down at your body, you realize that there's nothing there!"^^xsd:string ,
+		     "It feels as though your body is racing around at high speeds"^^xsd:string ,
+		     "Transporter Beam"^^xsd:string ,
+		     "You find yourself in a transporter beam"^^xsd:string .
+
+mud:Artifact-Generic
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1000
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1000-Phaser676
+	a mud:ArtifactCol1000 ,
+	  mud:Device-SingleUser ,
+	  mud:Handgun ,
+	  mud:LightingDevice ,
+	  mud:SomethingToWear ,
+	  mud:Weapon ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A standard issue Starfleet phaser has been left here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:issue ,
+		    mud:phaser ,
+		    mud:standard ,
+		    mud:starfleet ,
+		    "phaser"^^xsd:string ,
+		    "weaponblasting"^^xsd:string ;
+	mud:nameStrings "Phaser"^^xsd:string ,
+			"a standard issue phaser"^^xsd:string ;
+	rdfs:comment "A standard issue Starfleet phaser has been left here"^^xsd:string ,
+		     "Phaser"^^xsd:string ,
+		     "These phasers are the standard weapon of Starfleet officers. It offers decent damage for its fairly small size"^^xsd:string ,
+		     "WeaponBlasting"^^xsd:string ,
+		     "a standard issue phaser"^^xsd:string ,
+		     "damageNumberDice 5"^^xsd:string ,
+		     "damageSizeDice 5"^^xsd:string ,
+		     "issue"^^xsd:string ,
+		     "phaser"^^xsd:string ,
+		     "standard"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1000-Phaser700
+	a mud:ArtifactCol1000 ,
+	  mud:Device-SingleUser ,
+	  mud:Handgun ,
+	  mud:LightingDevice ,
+	  mud:SomethingToWear ,
+	  mud:Weapon ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A standard issue Starfleet phaser has been left here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:issue ,
+		    mud:phaser ,
+		    mud:standard ,
+		    mud:starfleet ,
+		    "phaser"^^xsd:string ,
+		    "weaponblasting"^^xsd:string ;
+	mud:nameStrings "Phaser"^^xsd:string ,
+			"a standard issue phaser"^^xsd:string ;
+	rdfs:comment "A standard issue Starfleet phaser has been left here"^^xsd:string ,
+		     "Phaser"^^xsd:string ,
+		     "These phasers are the standard weapon of Starfleet officers. It offers decent damage for its fairly small size"^^xsd:string ,
+		     "WeaponBlasting"^^xsd:string ,
+		     "a standard issue phaser"^^xsd:string ,
+		     "damageNumberDice 5"^^xsd:string ,
+		     "damageSizeDice 5"^^xsd:string ,
+		     "issue"^^xsd:string ,
+		     "phaser"^^xsd:string ,
+		     "standard"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1000-Phaser724
+	a mud:ArtifactCol1000 ,
+	  mud:Device-SingleUser ,
+	  mud:Handgun ,
+	  mud:LightingDevice ,
+	  mud:SomethingToWear ,
+	  mud:Weapon ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A standard issue Starfleet phaser has been left here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:issue ,
+		    mud:phaser ,
+		    mud:standard ,
+		    mud:starfleet ,
+		    "phaser"^^xsd:string ,
+		    "weaponblasting"^^xsd:string ;
+	mud:nameStrings "Phaser"^^xsd:string ,
+			"a standard issue phaser"^^xsd:string ;
+	rdfs:comment "A standard issue Starfleet phaser has been left here"^^xsd:string ,
+		     "Phaser"^^xsd:string ,
+		     "These phasers are the standard weapon of Starfleet officers. It offers decent damage for its fairly small size"^^xsd:string ,
+		     "WeaponBlasting"^^xsd:string ,
+		     "a standard issue phaser"^^xsd:string ,
+		     "damageNumberDice 5"^^xsd:string ,
+		     "damageSizeDice 5"^^xsd:string ,
+		     "issue"^^xsd:string ,
+		     "phaser"^^xsd:string ,
+		     "standard"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1000-Phaser776
+	a mud:ArtifactCol1000 ,
+	  mud:Device-SingleUser ,
+	  mud:Handgun ,
+	  mud:LightingDevice ,
+	  mud:SomethingToWear ,
+	  mud:Weapon ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A standard issue Starfleet phaser has been left here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:issue ,
+		    mud:phaser ,
+		    mud:standard ,
+		    mud:starfleet ,
+		    "phaser"^^xsd:string ,
+		    "weaponblasting"^^xsd:string ;
+	mud:nameStrings "Phaser"^^xsd:string ,
+			"a standard issue phaser"^^xsd:string ;
+	rdfs:comment "A standard issue Starfleet phaser has been left here"^^xsd:string ,
+		     "Phaser"^^xsd:string ,
+		     "These phasers are the standard weapon of Starfleet officers. It offers decent damage for its fairly small size"^^xsd:string ,
+		     "WeaponBlasting"^^xsd:string ,
+		     "a standard issue phaser"^^xsd:string ,
+		     "damageNumberDice 5"^^xsd:string ,
+		     "damageSizeDice 5"^^xsd:string ,
+		     "issue"^^xsd:string ,
+		     "phaser"^^xsd:string ,
+		     "standard"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1001
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1001-5-Phaser-Rifle705
+	a mud:ArtifactCol1001 ,
+	  mud:Device-SingleUser ,
+	  mud:LightingDevice ,
+	  mud:SomethingToWear ,
+	  mud:Weapon ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A large phaser rifle is lying here"^^xsd:string ,
+			    "This phaser rifle looks pretty powerful. These weapons are used mainly on assault type missions, where power is important"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:phaser ,
+		    mud:rifle ,
+		    "weaponblasting"^^xsd:string ;
+	mud:nameStrings "5 Phaser Rifle"^^xsd:string ,
+			"a phaser rifle"^^xsd:string ;
+	rdfs:comment "5 Phaser Rifle"^^xsd:string ,
+		     "A large phaser rifle is lying here"^^xsd:string ,
+		     "This phaser rifle looks pretty powerful. These weapons are used mainly on assault type missions, where power is important"^^xsd:string ,
+		     "WeaponBlasting"^^xsd:string ,
+		     "a phaser rifle"^^xsd:string ,
+		     "damageNumberDice 7"^^xsd:string ,
+		     "damageSizeDice 6"^^xsd:string ,
+		     "phaser"^^xsd:string ,
+		     "rifle"^^xsd:string .
+
+mud:ArtifactCol1002
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1002-Red-Uniform704
+	a mud:ArtifactCol1002 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:burgandy ,
+		    mud:starfleet ,
+		    mud:uniform ,
+		    computable:command ;
+	mud:nameStrings "Red Uniform"^^xsd:string ,
+			"a burgandy Starfleet command uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ,
+		     "Red Uniform"^^xsd:string ,
+		     "These uniforms are worn by command officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a burgandy Starfleet command uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "burgandy"^^xsd:string ,
+		     "command"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1002-Red-Uniform710
+	a mud:ArtifactCol1002 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:burgandy ,
+		    mud:starfleet ,
+		    mud:uniform ,
+		    computable:command ;
+	mud:nameStrings "Red Uniform"^^xsd:string ,
+			"a burgandy Starfleet command uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ,
+		     "Red Uniform"^^xsd:string ,
+		     "These uniforms are worn by command officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a burgandy Starfleet command uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "burgandy"^^xsd:string ,
+		     "command"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1002-Red-Uniform719
+	a mud:ArtifactCol1002 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:burgandy ,
+		    mud:starfleet ,
+		    mud:uniform ,
+		    computable:command ;
+	mud:nameStrings "Red Uniform"^^xsd:string ,
+			"a burgandy Starfleet command uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ,
+		     "Red Uniform"^^xsd:string ,
+		     "These uniforms are worn by command officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a burgandy Starfleet command uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "burgandy"^^xsd:string ,
+		     "command"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1002-Red-Uniform739
+	a mud:ArtifactCol1002 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:burgandy ,
+		    mud:starfleet ,
+		    mud:uniform ,
+		    computable:command ;
+	mud:nameStrings "Red Uniform"^^xsd:string ,
+			"a burgandy Starfleet command uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ,
+		     "Red Uniform"^^xsd:string ,
+		     "These uniforms are worn by command officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a burgandy Starfleet command uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "burgandy"^^xsd:string ,
+		     "command"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1002-Red-Uniform743
+	a mud:ArtifactCol1002 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:burgandy ,
+		    mud:starfleet ,
+		    mud:uniform ,
+		    computable:command ;
+	mud:nameStrings "Red Uniform"^^xsd:string ,
+			"a burgandy Starfleet command uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded burgandy Starfleet command uniform is lying here"^^xsd:string ,
+		     "Red Uniform"^^xsd:string ,
+		     "These uniforms are worn by command officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a burgandy Starfleet command uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "burgandy"^^xsd:string ,
+		     "command"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1003-Gold-Uniform675
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform687
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform699
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform723
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform731
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform735
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1003-Gold-Uniform775
+	a mud:ArtifactCol1003 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:engineering ,
+		    mud:gold ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Gold Uniform"^^xsd:string ,
+			"a gold Starfleet engineering uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded gold Starfleet engineering uniform is lying here"^^xsd:string ,
+		     "Gold Uniform"^^xsd:string ,
+		     "These uniforms are worn by engineering officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a gold Starfleet engineering uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "engineering"^^xsd:string ,
+		     "gold"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1004
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1004-Blue-Uniform680
+	a mud:ArtifactCol1004 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:blue ,
+		    mud:medical ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Blue Uniform"^^xsd:string ,
+			"a blue Starfleet medical uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ,
+		     "Blue Uniform"^^xsd:string ,
+		     "These uniforms are worn by medical officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a blue Starfleet medical uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "blue"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1004-Blue-Uniform715
+	a mud:ArtifactCol1004 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:blue ,
+		    mud:medical ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Blue Uniform"^^xsd:string ,
+			"a blue Starfleet medical uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ,
+		     "Blue Uniform"^^xsd:string ,
+		     "These uniforms are worn by medical officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a blue Starfleet medical uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "blue"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1004-Blue-Uniform747
+	a mud:ArtifactCol1004 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:blue ,
+		    mud:medical ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Blue Uniform"^^xsd:string ,
+			"a blue Starfleet medical uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ,
+		     "Blue Uniform"^^xsd:string ,
+		     "These uniforms are worn by medical officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a blue Starfleet medical uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "blue"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1004-Blue-Uniform751
+	a mud:ArtifactCol1004 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:blue ,
+		    mud:medical ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Blue Uniform"^^xsd:string ,
+			"a blue Starfleet medical uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ,
+		     "Blue Uniform"^^xsd:string ,
+		     "These uniforms are worn by medical officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a blue Starfleet medical uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "blue"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1004-Blue-Uniform755
+	a mud:ArtifactCol1004 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 10 ;
+	mud:descriptionHere "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:blue ,
+		    mud:medical ,
+		    mud:starfleet ,
+		    mud:uniform ;
+	mud:nameStrings "Blue Uniform"^^xsd:string ,
+			"a blue Starfleet medical uniform"^^xsd:string ;
+	rdfs:comment "A neatly folded blue Starfleet medical uniform is lying here"^^xsd:string ,
+		     "Blue Uniform"^^xsd:string ,
+		     "These uniforms are worn by medical officers on Federation starships. It's kind of tight, but it looks pretty good"^^xsd:string ,
+		     "a blue Starfleet medical uniform"^^xsd:string ,
+		     "armorLevel: 10"^^xsd:string ,
+		     "blue"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "starfleet"^^xsd:string ,
+		     "uniform"^^xsd:string .
+
+mud:ArtifactCol1005
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1005-Boots673
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots678
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots685
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots697
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots702
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots708
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots713
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots717
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots721
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots729
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots733
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots737
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots741
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots745
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots749
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots753
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1005-Boots773
+	a mud:ArtifactCol1005 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 5 ;
+	mud:descriptionHere "A pair of Starfleet black boots are sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:black ,
+		    mud:boots ,
+		    mud:starfleet ,
+		    "boots"^^xsd:string ;
+	mud:nameStrings "Boots"^^xsd:string ,
+			"a pair of Starfleet black boots"^^xsd:string ;
+	rdfs:comment "A pair of Starfleet black boots are sitting here"^^xsd:string ,
+		     "Boots"^^xsd:string ,
+		     "These boots must be worn by all Starfleet officers while on duty. They're quite light, and offer good protection for the feet"^^xsd:string ,
+		     "a pair of Starfleet black boots"^^xsd:string ,
+		     "armorLevel: 5"^^xsd:string ,
+		     "black"^^xsd:string ,
+		     "boots"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1006-Comm-Badge674
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge679
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge686
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge698
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge703
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge709
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge714
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge718
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge722
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge730
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge734
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge738
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge742
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge746
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge750
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge754
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1006-Comm-Badge774
+	a mud:ArtifactCol1006 ,
+	  mud:Necklace ,
+	  mud:ProtectiveAttire ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 1 ;
+	mud:descriptionHere "A Starfleet communication badge is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:badge ,
+		    mud:com ,
+		    mud:comm ,
+		    mud:communication ,
+		    mud:starfleet ;
+	mud:nameStrings "Comm Badge"^^xsd:string ,
+			"a Starfleet communication badge"^^xsd:string ;
+	rdfs:comment "A Starfleet communication badge is lying here"^^xsd:string ,
+		     "Comm Badge"^^xsd:string ,
+		     "These communication badges must be worn by all officers while on a starship. It looks like a silver arrow head on top of a golden coloured oval: ____/____ / /   | /  | _/ _/_ _/ // \\ "^^xsd:string ,
+		     "a Starfleet communication badge"^^xsd:string ,
+		     "armorLevel: 1"^^xsd:string ,
+		     "badge"^^xsd:string ,
+		     "com"^^xsd:string ,
+		     "comm"^^xsd:string ,
+		     "communication"^^xsd:string ,
+		     "starfleet"^^xsd:string .
+
+mud:ArtifactCol1007
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1007-Sash725
+	a mud:ArtifactCol1007 ,
+	  mud:ProtectiveAttire ,
+	  mud:SomethingToWear ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 8 ;
+	mud:descriptionHere "Worf's silver chain sash has been left here"^^xsd:string ;
+	mud:keyword mud:sash ,
+		    mud:worf ,
+		    <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#worf's> ,
+		    "sash"^^xsd:string ;
+	mud:nameStrings "Sash"^^xsd:string ,
+			"Worf's sash"^^xsd:string ;
+	rdfs:comment "Sash"^^xsd:string ,
+		     "Worf's sash"^^xsd:string ,
+		     "Worf's sash is some sort of Klingon clothing. Worf always wears it, which makes you wonder how you managed to get a hold of it.."^^xsd:string ,
+		     "Worf's silver chain sash has been left here"^^xsd:string ,
+		     "armorLevel: 8"^^xsd:string ,
+		     "sash"^^xsd:string ,
+		     "worf"^^xsd:string ,
+		     "worf's"^^xsd:string .
+
+mud:ArtifactCol1008
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1008-VISOR688
+	a mud:ArtifactCol1008 ,
+	  mud:ProtectiveAttire ,
+	  mud:flagged_visor ,
+	  knowrob:PortableObject ;
+	mud:armorLevel 2 ;
+	mud:descriptionHere "Geordi's VISOR is lying here"^^xsd:string ;
+	mud:keyword mud:geordi ,
+		    <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#geordi's> ,
+		    mud:visor ;
+	mud:nameStrings "Geordi's VISOR"^^xsd:string ,
+			"VISOR"^^xsd:string ;
+	rdfs:comment "Geordi's VISOR"^^xsd:string ,
+		     "Geordi's VISOR is lying here"^^xsd:string ,
+		     "Geordi's VISOR was made specially for him, because he's blind. This piece of equipment allows him to see things, but differently than normal eyes. I wonder how Geordi is managing, now that you've stolen his only way of seeing?"^^xsd:string ,
+		     "VISOR"^^xsd:string ,
+		     "armorLevel: 2"^^xsd:string ,
+		     "geordi"^^xsd:string ,
+		     "geordi's"^^xsd:string ,
+		     "visor"^^xsd:string .
+
+mud:ArtifactCol1009
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1009-Medical-Tricorder681
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Medical Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "Medical Tricorder"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1009-Medical-Tricorder682
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Medical Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "Medical Tricorder"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1009-Medical-Tricorder683
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Medical Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "Medical Tricorder"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1009-Tricorder759
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ,
+		    "tricorder"^^xsd:string ;
+	mud:localityOfObject mud:Area1015 ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "Tricorder"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1009-Tricorder760
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ,
+		    "tricorder"^^xsd:string ;
+	mud:localityOfObject mud:Area1015 ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "Tricorder"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1009-Tricorder761
+	a mud:ArtifactCol1009 ,
+	  mud:RodShapedObject ,
+	  knowrob:ControlDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:chargeCapacity 5 ;
+	mud:chargeRemaining 5 ;
+	mud:descriptionHere "A medical Tricorder is lying here, ready to be used"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:medical ,
+		    mud:tricorder ,
+		    "tricorder"^^xsd:string ;
+	mud:localityOfObject mud:Area1015 ;
+	mud:mudLevelOf 10 ;
+	mud:nameStrings "Tricorder"^^xsd:string ,
+			"a medical Tricorder"^^xsd:string ;
+	rdfs:comment "A medical Tricorder is lying here, ready to be used"^^xsd:string ,
+		     "This medical Tricorder is used to heal small wounds and cuts. While it isn't made for major injuries, it can help you limp home. To use, hold it and then use it"^^xsd:string ,
+		     "Tricorder"^^xsd:string ,
+		     "a medical Tricorder"^^xsd:string ,
+		     "chargeCapacity: 5"^^xsd:string ,
+		     "chargeRemaining: 5"^^xsd:string ,
+		     "medical"^^xsd:string ,
+		     "mudLevelOf: 10"^^xsd:string ,
+		     "tricorder"^^xsd:string .
+
+mud:ArtifactCol1010
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1010-Dilithium-Crystal756
+	a mud:ArtifactCol1010 ,
+	  mud:LightingDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A shard of dilithium crystal is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:crystal ,
+		    mud:dilithium ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:nameStrings "Dilithium Crystal"^^xsd:string ,
+			"a dilithium crystal"^^xsd:string ;
+	rdfs:comment "A shard of dilithium crystal is lying here"^^xsd:string ,
+		     "Dilithium Crystal"^^xsd:string ,
+		     "Dilithium crystals are used to power warp cores of starships. This particular crystal is glowing brightly, and gives off a blue-ish tinge"^^xsd:string ,
+		     "a dilithium crystal"^^xsd:string ,
+		     "crystal"^^xsd:string ,
+		     "dilithium"^^xsd:string ,
+		     "maybe a #$LightingDevice"^^xsd:string .
+
+mud:ArtifactCol1010-Dilithium-Crystal757
+	a mud:ArtifactCol1010 ,
+	  mud:LightingDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A shard of dilithium crystal is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:crystal ,
+		    mud:dilithium ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:nameStrings "Dilithium Crystal"^^xsd:string ,
+			"a dilithium crystal"^^xsd:string ;
+	rdfs:comment "A shard of dilithium crystal is lying here"^^xsd:string ,
+		     "Dilithium Crystal"^^xsd:string ,
+		     "Dilithium crystals are used to power warp cores of starships. This particular crystal is glowing brightly, and gives off a blue-ish tinge"^^xsd:string ,
+		     "a dilithium crystal"^^xsd:string ,
+		     "crystal"^^xsd:string ,
+		     "dilithium"^^xsd:string ,
+		     "maybe a #$LightingDevice"^^xsd:string .
+
+mud:ArtifactCol1010-Dilithium-Crystal758
+	a mud:ArtifactCol1010 ,
+	  mud:LightingDevice ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "A shard of dilithium crystal is lying here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:crystal ,
+		    mud:dilithium ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:nameStrings "Dilithium Crystal"^^xsd:string ,
+			"a dilithium crystal"^^xsd:string ;
+	rdfs:comment "A shard of dilithium crystal is lying here"^^xsd:string ,
+		     "Dilithium Crystal"^^xsd:string ,
+		     "Dilithium crystals are used to power warp cores of starships. This particular crystal is glowing brightly, and gives off a blue-ish tinge"^^xsd:string ,
+		     "a dilithium crystal"^^xsd:string ,
+		     "crystal"^^xsd:string ,
+		     "dilithium"^^xsd:string ,
+		     "maybe a #$LightingDevice"^^xsd:string .
+
+mud:ArtifactCol1011
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1011-5-Picards-Flute706
+	a mud:Artifact-Generic ,
+	  mud:ArtifactCol1011 ,
+	  mud:InformationStore ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "Captain Picard's wooden flute is sitting here"^^xsd:string ;
+	mud:keyword mud:flute ,
+		    mud:picard ,
+		    <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#picard's> ;
+	mud:nameStrings "5 Picard's Flute"^^xsd:string ,
+			"Picard's flute"^^xsd:string ;
+	rdfs:comment "5 Picard's Flute"^^xsd:string ,
+		     "Captain Picard recieved this flute when he lost his memory and was stuck on some strange world. Now, he plays it to relieve stress"^^xsd:string ,
+		     "Captain Picard's wooden flute is sitting here"^^xsd:string ,
+		     "Picard's flute"^^xsd:string ,
+		     "flute"^^xsd:string ,
+		     "picard"^^xsd:string ,
+		     "picard's"^^xsd:string .
+
+mud:ArtifactCol1012
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1012-Trombone711
+	a mud:Artifact-Generic ,
+	  mud:ArtifactCol1012 ,
+	  mud:InformationStore ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ;
+	mud:descriptionHere "Commander Riker's trombone has been placed here"^^xsd:string ;
+	mud:keyword mud:riker ,
+		    <file:///opt/LogicmooDeveloperFramework/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#riker's> ,
+		    mud:trombone ,
+		    "trombone"^^xsd:string ;
+	mud:nameStrings "Riker's trombone"^^xsd:string ,
+			"Trombone"^^xsd:string ;
+	rdfs:comment "Commander Riker considers himself to be a talented jazz musician. He practices on this trombone all the time"^^xsd:string ,
+		     "Commander Riker's trombone has been placed here"^^xsd:string ,
+		     "Riker's trombone"^^xsd:string ,
+		     "Trombone"^^xsd:string ,
+		     "riker"^^xsd:string ,
+		     "riker's"^^xsd:string ,
+		     "trombone"^^xsd:string .
+
+mud:ArtifactCol1020
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1020-Tea690
+	a mud:ArtifactCol1020 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A small cup of tea is sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:cup ,
+		    mud:tea ,
+		    "tea"^^xsd:string ;
+	mud:nameStrings "Tea"^^xsd:string ,
+			"a small cup"^^xsd:string ;
+	rdfs:comment "A small cup of tea is sitting here"^^xsd:string ,
+		     "Tea"^^xsd:string ,
+		     "a small cup"^^xsd:string ,
+		     "cup"^^xsd:string ,
+		     "tea"^^xsd:string .
+
+mud:ArtifactCol1021
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1021-Synthehol691
+	a mud:ArtifactCol1021 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  mud:LimitedAccess ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A bottle of synthehol is standing here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:bottle ,
+		    mud:synthehol ,
+		    mud:wine ,
+		    "synthehol"^^xsd:string ;
+	mud:nameStrings "Synthehol"^^xsd:string ,
+			"a synthehol"^^xsd:string ;
+	rdfs:comment "A bottle of synthehol is standing here"^^xsd:string ,
+		     "Synthehol"^^xsd:string ,
+		     "a synthehol"^^xsd:string ,
+		     "bottle"^^xsd:string ,
+		     "synthehol"^^xsd:string ,
+		     "wine"^^xsd:string .
+
+mud:ArtifactCol1022
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1022-Ferengi-Ale692
+	a mud:ArtifactCol1022 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  mud:LimitedAccess ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A bottle of Ferengi ale is sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:ale ,
+		    mud:bottle ,
+		    mud:ferengi ;
+	mud:nameStrings "Ferengi Ale"^^xsd:string ,
+			"a Ferengi bottle"^^xsd:string ;
+	rdfs:comment "A bottle of Ferengi ale is sitting here"^^xsd:string ,
+		     "Ferengi Ale"^^xsd:string ,
+		     "a Ferengi bottle"^^xsd:string ,
+		     "ale"^^xsd:string ,
+		     "bottle"^^xsd:string ,
+		     "ferengi"^^xsd:string .
+
+mud:ArtifactCol1023
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1023-Romulan-Whisky693
+	a mud:ArtifactCol1023 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  mud:LimitedAccess ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A bottle of Romulan whiskey is sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:bottle ,
+		    mud:romulan ,
+		    mud:whiskey ,
+		    mud:whisky ;
+	mud:nameStrings "Romulan Whisky"^^xsd:string ,
+			"a Romulan bottle"^^xsd:string ;
+	rdfs:comment "A bottle of Romulan whiskey is sitting here"^^xsd:string ,
+		     "Romulan Whisky"^^xsd:string ,
+		     "a Romulan bottle"^^xsd:string ,
+		     "bottle"^^xsd:string ,
+		     "romulan"^^xsd:string ,
+		     "whiskey"^^xsd:string ,
+		     "whisky"^^xsd:string .
+
+mud:ArtifactCol1024
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1024-Lemonade-Prune-Juice694
+	a mud:ArtifactCol1024 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  mud:LimitedAccess ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A small glass of prune juice is sitting here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:glass ,
+		    mud:juice ,
+		    mud:lemonade ,
+		    mud:prune ;
+	mud:nameStrings "Lemonade 'Prune Juice'"^^xsd:string ,
+			"a small glass"^^xsd:string ;
+	rdfs:comment "A small glass of prune juice is sitting here"^^xsd:string ,
+		     "Lemonade 'Prune Juice'"^^xsd:string ,
+		     "a small glass"^^xsd:string ,
+		     "glass"^^xsd:string ,
+		     "juice"^^xsd:string ,
+		     "lemonade"^^xsd:string ,
+		     "prune"^^xsd:string .
+
+mud:ArtifactCol1025
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ArtifactCol1025-Vulcan-Beer695
+	a mud:ArtifactCol1025 ,
+	  mud:Bottle ,
+	  mud:Flask-LabGlassware ,
+	  mud:FluidReservoir ,
+	  mud:LimitedAccess ,
+	  knowrob:HandTool ,
+	  knowrob:PortableObject ,
+	  knowrob:Portal ,
+	  rdfs:Container ;
+	mud:descriptionHere "A bottle of Vulcan beer is standing here"^^xsd:string ;
+	mud:determinerString rdf:type ;
+	mud:keyword mud:beer ,
+		    mud:bottle ,
+		    mud:vulcan ;
+	mud:nameStrings "Vulcan Beer"^^xsd:string ,
+			"a Vulcan bottle"^^xsd:string ;
+	rdfs:comment "A bottle of Vulcan beer is standing here"^^xsd:string ,
+		     "Vulcan Beer"^^xsd:string ,
+		     "a Vulcan bottle"^^xsd:string ,
+		     "beer"^^xsd:string ,
+		     "bottle"^^xsd:string ,
+		     "vulcan"^^xsd:string .
+
+mud:BPVLocation
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:Bottle
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:Device-SingleUser
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:FemaleAnimal
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:player .
+
+mud:Flask-LabGlassware
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:FluidReservoir
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:drinkable .
+
+mud:FreeSpaceContent
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:FreeSpaceContext
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:Handgun
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:Indoors-IsolatedFromOutside
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:InformationStore
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:LightingDevice
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:LimitedAccess
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:MaleAnimal
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:player .
+
+mud:Necklace
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1000
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1000-Geordi684
+	a mud:MaleAnimal ,
+	  mud:NpcCol1000 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Lieutenant Commander Geordi LaForge is standing here"^^xsd:string ;
+	mud:keyword "commander"^^xsd:string ,
+		    "geordi"^^xsd:string ,
+		    "laforge"^^xsd:string ,
+		    "lieutenant"^^xsd:string ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:mudToHitArmorClass0 3 ;
+	mud:nameStrings "Geordi"^^xsd:string ,
+			"Geordi LaForge"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1003-Gold-Uniform687 ,
+			  mud:ArtifactCol1005-Boots685 ,
+			  mud:ArtifactCol1006-Comm-Badge686 ,
+			  mud:ArtifactCol1008-VISOR688 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "+mudToHitArmorClass0: 3"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Commander"^^xsd:string ,
+		     "Geordi"^^xsd:string ,
+		     "Geordi LaForge"^^xsd:string ,
+		     "Geordi is the Chief Engineer of the Enterprise"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's blind, so he wears a special VISOR that lets him see things"^^xsd:string ,
+		     "LaForge"^^xsd:string ,
+		     "Lieutenant"^^xsd:string ,
+		     "Lieutenant Commander Geordi LaForge is standing here"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+3200"^^xsd:string .
+
+mud:NpcCol1001
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1002
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1002-Worf720
+	a mud:MaleAnimal ,
+	  mud:NpcCol1002 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Lieutenant Worf is here, looking pretty mean"^^xsd:string ;
+	mud:keyword "klingon"^^xsd:string ,
+		    "lieutenant"^^xsd:string ,
+		    "worf"^^xsd:string ;
+	mud:localityOfObject mud:Area1025 ;
+	mud:mudToHitArmorClass0 2 ;
+	mud:nameStrings "Lieutenant Worf"^^xsd:string ,
+			"Worf"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1000-Phaser724 ;
+	mud:wearsClothing mud:ArtifactCol1003-Gold-Uniform723 ,
+			  mud:ArtifactCol1005-Boots721 ,
+			  mud:ArtifactCol1006-Comm-Badge722 ,
+			  mud:ArtifactCol1007-Sash725 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+60"^^xsd:string ,
+		     "+mudToHitArmorClass0: 2"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's Chief of Security of the Enterprise, and he's plenty strong"^^xsd:string ,
+		     "Klingon"^^xsd:string ,
+		     "Lieutenant"^^xsd:string ,
+		     "Lieutenant Worf"^^xsd:string ,
+		     "Lieutenant Worf is here, looking pretty mean"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "Worf"^^xsd:string ,
+		     "Worf is the first Klingon to have joined Starfleet"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+60"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+3400"^^xsd:string .
+
+mud:NpcCol1003
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1003-Dr-Crusher677
+	a mud:FemaleAnimal ,
+	  mud:NpcCol1003 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Lieutenant Beverly Crusher is here, looking for someone to heal"^^xsd:string ;
+	mud:keyword "beverly"^^xsd:string ,
+		    "crusher"^^xsd:string ,
+		    "doctor"^^xsd:string ;
+	mud:localityOfObject mud:Area1015 ;
+	mud:mudToHitArmorClass0 3 ;
+	mud:nameStrings "Doctor Crusher"^^xsd:string ,
+			"Dr. Crusher"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1009-Medical-Tricorder681 ,
+		   mud:ArtifactCol1009-Medical-Tricorder682 ,
+		   mud:ArtifactCol1009-Medical-Tricorder683 ;
+	mud:wearsClothing mud:ArtifactCol1004-Blue-Uniform680 ,
+			  mud:ArtifactCol1005-Boots678 ,
+			  mud:ArtifactCol1006-Comm-Badge679 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "+mudToHitArmorClass0: 3"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Beverly"^^xsd:string ,
+		     "Crusher"^^xsd:string ,
+		     "Doctor"^^xsd:string ,
+		     "Doctor Crusher"^^xsd:string ,
+		     "Doctor Crusher is the Enterprise's Chief Medical Officer"^^xsd:string ,
+		     "Dr. Crusher"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "Her husband was killed years ago in an accident on another starship which was also commanded by Captain Picard"^^xsd:string ,
+		     "Lieutenant Beverly Crusher is here, looking for someone to heal"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "Wesley is her son"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+3200"^^xsd:string .
+
+mud:NpcCol1004
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1004-Troi712
+	a mud:FemaleAnimal ,
+	  mud:NpcCol1004 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Counselor Deanna Troi is here"^^xsd:string ;
+	mud:keyword "counselor"^^xsd:string ,
+		    "deanna"^^xsd:string ,
+		    "troi"^^xsd:string ;
+	mud:localityOfObject mud:Area1007 ;
+	mud:mudToHitArmorClass0 3 ;
+	mud:nameStrings "Counselor Troi"^^xsd:string ,
+			"Troi"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1004-Blue-Uniform715 ,
+			  mud:ArtifactCol1005-Boots713 ,
+			  mud:ArtifactCol1006-Comm-Badge714 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "+mudToHitArmorClass0: 3"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Counselor"^^xsd:string ,
+		     "Counselor Deanna Troi is here"^^xsd:string ,
+		     "Counselor Troi"^^xsd:string ,
+		     "Counselor Troi is the ship's main counselor"^^xsd:string ,
+		     "Deanna"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "She's half betazoid, which means that she can read people's minds"^^xsd:string ,
+		     "Troi"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+42"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+3200"^^xsd:string .
+
+mud:NpcCol1005
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1005-Riker707
+	a mud:MaleAnimal ,
+	  mud:NpcCol1005 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Commander William Riker is here, staring at you"^^xsd:string ;
+	mud:keyword "commander"^^xsd:string ,
+		    "riker"^^xsd:string ,
+		    "william"^^xsd:string ;
+	mud:localityOfObject mud:Area1036 ;
+	mud:mudToHitArmorClass0 2 ;
+	mud:nameStrings "Commander Riker"^^xsd:string ,
+			"Riker"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1012-Trombone711 ;
+	mud:wearsClothing mud:ArtifactCol1002-Red-Uniform710 ,
+			  mud:ArtifactCol1005-Boots708 ,
+			  mud:ArtifactCol1006-Comm-Badge709 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+52"^^xsd:string ,
+		     "+mudToHitArmorClass0: 2"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Commander"^^xsd:string ,
+		     "Commander Riker"^^xsd:string ,
+		     "Commander Riker is the Enterprise's first officer"^^xsd:string ,
+		     "Commander William Riker is here, staring at you"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's in charge of keeping the crew in line"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "Riker"^^xsd:string ,
+		     "William"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+52"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+3200"^^xsd:string .
+
+mud:NpcCol1006
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1006-Picard701
+	a mud:MaleAnimal ,
+	  mud:NpcCol1006 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_nice_thief ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_aware ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobackstab ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_nosleep ,
+	  mud:flagged_nosummon ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ,
+	  mud:flagged_npc_sanctuary ;
+	mud:descriptionHere "Captain Jean-Luc Picard is standing here, watching you"^^xsd:string ;
+	mud:keyword "captain"^^xsd:string ,
+		    "jean"^^xsd:string ,
+		    "jean-luc"^^xsd:string ,
+		    "luc"^^xsd:string ,
+		    "picard"^^xsd:string ;
+	mud:localityOfObject mud:Area1035 ;
+	mud:mudToHitArmorClass0 0 ;
+	mud:nameStrings "Captain Picard"^^xsd:string ,
+			"Picard"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1001-5-Phaser-Rifle705 ,
+		   mud:ArtifactCol1011-5-Picards-Flute706 ;
+	mud:wearsClothing mud:ArtifactCol1002-Red-Uniform704 ,
+			  mud:ArtifactCol1005-Boots702 ,
+			  mud:ArtifactCol1006-Comm-Badge703 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 12d12+75"^^xsd:string ,
+		     "+mudToHitArmorClass0: 0"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_NICE_THIEF"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "AWARE"^^xsd:string ,
+		     "Captain"^^xsd:string ,
+		     "Captain Jean-Luc Picard is standing here, watching you"^^xsd:string ,
+		     "Captain Picard"^^xsd:string ,
+		     "Captain Picard is a very important man"^^xsd:string ,
+		     "Don't mess with him!"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's in charge of Starfleet's flagship, the Enterprise"^^xsd:string ,
+		     "He's very smart, and very wise"^^xsd:string ,
+		     "Jean"^^xsd:string ,
+		     "Jean-Luc"^^xsd:string ,
+		     "Luc"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBACKSTAB"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NOSLEEP"^^xsd:string ,
+		     "NOSUMMON"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "NPC_SANCTUARY"^^xsd:string ,
+		     "Picard"^^xsd:string ,
+		     "mudBareHandDamage: 12d12+75"^^xsd:string ,
+		     "mudMaxHitPoints: 20d20+5000"^^xsd:string .
+
+mud:NpcCol1007
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1007-Guinan689
+	a mud:FemaleAnimal ,
+	  mud:NpcCol1007 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_sentinel ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Guinan is here, tending the bar"^^xsd:string ;
+	mud:keyword "guinan"^^xsd:string ;
+	mud:localityOfObject mud:Area1021 ;
+	mud:mudToHitArmorClass0 4 ;
+	mud:nameStrings "Guinan"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1020-Tea690 ,
+		   mud:ArtifactCol1021-Synthehol691 ,
+		   mud:ArtifactCol1022-Ferengi-Ale692 ,
+		   mud:ArtifactCol1023-Romulan-Whisky693 ,
+		   mud:ArtifactCol1024-Lemonade-Prune-Juice694 ,
+		   mud:ArtifactCol1025-Vulcan-Beer695 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+36"^^xsd:string ,
+		     "+mudToHitArmorClass0: 4"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_SENTINEL"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Guinan"^^xsd:string ,
+		     "Guinan is a strange being"^^xsd:string ,
+		     "Guinan is here, tending the bar"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "She's lived for thousands of years and experienced many things, but now she's decided to work on the Enterprise as a bartender"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+36"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+2600"^^xsd:string .
+
+mud:NpcCol1008
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1008-OBrien696
+	a mud:MaleAnimal ,
+	  mud:NpcCol1008 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_sentinel ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Chief O'Brien is here, waiting to teleport you somwhere"^^xsd:string ;
+	mud:keyword "chief"^^xsd:string ,
+		    "o'brien"^^xsd:string ,
+		    "transporter"^^xsd:string ;
+	mud:localityOfObject mud:Area1006 ;
+	mud:mudToHitArmorClass0 4 ;
+	mud:nameStrings "Chief O'Brien"^^xsd:string ,
+			"O'Brien"^^xsd:string ;
+	mud:stowed mud:ArtifactCol1000-Phaser700 ;
+	mud:wearsClothing mud:ArtifactCol1003-Gold-Uniform699 ,
+			  mud:ArtifactCol1005-Boots697 ,
+			  mud:ArtifactCol1006-Comm-Badge698 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+36"^^xsd:string ,
+		     "+mudToHitArmorClass0: 4"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_SENTINEL"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Chief"^^xsd:string ,
+		     "Chief O'Brien"^^xsd:string ,
+		     "Chief O'Brien is here, waiting to teleport you somwhere"^^xsd:string ,
+		     "Chief O'Brien is the transporter chief on the Enterprise"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "It's his job to make sure everyone arrives(and leaves) in one piece, instead of trillions of atoms"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "O'Brien"^^xsd:string ,
+		     "Transporter"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+36"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+2600"^^xsd:string .
+
+mud:NpcCol1009
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1009-Wesley716
+	a mud:MaleAnimal ,
+	  mud:NpcCol1009 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_act_wimpy ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Wesley Crusher is here, eagerly trying to earn your praise"^^xsd:string ;
+	mud:keyword "crusher"^^xsd:string ,
+		    "wesley"^^xsd:string ;
+	mud:localityOfObject mud:Area1016 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Wesley"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1002-Red-Uniform719 ,
+			  mud:ArtifactCol1005-Boots717 ,
+			  mud:ArtifactCol1006-Comm-Badge718 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+24"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "ACT_WIMPY"^^xsd:string ,
+		     "Crusher"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He got this position only because Captain Picard feels guilty about killing his father"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "Wesley"^^xsd:string ,
+		     "Wesley Crusher is here, eagerly trying to earn your praise"^^xsd:string ,
+		     "Wesley Crusher is not even an official officer, but he serves as an acting Ensign on the bridge"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+24"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+1400"^^xsd:string ,
+		     "wimpy mobile will try to flee when it gets low on hit points. A mobile which is both aggressive and wimpy will not attack a player that is awake"^^xsd:string .
+
+mud:NpcCol1010
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1010-Livingston726
+	a mud:MaleAnimal ,
+	  mud:NpcCol1010 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_sentinel ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Livingston the fish is here, swimming about in his tank"^^xsd:string ;
+	mud:keyword mud:fish ,
+		    "livingston"^^xsd:string ;
+	mud:localityOfObject mud:Area1035 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Livingston"^^xsd:string ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+14"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_SENTINEL"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's some sort of exotic breed, and he's expensive to feed and keep alive"^^xsd:string ,
+		     "Livingston"^^xsd:string ,
+		     "Livingston is Captain Picard's pet fish"^^xsd:string ,
+		     "Livingston the fish is here, swimming about in his tank"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "fish"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+14"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+800"^^xsd:string .
+
+mud:NpcCol1011
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1011-Spot727
+	a mud:MaleAnimal ,
+	  mud:NpcCol1011 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_sentinel ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Spot, Data's pet cat, is sitting here looking at you"^^xsd:string ;
+	mud:keyword mud:cat ,
+		    mud:spot ,
+		    mud:the ,
+		    "spot"^^xsd:string ;
+	mud:localityOfObject mud:Area1003 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Spot"^^xsd:string ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 9d9+14"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_SENTINEL"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Data is always trying to become more human, so he thinks that having a pet might help him achieve his goal"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "Spot"^^xsd:string ,
+		     "Spot is Data's orange coloured cat"^^xsd:string ,
+		     "Spot, Data's pet cat, is sitting here looking at you"^^xsd:string ,
+		     "cat"^^xsd:string ,
+		     "mudBareHandDamage: 9d9+14"^^xsd:string ,
+		     "mudMaxHitPoints: 12d12+800"^^xsd:string ,
+		     "spot"^^xsd:string ,
+		     "the"^^xsd:string .
+
+mud:NpcCol1012
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1012-Ensign728
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1003-Gold-Uniform731 ,
+			  mud:ArtifactCol1005-Boots729 ,
+			  mud:ArtifactCol1006-Comm-Badge730 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign732
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1004 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1003-Gold-Uniform735 ,
+			  mud:ArtifactCol1005-Boots733 ,
+			  mud:ArtifactCol1006-Comm-Badge734 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign736
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1011 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1002-Red-Uniform739 ,
+			  mud:ArtifactCol1005-Boots737 ,
+			  mud:ArtifactCol1006-Comm-Badge738 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign740
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1020 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1002-Red-Uniform743 ,
+			  mud:ArtifactCol1005-Boots741 ,
+			  mud:ArtifactCol1006-Comm-Badge742 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign744
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1024 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1004-Blue-Uniform747 ,
+			  mud:ArtifactCol1005-Boots745 ,
+			  mud:ArtifactCol1006-Comm-Badge746 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign748
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1022 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1004-Blue-Uniform751 ,
+			  mud:ArtifactCol1005-Boots749 ,
+			  mud:ArtifactCol1006-Comm-Badge750 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1012-Ensign752
+	a mud:MaleAnimal ,
+	  mud:NpcCol1012 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "A nervous looking ensign is standing here, watching you"^^xsd:string ;
+	mud:determinerString mud:the ;
+	mud:keyword mud:ensign ,
+		    "ensign"^^xsd:string ;
+	mud:localityOfObject mud:Area1036 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Ensign"^^xsd:string ,
+			"the ensign"^^xsd:string ;
+	mud:wearsClothing mud:ArtifactCol1004-Blue-Uniform755 ,
+			  mud:ArtifactCol1005-Boots753 ,
+			  mud:ArtifactCol1006-Comm-Badge754 ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "A nervous looking ensign is standing here, watching you"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Ensign"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "These ensigns make up the backbone of the Enterprise"^^xsd:string ,
+		     "They clean things, do jobs the higher ups won't even consider doing, and get yelled at all the time"^^xsd:string ,
+		     "ensign"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "the ensign"^^xsd:string .
+
+mud:NpcCol1013
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:NpcCol1013-Alexander671
+	a mud:MaleAnimal ,
+	  mud:NpcCol1013 ,
+	  mud:flagged_act_friend ,
+	  mud:flagged_act_stay_zone ,
+	  mud:flagged_helper ,
+	  mud:flagged_memory ,
+	  mud:flagged_nobash ,
+	  mud:flagged_noblind ,
+	  mud:flagged_nocharm ,
+	  mud:flagged_npc_detect_invis ,
+	  mud:flagged_npc_notrack ;
+	mud:descriptionHere "Alexander Rozhenko is here, practicing laughing hour"^^xsd:string ;
+	mud:keyword mud:alexander ,
+		    mud:rozhenko ,
+		    "alexander"^^xsd:string ;
+	mud:localityOfObject mud:Area1025 ;
+	mud:mudToHitArmorClass0 6 ;
+	mud:nameStrings "Alexander"^^xsd:string ,
+			"alexander rozhenko"^^xsd:string ;
+	rdfs:comment "#$PunchingSomething mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "+mudToHitArmorClass0: 6"^^xsd:string ,
+		     "ACT_FRIEND"^^xsd:string ,
+		     "ACT_STAY_ZONE"^^xsd:string ,
+		     "Alexander"^^xsd:string ,
+		     "Alexander Rozhenko is Worf's son"^^xsd:string ,
+		     "Alexander Rozhenko is here, practicing laughing hour"^^xsd:string ,
+		     "HELPER"^^xsd:string ,
+		     "He's quite small, but since he's a Klingon he's very strong"^^xsd:string ,
+		     "His mother was half human and half Klingon, so Alexander is 3/4 Klingon"^^xsd:string ,
+		     "MEMORY"^^xsd:string ,
+		     "NOBASH"^^xsd:string ,
+		     "NOBLIND"^^xsd:string ,
+		     "NOCHARM"^^xsd:string ,
+		     "NPC_DETECT_INVIS"^^xsd:string ,
+		     "NPC_NOTRACK"^^xsd:string ,
+		     "alexander"^^xsd:string ,
+		     "alexander rozhenko"^^xsd:string ,
+		     "mudBareHandDamage: 8d8+26"^^xsd:string ,
+		     "mudMaxHitPoints: 8d8+1600"^^xsd:string ,
+		     "rozhenko"^^xsd:string .
+
+mud:ProtectiveAttire
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:possessable ,
+			mud:wearable ,
+			mud:wieldable .
+
+mud:RodShapedObject
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ShipMap
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:TemporallyExistingThing .
+
+mud:ShipMap123
+	a mud:ShipMap ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:Area1000 ;
+	mud:opaqueness 100 .
+
+mud:SomethingToWear
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:possessable ,
+			mud:wearable .
+
+mud:TemporallyExistingThing
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:Weapon
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:wieldable .
+
+mud:act_affect
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:act_term
+	mud:mpred_arity 2 .
+
+mud:action
+	a mud:formattype ,
+	  owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:action_info
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:action_rules
+	mud:mpred_arity 4 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:action_verb_useable
+	mud:mpred_arity 4 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:actiontype
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:activeAgent
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:actor
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:agent .
+
+mud:agent
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure ;
+	mud:type_max_charge 120 ;
+	rdfs:subClassOf mud:channel ,
+			mud:obj ,
+			mud:spatialthing ,
+			knowrob:Agent-Generic ;
+	owl:disjointWith mud:item .
+
+mud:agentRoute
+	mud:mpred_arity 3 .
+
+mud:a_command
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:agent_current_action
+	mud:mpred_arity 2 .
+
+mud:agent_done
+	mud:mpred_arity 2 .
+
+mud:agent_text_command
+	mud:mpred_arity 4 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:agent_turnnum
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:agenttype
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf rdf:type .
+
+mud:apath
+	a mud:formattype ;
+	mud:resultIsa mud:areaPath .
+
+mud:apple
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:food ,
+			mud:obj .
+
+mud:areaPath
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:door .
+
+mud:argFormat
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:argIsa
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:argsIsaInList
+	a owl:Class ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:armorLevel
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:art
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:ask_module
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:ask_predicate
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:assert_with_pred
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:assertionMacroHead
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:atloc
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:atom
+	a mud:formattype ;
+	mud:subft mud:term .
+
+mud:atomic_invariants
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:atomic_invariantsC
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:attack
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:authorWas
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:back_yard
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:spatialthing ,
+			mud:yard .
+
+mud:back_yard777
+	a mud:back_yard ,
+	  mud:region ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:bad_instance
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:ball
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:throwable .
+
+mud:ball777
+	a mud:ball ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:red ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:back_yard777 ;
+	mud:material mud:rubber ;
+	mud:opaqueness 100 ;
+	mud:shape mud:spherical ;
+	mud:size mud:medium ;
+	mud:texture mud:bumpy .
+
+mud:bar
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:hassurface .
+
+mud:bath_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room ,
+			mud:spatialthing .
+
+mud:bath_room777
+	a mud:bath_room ,
+	  mud:region ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:bath_room_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:bathtub
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:bath_room_furnature ,
+			mud:furniture ,
+			mud:obj .
+
+mud:bathtub777
+	a mud:bathtub ,
+	  mud:furniture ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ,
+	  mud:useable ;
+	mud:charge 140 ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:bath_room777 ;
+	mud:opaqueness 100 .
+
+mud:bed
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:bed_room_furnature ,
+			mud:furniture ,
+			mud:mattress ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:bed777
+	a mud:bed ;
+	mud:charge 140 ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:bed_room777 ;
+	mud:opaqueness 100 .
+
+mud:bed_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room ,
+			mud:spatialthing .
+
+mud:bed_room777
+	a mud:bed_room ,
+	  mud:region ;
+	mud:doorBetween mud:closet_room777 ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:bed_room_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:bedding
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:foldable .
+
+mud:blanket
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bedding ,
+			mud:item ,
+			mud:obj .
+
+mud:blanket777
+	a mud:blanket ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:dark ,
+		  mud:green ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:bed777 ;
+	mud:material mud:rayon ;
+	mud:opaqueness 100 ;
+	mud:shape mud:rectangular ;
+	mud:size mud:bulky ,
+		 mud:large ;
+	mud:texture mud:plush ,
+		    mud:soft .
+
+mud:book
+	a mud:createableType ,
+	  owl:Class ,
+	  owl:Property ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:obj ,
+			mud:readable .
+
+mud:book_type_a
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:book_type_b
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:bookcase
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:wall_furnature .
+
+mud:bookcase777
+	a mud:bookcase ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:charge 140 ;
+	mud:color mud:brown ,
+		  mud:dark ,
+		  mud:shiney ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:living_room777 ;
+	mud:material mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:concave_polyhedron ,
+		  mud:square ;
+	mud:size mud:large ;
+	mud:texture mud:smooth ;
+	mud:weight 60 .
+
+mud:boolean
+	a mud:formattype .
+
+mud:bottom_drawer
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:drawer ,
+			mud:item ,
+			mud:obj ,
+			mud:partof_furnature .
+
+mud:bottom_drawer777
+	a mud:bottom_drawer ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:charge 140 ;
+	mud:color mud:brown ,
+		  mud:shiney ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:dresser777 ;
+	mud:material mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:concave_polyhedron ,
+		  mud:rectangular ;
+	mud:size mud:medium ;
+	mud:texture mud:smooth .
+
+mud:broccoli
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:food ,
+			mud:item ,
+			mud:obj .
+
+mud:broccoli777
+	a mud:broccoli ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:green ;
+	mud:height 0 ,
+		   1 ;
+	mud:kwLabel mud:fd ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:opaqueness 100 ;
+	mud:size mud:small ;
+	mud:texture mud:bumpy ,
+		    mud:porous ;
+	mud:weight 1 .
+
+mud:call_look_proc
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:call_mpred
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:candle
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:portable_device .
+
+mud:candle777
+	a mud:candle ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:portable ,
+	  mud:portable_device ,
+	  mud:spatialthing ,
+	  mud:takeable ;
+	mud:charge 140 ;
+	mud:color mud:blue ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:material mud:wax ;
+	mud:opaqueness 100 ;
+	mud:shape mud:triangular ;
+	mud:size mud:small ;
+	mud:texture mud:sticky .
+
+mud:cellar
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:spatialthing .
+
+mud:cellar777
+	a mud:cellar ,
+	  mud:region ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:chair
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furniture ,
+			mud:sittable .
+
+mud:channel
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:chargable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:charge
+	a owl:FunctionalProperty ;
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:chargeCapacity
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:chargeRemaining
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:chargeable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:check_consistent
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:closeable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:closed_node
+	mud:mpred_arity 6 ;
+	mud:mpred_prop mud:dyn .
+
+mud:closet_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room ,
+			mud:spatialthing .
+
+mud:closet_room777
+	a mud:closet_room ,
+	  mud:region ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:clothes_dryer
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:dryer ,
+			mud:furniture .
+
+mud:clothing
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:foldable ,
+			mud:washable ,
+			mud:wearable .
+
+mud:cmdfailure
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:cmdsuccess
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:coat
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:clothing ,
+			mud:item ,
+			mud:obj .
+
+mud:coat777
+	a mud:coat ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:black ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:closet_room777 ;
+	mud:material mud:cotton ,
+		     mud:rayon ,
+		     mud:wool ;
+	mud:opaqueness 100 ;
+	mud:size mud:fits ,
+		 mud:medium ;
+	mud:texture mud:coarse .
+
+mud:coffee
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:liquid ,
+			mud:obj .
+
+mud:coffee777
+	a mud:coffee ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:black ,
+		  mud:brown ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:coffee_cup777 ;
+	mud:material mud:liquid ;
+	mud:opaqueness 100 ;
+	mud:shape mud:fluid ;
+	mud:size mud:small ;
+	mud:texture mud:wet .
+
+mud:coffee_cup
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:drinkable ,
+			mud:item ,
+			mud:liquid_container ,
+			mud:obj ,
+			mud:spatialthing ,
+			mud:throwable .
+
+mud:coffee_cup777
+	a mud:coffee_cup ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:black ,
+		  mud:brown ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:material mud:glass ;
+	mud:opaqueness 100 ;
+	mud:shape mud:cuplike ;
+	mud:size mud:small ;
+	mud:texture mud:smooth .
+
+mud:coffee_table
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:living_room_furnature ,
+			mud:obj ,
+			mud:spatialthing ,
+			mud:table .
+
+mud:coffee_table777
+	a mud:coffee_table ,
+	  mud:item ,
+	  mud:table ;
+	mud:charge 140 ;
+	mud:color mud:blue ,
+		  mud:brown ,
+		  mud:shiney ,
+		  mud:white ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:living_room777 ;
+	mud:material mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:circular ,
+		  mud:oval ;
+	mud:size mud:large ,
+		 mud:medium ;
+	mud:texture mud:bumpy ,
+		    mud:irregular ,
+		    mud:smooth ;
+	mud:weight 35 ,
+		   50 .
+
+mud:color
+	mud:mpred_arity 2 .
+
+mud:completeExtentAsserted
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:computer
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:office_furnature .
+
+mud:computer777
+	a mud:computer ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:grey ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:desk777 ;
+	mud:material mud:plastic ;
+	mud:opaqueness 100 ;
+	mud:shape mud:cubular ,
+		  mud:rectangular ;
+	mud:size mud:medium ;
+	mud:texture mud:smooth .
+
+mud:consumable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:container
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:hasobjs .
+
+mud:corpsea
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:corpseb
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:corpsec
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:couch
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:sittable .
+
+mud:counter
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:hassurface .
+
+mud:crackers
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:food ,
+			mud:item ,
+			mud:obj .
+
+mud:crackers777
+	a mud:crackers ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:tan ;
+	mud:height 0 ,
+		   1 ;
+	mud:kwLabel mud:fd ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:opaqueness 100 ;
+	mud:shape mud:circular ,
+		  mud:flat ;
+	mud:size mud:small ;
+	mud:texture mud:coarse ,
+		    mud:dry ;
+	mud:weight 1 .
+
+mud:createableSubclassType
+	mud:mpred_arity 2 .
+
+mud:createableType
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf rdf:type ;
+	owl:disjointWith mud:nonCreatableType .
+
+mud:crib
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:layable .
+
+mud:current_agent
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:current_num
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:current_pronoun
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:default_inst_props
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:prologOnly .
+
+mud:default_sv
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:default_type_props
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:prologOnly .
+
+mud:defence
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:deleted
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure .
+
+mud:deliverable_location_events
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:descriptionHere
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued ,
+		       mud:ordered .
+
+mud:desk
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:office_room_furnature ,
+			mud:spatialthing .
+
+mud:desk777
+	a mud:desk ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:brown ,
+		  mud:shiney ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:office_room777 ;
+	mud:opaqueness 100 ;
+	mud:shape mud:cubular ,
+		  mud:rectangular ;
+	mud:size mud:large ;
+	mud:texture mud:ridged ,
+		    mud:smooth ;
+	mud:weight 175 .
+
+mud:determinerString
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:device
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:useable .
+
+mud:device_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature .
+
+mud:dice
+	a mud:formattype ;
+	mud:subft xsd:int .
+
+mud:dining_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room .
+
+mud:dining_room777
+	a mud:dining_room ,
+	  mud:region ;
+	mud:doorBetween mud:kitchen777 ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:dir
+	a mud:formattype ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subft xsd:string .
+
+mud:directions
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:listValued .
+
+mud:dirt
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:discoverableType
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf rdf:type .
+
+mud:domain_name
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:door
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furniture ,
+			mud:item .
+
+mud:doorBetween
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:symmetric .
+
+mud:doorsConnect
+	mud:mpred_arity 2 .
+
+mud:drawer
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:closeable ,
+			mud:container ,
+			mud:openable ,
+			mud:partof_furnature .
+
+mud:dresser
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bed_room_furnature ,
+			mud:item ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:dresser777
+	a mud:dresser ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:charge 140 ;
+	mud:color mud:brown ,
+		  mud:shiney ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:bed_room777 ;
+	mud:material mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:polyhedral ,
+		  mud:rectangular ;
+	mud:size mud:large ;
+	mud:texture mud:smooth ;
+	mud:weight 45 .
+
+mud:drinkable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:dryer
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:easy_chair
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:chair ,
+			mud:item ,
+			mud:living_room_furnature ,
+			mud:obj .
+
+mud:easy_chair777
+	a mud:easy_chair ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:blue ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:living_room777 ;
+	mud:material mud:poplin ,
+		     mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:polyhedral ;
+	mud:size mud:large ,
+		 mud:narrow ;
+	mud:texture mud:ribbed ;
+	mud:weight 75 .
+
+mud:eatable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:consumable ,
+			mud:item .
+
+mud:edge
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:elixer
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:envelope
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:office_item ,
+			mud:spatialthing .
+
+mud:envelope777
+	a mud:envelope ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:white ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:desk777 ;
+	mud:material mud:paper ;
+	mud:opaqueness 100 ;
+	mud:shape mud:rectangular ;
+	mud:size mud:small ;
+	mud:texture mud:smooth .
+
+mud:equivRule
+	mud:mpred_prop mud:multiValued ,
+		       mud:nonGroundOK ,
+		       mud:prologOnly .
+
+mud:explorer
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:agent .
+
+mud:facing
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:failure
+	mud:mpred_arity 2 .
+
+mud:federation
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:final_node
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:flagged_act_friend
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_act_nice_thief
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_act_sentinel
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_act_stay_zone
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_act_wimpy
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_aware
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_helper
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_memory
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_nobackstab
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_nobash
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_noblind
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_nocharm
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_nosleep
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_nosummon
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_npc_detect_invis
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_npc_notrack
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_npc_sanctuary
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flagged_visor
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:flashlight
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:portable_device .
+
+mud:flashlight777
+	a mud:flashlight ,
+	  mud:item ;
+	mud:charge 140 ;
+	mud:color mud:yellow ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:desk777 ;
+	mud:material mud:plastic ;
+	mud:opaqueness 100 ;
+	mud:shape mud:cylindrical ;
+	mud:size mud:medium ,
+		 mud:small ;
+	mud:texture mud:ribbed .
+
+mud:foldable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:portable .
+
+mud:food
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:eatable ,
+			mud:item ,
+			mud:takeable ,
+			knowrob:Food .
+
+mud:formatted
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:relation .
+
+mud:formatted_resultIsa
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:formattype
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	owl:disjointWith mud:item ,
+			 mud:obj ,
+			 mud:region .
+
+mud:forwardRule
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:fpred
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:pred .
+
+mud:fridge
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:kitchen_furnature ,
+			mud:obj .
+
+mud:fridge777
+	a mud:fridge ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:height 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:opaqueness 100 .
+
+mud:ft_info
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:furnature
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:furniture
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:obj ,
+			mud:partof ,
+			mud:useable .
+
+mud:gOperator
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:garden_plant
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:obj ,
+			mud:outdoor_furnature ,
+			mud:plant .
+
+mud:garden_plant777
+	a mud:garden_plant ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:height 0 ;
+	mud:localityOfObject mud:back_yard777 ;
+	mud:opaqueness 100 .
+
+mud:genlInverse
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:genlPreds
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:get_feet
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:listValued .
+
+mud:get_near
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:listValued .
+
+mud:get_percepts
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:listValued .
+
+mud:goal_related
+	mud:mpred_arity 3 .
+
+mud:goal_related_search
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:gold
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:gossup
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:channel .
+
+mud:green_apple
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:apple ,
+			mud:item .
+
+mud:grid
+	mud:mpred_arity 4 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:gsstates
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:gsubstate_classes
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:gueridon
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:living_room_furnature ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:gueridon777
+	a mud:gueridon ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:charge 140 ;
+	mud:color mud:brown ,
+		  mud:shiney ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:living_room777 ;
+	mud:material mud:wood ;
+	mud:opaqueness 100 ;
+	mud:shape mud:circular ;
+	mud:size mud:medium ;
+	mud:texture mud:smooth ;
+	mud:weight 25 .
+
+mud:hall
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:spatialthing .
+
+mud:hall777
+	a mud:hall ,
+	  mud:region ;
+	mud:doorBetween mud:bath_room777 ,
+			mud:bed_room777 ,
+			mud:dining_room777 ,
+			mud:living_room777 ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:hasobjs
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:hassurface
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:container ,
+			mud:hasobjs .
+
+mud:health
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:height
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:height_on_obj
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:hide
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:high_box
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:high_wall
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:wall .
+
+mud:houseplant
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:partof .
+
+mud:houseplant777
+	a mud:houseplant ,
+	  mud:item ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:charge 140 ;
+	mud:color mud:green ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:planter777 ;
+	mud:material mud:plant_tissue ;
+	mud:opaqueness 100 ;
+	mud:shape mud:anthurium_crystallinum ;
+	mud:size mud:medium ;
+	mud:texture mud:smooth .
+
+mud:htn_task
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:human_player
+	a mud:agenttype ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:player .
+
+mud:id
+	a mud:formattype ;
+	mud:subft mud:term .
+
+mud:implied_invariant
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:inconsistent_constraint
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:inside_of
+	mud:genlInverse mud:possess ;
+	mud:mpred_arity 2 .
+
+mud:integer
+	a mud:formattype ;
+	mud:subft mud:number .
+
+mud:inventory
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:listValued .
+
+mud:is_checking_instance
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:is_instance_consistent
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:is_of_primitive_sort
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:is_of_sort
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:isa
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:isa_backchaing
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:item
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:obj ,
+			mud:spatialthing ,
+			knowrob:HumanScaleObject .
+
+mud:key
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:office_item .
+
+mud:key777
+	a mud:item ,
+	  mud:key ;
+	mud:localityOfObject mud:envelope777 .
+
+mud:keyword
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:kitchen
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:spatialthing .
+
+mud:kitchen777
+	a mud:kitchen ,
+	  mud:region ;
+	mud:doorBetween mud:Area1000 ,
+			mud:back_yard777 ,
+			mud:cellar777 ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:kitchen_counter
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:counter ,
+			mud:kitchen_furnature ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:kitchen_counter777
+	a mud:kitchen_counter ,
+	  mud:obj ,
+	  mud:spatialthing ;
+	mud:height 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:opaqueness 100 .
+
+mud:kitchen_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature .
+
+mud:kitchen_sink
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:kitchen_furnature ,
+			mud:obj ,
+			mud:sink .
+
+mud:kitchen_sink777
+	a mud:furniture ,
+	  mud:item ,
+	  mud:kitchen_sink ,
+	  mud:obj ,
+	  mud:sink ,
+	  mud:spatialthing ,
+	  mud:useable ;
+	mud:charge 140 ;
+	mud:height 0 ;
+	mud:listPrice 0 ;
+	mud:localityOfObject mud:kitchen_counter777 ;
+	mud:opaqueness 100 .
+
+mud:knife
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:kwLabel
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:label_type_props
+	mud:mpred_arity 3 .
+
+mud:last_command
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:layable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:sittable .
+
+mud:ledge
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:light_switch
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:switch ,
+			mud:wall_furnature .
+
+mud:light_switch777
+	a mud:item ,
+	  mud:light_switch ;
+	mud:localityOfObject mud:bed_room777 .
+
+mud:liquid
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:liquid_container
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:container .
+
+mud:list
+	a mud:formattype .
+
+mud:listPrice
+	mud:mpred_arity 2 .
+
+mud:listValued
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:living_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room ,
+			mud:spatialthing .
+
+mud:living_room777
+	a mud:living_room ,
+	  mud:region ;
+	mud:doorBetween mud:office_room777 ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:living_room_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:localityOfObject
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:location_center
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:low_box
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:low_wall
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:wall .
+
+mud:machine
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:material
+	mud:mpred_arity 2 .
+
+mud:mattress
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:layable .
+
+mud:max_charge
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:max_health
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:memory
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:method
+	mud:mpred_arity 6 ;
+	mud:mpred_prop mud:dyn .
+
+mud:methodC
+	mud:mpred_arity 7 ;
+	mud:mpred_prop mud:dyn .
+
+mud:middle_drawer
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:drawer ,
+			mud:item ,
+			mud:obj ,
+			mud:partof_furnature .
+
+mud:middle_drawer777
+	a mud:item ,
+	  mud:middle_drawer ;
+	mud:localityOfObject mud:dresser777 .
+
+mud:monster
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:movedist
+	mud:mpred_prop mud:prologBuiltin ,
+		       mud:singleValued .
+
+mud:mpred
+	a owl:Class ;
+	mud:genlPreds mud:mpred ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:pred ,
+			mud:relation .
+
+mud:mudBareHandDamage
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:mudLevelOf
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:mudMaxHitPoints
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:mudToHitArmorClass0
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:mud_dictionary
+	mud:mpred_arity 2 .
+
+mud:mud_test
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:multi
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:negationByFailure .
+
+mud:multiValued
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:naf
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:nameStrings
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:named
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:nani
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:art ,
+			mud:item ,
+			mud:obj ,
+			mud:portable ,
+			mud:teddybear ,
+			mud:washable .
+
+mud:nani777
+	a mud:item ,
+	  mud:nani ,
+	  mud:teddybear ;
+	mud:localityOfObject mud:washing_machine777 .
+
+mud:nasty_knife
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:knife .
+
+mud:nearby
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:needs_look
+	a owl:FunctionalProperty ;
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:completeExtentAsserted ,
+		       mud:negationByFailure ,
+		       mud:singleValued .
+
+mud:negationByFailure
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:node
+	mud:mpred_arity 5 ;
+	mud:mpred_prop mud:dyn .
+
+mud:nonCreatableType
+	mud:mpred_arity 1 .
+
+mud:nonGroundOK
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:not_takable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:takable .
+
+mud:npc_player
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:player .
+
+mud:number
+	a mud:formattype ;
+	mud:subft mud:percent .
+
+mud:nut
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:obj
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:type_max_charge 130 ;
+	mud:type_max_health 500 ;
+	rdfs:subClassOf mud:spatialthing ;
+	owl:disjointWith mud:region .
+
+mud:objects
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:assertionMacroHead ,
+		       mud:dyn .
+
+mud:objectsC
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:objectsD
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:objectsOfSort
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:objid
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:office_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature .
+
+mud:office_item
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:office_room
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region ,
+			mud:room ,
+			mud:spatialthing .
+
+mud:office_room777
+	a mud:office_room ,
+	  mud:region ;
+	mud:height 0 ;
+	mud:opaqueness 1 .
+
+mud:office_room_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:opParent
+	mud:mpred_arity 6 ;
+	mud:mpred_prop mud:dyn .
+
+mud:op_score
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:opaqueness
+	mud:mpred_arity 2 .
+
+mud:openable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:operator
+	mud:mpred_arity 4 ;
+	mud:mpred_prop mud:dyn .
+
+mud:operatorC
+	mud:mpred_arity 5 ;
+	mud:mpred_prop mud:dyn .
+
+mud:ordered
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:outdoor_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature .
+
+mud:outlet
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:pajamas
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:clothing ,
+			mud:obj .
+
+mud:pajamas777
+	a mud:item ,
+	  mud:pajamas ;
+	mud:localityOfObject mud:stand_table777 .
+
+mud:pajams
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:pants
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:clothing ,
+			mud:item ,
+			mud:obj .
+
+mud:pants777
+	a mud:item ,
+	  mud:pants ;
+	mud:localityOfObject mud:closet_room777 .
+
+mud:partof
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:not_takable .
+
+mud:partof_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature ,
+			mud:partof .
+
+mud:pathBetween
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:pathBetween_call
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:pathName
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:multiValued .
+
+mud:percent
+	a mud:formattype ;
+	mud:subft mud:number .
+
+mud:permanence
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:pillow
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bedding ,
+			mud:item ,
+			mud:obj .
+
+mud:pillow777
+	a mud:item ,
+	  mud:pillow ;
+	mud:localityOfObject mud:bed777 .
+
+mud:pit
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:planner_task
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:planner_task_slow
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:plant
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:planter
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:container ,
+			mud:item ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:planter777
+	a mud:item ,
+	  mud:planter ;
+	mud:localityOfObject mud:gueridon777 .
+
+mud:player
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:agent .
+
+mud:portable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:takeable .
+
+mud:portable_device
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:device ,
+			mud:portable .
+
+mud:possess
+	mud:genlPreds mud:wearsClothing ;
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:possessable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:posture
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf computable:command .
+
+mud:pred
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:relation .
+
+mud:predator
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:predicates
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:dyn .
+
+mud:prey
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:prolog
+	a mud:formattype ;
+	mud:ft_info mud:true .
+
+mud:prologBuiltin
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:prologHybrid
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:prologOnly
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:readable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:red_apple
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:apple ,
+			mud:item .
+
+mud:region
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure ;
+	rdfs:subClassOf mud:channel ,
+			mud:region ,
+			mud:spatialthing ,
+			knowrob:FixedStructure ;
+	owl:disjointWith mud:obj .
+
+mud:related_op
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:relation
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:repl_to_string
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:repl_writer
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:resultIsa
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:rock
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:room
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:score
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:shape
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:shelf
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:hassurface .
+
+mud:shirt
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:clothing ,
+			mud:item ,
+			mud:obj .
+
+mud:shirt777
+	a mud:item ,
+	  mud:shirt ;
+	mud:localityOfObject mud:closet_room777 .
+
+mud:shower
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bath_room_furnature ,
+			mud:furniture ,
+			mud:obj .
+
+mud:shower777
+	a mud:item ,
+	  mud:shower ;
+	mud:localityOfObject mud:bath_room777 .
+
+mud:sillyitem
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:singleValued
+	a owl:Class ;
+	rdfs:subClassOf mud:mpred ,
+			mud:relation .
+
+mud:sink
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:bath_room_furnature ,
+			mud:furniture ,
+			mud:obj .
+
+mud:sink777
+	a mud:item ,
+	  mud:sink ;
+	mud:localityOfObject mud:bath_room777 .
+
+mud:sittable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furniture ,
+			mud:hassurface .
+
+mud:size
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:singleValued .
+
+mud:skin
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:sofa
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:couch ,
+			mud:item ,
+			mud:living_room_furnature ,
+			mud:obj .
+
+mud:sofa777
+	a mud:item ,
+	  mud:sofa ;
+	mud:localityOfObject mud:living_room777 .
+
+mud:solved_node
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:dyn .
+
+mud:somethingDescription
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:assertionMacroHead .
+
+mud:somethingIsa
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:assertionMacroHead .
+
+mud:sorts
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:assertionMacroHead ,
+		       mud:dyn .
+
+mud:spatialthing
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf computable:visible ,
+			knowrob:SpatialThing .
+
+mud:spawn_rate
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:spd
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:stamp
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:obj ,
+			mud:office_item .
+
+mud:stamp777
+	a mud:item ,
+	  mud:stamp ;
+	mud:localityOfObject mud:envelope777 .
+
+mud:stance
+	mud:mpred_arity 2 .
+
+mud:stand_table
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bed_room_furnature ,
+			mud:item ,
+			mud:obj ,
+			mud:spatialthing ,
+			mud:table .
+
+mud:stand_table777
+	a mud:item ,
+	  mud:stand_table ,
+	  mud:table ;
+	mud:localityOfObject mud:bed_room777 .
+
+mud:stat_total
+	mud:mpred_prop mud:prologBuiltin ,
+		       mud:singleValued .
+
+mud:stm
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:stove
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:kitchen_furnature ,
+			mud:obj .
+
+mud:stove777
+	a mud:obj ,
+	  mud:spatialthing ,
+	  mud:stove ;
+	mud:height 0 ;
+	mud:localityOfObject mud:kitchen777 ;
+	mud:opaqueness 100 .
+
+mud:stowable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:wieldable .
+
+mud:stowed
+	mud:genlInverse mud:inside_of ;
+	mud:mpred_arity 2 .
+
+mud:str
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:subclass
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:subft
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:substate_classes
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:success
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:switch
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:table
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature ,
+			mud:hassurface ,
+			mud:item ,
+			mud:obj .
+
+mud:table777
+	a mud:item ,
+	  mud:table ;
+	mud:localityOfObject mud:kitchen777 .
+
+mud:takable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:takeable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:obj .
+
+mud:teddybear
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:treasure .
+
+mud:temp_assertIndivConds
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:dyn .
+
+mud:term
+	a mud:formattype ;
+	mud:subft mud:prolog .
+
+mud:term_anglify_args
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:term_anglify_last
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:text
+	a mud:formattype ;
+	mud:subft mud:term .
+
+mud:texture
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:thinking
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure .
+
+mud:throwable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:portable .
+
+mud:tn
+	mud:mpred_arity 6 ;
+	mud:mpred_prop mud:dyn .
+
+mud:toilet
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:bath_room_furnature ,
+			mud:furniture ,
+			mud:obj .
+
+mud:toilet777
+	a mud:item ,
+	  mud:toilet ;
+	mud:localityOfObject mud:bath_room777 .
+
+mud:top_drawer
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:drawer ,
+			mud:item ,
+			mud:obj ,
+			mud:partof_furnature .
+
+mud:top_drawer777
+	a mud:item ,
+	  mud:top_drawer ;
+	mud:localityOfObject mud:dresser777 .
+
+mud:torso
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:tough_hide
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:hide .
+
+mud:tp_goal
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:dyn .
+
+mud:tp_node
+	mud:mpred_arity 6 ;
+	mud:mpred_prop mud:dyn .
+
+mud:treadmill
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subclass mud:TemporallyExistingThing ;
+	rdfs:subClassOf mud:TemporallyExistingThing ,
+			mud:obj .
+
+mud:treadmill777
+	a mud:obj ,
+	  mud:spatialthing ,
+	  mud:treadmill ;
+	mud:height 0 ;
+	mud:localityOfObject mud:hall777 ;
+	mud:opaqueness 100 .
+
+mud:treasure
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:tree
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:typeDeclarer
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:type_action_info
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:type_grid
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:type_max_charge
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:type_max_health
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:usable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:useable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item .
+
+mud:vacuum
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:var
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subft mud:prolog .
+
+mud:verbAsWell
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:verbOverride
+	mud:mpred_arity 3 ;
+	mud:mpred_prop mud:argsIsaInList ,
+		       mud:multiValued .
+
+mud:verb_alias
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:visually_blocked
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:voprop
+	mud:subft mud:term .
+
+mud:wall
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:wall_furnature
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:furnature .
+
+mud:was_imported_kb_content
+	mud:mpred_prop mud:prologBuiltin .
+
+mud:washable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:washing_machine
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:device_furnature ,
+			mud:furniture ,
+			mud:item ,
+			mud:machine ,
+			mud:obj ,
+			mud:spatialthing .
+
+mud:washing_machine777
+	a mud:item ,
+	  mud:washing_machine ;
+	mud:localityOfObject mud:cellar777 .
+
+mud:wearable
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:item ,
+			mud:portable .
+
+mud:wearing
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+mud:wearsClothing
+	mud:genlPreds mud:possess ;
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+mud:weight
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:singleValued .
+
+mud:wieldable
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+mud:xyz
+	a mud:formattype .
+
+mud:yard
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+computable:command
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:action .
+
+computable:visible
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+knowrob:Area
+	a mud:createableType ,
+	  owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:region .
+
+knowrob:ControlDevice
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:chargable ,
+			mud:usable .
+
+knowrob:HandTool
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+knowrob:PortableObject
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	rdfs:subClassOf mud:possessable ,
+			mud:wieldable .
+
+knowrob:Portal
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+knowrob:SpaceInAHOC
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+knowrob:contains
+	mud:genlInverse mud:inside_of ;
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+dc:description
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+rdf:rest
+	a mud:formattype ;
+	mud:ft_info mud:true .
+
+rdf:type
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:mpred_prop mud:flag ,
+		       mud:negationByFailure ;
+	rdfs:subClassOf owl:Class .
+
+rdfs:Container
+	a owl:Class ;
+	mud:mpred_arity 1 .
+
+rdfs:comment
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:multiValued .
+
+rdfs:member
+	mud:mpred_arity 2 ;
+	mud:mpred_prop mud:argsIsaInList .
+
+xsd:int
+	a mud:formattype ;
+	mud:subft mud:dice ,
+		  mud:integer .
+
+xsd:string
+	a owl:Class ;
+	mud:mpred_arity 1 ;
+	mud:subft mud:term ,
+		  mud:text .

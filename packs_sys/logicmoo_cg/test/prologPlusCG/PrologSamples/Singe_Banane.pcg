@@ -1,0 +1,56 @@
+// etat initial
+position(singe, posA) :- !.
+position(caisse, posB) :- !.
+position(banane, posC) :- !.
+main_vide.
+
+// actions: regles de comportement
+aller_a(p) :-
+  elimine_faits([position(singe, p1)]),
+  ajout_faits([position(singe, p)]),
+  write("aller_a "), writeln(p), !.
+
+deplacer_caisse(p) :-
+  position(caisse, p1),
+  position(singe, p1),
+  elimine_faits([position(singe, p1), position(caisse, p1)]),
+  ajout_faits([position(singe, p), position(caisse, p)]),
+  write("deplacer caisse à "), writeln(p), !.
+
+monter :-
+  position(caisse, p),
+  position(singe, p),
+  elimine_faits([position(singe, p)]),
+  ajout_faits([sur(singe, caisse)]),
+  writeln("monter sur la caisse"), !.
+
+saisir(banane) :-
+  position(caisse, posC),
+  sur(singe, caisse),
+  elimine_faits([main_vide]),
+  ajout_faits([tient(banane)]),
+  writeln("saisir la banane"), !.
+
+// table des differences: moyens-fins
+position(singe, p) :- aller_a(p), !.
+position(singe, p) :- deplacer_caisse(p), !.
+position(caisse, p) :- deplacer_caisse(p), !.
+
+sur(singe, caisse) :- monter, !.
+tient(banane) :- saisir(banane), !.
+
+// auxiliaires
+ajout_faits(l) :-
+  membre(f, l),
+  asserta(f, []),
+  fail.
+ajout_faits(l).
+
+elimine_faits([]).
+elimine_faits([f|q]) :-
+  retract(f),
+  elimine_faits(q), !.
+
+membre(x, [x|_]).
+membre(x, [_|q]) :-
+  membre(x, q).

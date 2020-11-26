@@ -1,0 +1,9 @@
+(note "Kalish & Montague, Theorem 263b")
+
+(exists ?Y (forall ?X (implies (F ?X) (G ?Y))))
+
+(queryyn (forall ?X (exists ?Y (implies (F ?X) (G ?Y)))) )
+
+(answer Yes)
+
+(end_of_file)

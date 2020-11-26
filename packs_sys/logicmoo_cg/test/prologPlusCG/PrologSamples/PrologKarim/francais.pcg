@@ -1,0 +1,69 @@
+phrase(_Structure, _S) :-
+	phrase(_Structure, _S, []).
+
+phrase(phrase(_SU, _VE, _C1), _S, _T) :-
+	sujet(_SU, _S, _U),
+	verbe(_VE, _U, _V),
+	complement(_C1, _V, _T).
+
+sujet(sujet(_AR, _NC), _S, _T) :-
+	article(_AR, _S, _U),	
+	nom_commun(_NC, _U, _T).
+sujet(sujet(_NP), _S, _T) :-
+	nom_propre(_NP, _S, _T).
+
+verbe(verbe(est), [est | _U], _U).
+verbe(verbe(sont), [sont | _U], _U).
+verbe(verbe(mange), [mange | _U], _U).
+verbe(verbe(aa), [aa | _U], _U).
+
+complement(comp(_AR, _NC), _S, _T) :-
+	article(_AR, _S, _U),	
+	nom_commun(_NC, _U, _T).
+complement(comp(_PR, _AR, _NC), _S, _T) :-
+	preposition(_PR, _S, _U),
+	article(_AR, _U, _V),	
+	nom_commun(_NC, _V, _T).
+complement(comp(_PR, _NC, _AD), _S, _T) :-
+	preposition(_PR, _S, _U),
+	nom_commun(_NC,_U, _V),	
+	adjectif(_AD, _V, _T).
+complement(comp(_AR, _NC1, _PR, _NC2), _S, _T) :-
+	article(_AR, _S, _U),	
+	nom_commun(_NC1, _U, _V),
+	preposition(_PR, _V, _W),
+	nom_commun(_NC2, _W, _T).
+
+nom_propre(nom_propre(max), [max | _U], _U).
+nom_propre(nom_propre(lea), [lea | _U], _U).
+
+nom_commun(nom_commun(equide), [equide | _U], _U).
+nom_commun(nom_commun(cheval), [cheval | _U], _U).
+nom_commun(nom_commun(lion), [lion | _U], _U).
+nom_commun(nom_commun(felin), [ felin| _U], _U).
+nom_commun(nom_commun(felins), [felins | _U], _U).
+nom_commun(nom_commun(mammifere), [mammifere | _U], _U).
+nom_commun(nom_commun(carnivore), [carnivore | _U], _U).
+nom_commun(nom_commun(chat), [chat | _U], _U).
+nom_commun(nom_commun(chats), [chats | _U], _U).
+nom_commun(nom_commun(viande), [viande | _U], _U).
+nom_commun(nom_commun(couleur), [couleur | _U], _U).
+nom_commun(nom_commun(yeux), [yeux | _U], _U).
+nom_commun(nom_commun(griffes), [griffes | _U], _U).
+nom_commun(nom_commun(avant), [avant | _U], _U).
+nom_commun(nom_commun(pattes), [pattes | _U], _U).
+
+preposition(preposition(aa), [aa | _U], _U).
+preposition(preposition(de), [de | _U], _U).
+preposition(preposition(en), [en | _U], _U).
+preposition(preposition(aux), [aux | _U], _U).
+
+article(article(un), [un | _U], _U).
+article(article(le), [le | _U], _U).
+article(article(la), [la | _U], _U).
+article(article(les), [les | _U], _U).
+article(article(des), [des | _U], _U).
+
+adjectif(adjectif(noire), [noire | _U], _U).
+
+

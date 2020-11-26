@@ -1,0 +1,34 @@
+:- include(test_header).
+;; Module zebra5 - Test Zerbra Puzzle in CLIF for SWI-Prolog
+;; Maintainer: Douglas Miles
+;; Load with  ?- load_clif(pack(logicmoo_base/t/examples/fol/exactly_one_instance)).
+;; causes deduction of argument types
+(:- (module exactly_one_instance ()))
+(:- (ensure_loaded (library logicmoo_clif)))
+(set-kif-option :assume-wff)
+(kif-mode :tell)
+
+(domain address 1 tHouse)
+(domain address 2 tAddress)
+(argQuotedIsa address 2 ftInt)
+
+;; Special Logicmoo operator specific to forward chaining
+(==> (and (domain ?P ?n ?c) (admittedArgument ?p ?n ?i)) (instance ?i ?c))
+
+; ============================================================
+; There is only one entity with address 1
+; ============================================================
+(exactly 1 ?h1 (address ?h1 1))
+
+; ============================================================
+; There is only one Devil
+; ============================================================
+
+(exactly 1 ?g (instance ?g Devil))
+
+
+; ============================================================
+; Devil has exactly one name
+; ============================================================
+
+(exactly 1 ?name (isNamed Devil ?name))

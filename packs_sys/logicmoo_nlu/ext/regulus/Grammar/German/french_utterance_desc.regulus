@@ -1,0 +1,26 @@
+utterance_desc:[sg_utterance_agr=(1/\sing), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','ton','sujet',':').
+utterance_desc:[sg_utterance_agr=(2/\sing), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','mon','sujet',':').
+utterance_desc:[sg_utterance_agr=(3/\sing), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','son','sujet',':').
+utterance_desc:[sg_utterance_agr=(1/\plur), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','votre','sujet',':').
+utterance_desc:[sg_utterance_agr=(2/\plur), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','notre','sujet',':').
+utterance_desc:[sg_utterance_agr=(3/\plur), sg_vform=praesens, sg_utterance_type=statement]  --> ('Dis','à','leur', 'sujet',':').
+utterance_desc:[sg_utterance_agr=(pol/\sing), sg_vform=praesens, sg_utterance_type=statement] --> ('Dis','à', 'mon','sujet','(poli)',':').
+utterance_desc:[sg_utterance_agr=(not_person/\sing), sg_vform=praesens, sg_utterance_type=statement] --> ('Dis','(présent)',':').
+
+utterance_desc:[sg_utterance_agr=(1/\sing), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','a','ton','sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(2/\sing), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','a','mon','sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(3/\sing), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','a','son','sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(1/\plur), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','a','votre','sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(2/\plur), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','à','notre','sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(3/\plur), sg_vform=praeteritum, sg_utterance_type=statement]  --> ('Dis','à','leur', 'sujet','(praeteritum)',':').
+utterance_desc:[sg_utterance_agr=(pol/\sing), sg_vform=praeteritum, sg_utterance_type=statement] --> ('Dis','à', 'mon','sujet','(praeteritum)','(poli)',':').
+utterance_desc:[sg_utterance_agr=(not_person/\sing), sg_vform=praeteritum, sg_utterance_type=statement] --> ('Dis','(praeteritum)',':').
+
+
+% Demande à ton ami : FAIRE DEVOIRS -> Machst du deine Hausarbeiten
+utterance_desc:[sg_utterance_agr=((1\/2\/3\/not_person)/\sing), sg_vform=praesens, sg_utterance_type=question]  --> ('Demande','à','ton','ami',':').  
+utterance_desc:[sg_utterance_agr=((1\/2\/3\/not_person)/\plur), sg_vform=praesens, sg_utterance_type=question]  --> ('Demande','à','tes','amis',':').   
+
+
+utterance_desc:[sg_utterance_agr=((1\/2\/3\/not_person)/\sing), sg_vform=praeteritum, sg_utterance_type=question]  --> ('Demande','à','ton','ami','(praeteritum)',':').  
+utterance_desc:[sg_utterance_agr=((1\/2\/3\/not_person)/\plur), sg_vform=praeteritum, sg_utterance_type=question]  --> ('Demande','à','tes','amis','(praeteritum)',':').    

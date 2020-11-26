@@ -1,0 +1,5 @@
+inserer(e, L, (e|L)) :- member(e, L), /.
+inserer(e, L, L).
+
+membre(e, (e|L)).
+membre(e, (x|L)) :- membre(e, L).

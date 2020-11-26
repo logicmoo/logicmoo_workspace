@@ -1,0 +1,2 @@
+/* ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml  */
+[Person: *x1 'Tom'] [Believe *x2] (Expr ?x2 ?x1) (Thme ?x2 [Proposition: [Person: *x3 'Mary'] [Want *x4] (Expr ?x4 ?x3) (Thme ?x4 [Situation: [Woman ?x3] [Marry *x5] (Agnt ?x5 ?x3) (Thme ?x5 [Sailor]) ]) ])

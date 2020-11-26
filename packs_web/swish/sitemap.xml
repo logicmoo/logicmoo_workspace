@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>/</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/index.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/about.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/help-cplint.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/help.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/runner.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/beware.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/background.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/caveats.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/help/query.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/example/inference/inference_examples.swinb</loc>
+</url>
+<url>
+  <loc>/example/inference/coin.cpl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>/example/inference/coin.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/inference_examples.swinb</loc>
+</url>
+<url>
+  <loc>example/inference/coin.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/coinmc.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/dice.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/epidemic.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/earthquake.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/sneezing.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/eruption.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/mendel.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/bloodtype.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/path.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/alarm.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/hmm.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/pcfg.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/uwcse.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/cora.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/monty.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/jail.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/trigger.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/light.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/coin2.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/threesideddice.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/mendelc.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/meta.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/metacomb.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/flexprob.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/persons.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/pcfglrdb.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/pcfglr.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/markov_chaindb.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/markov_chain.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/prefix.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/testdb.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/var_objdb.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/var_obj.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/plcg.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/pre_plcg.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/pctl_slep.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/gpl.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/rmc.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/hmmpos.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/hmmpos2.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/inference/arithm.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/learning_examples.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/mach.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/registration.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/bongard.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/bongardkeys.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/shop.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/hmmlearn.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/muta.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/university.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>example/learning/exauc.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/tutorial.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/lpad.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/coin.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/dice.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/epidemic.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/earthquake.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/coinmc.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/markov_chain.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/pctl_slep.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/inference/artihm.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/learning/mach.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/learning/registration.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>tutorial/learning/bongard.swinb</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/chat.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/newchat.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/debug.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/notebook.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/sourcelist.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/editor.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/privacy.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/hangout.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>help/login.html</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/biopaxLevel3.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/commander.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/johnEmployee.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/vicodi.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/BRCA.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/DBPedia.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>examples/trill/peoplePets.pl</loc>
+  <changefreq>weekly</changefreq>
+</url>
+
+
+</urlset>

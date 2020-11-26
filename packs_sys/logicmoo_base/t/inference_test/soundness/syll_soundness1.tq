@@ -1,0 +1,13 @@
+(note "syllogism soundness check1")
+
+(forall ?X (implies (PP ?X) (MM ?X))) 
+
+(forall ?X (implies (SS ?X) (MM ?X)))
+
+(queryyn 
+(forall ?X (implies (SS ?X) (PP ?X))) 
+)
+
+(answer Unproven)
+
+(end_of_file)

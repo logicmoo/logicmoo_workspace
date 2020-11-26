@@ -1,0 +1,243 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ANL Prover9 system.
+%----
+%----Written by Geoff Sutcliffe, July, 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+output_prover9_options([]):-
+    !.
+
+output_prover9_options([FirstOption|RestOfOptions]):-
+    write(FirstOption),
+    write('.'),
+    nl,
+    output_prover9_options(RestOfOptions).
+%------------------------------------------------------------------------------
+%----Output variables
+prover9_output_variable(Variable):-
+    write(Variable).
+%------------------------------------------------------------------------------
+%----Generic output of atoms
+prover9_output_atom(_,'$true'):-
+    !,
+    write('$T').
+
+prover9_output_atom(_,'$false'):-
+    !,
+    write('$F').
+
+prover9_output_atom(_,'$tptp_not_equal'(X,Y)):-
+    !,
+    write(X),
+    write(' != '),
+    write(Y).
+
+prover9_output_atom(_,'$tptp_equal'(X,Y)):-
+    !,
+    write(X),
+    write(' = '),
+    write(Y).
+
+prover9_output_atom(_,Atom):-
+    display(Atom).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Output of FOF
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+prover9_quantified_formula(QuantifiedFormula,Prover9Quantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member((Quantifier)-(Prover9Quantifier),[('!')-(all),('?')-(exists)]).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+prover9_binary_formula(BinaryFormula,Prover9Connective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(Prover9Connective),
+[('<=>')-('<->'),('=>')-('->'),('&')-('&'),(';')-('|'),('|')-('|')]).
+%----It needs both for some reason after shorten - need to investigate
+%----|;BUG
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+prover9_unary_formula(UnaryFormula,Prover9Connective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(Prover9Connective),[('~')-('-')]).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in prover9 format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+prover9_quantified_format('( ',' ',' ',' ',' )').
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+prover9_binary_format('( ',' ',' ',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+prover9_unary_format('','(',')').
+%------------------------------------------------------------------------------
+%----Write a prover9 formula in fof form
+output_prover9_fof(fof(Name,Status,Formula)):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    single_variable_quantification(Formula,NewFormula),
+    output_generic_formula(prover9,fof,NewFormula),
+    nl,
+    write('# label('),
+    write(Name),
+    write(') # label('),
+    write(Status),
+    write(').'),
+    nl.
+%------------------------------------------------------------------------------
+%----Write out each formula in TPTP format
+output_prover9_formulae([OneFormula]):-
+    !,
+    output_prover9_fof(OneFormula).
+
+output_prover9_formulae([FirstFormula|RestOfFormulae]):-
+    output_prover9_fof(FirstFormula),
+    nl,
+    output_prover9_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Output of CNF
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive
+output_prover9_signed_literal(--'$tptp_equal'(X,Y)):-
+    !,
+    write(' '),
+    prover9_output_atom(cnf,'$tptp_not_equal'(X,Y)).
+
+output_prover9_signed_literal(--Atom):-
+    !,
+    write('-'),
+    prover9_output_atom(cnf,Atom).
+
+output_prover9_signed_literal(++Atom):-
+    write(' '),
+    prover9_output_atom(cnf,Atom).
+%------------------------------------------------------------------------------
+%----Output the literals of the clause in Prover9 format
+%----Special case of an empty clause
+output_prover9_clause(_,_,[]):-
+    !,
+    write('$F.'),
+    nl,
+    nl.
+
+output_prover9_clause(Name,Status,[OneLiteral]):-
+    !,
+    output_prover9_signed_literal(OneLiteral),
+    nl,
+    write('# label('),
+    write(Name),
+    write(') # label('),
+    write(Status),
+    write(').'),
+    nl,
+    nl.
+
+output_prover9_clause(Name,Status,[FirstLiteral|RestOfLiterals]):-
+    output_prover9_signed_literal(FirstLiteral),
+    write(' |'),
+    nl,
+    output_prover9_clause(Name,Status,RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_prover9_clauses([]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_prover9_clauses([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_prover9_clause(Name,Status,Literals),
+    output_prover9_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+%======================================================================
+%----Output of Prover9 lists
+%======================================================================
+%------------------------------------------------------------------------------
+output_prover9_list([],_):-
+    !.
+
+output_prover9_list(Clauses):-
+    tptp_clauses(Clauses),
+    write('formulas(sos).'),
+    nl,
+    nl,
+    output_prover9_clauses(Clauses),
+    write('end_of_list.'),
+    nl,
+    nl.
+
+%----Output the formulae for the given list, selected by status
+output_prover9_list(Formulae):-
+    tptp_formulae(Formulae),
+    write('formulas(sos).'),
+    nl,
+    nl,
+    output_prover9_formulae(Formulae),
+    write('end_of_list.'),
+    nl,
+    nl.
+%------------------------------------------------------------------------------
+%----Negate the conjecture formula (assume there is only one)
+negate_prover9_conjecture(Formulae,_ProofFormulae):-
+    tptp2X_select(fof(_Name,conjecture,_Formula),Formulae,OtherFormulae),
+    tptp2X_member(fof(_,conjecture,_),OtherFormulae),
+    !,
+    write('%----ERROR : More than one conjecture'),
+    nl,
+    fail.
+
+negate_prover9_conjecture(Formulae,ProofFormulae):-
+    tptp2X_select(fof(Name,conjecture,Formula),Formulae,
+OtherFormulae),
+    !,
+%----Need this for dodgy processing in Ratify and SystemOnTPTP
+    write('%----This is the conjecture with negated conjecture'),
+    nl,
+    tptp2X_append(OtherFormulae,[fof(Name,negated_conjecture,
+~(Formula))],ProofFormulae).
+
+%----If not there it's clauses or no conjecture (satisfiable FOF)
+negate_prover9_conjecture(Formulae,Formulae).
+%------------------------------------------------------------------------------
+%----Output all the clauses in Prover9 format
+prover9(prover9:Prover9Options,Formulae,_):-
+    write('op(500, infix, "==>").'),nl,
+    op(480,xfx,'==>'),
+    op(480,xfx,'+'),
+    negate_prover9_conjecture(Formulae,ProofFormulae),
+    output_prover9_options([set(prolog_style_variables)|Prover9Options]),
+    output_prover9_list(ProofFormulae).
+
+prover9(prover9,Formulae,_):-
+    prover9(prover9:[],Formulae,_).
+%------------------------------------------------------------------------------
+%----Provide information about the Prover9 format
+prover9_format_information('%','.in').
+%------------------------------------------------------------------------------
+%----Provide information about the Prover9 file
+prover9_file_information(format,prover9:conjecture:'clear(print_given),set(auto)',
+'SoS is any of conjecture, hypothesis, not_conjecture, axioms, positive, negative, unit, none, all.  Flags can be added').
+%------------------------------------------------------------------------------

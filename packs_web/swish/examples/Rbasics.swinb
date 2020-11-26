@@ -1,0 +1,169 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# R/SWISH demos
+
+R for SWISH provides an interface to [Rserve](https://rforge.net/Rserve/) where the access predicates are inspired by [Real](http://stoics.org.uk/~nicos/sware/real/) by [Nicos Angelopoulos](http://stoics.org.uk/~nicos/).  The interface defines two predicates and a [quasi quotation](http://www.swi-prolog.org/pldoc/man?section=quasiquotations):
+
+  $ Var &lt;- Expression :
+  Evaluate _Expression_ and bind the result to _Var_.  _Var_ can both be a Prolog
+  variable, which causes the R expression to be converted into Prolog or an
+  R variable (atom), which causes the result to be bound to an R variable.
+  $ &lt;- Expression :
+  Evaluate _Expression_ and display the resulting R console output.
+  $ {|r(Arg ...)||R-code|} :
+  In this quasi quotation, `r` specifies the syntax.  `Arg ...` is a list of
+  Prolog terms that are translated to R and bound to an R variable with the
+  same name.  `R-code` is arbitrary R code.  This may contain any characters
+  except for the `|}` termination sequence.
+
+Above, *Expression* is either a Prolog term or a quasi quotation.  If it is a
+Prolog term, it is translated into R using these rules:
+
+  - An identifier (atom with chars valid for R identifiers) are emitted verbatim.
+  - The Prolog atoms `true` and `false` are translated into the R expressions
+    =TRUE= and =FALSE=.
+  - A Prolog string is translated into an R string.  Note that R strings may be
+    written as `"string"` or `'string'`, while in Prolog `'string'` is an atom,
+    which is treated as an identifier.  Thus, use double quoted Prolog strings
+    to create a string in R.
+  - Numbers are translated into R numbers.
+  - A term =|functor(Arg ...)|= is translated into an R-function call.
+  - The R operators are supported:  =|+, -, *, /, mod, '%%', ^,
+	&gt;=, &gt;, ==, &lt;, &lt;=, =&lt;, \=, '!=', :, &lt;-|=
+  - =|A$B|= and =|A[I]|= are supported
+  - Goal expansion is provided to turn =|a.b|= and =|a.b()|= into valid syntax.
+</div>
+
+<div class="nb-cell markdown">
+## Exchange data between Prolog and R
+
+Data may be transferred using the assignment operator `Target &lt;- Source`, where `Source` is the Prolog representation of an R expression.  `Target` is either a Prolog variable, transferring the value of an R expression to Prolog, or an R variable or expression, transferring a Prolog expression to R.
+
+First we illustrate exchanging R data to Prolog.  Note that the expression can both be the Prolog representation of an R expression or R source represented as a quasi quotation.
+</div>
+
+<div class="nb-cell query">
+A &lt;- 1:10.
+</div>
+
+<div class="nb-cell query">
+A &lt;- {|r||1:10|}.
+</div>
+
+<div class="nb-cell markdown">
+Next, we transfer data from Prolog to R.  We compute the mean and return it to show that `a &lt;- List` actual binds the R variable `a`.
+</div>
+
+<div class="nb-cell query">
+numlist(0, 10, List),
+a &lt;- List,
+Mean &lt;- mean(a).
+</div>
+
+<div class="nb-cell markdown">
+The left side of the assignment can be any valid R term as illustrated below, where we assign the column names of a data frame.  See [Data frame](example/Rdataframe.swinb) for more high level operations on data frames.
+</div>
+
+<div class="nb-cell query">
+df &lt;- data.frame([100,200,300]),
+colnames(df) &lt;- ["hundreds"],
+&lt;- df.
+</div>
+
+<div class="nb-cell markdown">
+## Simple plot examples
+
+First, we make some trivial plots using an R vector, Prolog list and a _quasi quotation_.
+</div>
+
+<div class="nb-cell query">
+&lt;- plot(c(1,2,3)).
+</div>
+
+<div class="nb-cell query">
+&lt;- plot([1,2,3,4]).
+</div>
+
+<div class="nb-cell query">
+{|r||plot(c(1,2,3))|}.
+</div>
+
+<div class="nb-cell query">
+numlist(1, 25, Data),
+{|r(Data)||plot(Data)|}.
+</div>
+
+<div class="nb-cell markdown">
+## Performance tests for transferring data
+
+Below we compare computing the mean from a list of 1M integers through R as well as natively in Prolog.  It turns out R does the job faster on a large number of integers than Prolog.  Why?  Once in R, the array is a simple C array of integers, causing a blindly fast addition.  The Prolog counterpart adds the numbers one-by-one and does rigid overflow checking and handling.
+</div>
+
+<div class="nb-cell query">
+numlist(1, 1 000 000, _L),
+time(A &lt;- mean(_L)).
+</div>
+
+<div class="nb-cell query">
+numlist(1, 1 000 000, _L),
+time(sum_list(_L, Sum)).
+</div>
+
+<div class="nb-cell markdown">
+## Show error handling
+</div>
+
+<div class="nb-cell query">
+A &lt;- {|r||a b|}.
+</div>
+
+<div class="nb-cell markdown">
+## Using ggplot2 to render plots
+
+The library("ggplot2") can be used for rendering plots.  Unlike native plot() however, the call should be made with &lt;-/1 because ggplot relies on console output.  We first give the example using an R quasi quotation, followed by using a Prolog term.  Note that
+
+  - Quasi quotations can be used to copy/paste R code into your Prolog
+    program without changing it (except when it contains =||}|=).
+  - Prolog code may need minor modifications.  In the example, =|I(.5)|=
+    must be changed to `'I'(0.5)` because Prolog floats cannot start with
+    a =|.|= and functors (used as function symbols) cannot start with a
+    capital.  The Prolog approach however
+    - Is better portable.
+    - Profits from Prolog syntax checking.
+    - Makes it easier to compose R expressions from smaller elements.
+</div>
+
+<div class="nb-cell program">
+:- &lt;- library("ggplot2").
+</div>
+
+<div class="nb-cell query">
+&lt;- {|r||qplot(mpg, data=mtcars, geom="density", fill=gear, alpha=I(.5), main="Distribution of Gas Milage", xlab="Miles Per Gallon", ylab="Density")|}.
+</div>
+
+<div class="nb-cell query">
+&lt;- qplot(mpg, data=mtcars, geom="density", fill=gear, alpha='I'(0.5), main="Distribution of Gas Milage", xlab="Miles Per Gallon", ylab="Density").
+</div>
+
+<div class="nb-cell markdown">
+## Query and handle data frames
+
+This shows how to print a data frame and how to get R data into Prolog.  Note that the interface merely fetches the matrix as a nested list of columns.  The library(r/r_data) provides utilites for creating and fetching R data frames from Prolog.  This [notebook](example/Rdataframe.swinb) illustrates the library.
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_rendering(table).
+</div>
+
+<div class="nb-cell query">
+&lt;- mtcars.
+</div>
+
+<div class="nb-cell query">
+MtCars &lt;- mtcars,
+Cols &lt;- colnames(mtcars),
+Rows &lt;- rownames(mtcars).
+</div>
+
+</div>

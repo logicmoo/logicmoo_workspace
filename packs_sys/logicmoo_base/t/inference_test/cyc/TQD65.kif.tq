@@ -1,0 +1,113 @@
+(note TQD65)
+
+(implies 
+ (and 
+ (eventOccursAt ?ACT ?SUB) 
+ (contains ?REG ?SUB)) 
+ (eventOccursAt ?ACT ?REG)) 
+
+(eventOccursAt 
+ (SKF-48187691) Oregon-State) 
+
+(contains UnitedStatesOfAmerica Oregon-State) 
+
+(temporalBoundsContain 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1984))) 
+ (SKF-48187691)) 
+
+(inverse temporalBoundsContain startsDuring) 
+
+(implies 
+ (and 
+ (instance 
+ (TimeIntervalInclusiveFn ?DATE1 ?DATE2) TimeInterval) 
+ (laterThan ?DATE1 ?DATE)) 
+ (startsAfterEndingOf 
+ (TimeIntervalInclusiveFn ?DATE1 ?DATE2) ?DATE)) 
+
+(instance 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1984))) TimeInterval) 
+
+(laterThan 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (YearFn 1970)) 
+
+(implies 
+ (and 
+ (startsDuring ?EVT ?EVT1) 
+ (startsAfterEndingOf ?EVT1 ?EVT2)) 
+ (startsAfterEndingOf ?EVT ?EVT2)) 
+
+(startsDuring 
+ (#$SKF-48187691) 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1984)))) 
+
+(startsAfterEndingOf 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1984))) 
+ (YearFn 1970)) 
+
+(instance UnitedStatesOfAmerica IndependentCountry) 
+
+(eventOccursAt 
+ (SKF-48187691) UnitedStatesOfAmerica) 
+
+(startsAfterEndingOf 
+ (#$SKF-48187691) 
+ (YearFn 1970)) 
+
+(instance Rajneeshee TerroristAgent) 
+
+(agent 
+ (SKF-48187691) Rajneeshee) 
+
+(subrelation agent agent) 
+
+(instance 
+ (SKF-48187691) AttackOnTangible) 
+
+(instrument-Generic 
+ (#$SKF-48187691) 
+ (SKF-9169603)) 
+
+(instance 
+ (SKF-9169603) BiologicalWeapon) 
+
+(query (findall ?SCENAGT 
+(thereExists ?ACT 
+   (thereExists ?FORCE 
+       (and 
+           (instance ?SCENAGT TerroristAgent) 
+           (agent ?ACT ?SCENAGT) 
+           (instance ?ACT AttackOnTangible) 
+           (instance ?FORCE BiologicalWeapon) 
+           (instrument-Generic ?ACT ?FORCE) 
+           (thereExists ?COUNTRY 
+               (and 
+                   (instance ?COUNTRY IndependentCountry) 
+                   (eventOccursAt ?ACT ?COUNTRY))) 
+           (startsAfterEndingOf ?ACT 
+               (YearFn 1970)))))
+))
+
+(answer Rajneeshee
+)
+
+(end_of_file)
+

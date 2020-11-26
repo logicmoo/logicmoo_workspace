@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF SYSTEM "blocks_generated.dtd" []> 
+
+<rdf:RDF
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:inf="http://www.infraengine.com/planner/"
+  xml:base="http://www.infraengine.com/examples/blocks"
+  xmlns:bs="http://www.infraengine.com/examples/blocks#" >
+
+
+  <!-- ================================================================== -->
+  <!-- Objects in the Blocks World -->
+  <!-- ================================================================== -->
+
+  <rdfs:Class rdf:ID="WorldObject"
+    rdfs:comment="An object in the blocks world."/>
+  
+  <rdfs:Class rdf:ID="Block"
+    rdfs:comment="A block that can be moved." >
+    <rdfs:subClassOf rdf:resource="#WorldObject" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:ID="Table"
+    rdfs:comment="A table with blocks on it." >
+    <rdfs:subClassOf rdf:resource="#WorldObject" />
+  </rdfs:Class>
+
+  <!-- ================================================================== -->
+  <!-- Fluents -->
+  <!-- ================================================================== -->
+    
+  <!-- Fluent "on(top:Block, bottom:WorldObject)" -->
+
+  <rdfs:Class rdf:ID="on" 
+    rdfs:comment="Fluent: One block is on top of the other."/>
+  
+  <rdf:Property rdf:ID="onTop"
+    rdfs:comment="Fluent parameter: Top block." >
+    <rdfs:domain rdf:resource="#on" />
+    <rdfs:range rdf:resource="#Block" />
+  </rdf:Property>
+
+  <rdf:Property rdf:ID="onBottom"
+    rdfs:comment="Fluent parameter: Bottom block." >
+    <rdfs:domain rdf:resource="#on" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+  <!-- Fluent "clear(object:WorldObject)" -->
+
+  <rdfs:Class rdf:ID="clear"
+    rdfs:comment="Fluent: The object is clear."/>
+  
+  <rdf:Property rdf:ID="clearWorldObject"
+    rdfs:comment="Fluent parameter: The clear object." >
+    <rdfs:domain rdf:resource="#clear" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+
+  <!-- ================================================================== -->
+  <!-- The PutOn Action -->
+  <!-- ================================================================== -->
+
+  <!-- Action "PutOn(block:Block, from:WorldObject, to:WorldObject)" -->
+
+  <rdfs:Class rdf:ID="PutOn"
+    rdfs:comment="Action: Put a block on to another block or the table." />
+  
+  <rdf:Property rdf:ID="putOnBlock"
+    rdfs:comment="Action parameter: The block that is moved.">
+    <rdfs:domain rdf:resource="#PutOn" />
+    <rdfs:range rdf:resource="#Block" />
+  </rdf:Property>
+
+  <rdf:Property rdf:ID="putOnFrom"
+    rdfs:comment="Action parameter: The object on which the block
+    was lying before." >
+    <rdfs:domain rdf:resource="#PutOn" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+  <rdf:Property rdf:ID="putOnTo"
+    rdfs:comment="Action parameter: The object on which the block
+    is put." >
+    <rdfs:domain rdf:resource="#PutOn" />
+    <rdfs:range rdf:resource="#WorldObject" />
+  </rdf:Property>
+
+
+  <!-- ================================================================== -->
+  <!-- Rules -->
+  <!-- ================================================================== -->
+
+  <!-- Rule 1: We have a table that is always clear. -->
+
+  <inf:Rule rdf:ID="ruleTableAlwaysClear"
+    rdfs:comment="We have an instance of Table that is always clear.">
+    <inf:after rdf:parseType="Literal">
+      <bs:clear>
+	<bs:clearWorldObject>
+	  <bs:Table rdf:about="#table" />
+	</bs:clearWorldObject>
+      </bs:clear>
+    </inf:after>
+
+  </inf:Rule>
+
+  <!-- Rule 2: The effect of PutOn -->
+
+  <inf:Rule rdf:ID="rulePutOn"
+    rdfs:comment="The effect of PutOn.">
+
+    <inf:action rdf:parseType="Literal">
+      <bs:PutOn>
+	<bs:putOnBlock><bs:Block inf:var="Moved"/></bs:putOnBlock>
+	<bs:putOnFrom><bs:WorldObject inf:var="From"/></bs:putOnFrom>
+	<bs:putOnTo><bs:WorldObject inf:var="To"/></bs:putOnTo>
+      </bs:PutOn>
+    </inf:action>
+
+    <inf:after rdf:parseType="Literal">
+      <bs:on>
+	<bs:onTop><bs:Block inf:var="Moved"/></bs:onTop>
+	<bs:onBottom><bs:WorldObject inf:var="To"/></bs:onBottom>
+      </bs:on>
+      <bs:clear>
+	<bs:clearWorldObject><bs:WorldObject inf:var="From"/></bs:clearWorldObject>
+      </bs:clear>
+    </inf:after>
+
+    <inf:remaining rdf:parseType="Literal">
+      <bs:clear>
+	<bs:clearWorldObject><bs:Block inf:var="Moved"/></bs:clearWorldObject>
+      </bs:clear>
+    </inf:remaining>
+
+    <inf:before rdf:parseType="Literal">
+      <bs:on>
+	<bs:onTop><bs:Block inf:var="Moved"/></bs:onTop>
+	<bs:onBottom><bs:WorldObject inf:var="From"/></bs:onBottom>
+      </bs:on>
+      <bs:clear>
+	<bs:clearWorldObject><bs:WorldObject inf:var="To"/></bs:clearWorldObject>
+      </bs:clear>
+    </inf:before>
+
+  </inf:Rule>
+
+
+  <!-- ================================================================== -->
+  <!-- Queries -->
+  <!-- ================================================================== -->
+
+  <inf:Query rdf:ID="querySussman"
+    rdfs:comment="The Sussman anomaly.">
+
+    <inf:goal rdf:parseType="Literal">
+
+      <bs:on>
+	<bs:onTop rdf:resource="#a" />
+	<bs:onBottom rdf:resource="#b" />
+      </bs:on>
+
+      <bs:on>
+	<bs:onTop rdf:resource="#b" />
+	<bs:onBottom rdf:resource="#c" />
+      </bs:on>
+
+    </inf:goal>
+    
+
+    <inf:start rdf:parseType="Literal">
+
+      <bs:on>
+	<bs:onTop rdf:resource="#b" />
+	<bs:onBottom rdf:resource="#table" />
+      </bs:on>
+
+      <bs:clear>
+	<bs:clearWorldObject rdf:resource="#b" />
+      </bs:clear>
+
+      <bs:on>
+	<bs:onTop rdf:resource="#a" />
+	<bs:onBottom rdf:resource="#table" />
+      </bs:on>
+
+      <bs:on>
+	<bs:onTop rdf:resource="#c" />
+	<bs:onBottom rdf:resource="#a" />
+      </bs:on>
+
+      <bs:clear>
+	<bs:clearWorldObject rdf:resource="#c" />
+      </bs:clear>
+
+    </inf:start>
+
+  </inf:Query>
+  
+</rdf:RDF>
+
+

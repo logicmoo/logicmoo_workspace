@@ -1,0 +1,486 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.46</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tables.html">
+<link rel="next" href="threadpool.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tables.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="threadpool.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:thread"><a id="sec:A.46"><span class="sec-nr">A.46</span> <span class="sec-title">library(thread): 
+High level thread primitives</span></a></h2>
+
+<p><a id="sec:thread"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jan Wielemaker
+</dd>
+</dl>
+
+<p>This module defines simple to use predicates for running goals 
+concurrently. Where the core multi-threaded API is targeted at 
+communicating long-living threads, the predicates here are defined to 
+run goals concurrently without having to deal with thread creation and 
+maintenance explicitely.
+
+<p>Note that these predicates run goals concurrently and therefore these 
+goals need to be thread-safe. As the predicates in this module also 
+abort branches of the computation that are no longer needed, predicates 
+that have side-effect must act properly. In a nutshell, this has the 
+following consequences:
+
+<p>
+<ul class="latex">
+<li>Nice clean Prolog code without side-effects (but with cut) works 
+fine.
+<li>Side-effects are bad news. If you really need assert to store 
+intermediate results, use the <a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a> 
+declaration. This also guarantees cleanup of left-over clauses if the 
+thread is cancelled. For other side-effects, make sure to use <a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
+to undo them should the thread be cancelled.
+<li>Global variables are ok as they are thread-local and destroyed on 
+thread cancellation. Note however that global variables in the calling 
+thread are <b>not</b> available in the threads that are created. You 
+have to pass the value as an argument and initialise the variable in the 
+new thread.
+<li>Thread-cancellation uses <a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
+Using this code with long-blocking foreign predicates may result in long 
+delays, even if another thread asks for cancellation.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent/3"><strong>concurrent</strong>(<var>+N, 
+:Goals, +Options</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goals</var> in parallel using <var>N</var> threads. This call 
+blocks until all work has been done. The <var>Goals</var> must be 
+independent. They should not communicate using shared variables or any 
+form of global data. All <var>Goals</var> must be thread-safe.
+
+<p>Execution succeeds if all goals have succeeded. If one goal fails or 
+throws an exception, other workers are abandoned as soon as possible and 
+the entire computation fails or re-throws the exception. Note that if 
+multiple goals fail or raise an error it is not defined which error or 
+failure is reported.
+
+<p>On successful completion, variable bindings are returned. Note 
+however that threads have independent stacks and therefore the goal is 
+copied to the worker thread and the result is copied back to the caller 
+of <a class="pred" href="thread.html#concurrent/3">concurrent/3</a>.
+
+<p>Choosing the right number of threads is not always obvious. Here are 
+some scenarios:
+
+<p>
+<ul class="latex">
+<li>If the goals are CPU intensive and normally all succeeding, 
+typically the number of CPUs is the optimal number of threads. Less does 
+not use all CPUs, more wastes time in context switches and also uses 
+more memory.
+<li>If the tasks are I/O bound the number of threads is typically higher 
+than the number of CPUs.
+<li>If one or more of the goals may fail or produce an error, using a 
+higher number of threads may find this earlier.
+</ul>
+<table class="arglist">
+<tr><td><var>N</var> </td><td>Number of worker-threads to create. Using 
+1, no threads are created. If <var>N</var> is larger than the number of <var>Goals</var> 
+we create exactly as many threads as there are <var>Goals</var>. </td></tr>
+<tr><td><var>Goals</var> </td><td>List of callable terms. </td></tr>
+<tr><td><var>Options</var> </td><td>Passed to <a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+for creating the workers. Only options changing the stack-sizes can be 
+used. In particular, do not pass the detached or alias options. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+In many cases, <a class="pred" href="thread.html#concurrent_maplist/2">concurrent_maplist/2</a> 
+and friends is easier to program and is tractable to program analysis.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent_forall/2"><strong>concurrent_forall</strong>(<var>:Generate, 
+:Action</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent_forall/3"><strong>concurrent_forall</strong>(<var>:Generate, 
+:Action, +Options</var>)</a></dt>
+<dd class="defbody">
+True when <var>Action</var> is true for all solutions of <var>Generate</var>. 
+This has the same semantics as <a class="pred" href="forall2.html#forall/2">forall/2</a>, 
+but the <var>Action</var> goals are executed in multiple threads. 
+Notable a failing <var>Action</var> or a <var>Action</var> throwing an 
+exception signals the calling thread which in turn aborts all workers 
+and fails or re-throws the generated error. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>threads</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Number of threads to use. The default is determined by the Prolog flag <code>cpu_count</code>.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Ideally we would grow the set of workers dynamically, similar to dynamic 
+scheduling of HTTP worker threads. This would avoid creating threads 
+that are never used if <var>Generate</var> is too slow or does not 
+provide enough answers and would further raise the number of threads if <var>Action</var> 
+is I/O bound rather than CPU bound.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="concurrent_and/2"><strong>concurrent_and</strong>(<var>:Generator, 
+:Test</var>)</a></dt>
+<dt class="pubdef"><a id="concurrent_and/3"><strong>concurrent_and</strong>(<var>:Generator, 
+:Test, +Options</var>)</a></dt>
+<dd class="defbody">
+Concurrent version of <code>(Generator,Test)</code>. This predicate 
+creates a thread providing solutions for <var>Generator</var> that are 
+handed to a pool of threads that run <var>Test</var> for the different 
+instantiations provided by <var>Generator</var> concurrently. The 
+predicate is logically equivalent to a simple conjunction except for two 
+aspects: (1) terms are <i>copied</i> from <var>Generator</var> to the 
+test <var>Test</var> threads while answers are copied back to the 
+calling thread and (2) answers may be produced out of order.
+
+<p>If the evaluation of some <var>Test</var> raises an exception,
+<a class="pred" href="thread.html#concurrent_and/2">concurrent_and/2</a>,3 
+is terminated with this exception. If the caller commits after a given 
+answer or raises an exception while
+<a class="pred" href="thread.html#concurrent_and/2">concurrent_and/2</a>,3 
+is active with pending choice points, all involved resources are 
+reclaimed.
+
+<p><var>Options</var>:
+
+<dl class="latex">
+<dt><strong>threads</strong>(<var>+Count</var>)</dt>
+<dd class="defbody">
+Create a worker pool holding <var>Count</var> threads. The default is 
+the Prolog flag <code>cpu_count</code>.
+</dd>
+</dl>
+
+<p>This predicate was proposed by Jan Burse as
+<code>balance((Generator,Test))</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent_maplist/2"><strong>concurrent_maplist</strong>(<var>:Goal, 
++List</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent_maplist/3"><strong>concurrent_maplist</strong>(<var>:Goal, 
++List1, +List2</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="concurrent_maplist/4"><strong>concurrent_maplist</strong>(<var>:Goal, 
++List1, +List2, +List3</var>)</a></dt>
+<dd class="defbody">
+Concurrent version of <a class="pred" href="apply.html#maplist/2">maplist/2</a>. 
+This predicate uses <a class="pred" href="thread.html#concurrent/3">concurrent/3</a>, 
+using multiple <i>worker</i> threads. The number of threads is the 
+minimum of the list length and the number of cores available. The number 
+of cores is determined using the prolog flag <code>cpu_count</code>. If 
+this flag is absent or 1 or <var>List</var> has less than two elements, 
+this predicate calls the corresponding maplist/N version using a wrapper 
+based on <a class="pred" href="metacall.html#once/1">once/1</a>. Note 
+that all goals are executed as if wrapped in
+<a class="pred" href="metacall.html#once/1">once/1</a> and therefore 
+these predicates are <i>semidet</i>.
+
+<p>Note that the the overhead of this predicate is considerable and 
+therefore <var>Goal</var> must be fairly expensive before one reaches a 
+speedup.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="first_solution/3"><strong>first_solution</strong>(<var>-X, 
+:Goals, +Options</var>)</a></dt>
+<dd class="defbody">
+Try alternative solvers concurrently, returning the first answer. In a 
+typical scenario, solving any of the goals in <var>Goals</var> is 
+satisfactory for the application to continue. As soon as one of the 
+tried alternatives is successful, all the others are killed and <a class="pred" href="thread.html#first_solution/3">first_solution/3</a> 
+succeeds.
+
+<p>For example, if it is unclear whether it is better to search a graph 
+breadth-first or depth-first we can use:
+
+<pre class="code">
+search_graph(Grap, Path) :-
+         first_solution(Path, [ breadth_first(Graph, Path),
+                                depth_first(Graph, Path)
+                              ],
+                        []).
+</pre>
+
+<p><var>Options</var> include thread stack-sizes passed to 
+thread_create, as well as the options <code>on_fail</code> and <code>on_error</code> 
+that specify what to do if a solver fails or triggers an error. By 
+default execution of all solvers is terminated and the result is 
+returned. Sometimes one may wish to continue. One such scenario is if 
+one of the solvers may run out of resources or one of the solvers is 
+known to be incomplete.
+
+<dl class="latex">
+<dt><strong>on_fail</strong>(<var>Action</var>)</dt>
+<dd class="defbody">
+If <code>stop</code> (default), terminate all threads and stop with the 
+failure. If <code>continue</code>, keep waiting.
+</dd>
+<dt><strong>on_error</strong>(<var>Action</var>)</dt>
+<dd class="defbody">
+As above, re-throwing the error if an error appears.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+<a class="pred" href="thread.html#first_solution/3">first_solution/3</a> 
+cannot deal with non-determinism. There is no obvious way to fit 
+non-determinism into it. If multiple solutions are needed wrap the 
+solvers in <a class="pred" href="allsolutions.html#findall/3">findall/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="call_in_thread/2"><strong>call_in_thread</strong>(<var>+Thread, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> as an interrupt in the context of <var>Thread</var>. 
+This is based on
+<a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
+If waiting times out, we inject a <code>stop(Reason)</code> exception 
+into <var>Goal</var>. Interrupts can be nested, i.e., it is allowed to 
+run a <a class="pred" href="thread.html#call_in_thread/2">call_in_thread/2</a> 
+while the target thread is processing such an interrupt.
+
+<p>This predicate is primarily intended for debugging and inspection 
+tasks.
+</dd>
+</dl>
+
+<p></body></html>

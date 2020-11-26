@@ -1,0 +1,6 @@
+son(Ishmael, Abraham, mother_is_slave).
+son(Isaac, Abraham, mother_is_free).
+patriarch(Abraham).
+freeborn(P,S) :- patriarch(P), 
+                 son(S,P,F),
+                 eq(F,mother_is_free).

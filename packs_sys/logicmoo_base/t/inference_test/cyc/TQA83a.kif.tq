@@ -1,0 +1,25 @@
+(note TQA83a)
+(abort)
+
+(instance #$IranianF-4E-Instance Warplane) 
+
+(inRegion WesternCountries WesternCountries) 
+
+(queryyn
+(thereExists ?FORCE 
+ (thereExists ?TARGET 
+ (and 
+ (instance ?FORCE Warplane) 
+ (inRegion ?TARGET WesternCountries) 
+ (consistent 
+ (thereExists ?ACT 
+ (and 
+ (instance ?ACT AttackOnTangible) 
+ (agent ?ACT Iran) 
+ (deviceUsed ?ACT ?FORCE) 
+ (damages ?ACT ?TARGET))))))))
+
+(answer No)
+
+(end_of_file)
+

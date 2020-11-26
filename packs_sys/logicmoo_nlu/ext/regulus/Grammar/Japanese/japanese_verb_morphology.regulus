@@ -1,0 +1,250 @@
+
+macro(v_stem(Surface, StemType, Sem, Feats),
+      ( v_stem:[stem_type=StemType, sem=[ @verb_sem(Sem)] | Feats] --> Surface )
+     ).
+macro(suru_verb(Surface, Sem, Feats),
+      ( suru_complement:[sem=[ @verb_sem(Sem)] | Feats] --> Surface )
+     ).
+
+% "suru" in a suru-verb acts like an inflectional affix.
+v:[sem=concat(Complement, Suru), special_v_type=normal,
+   v_type=VType, sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType,
+   vform=VForm, politeness=Polite, voice=Voice] -->
+	suru_complement:[sem=Complement, v_type=VType, sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType],
+	v:[special_v_type=suru, sem=Suru, vform=VForm, politeness=Polite, voice=Voice].
+
+% A verb is a verb-stem followed by an affix. The affix can be null.
+% The verb stem has to be of one of the types i, a, e, u, ta or te
+
+% hirakimasu = hiraki + masu
+% hirakaremasu = hiraka + remasu
+% hiraite = hiraite + []
+% etc
+v:[sem=concat(Stem, Affix), v_type=VType, special_v_type=normal,
+   sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType,
+   vform=VForm, politeness=Polite, voice=Voice] -->
+	v_stem:[stem_type=StemType, stem_type=(i\/a\/e\/u\/ta\/te\/r1\/r2),
+		sem=Stem, v_type=VType, sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType],
+	affix:[stem_type=StemType,
+	       sem=Affix, vform=VForm, politeness=Polite, voice=Voice].
+
+% A verb-stem of type i, a, e, u, ta or te is a verb-stem of type null, k, s, g, m, n, b, ts or r, followed by a stem-affix.
+
+% hiraki = hira + ki
+% hiraku = hira + ku
+% hiraita = hira + ita
+% etc
+v_stem:[stem_type=Stem2, stem_type=(i\/a\/e\/u\/ta\/te),
+	   sem=Sem, v_type=VType, sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType] -->
+	v_stem:[stem_type=Stem1, stem_type=(null\/k\/s\/g\/m\/n\/b\/ts\/r1\/r2),
+	   sem=Sem, v_type=VType, sem_subj_type=SubjType, sem_obj_type=ObjType, sem_pp_type=PPType],
+	stem_affix:[stem_type1=Stem1, stem_type2=Stem2].
+
+% PRESENT ACTIVE
+
+% hira-ku
+% oko-ru
+% tabe-ru
+affix:[stem_type=u, vform=finite, politeness=base, voice=active, sem=[[tense, present]]] --> [].
+% hira-ka-nai
+% okora-nai
+% tabe-nai
+affix:[stem_type=a\/r2, vform=finite, politeness=base, voice=active, sem=[[tense, present], [polarity, negative]]] --> @j('ない', nai, 'NEG-PLAIN-PRESENT'). 
+% hira-ki-masu
+% oko-ri-masu
+% tabe-masu
+affix:[stem_type=i\/r2, vform=finite, politeness=polite, voice=active, sem=[[tense, present]]] --> @j('ます', masu, 'POLITE-PRESENT'). 
+% hira-ki-masen
+% oko-ri-masen
+% tabe-masen
+affix:[stem_type=i\/r2, vform=finite, politeness=polite, voice=active, sem=[[tense, present], [polarity, negative]]] --> @j('ません', masen, 'NEG-POLITE-PRESENT'). 
+
+% PRESENT PASSIVE
+
+% hira-ka-reru
+% oko-ra-reru
+% tabe-reru
+affix:[stem_type=a\/r2, vform=finite, politeness=base, voice=passive, sem=[[tense, present]]] --> @j('れる', reru, 'PASSIVE-PLAIN-PRESENT'). 
+% hira-ka-remasu
+% oko-ra-remasu
+% tabe-remasu
+affix:[stem_type=a\/r2, vform=finite, politeness=polite, voice=passive, sem=[[tense, present]]] --> @j('れます', remasu, 'PASSIVE-POLITE-PRESENT'). 
+
+% PAST ACTIVE
+
+% hira-ita
+% oko-tta
+% hira-ita
+affix:[stem_type=ta, vform=finite, politeness=base, voice=active, sem=[[tense, past]]] --> [].
+% hira-ka-nakatta
+% oko-ra-nakatta
+% tabe-nakatta
+affix:[stem_type=a\/r2, vform=finite, politeness=base, voice=active, sem=[[tense, past], [polarity, negative]]] --> @j('なかった', nakatta, 'NEG-PLAIN-PAST'). 
+% hira-ki-mashita
+% oko-ri-mashita
+% tabe-mashita
+affix:[stem_type=i\/r2, vform=finite, politeness=polite, voice=active, sem=[[tense, past]]] --> @j('ました', mashita, 'POLITE-PAST'). 
+% hira-ki-masendeshita
+% oko-ri-masendeshita
+% tabe-masendeshita
+affix:[stem_type=i\/r2, vform=finite, politeness=polite, voice=active, sem=[[tense, past], [polarity, negative]]] --> @j('ませんでした', masendeshita, 'NEG-POLITE-PAST'). 
+
+% PAST PASSIVE
+
+% hira-ka-reta
+% oko-ra-reta
+% tabe-reta
+affix:[stem_type=a\/r2, vform=finite, politeness=base, voice=passive, sem=[[tense, past]]] --> @j('れた', reta, 'PASSIVE-PLAIN-PAST'). 
+% hira-ka-remashita
+% oko-ra-remashita
+% tabe-remashita
+affix:[stem_type=a\/r2, vform=finite, politeness=polite, voice=passive, sem=[[tense, past]]] --> @j('れました', remashita, 'PASSIVE-POLITE-PAST'). 
+
+% CONTINUOUS/-TE ACTIVE
+
+% hira-ite
+% oko-tte
+% hira-ite
+affix:[stem_type=te, vform=continuous, politeness=base, voice=active, sem=[]] --> [].
+
+% CONTINUOUS/-TE PASSIVE
+
+% hira-ka-rete
+% oko-ra-rete
+% tabe-rete
+affix:[stem_type=a\/r2, vform=continuous, politeness=base, voice=passive, sem=[]] --> @j('れた', rete, 'PASSIVE-CONTINUOUS'). 
+
+% VOLITION/-TAI
+
+% hira-ki-tai
+% oko-ri-tai
+% tabe-tai
+affix:[stem_type=i\/r2, vform=finite, politeness=polite, voice=active, sem=[[modal, desire]]] --> @j('たい', tai, 'WANT'). 
+
+% POSSIBILITY FORMS
+
+% hira-ke-masu
+% tabe-re-masu
+affix:[stem_type=e, vform=finite, politeness=polite, voice=active, sem=[[tense, present], [aspect, possibility]]] --> @j('ます', masu, 'POSSIBLE-POLITE-PRESENT'). 
+
+% hira-ke-mashita
+% tabe-re-mashita
+affix:[stem_type=e, vform=finite, politeness=polite, voice=active, sem=[[tense, present], [aspect, possibility]]] --> @j('ました', mashita, 'POSSIBLE-POLITE-PAST'). 
+
+% CONDITIONAL FORMS
+
+% hira-ke-ba
+% tabe-re-ba
+affix:[stem_type=e, vform=finite, politeness=polite, voice=active, sem=[[aspect, conditional]]] --> @j('ば', ba, 'CONDITIONAL'). 
+% hira-it-ara
+% tabe-ta-ara
+affix:[stem_type=ta, vform=finite, politeness=base, voice=active, sem=[[aspect, conditional]]] --> @j('ら', ra, 'CONDITIONAL'). 
+
+stem_affix:[stem_type1=null, stem_type2=i] --> @j('い', i, i).
+stem_affix:[stem_type1=k, stem_type2=i] --> @j('き', ki, ki).
+stem_affix:[stem_type1=s, stem_type2=i] --> @j('し', shi, shi).
+stem_affix:[stem_type1=g, stem_type2=i] --> @j('ぎ', gi, gi).
+stem_affix:[stem_type1=m, stem_type2=i] --> @j('み', mi, mi).
+stem_affix:[stem_type1=n, stem_type2=i] --> @j('に', ni, ni).
+stem_affix:[stem_type1=b, stem_type2=i] --> @j('び', bi, bi).
+stem_affix:[stem_type1=ts, stem_type2=i] --> @j('ち', chi, chi).
+stem_affix:[stem_type1=r1, stem_type2=i] --> @j('り', ri, ri).
+
+stem_affix:[stem_type1=null, stem_type2=a] --> @j('わ', wa, wa).
+stem_affix:[stem_type1=k, stem_type2=a] --> @j('か', ka, ka).
+stem_affix:[stem_type1=s, stem_type2=a] --> @j('さ', sa, sa).
+stem_affix:[stem_type1=g, stem_type2=a] --> @j('が', ga, ga).
+stem_affix:[stem_type1=m, stem_type2=a] --> @j('ま', ma, ma).
+stem_affix:[stem_type1=n, stem_type2=a] --> @j('な', na, na).
+stem_affix:[stem_type1=b, stem_type2=a] --> @j('ば', ba, ba).
+stem_affix:[stem_type1=ts, stem_type2=a] --> @j('た', ta, ta).
+stem_affix:[stem_type1=r1, stem_type2=a] --> @j('ら', ra, ra).
+
+stem_affix:[stem_type1=null, stem_type2=e] --> @j('え', e, e).
+stem_affix:[stem_type1=k, stem_type2=e] --> @j('け', ke, ke).
+stem_affix:[stem_type1=s, stem_type2=e] --> @j('せ', se, se).
+stem_affix:[stem_type1=g, stem_type2=e] --> @j('げ', ge, ge).
+stem_affix:[stem_type1=m, stem_type2=e] --> @j('め', me, me).
+stem_affix:[stem_type1=n, stem_type2=e] --> @j('ね', ne, ne).
+stem_affix:[stem_type1=b, stem_type2=e] --> @j('べ', be, be).
+stem_affix:[stem_type1=ts, stem_type2=e] --> @j('て', te, te).
+stem_affix:[stem_type1=r1\/r2, stem_type2=e] --> @j('れ', re, re).
+
+stem_affix:[stem_type1=null, stem_type2=u] --> @j('う', u, u).
+stem_affix:[stem_type1=k, stem_type2=u] --> @j('く', ku, ku).
+stem_affix:[stem_type1=s, stem_type2=u] --> @j('す', su, su).
+stem_affix:[stem_type1=g, stem_type2=u] --> @j('ぐ', gu, gu).
+stem_affix:[stem_type1=m, stem_type2=u] --> @j('む', mu, mu).
+stem_affix:[stem_type1=n, stem_type2=u] --> @j('ぬ', nu, nu).
+stem_affix:[stem_type1=b, stem_type2=u] --> @j('ぶ', bu, bu).
+stem_affix:[stem_type1=ts, stem_type2=u] --> @j('つ', tsu, tsu).
+stem_affix:[stem_type1=r1\/r2, stem_type2=u] --> @j('る', ru, ru).
+
+stem_affix:[stem_type1=null, stem_type2=ta] --> @j('った', tta, 'PLAIN-PAST').
+stem_affix:[stem_type1=k, stem_type2=ta] --> @j('いた', ita, 'PLAIN-PAST').
+stem_affix:[stem_type1=s, stem_type2=ta] --> @j('した', shita, 'PLAIN-PAST').
+stem_affix:[stem_type1=g, stem_type2=ta] --> @j('いだ', ida, 'PLAIN-PAST').
+stem_affix:[stem_type1=m, stem_type2=ta] --> @j('んだ', nda, 'PLAIN-PAST').
+stem_affix:[stem_type1=n, stem_type2=ta] --> @j('んだ', nda, 'PLAIN-PAST').
+stem_affix:[stem_type1=b, stem_type2=ta] --> @j('った', tta, 'PLAIN-PAST').
+stem_affix:[stem_type1=ts, stem_type2=ta] --> @j('った', tta, 'PLAIN-PAST').
+stem_affix:[stem_type1=r1, stem_type2=ta] --> @j('った', tta, 'PLAIN-PAST').
+stem_affix:[stem_type1=r2, stem_type2=ta] --> @j('た', ta, 'PLAIN-PAST').
+
+stem_affix:[stem_type1=null, stem_type2=te] --> @j('って', tte, 'CONTINUOUS').
+stem_affix:[stem_type1=k, stem_type2=te] --> @j('いて', ite, 'CONTINUOUS').
+stem_affix:[stem_type1=s, stem_type2=te] --> @j('して', shite, 'CONTINUOUS').
+stem_affix:[stem_type1=g, stem_type2=te] --> @j('いで', ide, 'CONTINUOUS').
+stem_affix:[stem_type1=m, stem_type2=te] --> @j('んで', nde, 'CONTINUOUS').
+stem_affix:[stem_type1=n, stem_type2=te] --> @j('んで', nde, 'CONTINUOUS').
+stem_affix:[stem_type1=b, stem_type2=te] --> @j('んで', nde, 'CONTINUOUS').
+stem_affix:[stem_type1=ts, stem_type2=te] --> @j('って', tte, 'CONTINUOUS').
+stem_affix:[stem_type1=r1, stem_type2=te] --> @j('って', tte, 'CONTINUOUS').
+stem_affix:[stem_type1=r2, stem_type2=te] --> @j('て', te, 'CONTINUOUS').
+
+% INFLECTIONS OF "SURU" (IRREGULAR)
+
+macro(suru_inflection(Surface, VForm, Politeness, Voice, Sem),
+      (  v:[special_v_type=suru, vform=VForm, politeness=Politeness, voice=Voice, sem=Sem] --> Surface )
+     ).
+
+% PRESENT ACTIVE
+
+@suru_inflection(@j(('す', 'る'), (su, ru), ('do', 'PLAIN-PRESENT')), finite, base, active, [[tense, present]]). 
+@suru_inflection(@j(('し', 'ない'), (shi, nai), ('do', 'NEG-PLAIN-PRESENT')), finite, base, active, [[tense, present], [polarity, negative]]). 
+@suru_inflection(@j(('し', 'ます'), (shi, masu), ('do', 'POLITE-PRESENT')), finite, polite, active, [[tense, present]]). 
+@suru_inflection(@j(('し', 'ません'), (shi, masen), ('do', 'NEG-POLITE-PRESENT')), finite, polite, active, [[tense, present], [polarity, negative]]). 
+
+% PRESENT PASSIVE
+
+@suru_inflection(@j(('さ', 'れる'), (sa, reru), ('do', 'PASSIVE-PLAIN-PRESENT')), finite, base, passive, [[tense, present]]).  
+@suru_inflection(@j(('さ', 'ます'), (sare, masu), ('do', 'PASSIVE-POLITE-PRESENT')), finite, polite, passive, [[tense, present]]).  
+
+% PAST ACTIVE
+
+@suru_inflection(@j(('し', 'た'), (shi, ta), ('do', 'PLAIN-PAST')), finite, base, active, [[tense, past]]). 
+@suru_inflection(@j(('し', 'なかった'), (shi, nakatta), ('do', 'NEG-PLAIN-PAST')), finite, base, active, [[tense, past], [polarity, negative]]).  
+@suru_inflection(@j(('し', 'ました'), (shi, mashita), ('do', 'POLITE-PAST')), finite, polite, active, [[tense, past]]). 
+@suru_inflection(@j(('し', 'ませんでした'), (shi, masendeshita), ('do', 'NEG-POLITE-PAST')), finite, polite, active, [[tense, past], [polarity, negative]]). 
+
+% PAST PASSIVE
+
+@suru_inflection(@j(('さ', 'れた'), (sa, reta), ('do', 'PASSIVE-PLAIN-PAST')), finite, base, passive, [[tense, past]]). 
+@suru_inflection(@j(('さ', 'れました'), (sa, remashita), ('do', 'PASSIVE-POLITE-PAST')), finite, polite, passive, [[tense, past]]). 
+
+% CONTINUOUS/-TE ACTIVE
+
+@suru_inflection(@j(('し', 'て'), (shi, te), ('do', 'CONTINUOUS')), continuous, base, active, []). 
+
+% CONTINUOUS/-TE PASSIVE
+
+@suru_inflection(@j(('さ', 'れて'), (sa, rete), ('do', 'PASSIVE-CONTINUOUS')), continuous, base, passive, []). 
+
+% VOLITION/-TAI
+
+@suru_inflection(@j(('し', 'たい'), (shi, tai), ('do', 'WANT')), finite, polite, active, [[modal, desire]]). 
+
+% CONDITIONAL FORMS
+
+@suru_inflection(@j(('す', 'れば'), (su, reba), ('do', 'CONDITIONAL')), finite, polite, active, [[aspect, conditional]]).
+@suru_inflection(@j(('し', 'た'), (shi, tara), ('do', 'CONDITIONAL')), finite, base, active, [[aspect, conditional]]).

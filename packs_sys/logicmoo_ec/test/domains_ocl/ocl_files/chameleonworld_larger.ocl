@@ -1,0 +1,307 @@
+
+/*
+GIPO Domain Model
+
+Domain Details
+
+Author: Mr. Darren Jackson	Name: Chameleon World	Favourite: no
+Index
+
+Life History	Diagram Nodes' Properties and Constraints	OCL Domain Plain Text	PDDL Domain Plain Text	Files Download Links
+Life History
+
+
+
+Diagram Nodes' Properties and Constraints
+
+(alphabetical order)
+
+
+
+
+
+
+
+OCL Domain Plain Text
+*/
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: Darren
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Nov 14 16:25:00 GMT 2006
+ *  Date last modified: 2006/12/03 at 05:41:15 PM GMT
+ *  Description:
+ *    
+ * Object Life History : chameleonWorld.gfx
+ */
+
+domain_name(chameleonWorld).
+
+% Sorts
+sorts(primitive_sorts,[door,flexarium,chameleon,box,substrate]).
+
+% Objects
+objects(door,[door1]).
+objects(flexarium,[flexarium1]).
+objects(chameleon,[veiledChameleon]).
+objects(box,[box1,box2]).
+objects(substrate,[newsPaper1,newsPaper2]).
+
+% Predicates
+predicates([
+    doorOpen(door),
+    doorClosed(door),
+    dirty(flexarium),
+    clean(flexarium),
+    inBox(chameleon,box),
+    inHands(chameleon),
+    inFlexarium(chameleon),
+    boxOpen(box),
+    boxClosed(box),
+    insideFlexarium(substrate),
+    outsideFlexarium(substrate)]).
+
+% Object Class Definitions
+substate_classes(door,Door,[
+    [doorOpen(Door)],
+    [doorClosed(Door)]]).
+substate_classes(flexarium,Flexarium,[
+    [dirty(Flexarium)],
+    [clean(Flexarium)]]).
+substate_classes(chameleon,Chameleon,[
+    [inBox(Chameleon,Box)],
+    [inHands(Chameleon)],
+    [inFlexarium(Chameleon)]]).
+substate_classes(box,Box,[
+    [boxOpen(Box)],
+    [boxClosed(Box)]]).
+substate_classes(substrate,Substrate,[
+    [insideFlexarium(Substrate)],
+    [outsideFlexarium(Substrate)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(takeOutFlex(Door,Chameleon),
+    % prevail
+    [     se(door,Door,[doorOpen(Door)])],
+    % necessary
+    [     sc(chameleon,Chameleon,[inFlexarium(Chameleon)]=>[inHands(Chameleon)])],
+    % conditional
+    []).
+operator(putInBox(Box,Chameleon),
+    % prevail
+    [     se(box,Box,[boxOpen(Box)])],
+    % necessary
+    [     sc(chameleon,Chameleon,[inHands(Chameleon)]=>[inBox(Chameleon,Box)])],
+    % conditional
+    []).
+operator(takeOutBox(Box,Chameleon),
+    % prevail
+    [     se(box,Box,[boxOpen(Box)])],
+    % necessary
+    [     sc(chameleon,Chameleon,[inBox(Chameleon,Box)]=>[inHands(Chameleon)])],
+    % conditional
+    []).
+operator(putInFlex(Door,Substrate,Flexarium,Chameleon),
+    % prevail
+    [     se(door,Door,[doorOpen(Door)]),
+     se(substrate,Substrate,[insideFlexarium(Substrate)]),
+     se(flexarium,Flexarium,[clean(Flexarium)])],
+    % necessary
+    [     sc(chameleon,Chameleon,[inHands(Chameleon)]=>[inFlexarium(Chameleon)])],
+    % conditional
+    []).
+operator(openDoor(Door),
+    % prevail
+    [],
+    % necessary
+    [     sc(door,Door,[doorClosed(Door)]=>[doorOpen(Door)])],
+    % conditional
+    []).
+operator(closeDoor(Door),
+    % prevail
+    [],
+    % necessary
+    [     sc(door,Door,[doorOpen(Door)]=>[doorClosed(Door)])],
+    % conditional
+    []).
+operator(time(Flexarium),
+    % prevail
+    [],
+    % necessary
+    [     sc(flexarium,Flexarium,[clean(Flexarium)]=>[dirty(Flexarium)])],
+    % conditional
+    []).
+operator(wash(Chameleon,Box,Door,Substrate,Flexarium),
+    % prevail
+    [     se(chameleon,Chameleon,[inBox(Chameleon,Box)]),
+     se(door,Door,[doorOpen(Door)]),
+     se(substrate,Substrate,[outsideFlexarium(Substrate)])],
+    % necessary
+    [     sc(flexarium,Flexarium,[dirty(Flexarium)]=>[clean(Flexarium)])],
+    % conditional
+    []).
+operator(addCleanNewspaper(Flexarium,Door,Chameleon,Box,Substrate),
+    % prevail
+    [     se(flexarium,Flexarium,[clean(Flexarium)]),
+     se(door,Door,[doorOpen(Door)]),
+     se(chameleon,Chameleon,[inBox(Chameleon,Box)])],
+    % necessary
+    [     sc(substrate,Substrate,[outsideFlexarium(Substrate)]=>[insideFlexarium(Substrate)])],
+    % conditional
+    []).
+operator(removeDirtyNewspaper(Flexarium,Door,Chameleon,Box,Substrate),
+    % prevail
+    [     se(flexarium,Flexarium,[dirty(Flexarium)]),
+     se(door,Door,[doorOpen(Door)]),
+     se(chameleon,Chameleon,[inBox(Chameleon,Box)])],
+    % necessary
+    [     sc(substrate,Substrate,[insideFlexarium(Substrate)]=>[outsideFlexarium(Substrate)])],
+    % conditional
+    []).
+operator(openBox(Box),
+    % prevail
+    [],
+    % necessary
+    [     sc(box,Box,[boxClosed(Box)]=>[boxOpen(Box)])],
+    % conditional
+    []).
+operator(closeBox(Box),
+    % prevail
+    [],
+    % necessary
+    [     sc(box,Box,[boxOpen(Box)]=>[boxClosed(Box)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(flexarium,flexarium1,[clean(flexarium1)]),
+     se(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(substrate,newsPaper1,[outsideFlexarium(newsPaper1)]),
+     se(substrate,newsPaper2,[insideFlexarium(newsPaper2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(flexarium,flexarium1,[dirty(flexarium1)]),
+     ss(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     ss(box,box1,[boxClosed(box1)]),
+     ss(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     ss(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])]).
+planner_task(2,
+    % Goals
+    [
+     se(door,door1,[doorOpen(door1)]),
+     se(chameleon,veiledChameleon,[inBox(veiledChameleon,box1)]),
+     se(box,box1,[boxClosed(box1)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     ss(box,box1,[boxClosed(box1)])]).
+planner_task(3,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(flexarium,flexarium1,[clean(flexarium1)]),
+     se(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(box,box2,[boxClosed(box2)]),
+     se(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     se(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(flexarium,flexarium1,[clean(flexarium1)]),
+     ss(chameleon,veiledChameleon,[inBox(veiledChameleon,box1)]),
+     ss(box,box1,[boxClosed(box1)]),
+     ss(box,box2,[boxClosed(box2)]),
+     ss(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     ss(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])]).
+planner_task(4,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(flexarium,flexarium1,[dirty(flexarium1)]),
+     se(chameleon,veiledChameleon,[inBox(veiledChameleon,box2)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(box,box2,[boxClosed(box2)]),
+     se(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     se(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(flexarium,flexarium1,[dirty(flexarium1)]),
+     ss(chameleon,veiledChameleon,[inBox(veiledChameleon,box1)]),
+     ss(box,box1,[boxClosed(box1)]),
+     ss(box,box2,[boxClosed(box2)]),
+     ss(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     ss(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])]).
+planner_task(5,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(box,box2,[boxClosed(box2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorOpen(door1)]),
+     ss(box,box1,[boxOpen(box1)]),
+     ss(box,box2,[boxOpen(box2)])]).
+planner_task(6,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(flexarium,flexarium1,[clean(flexarium1)]),
+     se(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(box,box2,[boxClosed(box2)]),
+     se(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     se(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(flexarium,flexarium1,[dirty(flexarium1)]),
+     ss(chameleon,veiledChameleon,[inBox(veiledChameleon,box2)]),
+     ss(box,box1,[boxClosed(box1)]),
+     ss(box,box2,[boxClosed(box2)]),
+     ss(substrate,newsPaper1,[outsideFlexarium(newsPaper1)]),
+     ss(substrate,newsPaper2,[insideFlexarium(newsPaper2)])]).
+planner_task(7,
+    % Goals
+    [
+     se(door,door1,[doorClosed(door1)]),
+     se(flexarium,flexarium1,[clean(flexarium1)]),
+     se(chameleon,veiledChameleon,[inHands(veiledChameleon)]),
+     se(box,box1,[boxClosed(box1)]),
+     se(box,box2,[boxClosed(box2)]),
+     se(substrate,newsPaper1,[outsideFlexarium(newsPaper1)]),
+     se(substrate,newsPaper2,[insideFlexarium(newsPaper2)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(flexarium,flexarium1,[dirty(flexarium1)]),
+     ss(chameleon,veiledChameleon,[inFlexarium(veiledChameleon)]),
+     ss(box,box1,[boxOpen(box1)]),
+     ss(box,box2,[boxOpen(box2)]),
+     ss(substrate,newsPaper1,[insideFlexarium(newsPaper1)]),
+     ss(substrate,newsPaper2,[outsideFlexarium(newsPaper2)])]).
+

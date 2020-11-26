@@ -1,0 +1,294 @@
+<div class="notebook">
+
+<div class="nb-cell html">
+<script type="text/javascript">
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML",function() {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);});
+</script>
+<h2>Markov Logic Networks</h2>
+
+<p>Markov Networks (MN) and Markov Logic Networks (MLN) can be encoded with 
+Probabilistic Logic Programming. The encoding is based on the observation that
+a MN factor can be represented with a Bayesian Network (BN) with an extra node that
+is always observed.</p>
+<p>
+For example, the MLN clause
+</p><pre><code>1.5  Intelligent(x) =&gt; GoodMarks(x) 
+</code></pre>
+for a single constant <code>anna</code> originates an edge between the Boolean nodes  
+for  <code>Intelligent(anna)</code> and <code>GoodMarks(anna)</code>. This means that the two variables
+cannot be d-separated in any way. This dependence can be modeled with BNs by
+adding an extra Boolean node, <code>Clause(anna)</code>, that is a child of 
+ <code>Intelligent(anna)</code> and <code>GoodMarks(anna)</code> and is observed. In this way,
+ <code>Intelligent(anna)</code> and <code>GoodMarks(anna)</code> are not d-separated in the BN no 
+matter what other nodes the BN contains.
+<p></p><p>
+In general, for a domain with Herbrand base \(X\) and an MLN ground clause 
+\(C\) 
+mentioning atom variables \(X'\), the 
+equivalent BN should contain a Boolean node \(C\) with \(X'\) as parents.
+All the queries of the form \(P(a|b)\) should then be posed to the BN as
+\(P(a|b,C=true)\).
+</p><p>
+The problem is now how to assign values to the conditional probability table
+(CPT) of \(C\) given \(X'\) so that the joint distribution of \(X\) 
+ in the BN
+is the same as that of the MLN. 
+</p><p>
+An MLN formula of the form \(\alpha \ C\)
+contributes
+to the probabilities of the worlds with a factor
+\(e^{\alpha}\)
+ for the worlds where the
+clause is true and \(1\) for the worlds where the clause is false.
+If we use \(c\) to indicate \(C=true\), the joint probability of a state 
+of the world \(x\) can then be computed as
+\[
+P(x|c)=\frac{P(x,c)}{P(c)}\propto P(x,c)
+\]
+i.e., \(P(x|c)\) is proportional to \(P(x,c)\) because the denominator does not
+depend on \(x\) and is thus a normalizing constant.
+</p>
+<p>
+\(P(x,c)\) can be written as
+\[
+P(x,c)=P(c|x)P(x)=P(c|x')P(x)
+\]
+where \(x'\) is the state of the parents of \(C\), so
+\[
+P(x|c)\propto P(c|x')P(x)
+\]
+To model the MLN formula we just have to ensure that \(P(c|x')\) is 
+proportional to \(e^{\alpha}\) when \(x'\) makes \(C\) true and to 1 when 
+\(x'\) makes \(C\) false. We cannot use \(e^\alpha\) directly in the CPT for 
+\(C\) because it can be larger than 1 but we can use the values
+\(e^\alpha/(1+e^\alpha)\) and \(1/(1+e^\alpha)\) that are proportional to 
+\(e^\alpha\) and \(1\) and are surely less than 1.
+</p>
+<p>
+For an MLN containing the example formula above, 
+the probability of a world would be represented by 
+\(P(i,g|c)\) where \(i\) and \(g\) are values for
+<code>Intelligent(anna)</code> and <code>GoodMarks(anna)</code> and \(c\) is 
+<code>Clause(anna)</code>\(=true\).
+The CPT will have the values \(e^{1.5}/(1+e^{1.5})\) for <code>Clause(anna)</code> being
+true given that the parents' values make the clause true and \(1/(1+e^{1.5})\) is the
+probability of  <code>Clause(anna)</code> being
+true given that the parents' values make the clause false.
+</p>
+<p>
+In order to model MLN formulas with LPADs, we can add an extra atom \(clause_i(X)\) for each formula \(F_i=\alpha_i \ C_i\) where \(X\) is the vector of variables appearing in \(C_i\). Then, when we query for the probability of query 
+\(q\) given evidence \(e\), we have to ask for the probability of \(q\) given 
+\(e\wedge ce\) where \(ce\) is the conjunction of the groundings of 
+\(clause_i(X)\) for all values of \(i\).
+</p>
+<p>
+Then, clause \(C_i\) should be transformed into a Disjunctive Normal Form 
+formula \(C_{i1}\vee\ldots\vee C_{in_i}\) where the disjuncts are mutually exclusive and the LPAD should contain the clauses
+\[
+clause_i(X):e^\alpha/(1+e^\alpha)\leftarrow C_{ij}
+\]
+for all  \(j\).
+Similalry, \(\neg C_i\) should be transformed into a disjoint sum 
+\(D_{i1}\vee\ldots\vee D_{im_i}\) and the LPAD should contain the clauses
+\[
+clause_i(X):1/(1+e^\alpha)\leftarrow D_{il}
+\]
+for all \(l\).
+</p>
+Alternatively, if \(\alpha\) is negative, \(e^\alpha\) will be smaller than \(1\)
+and we can use the two probability values \(e^\alpha\) and \(1\) with the clauses
+\[
+\begin{array}{l}
+clause_i(X):e^\alpha\leftarrow C_{ij}\\
+\ldots\\
+clause_i(X)\leftarrow D_{il}
+\end{array}
+\]
+This solution has the advantage that some clauses are certain, reducing the
+number of random variables.
+If \(\alpha\) is positive in formula \(\alpha \ C\), we can consider 
+\(-\alpha \ \neg C\).
+<p></p>
+<p>MLN formulas can also be added to a regular probabilistic
+logic program, their effect is equivalent to a 
+soft form of evidence, where certain worlds are weighted more than others.
+This is the same as soft evidence in Figaro.
+MLN hard constraints, i.e., formulas with an infinite weight, can instead be 
+used to rule out completely certain worlds, those violating the constraint. 
+For example, given hard constraint \(C.\) with disjoint sum 
+\(C_{i1}\vee\ldots\vee C_{in_i}\), the LPAD should contain the clauses
+\[
+clause_i(X)\leftarrow C_{ij}
+\]
+for all \(j\), and the evidence should contain \(clause_i(x)\) for all
+groundings \(x\) of \(X\). In this way, the worlds that violate \(C\) are
+ruled out.
+</p>
+<p>
+Let see an example where we translate to LPADs the MLN
+</p><pre><code>1.5  Intelligent(x) =&gt; GoodMarks(x) 
+1.1 Friends(x, y) =&gt; (Intelligent(x) &lt;=&gt; Intelligent(y)) 
+</code></pre>
+<p></p>
+</div>
+
+<div class="nb-cell markdown">
+## Code
+
+Preamble:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(pita)).
+
+:- pita.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell html">
+The MLN formula
+<pre><code>1.5  Intelligent(x) =&gt; GoodMarks(x) 
+</code></pre>
+is translated into the clauses
+</div>
+
+<div class="nb-cell program" data-background="true">
+clause1(X): 0.8175744762:- \+intelligent(X).
+clause1(X): 0.1824255238:- intelligent(X), \+good_marks(X).
+clause1(X): 0.8175744762:- intelligent(X), good_marks(X).
+</div>
+
+<div class="nb-cell html">
+where \(0.8175744762=e^{1.5}/(1+e^{-1.5})\) and \(0.1824255238=1/(1+e^{-1.5})\).
+<p>
+The MLN formula
+</p><pre><code>1.1 Friends(x, y) =&gt; (Intelligent(x) &lt;=&gt; Intelligent(y)) 
+</code></pre>
+is translated into the clauses
+<p></p>
+</div>
+
+<div class="nb-cell program" data-background="true">
+clause2(X,Y): 0.7502601056:- \+friends(X,Y).
+clause2(X,Y): 0.7502601056:- friends(X,Y), intelligent(X),intelligent(Y).
+clause2(X,Y): 0.7502601056:- friends(X,Y), \+intelligent(X),\+intelligent(Y).
+clause2(X,Y): 0.2497398944:- friends(X,Y), intelligent(X),\+intelligent(Y).
+clause2(X,Y): 0.2497398944:- friends(X,Y), \+intelligent(X),intelligent(Y).
+</div>
+
+<div class="nb-cell html">
+<p>
+where \(0.7502601056=e^{1.1}/(1+e^{1.1})\) and \(0.2497398944=1/(1+e^{1.1})\).
+</p>
+<p>
+A priori we have a uniform distribution over student intelligence, good marks 
+and friendship:
+</p>
+</div>
+
+<div class="nb-cell program" data-background="true">
+intelligent(_):0.5.
+
+good_marks(_):0.5.
+
+friends(_,_):0.5.
+</div>
+
+<div class="nb-cell markdown">
+and there are two students:
+</div>
+
+<div class="nb-cell program" data-background="true">
+student(anna).
+student(bob).
+</div>
+
+<div class="nb-cell markdown">
+The evidence must include the truth of all groundings of the =clauseN= 
+predicates:
+</div>
+
+<div class="nb-cell program" data-background="true">
+evidence_mln:- clause1(anna),clause1(bob),clause2(anna,anna),
+    clause2(anna,bob),clause2(bob,anna),clause2(bob,bob).
+</div>
+
+<div class="nb-cell markdown">
+We want to query the probability that Anna gets good marks given that
+she is fried with Bob and Bob is intelligent:
+</div>
+
+<div class="nb-cell program" data-background="true">
+ev_intelligent_bob_friends_anna_bob:-
+    intelligent(bob),friends(anna,bob),evidence_mln.
+</div>
+
+<div class="nb-cell query">
+prob(good_marks(anna),ev_intelligent_bob_friends_anna_bob,P).
+</div>
+
+<div class="nb-cell markdown">
+The probability is higher than the prior probability of Anna getting
+good marks:
+</div>
+
+<div class="nb-cell query">
+prob(good_marks(anna),evidence_mln,P).
+</div>
+
+<div class="nb-cell html">
+In the alternative transformation, the MLN formula
+<pre><code>1.5  Intelligent(x) =&gt; GoodMarks(x) 
+</code></pre>
+is translated into the clauses
+</div>
+
+<div class="nb-cell program" data-background="true">
+clause1p(X):- \+intelligent(X).
+clause1p(X): 0.22313016014:- intelligent(X), \+good_marks(X).
+clause1p(X):- intelligent(X), good_marks(X).
+</div>
+
+<div class="nb-cell html">
+where \(0.22313016014=e^{-1.5}\).
+
+The new evidence is:
+</div>
+
+<div class="nb-cell program" data-background="true">
+evidence_mln_p:- clause1p(anna),clause1p(bob),clause2(anna,anna),
+    clause2(anna,bob),clause2(bob,anna),clause2(bob,bob).
+ev_intelligent_bob_friends_anna_bob_p:-
+    intelligent(bob),friends(anna,bob),evidence_mln_p.
+</div>
+
+<div class="nb-cell markdown">
+The probability that Anna gets good marks given that
+she is fried with Bob and Bob is intelligent is computed by:
+</div>
+
+<div class="nb-cell query">
+prob(good_marks(anna),ev_intelligent_bob_friends_anna_bob_p,P).
+</div>
+
+<div class="nb-cell markdown">
+The probability is again higher than the prior probability of Anna getting
+good marks:
+</div>
+
+<div class="nb-cell query">
+prob(good_marks(anna),evidence_mln_p,P).
+</div>
+
+<div class="nb-cell markdown">
+## Epilogue:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- end_lpad.
+</div>
+
+</div>
+

@@ -1,0 +1,38 @@
+(note TQD59)
+
+(subrelation subProcess temporallySubsumes) 
+
+(thereExists ?X
+  (and
+    (subProcess Iran-IraqWar ?X) 
+    (agent ?X Iran) 
+    (temporallySubsumes Iran-IraqWar ?X) 
+    (agent ?X Iran) 
+    (instance ?X AttackOnTangible)
+    (thereExists ?Y
+      (and
+	(stuffUsed ?X ?Y) 
+        (instrument-Generic ?X ?Y)
+	(instance ?Y WeaponOfMassDestruction)))))
+	 
+	
+ 
+(subrelation agent agent) 
+(subrelation stuffUsed instrument-Generic) 
+(instance Iran-IraqWar WagingWar) 
+
+(query (findall ?WAR
+(thereExists ?ACT 
+   (thereExists ?FORCE 
+       (and 
+           (agent ?ACT Iran) 
+           (instance ?ACT AttackOnTangible) 
+           (instance ?FORCE WeaponOfMassDestruction) 
+           (instrument-Generic ?ACT ?FORCE) 
+           (instance ?WAR WagingWar) 
+           (temporallySubsumes ?WAR ?ACT))))))
+
+(answer Iran-IraqWar)
+
+(end_of_file)
+

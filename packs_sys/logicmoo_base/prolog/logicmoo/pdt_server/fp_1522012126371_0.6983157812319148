@@ -1,0 +1,30 @@
+Location: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+
+Location: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20
+Message: '/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+

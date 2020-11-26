@@ -1,0 +1,5 @@
+// Type hierarchy
+Entity > Male, Female, Adult.
+Adult > Man, Woman.
+Male > Man.
+Female > Woman.

@@ -1,0 +1,119 @@
+(note TQC65)
+(eventOccursAt 
+ (SKF-48187691) UnitedStatesOfAmerica) 
+
+(instance Rajneeshee TerroristAgent) 
+
+(agent 
+ (SKF-48187691) Rajneeshee) 
+
+(startsAfterEndingOf 
+ (SKF-48187691) 
+ (YearFn 1970)) 
+
+(instance 
+ (SKF-48187691) AttackOnTangible) 
+
+(instrument-Generic 
+ (SKF-48187691) 
+ (SKF-9169603)) 
+
+(instance 
+ (SKF-9169603) BiologicalWeapon) 
+
+
+
+
+(implies 
+ (and 
+ (eventOccursAt ?ACT ?SUB) 
+ (contains ?REG ?SUB)) 
+ (eventOccursAt ?ACT ?REG)) 
+
+(eventOccursAt 
+ (SKF-48187691) Oregon-State) 
+
+(contains UnitedStatesOfAmerica Oregon-State) 
+
+
+
+
+(implies 
+ (and 
+ (startsDuring ?EVT ?EVT1) 
+ (startsAfterEndingOf ?EVT1 ?EVT2)) 
+ (startsAfterEndingOf ?EVT ?EVT2)) 
+
+(startsDuring 
+ (SKF-48187691) 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1994)))) 
+
+(startsAfterEndingOf 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1994))) 
+ (YearFn 1970)) 
+
+
+
+
+(temporalBoundsContain 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1994))) 
+ (SKF-48187691)) 
+
+(inverse temporalBoundsContain startsDuring) 
+
+
+
+
+(implies 
+ (and 
+ (instance 
+ (TimeIntervalInclusiveFn ?DATE1 ?DATE2) TimeInterval) 
+ (laterThan ?DATE1 ?DATE)) 
+ (startsAfterEndingOf 
+ (TimeIntervalInclusiveFn ?DATE1 ?DATE2) ?DATE)) 
+
+(instance 
+ (TimeIntervalInclusiveFn 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (MonthFn September 
+ (YearFn 1994))) TimeInterval) 
+
+(laterThan 
+ (MonthFn August 
+ (YearFn 1984)) 
+ (YearFn 1970)) 
+
+
+
+
+(query (findall ?AGT
+
+ (thereExists ?ACT 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?AGT TerroristAgent) 
+ (agent ?ACT ?AGT) 
+ (instance ?ACT AttackOnTangible) 
+ (instance ?FORCE BiologicalWeapon) 
+ (instrument-Generic ?ACT ?FORCE) 
+ (eventOccursAt ?ACT UnitedStatesOfAmerica) 
+ (startsAfterEndingOf ?ACT 
+ (YearFn 1970)))))))
+
+(answer Rajneeshee)  
+
+(end_of_file)
+

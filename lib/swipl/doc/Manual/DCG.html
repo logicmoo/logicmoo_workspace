@@ -1,0 +1,395 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.13</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="signal.html">
+<link rel="next" href="db.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="signal.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="db.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:DCG"><a id="sec:4.13"><span class="sec-nr">4.13</span> <span class="sec-title">DCG 
+Grammar rules</span></a></h2>
+
+<a id="sec:DCG"></a>
+
+<p><a id="idx:DCG:881"></a><a id="idx:serialize:882"></a><a id="idx:deserialize:883"></a>Grammar 
+rules form a comfortable interface to <em>difference lists</em>. They 
+are designed both to support writing parsers that build a parse tree 
+from a list of characters or tokens and for generating a flat list from 
+a term.
+
+<p>Grammar rules look like ordinary clauses using <code><code>--&gt;</code>/2</code> 
+for separating the head and body rather than <code><code>:-</code>/2</code>. 
+Expanding grammar rules is done by <a id="idx:expandterm2:884"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>, 
+which adds two additional arguments to each term for representing the 
+difference list.
+
+<p>The body of a grammar rule can contain three types of terms. A 
+callable term is interpreted as a reference to a grammar rule. Code 
+between
+<code>{</code>...<code>}</code> is interpreted as plain Prolog code, and 
+finally, a list is interpreted as a sequence of <em>literals</em>. The 
+Prolog control-constructs (<code><code>\+</code>/1</code>, <code><code>-&gt;</code>/2</code>, <code><code>;</code>//</code>2,
+<code><code>,</code>/2</code> and <code><code>!</code>/0</code>) can be 
+used in grammar rules.
+
+<p>We illustrate the behaviour by defining a rule set for parsing an 
+integer.
+
+<pre class="code">
+integer(I) --&gt;
+        digit(D0),
+        digits(D),
+        { number_codes(I, [D0|D])
+        }.
+
+digits([D|T]) --&gt;
+        digit(D), !,
+        digits(T).
+digits([]) --&gt;
+        [].
+
+digit(D) --&gt;
+        [D],
+        { code_type(D, digit)
+        }.
+</pre>
+
+<p>Grammar rule sets are called using the built-in predicates <a id="idx:phrase2:885"></a><a class="pred" href="DCG.html#phrase/2">phrase/2</a> 
+and <a id="idx:phrase3:886"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>:
+
+<dl class="latex">
+<dt class="pubdef"><a id="phrase/2"><strong>phrase</strong>(<var>:DCGBody, 
+?List</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>phrase(<var>DCGBody</var>, <var>InputList</var>, [])</code>.
+</dd>
+<dt class="pubdef"><a id="phrase/3"><strong>phrase</strong>(<var>:DCGBody, 
+?List, ?Rest</var>)</a></dt>
+<dd class="defbody">
+True when <var>DCGBody</var> applies to the difference
+<var>List</var>/<var>Rest</var>. Although <var>DCGBody</var> is 
+typically a
+<em>callable</em> term that denotes a grammar rule, it can be any term 
+that is valid as the body of a DCG rule.
+
+<p>The example below calls the rule set integer//1 defined in <a class="sec" href="DCG.html#sec:4.13">section 
+4.13</a> and available from <code>library(library(dcg/basics))</code>, 
+binding <var>Rest</var> to the remainder of the input after matching the 
+integer.
+
+<pre class="code">
+?- [library(dcg/basics)].
+?- atom_codes('42 times', Codes),
+   phrase(integer(X), Codes, Rest).
+X = 42
+Rest = [32, 116, 105, 109, 101, 115]
+</pre>
+
+<p>The next example exploits a complete body. Given the following 
+definition of digit_weight//1 , we can pose the query below.
+
+<pre class="code">
+digit_weight(W) --&gt;
+        [D],
+        { code_type(D, digit(W)) }.
+</pre>
+
+<pre class="code">
+?- atom_codes('Version 3.4', Codes),
+   phrase(("Version ",
+           digit_weight(Major),".",digit_weight(Minor)),
+          Codes).
+Major = 3,
+Minor = 4.
+</pre>
+
+<p>The SWI-Prolog implementation of <a id="idx:phrase3:887"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
+verifies that the <var>List</var> and <var>Rest</var> arguments are 
+unbound, bound to the empty list or a list
+<em>cons cell</em>. Other values raise a type error.<sup class="fn">77<span class="fn-text">The 
+ISO standard allows for both raising a type error and accepting any term 
+as input and output. Note the tail of the list is not checked for 
+performance reasons.</span></sup> The predicate <a id="idx:calldcg3:888"></a><a class="pred" href="DCG.html#call_dcg/3">call_dcg/3</a> 
+is provided to use grammar rules with terms that are not lists.
+
+<p>Note that the syntax for lists of codes changed in SWI-Prolog version&nbsp;7 
+(see <a class="sec" href="string.html#sec:5.2">section 5.2</a>). If a 
+DCG body is translated, both <code>"text"</code> and <code>`text`</code> 
+is a valid code-list literal in version&nbsp;7. A version&nbsp;7 string 
+(<code>"text"</code>) is <b>not</b> acceptable for the second and third 
+arguments of <a id="idx:phrase3:889"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>. 
+This is typically not a problem for applications as the input of a DCG 
+rarely appears in the source code. For testing in the toplevel, one must 
+use double quoted text in versions prior to&nbsp;7 and back quoted text 
+in version&nbsp;7 or later.
+
+<p>See also <a id="idx:portraytext1:890"></a><span class="pred-ext">portray_text/1</span>, 
+which can be used to print lists of character codes as a string to the 
+top level and debugger to facilitate debugging DCGs that process 
+character codes. The library <code>library(apply_macros)</code> compiles <a id="idx:phrase3:891"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
+if the argument is sufficiently instantiated, eliminating the runtime 
+overhead of translating <var>DCGBody</var> and meta-calling.</dd>
+<dt class="pubdef"><a id="call_dcg/3"><strong>call_dcg</strong>(<var>:DCGBody, 
+?State0, ?State</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:phrase3:892"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>, 
+but without type checking <var>State0</var> and <var>State</var>. This 
+allows for using DCG rules for threading an arbitrary state variable. 
+This predicate was introduced after type checking was added to
+<a id="idx:phrase3:893"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.<sup class="fn">78<span class="fn-text">After 
+discussion with Samer Abdallah.</span></sup>
+
+<p>A portable solution for threading state through a DCG can be 
+implemented by wrapping the state in a list and use the DCG semicontext 
+facility. Subsequently, the following predicates may be used to access 
+and modify the state:<sup class="fn">79<span class="fn-text">This 
+solution was proposed by Markus Triska.</span></sup>
+
+<pre class="code">
+state(S), [S] --&gt; [S].
+state(S0, S), [S] --&gt; [S0].
+</pre>
+
+<p></dd>
+</dl>
+
+<p>As stated above, grammar rules are a general interface to difference 
+lists. To illustrate, we show a DCG-based implementation of
+<a id="idx:reverse2:894"></a><a class="pred" href="lists.html#reverse/2">reverse/2</a>:
+
+<pre class="code">
+reverse(List, Reversed) :-
+        phrase(reverse(List), Reversed).
+
+reverse([])    --&gt; [].
+reverse([H|T]) --&gt; reverse(T), [H].
+</pre>
+
+<p></body></html>

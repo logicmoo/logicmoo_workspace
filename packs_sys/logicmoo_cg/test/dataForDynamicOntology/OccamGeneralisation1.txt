@@ -1,0 +1,40 @@
+[Goal #0 = [Goal #4] -
+                  -Actor->[Human :Mike ?m_mike],
+                  -outcome->[Success_Goal_Outcome],
+                  -Goal->[Act ?a_atrans],
+                  -Plan->[Plan ?p2_plan]
+           ] -
+         -outcome->[State #3 = [State #5] -
+                                       -State_Value->[State_Value :Yes_State_Value],
+                                       -Object->[PhysicalObject],
+                                       -Actor->[Human :Karen ?k_karen]
+                               ]<-outcome-[Goal #1 = [Goal #6] -
+                                                           -Actor->[Human :Karen ?k_karen],
+                                                           -Plan->[Plan ?p_plan],
+                                                           -Goal->[State ?s_state],
+                                                           -outcome->[Success_Goal_Outcome]
+                                                    ] -
+                                                  -achievedBy->[Act #2 = [Human :Mike ?m_mike]<-Actor-[Act]
+                                                                         ] -
+                                                                       <-RealizedBy-[Plan = [Plan #7] -
+                                                                                                   -Actor->[Human :Mike ?m_mike],
+                                                                                                   -RealizedBy->[Act ?a_atrans]
+                                                                                            ]<-intendedBy-[Goal #0],
+                                                                       <-achievedBy-[Goal #0];
+                                                  -intendedBy->[Plan = [Plan #8] -
+                                                                              -RealizedBy->[MTrans ?m_trans],
+                                                                              -Actor->[Human :Karen ?k_karen]
+                                                                       ]-RealizedBy->[MTrans = [MTrans #9] -
+                                                                                                       -Object->[Act ?a_atrans],
+                                                                                                       -to->[Human :Mike ?m_mike]<-Father-[Human :Karen ?k_karen]<-Actor-[MTrans #9]
+                                                                                              ]-motivates->[Goal #0],
+                                                  -Actor->[Human :Karen = [Human :Karen] -
+                                                                                      -Hair->[Hair]-Color->[Color :Blond],
+                                                                                      -Eyes->[Eyes]-Color->[Color :Blue],
+                                                                                      -Age->[Age :Kid]
+                                                                          ];
+         -Actor->[Human :Mike = [Human :Mike] -
+                                           -Hair->[Hair]-Color->[Color :Brown],
+                                           -Eyes->[Eyes]-Color->[Color :Green],
+                                           -Age->[Age :Grown_Up]
+                                ]

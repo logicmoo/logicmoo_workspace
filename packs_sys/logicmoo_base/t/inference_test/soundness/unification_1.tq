@@ -1,0 +1,12 @@
+(note "Unification over Formulas Level 1")
+
+(goals Bob (marry Bob Sue) )
+
+(query (goals Bob ?H))
+
+(answer  (marry Bob Sue) )
+
+
+
+
+

@@ -1,0 +1,402 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Parsing, search and ambiguity
+
+The essence of bottom-up recognition can be captured quite elegantly
+in a simple Prolog program.  As above, we can see the problem as that
+of successively transforming the initial string into a string
+consisting of a single category (e.g. "S").  The predicate 'burecog'
+below is given a string of words and categories, implemented as a
+Prolog list, and succeeds if, using the rules of the grammar, it can
+transform it to the list [s].
+
+    burecog([s]).
+    burecog(String) :-
+       append(Front,Back,String),
+       append(RHS,Rest,Back),
+       rule(LHS,RHS),
+       append(Front,[LHS|Rest],NewString),
+       burecog(NewString).
+
+This definition makes use of the 'append' predicate and assumes that
+the grammar rules are represented in the following way:
+
+    rule(s,[np,vp]).
+    rule(np,[john]).
+    rule(vp,[v]).
+    rule(vp,[v,np]).
+    rule(v,[saw]).
+    rule(np,[mary]).
+
+How does 'burecog' work?  First of all, 'append' is used twice to find
+a way in which the input String decomposes into the Front, followed by
+the RHS, followed by the Rest.  On backtracking, the 'append' goals
+will find every possible way that this can be done.  Given such a
+decomposition, an attempt is made to match the RHS part to the right
+hand side of a rule.  If this succeeds, a new list is constructed by
+putting together the items in the string that appear before the
+matched portion, the LHS of the rule and the items appearing after the
+matched portion.  Then an attempt is made to further transform the
+resulting NewString.  Although this definition is a clear and concise
+description of bottom-up recognition, the way that 'append' is used to
+investigate at each stage all possible decompositions of the string
+means that it is hopelessly inefficient.
+
+In the Prolog programs which result from the standard translation,                     
+DCGs implement top-down, left-to-right recognizers or parsers.  This
+can be readily inferred from observing the execution of a DCG parser.
+When the standard translation of a particular DCG rule is tried, for
+instance:
+
+    s([s,NP,VP],S1,S3) :- np(NP,S1,S2), vp(VP,S2,S3).
+
+a hypothesis has been made about how a particular type of phrase ("s")
+might be found in terms of smaller phrases (of category "np" and
+"vp").  Thus the goal to recognize (or parse) a sentence decomposes
+into goals to recognize an NP and a VP.  These themselves decompose
+into goals to find smaller phrases, and the process continues until
+the word level is reached.  This is pure top-down behaviour, as no
+account is taken of the input string until a hypothesis actually
+predicts that a word of a particular kind might appear there.  The
+fact that the recognition proceeds left-to-right is a simple
+consequence of the Prolog execution strategy.  Since Prolog attempts
+the goals in the body of a clause in the order they are written, in
+this case it will only start looking for a VP after it has found an
+initial NP.  Similarly, for any rule that has multiple elements on the
+RHS the corresponding Prolog program will look for them in the order
+written.  The result it a pure left-to-right strategy.
+
+If you want to do recognition or parsing in a Prolog environment, then                     
+the most straightforward way of going about it is simply to use the
+ready-made DCG interpreter provided with most Prolog systems and
+discussed in the previous chapter.  But, if such an interpreter is not
+available, then it is still trivial to implement left-to-right, top-
+down, depth-first recognition or parsing, requiring barely half-a-
+dozen lines of code in addition to the grammar.  Here, for example, is
+a recognizer - as usual, we exploit difference lists:
+
+    recognize(Category,S1,S2) :-
+        rule(Category,Daughters),
+        matches(Daughters,S1,S2).
+
+A string can be recognized as an instance of Category, if there is a
+rule which allows Category to dominate Daughters and if the Daughters
+match the string.
+
+    matches([],S,S).
+    matches([Word],[Word|S],S).
+    matches([Category|Categories],S1,S3) :-
+        recognize(Category,S1,S2),
+        matches(Categories,S2,S3).
+
+A list of categories matches a string (i) if both are empty, or (ii)
+both consist just of a Word, or (iii) if an initial portion of the
+string can be recognized as the first category in the list, and the
+remainder of the category list matches the remainder of the string.
+This recognizer expects rules in the following format:
+
+    rule(s,[np,vp]).
+    rule(vp,[iv]).
+    rule(vp,[tv,np]).
+    rule(np,['MediCenter']).
+    rule(np,[nurses]).
+    rule(iv,[died]).
+    rule(tv,[employed]).
+
+Since DCGs (under the standard translation) give rise to top-down,
+left-to-right parsers, both DCG parsers and this recognizer will
+suffer from the problem of left recursion.  That is, one can no more
+expect to write the DCG rule:
+
+    np --> np, pp.
+
+than one can expect to be able to write the clause:
+
+    human(X) :- human(X), animate(X).
+
+say.  In practice, it is not usually a problem to rewrite a DCG
+grammar to avoid left recursion.  Moreover, since the structures built
+by a DCG are not required to correspond exactly to the trace of the
+parser, in practice one can also arrange to have the same structures
+produced by the rewritten grammar as might have been produced by an                     
+original, left recursive, grammar.  For example:
+
+    np(np(Det,N)) --> det(Det), n(N).
+    np(np(NP,PP)) --> np(NP), pp(PP).
+
+can be rewritten as this:
+
+    np(np(Det,N)) --> det(Det), n(N).
+    np(PPs) --> det(Det), n(N), pps(np(Det,N),PPs).
+    pps(NP,np(NP,PP)) --> pp(PP).
+    pps(NP,PPs) --> pp(PP), pps(np(NP,PP),PPs).
+
+Although the standard translation of DCGs into Prolog programs gives
+rise to top-down parsers, this is by no means the only possible
+translation available.  We will now show how CF-PSG rules can be
+mapped into rather more complex clauses in a way that converts the
+CF-PSG into a bottom up parser, although, for simplicity, we will
+start out by considering just recognition.  Let us assume that our
+lexicon is encoded as follows:
+
+    word(np,'MediCenter').
+    word(np,nurses).
+    word(tv,employed).
+    word(iv,died).
+
+As before, the translation will associate a distinct predicate with
+each category, although the interpretation of this predicate will be
+different to that implicit in the standard translation.  The
+translation will also make use of a special predicate 'goal', which
+also serves as a kind of top-level predicate:
+
+    goal(Goal,[Word0|Words1],WordsN) :-
+        word(Category,Word0),
+        Term =.. [Category,Goal,Words1,WordsN],
+        call(Term).
+
+The first argument here is the category you are looking for, the
+second and third arguments are used for the standard difference list
+representation of the string to be recognized.  Thus we might call
+'goal' like this:
+
+    ?- goal(s,[nurses,died],[]).
+
+If we do, then 'word(np,nurses)' will succeed and Term will get bound
+to 'np(s,[died],[])' which is then called.  When we call the predicate
+'goal', Prolog attempts bottom-up analysis of the relevant part of the
+string and will succeed if there is a way of recognizing a phrase of
+type Goal.  Bottom-up analysis consists of looking at the next word
+(seeing what category it could have) and then attempting to complete
+an analysis of the required Goal using this material.  The crucial
+thing to note here is that the 'np' predicate gets called after an NP
+has been recognized.  Thus the 'np' predicate is not a predicate for                     
+recognizing NPs, but rather a predicate for recognizing the material
+that follows an NP.  So the interpretation of 'np' is as follows:
+
+    % np(Goal,S1,S2) -
+    %  The words in S1-S2 are a possible way of
+    %  extending an NP to a phrase of type Goal
+    %  (completing a phrase of type Goal, after an initial NP)
+
+Given a two daughter rule like this:
+
+    c0 -> c1 c2
+
+we will translate it into this:
+
+    c1(Goal,Words0,WordsN) :-
+        goal(c2,Words0,Words1),
+        c0(Goal,Words1,WordsN).
+
+So our rule for expanding S,
+
+    s -> np vp
+
+should be translated into this:
+
+    np(Goal,Words0,WordsN) :-
+        goal(vp,Words0,Words1),
+        s(Goal,Words1,WordsN).
+
+In words, if we are looking for a phrase of type Goal and have found
+an NP, we can complete the analysis by finding a VP and after that
+completing the analysis of a phrase of type Goal, working from the
+newly-found S.  Another way of saying this is 'we can extend an NP to
+a given Goal by first of all finding a VP and then extending the
+resulting S to make the Goal'.  Pursuing our example,
+'np(s,[died],[])' will succeed if 'goal(vp,[died],[])' and
+'s(s,[],[])' succeeds.  We make provision for the latter by providing
+a set of termination clauses, one for each syntactic category in our
+grammar, for our recognizer, as follows:
+
+    s(s,Words,Words).
+    np(np,Words,Words).
+    vp(vp,Words,Words).
+    iv(iv,Words,Words).
+    tv(tv,Words,Words).
+
+These clauses have the obvious interpretation - for instance, if you
+are looking for an S and have found an S, then one possibility is
+simply to succeed, without consuming any further words.  So that just
+leaves 'goal(vp,[died],[])' to consider: when we call 'goal' with
+those arguments, 'word(iv,died)' will succeed and Term will get bound
+to 'iv(vp,[],[])' which is then called.  This is not going to succeed
+in virtue of any of the termination clauses listed above, so clearly a
+clause that exists in virtue of the grammar translation is what is                     
+required.
+
+Given a single daughter rule like this:
+
+    c0 -> c1
+
+we will translate it into this:
+
+    c1(Goal,Words0,WordsN) :-
+        c0(Goal,Words0,WordsN).
+
+So a rule for expanding VP as just an intransitive verb,
+
+    vp -> iv
+
+should be translated into this:
+
+    iv(Goal,Words0,WordsN) :-
+        vp(Goal,Words1,WordsN).
+
+In words, if you want to complete a phrase of type Goal and have found
+an IV, then you can use any way of completing such a phrase assuming
+that you have found a VP.  Given this, 'iv(vp,[],[])' will plainly
+succeed if 'vp(vp,[],[])' succeeds, and the latter will succeed thanks
+to the presence of the relevant termination clause.  So our original
+goal, of recognizing nurses died as an instance of S, succeeds, as we
+would want it to.
+
+In some ways, the name of the predicate goal is slightly misleading in
+a recognizer of this kind, because it suggests that the program is
+actively seeking a particular kind of phrase, a very top-down idea.
+In fact, though, if you look at how goal is defined you will see that
+the first argument is not used at all to influence how bottom-up
+recognition proceeds from the first word.  Instead, the Goal argument
+simply serves to ensure that any bottom-up analyses with the right
+category are recognized as as possible solutions to the original
+problem.
+
+Having considered the recognition case in some detail, we will now
+show how to provide a parser by an analogous translation.  The top-
+level predicate of our parser is still 'goal', only now defined as
+follows:
+
+    goal(Goal,Parse2,[Word0|Words1],WordsN) :-
+        word(Category,Word0),
+        Parse1 =.. [Category,Word0],
+        Term =.. [Category,Goal,Parse1,Parse2,Words1,WordsN],
+        call(Term).
+
+The second argument here is the parse tree that gets returned.  Thus
+we might call 'goal' like this:
+
+    ?- goal(s,Parse2,['MediCenter',employed,nurses],[]).
+
+If we do, then 'word(np, 'MediCenter')' will succeed, Parse1 will get
+bound to 'np('MediCenter')' and Term will get bound to 'np(s,
+np('MediCenter'), Parse2, [employed, nurses], [])' which is then
+called.  We can now interpret a predicate like 'np' as follows:
+
+    % np(Goal,Parse1,Parse2,S1,S2) -
+    %  The words in S1-S2 are a possible way of
+    %  extending an NP with parse tree Parse1 to a
+    %  phrase of type Goal.
+    %  The parse tree of the Goal phrase is Parse2.
+
+Given a single daughter rule like this:
+
+    c0 -> c1
+
+we will translate it into this:
+
+    c1(Goal,Parse1,Parse,Words0,WordsN) :-
+        c0(Goal,c0(Parse1),Parse,Words0,WordsN).
+
+And given a two daughter rule like this:
+
+    c0 -> c1 c2
+
+we will translate it into this:
+
+    c1(Goal,Parse1,Parse,Words0,WordsN) :-
+        goal(c2,Parse2,Words0,Words1),
+        c0(Goal,c0(Parse1,Parse2),Parse,Words1,WordsN).
+
+Termination rules will now look like this:
+
+    c0(c0,Parse,Parse,String,String).
+    c1(c1,Parse,Parse,String,String).
+    c2(c2,Parse,Parse,String,String).
+
+As pure bottom-up parsers, programs of this kind suffer from various
+kinds of inefficiencies.  Consider what would happen if we had
+multiple lexical entries for the same word:
+
+    word(iv,strikes).
+    word(np,strikes).
+
+If we are trying to recognize a sentence starting with this word, we
+will first look for its category and then try and extend a phrase of
+this category to a phrase of type S.  The first possible category is
+IV, and so we will try to extend this analysis.  A rule like:
+
+    vp -> iv
+
+tells us that we can extend an analysed IV into an analysed phrase of
+some category if we can find a way of extending a VP to a phrase of
+the given category.  So we will look for ways of extending a VP into
+an S.  If there are rules with VP as the first category on the RHS,
+this will involve looking for further phrases that can combine with a
+VP.  All this activity is, however, wasted if in fact a TV can never
+appear as the first word in a sentence.  The trouble is that the
+bottom-up parsers only consider the goal category when they return a
+complete solution of some kind - the goal information is not used to
+actively guide what alternatives are considered beforehand.  We can
+improve the efficiency of this kind of left-to-right, depth-first,
+bottom-up parser by precompiling a 'link' relation: a category c1 is
+linked to a category c2 if and only if c1 can appear as an initial
+constituent in c2.  The relation is reflexive, so we have:
+
+    link(Category,Category).
+
+and, for the little grammar assumed in the discussion above, we also
+have:
+
+    link(np,s).
+    link(iv,vp).
+    link(tv,vp).
+
+The relationship is transitive, so if our grammar had included a "np
+-> det n" rule, then we would have had both the following:
+
+    link(det,np).
+    link(det,s).
+
+Given such 'link' statements, we can now modify our parser to exploit
+them:
+
+    goal(Goal,Parse2,[Word0|Words1],WordsN) :-
+        word(Category,Word0),
+        link(Category,Goal),
+        Parse1 =.. [Category,Word0],
+        Term =.. [Category,Goal,Parse1,Parse2,Words1,WordsN],
+        call(Term).
+
+This now expresses the rather obvious fact that there is no point in
+exploring a parse based on a particular category assignment to the
+first word in the string if that category cannot appear as a first
+constituent in the category of the string assumed by the Goal.
+Likwise, we shall want to insert a 'link' check at the start of each
+of our rule translations:
+
+    np(Goal,NP,Parse,Words0,WordsN)  :-
+        link(s,Goal),
+        goal(vp,VP,Words0,Words1),
+        s(Goal,s(NP,VP),Parse,Words1,WordsN).
+
+There is no point seeking to complete a sentence in this position if
+sentences cannot appear in this position.  Analogously with the
+single-daughter rules:
+
+    iv(Goal,IV,Parse,Words0,WordsN)  :-
+        link(vp,Goal),
+        vp(Goal,vp(IV),Parse,Words0,WordsN).
+
+All our Prolog recognisers and parsers, of course, use depth-first
+search, as they rely on the depth-first backtracking facility of
+Prolog to do their searching.  For this reason, it is obviously much
+easier in Prolog to write depth-first search programs than other
+kinds.  The use of breadth-first search requires programs that
+explicitly manipulate lists of alternative states, rather than leave
+the enumeration and remembering of states to the Prolog execution
+mechanism.

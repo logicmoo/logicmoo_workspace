@@ -1,0 +1,84 @@
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 1
+
+Rules in generated Nuance grammar: 2892
+
+Time for Regulus -> Nuance compilation: 18.13 secs
+
+Initial nodes: 2174
+
+After optimization: 2930
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 2
+
+Rules in generated Nuance grammar: 3432
+
+Time for Regulus -> Nuance compilation: 30.65 secs
+
+Initial nodes: 2835
+
+After optimization: 3418
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 5
+
+Rules in generated Nuance grammar: 4593
+
+Time for Regulus -> Nuance compilation: 53.10 secs
+
+Initial nodes: 6433
+
+After optimization: 5265
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 10
+
+Rules in generated Nuance grammar: 4640
+
+Time for Regulus -> Nuance compilation: 58.49 secs
+
+Initial nodes: 6547
+
+After optimization: 5102
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 25
+
+Rules in generated Nuance grammar: 5153
+
+Time for Regulus -> Nuance compilation: 69.52 secs
+
+Initial nodes: 7626
+
+After optimization: 5415
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 50
+
+Rules in generated Nuance grammar: 5692
+
+Time for Regulus -> Nuance compilation: 82.01 secs
+
+Initial nodes: 7509
+
+After optimization: 5824
+
+------------------------------------------------------------------------------------------
+
+RULE CONTEXT ANTI-UNIFICATION THRESHOLD: 100
+
+Rules in generated Nuance grammar: 7201
+
+Time for Regulus -> Nuance compilation: 95.72 secs
+
+Initial nodes: 10054
+
+After optimization: 5875
+
+------------------------------------------------------------------------------------------

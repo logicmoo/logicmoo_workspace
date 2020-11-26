@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>AceRules Technical Interface</title>
+<meta name="Author" content="Tobias Kuhn"/>
+<link rel="stylesheet" type="text/css" href="acerules.css"/>
+<script type="text/javascript" src="acerules.js"></script>
+</head>
+
+<body>
+
+<div id="busyLight" class="hidden">Processing...</div>
+
+<h3>AceRules Technical Interface</h3>
+
+<table class="controls">
+
+<tr><td>
+<label>Input:</label>
+</td></tr>
+
+<tr><td>
+<textarea
+	id="input"
+	name="input"
+	rows="15"
+	cols="80">
+Every quaker is a pacifist.
+Nixon is a quaker.
+Nixon is a republican.
+</textarea>
+</td></tr>
+
+<tr><td>
+<button
+	id="process"
+	type="process"
+	onclick="process()">
+Process
+</button>
+</td></tr>
+
+</table>
+
+<p/>
+
+<table id="menu" class="menu">
+<tr><td>Mode:</td><td>
+<input id="courtMode" type="radio" name="mode" value="court" checked="yes"/>Courteous
+<input id="stableMode" type="radio" name="mode" value="stable"/>Stable
+<input id="stableStrongMode" type="radio" name="mode" value="stable_strong"/>Stable with strong negation
+</td></tr>
+<tr><td>Unknown word guessing:</td><td>
+<input id="guessOn" type="radio" name="guess" value="on"/>On
+<input id="guessOff" type="radio" name="guess" value="off" checked="yes"/>Off
+</td></tr>
+<tr><td>Maximal number of answers:</td><td>
+<input id="maxanswers1" type="radio" name="maxanswers" value="1"/>1
+<input id="maxanswers5" type="radio" name="maxanswers" value="5"/>5
+<input id="maxanswers10" type="radio" name="maxanswers" value="10" checked="yes"/>10
+<input id="maxanswers20" type="radio" name="maxanswers" value="20"/>20
+</td></tr>
+<tr><td>Lexicon URL:</td><td>
+<input id="lexicon" type="text" name="lexicon" size="60" value=""/>
+</td></tr>
+<tr><td>Show input/outputs:</td><td>
+<input id="showInput" type="checkbox" checked="checked"/>Input
+<input id="showRules" type="checkbox"/>Rules
+<input id="showSimpleRules" type="checkbox"/>Simple Rules
+<input id="showAnswerset" type="checkbox"/>Answerset(s)
+<input id="showAnswertext" type="checkbox" checked="checked"/>Answertext(s)
+</td></tr>
+<tr><td>Trace (courteous only):</td><td>
+<input id="showTrace" type="checkbox"/>Trace
+<input id="showAceTrace" type="checkbox"/>ACE-Trace
+</td></tr>
+<tr><td>SOAP messages:</td><td>
+<input id="showSoapRequest" type="checkbox"/>SOAP Request
+<input id="showSoapReply" type="checkbox"/>SOAP Reply
+</td></tr>
+</table>
+
+<div id="results"> </div>
+
+</body>
+</html>

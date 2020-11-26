@@ -1,0 +1,1667 @@
+\documentstyle[fleqn,11pt]{article}
+%\documentstyle[fleqn,11pt,citestyle]{article}
+
+%\input{epsf.sty}
+
+\pagestyle{empty}
+\pagenumbering{arabic}
+
+\setlength{\topmargin}{-0.4in}
+\setlength{\textheight}{8.5in}
+\setlength{\oddsidemargin}{0.2in}
+\setlength{\textwidth}{6in}
+
+
+\newcommand{\eg}{{\it e.g.}}
+\newcommand{\ie}{{\it i.e.}}
+
+\newcommand{\ucpop}{\mbox{\sc ucpop}}
+\newcommand{\lang}{\mbox{\sc PDDL}}
+\newcommand{\prodigy}{\mbox{\sc prodigy}}
+\newcommand{\zeno}{\mbox{\sc zeno}}
+\newcommand{\clpr}{\mbox{CLP({$\cal{R}$})}}
+\newcommand{\HOLDS}{\mbox{\tt holds-at}}
+\newcommand{\VALUE}{\mbox{\tt value-at}}
+
+
+
+\newcommand{\?}{\mbox{?}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ddt}{\mbox{$\frac{d}{dt}\,$}}  %* no strut
+\newcommand{\PS}{\mbox{$\prec\!\! S, O, B\!\! \succ$}} % plan state
+\newcommand{\SPP}{\mbox{$\prec\!\! {\cal O}, \Sigma, \Omega \!\!\succ$}}
+\newcommand{\comment}[1]{}
+\newtheorem{defn}{Definition}
+\newcommand{\clink}[3]{\mbox{${#1}\!\!\stackrel{#2}{\rightarrow}\!\!{#3}$}}
+\newcommand{\hlink}[3]{\mbox{${#1}\!\!\stackrel{#2}{\rightarrow *}\!\!{#3}$}}
+\newcommand{\bug} {\mbox{\rule{4mm}{4mm}}}
+\newcommand{\Bug}[1]{\mbox{\rule{4mm}{4mm}}\footnote{{\bf BUG:} #1}}
+
+\newtheorem{them}{Proposition}
+\newtheorem{lemma}[them]{Lemma}
+\newtheorem{corol}[them]{Corollary}
+\newtheorem{conj}[them]{Conjecture}
+\newtheorem{example}{Example}
+
+\newcommand{\goal}[1]{\prec\!\!{#1}\!\!\succ}
+\newcommand{\PDB}{\mbox {\sc pdb}}
+\newcommand{\pdb}{\PDB}
+
+\setcounter{tocdepth}{2}
+
+\def\oom{$^{\tt +}$}
+\def\zom{$^*$}
+\def\bump{\hspace{1cm}}
+\def\req#1{$^{\tt #1}$}
+\newenvironment{tabtt}{\begin{tt}\begin{tabbing}}{\end{tabbing}\end{tt}}
+\def\noteme#1{}%{[[#1]]}
+\def\notecoauth#1{\ }
+\def\notereader#1{[[#1]]}
+\def\meta{$\uparrow\uparrow$}
+\def\la{\langle}
+\def\ra{\rangle}
+
+\begin{document}
+\pagenumbering{footnote}
+\pagestyle{empty}
+\thispagestyle{empty}
+\comment{\maketitle}
+
+\begin{center}
+{\bf {\LARGE \lang{} --- The Planning Domain Definition Language}} \\
+Draft 1.1
+
+\vspace{0.5in}
+\end{center}
+\begin{tabbing}
+This manual was produced by the AIPS-98 Planning Competition
+Committee: 
+\vspace{0.5cm} \\
+\hspace{3cm}\=
+    Malik Ghallab, Ecole Nationale Superieure D'ingenieur des \+\\
+\hspace{3cm}		     Constructions Aeronautiques  \\
+Adele Howe (Colorado State University) \\
+Craig Knoblock, ISI \\
+Drew McDermott (chair) (Yale University) \\
+Ashwin Ram (Georgia Tech University) \\
+Manuela Veloso (Carnegie Mellon University) \\
+Daniel Weld (University of Washington) \\
+David Wilkins (SRI) \-\\
+\vspace{2cm}
+It was based on the UCPOP language manual, written by the following \\
+researchers from the University of Washington: \\
+\vspace{0.5cm}
+\hspace{3cm}\=
+Anthony Barrett, Dave Christianson, Marc Friedman, Chung Kwok, Keith Golden, \+\\
+
+Scott Penberthy, David E Smith, Ying Sun, \&\ Daniel Weld \-\\
+\vspace{2cm}
+Contact Drew McDermott (mcdermott-drew@yale.edu) with comments on this draft.
+\end{tabbing}
+
+
+\today \\
+\vspace{.4in}
+
+
+
+
+\vspace{1in}
+{\large\bf Abstract}
+
+This manual describes the syntax of \lang, the Planning Domain Definition Language,
+the problem-specification language for the AIPS-98 planning competition.
+The language has roughly the the expressiveness of Pednault's
+ADL~\cite{pednault-kr89} for propositions, and roughly the expressiveness of
+UMCP~\cite{erol-aips-94} for actions.  Our hope is to encourage empirical
+evaluation of planner performance, and development of standard sets of problems 
+all in comparable notations.
+
+\newpage
+
+\pagestyle{plain}
+%\pagenumbering{roman}
+%\tableofcontents
+
+%\newpage
+\pagenumbering{arabic}
+
+\section{Introduction}
+\label{intro}
+    %subsection{Intro}
+
+
+This manual describes the syntax, and, less formally, the semantics,
+of the Planning Domain Definition Language (\lang). 
+The language supports the following syntactic
+features: 
+
+
+\bi
+    \item Basic STRIPS-style actions
+    \item Conditional effects
+    \item Universal quantification over dynamic universes (\ie, object
+       creation and destruction), 
+    \item Domain axioms over stratified theories,  
+    \item Specification of safety constraints. 
+    \item Specification of hierarchical actions composed of subactions and subgoals.
+    \item Management of multiple problems in multiple domains using
+    differing subsets of language features (to support sharing of domains
+    across different planners that handle varying levels of expressiveness). 
+\ei
+
+\lang{} is intended to express the ``physics'' of a domain, that is, what
+predicates there are, what
+actions are possible, what the structure of compound actions is, and what the
+effects of actions are.  Most planners require in addition some kind of
+``advice,'' that is, annotations about which actions to use in attaining which
+goals, or in carrying out which compound actions,  under which circumstances.
+We have endeavored to provide no advice at all as part of the \lang{}
+notation; that explains the almost perverse aura of neutrality
+surrounding the notation at various places. 
+As a result of this neutrality,
+almost all planners will require extending the notation, but every 
+planner will want to extend it in different ways.
+
+Even with advice left out,
+we anticipate that few planners will handle the entire \lang{}
+language.  Hence we have factored the language into subsets of
+features, called {\em requirements}.  Every domain defined using
+\lang{} should declare which requirements it assumes.  A planner that
+does not handle a given requirement can then skip over all definitions
+connected with a domain that declares that requirement, and won't even
+have to cope with its syntax.  
+
+\lang{} is descended from several forebears:
+\bi
+  \item ADL~\cite{pednault-kr89}
+  \item The SIPE-2 formalism~\cite{wilkins88}
+  \item The Prodigy-4.0 formalism~\cite{prodigy4.0-manual}
+  \item The UMCP formalism~\cite{erol-aips-94}
+  \item The Unpop formalism~\cite{mcdermott96}
+  \item and, most directly, the UCPOP formalism~\cite{ucpop-manual-4}
+\ei
+
+Our hope is to encourage sharing of problems and algorithms, as well as 
+to allow meaningful comparison of the performance of planners on different 
+problems.  A particular goal is to provide a notation for problems to be used
+in the AIPS-98 planning contest.
+
+
+
+    \section{A Simple Example}
+
+To give a flavor of the language, consider Pednault's famous example
+\cite{pednault-ci88} involving transportation of objects between home and
+work using a briefcase whose effects involve both universal quantification
+({\it all} objects are moved) and conditional effects ({\it if} they are
+inside the briefcase when it is moved).  The domain is described in terms
+of three action schemata (shown below). We encapsulate these schemata by
+defining the domain and listing its requirements.
+
+\begin{verbatim}
+(define (domain briefcase-world)
+  (:requirements :strips :equality :typing :conditional-effects)
+  (:types location physob)
+  (:constants (B - physob))
+  (:predicates (at ?x - physob ?l - location)
+               (in ?x ?y - physob))
+  ...
+\end{verbatim}
+
+A domain's set of requirements allow a planner to quickly tell if it is
+likely to be able to handle the domain. For example, this version of the
+briefcase world requires conditional effects, so a straight
+STRIPS-representation planner would not be able to handle it. A
+keyword (symbol starting with a colon)
+used in a {\tt :requirements} field is called a {\em requirement flag}; the
+domain is said to {\em declare a requirement for} that flag.  
+
+All domains include a few built-in types, such as {\tt object} (any object),
+and {\tt number}.  Most domains define further types, such as {\tt location}
+and {\tt physob} (``physical object'')
+in this domain.
+
+A constant is a symbol that will have the same meaning in all problems
+in this domain.  In this case {\tt B} --- the briefcase --- is such a constant.
+(Although we could have a type {\tt briefcase}, we don't need it, 
+because there's only one briefcase.)
+
+Inside the scope of a domain declaration, one specifies the action
+schemata for the domain. 
+
+\begin{verbatim}
+  (:action mov-b
+     :parameters (?m ?l - location)
+     :precondition (and (at B ?m) (not (= ?m ?l)))
+     :effect (and (at b ?l) (not (at B ?m))
+                  (forall (?z)
+                       (when (and (in ?z) (not (= ?z B)))
+                             (and (at ?z ?l) (not (at ?z ?m)))))) )
+\end{verbatim}
+
+This specifies that the briefcase can be moved from location {\tt ?m}
+to location {\tt ?l} where the symbols starting with question marks denote
+variables. The preconditions dictate that the briefcase must initially
+be in the starting location for the action to be legal and that it is
+illegal to try to move the briefcase to the place where it is
+initially. The effect equation says that the briefcase moves to its
+destination, is no longer where it started, and everything inside the
+briefcase is likewise moved.
+
+\begin{verbatim}
+  (:action put-in
+     :parameters (?x - physob ?l - location)
+     :precondition (not (= ?x B))
+     :effect (when (and (at ?x ?l) (at B ?l))
+                   (in ?x)) )
+\end{verbatim}
+
+This action definition specifies the effect of putting something (not the briefcase
+({\tt B}) itself!) inside the briefcase. If the action is attempted when
+the object is not at the same place ({\tt ?l}) as the briefcase, then there
+is no effect. 
+
+\begin{verbatim}
+  (:action take-out)
+     :parameters (?x - physob)
+     :precondition (not (= ?x B))
+     :effect (not (in ?x)) )
+\end{verbatim}
+      
+The final action provides a way to remove something from the briefcase.
+
+Pednault's example problem supposed that at home one had a dictionary and a
+briefcase with a paycheck inside it.  Furthermore, suppose that we wished
+to have the dictionary and briefcase at work, but wanted to keep the
+paycheck at home.  We can specify the planning problem as follows:\comment{Need
+to double-check to see if the closed world assumption is really unnecessary
+here.} 
+
+\begin{verbatim}
+(define (problem get-paid)       
+    (:domain briefcase-world)
+    (:init (place home) (place office) 
+           (object p) (object d) (object b)
+           (at B home) (at P home) (at D home) (in P))
+    (:goal (and (at B office) (at D office) (at P home))))
+\end{verbatim}
+
+One could then invoke a planner by typing something like {\tt (graph-plan
+'get-paid)}. The planner checks to see if it can handle the domain
+requirements and if so, plans. 
+
+\section{Syntactic Notation}
+
+Our notation is an Extended BNF (EBNF) with the following conventions:
+\begin{itemize}
+\item Each rule is of the form {\tt <{\it syntactic element}> ::= {\it expansion}}.
+
+\item Angle brackets delimit names of syntactic elements.
+
+\item Square brackets ({\tt [} and {\tt ]})  surround 
+optional material.  When a square bracket has a superscripted
+requirement flag, such as:
+\begin{center}
+\tt [(:types \ldots)]\req{(:typing)}
+\end{center}
+it means that the material is includable only if the domain being
+defined has declared a requirement for that flag.   See Section~\ref{requirements}.
+
+\item Similarly, the symbol {\tt ::=} may be superscripted with a requirement flag,
+indicating that the expansion is possible only if the domain has declared that
+flag.
+
+\item An asterisk ({\tt *})  means ``zero or more
+of''; a  plus ({\tt +})  means ``one or more of.''
+
+\item 
+  Some syntactic elements
+are parameterized.  E.g., {\tt <list (symbol)>} might denote a list of
+symbols, where there is an EBNF definition for {\tt <list $x$>} and
+a definition for {\tt <symbol>}.  The former might look like
+\begin{tabtt}
+\bump <list $x$> ::= ($x$*)
+\end{tabtt}
+so that a list of symbols is just {\tt (<symbol>*)}.
+
+\item Ordinary parenthesis are an essential
+part of the syntax we are defining and have no semantics in the EBNF meta
+language.
+\end{itemize}
+
+As we said in Section~\ref{intro}, \lang{} is intended to express only
+the physics of a domain, and will require extension to represent the
+search-control advice that most planners need.  
+We recommend that all such
+extensions obey the following convention: An extended \lang{} expression is
+an ordinary \lang{} expression with some subexpressions of the form
+{\tt (\meta{} $e$ $a$)}, where $e$ is an unextended \lang{} expression and $a$
+is some advice.  The ``{\tt \meta}'' notation indicates that we are ascending
+to a ``meta'' level.   The word ``expression'' here is interpreted as
+``any part of a \lang{} expression that is either a single symbol or
+an expression of the form {\tt (...)}.''
+For instance, the definition  of {\tt mov-b} given above might be
+enhanced for a particular planner thus:
+
+\begin{verbatim}
+  (:action mov-b
+     :parameters (?m ?l - location)
+     :precondition (and (^^ (at B ?m) 
+                            (goal-type: achievable))
+                        (^^ (not (= ?m ?l)) 
+                            (goal-type: filter)))
+     :effect (and (at b ?l) (not (at B ?m))
+                  (forall (?z)
+                       (when (and (in ?z) (not (= ?z B)))
+                             (and (^^ (at ?z ?l) :primary-effect)
+                                  (^^ (not (at ?z ?m)) :side-effect))))))
+\end{verbatim}
+
+\noindent to indicate that 
+\begin{enumerate}
+\item ({\tt :primary-effect} vs. {\tt :side-effect}):
+when the planner encounters a goal of the form
+{\tt (at ?z ?l)}, it may introduce a {\tt mov-b} action into a plan in order to achieve
+that goal, but a goal of the form 
+{\tt (not (at ?z ?m))}, while it may be achieved by an action of this form
+introduced for another reason, should not  cause a {\tt mov-b} action to 
+be created; 
+\item (different {\tt goal-type}s): If an action such as {\tt (mov-b
+b1 place2 place2)} arises, it should be rejected immediately, rather
+than giving rise to a subgoal {\tt (not (= place2 place2))}.
+\end{enumerate}
+
+Adopting this convention should improve the portability of plan-problem 
+collections, because a planner using \lang{} can be written to ignore all
+advice in unexpected contexts. 
+In the future, we may introduce a more complex syntax for attaching advice
+to be used by different planners, but for now the only general principle is
+that an expression of the form {\tt (\meta{} $e$ $a$)} can occur anywhere, and
+will mean exactly the same thing as $e$, as far as domain physics are concerned.
+
+Comments in \lang{} begin with a semicolon (``{\tt ;}'') and end with
+the next newline.  Any such string behaves like a single space.
+
+      \section{Domains}
+      \label{domains}
+ 
+We now describe the language more formally. The EBNF
+ for defining a domain structure is:
+
+\begin{nopagebreak}\begin{tabtt}
+\bump \= <domain> \bump\bump\=::= (def\=ine (domain <name>)\+\+\+\\
+                        {[}<extension-def>]  \\
+                        {[}<require-def>]  \\
+                        {[}<types-def>]\req{:typing} \\
+                        {[}<constants-def>] \\
+                        {[}<domain-vars-def>]\req{:expression-evaluation} \\
+                        {[}<predicates-def>] \\
+                        {[}<timeless-def>] \\
+                        {[}<safety-def>]\req{:safety-constraints} \\
+                        <structure-def>\zom) \-\-\\
+  <extension-def>\> ::= (:extends <domain name>\oom) \\
+  <require-def>  \> ::= (:requirements <require-key>\oom) \\
+  <require-key>  \> ::= {\em See Section~\ref{requirements}} \\
+  <types-def>    \> ::= (:types <typed list (name)>) \\
+  <constants-def> \>::= (:constants <typed list (name)>) \\
+  <domain-vars-def> \>::= (:dom\=ain-variables \\
+                              \>\> <typed list(domain-var-declaration)>) \\
+  <predicates-def> \> ::= (:predicates <atomic formula skeleton>\oom) \\
+  <atomic formula skeleton> \\
+                \> ::= (<predicate> <typed list (variable)>) \\
+  <predicate> \> ::= <name> \\
+  <variable> \> ::= ?<name> \\
+  <timeless-def> \> ::= (:timeless <literal (name)>\oom) \\
+  <structure-def> \>::= <action-def>\\
+  <structure-def> \>::=\req{:domain-axioms} <axiom-def> \\
+  <structure-def> \>::=\req{:action-expansions} <method-def> 
+\end{tabtt}\end{nopagebreak}
+  \noteme{<structure-def> ::= <attach-def>}
+
+Although we have indicated the arguments in a particular order, they may come
+in any order, except for the {\tt (domain \ldots)} itself.
+
+{\em Proviso:} For the convenience of some implementers, we define a
+``strict subset'' of \lang{} that imposes the following additional
+restrictions: 
+\begin{enumerate}
+\item All  keyword arguments (for {\tt (define (domain \ldots))} and
+all similar constructs) must appear in the order specified in the
+manual.  (An argument may be omitted.)
+\item Just one \lang{} definition (of a domain, problem, etc.) may
+appear per file.
+\item Addenda (see Section~\ref{addenda}) are forbidden.
+\end{enumerate}
+
+Names of domains, like other occurrences of syntactic category {\tt
+<name>}, are strings of characters beginning with a letter and
+containing letters, digits, hyphens (``-''),and underscores (``\_'').
+Case is not significant.  
+
+If the {\tt :extends} argument is present, then this domain inherits requirements,
+types, constants,
+actions, axioms, and timelessly true propositions from the named domains, which
+are called the {\em ancestors} of this domain. 
+\noteme{Say more somewhere}
+
+The {\tt :requirements} field is intended to formalize the fact that not all
+planners can handle all problems statable in the \lang{} notation.  If the
+requirement is missing (and not inherited from any ancestor domain), then it
+defaults to {\tt :strips}.  In general, a domain is taken to 
+declare every requirement that
+any ancestor declares.   A description of all possible requirements is
+found in Section~\ref{requirements}.
+
+The {\tt :types} argument uses a syntax borrowed from Nisp~\cite{mcdermott88} that
+is used elsewhere in \lang{} (but only if {\tt :typing} is handled by the
+planner.
+
+\begin{nopagebreak}\begin{tabtt}
+\bump\=  <typed list ($x$)> \=::= $x$\zom\+\\
+  <typed list ($x$)> \>::=\req{:typing} $x$\oom - <type> <typed list($x$)>\\
+  <type>\> ::= <name> \\
+  <type> \> ::= (either <type>\oom) \\
+  <type> \> ::=\req{:fluents} (fluent <type>)
+\end{tabtt}\end{nopagebreak}
+
+A typed list is used to declare the types of a list of entities; the types
+are preceded by a minus sign (``{\tt -}''), and every other element of the list
+is declared to be of the first type that follows it, or {\tt object} if there
+are no types that follow it.
+An example of a  {\tt <typed list(name)>} is 
+\begin{center}
+{\tt integer float - number physob}  
+\end{center}
+If this occurs as a 
+{\tt :types} argument to a domain, it declares three new types, {\tt integer},
+{\tt float}, and {\tt physob}.  The first two are subclasses of {\tt number},
+the last a subclass of {\tt object} (by default).  That is, every integer
+is a number, every float is a number, and every physical object is an object.
+
+An atomic type name is just a timeless unary predicate, and may be used wherever such a 
+predicate makes sense.  In addition to atomic type names, there are
+two compound types.  {\tt (either $t_1$ \ldots $t_k$)} is the union of
+types $t_1$ to $t_k$.  {\tt (fluent $t$)} is the type of an object
+whose value varies from situation to situation, and is always of type
+$t$.  (See Section~\ref{expeval}.)  
+
+The {\tt :domain-variables} declaration is used for domains that
+declare the requirement flag
+{\tt :expression-evaluation}; this requirement, and the accompanying syntactic class
+{\tt domain-var-declaration}, are described in Section~\ref{expeval}. 
+
+The {\tt :constants} field has the same syntax as the {\tt :types} field, but
+the semantics is different.  Now the names are taken as new constants in this
+domain, whose types are given as described above.  E.g., the declaration
+\begin{tabbing}
+\bump \tt (:constants \= sahara - theater \\
+                      \> division1 division2 - division)
+\end{tabbing}
+indicates that in this domain there are three distinguished constants, {\tt
+sahara} denoting a {\tt theater} and two symbols denoting {\tt division}s.
+
+The {\tt :predicates} field consists of a list of declarations of predicates,
+once again using the typed-list syntax to declare the arguments of each one.
+
+The {\tt :timeless} field consists of a list of literals that are taken to be
+true at all times in this domain.  
+The syntax {\tt <literal(name)>} will be defined in Section~\ref{gd}.  It
+goes without saying that the predicates used in the timeless propositions
+must be declared either here or in an ancestor domain.  (Built-in predicates
+such as ``{\tt =}'' behave as if they were inherited from an ancestor
+domain, although whether they actually are implemented this way
+depends on the implementation.)
+
+The remaining fields define actions and rules in the domain, and will be given
+their own sections.
+
+    \section{Actions}
+\label{actions}
+
+The EBNF  for an action definition is:
+
+\begin{nopagebreak}\begin{tabtt}
+\bump\=  <action-def> \bump \= ::= (:act\=ion <action functor>\+\+\+\\
+                        :parameters  ( <typed list (variable)> ) \\
+                        <action-def body>) \-\-\\
+   <action functor> \> ::= <name> \\
+   <action-def body> \>::= \={[}:vars (<typed list(variable)>)]\req{:existential-preconditions,:conditional-effects}  \+\+\\
+   		        {[}:precondition <GD>] \\
+                       {[}:exp\=ansion  \+\\
+                              <action spec>]\req{:action-expansions} \-\\
+                       {[}:expansion :methods]\req{:action-expansions} \\
+                       {[}:maintain <GD>]\req{:action-expansions} \\
+                       {[} :effect       <effect>]  \\
+                       {[}:only-in-expansions <boolean>]\req{:action-expansions}
+\-\-\\
+\end{tabtt}\end{nopagebreak}
+
+The {\tt :parameters} list is simply the list of variables on which the
+particular rule operates, \ie, its arguments, using the typing syntax
+described above.  The {\tt :vars} list are locally bound variables whose
+semantics are explained below.
+
+The {\tt :precondition}
+is an optional goal description (GD) that must be satisfied before
+the action is applied. As defined below (Section~\ref{gd}), 
+\lang\ goal descriptions
+are quite expressive: an arbitrary function-free first-order logical
+sentence is allowed.  If no preconditions are specified, then the
+action is always executable. {\em Effects} list the changes which
+the action imposes on the current state of the world.  Effects may
+be universally quantified and conditional, but full first order
+sentences (\eg, disjunction and Skolem functions) are not allowed.
+Thus, it is important to realize that \lang\ is asymmetric: action
+preconditions are considerably more expressive than action effects.
+
+The {\tt :effect} describes the effects of the action.  See
+Section~\ref{eff}.  
+
+If the domain declares requirement {\tt :action-expansions}, then 
+it is legitimate to include an {\tt :expansion} field for an action,
+which specifies all the ways the action may be carried out in terms of
+(presumably simpler) actions.  It is also meaningful to impose a
+constraint that a {\tt <GD>} be maintained throughout the execution of
+an action.  See Section~\ref{expansions}.
+
+An action definition must have an {\tt :effect} or an {\tt
+:expansion}, but {\em not both}.
+
+Free variables are not allowed.  All variables in an action definition
+(\ie, in its preconditions, maintenance condition, expansion, or
+effects) must be included in the {\tt :parameter } or {\tt :vars}
+list, or explicitly introduced with a quantifier.  
+
+{\tt :vars} is mainly a convenience.  Variables appearing here behave as if
+bound existentially in preconditions and universally in effects, except that it is
+an error if more than one instance satisfies the existential
+precondition.  So, 
+for example, in the following definition
+\begin{verbatim}
+   (:action spray-paint
+       :parameters (?c - color)
+       :vars (?x - location)
+       :precondition (at robot ?x)
+       :effect (forall (?y - physob)
+                  (when (at ?y ?x)
+                        (color ?y ?c))))
+\end{verbatim}
+if the robot must be in at most one place to avoid an error.
+
+All the variables occurring free in the {\tt :effect} or {\tt :action}
+field must be bound in the {\tt :precondition} field.
+
+The optional argument {\tt :only-in-expansions} is described in
+Section~\ref{expansions}.
+
+    \section{Goal  Descriptions}
+    \label{gd}
+
+A goal description is used to specify the desired goals in a planning
+problem and also the preconditions for an action.  Function-free
+first-order predicate logic (including nested quantifiers) is allowed.
+
+\begin{tabtt}
+\bump \= <GD> \hspace{3cm} \= ::= <atomic formula(term)> \+\\
+  <GD> \>::= (and <GD>\zom) \\
+  <GD> \> ::= <literal(term)> \\
+  <GD> \> ::=\req{:disjunctive-preconditions} (or  <GD>\zom) \\
+  <GD>\> ::=\req{:disjunctive-preconditions} (not <GD>) \\
+  <GD>\> ::=\req{:disjunctive-preconditions} (imply <GD> <GD>) \\
+\smallskip
+  <GD>\> ::=\=\req{:existential-preconditions}  \+\+\\
+             (exists (<typed list(variable)>\zom) <GD> )\-\-\\ 
+\smallskip
+  <GD>\> ::=\=\req{:universal-preconditions} \+\+\\
+            (forall (<typed list(variable)>\zom) <GD> ) \-\-\\  
+  <literal($t$)> \>::= <atomic formula($t$)> \\
+  <literal($t$)> \>::= (not <atomic formula($t$)>) \\
+  <atomic formula($t$)> \>::= (<predicate> $t$\zom) \\
+  <term> \> ::= <name> \\
+  <term> \> ::= <variable> 
+\end{tabtt}
+
+\noindent where, of course, an occurrence of a {\tt <predicate>} should 
+agree with its declaration in terms of number and, when applicable, types of
+arguments.  
+
+Hopefully the semantics of these expresssions is obvious.
+
+    \section{Effects}
+\label{eff}
+
+\begin{sloppypar}
+\lang\ allows both conditional and universally quantified effects.  The
+description is straightforward:
+\end{sloppypar}
+
+\begin{nopagebreak}\begin{tabtt}
+\bump \= <effect>\bump\=::= (and <effect>\zom) \+\\
+  <effect> \> ::= (not <atomic formula(term)>) \\
+  <effect> \>::= <atomic formula(term)>  \\
+  <effect> \> ::=\req{:conditional-effects} (forall (<variable>\zom) <effect>) \\
+  <effect> \>::=\req{:conditional-effects} (when <GD> <effect>) \\
+  <effect> \>::=\req{:fluents}(change <fluent> <expression>)
+\end{tabtt}\end{nopagebreak}
+
+We assume that all variables must be bound (either with a quantifier or in
+the parameters section of an action definition). 
+
+As in {\sc strips}, the truth value of predicates are assumed to persist
+forward in time.  Unlike {\sc strips}, \lang\ has no delete list ---
+instead of deleting {\tt (on a b)} one simply asserts {\tt (not (on a
+b))}. If an action's effects does not mention a predicate $P$ then the
+truth of that predicate is assumed unchanged by an instance of the
+action. 
+
+The semantics of {\tt (when $P$ $E$)} are as follows: If $P$ is true
+before the action, then effect $E$ occurs after.  $P$ is a {\em
+secondary precondition}~\cite{pednault-kr89}.  The action is feasible
+even if $P$ is false, but the effect $E$ occurs only if $P$ is true.
+
+Fluents are explained in Section~\ref{expeval}.
+
+\section{Action Expansions}
+\label{expansions}
+
+In many classical {\em hierarchical} 
+planners (such as Sipe~\cite{wilkins88}, O-Plan~\cite{currie-oplan},
+and UMCP~\cite{erol-aips-94}) goals are specified in terms of abstract actions to
+carry out as well as (or instead of) goals to achieve.  A solution to a
+planning problems is a sequence of actions that jointly compose all the abstract
+actions originally requested.  \lang{} allows for this style of planning by
+providing an {\tt :expansion} field in action definitions, provided the domain
+declares requirement {\tt :action-expansions}.  The field, as described
+above, is of the form {\tt :expansion <action spec>}, where {\tt <action spec>}
+has the following syntax:
+\begin{nopagebreak}\begin{tabtt}
+\bump \=<action spec> \bump \= ::= <action-term> \+\\
+   <action spec> \> ::= (in-\=context <action spec> \+\+ \\
+                                <action-def body>) \-\-\\
+   <action spec> \> ::= (choice <action spec>\zom) \\
+   <action spec> \> ::= (for\=some (<typed list(variable)>\zom) \+\+\\
+                                 <action spec>)\-\-\\
+   <action spec> \> ::= (series <action spec>\zom) \\
+   <action spec> \> ::= (parallel <action spec>\zom) \\
+   <action spec> \> ::= (tag \= <action-label term>\zom \+\+\\
+                                  <action spec> \\
+                                  <action-label term>\zom) \-\-\\
+   <action spec> \> ::=\=\req{:foreach-expansions} \+\+\\
+                            (foreach \=<typed list(variable)> \+\\
+                                     <GD> <action spec>) \-\-\-\\
+   <action spec> \> ::=\=\req{:dag-expansions} \+\+\\
+                             (con\=strained (<action spec>\oom) \+\\
+                                <action constraint>\zom) \-\-\-\\
+   <action constraint> \> ::= (in-\=context <action constraint> \+\+ \\
+                                <action-def body>) \-\-\\
+   <action constraint> \> ::= (series <action constraint>\zom) \\
+   <action constraint> \> ::= (parallel <action constraint>\zom) \\
+   <action-term> \> ::= (<action functor> <term>\zom) \\
+   <action-label term> \> ::= \= <action label> \+\+ \\
+                             | (< <action label>) \\
+                             | (> <action label>) \-\-\\
+   <action label> \> ::= <name> \\
+\end{tabtt}
+\end{nopagebreak}
+Extra choices may be added to an action
+expansion after the action is defined, by the use of {\tt :method}s, as described in 
+Section~\ref{addenda}.  An action with no expansion is called a {\em primitive
+action,} or just a {\em primitive}.  It is always possible to tell by the
+action definition if the action is primitive; if all its expansions are defined
+via methods, then the {\tt :expansion} argument should be the symbol {\tt :methods}.
+
+An action may be expanded into a structure of actions, either a series-parallel
+combination, or, if the domain declares requirement {\tt
+:dag-expansions} 
+an arbitrary partial order (with steps labeled by {\tt tag}).  
+If there is a choice of expansions,
+it is indicated using {\tt choice}.  A {\tt forsome} behaves like a
+choice among all its instances.
+
+The only built-in action term is {\tt (--)}, or {\em no-op}.
+
+Anywhere an action is allowed, the expansion may have an expression of the
+form 
+\begin{tabtt}
+\bump (in-c\=ontext <{\it action spec}> \+\\
+           :precondition $P$ \\
+           :maintain $M$)
+%           :effect $E$
+\end{tabtt}
+This construct is used to declare preconditions and maintenance conditions of actions that are
+due purely to their occurring in the context of this expansion.  (It should {\em not}
+be used to repeat the preconditions associated with the definition of
+the action itself.)
+For example, to
+indicate a plan to evacuate an area of friendly forces and then shell it, one
+might write
+\begin{verbatim}
+(series (clear ?area)
+        (in-context (shell ?area)
+            :precondition (not (exists (?x - unit) 
+                                  (and (friendly ?x) (in ?x ?area))))))
+\end{verbatim}
+%            :effect (forall (?x - unit)
+%                       (when (and (enemy ?x) (in ?x ?area)) (dead ?x)))
+
+As syntactic sugar, \lang{} allows you to write {\tt (achieve $P$)} as
+an abbreviation for {\tt (in-context (--) :precondition $P$)}.
+
+The {\tt (constrained $A$ $C$\zom)} syntax allows fairly arbitrary further
+conditions to be
+imposed on an action spec, with labels standing in for actions and their endpoints.  
+The labels
+are defined by the {\tt (tag {\em labels} {\em action})} construct.  A label 
+stands for the whole action (occurrence) unless it is qualified by {\tt <} or
+{\tt >}, in which case it stands for the beginning or end of the action. 
+Inside $C$, {\tt (series $l_1$ $l_2$ \ldots $l_k$)} imposes an
+additional ordering requirement on the time points tagged $l_1,
+\ldots, l_k$.  {\tt (in-context (series $l_1$ \ldots $l_k$) {\it
+-conditions-})} can be used to impose extra conditions (or announce
+extra effects) of the interval corresponding to such an additional ordering.
+
+For example,
+to expand an action into four subactions {\tt (A)}, {\tt (B)}, {\tt (C)}, and
+{\tt (D)}, such that {\tt (A)} precedes {\tt (B)} and {\tt (D)}, and {\tt (C)}
+precedes {\tt (D)}, with condition {\tt (P)} maintained from the end of {\tt (A)}
+until the end of {\tt (D)}, write
+\begin{verbatim}
+:expansion (constrained ((series (tag A (> end-a)) (B))
+                         (series (C) (tag (< beg-d) (D) (> end-d))))
+              (in-context (series end-a beg-d end-d)
+                  :maintain (P)))
+\end{verbatim}
+
+As an illustration of all this, here is a fragment of the University of 
+Maryland Translog domain~\cite{AndrewsEtal95}, specifying how to unload
+a flatbed truck:
+\begin{verbatim}
+     (:action unload
+         :parameters (?p - package ?v - vehicle ?l - location)
+         :expansion
+            (choice 
+               ...  ; several choices elided
+               (forsome (?c - crane)
+                   (in-context 
+                      (constrained 
+                          (series (tag (pick-up-package-vehicle 
+                                              ?p ?c ?v ?l)
+                                       (> end-n1))
+                                  (tag (< beg-n2)
+                                       (put-down-package-ground 
+                                              ?p ?c ?l)))
+                         (in-context (series end-n1 beg-n2)
+                             :maintain (and (at-package ?p ?c)
+                                            (at-equipment ?c ?l))))
+                      :precondition (and (flatbed ?v) 
+                                         (empty ?c)
+                                         (at-package ?p ?v)
+                                         (at-vehicle ?v ?l)
+                                         (at-equipment ?c ?l))))))
+
+\end{verbatim}
+Note that \lang{} does not allow you to specify whether it {\em makes sense} to
+insert steps to achieve an in-context precondition of a choice (as opposed to
+using it as a ``filter'' condition).  That falls into the category of advice,
+which is handled in a planner-specific way.
+
+The {\tt parallel} construct imposes no constraints on the execution order of its
+arguments.  However, a label associated with a parallel composition is associated
+with the first action of the composition
+to begin, in the case of a ``{\tt <}'' label, or the last
+action to end, in the case of a ``{\tt >}.''  E.g., to indicate that
+a condition be true from the end of {\tt act1} 
+until a set of actions performed in parallel with {\tt act1} are finished, write
+\begin{verbatim}
+      (constrained (tag (parallel (tag (act1) (> end-act1))
+                                  (act2)
+                                     ... 
+                                  (actN))
+                        (> alldone))
+         (in-context (series end-act1 alldone)
+            :maintain (condition)))
+\end{verbatim}
+
+If the domain declares requirement {\tt :foreach-expansions}, then an
+action can have an expansion of the form {\tt (foreach ($v$) $P(v)$
+$A(v)$)}, where $v$ is a set of typed variables, $P(v)$ is a
+precondition, and $A(v)$ is an action spec.  The idea is to expand the
+action into zero or more occurrences of $A(v)$, one for each instance
+of $P(v)$ that is true before in the situation when the expanded
+action begins execution.  
+(See Appendix~\ref{satis} for a precise definition of what it means for
+an action-spec to be satisfied by an action sequence.)
+
+The syntax of the language permits labels to occur inside {\tt choice}
+and {\tt foreach} action specs.  It is a consequence of the formal
+semantics of Appendix~\ref{satis} that 
+(a) a constraint mentioning a label
+inside a {\tt choice} branch that doesn't occur doesn't constrain
+anything; (b) a constraint mentioning a reference to a label inside a
+{\tt foreach}  or {\tt forsome} from
+outside doesn't constrain anything.  
+
+In Section~\ref{actions} we mentioned that an action definition may
+contain an argument 
+\begin{tabbing}
+\bump{\tt :only-in-expansions}.  
+\end{tabbing}
+If this is {\tt t}
+(default is {\tt nil}), then a planner is not allowed to assume that
+instances of the action are feasible if its preconditions are
+satisfied.  Instead, it can include an action in a plan only if it
+occurs as the expansion of some other action.  The intended use of
+this notation is to indicate that we do not really know all the
+preconditions of the action, just some standard contexts in which the
+preconditions are sure to be satisfied.
+
+See Section~\ref{addenda} for a notation that allows cumbersome action
+expansions to be broken into more manageable pieces.
+
+    \section{Axioms}
+\label{axioms}
+
+Axioms are logical formulas that assert relationships among propositions that hold
+within a situation (as opposed to action definitions, which define relationships
+across successive situations). To have axioms, a domain must declare requirement
+{\tt :domain-axioms}.
+
+\begin{tabtt}
+\bump\=  <axiom-def>   \=  ::= (:axi\=om <GD>) \+\+\+\\
+                                    :vars (<typed list (variable)>) \\
+                                    :context <GD> \\
+                                    :implies <literal(term)>)
+\end{tabtt}
+The {\tt :vars} field behaves like a universal quantifier.  All the 
+variables that occur in the axiom must be declared here.
+
+For example, we might define the classical blocks-world predicates
+{\tt above} and {\tt clear} as follows:
+
+\begin{verbatim}
+  (:axiom 
+     :vars (?x ?y - physob)
+     :context (on ?x ?y)
+     :implies (above ?x ?y)))
+
+ (:axiom 
+     :vars (?x ?y - physob)
+     :context (exists (?z - physob)
+                 (and (on ?x ?z) (above ?z ?y)))
+     :implies (above ?x ?y))
+
+ (:axiom
+     :vars (?x - physob)
+     :context (or (= ?x Table)
+                  (not (exists (?b - block)
+                          (on ?b ?x))))
+     :implies (clear ?x))
+\end{verbatim}
+
+Unless a domain declares requirement {\tt :true-negation}, {\tt not}
+is treated using the technique of ``negation as failure'' \cite{clark-78}.
+That means it makes no sense to {\em conclude} a negated formula; they
+should occur only as deductive goals, when {\tt (not $g$)} succeeds if
+and only if $g$ fails.  (If $g$ contains variables, the results are
+undefined.)  Hence axioms are treated directionally, always used to
+conclude the 
+{\tt :implies} field, and never to conclude a formula from the {\tt
+:context} field.  (Of course, whether an axiom is used forward or
+backward is a matter of advice, and \lang{} is silent on this issue.)
+
+Another important reason for the directionality of axioms is
+to avoid overly complex interactions with
+action definitions.  The rule is that action definitions are not allowed to
+have effects that mention predicates that occur in the {\tt :implies} field
+of an axiom.  The intention is that action definitions mention
+``primitive'' predicates like {\tt on}, and that all changes in truth value
+of ``derived'' predicates like {\tt above} occur through axioms.  Without
+axioms, the action definitions will have to describe changes in all predicates
+that might be affected by an action, which leads to a complex software engineering 
+(or ``domain engineering'') problem.
+
+If a domain declares requirement {\tt :true-negation} (which implies
+{\tt :open-world}), then exactly how action definitions interact with
+axioms becomes hard to understand, 
+and the management takes no responsibility for the outcome.
+(For example, if there is an axiom $P\wedge Q \supset R$, and an action
+causes {\tt (not $R$)} when $P$ and $Q$ are true, does $P$ become
+false or $Q$?)
+
+The domain requirement {\tt :subgoal-through-axioms} indicates that a goal
+involving derived predicates may have to be solved by finding actions to change
+truth values of related primitive predicates.  For example, a goal 
+{\tt (above A B)} might be achieve by either achieving {\tt (on A B)} or
+achieving {\tt (and (an A $Z$) (above $Z$ B))} for some $Z$.
+A domain that does not declare
+this requirement may still have axioms, but they will be used only for timeless
+predicates.
+
+Note that a given predicate can be in the {\tt :implies} field of
+more than one axiom.  
+
+    \section{Safety Constraints}
+\label{safety}
+
+A domain declaring requirement {\tt :safety-constraints} is allowed to
+specify {\em 
+safety constraints,} defined as background goals that must be satisfied
+throughout the planning process.  A plan is allowed only if at its end
+none of these background goals is false.  In other words, if one of the
+constraints is violated at some point in the plan, it must become true
+again by the end.
+
+\begin{verbatim}
+  <safety-def>    ::= (:safety <GD>)
+\end{verbatim}
+% deleted <name>
+
+For example, one could command a softbot (software robot) to avoid deleting
+files that are not backed up on tape with the following constraint:
+
+\begin{verbatim}
+  (:safety 
+    (forall (?f)
+       (or (file ?f) (written-to-tape ?f))))
+\end{verbatim}
+
+As everywhere else in \lang, free variables are not allowed.
+
+It is important to note that safety constraints do {\em not}
+require an agent to {\em make} them true; rather, the agent
+must avoid creating {\em new} violations of the constraints.  
+For example, if a constraint specifies that all of my files 
+be read protected, then the agent would avoid changing any of my files
+to be readable; but if my {\tt .plan} file is already readable 
+in the initial state, then the agent would not protect that file. 
+
+For details of safety constraints, please refer to
+\cite{weld-etzioni-aaai94}.
+%which is included as distribution file {\tt
+%doc/first-law-aaai94.ps}.
+
+Safety constraints should not be confused with {\tt :timeless}
+propositions.  (See Section~\ref{domains}.)  Timeless propositions
+are always true in all problems in the domain, and it should be
+impossible for any action to change them.  Hence no special measures
+are required to ensure that they are not violated.
+
+
+\section{Adding Axioms and Action Expansions Modularly}
+\label{addenda}
+
+Although \lang{} allows a domain to be defined as one gigantic {\tt
+define}, it is often more convenient to break the definition into
+pieces.  The following notation allows adding axioms and action
+expansions to an existing domain:
+
+\begin{tabtt}
+\bump \=(def\=ine (addendum <name>)  \+\+\\
+         (:domain <name>)  \\
+         <extra-def>\zom) \-\\
+   <extra-def> \bump \= ::= <action-def> \\
+   <extra-def> \> ::=\req{:domain-axioms} <axiom-def> \\
+   <extra-def> \> ::=\req{:action-expansions} <method-def> \\
+   <extra-def> \> ::=\req{:safety-constraints} <safety-def> \\
+   <method-def> \> ::= (:met\=hod  <action functor>\+\+\\
+			{[} :name <name> ] \\
+                        :parameters  ( <typed list (variable)> ) \\
+                        <action-def body> \-\-\\
+\end{tabtt}
+Please remember that, as explained in Section~\ref{domains}, in the
+``strict subset'' of \lang{} addenda are not allowed.
+
+Inside a {\tt (define (addendum \ldots) \ldots)} expression, {\tt
+:action}s and {\tt :axiom}s behave as though they had been included in
+the original {\tt (define (domain \ldots) \ldots)} expression for the
+domain.  {\tt :method} declarations specify further choice points for
+the expansion of an already-declared action, almost as though the 
+given {\tt <action-def body>} included inside a {\tt choice} in the
+original expansion of the action.  (It doesn't work quite that neatly
+because the parameters may have new names, and because an {\tt
+<action-def body>} is not exactly what's expected in a {\tt choice}.)
+	
+In a method definition, the {\tt <action-def body>} may not have 
+an {\tt :effect} field or an {\tt :only-in-expansions} field.
+
+Method names are an aid in describing problem solutions as structures
+of instantiated action schemas.  Each action has its own space of
+method names; there is no need to make them unique over a domain.  If
+an action has a method supplied in its original definition, the name
+of that method is the same as the name of the action itself.
+
+Example:
+\begin{verbatim}
+(define (addendum carry-methods)
+   :domain translog
+   ...
+   (:method CARRY-VIA-HUB
+       :name usual
+       :parameters (?p - package ?tc ?tc - tcenter)
+       :expansion (forsome (?hub - hub)
+                     (in-context (series (carry-direct ?p ?tc1 ?hub)
+                                         (carry-direct ?p ?hub ?tc2))
+                        :precondition (exists (?city1 ?city2 - city
+                                               ?reg1 ?reg2 - region)
+                                          (and (in-city ?tc1 ?city1)
+                                               (in-city ?tc2 ?city2)
+                                               (in-region ?city1 ?reg1)
+                                               (in-region ?city2 ?reg2)
+                                               (serves ?hub ?reg1)
+                                               (serves ?hub ?reg2)
+                                               (available ?hub)))))
+       :precondition (not (hazardous ?p)))
+   ...)
+\end{verbatim}
+
+The reason to give addenda names is so the system will know when an
+addendum is being redefined instead of being added for the first time.
+When a {\tt (define (addendum $N$) \ldots)} expression is evaluated,
+all the material previously associated with $N$ is erased before the
+definitions are added.  The name of an addendum is local to its
+domain, so different domains can have addenda with the same name.
+
+\section{Expression Evaluation}
+\label{expeval}
+
+If a domain declares requirement  {\tt :expression-evaluation}, then
+it supports a built-in predicate {\tt (eval $E$ $V$)} that succeeds if
+the value of expression $E$ is $V$.  $E$ has Lisp-like syntax for
+expressions, which should at least allow functions {\tt +}, {\tt -},
+{\tt *}, and {\tt /}; this argument position is said to be an {\em evaluation
+context}.  Evaluation contexts are
+the only places in \lang{} where functions are
+allowed, except for terms denoting actions.   
+$E$ should not include any variables; if it does, the goal
+will fail in an implementation-dependent way.  (Some implementations
+will distinguish between failure due to $E$'s value being different from
+$V$ and failure due to the inability to generate all instances of
+$E$.  Cf. {\tt equation}, below.)
+
+Another evaluation context is the argument to {\tt (test $E$)}.  Here
+$E$ is an expression whose main functor is one of {\tt =}, {\tt >},
+{\tt <}, {\tt >=}, or
+{\tt <=}.  The expression is evaluated, and the goal succeeds if it
+evaluates to {\tt T}.
+%\footnote{Most Lisp-based implementations will
+%allow fairly arbitrary Lisp expressions as arguments to {\tt eval} and {\tt
+%test}.} 
+
+The goal {\tt (bounded-int $I$ $L$ $H$)} succeeds if $I$ is an integer
+in the interval $[L,H]$.  $L$ and $H$ are evaluation contexts.
+
+The goal {\tt (equation $L$ $R$)} tries to bind variables so
+that $L$ and $R$ are equal.  Both $L$ and $R$ are evaluation contexts,
+but if there is an unbound variable, it is bound to whatever value
+would make $L$ and $R$ evaluate to the same thing.  E.g., if {\tt ?y}
+has been bound to 6, and {\tt ?x} is unbound, then {\tt (equation (+
+?x 2) (- ?y 3))} will bind {\tt ?x} to 1.  Don't expect an
+implementation to do anything fancy here; every implementation should
+at least handle the case where there is a single occurrence of an
+unbound variable, buried at most inside an expression of the form {\tt
+(+ \ldots)}.  
+
+The domain-vars defined in {\tt (define (domain\ldots) \ldots)} expressions are evaluated
+in evaluation contexts.  The syntax is 
+\begin{tabtt}
+\bump \= <domain-vars-def> \bump \=::= (:dom\=ain-variables \+\+\+\\
+                                                  <typed list(domain-var-declaration)> \-\-\\
+     <domain-var-declaration> \> ::= <name> | (<name> <constant>) 
+\end{tabtt}
+
+E.g.:
+\begin{verbatim}
+(define (domain cat-in-the-hat) 
+   (:types thing)
+   (:domain-variables (numthings 2) - integer)
+   ...
+   (:axiom 
+       :vars (?i - integer)
+       :context (bounded-int ?i 1 numthings)
+       :implies (thing ?i)))
+\end{verbatim}
+
+A variable like this is scoped over the entire domain, and is
+inherited by domains that extend this one.  If the variable is
+redeclared in an extending theory, it shadows the original binding.
+
+If a domain declares requirement {\tt :fluents}, then it supports the
+type {\tt (fluent <type>)}, plus some new predicates.  A fluent is a
+term with time-varying value (i.e., a value that can change as a
+result of performing an action).  The proposition {\tt (current-value
+$F$ $V$)} is true in a situation if $V$ is the current value of $F$ in
+that situation.
+Further, if a planner handles  the {\tt
+:fluents} requirement, then there must be a built-in predicate
+{\tt (fluent-eval $E$ $V$)}, which succeeds if $V$ is the 
+value of $E$, using the current value of any fluent that occurs in $E$ 
+(and otherwise behaving like {\tt eval}).  Similarly, there is a predicate
+{\tt fluent-test} that is to {\tt test} as {\tt fluent-eval} is to {\tt eval}.
+In addition, there is an effect 
+{\tt (change $F$ $E$)} that changes the value of fluent $F$ to $E$.  $E$ is
+an evaluation context, and its value is computed with respect to the situation 
+obtaining before the action (cf. {\tt when}).
+
+\begin{verbatim}
+   (:action pour
+       :parameters (?source ?dest - container)
+       :vars (?sfl ?dfl - (fluent number) ?dcap - number)
+       :precondition (and (contents ?source ?sfl)
+                          (contents ?dest ?dfl)
+                          (capacity ?dest ?dcap)
+                          (fluent-test (<= (+ ?sfl ?dfl) ?dcap)))
+       :effect (when (and (contents ?source ?sfl)
+                          (contents ?dest ?dfl))
+                     (and (change ?sfl 0)
+                          (change ?dfl (+ ?dfl ?sfl)))))
+\end{verbatim}
+
+\noteme{Possibly {\tt equation} should know about fluents.}
+
+One of the additional built-in functions that comes with requirement {\tt
+:fluents} is {\tt (sum $v$ $p$ $e$)}.  This is a fluent whose value in
+a situation is 
+$$\sum_{\theta \mbox{\ such that\ } \theta(p) \mbox{\ is true\ }}\theta(e)$$ 
+$v$ declares all the variables of $p$ that aren't already bound.  $e$
+is a fluent-evaluation context.  For
+example,
+\begin{verbatim}
+   (fluent-eval (sum (?p - person ?w - number)
+                     (and (aboard ?p ?elevator)
+                          (weight ?p ?w))
+                     ?w))
+\end{verbatim}
+succeeds if {\tt ?w} is the total weight of all the people on a {\tt
+?elevator} (a variable which must be bound somewhere else).  Note that
+the value of this fluent depends on who is on the elevator, not on
+what their mass is, because in this formulation it's assumed not to
+change.  If dieting is to be taken into account, then we would write
+\begin{verbatim}
+   (fluent-eval (sum (?p - person ?w - (fluent number))
+                     (and (aboard ?p ?elevator)
+                          (weight ?p ?w))
+                     ?w))
+\end{verbatim}
+where now {\tt ?w} is a fluent itself.
+
+\section{Problems}
+
+A problem is what a planner tries to solve.  It is defined with
+respect to a domain.  A problem specifies two things: an initial
+situation, and a goal to be achieved.  Because many problems may share
+an initial situation, there is a facility for defining named initial
+situations.
+
+\begin{nopagebreak}\begin{tabtt}
+\bump\=<problem> \bump\bump \=::= (def\=ine (problem <name>) \+\+\+\\
+                                      (:domain <name>) \\
+                                      {[}<require-def>] \\
+                                      {[}<situation> ] \\
+                                      {[}<object declaration> ] \\
+                                      {[}<init>] \\
+                                      <goal>\oom \\
+                                      {[}<length-spec> ]\-\-\\
+   <situation> \> ::= (:situation <initsit name>) \\
+   <object declaration> ::= (:objects <typed list (name)>) \\
+   <init> \> ::= (:init <literal(name)>\oom) \\
+   <initsit name> \>::= <name> \\
+   <goal> \> ::= (:goal <GD>) \\
+\smallskip
+   <goal> \>::=\=\req{:action-expansions} \\
+               \>\>\bump(:expansion <action spec(action-term)>) \\
+   <length-spec> \>::= (:length [(:serial <integer>)] [(:parallel <integer>)])
+\end{tabtt}
+\end{nopagebreak}
+
+Initial situations are defined thus:
+\begin{tabtt}
+\bump\=<initsit def> \=::= (def\=ine (situation <initsit name>) \+\+\+\\
+                              (:domain <name>) \\
+                              {[} <object declaration> ] \\
+                              {[} <init> ])
+\end{tabtt}
+
+A {\tt problem} definition must specify either an initial situation by
+name, or a list of initially true literals, or both.  If it specifies
+both, then the literals are treated as effects (adds and deletes) to
+the named situation.  The {\tt <initsit name>} must be a name defined
+either by a prior {\tt situation} definition or a prior {\tt problem}
+definition. 
+The {\tt :objects} field, if present, describes
+objects that exist in this problem or initial situation
+but are not declared in the {\tt
+:constants} field of its domain or any superdomain.  Objects do not
+need to be declared if they occur in the {\tt :init} list in a way
+that makes their type unambiguous.
+
+All predicates which are
+not explicitly said to be true in the initial conditions are assumed by
+\lang\ to be false, unless the domain declares requirement {\tt
+:open-world}.  
+
+For example, 
+
+\begin{verbatim}
+(define (situation briefcase-init)
+   (:domain briefcase-world)
+   (:objects P D)
+   (:init (place home) (place office)))
+
+(define (problem get-paid)       
+    (:domain briefcase-world)
+    (:situation briefcase-init)
+    (:init (at B home) (at P home) (at D home) (in P))
+    (:goal (and (at B office) (at D office) (at P home))))
+\end{verbatim}
+
+The {\tt :goal} of a problem definition may include a goal description
+or (if the domain has declare the requirement {\tt
+:action-expansions}) an expansion, or both.  A solution to a problem
+is a series of actions such that (a) the action sequence is feasible
+starting in the given inital situation situation; (b) 
+the {\tt :goal}, if any, is true in the situation resulting from
+executing the action sequence; (c) the {\tt :expansion}, if any, is
+satisfied by the series of actions  (in
+the sense explained in Appendix~\ref{satis}).
+
+For
+instance, in the transportation domain, one might have the problem
+\begin{verbatim}
+    (define (problem transport-beans)
+       (:domain transport)
+       (:situation standard-network)
+       (:init (beans beans27)
+              (at beans27 chicago))
+       (:expansion (constrained (tag (carry-in-train 
+                                          beans27 chicago newyork)
+                                     (> end))
+                       (in-context end
+                           :precondition (not (spoiled beans27))))))
+\end{verbatim}
+
+The {\tt :requirements} field of a problem definition is for the rare
+case in which the goal or initial conditions specified in a problem
+require some kind of expressiveness that is not found in the problem's
+domain.  
+
+The {\tt :length} field of a problem definition declares that there is
+known to be a  solution of a given length; this may be useful to
+planners that look for solutions by length.
+
+Unlike addendum names (see Section~\ref{addenda}), problem names are
+global.  Exactly how they are passed to a planner is
+implementation-dependent.
+
+\section{Scope of Names}
+
+Here is a table showing the different kinds of names and over what
+scope they are bound
+
+\begin{tabbing}
+\begin{tabular}{l|l}
+{\it Name type } & {\it Scope} \\
+Reserved word & \lang{} language \\
+Domain name & Global \\
+Type  & Domain, inherited \\
+Constant  & Domain, inherited \\
+Domain variable & Domain, inherited \\
+Predicate  & Domain, inherited \\
+Action functor &  Domain, inherited \\
+Addendum & Domain, local \\
+Situation name & Domain, inherited \\
+Problem name & Global \\
+Method name & Per action functor
+\end{tabular}
+\end{tabbing}
+
+Names with scope ``domain, inherited'' are visible in a domain and all
+its descendants.  Names with scope ``domain, local'' are visible
+within a domain but are not visible in descendant domains.  Method
+names are a documentation convenience, and need have no scope except
+that of the functor of which they are methods.
+
+There is limited possibility of overloading names in \lang.  The same
+name may be used for a global-scope entity (e.g., a problem) and a
+domain-scope entity (e.g., a predicate).  But the same domain-scoped
+name cannot be used for two different kinds of entity.  For instance,
+the same name cannot be used for a type and an action.
+
+The rules for method names are looser, because they are not true
+names.  The only restriction is that two distinct methods for the same
+action may not have the same name.
+
+\section{Current Requirement Flags}
+\label{requirements}
+
+\begin{sloppypar}
+Here is a table of all requirements in \lang{} 0.0.  Some requirements
+imply others; some 
+are abbreviations for common sets of requirements.  If a domain
+stipulates no requirements, it is assumed to declare a requirement for
+{\tt :strips}.
+\begin{center}
+\begin{tabular}{ll}
+\it Requirement & \it Description \\
+\tt :strips & Basic STRIPS-style adds and deletes \\
+\tt :typing & Allow type names in declarations of variables \\
+\tt :disjunctive-preconditions & Allow {\tt or} in goal descriptions \\
+\tt :equality & Support {\tt =} as built-in predicate \\
+\tt :existential-preconditions & Allow  {\tt exists} in
+goal descriptions \\
+\tt :universal-preconditions & Allow {\tt forall}  in
+goal descriptions \\
+\tt :quantified-preconditions & = {\tt :existential-preconditions}  \\
+  & + {\tt :universal-preconditions} \\
+\tt :conditional-effects & Allow {\tt when} in action effects \\
+\tt :action-expansions & Allow actions to have {\tt :expansions} \\
+\tt :foreach-expansions & Allow actions expansions to use {\tt
+foreach} \\
+   & (implies {\tt :action-expansions}) \\
+\tt :dag-expansions & Allow labeled subactions \\ 
+  &                 (implies {\tt :action-expansions}) \\
+\tt :domain-axioms & Allow domains to have {\tt :axiom}s \\
+\tt :subgoal-through-axioms & Given axioms $p\supset q$ and goal $q$,
+generate subgoal $p$ \\
+\tt :safety-constraints & Allow {\tt :safety} conditions for a domain
+\\
+\tt :expression-evaluation & Support {\tt eval} predicate in axioms \\
+ & (implies {\tt :domain-axioms}) \\
+\tt :fluents & Support type {\tt (fluent $t$)}.  \\
+&  Implies {\tt
+:expression-evaluation} \\
+\tt :open-world & Don't make the ``closed-world assumption'' for all
+\\
+ &                 predicates   --- i.e., if an atomic formula is not \\
+&  known to be true,  it is not necessarily
+assumed false \\
+\tt :true-negation & Don't handle {\tt not} using negation as failure, \\
+  & but treat it as in first-order logic \\
+  & (implies {\tt :open-world)} \\
+\tt :adl & = {\tt :strips} + {\tt :typing} \\
+   &      + {\tt :disjunctive-preconditions} \\
+   &      + {\tt :equality}  \\
+   &      + {\tt :quantified-preconditions}  \\
+&+ {\tt :conditional-effects} \\
+\tt :ucpop & = {\tt :adl} \noteme{+ {\tt :cwa} }
++ {\tt :domain-axioms} \\
+   &+ {\tt
+:safety-constraints} 
+\end{tabular}
+\end{center}
+\end{sloppypar}
+
+\section{The Syntax Checker}
+
+This section describes how to run the PDDL syntax checker once you
+have downloaded the tar distribution file.
+
+The file pddl.system contains a Kantrowitz-defsystem definition of
+{\tt pddl-syntax-check} and {\tt pddl-solution-check}, which are the
+syntax checker and 
+solution checker, respectively.
+Adjust the directory names in the calls to {\tt MK:DEFSYSTEM}, then
+load in pddl.system, and do 
+\begin{tabbing}
+\bump{\tt (MK:COMPILE-SYSTEM 'PDDL-SYNTAX-CHECK)}
+\end{tabbing}
+
+If you compile and load a file full of \lang{} definitions, then the
+domain will be defined as you expect.  However, this works only if the
+file contains no syntactic errors.  To find and eliminate errors, use
+the function
+
+\begin{center}
+ \tt  (PDDL-FILE-SYNCHECK <file>)
+\end{center}
+
+This will create a new file with extension ``{\tt .chk}'' which is a
+pretty-printed version of the input, with all syntactic errors flagged
+thus:
+\begin{center}
+ \tt      << {\em error-description}: {\em thing}>>
+\end{center}
+where "thing" is a subexpression and "error-description" says what's
+wrong with it.
+
+The idea is that the ``{\tt .chk}'' file plays the role of the ``{\tt .log}'' file in
+LaTeX.  Instead of line numbers the system just prints the entire
+input with errors flagged.  How well this works depends partly on the
+quality of the pretty-printer.
+
+If the global variable {\tt STRICT*} is set to {\tt T}, the syntax
+checker will flag violations of ``strictness'' as defined in
+Section~\ref{domains}. 
+
+The syntax checker does a pretty thorough job, although there are a
+few gaps.  In order to check for correct number of arguments to
+predicates and such, it's necessary to store information about domains
+as they are checked, so we have gone all the way, and written the
+syntax checker in such a way that it
+stores all the
+information about a domain in various data structures, whether the
+checker itself needs the information or not.  Hence a good way to
+implement a planner that uses the PDDL notation is to start with the
+internal data structures containing the information about a domain,
+and add whatever indexes the planner needs for efficiency.
+
+To avoid collisions with users' code, these data structures are not
+stored in any place that is visible by accident (such as symbol
+property lists).  There is a global hash table {\tt
+PDDL-SYMBOL-TABLE*} that contains all global bindings.  Domains are
+stored in this table, and then symbols with domain scope are stored in
+binding tables associated with the domain.  
+
+\section{The Solution Checker}
+
+The solution checker is another Lisp program.  To compile and load it,
+follow the instructions for the syntax checker, but do {\tt
+(MK:COMPILE-SYSTEM 'PDDL-SOLUTION-CHECK)} at the end.  
+
+A solution to a PDDL problem is a pair of items:
+\begin{enumerate}
+\item A primitive {\em action sequence}, i.e., a list of actions that have
+no expansions.
+\item A list of nonprimitive actions, called {\em expansion hints}.
+\end{enumerate}
+The second component may be absent.  The first may, of course, be
+empty, but only if the problem is trivial.
+
+Suppose problem $P$ has initial situation $S$, {\tt :goal} $G$, and {\tt :expansion} $E$.
+A solution with action sequence $A$ and hints $H$ 
+{\em solves} $P$ if and only if all of the following are
+true:
+\begin{enumerate}
+\item $A$ is feasible starting in situation $S$, and in the situation
+resulting from executing $A$, $G$ is true.
+\item $E$, and, if present, $H$ are executed by some (not necessarily
+contiguous) subsequence of $A$.
+\item Every action in $A$ that is declared {\tt :only-in-expansions}
+occurs in one of the subsequences instantiating $E$ or $H$.
+\end{enumerate}
+
+To run the solution checker, first load the domain of the problem in
+(using {\tt PDDL-FILE-SYNCHECK}), then 
+call 
+\begin{center}
+\tt (SOLUTION-CHECK $A$ $H$ $P$)
+\end{center}
+where $A$ is the action sequence, $H$ are the hints, and $P$ is a
+problem (or problem name).  It returns {\tt T} if it can verify the
+solution, {\tt NIL} if it can't.  It may print some helpful messages
+as well.
+
+As of Release 1.0, the solution checker does not actually check for
+the presence of action expansions.  So the $H$ argument is ignored.
+
+If the problem definition occurs in a file by itself ({\it pfile}),
+and a solution occurs in a file by itself ({\it sfile}), then the
+procedure
+\begin{center}
+\tt (SOLUTION-FILE-CHECK {\it sfile} {\it pfile})
+\end{center}
+will read the files, define the problem, and run {\tt SOLUTION-CHECK}
+on the solution in {\it sfile}, which must be in the form
+\begin{tabtt}
+(\>{\it step}$_1$ \+\\
+ {\it step}$_2$ \\
+ \ldots \\
+ {\it step}$_k$) \-
+\end{tabtt}
+
+
+
+\appendix
+
+\section{Formal Definition of Action Expansions}
+\label{satis}
+
+An {\em anchored action sequence} is a sequence $\la S_0,
+q_1,\ldots,q_k\ra$, where $S_0$ is a situation, $q_1,\ldots, q_k$ are
+ground action terms, and $q_{i+1}$ is feasible in the situation 
+resulting from executing $q_1, \ldots, q_i$ starting in $S_0$.
+We call this situation
+${\it result}_{\it dom}(S_0, \la q_1, \ldots,q_i\ra)$,
+and define it in the usual way.
+The subscript {\it
+dom} refers to the domain with respect to which {\it result} is
+defined. 
+In what
+follows, we will abbreviate ${\it result}_{\it dom}(S_0, \la q_1, \ldots,q_i\ra)$
+as  $S_i$.
+
+A {\em realization within} domain {\it dom} of an action spec $A$ {\em
+in} 
+the anchored action 
+sequence $\la S_0,q_1,\ldots,q_k\ra$ 
+is a mapping $R$ whose
+domain is the set of ordered pairs $\la E,\sigma\ra$, where $E$ is a
+subexpression of $A$ (defined by position, so two different
+occurrences of the same expression count as different) or an action
+tag, and $\sigma$ is
+a substitution; and whose range is a set of unions of closed
+intervals of the {\em real} interval $[0,k]$.  ({\em Not} the integer
+interval!)
+
+A realization $R$ of $A$ in $\la S_0, q_1,\ldots,q_k\ra$ {\em satisfies}
+subexpression $E$ of $A$ {\em with respect to} substitution $\sigma$,
+if and only if % $\la E,\sigma\ra$ is in the domain of $R$, and 
+one of the following is true:
+\begin{enumerate}
+\item $E$ is an action-label term.
+
+%\item $E$ is an action term and $R(E,\sigma)=[l,h]$, with $h>l>k$.
+
+\item $E$ is an occurrence of the term {\tt (--)}, and there is some
+$i,  0\leq i \leq k$ such that $R(E,\sigma) = [i,i]$.
+
+\item $E$ is a primitive action term other than {\tt (--)}, and there is some
+$i, 1 \leq i \leq k$ such that $\sigma(E)
+= q_i$, and $R(E,\sigma)=[i-1,i]$.
+
+\item $E$ is a nonprimitive action term, with $\sigma(E)$
+variable-free, and there is an expansion $A'$ in {\it dom} of
+$\sigma(E)$ (that is, an {\tt :expansion} from the {\tt :action}
+defining $E$ or a {\tt :method} for $E$), and a realization $R'$
+within {\it dom} of $\sigma(E)$ in $\la S_0, q_1,\ldots, q_k\ra$,
+such that $R(E,\sigma)=R'(\sigma(E),\emptyset)$.  
+
+\item $E=${\tt(series $E_1\: \ldots\: E_m$)}, and for all $i$, $1\leq i
+\leq m-1$, $R$ satisfies $E_i$ with respect to $\sigma$, and for all
+$i,j, 1 \leq i < j \leq m$, 
+%$R(E_i,\sigma)=\emptyset$, or $R(E_j,\sigma)=\emptyset$, or
+and for all $x_i\in R(E_i,\sigma), x_j\in R(E_j,\sigma), x_i\leq x_j$; and
+$R(E,\sigma) = \cup_{1\leq i \leq m}R(E_i,\sigma)$.
+
+\item $E=${\tt (parallel $E_1\: \ldots\: E_m$)}, and for all $1 \leq i,j
+\leq m$, $R$ satisfies $E_i$ with respect to $\sigma$; and
+%n, and 
+%$R(E_i,\sigma) \cap R(E_j,\sigma)$ is a set of points (i.e,
+%they are disjoint, considered as sets of actions)
+$R(E,\sigma) = \cup_{1\leq i \leq m}R(E_i,\sigma)$.
+
+\item $E=${\tt (in-context $E_1$ $a_1\:\ldots\: a_l$)}, and 
+$R$ satisfies $E_1$ with respect to $\sigma$, with
+$R(E,\sigma) = R(E_1,\sigma)$
+ and, 
+for each
+$a_i$: 
+\begin{itemize}
+\item If $a_i=$ {\tt :precondition} $C$, then $C$ is true in $S_L$.
+\item If $a_i=$ {\tt :maintain} $C$, then $C$ is true in $S_s$ for all
+integer $s\in[L,H]$.
+%\item If $a_i=$ {\tt :effect} $E$, then there is no constraint on any 
+%$S_s$ (but see below).
+\end{itemize}
+where $L=\min(R(E_1,\sigma))$ and $H=\max(R(E_1,\sigma))$.
+
+\item $E=${\tt (choice $E_1\: \ldots\: E_m$)}, and for some $i$, $1\leq
+i \leq m$, $R$ satisfies $E_i$ with respect to $\sigma$, and
+$R(E,\sigma) = R(E_i,\sigma)$.
+
+\item $E=${\tt (forsome {\it vars} $E_1$)}, and there is a substitution
+$\sigma'$ extending $\sigma$ by binding {\it vars}, such that
+$R$ satisfies $E_1$ with respect to $\sigma'$, and
+$R(E,\sigma) = R(E_1,\sigma')$.
+
+\item $E=${\tt (foreach {\it vars} $P$ $E_1$)}, and 
+there is a  set $X$ of extensions to $\sigma$ such that for all
+$\sigma'\in X$, $\sigma'(P)$ is ground, 
+such that if $[L,H] = R(E,\sigma)$, then 
+$$L= \cup_{1\leq i \leq m}R(E_i,\sigma')$$
+and 
+$$X=\{\sigma': \sigma' \mbox{\
+extends\ } \sigma \mbox{\ by binding vars to make\ } \sigma'(P) 
+\mbox{\ ground and true in\ }S_L\}$$
+
+
+\item $E=${\tt (tag $l_1 \ldots l_l\: E_1\: l_{l+1} \ldots l_m$)}, and $R$ satisfies
+$E_1$ with respect to $\sigma$, with 
+$R(E,\sigma) = R(E_1, \sigma)$, and for all $i, 1 \leq i \leq m$,
+\begin{itemize}
+\item If $l_i=$ {\tt (< $l$)}, then $R(l,\sigma) = [L,L]$.
+\item If $l_i=$ {\tt (> $l$)}, then $R(l,\sigma) = [H,H]$.
+\item Otherwise, $R(l,\sigma) = [L,H]$.
+\end{itemize}
+where $L=\min(R(E_1,\sigma))$ and $H=\max(R(E_1,\sigma))$.
+
+\item $E=${\tt (constrained $E_0$ $E_1 \: \ldots\: E_m$)}, and 
+for all $i, 0 \leq i \leq m$, $R$ satisfies $E_i$ with respect to
+$\sigma$ and $R(E_i,\sigma) \subseteq R(E_0,\sigma)$;
+and $R(E,\sigma) = R(E_0,\sigma)$.
+
+\end{enumerate}
+If $R(E,\sigma)$ is not given a value by repeated application of the
+rules in the list, then $R(E,\sigma)=\emptyset$.
+
+Finally, an anchored action sequence {\em satisfies} an action spec if the
+action spec has a realization into
+the action sequence  that satisfies the entire action spec.
+
+Note that the formal definition makes  $R(E,\sigma)=\emptyset$ 
+if there is no occurrence of $E$ inside a {\tt foreach} or
+{\tt forsome}
+yielding substitution $\sigma$, or if no action corresponding to $E$
+occurs in the action sequence.  Hence if an action spec has references
+to tags from contexts that make no sense, they will be interpreted as
+the empty set, and be ignored if used in constraints.
+(Implementators may not want to implement these semantics.)
+
+\newpage
+\bibliographystyle{plain}
+
+%\nocite{barrett-aaai94}
+%\nocite{carbonell-prodigy-manual}
+%\nocite{tate-oplan2-manual}
+
+%\bibliographystyle{yalethesis}
+\bibliography{uw,biblio}
+%\bibliography{/u/jsp/tex/general}
+
+
+\end{document}
+
+
+ 
+

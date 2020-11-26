@@ -1,0 +1,64 @@
+(note "TQF202c")
+
+(obligatedAgent NuclearNon-ProliferationTreaty UnitedStatesOfAmerica) 
+
+(behaviorCapable UnitedStatesOfAmerica DiplomaticAction agent) 
+
+(obligationParts ModernInternationalRelationsCOC NuclearNon-ProliferationTreaty) 
+
+(implies 
+  (and 
+    (obligationParts ModernInternationalRelationsCOC ?OBLIGATION) 
+    (obligatedAgent ?OBLIGATION ?SIGNEE) 
+    (behaviorCapable ?SIGNEE DiplomaticAction agent) 
+    (different ?SIGNEE ?VIOLATOR) 
+    (actionViolatesObligation ?VIOLATION ?OBLIGATION) 
+    (agent ?VIOLATION ?VIOLATOR)) 
+  (optionAvailableToAgent ?SIGNEE 
+    (TheSetOf ?DIPLOMATIC-CENSURE 
+      (and 
+        (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+        (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+        (maleficiary ?DIPLOMATIC-CENSURE ?VIOLATOR) 
+        (inReactionTo ?DIPLOMATIC-CENSURE ?VIOLATION))) agent))
+
+(query (findall ?THE-US-MIGHT-RESPOND-BY-ACTING-IN-AN-ELEMENT-OF
+ (implies 
+   (and 
+       (instance ?SMUGGLE 
+           (SmugglingFn Weapons-GradeFissileMaterial)) 
+       (instance ?SMUGGLER HPKB-ScenarioAgent) 
+       (agent ?SMUGGLE ?SMUGGLER) 
+       (instance ?MATERIEL Weapons-GradeFissileMaterial) 
+       (objectOfPossessionTransfer ?SMUGGLE ?MATERIEL) 
+       (actionViolatesObligation ?SMUGGLE NuclearNon-ProliferationTreaty) 
+       (obligationParts ModernInternationalRelationsCOC NuclearNon-ProliferationTreaty) 
+       (obligatedAgent NuclearNon-ProliferationTreaty UnitedStatesOfAmerica) 
+       (behaviorCapable UnitedStatesOfAmerica DiplomaticAction agent) 
+       (different UnitedStatesOfAmerica Iran) 
+       (actionViolatesObligation ?SMUGGLE NuclearNon-ProliferationTreaty) 
+       (agent ?SMUGGLE Iran) 
+       (fromLocation ?SMUGGLE Azerbaijan) 
+       (toLocation ?SMUGGLE Iran) 
+       (toPossessor ?SMUGGLE Iran) 
+       (agent ?SMUGGLE Iran)) 
+   (optionAvailableToAgent UnitedStatesOfAmerica ?THE-US-MIGHT-RESPOND-BY-ACTING-IN-AN-ELEMENT-OF agent))))
+
+(answer (list 
+  (TheSetOf ?DIPLOMATIC-CENSURE 
+      (and 
+        (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+        (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+        (maleficiary ?DIPLOMATIC-CENSURE Iran) 
+        (inReactionTo ?DIPLOMATIC-CENSURE ?VIOLATION)))))
+        
+(answer(list (TheSetOf ?DIPLOMATIC-CENSURE 
+      (and 
+        (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+        (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+        (maleficiary ?DIPLOMATIC-CENSURE ??) 
+        (inReactionTo ?DIPLOMATIC-CENSURE ?VIOLATION)))))
+
+(end_of_file)
+
+

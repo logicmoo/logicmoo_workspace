@@ -1,0 +1,1 @@
+(trade [negotiated_market *x0] [security])(method ?x0 [bargain *x2])(agnt ?x2 [seller])(rcpt ?x2 [buyer])(attr ?x2 [direct])

@@ -1,0 +1,22 @@
+
+Start an {\tt nl-tool} process, and use it to do parsing. Any old {\tt nl-tool} processes
+are first killed. The current config file needs to include either a 
+{\tt dialogue\_\-rec\_\-params} declaration (for dialogue apps) or a {\tt translation\_\-rec\_\-params}
+declaration (for speech translation apps); the declaration must 
+contain definitions for {\tt 'package'} and {\tt 'grammar'}. The following is a 
+typical example of a suitable declaration:
+
+\begin{verbatim}
+regulus_config(dialogue_rec_params,
+               [package=calendar_runtime(recogniser), 
+                grammar='.MAIN',
+                'rec.Pruning=1600', 'rec.DoNBest=TRUE', 
+                'rec.NumNBest=6']).
+\end{verbatim}
+Notes: 
+\begin{itemize}
+\item After {\tt NUANCE\_\-PARSER} is successfully invoked, {\tt nl-tool} is used for
+ALL parsing, including batch processing with commands like {\tt TRANSLATE\_\-CORPUS}
+and Prolog calls to {\tt parse\_\-with\_\-current\_\-parser/6}.
+\item The Nuance parser only returns logical forms, not parse trees.
+\end{itemize}

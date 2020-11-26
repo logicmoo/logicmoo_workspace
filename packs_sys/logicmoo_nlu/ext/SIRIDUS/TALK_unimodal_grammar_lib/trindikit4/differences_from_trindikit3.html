@@ -1,0 +1,872 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h1>Trindikit4 - differences from Trindikit3 (early draft)<br>
+</h1>
+<h3>Trindikit4&nbsp; - a distributed system</h3>
+In Trindikit4, the system components, e.g. Total Information State,
+modules, resources, controller,&nbsp; can be distributed across several
+OAA agents. Each agent publishes its capabilities as OAA solvables, so
+that other OAA agents can call make use of them. This allows for using
+only a part of the Trindikit functionality in a system, since overall
+system control can be put outside Trindikit itself. This document
+describes Trindikit4 in a fashion so that it should be understood by
+someone who has used earlier versions of Trindikit. <br>
+<br>
+<h3>Loading and starting and stopping Trindikit</h3>
+If Trindikit4 is installed at <code>$TRINDIKIT</code>, the following
+steps are needed to start a system:<br>
+<ol>
+  <li>load Trindikit by consulting the module <code>trindikit.pl</code>
+located in <code>$TRINDIKIT/core/prolog</code></li>
+  <li>set <a href="differences_from_trindikit3.html#Properties">properties</a></li>
+  <li>type <code>control</code> (for starting the Trindikit
+controller) or <code>oaa_slave</code> (for connecting to OAA and wait
+for requests)<br>
+  </li>
+</ol>
+Quit by typing <code>CTRL-C </code>in the controllers terminal.
+<h3>Asynchronicity</h3>
+A previous implementation of asynchronicity in Trindikit, the agent
+environment (AE),&nbsp; has been removed. Instead the dialogue system
+builder (DSB) can define one or more Trindikit agents which communicate
+via OAA. The Trindikit controller can run several control modules in <span
+ style="font-style: italic;">parallel</span>, coordinating the work of
+modules. The Trindikit agents work together as one Trindikit system.
+Currenlty resources need to be in the same agent as the TIS. Se <a
+ href="#Control_algorithms">Control Algorithms</a><br>
+<h3>Flags <br>
+</h3>
+Trindikit does not make use of flags. Instead <a href="#Properties">properties</a>
+are used, both for defining the system architecture and for the
+previous system flags. <br>
+<h3>Configuration file</h3>
+In previous versions of Trindikit the DSB wrote a system configuration
+file which specified e.g. what modules and datatypes to use. This
+functionality is now handled by <a href="#Properties">properties</a>.
+DSB still needs to write code that sets properties and
+starts the system. However the system architecture can be changed by
+setting properties. <br>
+<h3>Search paths and file names<br>
+</h3>
+Most of the trindikit core files have been renamed, to minimize the
+possibility of name clashes. In most cases a <code>tkit-</code>prefix
+has been added. DSB does not need to define the search paths and
+library directories for Trindikit files. However DSB-defined files and
+modules must be in a SICStus library directory. The directory in which
+the Trindikit core modules reside, e.g. for starting the system and
+accessing TIS, is not a library directory anymore, but resides in a
+special "trindikit" namespace. Thus, when e.g. writing a module that
+needs TIS access, write the following to load the <code>tkit_tis_access</code>
+module:
+<pre>:- use_module(trindikit(tkit_tis_access)).<br></pre>
+The directories containing predefined Trindikit modules and datatypes
+are library directories.<br>
+<code></code><br>
+<span style="font-weight: bold;"></span>
+<h3><a name="Properties"></a>Properties<br>
+</h3>
+What was previously handled by flags and predicates in the
+system configuration file is now handled by properties. The predicates
+for using properties are defined in the prolog module tkit_properties
+which is loaded like this (of course all predicates need not be
+imported):<br>
+<br>
+<code>:- use_module( trindikit(tkit_properties), [prop/2,setprop/2,
+addprop/3, deleteprop/3] ).</code><br>
+<ul>
+  <li><code>setprop(+P, +V)</code> sets property <code>P</code> to
+value <code>V </code>if <code>V</code> is a valid
+value for property <code>P</code>. Otherwise it fails. </li>
+  <li><code>prop(?P,?V)</code> reads the value <code>V</code> of
+property <code>P</code>. Can be used to enumerate properties.</li>
+  <li><code>addprop(+P, +PermittedValues, +Default )</code> adds
+user-defined property <code>P</code>. <code>PermittedValues</code> is
+a list of values that <code>P</code>
+can take, <code>Default</code> is the
+default value. It can also be used to redefine a property (and should
+possibly be called <code>defineprop</code> or <code>defprop</code>
+instead).<br>
+  </li>
+  <li><code>deleteprop(+P)</code> deletes property <code>P</code> so
+that it is no longer can be read or
+set. </li>
+</ul>
+A valid property name is defined as follows (from file
+tkit_properties.pl):<br>
+<br>
+<code>&nbsp;&nbsp; is_valid_prop_name(Atomic):-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; atomic(Atomic).<br>
+<br>
+&nbsp;&nbsp; is_valid_prop_name(A-B):-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is_valid_prop_name(A),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is_valid_prop_name(B).</code><br>
+<br>
+<br>
+These are the current predifined properties of Trindikit4:<br>
+<br>
+<table style="text-align: left;" border="1" cellpadding="5"
+ cellspacing="0">
+  <tbody>
+    <tr>
+      <td>Property<br>
+      </td>
+      <td style="vertical-align: top;">Default value<br>
+      </td>
+      <td style="vertical-align: top;">Permitted value<br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>no</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>no</code> or <code>yes</code><br>
+      </td>
+      <td style="vertical-align: top;">The value of property <code>tis</code>
+determines whether the agent is a TIS agent
+or not, i.e. whether it contains an information state.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-datatype_files</code></td>
+      <td style="vertical-align: top;"><code>[]</code></td>
+      <td style="vertical-align: top;">a list of files containing
+datatype definitions<br>
+      </td>
+      <td style="vertical-align: top;">A list of files containing
+datatype definitions, including resource interfaces. All files should
+be in a library directory. Replaces <code>selected_datatypes/1</code>
+and parts of file <code>resource_interfaces.pl</code>. <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-infostate</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>none</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>none</code> or <code>Var:Type</code>,
+where <code>Var</code> is a variable name (typically <code>is</code>),
+and <code>Type</code> is a type definition<br>
+      </td>
+      <td style="vertical-align: top;">The definition of the
+information state proper. Replaces file <code>infostate.pl</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-mivs</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form <code>Var:Type</code>, where <code>Var</code> is a variable
+name, and <code>Type</code> is a type definition</td>
+      <td style="vertical-align: top;">The definition of the module
+interface variables. Replaces file <code>module_interfaces.pl</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-rivs</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form <code>Var:Type</code>, where <code>Var</code> is a variable
+name, and <code>Type</code> is a type definition</td>
+      <td style="vertical-align: top;">The definition of the resource
+interface variables. Replaces parts of file <code>resource_interfaces.pl</code>.
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-typecheck</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>no</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>no</code> or <code>yes</code><br>
+      </td>
+      <td style="vertical-align: top;">Whether TIS checks and updates
+should be type checked. Replaces flag <code>typecheck</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-reset_ops</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list of TIS updates<br>
+      </td>
+      <td style="vertical-align: top;">Updates to be performed at TIS
+reset. Replaces <code>reset_operations/1</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-macros</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form <code>macro_cond(M,C) </code>or&nbsp;<code> macro_op(M,O)</code>
+where <code>C</code> is a TIS condition or a list of TIS conditions
+and <code>O</code> is a TIS operation or a list of TIS operations<br>
+      </td>
+      <td style="vertical-align: top;">Macro definitions. Macros are
+shorthand forms for TIS updates or checks. Replaces optional file <code>macros.pl</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-aliases</code><br>
+      </td>
+      <td style="vertical-align: top;">[]<br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form <code>alias(Alias,Path)</code><br>
+      </td>
+      <td style="vertical-align: top;">Alias definitions. Aliases are
+shorthand forms for paths. <br>
+Replaces optional file <code>alias.pl</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-output_format</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>text</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>text </code>or <code>xml
+      </code>or <code>latex</code><br>
+      </td>
+      <td style="vertical-align: top;">Defines how update rules are
+printed. <br>
+Replaces flag <code>output_format</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-print_state</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>all</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>all </code>or <code>is </code>or
+      <code>no</code><br>
+      </td>
+      <td style="vertical-align: top;">Defines what parts of the TIS
+should be printed when <code>print_state</code> is called. Replaces
+flag <code>print_state</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>tis-print_rules</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>yes</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>yes </code>or <code>no</code><br>
+      </td>
+      <td style="vertical-align: top;">Defines whether update rules
+should be printed when executed. <br>
+Replaces flag <code>print_rules</code>. <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>modules</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form <code>Module:File</code>, where <code>Module</code> is the
+name of the module and <code>File</code> is the file in which it is
+declared<br>
+      </td>
+      <td style="vertical-align: top;">Defines the Trindikit agent's
+modules. A module <code>M </code>declared in a file <code>F </code>must
+be declared as a prolog module named <code>M</code>. All exported
+predicates are considered module algorithms by trindikit. <br>
+Replaces predicate <code>selected_modules/1</code>. <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>resources</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>[]</code><br>
+      </td>
+      <td style="vertical-align: top;">a list containing (file) names
+of Trindikit resources<br>
+      </td>
+      <td style="vertical-align: top;">Defines the Trindikit agent's
+resources. A resource <code>R</code> must be declared as a prolog
+module named <code>R</code>. All resources must define <code>resource_of_type/1</code>
+which states the type of the resource, i.e. the corresponding resource
+interface. Replaces predicate <code>selected_resources/1</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>oaa</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>no</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>yes</code> or <code>no</code><br>
+      </td>
+      <td style="vertical-align: top;">Defines whether the Trindikit
+agent should connect to OAA and publish solvables. Needs <code>oaa-libdir</code>
+to be set to a proper value before it is set to <code>yes</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>oaa-name</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>trindikit</code><br>
+      </td>
+      <td style="vertical-align: top;">any atom<br>
+      </td>
+      <td style="vertical-align: top;">Defines the oaa name of the
+Trindikit agent.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>oaa-libdir</code><br>
+      </td>
+      <td style="vertical-align: top;"><code>''</code><br>
+      </td>
+      <td style="vertical-align: top;">a search path<br>
+      </td>
+      <td style="vertical-align: top;">Defines the directory in which
+the OAA prolog library resides. If e.g. OAA 2.3.0 is installed at <code>/home/david/oaa2.3.0</code>
+the value of <code>oaa-libdir</code> should be <code>'/home/david/oaa2.3.0/src/oaalib/prolog'</code>.
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">control<br>
+      </td>
+      <td style="vertical-align: top;">no<br>
+      </td>
+      <td style="vertical-align: top;">yes or no<br>
+      </td>
+      <td style="vertical-align: top;">Defines whether the agent should
+act as a controller (i.e. execute control algorithms) or not.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">control-algorithm<br>
+      </td>
+      <td style="vertical-align: top;">[]<br>
+      </td>
+      <td style="vertical-align: top;">a list containing elements of
+the form Trigger =&gt; SerialAlgo, where Trigger is a trigger and
+SerialAlgo is a serial control algorithm<br>
+      </td>
+      <td style="vertical-align: top;">The control algorithm used by
+the controller. See <a href="#Control_algorithms">Control algorithms</a>
+section.<br>
+Replaces file <code>control.pl</code><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<span style="font-weight: bold;"></span>
+<h3>Module read/write access</h3>
+In previous releases, Trindikit modules needed to define what parts of
+the TIS they could
+read and write to by specifying<code> read_access/1</code> and <code>write_access/1</code>
+for each module. This information is not used anymore, but may be used
+in future releases. <br>
+<h3>Resource interfaces and resources<br>
+</h3>
+The file resource_interfaces.pl was needed by Trindikit to specify:<br>
+<ul>
+  <li>the resources of a system and their type<br>
+  </li>
+  <li>the resource interface variables of a system and their type <br>
+  </li>
+  <li>definition of operations and conditions of these types <br>
+  </li>
+</ul>
+This file is no longer required.&nbsp; Instead a resource interface is
+treated
+as any other TIS datatype. One resource interface should be declared
+for each resource type, in fact the resource interface is the type
+definition. As with datatypes, it does not matter if resource
+interfaces are defined in separate files or not. <br>
+<br>
+<ul>
+  <li>Declare each resource interface in a separate file</li>
+  <li>This file should contain definitions of the resource relations
+and resource
+operations of the resource, i.e. how the resource can be called from
+update rules and&nbsp; is_resource_type/2 which states the existence of
+the resource type.<br>
+  </li>
+  <li>Resources look like before, except that they must declare
+resource_of_type/1 to specify the type of the resource interface
+variable they can bee hooked up to.</li>
+</ul>
+Example resource interface,&nbsp; lexicon.pl:<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp; :- multifile
+is_resource_type/1,resource_relation/2,
+resource_relation_type/2.<br>
+&nbsp;&nbsp;&nbsp; :- discontiguous resource_relation/2,
+resource_relation_type/2.<br>
+<br>
+&nbsp;&nbsp;&nbsp; is_resource_type(lexicon).<br>
+<br>
+&nbsp;&nbsp;&nbsp; resource_relation( input_form, [Lexicon, Phrase,
+Move] ) :-<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Lexicon : input_form( Phrase,
+Move ).<br>
+&nbsp;&nbsp;&nbsp; resource_relation_type( input_form, [ lexicon,
+string, dmove ] ).<br>
+<br>
+&nbsp;&nbsp;&nbsp; resource_relation( output_form, [Lexicon, Move,
+Phrase] ) :-<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Lexicon : output_form( Move,
+Phrase ).<br>
+&nbsp;&nbsp;&nbsp; resource_relation_type( output_form, [ lexicon,
+dmove, string ] ).<br>
+<br>
+&nbsp;&nbsp;&nbsp; resource_relation( yn_answer, [Lexicon, A] ) :-<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Lexicon : yn_answer( A ).<br>
+&nbsp;&nbsp;&nbsp; resource_relation_type( yn_answer, [ lexicon, answer
+] ).</code><br>
+<br>
+Example resource, lexicon_vcr_english.pl:<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp; :- module( lexicon_vcr_english,
+[output_form/2, input_form/2,
+yn_answer/1, resource_of_type/1]).<br>
+<br>
+&nbsp;&nbsp;&nbsp; resource_of_type( lexicon ).<br>
+<br>
+&nbsp;&nbsp;&nbsp; output_form( Move, Phrase ) :- ...<br>
+<br>
+&nbsp;&nbsp;&nbsp; input_form( Phrase, Move ) :- ...<br>
+<br>
+&nbsp;&nbsp;&nbsp; yn_answer( A ) :- ...</code><br>
+<br>
+Resources are loaded by setting the property resources to a list
+containing the resources that should be loaded (this replaces
+selected_resources/1 in the configuration file). The resources must be
+in a library directory. Example:<br>
+<br>
+<code>setprop( resources, [ lexicon_vcr_english, lexicon_vcr_svenska,
+device_vcr, domain_vcr ] )</code><br>
+<br>
+Resource interfaces are loaded just like other datatypes, they are
+included when setting the property tis-datatype_files. The resource
+interfaces must be in a library directory.&nbsp; TIS resource interface
+variables are defined by setting the property tis-rivs to a list
+containing the names of the resource interface variables and their
+type. Example:<br>
+<br>
+<code>setprop( tis-rivs, [ lexicon:lexicon, devices:record([]),
+domain:domain ] )</code><br>
+<h3>Module interfaces<br>
+</h3>
+The file module interfaces is no longer needed. Instead the name and
+type of module interface variables is determined by setting the
+property tis-mivs to a list containing the module interface variables
+and their type, e.g. like this:<br>
+<code><br>
+setprop( tis-mivs, [ input:string, output:string,
+latest_speaker:participant, latest_moves:oqueue(dmove),
+next_moves:oqueue(dmove), program_state:program_state, score:real,
+timeout:real, language:language ] )<br>
+<br>
+</code><code></code>
+<h3>Information State definition</h3>
+The definition of the information state is determined by setting the
+property tis-infostate to the name of the information state variable
+(typically is) and its type definition, e.g. like this IS type
+definition from godis-aod:<br>
+<code><br>
+ISDef = record( [ private : Private, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+shared : Shared ] ), <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Shared = record( [ com : set( proposition ), <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+actions : stackset( action ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+issues: stackset( question ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+qud : stackset( question ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+pm : set( move ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+lu : LU ] ), <br>
+&nbsp;&nbsp;&nbsp;&nbsp; Private = record( [ agenda: oqueue( action),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+plan : stackset( action ), <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+bel : set( proposition ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tmp : record( [ usr : TMP, sys: TMP ] ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+nim : oqueue( pair( participant, move ) ) ] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp; LU = record( [ speaker : participant,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+moves : set( move ) ] ), <br>
+&nbsp;&nbsp;&nbsp;&nbsp; TMP = record( [ com : set( proposition ), <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+issues : stackset( question ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+qud : stackset( question ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+actions : stackset( action ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+agenda : oqueue( action ),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+plan : stackset( action ) ] ),<br>
+setprop( tis-infostate, is : ISDef).<br>
+<br>
+</code><code></code>
+<h3>Calling Trindikit components</h3>
+There are four main component types in Trindikit:<br>
+<ul>
+  <li>Controller:&nbsp; executes control algorithms</li>
+  <li>Module: executes module algorithms</li>
+  <li>TIS: executes TIS checks and updates</li>
+  <li>Resources: can be hooked up to the TIS via resource interface
+variables, defines resource relations and operations</li>
+</ul>
+Each component type, except for resources, has its own interface which
+is used to make use of the components capabilities, These interfaces
+are defined in the prolog modules <code>tkit_control_access</code>,<code>
+tkit_module_access</code>, and <code>tkit_tis_access</code>. When a
+predicate defined in one of the interfaces is called, the value of
+property <code>control</code>, <code>modules</code>, or <code>tis </code>is
+checked to decide whether the call should be executed locally or if it
+should be routed via OAA to another trindikit agent. Since each
+Trindikit agent (connected to OAA) publishes its components
+capabilities as solvables, all Trindikit agents connected to the same
+facilitator can work as one system transparently. The different
+components do not need to know what other components are part of the
+system. Also non-Trindikit OAA agents can make use of the Trindikit
+components' functionality by using the Trindikit OAA API. The real
+components (called via the interfaces and the OAA API) are <code>tkit_control</code>,
+<code>tkit_tis</code> and the modules defined by the <code>modules</code>
+property. The interfaces <code>tkit_control_access</code>,<code>
+tkit_module_access</code>, and <code>tkit_tis_access</code> are
+imported as follows:<br>
+<code><br>
+:-use_module(trindikit(tkit_control_access)).<br>
+</code>for&nbsp; <code>tkit_control_access,</code><br>
+<br>
+<code>:-use_module(trindikit(tkit_module_access)).<br>
+</code>for<code> tkit_module_access,</code><br>
+<br>
+<code>:-use_module(trindikit(tkit_tis_access)).</code><br>
+for <code>tkit_tis_access</code>
+<h4>tkit_control_access&nbsp; predicates</h4>
+<table style="text-align: left;" border="1" cellpadding="5"
+ cellspacing="0">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Predicate</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>control</code><br>
+      </td>
+      <td style="vertical-align: top;">Starts the control algorithm as
+defined by property <code>control-algorithm</code> if property <code>control
+      </code>is set to <code>yes</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>trigger(TriggerCond)</code><br>
+      </td>
+      <td style="vertical-align: top;"><code></code>When called: <br>
+      <ul>
+        <li>if property <code>control </code>is set to <code>yes</code>,
+all serial control algorithms triggered by <code>TriggerCond</code>
+are appended to their respective threads (see <a
+ href="#Control_algorithms">Control algorithms</a>).&nbsp; </li>
+        <li>if property <code>control </code>is set to <code>no</code>,
+the call is routed via OAA by calling <code>oaa_Solve(tkit_trigger(TriggerCond))</code>.<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>tkit_module_access predicates</h4>
+<table style="text-align: left;" border="1" cellpadding="5"
+ cellspacing="0">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Predicate</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>call_module(M,A)</code><br>
+      </td>
+      <td style="vertical-align: top;">When called:<br>
+      <ul>
+        <li>if Trindikit module <code>M</code> is a component of the
+current agent (as defined by property <code>modules</code>) module
+algorithm <code>A</code> defined in module <code>M</code> is called. <code>A</code>
+can be a predicate of any arity; if it is of arity &gt; 0, one or
+several arguments can become bound after the call. The algorithms of a
+module is determined by its exported predicates.<br>
+        </li>
+        <li>else the call is routed via OAA by calling <code>oaa_Solve(
+tkit_call_module(M,A) )</code>&nbsp; to give another Trindikit agent
+(which may be defining module <code>M</code>) the opportunity of
+executing algorithm <code>A</code>.<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-weight: bold;"><br>
+</span><span style="font-weight: bold;"></span>
+<h4>tkit_tis_access predicates</h4>
+<table style="text-align: left;" border="1" cellpadding="5"
+ cellspacing="0">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Predicate</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>check_condition(Cond)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, check if condition <code>Cond </code>holds
+of TIS, else route the call via OAA by calling <code>oaa_Solve(tkit_check(Cond))</code>&nbsp;
+to give another Trindikit agent (which may be a TIS agent) the
+opportunity of checking condition <code>Cond</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>check_conditions(Conds)</code></td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, check if list of conditions <code>Conds </code>hold,
+else route call via OAA by calling <code>oaa_Solve(tkit_check(Cond))</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>apply_update(Op)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, apply update <code>Op </code>to TIS, else
+route call via OAA by calling <code>oaa_Solve(tkit_apply(Op))</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>apply_updates(Ops)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, apply updates <code>Ops </code>to TIS, else
+route call via OAA by calling <code>oaa_Solve(tkit_apply(Ops))</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>apply_rule(Name,Pre,Eff)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, apply rule <code>Name </code>with
+preconditions <code>Pre </code>and effects <code>Eff </code>to TIS,
+else route call via OAA by calling<code>
+oaa_Solve(tkit_apply_rule(Name,Pre,Eff))</code>. Fails if <code>Pre </code>do
+not hold.&nbsp; </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>add_trigger(TriggerCond)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, add trigger with trigger condition <code>TriggerCond</code>
+to TIS, else route call via OAA by calling <code>oaa_Solve(tkit_add_trigger(TriggerCond))</code>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>clear_triggers</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, clear (remove) all triggers, else route call
+via OAA by calling <code>oaa_Solve(tkit_clear_triggers)</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>reset</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, reset TIS (set all variables to their default
+value and execute reset operations defined by property <code>tis-reset_operations</code>),
+else route call via OAA by calling <code>oaa_Solve(tkit_reset)</code>.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>reset(Var)</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, set TIS variable <code>Var </code>to its
+default value, else fail.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>print_state</code><br>
+      </td>
+      <td style="vertical-align: top;">If property <code>tis </code>is
+set to <code>yes</code>, print state as specified by property <code>tis-print_state</code>,
+else route call via OAA by calling <code>oaa_Solve(tkit_print_state)</code>.</td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-weight: bold;"></span><br>
+&nbsp;&nbsp;&nbsp; <br>
+<h3>The Trindikit OAA interface<br>
+</h3>
+All Trindikit components can be called from OAA provided that the
+Trindikit agent has connected to OAA (i.e. property <code>oaa </code>is
+set to <code>yes</code>). The Trindikit solvables are as follows:<br>
+<h4>Controller solvables</h4>
+Control agents (Trindikit agents with property <code>control </code>set
+to <code>yes</code>) declare:<br>
+<ul>
+  <li><code>tkit_trigger(TC)</code>, which corresponds to <code>tkit_control_access</code>
+predicate <code>trigger/1</code></li>
+  <li><code>tkit_control</code>, which corresponds to <code>tkit_control_access</code>
+predicate <code>control/0</code> (not yet implemented)<code><br>
+    </code></li>
+</ul>
+<h4>Module solvables</h4>
+For each of the agent's module algorithms a solvable of the form<br>
+<ul>
+  <li><code>tkit_call_module(M,A)</code></li>
+</ul>
+where <code>M </code>is the name of the module and <code>A </code>is
+the algorithm, is declared. <br>
+<h4>TIS solvables</h4>
+TIS agents (Trindikit agents with property <code>tis </code>set to <code>yes</code>)
+declare:<br>
+<ul>
+  <li><code>tkit_check(C)</code>, which corresponds to <code>tkit_tis_access</code>
+predicates <code>check_condition/1</code> and <code>check_conditions/1</code></li>
+  <li><code>tkit_apply(O)</code>,&nbsp; which corresponds to <code>tkit_tis_access</code>
+predicates <code>apply_update/1</code> and <code>apply_updates/1</code></li>
+  <li><code>tkit_apply_rule(Name,Pre,Eff)</code>, which corresponds to <code>tkit_tis_access</code>
+predicate <code>apply_rule/3</code></li>
+  <li><code>tkit_reset</code>, which corresponds to <code>tkit_tis_access</code>
+predicate <code>reset/0</code></li>
+  <li><code>tkit_add_trigger(TC)</code>, which corresponds to <code>tkit_tis_access</code>
+predicate <code>add_trigger/1</code></li>
+  <li><code>tkit_clear_triggers</code>, which corresponds to <code>tkit_tis_access</code>
+predicate <code>clear_triggers/0</code></li>
+  <li><code>tkit_print_state</code>, which corresponds to <code>tkit_tis_access</code>
+predicate <code>print_state/0</code></li>
+</ul>
+- Trindikit DME operators over OAA:<br>
+<br>
+$latest_moves -&gt; '$'(latest_moves)<br>
+/shared/com -&gt; is/shared/com or '/'(shared/com)<br>
+$/shared/com -&gt; '$/'(shared/com)<br>
+!Cond -&gt; '$'(Cond)<br>
+A := B -&gt; ':='(A,B)<br>
+&lt; &gt; and ^ can not be used with java oaalib<br>
+<br>
+<h3><a name="Control_algorithms"></a>Control algorithms<br>
+</h3>
+Trindikit control is now multithreaded. It does not need to be a
+separate agent, but if you want modules to run in parallel with the DME
+you can&nbsp; have it in a separate agent. A Trindikit system can be
+distributed across several (OAA) agents. It is wise though to keep
+TIS-intensive modules in the same agent as the TIS, since it speeds
+things up. An asyncronous control algorithm looks as follows:
+<br>
+<br>
+AsyncAlgo = [ X_1,...,X_n] where
+<br>
+&nbsp; * X_i is either&nbsp;&nbsp;&nbsp; init =&gt;
+SerialAlgo&nbsp;&nbsp;&nbsp; or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+condition(TriggerCond) =&gt; SerialAlgo
+<br>
+&nbsp; * SerialAlgo is a serial control algorithm
+<br>
+&nbsp; * TriggerCond is a triggering condition, one of
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * is_set(Var) - TIS variable Var is set
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * is_unset(Var) - TIS variable Var is
+unset
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * empty(Var) - TIS variable Var is
+emptied
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * val(Var,Val) - TIS variable Var is set
+to Val
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * $Var == Val - TIS variable Var is set
+to Val
+<br>
+<br>
+The control/0 starts the control algorithm. It will then:
+<br>
+&nbsp; - create one empty thread (empty list) for all serial
+algorithms.
+<br>
+&nbsp; - reset TIS (according to the TIS definition and reset
+operations)
+<br>
+&nbsp; - uninstall any old triggers from TIS
+<br>
+&nbsp; - install all triggers of the form
+cond(TriggerCond)=&gt;SerialAlgorithm
+<br>
+&nbsp; - append the init-triggered algorithms to their corresponding
+threads
+<br>
+&nbsp; - start executing all threads in a round-robin fashion. each
+thread is executed one step at a time.
+<br>
+<br>
+Control algorithm calls to Trindikit components located in the same
+agent as the Trindikit control are blocking, calls to trindikit
+components in other agents are non-blocking, but they block the
+execution of the calling thread.
+<br>
+<br>
+When a triggering condition TC becomes true of the TIS after doing a
+TIS update, the agent containing the TIS will make the call
+trigger(TC), which will be delegated to the Trindikit control (via OAA
+if control is not in the same agent as TIS). The Trindikit control will
+then append the associated algorithm to its dedicated thread, and
+continue the round-robin execution.
+<br>
+<br>
+The control language is more powerful, making trindikit a less rigid
+system architecture, and enabling more processing to take place in the
+control algorithm.
+<br>
+- module algorithms can have arguments (even return arguments)
+<br>
+- variables can be bound within control algorithms&nbsp; (variables
+within repeat- or while-constructs are only bound locally)
+<br>
+- variable bindings can be passed on from a triggering condition to a
+control algorithm
+<br>
+- control algorithms can contain calls to arbitrary OAA agents
+<br>
+- control algorithms can update TIS (apply_rule/3 or apply_update(s)/1)
+<br>
+</body>
+</html>

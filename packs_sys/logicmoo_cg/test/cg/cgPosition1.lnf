@@ -1,0 +1,4 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Eat #0 & 435 121] -
+                -agnt(326 132)(435 131)(246 132)->[Man & 215 122],
+                -obj(381 95)(435 122)(342 66)->[Apple & 303 48]

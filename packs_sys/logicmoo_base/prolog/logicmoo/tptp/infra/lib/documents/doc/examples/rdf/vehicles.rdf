@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">]>
+<rdf:RDF   
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"  
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://example.org/schemas/vehicles"
+  xmlns:ex="http://example.org/schemas/vehicles#">
+
+<!-- 
+-- 
+-- This is a combination of "Example 28: The Full Vehicle Schema"
+-- and "Example 29: An Instance of ex:PassengerVehicle" in the
+-- W3C RDF Primer, http://www.w3.org/TR/2004/REC-rdf-primer-20040210/.
+--
+-- The following changes have been made:
+--
+--     added a rdfs:range to driver
+--         - I see no reason why it should not have a range declaration
+--
+--     added rdfs:comment attributes
+--         - to demonstrate how comments are displayed in the InfraEngine
+--           schema browser
+--
+--     added xmlns:ex="http://example.org/schemas/vehicles#" to the header
+--         - the namespace is then automatically used as abbreviation
+--           in the InfraEngine schema browser
+--
+-->
+
+<rdfs:Class rdf:ID="MotorVehicle">
+  <rdfs:comment>Motorized vehicle.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="PassengerVehicle">
+  <rdfs:subClassOf rdf:resource="#MotorVehicle"/>
+  <rdfs:comment>Passenger vehicle.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Truck">
+  <rdfs:subClassOf rdf:resource="#MotorVehicle"/>
+  <rdfs:comment>Large vehicle usually used for transporting bulk goods 
+                or other materials.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Van">
+  <rdfs:subClassOf rdf:resource="#MotorVehicle"/>
+  <rdfs:comment>Vehicle used for transporting goods or groups of 
+                people.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="MiniVan">
+  <rdfs:subClassOf rdf:resource="#Van"/>
+  <rdfs:subClassOf rdf:resource="#PassengerVehicle"/>
+  <rdfs:comment>Small van, designed for personal use.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Person">
+  <rdfs:comment>Person.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Datatype rdf:about="&xsd;integer"/>
+
+<rdf:Property rdf:ID="registeredTo">
+  <rdfs:domain rdf:resource="#MotorVehicle"/>
+  <rdfs:range rdf:resource="#Person"/>
+  <rdfs:comment>Registered owner.</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:ID="rearSeatLegRoom">
+  <rdfs:domain rdf:resource="#PassengerVehicle"/> 
+  <rdfs:range rdf:resource="&xsd;integer"/>
+  <rdfs:comment>Rear seat leg room in centimeters.</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:ID="driver">
+  <rdfs:domain rdf:resource="#MotorVehicle"/>
+  <rdfs:range rdf:resource="#Person"/>
+  <rdfs:comment>Driver.</rdfs:comment>
+</rdf:Property>
+
+<rdf:Property rdf:ID="primaryDriver">
+  <rdfs:subPropertyOf rdf:resource="#driver"/>
+  <rdfs:comment>Primary driver.</rdfs:comment>
+</rdf:Property>
+
+<PassengerVehicle rdf:ID="johnSmithsCar">
+  <registeredTo rdf:resource="http://www.example.org/staffid/85740"/>
+  <rearSeatLegRoom rdf:datatype="&xsd;integer">127</rearSeatLegRoom>
+  <primaryDriver rdf:resource="http://www.example.org/staffid/85740"/>
+</PassengerVehicle>
+
+</rdf:RDF>
+

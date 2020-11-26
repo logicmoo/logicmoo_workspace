@@ -1,0 +1,19 @@
+(note TQA87)
+
+
+(budgetExpenditureFractionOfGDP Bahrain GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (Percent 6.40000)) 
+
+(query (findall (?FRACTION ?TIME) (thereExists ?NR 
+   (and 
+       (budgetExpenditureFractionOfGDP Bahrain GovernmentMilitaryOrganization ?TIME ?NR) 
+       (evaluate ?FRACTION 
+           (QuantityConversionFn Percent ?NR))))  ))
+
+(answer 6.40000 1994 )
+
+(end_of_file)
+
+
+

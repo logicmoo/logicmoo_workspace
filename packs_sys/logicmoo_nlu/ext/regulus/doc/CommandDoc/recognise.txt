@@ -1,0 +1,6 @@
+Assumed that recognition resources have been loaded using the {\tt
+LOAD\_\-RECOGNITION} command; uses the current recogniser to 
+perform recognition, then treats the 1-best recognition result 
+as though it had been top-level text input. The {\tt RECOGNISE}
+command can be used in any top-level mode.
+

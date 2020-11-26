@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.8</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-incremental.html">
+<link rel="next" href="tabling-shared.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-incremental.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling-shared.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-monotonic"><a id="sec:7.8"><span class="sec-nr">7.8</span> <span class="sec-title">Monotonic 
+tabling</span></a></h2>
+
+<a id="sec:tabling-monotonic"></a>
+
+<p><em>Incremental tabling</em> (<a class="sec" href="tabling-incremental.html#sec:7.7">section 
+7.7</a>) maintains the consistency of tables that depend directly or 
+indirectly on (incremental) dynamic predicates. This is done by <em>invalidating</em> 
+dependent tables on an assert or retract and lazily <em>re-evaluate</em> 
+invalid tables when their content is needed. Incremental tabling 
+preserves all normal tabling properties, including well founded 
+semantics. The downside is that re-evaluation recomputes the table from 
+scratch. This section deals with <em>monotonic tabling</em>, a mechanism 
+that propagates the consequences of <a id="idx:assert1:2016"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+and friends without recomputing the dependent tables from scratch. 
+Unlike incremental tabling though, monotonic tabling can only deal with 
+monotonic programs, in particular it does <em>not</em> deal with 
+negation.
+
+<p>The example below defines the transitive closure of a bi-directional 
+graph using monotonic tabling. This program builds tables for the 
+connected/2 and maintains these tables when new facts are added for 
+link/2 .
+
+<pre class="code">
+:- table connected/2 as monotonic.
+:- dynamic link/2 as monotonic.
+
+connected(X, Y) :-
+    connected(Y, X).
+connected(X, Z) :-
+    connected(X, Y),
+    connected(Y, Z).
+connected(X, Y) :-
+    link(X, Y).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="abolish_monotonic_tables/0"><strong>abolish_monotonic_tables</strong></a></dt>
+<dd class="defbody">
+Abolish all monotonic tables and their dependencies.
+</dd>
+</dl>
+
+<p>The list below describes properties of monotonic tabling and relation 
+to other tabling primitives:
+
+<p>
+<ul class="latex">
+<li>When using <a id="idx:retract1:2017"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+on a dynamic monotonic predicate, all dependent tables and dependency 
+links are destroyed. Subsequent calling of one of the dependent goals 
+rebuilds the tables and dependencies from scratch.
+
+<p>
+<li><a id="idx:abolishalltables0:2018"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a> 
+destroys all monotonic dependency relations.
+
+<p>
+<li>Dynamic predicates can be declared as both <code>monotonic</code> 
+and
+<code>incremental</code> and it allowed to have both incremental and 
+monotonic tabled predicates that depend on such dynamic predicates.
+
+<p>
+<li>A tabled predicate that depends on a monotonic tabled predicate must 
+be tabled monotonic or incremental. If the dependent predicate is 
+incremental a new answer invalidates the incremental table.
+</ul>
+
+<p><b>Status</b> 
+
+<p>Monotonic tabling is experimental and incomplete. Notably support for
+<em>answer subsumption</em> and <em>call subsumption</em> is probably 
+possible and may greatly improve the application domain and resource 
+usage. Monotonic tabling should work with both shared and private 
+tables. Concurrency issues have not yet been tested though.
+
+<p></body></html>

@@ -1,0 +1,937 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.20</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="chario.html">
+<link rel="next" href="manipterm.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="chario.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="manipterm.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:termrw"><a id="sec:4.20"><span class="sec-nr">4.20</span> <span class="sec-title">Term 
+reading and writing</span></a></h2>
+
+<a id="sec:termrw"></a>
+
+<p>This section describes the basic term reading and writing predicates. 
+The predicates <a id="idx:format12:1291"></a><a class="pred" href="format.html#format/1">format/[1,2]</a> 
+and <a id="idx:writef2:1292"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+provide formatted output. Writing to Prolog data structures such as 
+atoms or code-lists is supported by <a id="idx:withoutputto2:1293"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
+and <a id="idx:format3:1294"></a><a class="pred" href="format.html#format/3">format/3</a>.
+
+<p>Reading is sensitive to the Prolog flag <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a>, 
+which controls the interpretation of the <code><code>\</code></code> 
+character in quoted atoms and strings.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write_term/2"><strong>write_term</strong>(<var>+Term, 
++Options</var>)</a></dt>
+<dd class="defbody">
+The predicate <a id="idx:writeterm2:1295"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+is the generic form of all Prolog term-write predicates. Valid options 
+are:
+
+<dl class="latex">
+<dt><strong>attributes</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Define how attributed variables (see <a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>) are written. The default is determined by the Prolog flag <a class="flag" href="flags.html#flag:write_attributes">write_attributes</a>. 
+Defined values are <code>ignore</code> (ignore the attribute), <code>dots</code> 
+(write the attributes as <code>{...}</code>), <code>write</code> (simply 
+hand the attributes recursively to <a id="idx:writeterm2:1296"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>) 
+and <code>portray</code> (hand the attributes to <a id="idx:attrportrayhook2:1297"></a><a class="pred" href="attvar.html#attr_portray_hook/2">attr_portray_hook/2</a>).</dd>
+<dt><strong>back_quotes</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Fulfills the same role as the <a class="flag" href="flags.html#flag:back_quotes">back_quotes</a> 
+prolog flag. Notably, the value <code>string</code> causes string 
+objects to be printed between back quotes and <code>symbol_char</code> 
+causes the backquote to be printed unquoted. In all other cases the 
+backquote is printed as a quoted atom.</dd>
+<dt><strong>brace_terms</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), write <code>{}(X)</code> as <code>{X}</code>. 
+See also
+<code>dotlists</code> and <code>ignore_ops</code>.</dd>
+<dt><strong>blobs</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Define how non-text blobs are handled. By default, this is left to the 
+write handler specified with the blob type. Using <code>portray</code>,
+<a id="idx:portray1:1298"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+is called for each blob encountered. See <a class="sec" href="foreigninclude.html#sec:12.4.8">section 
+12.4.8</a>.</dd>
+<dt><strong>character_escapes</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> and <code>quoted(true)</code> is active, special 
+characters in quoted atoms and strings are emitted as ISO escape 
+sequences. Default is taken from the reference module (see below).</dd>
+<dt><strong>cycles</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), cyclic terms are written as
+<code>@(Template, Substitutions)</code>, where <var>Substitutions</var> 
+is a list
+<var>Var</var> = <var>Value</var>. If <code>cycles</code> is <code>false</code>,
+<code>max_depth</code> is not given, and <var>Term</var> is cyclic, <a id="idx:writeterm2:1299"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+raises a <code>domain_error</code>.<sup class="fn">100<span class="fn-text">The 
+cycles option and the cyclic term representation using the @-term are 
+copied from SICStus Prolog. However, the default in SICStus is set to <code>false</code> 
+and SICStus writes an infinite term if not protected by, e.g., the <code>depth_limit</code> 
+option.</span></sup> See also the <code>cycles</code> option in
+<a id="idx:readterm2:1300"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>.</dd>
+<dt><strong>dotlists</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), write lists using the 
+dotted term notation rather than the list notation.<sup class="fn">101<span class="fn-text">Copied 
+from ECLiPSe.</span></sup> Note that as of version&nbsp;7, the list 
+constructor is
+<code>'[|]'</code>. Using <code>dotlists(true)</code>, <a id="idx:writeterm2:1301"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+writes a list using&lsquo;.' as constructor. This is intended for 
+communication with programs such as other Prolog systems, that rely on 
+this notation. See also the option <code>no_lists(true)</code> to use 
+the actual SWI-Prolog list functor.</dd>
+<dt><strong>fullstop</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), add a fullstop token 
+to the output. The dot is preceded by a space if needed and followed by 
+a space (default) or newline if the <code>nl(true)</code> option is also 
+given.<sup class="fn">102<span class="fn-text">Compatible with <a class="url" href="http://eclipseclp.org/doc/bips/kernel/ioterm/write_term-3.html">ECLiPSe</a></span></sup></dd>
+<dt><strong>ignore_ops</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, the generic term representation (&lt;<var>functor</var>&gt;(&lt;<var>args</var>&gt; 
+... )) will be used for all terms. Otherwise (default), operators will 
+be used where appropriate.<sup class="fn">103<span class="fn-text">In 
+traditional systems this flag also stops the syntactic sugar notation 
+for lists and brace terms. In SWI-Prolog, these are controlled by the 
+separate options <code>dotlists</code> and <code>brace_terms</code></span></sup>.</dd>
+<dt><strong>max_depth</strong>(<var>Integer</var>)</dt>
+<dd class="defbody">
+If the term is nested deeper than <var>Integer</var>, print the 
+remainder as ellipses ( ... ). A 0 (zero) value (default) imposes no 
+depth limit. This option also delimits the number of printed items in a 
+list. Example:
+
+<pre class="code">
+?- write_term(a(s(s(s(s(0)))), [a,b,c,d,e,f]),
+              [max_depth(3)]).
+a(s(s(...)), [a, b|...])
+true.
+</pre>
+
+<p>Used by the top level and debugger to limit screen output. See also 
+the Prolog flags <a class="flag" href="flags.html#flag:answer_write_options">answer_write_options</a> 
+and
+<a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a>.</dd>
+<dt><strong>module</strong>(<var>Module</var>)</dt>
+<dd class="defbody">
+Define the reference module (default <code>user</code>). This defines 
+the default value for the <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+option as well as the operator definitions to use. If <var>Module</var> 
+does not exist it is
+<em>not</em> created and the <code>user</code> module is used. See also <a id="idx:op3:1302"></a><a class="pred" href="operators.html#op/3">op/3</a> 
+and <a id="idx:readterm2:1303"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>, 
+providing the same option.</dd>
+<dt><strong>nl</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Add a newline to the output. See also the <code>fullstop</code> option.</dd>
+<dt><strong>no_lists</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Do not use list notation. This is similar to <code>dotlists(true)</code>, 
+but uses the SWI-Prolog list functor, which is by default <code>'[|]'</code> 
+instead of the ISO Prolog <code>'.'</code>. Used by <a id="idx:display1:1304"></a><span class="pred-ext">display/1</span>.</dd>
+<dt><strong>numbervars</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, terms of the format <code>$VAR(N)</code>, where <var>N</var> 
+is a non-negative integer, will be written as a variable name. If <var>N</var> 
+is an atom it is written without quotes. This extension allows for 
+writing variables with user-provided names. The default is <code>false</code>. 
+See also <a id="idx:numbervars3:1305"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a> 
+and the option <code>variable_names</code>.</dd>
+<dt><strong>partial</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), do not reset the 
+logic that inserts extra spaces that separate tokens where needed. This 
+is intended to solve the problems with the code below. Calling <code>write_value(<code>.</code>)</code> 
+writes <code>..</code>, which cannot be read. By adding <code>partial(true)</code> 
+to the option list, it correctly emits <code>. .</code>. Similar 
+problems appear when emitting operators using multiple calls to <a id="idx:writeterm3:1306"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a>.
+
+<pre class="code">
+write_value(Value) :-
+        write_term(Value, [partial(true)]),
+        write('.'), nl.
+</pre>
+
+</dd>
+<dt><strong>portray</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Same as <code>portrayed(Bool)</code>. Deprecated.</dd>
+<dt><strong>portray_goal</strong>(<var>:Goal</var>)</dt>
+<dd class="defbody">
+Implies <code>portray(true)</code>, but calls <var>Goal</var> rather 
+than the predefined hook <a id="idx:portray1:1307"></a><a class="pred" href="termrw.html#portray/1">portray/1</a>. <var>Goal</var> 
+is called through <a id="idx:call3:1308"></a><span class="pred-ext">call/3</span>, 
+where the first argument is <var>Goal</var>, the second is the term to 
+be printed and the 3rd argument is the current write option list. The 
+write option list is copied from the write_term call, but the list is 
+guaranteed to hold an option <code>priority</code> that reflects the 
+current priority.</dd>
+<dt><strong>portrayed</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, the hook <a id="idx:portray1:1309"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+is called before printing a term that is not a variable. If <a id="idx:portray1:1310"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+succeeds, the term is considered printed. See also <a id="idx:print1:1311"></a><a class="pred" href="termrw.html#print/1">print/1</a>. 
+The default is <code>false</code>. This option is an extension to the 
+ISO write_term options.</dd>
+<dt><strong>priority</strong>(<var>Integer</var>)</dt>
+<dd class="defbody">
+An integer between 0 and 1200 representing the&lsquo;context priority'. 
+Default is 1200. Can be used to write partial terms appearing as the 
+argument to an operator. For example:
+
+<pre class="code">
+        format('~w = ', [VarName]),
+        write_term(Value, [quoted(true), priority(699)])
+</pre>
+
+</dd>
+<dt><strong>quoted</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, atoms and functors that need quotes will be 
+quoted. The default is <code>false</code>.</dd>
+<dt><strong>spacing</strong>(<var>+Spacing</var>)</dt>
+<dd class="defbody">
+Determines whether and where extra white space is added to enhance 
+readability. The default is <code>standard</code>, adding only space 
+where needed for proper tokenization by <a id="idx:readterm3:1312"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>. 
+Currently, the only other value is <code>next_argument</code>, adding a 
+space after a comma used to separate arguments in a term or list.</dd>
+<dt><strong>variable_names</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Assign names to variables in <var>Term</var>. <var>List</var> is a list 
+of terms
+<var>Name</var> = <var>Var</var>, where <var>Name</var> is an atom that 
+represents a valid Prolog variable name. Terms where <var>Var</var> is 
+bound or is a variable that does not appear in <var>Term</var> are 
+ignored. Raises an error if <var>List</var> is not a list, one of the 
+members is not a term
+<var>Name</var> = <var>Var</var>, <var>Name</var> is not an atom or
+<var>Name</var> does not represent a valid Prolog variable name.
+
+<p>The implementation binds the variables from <var>List</var> to a term
+<code>'$VAR'</code>(<var>Name</var>). Like <a id="idx:writecanonical1:1313"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>, 
+terms that where already bound to <code>'$VAR'</code>(<var>X</var>) 
+before <a id="idx:writeterm2:1314"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+are printed normally, unless the option <code>numbervars(true)</code> is 
+also provided. If the option <code>numbervars(true)</code> is used, the 
+user is responsible for avoiding collisions between assigned names and 
+numbered names. See also the <code>variable_names</code> option of
+<a id="idx:readterm2:1315"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>.
+
+<p>Possible variable attributes (see <a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>) are ignored. In most cases one should use <a id="idx:copyterm3:1316"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+to obtain a copy that is free of attributed variables and handle the 
+associated constraints as appropriate for the use-case.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write_term/3"><strong>write_term</strong>(<var>+Stream, 
++Term, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:writeterm2:1317"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>, 
+but output is sent to <var>Stream</var> rather than the current output.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="write_length/3"><strong>write_length</strong>(<var>+Term, 
+-Length, +Options</var>)</a></dt>
+<dd class="defbody">
+True when <var>Length</var> is the number of characters emitted for
+<code>write_term(Term, Options)</code>. In addition to valid options for
+<a id="idx:writeterm2:1318"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>, 
+it processes the option:
+
+<dl class="latex">
+<dt><strong>max_length</strong>(<var>+MaxLength</var>)</dt>
+<dd class="defbody">
+If provided, fail if <var>Length</var> would be larger than <var>MaxLength</var>. 
+The implementation ensures that the runtime is limited when computing 
+the length of a huge term with a bounded maximum.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write_canonical/1"><strong>write_canonical</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> on the current output stream using standard 
+parenthesised prefix notation (i.e., ignoring operator declarations). 
+Atoms that need quotes are quoted. Terms written with this predicate can 
+always be read back, regardless of current operator declarations. 
+Equivalent to <a id="idx:writeterm2:1319"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+using the options <code>ignore_ops</code>,
+<code>quoted</code> and <code>numbervars</code> after <a id="idx:numbervars4:1320"></a><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a> 
+using the
+<code>singletons</code> option.
+
+<p>Note that due to the use of <a id="idx:numbervars4:1321"></a><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a>, 
+non-ground terms must be written using a <em>single</em> <a id="idx:writecanonical1:1322"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a> 
+call. This used to be the case anyhow, as garbage collection between 
+multiple calls to one of the write predicates can change the <code>_G</code>&lt;<var>NNN</var>&gt; 
+identity of the variables.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write_canonical/2"><strong>write_canonical</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> in canonical form on <var>Stream</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write/1"><strong>write</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> to the current output, using brackets and 
+operators where appropriate.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="write/2"><strong>write</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> to <var>Stream</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="writeq/1"><strong>writeq</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> to the current output, using brackets and 
+operators where appropriate. Atoms that need quotes are quoted. Terms 
+written with this predicate can be read back with <a id="idx:read1:1323"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+provided the currently active operator declarations are identical.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="writeq/2"><strong>writeq</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Write <var>Term</var> to <var>Stream</var>, inserting quotes.</dd>
+<dt class="pubdef"><a id="writeln/1"><strong>writeln</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>write(Term), nl.</code>. The output stream is 
+locked, which implies no output from other threads can appear between 
+the term and newline.</dd>
+<dt class="pubdef"><a id="writeln/2"><strong>writeln</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>write(Stream, Term), nl(Stream).</code>. The output 
+stream is locked, which implies no output from other threads can appear 
+between the term and newline.</dd>
+<dt class="pubdef"><a id="print/1"><strong>print</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Print a term for debugging purposes. The predicate <a id="idx:print1:1324"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+acts as if defined as below.
+
+<pre class="code">
+print(Term) :-
+    current_prolog_flag(print_write_options, Options), !,
+    write_term(Term, Options).
+print(Term) :-
+    write_term(Term, [ portray(true),
+                       numbervars(true),
+                       quoted(true)
+                     ]).
+</pre>
+
+<p>The <a id="idx:print1:1325"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+predicate is used primarily through the <code>~p</code> escape sequence 
+of <a id="idx:format2:1326"></a><a class="pred" href="format.html#format/2">format/2</a>, 
+which is commonly used in the recipes used by
+<a id="idx:printmessage2:1327"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+to emit messages.
+
+<p>The classical definition of this predicate is equivalent to the ISO 
+predicate <a id="idx:writeterm2:1328"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+using the options <code>portray(true)</code> and
+<code>numbervars(true)</code>. The <code>portray(true)</code> option 
+allows the user to implement application-specific printing of terms 
+printed during debugging to facilitate easy understanding of the output. 
+See also
+<a id="idx:portray1:1329"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+and <code>library(portray_text)</code>. SWI-Prolog adds <code>quoted(true)</code> 
+to (1) facilitate the copying/pasting of terms that are not affected by
+<a id="idx:portray1:1330"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+and to (2) allow numbers, atoms and strings to be more easily 
+distinguished, e.g., <code>42</code>, <code>'42'</code> and <code>"42"</code>.</dd>
+<dt class="pubdef"><a id="print/2"><strong>print</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Print <var>Term</var> to <var>Stream</var>.</dd>
+<dt class="pubdef"><a id="portray/1"><strong>portray</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+A dynamic predicate, which can be defined by the user to change the 
+behaviour of <a id="idx:print1:1331"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+on (sub)terms. For each subterm encountered that is not a variable <a id="idx:print1:1332"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+first calls <a id="idx:portray1:1333"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+using the term as argument. For lists, only the list as a whole is given 
+to <a id="idx:portray1:1334"></a><a class="pred" href="termrw.html#portray/1">portray/1</a>. 
+If
+<a id="idx:portray1:1335"></a><a class="pred" href="termrw.html#portray/1">portray/1</a> 
+succeeds <a id="idx:print1:1336"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+assumes the term has been written.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="read/1"><strong>read</strong>(<var>-Term</var>)</a></dt>
+<dd class="defbody">
+Read the next <b>Prolog term</b> from the current input stream and unify 
+it with <var>Term</var>. On reaching end-of-file <var>Term</var> is 
+unified with the atom <code>end_of_file</code>. This is the same as <a id="idx:readterm2:1337"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+using an empty option list.
+
+<p><b>[NOTE]</b> You might have found this while looking for a predicate 
+to read input from a file or the user. Quite likely this is not what you 
+need in this case. This predicate is for reading a <b>Prolog term</b> 
+which may span multiple lines and must end in a <em>full stop</em> (dot 
+character followed by a layout character). The predicates for reading 
+and writing Prolog terms are particularly useful for storing Prolog data 
+in a file or transferring them over a network communication channel 
+(socket) to another Prolog process. The libraries provide a wealth of 
+predicates to read data in other formats. See e.g., <code>library(readutil)</code>,
+<code>library(pure_input)</code> or libraries from the extension 
+packages to read XML, JSON, YAML, etc.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="read/2"><strong>read</strong>(<var>+Stream, 
+-Term</var>)</a></dt>
+<dd class="defbody">
+Read the next <b>Prolog term</b> from <var>Stream</var>. See <a id="idx:read1:1338"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and
+<a id="idx:readterm2:1339"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+for details.</dd>
+<dt class="pubdef"><a id="read_clause/3"><strong>read_clause</strong>(<var>+Stream, 
+-Term, +Options</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <a id="idx:readterm3:1340"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>, 
+but sets options according to the current compilation context and 
+optionally processes comments. Defined options:
+
+<dl class="latex">
+<dt><strong>syntax_errors</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+See <a id="idx:readterm3:1341"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>, 
+but the default is <code>dec10</code> (report and restart).</dd>
+<dt><strong>term_position</strong>(<var>-TermPos</var>)</dt>
+<dd class="defbody">
+Same as for <a id="idx:readterm3:1342"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.</dd>
+<dt><strong>subterm_positions</strong>(<var>-TermPos</var>)</dt>
+<dd class="defbody">
+Same as for <a id="idx:readterm3:1343"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.</dd>
+<dt><strong>variable_names</strong>(<var>-Bindings</var>)</dt>
+<dd class="defbody">
+Same as for <a id="idx:readterm3:1344"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.</dd>
+<dt><strong>process_comment</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default), call
+<code>prolog:comment_hook(Comments, TermPos, Term)</code> if this 
+multifile hook is defined (see <a id="idx:prologcommenthook3:1345"></a><a class="pred" href="loadfilehook.html#prolog:comment_hook/3">prolog:comment_hook/3</a>). 
+This is used to drive PlDoc.</dd>
+<dt><strong>comments</strong>(<var>-Comments</var>)</dt>
+<dd class="defbody">
+If provided, unify <var>Comments</var> with the comments encountered 
+while reading <var>Term</var>. This option implies
+<code>process_comment(false)</code>.
+</dd>
+</dl>
+
+<p>The <code>singletons</code> option of <a id="idx:readterm3:1346"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+is initialised from the active style-checking mode. The <code>module</code> 
+option is initialised to the current compilation module (see <a id="idx:prologloadcontext2:1347"></a><a class="pred" href="consulting.html#prolog_load_context/2">prolog_load_context/2</a>).</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="read_term/2"><strong>read_term</strong>(<var>-Term, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Read a term from the current input stream and unify the term with
+<var>Term</var>. The reading is controlled by options from the list of
+<var>Options</var>. If this list is empty, the behaviour is the same as 
+for
+<a id="idx:read1:1348"></a><a class="pred" href="termrw.html#read/1">read/1</a>. 
+The options are upward compatible with Quintus Prolog. The argument 
+order is according to the ISO standard. Syntax errors are always 
+reported using exception-handling (see <a id="idx:catch3:1349"></a><a class="pred" href="exception.html#catch/3">catch/3</a>). 
+Options:
+
+<dl class="latex">
+<dt><strong>backquoted_string</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, read <code>`</code>...<code>`</code> to a string 
+object (see
+<a class="sec" href="string.html#sec:5.2">section 5.2</a>). The default 
+depends on the Prolog flag
+<a class="flag" href="flags.html#flag:back_quotes">back_quotes</a>.</dd>
+<dt><strong>character_escapes</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Defines how to read <code>\</code> escape sequences in quoted atoms. See 
+the Prolog flag <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+in <a id="idx:currentprologflag2:1350"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>. 
+(SWI-Prolog).</dd>
+<dt><strong>comments</strong>(<var>-Comments</var>)</dt>
+<dd class="defbody">
+Unify <var>Comments</var> with a list of <var>Position</var>-<var>Comment</var>, 
+where
+<var>Position</var> is a stream position object (see <a id="idx:streampositiondata3:1351"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>) 
+indicating the start of a comment and <var>Comment</var> is a string 
+object containing the text including delimiters of a comment. It returns 
+all comments from where the <a id="idx:readterm2:1352"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+call started up to the end of the term read.</dd>
+<dt><strong>cycles</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), re-instantiate 
+templates as produced by the corresponding <a id="idx:writeterm2:1353"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+option. Note that the default is <code>false</code> to avoid 
+misinterpretation of <code>@(Template, Substitutions)</code>, while the 
+default of <a id="idx:writeterm2:1354"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+is <code>true</code> because emitting cyclic terms without using the 
+template construct produces an infinitely large term (read: it will 
+generate an error after producing a huge amount of output).</dd>
+<dt><strong>dotlists</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), read <code>.(a,[])</code> 
+as a list, even if lists are internally nor constructed using the dot as 
+functor. This is primarily intended to read the output from <a id="idx:writecanonical1:1355"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a> 
+from other Prolog systems. See <a class="sec" href="ext-lists.html#sec:5.1">section 
+5.1</a>.</dd>
+<dt><strong>double_quotes</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+Defines how to read " ... " strings. See the Prolog flag
+<a class="flag" href="flags.html#flag:double_quotes">double_quotes</a>. 
+(SWI-Prolog).</dd>
+<dt><strong>module</strong>(<var>Module</var>)</dt>
+<dd class="defbody">
+Specify <var>Module</var> for operators, <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+flag and <a class="flag" href="flags.html#flag:double_quotes">double_quotes</a> 
+flag. The value of the latter two is overruled if the corresponding <a id="idx:readterm3:1356"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+option is provided. If no module is specified, the current&lsquo;source 
+module' is used. If the options is provided but the target module does 
+not exist, module <code>user</code> is used because new modules by 
+default inherit from <code>user</code></dd>
+<dt><strong>quasi_quotations</strong>(<var>-List</var>)</dt>
+<dd class="defbody">
+If present, unify <var>List</var> with the quasi quotations (see
+<a class="sec" href="quasiquotations.html#sec:A.36">section A.36</a>) 
+instead of evaluating quasi quotations. Each quasi quotation is a term <code>quasi_quotation(+Syntax, 
++Quotation, +VarDict, -Result)</code>, where <var>Syntax</var> is the 
+term in
+<code>{|Syntax||..|}</code>, <var>Quotation</var> is a list of character 
+codes that represent the quotation, <var>VarDict</var> is a list of
+<var>Name</var>=<var>Variable</var> and <var>Result</var> is a variable 
+that shares with the place where the quotation must be inserted. This 
+option is intended to support tools that manipulate Prolog source text.</dd>
+<dt><strong>singletons</strong>(<var>Vars</var>)</dt>
+<dd class="defbody">
+As <code>variable_names</code>, but only reports the variables occurring 
+only once in the <var>Term</var> read (ISO). If <var>Vars</var> is the 
+constant
+<code>warning</code>, singleton variables are reported using <a id="idx:printmessage2:1357"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+The variables appear in the order they have been read. The latter option 
+provides backward compatibility and is used to read terms from source 
+files. Not all singleton variables are reported as a warning. See
+<a class="sec" href="syntax.html#sec:2.16.1.10">section 2.16.1.10</a> 
+for the rules that apply for warning about a singleton variable.<sup class="fn">104<span class="fn-text">As 
+of version 7.7.17, <em>all</em> variables starting with an underscore 
+except for the truly anonymous variable are returned in <var>Vars</var>. 
+Older versions only reported those that would have been reported if <code>warning</code> 
+is used.</span></sup></dd>
+<dt><strong>syntax_errors</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+If <code>error</code> (default), throw an exception on a syntax error. 
+Other values are <code>fail</code>, which causes a message to be printed 
+using
+<a id="idx:printmessage2:1358"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>, 
+after which the predicate fails, <code>quiet</code> which causes the 
+predicate to fail silently, and <code>dec10</code> which causes syntax 
+errors to be printed, after which <a id="idx:readterm23:1359"></a><a class="pred" href="termrw.html#read_term/2">read_term/[2,3]</a> 
+continues reading the next term. Using <code>dec10</code>, <a id="idx:readterm23:1360"></a><a class="pred" href="termrw.html#read_term/2">read_term/[2,3]</a> 
+never fails. (Quintus, SICStus).</dd>
+<dt><strong>subterm_positions</strong>(<var>TermPos</var>)</dt>
+<dd class="defbody">
+Describes the detailed layout of the term. The formats for the various 
+types of terms are given below. All positions are character positions. 
+If the input is related to a normal stream, these positions are relative 
+to the start of the input; when reading from the terminal, they are 
+relative to the start of the term.
+
+<dl class="latex">
+<dt><b><var>From</var>-<var>To</var></b></dt>
+<dd class="defbody">
+Used for primitive types (atoms, numbers, variables).</dd>
+<dt><strong>string_position</strong>(<var><var>From</var>, <var>To</var></var>)</dt>
+<dd class="defbody">
+Used to indicate the position of a string enclosed in double quotes (<code>"</code>).</dd>
+<dt><strong>brace_term_position</strong>(<var><var>From</var>, <var>To</var>, <var>Arg</var></var>)</dt>
+<dd class="defbody">
+Term of the form <code>{...}</code>, as used in DCG rules. <var>Arg</var> 
+describes the argument.</dd>
+<dt><strong>list_position</strong>(<var><var>From</var>, <var>To</var>, <var>Elms</var>, <var>Tail</var></var>)</dt>
+<dd class="defbody">
+A list. <var>Elms</var> describes the positions of the elements. If the 
+list specifies the tail as <code><code>|</code></code>&lt;<var>TailTerm</var>&gt;, <var>Tail</var> 
+is unified with the term position of the tail, otherwise with the atom <code>none</code>.</dd>
+<dt><strong>term_position</strong>(<var><var>From</var>, <var>To</var>, <var>FFrom</var>, <var>FTo</var>, <var>SubPos</var></var>)</dt>
+<dd class="defbody">
+Used for a compound term not matching one of the above. <var>FFrom</var> 
+and <var>FTo</var> describe the position of the functor. <var>SubPos</var> 
+is a list, each element of which describes the term position of the 
+corresponding subterm.</dd>
+<dt><strong>dict_position</strong>(<var><var>From</var>, <var>To</var>, <var>TagFrom</var>, <var>TagTo</var>, <var>KeyValuePosList</var></var>)</dt>
+<dd class="defbody">
+Used for a dict (see <a class="sec" href="bidicts.html#sec:5.4">section 
+5.4</a>). The position of the key-value pairs is described by <var>KeyValuePosList</var>, 
+which is a list of <code>key_value_position/7</code> terms. The
+<code>key_value_position/7</code> terms appear in the order of the 
+input. Because maps to not preserve ordering, the key is provided in the 
+position description.</dd>
+<dt><strong>key_value_position</strong>(<var><var>From</var>, <var>To</var>, <var>SepFrom</var>, <var>SepTo</var>, <var>Key</var>, <var>KeyPos</var>, <var>ValuePos</var></var>)</dt>
+<dd class="defbody">
+Used for key-value pairs in a map (see <a class="sec" href="bidicts.html#sec:5.4">section 
+5.4</a>). It is similar to the <code>term_position/5</code> that would 
+be created, except that the key and value positions do not need an 
+intermediate list and the key is provided in <var>Key</var> to enable 
+synchronisation of the file position data with the data structure.</dd>
+<dt><strong>parentheses_term_position</strong>(<var><var>From</var>, <var>To</var>, <var>ContentPos</var></var>)</dt>
+<dd class="defbody">
+Used for terms between parentheses. This is an extension compared to the 
+original Quintus specification that was considered necessary for secure 
+refactoring of terms.</dd>
+<dt><strong>quasi_quotation_position</strong>(<var><var>From</var>, <var>To</var>, <var>SyntaxFrom</var>, <var>SyntaxTo</var>, <var>ContentPos</var></var>)</dt>
+<dd class="defbody">
+Used for quasi quotations.
+</dd>
+</dl>
+
+</dd>
+<dt><strong>term_position</strong>(<var>Pos</var>)</dt>
+<dd class="defbody">
+Unifies <var>Pos</var> with the starting position of the term read. <var>Pos</var> 
+is of the same format as used by <a id="idx:streamproperty2:1361"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.</dd>
+<dt><strong>var_prefix</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, demand variables to start with an underscore. See
+<a class="sec" href="syntax.html#sec:2.16.1.8">section 2.16.1.8</a>.</dd>
+<dt><strong>variables</strong>(<var>Vars</var>)</dt>
+<dd class="defbody">
+Unify <var>Vars</var> with a list of variables in the term. The 
+variables appear in the order they have been read. See also <a id="idx:termvariables2:1362"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a>. 
+(ISO).</dd>
+<dt><strong>variable_names</strong>(<var>Vars</var>)</dt>
+<dd class="defbody">
+Unify <var>Vars</var> with a list of&lsquo;<var>Name</var> = <var>Var</var>&rsquo;, 
+where
+<var>Name</var> is an atom describing the variable name and <var>Var</var> 
+is a variable that shares with the corresponding variable in <var>Term</var>. 
+(ISO). The variables appear in the order they have been read.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="read_term/3"><strong>read_term</strong>(<var>+Stream, 
+-Term, +Options</var>)</a></dt>
+<dd class="defbody">
+Read term with options from <var>Stream</var>. See <a id="idx:readterm2:1363"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>.</dd>
+<dt class="pubdef"><a id="read_term_from_atom/3"><strong>read_term_from_atom</strong>(<var>+Atom, 
+-Term, +Options</var>)</a></dt>
+<dd class="defbody">
+Use <a id="idx:readterm3:1364"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+to read the next term from <var>Atom</var>. <var>Atom</var> is either an 
+atom or a string object (see <a class="sec" href="string.html#sec:5.2">section 
+5.2</a>). It is not required for <var>Atom</var> to end with a 
+full-stop. This predicate supersedes <a id="idx:atomtoterm3:1365"></a><a class="pred" href="manipatom.html#atom_to_term/3">atom_to_term/3</a>.</dd>
+<dt class="pubdef"><a id="read_term_with_history/2"><strong>read_term_with_history</strong>(<var>-Term, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Read a term while providing history substitutions.
+<a id="idx:readtermwithhistory2:1366"></a><a class="pred" href="termrw.html#read_term_with_history/2">read_term_with_history/2</a> 
+is used by the top level to read the user's actions. In addition to the 
+options recognised by <a id="idx:readterm2:1367"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>, 
+the following options are recognised:
+
+<dl class="latex">
+<dt><strong>prompt</strong>(<var>+Prompt</var>)</dt>
+<dd class="defbody">
+Define the prompt to use. The default is <code>~! ?-</code>. A sequence
+<code>~!</code> is replaced by the current history event number.
+</dd>
+<dt><strong>show</strong>(<var>+Command</var>)</dt>
+<dd class="defbody">
+Using <var>Command</var> lists the saved history events. Default is
+<code>!history</code>.
+</dd>
+<dt><strong>help</strong>(<var>+Command</var>)</dt>
+<dd class="defbody">
+Using <var>Command</var> shows help on the history system. Default is
+<code>!help</code>.
+</dd>
+<dt><strong>no_save</strong>(<var>+Commands</var>)</dt>
+<dd class="defbody">
+Do not save the command into the history if it appears in the list
+<var>Commands</var>.
+</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Defines the module from which to extract module-specific syntax such as 
+operators and handling of the various quotes. Default is the <em>typein</em> 
+module which is set using <a id="idx:module1:1368"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a> 
+and is initially set to <code>user</code>.
+</dd>
+<dt><strong>input</strong>(<var>+Stream</var>)</dt>
+<dd class="defbody">
+Stream from which to read <var>Term</var>. Default is <code>user_input</code>.
+</dd>
+</dl>
+
+<p>Most applications will use the <a id="idx:readterm2:1369"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+option <code>variable_names</code> to get access to the names of the 
+variables in <var>Term</var>. SWI-Prolog calls <a id="idx:readtermwithhistory2:1370"></a><a class="pred" href="termrw.html#read_term_with_history/2">read_term_with_history/2</a> 
+as follows:
+
+<pre class="code">
+    read_term_with_history(
+        Goal,
+        [ show(h),
+          help('!h'),
+          no_save([trace, end_of_file]),
+          prompt('~! ?-'),
+          variable_names(Bindings)
+        ]).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="prompt/2"><strong>prompt</strong>(<var>-Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Set prompt associated with reading from the <code>user_input</code> 
+stream.
+<var>Old</var> is first unified with the current prompt. On success the 
+prompt will be set to <var>New</var> (an atom). A prompt is printed if 
+data is read from <code>user_input</code>, the cursor is at the left 
+margin and the <code>user_input</code> is considered to be connected to 
+a terminal. See the <code>tty(Bool)</code> property of <a id="idx:streamproperty2:1371"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+and <a id="idx:setstream2:1372"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
+
+<p>The default prompt is <code>'|: '</code>. Note that the toplevel loop 
+(see
+<a id="idx:prolog0:1373"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>) 
+sets the prompt for the first prompt (see <a id="idx:prompt11:1374"></a><a class="pred" href="termrw.html#prompt1/1">prompt1/1</a>) 
+to
+<code>'?- '</code>, possibly decorated by the history event number,
+<em>break level</em> and debug mode. If the first line does not complete 
+the term, subsequent lines are prompted for using the prompt as defined 
+by <a id="idx:prompt2:1375"></a><a class="pred" href="termrw.html#prompt/2">prompt/2</a>.</dd>
+<dt class="pubdef"><a id="prompt1/1"><strong>prompt1</strong>(<var>+Prompt</var>)</a></dt>
+<dd class="defbody">
+Sets the prompt for the next line to be read. Continuation lines will be 
+read using the prompt defined by <a id="idx:prompt2:1376"></a><a class="pred" href="termrw.html#prompt/2">prompt/2</a>.
+</dd>
+</dl>
+
+<p></body></html>

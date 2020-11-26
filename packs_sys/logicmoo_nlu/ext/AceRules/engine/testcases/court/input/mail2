@@ -1,0 +1,13 @@
+Family-Rule: If a message is from someone who belongs-to the family of Fred then the message is important.
+Daisy-Rule: If a message is from Daisy then the message is not important.
+Emergency-Rule: If a message is a notification of an emergency then the message is important.
+Daisy-Rule overrides Family-Rule.
+Emergency-Rule overrides Daisy-Rule.
+Emergency-Rule overrides Family-Rule.
+If there is an illness of someone who belongs-to the family of Fred then the illness is an emergency.
+Betty belongs-to the family of Fred.
+Daisy belongs-to the family of Fred.
+Item19 is a message that is from Betty.
+Item20 is a message that is from Daisy.
+Item115 is a message that is from Daisy.
+Item115 is a message that is a notification of an illness of Daisy.

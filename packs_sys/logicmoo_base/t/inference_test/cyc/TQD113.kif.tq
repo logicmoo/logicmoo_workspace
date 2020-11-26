@@ -1,0 +1,43 @@
+(note TQD113)
+
+(desires WorldTradeOrganization "To help trade flow as freely as possible so long as there are no undesirable side-effects.") 
+
+
+
+
+(desires WorldTradeOrganization "To reduce (the uses and needs for) favored-nation treatment.") 
+
+
+
+
+(desires WorldTradeOrganization "To achieve further liberalization gradually through negotiation through serving as a forum for trade negotiations.") 
+
+
+
+
+(desires WorldTradeOrganization "To set up an impartial means of settling disputes in the most harmonious way through procedures based on an agreed legal foundation.") 
+
+
+
+
+(statementOfPurpose WorldTradeOrganization "to provide a means to resolve trade conflicts  between members and to carry on negotiations with  the goal of further lowering and/or eliminating tariffs  and other trade barriers") 
+
+
+
+
+
+( query  (findall ?GOALS ?PURPOSE) (or 
+ (desires WorldTradeOrganization ?GOALS) 
+ (statementOfPurpose WorldTradeOrganization ?PURPOSE))  
+))
+
+
+(answer "To help trade flow as freely as possible so long as there are no undesirable side-effects.")
+(answer "To reduce (the uses and needs for) favored-nation treatment.")
+(answer "To achieve further liberalization gradually through negotiation through serving as a forum for trade negotiations.")
+(answer "To set up an impartial means of settling disputes in the most harmonious way through procedures based on an agreed legal foundation.")
+(answer "to provide a means to resolve trade conflicts between members and to carry on negotiations with the goal of further lowering and/or eliminating tariffs and other trade barriers")
+
+(end_of_file)
+
+

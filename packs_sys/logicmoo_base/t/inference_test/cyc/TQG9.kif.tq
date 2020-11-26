@@ -1,0 +1,7 @@
+(note TQG9)
+
+(time 200)
+
+(query (and (subclass ?ENTITY Animal) (subclass ?ENTITY CognitiveAgent)))
+
+(answer Human)

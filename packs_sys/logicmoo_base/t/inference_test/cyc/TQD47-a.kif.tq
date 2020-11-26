@@ -1,0 +1,30 @@
+(note TQD47-a)
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?COUNTRY) 
+ (instance ?COUNTRY IndependentCountry)) 
+ (capableOfDoing UnitedStatesOfAmerica ?EMBARGO agent)) 
+
+(instance HYP-EconomicEmbargo-40147365 EconomicEmbargo) 
+
+(instance Libya IndependentCountry) 
+
+(maleficiary HYP-EconomicEmbargo-40147365 Libya) 
+
+(capableOfDoing UnitedStatesOfAmerica HYP-EconomicEmbargo-40147365 agent) 
+
+
+(queryyn
+(implies 
+   (and 
+       (instance ?EMBARGO EconomicEmbargo) 
+       (maleficiary ?EMBARGO Libya)) 
+   (capableOfDoing UnitedStatesOfAmerica ?EMBARGO agent))
+)
+
+(answer Yes
+)
+
+(end_of_file)

@@ -1,0 +1,2 @@
+
+In this mode, the sentence is parsed using the current parser. If any parses are found, the first one is processed through the code defined by the dialogue\_\-files config file entry.

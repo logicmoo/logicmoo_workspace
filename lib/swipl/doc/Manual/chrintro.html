@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 9.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="chr.html">
+<link rel="next" href="SyntaxAndSemantics.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="chr.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="SyntaxAndSemantics.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:chrintro"><a id="sec:9.1"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction</span></a></h2>
+
+<a id="sec:chrintro"></a> Constraint Handling Rules (CHR) is a 
+committed-choice rule-based language embedded in Prolog. It is designed 
+for writing constraint solvers and is particularly useful for providing 
+application-specific constraints. It has been used in many kinds of 
+applications, like scheduling, model checking, abduction, and type 
+checking, among many others.
+
+<p>CHR has previously been implemented in other Prolog systems (SICStus, 
+Eclipse, Yap), Haskell and Java. This CHR system is based on the 
+compilation scheme and runtime environment of CHR in SICStus.
+
+<p>In this documentation we restrict ourselves to giving a short 
+overview of CHR in general and mainly focus on elements specific to this 
+implementation. For a more thorough review of CHR we refer the reader to
+<cite><a class="cite" href="Bibliography.html#Freuhwirth:2009">Fr&uuml;hwirth, 
+2009</a></cite>. More background on CHR can be found at
+<cite><a class="cite" href="Bibliography.html#chrSite">Fr&uuml;hwirth,</a></cite>.
+
+<p>In <a class="sec" href="SyntaxAndSemantics.html#sec:9.2">section 9.2</a> 
+we present the syntax of CHR in Prolog and explain informally its 
+operational semantics. Next, <a class="sec" href="practical.html#sec:9.3">section 
+9.3</a> deals with practical issues of writing and compiling Prolog 
+programs containing CHR. <a class="sec" href="debugging.html#sec:9.4">Section 
+9.4</a> explains the (currently primitive) CHR debugging facilities. <a class="sec" href="debugging.html#sec:9.4.3">Section 
+9.4.3</a> provides a few useful predicates to inspect the constraint 
+store, and <a class="sec" href="examples.html#sec:9.5">section 9.5</a> 
+illustrates CHR with two example programs. <a class="sec" href="sicstus-chr.html#sec:9.6">Section 
+9.6</a> describes some compatibility issues with older versions of this 
+system and SICStus' CHR system. Finally, <a class="sec" href="guidelines.html#sec:9.7">section 
+9.7</a> concludes with a few practical guidelines for using CHR.
+
+<p></body></html>

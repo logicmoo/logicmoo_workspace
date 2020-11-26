@@ -1,0 +1,29 @@
+(note "TQD102 -- missing axioms")
+
+(temporallySubsumes (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) 
+ (givesSupportToAgent Iran Stage1-LibyanScientist1 
+ (HighAmountFn EconomicSupport))) 
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(expertRegarding Stage1-LibyanScientist1 BiologicalWeapon) 
+
+
+
+( queryyn (thereExists ?WEAPON-TYPE 
+ (thereExists ?DEVELOPER 
+ (or 
+ (and 
+ (expertRegarding ?DEVELOPER ?WEAPON-TYPE) 
+ (subclass ?WEAPON-TYPE WeaponOfMassDestruction) 
+ (temporallySubsumes (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) 
+ (givesSupportToAgent Iran ?DEVELOPER 
+ (HighAmountFn EconomicSupport)))) 
+ (temporallySubsumes (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) 
+ (desires Iran 
+ (relationInstanceExists possesses Iran WeaponOfMassDestruction))))))  
+)
+
+(answer Yes)
+
+(end_of_file)

@@ -1,0 +1,14 @@
+In dialogue processing applications where expressions like ``today''
+or ``next week'' are used, it is necessary to know the current
+time. When doing regression testing, it is then useful to be able to
+set a notional time, so that responses to time-dependent utterances
+stay stable.
+
+The {\tt SET\_\-NOTIONAL\_\-TIME} command makes it possible to set the identity 
+of the notional time from the command-line. The format is 
+YYYY-MM-DD\_HH-MM-SS, e.g.
+\begin{verbatim}
+SET_NOTIONAL_TIME 2010-08-04_15-17-55
+\end{verbatim}
+The notional time can be retrieved using the predicate 
+{\tt get\_\-notional\_\-time/1} in {\tt PrologLib/utilities.pl}.

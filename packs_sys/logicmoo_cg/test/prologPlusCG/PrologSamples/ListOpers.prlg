@@ -1,0 +1,42 @@
+papa(abdou, farida).
+papa(abdou, hamid).
+papa(abdou, karim).
+
+alist([1, 2, 3, 4]).
+
+membre(e, [e|q]).
+membre(e, [_|q]) :- membre(e, q).
+
+member(e, [e|q]).
+member(e, [_|q]) :- member(e, q).
+
+imember(e, [e|q]).
+imember(e, [t|q]) :- imember(e, t).
+imember(e, [_|q]) :- imember(e, q).
+
+insertion(e, x, [e|x]).
+insertion(e, [f|x], [f|y]) :- insertion(e, x, y).
+
+permutation([], []).
+permutation([e|x], z) :- permutation(x, y), insertion(e, y, z).
+
+include([], L) :- !.
+include([x|q], L1) :- member(x, L1), include(q, L1), !.
+
+unif(x, x).
+
+lastElem([e], e).
+lastElem([_|q], e) :- lastElem(q, e).
+
+
+
+eliminate(e, [], []).
+eliminate(e, [e|q], q1) :- eliminate(e, q, q1).
+eliminate(e, [x|q], [x|q1]) :- eliminate(e, q, q1).
+
+concatene([],A,A).
+concatene([X|L],Y,[X|Q]) :- concatene(L,Y,Q).
+
+append([],A,A).
+append([X|L],Y,[X|Q]) :- append(L,Y,Q).
+

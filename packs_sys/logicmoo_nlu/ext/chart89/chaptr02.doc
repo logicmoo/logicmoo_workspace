@@ -1,0 +1,388 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Finite state techniques    
+
+It is straightforward to represent FSTNs in Prolog and to write                     
+programs to perform various operations with them.  Our approach here
+will be to represent networks declaratively as data structures (facts
+in the Prolog database) that can be examined and manipulated.  We will
+then write general purpose recognition and generation programs that
+will work on any network represented as a data structure in the
+approved way.
+
+Before we start writing general network traversal programs, we need to
+consider how we are going to represent transition networks as Prolog
+data structures.  We need to know the following about a network:
+
+    - what its initial nodes are
+    - what its final nodes are
+    - what its arcs are, where each arc is defined by:
+        - the departure node
+        - the destination node
+        - the label on the arc
+
+This can be represented most straightforwardly in Prolog by using
+simple predicates of the appropriate kind:
+
+    initial(Node).
+    final(Node).
+    arc(DEPARTURE_NODE,DESTINATION_NODE,LABEL).
+
+Here are some example networks (the ENGLISH1 example appears in the
+appendix in the file "fstnarcs.pl"):
+
+    % Swahili-1
+    %
+    initial(1).
+    final(5).
+    arc(1,2,subj).
+    arc(2,3,tense).
+    arc(3,4,obj).                     
+    arc(4,5,stem).
+
+     % ENGLISH1
+     %
+    initial(1).
+    final(9).
+    arc(1,3,np).
+    arc(1,2,det).
+    arc(2,3,n).
+    arc(3,4,bv).
+    arc(4,5,adv).
+    arc(4,5,'#').
+    arc(5,6,det).
+    arc(5,7,det).
+    arc(5,8,'#').
+    arc(6,7,adj).
+    arc(6,6,mod).
+    arc(7,9,n).
+    arc(8,9,adj).
+    arc(8,8,mod).
+    arc(9,4,cnj).
+    arc(9,1,cnj).
+
+Something is missing from these network definitions (at least, under
+their intended interpretations), namely a statement of what such
+symbols as 'subj' abbreviate.  We could readily adopt the following
+style of declaring these abbreviations:
+
+    abbreviates(subj,[ni,u,a,tu,wa]).
+
+But, for reasons of consistency with our treatment of the lexicon in
+subsequent example programs, we will adopt here a more verbose, but
+equivalent form of declaration:
+
+    word(CATEGORY,WORD).
+
+Here the CATEGORY argument corresponds to the abbreviation symbol, and
+WORD corresponds to one of the items subsumed under this abbreviation.
+Under this scheme, here are the abbreviations for ENGLISH1:
+
+    word(np,kim).
+    word(np,sandy).
+    word(np,lee).
+    word(det,a).
+    word(det,the).
+    word(det,her).
+    word(n,consumer).
+    word(n,man).
+    word(n,woman).
+    word(bv,is).
+    word(bv,was).                     
+    word(cnj,and).
+    word(cnj,or).
+    word(adj,happy).
+    word(adj,stupid).
+    word(mod,very).
+    word(adv,often).
+    word(adv,always).
+    word(adv,sometimes).
+
+Although this is verbose, it is not inefficient: it may involve a
+Prolog interpreter in just as much work to search down a list checking
+membership as it does to search through its data base looking for the
+appropriate 'word' entry.
+
+In this section and some subsequent sections, we will develop a number
+of programs for performing useful tasks with various kinds of
+networks.  These programs will have a certain "family resemblance" but                     
+will differ in their details.  The task we will consider initially is
+that of using a network for recognition.
+
+The predicate 'recognize(NODE,STRING)' will be true if the given
+STRING can be accepted by our FSTN with the traversal starting at the
+given NODE.  Firstly, we want to recognize the empty string (a string
+is a list of words, for present purposes) if we are at a final node:
+
+    recognize(Node,[]) :-
+        final(Node).
+
+This clause says that 'recognize(Node,String)' will succeed when
+String is empty and Node is a final Node.
+
+Secondly, we need to make provision for a traversal of an arc leading
+from the node we are at, followed by a continuation of the traversal
+from that point:
+
+    recognize(Node_1,String) :-
+        arc(Node_1,Node_2,Label),
+        traverse(Label,String,NewString),
+        recognize(Node_2,NewString).
+
+Notice that we call 'recognize' recursively, starting it off at the
+destination node Node_2 of the chosen arc.  The predicate 'traverse'
+is in charge of telling us whether we can traverse that arc and, if
+so, what change is made to the input string.  Provided with the arc
+label and the initial string in its first two arguments, it returns
+the new value of the string in its third argument.
+
+The definition of 'traverse' reflects the three ways in which we can
+make progress through the network.  The first way (SYM) involves
+crossing an arc labelled with the next word in the string:
+
+    traverse(Label,[Label|Words],Words) :-
+        not(special(Label)).
+
+This says that we can traverse the arc if the label is the same as the
+first word in the input, as long as it is not a 'special' symbol (an
+abbreviation or '#').
+
+The second way (ABB) involves continuing down a string whose first
+word is subsumed under the category given by the arc label:
+
+    traverse(Label,[Word|Words],Words) :-
+        word(Label,Word).
+
+This says that we can traverse the arc if the label is an abbreviation
+and the first word on the input is covered by that abbreviation.  As
+in the last case, the new string returned is simply the rest of the
+string.
+
+The final clause (JMP), for 'jump' arcs, says we can recognize the
+string from a node if there is a jump to another node.  In this case
+we return the original string unchanged:
+
+    traverse('#',String,String).
+
+To complete our definition, we need to define the predicate 'special',
+which detects abbreviations and the "jump" symbol:
+
+    special('#').
+    special(Category) :- word(Category,_).
+
+Finally, in checking recognition of a whole string, we need to make
+sure that we start out from an initial node, and we can put this
+requirement in a simple test predicate that calls 'recognize':
+
+    test(Words) :-
+        initial(Node),
+        recognize(Node,Words).
+
+The predicate 'test', given a list of words as argument, will succeed
+exactly when the string of words is accepted by the automaton encoded
+in the 'initial', 'final', 'arc' and 'word' statements.  The
+definition of 'test' completes the code of our recognizer, which also
+appears in the appendix as "fstnrecg.pl".
+
+The FSTN recognizer program has been described as if there is no
+search involved in recognition, but obviously we would like the
+program to work with non-deterministic automata as well as
+deterministic ones.  When we call 'recognize' with a particular string
+and node, we are entrusting that call with a particular state in the
+search space which is to be explored.  Such a call is in charge of
+checking whether the state could be a final state, and simply
+succeeding if so.  It is also in charge of computing the possible next
+states and calling 'recognize' again to investigate them.  Search
+arises if there is more than one possible next state that arises from
+a given state.  Our program handles this thanks to the ability of
+'recognize' to do different things on backtracking.  Thus a given call
+may first of all invoke another 'recognize' for one possible next
+state.  If that recursive call does not succeed, it may then be able
+(by selecting an alternative 'traverse' or 'arc' clause) to make a
+call corresponding to an alternative next state.
+
+Notice that because of the way Prolog works only one path down the
+search tree is investigated at a time.  So, for instance, the call
+
+    recognize(4,[o,a,h,w])
+
+first of all calls
+
+    recognize(5,[a,h,w])
+
+and only if this fails (because this is not a final state and yet
+cannot be taken further) does it call
+
+    recognize(5,[o,a,h,w])
+
+This is the characteristic behaviour of depth-first search - a given
+possibility is followed up as far as possible before any alternative
+is considered.  In this case, Prolog's backtracking facility means
+that we do not need to explicitly represent the "pool" of alternative
+states to explore.  The set of alternatives is represented implicitly
+in Prolog's memory of places to backtrack to.
+
+Let us consider now what has to be done if we wish to adapt our
+recognition program for the exhaustive generation of all the sequences
+that are allowed by a transition network.  We still need to search all
+possible paths through the network, but now we are not constrained to
+traverse arcs that are compatible with an input string.  In fact, we
+do not really need to make any modifications to the program, since it
+will generate as it stands, given the goal 'test(X), write(X), nl,
+fail.', but we can package this up into a 'generate' predicate if we
+wish:
+
+    generate :-
+       test(X),
+       write(X), nl,
+       fail.
+
+This provides us with exhaustive generation but it cannot be allowed
+to run to completion if the network allows an infinite number of
+different strings.  Nevertheless, it could still be useful, in
+principle at least, to run such a system for a while, to get an idea
+of the range of the strings allowed by a network.  If we try
+generating from our example network for a fragment of English,
+however, we do not get a representative sample of the strings - the
+strings generated go as follows:
+
+    [kim, is, often, a, happy, consumer]
+    [kim, is, often, a, happy, consumer,
+         and, often, a, happy, consumer]
+    [kim, is, often, a, happy, consumer,
+         and, often, a, happy, consumer,
+         and, often, a, happy, consumer]
+    [kim, is, often, a, happy, consumer,
+         and, often, a, happy, consumer,
+         and, often, a, happy, consumer]
+    [kim, is, often, a, happy, consumer,                     
+         and, often, a, happy, consumer,
+         and, often, a, happy, consumer]
+     ...
+
+The trouble is that, once the program has made a decision about an
+initial set of words, it is happy to go on investigating other
+decisions that it encounters later.  At node 9, the only final node,
+there is always the option to loop back to node 4 instead of
+finishing, and it is this decision, rather than any other, that is
+remade when we ask for alternative solutions.  Only if for some reason
+all future possibilities fail to work out will it remake earlier
+decisions.  Because of the way one call of 'recognize' has to fail
+(exhaust all its possibilities) before an alternative can run, the
+program will always focus on one alternative and further developments
+from it before it tries other alternatives.  This depth-first search
+behaviour is all right when the set of possibilities to be
+investigated is finite, but when the set is infinite, as in this case,
+it can lead to a very narrow exploration of alternatives, or, worse
+still an infinite loop where longer and longer alternatives are tried
+and the program never actually stops with any solutions.  Indeed, if
+we were to rearrange our 'word' database in this example so that entry
+for the mod "very" came first, the generation would get into an
+infinite loop without generating any possibilities.
+
+Our recognition program does just that - it recognizes whether or not
+a string is accepted by a given FSTN.  But although it discovers quite
+a lot about the string in the course of a successful recognition, this
+information is lost.  All we get by way of result is a truth value
+(reported by Prolog as "yes" or "no").  If we wish to recover the
+information about the sequence of nodes and arc labels that were
+involved in the successful recognition, then we need to introduce a
+further argument to collect this information.  Equipped with such an
+argument, 'recognize' ceases to be merely a recognizer and becomes
+instead a rather primitive form of parser.  Here is the modified part
+of the program.  The definition of 'traverse' and 'special' are as
+before:
+
+    parse(Node,[],[Node]) :-
+       final(Node).
+    parse(Node_1,String,[Node_1,Label|Path]) :-
+       arc(Node_1,Node_2,Label),
+       traverse(Label,String,NewString),
+       parse(Node_2,NewString,Path).
+
+    test(Words) :-
+       initial(Node),
+       parse(Node,Words,Path),
+       write(Path), nl.
+
+One way of thinking about what this program (which also appears in the
+appendix as "fstnpars.pl") does is simply in terms of it recording the                     
+history of its successful arc transitions in a list.  But another,
+equally good, way of thinking about it is as a program which maps one
+string of symbols (the sentence) into another string of symbols (the
+parse), in other words, as a program which transduces one string into
+another.
+
+A finite state transducer is just like a finite state recognizer                     
+except that it deals with two tapes.  Thus we can amend our FSTN
+traversal programs to deal with finite state transducers, mainly by
+changing the arc statements to specify a pair of symbols (one from
+each tape) instead of just one.  Where a transition is allowed by an
+abbreviation, however, the label can just be a single symbol, as
+before.  Here is an example, the ENG_FRE-2 transducer (which appears
+in "fstrans.pl" in the appendix):
+
+    initial(1).
+    final(5).
+
+    arc(1,2,'WHERE').
+    arc(2,3,'BE').
+    arc(3,4,'FDET').
+    arc(4,5,'FNOUN').
+    arc(3,6,'MDET').
+    arc(6,5,'MNOUN').
+
+    word('WHERE',[where,ou]).
+    word('BE',[is,est]).
+    word('FDET',[the,la]).
+    word('MDET',[the,le]).
+    word('FNOUN',[exit,sortie]).
+    word('FNOUN',[shop,boutique]).
+    word('FNOUN',[toilet,toilette]).
+    word('MNOUN',[policeman,gendarme]).
+
+Notice that abbreviations now stand for possible pairs of words,
+rather than simply possible single words.  Given such arc statements,
+our 'transduce' predicate can be defined along very similar lines to
+our earlier 'recognize' and 'parse' predicates. The only additional
+complication is that we need a modified version of 'traverse',
+'traverse2', which takes two input tape arguments and produces two
+modified tape arguments.  The definition of 'traverse2' needs to
+consider the three possible <jump> situations: left tape but not right
+tape, right tape but not left tape, and both tapes.
+
+    transduce(Node,[],[]) :-
+       final(Node).
+    transduce(Node_1,String1,String2) :-
+       arc(Node_1,Node_2,Label),
+       traverse2(Label,String1,NewString1,String2,NewString2),
+       transduce(Node_2,NewString1,NewString2).
+
+    traverse2([Word1,Word2],[Word1|RestString1],RestString1,[Word2|RestString2],RestString2) :-
+       not(special(Word1)), not(special(Word2)).
+    traverse2(Abbrev,String1,NewString1,String2,NewString2) :-
+       word(Abbrev,NewLabel),
+       traverse2(NewLabel,String1,NewString1,String2,NewString2).
+    traverse2(['#',Word2],String1,String1,[Word2|RestString2],RestString2).
+    traverse2([Word1,'#'],[Word1|RestString1],RestString1,String2,String2).
+    traverse2('#',String1,String1,String2,String2).
+
+Notice that this definition of 'transduce' is wholly reversible: it
+makes no difference to the program if we think of it as transducing
+from its second argument to its third, or conversely.  Indeed, we may
+even wish to use it to match inputs on both tapes or to generate
+output on both tapes.
+
+As before, we need an additional predicate to ensure that we start out
+from an initial node, and we can conveniently use this predicate to
+print the transduced string out, as well:
+
+    test(String_A) :-
+       initial(Node),
+       transduce(Node,String_A,String_B),
+       write(String_B),
+       nl.

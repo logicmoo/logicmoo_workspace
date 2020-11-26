@@ -1,0 +1,15 @@
+(note "Unification over Formulas Level 4")
+
+(goals Bob (thereExists ?X (and (instance ?X Female )(marry ?X)) ))
+
+(goals Joe (thereExists ?X (and (instance ?X Female )(marry ?X)) ))
+
+(query (and (goals Bob ?H) (goals Joe ?H) ))
+
+(answer (thereExists ?X (and (instance ?X Female )(marry ?X)) ))
+
+
+
+
+
+

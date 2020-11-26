@@ -1,0 +1,7 @@
+professor(Alfred).
+professor(Albert).
+student(name(Lisa), course(MA301), prof(Alfred)).
+student(name(Martin), course(MA302), prof(Alfred)).
+student(name(Lisa), course(PH307), prof(Albert)).
+student_of(S,P) :- professor(P),
+                   student(name(S), C, prof(P)).

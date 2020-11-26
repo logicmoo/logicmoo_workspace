@@ -1,0 +1,9 @@
+(note "Kalish & Montague, Theorem 248a")
+
+(and (exists ?X (not (F ?X))) (exists ?X (F ?X)))
+
+(queryyn  (forall ?X (exists ?Y (equiv (F ?X) (not (F ?Y))))))
+
+(answer Yes)
+
+(end_of_file)

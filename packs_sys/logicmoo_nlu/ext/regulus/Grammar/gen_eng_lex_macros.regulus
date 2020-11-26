@@ -1,0 +1,408 @@
+
+% Macros for writing lexicon entries in general English grammar
+
+%==========================================================================
+
+% Name
+%
+% @name((john, smith), [john_smith], [agent], sing, []).
+
+macro(name(SurfaceForm, [SemConstant], [SortalType], Agr, OtherFeats),
+      ( name:[sem = @name_sem(SemConstant),
+	   agr = Agr,
+	   sem_n_type = SortalType |
+	  OtherFeats] --> SurfaceForm )).
+
+%==========================================================================
+
+% Standard macros for nouns
+
+%----------------------------------------------------------
+
+% Noun with both singular and plural forms
+% 
+% @noun([headache, headaches],
+%       [symptom, headache], [symptom], [takes_det_type=null\/def\/indef, takes_loc_pp=y]).
+
+macro(noun(SurfaceForms, [SemType, SemConstant], [SortalType], OtherFeats),
+      @noun(SurfaceForms,
+	    [sem = @noun_sem(SemType, SemConstant),
+	     sem_n_type = SortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Noun with just singular or just plural
+%
+% @uninflected_noun(work,
+%                   [loc, work], [loc], sing, [takes_det_type=null]).
+
+macro(uninflected_noun(SurfaceForm, [SemType, SemConstant], [SortalType], Agr, OtherFeats),
+      ( n:[sem = @noun_sem(SemType, SemConstant),
+	   agr = Agr,
+	   sem_n_type = SortalType |
+	  OtherFeats] --> SurfaceForm )).
+
+%==========================================================================
+
+% Standard macro for adjectives
+%
+% @adjective(severe, [degree, severe], [symptom], [adjpos=prenom\/pred]).
+
+macro(adjective(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats),
+      ( adj:[sem= @adj_sem(SemType, SemConstant),
+	     subj_sem_n_type=SortalType |
+	    OtherFeats] --> SurfaceForm)).
+
+%==========================================================================
+
+% Standard macro for adverbs
+%
+% @adverb(always, [freq, always], [temporal], [advpos=prev\/postv])
+
+macro(adverb(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats),
+      ( adv:[sem= @adv_sem(SemType, SemConstant),
+	     adv_type=SortalType |
+	    OtherFeats] --> SurfaceForm)).
+
+%==========================================================================
+
+% Standard macro for prepositions
+%
+% @preposition(in, in_loc, [loc, body_part], []).
+
+macro(preposition(SurfaceForm, SemConstant, [SemPPType, NPSortalType], OtherFeats),
+      ( p:[sem = @prep_sem(SemConstant),
+	   sem_pp_type = SemPPType,
+	   obj_sem_n_type = NPSortalType |
+	  OtherFeats] --> SurfaceForm)).
+
+%==========================================================================
+
+% Standard macro for lexical PPs
+%
+% @lexical_pp((at, home), [loc, at_home], [loc], [])
+
+macro(lexical_pp(SurfaceForm, [SemType, SemConstant], [SortalType], OtherFeats),
+      ( pp:[sem= [ @pp_sem(SemType, SemConstant)],
+	    sem_pp_type=SortalType,
+	    gapsin=Gaps, gapsout=Gaps,
+	    wh=n |
+	    OtherFeats] --> SurfaceForm)).
+
+%==========================================================================
+
+% Standard macros for verbs
+
+%----------------------------------------------------------
+
+% Intransitive
+% e.g. "John sleeps"
+%
+% @v_intransitive([sleep, sleeps, slept, slept, sleeping],
+%                 [action, sleep], [agent], [takes_time_pp=y, takes_frequency_pp=y, takes_duration_pp=y]).
+
+macro(v_intransitive(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0v,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Transitive
+% e.g. "John drinks coffee" or "coffee is drunk by John"
+%
+% @v_transitive([drink, drinks, drank, drunk, drinking],
+%               [action, drink], [agent, substance], [takes_time_pp=y, takes_duration_pp=y]).
+
+macro(v_transitive(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Transitive without passive
+% e.g. "John has fever" BUT NOT "fever is had by John"
+%
+% @v_transitive_no_passive([has, have, had, had, having],
+%                          [state, have_symptom], [agent, symptom], [takes_time_pp=y, takes_duration_pp=y]).
+
+macro(v_transitive_no_passive(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1_no_passive,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking measure NP
+% e.g. "John ran 1000 metres"
+%
+% @v_measure([run, runs, ran, ran, running],
+%               [action, run_distance], [agent, distance], [takes_time_pp=y]).
+
+macro(v_measure(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1_measure,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Ditransitive
+% e.g. "bright light gives you headaches" or "you are given headaches by bright light"
+%
+% @v_ditransitive([give, gives, gave, given, giving],
+%                 [action, give], [cause\/action, symptom, agent], [])
+
+macro(v_ditransitive(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType, IndObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1x2,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_,
+	     indobj_sem_n_type=IndObjSortalType, indobj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking PP complement
+% e.g. "the pain radiates to the shoulder"
+%
+% @v_pp([radiate, radiates, radiated, radiated, radiating],
+%       [state, radiate], [symptom, to], [can_be_gerund=n])
+
+macro(v_pp(SurfaceForms, [SemType, SemConstant], [SubjSortalType, PPSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vpnx1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     pp_sem_pp_type=PPSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking ADJ complement
+% e.g. "the pain becomes worse"
+%
+% @v_adj([become, becomes, became, became, becoming],
+%        [event, become], [symptom], [])
+
+macro(v_adj(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0va1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and particle
+% e.g. "you switch on the light", or "you switch the light on"
+%
+% v_object_particle([switch, switches, switched, switched, switching],
+%                   [action, switch], [agent, switchable, onoff], [takes_loc_pp=y]).
+
+macro(v_object_particle(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1pl\/nx0vplnx1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_,
+	     sem_p_type=ParticleType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and PP,
+% e.g. "you associate the pain with bright light" or "the pain is associated with bright light"
+%
+% @v_object_pp([associate, associates, associated, associated, associating],
+%              [action, associate_with], [agent, cause\/symptom, with], [])
+
+macro(v_object_pp(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType, PPSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1pnx2,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_,
+	     pp_sem_pp_type=PPSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and ADJ, 
+% e.g. "bright light makes the pain worse" or "the pain is made worse by bright light"
+%
+% @v_object_adj([make, makes, made, made, making],
+%               [event, make_adj], [cause\/action, agent\/symptom], [])
+
+macro(v_object_adj(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vx1a1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% (Nonmodal) verb taking ing-VP, 
+% e.g. "John stopped sleeping" 
+%
+% @v_vp_ing([stop, stops, stopped, stopped, stopping], [state, stop_doing], [_AnyAgent], []).
+
+macro(v_vp_ing(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vvx1_nonmodal,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     vp_vform=ing |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking to-VP, 
+% e.g. "John wants to sleep" 
+%
+% @v_to_vp([want, wants, wanted, wanted, wanting], [state, want_to], [agent], []).
+
+macro(v_to_vp(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vvx1_to,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and to-VP, 
+% e.g. "John allowed Mary to sleep" 
+%
+% Don't allow post-mods here -
+% if we do, we get bad problems with ambiguity and UG -> CFG compilation
+% Not completely correct to block it, but cases where you require the post-mod
+% to attach to the higher verb are rare, and usually it makes no difference anyway.
+%
+% @v_object_to_vp([allow, allows, allowed, allowed, allowing], [event, allow_to], [agent, agent], []).
+
+macro(v_object_to_vp(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0x1vx2_to,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_,
+	     vp_vform=base,
+	     @takes_no_pps |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking clause, 
+% e.g. "John says he loves Mary" 
+%
+% @v_clause([say, says, said, said, saying], [action, say_that], [agent], []).
+
+macro(v_clause(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vs1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking embedded question, 
+% e.g. "John wonders whether Mary loves him" 
+%
+% @v_question([wonder, wonders, wondered, wondered, wondering], [state, wonder], [agent], []).
+
+macro(v_question(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vsq1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and embedded question, 
+% e.g. "John asked Mary whether she loved him" 
+%
+% @v_object_question([ask, asks, asked, asked, asking], [action, ask_if], [agent, agent], []).
+
+macro(v_object_question(SurfaceForms, [SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1sq1,
+	     inv=n,
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% "Be" taking an NP
+% e.g. "it is a sharp pain" or "what are your activities"
+%
+% @be_np([verb, be], [behavior\/finding, behavior\/finding\/time\/degree\/symptom], []).
+
+macro(be_np([SemType, SemConstant], [SubjSortalType, ObjSortalType], OtherFeats),
+      @be_verb([ @verb_sem(SemType, SemConstant)],
+	       [subcat=nx0vnx1_be,
+		subj_sem_n_type=SubjSortalType,
+		obj_sem_n_type=ObjSortalType, obj_syn_type=_ |
+	       OtherFeats])).
+
+%----------------------------------------------------------
+
+% "Be" taking an ADJP
+% e.g. "the pain is sharp"
+%
+% @be_adj([verb, be], [_AnySubjType], [takes_loc_pp=y, takes_time_pp=y]).
+
+macro(be_adj([SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @be_verb([ @verb_sem(SemType, SemConstant)],
+	       [subcat=nx0va1,
+		subj_sem_n_type=SubjSortalType |
+	       OtherFeats])).
+
+%----------------------------------------------------------
+
+% "Be" taking a PP
+% e.g. "the pain is in the head" or "when you are at home"
+%
+% @be_pp([verb, be], [symptom\/quant\/agent, loc\/time], []).
+
+macro(be_pp([SemType, SemConstant], [SubjSortalType, PPSortalType], OtherFeats),
+      @be_verb([ @verb_sem(SemType, SemConstant)],
+	       [subcat=nx0vpnx1,
+		subj_sem_n_type=SubjSortalType,
+		pp_sem_pp_type=PPSortalType |
+	       OtherFeats])).
+

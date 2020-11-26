@@ -1,0 +1,6 @@
+
+* figure out why X-RAY fails chang_lee_example9 but not PTTP
+* compatibility_first VERSUS herbrand ???!!!
+* test dystatic
+* false --> []  (disj-lemmas)
+* check skim_reductions (takes too many of them???)

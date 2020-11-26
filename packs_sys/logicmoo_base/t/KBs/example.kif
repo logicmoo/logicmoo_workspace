@@ -1,0 +1,11 @@
+; comments
+(=>
+   (inverse ?REL1 ?REL2)
+   (forall (?INST1 ?INST2)
+      (<=>
+         (holds ?REL1 ?INST1 ?INST2)
+         (holds ?REL2 ?INST2 
+	?INST1))))
+
+(instance subclass BinaryPredicate  "adfadfadsf
+    " )

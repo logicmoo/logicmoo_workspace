@@ -1,0 +1,20 @@
+(note TQC44)
+(or 
+ (behaviorCapable ?AGENT ?ACTIONTYPE agent) 
+ (viabilityOfAsForeignPolicyTool ?AGENT ?ACTIONTYPE None)) 
+
+(not 
+ (behaviorCapable SaudiArabia BiologicalAttack agent)) 
+
+(minimizeExtent behaviorCapable) 
+
+
+
+
+(query (findall ?ATTRIB
+
+ (viabilityOfAsForeignPolicyTool SaudiArabia BiologicalAttack ?ATTRIB)))  
+
+(answer None)
+
+(end_of_file)

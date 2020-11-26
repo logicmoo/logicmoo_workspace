@@ -1,0 +1,581 @@
+#!/bin/tcsh
+#--------------------------------------------------------------------------
+#----These need to be installed
+set TPTPDirectory=/home/tptp/TPTP
+set PrologInterpreter='/usr/local/bin/eclipse'
+set PrologArguments='-l 1024000 -g 1024000'
+set Gawk=/bin/awk
+#--------------------------------------------------------------------------
+#----Set default values for tptp2X parameters
+set FilesToConvert="$TPTPDirectory/Problems/*/*.p"
+set Size=""
+set Transformation=none
+set ListOfFiles=none
+set OutputFormat=tptp
+set OutputDir="-"
+@ Quietness=1
+
+#----Set interactive mode off by default 
+set Interact=no
+set SizeSet=no
+set OutputDirSet=no
+set TransformationSet=no
+
+#----Usage prompts
+set Usage1='tptp2X [-q<Level>][-i][-s<Size>][-t<Transform>][-f<Format>][-d<Dir>] <TPTPFiles>'
+set Usage2="See the TPTP technical report for details."
+#--------------------------------------------------------------------------
+#----Check that the TPTP directory exists
+if (!(-d "$TPTPDirectory")) then
+    echo " "
+    echo "ERROR : Cannot find the TPTP directory $TPTPDirectory."
+    echo " "
+    exit
+endif
+
+set TPTP2XDirectory=$TPTPDirectory/TPTP2X
+
+#----Check that the TPTP2X directory exists
+if (!(-d "$TPTP2XDirectory")) then
+    echo " "
+    echo "ERROR : Cannot find the TPTP2X directory $TPTP2XDirectory."
+    echo " "
+    exit
+endif
+
+#----Check that tptp2X.config exists (rough check of the directory)
+if (!(-f "$TPTP2XDirectory/tptp2X.config")) then
+    echo " "
+    echo "ERROR : Cannot find the tptp2X.config file $TPTP2XDirectory/tptp2X.config."
+    echo " "
+    exit
+endif
+
+#----Check that the Prolog interpreter can be found
+set PrologExecutable=`which $PrologInterpreter`
+if ("$PrologExecutable" !~ /*) then
+    echo " "
+    echo "ERROR : Cannot find the Prolog executable $PrologExecutable."
+    echo " "
+    exit
+endif
+#--------------------------------------------------------------------------
+#----Parse the command line
+#----Need to set noglob in case of parameters like -s'[3,5]'.
+set noglob
+set argv=`getopt hniq:s:t:f:d:l: $*` 
+set Interaction = 1
+unset noglob
+if ($status != 0) then
+    echo Use:
+    echo "$Usage1"
+    echo ""
+    echo "$Usage2"
+    exit
+endif
+while ("$1" != '--')
+    switch ("$1")
+#----Option for help
+        case '-h':
+            echo Use:
+            echo "$Usage1"
+            echo ""
+            echo "$Usage2"
+            exit
+            breaksw
+#----Option for a file containing a list of file names
+        case '-l':
+            shift
+            if (!(-r $1)) then
+                echo "ERROR : $1 is not a readable list of files, and has been ignored"
+            else
+                set ListOfFiles=$1
+                set FilesToConvert=listed
+            endif
+            shift
+            breaksw
+#----Option to prevent user interaction
+        case '-n':
+            shift
+            set Interaction = 0
+            breaksw
+#----Option for verbose mode
+        case '-q':
+            shift
+            if ("$1" != "0" && "$1" != "1" && "$1" != "2") then
+                echo "ERROR : $1 is not a valid quietness level, and has been ignored."
+                if ($Interaction == 1) then
+                    echo -n "Do you want to continue? [n] : "
+                    set Continue=$<
+                else
+                    set Continue = "no"
+                endif
+                if ("$Continue" !~ Y* && "$Continue" !~ y*) then
+                    exit
+                endif
+            else
+                @ Quietness=$1
+            endif
+            shift
+            breaksw
+#----Option for interactive parameter collection
+        case '-i':
+            shift
+            set Interact=yes
+            breaksw
+#----Option for generation Size
+        case '-s':
+            shift
+#----Check that it's a numeric size
+            if (("$1" != "sota") && (`expr "$1" : "[0-9:\.]*"` != `expr "$1" : ".*"`)) then
+                echo "ERROR : $1 is not a valid size, and has been ignored."
+                if ($Interaction == 1) then
+                    echo -n "Do you want to continue? [n] : "
+                    set Continue=$<
+                else
+                    set Continue = "no"
+                endif
+                if ("$Continue" !~ Y* && "$Continue" !~ y*) then
+                    exit
+                endif
+            else
+                set Size="$1"
+                set SizeSet=yes
+            endif
+            shift
+            breaksw
+#----Option for a Transformation
+        case '-t':
+            shift
+            set Transformation="$1"
+            set TransformationSet=yes
+            shift
+            breaksw
+#----Option for Output format
+        case '-f':
+            shift
+            set OutputFormat="$1"
+            shift
+            breaksw
+#----Option for output Directory. Use echo to expand to the full name
+        case '-d':
+            shift
+#Tony's trick   set OutputDir=`echo "echo $1" | $Csh`
+            if ("$1" == "-") then
+                set OutputDir="$1"
+                set OutputDirSet=yes
+            else
+#----Expand leading ~ which may be there if written -d~geoff
+                set ExpandedArgument=`echo $1`
+                if ($status != 0) then
+# || (!(-d "$ExpandedArgument"))) then
+                    echo "ERROR : $1 cannot be a directory, and has been ignored."
+                    if ($Interaction == 1) then
+                        echo -n "Do you want to continue? [n] : "
+                        set Continue=$<
+                    else
+                        set Continue = "no"
+                    endif
+                    if ("$Continue" !~ Y* && "$Continue" !~ y*) then
+                        exit
+                    endif
+                else
+                    set OutputDir=$ExpandedArgument
+                    set OutputDirSet=yes
+                endif
+            endif
+            shift
+            breaksw
+        default:
+            echo Unrecognized option $1
+            shift
+            breaksw
+        endsw
+    end
+#----Shift past the -- from getopt
+shift
+#----If files specified then take them, else accept default
+if ($#argv > 0) then
+    set FilesToConvert="$*"
+endif
+#--------------------------------------------------------------------------
+#----Check the quietness is OK. If no gawk then no quieteness
+if ($Quietness >= 1 && "$Gawk" == "") then
+    @ Quietness=0
+    echo "ERROR : gawk/awk is unavailable, quietness set to 0"
+endif
+#--------------------------------------------------------------------------
+#----Interactive mode requested
+if ($Interact == yes) then
+    echo '---- Interactive mode -----------------------------------------------'
+#----Interactive for files to convert
+    set Response=non_null_value
+    while ("$Response" != "")
+#----Make a nice output line if the file name is long
+        if ("$FilesToConvert[1]" =~ ${TPTPDirectory}*) then
+            set noglob
+            set NameToShow=`expr "$FilesToConvert[1]" : "$TPTPDirectory\/\(.*\)"`
+            unset noglob
+        else
+            set NameToShow="$FilesToConvert[1]"
+        endif
+        if ($#FilesToConvert > 1) then
+            echo -n "Files to convert      [$NameToShow ...] : "
+        else 
+            echo -n "Files to convert      [$NameToShow] : "
+        endif
+        set Response=$<
+        if ("$Response" != "") then
+            set FilesToConvert="$Response"
+        endif
+    end
+#----Interactive for Size
+    set Response=non_null_value
+    while ("$Response" != "")
+        echo -n "Size                  [$Size] : "
+        set Response=$<
+        if ("$Response" != "") then
+            set Size=$Response
+            set SizeSet=yes
+        endif
+    end
+#----Interactive for Transformations
+    set Response=non_null_value
+    while ("$Response" != "")
+        echo -n "Transformation        [$Transformation] : "
+        set Response=$<
+        if ("$Response" != "") then
+            set Transformation=$Response
+            set TransformationSet=yes
+        endif
+    end
+#----Interactive for Output format
+    set Response=non_null_value
+    while ("$Response" != "")
+        echo -n "Format to convert to  [$OutputFormat] : "
+        set Response=$<
+        if ("$Response" != "") then
+            set OutputFormat=$Response
+        endif
+    end
+#----Interactive for Output directory
+    set Response=non_null_value
+    while ("$Response" != "")
+        echo -n "Output directory      [$OutputDir] : "
+        set Response=$<
+        if ("$Response" != "") then
+            set ExpandedReponse=`echo $Response`
+            if ($status != 0 || (!(-d "$ExpandedReponse"))) then
+                echo "ERROR : $Response does not expand to any directory, and has been ignored."
+            else
+                set OutputDir=$ExpandedReponse
+                set OutputDirSet=yes
+            endif
+        endif
+    end
+    echo '---- End of Interactive mode ----------------------------------------'
+endif
+#--------------------------------------------------------------------------
+#----Check that if a size is given, then .g file exists
+if ("$SizeSet" == yes && "$FilesToConvert" !~ *.g) then
+    echo "ERROR : Size specified but no generator files specified."
+    if ($Interaction == 1) then
+        echo -n "Do you want to continue? [n] : "
+        set Continue=$<
+    else
+        set Continue = "no"
+    endif
+    if ("$Continue" !~ Y* && "$Continue" !~ y*) then
+        exit
+    endif
+endif
+
+#----Check that a size has been specified for .g files
+if ("$SizeSet" == no && "$FilesToConvert" =~ *.g) then
+    echo "ERROR : No size specified for generator files."
+    exit
+endif
+#--------------------------------------------------------------------------
+#----Check if output dir starts with ., in which case expand it
+if ("$OutputDirSet" == yes && "$OutputDir" =~ .*) then
+    set OutputDir=${cwd}`expr "$OutputDir" : "\.\(.*\)"`
+endif
+
+if ("$OutputDirSet" == yes && "$OutputDir" !~ /* && "$OutputDir" != "-") then
+    set OutputDir="${cwd}/$OutputDir"
+endif
+
+#----If no output dir specified, then use default
+if ("$OutputDirSet" == no) then
+#----If a parameterized format is specified, take the first bit only
+    set OutputDir=${cwd}/`expr "$OutputFormat" : "\([^:]*\).*"`
+endif
+#--------------------------------------------------------------------------
+#----Deal with special cases for formats
+if ("$OutputFormat" == otter) then
+    set OutputFormat=otter:none:'set(auto),clear(print_given)'
+    if ("$TransformationSet" == no) then
+        set Transformation='stdfof+add_equality:r'
+    endif
+endif
+
+if ("$OutputFormat" == tptp) then
+    set OutputFormat="tptp:short"
+endif
+
+if ("$OutputFormat" == setheo) then
+    set OutputFormat="setheo:sign"
+endif
+#--------------------------------------------------------------------------
+#----Check if nothing left to expand
+if ($#FilesToConvert == 0) then
+    echo "ERROR : No files specified."
+    exit
+endif
+
+#----This needs to be done last before the foreach loop, because after this
+#----FilesToConvert is big, and the shell refuses to manipulate it
+if ("$FilesToConvert" == "-") then
+#----Output must go to stdout, as I don't know the file name
+    set OutputDir="-"
+    set OutputDirSet=yes
+else
+#----If a file with a list of names then cat it out
+    if ("$FilesToConvert" == "listed") then
+        set FilesToConvert=`cat $ListOfFiles`
+    else
+        set FilesToExpand="$FilesToConvert"
+        set FilesToConvert=""
+#----Done this way to avoid expanding *s until later
+        foreach Argument (`echo "$FilesToExpand"`)
+#----Check if a domain name
+            if (-d "$TPTPDirectory/Problems/$Argument") then
+                set FilesToConvert="$FilesToConvert $TPTPDirectory/Problems/$Argument/*.p"
+            else
+#----Need to echo this to expand things that start with .. without error.
+                set ExpandedArguments=`echo $Argument`
+                if ($status != 0) then
+                    echo "ERROR : $Argument does not expand to any files, and has been ignored."
+                else
+                    set FilesToConvert=`echo $FilesToConvert $ExpandedArguments`
+                endif
+            endif
+        end
+    endif
+endif
+#--------------------------------------------------------------------------
+if ($Quietness <= 1) then
+    echo "---------------------------------------------------------------------"
+    echo "TPTP2X directory      = $TPTP2XDirectory"
+    echo "TPTP directory        = $TPTPDirectory"
+    echo "Prolog interpreter    = $PrologInterpreter"
+    if ($#FilesToConvert > 1) then
+        echo "Files to convert      = $FilesToConvert[1] ..."
+    else
+        echo "Files to convert      = $FilesToConvert"
+        endif
+    echo "Size                  = $Size"
+    echo "Transformation        = $Transformation"
+    echo "Format to convert to  = $OutputFormat"
+    echo "Output directory      = $OutputDir"
+    echo "---------------------------------------------------------------------"
+endif
+#--------------------------------------------------------------------------
+#----Put things into Prolog syntax
+#----Sizes are simply put in a list, in case there is a list (may not be)
+set Size="[$Size]"
+
+#----If the transform is rename, do a quick fix
+if ("$Transformation" =~ rename:*) then
+    set RenameList = `expr $Transformation : "rename:\(.*\)"`
+    set Transformation = "rename:[$RenameList]"
+endif
+
+#----Put all transformations in a list, in case there is a list
+set Transformation="[$Transformation]"
+ 
+#----If the format is OTTER, do a quick fix
+if ("$OutputFormat" =~ otter:*) then
+    set OtterSoS=`expr $OutputFormat : "otter:\(.*\):.*"`
+    set OtterOptions=`expr $OutputFormat : "otter:.*:\(.*\)"`
+#----If it doesn't work, exit
+    if ($OtterSoS == "") then
+        echo "ERROR: $OutputFormat is missing a SoS specification"
+        exit
+    endif
+    set OutputFormat="otter:${OtterSoS}:[$OtterOptions]"
+endif
+
+#----If the format is FINDER, do a quick fix
+if ("$OutputFormat" =~ finder:*) then
+    set FinderToDeclare=`expr $OutputFormat : "finder:\(.*\):.*:.*:.*"`
+    set FinderToModel=`expr $OutputFormat : "finder:.*:\(.*\):.*:.*"`
+    set FinderSettings=`expr $OutputFormat : "finder:.*:.*:\(.*\):.*"`
+    set FinderCardinality=`expr $OutputFormat : "finder:.*:.*:.*:\(.*\)"`
+    set OutputFormat="finder:[${FinderToDeclare}]:[$FinderToModel]:[$FinderSettings]:$FinderCardinality"
+endif
+
+#----Put formats into a list, in case there is a list
+set OutputFormat="[$OutputFormat]"
+#--------------------------------------------------------------------------
+#----Keep count of queries created
+@ TPTP2XQueries=0
+#----Make an input file for Prolog
+set PrologInputFile="/tmp/tptp2XScript_$$"
+echo "COMPILE('tptp2X.main')." >$PrologInputFile
+echo "asserta(tptp2X_unique_value($$))." >>$PrologInputFile
+echo "asserta(tptp2X_cwd('$cwd'))." >>$PrologInputFile
+#----Make a query for each file specified. By now all *s are expanded.
+set EndOfLoop=no
+#----Have to use N (short name) so the set LastFile lives in csh (yak!)
+set N=$#FilesToConvert
+set LastFile="$FilesToConvert[$N]"
+foreach FilePath ($FilesToConvert)
+#----Note if last file in loop, for error prompting 
+    if ("$FilePath" == "$LastFile") then
+        set EndOfLoop=yes
+    endif
+#----Sort out the input file name
+    if ("$FilePath" == "-") then
+#----Input from user saved in a file
+        set FilePath=/tmp/tptp2X-$$.p
+        cat >$FilePath
+#----Output must go to stdout, as I don't know the file name
+        set OutputDir="-"
+#----Determine if .p or .g by a quick hack
+        grep 'SIZE' $FilePath >& /dev/null
+#----Generators cannot be read from standard input (coz I won't know the
+#----entry point).
+        if ($status == 0) then
+            echo "ERROR : A generator file cannot be read from standard input."
+            exit
+        endif
+    else
+#----Extract the domain and file type
+        set FileName=`basename $FilePath`
+        set Domain=`expr "$FileName" : "\(...\).*"`
+#----Check if a TPTP domain
+        if (!(-d "$TPTPDirectory/Problems/$Domain")) then
+            set Domain = ""
+        endif
+#----Search if file does not exist
+        if ("$FilePath" != "user" && !(-f $FilePath)) then
+#----Try different extensions (man should check if there is one already)
+            foreach PossibleExtension ("" ".p" ".ax" ".eq")
+#----Try current directory, Generators directory, Problems directory,
+#----domain directory, TPTP directory
+#----NOTE $cwd in csh include full path names (e.g., /home/2/geoff) which
+#----     can mess up Prolog when generator files are reloaded
+                foreach PossiblePath ("" "$cwd" "$TPTPDirectory/Problems/$Domain" "$TPTPDirectory/Problems" "$TPTPDirectory/Axioms" "$TPTPDirectory/Generators" "$TPTPDirectory")
+#----If found, then set path
+                    if (-f "$PossiblePath/$FilePath$PossibleExtension") then
+                        set FilePath="$PossiblePath/$FilePath$PossibleExtension"
+                        break
+                    endif
+                end
+#----Break out if found case
+                if (-f "$FilePath") then
+                    break
+                endif
+            end
+        endif
+#----If not absolute, add $cwd
+        if ("$FilePath" != "user" && "$FilePath" !~ /*) then
+            set FilePath = "$cwd/$FilePath"
+        endif
+#----Now check again that all went well, and if not give error message. 
+        if ("$FilePath" != "user" && !(-f "$FilePath")) then
+            echo "ERROR : $FilePath cannot be found, and has been ignored."
+#----If there is work accepted, or possibly more, then ask user
+            if ("$TPTP2XQueries" > 0 || "$EndOfLoop" == no) then
+                if ($Interaction == 1) then
+                    echo -n "Do you want to continue? [n] : "
+                    set Continue=$<
+                else
+                    set Continue = "no"
+                endif
+                if ("$Continue" !~ Y* && "$Continue" !~ y*) then
+                    exit
+                else
+                    continue
+                endif
+#----Otherwise abort
+            else
+                break
+            endif
+        endif
+    endif
+#----Fix the final output directory
+    if ("$OutputDir" == "-") then
+        set FinalOutputDir=user
+    else
+        set FinalOutputDir=$OutputDir/$Domain
+        if (!(-d $FinalOutputDir)) then
+            mkdir -p $FinalOutputDir
+            if ($status != 0) then
+                echo "ERROR : Cannot make the directory $FinalOutputDir"
+                exit
+            else
+                if ($Quietness <= 1) then
+                    echo Made the directory $FinalOutputDir
+                endif
+            endif
+        endif
+    endif
+
+# #----Ensure that the output directory exists
+#         set HigherDirectory=$FinalOutputDir
+#         set ToMake=
+#         @ ToMakeIndex=0
+# #----Find a higher directory that exists
+#         while ((!(-d $HigherDirectory)) && ($HigherDirectory != ""))
+#             @ ToMakeIndex++
+#             set ToMake=($ToMake `basename $HigherDirectory`)
+#             set HigherDirectory=`dirname $HigherDirectory`
+#         end
+# #----Make all the subdirectories
+#         while ($ToMakeIndex > 0)
+#             mkdir $HigherDirectory/$ToMake[$ToMakeIndex]
+#             set HigherDirectory="$HigherDirectory/$ToMake[$ToMakeIndex]"
+#             @ ToMakeIndex--
+# #----Tell user if directories have been made
+#             if ($ToMakeIndex == 0 && $Quietness <= 1) then
+#                 echo Made the directory $HigherDirectory
+#             endif
+#         end
+#     endif
+
+#----Make the query, with quietness marks as required
+    @ TPTP2XQueries++
+    if ($Quietness >= 1) then
+        echo "write(tptp2X_output_start),nl," >>$PrologInputFile
+    endif
+    echo "tptp2X('$FilePath',$Size,$Transformation,$OutputFormat,'$FinalOutputDir')," >>$PrologInputFile
+    if ($Quietness >= 1) then
+        echo "write(tptp2X_output_end),nl." >>$PrologInputFile
+    endif
+end
+#----Halt the Prolog interpreter
+echo "halt." >>$PrologInputFile
+#--------------------------------------------------------------------------
+#----Invoke the Prolog interpreter with this input, if there are queries
+if ($TPTP2XQueries > 0) then
+    cd $TPTP2XDirectory
+    set PrologCommand="$PrologInterpreter $PrologArguments"
+#----Execute the command with an appropriate silence
+    if ($Quietness >= 1) then
+            $PrologCommand <$PrologInputFile |& $Gawk 'BEGIN {OutputOn="no"} /tptp2X_output_start/ {OutputOn="yes"} /tptp2X_output_end/ {OutputOn="no"} \!/tptp2X_output_/ {if (OutputOn == "yes" && ($0 !~ "WARNING*")) print}'
+#SCHULZ BROKEN LINE $PrologCommand <$PrologInputFile |& $Gawk 'BEGIN {OutputOn=0} /tptp2X_output_start/ {OutputOn=1;next} /tptp2X_output_end/ {OutputOn=0;next} \!/tptp2X_output_/ {if (OutputOn && ($0 !~ "WARNING*")) print}'
+    else
+#----Combine stdout and stderr for meta programs
+        $PrologCommand <$PrologInputFile |& cat
+    endif
+endif
+#--------------------------------------------------------------------------
+#----Delete script file
+/bin/rm -f $PrologInputFile
+/bin/rm -f /tmp/tptp2X-$$.p
+#--------------------------------------------------------------------------
+#----Clean up any old files lying around
+/bin/find /tmp \( -name 'tptp2X*' -o -name 'TemporaryFile*.tptp' \) -atime +1 -exec rm -f {} >& /dev/null \;
+#--------------------------------------------------------------------------

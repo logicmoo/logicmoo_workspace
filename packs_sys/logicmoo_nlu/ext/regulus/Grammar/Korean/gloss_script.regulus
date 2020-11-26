@@ -1,0 +1,4 @@
+macro(k(Hangul, Romaji, Gloss), Gloss).
+
+% Default to romaji if there is no gloss.
+macro(k(Hangul, Romaji), Romaji).

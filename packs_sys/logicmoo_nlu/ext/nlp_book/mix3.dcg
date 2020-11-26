@@ -1,0 +1,20 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% mix3.dcg [Chapter  4] A DCG for the language MIX, MIX in {a,b,c}*, n(a) = n(b) = n(c)
+%
+% start three counters
+x		-->	x(a,b,c).
+% if there is an a, then increment the b and c counters
+x(A,B,C)	-->	[a],	x(A,b(B),c(C)).
+x(A,B,C)	-->	[b],	x(a(A),B,c(C)).
+x(A,B,C)	-->	[c],	x(a(A),b(B),C).
+% alternatively, if there is an a, then decrement the a counter
+x(a(A),B,C)	-->	[a],	x(A,B,C).
+x(A,b(B),C)	-->	[b],	x(A,B,C).
+x(A,B,c(C))	-->	[c],	x(A,B,C).
+% eliminate the nonterminal
+x(a,b,c)	-->	[].

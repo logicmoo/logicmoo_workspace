@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.23</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="manipatom.html">
+<link rel="next" href="chartype.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="manipatom.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="chartype.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:locale"><a id="sec:4.23"><span class="sec-nr">4.23</span> <span class="sec-title">Localization 
+(locale) support</span></a></h2>
+
+<a id="sec:locale"></a>
+
+<p>SWI-Prolog provides (currently limited) support for localized 
+applications.
+
+<p>
+<ul class="latex">
+<li>The predicates <a id="idx:chartype2:1464"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+and <a id="idx:codetype2:1465"></a><a class="pred" href="chartype.html#code_type/2">code_type/2</a> 
+query character classes depending on the locale.
+<li>The predicates <a id="idx:collationkey2:1466"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
+and <a id="idx:localesort2:1467"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a> 
+can be used for locale dependent sorting of atoms.
+<li>The predicate <a id="idx:formattime3:1468"></a><a class="pred" href="system.html#format_time/3">format_time/3</a> 
+can be used to format time and date representations, where some of the 
+specifiers are locale dependent.
+<li>The predicate <a id="idx:format2:1469"></a><a class="pred" href="format.html#format/2">format/2</a> 
+provides locale-specific formatting of numbers. This functionality is 
+based on a more fine-grained localization model that is the subject of 
+this section.
+</ul>
+
+<p>A locale is a (optionally named) read-only object that provides 
+information to locale specific functions.<sup class="fn">110<span class="fn-text">The 
+locale interface described in this section and its effect on <a id="idx:format2:1470"></a><a class="pred" href="format.html#format/2">format/2</a> 
+and reading integers from digit groups was discussed on the SWI-Prolog 
+mailinglist. Most input in this discussion is from Ulrich Neumerkel and 
+Richard O'Keefe. The predicates in this section were designed by Jan 
+Wielemaker.</span></sup> The system creates a default locale object 
+named
+<code>default</code> from the system locale. This locale is used as the 
+initial locale for the three standard streams as well as the
+<code>main</code> thread. Locale sensitive output predicates such as <a id="idx:format3:1471"></a><a class="pred" href="format.html#format/3">format/3</a> 
+get their locale from the stream to which they deliver their output. New 
+streams get their locale from the thread that created the stream. 
+Threads get their locale from the thread that created them.
+
+<dl class="latex">
+<dt class="pubdef"><a id="locale_create/3"><strong>locale_create</strong>(<var>-Locale, 
++Default, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new locale object. <var>Default</var> is either an existing 
+locale or a string that denotes the name of a locale provided by the 
+system, such as <code>"en_EN.UTF-8"</code>. The values read from the 
+default locale can be modified using <var>Options</var>. <var>Options</var> 
+provided are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Give the locale a name.
+</dd>
+<dt><strong>decimal_point</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Specify the decimal point to use.
+</dd>
+<dt><strong>thousands_sep</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Specify the string that delimits digit groups. Only effective is <code>grouping</code> 
+is also specified.
+</dd>
+<dt><strong>grouping</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Specify the grouping of digits. Groups are created from the right (least 
+significant) digits, left of the decimal point. <var>List</var> is a 
+list of integers, specifying the number of digits in each group, 
+counting from the right. If the last element is <code>repeat(Count)</code>, 
+the remaining digits are grouped in groups of size <var>Count</var>. If 
+the last element is a normal integer, digits further to the left are not 
+grouped.
+</dd>
+</dl>
+
+<p>For example, the English locale uses
+
+<pre class="code">
+[ decimal_point('.'), thousands_sep(','), grouping([repeat(3)]) ]
+</pre>
+
+<p>Named locales exists until they are destroyed using <a id="idx:localedestroy1:1472"></a><a class="pred" href="locale.html#locale_destroy/1">locale_destroy/1</a> 
+and they are no longer referenced. Unnamed locales are subject to (atom) 
+garbage collection.</dd>
+<dt class="pubdef"><a id="locale_destroy/1"><strong>locale_destroy</strong>(<var>+Locale</var>)</a></dt>
+<dd class="defbody">
+Destroy a locale. If the locale is named, this removes the name 
+association from the locale, after which the locale is left to be 
+reclaimed by garbage collection.</dd>
+<dt class="pubdef"><a id="locale_property/2"><strong>locale_property</strong>(<var>?Locale, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Locale</var> has <var>Property</var>. Properties are the 
+same as the <var>Options</var> described with <a id="idx:localecreate3:1473"></a><a class="pred" href="locale.html#locale_create/3">locale_create/3</a>.</dd>
+<dt class="pubdef"><a id="set_locale/1"><strong>set_locale</strong>(<var>+Locale</var>)</a></dt>
+<dd class="defbody">
+Set the default locale for the current thread, as well as the locale for 
+the standard streams (<code>user_input</code>, <code>user_output</code>,
+<code>user_error</code>, <code>current_output</code> and <code>current_input</code>. 
+This locale is used for new streams, unless overruled using the
+<code>locale(Locale)</code> option of <a id="idx:open4:1474"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+or <a id="idx:setstream2:1475"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
+<dt class="pubdef"><a id="current_locale/1"><strong>current_locale</strong>(<var>-Locale</var>)</a></dt>
+<dd class="defbody">
+True when <var>Locale</var> is the locale of the calling thread.
+</dd>
+</dl>
+
+<p></body></html>

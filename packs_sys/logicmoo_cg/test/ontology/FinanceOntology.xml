@@ -1,0 +1,4877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform6\aminePlatform\classes\aminePlatform\samples\ontology\FinanceOntology.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>entity</Key>
+        </Child>
+        <Child>
+          <Key>others</Key>
+        </Child>
+        <Child>
+          <Key>Event</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Event</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Event</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Economic_Event</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Economic_Event</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Economic_Event</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Event</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>others</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>others</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>buyer</Key>
+        </Child>
+        <Child>
+          <Key>seller</Key>
+        </Child>
+        <Child>
+          <Key>new</Key>
+        </Child>
+        <Child>
+          <Key>newly_issued</Key>
+        </Child>
+        <Child>
+          <Key>already_issued</Key>
+        </Child>
+        <Child>
+          <Key>loan</Key>
+        </Child>
+        <Child>
+          <Key>cash</Key>
+        </Child>
+        <Child>
+          <Key>access</Key>
+        </Child>
+        <Child>
+          <Key>free</Key>
+        </Child>
+        <Child>
+          <Key>capital</Key>
+        </Child>
+        <Child>
+          <Key>money_value</Key>
+        </Child>
+        <Child>
+          <Key>short_term</Key>
+        </Child>
+        <Child>
+          <Key>long_term</Key>
+        </Child>
+        <Child>
+          <Key>size</Key>
+        </Child>
+        <Child>
+          <Key>broad</Key>
+        </Child>
+        <Child>
+          <Key>bargain</Key>
+        </Child>
+        <Child>
+          <Key>situation</Key>
+        </Child>
+        <Child>
+          <Key>investor</Key>
+        </Child>
+        <Child>
+          <Key>lender</Key>
+        </Child>
+        <Child>
+          <Key>maturity</Key>
+        </Child>
+        <Child>
+          <Key>borrower</Key>
+        </Child>
+        <Child>
+          <Key>investment</Key>
+        </Child>
+        <Child>
+          <Key>money_market_investment</Key>
+        </Child>
+        <Child>
+          <Key>range</Key>
+        </Child>
+        <Child>
+          <Key>direct</Key>
+        </Child>
+        <Child>
+          <Key>Transaction</Key>
+        </Child>
+        <Child>
+          <Key>Economic_Resource</Key>
+        </Child>
+        <Child>
+          <Key>Inside_Agent</Key>
+        </Child>
+        <Child>
+          <Key>Outside_Agent</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Outside_Agent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Outside_Agent</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Inside_Agent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Inside_Agent</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Economic_Resource</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Economic_Resource</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Transaction</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Transaction</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>direct</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>direct</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>range</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>range</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>money_market_investment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>money_market_investment</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>investment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>investment</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>borrower</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>borrower</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>maturity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>maturity</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>lender</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>lender</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>investor</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>investor</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>situation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>situation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bargain</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bargain</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>broad</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>broad</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>size</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>size</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>long_term</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>long_term</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>short_term</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>short_term</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>money_value</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>money_value</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>capital</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>capital</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>free</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>free</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>access</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>access</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cash</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>cash</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>loan</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>loan</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+        <Father>
+          <Key>debt_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>already_issued</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>already_issued</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>newly_issued</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>newly_issued</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>new</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>new</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>seller</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>seller</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>buyer</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>buyer</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>others</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>entity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>entity</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>financial_instrument</Key>
+        </Child>
+        <Child>
+          <Key>organization</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>organization</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>organization</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>option_clearing_corporation</Key>
+        </Child>
+        <Child>
+          <Key>company</Key>
+        </Child>
+        <Child>
+          <Key>corporation</Key>
+        </Child>
+        <Child>
+          <Key>self_regulatory_organization</Key>
+        </Child>
+        <Child>
+          <Key>security_and_exchange_commission</Key>
+        </Child>
+        <Child>
+          <Key>market</Key>
+        </Child>
+        <Child>
+          <Key>usa_federal_reserve</Key>
+        </Child>
+        <Child>
+          <Key>commodity_futures_trading_commission</Key>
+        </Child>
+        <Child>
+          <Key>government</Key>
+        </Child>
+        <Child>
+          <Key>brokerage_firm</Key>
+        </Child>
+        <Child>
+          <Key>government_agency</Key>
+        </Child>
+        <Child>
+          <Key>bank</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>entity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bank</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bank</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>investment_bank</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>investment_bank</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>investment_bank</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bank</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>government_agency</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>government_agency</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>brokerage_firm</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>brokerage_firm</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>government</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>government</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>municipal_government</Key>
+        </Child>
+        <Child>
+          <Key>national_government</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>national_government</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>national_government</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>government</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>municipal_government</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>municipal_government</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>state_government</Key>
+        </Child>
+        <Child>
+          <Key>local_government</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>government</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>local_government</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>local_government</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_government</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>state_government</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>state_government</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_government</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>commodity_futures_trading_commission</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>commodity_futures_trading_commission</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>usa_federal_reserve</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>usa_federal_reserve</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>financial_market</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>financial_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>financial_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[trade : *p1 ] -
+            -agnt_buyer-&gt;[buyer],
+            -agnt_seller-&gt;[seller],
+            -thm-&gt;[financial_instrument],
+            -loc-&gt;[market :super ]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>stock_market</Key>
+        </Child>
+        <Child>
+          <Key>secondary_market</Key>
+        </Child>
+        <Child>
+          <Key>primary_market</Key>
+        </Child>
+        <Child>
+          <Key>negotiated_market</Key>
+        </Child>
+        <Child>
+          <Key>capital_market</Key>
+        </Child>
+        <Child>
+          <Key>money_market</Key>
+        </Child>
+        <Child>
+          <Key>open_market</Key>
+        </Child>
+        <Child>
+          <Key>spot_market</Key>
+        </Child>
+        <Child>
+          <Key>bond_market</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bond_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bond_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>spot_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>spot_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>open_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>open_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[financial_market :super ] -
+                        -trade-&gt;[security],
+                        -agnt-&gt;[seller : *p1 ]-poss-&gt;[access : *p2 ]-attr-&gt;[free],
+                        -rcpt-&gt;[buyer : *p3 ]-poss-&gt;[access : *p4 ]-attr-&gt;[free]</Definition>
+        <Canon>[financial_market :super ] -
+                        -trade-&gt;[loan],
+                        -agnt-&gt;[seller : *p1 ]-poss-&gt;[access : *p2 ]-attr-&gt;[free],
+                        -rcpt-&gt;[buyer : *p3 ]-poss-&gt;[access : *p4 ]-attr-&gt;[free]</Canon>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>money_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>money_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[financial_market :super ] -
+                        -operate_with_security-&gt;[security : *p1 ]-attr-&gt;[short_term],
+                        -operate_with_loan-&gt;[loan : *p2 ]-attr-&gt;[short_term]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1c1c9dc</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1abbba1</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1ab5d6d</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@182ab3e</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@182ab3e</Key>
+      <Content>
+        <Description>[money_market : *p1 ] -
+                   -rcpt-&gt;[buyer],
+                   -agnt-&gt;[seller],
+                   -obj-&gt;[security : *p2 ]-attr-&gt;[short_term]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>money_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1ab5d6d</Key>
+      <Content>
+        <Description>[money_market]-provide-&gt;[situation : [money_market_investment]-convert_into-&gt;[cash]
+                                      ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>money_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1abbba1</Key>
+      <Content>
+        <Description>[loan : *p1 ] -
+           -attr-&gt;[short_term],
+           &lt;-trade-[money_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>money_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1c1c9dc</Key>
+      <Content>
+        <Description>[security : *p1 ] -
+               -attr-&gt;[short_term],
+               &lt;-trade-[money_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>money_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>capital_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>capital_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[investment : *p1 ] -
+                 -attr-&gt;[long_term],
+                 &lt;-trade-[financial_market :super ],
+                 &lt;-agnt-[range : *p2 ] -
+                                    -manr-&gt;[broad],
+                                    -dim-&gt;[size]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>negotiated_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>negotiated_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@9ced84</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@ad8bfd</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@ad8bfd</Key>
+      <Content>
+        <Description>[bargain : *p1 ] -
+              -attr-&gt;[direct],
+              -agnt-&gt;[seller],
+              -rcpt-&gt;[buyer],
+              &lt;-method-[money_market : *p2 ]-trade-&gt;[loan]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>negotiated_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@9ced84</Key>
+      <Content>
+        <Description>[bargain : *p1 ] -
+              -attr-&gt;[direct],
+              -agnt-&gt;[seller],
+              -rcpt-&gt;[buyer],
+              &lt;-method-[money_market : *p2 ]-trade-&gt;[security]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>negotiated_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>primary_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>primary_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[financial_instrument : *p1 ] -
+                           -attr-&gt;[newly_issued],
+                           &lt;-trade-[financial_market :super ]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1f14318</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@6bfd73</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1ccc6c8</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@10eb2f0</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@5e593</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@1233bdc</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@2f0e07</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@142022d</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@142022d</Key>
+      <Content>
+        <Description>[capital : *p1 ] -
+              -rcpt-&gt;[investment : *p2 ]-attr-&gt;[new],
+              &lt;-provide-[primary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@2f0e07</Key>
+      <Content>
+        <Description>[primary_market]-goal-&gt;[situation : [money_value : *p1 ] -
+                                                      -of-&gt;[capital],
+                                                      &lt;-raise-[primary_market]
+                                     ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1233bdc</Key>
+      <Content>
+        <Description>[investment : *p1 ] -
+                 -attr-&gt;[new],
+                 &lt;-provide-[primary_market : *p2 ]-trade-&gt;[security : *p3 ]-attr-&gt;[newly_issued]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@5e593</Key>
+      <Content>
+        <Description>[corporate_bond : *p1 ] -
+                     -attr-&gt;[newly_issued],
+                     &lt;-trade-[primary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@10eb2f0</Key>
+      <Content>
+        <Description>[investment : *p1 ] -
+                 -attr-&gt;[new],
+                 &lt;-provide-[primary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1ccc6c8</Key>
+      <Content>
+        <Description>[loan : *p1 ] -
+           -attr-&gt;[newly_issued],
+           &lt;-trade-[primary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@6bfd73</Key>
+      <Content>
+        <Description>[security : *p1 ] -
+               -attr-&gt;[newly_issued],
+               &lt;-trade-[primary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@1f14318</Key>
+      <Content>
+        <Description>[stock : *p1 ] -
+            -attr-&gt;[newly_issued],
+            &lt;-operate_with-[primary_market : *p2 ]-provide-&gt;[investment : *p3 ]-attr-&gt;[new]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>primary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>secondary_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>secondary_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[security : *p1 ] -
+               -attr-&gt;[already_issued],
+               &lt;-operate_with-[financial_market :super ]</Definition>
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@6cd67b</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@175650e</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@3da1dc</Key>
+        </Child>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@4d9ebf</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@4d9ebf</Key>
+      <Content>
+        <Description>[investment : *p1 ] -
+                 -attr-&gt;[new],
+                 &lt;-support-[secondary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>secondary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@3da1dc</Key>
+      <Content>
+        <Description>[situation : *p1  [security]-convert_into-&gt;[cash]
+                   ] -
+-rcpt-&gt;[investor],
+&lt;-provide-[secondary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>secondary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@175650e</Key>
+      <Content>
+        <Description>[loan : *p1 ] -
+           -attr-&gt;[already_issued],
+           &lt;-trade-[secondary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>secondary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@6cd67b</Key>
+      <Content>
+        <Description>[security : *p1 ] -
+               -attr-&gt;[already_issued],
+               &lt;-trade-[secondary_market]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>secondary_market</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>stock_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>stock_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>stock_exchange</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_market</Key>
+        </Father>
+        <Father>
+          <Key>self_regulatory_organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>stock_exchange</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>stock_exchange</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>nyse</Key>
+        </Child>
+        <Child>
+          <Key>nasd</Key>
+        </Child>
+        <Child>
+          <Key>amex</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>stock_market</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>amex</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>amex</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock_exchange</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>nasd</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>nasd</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock_exchange</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>nyse</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>nyse</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock_exchange</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>security_and_exchange_commission</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>security_and_exchange_commission</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>self_regulatory_organization</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>self_regulatory_organization</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>forward_market</Key>
+        </Child>
+        <Child>
+          <Key>stock_market</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>forward_market</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>forward_market</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>self_regulatory_organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>corporation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>corporation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>company</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>company</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>option_clearing_corporation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>option_clearing_corporation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>organization</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>financial_instrument</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>financial_instrument</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>certificate</Key>
+        </Child>
+        <Child>
+          <Key>commercial_paper</Key>
+        </Child>
+        <Child>
+          <Key>banker's_acceptance</Key>
+        </Child>
+        <Child>
+          <Key>contract</Key>
+        </Child>
+        <Child>
+          <Key>debt_instrument</Key>
+        </Child>
+        <Child>
+          <Key>security</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>entity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>fixed_interest_security</Key>
+        </Child>
+        <Child>
+          <Key>floating_rate_security</Key>
+        </Child>
+        <Child>
+          <Key>hybrid_security</Key>
+        </Child>
+        <Child>
+          <Key>asset_backed_security</Key>
+        </Child>
+        <Child>
+          <Key>mortgage_backed_security</Key>
+        </Child>
+        <Child>
+          <Key>stock</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>growth_stock</Key>
+        </Child>
+        <Child>
+          <Key>speculative_stock</Key>
+        </Child>
+        <Child>
+          <Key>defnsive_stock</Key>
+        </Child>
+        <Child>
+          <Key>cyclical_stock</Key>
+        </Child>
+        <Child>
+          <Key>common_stock</Key>
+        </Child>
+        <Child>
+          <Key>prefered_stock</Key>
+        </Child>
+        <Child>
+          <Key>unlisted_stock</Key>
+        </Child>
+        <Child>
+          <Key>listed_stock</Key>
+        </Child>
+        <Child>
+          <Key>blue_chip_stock</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>blue_chip_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>blue_chip_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>listed_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>listed_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>unlisted_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>unlisted_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>prefered_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>prefered_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>cummulative_prefered_stock</Key>
+        </Child>
+        <Child>
+          <Key>non_cumulative_prefered_stock</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>non_cumulative_prefered_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>non_cumulative_prefered_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>prefered_stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cummulative_prefered_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>cummulative_prefered_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>prefered_stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>common_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>common_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>cyclical_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>cyclical_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>defnsive_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>defnsive_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>speculative_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>speculative_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>growth_stock</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>growth_stock</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>stock</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>mortgage_backed_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>mortgage_backed_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>asset_backed_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>asset_backed_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>hybrid_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>hybrid_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>floating_rate_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>floating_rate_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>fixed_interest_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>fixed_interest_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>security</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>debt_instrument</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>debt_instrument</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>loan</Key>
+        </Child>
+        <Child>
+          <Key>bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>multiplier_bond</Key>
+        </Child>
+        <Child>
+          <Key>compound_interest_bond</Key>
+        </Child>
+        <Child>
+          <Key>zero_coupon_bond</Key>
+        </Child>
+        <Child>
+          <Key>convertible_bond</Key>
+        </Child>
+        <Child>
+          <Key>municipal_bond</Key>
+        </Child>
+        <Child>
+          <Key>non_tax_exempt_bond</Key>
+        </Child>
+        <Child>
+          <Key>tax_exempt_bond</Key>
+        </Child>
+        <Child>
+          <Key>non_callable_bond</Key>
+        </Child>
+        <Child>
+          <Key>callable_bond</Key>
+        </Child>
+        <Child>
+          <Key>put_bond</Key>
+        </Child>
+        <Child>
+          <Key>coupon_bond</Key>
+        </Child>
+        <Child>
+          <Key>income_bond</Key>
+        </Child>
+        <Child>
+          <Key>registered_bond</Key>
+        </Child>
+        <Child>
+          <Key>subordinated_bond</Key>
+        </Child>
+        <Child>
+          <Key>corporate_bond</Key>
+        </Child>
+        <Child>
+          <Key>serial_bond</Key>
+        </Child>
+        <Child>
+          <Key>senior_bond</Key>
+        </Child>
+        <Child>
+          <Key>agency_bond</Key>
+        </Child>
+        <Child>
+          <Key>government_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>debt_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>government_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>government_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>federal_agency_bond</Key>
+        </Child>
+        <Child>
+          <Key>gilt</Key>
+        </Child>
+        <Child>
+          <Key>u.s.treasuries</Key>
+        </Child>
+        <Child>
+          <Key>savings_bond</Key>
+        </Child>
+        <Child>
+          <Key>eurobond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>eurobond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>eurobond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>government_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>savings_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>savings_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>government_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>u.s.treasuries</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>u.s.treasuries</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>u.s.treasury_bill</Key>
+        </Child>
+        <Child>
+          <Key>u.s.treasury_note</Key>
+        </Child>
+        <Child>
+          <Key>u.s.treasury_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>government_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>u.s.treasury_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>u.s.treasury_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>u.s.treasuries</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>u.s.treasury_note</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>u.s.treasury_note</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>u.s.treasuries</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>u.s.treasury_bill</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>u.s.treasury_bill</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>u.s.treasuries</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>gilt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>gilt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>government_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>federal_agency_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>federal_agency_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>government_bond</Key>
+        </Father>
+        <Father>
+          <Key>agency_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>agency_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agency_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>federal_agency_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>senior_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>senior_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>equipment_trust_certificate</Key>
+        </Child>
+        <Child>
+          <Key>mortgage_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>mortgage_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>mortgage_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>open_end_mortgage_bond</Key>
+        </Child>
+        <Child>
+          <Key>close_end_mortgage_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>senior_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>close_end_mortgage_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>close_end_mortgage_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>mortgage_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>open_end_mortgage_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>open_end_mortgage_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>mortgage_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>equipment_trust_certificate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>equipment_trust_certificate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>senior_bond</Key>
+        </Father>
+        <Father>
+          <Key>serial_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>serial_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>serial_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>equipment_trust_certificate</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>corporate_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>corporate_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>secure_bond</Key>
+        </Child>
+        <Child>
+          <Key>unsecured_bond</Key>
+        </Child>
+        <Child>
+          <Key>samuraibond</Key>
+        </Child>
+        <Child>
+          <Key>junk_bond</Key>
+        </Child>
+        <Child>
+          <Key>gilt_edged_bond</Key>
+        </Child>
+        <Child>
+          <Key>bulldog_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bulldog_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bulldog_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>gilt_edged_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>gilt_edged_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>junk_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>junk_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>samuraibond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>samuraibond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>unsecured_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>unsecured_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>secure_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>secure_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>corporate_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>subordinated_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>subordinated_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>registered_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>registered_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>partiallay_registered_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>partiallay_registered_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>partiallay_registered_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>registered_bond</Key>
+        </Father>
+        <Father>
+          <Key>coupon_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>income_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>income_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>coupon_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>coupon_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>bearer_bond</Key>
+        </Child>
+        <Child>
+          <Key>partiallay_registered_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bearer_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bearer_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>coupon_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>put_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>put_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>callable_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>callable_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>non_callable_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>non_callable_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tax_exempt_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>tax_exempt_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>non_tax_exempt_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>non_tax_exempt_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>municipal_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>municipal_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>housing_bond</Key>
+        </Child>
+        <Child>
+          <Key>municipal_note</Key>
+        </Child>
+        <Child>
+          <Key>moral_obligation_bond</Key>
+        </Child>
+        <Child>
+          <Key>limited_and_special_tax_bond</Key>
+        </Child>
+        <Child>
+          <Key>insured_municipal_bond</Key>
+        </Child>
+        <Child>
+          <Key>revenue_bond</Key>
+        </Child>
+        <Child>
+          <Key>general_obligation_bond</Key>
+        </Child>
+        <Child>
+          <Key>double_barreled_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>double_barreled_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>double_barreled_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>general_obligation_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>general_obligation_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>revenue_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>revenue_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>industrial_revenue_bond</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>industrial_revenue_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>industrial_revenue_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>revenue_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>insured_municipal_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>insured_municipal_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>limited_and_special_tax_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>limited_and_special_tax_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>moral_obligation_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>moral_obligation_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>municipal_note</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>municipal_note</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>tax_anticipation_note</Key>
+        </Child>
+        <Child>
+          <Key>bond_anticipation_note</Key>
+        </Child>
+        <Child>
+          <Key>revenue_anticipation_note</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>revenue_anticipation_note</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>revenue_anticipation_note</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_note</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>bond_anticipation_note</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>bond_anticipation_note</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_note</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>tax_anticipation_note</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>tax_anticipation_note</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_note</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>housing_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>housing_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>municipal_bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>convertible_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>convertible_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>zero_coupon_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>zero_coupon_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>compound_interest_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>compound_interest_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>multiplier_bond</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>multiplier_bond</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>bond</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>option_contract</Key>
+        </Child>
+        <Child>
+          <Key>futures_contract</Key>
+        </Child>
+        <Child>
+          <Key>foward_contract</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>foward_contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>foward_contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>futures_contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>futures_contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agricultural_futures_contract</Key>
+        </Child>
+        <Child>
+          <Key>metallurgical_futures_contract</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>metallurgical_futures_contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>metallurgical_futures_contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>futures_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>agricultural_futures_contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agricultural_futures_contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>futures_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>option_contract</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>option_contract</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>stock_option</Key>
+        </Child>
+        <Child>
+          <Key>european_stock_option</Key>
+        </Child>
+        <Child>
+          <Key>index_option</Key>
+        </Child>
+        <Child>
+          <Key>american_standard_option</Key>
+        </Child>
+        <Child>
+          <Key>call_option</Key>
+        </Child>
+        <Child>
+          <Key>put_option</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>put_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>put_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>call_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>call_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>american_standard_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>american_standard_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>index_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>index_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>european_stock_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>european_stock_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>stock_option</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>stock_option</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>option_contract</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>banker's_acceptance</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>banker's_acceptance</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>commercial_paper</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>commercial_paper</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>certificate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>certificate</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>certificate_of_deposit</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>financial_instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>certificate_of_deposit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>certificate_of_deposit</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>negotiable_certificate_of_deposit</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>certificate</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>negotiable_certificate_of_deposit</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>negotiable_certificate_of_deposit</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>certificate_of_deposit</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>attr</Key>
+        </Child>
+        <Child>
+          <Key>operate_with</Key>
+        </Child>
+        <Child>
+          <Key>provide</Key>
+        </Child>
+        <Child>
+          <Key>loc</Key>
+        </Child>
+        <Child>
+          <Key>thm</Key>
+        </Child>
+        <Child>
+          <Key>trade</Key>
+        </Child>
+        <Child>
+          <Key>raise</Key>
+        </Child>
+        <Child>
+          <Key>of</Key>
+        </Child>
+        <Child>
+          <Key>goal</Key>
+        </Child>
+        <Child>
+          <Key>rcpt</Key>
+        </Child>
+        <Child>
+          <Key>poss</Key>
+        </Child>
+        <Child>
+          <Key>convert_into</Key>
+        </Child>
+        <Child>
+          <Key>dim</Key>
+        </Child>
+        <Child>
+          <Key>manr</Key>
+        </Child>
+        <Child>
+          <Key>method</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>char</Key>
+        </Child>
+        <Child>
+          <Key>buy</Key>
+        </Child>
+        <Child>
+          <Key>sell</Key>
+        </Child>
+        <Child>
+          <Key>support</Key>
+        </Child>
+        <Child>
+          <Key>agnt_seller</Key>
+        </Child>
+        <Child>
+          <Key>agnt_buyer</Key>
+        </Child>
+        <Child>
+          <Key>operate_with_security</Key>
+        </Child>
+        <Child>
+          <Key>operate_with_loan</Key>
+        </Child>
+        <Child>
+          <Key>event_subject</Key>
+        </Child>
+        <Child>
+          <Key>source</Key>
+        </Child>
+        <Child>
+          <Key>destination</Key>
+        </Child>
+        <Child>
+          <Key>part</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>part</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>part</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>destination</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>destination</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>source</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>source</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>event_subject</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>event_subject</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>operate_with_loan</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>operate_with_loan</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>operate_with_security</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>operate_with_security</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt_buyer</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agnt_buyer</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt_seller</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agnt_seller</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>support</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>support</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>sell</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>sell</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>buy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>buy</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>char</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>char</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>method</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>method</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>manr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>manr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>dim</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>dim</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>convert_into</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>convert_into</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>poss</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>poss</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>rcpt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>rcpt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>goal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>goal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>of</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>of</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>raise</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>raise</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>trade</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>trade</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>thm</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>thm</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>loc</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>loc</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>provide</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>provide</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>operate_with</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>operate_with</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>attr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>attr</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

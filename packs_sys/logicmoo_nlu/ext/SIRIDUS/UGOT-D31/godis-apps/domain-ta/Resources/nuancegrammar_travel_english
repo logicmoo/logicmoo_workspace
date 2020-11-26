@@ -1,0 +1,100 @@
+LexiconTravelEnglish [ +[Question Answer]
+			SimpleStuff
+			ICM ]  
+
+;user questions
+Question [ visa
+	   price
+ 	   (connecting flights) ]
+
+Answer [FullAnswer NegAnswer EllipticalAnswer ]
+
+;full answers
+FullAnswer [ (to City)
+	     (from City)
+	     (by MeansOfTravel)
+	     (in Month)
+	     (the Day)
+	     Class
+            ]
+
+;general negation 010419 
+NegAnswer  (not Answer)
+
+;elliptical answers, e.g. "london"
+EllipticalAnswer [
+	City
+	Country
+	MeansOfTravel
+	Month
+	Day
+	Class
+	yes
+	no ]
+
+;simple stuff
+SimpleStuff [ hello	
+	      bye
+              quit ]
+
+; ICM
+ICM [ pardon
+      okay
+      (dont know) ]
+
+
+City [  malmoe
+	paris
+	london
+	gothenburg
+	washington
+	seattle
+	hongkong ]
+
+Country [ sweden
+	 britain
+ 	 usa
+	 china
+	 france ]
+
+MeansOfTravel [ flight 
+		flights	
+		plane
+		fly
+		airplane
+		boat
+		train
+		rail
+		railway ]
+
+Month [ january
+	february
+	march
+	april
+	may
+	june
+	july
+	august
+	september	
+	october
+	november
+	december ]
+
+Day [ ;finns i semsort.pl 
+	]
+
+Class [ cheap
+	(second class)
+	second 
+	first
+	(first class)
+	expensive
+	(business_class) ]
+
+
+
+
+
+
+
+

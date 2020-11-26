@@ -1,0 +1,141 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Using RDF prefixes
+
+RDF prefixes make long RDF resources readable and allow for consistent renaming of resources.  The RDF interface expands
+terms of the shape Prefix:Local to a full URI, i.e., an _atom_.  The library supports both **global** and **local** prefix
+declarations:
+
+  - **Global** prefix declarations are declared using the Prolog predicates rdf_register_prefix/2 or rdf_register_prefix/3.
+  They should be considered a property of the data and are normally declared with the application.  Global prefixes may also
+  be defined through the ClioPatria interface.  Global prefixes can only be added by priviledged users.
+
+  - **Local** prefixes can de declared using `:- rdf_prefix(Prefix, URI)`.  They are local to a module and take preference
+  over globally defined prefixes.  The rdf_prefix/2 declaration can be used in SWISH programs.  As they are local to the
+  temporary SWISH module there is no interference with other users.
+
+RDF Prefix declarations causes calls to predicates that are declared using rdf_meta/2 as well as the predicate head of such
+predicates to be subject to **prefix expansion**.  In addition, the following predicates can be used to interact with the
+prefix declarations:
+
+  - [[rdf_current_prefix/2]]
+  - [[rdf_global_id/2]]
+  - [[rdf_global_object/2]]
+  - [[rdf_global_term/2]]
+
+## Enumerating the known prefixes
+
+The currently known prefixes are easily enumerated:
+</div>
+
+<div class="nb-cell query" data-chunk="100" data-tabled="true">
+rdf_current_prefix(Prefix, IRI).
+</div>
+
+<div class="nb-cell markdown">
+## Where can I use prefixes?
+
+Prefix abbreviations can be inserted into arguments of the RDF API that expect a resource.  Here is an example.  Note `'Person'` is quoted to ensure it is an atom
+and not a Prolog _variable_.
+</div>
+
+<div class="nb-cell query" data-tabled="true">
+rdf(P, rdf:type, foaf:'Person').
+</div>
+
+<div class="nb-cell markdown">
+## How are prefixes handled?
+
+All resources in the RDF store are represented as Prolog _atoms_, exploiting the unique (_interned_) representation of atoms in Prolog to reduce storage requirements and speed up comparison.  The `rdf:type` notation is handled by Prolog _goal_ (macro) _expansion_ mechanism (see expand_goal/2).  We demonstate that in the program below.  Use the *play* button to see the expanded program.
+</div>
+
+<div class="nb-cell program">
+person(P) :-
+    rdf(P, rdf:type, foaf:'Person').
+</div>
+
+<div class="nb-cell query">
+listing(person/1).
+</div>
+
+<div class="nb-cell markdown">
+The main advantage of the macro-based handling of prefixes is that the expensive prefix expansion is done at compile time.  The price is that we must ensure it can be found and expanded at compile time.  For example, the following does *not* work:
+</div>
+
+<div class="nb-cell program">
+person(P) :-
+    Class = foaf:'Person',
+    rdf(P, rdf:type, Class).
+</div>
+
+<div class="nb-cell query">
+person(P).
+</div>
+
+<div class="nb-cell markdown">
+Something similar to the above example happens less obviously in real code.  We discuss these cases below.
+
+### A &lt;prefix&gt;:&lt;local&gt; term is passed to a user defined predicate.
+
+In this case Prolog does not know that the user predicates expects a resource and thus does not expand the resource.  This can be fixed using an rdf_meta/1 declaration as shown in the code below, but unfortunately this is *not yet supported by SWISH*.
+
+    ```
+    :- rdf_meta
+	instance_of(r,r).
+
+    instance_of(I, Class) :-
+	rdf(I, rdf:type, Class).
+
+    person(P) :-
+	instance_of(P, foaf:'Person').
+    ```
+The work-around is to use rdf_equal/2.  This predicate is defines normal _unification_, but is annotated to expect an RDF resource as argument.  This
+results in the following definition:
+</div>
+
+<div class="nb-cell program">
+instance_of(I, Class) :-
+    rdf(I, rdf:type, Class).
+
+person(P) :-
+    rdf_equal(PersonClass, foaf:'Person'),
+    instance_of(P, PersonClass).
+</div>
+
+<div class="nb-cell query">
+listing(person/1).
+</div>
+
+<div class="nb-cell markdown">
+### The prefix or local name is not known at compile time
+
+Compile time expansion of course requires the prefix to be declared and the local name to be known at compile time.  If this is not the case, there is the predicate
+rdf_global_id/2, which can both be used to create an atomic resource and to split
+one into the prefix and local name.  Note the rendering of `Resource` as an abbreviated link and the rendering of `Term` as an ordinary Prolog term.
+</div>
+
+<div class="nb-cell query" data-tabled="true">
+Term = foaf:'Person', rdf_global_id(Term, Resource).
+</div>
+
+<div class="nb-cell markdown">
+## Defining prefixes in SWISH programs
+
+As stated in the beginning of this notebook, **global** prefixes cannot be defined in SWISH programs unless the user is logged on
+with sufficient authorization.  Any program can use **local** prefixes though.  The code below illustrates this.  Local prefix
+declarations take precedence over global ones.
+</div>
+
+<div class="nb-cell program">
+:- rdf_prefix(me, 'http://example.org/me/').
+
+person(X) :-
+    rdf(X, rdf:type, me:'Person').
+</div>
+
+<div class="nb-cell query">
+listing(person/1).
+</div>
+
+</div>

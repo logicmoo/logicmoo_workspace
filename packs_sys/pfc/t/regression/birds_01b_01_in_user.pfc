@@ -1,0 +1,92 @@
+%
+%  was_module(sanity_birdt,[]).
+
+%# See if negative implication overrides inheritence
+
+:- include(test_header).
+:- set_file_abox_module(user).
+:- module(user).
+:- '$set_typein_module'(user).
+:- '$set_source_module'(user).
+:- file_begin(pfc).
+
+%:- rtrace(ain(((tType(COL)==>{kb_local(COL/2)},(t(COL,ext,X)<==>iza(X,COL)))))).
+%:- break.
+
+(tType(COL)==>
+ ({kb_local(COL/2)},
+ (t(COL,ext,X)<==>iza(X,COL)))).
+
+
+P ==> \+ ~P.
+~P ==> \+ P.
+
+
+tType(tFly).
+tType(tCanary).
+tType(tPenguin).
+tType(tBird).
+
+
+:- mpred_test(predicate_property(tBird(_,_),dynamic)).
+
+genls(C1,C2)==> (iza(X,C1)==>iza(X,C2)).
+
+genls(tCanary,tBird).
+genls(tPenguin,tBird).
+
+
+
+:- dmsg("chilly is a penguin.").
+tPenguin(ext,iChilly).
+
+:- mpred_test((tBird(ext,iChilly))).
+
+
+:- dmsg("tweety is a canary.").
+tCanary(ext,iTweety).
+
+:- dmsg("make sure tweety is a bird").
+:- mpred_test((tBird(ext,iTweety))).
+
+:- dmsg("birds fly by default.").
+mdefault(( tBird(ext,X) ==> tFly(ext,X) )).
+
+:- dmsg("make sure tweety is a bird").
+:- mpred_test((tBird(ext,iTweety))).
+
+:- dmsg("make sure tweety can fly").
+:- mpred_test((tFly(ext,iTweety))).
+
+:- dmsg("make sure chilly can fly").
+:- mpred_test((iza(I,tFly),I=iChilly)).
+
+:- dmsg("make sure tweety is a bird").
+:- mpred_test((tBird(ext,iTweety))).
+
+:- listing([tFly/2,tBird/2,iza/2]).
+
+
+:- dmsg("make sure tweety can fly (and again chilly)").
+:- mpred_test((tFly(ext,iTweety))).
+:- mpred_test((tFly(ext,iChilly))).
+
+
+==> never_retract_u(tBird(ext,iChilly)).
+
+
+:- dmsg("penguins do not tFly.").
+% :- mpred_info(tFly(ext, iChilly)).
+
+:- dmsg("Make sure we are not the reason he was a bird and not just inheritence.").
+:- mpred_test(\+ mpred_axiom(tBird(ext,iChilly))).
+
+:- dmsg("By default penguins cant fly.").
+:- mpred_ain(mdefault(tPenguin(ext,X) ==>  ~tFly(ext,X))). 
+
+:- mpred_test((tBird(ext,iChilly))).
+
+%:- mpred_why( (( tFly(ext,iChilly)))).
+%:- with_no_breaks( mpred_test(( tFly(ext,iChilly)))).
+
+

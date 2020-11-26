@@ -1,0 +1,114 @@
+(note TQD6)
+
+(implies 
+  (instance ?ORG InternationalOrganizationOfCountries) 
+  (productionAmountDuring ?ORG ?PRODUCT-TYPE ?TIME 
+    (PlusAll 
+      (TheSetOf ?COUNTRY 
+        (internationalOrg-MemberCountry ?ORG ?COUNTRY)) 
+  (FunctionToArg 2 
+    (Kappa (?C ?A) 
+      (productionAmountDuring ?C ?PRODUCT-TYPE ?TIME ?A))))))
+
+(instance OPEC InternationalOrganizationOfCountries) 
+
+(instance 
+ (MillionBarrelsPerDay 28.3210) FlowRate) 
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1996) 
+ (MillionBarrelsPerDay 28.3210))
+
+(instance 
+ (MillionBarrelsPerDay 1.39300) FlowRate) 
+
+(productionAmountDuring Algeria PetroleumProduct 
+ (YearFn 1996) 
+ (MillionBarrelsPerDay 1.39300)) 
+
+(implies 
+ (instance ?ORG InternationalOrganizationOfCountries) 
+ (productionAmountDuring ?ORG ?PRODUCT-TYPE ?TIME 
+   (PlusAll 
+     (TheSetOf ?COUNTRY 
+       (internationalOrg-MemberCountry ?ORG ?COUNTRY))
+   (FunctionToArg 2 
+     (Kappa (?C ?A) 
+       (productionAmountDuring ?C ?PRODUCT-TYPE ?TIME ?A))))))
+
+(instance OPEC InternationalOrganizationOfCountries) 
+
+(instance 
+ (MillionBarrelsPerDay 27.5670) FlowRate) 
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 27.5670)) 
+
+(instance 
+ (MillionBarrelsPerDay 1.34800) FlowRate) 
+
+(productionAmountDuring Algeria PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.34800)) 
+
+(instance 
+ (BarrelsPerDay 2.75670e+07) FlowRate) 
+
+(instance 
+ (MillionBarrelsPerDay 1.34800) FlowRate) 
+
+(productionAmountDuring Algeria PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.34800)) 
+
+(instance OPEC InternationalOrganizationOfCountries) 
+
+(implies 
+ (instance ?ORG InternationalOrganizationOfCountries) 
+ (productionAmountDuring ?ORG ?PRODUCT-TYPE ?TIME 
+   (PlusAll 
+     (TheSetOf ?COUNTRY 
+       (internationalOrg-MemberCountry ?ORG ?COUNTRY))
+     (FunctionToArg 2 
+       (Kappa (?C ?A) 
+         (productionAmountDuring ?C ?PRODUCT-TYPE ?TIME ?A)))))) 
+
+(instance 
+ (BarrelsPerDay 2.83210e+07) FlowRate) 
+
+(instance 
+ (MillionBarrelsPerDay 1.39300) FlowRate) 
+
+(productionAmountDuring Algeria PetroleumProduct 
+ (YearFn 1996) 
+ (MillionBarrelsPerDay 1.39300)) 
+
+(instance OPEC InternationalOrganizationOfCountries) 
+
+(implies 
+ (instance ?ORG InternationalOrganizationOfCountries) 
+ (productionAmountDuring ?ORG ?PRODUCT-TYPE ?TIME 
+   (PlusAll 
+     (TheSetOf ?COUNTRY 
+       (internationalOrg-MemberCountry ?ORG ?COUNTRY)) 
+     (FunctionToArg 2 
+       (Kappa (?C ?A) 
+         (productionAmountDuring ?C ?PRODUCT-TYPE ?TIME ?A))))))
+
+(query (findall (?FRACTION ?TIME)
+ (thereExists ?A1 
+   (thereExists ?A2 
+       (and 
+           (productionAmountDuring OPEC PetroleumProduct ?TIME ?A1) 
+           (instance ?A1 FlowRate) 
+           (productionAmountDuring Algeria PetroleumProduct ?TIME ?A2) 
+           (instance ?A2 FlowRate) 
+           (evaluate ?FRACTION 
+               (QuantityConversionFn Percent 
+                   (QuotientFn ?A2 ?A1))))))))
+
+(answer 4.91861 1996)
+(answer 4.88990 1995)
+(end_of_file)
+

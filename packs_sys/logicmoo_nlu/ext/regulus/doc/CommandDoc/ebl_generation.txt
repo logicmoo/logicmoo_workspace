@@ -1,0 +1,25 @@
+This command does all the processing needed to build a specialised
+Nuance generation grammar from scratch. You will need to have defined at least 
+the following config file parameters:
+\begin{itemize}
+
+\item {\tt ebl\_\-corpus} The training corpus, which should consist of Prolog records of the form {\tt sent(...)}.
+
+\item {\tt ebl\_\-operationality} The file defining the operationality criteria.
+
+\item {\tt generation\_\-grammar} The output file which will contain the generation grammar.
+
+\end{itemize}
+
+In many applications, you will also want the following:
+
+\begin{itemize}
+
+\item {\tt ebl\_\-include\_\-lex} A file of ``include-lex'' definitions, which specify lexical entries to be included directly.
+
+\item {\tt ebl\_\-regulus\_\-component\_\-grammar} The specialised grammar that will be loaded by the {\tt EBL\_LOAD} command, if it is not the default one.
+
+\item {\tt generation\_\-incremental\_\-deepening\_\-parameters} Settings to control incremental deepening during generation. A typical value is {\tt [0, 50, 50]}.
+
+\end{itemize}
+

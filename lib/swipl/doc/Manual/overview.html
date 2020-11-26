@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="acknowledge.html">
+<link rel="next" href="quickstart.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="acknowledge.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="quickstart.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:overview"><a id="sec:2"><span class="sec-nr">2</span> <span class="sec-title">Overview</span></a></h1>
+
+<a id="sec:overview"></a>
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="quickstart.html"><span class="sec-nr">2.1</span> <span class="sec-title">Getting 
+started quickly</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.1"><span class="sec-nr">2.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog</span></a></div>
+<div class="toc-h4"><a class="sec" href="quickstart.html#sec:2.1.1.1"><span class="sec-nr">2.1.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog on Unix</span></a></div>
+<div class="toc-h4"><a class="sec" href="quickstart.html#sec:2.1.1.2"><span class="sec-nr">2.1.1.2</span> <span class="sec-title">Starting 
+SWI-Prolog on Windows</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.2"><span class="sec-nr">2.1.2</span> <span class="sec-title">Adding 
+rules from the console</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.3"><span class="sec-nr">2.1.3</span> <span class="sec-title">Executing 
+a query</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.4"><span class="sec-nr">2.1.4</span> <span class="sec-title">Examining 
+and modifying your program</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.5"><span class="sec-nr">2.1.5</span> <span class="sec-title">Stopping 
+Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="initfile.html"><span class="sec-nr">2.2</span> <span class="sec-title">The 
+user's initialisation file</span></a></div>
+<div class="toc-h2"><a class="sec" href="initgoal.html"><span class="sec-nr">2.3</span> <span class="sec-title">Initialisation 
+files and goals</span></a></div>
+<div class="toc-h2"><a class="sec" href="cmdline.html"><span class="sec-nr">2.4</span> <span class="sec-title">Command 
+line options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.1"><span class="sec-nr">2.4.1</span> <span class="sec-title">Informational 
+command line options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.2"><span class="sec-nr">2.4.2</span> <span class="sec-title">Command 
+line options for running Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.3"><span class="sec-nr">2.4.3</span> <span class="sec-title">Controlling 
+the stack sizes</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.4"><span class="sec-nr">2.4.4</span> <span class="sec-title">Running 
+goals from the command line</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.5"><span class="sec-nr">2.4.5</span> <span class="sec-title">Compilation 
+options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.6"><span class="sec-nr">2.4.6</span> <span class="sec-title">Maintenance 
+options</span></a></div>
+<div class="toc-h2"><a class="sec" href="theme.html"><span class="sec-nr">2.5</span> <span class="sec-title">UI 
+Themes</span></a></div>
+<div class="toc-h3"><a class="sec" href="theme.html#sec:2.5.1"><span class="sec-nr">2.5.1</span> <span class="sec-title">Status 
+of theme support</span></a></div>
+<div class="toc-h2"><a class="sec" href="gemacs.html"><span class="sec-nr">2.6</span> <span class="sec-title">GNU 
+Emacs Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="online-help.html"><span class="sec-nr">2.7</span> <span class="sec-title">Online 
+Help</span></a></div>
+<div class="toc-h3"><a class="sec" href="online-help.html#sec:2.7.1"><span class="sec-nr">2.7.1</span> <span class="sec-title">library(help): 
+Text based manual</span></a></div>
+<div class="toc-h3"><a class="sec" href="online-help.html#sec:2.7.2"><span class="sec-nr">2.7.2</span> <span class="sec-title">library(explain): 
+Describe Prolog Terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="history.html"><span class="sec-nr">2.8</span> <span class="sec-title">Command 
+line history</span></a></div>
+<div class="toc-h2"><a class="sec" href="topvars.html"><span class="sec-nr">2.9</span> <span class="sec-title">Reuse 
+of top-level bindings</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugoverview.html"><span class="sec-nr">2.10</span> <span class="sec-title">Overview 
+of the Debugger</span></a></div>
+<div class="toc-h2"><a class="sec" href="compilation.html"><span class="sec-nr">2.11</span> <span class="sec-title">Compilation</span></a></div>
+<div class="toc-h3"><a class="sec" href="compilation.html#sec:2.11.1"><span class="sec-nr">2.11.1</span> <span class="sec-title">During 
+program development</span></a></div>
+<div class="toc-h3"><a class="sec" href="compilation.html#sec:2.11.2"><span class="sec-nr">2.11.2</span> <span class="sec-title">For 
+running the result</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.1"><span class="sec-nr">2.11.2.1</span> <span class="sec-title">Using 
+PrologScript</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.2"><span class="sec-nr">2.11.2.2</span> <span class="sec-title">Creating 
+a shell script</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.3"><span class="sec-nr">2.11.2.3</span> <span class="sec-title">Creating 
+a saved state</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.4"><span class="sec-nr">2.11.2.4</span> <span class="sec-title">Compilation 
+using the -c command line option</span></a></div>
+<div class="toc-h2"><a class="sec" href="flags.html"><span class="sec-nr">2.12</span> <span class="sec-title">Environment 
+Control (Prolog flags)</span></a></div>
+<div class="toc-h2"><a class="sec" href="hooks.html"><span class="sec-nr">2.13</span> <span class="sec-title">An 
+overview of hook predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="autoload.html"><span class="sec-nr">2.14</span> <span class="sec-title">Automatic 
+loading of libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="packs.html"><span class="sec-nr">2.15</span> <span class="sec-title">Packs: 
+community add-ons</span></a></div>
+<div class="toc-h2"><a class="sec" href="syntax.html"><span class="sec-nr">2.16</span> <span class="sec-title">The 
+SWI-Prolog syntax</span></a></div>
+<div class="toc-h3"><a class="sec" href="syntax.html#sec:2.16.1"><span class="sec-nr">2.16.1</span> <span class="sec-title">ISO 
+Syntax Support</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.1"><span class="sec-nr">2.16.1.1</span> <span class="sec-title">Processor 
+Character Set</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.2"><span class="sec-nr">2.16.1.2</span> <span class="sec-title">Nested 
+comments</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.3"><span class="sec-nr">2.16.1.3</span> <span class="sec-title">Character 
+Escape Syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.4"><span class="sec-nr">2.16.1.4</span> <span class="sec-title">Syntax 
+for non-decimal numbers</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.5"><span class="sec-nr">2.16.1.5</span> <span class="sec-title">Using 
+digit groups in large integers</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.6"><span class="sec-nr">2.16.1.6</span> <span class="sec-title">Rational 
+number syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.7"><span class="sec-nr">2.16.1.7</span> <span class="sec-title">NaN 
+and Infinity floats and their syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.8"><span class="sec-nr">2.16.1.8</span> <span class="sec-title">Force 
+only underscore to introduce a variable</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.9"><span class="sec-nr">2.16.1.9</span> <span class="sec-title">Unicode 
+Prolog source</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.10"><span class="sec-nr">2.16.1.10</span> <span class="sec-title">Singleton 
+variable checking</span></a></div>
+<div class="toc-h2"><a class="sec" href="cyclic.html"><span class="sec-nr">2.17</span> <span class="sec-title">Rational 
+trees (cyclic terms)</span></a></div>
+<div class="toc-h2"><a class="sec" href="jitindex.html"><span class="sec-nr">2.18</span> <span class="sec-title">Just-in-time 
+clause indexing</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.1"><span class="sec-nr">2.18.1</span> <span class="sec-title">Deep 
+indexing</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.2"><span class="sec-nr">2.18.2</span> <span class="sec-title">Future 
+directions</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.3"><span class="sec-nr">2.18.3</span> <span class="sec-title">Indexing 
+and portability</span></a></div>
+<div class="toc-h2"><a class="sec" href="widechars.html"><span class="sec-nr">2.19</span> <span class="sec-title">Wide 
+character support</span></a></div>
+<div class="toc-h3"><a class="sec" href="widechars.html#sec:2.19.1"><span class="sec-nr">2.19.1</span> <span class="sec-title">Wide 
+character encodings on streams</span></a></div>
+<div class="toc-h4"><a class="sec" href="widechars.html#sec:2.19.1.1"><span class="sec-nr">2.19.1.1</span> <span class="sec-title">BOM: 
+Byte Order Mark</span></a></div>
+<div class="toc-h2"><a class="sec" href="limits.html"><span class="sec-nr">2.20</span> <span class="sec-title">System 
+limits</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.1"><span class="sec-nr">2.20.1</span> <span class="sec-title">Limits 
+on memory areas</span></a></div>
+<div class="toc-h4"><a class="sec" href="limits.html#sec:2.20.1.1"><span class="sec-nr">2.20.1.1</span> <span class="sec-title">The 
+heap</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.2"><span class="sec-nr">2.20.2</span> <span class="sec-title">Other 
+Limits</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.3"><span class="sec-nr">2.20.3</span> <span class="sec-title">Reserved 
+Names</span></a></div>
+<div class="toc-h2"><a class="sec" href="64bits.html"><span class="sec-nr">2.21</span> <span class="sec-title">SWI-Prolog 
+and 64-bit machines</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.1"><span class="sec-nr">2.21.1</span> <span class="sec-title">Supported 
+platforms</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.2"><span class="sec-nr">2.21.2</span> <span class="sec-title">Comparing 
+32- and 64-bits Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.3"><span class="sec-nr">2.21.3</span> <span class="sec-title">Choosing 
+between 32- and 64-bit Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="abi-versions.html"><span class="sec-nr">2.22</span> <span class="sec-title">Binary 
+compatibility</span></a></div>
+</div>
+</body></html>

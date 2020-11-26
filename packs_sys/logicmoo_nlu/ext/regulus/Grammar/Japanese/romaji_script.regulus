@@ -1,0 +1,3 @@
+macro(j(KanaKanji, Romaji, Gloss), Romaji).
+
+macro(j(KanaKanji, Romaji), Romaji).

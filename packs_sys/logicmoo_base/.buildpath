@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry exported="true" kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER"/>
+	<buildpathentry excluding="t/|t/docs/|t/examples/|t/examples/api/|t/examples/bugs/|t/examples/csp/|t/examples/fol/|t/examples/pfc/|t/examples/sanity_base/|t/examples/sanity_user/|t/examples/snark/|t/examples/tptp/" kind="src" path=""/>
+	<buildpathentry external="true" kind="lib" path="T:/devel/LogicmooDeveloperFramework/PrologMUD/pack/logicmoo_base/prolog"/>
+</buildpath>

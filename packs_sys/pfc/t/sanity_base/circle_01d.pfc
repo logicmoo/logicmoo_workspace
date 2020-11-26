@@ -1,0 +1,41 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a11 language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
+
+%  was_module(header_sane,[]).
+:- include(test_header).
+
+:- abolish(a11,0).
+:- abolish(b11,0).
+:- abolish(c11,0).
+
+a11 ==> b11.
+b11 ==> c11.
+
+a11 ==> b22.
+b22 ==> c11.
+
+a11.
+
+:- mpred_test(c11).
+
+
+~ b11.
+
+% so should this make a11 impossible?
+% :- break.
+
+% thru b22 this shoud be true
+:- mpred_test( c11).
+
+% what about now ?
+% c11 ==> a11.
+:- mpred_test( c11).
+
+(~P , P) ==> {wdmsg(conflict((~P , P))),break}.
+
+

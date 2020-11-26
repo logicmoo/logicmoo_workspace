@@ -1,0 +1,466 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.10</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="topvars.html">
+<link rel="next" href="compilation.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="topvars.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="compilation.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:debugoverview"><a id="sec:2.10"><span class="sec-nr">2.10</span> <span class="sec-title">Overview 
+of the Debugger</span></a></h2>
+
+<a id="sec:debugoverview"></a>
+
+<p>SWI-Prolog has a traditional commandline debugger. It also provides 
+programmatic access to the debugger. This facility is used to provide a 
+graphical debugger as well as remote debugging in the web interface 
+provided by <a class="url" href="https://swish.swi-prolog.org">SWISH</a>.
+
+<p>SWI-Prolog has a 6-port tracer, extending the standard 4-port tracer
+<cite><a class="cite" href="Bibliography.html#Byrd:80">Byrd, 1980</a>, <a class="cite" href="Bibliography.html#Clocksin:87">Clocksin &amp; 
+Melish, 1987</a></cite> with two additional ports. The standard ports 
+are called <code>call</code>, <code>exit</code>, <code>redo</code>, and <code>fail</code>. 
+The additional <var>unify</var> port allows the user to inspect the 
+result after unification of the head. The additional <var>exception</var> 
+port shows exceptions raised by <a id="idx:throw1:59"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+or one of the built-in predicates. See
+<a class="sec" href="exception.html#sec:4.10">section 4.10</a>.
+
+<p>The tracer is started by the <a id="idx:trace0:60"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+command. If the system is in debug mode (see <a id="idx:debug0:61"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>) 
+the trace is started, after reaching a <em>spy point</em> set using <a id="idx:spy1:62"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+or <em>break point</em> set using
+<a id="idx:setbreakpoint4:63"></a><span class="pred-ext">set_breakpoint/4</span>. 
+The debugger is also started if an
+<code>error(Formal, Extended)</code> exception is raised that is not 
+caught.
+
+<p>If the native graphics plugin (XPCE) is available, the commands <a id="idx:gtrace0:64"></a><a class="pred" href="guitracer.html#gtrace/0">gtrace/0</a> 
+and <a id="idx:gspy1:65"></a><a class="pred" href="guitracer.html#gspy/1">gspy/1</a> 
+activate the graphical debugger while <a id="idx:tdebug0:66"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a> 
+and <a id="idx:tspy1:67"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
+allow debugging of arbitrary threads.
+
+<p>The interactive top-level goal <a id="idx:trace0:68"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+means &ldquo;trace the next query''. The tracer shows the port, 
+displaying the port name, the current depth of the recursion and the 
+goal. The goal is printed using the Prolog predicate <a id="idx:writeterm2:69"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+The style is defined by the Prolog flag
+<a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+and can be modified using this flag or using the <code>w</code>, <code>p</code> 
+and <code>d</code> commands of the tracer.
+
+<pre class="code">
+min_numlist([H|T], Min) :-
+        min_numlist(T, H, Min).
+
+min_numlist([], Min, Min).
+min_numlist([H|T], Min0, Min) :-
+        Min1 is min(H, Min0),
+        min_numlist(T, Min1, Min).
+</pre>
+
+<pre class="code">
+1 ?- visible(+all), leash(-exit).
+true.
+
+2 ?- trace, min_numlist([3, 2], X).
+   Call: (7) min_numlist([3, 2], _G0) ? creep
+   Unify: (7) min_numlist([3, 2], _G0)
+   Call: (8) min_numlist([2], 3, _G0) ? creep
+   Unify: (8) min_numlist([2], 3, _G0)
+^  Call: (9) _G54 is min(2, 3) ? creep
+^  Exit: (9) 2 is min(2, 3)
+   Call: (9) min_numlist([], 2, _G0) ? creep
+   Unify: (9) min_numlist([], 2, 2)
+   Exit: (9) min_numlist([], 2, 2)
+   Exit: (8) min_numlist([2], 3, 2)
+   Exit: (7) min_numlist([3, 2], 2)
+X = 2.
+</pre>
+
+<div class="caption"><b>Figure 2 : </b>Example trace of the program 
+above showing all ports. The lines marked <code><code>^</code></code> 
+indicate calls to <em>transparent</em> predicates. See <a class="sec" href="modules.html#sec:6">section 
+6</a>.</div>
+<a id="fig:tracer"></a>
+
+<p>On <em>leashed ports</em> (set with the predicate <a id="idx:leash1:70"></a><a class="pred" href="debugger.html#leash/1">leash/1</a>, 
+default are
+<code>call</code>, <code>exit</code>, <code>redo</code> and <code>fail</code>) 
+the user is prompted for an action. All actions are single-character 
+commands which are executed <b>without</b> waiting for a return, unless 
+the command line option <strong>--no-tty</strong> is active. Tracer 
+options:
+
+<dl class="latex">
+<dt><strong>Spy</strong> (<code>+</code>)</dt>
+<dd class="defbody">
+Set a spy point (see <a id="idx:spy1:71"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>) 
+on the current predicate.
+</dd>
+<dt><strong>No spy</strong> (<code>-</code>)</dt>
+<dd class="defbody">
+Remove the spy point (see <a id="idx:nospy1:72"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>) 
+from the current predicate.
+</dd>
+<dt><strong>Find</strong> (<code>/</code>)</dt>
+<dd class="defbody">
+Search for a port. After the&lsquo;/', the user can enter a line to 
+specify the port to search for. This line consists of a set of letters 
+indicating the port type, followed by an optional term, that should 
+unify with the goal run by the port. If no term is specified it is taken 
+as a variable, searching for any port of the specified type. If an atom 
+is given, any goal whose functor has a name equal to that atom matches. 
+Examples: <table class="latex frame-void center">
+<tr><td><code>/f</code></td><td>Search for any fail port </td></tr>
+<tr><td><code>/fe solve</code></td><td>Search for a fail or exit port of 
+any goal with name <code>solve</code> </td></tr>
+<tr><td><code>/c solve(a, _)</code></td><td>Search for a call to solve/2 
+whose first argument is a variable or the atom <code>a</code> </td></tr>
+<tr><td><code>/a member(_, _)</code></td><td>Search for any port on <a id="idx:member2:73"></a><a class="pred" href="lists.html#member/2">member/2</a>. 
+This is equivalent to setting a spy point on <a id="idx:member2:74"></a><a class="pred" href="lists.html#member/2">member/2</a>. </td></tr>
+</table>
+</dd>
+<dt><strong>Repeat find</strong> (<code>.</code>)</dt>
+<dd class="defbody">
+Repeat the last find command (see&lsquo;/').
+</dd>
+<dt><strong>Alternatives</strong> (<code>A</code>)</dt>
+<dd class="defbody">
+Show all goals that have alternatives.
+</dd>
+<dt><strong>Context</strong> (<code>C</code>)</dt>
+<dd class="defbody">
+Toggle&lsquo;Show Context'. If <code>on</code>, the context module of 
+the goal is displayed between square brackets (see <a class="sec" href="modules.html#sec:6">section 
+6</a>). Default is <code>off</code>.
+</dd>
+<dt><strong>Listing</strong> (<code>L</code>)</dt>
+<dd class="defbody">
+List the current predicate with <a id="idx:listing1:75"></a><a class="pred" href="listing.html#listing/1">listing/1</a>.
+</dd>
+<dt><strong>Abort</strong> (<code>a</code>)</dt>
+<dd class="defbody">
+Abort Prolog execution (see <a id="idx:abort0:76"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>).
+</dd>
+<dt><strong>Break</strong> (<code>b</code>)</dt>
+<dd class="defbody">
+Enter a Prolog break environment (see <a id="idx:break0:77"></a><a class="pred" href="toplevel.html#break/0">break/0</a>).
+</dd>
+<dt><strong>Creep</strong> (<code>c</code>)</dt>
+<dd class="defbody">
+Continue execution, stop at next port. (Also <span style="font-variant:small-caps">return</span>, <span style="font-variant:small-caps">space</span>).
+</dd>
+<dt><strong>Display</strong> (<code>d</code>)</dt>
+<dd class="defbody">
+Set the <code>max_depth(Depth)</code> option of <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a>, 
+limiting the depth to which terms are printed. See also the <code>w</code> 
+and <code>p</code> options.
+</dd>
+<dt><strong>Exit</strong> (<code>e</code>)</dt>
+<dd class="defbody">
+Terminate Prolog (see <a id="idx:halt0:78"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a>).
+</dd>
+<dt><strong>Fail</strong> (<code>f</code>)</dt>
+<dd class="defbody">
+Force failure of the current goal.
+</dd>
+<dt><strong>Goals</strong> (<code>g</code>)</dt>
+<dd class="defbody">
+Show the list of parent goals (the execution stack). Note that due to 
+tail recursion optimization a number of parent goals might not exist any 
+more.
+</dd>
+<dt><strong>Help</strong> (<code>h</code>)</dt>
+<dd class="defbody">
+Show available options (also&lsquo;?').
+</dd>
+<dt><strong>Ignore</strong> (<code>i</code>)</dt>
+<dd class="defbody">
+Ignore the current goal, pretending it succeeded.
+</dd>
+<dt><strong>Leap</strong> (<code>l</code>)</dt>
+<dd class="defbody">
+Continue execution, stop at next spy point.
+</dd>
+<dt><strong>No debug</strong> (<code>n</code>)</dt>
+<dd class="defbody">
+Continue execution in&lsquo;no debug' mode.
+</dd>
+<dt><strong>Print</strong> (<code>p</code>)</dt>
+<dd class="defbody">
+Set the Prolog flag <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+to <code>[quoted(true), portray(true), max_depth(10), priority(699)]</code>. 
+This is the default.
+</dd>
+<dt><strong>Retry</strong> (<code>r</code>)</dt>
+<dd class="defbody">
+Undo all actions (except for database and I/O actions) back to the call 
+port of the current goal and resume execution at the call port.
+</dd>
+<dt><strong>Skip</strong> (<code>s</code>)</dt>
+<dd class="defbody">
+Continue execution, stop at the next port of <b>this</b> goal (thus 
+skipping all calls to children of this goal).
+</dd>
+<dt><strong>Up</strong> (<code>u</code>)</dt>
+<dd class="defbody">
+Continue execution, stop at the next port of <b>the parent</b> goal 
+(thus skipping this goal and all calls to children of this goal). This 
+option is useful to stop tracing a failure driven loop.
+</dd>
+<dt><strong>Write</strong> (<code>w</code>)</dt>
+<dd class="defbody">
+Set the Prolog flag <a class="flag" href="flags.html#flag:debugger_write_options">debugger_write_options</a> 
+to <code>[quoted(true), attributes(write), priority(699)]</code>, 
+bypassing <a id="idx:portray1:79"></a><a class="pred" href="termrw.html#portray/1">portray/1</a>, 
+etc.
+</dd>
+</dl>
+
+<p>The ideal 4-port model <cite><a class="cite" href="Bibliography.html#Byrd:80">Byrd, 
+1980</a></cite> as described in many Prolog books
+<cite><a class="cite" href="Bibliography.html#Clocksin:87">Clocksin &amp; 
+Melish, 1987</a></cite> is not visible in many Prolog implementations 
+because code optimisation removes part of the choice and exit points. 
+Backtrack points are not shown if either the goal succeeded 
+deterministically or its alternatives were removed using the cut. When 
+running in debug mode (<a id="idx:debug0:80"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>) 
+choice points are only destroyed when removed by the cut. In debug mode, 
+last call optimisation is switched off.<sup class="fn">12<span class="fn-text">This 
+implies the system can run out of stack in debug mode, while no problems 
+arise when running in non-debug mode.</span></sup>
+
+<p>Reference information to all predicates available for manipulating 
+the debugger is in <a class="sec" href="debugger.html#sec:4.39">section 
+4.39</a>.
+
+<p></body></html>

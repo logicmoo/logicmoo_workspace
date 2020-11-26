@@ -1,0 +1,91 @@
+This file is not an XML file. This is not an XSD XML Schema Definition. Instead, it's a more human-readable, informal format for describing the structure of the circlemud_data.xml file.
+
+There are basically five parts: mobs, rooms, zones, shops, and objects. These are described in the building.txt file which describes the format of the original CircleMUD data files.
+
+Any of the attributes which have a boolean "true" or "false" value are false by default. If the attribute does not exist, consider it false.
+
+This description isn't complete. You should read through the building.txt file and maybe look at the python source code files to find out all the possible enumerated values.
+
+<?xml version="1.0" ?>
+<circlemud>
+
+<mobs>
+    <mob vnum="" alignment="" type="" level="" thac0="" ac="" maxhp="" barehanddmg="" gold="" xp="" loadposition="" defaultposition="" sex="">
+        <alias name="" />
+        <shortdesc>short description</shortdesc>
+        <longdesc>long description</longdesc>
+        <detaileddesc>detailed description</detaileddesc>
+        <action sentinel="bool" ... />
+        <affection blind="bool" ... />
+        <extended barehandattack="" str="" ... />
+    </mob>
+</mobs>
+
+<zones>
+    <zone vnum="" name="" startroom="" endroom="" lifespan="" resetmode="">
+        <mobs>
+            <mob vnum="" globalmax="" room="">
+                <equipped obj="" globalmax="" wornon="" />
+                <inventory obj="" globalmax="" />
+            </mob>
+        </mobs>
+        <objects>
+            <object vnum="" globalmax="" room="" />
+            <contains>
+                <object vnum="" globalmax="" />
+            </contains>
+        </objects>
+        <doors>
+            <door room="" exit="" state="open|closed|locked" />
+        </doors>
+        <cleanup>
+            <obj vnum="" room="" />
+        </cleanup>
+    </zone>
+</zones>
+
+<objects>
+    <object vnum="" type="" value0="" value1="" value2="" value3="" weight="" cost="" rent="">
+        <alias name="" />
+        <shortdesc>description</shortdesc>
+        <longdesc>description</longdesc>
+        <actiondesc>description</actiondesc>
+        <effects glow="bool" ... />
+        <wear takeable="bool" ... />
+        <typespecific charge="42" ... />
+        <extradesc><keyword>...</keyword/>description</extradesc>
+        <affect type="none|strength|dexterity|intelligence|wisdom|constitution|charisma|class|level|age|charweight|charheight|mana|hit\Move|gold|experience|ac|hitroll|damageroll|saveparalysis|saverods|savepetrification|savebreath|savespell" value="" />
+    </object>
+</objects>
+
+<shops>
+    <shop shopnum="" profitwhenselling="" profitwhenbuying="" fights="bool" banks="bool" shopkeepervnum="" roomvnum="" open1="0-28" close1="0-28" open2="0-28" close2="0-28">
+        <forsale>
+            <item vnum="" />
+        </forsale>
+        <willbuy light="bool" scroll="bool" wand="bool" staff="bool" weapon="bool" fireweapon="bool" missile="bool" treasure="bool" armor="bool" potion="bool" worn="bool" other="bool" trash="bool" trap="bool" container="bool" note="bool" drinkcontainer="bool" key="bool" food="bool" money="bool" pen="bool" boat="bool" fountain="bool">
+            <willbuyname>name</willbuyname>
+        </willbuy>
+        <messages>
+            <playercantbuy>message</playercantbuy>
+            <playercantsell>message</playercantsell>
+            <shopdoesnotbuy>message</shopdoesnotbuy>
+            <shopcantafford>message</shopcantafford>
+            <playercantafford>message</playercantafford>
+            <shopsolditem>message</shopsolditem>
+            <shopboughtitem>message</shopboughtitem>
+            <temper>message</temper>
+        </messages>
+        <wontdealwith warrior="bool" thief="bool" cleric="bool" magicuser="bool" neutral="bool" evil="bool" good="bool"  />
+        <room vnum=""/>
+    </shop>
+</shops>
+
+<rooms>
+    <room vnum="" name="" type="" zone="" dark="bool" indoors="bool" nomob="bool" peaceful="bool" soundproof="bool" notrack="bool" nomagic="bool" tunnel="bool" private="bool" godroom="bool" house="bool" house_crash="bool" atrium="bool" olc="bool" bfs_mark="bool">
+        <desc>Long description</desc>
+        <exit direction="north|east|south|west|up|down" type="nodoor|normal|pickproof" keynum="" roomlinked="">
+            <exitkeyword keyword="" />
+        </exit>
+    </room>
+</rooms>

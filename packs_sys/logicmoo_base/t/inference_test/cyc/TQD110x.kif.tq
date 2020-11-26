@@ -1,0 +1,67 @@
+(note TQd110x)
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 35 HPKBScenarioConflict) Stage4-GCCStatement) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 31 HPKBScenarioConflict) Stage4-IranAnnouncesStraitClosing) 
+
+(topicOfInfoTransfer Stage4-GCCStatement 
+ (thereExists ?SHIPPING 
+ (and 
+ (pathway-Partial ?SHIPPING PersianGulf) 
+ (instance ?SHIPPING 
+ (TransportViaFn Ship))))) 
+
+(agent Stage4-GCCStatement Bahrain) 
+
+(agent Stage4-IranAnnouncesStraitClosing Iran) 
+
+(inReactionTo Stage4-GCCStatement Stage4-IranAnnouncesStraitClosing) 
+
+(subProcess HPKBScenarioConflict Stage4-GCCStatement) 
+
+(instance Stage4-GCCStatement Communicating) 
+
+
+
+
+(existant Stage4-GCCStatement 
+ (DateInSituationFn CalendarDay 35 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+ 
+
+
+(existant Stage4-IranAnnouncesStraitClosing 
+ (DateInSituationFn CalendarDay 31 HPKBScenarioConflict)) 
+
+
+(directingAgent Stage4-GCCStatement Bahrain) 
+
+(subrelation directingAgent agent) 
+
+(directingAgent Stage4-IranAnnouncesStraitClosing Iran) 
+
+(queryyn
+ (and 
+ (instance Stage4-GCCStatement Communicating) 
+ (subProcess HPKBScenarioConflict Stage4-GCCStatement) 
+ (topicOfInfoTransfer Stage4-GCCStatement 
+ (thereExists ?INTEREST 
+ (and 
+ (instance ?INTEREST 
+ (TransportViaFn Ship)) 
+ (pathway-Partial ?INTEREST PersianGulf)))) 
+ (inReactionTo Stage4-GCCStatement Stage4-IranAnnouncesStraitClosing) 
+ (agent Stage4-GCCStatement Bahrain) 
+ (agent Stage4-IranAnnouncesStraitClosing Iran) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 35 HPKBScenarioConflict) Stage4-GCCStatement) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 31 HPKBScenarioConflict) Stage4-IranAnnouncesStraitClosing)))
+
+(answer Yes)  
+
+(end_of_file)
+

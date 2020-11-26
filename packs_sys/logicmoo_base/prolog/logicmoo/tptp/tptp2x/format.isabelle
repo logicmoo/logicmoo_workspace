@@ -1,0 +1,422 @@
+%==============================================================================
+%----Procedures for writing out THF in Isabelle format
+%----
+%----Written by Geoff Sutcliffe January 2009
+%==============================================================================
+%------------------------------------------------------------------------------
+isabelle_dequote_ascii([],[]).
+
+%----Keep alphanumeric
+isabelle_dequote_ascii([First|Rest],[First|DequotedRest]):-
+    (   (   First >= 97,
+            First =< 122
+        )
+        ;
+        (   First >= 65,
+            First =< 90
+        )
+        ;
+        (   First >= 48,
+            First =< 57
+        )
+    ),
+    !,
+    isabelle_dequote_ascii(Rest,DequotedRest).
+
+%----Cannot end in _, so add a z
+isabelle_dequote_ascii([_],[95,122]):-
+    !.
+
+%----Change everything else to _
+isabelle_dequote_ascii([_|Rest],[95|DequotedRest]):-
+    isabelle_dequote_ascii(Rest,DequotedRest).
+%------------------------------------------------------------------------------
+isabelle_dequote(Functor,DequotedFunctor):-
+    name(Functor,ASCII),
+    isabelle_dequote_ascii(ASCII,DequotedASCII),
+    name(DequotedFunctor,DequotedASCII).
+%------------------------------------------------------------------------------
+tptp_to_isabelle(variable,Variable,Variable):-
+    var(Variable),
+    !,
+    write(Variable).
+
+tptp_to_isabelle(symbol,Integer,TypedInteger):-
+    integer(Integer),
+    !,
+    name(Integer,IntegerASCII),
+    tptp2X_append("(",IntegerASCII,PreBracketedASCII),
+    tptp2X_append(PreBracketedASCII,"::int",TypedASCII),
+    tptp2X_append(TypedASCII,")",BracketedASCII),
+    name(TypedInteger,BracketedASCII).
+
+tptp_to_isabelle(_,TPTP,Isabelle):-
+    tptp2X_member(TPTP,[
+%----Lexicon
+'ALL','CHR','CONST','EX','GREATEST','INF','INT','Int','LEAST','O','OFCLASS',
+'OO','PROD','PROP','SIGMA','SOME','SUM','SUP','THE','TYPE','UN','Un','WRT',
+'XCONST']),
+    !,
+    name(TPTP,TPTPASCII),
+    tptp2X_append("TPTP_",TPTPASCII,IsabelleASCII),
+    name(Isabelle,IsabelleASCII).
+
+tptp_to_isabelle(_,TPTP,Isabelle):-
+    tptp2X_member(TPTP,[
+%----Isabelle reserved words
+bool,not,the,all,ex,ex1,not_equal,iff,
+%----Isabelle commands
+prop,pwd,quit,redo,refute,remove_thy,term,thm,thm_deps,thy_deps,
+touch_child_thys,touch_thy,typ,undo,undos_proof,unused_thms,use_thy,value,
+welcome,
+%----Isabelle lexicon
+case,div,dvd,else,if,in,let,mem,mod,o,o_m,of,op,respects,respects2,then
+]),
+    !,
+    name(TPTP,TPTPASCII),
+    tptp2X_append("tptp_",TPTPASCII,IsabelleASCII),
+    name(Isabelle,IsabelleASCII).
+
+%----Catch connective terms first
+tptp_to_isabelle(symbol,TPTP,Isabelle):-
+    tptp2X_member(ti(TPTP,Isabelle),[
+ti('&','(op &)'),
+ti('|','(op |)'),
+ti('=>','(op -->)'),
+ti('<=','(op <--)'),
+ti('<=>','(op <->)'),
+ti('=','(op =)'),
+ti('!=','(op ~=)'),
+ti('~','Not'),
+ti('$less','(op <)'),
+ti('$lesseq','(op <=)'),
+ti('$greater','(op >)'),
+ti('$greatereq','(op >=)'),
+ti('$uminus','(op -)'),
+ti('$sum','(op +)'),
+ti('$difference','(op -)'),
+ti('$product','(op *)'),
+ti('$is_int','is_int'),
+ti('$is_rat','is_rat'),
+ti('$to_int','is_int'),
+ti('$to_rat','is_rat'),
+ti('$to_real','is_real')
+]),
+    !.
+
+tptp_to_isabelle(connective,TPTP,Isabelle):-
+    tptp2X_member(ti(TPTP,Isabelle),[
+ti('!','ALL'),
+ti('?','EX'),
+ti('^','%'),
+ti('&','&'),
+ti('|','|'),
+ti('=>','-->'),
+ti('<=','<--'),
+ti('<=>','<->'),
+ti('@',''),
+ti('$tptp_equal','='),
+ti('$tptp_not_equal','~='),
+ti('>','=>'),
+ti('~','~')
+]),
+    !.
+
+tptp_to_isabelle(_,TPTP,Isabelle):-
+    tptp2X_member(ti(TPTP,Isabelle),[
+%----Individuals are translated to a type variable
+ti('$i','\'i'),
+ti('$o',bool),
+ti('$false','False'),
+ti('$true','True'),
+ti('$int',int),
+ti('$rat',rat),
+ti('$real',real)
+]),
+    !.
+
+%----If it starts with a dollar, no quotes
+tptp_to_isabelle(_,DefinedSymbol,DefinedSymbol):-
+    name(DefinedSymbol,[36|_]),
+    !.
+
+tptp_to_isabelle(_,Symbol,DequotedSymbol):-
+    isabelle_dequote(Symbol,DequotedSymbol).
+%------------------------------------------------------------------------------
+output_isabelle_formula(Variable,Indent,AlreadyIndented):-
+    looks_like_a_prolog_variable(Variable),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    tptp_to_isabelle(variable,Variable,IsabelleVariable),
+    write(IsabelleVariable).
+
+output_isabelle_formula(QuantifiedManyVarsFormula,Indent,AlreadyIndented):-
+    quantified_formula(tptp,QuantifiedManyVarsFormula,Quantifier,
+[OneVariable,TwoVariables|MoreVariables],QuantifiedFormula,_,_,_,_,_),
+    !,
+    InnerQuantifier =.. [Quantifier,[TwoVariables|MoreVariables]],
+    InnerFormula =.. [:,InnerQuantifier,QuantifiedFormula],
+    OuterQuantifier =.. [Quantifier,[OneVariable]],
+    QuantifiedOneVarFormula =.. [:,OuterQuantifier,InnerFormula],
+    output_isabelle_formula(QuantifiedOneVarFormula,Indent,AlreadyIndented).
+
+%----Quantified formula
+output_isabelle_formula(QuantifiedFormula,Indent,AlreadyIndented):-
+    quantified_formula(tptp,QuantifiedFormula,Quantifier,[Variable],Formula,
+_,_,_,_,_),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    write('( '),
+    tptp_to_isabelle(connective,Quantifier,IsabelleQuantifier),
+    write(IsabelleQuantifier),
+    write(' '),
+    output_isabelle_formula(Variable,Indent,Indent),
+    write('.'),
+    nl,
+    NewIndent is Indent + 2,
+    output_isabelle_formula(Formula,NewIndent,0),
+    write(' )').
+
+%----Variable types
+output_isabelle_formula(Variable:Type,Indent,AlreadyIndented):-
+    looks_like_a_variable(Variable),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    output_isabelle_formula(Variable,Indent,Indent),
+    write('::'),
+    output_isabelle_formula(Type,Indent,Indent).
+
+%----Binary formula that Isabelle doesn't know
+output_isabelle_formula(LHS <~> RHS,Indent,AlreadyIndented):-
+    !,
+    output_isabelle_formula(~ (LHS <=> RHS),Indent,AlreadyIndented).
+
+output_isabelle_formula(LHS <= RHS,Indent,AlreadyIndented):-
+    !,
+    output_isabelle_formula(RHS => LHS,Indent,AlreadyIndented).
+
+%----Binary formula
+output_isabelle_formula(BinaryFormula,Indent,AlreadyIndented):-
+    binary_formula(tptp,BinaryFormula,Connective,LHS,RHS,_,_,_,_),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('( '),
+    output_isabelle_formula(LHS,NewIndent,NewIndent),
+    nl,
+    output_indent(Indent,0),
+    tptp_to_isabelle(connective,Connective,IsabelleConnective),
+    write(IsabelleConnective),
+    write(' '),
+    output_isabelle_formula(RHS,NewIndent,NewIndent),
+    write(' )').
+
+output_isabelle_formula(~'$tptp_equal'(LHS,RHS),Indent,AlreadyIndented):-
+    !,
+    output_isabelle_formula('$tptp_not_equal'(LHS,RHS),Indent,AlreadyIndented).
+
+%----Unary formula
+output_isabelle_formula(UnaryFormula,Indent,AlreadyIndented):-
+    unary_formula(tptp,UnaryFormula,Connective,Formula,_,_,_),
+    !,      
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 4,
+    write('( '),
+    tptp_to_isabelle(connective,Connective,IsabelleConnective),
+    write(IsabelleConnective),
+    write(' '),
+    output_isabelle_formula(Formula,NewIndent,NewIndent),
+    write(' )').
+
+%----Equality
+output_isabelle_formula(Equality,Indent,AlreadyIndented):-
+    Equality =.. [Connective,LHS,RHS],
+    tptp2X_member(Connective,['$tptp_equal','$tptp_not_equal']),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    NewIndent is Indent + 2,
+    write('( '),
+    output_isabelle_formula(LHS,NewIndent,NewIndent),
+    nl,
+    output_indent(Indent,0),
+    tptp_to_isabelle(connective,Connective,IsabelleConnective),
+    write(IsabelleConnective),
+    write(' '),
+    output_isabelle_formula(RHS,NewIndent,NewIndent),
+    write(' )').
+
+%----Symbols
+output_isabelle_formula(Atomic,Indent,AlreadyIndented):-
+    atomic(Atomic),
+    !,
+    output_indent(Indent,AlreadyIndented),
+    tptp_to_isabelle(symbol,Atomic,IsabelleAtomic),
+    write(IsabelleAtomic).
+
+output_isabelle_formula(Unknown,_Indent,_AlreadyIndented):-
+    nl,
+    write('ERROR : Dont know what to do with '),
+    write(Unknown),
+    nl.
+%------------------------------------------------------------------------------
+output_isabelle_annotated_formula(AnnotatedFormula):-
+    AnnotatedFormula =.. [_,_,type,Type: '$tType'|_],
+    !,
+    write('typedecl "'),
+    tptp_to_isabelle(symbol,Type,DequotedType),
+    write(DequotedType),
+    write('"'),
+    nl.
+
+output_isabelle_annotated_formula(AnnotatedFormula):-
+    AnnotatedFormula =.. [_,_,type,Symbol:Type|_],
+    !,
+    write('  fixes "'),
+    tptp_to_isabelle(symbol,Symbol,DequotedSymbol),
+    write(DequotedSymbol),
+    write('" :: "'),
+    nl,
+    output_isabelle_formula(Type,4,0),
+    nl,
+    write('  "'),
+    nl.
+
+output_isabelle_annotated_formula(AnnotatedFormula):-
+    AnnotatedFormula =.. [_,Name,conjecture,Formula|_],
+    !,
+    write('(* This is the '),
+%----Hack to hide "This is the conjecture from SystemOnTPTP when $false
+    (   Formula == '$false'
+    ->  write('dummy ')
+    ;   true
+    ),
+    write('conjecture *)'),
+    nl,
+    write('  shows (* "'),
+    write(Name),
+    write('": *) "'),
+    nl,
+    output_isabelle_formula(Formula,4,0),
+    nl,
+    write('  "'),
+    nl.
+
+output_isabelle_annotated_formula(AnnotatedFormula):-
+    AnnotatedFormula =.. [_,Name,_,Formula|_],
+    write('  assumes "'),
+    write(Name),
+    write('": "'),
+    nl,
+    output_isabelle_formula(Formula,4,0),
+    nl,
+    write('  "'),
+    nl.
+%------------------------------------------------------------------------------
+output_isabelle_annotated_formulae([]).
+
+output_isabelle_annotated_formulae([FirstFormula|RestOfFormulae]):-
+    output_isabelle_annotated_formula(FirstFormula),
+    nl,
+    output_isabelle_annotated_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+select_isabelle_typedecls(TSTPFormulae,[TypeDecl|RestOfTypeDecls],
+AxiomsAndConjecture):-
+    tptp2X_select(TypeDecl,TSTPFormulae,RestOfTSTPFormulae),
+    TypeDecl =.. [_,_,type,_Type: '$tType'|_],
+    !,
+    select_isabelle_typedecls(RestOfTSTPFormulae,RestOfTypeDecls,
+AxiomsAndConjecture).
+
+select_isabelle_typedecls(TSTPFormulae,[],TSTPFormulae).
+%------------------------------------------------------------------------------
+select_isabelle_axioms_and_conjecture(TSTPFormulae,Axioms,Conjecture):-
+    tptp2X_select(Conjecture,TSTPFormulae,Axioms),
+    Conjecture =.. [thf,_,conjecture|_],
+    !.
+
+select_isabelle_axioms_and_conjecture(TSTPFormulae,TSTPFormulae,
+thf(prove_false,conjecture,'$false')).
+%------------------------------------------------------------------------------
+output_isabelle_header:-
+    write('theory THEORYNAME'),nl,
+    write('imports "~~/src/HOL/Library/TPTP"'),nl,
+    write('begin'),nl,
+    write('ML {* proofs := PROOFMODE *}'),nl,
+    nl.
+%------------------------------------------------------------------------------
+output_isabelle_trailer(Mode,Conjecture):-
+    tptp2X_member(Mode,[refute,nitpick]),
+    !,
+    write('  apply (insert assms)'),nl,
+    write('  apply clarsimp'),nl,
+    write('  '),
+    (   Mode == refute
+    ->  write('refute  [maxtime = CPULIMIT,   expect = genuine, no_assms]')
+    ;   write('nitpick [timeout = CPULIMIT, card = 1-10, verbose, expect = genuine, dont_box, no_assms]')
+%----"expect = genuine" makes sure that an error is generated if the file is
+%----empty (no models for an empty file).
+    ),
+    nl,
+    write('  oops'),nl,
+    nl,
+    write('  ML_command {* writeln ("% SZS status '),
+    (   Conjecture = thf(_,conjecture,'$false')
+    ->  write('Satisfiable')
+    ;   write('CounterSatisfiable')
+    ),
+    write(' for FILENAME'),
+    write(' : " ^ Context.theory_name @{theory}) *}'),
+    nl,
+    write('end'),nl.
+
+output_isabelle_trailer(sledgehammer,Conjecture):-
+    write('  apply (insert assms)'),nl,
+%----Run each of the modes for some amount of time
+    write('  apply (tactic {* isabellep_tac @{context} @{claset} @{simpset} @{clasimpset} CPULIMIT *})'),nl,
+    write('  done'),nl,
+    write('  prf THEORYNAME'),nl,
+    write('  ML_command {* writeln ("% SZS status '),
+    (   Conjecture = thf(_,conjecture,'$false')
+    ->  write('Unsatisfiable')
+    ;   write('Theorem')
+    ),
+    write(' for FILENAME'),
+    write(' : " ^ Context.theory_name @{theory}) *}'),
+    nl,
+    write('  ML_command {* writeln ("% SZS output start Proof for FILENAME") *}'),
+    nl,
+    write('  prf THEORYNAME'),
+    nl,
+    write('  ML_command {* writeln ("% SZS output end Proof for FILENAME") *}'),
+    nl,
+    write('end'),nl.
+%------------------------------------------------------------------------------
+isabelle(isabelle:_,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('%----CNF format not available for Isabelle'),
+    nl.
+
+isabelle(isabelle:Mode,Formulae,_FileHeader):-
+    tptp_formulae(Formulae),
+    !,
+    convert_formulae_to_tptp(Formulae,TSTPFormulae),
+    select_isabelle_typedecls(TSTPFormulae,TypeDecls,AxiomsAndConjecture),
+    output_isabelle_header,
+    output_isabelle_annotated_formulae(TypeDecls),
+    write('lemma THEORYNAME:'),nl,
+    select_isabelle_axioms_and_conjecture(AxiomsAndConjecture,Axioms,
+Conjecture),
+    output_isabelle_annotated_formulae(Axioms),
+    output_isabelle_annotated_formulae([Conjecture]),
+    output_isabelle_trailer(Mode,Conjecture).
+
+isabelle(isabelle,Formulae,FileHeader):-
+    !,
+    isabelle(isabelle:sledgehammer,Formulae,FileHeader).
+%------------------------------------------------------------------------------
+%---Information about the Isabelle format and file
+%------------------------------------------------------------------------------
+isabelle_format_information('(*'-'*)','.thy').
+isabelle_file_information(format,isabelle:[automodes],'Isabelle format').
+%------------------------------------------------------------------------------

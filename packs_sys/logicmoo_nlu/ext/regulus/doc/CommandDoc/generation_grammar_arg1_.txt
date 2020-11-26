@@ -1,0 +1,4 @@
+Relevant to applications that use generation (typically translation
+applications) and also grammar specialisation. Points to the file
+containing the compiled specialised generation grammar for the
+subdomain tag $\langle$Arg$\rangle$.

@@ -1,0 +1,4816 @@
+;; Copyright 1998-2000 Cycorp, Inc., All Rights Reserved.  This file and
+;; its contents are products of Cycorp, Inc.  They are released only
+;; under specific license agreement with Cycorp, and must be treated
+;; as Cycorp Confidential Information, as per that license agreement,
+;; including translations into another language (including but not
+;; limited to Conceptual Graphs, KIF, Ontolingua, GFP, LOOM,
+;; PowerLOOM, CycL, C, C++, IDL, predicate logic, and English) and any
+;; logically equivalent rearrangement or renaming of assertion
+;; components, terms, or variables.  This paragraph shall not be
+;; altered or removed. This file is provided "AS IS", without any
+;; warranty; the cumulative liability of Cycorp for all claims
+;; relating to this file shall not exceed the amount of one dollar.
+;; Cycorp, 3721 Executive Center Dr., Austin, TX 78731, USA; Website:
+;; www.cyc.com, Tel: (512) 342-4000.
+
+;; KIF assertion-specs for microtheory : #$BiologyMt
+;; 10/12/2000 17:32:50
+
+(:DIRECTION :BACKWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 110529
+ :MICROTHEORY BiologyMt
+ :KIF
+  (salientAssertions BiologicalSpecies 
+    (=> 
+      (and 
+        (isa ?SPEC BiologicalSpecies) 
+        (isa ?YOUNGER ?SPEC) 
+        (children ?OLDER ?YOUNGER)) 
+      (isa ?OLDER ?SPEC)))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (salientAssertions children 
+    (=> 
+      (and 
+        (isa ?SPEC BiologicalSpecies) 
+        (isa ?OLDER ?SPEC) 
+        (children ?OLDER ?YOUNGER)) 
+      (isa ?YOUNGER ?SPEC)))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 105853
+ :MICROTHEORY BiologyMt
+ :KIF
+  (exceptWhen 
+    (and 
+      (isa ?SPEC2 BiologicalSpecies) 
+      (isa ?OLDER2 ?SPEC2) 
+      (children ?OLDER2 ?YOUNGER) 
+      (different ?OLDER ?OLDER2) 
+      (different ?SPEC ?SPEC2)) 
+    (=> 
+      (and 
+        (isa ?SPEC BiologicalSpecies) 
+        (isa ?OLDER ?SPEC) 
+        (children ?OLDER ?YOUNGER)) 
+      (isa ?YOUNGER ?SPEC)))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (salientAssertions SecretionEvent 
+    (=> 
+      (and 
+        (isa ?SB Secretion-Bodily) 
+        (outputsCreated ?SECR-EV ?SB)) 
+      (isa ?SECR-EV SecretionEvent)))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (salientAssertions stuffInExposureEvent 
+    (=> 
+      (and 
+        (eventOccursAt ?EXP ?LOC) 
+        (stuffInExposureEvent ?EXP ?SUBST)) 
+      (inRegion ?EXP ?SUBST)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 161316
+ :MICROTHEORY BiologyMt
+ :KIF
+  (exampleAssertions arg1Isa 
+    (arg1Isa killedByExposure BiologicalLivingObject))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AnaerobicBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argFormat inhalingToxicityFor 3 IntervalEntry)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (interArgIsa1-2 anatomicalParts Animal AnimalBodyPart)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 110024
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SPEC BiologicalSpecies) 
+      (children ?OLDER ?YOUNGER) 
+      (isa ?YOUNGER ?SPEC)) 
+    (isa ?OLDER ?SPEC))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Finger 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 94057
+ :MICROTHEORY BiologyMt
+ :KIF
+  (siblingDisjointExceptions Spore-DormantBacterium GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa BacterialSporeFn LifeStageType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Heart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa immuneWithRespectToPathogen 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExists birthChild BirthEvent Animal)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (residesInDwelling ?ANIMAL ?REGION) 
+      (hasHabitat ?ANIMAL ?SHELTER)) 
+    (objectFoundInLocation ?REGION ?SHELTER))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 173408
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ImmuneResponse Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (kePredArgStrongSuggestionPreds parentActors 1 offspringActors)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 111953
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SUBPHYLUM BiologicalSubphylum) 
+      (isa ?PHYLUM BiologicalPhylum) 
+      (genls ?SUBPHYLUM ?PHYLUM)) 
+    (superTaxons ?SUBPHYLUM ?PHYLUM))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Neutrophil Cell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (BacterialSporeFn Anthrax-Bacterium) LifeStageType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163206
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment GramPositiveBacterium "The collection of all instances of #$Bacterium that are not decolorized after the process known as 'Gram Staining'. In this process the bacterial cells are rinsed with ethyl alcohol after being stained with a crystal violet dye. That the #$GramPositiveBacterium retain the stain indicates that the cells lack an outer membrane. Another feature that distinguishes them from the #$GramNegativeBacterium is that their cell walls have molecules on them known as teichoic acids which regulate the growth of the cell wall. Antibiotics to work against the #$GramPositiveBacterium are engineered to interfere with these molecules.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Clostridiales-Order "A collection of #$Bacterium. A #$BiologicalOrder formed in the
+#$Firmicutes-Division of the #$MoneraKingdom.  An important subtaxon is the
+Clostridiaceae-Family.  These #$ProkaryoticCells are #$SporeFormingBacterium.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) 1 MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Arthropod Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole ReproductiveSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa SKF-33612495 AnimalBodyPart)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Smallpox-Virus BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 121333
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Cyanosis-PhysiologicalCondition PhysiologicalConditionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole MuscularSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (completeCollectionExtent Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (expansion carriesOrganismType 
+    (relationInstanceExists carriesOrganism :ARG1 :ARG2))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BrucellaBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity contaminatedWithMicroorganismType 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AnaerobicBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Mammal BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (completeCollectionExtent BacteriumTypeByAerobicity)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (BacterialSporeFn Anthrax-Bacterium) Spore-DormantBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn TerroristAct) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 93835
+ :MICROTHEORY BiologyMt
+ :KIF
+  (siblingDisjointExceptions BacillusBacterium Spore-DormantBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 153900
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa GramPositiveBacterium BacteriumTypeByGramStain)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa BacterialSporeFn ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 104745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa immuneWithRespectToPathogen OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacillusBacterium BacteriumTypeByStructure)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (BacterialSporeFn Anthrax-Bacterium) Anthrax-Bacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 111923
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsCount superTaxons BiologicalSubphylum BiologicalPhylum 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa NervousSystem UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BLymphocyte AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CanineAnimal NonPersonAnimal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 162733
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment GramNegativeBacterium "The collection of all instances of #$Bacterium that do not retain the stain in the 'Gram Staining' process. The cell walls of the #$GramNegativeBacterium are more complex and do not contain as many peptoglycans as the #$GramPositiveBacterium. Among the #$Bacterium which are #$Pathogens, the #$GramNegativeBacterium are much more plentiful than the #$GramPositiveBacterium.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 154554
+ :MICROTHEORY BiologyMt
+ :KIF
+  (keWeakSuggestionPreds Inhaling bodilyDoer)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) 1 MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Arthropod Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity SKF-33612495 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa EndosporeAttribute BacterialPhysiologicalAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment contactToxicityFor "(#$contactToxicityFor STUFF ORGTYPE TOXLEVEL) means that under ordinary circumstances, stuff has the #$Toxicity TOXLEVEL for instances of ORGTYPE that come into skin contact with it.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (GroupFn Animal) SpatialThing)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl organismFoundInSubstance 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BrucellaBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa contaminatedWithMicroorganismType BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Fish AquaticOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl inhalingToxicityFor 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 192135
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AtLeastPartiallyMentalEvent AnimalActivity)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Reptile BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184852
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl BacterialSporeFn Spore-DormantBacterium)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (eventOccursAt ?EXP ?LOC) 
+      (stuffInExposureEvent ?EXP ?SUBST)) 
+    (inRegion ?EXP ?SUBST))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity BacterialSporeFn 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Fungus Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa immuneWithRespectToPathogen 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argFormat organismTypeCanLethallyInfect 2 SetTheFormat)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole FaceOfAnimal 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BLymphocyte Cell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CanineAnimal Carnivore)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 154554
+ :MICROTHEORY BiologyMt
+ :KIF
+  (keWeakSuggestionPreds Inhaling objectActedOn)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl organismTypeCanLethallyInfect 1 MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Insect Arthropod)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SKF-33612495 FixedAritySkolemFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridium-Genus GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment carriesOrganism "(carriesOrganism CARRIER ORGANISM) means that CARRIER currently
+carries ORGANISM. See also, #$carriesOrganismType.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Format contactToxicityFor IntervalEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AnthraxInfection Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 175951
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl organismFoundInSubstance Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AntibodyIgE Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Primate Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Mammal Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl inhalingToxicityFor BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Amphibian BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184402
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacterialSporeFn "(#$BacterialSporeFn BACTERIUM-TYPE) returns the collection of
+all bacteria of the type BACTERIUM-TYPE in their spore form.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 93514
+ :MICROTHEORY BiologyMt
+ :KIF
+  (siblingDisjointExceptions BacillusBacterium GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment stuffInExposureEvent "This predicate relates instances of #$ExposureToSubstance to that which the object exposed (see #$objectExposed) is exposed to in the event.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 162355
+ :MICROTHEORY BiologyMt
+ :KIF
+  (exampleNATs BacterialSporeFn 
+    (BacterialSporeFn ClostridiumBotulinum-Species))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialSporeFn UnaryFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment ImmuneResponse "A collection. #$ImmuneResponse isa the collection of all immune
+response. It stands for the usually wide variety of organism's
+#$ImmuneSystem response to encounter with microbial or viral agent. See
+#$HumoralImmuneResponse, #$CellularImmuneResponse, #$ImmuneSystem.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 104745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa immuneWithRespectToPathogen Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts ?MAMMALTYPE 
+    (HairMobFn ?MAMMALTYPE) 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Format organismTypeCanLethallyInfect SetTheFormat)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172511
+ :MICROTHEORY BiologyMt
+ :KIF
+  (examplePredFormulas stuffInExposureEvent 
+    (stuffInExposureEvent JoesJuly9Bath WaterInJoesJuly9Bath))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 133017
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenlArg BacterialSporeFn 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls TLymphocyte AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Plant-Woody TerrestrialOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CanineAnimal Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Clostridiales-Order BiologicalOrder)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl organismTypeCanLethallyInfect MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Insect Arthropod)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridium-Genus AnaerobicBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlInverse carriesOrganism objectFoundInLocation)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa organismFoundInSubstance 1 Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ExposureToSubstance Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (partitionedInto Person PersonByGenderType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByStructure SiblingDisjointCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa inhalingToxicityFor 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Fish BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 135230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacteriumTypeByAerobicity "A collection of collections and a partion on #$Bacterium. This collection partitions #$Bacterium into two disjoint classes, the #$AnaerobicBacterium and the #$AerobicBacterium.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn EconomicEmbargo) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Reptile Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa stuffInExposureEvent 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment exposureToType "(exposureToType EXPOSURE TYPE) means that during EXPOSURE, the
+object exposed is exposed to substance of the TYPE.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 172905
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment SporeGermination "The collection of events in which spores, instances of #$Spore-PlantOrgan, 
+germinate.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (BacterialSporeFn ClostridiumBotulinum-Species) Spore-DormantBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialSporeFn ReifiableFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 153335
+ :MICROTHEORY BiologyMt
+ :KIF
+  (interArgFormat1-2 bodilyDoer PhysiologicalCondition SingleEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 161528
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment AnaerobicBacterium-Oxyphobic "The collection of all instances of #$AnaerobicBacterium to which oxygen is actually lethal; i.e., which not only do not metabolize oxygen, but which are actually killed by it.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Lung 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ImmuneResponse BodilyFunctionEvent-Involuntary)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment HairMobFn "(#$HairMobFn MAMMALTYPE) returns the collection of instances of #$MobOfHair-Mammal belonging to instances of MAMMALTYPE.  E.g., (#$HairMobFn #$Raccoon) is the collection of #$Raccoon hair, or more properly, the collection of all #$Raccoon hair-mobs.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argFormat organismTypeCanLethallyInfect 1 SetTheFormat)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Head-Vertebrate UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls TLymphocyte Cell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa inhalingToxicityFor 3 ScalarInterval)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?PART-TYPE UniqueAnatomicalPartType) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (inRegion ?INFECTION 
+      (BodyPartFn ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Inhaling SituationType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?KILL Killing-Biological) 
+      (inputsDestroyed ?KILL ?ORG)) 
+    (temporallyCoterminal ?KILL ?ORG))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Anthrax-Bacterium BacillusBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridium-Genus Clostridiaceae-Family)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101317
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls RickettsiaRicketsii Rickettsia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Amphibian Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa carriesOrganism 2 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment RicinToxin "A #$Collection. #$RicinToxin is one of the main toxic proteins of the castor bean plant (ricinus communis). Ricin is a potent cytotoxin but a weak hemagglutinin.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 175919
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa organismFoundInSubstance Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AntibodyIgE ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByStructure DisjointSetOrCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa inhalingToxicityFor OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Bird BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 135230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes BacteriumTypeByAerobicity "This or something like it should be promoted to a more general reasoning domain, together with #$AerobicBacterium and #$AnaerobicBacterium.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole SkeletalSystem 1)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?INSECT AdultAnimal) 
+      (isa ?INSECT Insect)) 
+    (anatomicalParts ?INSECT 
+      (SKF-51781280 ?INSECT 6)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BLymphocyte ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa stuffInExposureEvent PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 101355
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment VegetativeCell "Bacteria which are not in the state of being
+an #$Endospore are #$VegetativeCells. This is the usual life of the cell
+when it is metabolizing.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Person Primate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (BacterialSporeFn ClostridiumBotulinum-Species) SporeFormingBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialSporeFn CollectionDenotingFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 151637
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsCount bodilyDoer PhysiologicalCondition Organism-Whole 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AnaerobicBacterium-Oxyphobic AnaerobicBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity immuneWithRespectToPathogen 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Format organismTypeCanLethallyInfect SetTheFormat)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls NaturalKillerCell AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole HumanBody 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa inhalingToxicityFor ScalarInterval)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?DY Dying) 
+      (bodilyDoer ?DY ?BLO)) 
+    (temporallyFinishedBy ?BLO ?DY))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Eye 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Anthrax-Bacterium GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Plant BiologicalKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Amphibian "The collection of all #$Organism-Wholes which are members of the #$BiologicalClass Amphibia, being a specialization of #$Vertebrate.  
+Members of this class are smooth skinned #$Vertebrates which hatch from eggs to form aquatic larvae [see #$Larva].  These larvae metamorphose into an air-breathing adult [see AirBreathingVertebrate] (normally) having #$Lungs.  Subsets of this collection include #$Frogs and #$Salamanders.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialPhysiologicalAttribute BacterialPhysiologicalAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Clostridium-Genus Clostridiaceae-Family)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101317
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa RickettsiaRicketsii OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Bird Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa carriesOrganism Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl contactToxicityFor 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (unknownFormula 
+        (isa ?PART-TYPE SymmetricAnatomicalPartType)) 
+      (unknownFormula 
+        (isa ?PART-TYPE UniqueAnatomicalPartType)) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (actorPartsAffected ?INFECTION 
+      (SKF-58570131 ?INFECTION ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacillusCereus-Species BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Amphibian Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101730
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CoxiellaBurnetti Rickettsia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CoccusBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa inhalingToxicityFor 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacteriumTypeByAerobicity OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole CirculatorySystem 1)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?INSECT AdultAnimal) 
+      (isa ?INSECT Insect)) 
+    (isa 
+      (SKF-51781280 ?INSECT 6) Leg))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn LoggingInOnAComputer) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa stuffInExposureEvent 1 ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (BacterialSporeFn ClostridiumBotulinum-Species) LifeStageType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AnaerobicBacterium-Oxyphobic OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 104745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa immuneWithRespectToPathogen BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa HairMobFn Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl organismTypeCanLethallyInfect 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172336
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment SpirillaBacterium "A specialization of #$Bacterium whose instances are characterized by having spiral or corkscrew shape.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls NaturalKillerCell Cell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa ingestingToxicityFor 3 ScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (partitionedInto Organism-Whole BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa infectionLocalizedIn 3 AnimalBodyPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (MobFn Person) ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialPhysiologicalAttribute AttributeType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Clostridium-Genus BiologicalGenus)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Fish Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa carriesOrganism 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl contactToxicityFor BiologicalLivingObject)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (unknownFormula 
+        (isa ?PART-TYPE SymmetricAnatomicalPartType)) 
+      (unknownFormula 
+        (isa ?PART-TYPE UniqueAnatomicalPartType)) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (isa 
+      (SKF-58570131 ?INFECTION ?ORG ?PART-TYPE) 
+      (BodyPartCollectionFn ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 153032
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Safeguard-Situation "This is the collection of situations which constitute the safeguarding of
+something. Some of these are purposeful actions (#$ProtectingSomething); others are events
+which are not purposeful actions (a security program running); still others are
+more-or-less static situations (a lock's being in a door). While not all instances
+of #$Safeguard-Situation are purposeful actions, all are a result of such. Note that the term `safeguard' may also
+be used to denote artifacts such as locks and computer programs, even when they are not being used to safeguard. These things
+are instances of #$Safeguard-Artifact. (#$SteveSchulz 4/11/2000)")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101730
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CoxiellaBurnetti OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CoccusBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (isa ?PARTTYPE UniqueAnatomicalPartType) 
+    (relationAllExistsMax anatomicalParts Organism-Whole ?PARTTYPE 1))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (transitiveViaArgInverse organismTypeCanLethallyInfect genls 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa inhalingToxicityFor PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExists stuffInExposureEvent ExposureToSubstance PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn Learning) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa stuffInExposureEvent ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa exposureToType 1 ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (BacterialSporeFn ClostridiumBotulinum-Species) ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (keStrongSuggestionPreds EndosporingEvent eventOccursAt)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl HairMobFn 1 Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl organismTypeCanLethallyInfect BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172724
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes SpirillaBacterium "Strictly speaking, this morphological characterization applies only to instances of Eubacteria.  Appropriate adjustments will be made as our taxonomy grows in sophistication.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity carriesOrganismType 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ImmuneResponse SituationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa ingestingToxicityFor ScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa infectionLocalizedIn AnimalBodyPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Stomach 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (MobFn Antibody) ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole FaceOfAnimal 1)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (not 
+    (and 
+      (isa ?PARTTYPE UniqueAnatomicalPartType) 
+      (isa ?PART1 ?PARTTYPE) 
+      (different ?PART1 ?PART2) 
+      (isa ?PART2 ?PARTTYPE) 
+      (anatomicalParts ?ORG ?PART1) 
+      (anatomicalParts ?ORG ?PART2)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa carriesOrganism PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa contactToxicityFor 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Nose UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Head-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity inhalingToxicityFor 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByAerobicity CollectionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 105848
+ :MICROTHEORY BiologyMt
+ :KIF
+  (requiredArg1Pred ExposureToSubstance stuffInExposureEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa exposureToType ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101256
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa VegetativeCell OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (BacterialSporeFn ClostridiumBotulinum-Species) ClostridiumBotulinum-Species)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Primate BiologicalOrder)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl HairMobFn Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa organismTypeCanLethallyInfect 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa carriesOrganismType BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BrucellaBacterium "A #$Collection.  Each instance is a portion of the #$Bacterium Brucella, which is responsible for the disease #$Brucellosis.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HumoralImmuneResponse SituationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CanineAnimal TerrestrialOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa contactToxicityFor 3 ScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Inhaling "The collection of all body movement events in which an animal takes air in through an appropriate portal (#$Mouth, #$Nose) and passes it into its #$Lungs.  The elements of #$Breathing all have #$subEvents which are #$Inhalings.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Nose 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 152123
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment ReturnToVegetativeState "A subset of #$BiologicalDevelopmentEvent. In each instance of
+#$ReturnToVegetativeState, an instance of #$Endospore returns to its
+#$VegetativeCell state.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa infectionLocalizedIn 2 Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (MobFn Antibody) Mob)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (partitionedInto Organism-Whole BiologicalOrder)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa contactToxicityFor OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Joint-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AntibodyIgA Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 152850
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Safeguard-Situation Situation-Temporal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacillusBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Nose 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 155444
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Herbivore OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa inhalingToxicityFor TernaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 105848
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExists objectExposed ExposureToSubstance PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa SKF-51781280 NonNegativeScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn Cracking-CompromisingSecurity) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Neutrophil "A subclass of #$WhiteBloodCell, quite similar to #$Macrophage in
+size, structure and function, unlike these, they circualte the
+#$Blood. They need stimulus to exit the blood and enter tissues.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (GroupFn Animal) PartiallyTangible)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?TYPE BiologicalTaxon) 
+      (isa ?A ?TYPE) 
+      (siblings ?A ?B)) 
+    (isa ?B ?TYPE))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 161630
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment AnaerobicBacterium "The collection of all instances of #$Bacterium which do not metabolize oxygen.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa HairMobFn 1 Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa organismTypeCanLethallyInfect OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Dog BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CellularImmuneResponse SituationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 185631
+ :MICROTHEORY BiologyMt
+ :KIF
+  (examplePredFormulas organismFoundInSubstance 
+    (organismFoundInSubstance Fish Water))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa contactToxicityFor ScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Inhaling BodilyFunctionEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Mouth 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 152123
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ReturnToVegetativeState BiologicalDevelopmentEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa infectionLocalizedIn Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (MobFn Antibody) StuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa NonSporeFormingBacterium BacteriumTypeBySporulationAbility)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity carriesOrganism 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa contactToxicityFor 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Heart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment contaminatedWithMicroorganismType "(#$contaminatedWithMicroorganismType STUFF MICROTYPE) means that the #$PartiallyTangible STUFF is
+contaminated with #$Microorganisms of the type MICROTYPE.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacillusBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa SKF-51781280 AdultAnimal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Animal Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Antigen "An antigen is any substance that can stimulate immune
+response. For example, bacteria, viruses, proteins can serve as #$Antigens.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa HairMobFn Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) 1 ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Embryo LifeStageType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BrucellaBacterium OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) ActsCommonlyConsideredCriminal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ExposureToSubstance IntrinsicStateChangeEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Omnivore Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByGramStain SiblingDisjointCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa infectionLocalizedIn 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment ScatFn "(#$ScatFn ORGANISMTYPE) returns the collection of all instances of #$ExcretionSubstance deriving from some instance of ORGANISMTYPE.  E.g., (#$ScatFn #$Opossum) denotes the collection of all instances of possum-scat.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?X FemaleAnimal) 
+      (isa ?X Person)) 
+    (isa ?X FemalePerson))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 142639
+ :MICROTHEORY BiologyMt
+ :KIF
+  (examplePredFormulas objectExposed 
+    (objectExposed BeberDrinksWaterWithCholera MmeBertrand))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (negationInverse carriesOrganism carriesOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa contactToxicityFor PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SkeletalSystem UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa SKF-58570131 AnimalBodyPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Rickettsia Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AntibodyIgA ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 152831
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Safeguard-Situation ObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172841
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SporeGermination BiologicalDevelopmentEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl exposureToType 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa SKF-51781280 Insect)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 162325
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment stuffInhaled "(#$stuffInhaled INHALING STUFF) means that during
+INHALING, an instance of #$Inhaling, STUFF, an instance of
+#$PartiallyTangible, is what is inhaled.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 170110
+ :MICROTHEORY BiologyMt
+ :KIF
+  (expansion exposureOfObjectToSubstanceType 
+    (and 
+      (objectExposed :ARG1 :ARG2) 
+      (exposureToType :ARG1 :ARG3)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AnaerobicBacterium BacteriumTypeByAerobicity)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn CoercingAnAgent) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Antigen TangibleThing)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SpirillaBacterium BacteriumTypeByStructure)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BrucellaBacterium BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ExposureToSubstance Action)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByGramStain DisjointSetOrCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Inhaling BiologicalIntakeEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa infectionLocalizedIn Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa carriesOrganism AsymmetricBinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity contactToxicityFor 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa SKF-58570131 Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Clostridium-Genus "A collection of #$Bacterium.  A #$BiologicalGenus formed in the
+#$MoneraKingdom.  The #$Clostridium-Genus are large #$AnaerobicBacterium,
+#$GramPositiveBacterium, #$BacillusBacterium.  These #$ProkaryoticCells cause
+#$Botulism, #$Tetanus, gas gangrene, and pseudomembranous colitis.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 211236
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl exposureToType PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SpirillaBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa SKF-51781280 Leg)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Neutrophil ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlPreds stuffInExposureEvent preActors)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 175951
+ :MICROTHEORY BiologyMt
+ :KIF
+  (examplePredFormulas stuffInhaled 
+    (stuffInhaled MmeBertrandGasps79 O2InhaledByMmeBertrand79))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl exposureOfObjectToSubstanceType 3 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HairMobFn CollectionDenotingFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) Translation-SingleTrajectory)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa exposureToType Thing)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls GramPositiveBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Liver UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa ScatFn Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Mammal Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa contactToxicityFor TernaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa SKF-58570131 Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa exposureToType 2 TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SpirillaBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment ingestingToxicityFor "(#$ingestingToxicityFor STUFF ORGTYPE TOXLEVEL) means that under ordinary circumstances, stuff has the #$Toxicity TOXLEVEL for instances of ORGTYPE that ingest it.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity SKF-51781280 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlPreds stuffInExposureEvent nonDeliberateActors)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 165840
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Genl exposureOfObjectToSubstanceType PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Antigen ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity HairMobFn 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) Predicate)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (objectExposed ?EXPOSURE ?OBJECT) 
+      (exposureToType ?EXPOSURE ?CONTAMINANT-TYPE)) 
+    (exposureOfObjectToSubstanceType ?EXPOSURE ?OBJECT ?CONTAMINANT-TYPE))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls VegetativeCell ProkaryoticCell)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?X MaleAnimal) 
+      (isa ?X Person)) 
+    (isa ?X MalePerson))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 162621
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment infectionLocalizedIn "(#$infectionLocalizedIn ORG INFECTION PART-TYPE) means that in
+the context of the assertion, INFECTION is localized in the part or
+parts of ORG that are instances of PART-TYPE.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls GramPositiveBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Inhaling TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Primate TerrestrialOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity infectionLocalizedIn 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl contaminatedWithMicroorganismType 2 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl ScatFn 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Animal BiologicalKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Reptile Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes Clostridiaceae-Family "This biological family has previously been classified with the Bacillaceae family and may still be in older texts.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment NonSporeFormingBacterium "A collection, a specialization of #$Bacterium. The collection of bacteria that are not capable of forming spores.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultIsa SKF-58570131 AnimalBodyPart)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172430
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SporeGermination DefaultDisjointScriptType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 211113
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa exposureToType TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Format ingestingToxicityFor IntervalEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SKF-51781280 FixedAritySkolemFuncN)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa exposureOfObjectToSubstanceType 3 TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn Punishing) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HairMobFn UnaryFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) Individual)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (exposureOfObjectToSubstanceType ?EXPOSURE ?OBJECT ?CONTAMINANT-TYPE) 
+    (objectExposed ?EXPOSURE ?OBJECT))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Liver 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa RespiratorySystem UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) GuidingAMovingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls VegetativeCell MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 173323
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment CoccusBacterium "A specialization of #$Bacterium whose instances are characterized by having spherical shape.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Torso 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls GramNegativeBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Inhaling DefaultDisjointScriptType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa infectionLocalizedIn TernaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl contaminatedWithMicroorganismType Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl ScatFn Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Vertebrate ChordataPhylum)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls EndosporingEvent IntrinsicStateChangeEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment SporeFormingBacterium "A collection, a specialization of #$Bacterium. The collection of bacteria. that are capable to form spores. When a group of these bacteria is placed in an hostile environment, some of them may form a single internal spore, #$Endospore liberated when the
+mother cell undergoes autolysis.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Clostridiaceae-Family "A collection of #$Bacterium. A #$BiologicalFamily formed in the
+#$MoneraKingdom.  This family contains #$Clostridium-Genus.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity SKF-58570131 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AntibodyIgG Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 172408
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SporeGermination TemporalObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole DigestiveSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity stuffInExposureEvent 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 165745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa exposureOfObjectToSubstanceType TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101635
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HairMobFn ReifiableFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (InstantiationInstanceFn exposureToType 
+      (TheSet 2)) FixedArityRelation)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (exposureOfObjectToSubstanceType ?EXPOSURE ?OBJECT ?CONTAMINANT-TYPE) 
+    (exposureToType ?EXPOSURE ?CONTAMINANT-TYPE))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity organismTypeCanLethallyInfect 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl killedByExposure 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeBySporulationAbility SiblingDisjointCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment CellularImmuneResponse "A collection, spec of #$ImmuneResponse. Those #$ImmuneResponse
+that are cell-mediated, see #$Lymphocyte, #$Antigen ")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 173347
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes CoccusBacterium "Strictly speaking, this morphological characterization applies only to instances of Eubacteria.  Appropriate adjustments will be made as our taxonomy grows in sophistication.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls GramNegativeBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Herbivore Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Heart UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl contaminatedWithMicroorganismType 2 MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa ScatFn 1 Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ChordataPhylum Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridiaceae-Family BacillusBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Protozoan ProtistaKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa FaceOfAnimal UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SKF-58570131 FixedAritySkolemFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacterialSporeGermination "A collection of events. During each #$BacterialSporeGermination, a bacterial spore [see #$Spore-DormantBacterium] germinates to a single #$VegetativeCell. These complex events may occur once spores have found suitable environment for germination.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CanineAnimal BiologicalTaxon)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Chest-BodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Macrophage "A subclass of #$WhiteBloodCell that ingest microbes, #$Antigens
+and other substances. Not found in #$Blood, they resides where body organs
+interface with bloodstream or the outside world.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 94229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa stuffInExposureEvent ActorSlot)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment objectExposed "(objectExposed EXPOSURE OBJECT) means that during EXPOSURE, the
+object that is exposed is OBJECT.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 153253
+ :MICROTHEORY BiologyMt
+ :KIF
+  (completeCollectionExtent BacteriumTypeByGramStain)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CanineAnimal BiologicalFamily)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Shell-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn 
+      (MakingFn WeaponOfMassDestruction)) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Head-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment exposureOfObjectToSubstanceType "(exposureOfObjectToSubstanceType EXPOSURE OBJECT
+CONTAMINANT-TYPE) means that during EXPOSURE, OBJECT is exposed to
+substance of the type CONTAMINANT-TYPE.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?X BirthEvent) 
+      (doneBy ?X ?Y)) 
+    (isa ?Y FemaleAnimal))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa organismTypeCanLethallyInfect BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (GroupFn Person) PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl killedByExposure PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) DirectedTranslation)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole RespiratorySystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeBySporulationAbility DisjointSetOrCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls CellularImmuneResponse ImmuneResponse)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacterialSporeGermination BiologicalDevelopmentEvent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacillusCereus-Species BacillusBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl contaminatedWithMicroorganismType MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa ScatFn Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 223521
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes organismFoundInSubstance "We may want to generalize this predicate to become a
+type-type version of #$objectFoundInLocation.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa EndosporingEvent TemporalStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa SporeFormingBacterium BacteriumTypeBySporulationAbility)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridiaceae-Family Clostridiales-Order)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlPreds contaminatedWithMicroorganismType carriesOrganismType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Vertebrate ChordataPhylum)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AntibodyIgG ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 143126
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridium-Genus SporeFormingBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (sharedNotes OrganismClassificationType NoteOnOrganismClassification)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl ingestingToxicityFor 2 BiologicalLivingObject)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?KILL Killing-Biological) 
+      (objectActedOn ?KILL ?ORG)) 
+    (inputsDestroyed ?KILL ?ORG))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Insect BiologicalClass)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa objectExposed 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 160824
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlPreds stuffInhaled objectActedOn)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByGramStain CollectionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CirculatorySystem UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Dog BiologicalTaxon)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa killedByExposure 2 TangibleStuffCompositionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SporeFormingBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacillusCereus-Species SporeFormingBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa EndosporingEvent SituationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 223521
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment organismFoundInSubstance "(#$organismFoundInSubstance ORGTYPE STUFFTYPE) means that instances of ORGTYPE can often be found in instances of STUFFTYPE, such that instances of STUFFTYPE constitute good or probable places to look for instances of ORGTYPE.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Clostridiaceae-Family Clostridiales-Order)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes carriesOrganismType "Note that this relation does not imply the
+existence of a #$TransportationEvent, although this may be implied in
+cases where the first argument is in motion.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?PART-TYPE UniqueAnatomicalPartType) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (actorPartsAffected ?INFECTION 
+      (BodyPartFn ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment ClostridiumBotulinum-Species "A collection of #$Bacterium. A #$BiologicalSpecies formed under
+the #$Clostridium-Genus in the #$MoneraKingdom.  These #$ProkaryoticCells
+cause #$Botulism.  They are found in soil, water
+sediment, and occasionally in animal feces.  C. botulinum is divided into
+seven strains, A - G, based on antigenic specificity of their individual
+toxins.  All strains produce a neurotoxin of extraordinary toxicity: the
+estimated lethal dose for humans is less than 1 microgram.  Spores are
+highly resistant to heat.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101633
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls RickettsiaProwsecki Rickettsia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (sharedNotes BiologicalTaxon NoteOnOrganismClassification)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl ingestingToxicityFor BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa objectExposed PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa stuffInhaled 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 153228
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacteriumTypeByGramStain OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole CirculatorySystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 162012
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment AerobicBacterium "The collection of all instances of #$Bacterium that metabolize oxygen.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Ear 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn 
+      (MakingFn NuclearWeapon)) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Appendage-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole SkeletalSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa killedByExposure TangibleStuffCompositionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SporeFormingBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) Translation-Complete)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (partitionedInto Organism-Whole BiologicalGenus)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Arthropod BiologicalPhylum)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 95219
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Rickettsia OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacillusCereus-Species GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Spore-DormantBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ScatFn CollectionDenotingFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa organismFoundInSubstance 2 ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (afterAdding memberOfSpecies PROPAGATE-TO-ISA)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Clostridiaceae-Family BiologicalFamily)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 100807
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls RickettsiaQuintana Rickettsia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment carriesOrganismType "(#$carriesOrganismType OBJ ORGTYPE) means that OBJ carries within
+or upon itself organisms of the type ORGTYPE.  OBJ can be an inanimate
+thing, like a hypoderimic needle or a solution contaminated with bacteria,
+or an organism.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole NervousSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Torso UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (unknownFormula 
+        (isa ?PART-TYPE SymmetricAnatomicalPartType)) 
+      (unknownFormula 
+        (isa ?PART-TYPE UniqueAnatomicalPartType)) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (inRegion ?INFECTION 
+      (SKF-33612495 ?INFECTION ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment EndosporingEvent "An #$EndosporingEvent is the #$Event in which a #$VegetativeCell becomes an #$Endospore. Not all bacteria are capable of undegoing this change. An #$EndosporingEvent occurs when bacteria that are capable of this change are in a hostile environment.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ClostridiumBotulinum-Species Clostridium-Genus)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101633
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa RickettsiaProwsecki OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa ingestingToxicityFor 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Macrophage ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa objectExposed 1 ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 160824
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa stuffInhaled PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa NaturalKillerCell ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa exposureOfObjectToSubstanceType 2 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa organismTypeCanLethallyInfect 1 Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (partitionedInto Organism-Whole BiologicalFamily)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa killedByExposure 1 BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls NonSporeFormingBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Organ 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialSporeGermination TemporalObjectType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SUBSPEC BiologicalSubspecies) 
+      (isa ?PARENT1 ?SUBSPEC) 
+      (children ?PARENT1 ?YOUNGER) 
+      (different ?PARENT1 ?PARENT2) 
+      (isa ?PARENT2 ?SUBSPEC) 
+      (children ?PARENT2 ?YOUNGER)) 
+    (isa ?YOUNGER ?SUBSPEC))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CoccusBacterium BacteriumTypeByStructure)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ReturnToVegetativeState SituationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole NervousSystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Leg 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Spore-DormantBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity ScatFn 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 223521
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa organismFoundInSubstance ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl carriesOrganismType 2 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Fruit 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Chest-BodyPart UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 113419
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (unknownFormula 
+        (isa ?PART-TYPE SymmetricAnatomicalPartType)) 
+      (unknownFormula 
+        (isa ?PART-TYPE UniqueAnatomicalPartType)) 
+      (infectionLocalizedIn ?ORG ?INFECTION ?PART-TYPE)) 
+    (isa 
+      (SKF-33612495 ?INFECTION ?ORG ?PART-TYPE) 
+      (BodyPartCollectionFn ?ORG ?PART-TYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons ClostridiumBotulinum-Species Clostridium-Genus)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa ingestingToxicityFor OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacillusCereus-Species "A collection of #$Bacterium in a #$BiologicalSpecies in the #$MoneraKingdom.  These #$ProkaryoticCells are responsible for two types of food poisoning in humans.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa objectExposed ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa stuffInhaled 1 Inhaling)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AerobicBacterium BacteriumTypeByAerobicity)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn 
+      (MakingFn BiologicalWeapon)) Collection)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (memberOfSpecies ?MEM ?SPEC) 
+    (isa ?MEM ?SPEC))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (MobFn 
+      (BacterialSporeFn Anthrax-Bacterium)) ExistingStuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa exposureOfObjectToSubstanceType PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa organismTypeCanLethallyInfect Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 104745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment immuneWithRespectToPathogen "(#$immuneWithRespectToPathogen ORG PATHOGEN) means that ORG, an instance of #$Organism-Whole, is
+#$Immune to #$Infections caused by pathogen organisms of the type PATHOGEN. More precisely, ORG is said to be resistant, or
+insusceptible, to toxic molecules, microorganisms and/or foreign cells.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 154207
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa GramNegativeBacterium BacteriumTypeByGramStain)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (completeCollectionExtent BacteriumTypeByStructure)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa killedByExposure BiologicalLivingObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) HandlingAnObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls NonSporeFormingBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacterialSporeGermination DefaultDisjointScriptType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Clostridiales-Order GramPositiveBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 112229
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Vertebrate BiologicalSubphylum)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Antibody Nutrient)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ScatFn UnaryFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl carriesOrganismType Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Head-AnimalBodyPart UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SPEC BiologicalSpecies) 
+      (isa ?OLDER ?SPEC) 
+      (children ?OLDER ?YOUNGER)) 
+    (isa ?YOUNGER ?SPEC))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AntibodyIgM Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 165050
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Spore-DormantBacterium LifeStageType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ClostridiumBotulinum-Species BiologicalSpecies)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SECR-EV SecretionEvent) 
+      (outputsCreated ?SECR-EV ?SB)) 
+    (isa ?SB Secretion-Bodily))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa ingestingToxicityFor 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacterialPhysiologicalAttribute PhysiologicalAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HumanBody UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (interArgIsa2-1 anatomicalParts AnimalBodyPart Animal)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?X BirthEvent) 
+      (bodilyDoer ?X ?Y)) 
+    (isa ?Y FemaleAnimal))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 160824
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa stuffInhaled Inhaling)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Dog CanineAnimal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByAerobicity SiblingDisjointCollection)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (not 
+    (and 
+      (isa ?TAXONTYPE BiologicalTaxonType) 
+      (isa ?ORGANISMTYPE ?TAXONTYPE) 
+      (genls ?ORGANISMTYPE ?TAXON) 
+      (different ?ORGANISMTYPE ?TAXON) 
+      (isa ?TAXON ?TAXONTYPE)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (MobFn 
+      (BacterialSporeFn Anthrax-Bacterium)) Mob)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa exposureOfObjectToSubstanceType 1 ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 170756
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacteriumTypeByStructure "A partition on the collection #$Bacterium, reflecting the classical morphological division of the Eubacteria into #$CoccusBacterium, #$BacillusBacterium, and #$SpirillaBacterium.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons ChordataPhylum Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Arm 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (disjointWith ProkaryoticCell EukaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl HairMobFn AnimalBodyPart)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Nerve 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Person BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Head-Vertebrate 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Staphylococcus BiologicalGenus)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?EV BiologicalReproductionEvent) 
+      (offspringActors ?EV ?OFF)) 
+    (keStrongSuggestion ?OFF 
+      (exists 
+        (?TYPE) 
+        (and 
+          (isa ?TYPE OrganismClassificationType) 
+          (isa ?OFF ?TYPE)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BiologicalSubphylum CollectionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Antibody MolecularStuff)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Dog CanineAnimal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 101804
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ScatFn ReifiableFunction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Antibody ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacteriumTypeBySporulationAbility "A partition on the collection #$Bacterium, reflecting class
+ability or inability to form endospores.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment organismTypeCanLethallyInfect "(#$organismTypeCanLethallyInfect ?ORGTYPE ?HOSTTYPE) means that under ordinary circumstances, instances of ?ORGTYPE are able to play the role of #$infectingOrganism in instances of #$Infection which culminate in the death of an instance of ?HOSTTYPE.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa carriesOrganismType 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 155658
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Spore-DormantBacterium "The collection of bacterial spores. An
+instance of #$Spore-DormantBacterium is the product of sporulation - when
+in a hostile environment, some bacteria, see #$SporeFormingBacterium,
+become dormant in order to survive. #$Spore-DormantBacteriums are well
+resistant to heat, chemicals and radiation. In certain conditions, they may
+last for years. Spores can germinate into a single new vegetative cell, see
+#$BacterialSporeGermination, when environment is favorable. Do not confuse
+bacterial spores with spores of certain plants or fungi, for these later
+see #$Spore-PlantOrgan. ")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Staphylococcus ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole AnatomicalVessel 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (negationAttribute VegetativeCellAttribute EndosporeAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl BacterialSporeFn SporeFormingBacterium)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 152123
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?EVENT BacterialSporeGermination) 
+      (objectOfStateChange ?EVENT ?SPORE)) 
+    (isa ?SPORE Spore-DormantBacterium))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Plague-Bacterium "A #$Collection.  Each instance is a sample of Yersinia pestis, a #$Bacterium that causes the Plague.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa ingestingToxicityFor PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacterialPhysiologicalAttribute "The collection of
+#$AttributeValues that are #$PhysiologicalAttributes specific to
+#$Bacterium. Examples of this are #$GramNegative and #$GramPositive.
+Negative examples would be #$AerobicPhysiology and #$AnaerobicPhysiology which may
+apply to #$EukaryoticCells as well as #$ProkaryoticCells.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Shell-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole HumanBody 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Bird Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa contaminatedWithMicroorganismType 2 OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity objectExposed 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByAerobicity DisjointSetOrCollection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn 
+      (MakingFn ChemicalWeapon)) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (MobFn 
+      (BacterialSporeFn Anthrax-Bacterium)) StuffType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa exposureOfObjectToSubstanceType ExposureToSubstance)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Bird TerrestrialOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 173959
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes BacteriumTypeByStructure "Strictly speaking, this morphological division is considered to apply to Eubacteria only, and not to Archaebacteria.  As these additional taxonomic distinctions are introduced into the Cyc knowledge base, appropriate adjustments in representation will be made.  Also, it should be noted that the traditional phylogenetic division of the Eubacteria into baccillus, coccus, and spirilla has been replaced to some extent by a phylogeny based on biochemical properties.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity killedByExposure 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Brain 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl HairMobFn 
+    (CollectionUnionFn 
+      (TheSet 
+        (SolidTangibleThing SemiSolidTangibleThing))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls 
+    (SmugglingFn Anthrax-Bacterium) Conveying-Generic)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls SpermCell AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment HumoralImmuneResponse "A collection, spec of #$ImmuneResponse. Those #$ImmuneResponse
+that are antibody-mediated, see #$Antibody. It is an important defense
+against organisms that produce toxins or have polysaccharide capsules taht
+interfere with the phagocytosis.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (organismTypeCanLethallyInfect Anthrax-Bacterium Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 173235
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacillusBacterium "A specialization of #$Bacterium whose instances are characterized by having cylindrical or rod-like shape.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?EV BiologicalReproductionEvent) 
+      (parentActors ?EV ?PAR)) 
+    (keStrongSuggestion ?PAR 
+      (exists 
+        (?TYPE) 
+        (and 
+          (isa ?TYPE OrganismClassificationType) 
+          (isa ?PAR ?TYPE)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 112053
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BiologicalSubphylum BiologicalTaxon)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Antibody OrganicStuff)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Antibody ObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeBySporulationAbility CollectionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 100717
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa RickettsiaQuintana OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl organismTypeCanLethallyInfect 1 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa carriesOrganismType OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Staphylococcus MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AntibodyIgM ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Protozoan BiologicalSubkingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment VegetativeCellAttribute "The #$AttributeValue describing the
+normal growing form of bacteria that exhibit all of life's
+characteristics, such as metabolism and reproduction. The only time the
+#$Bacterium would not have the #$VegetativeCellAttribute is when the cell
+has acquired the #$EndosporeAttribute or has been killed.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl BacterialSporeFn 1 SporeFormingBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 171440
+ :MICROTHEORY BiologyMt
+ :KIF
+  (expansion exposureToType 
+    (exists 
+      (?SUB) 
+      (and 
+        (isa ?SUB :ARG2) 
+        (stuffInExposureEvent :ARG1 ?SUB))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity ingestingToxicityFor 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa contaminatedWithMicroorganismType OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AntibodyIgD Antibody)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa objectExposed ActorSlot)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllInstance fromState EndosporingEvent VegetativeCellAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184533
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Anthrax-Bacterium SporeFormingBacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity stuffInhaled 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AerobicBacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Vine-Plant TerrestrialOrganism)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacteriumTypeByStructure OrganismClassificationType)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (outputsCreated ?SECR-EV ?SB) 
+      (isa ?SB Secretion-Bodily)) 
+    (isa ?SECR-EV SecretionEvent))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa killedByExposure BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl HairMobFn SheetOfSomeStuff)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls HumoralImmuneResponse ImmuneResponse)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (organismTypeCanLethallyInfect Plague-Bacterium Mammal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 173257
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes BacillusBacterium "Strictly speaking, this morphological characterization applies only to instances of Eubacteria.  Appropriate adjustments will be made as our taxonomy grows in sophistication.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 173410
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ReturnToVegetativeState Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Anthrax-Bacterium BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (keStrongSuggestionPreds BiologicalReproductionEvent parentActors)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Shell-AnimalBodyPart UniqueAnatomicalPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Macrophage AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Head-Vertebrate 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity organismFoundInSubstance 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Person Omnivore)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163214
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls BacteriumTypeBySporulationAbility OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl organismTypeCanLethallyInfect Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa carriesOrganismType 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Smallpox-Virus "A #$Collection. Each instance is a sample of the #$Virus that causes the Smallpox disease.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Isa SKF-33612495 AnimalBodyPartType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 121333
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Cyanosis-PhysiologicalCondition "A collection of the #$PhysiologicalConditions defined as bluish
+discolorations, applied especially to such discoloration of #$Skin and
+mucuous membranes due to excessive concentration of reduced hemoglobin in
+the #$Blood.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 165002
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Genl BacterialSporeFn SporeFormingBacterium)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?BIGTYPE UniqueAnatomicalPartType) 
+      (isa ?BIG ?BIGTYPE) 
+      (anatomicalParts ?ORG ?BIG) 
+      (anatomicalParts ?ORG ?SMALL) 
+      (isa ?SMALL ?SMALLTYPE) 
+      (relationExistsAll physicalParts ?BIGTYPE ?SMALLTYPE)) 
+    (physicalParts ?BIG ?SMALL))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?SPEC BiologicalSpecies) 
+      (isa ?MEM ?SPEC)) 
+    (memberOfSpecies ?MEM ?SPEC))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 142639
+ :MICROTHEORY BiologyMt
+ :KIF
+  (examplePredFormulas carriesOrganism 
+    (carriesOrganism MmeBertrand MmeBertrandLouse1))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 174527
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?AIL PhysiologicalCondition) 
+      (bodilyDoer ?AIL ?DOER) 
+      (actorPartsAffected ?AIL ?PART)) 
+    (anatomicalParts ?DOER ?PART))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa ingestingToxicityFor TernaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Plague-Bacterium OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Plague-Bacterium ProkaryoticCell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa contaminatedWithMicroorganismType 1 PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllInstance toState EndosporingEvent EndosporeAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 160824
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa stuffInhaled ActorSlot)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls AerobicBacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argFormat contactToxicityFor 3 IntervalEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExistsMax anatomicalParts Organism-Whole Chest-BodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment inhalingToxicityFor "(#$inhalingToxicityFor STUFF ORGTYPE TOXLEVEL) means that under ordinary circumstances, stuff has the #$Toxicity TOXLEVEL for instances of ORGTYPE that inhale it.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genlPreds memberOfSpecies isa)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (AttemptingFn ResolveByMediation) Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arity exposureOfObjectToSubstanceType 3)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argIsa BacterialSporeFn 1 ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Skin 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl HairMobFn Mob)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argGenl immuneWithRespectToPathogen 2 Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?PERSON HumanAdult) 
+      (hasGender ?PERSON Feminine)) 
+    (isa ?PERSON AdultFemalePerson))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 173409
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa CellularImmuneResponse Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (keStrongSuggestionPreds BiologicalReproductionEvent offspringActors)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 112031
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BiologicalSubphylum BiologicalTaxonType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Macrophage Cell)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (superTaxons Fish Vertebrate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Foot-AnimalBodyPart 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 223521
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa organismFoundInSubstance BinaryPredicate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1)) MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 123939
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa carriesOrganismType PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Smallpox-Virus Virus)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Isa SKF-33612495 Animal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 111420
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls ProtectingSomething Safeguard-Situation)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 121333
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Cyanosis-PhysiologicalCondition PhysiologicalCondition)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Hand 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa VegetativeCellAttribute BacterialPhysiologicalAttribute)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Plague-Bacterium BiologicalSpecies)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Plague-Bacterium MoneraKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Liver 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa contaminatedWithMicroorganismType PartiallyTangible)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa AntibodyIgD ChemicalCompoundType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (argFormat ingestingToxicityFor 3 IntervalEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184643
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment Saxitoxin "A #$Collection. #$Saxitoxin is 
+a poisonous substance, C10H17N7O4.2HCI, 
+found in certain species of #$Mollusks.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 184610
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg3Format inhalingToxicityFor IntervalEntry)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (typedGenlPreds memberOfSpecies isa)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa TLymphocyte ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 94202
+ :MICROTHEORY BiologyMt
+ :KIF
+  (siblingDisjointExceptions Spore-DormantBacterium Anthrax-Bacterium)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 152123
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationAllExists preconditionFor-Events InfectionTransmissionEvent Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment EndosporeAttribute "The #$AttributeValue describing the state
+of a bacterium being an #$Endospore.  This occurs when it is experiencing
+a hostile environment that would otherwise kill it. The bacterium forms an
+#$Endospore, which is a nongrowing heat-resistant structure within the
+cell. When the environment is no longer threatening, the #$Bacterium can
+revert back to its normal #$VegetativeCell state.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Protozoan ProtistaKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 111259
+ :MICROTHEORY BiologyMt
+ :KIF
+  (cyclistNotes Safeguard-Situation "This should probably be moved to an agents microtheory since it includes events initiated by machines under program control.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa SKF-33612495 Infection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Smallpox-Virus OrganismClassificationType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa 
+    (InstantiationInstanceFn organismTypeCanLethallyInfect 
+      (TheSet 1 2)) MicroscopicScaleObject)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 164241
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BacteriumTypeByGramStain "A collection of collections and a partition on #$Bacterium. This collection partitions #$Bacterium into two disjoint classes, #$GramPositiveBacterium and #$GramNegativeBacterium. The 'Gram Stain' is a test to see what type of cell wall the bacteria has. The #$Bacterium are stained with a violet dye and iodine, then rinsed in alcohol, and stained again with a red dye. The #$GramPositiveBacterium retain the violet dye while the #$GramNegativeBacterium will lose it but keep the red.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa 
+    (BacterialSporeFn Anthrax-Bacterium) ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (genls Neutrophil AnimalBLO)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 112012
+ :MICROTHEORY BiologyMt
+ :KIF
+  (comment BiologicalSubphylum "A collection of #$BiologicalTaxons that is more restrictive than #$BiologicalPhylum.  All instances of a particular #$BiologicalSubspecies have significant traits or collections of traits in common which are not shared by all other members of the same #$BiologicalPhylum.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole RespiratorySystem 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 142230
+ :MICROTHEORY BiologyMt
+ :KIF
+  (kePredArgStrongSuggestionPreds offspringActors 1 parentActors)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE 173409
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa HumoralImmuneResponse Collection)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 150535
+ :MICROTHEORY BiologyMt
+ :KIF
+  (transitiveViaArgInverse organismTypeCanLethallyInfect genls 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 104745
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg2Genl immuneWithRespectToPathogen Organism-Whole)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (resultGenl ScatFn NaturalTangibleStuff)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (relationExistsCountAll anatomicalParts Organism-Whole Torso 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (arg1Isa BacterialSporeFn ExistingObjectType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa BacteriumTypeByStructure CollectionType)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Cyc :CREATION-DATE NIL
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa Fungus BiologicalKingdom)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Cyc :CREATION-DATE 163147
+ :MICROTHEORY BiologyMt
+ :KIF
+  (isa exposureOfObjectToSubstanceType TernaryPredicate)
+)

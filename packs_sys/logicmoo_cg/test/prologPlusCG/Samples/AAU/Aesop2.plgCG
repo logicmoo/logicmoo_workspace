@@ -1,0 +1,6 @@
+Entity > Animal, Act, Persuasion.
+
+Animal = Wolf, Lamb.
+Act = Say.
+
+SpeechAct([Animal : Wolf]<-AGNT-[Act : Say]-THME->[Persuasion]).

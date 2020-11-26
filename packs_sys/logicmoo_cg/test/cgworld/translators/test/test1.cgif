@@ -1,0 +1,25 @@
+[Integer*a:-7.0][Variable*b: #n](val?b?a)
+.
+[Foo:-7.0 ;comments are nice;]
+.
+~[;comment;]
+.
+[Foo:@Col{"three", "blind", "mice"}]
+.
+[Entity:'Block' (ATTR [Block*b] [Color]) (CHRC ?b [Shape]) ]
+.
+[Act:'Putdown'
+    (PTNT [Putdown*p] [Block*b])
+    (DEST ?p [Location*l])
+    (INST ?p [Hand])
+    (RSLT ?p [Situation: (Top ?b ?l)]) ]
+.
+<sqr [In:'*x'] | [Out:'*y']>
+.
+[In*a:'*x'] [Out*b:'*y'] <sqr?a|?b>
+.
+;(Attr [Foo:*p] [Bar:*q] [?p ?q]);
+.
+~[[Foo]]
+
+

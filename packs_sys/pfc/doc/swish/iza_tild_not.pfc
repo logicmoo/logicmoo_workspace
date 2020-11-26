@@ -1,0 +1,48 @@
+:- dynamic((~)/1).
+
+:- include(library(pfc_header_3_0)).
+
+:- pfcTrace.
+:- pfcWatch.
+
+:- dynamic(fly/1).
+
+% -*-Prolog-*-
+% here is an example which defines default facts and rules.  Will it work?  Yes!
+
+(default(P)/pfcLiteral(P))  ==>  (\+ ~(P) ==> P).
+
+default((P ==> Q))/pfcLiteral(Q) ==> (P, \+ ~(Q) ==> Q).
+
+% birds fly by default.
+==> default((bird(X) ==> fly(X))).
+
+% here's one way to do an subclass hierarchy.
+% subclass = subclass.
+
+subclass(C1,C2) ==>
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X],
+    dynamic(C1/1),dynamic(C2/1)},
+  (P1 ==> P2).
+
+==> subclass(canary,bird).
+==> subclass(penguin,bird).
+
+% penguins do not fly.
+penguin(X) ==> ~(fly(X)).
+
+
+% chilly is a penguin.
+==> penguin(chilly).
+
+% tweety is a canary.
+==> canary(tweety).
+
+binfo:- 
+ pfcTF(bird(tweety)),
+ pfcTF(fly(tweety)),
+ pfcTF(bird(chilly)),
+ pfcTF(fly(chilly)),!.
+
+:- binfo.

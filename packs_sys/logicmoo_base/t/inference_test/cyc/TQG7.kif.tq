@@ -1,0 +1,9 @@
+(note TQG7)
+
+(mother Bill Jane)
+(sibling Bob Bill)
+
+(query (mother ?WHO Jane))
+
+(answer Bill)
+(answer Bob)

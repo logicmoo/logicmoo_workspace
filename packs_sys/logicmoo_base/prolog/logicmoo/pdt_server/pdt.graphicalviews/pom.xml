@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>jtransformer_projects</artifactId>
+    <groupId>org.cs3.roots</groupId>
+    <version>1.0.0</version>
+  </parent>
+  <groupId>org.cs3.roots</groupId>
+  <artifactId>org.cs3.pdt.graphicalviews</artifactId>
+  <version>3.1.2.qualifier</version>
+  <packaging>eclipse-plugin</packaging>
+  <build>
+  <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>yguard</groupId>
+            <artifactId>yguard</artifactId>
+            <version>2.1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/yguard.jar</systemPath>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <tasks>
+                <property refid="maven.compile.classpath" name="mvn.classpath" />
+                <!-- <echo message="Using Maven Classpath: ${mvn.classpath}" /> -->
+                <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask" />
+                <yguard>
+				  <inoutpair in="lib/y.jar" out="target/y.jar" />
+                  <!-- Input file and output file is the same. -->
+                  <inoutpair in="target/${project.build.finalName}.jar" out="target/${project.build.finalName}.jar" />
+                  <!-- Obfuscate classes plus string references. -->
+                  <rename replaceClassNameStrings="true">
+					  <keep>
+						<class classes="private" methods="private" fields="private">
+						  <patternset>
+						    <include name="org.cs3.pdt.graphicalviews.**"/>
+						  </patternset>
+						</class>
+					  </keep>
+                      <adjust replaceContent="true">
+                        <include name="plugin.xml"/>
+                      </adjust>
+					  <adjust replaceName="true">
+					    <include name="y/**/*.properties"/>
+						<include name="y/view/**/resource/*"/>
+					  </adjust>
+                  </rename>
+                  <!-- There are some external libraries used - Maven knows details. -->
+                  <externalclasses>
+                    <pathelement path="${mvn.classpath}" />
+                    <pathelement location="lib/org.eclipse.albireo.core_0.0.3.v20081031.jar"/>
+                  </externalclasses>
+                </yguard>
+				<zip file="target/temp.jar">
+				  <zipfileset src="target/${project.build.finalName}.jar">
+				    <exclude name="lib/y.jar" />
+				  </zipfileset>
+				</zip>
+				<zip destfile="target/temp.jar" update="true">
+				  <zipfileset dir="." includes="target/y.jar" fullpath="lib/y.jar" />
+				</zip>
+				<move file="target/temp.jar" toFile="target/${project.build.finalName}.jar" />
+              </tasks>
+            </configuration>
+            <goals>
+                <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+  </plugins>
+  </build>
+</project>
+

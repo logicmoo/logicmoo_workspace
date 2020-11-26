@@ -1,0 +1,17 @@
+Check the consistency of the current Alterf patterns file, defined by
+the {\tt alterf\_\-patterns\_\-file config} file entry. Records in the
+file should have the format
+\begin{verbatim}
+alterf_pattern(<Pattern>, <Atom>, <Sent>).
+\end{verbatim}
+or
+\begin{verbatim}
+alterf_pattern(<Pattern>, <Atom>, <Sent>) :- <Conds>.
+\end{verbatim}
+where \verb!<Pattern>! is the Alterf pattern, \verb!<Atom>! is the semantic
+atom it corresponds to, \verb!<Sent>! is an example sentence illustrating
+the patterns, and \verb!<Conds>! are optional Prolog conditions.
+
+The command parses each \verb!<Sent>! using the currently loaded
+grammar, and checks that the \verb!<Pattern>! matches it. It warns
+about patterns that fail to match, and print summary statistics.

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+<!--   <extension-point id="consoleContextMenu" name="Console Context Menu" schema="schema/console_context_menu.exsd"/> 
+   <extension
+         point="org.cs3.pdt.console.consoleContextMenu">
+      <SelectionContextAction
+            class="org.cs3.pdt.console.internal.actions.CopyAction"
+            name="copy"
+            sharedIcon="IMG_TOOL_COPY"/>
+      <SelectionContextAction
+            class="org.cs3.pdt.console.internal.actions.ClearAction"
+            icon="icons/clear.gif"
+            name="clear"/>
+      <SelectionContextAction
+            class="org.cs3.pdt.console.internal.actions.SelectAllAction"
+            name="select all"/>
+   </extension>
+   -->
+	<extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="org.cs3.pdt.console.internal.views.PrologConsoleView"
+            category="org.cs3.pdt"
+            name="Prolog Console"
+            id="org.cs3.pdt.console.internal.views.PrologConsoleView"/>
+	</extension>
+	 <!--<extension
+       point="org.cs3.prolog.connector.ui.hooks">
+	    <hook
+          class="org.cs3.pdt.console.internal.hooks.ConsoleServerHook"
+          id="org.cs3.pdt.console.internal.hooks.ConsoleServerHook"/>
+	</extension>-->
+	<extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.cs3.pdt.console.internal.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
+    <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+    	  category="org.cs3.pdt.common.internal.preferences.PDTCommonPreferencePage"
+          class="org.cs3.pdt.console.internal.preferences.PreferencePageMain"
+          id="org.cs3.pdt.console.preferences.PreferencePageMain"
+          name="Console">
+    </page>
+ </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <category
+             id="org.cs3.pdt.console"
+             name="PDT Console Commands"/>
+       <command
+       		 categoryId="org.cs3.pdt.console"
+             description="Paste the name of the file currently edited in the editor"
+             id="pdt.console.paste_filename"
+             name="Paste Filename"/>
+    </extension>
+    <extension
+          point="org.eclipse.ui.contexts">
+       <context
+             id="org.cs3.pdt.console"
+             name="using the prolog console view"
+             parentId="org.eclipse.ui.contexts.dialogAndWindow"/>
+    </extension>
+    <extension
+          point="org.eclipse.ui.bindings">
+       <key
+             commandId="pdt.console.paste_filename"
+             contextId="org.eclipse.ui.contexts.window"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="CTRL+SHIFT+V"/>
+    </extension>
+    <extension
+          point="org.cs3.pdt.connector.bootstrapContribution">
+       <fileContribution
+             id="pdt.console.pl.fileContribution"
+             path="pl/loader.pl">
+          <dependency
+                contribution="org.cs3.pdt.common.fileContribution">
+          </dependency>
+       </fileContribution>
+       <fileSearchPathContribution
+             alias="lib_pdt_console_pl"
+             id="pdt.console.pl.fileSearchPathContribution"
+             path="pl/">
+       </fileSearchPathContribution>
+    </extension>
+ </plugin>

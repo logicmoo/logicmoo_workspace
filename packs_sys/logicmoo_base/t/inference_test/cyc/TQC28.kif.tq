@@ -1,0 +1,33 @@
+(note TQC28)
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct UnitedArabEmirates StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.21477)) 
+
+(instance (MillionBarrelsPerDay 14) FlowRate) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 14)) 
+
+(implies 
+  (exportThroughAmountDuring ?REGION ?PRODUCT-TYPE ?PT ?TIME ?AMOUNT) 
+  (supplyFromThroughAmountDuring PlanetEarth ?PRODUCT-TYPE ?REGION ?PT ?TIME ?AMOUNT))
+
+(exportThroughAmountDuring UnitedArabEmirates PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.21477)) 
+
+(query (findall (?AMOUNT ?TIME)
+  (thereExists ?UAE-H-OIL-AMOUNT 
+    (thereExists ?H-OIL-AMOUNT 
+      (and 
+        (supplyFromThroughAmountDuring PlanetEarth PetroleumProduct UnitedArabEmirates StraitOfHormuz ?TIME ?UAE-H-OIL-AMOUNT)
+        (instance ?H-OIL-AMOUNT FlowRate) 
+        (supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz ?TIME ?H-OIL-AMOUNT) 
+        (evaluate ?AMOUNT 
+          (DifferenceFn ?H-OIL-AMOUNT ?UAE-H-OIL-AMOUNT)))))))
+
+(answer 11785200 1995)  
+
+(end_of_file)

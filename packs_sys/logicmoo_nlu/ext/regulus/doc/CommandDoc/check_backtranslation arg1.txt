@@ -1,0 +1,14 @@
+Command relevant to interlingua-based translation applications which
+use backtranslation (cf. Section~\ref{Section:Backtranslation}). The
+assumption is that translation is from Source to Interlingua, and
+backtranslation is thus from Interlingua to Source.
+
+The argument to the command should be an output file produced by doing 
+{\tt TRANSLATE\_\-CORPUS} (cf. Section~\ref{Section:TRANSLATE--CORPUS})
+in the Source $\rightarrow$ Source environment. The command is however run
+in the Source $\rightarrow$ Interlingua environment. The intent is to
+check that the result of backtranslation is an expression which, when
+parsed in the Source language and translated back into Interlingua,
+would produce the same Interlingua representation as the one produced by performing
+the Source $\rightarrow$ Source translation. Examples which fail to
+give a match are flagged.

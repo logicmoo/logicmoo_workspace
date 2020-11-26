@@ -1,0 +1,167 @@
+10,-,LOG,STATUS,0,2003/08/13 19:21:46.932,Cantor,recserver,1784,RS,AppOutput,32,Loading recognition packages...
+10,-,LOG,STATUS,0,2003/08/13 19:21:54.924,Cantor,recserver,1784,RS,AppOutput,33,All recognition packages loaded.
+10,-,LOG,STATUS,0,2003/08/13 19:21:54.924,Cantor,recserver,1784,RS,AppOutput,52,Recserver ready to accept connections on port 8200
+
+10,-,LOG,STATUS,0,2003/08/13 19:21:54.954,Cantor,recserver,1784,RS,AppOutput,19,Client 0 connected
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:37.441,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65540 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:40.776,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65540 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:40.796,Cantor,recserver,636,RAPI,AppOutput,54,Result #0:     forward twenty (conf: 67, NL conf: 65)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:40.816,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:40.816,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.29 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:45.853,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65545 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:47.926,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65545 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:52.223,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65550 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:23:54.255,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65550 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:05.101,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65555 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:08.726,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65555 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:08.726,Cantor,recserver,636,RAPI,AppOutput,60,Result #0:     right ninety degrees (conf: 71, NL conf: 72)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:08.726,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:08.726,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.31 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:13.103,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65560 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:15.135,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65560 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:19.402,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65565 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:21.435,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65565 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:33.001,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65570 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:36.526,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65570 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:36.526,Cantor,recserver,636,RAPI,AppOutput,61,Result #0:     backward thirty steps (conf: 54, NL conf: 57)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:36.526,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:36.526,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.15 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:42.375,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65575 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:43.837,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65575 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:43.837,Cantor,recserver,636,RAPI,AppOutput,43,Result #0:     yes (conf: 71, NL conf: 71)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:43.837,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:24:43.837,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.03 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:06.890,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65580 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:10.205,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65580 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:10.205,Cantor,recserver,636,RAPI,AppOutput,60,Result #0:     backward forty steps (conf: 74, NL conf: 71)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:10.205,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:10.205,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.49 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:15.082,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65585 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:17.115,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65585 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:21.210,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65590 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:23.243,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65590 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:34.059,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65595 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:39.096,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65595 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:44.875,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65600 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:48.630,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65600 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:48.630,Cantor,recserver,636,RAPI,AppOutput,64,Result #0:     ten right thirty degrees (conf: 73, NL conf: 71)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:48.630,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:48.630,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.61 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:53.156,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65605 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:55.189,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65605 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:25:59.235,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65610 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:01.268,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65610 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:11.703,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65615 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:16.730,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65615 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:22.408,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65620 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:27.436,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65620 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:33.394,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65625 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:38.422,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65625 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:44.200,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65630 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:49.227,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65630 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:54.885,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65635 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:26:59.902,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65635 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:05.701,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65640 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:10.728,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65640 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:16.406,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65645 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:21.423,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65645 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:27.182,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65650 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:32.209,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65650 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:37.857,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65655 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:42.884,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65655 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:48.522,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65660 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:53.550,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65660 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:27:59.228,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65665 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:01.271,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65665 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:01.271,Cantor,recserver,636,RAPI,AppOutput,47,Result #0:     ten top (conf: 53, NL conf: 52)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:01.271,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:01.271,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.57 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:09.202,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65670 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:13.528,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65670 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:13.538,Cantor,recserver,636,RAPI,AppOutput,50,Result #0:     <rejected> (conf: 44, NL conf:  0)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:13.538,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.63 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:21.029,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65675 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:24.194,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65675 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:24.194,Cantor,recserver,636,RAPI,AppOutput,76,Result #0:     three right five hundred and degrees (conf: 46, NL conf: 51)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:24.194,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:24.194,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.73 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:51.142,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65680 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:54.177,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65680 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:54.177,Cantor,recserver,636,RAPI,AppOutput,47,Result #0:     forward (conf: 86, NL conf: 86)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:54.177,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:54.177,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.47 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:28:58.623,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65685 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:00.446,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65685 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:00.446,Cantor,recserver,636,RAPI,AppOutput,50,Result #0:     <rejected> (conf: 41, NL conf:  0)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:00.446,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.29 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:07.716,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65690 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:09.048,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65690 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:09.048,Cantor,recserver,636,RAPI,AppOutput,43,Result #0:     yes (conf: 84, NL conf: 84)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:09.048,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:09.048,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.03 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:12.543,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65695 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:14.987,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65695 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:14.987,Cantor,recserver,636,RAPI,AppOutput,59,Result #0:     one hundred and six (conf: 47, NL conf: 47)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:14.987,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:14.987,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.95 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:21.596,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65700 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:24.641,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65700 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:24.641,Cantor,recserver,636,RAPI,AppOutput,50,Result #0:     <rejected> (conf: 41, NL conf:  0)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:24.641,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.73 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:33.894,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65705 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:36.628,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65705 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:36.628,Cantor,recserver,636,RAPI,AppOutput,64,Result #0:     no right one hundred and (conf: 61, NL conf: 60)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:36.628,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:36.628,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.43 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:44.469,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65710 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:46.021,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65710 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:46.021,Cantor,recserver,636,RAPI,AppOutput,42,Result #0:     no (conf: 69, NL conf: 69)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:46.021,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:46.021,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.23 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:50.758,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65715 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:52.601,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65715 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:52.601,Cantor,recserver,636,RAPI,AppOutput,43,Result #0:     yes (conf: 84, NL conf: 84)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:52.601,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:29:52.601,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.37 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:34:56.848,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65720 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:00.393,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65720 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:00.393,Cantor,recserver,636,RAPI,AppOutput,59,Result #0:     forward fifty steps (conf: 65, NL conf: 64)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:00.393,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:00.393,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.41 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:05.350,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65725 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:06.913,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65725 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:06.913,Cantor,recserver,636,RAPI,AppOutput,43,Result #0:     yes (conf: 83, NL conf: 83)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:06.913,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:06.913,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.23 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:11.109,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65730 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:13.122,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65730 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:24.218,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65735 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:27.863,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65735 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:27.863,Cantor,recserver,636,RAPI,AppOutput,63,Result #0:     ten right sixty degrees (conf: 62, NL conf: 62)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:27.863,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:27.863,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.71 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:32.479,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65740 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:34.502,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65740 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:38.919,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65745 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:40.491,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65745 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:40.491,Cantor,recserver,636,RAPI,AppOutput,50,Result #0:     <rejected> (conf: 39, NL conf:  0)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:40.491,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 1.23 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:47.922,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65750 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:50.555,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65750 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:50.555,Cantor,recserver,636,RAPI,AppOutput,55,Result #0:     no left degrees (conf: 63, NL conf: 60)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:50.555,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:35:50.555,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.29 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:28.730,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65755 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:33.707,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65755 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:33.707,Cantor,recserver,636,RAPI,AppOutput,62,Result #0:     ten left sixty degrees (conf: 66, NL conf: 62)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:33.707,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:33.707,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.69 sec
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:38.805,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65760 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:40.838,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65760 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:45.514,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65765 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:47.547,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65765 aborted
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:36:59.074,Cantor,recserver,636,RS,AppOutput,71,Client 0 started utterance 65770 with grammar .Asrg_legoturtle_english
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:37:02.709,Cantor,recserver,636,RS,AppOutput,33,Client 0 utterance 65770 result:
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:37:02.709,Cantor,recserver,636,RAPI,AppOutput,51,Result #0:     fifty steps (conf: 46, NL conf: 46)
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:37:02.709,Cantor,recserver,636,RAPI,AppOutput,16,NL Res.#0:     
+10,82f13599_00000708_3f3a73b1_0001_0000,LOG,STATUS,0,2003/08/13 19:37:02.709,Cantor,recserver,636,RAPI,AppOutput,22,Total Audio: 2.23 sec

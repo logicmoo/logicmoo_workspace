@@ -1,0 +1,316 @@
+%======================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the SATCHMO system.
+%----
+%----Written by Tim Geisler, August 1995.
+%----Revised by Tim Geisler, February 1996.
+%----adapted from format.{mgtp,setheo}
+%======================================================================
+%--------------------------------------------------------------------
+%----Output the atoms, separated and terminated as indicated.
+%----First case, there never were any of this sign.
+output_satchmo_atoms([],_,_,_,ToWriteIfNone,Terminator,no):-
+    !,
+    write(ToWriteIfNone),
+    write(Terminator).
+
+%----The last one, if there ever were any
+output_satchmo_atoms([OneAtom],NL,Prefix,_,_,Terminator,yes):-
+    !,
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Terminator).
+
+%----More than one, write separated
+output_satchmo_atoms([OneAtom,TwoAtoms|RestOfAtoms],NL,Prefix,
+Separator,_,Terminator,yes):-
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Separator),
+    output_satchmo_atoms([TwoAtoms|RestOfAtoms],yes,Prefix,
+Separator,_,Terminator,_).
+%-------------------------------------------------------------------
+%----Extract the atoms of literals with the given sign
+select_satchmo_atoms_with_sign(_,[],[]).
+
+select_satchmo_atoms_with_sign(Sign,[Literal|Rest],[Atom|SelectedRest]):-
+    Literal =.. [Sign,Atom],
+    !,
+    select_satchmo_atoms_with_sign(Sign,Rest,SelectedRest).
+
+select_satchmo_atoms_with_sign(Sign,[_|Rest],SelectedRest):-
+    select_satchmo_atoms_with_sign(Sign,Rest,SelectedRest).
+%-------------------------------------------------------------------
+%----Output signed literals, separated and terminated appropriately
+output_satchmo_literals(Literals,Sign,NL,Prefix,Separator,
+ToWriteIfNone,Terminator,Next_NL):-
+    select_satchmo_atoms_with_sign(Sign,Literals,SignedAtoms),
+    output_satchmo_atoms(SignedAtoms,NL,Prefix,Separator,
+ToWriteIfNone,Terminator,Next_NL).
+%-------------------------------------------------------------------
+%----Output each clause, preceded by a comment with it's name and
+%----status.
+output_each_satchmo_clause([],_,_,_,_,_,_,_):-
+    !.
+
+output_each_satchmo_clause([input_clause(Name,Status,Literals)|
+RestOfClauses],ClauseNr,NameSpec,Top,Bot,Konj,Disj,Impl):-
+    output_satchmo_clause_name(Literals,ClauseNr,Name,Status,NameSpec),	
+    nl,
+    output_satchmo_literals(Literals,--,no,'',Konj,Top,Impl,NextNL),
+    output_satchmo_literals(Literals,++,NextNL, '     ',Disj,Bot,'.',_),
+    nl,
+    nl,
+    ClauseNr1 is ClauseNr + 1,
+    output_each_satchmo_clause(RestOfClauses,ClauseNr1,NameSpec,Top,Bot,Konj,Disj,Impl).
+
+
+output_each_satchmo_clause([fof(Name,Status,Literals)|RestOfClauses],ClauseNr,
+NameSpec,Top,Bot,Konj,Disj,Impl):-
+    output_satchmo_clause_name(Literals,ClauseNr,Name,Status,NameSpec),	
+    nl,
+    output_satchmo_formula(fof(Name,Status,Literals)),
+    nl,
+    nl,
+    ClauseNr1 is ClauseNr + 1,
+    output_each_satchmo_clause(RestOfClauses,ClauseNr1,NameSpec,Top,Bot,Konj,Disj,Impl).
+
+
+output_satchmo_clause_name(_,_,Name,Status,none) :-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status).
+output_satchmo_clause_name(_,_,Name,Status,name) :-
+    write(Name),
+    write('_'),
+    write(Status),
+    write(' ::').
+output_satchmo_clause_name(Literals,_,Name,Status,namevar) :-
+    write(Name),
+    write('_'),
+    satchmo_variables(Literals, Vars),
+    NewStatus =.. [Status | Vars],
+    write(NewStatus),
+    write(' ::').
+output_satchmo_clause_name(_,ClauseNr,Name,Status,number) :-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    nl,
+    write('rule_'),
+    write(ClauseNr),
+    write(' ::').
+output_satchmo_clause_name(Literals,ClauseNr,Name,Status,numbervar) :-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    nl,
+    concatenate_atoms(['rule_',ClauseNr],Rule_ClauseNr),
+    satchmo_variables(Literals, Vars),
+    NewName =.. [Rule_ClauseNr | Vars],
+    write(NewName),
+    write(' ::').
+
+%======================================================================
+%----Output of FOF
+%======================================================================
+%----------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+satchmo_quantified_formula(QuantifiedFormula,SatchmoQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member((Quantifier)-(SatchmoQuantifier),
+[('!')-('ALL'),('?')-('EXISTS')]).
+%----------------------------------------------------------------------
+%----Recognise and split up binary formulae
+satchmo_binary_formula(BinaryFormula,SatchmoConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(SatchmoConnective),
+[('<=>')-('<->'),('=>')-('->'),('<=')-('<-'),('&')-('&'),(';')-('|')]).
+%----------------------------------------------------------------------
+%----Recognise and split up unary formulae
+satchmo_unary_formula(UnaryFormula,SatchmoConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(SatchmoConnective),[('~')-('-')]).
+%----------------------------------------------------------------------
+%----The format for outputing quantified formulae in satchmo format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+satchmo_quantified_format('( ',' ',' ',': ',' )').
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+satchmo_binary_format('( ',' ',' ',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+satchmo_unary_format('','(',')').
+%----------------------------------------------------------------------
+%----Write a satchmo formula in fof form
+output_satchmo_formula(fof(_Name,Status,Formula)) :- 
+    (Status = theorem ->
+	output_formula(satchmo,~(Formula),unknown,4,0,_)
+    ;
+	output_formula(satchmo,Formula,unknown,4,0,_)
+    ),
+    write('.').
+	
+
+%-------------------------------------------------------------------
+%----Output predicate declarations in clauses
+compute_satchmo_predicate_declarations([],PD,PD).
+
+compute_satchmo_predicate_declarations([input_clause(_Name,_Status,Literals)|
+RestOfClauses],PDin,PDout):-
+    compute_satchmo_predicate_declarations_literals(Literals,PDin,PD),
+    compute_satchmo_predicate_declarations(RestOfClauses,PD,PDout).
+
+compute_satchmo_predicate_declarations_literals([],PD,PD).
+compute_satchmo_predicate_declarations_literals([Lit1|Lits],PDin,PDout):-
+	Lit1 =.. [_Sign,Atom],
+	functor(Atom,Pred,Arity),
+	(tptp2X_member(Pred/Arity,PDin) ->
+	    PD = PDin
+	;
+	    PD = [Pred/Arity|PDin]
+	),
+	compute_satchmo_predicate_declarations_literals(Lits,PD,PDout).
+
+output_each_predicate_declaration([]).
+output_each_predicate_declaration([PD|PDs]) :-
+	write(predicate(PD)),
+	write('.'),
+	nl,
+	output_each_predicate_declaration(PDs).
+
+%----------------------------------------------------------------------
+%----
+% Hack because TPTP variables are Prolog constants
+satchmo_variable(Term) :-
+	functor(Term,Functor,_),
+	name(Functor,[First|_]),
+	65 =< First,
+	First =< 90.
+
+satchmo_variables(Literals, Vars) :-
+	satchmo_variables(Literals, [], RawVars),
+	sort(RawVars, Vars).
+
+satchmo_variables([],Vars,Vars).
+satchmo_variables([H|T],Vars1,Vars3) :-
+	satchmo_variables_term(H,Vars1,Vars2),
+	satchmo_variables(T,Vars2,Vars3).
+
+satchmo_variables_term(Term,Vars1,Vars3) :-
+	(satchmo_variable(Term) ->
+	    Vars3 = [Term|Vars1]
+	;
+	    Term =.. [_Functor|Terms],
+	    satchmo_variables(Terms,Vars1,Vars3)
+	).
+
+%----------------------------------------------------------------------
+%----This writes out SATCHMO format clauses
+satchmo(satchmo:PredSpec:NameSpec:SyntaxSpec,Clauses,_FileHeader):-
+	(PredSpec = none ->
+	    true
+	;
+	    compute_satchmo_predicate_declarations(Clauses,[],PD),
+	    fast_reverse_list(PD,[],PDrev),
+	    (PredSpec = predicate ->
+		output_each_predicate_declaration(PDrev)
+	    ;
+	        write(specification(PDrev)),
+		write('.'),
+		nl
+	    ),
+	    nl
+	),
+        (tptp2X_member(top(Top),SyntaxSpec) -> true ; Top = true),
+	(tptp2X_member(bot(Bot),SyntaxSpec) -> true ; Bot = false),
+	(tptp2X_member(konj(Konj),SyntaxSpec) -> true ; Konj = ', '),
+	(tptp2X_member(disj(Disj),SyntaxSpec) -> true ; Disj = ' ; '),
+	(tptp2X_member(impl(Impl),SyntaxSpec) -> true ; Impl = ' ---> '),
+	output_each_satchmo_clause(Clauses,1,NameSpec,Top,Bot,Konj,Disj,Impl).
+
+%----Short cuts for various versions
+satchmo(satchmo:basic,Clauses,FileHeader):-
+    satchmo(satchmo:predicate:none:[],Clauses,FileHeader).
+satchmo(satchmo:compiling,Clauses,FileHeader):-
+    satchmo(satchmo:predicate:namevar:[],Clauses,FileHeader).
+satchmo(satchmo:prgprakt,Clauses,FileHeader):-
+    satchmo(satchmo:none:none:[top(''),bot(''),konj(' & '),impl(' --> ')],Clauses,FileHeader).
+satchmo(satchmo:java,Clauses,FileHeader):-
+    satchmo(satchmo:none:name:[top(''),bot('')],Clauses,FileHeader).
+satchmo(satchmo:signature,Clauses,FileHeader):-
+    satchmo(satchmo:signature:none:[],Clauses,FileHeader).
+satchmo(satchmo:haskell,Formulas,FileHeader):-
+    satchmo(satchmo:none:none:[top('TRUE'),bot('FALSE'),konj(' & '),disj(' | '),impl(' -> ')],Formulas,FileHeader).
+
+prgprakt(prgprakt,Clauses,FileHeader) :-
+	satchmo(satchmo:prgprakt,Clauses,FileHeader).
+java(java,Clauses,FileHeader) :-
+	satchmo(satchmo:java,Clauses,FileHeader).
+compiling(compiling,Clauses,FileHeader) :-
+	satchmo(satchmo:compiling,Clauses,FileHeader).
+signature(signature,Clauses,FileHeader) :-
+	satchmo(satchmo:signature,Clauses,FileHeader).
+haskell(haskell,Formulas,FileHeader) :-
+	satchmo(satchmo:haskell,Formulas,FileHeader).
+
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+satchmo_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+satchmo_file_information(format,satchmo:option1:option2:option3,
+'option1 is one of none, predicate, signature
+ option2 is one of none, name, namevar, number, numbervar
+ option3 is a list of top(_Top), bot(_Bot), konj(_Konj), disj(_Disj), impl(_Impl)').
+%----------------------------------------------------------------------
+
+%%% Additional hooks into format conversion (creates new directories)
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+prgprakt_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+prgprakt_file_information(format,prgprakt).
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+java_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+java_file_information(format,java).
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+compiling_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+compiling_file_information(format,compiling).
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+signature_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+signature_file_information(format,signature).
+%----------------------------------------------------------------------
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO format
+haskell_format_information('%','.sat').
+%----------------------------------------------------------------------
+%----Provide information about the SATCHMO file
+haskell_file_information(format,haskell).
+%----------------------------------------------------------------------

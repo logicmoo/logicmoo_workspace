@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>Regulus Protege Exporter</title>
+
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+		<link title="regulusDocStyle" rel="stylesheet" href="regulusDoc.css" type="text/css" />
+
+	</head>
+	<body>
+		<div class="header">
+			<h1>Regulus Prot&eacute;g&eacute; Exporter</h1>
+			<div class="version">version 0.2</div>
+			<div class="authors">Nikos Chatzichrisafis, Marianne Santaholma</div>
+		</div>
+		<div class="main-content">
+			<h2>Introduction</h2>
+				<p>The Protege Exporter Plugin lets you manage your lexical resources in an easy to use visual environment.</p>
+				<p>It helps you organising the lexical entries and achieving a uniform naming scheme across languages. Hence it facilitates the development of multilingual grammars. Adding lexical entries is easier done in Prot&eacute;g&eacute;'s visual environment, since it hides prolog syntax.</p>
+
+			<h2>Installation</h2>
+				<ul>
+					<li>Download and Install <a href="http://protege.stanford.edu/">Prot&eacute;g&eacute;</a>. The Regulus Exporter Plugin has been tested on Prot&eacute;g&eacute; 3.1</li>
+					<li>To install the Regulus Prot&eacute;g&eacute; Exporter, simply unzip the <a href="#">exporter archive</a> to your Prot&eacute;g&eacute; <span class="code">plugins</span> directory. In windows this is typically set to <span class="code">C:\Program Files\Protege_3.1\plugins</span>.</li>
+				</ul>
+			<h2>Getting Started</h2>
+			<h3>Prot&eacute;g&eacute; Classes,  Prot&eacute;g&eacute; Slots and Regulus Definitions</h3>
+			<h4>Prot&eacute;g&eacute; Classes</h4>
+				<p>Download a <a href="#">toy lexicon package</a> and unzip it to a directory of your choice. The template files contain one Prot&eacute;g&eacute; project, and a regulus exporter <span class="code">.rex</span> file.</p>
+				<p>
+					Open the Prot&eacute;g&eacute; project and get acquinted with the environment.
+					Prot&eacute;g&eacute; has a class browser, which contains our definition of languages under a special class named "Lexical Entry".
+				</p>
+				<img src="class-organization.png" alt="protege class layout"></img>
+
+				<p>
+					Under the "Lexical Entry" class absract container classes (distinguishable by the donought shape) are placed.
+					These are Regulus grammar declaration categories that correspond the lexical entry classes. In the example shown, abstract container classes include "Auxilary Verb", "Noun", ..., "Adj".
+					These abstract classes are not language specific and act only as placeholders for language specific classes that are placed below.
+				</p>
+
+				<p>
+					In our example the abstract "Adj" container class contains language specific classes for English and Finnish.
+					Subclasses placed under the "Adj" container have to be named, by convention, with the name of the language.
+					If you want to add a more descriptive name, do so after a space character. In our example the classes are named "English Adj" and "Finnish Adj". "English Adj" includes also the sub-classes "Eng adj 'body_part_descriptor'", "Eng adj 'descriptor'" and "Eng adj 'oriental_location'".</p>
+				<p>
+					The advantage of this kind of tree structure is that the language specific classes (sub-classes) inherit directly the features of more general classes (the upper classes). Hence in our example "Eng adj 'oriental_location'" directly inherits the features of "Eng adj", which then inherits the features of "Adj".</p>
+
+				<p>
+					Remenber that completely equal class and subclass names are not allowed in this kind of ontological organisation.
+					You have to always specify the language of the class, for instance subclasses of "Eng adj" are "Eng adj 'body_part_descriptor'" and "Fin adj 'body_part_descriptor'"; not only "adj 'body_part_descriptor".
+
+				</p>
+
+				<h4>Prot&eacute;g&eacute; Slots</h4>
+				<p>
+				Since classes are used to model <em>Regulus Lexical Categories</em>, we need a way to model <em>Regulus Feautures</em>.
+				<em>Regulus Features</em> are modeled with Prot&eacute;g&eacute; Slots.
+				</p>
+				<img src="slots.png" alt="protege slot layout"></img>
+
+				<p>In our example the "position" slot is defined with allowed values "pre", "post" and "predicative". This correspond the Regulus grammar feature-value-space declaration "feature_value_space(position_value, [[pre, post, predicative]]).</p>
+
+
+				<p>"Position" is defined to have "Value Type" "Symbol", which lets us define list of allowed values for this category (like "pre", "post"). We can also define Boolean ("true", "false"), Integer and String values for categories.</p>
+				<p>The slot tab also lets us define restrictions on cardinality. They are enforced when adding lexical entries.</p>
+
+				<p>Our sample Adjective class uses this slot as shown below.</p>
+				<img src="class-with-slot.png" alt="Sample class with slot"></img>
+				<p>Default values, which are defined in the slot tab, may be overriden at classes. Right-click a class-specific slot to view and edit overriden values.</p>
+				<p>The structure contained in slots and classes is exported into regulus-readable files.</p>
+
+				<p><b>Important!</b> Some differences between Regulus prolog grammar/lexicon feature-value and Prot&eacute;g&eacute; lexicon slot-values writing conventions:</p>
+
+				<ul>
+				<li> <em>Agreement</em>: Person-number-gender agreement is written in Prot&eacute;g&eacute; using underscores: 1_sing, 2_sing, 3_sing, 1_plur_fem, etc. The underscores are converted in slashes of prolog expressions used in Regulus grammars: 1/\sing, 2/\sing, 3/\sing, 1/\plur/\fem.
+
+				<li> <em>yes-no value</em>: Yes/no value used commonly for example as value of Inversion feature is expressed in Prot&eacute;g&eacute; with the Boolean (for "Value type" choose "Boolean"). Instead of "Yes/No" this prints out in Regulus file "true" or "false". Attention! Remember to define a default value in slot editor when creating the slot (either "true" or "false"). The default value is used when the value is left undefined.
+				</li></ul>
+
+				Otherwise the feature-values are not fixed but to be decided by the grammar/lexicon developer.
+
+				<h4>Summary</h4>
+				<p>
+				<ul>
+				<li><em>Prot&eacute;g&eacute; Classes</em> correspond to <em>Regulus Categories</em> for lexical entries, which are defined in the declaration section of your regulus grammar.</li>
+				 <li><em>Prot&eacute;g&eacute; Slots</em> correspond to <em>Regulus Feautures</em> that are defined in the declaration section of your regulus grammar.</li>
+				 <li>The subclasses inherit the features of upper classes.</li>
+				 <li>Language-Independent Slots can be removed, added and edited in Prot&eacute;g&eacute;'s Slot Tab.</li>
+				 <li>Slot defaults may be overriden for specific languages at class level.</li>
+				<li>The structure stored in the Prot&eacute;g&eacute;'s Class and Slot tabs are saved into definition files.</li>
+				</ul>
+				</p>
+
+				<h3>Lexical Entries</h3>
+				<p>Lexical Entries are added in Prot&eacute;g&eacute;'s Instance tab.</p>
+				<img src="instance-editor.png" alt="protege instance editor"></img>
+				<p>Entries are placed under the corresponding language-specific category. Prot&eacute;g&eacute;'s generates the Instance Editor (the tab on the right) based on the Class and Slot definitions of the particular entry. You may customize the appearance of the instance editor in the Prot&eacute;g&eacute; Form tab.</p>
+
+				<p>To avoid unnecessary clicking you can copy the instances and change for example just the case value of entry.</p>
+
+				<p>Another possibility is to modify Prot&eacute;g&eacute; <em> .pins </em> file.
+
+				<p>To export your work to a regulus compatible format select <span class="code"><b>File</b> -><b>Export To Format</b>-><b>Regulus Dictionary</b></span>. This will prompt you for a regulus exporter <span class="code">.rex</span> file, which contains definitions on what, how, and where to export your lexicon and accompanying definitions. A sample <span class="code">.rex</span> file is included with the <a href="#">toy lexicon package</a>. For more information on setting up a <span class="code">.rex</span> file see <a href="#Configuration">Configuration</a>.</p>
+				<p>Voil&agrave;!</p>
+
+			<h3>Configuration</h3>
+				<p>The Regulus Exporter reads it's configaration from the regulus exporter file <span class="code">.rex</span>. A sample file, along with documentation is <a href="sample.rex">given here</a>.</p>
+
+			<h3>Reserved Slot Names</h3>
+				<p>By convention following slot names receive special treatment by the exporter:</p>
+				<ul>
+					<li><em>agr</em>: The slot for agreeement is being expanded to regulus formalism</li>
+					<li><em>entry_type</em>: The entry type of the record　under which the record gets exported, e.g. verb, noun, number, etc.</li>
+					<li><em>surface_form</em>: The form of the entry to export. This is usually written in the language's native script</li>
+					<li><em>latin_transliteration</em>: For languages with a non-latin script, this slot may contain a latin transliteration. This is usefull for people who can't understand the native script.</li>
+					<li><em>gloss</em>: This entry may contain the gloss for the record. This is usefull for demonstration purposes.</li>
+				</ul>
+
+				<p>
+					If a record contains non-empty <em>gloss</em> or <em>latin_transliteration</em> slots, it gets exported using the transliteration macro defined in the <span class="code">.rex</span> file.
+					An example of such an expanded entry is given below.
+				</p>
+				<span class="code">
+					number:[sem=[[number, 1]]] --> @transliteration_macro('一', 'ichi', '1').
+				</span>
+				<p>
+					In the example the <em>entry_type</em> of the exported entry was set to <span class="code">number</span>.
+					The entry contained non-empty <em>gloss</em> and <em>latin_transliteration</em> slots, which got exported in the <span class="code">@transliteration_macro</span>.
+					The <em>surface_form</em> of the entry is <span class="code">一</span>, the <em>latin_transliteration</em> is <span class="code">ichi</span>, and the <em>gloss</em> is set to <span class="code">1</span>.
+				<p>
+				<p>
+					<a href="../RegulusDoc.htm#Macros">Regulus transliteration macros</a> are defined by the gramar developer.
+					A sample transliteration macro definition for Japanese, which only takes account of the latin transliteration would look as follows:
+				</p>
+				<span class="code">
+					macro(transliteration_macro(KanaKanji, Romaji, Gloss), Romaji).
+				</span>
+
+			<h2>Future Plans</h2>
+			<ul>
+				<li>This is a first step towards integrating lexical and semantic representation. Future releases will address this.</li>
+				<li>Synonym extraction using WordNet.</li>
+			</ul>
+
+			<h2>Known Limitations</h2>
+			<ul>
+				<li>You can't directly import an already developed Regulus lexicon into Prot&eacute;g&eacute;.</li>
+			</ul>
+
+		</div>
+		<div class="footer">
+			<div class="date">Last update: $Date: 2007-04-26 21:16:12 $</div>
+		</div>
+	</body>
+</html>

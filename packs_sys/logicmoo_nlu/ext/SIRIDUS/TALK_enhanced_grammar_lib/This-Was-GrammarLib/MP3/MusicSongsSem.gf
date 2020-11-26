@@ -1,0 +1,114 @@
+--# -path=.:../Common
+
+concrete MusicSongsSem of MusicSongs = open Prolog in {
+
+lincat Song = PStr;
+
+lin
+
+-- Swedish titles
+blinkar_bla = pp0 "blinkar_bla";
+segla_pa_ett_moln = pp0 "segla_pa_ett_moln";
+undantag = pp0 "undantag";
+det_hon_vill_ha = pp0 "det_hon_vill_ha";
+skuggor_i_skymningen = pp0 "skuggor_i_skymningen";
+vem_ska_jag_tro_pa = pp0 "vem_ska_jag_tro_pa";
+solglasogon = pp0 "solglasogon";
+atta_hundra_grader = pp0 "atta_hundra_grader";
+karlekens_tunga = pp0 "karlekens_tunga";
+angeln_i_rummet = pp0 "angeln_i_rummet";
+vem_tander_stjarnorna = pp0 "vem_tander_stjarnorna";
+vindarna = pp0 "vindarna";
+flickorna_pa_tv_tva = pp0 "flickorna_pa_tv_tva";
+du_ska_va_president = pp0 "du_ska_va_president";
+precis_som_du = pp0 "precis_som_du";
+vara_vanner = pp0 "vara_vanner";
+om_du_var_har = pp0 "om_du_var_har";
+kom_ihag_mig = pp0 "kom_ihag_mig";
+vem_vet = pp0 "vem_vet";
+himlen_runt_hornet = pp0 "himlen_runt_hornet";
+diamanter = pp0 "diamanter";
+efter_stormen = pp0 "efter_stormen";
+det_finns = pp0 "det_finns";
+sarah = pp0 "sarah";
+vingar = pp0 "vingar";
+flickan_och_krakan = pp0 "flickan_och_krakan";
+vintersaga = pp0 "vintersaga";
+allt_som_jag_kanner = pp0 "allt_som_jag_kanner";
+jag_blir_hellre_jagad_av_vargar = pp0 "jag_blir_hellre_jagad_av_vargar";
+du_far_gora_som_du_vill = pp0 "du_far_gora_som_du_vill";
+hall_om_mig = pp0 "hall_om_mig";
+sag_som_det_ar = pp0 "sag_som_det_ar";
+vinden_har_vant = pp0 "vinden_har_vant";
+jackie = pp0 "jackie";
+lilla_fagel_bla = pp0 "lilla_fagel_bla";
+sommaren_ar_kort = pp0 "sommaren_ar_kort";
+en_del_av_mitt_hjarta = pp0 "en_del_av_mitt_hjarta";
+oppna_landskap = pp0 "oppna_landskap";
+under_ytan = pp0 "under_ytan";
+teknikens_under = pp0 "teknikens_under";
+tva_av_oss = pp0 "tva_av_oss";
+vandraren = pp0 "vandraren";
+under_norrskenet = pp0 "under_norrskenet";
+vill_ha_mer = pp0 "vill_ha_mer";
+flykting = pp0 "flykting";
+sanningens_krigare = pp0 "sanningens_krigare";
+i_vargens_spar = pp0 "i_vargens_spar";
+nu_tandas_tusen_julejus = pp0 "nu_tandas_tusen_julejus";
+alla_alskar_dig = pp0 "alla_alskar_dig";
+hon_far = pp0 "hon_far";
+
+-- English titles    
+another_world = pp0 "another_world";
+deeper_than_the_usual_feeling = pp0 "deeper_than_the_usual_feeling";
+london_calling = pp0 "london_calling";
+should_i_stay_or_should_i_go = pp0 "should_i_stay_or_should_i_go";
+dead_stars = pp0 "dead_stars";
+like_tears_in_rain = pp0 "like_tears_in_rain";
+figurehead = pp0 "figurehead";
+final_countdown = pp0 "final_countdown";
+leviathan = pp0 "leviathan";
+stalker = pp0 "stalker";
+friday_im_in_love = pp0 "friday_im_in_love";
+sadness = pp0 "sadness";
+i_think_im_paranoid = pp0 "i_think_im_paranoid";
+in_the_city = pp0 "in_the_city";
+time_for_truth = pp0 "time_for_truth";
+the_man_with_the_child_in_his_eyes = pp0 "the_man_with_the_child_in_his_eyes";
+totem_pole = pp0 "totem_pole";
+lucky_star = pp0 "lucky_star";
+material_girl = pp0 "material_girl";
+if_i_should_die_tonight = pp0 "if_i_should_die_tonight";
+angel = pp0 "angel";
+teardrop = pp0 "teardrop";
+sly = pp0 "sly";
+sex_by_force = pp0 "sex_by_force";
+ars_magica = pp0 "ars_magica";
+razors_through_flesh = pp0 "razors_through_flesh";
+heads_high = pp0 "heads_high";
+latest_news = pp0 "latest_news";
+good_enough = pp0 "good_enough";
+thorn = pp0 "thorn";
+let_beauty_loose = pp0 "let_beauty_loose";
+eleanor_rigby = pp0 "eleanor_rigby";
+west_end_girls = pp0 "west_end_girls";    
+suburbia = pp0 "suburbia";    
+debaser = pp0 "debaser";    
+poison = pp0 "poison";    
+existence = pp0 "existence";    
+darkangel = pp0 "darkangel";    
+rubicon = pp0 "rubicon";    
+all_that_she_wants = pp0 "all_that_she_wants";    
+the_final_countdown = pp0 "the_final_countdown";   
+stone_me_into_the_groove = pp0 "stone_me_into_the_groove";   
+oh_i_like_it = pp0 "oh_i_like_it";    
+save_tonight = pp0 "save_tonight";    
+tears_never_dry = pp0 "tears_never_dry";    
+it_takes_a_fool_to_remain_sain = pp0 "it_takes_a_fool_to_remain_sain";   
+youre_gonna_get_it = pp0 "youre_gonna_get_it";    
+i_breathe = pp0 "i_breathe";    
+legion = pp0 "legion";   
+standing = pp0 "standing";    
+like_a_prayer = pp0 "like_a_prayer";
+
+}

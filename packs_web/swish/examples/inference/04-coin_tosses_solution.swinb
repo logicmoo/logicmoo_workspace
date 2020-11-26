@@ -1,0 +1,147 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Coin tosses
+
+Consider a process where you repeatedly toss coins and record the results.
+
+After each toss, you continue tossing with probability 0.8.
+
+Write a predicate tosses(Coin,L) that, given an initial coin id =Coin=, returns in =L= the list of results of coin tosses obtained using the process above. 
+
+Moreover, write a predicate length_tosses(N) that returns the number of coin tosses.
+
+
+Compute the probability of the sequence =|[h,h,h]|= using MCINTYRE.
+
+Compute the probability of the sequence =|[h,h,h,h,h]|= given that the subsequence =|[h,h,h]|= was observed using rejection sampling and Metropolis Hastings.
+
+Compute the probability of the sequences of 10 coin tosses using MCINTYRE.
+
+Compute the expected length of the sequences of coin tosses using MCINTYRE.
+</div>
+
+<div class="nb-cell program" name="p1">
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- endif.
+
+:- mc.
+
+:- begin_lpad.
+
+% Note: one have to identify each toss with an id.
+toss(_):0.8.
+toss(C,h):1/2 ; toss(C,t):1/2 :- toss(C).
+tossed(C) :-
+  toss(C,_).
+tosses(Coin,L) :-
+  tosses(Coin,[],L).
+
+tosses(Coin,L0,[C|L]) :-
+  Coin2 is Coin + 1,
+  toss(Coin2,C),
+  tosses(Coin2,L0,L).  
+tosses(Coin,L,L):-
+    Coin2 is Coin + 1,
+    \+ tossed(Coin2). % this is needed otherwise you can
+% obtain a sequence like [h,h,h] with the following toss 
+% still possible, so the probability of [h,h,h]  misses the
+% last factor 0.2
+
+% this is needed because the probability of [h,h,h,h,h] 
+% give that [h,h,h] was sampled is 0 because when you obtain
+% the first sequence, toss(3) is false
+partial_tosses(L):-
+    tosses(0,T),
+    append(L,_,T).
+
+
+% length of the coin toss session
+length_tosses(N) :-
+  tosses(0,L),
+  length(L,N).
+
+:- end_lpad.
+
+/* 
+ Examples
+
+% Compute the probability of the sequence [h,h,h] using MCINTYRE.
+?- mc_prob(tosses(0,[h,h,h]),P).
+P = 0.0692.
+
+% Compute the probability of the sequence [h,h,h,h,h] given that the
+% subsequence [h,h,h] was observed using rejection sampling and Metropolis Hastings.
+?- mc_rejection_sample(tosses(0,[h,h,h,h,h]),partial_tosses([h,h,h]),1000,P).
+P = 0.171.
+
+?- mc_mh_sample(tosses(0,[h,h,h,h,h]),partial_tosses([h,h,h]),1000,P).
+P = 0.153.
+
+% Compute the probability of the sequences of 10 coin tosses using MCINTYRE.
+?- mc_prob(length_tosses(10),P).
+P = 0.10525.
+
+% Compute the expected length of the sequences of coin tosses using MCINTYRE.
+?- mc_expectation(length_tosses(N),1000,N,V).
+V = 3.975.
+
+% Other queries
+% What is the probability that we get a length 10 sequence, given that we got a length 9 sequence?
+?- mc_rejection_sample(length_tosses(10),length_tosses(9), 1000,N,[successes(T),failures(F)]).
+N = 0.782,
+T = 782,
+F = 218.
+
+% The probabilities for length 1..20
+?- findall([N,P], (between(1,20,N), mc_prob(length_tosses(N),P)),Res),writeln(Res).
+[[1,0.7936923076923077],[2,0.6391111111111111],[3,0.5153],[4,0.4089473684210526],[5,0.33466666666666667],[6,0.2636],[7,0.21153846153846154],[8,0.1710909090909091],[9,0.1358],[10,0.1145],[11,0.08371428571428571],[12,0.0688],[13,0.048],[14,0.0425],[15,0.03933333333333333],[16,0.019],[17,0.024],[18,0.018],[19,0.014],[20,0.008]]
+
+*/
+</div>
+
+<div class="nb-cell html" name="htm1">
+Compute the probability of the sequence [h,h,h] using MCINTYRE.
+</div>
+
+<div class="nb-cell query" name="q1">
+mc_prob(tosses(0,[h,h,h]),P).
+</div>
+
+<div class="nb-cell html" name="htm2">
+Compute the probability of the sequence [h,h,h,h,h] given that the 
+subsequence [h,h,h] was observed using rejection sampling and 
+Metropolis Hastings.
+</div>
+
+<div class="nb-cell query" name="q2">
+mc_rejection_sample(tosses(0,[h,h,h,h,h]),partial_tosses([h,h,h]),1000,P).
+</div>
+
+<div class="nb-cell query" name="q3">
+mc_mh_sample(tosses(0,[h,h,h,h,h]),partial_tosses([h,h,h]),1000,P).
+</div>
+
+<div class="nb-cell html" name="htm3">
+Compute the probability of the sequences of 10 coin tosses 
+using MCINTYRE.
+</div>
+
+<div class="nb-cell query" name="q4">
+mc_prob(length_tosses(10),P).
+</div>
+
+<div class="nb-cell html" name="htm4">
+Compute the expected length of the sequences of coin tosses 
+using MCINTYRE.
+</div>
+
+<div class="nb-cell query" name="q5">
+mc_expectation(length_tosses(N),1000,N,V).
+</div>
+
+</div>

@@ -1,0 +1,32 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+
+%  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
+
+
+:- include(test_header).
+
+:- dmsg(begin_abc).
+              
+:- file_begin(pfc).
+
+:- abolish(a,1).
+:- abolish(b,1).
+:- dynamic((a/1,b/1)).
+
+:- debug_logicmoo(logicmoo(_)).
+ % :- mpred_trace_exec.
+
+
+a(1).
+a(X) ==> b(X).
+
+:- mpred_test(a(1)).
+:- mpred_test(b(1)).
+
+

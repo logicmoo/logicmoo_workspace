@@ -1,0 +1,34 @@
+@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+.affix {
+	margin-top: -60px;
+}
+.doc {
+	margin: 10px;
+}
+
+.bs-docs-sidebar .nav>li>a {
+	color: #999;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.bs-docs-sidebar .nav>.active>a, .bs-docs-sidebar .nav>.active:hover>a,
+	.bs-docs-sidebar .nav>.active:focus>a {
+	font-weight: 700;
+	color: #ce4646;
+	border-left: 2px solid #ce4646;
+}
+
+.bs-docs-sidebar .nav .nav>li>a {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 30px;
+}
+
+
+
+.gistIcon {
+	margin-left: 10px;
+	width: 18px;
+	height:18px;
+}

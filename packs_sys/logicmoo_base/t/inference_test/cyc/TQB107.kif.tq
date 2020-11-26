@@ -1,0 +1,46 @@
+(note TQB107)
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict) Stage2-TerroristAttackOnAramco) 
+
+(existant Stage2-TerroristAttackOnAramco 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(subProcess HPKBScenarioConflict Stage2-TerroristAttackOnAramco) 
+
+(instrument-Generic Stage2-TerroristAttackOnAramco Stage2-TruckBomb) 
+
+(deviceUsed Stage2-TerroristAttackOnAramco Stage2-TruckBomb) 
+
+(subrelation deviceUsed instrument-Generic) 
+
+(instance Stage2-TerroristAttackOnAramco AttackOnTangible) 
+
+(deathToll Stage2-TerroristAttackOnAramco Person 100) 
+
+(instance #$Stage2-TruckBomb TruckBomb) 
+
+
+
+
+(query (findall ?NUM
+
+ (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 25 HPKBScenarioConflict) ?ACT) 
+ (deathToll ?ACT Person ?NUM) 
+ (thereExists ?FORCE 
+ (and 
+ (instance ?FORCE TruckBomb) 
+ (instrument-Generic ?ACT ?FORCE)))))  )
+)
+
+(answer 100)
+
+(end_of_file)
+

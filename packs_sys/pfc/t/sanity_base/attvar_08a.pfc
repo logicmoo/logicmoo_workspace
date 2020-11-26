@@ -1,0 +1,34 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_attvar_08,[]).
+
+:- include(test_header).
+
+
+:- dynamic(sk_out/1).
+:- dynamic(sk_in/1).
+
+% :- process_this_script.
+
+:- ensure_loaded(library(attvar_reader)).
+:- read_attvars(true).
+:- set_prolog_flag(assert_attvars,true).
+
+sk_in(fl(X,Y,X,Y)).
+sk_in(avar([vn='ExIn',sk='SKF-666'])).
+sk_in(_DUNNO).
+
+sk_in(X)==>sk_out(X).
+
+:- must((findall(Ex,(clause_u(sk_out(Ex),_,_),wdmsg(sk_out(Ex))),L),length(L,THREE),THREE=3)).
+
+%:- listing([pt/2,sk_in/1,sk_out/1]).
+
+:- must((sk_out(FOUND),get_attr(FOUND,sk,What),What=='SKF-666',wdmsg(fOUND=FOUND))).
+
+

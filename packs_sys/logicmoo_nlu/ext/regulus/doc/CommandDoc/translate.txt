@@ -1,0 +1,2 @@
+
+In this mode, the sentence is parsed using the current parser. If any parses are found, the first one is processed through translation and generation. Translation is performed using interlingual rules if the INTERLINGUA command has been applied, otherwise using direct transfer.

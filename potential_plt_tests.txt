@@ -1,0 +1,327 @@
+packs_sys/predicate_streams/t/sanity_tests.pl:        some_test/0,
+packs_sys/wam_common_lisp/prolog/wam_cl/utests.pl::- dynamic(tst:is_local_test/1).
+packs_sys/wam_common_lisp/prolog/wam_cl/hashtables.pl:f_hash_table_test(HT,RetVal):-get_opv(HT,hash_table_test,RetVal).
+packs_sys/wam_common_lisp/prolog/wam_cl/symbols.pl:   ((PresentP==t->get_test_pred(f_eql,Optionals,EqlPred);EqlPred=f_eql),
+packs_sys/wam_common_lisp/prolog/wam_cl/eightball.pl:di_test:- lisp_compile_to_prolog(pkg_user,
+packs_sys/wam_common_lisp/prolog/wam_cl/sequences.pl: get_test_pred(f_eql,Keys,EqlPred),
+packs_sys/wam_common_lisp/prolog/wam_cl/fileload.pl:wl:lambda_def(defun, require, f_require, [sys_name, c38_optional, u_pathnames], [[let, [[string, [string, sys_name]]], [unless, [find, string, xx_modules_xx, kw_test, function(string_c61)], [u_do_list_designator, [u_file, u_pathnames], [load, u_file]]]]]).
+packs_sys/wam_common_lisp/prolog/wam_cl/compile.pl:tst:is_local_test("
+packs_sys/wam_common_lisp/prolog/wam_cl/tagbody.pl:tst:is_local_test(tagbody1,[tagbody,setq(b,2),[go,tag1],setq(a,1),(tag1),setq(a,4),print(plus(a,b))],[]).
+packs_sys/wam_common_lisp/prolog/wam_cl/readtables.pl:atom_symbol_test(SymbolName,Symbol):- reading_package(Package),atom_symbol(Package,SymbolName,Symbol),!.
+packs_sys/wam_common_lisp/prolog/wam_cl/prologfns.pl:tst:is_local_test(block2,[block,block2,[tagbody,setq(b,2),[go,tag2],setq(a,1),(tag1),
+packs_sys/wam_common_lisp/prolog/wam_cl/clstructs.pl:  m(ro,claz_weak_hash_table___test,test),
+packs_sys/wam_common_lisp/prolog/wam_cl/block.pl:tst:is_local_test(do(0.0),
+packs_sys/wam_common_lisp/prolog/wam_cl/header.pl::- dynamic(tst:is_local_test/1).
+packs_sys/wam_common_lisp/prolog/wam_cl/paramfns.pl:get_test_pred(IfMissing,Keys,Pred):-
+packs_sys/wam_common_lisp/prolog/wam_cl/condifs.pl:must_compile_test_body(Ctx,Env,TestResult,Test,TestBody,TestResultBody):-
+packs_sys/wam_common_lisp/prolog/wam_cl/conses.pl:  get_test_pred(f_eql,Options,EqlPred),
+packs_sys/wam_common_lisp/prolog/wam_cl/streams.pl: * (streams_test.pl)
+packs_sys/wam_common_lisp/t/pre_commit_01.pl::- ensure_loaded(library(pfc_test)).
+packs_sys/wam_common_lisp/t/sanity_01.pl::- pfc_test_feature(mt,must_not_be_pfc_file).
+packs_sys/wam_common_lisp/t/test_header.pl::- wdmsg(reload_of_test_header).
+packs_sys/dictoo/t/sanity_tests.pl::- consult(library(dictoo_tests)).
+packs_sys/dictoo/t/dictoo_tests.pl:test(2):- dict_create(Dict,foo,[key_test-value_success]) , X = Dict.key_test, writeln(X).
+packs_sys/instant_prolog_docs/t/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/logicmoo_ec/prolog/lps_pddl/lps_pddl_convert.pl:assert_lps(Lps):- assert_lps(lps_test_mod,Lps).
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_common.pl:run_tests:- 
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_loader.pl::- export_transparent(e_reader_teste/0).
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_lps_convert_advice.pl::- dynamic lps_test_result/3.
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_reader.pl:   e_reader_test/0,
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_lps_convert.pl:skip_tests. 
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_reader_no_lps.pl:   with_e_sample_tests(1),
+packs_sys/logicmoo_ec/prolog/ec_planner/ec_test_incl.pl::- discontiguous do_test/1.
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/ptools/olprecede.pl:	nb_pair_test(Type,A,B,Ret1) ,
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_code1.pl:% :-tell(user),run_header_tests.
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_code.pl:tryff(Call):- predicate_property(Call,_),!,once(tryf((Call,assert(passed_test_try(Call))))),fail.
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_new.pl:        %write_out_test_data('.preClean',Id),
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_lm.pl:% :-tell(user),run_header_tests.
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/rsasak_forward_wa_star_h_add.pl:probfreecell:- solve_filespddl('benchmarks/freecell/domain.pddl', '../test/pddl_tests/benchmarks/freecell/probfreecell-9-5.pddl').
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_works.pl:        %write_out_test_data('.preClean',Id),
+packs_sys/logicmoo_ec/prolog/hyhtn_pddl/hyhtn_code2.pl:% :-tell(user),run_header_tests.
+packs_sys/logicmoo_ec/prolog/logicmoo_planner.pl::-  add_absolute_search_folder(pddl,library('../test/pddl_tests/')),
+packs_sys/logicmoo_ec/prolog/logicmoo_ec.pl:%test_logicmoo_ec:- run_tests.
+packs_sys/logicmoo_ec/ext/theorist/snark_klsnl.pl:   otres_test_otter_output(OtterRules,(Initial,NewerLiteral,NewerModal,Temporal),ERulePaths,ERules,AllNewRules).
+packs_sys/logicmoo_ec/ext/PKnows-0.9.9/epath.pl:    epath_not_refuted_values_test(VVIn,[],P,VVOut),
+packs_sys/logicmoo_ec/ext/PKnows-0.9.9/domain.pl::- begin_tests(domain,[sto(rational_trees)]).
+packs_sys/logicmoo_ec/ext/PKnows-0.9.9/fluent.pl::- begin_tests(fluent,[sto(rational_trees)]).
+packs_sys/logicmoo_ec/ext/xray/hooks.pl:phook_tests(P,N,TestsA,Proc,ProcP) :-
+packs_sys/logicmoo_ec/ext/xray/lemma.pl:lemma_tests_p(P,N) :-
+packs_sys/logicmoo_ec/ext/xray/lemma_config.pl:dynamic_lemma_test_p(P,N) :-
+packs_sys/logicmoo_ec/ext/xray/debug.pl:phook1_tests(P,N,Result) :-
+packs_sys/logicmoo_ec/ext/xray/pttp.pl:ancestor_tests(P,N,Result) :-
+packs_sys/logicmoo_ec/ext/xray/xray.pl:ancestor_tests(P,N,Result) :-
+packs_sys/logicmoo_ec/test/sanity_tests.pl:  ( \+ prolog_load_context(file,Loader) -> assert(t_l:santiy_tests_includer(Loader)) ; true).
+packs_sys/logicmoo_ec/test/lps_user_examples/Solomon and the two women.pl:	 put_to_test(a, b),
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_3.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/sanity_equals_01_extra.pl:do_test(all):-  maplist(call, 
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_b.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_plant.e.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_c.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_8.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_6.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_story.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/Example4.e.pl::-include(library('ec_planner/ec_test_incl')).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_2.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/testA.e.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_good_1.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_1.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/Example1a.e.pl::-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e',257).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_3.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/Example2.e.pl::-include(library('ec_planner/ec_test_incl')).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_7.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/Example3.e.pl::-include(library('ec_planner/ec_test_incl')).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_a.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_1.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_9.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_4.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e.pl::-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_examples.e',9038).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/TestBoxRoom.e.pl::-include(library('ec_planner/ec_test_incl')).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/testB.e.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_includes.e.pl::-was_s_l('/pack/logicmoo_ec/test/ec_planner/ectest/ec_reader_test_foundations.e',262).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_shopping.e.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_good_2.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_imagine_cake_2.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake_4.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_eat_cake.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_np_box_agent.e.pl::- discontiguous do_test/1.
+packs_sys/logicmoo_ec/test/ec_planner/ectest/testC.e.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/Example1.e.pl::-include(library('ec_planner/ec_test_incl')).
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_2.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_imagine_cake_1.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/ec_planner/ectest/test_mail_5.pl::- include('../ec_test_incl').
+packs_sys/logicmoo_ec/test/bounty0500_tests.pl:root@gitlab:/opt/logicmoo_workspace/packs_sys/planner_api/t# swipl bounty0500_tests.pl
+packs_sys/pfc/prolog/pfc_test.pl::- module(pfc_test,[why_was_true/1,mpred_test/1]).
+packs_sys/pfc/prolog/pfclib/pfc_2_0_full.pl:  filter_buffer_n_test/3,
+packs_sys/pfc/prolog/pfclib/system_autoexec_3_0.pfc.pl:%:- use_module(library(pfc_test)).
+packs_sys/pfc/prolog/pfclib/system_base.pfc.pl:%:- use_module(library(pfc_test)).
+packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:% :- mpred_test(ensure_loaded('pttpFWC.pfc')).
+packs_sys/pfc/prolog/pfclib/pfc_3_0_full.pl:mpred_test(\+ X):- !, mpred_test(~ X).
+packs_sys/pfc/prolog/dialect/pfc_ext/mpred_core.pl:  filter_buffer_n_test/3,
+packs_sys/pfc/prolog/dialect/pfc_ext/mpred_database.pl:map_unless(_Test,_,[],_) :- !.
+packs_sys/pfc/prolog/dialect/pfc_ext/mpred_justify.pl:% local_testing
+packs_sys/pfc/doc/swish/mcp.pl:do_test :- 
+packs_sys/pfc/t/sanity_base/mpred_pfc_test_02.pl::- include('mpred_pfc_test_03').
+packs_sys/pfc/t/sanity_base/mt_01b.pl::- mpred_test(clause_u(header_sane:loves(_,_))).
+packs_sys/pfc/t/sanity_base/make_exe.pl::- qsave_program(tml_test).
+packs_sys/pfc/t/sanity_base/mt_01c_0a.pl::- pfc_test_feature(mt,\+ clause_u(header_sane:loves(_,_))).
+packs_sys/pfc/t/sanity_base/mt_01a_0a.pl::- pfc_test_feature(mt,must_not_be_pfc_file).
+packs_sys/pfc/t/sanity_base/no_reload_pfc_test.pl::- consult('mpred_pfc_test_01.pl').
+packs_sys/pfc/t/sanity_base/clause_fwd_02.pfc.pl::- mpred_test(early_aa(1)).
+packs_sys/pfc/t/sanity_base/food_and_drink_arity2.pl:do_test :-
+packs_sys/pfc/t/sanity_base/prolog_tests.pl::- include('mpred_pfc_test_01.pl').
+packs_sys/pfc/t/sanity_base/attvar_01.pl:%:- pfc_test_feature(mt,must_not_be_pfc_file).
+packs_sys/pfc/t/sanity_base/mpred_pfc_test_03.pl:%  was_module(red_test03,[]).
+packs_sys/pfc/t/sanity_base/mt_01a.pl::- pfc_test_feature(mt,must_not_be_pfc_file).
+packs_sys/pfc/t/sanity_base/mt_01c.pl::- mpred_test(clause_u(cycKB1:loves(_,_))).
+packs_sys/pfc/t/sanity_base/mt_01e.pl::- pfc_test_feature(mt,\+ mtHybrid(header_sane)).
+packs_sys/pfc/t/sanity_base/clause_fwd_01a.pfc.pl:mpred_test_cf(P):- dmsg_pretty((:- mpred_test(P))),mpred_test_fok(P).
+packs_sys/pfc/t/sanity_base/mt_02.pl::- if((pfc_test_feature(mt,X=1),X==1)).
+packs_sys/pfc/t/sanity_base/test_header.pl::- wdmsg(reload_of_test_header).
+packs_sys/pfc/t/sanity_base/predmt_01a.pl::- mpred_test(clause_u(socialMt:loves(_,_))).
+packs_sys/pfc/t/sanity_base/food_and_drink.pl:do_test :-
+packs_sys/pfc/t/sanity_base/mt_09.pl::- pfc_test_feature(pfc_file_detect,must(\+ is_pfc_file)).
+packs_sys/pfc/t/sanity_base/predmt_01b.pl::- mpred_test(clause_u(socialMt:loves(_,_))).
+packs_sys/pfc/t/sanity_base/mt_01c_0b.pl::- mpred_test(clause_u(cycKB1:loves(_,_))).
+packs_sys/pfc/t/sanity_base/mt_01d.pl::- mpred_test(clause_u(cycKB1:loves(_,_))).
+packs_sys/pfc/t/sanity_base/missionaries_and_cannibals.pl:do_test :- 
+packs_sys/pfc/t/sanity_base/mpred_pfc_test_04.pl::- include('mpred_pfc_test_03').
+packs_sys/pfc/t/sanity_base/clause_fwd_01b.pfc.pl::- mpred_test(early_aa(1)).
+packs_sys/pfc/t/sanity_base/mt_01.pl::- mpred_test(clause_u(socialMt:loves(_,_))).
+packs_sys/pfc/t/sanity_base/clause_fwd_3u.pfc.pl:mpred_test_cf(P):- dmsg_pretty((:- mpred_test(P))),mpred_test_fok(P).
+packs_sys/pfc/t/sanity_base/clause_fwd_01c.pfc.pl::- mpred_test(early_aa(1)).
+packs_sys/pfc/t/try_logicmoo_examples.pl::- doall(dcall_test(mother(Female,Who))).
+packs_sys/logicmoo_cg/prolog/logicmoo_cg.pl::- module(logicmoo_cg,[cg_reader_tests/0,cg_demo/0]).
+packs_sys/logicmoo_cg/prolog/cgp_lib/cgp_common_logic.pl:  [run_tests/0, 
+packs_sys/logicmoo_cg/prolog/cgp_lib/cgp_common_logic_extra.pl:  [run_tests/0, 
+packs_sys/logicmoo_cg/prolog/cgp_lib/cgp_pl_reader.pl::- discontiguous(cg_test_data/2). 
+packs_sys/logicmoo_cg/prolog/cgp_lib/cgp_reader.pl::- multifile_data(cg_test_data/2). 
+packs_sys/gvar_syntax/t/sanity_tests.pl::- consult(gvar_syntax_tests).
+packs_sys/gvar_syntax/t/gvar_syntax_tests.pl:all_tests:- forall(clause(test(X),Body),(dmsg(test(X)),must(Body))).
+packs_sys/logicmoo_base/prolog/logicmoo_cliop.pl:   reexport_from(system,trill:init_test/2),
+packs_sys/logicmoo_base/prolog/logicmoo_typesystem.pl:    mpred_save_restore_file('some_test.pl~'))))),!.
+packs_sys/logicmoo_base/prolog/logicmoo_repl.pl:decl_kb_shared_tests:-
+packs_sys/logicmoo_base/prolog/logicmoo/pfc/system_basic.pfc.pl:%:- meta_predicate(mp_test_agr(?,+,-,*,^,:,0,1,5,9)).
+packs_sys/logicmoo_base/prolog/logicmoo/pfc/system_constraints.pfc.pl:predicate_relaxed(weak_test/2).
+packs_sys/logicmoo_base/prolog/logicmoo/pfc/system_common.pfc.pl:==>( specialized_conflict_tests ==> (( ~tCol(T),tCol(T)) ==> conflict(~tCol(T)))).
+packs_sys/logicmoo_base/prolog/logicmoo/pfc/autoexec.pfc.pl:% :- mpred_test(ensure_loaded('pttpFWC.pfc')).
+packs_sys/logicmoo_base/prolog/logicmoo/pttp/dbase_i_mpred_pttp_statics.pl:       pttp_test/2,
+packs_sys/logicmoo_base/prolog/logicmoo/pttp/dbase_i_mpred_pttp.pl::- kb_shared(pttp_test/2).
+packs_sys/logicmoo_base/prolog/logicmoo/pttp/dbase_i_mpred_pttp_testing.pl::- module(mpred_pttp_testing,[]).
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/infra/src/patched_rdf_triple.pl:%	output with the stored desired output (see rdf_test.pl).
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/pdl-tableau/problems.pl:problems(routine_w_test, [
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/pdl-tableau/pdl_tableau.pl::- set_test_output_filename('/tmp/testing.log').
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/pdl-tableau/testing.pl:%     ProblemClassId is e.g. routine, routine_w_test, difficult; see
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/pdl-tableau/settings.pl:create_test_output_file :- !,
+packs_sys/logicmoo_base/prolog/logicmoo/tptp/pdl-tableau/pdlProver.pl:%     ProblemClassId is e.g. routine, routine_w_test, difficult; see
+packs_sys/logicmoo_base/prolog/logicmoo/typesystem/mpred_props.pl:%% pred_type_test( ?H, ?F) is semidet.
+packs_sys/logicmoo_base/prolog/logicmoo/typesystem/mpred_stubs.pl:last_arg_ground(mud_test,_,_).
+packs_sys/logicmoo_base/prolog/logicmoo/typesystem/mpred_userkb.pl:%baseKB:mud_test/2,
+packs_sys/logicmoo_base/prolog/logicmoo/common_logic/common_logic_exists.pl::- meta_predicate skolem_test(0).
+packs_sys/logicmoo_base/prolog/logicmoo/common_logic/common_logic_compiler.pl::-ain(baseKB:predicateConventionMt(mud_test,baseKB)).
+packs_sys/logicmoo_base/prolog/logicmoo/common_logic/common_logic_sanity.pl::- module(common_logic_sanity, [kif_test/1, test_boxlog/1, test_boxlog/2, test_defunctionalize/1]).
+packs_sys/logicmoo_base/prolog/logicmoo/common_logic/common_logic_reordering.pl:same_cl_test0 :-
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/prolog.library/pl/junitadapter.pl::- dynamic file_to_test/1.
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.builder/prolog-src/load_builder.pl:pl_test(Project):-
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.common/pl/callgraph/call_graph_test.pl::- module(call_graph_test, []).
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.common/pl/metainference/meta_inference_test.pl::- module(meta_inference_test, []).
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.common/pl/metainference/load.pl:%:- [meta_inference_test].
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.graphicalviews/pl/pl_to_graphML.pl:%pl_test_graph:-	
+packs_sys/logicmoo_base/prolog/logicmoo/pdt_server/pdt.graphicalviews/pl/pl_ast_to_abba.pl:							pl_test/0,
+packs_sys/logicmoo_base/prolog/logicmoo_swish.pl:   reexport_from(system,trill:init_test/2),
+packs_sys/logicmoo_base/t/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/logicmoo_base/t/examples/pfc/pfc.pl::- include(mpred_tests).
+packs_sys/logicmoo_base/t/examples/pfc/pfc_tests.pl:run_tests:-forall(between(1,10,X),on_x_debug((once(test(X))))).
+packs_sys/logicmoo_base/t/examples/sanity_user/test_header.pl::- wdmsg(reload_of_test_header).
+packs_sys/logicmoo_base/t/examples/api/is_each.pl::- mpred_test(~fooBar).
+packs_sys/logicmoo_base/t/examples/api/filestream_test.pl::- mpred_test(~fooBar).
+packs_sys/logicmoo_base/t/examples/api/chr_01.pl::- module(chr_test_01,[]).
+packs_sys/logicmoo_base/t/examples/fol/boxlog_sanity_02.pfc.pl::- mpred_test(cute_puppy(_)).
+packs_sys/logicmoo_base/t/examples/fol/sanity_sk_two_01.pfc.pl::- mpred_test(parent(douglas,_X)).
+packs_sys/logicmoo_base/t/examples/fol/sanity_exists_01.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/sanity_poss_02.pfc.pl::- mpred_test(poss(a(b))).
+packs_sys/logicmoo_base/t/examples/fol/zenls_01z.pfc.pl::-mpred_test((tBird(iChilly))).
+packs_sys/logicmoo_base/t/examples/fol/kif_sanity_01.pfc.pl::- discontiguous kif_sanity_test_0/0.
+packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_03.pfc.pl::- mpred_test(livesAt(_X,green_house)).
+packs_sys/logicmoo_base/t/examples/fol/make_types_wff_01.pfc.pl:% ?- mpred_test(all(X,if(isa(X,servant),isa(X,human)))).
+packs_sys/logicmoo_base/t/examples/fol/sanity_fi_human_01.pfc.pl::- mpred_remove(baseKB:never_retract_u(human(trudy), sanity_test)).
+packs_sys/logicmoo_base/t/examples/fol/exaxtly_two.pfc.pl:test_sanity0(G):- mpred_test(G),!.
+packs_sys/logicmoo_base/t/examples/fol/sanity_poss_01.pfc.pl::- mpred_test(poss(a(b))).
+packs_sys/logicmoo_base/t/examples/fol/sanity_exists_02.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/exactly_poss_cute_06.pfc.pl:test_sanity0(G):- mpred_test(G),!.
+packs_sys/logicmoo_base/t/examples/fol/make_wff_01.pfc.pl::- mpred_test(poss(isa(fred,human))).
+packs_sys/logicmoo_base/t/examples/fol/exactly_puppy_02.pfc.pl:test_sanity(G):- sanity(mpred_test(G)).
+packs_sys/logicmoo_base/t/examples/fol/sanity_exists_03.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/boxlog_sanity_03.pfc.pl::- mpred_test(cute_puppy(_)).
+packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_04.pfc.pl::- mpred_test(livesAt(_X,green_house)).
+packs_sys/logicmoo_base/t/examples/fol/test_header.pl::- wdmsg(reload_of_test_header).
+packs_sys/logicmoo_base/t/examples/fol/family_regress_01.pfc.pl:show_test(G):- defaultAssertMt(KB),printAll(must(KB:G)).
+packs_sys/logicmoo_base/t/examples/fol/test_header1.pl::- wdmsg(reload_of_test_header).
+packs_sys/logicmoo_base/t/examples/fol/sanity_exactly_01.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/family_inheritance_01.pfc.pl:show_test(G):- cwc, defaultAssertMt(KB),printAll(must(KB:G)).
+packs_sys/logicmoo_base/t/examples/fol/sanity_atmost_01.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/test_header2.pl::- wdmsg(reload_of_test_header).
+packs_sys/logicmoo_base/t/examples/fol/sanity_at_least_most_exactly_01.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/sanity_poss_03.pfc.pl::- mpred_test(poss(a(_))).
+packs_sys/logicmoo_base/t/examples/fol/sanity_atleast_01.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/fol_birdt_01.pfc.pl::- mpred_test(predicate_property(tBird(_),dynamic)).
+packs_sys/logicmoo_base/t/examples/fol/sanity_at_least_most_exactly_02.pfc.pl:        mpred_test(isa(_,tHeart))]).
+packs_sys/logicmoo_base/t/examples/fol/poss_forall_exists_02.pfc.pl::- mpred_test(poss(a(b))).
+packs_sys/logicmoo_base/t/examples/fol/make_wff_02.pfc.pl::- mpred_test(poss(isa(fred,human))).
+packs_sys/logicmoo_nars/prolog/nars/nal_reader.pl:is_nal_test_file(X):-filematch('../../nal-tests/**/*',X), \+ non_nal_file(X). 
+packs_sys/logicmoo_nars/prolog/sre_dna/reg_gram_1.pl:generate_testset :-
+packs_sys/logicmoo_nars/prolog/sre_dna/compile_file_ex.pl:evaluator_reset_P(generate_testset, 100).
+packs_sys/logicmoo_nars/prolog/sre_dna/parameters_P.pl:evaluator_reset_P(generate_testset,100).	% <-- no
+packs_sys/logicmoo_nars/prolog/miles/div_utils.pl:          genterm_test/2,
+packs_sys/logicmoo_nars/prolog/miles/lgg.pl:	(   reduce_complete_test(SProof) ->
+packs_sys/logicmoo_nars/prolog/miles/g2_ops.pl:              [effaceall/3,genterm_test/2]).
+packs_sys/logicmoo_nars/prolog/miles/var_utils.pl:                   [effaceall/3,genterm_test/2,identical_member/2,mysetof/3,
+packs_sys/logicmoo_nlu/prolog/marty_white/adv_test.pl::- module(adv_test, [test_adv/0]).
+packs_sys/logicmoo_nlu/prolog/marty_white/adv_eng2cmd_frame.pl::- discontiguous(eng2flogic_test/1).
+packs_sys/logicmoo_nlu/prolog/marty_white/adv_lexicon.pl:thetaRole(hear, hear_1, hear_testimony_tt, -1, expl_tt, concept_tt, "testimony", "v_o", 0).
+packs_sys/logicmoo_nlu/prolog/marty_white/adv_main.pl:%:- ensure_loaded(adv_test).
+packs_sys/logicmoo_nlu/prolog/marty_white/adv_eng2cmd.pl::- discontiguous(eng2flogic_test/1).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/nl_pipeline.pl::- shared_parser_data(baseKB:mud_test/2).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_lexical_gen.pl:maybe_skip_search(parser_chat80, must_test_80, 3). %%
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_lexical.pl:get_test_verbs(V):- wnframes:s(_, _, V, v, _, _).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_stanford.pl:baseKB:sanity_test:- test_corenlp.
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_chat80_regress.pl::-multifile(baseKB:mud_test/2).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/logicmoo_cyc_nl_sem.pl::- if(exists_source(logicmoo_nl_testing)).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_fracas.pl:writeEachTo(ID, Ctx, N=V):- crrect_value_arg(N, V, VV), !, append_terms([Ctx, ID, N, VV], O), !, do_test(O).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_commands.pl::- M = parser_e2c, forall(baseKB:mpred_props(M, F, A, prologDcg), must_or_rtrace(make_dcg_test_stub(M, F, A))).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/e2c/e2c_fwd_chaining.pl:baseKB:sanity_test:- t33fa.
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_candc.pl:baseKB:sanity_test:- test_candc_server.
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_e2c.pl:make_dcg_test_stub(_, _, A):- A < 3.
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_stanford_legacy_jpl.pl:% pos_tagger_test(Out),arg(3,Out,A).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_chart89.pl::-multifile(baseKB:mud_test/2).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_chat80.pl::- share_mp(must_test_801/3).
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_bratko.pl:baseKB:sanity_test:- t3.
+packs_sys/logicmoo_nlu/prolog/logicmoo_nlu/parser_tests.pl::- module(parser_tests, []).
+packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/adv_flp_api.pl::- defn_state_none(flp_test()).
+packs_sys/logicmoo_nlu/prolog/config_nomicmu/plugins/example_area1.pl:area_test1 :-
+packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/coronavirus.pl:       declare(h(needs_to_be_tested,Person,covid19)),
+packs_sys/logicmoo_nlu/prolog/config_nomicmu/example_bt/coronavirus_simplified.pl:% %%        declare(h(needs_to_be_tested,Person,covid19)),
+packs_sys/logicmoo_nlu/ext/candc/src/prolog/boxer/lex/framenet.pl:fnpattern(test, 35040000, 'Operational_testing', ['Agent': 'Tester', 'Location': 'Product', 'Theme': 'Unwanted_characteristics']).
+packs_sys/logicmoo_nlu/ext/candc/src/prolog/boxer/knowledge/wiki.pl:wiki('range','"Kura_Test_Range"',		['"kura"','"test"','"range"']).
+packs_sys/logicmoo_nlu/ext/candc/src/prolog/nutcracker/miniWordNet.pl:%:- [working/wordnet/vanilla_test_xl].
+packs_sys/logicmoo_nlu/ext/candc/src/scripts/ccg/compare_deps.pl:sub get_next_test {
+packs_sys/logicmoo_nlu/ext/candc/src/scripts/ccg/evaluateDeps.pl:sub get_next_test {
+packs_sys/logicmoo_nlu/ext/candc/src/scripts/ccg/evaluateDepsCCGbank.pl:sub get_next_test {
+packs_sys/logicmoo_nlu/ext/candc/parser_boxer.pl:e2lf_test   :- e2lf("You find yourself standing by the door of Captain Picard's quarters.
+packs_sys/logicmoo_nlu/ext/pldata/wn_frames.pl:+0 ## Operational_testing - testing.n - n#639975
+packs_sys/logicmoo_nlu/ext/pldata/framenet.pl:fnpattern(test, 35040000, 'operational_testing', ['agent': 'tester', 'location': 'product', 'theme': 'unwanted_characteristics']).
+packs_sys/logicmoo_nlu/ext/pldata/nl_iface.pl:nlkb7166:assertion_content(sentenceParameterValueInSpecification, uU(xQuoteFn, supportsResponseToOf(s("Sue", "ran", "down", "to", "McDonald", "'", "s", "and", "got", "a", "hamburger", "happy", "meal", "with", "a", "large", "Diet", "Coke", "."), s("Did", "Sue", "get", "a", "cup", "?"), "Yes.")), nartR(iCW_TestQueryFn, iCW_KBCTForCycorp_006_TEP_Response_1), 2620350).
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/regulus_top.pl:	interpret_number_as_test_sent(N, SentChars, Comment),
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/regulus_test.pl:% regulus_test.pl
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/extract_translation_pairs.pl:	split_list_into_training_dev_and_test(InList, TrainingList, DevList, TestList, ProportionDev, ProportionTest),
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/load_regulus.pl::- ensure_loaded(regulus_test).
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/summarise_make_trace.pl:context_pattern(["make text_test"], _Any-text_test).
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/test_assoc_and_avl.pl:assoc_test :-
+packs_sys/logicmoo_nlu/ext/regulus/Prolog/start_regulus.pl::- ensure_loaded(regulus_test).
+packs_sys/logicmoo_nlu/ext/regulus/Alterf/Prolog/parse_annotated_wavfiles.pl:	 split_annotated_wavfiles_into_training_and_test/4,
+packs_sys/logicmoo_nlu/ext/regulus/Alterf/Prolog/batch_decoder.pl:	corpora(annotated_wavfiles_test1),
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/Prolog/randomly_split_transcriptions_data.pl:				      '$REGULUS/Examples/Calendar/corpora/calendar_transcriptions_test.txt',
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_speech_test_test_only_again.pl:		  "BATCH_DIALOGUE_SPEECH_AGAIN in_coverage_test"]).
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/randomly_split_transcriptions_data_into_test_and_training.pl:				 '$REGULUS/Examples/Calendar/corpora/calendar_transcriptions_test.txt',
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_update_speech_judgements_test_only.pl:		 ["UPDATE_DIALOGUE_JUDGEMENTS_SPEECH in_coverage_test"]).
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Calendar/scripts/run_speech_test_test_only.pl:		  "SPLIT_SPEECH_CORPUS .MAIN test in_coverage_test out_of_coverage_test",
+packs_sys/logicmoo_nlu/ext/regulus/Examples/Toy1Alterf/scripts/test_alterf.pl:		     %rec([1-'$REGULUS/Examples/Toy1Alterf/Generated/stored_batchrec_results_test.pl']),
+packs_sys/logicmoo_nlu/ext/regulus/PrologLib/CorpusTools/random_subcorpus.pl:			    '$ACCEPT/MT/Europarl/Generated/europarl_questions_fr_test.txt',
+packs_sys/logicmoo_nlu/ext/regulus/PrologLib/CorpusTools/crowdsource_translations.pl:			      '$ACCEPT/MT/Europarl/TestResults/Nov2012Data/out.train_base_test_vous.txt',
+packs_sys/logicmoo_nlu/ext/regulus/PrologLib/CorpusTools/extract_interesting_examples.pl:				  '$ACCEPT/MT/GTFeb2012/CleanFrenchVersions/bigrams_clitics_test.pl').
+packs_sys/logicmoo_nlu/ext/regulus/PrologLib/html_format_diffs.pl:test_html_format_diffs(make_test_data) :-
+packs_sys/logicmoo_nlu/ext/AceRules/engine/run_testcases.pl::- module(run_testcases, [
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/Experiments/domain_medical_TREE.pl:			report( take_test(fever), pending ),
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/domain_medical_V2.pl:plan( confirmed_by_tests,%positive_diagnosis, %
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/lexicon_medical_english.pl:output_form(icm:reraise:confirmed_by_tests,[]).
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/domain_medical.pl:plan( confirmed_by_tests,%positive_diagnosis, %
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/godis-medical-text.pl:		    push(/shared/issues, confirmed_by_tests ),
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/lexicon_medical_english_V2.pl:output_form(icm:reraise:confirmed_by_tests,[]).
+packs_sys/logicmoo_nlu/ext/SIRIDUS/UGOT-D31/godis-apps/domain-medical/device_medical.pl:dev_query(confirmed_by_tests,Com,confirmed_by_tests):-
+packs_sys/logicmoo_nlu/ext/chat80_regress/newdict.pl::-kb_shared(must_test_801/3).
+packs_sys/logicmoo_nlu/ext/ape/tests/test_drs_to_x.pl:			run_test(TimeLimit, Converter, Pp, Number, Text, Drs)
+packs_sys/logicmoo_nlu/ext/ape/tests/test_drace.pl:* echo "[test_drace]. test_drace(core)." | swipl > drace_test_results.txt
+packs_sys/logicmoo_nlu/ext/ape/tests/test_ape.pl:		text_drs_eval(0, Number, Text, DrsPre, _Syntax, _TestDate, _Author, _Comment),
+packs_sys/logicmoo_nlu/ext/ape/tests/test_duration.pl:		execute_test(Number, Text, DRS, _TimeOutLimit)
+packs_sys/logicmoo_nlu/ext/ape/tests/make_acetext_drs.pl:		text_drs_eval(0, Number, Text, DrsPre, _Syntax, _TestDate, _Author, _Comment),
+packs_sys/logicmoo_nlu/ext/ape/examples/output_tests.pl:swipl -s output_tests.pl -t halt -g main
+packs_sys/logicmoo_nlu/ext/chat80/newtop.pl:get_prev_run_results(U,List,Time):-must_test_801(U,List,Time),!.
+packs_sys/logicmoo_nlu/ext/chat80/newdict.pl::-share_mp(must_test_801/3).
+packs_sys/logicmoo_nlu/ext/chat80/newdict_regress.pl::-share_mp(must_test_801/3).
+packs_sys/logicmoo_nlu/test/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/swicli/prolog/swicffi.pl::- module(swicffi,[install_cffi/2,cffi_tests/0,to_forms/2,cffi_eval/1,cffi_test/1]).
+packs_sys/swicli/prolog/swicli.pl:cli_tests:- debugging(swicli),!,forall(clause(swicli_test,Call),Call),!.
+packs_sys/swicli/prolog/jpl_for_ikvm.pl:%   not used outside jni_junk and jpl_test (is this (still) true?);
+packs_sys/swicli/doc/winapi_dll.pl::- cffi_tests.
+packs_sys/multimodal_dcg/prolog/multimodal_dcg.pl:         do_dcg_util_tests/0,
+packs_sys/multimodal_dcg/t/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/config-enabled-swish/email.pl:          [ email_test/1                % +To
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/test_release.pl:% sanity_test:- rescan_pfc.
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/attic/remote_swish.pl:   reexport_from(system,trill:init_test/2),
+packs_sys/prologmud_samples/prolog/prologmud_sample_games/init_mud_server.pl:%:- cg_reader_tests.
+packs_sys/lps_corner/examples/slamodel.pl:   time_to_test, 
+packs_sys/lps_corner/examples/CLOUT_workshop/burning.pl:  /example/bankTransfer.pl, /example/bubbleSort.pl, /example/life.pl, /example/d_test.pl 
+packs_sys/lps_corner/examples/CLOUT_workshop/RockPaperScissorsEthereum.pl:grab_test_accounts(2,0.02,[Player1,Player2]),
+packs_sys/logicmoo_utils/prolog/hook_database.pl:clause_asserted_test(M:H,B,R):- freeze(BB,(HH:BB=@=H:B)),clause(M:HH,BB,R).
+packs_sys/logicmoo_utils/prolog/xlisting.pl::- system:reexport(library(xlisting/xlisting_web_sanity_tests)).
+packs_sys/logicmoo_utils/prolog/logicmoo/util_dlist.pl:mk_test(S,lo(S), L):- numlist(1, S, L).
+packs_sys/logicmoo_utils/prolog/logicmoo/util_strings.pl:local_sanity_test:- sanity(dehyphenize_const('a-b','aB')).
+packs_sys/logicmoo_utils/prolog/logicmoo/butterfly_console.pl:fly_test:-   bformat('hi<pre> there </pre>fred ').
+packs_sys/logicmoo_utils/prolog/logicmoo/dcg_meta.pl:         do_dcg_util_tests/0,
+packs_sys/logicmoo_utils/prolog/logicmoo/no_repeats.pl:            nr_test/2,
+packs_sys/logicmoo_utils/prolog/logicmoo/redo_locally.pl:wtl_how(setup_call_cleanup, _Test , Pre , Call, Post):- !, each_call_cleanup_local(Pre , Call, Post).
+packs_sys/logicmoo_utils/prolog/debuggery/ucatch.pl::- if(current_predicate(run_sanity_tests/0)).
+packs_sys/logicmoo_utils/prolog/debuggery/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/logicmoo_utils/prolog/xlisting/xlisting_web_sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/logicmoo_utils/prolog/xlisting/xlisting_web.pl::- export((current_form_var0/1, get_http_session0/1,  is_context0/1, make_quotable_0/2, pp_i2tml_0/1, pp_i2tml_1/1, sanity_test_000/0, show_edit_term0/3, show_edit_term1/3, show_select1/2, show_select2/3)).
+packs_sys/logicmoo_utils/prolog/multivar/t/sanity_tests.pl:% File: sanity_tests.pl
+packs_sys/logicmoo_utils/t/sanity_tests.pl:  ( \+ prolog_load_context(file,Loader) -> assert(t_l:santiy_tests_includer(Loader)) ; true).
+packs_sys/prologmud/prolog/prologmud_web/src_webui/model/substance.pl:substance_cell(Agent,X,Y,WhatGlyph):- not(at_web(_)),!,substance_cell_test(Agent,X,Y,WhatGlyph).
+packs_sys/prologmud/prolog/prologmud/parsing/parser_imperative.pl:% baseKB:mud_test("cmdparse test",...)
+packs_sys/prologmud/prolog/prologmud/mud_builtin.pfc.pl:% :- kb_global(baseKB:   mud_test/0).
+packs_sys/prologmud/prolog/prologmud/mud_loader.pl:% UNDO % :- add_import_module(baseKB,mud_testing,end).
+packs_sys/prologmud/prolog/prologmud/actions/look.pfc.pl:	mem_test(Agent,D1,D2,YorN),
+packs_sys/prologmud/prolog/prologmud/mud_startup.pl::- show_entry(gripe_time(40, doall(baseKB:regression_test))).
+packs_sys/prologmud/prolog/prologmud/server/mud_testing.pl:%:-module(mud_testing,[]).
+packs_sys/prologmud/t/sanity_tests.pl:all_tests:- forall(test(_),true).
+packs_sys/body_reordering/prolog/logicmoo_util_autocut.pl:a:- throw(failed_test).
+packs_sys/body_reordering/t/sanity_tests.pl:all_tests:- forall(test(_),true).

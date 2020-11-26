@@ -1,0 +1,66 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter7/HotAirBalloon.e
+loading foundations/Root.e
+loading foundations/DEC.e
+loading foundations/ECTraj.e
+40 variables and 75 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Height(Balloon, 0).
+Happens(TurnOnHeater(Nathan, Balloon), 0).
+1
+-Height(Balloon, 0).
++HeaterOn(Balloon).
++Height(Balloon, 1).
+2
+-Height(Balloon, 1).
++Height(Balloon, 2).
+Happens(TurnOffHeater(Nathan, Balloon), 2).
+3
+-HeaterOn(Balloon).
+-Height(Balloon, 2).
++Height(Balloon, 1).
+P
+ReleasedAt(Height(Balloon, 0), 0).
+ReleasedAt(Height(Balloon, 0), 1).
+ReleasedAt(Height(Balloon, 0), 2).
+ReleasedAt(Height(Balloon, 0), 3).
+ReleasedAt(Height(Balloon, 1), 0).
+ReleasedAt(Height(Balloon, 1), 1).
+ReleasedAt(Height(Balloon, 1), 2).
+ReleasedAt(Height(Balloon, 1), 3).
+ReleasedAt(Height(Balloon, 2), 0).
+ReleasedAt(Height(Balloon, 2), 1).
+ReleasedAt(Height(Balloon, 2), 2).
+ReleasedAt(Height(Balloon, 2), 3).
+!Happens(TurnOffHeater(Nathan, Balloon), 0).
+!Happens(TurnOffHeater(Nathan, Balloon), 1).
+!Happens(TurnOffHeater(Nathan, Balloon), 3).
+!Happens(TurnOnHeater(Nathan, Balloon), 1).
+!Happens(TurnOnHeater(Nathan, Balloon), 2).
+!Happens(TurnOnHeater(Nathan, Balloon), 3).
+!ReleasedAt(HeaterOn(Balloon), 0).
+!ReleasedAt(HeaterOn(Balloon), 1).
+!ReleasedAt(HeaterOn(Balloon), 2).
+!ReleasedAt(HeaterOn(Balloon), 3).
+DEC: 6 predicates, 0 functions, 0 fluents, 0 events, 7 axioms
+ECTraj: 4 predicates, 0 functions, 0 fluents, 0 events, 2 axioms
+HotAirBalloon: 0 predicates, 0 functions, 2 fluents, 2 events, 9 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.9s
+solution 0.0s
+total 1.0s
+Discrete Event Calculus Reasoner 1.0

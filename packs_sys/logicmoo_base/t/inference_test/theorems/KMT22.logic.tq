@@ -1,0 +1,19 @@
+(note "Kalish & Montague, Theorem 22")
+
+(queryyn  
+
+(implies 
+   (not 
+       (implies 
+           (instance ?X Dog) 
+           (instance ?X Fish))) 
+   (not 
+       (instance ?X Fish)))
+
+
+)
+
+(answer Yes)
+
+(end_of_file) 
+

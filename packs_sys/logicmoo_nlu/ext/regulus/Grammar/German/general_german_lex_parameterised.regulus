@@ -1,0 +1,496 @@
+macro(verb1([A,_],B,C,D,E), (v:[sem=[B],subcat=C,vform=infinitiv,aux_v=D,voice=active,part_type=none|E]-->A)).
+labelled_item(non_canonical_lex_macro, macro(verb1([_,A],B,C,D,E),(v:[sem=[B],subcat=C,vform=partizip,aux_v=D,voice=active,part_type=none|E]-->A))).
+macro(verb2([A,_,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,present]]),agr=1/\sing,subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A)).
+macro(verb2([_,A,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\sing,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A)).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,A,_,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\sing,subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,A,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\sing,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,A,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\sing,subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,A,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\sing,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,A,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=1/\plur,subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,_,A,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\plur,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,_,_,A,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\plur,subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,_,_,_,A,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\plur,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,_,_,_,_,A,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\plur\/(pol/\sing)\/(pol\/plur),subcat=C,vform=praesens\/vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2([_,_,_,_,_,_,_,_,_,_,_,A],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\plur,subcat=C,vform=praeteritum\/vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+macro(verb2_part([A,_,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,present]]),agr=1/\sing,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A)).
+macro(verb2_part([_,A,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\sing,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A)).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,A,_,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\sing,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,A,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\sing,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,A,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\sing,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,A,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\sing,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,A,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\sing,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,A,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\sing,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,A,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=1/\plur,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,_,A,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\plur,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,_,_,A,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\plur,subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,_,_,_,A,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\plur,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,_,_,_,_,A,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\plur\/(pol/\sing)\/(pol\/plur),subcat=C,vform=praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part([_,_,_,_,_,_,_,_,_,_,_,A],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\plur,subcat=C,vform=praeteritum,aux_v=none,voice=active|D]-->A))).
+macro(verb2_part_vf([A,_,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,present]]),agr=1/\sing,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A)).
+macro(verb2_part_vf([_,A,_,_,_,_,_,_,_,_,_,_],B,C,D), (v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\sing,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A)).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,A,_,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\sing,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,A,_,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\sing,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,A,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\sing,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,A,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\sing,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,A,_,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\sing,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,A,_,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\sing,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,A,_,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=1/\plur,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,_,A,_,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=1/\plur,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,_,_,A,_,_,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=2/\plur,subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,_,_,_,A,_,_],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=2/\plur,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,_,_,_,_,A,_],B,C,D),(v:[sem=concat([B],[[tense,present]]),agr=3/\plur\/(pol/\sing)\/(pol\/plur),subcat=C,vform=vf_praesens,aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb2_part_vf([_,_,_,_,_,_,_,_,_,_,_,A],B,C,D),(v:[sem=concat([B],[[tense,praeteritum]]),agr=3/\plur,subcat=C,vform=vf_praeteritum,aux_v=none,voice=active|D]-->A))).
+macro(verb3([A],B,C,D), (v:[sem=concat([B],[[tense,konjII]]),agr=C,vform=konjII,aux_v=none,voice=active|D]-->A)).
+@verb3([@l(hätte)],[verb,haben],1/\sing,[subcat=nx0vnx1\/nx0vnx1pnx2,subj_sem_n_type=agent,obj_sem_n_type=loc\/substance\/payment\/recipient\/cutlery,pp_sem_pp_type=loc\/time\/hour\/for]).
+labelled_item(non_canonical_lex_item, @verb3([hätten],[verb,haben],1\/pol\/3/\plur,[subcat=nx0vnx1\/nx0vnx1pnx2,subj_sem_n_type=agent,obj_sem_n_type=loc\/substance\/payment\/recipient\/cutlery,pp_sem_pp_type=loc\/time\/hour\/for])).
+@verb3([@l(wäre)],[verb,sein],1/\sing,[subcat=nx0vpnx1,subj_sem_n_type=loc,pp_sem_pp_type=loc]).
+labelled_item(non_canonical_lex_item, @verb3([wären],[verb,sein],1\/pol\/3/\plur,[subcat=nx0vpnx1,subj_sem_n_type=loc,pp_sem_pp_type=loc])).
+labelled_item(non_canonical_lex_item, @verb3([wäre],[verb,sein],3/\sing,[subcat=nx0vpnx1,subj_sem_n_type=loc,pp_sem_pp_type=loc])).
+macro(verbAux([A,_,_],B,C,D,E), (v:[sem=[],agr=B,is_aux_v=C,subcat=D,vform=praesens,aux_v=none,subj_sem_n_type=none,voice=active|E]-->A)).
+macro(verbAux([_,A,_],B,C,D,E), (v:[sem=[],agr=B,is_aux_v=C,subcat=D,vform=praeteritum,aux_v=none,subj_sem_n_type=none,voice=active|E]-->A)).
+macro(verbAux([_,_,A],B,C,D,E), (v:[sem=[],agr=B,is_aux_v=C,subcat=D,vform=konjII,aux_v=none,subj_sem_n_type=none,voice=active|E]-->A)).
+labelled_item(useless_lexicon_entry, @verbAux([bin,war,wäre],1/\sing,sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([bist,warst,wärest],2/\sing,sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([ist,war,wäre],3/\sing,sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([sind,waren,wären],1/\plur\/(pol/\(sing\/plur)),sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([seid,wart,wäret],2/\plur,sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([sind,waren,wären],3/\plur,sein,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([habe,hatte,hätte],1/\sing,haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([hast,hattest,hättest],2/\sing,haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([hat,hatte,hätte],3/\sing,haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([haben,hatten,hätten],1/\plur\/(pol/\(sing\/plur)),haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([habt,hattet,hättet],2/\plur,haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([haben,hatten,hätten],3/\plur,haben,aux,[])).
+labelled_item(useless_lexicon_entry, @verbAux([werde,wurde,würde],1/\sing,werden,aux_w,[])).
+labelled_item(useless_lexicon_entry, @verbAux([wirst,wurdest,würdest],2/\sing,werden,aux_w,[])).
+labelled_item(useless_lexicon_entry, @verbAux([wird,wurde,würde],3/\sing,werden,aux_w,[])).
+labelled_item(useless_lexicon_entry, @verbAux([werden,wurden,würden],1/\plur\/(pol/\(sing\/plur)),werden,aux_w,[])).
+labelled_item(useless_lexicon_entry, @verbAux([werdet,wurdet,würdet],2/\plur,werden,aux_w,[])).
+labelled_item(useless_lexicon_entry, @verbAux([werden,wurden,würden],3/\plur,werden,aux_w,[])).
+macro(verbMod([A,_,_],B,C), (v:[sem=concat([B],[[tense,present]]),agr=C,vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->A)).
+macro(verbMod([_,A,_],B,C), (v:[sem=concat([B],[[tense,praeteritum]]),agr=C,vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->A)).
+macro(verbMod([_,_,A],B,C), (v:[sem=concat([B],[[tense,konjII]]),agr=C,vform=konjII,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->A)).
+@verbMod([@l(darf),@l(durfte),@l(dürfte)],[modal,dürfen],1/\sing).
+@verbMod([@l(darfst),@l(durftest),@l(dürftest)],[modal,dürfen],2/\sing).
+@verbMod([@l(darf),@l(durfte),@l(dürfte)],[modal,dürfen],3/\sing).
+labelled_item(useless_lexicon_entry, @verbMod([dürfen,durften,dürften],[modal,dürfen],1/\plur\/(pol/\(sing\/plur)))).
+@verbMod([@l(kann),@l(konnte),@l(könnte)],[modal,können],1/\sing).
+@verbMod([@l(kannst),@l(konntest),@l(könntest)],[modal,können],2/\sing).
+labelled_item(useless_lexicon_entry, @verbMod([können,konnten,könnten],[modal,können],1/\plur\/(pol/\(sing\/plur)))).
+@verbMod([@l(muss),@l(musste),@l(müsste)],[modal,müssen],1/\sing).
+@verbMod([@l(muss),@l(musste),@l(müsste)],[modal,müssen],3/\sing).
+labelled_item(useless_lexicon_entry, @verbMod([müssen,mussten,müssten],[modal,müssen],1/\plur\/(pol/\(sing\/plur)))).
+labelled_item(useless_lexicon_entry, @verbMod([soll,sollte,sollte],[modal,sollen],1/\sing)).
+labelled_item(useless_lexicon_entry, @verbMod([sollen,sollten,sollten],[modal,sollen],1/\plur\/(pol/\(sing\/plur)))).
+labelled_item(useless_lexicon_entry, @verbMod([will,wollte,wollte],[modal,wollen],1/\sing)).
+labelled_item(useless_lexicon_entry, @verbMod([wollen,wollten,wollten],[modal,wollen],1/\plur\/(pol/\(sing\/plur)))).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,mögen]],[[tense,present]]),agr=1/\sing,vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->mag)).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,mögen]],[[tense,praeteritum]]),agr=1/\sing,vform=praeteritum,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->mochte)).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,mögen]],[[tense,present]]),agr=1/\plur,vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->mögen)).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,mögen]],[[tense,praeteritum]]),agr=1/\plur,vform=praeteritum,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->mochten)).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,möchten]],[[tense,present]]),agr=1/\sing,vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->möchte)).
+labelled_item(useless_lexicon_entry, (v:[sem=concat([[modal,möchten]],[[tense,present]]),agr=1/\plur\/(pol/\(sing\/plur)),vform=praesens,voice=active,subcat=modal,aux_v=none,subj_sem_n_type=agent]-->möchten)).
+macro(verb4([A,_,_],B,C,D), (v:[sem=concat([B],[[modus,imperativ]]),agr=2/\sing,subcat=C,vform=imperativ,is_aux_v=none,voice=active|D]-->A)).
+labelled_item(non_canonical_lex_macro, macro(verb4([_,A,_],B,C,D),(v:[sem=concat([B],[[modus,imperativ]]),agr=pol/\(plur\/sing),subcat=C,vform=imperativ,is_aux_v=none,voice=active|D]-->A))).
+labelled_item(non_canonical_lex_macro, macro(verb4([_,_,A],B,C,D),(v:[sem=concat([B],[[modus,imperativ]]),agr=2/\plur,subcat=C,vform=imperativ,is_aux_v=none,voice=active|D]-->A))).
+macro(noun_sg([A,_,_,_],B,C,D,E), (n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(noun_sg([_,A,_,_],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_sg([_,_,A,_],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_sg([_,_,_,A],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=akk]-->A))).
+macro(noun_pl([A,_,_,_],B,C,D,E), (n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(noun_pl([_,A,_,_],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_pl([_,_,A,_],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_pl([_,_,_,A],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=akk]-->A))).
+macro(noun_sing([A,_,_,_],B,C,D,E), (n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(noun_sing([_,A,_,_],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_sing([_,_,A,_],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_sing([_,_,_,A],B,C,D,E),(n:[sem=[C],agr=3/\sing,sg_sing_plur=sing,gender=B,sem_n_type=D,takes_det_type=E,kasus=akk]-->A))).
+macro(noun_plur([A,_,_,_],B,C,D,E), (n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(noun_plur([_,A,_,_],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_plur([_,_,A,_],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(noun_plur([_,_,_,A],B,C,D,E),(n:[sem=[C],agr=3/\plur,sg_sing_plur=plur,gender=B,sem_n_type=D,takes_det_type=E,kasus=akk]-->A))).
+macro(pronoun([A,_,_,_],B,C,D,E,F), (pronoun:[sem=[B],agr=C/\D,gender=E,sem_n_type=F,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(pronoun([_,A,_,_],B,C,D,E,F),(pronoun:[sem=[B],agr=C/\D,gender=E,sem_n_type=F,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(pronoun([_,_,A,_],B,C,D,E,F),(pronoun:[sem=[B],agr=C/\D,gender=E,sem_n_type=F,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(pronoun([_,_,_,A],B,C,D,E,F),(pronoun:[sem=[B],agr=C/\D,gender=E,sem_n_type=F,kasus=akk]-->A))).
+@pronoun([@l(ich),meiner,mir,mich],[pron,ich],1,sing,masc\/fem,agent).
+@pronoun([@l(wir),unser,uns,uns],[pron,wir],1,plur,masc\/fem,agent).
+@pronoun([@l(du),deiner,dir,dich],[pron,du],2,sing,masc\/fem,agent).
+@pronoun([@l(ihr),euer,euch,euch],[pron,ihr],2,plur,masc\/fem,agent).
+@pronoun([@l(sie_polite),ihrer,ihnen,sie],[pron,sie_polite],pol,sing\/plur,masc\/fem,agent).
+@pronoun([@l(er),seiner,ihm,ihn],[pron,er],3,sing,masc,agent).
+@pronoun([@l(sie_she),ihrer,ihr,sie],[pron,sie_fem],3,sing,fem,agent).
+@pronoun([@l(es),seiner,ihm,es],[pron,es],3,sing,ntr,object).
+(reflexive_pronoun:[agr=1/\sing]--> @l(mich)).
+(reflexive_pronoun:[agr=2/\sing]--> @l(dich)).
+(reflexive_pronoun:[agr=3/\sing]--> @l(sich)).
+(reflexive_pronoun:[agr=1/\plur]--> @l(uns)).
+(reflexive_pronoun:[agr=2/\plur]--> @l(euch)).
+(reflexive_pronoun:[agr=3/\plur]--> @l(sich)).
+(reflexive_pronoun:[agr=pol/\sing]--> @l(sich)).
+macro(spec([A,_,_,_],B,C,D,E,F), (d:[sem=B,agr=3/\C,gender=D,det_type=E,prenumber=F,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(spec([_,A,_,_],B,C,D,E,F),(d:[sem=B,agr=3/\C,gender=D,det_type=E,prenumber=F,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(spec([_,_,A,_],B,C,D,E,F),(d:[sem=B,agr=3/\C,gender=D,det_type=E,prenumber=F,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(spec([_,_,_,A],B,C,D,E,F),(d:[sem=B,agr=3/\C,gender=D,det_type=E,prenumber=F,kasus=akk]-->A))).
+@spec([@l(der),des,dem,den],[[det,def]],sing,masc,def,n).
+labelled_item(non_canonical_lex_item, @spec([die,der,der,die],[[det,def]],sing,fem,def,n)).
+labelled_item(non_canonical_lex_item, @spec([das,des,dem,das],[[det,def]],sing,ntr,def,n)).
+labelled_item(non_canonical_lex_item, @spec([die,der,den,die],[[det,def]],plur,masc\/fem\/ntr,def,y)).
+labelled_item(non_canonical_lex_item, @spec([ein,eines,einem,einen],[[det,indef]],sing,masc,indef,n)).
+@spec([@l(eine),einer,einer,eine],[[det,indef]],sing,fem,indef,n).
+labelled_item(non_canonical_lex_item, @spec([ein,eines,einem,ein],[[det,indef]],sing,ntr,indef,n)).
+labelled_item(non_canonical_lex_item, @spec([kein,keines,keinem,keinen],[[det,kein]],sing,masc,indef,n)).
+@spec([@l(keine),keiner,keiner,keine],[[det,kein]],sing,fem,indef,n).
+@spec([@l(derselbe),desselben,demselben,denselben],[[det,derselbe]],sing,masc,def,y).
+labelled_item(non_canonical_lex_item, @spec([dieselbe,derselben,derselben,dieselbe],[[det,derselbe]],sing,fem,def,y)).
+labelled_item(non_canonical_lex_item, @spec([dasselbe,desselben,demselben,dasselbe],[[det,derselbe]],sing,ntr,def,y)).
+labelled_item(non_canonical_lex_item, @spec([dieselben,derselben,denselben,dieselben],[[det,derselbe]],plur,masc\/fem\/ntr,def,y)).
+@spec([@l(dieser),dieses,diesem,diesen],[[det,dieses]],sing,masc,def\/def_this,n).
+labelled_item(non_canonical_lex_item, @spec([diese,dieser,dieser,diese],[[det,dieses]],sing,fem,def\/def_this,n)).
+labelled_item(non_canonical_lex_item, @spec([dieses,dieses,diesem,dieses],[[det,dieses]],sing,ntr,def\/def_this,n)).
+labelled_item(non_canonical_lex_item, @spec([diese,dieser,diesen,diese],[[det,dieses]],plur,masc\/fem\/ntr,def\/def_this,y)).
+@spec([@l(beide),beider,beiden,beide],[[det,beide]],plur,masc\/fem\/ntr,quant,n).
+@spec([@l(einige),einiger,einigen,einige],[[det,einige]],plur,masc\/fem\/ntr,quant,n).
+@spec([@l(mehrere),mehrerer,mehreren,mehrere],[[det,mehrere]],plur,masc\/fem\/ntr,quant,n).
+@spec([@l(andere),anderer,anderen,andere],[[det,andere]],plur,masc\/fem\/ntr,quant,n).
+@spec([@l(irgendwelche),irgendwelcher,irgendwelchen,irgendwelche],[[det,irgendwelche]],plur,masc\/fem\/ntr,quant,n).
+macro(count1([A,_,_,_],B,C,D), (counter:[sem=B,agr=3/\C,gender=D,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(count1([_,A,_,_],B,C,D),(counter:[sem=B,agr=3/\C,gender=D,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(count1([_,_,A,_],B,C,D),(counter:[sem=B,agr=3/\C,gender=D,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(count1([_,_,_,A],B,C,D),(counter:[sem=B,agr=3/\C,gender=D,kasus=akk]-->A))).
+@count1([@l(erste),ersten,ersten,ersten],[[count,1]],sing,masc).
+@count1([@l(erste),ersten,ersten,erste],[[count,1]],sing,fem\/ntr).
+@count1([@l(zweite),zweiten,zweiten,zweiten],[[count,2]],sing,masc).
+@count1([@l(zweite),zweiten,zweiten,zweite],[[count,2]],sing,fem\/ntr).
+@count1([@l(dritte),dritten,dritten,dritten],[[count,3]],sing,masc).
+@count1([@l(dritte),dritten,dritten,dritte],[[count,3]],sing,fem\/ntr).
+@count1([@l(vierte),vierten,vierten,vierten],[[count,4]],sing,masc).
+@count1([@l(vierte),vierten,vierten,vierte],[[count,4]],sing,fem\/ntr).
+@count1([@l(fünfte),fünften,fünften,fünften],[[count,5]],sing,masc).
+@count1([@l(fünfte),fünften,fünften,fünfte],[[count,5]],sing,fem\/ntr).
+@count1([@l(sechste),sechsten,sechsten,sechsten],[[count,6]],sing,masc).
+@count1([@l(sechste),sechsten,sechsten,sechste],[[count,6]],sing,fem\/ntr).
+@count1([@l(siebte),siebten,siebten,siebten],[[count,7]],sing,masc).
+@count1([@l(siebte),siebten,siebten,siebte],[[count,7]],sing,fem\/ntr).
+@count1([@l(achte),achten,achten,achten],[[count,8]],sing,masc).
+@count1([@l(achte),achten,achten,achte],[[count,8]],sing,fem\/ntr).
+@count1([@l(neunte),neunten,neunten,neunten],[[count,9]],sing,masc).
+@count1([@l(neunte),neunten,neunten,neunte],[[count,9]],sing,fem\/ntr).
+@count1([@l(zehnte),zehnten,zehnten,zehnten],[[count,10]],sing,masc).
+@count1([@l(zehnte),zehnten,zehnten,zehnte],[[count,10]],sing,fem\/ntr).
+@count1([@l(elfte),elften,elften,elften],[[count,11]],sing,masc).
+@count1([@l(elfte),elften,elften,elfte],[[count,11]],sing,fem\/ntr).
+@count1([@l(zwölfte),zwölften,zwölften,zwölften],[[count,12]],sing,masc).
+@count1([@l(zwölfte),zwölften,zwölften,zwölfte],[[count,12]],sing,fem\/ntr).
+@count1([@l(dreizehnteste),dreizehntesten,dreizehntesten,dreizehntesten],[[count,13]],sing,masc).
+@count1([@l(dreizehnteste),dreizehntesten,dreizehntesten,dreizehnteste],[[count,13]],sing,fem\/ntr).
+@count1([@l(vierzehnteste),vierzehntesten,vierzehntesten,vierzehntesten],[[count,14]],sing,masc).
+@count1([@l(vierzehnteste),vierzehntesten,vierzehntesten,vierzehnteste],[[count,14]],sing,fem\/ntr).
+@count1([@l(fünfzehnteste),fünfzehntesten,fünfzehntesten,fünfzehntesten],[[count,15]],sing,masc).
+@count1([@l(fünfzehnteste),fünfzehntesten,fünfzehntesten,fünfzehnteste],[[count,15]],sing,fem\/ntr).
+@count1([@l(sechszehnteste),sechszehntesten,sechszehntesten,sechszehntesten],[[count,16]],sing,masc).
+@count1([@l(sechszehnteste),sechszehntesten,sechszehntesten,sechszehnteste],[[count,16]],sing,fem\/ntr).
+@count1([@l(siebzehnteste),siebzehntesten,siebzehntesten,siebzehntesten],[[count,17]],sing,masc).
+@count1([@l(siebzehnteste),siebzehntesten,siebzehntesten,siebzehnteste],[[count,17]],sing,fem\/ntr).
+@count1([@l(achtzehnteste),achtzehntesten,achtzehntesten,achtzehntesten],[[count,18]],sing,masc).
+@count1([@l(achtzehnteste),achtzehntesten,achtzehntesten,achtzehnteste],[[count,18]],sing,fem\/ntr).
+@count1([@l(neunzehnteste),neunzehntesten,neunzehntesten,neunzehntesten],[[count,19]],sing,masc).
+@count1([@l(neunzehnteste),neunzehntesten,neunzehntesten,neunzehnteste],[[count,19]],sing,fem\/ntr).
+@count1([@l(zwanzigste),zwanzigsten,zwanzigsten,zwanzigsten],[[count,20]],sing,masc).
+@count1([@l(zwanzigste),zwanzigsten,zwanzigsten,zwanzigste],[[count,20]],sing,fem\/ntr).
+@count1([@l(einundzwanzigste),einundzwanzigsten,einundzwanzigsten,einundzwanzigsten],[[count,21]],sing,masc).
+@count1([@l(einundzwanzigste),einundzwanzigsten,einundzwanzigsten,einundzwanzigste],[[count,21]],sing,fem\/ntr).
+@count1([@l(zweiundzwanzigste),zweiundzwanzigsten,zweiundzwanzigsten,zweiundzwanzigsten],[[count,22]],sing,masc).
+@count1([@l(zweiundzwanzigste),zweiundzwanzigsten,zweiundzwanzigsten,zweiundzwanzigste],[[count,22]],sing,fem\/ntr).
+@count1([@l(dreiundzwanzigste),dreiundzwanzigsten,dreiundzwanzigsten,dreiundzwanzigsten],[[count,23]],sing,masc).
+@count1([@l(dreiundzwanzigste),dreiundzwanzigsten,dreiundzwanzigsten,dreiundzwanzigste],[[count,23]],sing,fem\/ntr).
+@count1([@l(vierundzwanzigste),vierundzwanzigsten,vierundzwanzigsten,vierundzwanzigsten],[[count,24]],sing,masc).
+@count1([@l(vierundzwanzigste),vierundzwanzigsten,vierundzwanzigsten,vierundzwanzigste],[[count,24]],sing,fem\/ntr).
+@count1([@l(fünfundzwanzigste),fünfundzwanzigsten,fünfundzwanzigsten,fünfundzwanzigsten],[[count,25]],sing,masc).
+@count1([@l(fünfundzwanzigste),fünfundzwanzigsten,fünfundzwanzigsten,fünfundzwanzigste],[[count,25]],sing,fem\/ntr).
+@count1([@l(sechsundzwanzigste),sechsundzwanzigsten,sechsundzwanzigsten,sechsundzwanzigsten],[[count,26]],sing,masc).
+@count1([@l(sechsundzwanzigste),sechsundzwanzigsten,sechsundzwanzigsten,sechsundzwanzigste],[[count,26]],sing,fem\/ntr).
+@count1([@l(siebenundzwanzigste),siebenundzwanzigsten,siebenundzwanzigsten,siebenundzwanzigsten],[[count,27]],sing,masc).
+@count1([@l(siebenundzwanzigste),siebenundzwanzigsten,siebenundzwanzigsten,siebenundzwanzigste],[[count,27]],sing,fem\/ntr).
+@count1([@l(achtundzwanzigste),achtundzwanzigsten,achtundzwanzigsten,achtundzwanzigsten],[[count,28]],sing,masc).
+@count1([@l(achtundzwanzigste),achtundzwanzigsten,achtundzwanzigsten,achtundzwanzigste],[[count,28]],sing,fem\/ntr).
+@count1([@l(neunundzwanzigste),neunundzwanzigsten,neunundzwanzigsten,neunundzwanzigsten],[[count,29]],sing,masc).
+@count1([@l(neunundzwanzigste),neunundzwanzigsten,neunundzwanzigsten,neunundzwanzigste],[[count,29]],sing,fem\/ntr).
+@count1([@l(dreissigste),dreissigsten,dreissigsten,dreissigsten],[[count,30]],sing,masc).
+@count1([@l(dreissigste),dreissigsten,dreissigsten,dreissigste],[[count,30]],sing,fem\/ntr).
+@count1([@l(einunddreissigste),einunddreissigsten,einunddreissigsten,einunddreissigsten],[[count,31]],sing,masc).
+@count1([@l(einunddreissigste),einunddreissigsten,einunddreissigsten,einunddreissigste],[[count,31]],sing,fem\/ntr).
+macro(number1([A,_,_,_],B,C,D), (number:[sem=B,agr=3/\C,gender=D,kasus=nom,num_type=det]-->A)).
+labelled_item(non_canonical_lex_macro, macro(number1([_,A,_,_],B,C,D),(number:[sem=B,agr=3/\C,gender=D,kasus=gen,num_type=det]-->A))).
+labelled_item(non_canonical_lex_macro, macro(number1([_,_,A,_],B,C,D),(number:[sem=B,agr=3/\C,gender=D,kasus=dat,num_type=det]-->A))).
+labelled_item(non_canonical_lex_macro, macro(number1([_,_,_,A],B,C,D),(number:[sem=B,agr=3/\C,gender=D,kasus=akk,num_type=det]-->A))).
+@number1([@l(ein),eines,einem,einen],1,sing,masc).
+labelled_item(non_canonical_lex_item, @number1([eine,einer,einer,eine],1,sing,fem)).
+labelled_item(non_canonical_lex_item, @number1([ein,eines,einem,ein],1,sing,ntr)).
+@number1([@l((ein,dutzend)),(eines,dutzend),(einem,dutzend),(ein,dutzend)],12,plur,masc\/fem\/ntr).
+macro(number(A,B,C), (number:[sem=B,agr=3/\plur,num_type=C,gender=masc\/fem\/ntr,kasus=nom\/gen\/akk\/dat\/none]-->A)).
+@number(@l(eins),1,stunde_am).
+@number(@l(zwei),2,minute\/stunde_am\/det).
+@number(@l(drei),3,minute\/stunde_am\/det).
+@number(@l(vier),4,minute\/stunde_am\/det).
+@number(@l(fünf),5,minute\/stunde_am\/det).
+@number(@l(sechs),6,minute\/stunde_am\/det).
+@number(@l(sieben),7,minute\/stunde_am\/det).
+@number(@l(acht),8,minute\/stunde_am\/det).
+@number(@l(neun),9,minute\/stunde_am\/det).
+@number(@l(zehn),10,minute\/stunde_am\/det).
+@number(@l(elf),11,minute\/stunde_am\/det).
+@number(@l(zwölf),12,minute\/stunde_am\/det).
+@number(@l(dreizehn),13,minute\/stunde_pm\/det).
+@number(@l(vierzehn),14,minute\/stunde_pm\/det).
+@number(@l(fünfzehn),15,minute\/stunde_pm\/det).
+@number(@l(sechzehn),16,minute\/stunde_pm\/det).
+@number(@l(siebzehn),17,minute\/stunde_pm\/det).
+@number(@l(achtzehn),18,minute\/stunde_pm\/det).
+@number(@l(neunzehn),19,minute\/stunde_pm\/det).
+@number(@l(zwanzig),20,minute\/stunde_pm\/det).
+@number(@l(einundzwanzig),21,minute\/stunde_pm\/det).
+@number(@l(zweiundzwanzig),22,minute\/stunde_pm\/det).
+@number(@l(dreiundzwanzig),23,minute\/stunde_pm\/det).
+@number(@l(vierundzwanzig),24,minute\/stunde_pm\/det).
+@number(@l((zwei,dutzend)),24,det).
+@number(@l(fünfundzwanzig),25,minute\/det).
+@number(@l(sechsundzwanzig),26,minute\/det).
+@number(@l(siebenundzwanzig),27,minute\/det).
+@number(@l(achtundzwanzig),28,minute\/det).
+@number(@l(neunundzwanzig),29,minute\/det).
+@number(@l(dreissig),30,minute\/det).
+@number(@l(einunddreissig),31,minute\/det).
+@number(@l(zweiunddreissig),32,minute\/det).
+@number(@l(dreiunddreissig),33,minute\/det).
+@number(@l(vierunddreissig),34,minute\/det).
+@number(@l(fünfunddreissig),35,minute\/det).
+@number(@l(sechsunddreissig),36,minute\/det).
+@number(@l(siebenunddreissig),37,minute\/det).
+@number(@l(achtunddreissig),38,minute\/det).
+@number(@l(neununddreissig),39,minute\/det).
+@number(@l(vierzig),40,minute\/det).
+@number(@l(einundvierzig),41,minute\/det).
+@number(@l(zweiundvierzig),42,minute\/det).
+@number(@l(dreiundvierzig),43,minute\/det).
+@number(@l(vierundvierzig),44,minute\/det).
+@number(@l(fünfundvierzig),45,minute\/det).
+@number(@l(sechsundvierzig),46,minute\/det).
+@number(@l(siebenundvierzig),47,minute\/det).
+@number(@l(achtundvierzig),48,minute\/det).
+@number(@l(neunundvierzig),49,minute\/det).
+@number(@l(fünfzig),50,minute\/det).
+@number(@l(einundfünfzig),51,minute\/det).
+@number(@l(zweiundfünfzig),52,minute\/det).
+@number(@l(dreiundfünfzig),53,minute\/det).
+@number(@l(vierundfünfzig),54,minute\/det).
+@number(@l(fünfundfünfzig),55,minute\/det).
+@number(@l(sechsundfünfzig),56,minute\/det).
+@number(@l(siebenundfünfzig),57,minute\/det).
+@number(@l(achtundfünfzig),58,minute\/det).
+@number(@l(neunundfünfzig),59,minute\/det).
+@number(@l(sechzig),60,det).
+@number(@l(einundsechzig),61,det).
+@number(@l(zweiundsechzig),62,det).
+@number(@l(dreiundsechzig),63,det).
+@number(@l(vierundsechzig),64,det).
+@number(@l(fünfundsechzig),65,det).
+@number(@l(sechsundsechzig),66,det).
+@number(@l(siebenundsechzig),67,det).
+@number(@l(achtundsechzig),68,det).
+@number(@l(neunundsechzig),69,det).
+@number(@l(siebzig),70,det).
+@number(@l(einundsiebzig),71,det).
+@number(@l(zweiundsiebzig),72,det).
+@number(@l(dreiundsiebzig),73,det).
+@number(@l(vierundsiebzig),74,det).
+@number(@l(fünfundsiebzig),75,det).
+@number(@l(sechsundsiebzig),76,det).
+@number(@l(siebenundsiebzig),77,det).
+@number(@l(achtundsiebzig),78,det).
+@number(@l(neunundsiebzig),79,det).
+@number(@l(achzig),80,det).
+@number(@l(einundachtzig),81,det).
+@number(@l(zweiundachtzig),82,det).
+@number(@l(dreiundachtzig),83,det).
+@number(@l(vierundachtzig),84,det).
+@number(@l(fünfundachtzig),85,det).
+@number(@l(sechsundachtzig),86,det).
+@number(@l(siebenundachtzig),87,det).
+@number(@l(achtundachtzig),88,det).
+@number(@l(neunundachtzig),89,det).
+@number(@l(neunzig),90,det).
+@number(@l(einundneunzig),91,det).
+@number(@l(zweiundneunzig),92,det).
+@number(@l(dreiundneunzig),93,det).
+@number(@l(vierundneunzig),94,det).
+@number(@l(fünfundneunzig),95,det).
+@number(@l(sechsundneunzig),96,det).
+@number(@l(siebenundneunzig),97,det).
+@number(@l(achtundneunzig),98,det).
+@number(@l(neunundneunzig),99,det).
+@number(@l(hundert),100,det).
+macro(comparative(A,B), (comparative:[sem= @comparative_sem(B)]-->A)).
+@comparative(@l((mehr,als)),[comparative,mehr_als]).
+@comparative(@l((länger,als)),[comparative,länger_als]).
+@comparative(@l((weniger,als)),[comparative,weniger_als]).
+@comparative(@l(mindestens),[comparative,mindestens]).
+macro(possessive([A,_,_,_],B,C,D), (possessive:[sem=[B],agr=3/\C,gender=D,kasus=nom]-->A)).
+labelled_item(non_canonical_lex_macro, macro(possessive([_,A,_,_],B,C,_),(possessive:[sem=[B],agr=3/\C,gender=_,kasus=gen]-->A))).
+labelled_item(non_canonical_lex_macro, macro(possessive([_,_,A,_],B,C,_),(possessive:[sem=[B],agr=3/\C,gender=_,kasus=dat]-->A))).
+labelled_item(non_canonical_lex_macro, macro(possessive([_,_,_,A],B,C,_),(possessive:[sem=[B],agr=3/\C,gender=_,kasus=akk]-->A))).
+@possessive([@l(mein),meines,meinem,meinen],[possessive,my],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([meine,meiner,meiner,meine],[possessive,my],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([mein,meines,meinem,mein],[possessive,my],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([meine,meiner,meinen,meine],[possessive,my],plur,masc\/fem\/ntr)).
+@possessive([@l(dein),deines,deinem,deinen],[possessive,your],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([deine,deiner,deiner,deine],[possessive,your],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([dein,deines,deinem,dein],[possessive,your],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([deine,deiner,deinen,deine],[possessive,your],plur,masc\/fem\/ntr)).
+@possessive([@l(ihr),ihres,ihrem,ihren],[possessive,their_pol],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([ihre,ihrer,ihrer,ihre],[possessive,their_pol],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([ihr,ihres,ihrem,ihr],[possessive,their_pol],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([ihre,ihrer,ihren,ihre],[possessive,their_pol],plur,masc\/fem\/ntr)).
+@possessive([@l(sein),seines,seinem,seinen],[possessive,his],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([seine,seiner,seiner,seine],[possessive,his],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([sein,seines,seinem,sein],[possessive,his],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([seine,seiner,seinen,seine],[possessive,his],plur,masc\/fem\/ntr)).
+@possessive([@l(unser),unseres,unserem,unseren],[possessive,our],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([unsere,unserer,unserer,unsere],[possessive,our],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([unser,unseres,unserem,unser],[possessive,our],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([unsere,unserer,unseren,unsere],[possessive,our],plur,masc\/fem\/ntr)).
+@possessive([@l(euer),eures,eurem,euer],[possessive,their],sing,masc).
+labelled_item(non_canonical_lex_item, @possessive([eure,eurer,eurer,eure],[possessive,their],sing,fem)).
+labelled_item(non_canonical_lex_item, @possessive([euer,eures,eurem,euer],[possessive,their],sing,ntr)).
+labelled_item(non_canonical_lex_item, @possessive([eure,eurer,euren,eure],[possessive,their],plur,masc\/fem\/ntr)).
+labelled_item(verb_particle, (p:[sem=[],part_type=auf]-->auf)).
+labelled_item(verb_particle, (p:[sem=[],part_type=an]-->an)).
+labelled_item(verb_particle, (p:[sem=[],part_type=zu]-->zu)).
+labelled_item(verb_particle, (p:[sem=[],part_type=ab]-->ab)).
+labelled_item(verb_particle, (p:[sem=[],part_type=ein]-->ein)).
+labelled_item(verb_particle, (p:[sem=[],part_type=aus]-->aus)).
+labelled_item(verb_particle, (p:[sem=[],part_type=in]-->in)).
+labelled_item(verb_particle, (p:[sem=[],part_type=vor]-->vor)).
+labelled_item(verb_particle, (p:[sem=[],part_type=hin]-->hin)).
+labelled_item(verb_particle, (p:[sem=[],part_type=fern]-->fern)).
+labelled_item(verb_particle, (p:[sem=[],part_type=zurück]-->zurück)).
+labelled_item(verb_particle, (p:[sem=[],part_type=liegen]-->liegen)).
+labelled_item(verb_particle, (p:[sem=[],part_type=still]-->still)).
+labelled_item(verb_particle, (p:[sem=[],part_type=mit]-->mit)).
+labelled_item(verb_particle, (p:[sem=[],part_type=vorbei]-->vorbei)).
+labelled_item(verb_particle, (p:[sem=[],part_type=nach]-->nach)).
+labelled_item(verb_particle, (p:[sem=[],part_type=frei]-->frei)).
+(prep:[sem=in,sem_pp_type=to,sem_n_type=loc\/body_part\/event,kasus=akk,np_has_spec=y]--> @l(in_akk)).
+labelled_item(prep_det_combo, (prep:[sem=in,agr=3/\sing,gender=ntr,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=akk,np_has_spec=n]-->ins)).
+(prep:[sem=in,sem_pp_type=loc,sem_n_type=loc\/body_part\/diagn\/object,kasus=dat,np_has_spec=y]--> @l(in_datLoc)).
+(prep:[sem=in,sem_pp_type=time,sem_n_type=event\/time,kasus=dat,np_has_spec=y]--> @l(in_datTime)).
+labelled_item(prep_det_combo, (prep:[sem=in,agr=3/\sing,gender=masc\/ntr,sem_pp_type=loc,sem_n_type=loc\/body_part\/diagn\/object,kasus=dat,np_has_spec=n]-->im)).
+labelled_item(prep_det_combo, (prep:[sem=in,agr=3/\sing,gender=masc\/ntr,sem_pp_type=time,sem_n_type=time,kasus=dat,np_has_spec=n]-->im)).
+(prep:[sem=in_der_nähe,sem_pp_type=loc,sem_n_type=loc,kasus=gen,np_has_spec=y]--> @l((in,der,nähe))).
+(prep:[sem=an,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=akk,np_has_spec=y]--> @l(an_akk)).
+labelled_item(prep_det_combo, (prep:[sem=an,agr=3/\sing,gender=ntr,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=akk,np_has_spec=n]-->ans)).
+(prep:[sem=an,sem_pp_type=loc,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=y]--> @l(an_datLoc)).
+labelled_item(prep_det_combo, (prep:[sem=an,agr=3/\sing,gender=masc\/ntr,sem_pp_type=loc,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=n]-->am)).
+(prep:[sem=an,sem_pp_type=time,sem_n_type=time\/event,kasus=dat,np_has_spec=y]--> @l(an_datTime)).
+labelled_item(prep_det_combo, (prep:[sem=an,agr=3/\sing,gender=masc\/ntr,sem_pp_type=time,sem_n_type=time\/event,kasus=dat,np_has_spec=n]-->am)).
+(prep:[sem=an,sem_pp_type=symptom,sem_n_type=symptom,kasus=dat,np_has_spec=y\/n]--> @l(an_symptom)).
+(prep:[sem=bei,agr=3/\(sing\/plur),gender=fem,sem_pp_type=time,sem_n_type=time\/cause\/symptom,kasus=dat,np_has_spec=n]--> @l(bei)).
+(prep:[sem=bei,agr=3/\(sing\/plur),gender=fem,sem_pp_type=time,sem_n_type=action,kasus=dat,np_has_spec=y]--> @l(bei)).
+labelled_item(prep_det_combo, (prep:[sem=bei,agr=3/\sing,gender=ntr,sem_pp_type=time,sem_n_type=time\/action\/cause,kasus=dat,np_has_spec=n]-->beim)).
+(prep:[sem=bei,agr=3/\sing,gender=masc,sem_pp_type=time,sem_n_type=time\/action\/cause,kasus=dat,np_has_spec=n]--> @l(bei)).
+(prep:[sem=bei,agr=3/\plur,gender=masc\/ntr,sem_pp_type=time,sem_n_type=time\/action\/cause\/symptom,kasus=dat,np_has_spec=n]--> @l(bei)).
+labelled_item(prep_det_combo, (prep:[sem=bei,agr=3/\sing,gender=ntr,sem_pp_type=loc,sem_n_type=loc,kasus=dat,np_has_spec=n]-->beim)).
+(prep:[sem=mit,sem_pp_type=means,sem_n_type=payment,kasus=dat,np_has_spec=y\/n]--> @l(mit_means)).
+(prep:[sem=mit,sem_pp_type=with,sem_n_type=agent,kasus=dat,np_has_spec=y\/n]--> @l(mit_with)).
+(prep:[sem=seit,agr=3/\(sing\/plur),gender=masc\/fem\/ntr,sem_pp_type=time,sem_n_type=time\/timeunit,kasus=dat,np_has_spec=y\/n]--> @l(seit)).
+(prep:[sem=nach,sem_pp_type=time,sem_n_type=time\/action\/cause,kasus=dat,np_has_spec=y]--> @l(nach_time)).
+(prep:[sem=nach,sem_pp_type=to,sem_n_type=loc,kasus=dat,np_has_spec=y]--> @l(nach_to)).
+(prep:[sem=von,sem_pp_type=passive_by,sem_n_type=cause\/symptom,kasus=dat,np_has_spec=y\/n]--> @l(von_passive)).
+(prep:[sem=von,sem_pp_type=of,sem_n_type=cause\/symptom,kasus=dat,np_has_spec=y\/n]--> @l(von_cause)).
+(prep:[sem=zu,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=y]--> @l(zu)).
+labelled_item(prep_det_combo, (prep:[sem=zu,agr=3/\sing,gender=masc\/ntr,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=n]-->zum)).
+labelled_item(prep_det_combo, (prep:[sem=zu,agr=3/\sing,gender=fem,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=n]-->zur)).
+(prep:[sem=auf,sem_pp_type=loc,sem_n_type=loc\/body_part,kasus=dat,np_has_spec=y]--> @l(auf_dat)).
+(prep:[sem=auf,sem_pp_type=to,sem_n_type=loc\/body_part,kasus=akk,np_has_spec=y]--> @l(auf_akk)).
+(prep:[sem=auf,sem_pp_type=cause,sem_n_type=cause\/symptom,kasus=akk,np_has_spec=y\/n]--> @l(auf_cause)).
+(prep:[sem=auf,sem_pp_type=about,sem_n_type=event,kasus=akk,np_has_spec=y\/n]--> @l(auf_about)).
+(prep:[sem=durch,agr=3/\(sing\/plur),sem_pp_type=passive_by,sem_n_type=cause\/loc\/symptom\/substance,kasus=akk,np_has_spec=y\/n]--> @l(durch)).
+(prep:[sem=pro,sem_pp_type=frequency_unit,sem_n_type=timeunit,kasus=akk,np_has_spec=n]--> @l(pro)).
+(prep:[sem=vor,sem_pp_type=time,sem_n_type=time\/timeunit\/symptom\/object,kasus=dat,np_has_spec=y]--> @l(vor)).
+(prep:[sem=hinter,sem_pp_type=loc,sem_n_type=loc,kasus=dat,np_has_spec=y]--> @l(hinter)).
+(prep:[sem=über,sem_pp_type=loc,sem_n_type=body_part\/object,kasus=dat,np_has_spec=y]--> @l(über)).
+(prep:[sem=unter,sem_pp_type=symptom,sem_n_type=symptom\/cause\/object,kasus=dat,np_has_spec=y\/n]--> @l(unter)).
+(prep:[sem=unter,sem_pp_type=loc,sem_n_type=body_part,kasus=dat,np_has_spec=y\/n]--> @l(unter)).
+(prep:[sem=neben,sem_pp_type=loc,sem_n_type=object,kasus=dat,np_has_spec=y]--> @l(neben)).
+(prep:[sem=um,sem_pp_type=loc,sem_n_type=body_part,kasus=akk,np_has_spec=y]--> @l(um_loc)).
+(prep:[sem=um,sem_pp_type=time,sem_n_type=uhr,kasus=akk,np_has_spec=n]--> @l(um_time)).
+(prep:[sem=während,sem_pp_type=time,sem_n_type=time\/timeunit\/action\/cause,kasus=dat,np_has_spec=y]--> @l(während)).
+(prep:[sem=im_zusammenhang_mit,sem_pp_type=with,sem_n_type=cause\/symptom,kasus=dat,np_has_spec=n]--> @l((im,zusammenhang,mit))).
+(prep:[sem=in_verbindung_mit,sem_pp_type=with,sem_n_type=cause\/symptom,kasus=dat,np_has_spec=n]--> @l((in,verbindung,mit))).
+(prep:[sem=wegen,sem_pp_type=cause,sem_n_type=symptom\/cause,kasus=gen,np_has_spec=y]--> @l(wegen)).
+(prep:[sem=für,sem_pp_type=for,sem_n_type=agent,kasus=akk,np_has_spec=y]--> @l(für)).
+(prep:[sem=für,sem_pp_type=hour,sem_n_type=uhr,kasus=akk,np_has_spec=n]--> @l(für)).
+(prep:[sem=für,sem_pp_type=time,sem_n_type=time,kasus=akk,np_has_spec=y]--> @l(für)).
+macro(wh_pp(A,B), (wh_pp:[sem=B]-->A)).
+@wh_pp(@l(wann),@lexical_wh_pp_sem([temporal,wann])).
+@wh_pp(@l(wie),@lexical_wh_pp_sem([temporal,wie])).
+@wh_pp(@l(wo),@lexical_wh_pp_sem([loc,wo])).
+@wh_pp(@l((wie,oft)),@lexical_wh_pp_sem([temporal,wie_oft])).
+@wh_pp(@l((wie,stark)),@lexical_wh_pp_sem([qual,wie_stark])).
+@wh_pp(@l((wie,viele)),@lexical_wh_pp_sem([quant,wie_viele])).
+@wh_pp(@l((wie,schnell)),@lexical_wh_pp_sem([quant,wie_schnell])).
+@wh_pp(@l(wodurch),@lexical_wh_pp_sem([cause,wodurch])).
+@wh_pp(@l(weshalb),@lexical_wh_pp_sem([cause,weshalb])).
+@wh_pp(@l((seit,wann)),@lexical_wh_pp_sem([temporal,seit_wann])).
+@wh_pp(@l(wohin),@lexical_wh_pp_sem([loc,wohin])).
+@wh_pp(@l(warum),@lexical_wh_pp_sem([cause,warum])).
+macro(wh_np(A,B,C), (wh_np:[sem=B,agr=C,sem_n_type=wh]-->A)).
+@wh_np(@l(was),@wh_np_sem([pron,was]),1\/2\/3/\(sing\/plur)).
+@wh_np(@l((wie,lange)),@wh_np_sem([pron,wie_lange]),1\/2\/3/\(sing\/plur)).
+@wh_np(@l(wer),@wh_np_sem([pron,wer]),3/\(sing\/plur)).
+macro(wh_pron([A,_,_,_],B,C,D,E), (wh_pron:[sem=[B],agr=C/\D,gender=E,kasus=nom]-->A)).
+macro(wh_pron([_,A,_,_],B,C,D,E), (wh_pron:[sem=[B],agr=C/\D,gender=E,kasus=gen]-->A)).
+macro(wh_pron([_,_,A,_],B,C,D,E), (wh_pron:[sem=[B],agr=C/\D,gender=E,kasus=dat]-->A)).
+macro(wh_pron([_,_,_,A],B,C,D,E), (wh_pron:[sem=[B],agr=C/\D,gender=E,kasus=akk]-->A)).
+@wh_pron([@l(welcher),@l(welchem),@l(welchem),@l(welchen)],[pron,welcher],3,sing,masc).
+@wh_pron([@l(welche),@l(welcher),@l(welcher),@l(welche)],[pron,welcher],3,sing,fem).
+@wh_pron([@l(welcher),@l(welchem),@l(welchem),@l(welches)],[pron,welcher],3,sing,ntr).
+@wh_pron([@l(welche),@l(welcher),@l(welchen),@l(welche)],[pron,welcher],3,plur,masc\/fem\/ntr).
+@wh_pron([@l((wie,viel)),@l((wie,viel)),@l((wie,vielem)),@l((wie,viel))],[pron,wie_viel],3,sing,masc\/ntr).
+@wh_pron([@l((wie,viel)),@l((wie,viel)),@l((wie,vieler)),@l((wie,viel))],[pron,wie_viel],3,sing,fem).
+@wh_pron([@l((wie,viele)),@l((wie,vielen)),@l((wie,vielen)),@l((wie,viele))],[pron,wie_viel],3,plur,masc\/fem\/ntr).
+macro(adj([_,A,_,_,_,_],B,C), (adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=fem,kasus=nom\/akk,subj_sem_n_type=C]-->A)).
+labelled_item(non_canonical_lex_macro, macro(adj([_,A,_,_,_,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\plur,gender=masc\/fem\/ntr,kasus=nom\/akk,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,A,_,_,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=masc\/ntr,kasus=dat,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=masc,kasus=gen\/akk,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=ntr,kasus=gen,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\plur,gender=masc\/fem\/ntr,kasus=dat,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,A,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=masc,kasus=nom,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,A,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=fem,kasus=gen\/dat,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,A,_],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\plur,gender=masc\/fem\/ntr,kasus=gen,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,_,A],B,C),(adj:[sem=[[adj,B]],adjfkt=attrTypI,agr=3/\sing,gender=ntr,kasus=nom\/akk,subj_sem_n_type=C]-->A))).
+macro(adj([_,A,_,_,_,_],B,C), (adj:[sem=[[adj,B]],agr=3/\sing,gender=masc\/fem\/ntr,kasus=nom,adjfkt=attrTypII,subj_sem_n_type=C]-->A)).
+labelled_item(non_canonical_lex_macro, macro(adj([_,A,_,_,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=fem\/ntr,kasus=akk,adjfkt=attrTypII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=masc\/fem\/ntr,kasus=gen\/dat,adjfkt=attrTypII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=masc,kasus=akk,adjfkt=attrTypII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\plur,gender=masc\/fem\/ntr,kasus=nom\/gen\/dat\/akk,adjfkt=attrTypII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,A,_,_,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=fem,kasus=nom\/akk,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=masc\/fem\/ntr,kasus=gen\/dat,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=masc,kasus=akk,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,A,_,_],B,C),(adj:[sem=[[adj,B]],agr=3/\plur,gender=masc\/fem\/ntr,kasus=nom\/gen\/dat\/akk,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,A,_],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=masc,kasus=nom,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+labelled_item(non_canonical_lex_macro, macro(adj([_,_,_,_,_,A],B,C),(adj:[sem=[[adj,B]],agr=3/\sing,gender=ntr,kasus=nom\/akk,adjfkt=attrTypIII,subj_sem_n_type=C]-->A))).
+macro(adj([A,_,_,_,_,_],B,C), (adj:[sem=[[adj,B]],adjfkt=pred,subj_sem_n_type=C|_]-->A)).
+macro(adverb(A,B,C), (adv:[sem=[B],adv_type=C]-->A)).
+(sc:[sem= @sc_sem(wenn),sem_pp_type=time,sc_s_type=s]--> @l(wenn)).
+(sc:[sem= @sc_sem(bevor),sem_pp_type=time,sc_s_type=s]--> @l(bevor)).
+(sc:[sem= @sc_sem(nachdem),sem_pp_type=time,sc_s_type=s]--> @l(nachdem)).
+(sc:[sem= @sc_sem(weil),sem_pp_type=cause,sc_s_type=s]--> @l(weil)).
+macro(mod_time_et(A,B,C), (mod_time_et:[sem=B,agr=C]-->A)).
+macro(mod_time_moins(A,B), (mod_time_moins:[sem=B]-->A)).
+macro(num_heure(A,B,C), (num_heure:[sem=B,agr=C]-->A)).
+macro(interj(A,B,C), (interj:[sem=[B],i_type=C]-->A)).
+@interj(@l(ja),[interj,ja],ja).
+@interj(@l(nein),[interj,nein],ja).
+@interj(@l(bitte),[interj,bitte],bitte).
+@interj(@l(klar),[interj,klar],ja).

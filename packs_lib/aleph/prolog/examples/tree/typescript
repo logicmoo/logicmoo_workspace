@@ -1,0 +1,923 @@
+Script started on Wed 20 Nov 2002 17:03:42 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/tree
+[1m~/aleph/test/examples/tree[42]>[m	yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161928 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(animals).
+ [ reconsulting animals.b... ]
+ [ animals.b reconsulted 26424 bytes in 0.01 seconds ]
+[consulting pos examples] [animals.f]
+[cannot open] [animals.n]
+
+yes
+   ?- induce_tree.
+[constructing tree]
+class(A,B) :-
+   has_gills(A).
+[entropy] [-0.0]
+class(A,B) :-
+   not has_gills(A).
+[entropy] [0.954434]
+[expected cost reduction] [0.117744]
+class(A,B) :-
+   has_covering(A,hair).
+[entropy] [-0.0]
+class(A,B) :-
+   not has_covering(A,hair).
+[entropy] [-0.0]
+[expected cost reduction] [0.881291]
+[found clauses]
+class(A,B) :-
+   has_covering(A,hair).
+[entropy] [-0.0]
+class(A,B) :-
+   not has_covering(A,hair).
+[entropy] [-0.0]
+[expected cost reduction] [0.881291]
+[pruning clauses]
+[best clause]
+class(A,B) :-
+   has_covering(A,hair), B=mammal.
+[atoms left] [14]
+[best clause]
+class(A,B) :-
+   not has_covering(A,hair), B=nmammal.
+[atoms left] [0]
+[construction time] [0.0]
+
+[theory]
+
+[Rule 1] [Pos cover = 6 Neg cover = 0]
+class(A,B) :-
+   has_covering(A,hair), B=mammal.
+
+[Rule 2] [Pos cover = 14 Neg cover = 0]
+class(A,B) :-
+   not has_covering(A,hair), B=nmammal.
+
+[Training set performance]
+          Actual
+       +        - 
+     + 20        0        20 
+Pred 
+     - 0        0        0 
+
+       20        0        20 
+
+Accuracy = 1.0
+[Training set summary] [[20,0,0,0]]
+
+yes
+   ?- [1m~/aleph/test/examples/tree[43]>[m	yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161928 bytes in 0.46 seconds ]
+
+yes
+   ?- read_all(weather).
+ [ reconsulting weather.b... ]
+ [ weather.b reconsulted 14096 bytes in 0.0 seconds ]
+[consulting pos examples] [weather.f]
+[cannot open] [weather.n]
+
+yes
+   ?- induce_tree.
+[constructing tree]
+class(A,B) :-
+   outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not outlook(A,sunny).
+[entropy] [0.764205]
+[expected cost reduction] [0.102244]
+class(A,B) :-
+   outlook(A,sunny), temp(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,sunny),temp(A,C)).
+[entropy] [0.764205]
+[expected cost reduction] [0.102244]
+class(A,B) :-
+   outlook(A,sunny), humidity(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,sunny),humidity(A,C)).
+[entropy] [0.764205]
+[expected cost reduction] [0.102244]
+class(A,B) :-
+   outlook(A,sunny), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (outlook(A,sunny),windy(A,true)).
+[entropy] [0.918296]
+[expected cost reduction] [0.0103181]
+class(A,B) :-
+   outlook(A,sunny), windy(A,false).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,sunny),windy(A,false)).
+[entropy] [0.845351]
+[expected cost reduction] [0.079304]
+class(A,B) :-
+   outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not outlook(A,overcast).
+[entropy] [1.0]
+[expected cost reduction] [0.226]
+class(A,B) :-
+   outlook(A,overcast), temp(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,overcast),temp(A,C)).
+[entropy] [1.0]
+[expected cost reduction] [0.226]
+class(A,B) :-
+   outlook(A,overcast), humidity(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,overcast),humidity(A,C)).
+[entropy] [1.0]
+[expected cost reduction] [0.226]
+class(A,B) :-
+   outlook(A,overcast), windy(A,true).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,overcast),windy(A,true)).
+[entropy] [0.979869]
+[expected cost reduction] [0.100398]
+class(A,B) :-
+   outlook(A,overcast), windy(A,false).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,overcast),windy(A,false)).
+[entropy] [0.979869]
+[expected cost reduction] [0.100398]
+class(A,B) :-
+   outlook(A,rain).
+[entropy] [0.970951]
+class(A,B) :-
+   not outlook(A,rain).
+[entropy] [0.918296]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   outlook(A,rain), temp(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),temp(A,C)).
+[entropy] [0.918296]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   outlook(A,rain), humidity(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),humidity(A,C)).
+[entropy] [0.918296]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   outlook(A,rain), windy(A,true).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.244905]
+class(A,B) :-
+   outlook(A,rain), windy(A,false).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,false)).
+[entropy] [0.99403]
+[expected cost reduction] [0.159262]
+class(A,B) :-
+   temp(A,C), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (temp(A,C),outlook(A,sunny)).
+[entropy] [0.764205]
+[expected cost reduction] [0.102244]
+class(A,B) :-
+   temp(A,C), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (temp(A,C),outlook(A,overcast)).
+[entropy] [1.0]
+[expected cost reduction] [0.226]
+class(A,B) :-
+   temp(A,C), outlook(A,rain).
+[entropy] [0.970951]
+class(A,B) :-
+   not (temp(A,C),outlook(A,rain)).
+[entropy] [0.918296]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   temp(A,C), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (temp(A,C),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   temp(A,C), windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not (temp(A,C),windy(A,false)).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   temp(A,C), lteq(C,65).
+[entropy] [1.0]
+class(A,B) :-
+   not (temp(A,C),lteq(C,65)).
+[entropy] [0.918296]
+[expected cost reduction] [0.0103181]
+class(A,B) :-
+   temp(A,C), lteq(C,68).
+[entropy] [0.918296]
+class(A,B) :-
+   not (temp(A,C),lteq(C,68)).
+[entropy] [0.94566]
+[expected cost reduction] [0.000489469]
+class(A,B) :-
+   temp(A,C), lteq(C,69).
+[entropy] [0.811278]
+class(A,B) :-
+   not (temp(A,C),lteq(C,69)).
+[entropy] [0.970951]
+[expected cost reduction] [0.0149561]
+class(A,B) :-
+   temp(A,C), lteq(C,70).
+[entropy] [0.721928]
+class(A,B) :-
+   not (temp(A,C),lteq(C,70)).
+[entropy] [0.991076]
+[expected cost reduction] [0.0453342]
+class(A,B) :-
+   temp(A,C), lteq(C,71).
+[entropy] [0.918296]
+class(A,B) :-
+   not (temp(A,C),lteq(C,71)).
+[entropy] [0.954434]
+[expected cost reduction] [0.00133974]
+class(A,B) :-
+   temp(A,C), lteq(C,75).
+[entropy] [0.881291]
+class(A,B) :-
+   not (temp(A,C),lteq(C,75)).
+[entropy] [1.0]
+[expected cost reduction] [0.0250782]
+class(A,B) :-
+   temp(A,C), lteq(C,80).
+[entropy] [0.94566]
+class(A,B) :-
+   not (temp(A,C),lteq(C,80)).
+[entropy] [0.918296]
+[expected cost reduction] [0.000489469]
+class(A,B) :-
+   temp(A,C), lteq(C,81).
+[entropy] [0.918296]
+class(A,B) :-
+   not (temp(A,C),lteq(C,81)).
+[entropy] [1.0]
+[expected cost reduction] [0.0103181]
+class(A,B) :-
+   humidity(A,C), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (humidity(A,C),outlook(A,sunny)).
+[entropy] [0.764205]
+[expected cost reduction] [0.102244]
+class(A,B) :-
+   humidity(A,C), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (humidity(A,C),outlook(A,overcast)).
+[entropy] [1.0]
+[expected cost reduction] [0.226]
+class(A,B) :-
+   humidity(A,C), outlook(A,rain).
+[entropy] [0.970951]
+class(A,B) :-
+   not (humidity(A,C),outlook(A,rain)).
+[entropy] [0.918296]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   humidity(A,C), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (humidity(A,C),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   humidity(A,C), windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not (humidity(A,C),windy(A,false)).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   humidity(A,C), lteq(C,70).
+[entropy] [0.811278]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,70)).
+[entropy] [0.970951]
+[expected cost reduction] [0.0149561]
+class(A,B) :-
+   humidity(A,C), lteq(C,75).
+[entropy] [0.721928]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,75)).
+[entropy] [0.991076]
+[expected cost reduction] [0.0453342]
+class(A,B) :-
+   humidity(A,C), lteq(C,80).
+[entropy] [0.811278]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,80)).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   humidity(A,C), lteq(C,85).
+[entropy] [0.918296]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,85)).
+[entropy] [0.970951]
+[expected cost reduction] [0.00318485]
+class(A,B) :-
+   humidity(A,C), lteq(C,86).
+[entropy] [0.881291]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,86)).
+[entropy] [1.0]
+[expected cost reduction] [0.0250782]
+class(A,B) :-
+   humidity(A,C), lteq(C,90).
+[entropy] [0.918296]
+class(A,B) :-
+   not (humidity(A,C),lteq(C,90)).
+[entropy] [1.0]
+[expected cost reduction] [0.0103181]
+class(A,B) :-
+   windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not windy(A,true).
+[entropy] [0.811278]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   windy(A,true), outlook(A,sunny).
+[entropy] [1.0]
+class(A,B) :-
+   not (windy(A,true),outlook(A,sunny)).
+[entropy] [0.918296]
+[expected cost reduction] [0.0103181]
+class(A,B) :-
+   windy(A,true), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (windy(A,true),outlook(A,overcast)).
+[entropy] [0.979869]
+[expected cost reduction] [0.100398]
+class(A,B) :-
+   windy(A,true), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (windy(A,true),outlook(A,rain)).
+[entropy] [0.811278]
+[expected cost reduction] [0.244905]
+class(A,B) :-
+   windy(A,true), temp(A,C).
+[entropy] [1.0]
+class(A,B) :-
+   not (windy(A,true),temp(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   windy(A,true), humidity(A,C).
+[entropy] [1.0]
+class(A,B) :-
+   not (windy(A,true),humidity(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not windy(A,false).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   windy(A,false), outlook(A,sunny).
+[entropy] [0.918296]
+class(A,B) :-
+   not (windy(A,false),outlook(A,sunny)).
+[entropy] [0.845351]
+[expected cost reduction] [0.079304]
+class(A,B) :-
+   windy(A,false), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (windy(A,false),outlook(A,overcast)).
+[entropy] [0.979869]
+[expected cost reduction] [0.100398]
+class(A,B) :-
+   windy(A,false), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (windy(A,false),outlook(A,rain)).
+[entropy] [0.99403]
+[expected cost reduction] [0.159262]
+class(A,B) :-
+   windy(A,false), temp(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (windy(A,false),temp(A,C)).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+class(A,B) :-
+   windy(A,false), humidity(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (windy(A,false),humidity(A,C)).
+[entropy] [1.0]
+[expected cost reduction] [0.048127]
+[found clauses]
+class(A,B) :-
+   outlook(A,rain), windy(A,true).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.244905]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,sunny).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), temp(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,sunny),temp(A,C)).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,sunny),humidity(A,C)).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,sunny),windy(A,true)).
+[entropy] [0.721928]
+[expected cost reduction] [0.0430047]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), windy(A,false).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,sunny),windy(A,false)).
+[entropy] [0.503258]
+[expected cost reduction] [0.20426]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,overcast).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,overcast), temp(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,overcast),temp(A,C)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,overcast), humidity(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,overcast),humidity(A,C)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,overcast), windy(A,true).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,overcast),windy(A,true)).
+[entropy] [0.881291]
+[expected cost reduction] [0.076869]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,overcast), windy(A,false).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,overcast),windy(A,false)).
+[entropy] [0.881291]
+[expected cost reduction] [0.076869]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,rain).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,rain), temp(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,rain),temp(A,C)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,rain), humidity(A,C).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,rain),humidity(A,C)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,rain), windy(A,false).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (outlook(A,rain),windy(A,false)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),outlook(A,sunny)).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),outlook(A,overcast)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),outlook(A,rain)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), windy(A,true).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),windy(A,false)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,68).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,68)).
+[entropy] [0.881291]
+[expected cost reduction] [0.076869]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,69).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,69)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,70).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,70)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,71).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,71)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,75).
+[entropy] [0.543564]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,75)).
+[entropy] [1.0]
+[expected cost reduction] [0.115568]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,80).
+[entropy] [0.764205]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,80)).
+[entropy] [0.918296]
+[expected cost reduction] [0.00855079]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), temp(A,C), lteq(C,81).
+[entropy] [0.721928]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (temp(A,C),lteq(C,81)).
+[entropy] [1.0]
+[expected cost reduction] [0.0430047]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),outlook(A,sunny)).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),outlook(A,overcast)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),outlook(A,rain)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), windy(A,true).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),windy(A,true)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),windy(A,false)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,70).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,70)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,75).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,75)).
+[entropy] [0.954434]
+[expected cost reduction] [0.174989]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,80).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,80)).
+[entropy] [1.0]
+[expected cost reduction] [0.311278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,85).
+[entropy] [0.591673]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,85)).
+[entropy] [0.970951]
+[expected cost reduction] [0.0615729]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,86).
+[entropy] [0.543564]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,86)).
+[entropy] [1.0]
+[expected cost reduction] [0.115568]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), humidity(A,C), lteq(C,90).
+[entropy] [0.721928]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (humidity(A,C),lteq(C,90)).
+[entropy] [1.0]
+[expected cost reduction] [0.0430047]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,true).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not windy(A,true).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,true), outlook(A,sunny).
+[entropy] [1.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,true),outlook(A,sunny)).
+[entropy] [0.721928]
+[expected cost reduction] [0.0430047]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,true), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,true),outlook(A,overcast)).
+[entropy] [0.881291]
+[expected cost reduction] [0.076869]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,true), temp(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,true),temp(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,true), humidity(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,true),humidity(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not windy(A,false).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false), outlook(A,sunny).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,false),outlook(A,sunny)).
+[entropy] [0.503258]
+[expected cost reduction] [0.20426]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false), outlook(A,overcast).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,false),outlook(A,overcast)).
+[entropy] [0.881291]
+[expected cost reduction] [0.076869]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false), outlook(A,rain).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,false),outlook(A,rain)).
+[entropy] [0.918296]
+[expected cost reduction] [0.122556]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false), temp(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,false),temp(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), windy(A,false), humidity(A,C).
+[entropy] [0.811278]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not (windy(A,false),humidity(A,C)).
+[entropy] [0.811278]
+[expected cost reduction] [0.0]
+[found clauses]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny).
+[entropy] [0.970951]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,sunny).
+[entropy] [-0.0]
+[expected cost reduction] [0.406715]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), temp(A,C), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (temp(A,C),windy(A,true)).
+[entropy] [0.918296]
+[expected cost reduction] [0.0199731]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), temp(A,C), windy(A,false).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (temp(A,C),windy(A,false)).
+[entropy] [1.0]
+[expected cost reduction] [0.0199731]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), temp(A,C), lteq(C,75).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (temp(A,C),lteq(C,75)).
+[entropy] [-0.0]
+[expected cost reduction] [0.419973]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), windy(A,true).
+[entropy] [1.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),windy(A,true)).
+[entropy] [0.918296]
+[expected cost reduction] [0.0199731]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), windy(A,false).
+[entropy] [0.918296]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),windy(A,false)).
+[entropy] [1.0]
+[expected cost reduction] [0.0199731]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), lteq(C,70).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),lteq(C,70)).
+[entropy] [-0.0]
+[expected cost reduction] [0.970951]
+[found clauses]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), lteq(C,70).
+[entropy] [-0.0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),lteq(C,70)).
+[entropy] [-0.0]
+[expected cost reduction] [0.970951]
+[no pruning for class probability trees]
+[best clause]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), lteq(C,70), 
+   random(B,[0.75-play,0.25-dont_play]).
+[atoms left] [12]
+[best clause]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),lteq(C,70)), random(B,[0.8-dont_play,0.2-play]).
+[atoms left] [9]
+[best clause]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,sunny), random(B,[0.888889-play,0.111111-dont_play]).
+[atoms left] [2]
+[best clause]
+class(A,B) :-
+   outlook(A,rain), windy(A,true), random(B,[0.75-dont_play,0.25-play]).
+[atoms left] [0]
+[construction time] [0.09]
+
+[theory]
+
+[Rule 1] [Pos cover = 2 Neg cover = 0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), humidity(A,C), lteq(C,70), 
+   random(B,[0.75-play,0.25-dont_play]).
+
+[Rule 2] [Pos cover = 3 Neg cover = 0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), outlook(A,sunny), not (humidity(A,C),lteq(C,70)), random(B,[0.8-dont_play,0.2-play]).
+
+[Rule 3] [Pos cover = 7 Neg cover = 0]
+class(A,B) :-
+   not (outlook(A,rain),windy(A,true)), not outlook(A,sunny), random(B,[0.888889-play,0.111111-dont_play]).
+
+[Rule 4] [Pos cover = 2 Neg cover = 0]
+class(A,B) :-
+   outlook(A,rain), windy(A,true), random(B,[0.75-dont_play,0.25-play]).
+
+[Training set performance]
+          Actual
+       +        - 
+     + 14        0        14 
+Pred 
+     - 0        0        0 
+
+       14        0        14 
+
+Accuracy = 1.0
+[Training set summary] [[14,0,0,0]]
+
+yes
+   ?- [1m~/aleph/test/examples/tree[44]>[m	exit
+exit
+
+script done on Wed 20 Nov 2002 17:04:33 GMT

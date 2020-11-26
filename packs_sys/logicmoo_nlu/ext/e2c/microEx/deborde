@@ -1,0 +1,30 @@
+
+ % tester debordement de piles
+
+  % version1
+  $ tloc :- tloc.
+  $ tglo(g(f(X,Y,Z,T,U))) :- tglo(g(A)).
+	 $ trest :- goo, hoo([X,Y,Z,T,U,V,W,A,B,C]), trest.
+
+  $ goo.
+  $ goo :- true.
+  $ hoo([1,2,3,4,5,6,7,8,9,10]).
+
+
+  % versions 2/3
+	 $ tloc3 :- goo, stat, tloc3.
+  $ tloc2 :- goo, tloc2.
+  $ tglo2(g(f(X,Y,Z,T,U))) :- tglo2(g(A)).
+  $ trest2 :- goo, hoo([X,Y,Z,T,U,V,W,A,B,C]), trest2.
+  $ trest3 :- goo, hoo([X,Y,Z,T,U,V,W,A,B,C]), stat, trest3.
+
+  $ tgels :- freeze(X,write(X)), freeze(Y,write(X)), tgels.
+  $ tgels3 :- freeze(X,write(X)), 
+             freeze(Y,write(X)), 
+													eq(X,Y),
+             stat, tgels3.
+  
+
+
+
+

@@ -1,0 +1,75 @@
+PMPreferences: {
+  agentCopyEnvRunState: false,
+  agentsBrowseDir: 'W:\opt\logicmoo_workspace\ide\java_boot_classes/GOALagents',
+  defaultKRInterface: swiprolog,
+  middlewareLocal: false,
+  rememberLastUsedAgentDir: true,
+  removeKilledAgent: false,
+  sleepRepetetiveAgent: false,
+  threadPoolSize: 20,
+  useMASNameAsAgentPrefix: false
+}
+EnvironmentPreferences: {
+  printNewEntities: true,
+  registryhost: ''
+}
+RunPreferences: {
+  middleware: LOCAL
+}
+CorePreferences: {
+  learnedBehaviourFile: '',
+  learning: false
+}
+DebugPreferences: {
+  ACTION_EXECUTED_BUILTIN: VIEW,
+  ACTION_EXECUTED_USERSPEC: VIEW,
+  ACTION_POSTCOND_EVALUATION: PAUSE,
+  ACTION_PRECOND_EVALUATION: PAUSE,
+  ATOM_QUERIES: NONE,
+  BB_UPDATES: NONE,
+  BREAKPOINTS: PAUSE,
+  CALL_ACTION_OR_MODULE: PAUSE,
+  GB_CHANGES: NONE,
+  GB_UPDATES: NONE,
+  GOAL_ACHIEVED: VIEWPAUSE,
+  HIDDEN_RULE_CONDITION_EVALUATION: NONE,
+  MAILS: NONE,
+  MAILS_CONDITIONAL_VIEW: NONE,
+  MIDDLEWARE_AGENT: NONE,
+  MODULE_ENTRY: PAUSE,
+  MODULE_EXIT: NONE,
+  NONE: NONE,
+  PERCEPTS: NONE,
+  PERCEPTS_CONDITIONAL_VIEW: NONE,
+  REASONING_CYCLE_SEPARATOR: VIEW,
+  RULE_APPLICATION_SUMMARY: NONE,
+  RULE_CONDITIONAL_VIEW: NONE,
+  RULE_CONDITION_EVALUATION: PAUSE,
+  RUNMODE: NONE,
+  SLEEP: VIEW,
+  TESTFAILURE: VIEWPAUSE
+}
+LoggingPreferences: {
+  eclipseActionHistory: true,
+  eclipseAgentConsoles: true,
+  eclipseDebug: false,
+  javadetails: false,
+  logconsoles: false,
+  logdirectory: 'C:\Users\Administrator/GOAL/logs',
+  logtofile: false,
+  overwritelogfiles: false,
+  showLogsInConsole: false,
+  showlogtime: false,
+  stackdump: false,
+  suppresslevel: 5
+}
+DBExportPreferences: {
+  exportBrowseDir: 'W:\opt\logicmoo_workspace\ide\java_boot_classes',
+  exportbeliefs: true,
+  exportgoals: true,
+  exportmailbox: true,
+  exportpercepts: true,
+  openaftersave: false,
+  rememberLastUsedExportDir: true,
+  separatefiles: true
+}

@@ -1,0 +1,39 @@
+
+
+%[Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle]
+
+%@verb([finden, finde, findest, findet, finden, findet, gefunden], [[action, find]], [subcat=nx0vnx1]).
+
+
+%DETERMINERS --------------------------------------------------------------------------------
+
+%NomSing, AccSing, DatSing, GenSing, Plural
+@def_det([der, den, dem, des, die, den, der], def, masc,[]).
+@def_det([die, die, der, der, die, den, der], def, fem,[]).
+@def_det([das, das, dem, des, die, den, der], def, neu, []).
+
+@indef_det([ein, einen, einem, eines], indef, masc, []).
+@indef_det([ein, ein, einem, eines], indef, neu, []).
+@indef_det([eine, eine, einer, einer], indef, masc, []).
+
+%AUX VERBS -----------------------------------------------------------------------------------
+
+@modal_verb([koennen, kann, kannst, kann, koennen, koennt, gekonnt], can).
+
+
+%Complmentizers ---------------------------------------------------------
+
+@comp([dass], that, []).
+
+%PRONOUNS --------------------------------------------------------------
+%
+@personal_pronoun([du, dich, dir], you, none, [2, sing], []).
+@personal_pronoun([ich, mich, mir], me, none, [1, sing], []).
+@personal_pronoun([er, ihn, ihm], he, masc, [3, sing], []).
+@personal_pronoun([sie, sie, ihr], she, fem, [3, sing], []).
+@personal_pronoun([es, es, ihm], it, neu, [3, sing], []).
+@personal_pronoun([wir, uns, uns], we, none, [1, plur], []).
+@personal_pronoun([ihr, euch, euch], yall, none, [2, plur], []).
+@personal_pronoun([sie, sie, ihnen], they, none, [3, plur], []).
+
+

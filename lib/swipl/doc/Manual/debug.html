@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.14</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="highorder.html">
+<link rel="next" href="dicts.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="highorder.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="dicts.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:debug"><a id="sec:A.14"><span class="sec-nr">A.14</span> <span class="sec-title">library(debug): 
+Print debug messages and test assertions</span></a></h2>
+
+<p><a id="sec:debug"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jan Wielemaker
+</dd>
+</dl>
+
+<p>This library is a replacement for <a class="pred" href="format.html#format/3">format/3</a> 
+for printing debug messages. Messages are assigned a <i>topic</i>. By 
+dynamically enabling or disabling topics the user can select desired 
+messages. Debug statements are removed when the code is compiled for 
+optimization.
+
+<p>See manual for details. With XPCE, you can use the call below to 
+start a graphical monitoring tool.
+
+<pre class="code">
+?- prolog_ide(debug_monitor).
+</pre>
+
+<p>Using the predicate <a class="pred" href="debug.html#assertion/1">assertion/1</a> 
+you can make assumptions about your program explicit, trapping the 
+debugger if the condition does not hold.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="debugging/1"><strong>debugging</strong>(<var>+Topic</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="debugging/1"><strong>debugging</strong>(<var>-Topic</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="debugging/2"><strong>debugging</strong>(<var>?Topic, 
+?Bool</var>)</a></dt>
+<dd class="defbody">
+Examine debug topics. The form <code>debugging(+Topic)</code> may be 
+used to perform more complex debugging tasks. A typical usage skeleton 
+is:
+
+<pre class="code">
+      (   debugging(mytopic)
+      -&gt;  &lt;perform debugging actions&gt;
+      ;   true
+      ),
+      ...
+</pre>
+
+<p>The other two calls are intended to examine existing and enabled 
+debugging tokens and are typically not used in user programs.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="debug/1"><strong>debug</strong>(<var>+Topic</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nodebug/1"><strong>nodebug</strong>(<var>+Topic</var>)</a></dt>
+<dd class="defbody">
+Add/remove a topic from being printed. <code>nodebug(_)</code> removes 
+all topics. Gives a warning if the topic is not defined unless it is 
+used from a directive. The latter allows placing debug topics at the 
+start of a (load-)file without warnings.
+
+<p>For <a class="pred" href="debug.html#debug/1">debug/1</a>, <var>Topic</var> 
+can be a term <var>Topic</var> <var>&gt;</var> Out, where Out is either 
+a stream or stream-alias or a filename (atom). This redirects debug 
+information on this topic to the given output.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_debug_topics/0"><strong>list_debug_topics</strong></a></dt>
+<dd class="defbody">
+List currently known debug topics and their setting.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="debug_message_context/1"><strong>debug_message_context</strong>(<var>+What</var>)</a></dt>
+<dd class="defbody">
+Specify additional context for debug messages.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use the Prolog flag <code>message_context</code>. This 
+predicates adds or deletes topics from this list.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="debug/3"><strong>debug</strong>(<var>+Topic, 
++Format, :Args</var>)</a></dt>
+<dd class="defbody">
+<var>Format</var> a message if debug topic is enabled. Similar to <a class="pred" href="format.html#format/3">format/3</a> 
+to <code>user_error</code>, but only prints if <var>Topic</var> is 
+activated through
+<a class="pred" href="debug.html#debug/1">debug/1</a>. <var>Args</var> 
+is a meta-argument to deal with goal for the @-command. Output is first 
+handed to the hook
+<a class="pred" href="debug.html#prolog:debug_print_hook/3">prolog:debug_print_hook/3</a>. 
+If this fails, <var>Format</var>+<var>Args</var> is translated to text 
+using the message-translation (see
+<a class="pred" href="printmsg.html#print_message/2">print_message/2</a>) 
+for the term <code>debug(Format, Args)</code> and then printed to every 
+matching destination (controlled by <a class="pred" href="debug.html#debug/1">debug/1</a>) 
+using <a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>.
+
+<p>The message is preceded by&rsquo;% &rsquo;and terminated with a 
+newline.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="format.html#format/3">format/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:debug_print_hook/3"><span class="module">prolog</span>:<strong>debug_print_hook</strong>(<var>+Topic, 
++Format, +Args</var>)</a></dt>
+<dd class="defbody">
+Hook called by <a class="pred" href="debug.html#debug/3">debug/3</a>. 
+This hook is used by the graphical frontend that can be activated using <a class="pred" href="idepreds.html#prolog_ide/1">prolog_ide/1</a>:
+
+<pre class="code">
+?- prolog_ide(debug_monitor).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assertion/1"><strong>assertion</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Acts similar to C <code>assert()</code> macro. It has no effect if <var>Goal</var> 
+succeeds. If <var>Goal</var> fails or throws an exception, the following 
+steps are taken:
+
+<p>
+<ul class="latex">
+<li>call <a class="pred" href="debug.html#prolog:assertion_failed/2">prolog:assertion_failed/2</a>. 
+If <a class="pred" href="debug.html#prolog:assertion_failed/2">prolog:assertion_failed/2</a> 
+fails, then:
+
+<p>
+<ul class="latex">
+<li>If this is an interactive toplevel thread, print a message, the 
+stack-trace, and finally trap the debugger.
+<li>Otherwise, throw <code>error(assertion_error(Reason, G),_)</code> 
+where Reason is one of <code>fail</code> or the exception raised.
+</ul>
+</ul>
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:assertion_failed/2"><span class="module">prolog</span>:<strong>assertion_failed</strong>(<var>+Reason, 
++Goal</var>)</a></dt>
+<dd class="defbody">
+This hook is called if the <var>Goal</var> of <a class="pred" href="debug.html#assertion/1">assertion/1</a> 
+fails. <var>Reason</var> is unified with either <code>fail</code> if <var>Goal</var> 
+simply failed or an exception call otherwise. If this hook fails, the 
+default behaviour is activated. If the hooks throws an exception it will 
+be propagated into the caller of <a class="pred" href="debug.html#assertion/1">assertion/1</a>.
+</dd>
+</dl>
+
+<p></body></html>

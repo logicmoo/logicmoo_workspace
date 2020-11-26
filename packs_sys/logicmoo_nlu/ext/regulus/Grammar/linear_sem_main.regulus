@@ -1,0 +1,466 @@
+
+macro(intro_and_coda_sem(Intro, Utt, Coda),
+      concat(Intro, Utt, Coda)).
+
+macro(yesno_and_politeness_sem(YesNo, Politeness),
+      concat(YesNo, Politeness)).
+
+macro(yesno_and_interjection_sem(YesNo, Int),
+      concat(YesNo, Int)).
+
+macro(correction_and_interjection_sem(YesNo, Int),
+      concat(YesNo, Int)).
+
+macro(null_sem,
+      []).
+ 
+macro(dcl_sem(Sem), 
+      concat([[utterance_type, dcl]], Sem)).
+
+macro(whq_sem(Sem), 
+      concat([[utterance_type, whq]], Sem)).
+
+macro(ynq_sem(Sem), 
+      concat([[utterance_type, ynq]], Sem)).
+
+macro(imperative_sem(Sem), 
+      concat([[utterance_type, imp]], Sem)).
+
+macro(elliptical_utt_sem(Sem),
+      concat([[utterance_type, phrase]], Sem)).
+
+macro(s_advp_s_sem(Advp, S),
+      concat(Advp, S)).
+
+macro(s_pp_s_sem(Pp, S),
+      concat(Pp, S)).
+
+macro(s_vp_imperative_sem(Vp),
+      concat([[tense, imperative]], @np_pronoun_sem( @pronoun_sem(you)), Vp)).
+
+macro(s_lets_vp_imperative_sem(Vp),
+      concat([[tense, imperative]], @np_pronoun_sem( @pronoun_sem(we)), Vp)).
+
+macro(fronting_sem(Fronted, S),
+      concat(Fronted, S)).
+
+macro(np_vp_sem(Np, Vp),
+      concat(Np, [[voice, active]], Vp)).
+
+macro(np_vp_imperative_sem(Np, Vp),
+      concat([[tense, imperative]], Np, Vp)).
+
+macro(np_vp_sem_passive(Np, Vp),
+      concat(Np, [[voice, passive]], Vp)).
+
+macro(np_vp_sem_impersonal_subj(Np, Vp),
+      concat([[voice, active]], Vp)).
+
+macro(s_vp_sem_inverted(Vp),
+      concat([[voice, active]], Vp)).
+
+macro(s_vp_sem_inverted_passivised(Vp),
+      concat([[voice, passive]], Vp)).
+
+macro(inverted_subj_sem(V, Np),
+      concat(Np, V)).
+
+macro(inverted_subj_sem_passive(V, Np),
+      concat(Np, V)).
+
+macro(inverted_subj_sem_impersonal_subj(V, Np),
+      V).
+
+macro(unspecified_tense_sem(VP),
+      concat([[tense, unspecified]], VP)).
+
+macro(vp_v_sem(Verb),
+      Verb).
+
+macro(vp_v_sem_passivised(Verb),
+      Verb).	
+
+macro(vp_v_pp_sem(Verb, PP),
+      concat(Verb, PP)).
+
+macro(vp_v_pp_sem_passivised(Verb, PP),
+      concat(Verb, PP)).
+
+macro(vp_v_np_pp_sem(Verb, NP, PP),
+      concat(concat(Verb, NP), PP)).
+
+macro(vp_v_np_sem(Verb, NP),
+      concat(Verb, NP)).
+
+macro(vp_v_np_sem_passivised(Verb, NP),
+      concat(Verb, NP)).
+
+macro(vp_v_np_np_sem(Verb, NP1, NP2),
+      concat(Verb, concat(NP1, NP2))).
+
+macro(vp_v_np_there_is_sem(Verb, NP),
+      concat(Verb, NP)).
+
+macro(modal_sem(V),
+      [[modal, V]]).
+
+macro(negated_modal_sem(V),
+      [[polarity, negative], [modal, V]]).
+
+macro(vp_v_vp_modal_sem(Verb, VP),
+      concat(Verb, VP)).
+
+macro(vp_v_vp_nonmodal_sem(Verb, VP),
+      concat(Verb, VP)).
+
+macro(vp_v_vp_passive_sem(Verb, VP),
+      concat(Verb, VP)).
+
+macro(vp_v_to_vp_sem(Verb, VP),
+      concat(Verb, VP)).
+
+macro(vp_v_np_to_vp_sem(Verb, NP, VP),
+      concat(Verb, NP, VP)).
+
+macro(vp_v_to_vp_sem_passivised(Verb, VP),
+      concat(Verb, VP)).
+
+macro(vp_v_s_prop_sem(Verb, S),
+      concat(Verb, [[clause, S]])).
+
+macro(vp_v_s_embedded_q_sem(Verb, S),
+      concat(Verb, [[clause, S]])).
+
+macro(vp_v_np_s_embedded_q_sem(Verb, NP, S),
+      concat(Verb, NP, [[clause, S]])).
+
+macro(vp_v_adj_sem(Verb, Adj),
+      concat(Verb, Adj)).
+
+macro(vp_v_np_adj_sem(Verb, NP, Adj),
+      concat(Verb, NP, Adj)).
+
+macro(vp_v_np_p_sem(Verb, NP, P),
+      concat(Verb, NP, P)).
+
+macro(vp_vp_mods_sem(VP, Mods),
+      concat(VP, Mods)).
+
+macro(vbar_vbar_advp_sem(V, Advp),
+      concat(V, Advp)).
+
+macro(mods_mod_mods_sem(Mod, Mods),
+      concat(Mod, Mods)).
+
+macro(mods_adjp_mods_sem(Adjp, Mods),
+      concat(Adjp, Mods)).
+
+macro(partitive_sem(PP),
+      PP).
+
+macro(pp_p_np_sem(P, NP),
+      concat(P, NP)).
+
+macro(pp_sc_s_sem(SC, S),
+      concat(SC, [[clause, S]])).
+
+macro(pp_sc_vp_sem(SC, VP),
+      concat(SC, [[clause,
+		   concat([[tense, unspecified], [voice, active]],
+			  @np_pronoun_sem( @pronoun_sem(unspecified)),
+			  VP)]])).
+
+macro(of_pp_sem(NP),
+      NP).
+
+macro(pp_np_date_sem(NP),
+      %concat([[prep, date]], NP)).
+      NP).
+
+macro(pp_np_duration_sem(NP),
+      %concat([[prep, duration]], NP)).
+      NP).
+
+macro(pp_np_frequency_sem(NP),
+      %concat([[prep, frequency]], NP)).
+      NP).
+
+macro(np_d_nbar_sem(Det, Nbar),
+      concat([[spec, Det]], Nbar)).
+
+labelled_item(np_article_nbar_sem_macro, 
+macro(np_article_nbar_sem(Det, Nbar),
+      concat([[spec, Det]], Nbar))
+).
+
+macro(possessive_pron_sem(Pron),
+      [[possessive, [ @np_pronoun_sem( @pronoun_sem(Pron))]]]).
+
+macro(np_possessive_nbar_sem(Poss, N),
+      concat(Poss, N)).
+
+macro(np_possessive_d_nbar_sem(Poss, Det, N),
+      concat(Poss, [[spec, Det]], N)).
+
+macro(np_nbar_sem(Nbar),
+      Nbar).
+
+macro(np_pronoun_sem(Pro),
+      [[pronoun, Pro]]).
+
+macro(np_quantified_pronoun_sem(Pro),
+      [[spec, Pro]]).
+
+macro(np_reflexive_pronoun_sem(Pro),
+      [[reflexive_pronoun, self]]).
+
+macro(np_name_sem(Name),
+      [[name, Name]]).
+
+macro(np_time_sem(Time),
+      [[time, Time]]).
+
+macro(np_date_sem(Date),
+      [[date, Date]]).
+
+macro(np_d_sem(D),
+      [[spec, D]]).
+
+macro(np_vp_gerund_sem(VP),
+      concat([[clause_type, gerund]],
+	     [[clause,
+	       concat([[tense, unspecified], [voice, active]],
+		      @np_pronoun_sem( @pronoun_sem(unspecified)),
+		      VP)]])).
+
+macro(np_nbar_nbar_postmod_sem(N1, N2),
+      concat(N1, N2)).
+
+macro(np_nbar_name_postmod_sem(N1, N2),
+      concat(N1, N2)).
+
+macro(np_np_postmods_sem(NP, Mods),
+      concat(NP, Mods)).
+
+macro(nbar_adj_nbar_sem(Adj, N),
+      concat(Adj, N)).
+
+macro(nbar_n_sem(N),
+      N).
+
+macro(nbar_kind_of_n_sem(N),
+      concat([[spec, kind_of]], N)).
+
+macro(nbar_n_n_sem(N1, N2),
+      concat(N1, N2)).
+
+macro(nbar_n_nbar_sem(N, Nbar),
+      concat(N, Nbar)).
+
+macro(nbar_number_n_nbar_sem(Number, N1, N2),
+      concat([[spec, Number]], N1, N2)).
+
+macro(nbar_name_n_sem(N1, N2),
+      concat(N1, N2)).
+
+macro(nbar_name_nbar_sem(N, Nbar),
+      concat(N, Nbar)).
+
+macro(nbar_nbar_conj_nbar_sem(N1, N2),
+      [[and, N1, N2]]).
+
+macro(nbar_adjp_sem(Adj),
+      Adj).
+
+macro(nbar_number_sem(N),
+      [[number, N]]).
+
+macro(nbar_number_and_number_sem(N1, N2),
+      [[number, [and, N1, N2]]]).
+
+macro(nbar_number_through_number_sem(N1, N2),
+      [[number, [range, N1, N2]]]).
+
+macro(adjp_how_adj_sem(Adj),
+      concat([[degree, how]], Adj)).
+
+macro(adj_pp_sem(Adj, PP),
+      concat(Adj, PP)).
+
+macro(adjp_advp_adj_sem(Adv, Adj),
+      concat(Adv, Adj)).
+
+macro(advp_how_adv_sem(Adv),
+      concat([[degree, how]], Adv)).
+
+macro(adjp_list_sem(Adj1, Adj2),
+      concat(Adj1, Adj2)).
+
+macro(conj2_sem(Conj, Arg1, Arg2),
+      [Conj, Arg1, Arg2]).
+
+macro(n_conjlist_sem(Conj, Args),
+      [concat([Conj], Args)]).
+
+macro(conj_list_sem(Conj, Args),
+      [concat([Conj], Args)]).
+
+macro(conjlist_item_item_sem(Item1, Item2),
+      [Item1, Item2]).
+
+macro(conjlist_item_conjlist_sem(Item, Conjlist),
+      concat([Item], Conjlist)).
+
+macro(np_gap_sem,
+      []).
+
+macro(pp_gap_sem,
+      []).
+
+macro(adjp_gap_sem,
+      []).
+
+macro(advp_gap_sem,
+      []).
+
+macro(rel_pron_sem,
+      []).
+
+macro(rel_s_sem(S),
+      concat([[clause_type, rel]], [[clause, S]])).
+
+macro(time_number_hundred_sem(H),
+      [[time, @multiply(H, 100)]]).
+
+macro(time_number_timesuffix_sem(H, Timesuffix),
+      [[time, @multiply(H, 100)], [day_part, Timesuffix]]).
+
+macro(time_hours_minutes_sem(H, M),
+      [[time, @plus( @multiply(H, 100), M)]]).
+
+macro(time_hours_minutes_to_sem(H, M),
+      [[time, @subtract( @multiply(H, 100), @plus(M, 40))]]).
+
+macro(time_hours_minutes_timesuffix_sem(H, M, Timesuffix),
+      [[time, @plus( @multiply(H, 100), M)], [day_part, Timesuffix]]).
+
+macro(date_month_sem(Month),
+      [[date, [[month, Month]]]]).
+
+macro(date_year_sem(Year),
+      [[date, [[year, Year]]]]).
+
+macro(date_month_year_sem(Month, Year),
+      [[date, [[month, Month], [year, Year]]]]).
+
+macro(date_day_month_sem(Day, Month),
+      [[date, [[day, Day], [month, Month]]]]).
+
+macro(date_day_month_year_sem(Day, Month, Year),
+      [[date, [[day, Day], [month, Month], [year, Year]]]]).
+
+macro(measure_phrase_det_unit(Det, Unit),
+      [[amount, Det], [unit, Unit]]).
+
+macro(det_number_sem(N),
+      N).
+
+macro(det_number_conj_number_sem(N1, N2),
+      [and, N1, N2]).
+
+macro(det_number_to_number_sem(N1, N2),
+      [number_range, [N1, N2]]).
+
+macro(det_det_number_sem(D, N),
+      [D, N]).
+
+macro(det_numcompare_number_sem(D, N),
+      [D, N]).
+
+macro(det_ordinal_sem(N),
+      [ordinal, N]).
+
+macro(det_det_ordinal_sem(D, N),
+      [ordinal, D, N]).
+
+macro(number_number_thousand_sem(N),
+      @multiply(1000, N)).
+
+macro(number_thousand_plus_sem(Thousands, Rest),
+      @plus(Thousands, Rest)).
+
+macro(number_number_hundred_sem(N),
+      @multiply(100, N)).
+
+macro(number_h_tu_sem(Hundreds, TensAndUnits),
+      @plus(Hundreds, TensAndUnits)).
+
+macro(number_two_digits(D1, D2),
+      @plus( @multiply(10, D1), D2)).
+
+macro(number_three_digits(D1, D2, D3),
+      @plus( @multiply(100, D1), @plus( @multiply(10, D2), D3))).
+
+macro(number_four_digits(D1, D2, D3, D4),
+      @plus( @multiply(1000, D1), @plus( @multiply(100, D2), @plus( @multiply(10, D3), D4)))).
+
+macro(number_five_digits(D1, D2, D3, D4, D5),
+      @plus( @multiply(10000, D1), @plus( @multiply(1000, D2), @plus( @multiply(100, D3), @plus( @multiply(10, D4), D5))))).
+
+macro(number_minutes_seconds_sem(Minutes, Seconds),
+      @plus( @multiply(60, Minutes), Seconds)).
+
+macro(number_decimal(N1, N2),
+      [decimal, N1, N2]).
+
+macro(passive_by_prep_sem,
+      @prep_sem(subj)).
+
+macro(prep_sem(Prep),
+      [[prep, Prep]]).
+
+macro(sc_sem(SC),
+      [[sc, SC]]).
+
+macro(interjection_sem(Interjection),
+      [[interjection, Interjection]]).
+
+macro(politeness_sem(Polite),
+      [[politeness, Polite]]).
+
+macro(verb_sem(Type, Verb),
+      [Type, Verb]).
+
+macro(pp_sem(Prep, NP),
+      [Prep, NP]).
+
+macro(wh_pp_sem(Prep, NP),
+      @pp_sem(Prep, NP)).
+
+macro(noun_sem(Type, Noun),
+      [[Type, Noun]]).
+
+macro(pronoun_sem(Pron),
+      Pron).
+
+macro(name_sem(Name),
+      Name).
+
+macro(adj_sem(Adj),
+      [[adj, Adj]]).
+
+macro(adj_sem(Type, Adj),
+      [[Type, Adj]]).
+
+macro(adv_sem(AdvType, Adv),
+      [[AdvType, Adv]]).
+
+
+
+
+
+
+
+
+
+

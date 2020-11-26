@@ -1,0 +1,46 @@
+// Mary throws the ball
+[State = 
+    [Location:locA]<-loc-[Girl: Mary]-physContact->[Toy:ball1]-loc->[Location:locA]
+					]-followedBy->
+[Throw = [Throw]-
+		-agnt->[Girl: Mary],
+		-obj->[Toy:ball1]
+					]-followedBy->
+[State = 
+    [Location:locA]<-loc-[Girl:Mary]
+    [Location:locB]<-loc-[Toy:ball1 ] ]
+
+// Figaro throws the ball to Ristin
+[State = 
+    [Location:locA]<-loc-[Man:Figaro]-physContact->[Toy:ball1]-loc->[Location:locA]
+    [Location:locB]<-loc-[Girl:Ristin]
+    [Location:locC]<-loc-[Table]-on->[Book]
+    [Clock]<-on-[Wall]			   				   	
+			]-followedBy->
+[Throw = [Throw]-
+		-agnt->[Man:Figaro],
+		-obj->[Toy:ball1],
+		-to->[Girl:Ristin]
+			]-followedBy->
+[State = 
+    [Location:locB]<-loc-[Girl:Ristin]-physContact->[Toy:ball1]-loc->[Location:locB]
+    [Location:locA]<-loc-[Man:Figaro]
+    [Location:locC]<-loc-[Table]-on->[Book]
+    [Clock]<-on-[Wall]			   				   	
+			]
+
+
+// Sharon throws the terminal at Raphael
+[State = 
+    [Location:locA]<-loc-[Man:Sharon]-physContact->[Terminal: Terminal1]-loc->[Location:locA]
+    [Location:locC]<-loc-[Girl:Raphael]
+					]-followedBy->
+[Throw = [Throw]-
+		-agnt->[Man:Sharon],
+		-obj->[Terminal: Terminal1],
+		-dest->[Girl:Raphael]
+					]-followedBy->
+[State = 
+    [Location:locA]<-loc-[Man:Sharon] 
+    [Terminal: Terminal1]-loc->[Location:locB]
+    [Location:locC]<-loc-[Girl:Raphael]  ]

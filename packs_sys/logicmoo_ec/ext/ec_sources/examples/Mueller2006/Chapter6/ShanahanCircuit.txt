@@ -1,0 +1,115 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter6/ShanahanCircuit.e
+loading foundations/Root.e
+loading foundations/EC.e
+100 variables and 316 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Closed(S2).
+Closed(S3).
+Happens(Close(S1), 0).
+1
++Closed(S1).
+Happens(Activate(R), 1).
+Happens(Light(L), 1).
+2
++Activated(R).
++Lit(L).
+Happens(Open(S2), 2).
+3
+-Closed(S2).
+Happens(Deactivate(R), 3).
+Happens(Unlight(L), 3).
+4
+-Activated(R).
+-Lit(L).
+P
+!Happens(Activate(R), 0).
+!Happens(Activate(R), 2).
+!Happens(Activate(R), 3).
+!Happens(Activate(R), 4).
+!Happens(Close(S1), 1).
+!Happens(Close(S1), 2).
+!Happens(Close(S1), 3).
+!Happens(Close(S1), 4).
+!Happens(Close(S2), 0).
+!Happens(Close(S2), 1).
+!Happens(Close(S2), 2).
+!Happens(Close(S2), 3).
+!Happens(Close(S2), 4).
+!Happens(Close(S3), 0).
+!Happens(Close(S3), 1).
+!Happens(Close(S3), 2).
+!Happens(Close(S3), 3).
+!Happens(Close(S3), 4).
+!Happens(Deactivate(R), 0).
+!Happens(Deactivate(R), 1).
+!Happens(Deactivate(R), 2).
+!Happens(Deactivate(R), 4).
+!Happens(Light(L), 0).
+!Happens(Light(L), 2).
+!Happens(Light(L), 3).
+!Happens(Light(L), 4).
+!Happens(Open(S1), 0).
+!Happens(Open(S1), 1).
+!Happens(Open(S1), 2).
+!Happens(Open(S1), 3).
+!Happens(Open(S1), 4).
+!Happens(Open(S2), 0).
+!Happens(Open(S2), 1).
+!Happens(Open(S2), 3).
+!Happens(Open(S2), 4).
+!Happens(Open(S3), 0).
+!Happens(Open(S3), 1).
+!Happens(Open(S3), 2).
+!Happens(Open(S3), 3).
+!Happens(Open(S3), 4).
+!Happens(Unlight(L), 0).
+!Happens(Unlight(L), 1).
+!Happens(Unlight(L), 2).
+!Happens(Unlight(L), 4).
+!ReleasedAt(Activated(R), 0).
+!ReleasedAt(Activated(R), 1).
+!ReleasedAt(Activated(R), 2).
+!ReleasedAt(Activated(R), 3).
+!ReleasedAt(Activated(R), 4).
+!ReleasedAt(Closed(S1), 0).
+!ReleasedAt(Closed(S1), 1).
+!ReleasedAt(Closed(S1), 2).
+!ReleasedAt(Closed(S1), 3).
+!ReleasedAt(Closed(S1), 4).
+!ReleasedAt(Closed(S2), 0).
+!ReleasedAt(Closed(S2), 1).
+!ReleasedAt(Closed(S2), 2).
+!ReleasedAt(Closed(S2), 3).
+!ReleasedAt(Closed(S2), 4).
+!ReleasedAt(Closed(S3), 0).
+!ReleasedAt(Closed(S3), 1).
+!ReleasedAt(Closed(S3), 2).
+!ReleasedAt(Closed(S3), 3).
+!ReleasedAt(Closed(S3), 4).
+!ReleasedAt(Lit(L), 0).
+!ReleasedAt(Lit(L), 1).
+!ReleasedAt(Lit(L), 2).
+!ReleasedAt(Lit(L), 3).
+!ReleasedAt(Lit(L), 4).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ShanahanCircuit: 0 predicates, 0 functions, 3 fluents, 6 events, 17 axioms
+encoding 0.1s
+solution 0.0s
+total 0.2s
+Discrete Event Calculus Reasoner 1.0

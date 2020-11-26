@@ -1,0 +1,454 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.29</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="miscarith.html">
+<link rel="next" href="allsolutions.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="miscarith.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="allsolutions.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:builtinlist"><a id="sec:4.29"><span class="sec-nr">4.29</span> <span class="sec-title">Built-in 
+list operations</span></a></h2>
+
+<a id="sec:builtinlist"></a>
+
+<p>Most list operations are defined in the library <code>library(lists)</code> 
+described in <a class="sec" href="lists.html#sec:A.21">section A.21</a>. 
+Some that are implemented with more low-level primitives are built-in 
+and described here.
+
+<dl class="latex">
+<dt class="pubdef"><a id="is_list/1"><strong>is_list</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is bound to the empty list (<code><code>[]</code></code>) 
+or a term with functor&lsquo;<code>&rsquo;[|]'</code>&rsquo;<sup class="fn">124<span class="fn-text">The 
+traditional list functor is the dot (<code>&rsquo;.'</code>). This is 
+still the case of the command line option <strong>--traditional</strong> 
+is given. See also <a class="sec" href="ext-lists.html#sec:5.1">section 
+5.1</a>.</span></sup> and arity&nbsp;2 and the second argument is a 
+list.<sup class="fn">125<span class="fn-text">In versions before 5.0.1, <a id="idx:islist1:1540"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
+just checked for <code><code>[]</code></code> or <code>[_|_]</code> and 
+proper_list/1 had the role of the current <a id="idx:islist1:1541"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a>. 
+The current definition conforms to the de facto standard. Assuming 
+proper coding standards, there should only be very few cases where a 
+quick-and-dirty <a id="idx:islist1:1542"></a><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> 
+is a good choice. Richard O'Keefe pointed at this issue.</span></sup> 
+This predicate acts as if defined by the definition below on
+<em>acyclic</em> terms. The implementation <em>fails</em> safely if
+<var>Term</var> represents a cyclic list.
+
+<pre class="code">
+is_list(X) :-
+        var(X), !,
+        fail.
+is_list([]).
+is_list([_|T]) :-
+        is_list(T).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="memberchk/2"><strong>memberchk</strong>(<var>?Elem, 
++List</var>)</a></dt>
+<dd class="defbody">
+True when <var>Elem</var> is an element of <var>List</var>. This&lsquo;chk' 
+variant of
+<a id="idx:member2:1543"></a><a class="pred" href="lists.html#member/2">member/2</a> 
+is semi deterministic and typically used to test membership of a list. 
+Raises a <code>type</code> error if scanning <var>List</var> encounters 
+a non-list. Note that <a id="idx:memberchk2:1544"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+does <em>not</em> perform a full list typecheck. For example, <code>memberchk(a, 
+[a|b])</code> succeeds without error. If <var>List</var> is cyclic and <var>Elem</var> 
+is not a member of
+<var>List</var>, <a id="idx:memberchk2:1545"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+eventually raises a <code>type</code> error.<sup class="fn">126<span class="fn-text"><i>Eventually</i> 
+here means it will scan as many elements as the longest list that may 
+exist given the current stack usage before raising the exception.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="length/2"><strong>length</strong>(<var>?List, 
+?Int</var>)</a></dt>
+<dd class="defbody">
+True if <var>Int</var> represents the number of elements in <var>List</var>. 
+This predicate is a true relation and can be used to find the length of 
+a list or produce a list (holding variables) of length <var>Int</var>. 
+The predicate is non-deterministic, producing lists of increasing length 
+if
+<var>List</var> is a <em>partial list</em> and <var>Int</var> is 
+unbound. It raises errors if
+
+<p>
+<ul class="latex">
+<li><var>Int</var> is bound to a non-integer.
+<li><var>Int</var> is a negative integer.
+<li><var>List</var> is neither a list nor a partial list. This error 
+condition includes cyclic lists.<sup class="fn">127<span class="fn-text">ISO 
+demands failure here. We think an error is more appropriate.</span></sup>
+</ul>
+
+<p>This predicate fails if the tail of <var>List</var> is equivalent to
+<var>Int</var> (e.g., <code>length(L,L)</code>).<sup class="fn">128<span class="fn-text">This 
+is logically correct. An exception would be more appropriate, but to our 
+best knowledge, current practice in Prolog does not describe a suitable 
+candidate exception term.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="sort/2"><strong>sort</strong>(<var>+List, 
+-Sorted</var>)</a></dt>
+<dd class="defbody">
+True if <var>Sorted</var> can be unified with a list holding the 
+elements of <var>List</var>, sorted to the standard order of terms (see
+<a class="sec" href="compare.html#sec:4.6">section 4.6</a>). Duplicates 
+are removed. The implementation is in C, using <em>natural merge sort</em>.<sup class="fn">129<span class="fn-text">Contributed 
+by Richard O'Keefe.</span></sup> The <a id="idx:sort2:1546"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+predicate can sort a cyclic list, returning a non-cyclic version with 
+the same elements.
+
+<p>Note that <var>List</var> may contain non-ground terms. If <var>Sorted</var> 
+is unbound at call-time, for each consecutive pair of elements in
+<var>Sorted</var>, the relation <code>E1 @&lt; E2</code> will hold. 
+However, unifying a variable in <var>Sorted</var> may cause this 
+relation to become invalid,
+<em>even</em> unifying a variable in <var>Sorted</var> with another 
+(older) variable. See also <a class="sec" href="compare.html#sec:4.6.1">section 
+4.6.1</a>.</dd>
+<dt class="pubdef"><a id="sort/4"><strong>sort</strong>(<var>+Key, 
++Order, +List, -Sorted</var>)</a></dt>
+<dd class="defbody">
+True when <var>Sorted</var> can be unified with a list holding the 
+element of
+<var>List</var>. <var>Key</var> determines which part of each element in
+<var>List</var> is used for comparing two term and <var>Order</var> 
+describes the relation between each set of consecutive elements in
+<var>Sorted</var>.<sup class="fn">130<span class="fn-text">The 
+definition of this predicate was established after discussion with 
+Joachim Schimpf from the ECLiPSe team. ECLiPSe currently only accepts <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
+and <code><code>&gt;=</code></code> for the <var>Order</var> argument 
+but this is likely to change. SWI-Prolog extends this predicate to deal 
+with dicts.</span></sup>
+
+<p>If <var>Key</var> is the integer zero (0), the entire term is used to 
+compare two elements. Using <var>Key</var>=0 can be used to sort 
+arbitrary Prolog terms. Other values for <var>Key</var> can only be used 
+with compound terms or dicts (see <a class="sec" href="bidicts.html#sec:5.4">section 
+5.4</a>). An integer key extracts the
+<var>Key</var>-th argument from a compound term. An integer or atom key 
+extracts the value from a dict that is associated with the given key. A 
+type_error is raised if the list element is of the wrong type and an 
+existence_error is raised if the compound has not enough argument or the 
+dict does not contain the requested key.
+
+<p>Deeper nested elements of structures can be selected by using a list 
+of keys for the <var>Key</var> argument.
+
+<p>The <var>Order</var> argument is described in the table below:<sup class="fn">131<span class="fn-text">For 
+compatibility with ECLiPSe, the values <code><code>&lt;</code></code>, <code><code>=&lt;</code></code>, <code><code>&gt;</code></code> 
+and <code><code>&gt;=</code></code> are allowed as synonyms.</span></sup>
+
+<p><table class="latex frame-void center">
+<tr><td>Order</td><td>Ordering</td><td>Duplicate handling </td></tr>
+<tr class="hline"><td><code><code>@&lt;</code></code> </td><td>ascending</td><td>remove </td></tr>
+<tr><td><code><code>@=&lt;</code></code> </td><td>ascending</td><td>keep </td></tr>
+<tr><td><code><code>@&gt;</code></code> </td><td>descending</td><td>remove </td></tr>
+<tr><td><code><code>@&gt;=</code></code> </td><td>descending</td><td>keep </td></tr>
+</table>
+
+<p>The sort is <em>stable</em>, which implies that, if duplicates are 
+kept, the order of duplicates is not changed. If duplicates are removed, 
+only the first element of a sequence of duplicates appears in <var>Sorted</var>.
+
+<p>This predicate supersedes most of the other sorting primitives, for 
+example:
+
+<pre class="code">
+sort(List, Sorted)     :- sort(0,  @&lt;, List,  Sorted).
+msort(List, Sorted)    :- sort(0, @=&lt;, List,  Sorted).
+keysort(Pairs, Sorted) :- sort(1, @=&lt;, Pairs, Sorted).
+</pre>
+
+<p>The following example sorts a list of rows, for example resulting 
+from
+<a id="idx:csvreadfile2:1547"></a><a class="pred" href="csv.html#csv_read_file/2">csv_read_file/2</a>) 
+ascending on the 3th column and descending on the 4th column:
+
+<pre class="code">
+    sort(4, @&gt;=, Rows0, Rows1),
+    sort(3, @=&lt;, Rows1, Sorted).
+</pre>
+
+<p>See also <a id="idx:sort2:1548"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+(ISO), <a id="idx:msort2:1549"></a><a class="pred" href="builtinlist.html#msort/2">msort/2</a>, <a id="idx:keysort2:1550"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>, <a id="idx:predsort3:1551"></a><a class="pred" href="builtinlist.html#predsort/3">predsort/3</a> 
+and <a id="idx:orderby2:1552"></a><a class="pred" href="solutionsequences.html#order_by/2">order_by/2</a>.</dd>
+<dt class="pubdef"><a id="msort/2"><strong>msort</strong>(<var>+List, 
+-Sorted</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <a id="idx:sort2:1553"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
+but does not remove duplicates. Raises a
+<code>type_error</code> if <var>List</var> is a cyclic list or not a 
+list.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="keysort/2"><strong>keysort</strong>(<var>+List, 
+-Sorted</var>)</a></dt>
+<dd class="defbody">
+Sort a list of <em>pairs</em>. <var>List</var> must be a list of
+<code><var>Key</var>-<var>Value</var></code> pairs, terms whose 
+principal functor is (-)/2. <var>List</var> is sorted on <var>Key</var> 
+according to the standard order of terms (see <a class="sec" href="compare.html#sec:4.6.1">section 
+4.6.1</a>). Duplicates are <em>not</em> removed. Sorting is <em>stable</em> 
+with regard to the order of the
+<var>Values</var>, i.e., the order of multiple elements that have the 
+same
+<var>Key</var> is not changed.
+
+<p>The <a id="idx:keysort2:1554"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a> 
+predicate is often used together with library
+<code>library(pairs)</code>. It can be used to sort lists on different 
+or multiple criteria. For example, the following predicates sorts a list 
+of atoms according to their length, maintaining the initial order for 
+atoms that have the same length.
+
+<pre class="code">
+:- use_module(library(pairs)).
+
+sort_atoms_by_length(Atoms, ByLength) :-
+        map_list_to_pairs(atom_length, Atoms, Pairs),
+        keysort(Pairs, Sorted),
+        pairs_values(Sorted, ByLength).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="predsort/3"><strong>predsort</strong>(<var>+Pred, 
++List, -Sorted</var>)</a></dt>
+<dd class="defbody">
+Sorts similar to <a id="idx:sort2:1555"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>, 
+but determines the order of two terms by calling <var>Pred</var>(-<var>Delta</var>, 
++<var>E1</var>, +<var>E2</var>) . This call must unify <var>Delta</var> 
+with one of <code><code>&lt;</code></code>, <code><code>&gt;</code></code> 
+or
+<code><code>=</code></code>. If the built-in predicate <a id="idx:compare3:1556"></a><a class="pred" href="compare.html#compare/3">compare/3</a> 
+is used, the result is the same as <a id="idx:sort2:1557"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>. 
+See also <a id="idx:keysort2:1558"></a><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>.
+</dd>
+</dl>
+
+<p></body></html>

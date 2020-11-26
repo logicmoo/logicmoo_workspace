@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Refactoring
+Bundle-SymbolicName: org.cs3.pdt.refactoring
+Bundle-Version: 3.0.1.qualifier
+Bundle-Activator: org.cs3.pdt.refactoring.PDTRefactoringPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.ltk.ui.refactoring,
+ org.cs3.pdt.common;bundle-version="[3.0.1,4.0.0)",
+ org.eclipse.jface.text
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

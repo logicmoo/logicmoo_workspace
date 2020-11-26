@@ -1,0 +1,373 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.6</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="broadcast.html">
+<link rel="next" href="check.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="broadcast.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="check.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:charsio"><a id="sec:A.6"><span class="sec-nr">A.6</span> <span class="sec-title">library(charsio): 
+I/O on Lists of Character Codes</span></a></h2>
+
+<p><a id="sec:charsio"></a>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+The naming of this library is not in line with the ISO standard. We 
+believe that the SWI-Prolog native predicates form a more elegant 
+alternative for this library.
+</dd>
+</dl>
+
+<p>This module emulates the Quintus/SICStus library <code>charsio.pl</code> 
+for reading and writing from/to lists of character codes. Most of these 
+predicates are straight calls into similar SWI-Prolog primitives. Some 
+can even be replaced by ISO standard predicates.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="format_to_chars/3"><strong>format_to_chars</strong>(<var>+Format, 
++Args, -Codes</var>)</a></dt>
+<dd class="defbody">
+Use <a class="pred" href="format.html#format/2">format/2</a> to write to 
+a list of character codes.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="format_to_chars/4"><strong>format_to_chars</strong>(<var>+Format, 
++Args, -Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Use <a class="pred" href="format.html#format/2">format/2</a> to write to 
+a difference list of character codes.</dd>
+<dt class="pubdef"><a id="write_to_chars/2"><strong>write_to_chars</strong>(<var>+Term, 
+-Codes</var>)</a></dt>
+<dd class="defbody">
+Write a term to a code list. True when <var>Codes</var> is a list of 
+character codes written by <a class="pred" href="termrw.html#write/1">write/1</a> 
+on <var>Term</var>.</dd>
+<dt class="pubdef"><a id="write_to_chars/3"><strong>write_to_chars</strong>(<var>+Term, 
+-Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Write a term to a code list. <var>Codes</var><code>\</code><var>Tail</var> 
+is a difference list of character codes produced by <a class="pred" href="termrw.html#write/1">write/1</a> 
+on <var>Term</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="atom_to_chars/2"><strong>atom_to_chars</strong>(<var>+Atom, 
+-Codes</var>)</a></dt>
+<dd class="defbody">
+Convert <var>Atom</var> into a list of character codes.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use ISO <a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="atom_to_chars/3"><strong>atom_to_chars</strong>(<var>+Atom, 
+-Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Convert <var>Atom</var> into a difference list of character codes.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="number_to_chars/2"><strong>number_to_chars</strong>(<var>+Number, 
+-Codes</var>)</a></dt>
+<dd class="defbody">
+Convert Atom into a list of character codes.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use ISO <a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="number_to_chars/3"><strong>number_to_chars</strong>(<var>+Number, 
+-Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Convert <var>Number</var> into a difference list of character codes.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="read_from_chars/2"><strong>read_from_chars</strong>(<var>+Codes, 
+-Term</var>)</a></dt>
+<dd class="defbody">
+Read <var>Codes</var> into <var>Term</var>.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+The SWI-Prolog version does not require <var>Codes</var> to end in a 
+full-stop.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="read_term_from_chars/3"><strong>read_term_from_chars</strong>(<var>+Codes, 
+-Term, +Options</var>)</a></dt>
+<dd class="defbody">
+Read <var>Codes</var> into <var>Term</var>. <var>Options</var> are 
+processed by <a class="pred" href="termrw.html#read_term/3">read_term/3</a>.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+sicstus
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="open_chars_stream/2"><strong>open_chars_stream</strong>(<var>+Codes, 
+-Stream</var>)</a></dt>
+<dd class="defbody">
+Open <var>Codes</var> as an input stream.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="string.html#open_string/2">open_string/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="with_output_to_chars/2"><strong>with_output_to_chars</strong>(<var>:Goal, 
+-Codes</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> as with <a class="pred" href="metacall.html#once/1">once/1</a>. 
+Output written to <code>current_output</code> is collected in <var>Codes</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="with_output_to_chars/3"><strong>with_output_to_chars</strong>(<var>:Goal, 
+-Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> as with <a class="pred" href="metacall.html#once/1">once/1</a>. 
+Output written to <code>current_output</code> is collected in <var>Codes</var><code>\</code><var>Tail</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="with_output_to_chars/4"><strong>with_output_to_chars</strong>(<var>:Goal, 
+-Stream, -Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="pred" href="charsio.html#with_output_to_chars/3">with_output_to_chars/3</a> 
+using an explicit stream. The difference list <var>Codes</var><code>\</code><var>Tail</var> 
+contains the character codes that
+<var>Goal</var> has written to <var>Stream</var>.
+</dd>
+</dl>
+
+<p></body></html>

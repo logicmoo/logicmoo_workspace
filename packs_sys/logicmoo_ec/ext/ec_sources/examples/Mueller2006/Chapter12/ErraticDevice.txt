@@ -1,0 +1,69 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter12/ErraticDevice.e
+loading foundations/Root.e
+loading foundations/EC.e
+24 variables and 43 clauses
+relsat solver
+2 models
+---
+model 1:
+0
+DeterminingFluent(Device1).
+Erratic(Device1).
+PluggedIn(Device1).
+Happens(TurnOn(Nathan, Device1), 0).
+1
+P
+Ab1(Device1, 0).
+Ab1(Device1, 1).
+ReleasedAt(DeterminingFluent(Device1), 0).
+ReleasedAt(DeterminingFluent(Device1), 1).
+!Happens(TurnOn(Nathan, Device1), 1).
+!ReleasedAt(BrokenSwitch(Device1), 0).
+!ReleasedAt(BrokenSwitch(Device1), 1).
+!ReleasedAt(Erratic(Device1), 0).
+!ReleasedAt(Erratic(Device1), 1).
+!ReleasedAt(On(Device1), 0).
+!ReleasedAt(On(Device1), 1).
+!ReleasedAt(PluggedIn(Device1), 0).
+!ReleasedAt(PluggedIn(Device1), 1).
+---
+model 2:
+0
+Erratic(Device1).
+PluggedIn(Device1).
+Happens(TurnOn(Nathan, Device1), 0).
+1
++DeterminingFluent(Device1).
++On(Device1).
+P
+Ab1(Device1, 1).
+ReleasedAt(DeterminingFluent(Device1), 0).
+ReleasedAt(DeterminingFluent(Device1), 1).
+!Ab1(Device1, 0).
+!Happens(TurnOn(Nathan, Device1), 1).
+!ReleasedAt(BrokenSwitch(Device1), 0).
+!ReleasedAt(BrokenSwitch(Device1), 1).
+!ReleasedAt(Erratic(Device1), 0).
+!ReleasedAt(Erratic(Device1), 1).
+!ReleasedAt(On(Device1), 0).
+!ReleasedAt(On(Device1), 1).
+!ReleasedAt(PluggedIn(Device1), 0).
+!ReleasedAt(PluggedIn(Device1), 1).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+ErraticDevice: 1 predicates, 0 functions, 5 fluents, 1 events, 10 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

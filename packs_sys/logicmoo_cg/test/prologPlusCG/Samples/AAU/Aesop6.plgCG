@@ -1,0 +1,21 @@
+Entity > Proposition, Act, Animal, Right.
+
+Animal = Wolf, Lamb.
+Act = Persuade, Eat.
+
+// The Wolf persuades the Lamb that the Wolf has a right 
+// to eat the lamb.
+prop([Proposition =
+       [Act : Persuade]-
+          -AGNT->[Animal : Wolf],
+          -RCPT->[Animal : Lamb],
+          -THME->[Proposition =
+                   [Animal : Wolf]-
+                    -POSS->[Right = 
+                             [Proposition =
+                               [Animal : Wolf]<-AGNT-[Act : Eat]-
+                                -PTNT->[Animal : Lamb]
+                             ]
+                           ]
+                 ];
+     ]).

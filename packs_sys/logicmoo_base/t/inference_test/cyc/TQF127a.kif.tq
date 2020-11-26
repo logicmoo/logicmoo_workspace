@@ -1,0 +1,18 @@
+(note TQF127a)
+
+(subrelation  controllingSuborganizations subOrganizations )
+
+(controllingSuborganizations GulfCooperationCouncil SupremeCouncil-GCC) 
+
+
+
+(subOrganizations GulfCooperationCouncil PeninsulaShieldForce)
+
+
+(query (findall ?ORG (subOrganizations GulfCooperationCouncil ?ORG)))
+
+(answer SupremeCouncil-GCC)
+
+(answer PeninsulaShieldForce)
+
+(end_of_file)

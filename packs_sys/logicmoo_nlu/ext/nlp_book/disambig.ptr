@@ -1,0 +1,128 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% disambig.ptr [Chapter  8] Disambiguation by semantic features
+%
+% This grammar illustrates the use of semantic markers to
+% reduce the number of parses
+% E.g. it only produces one analysis of each of the following
+%             get a screwdriver with a narrow blade
+%             get a screwdriver with your left hand
+
+test1 :- test([get, a, screwdriver, with, a, narrow, blade]).
+test2 :- test([get, a, screwdriver, with, your, left, hand]).
+test3 :- test([get, a, screwdriver, with, a, narrow, blade, with, your, left, hand]).
+
+R ule VP ---> [TV, NP] :-
+   VP : parse : tv === TV : parse,
+   VP : parse : np === NP : parse,
+   VP : cat === vp,
+   TV : cat === tv,
+   TV : arg1 : type === NP : type,
+   NP : cat === np.
+
+R ule VP1 ---> [VP2, PP] :-
+   VP1 : parse : vp === VP2 : parse,
+   VP1 : parse : pp === PP : parse,
+   VP1 : cat === vp,
+   VP2 : cat === vp,
+   PP : cat === pp,
+   PP : arg0 : type === action.
+
+R ule PP ---> [P, NP] :-
+   PP : parse : p === P : parse,
+   PP : parse : np === NP : parse,
+   PP : cat === pp,
+   PP : arg0 : type === P : arg0 : type,
+   P : cat === p,
+   P : arg1 : type === NP : type,
+   NP : cat === np.
+
+R ule NP ---> [DET, NB] :-
+   NP : parse : det === DET : parse,
+   NP : parse : nb === NB : parse,
+   NP : cat === np,
+   NP : type === NB : type,
+   DET : cat === det,
+   NB : cat === nb.
+
+R ule NP1 ---> [NP2, PP] :-
+   NP1 : parse : np === NP2 : parse,
+   NP1 : parse : pp === PP : parse,
+   NP1 : cat === np,
+   NP1 : type === NP2 : type,
+   NP2 : cat === np,
+   PP : cat === pp,
+   PP : arg0 : type === NP2 : type.
+
+R ule NB ---> [N] :-
+   NB : parse : n === N : parse,
+   NB : cat === nb,
+   NB : type === N : type,
+   N : cat === n.
+
+R ule NB1 ---> [ADJ, NB2] :-
+   NB1 : parse : adj === ADJ : parse,
+   NB1 : parse : nb === NB2 : parse,
+   NB1 : cat === nb,
+   NB1 : type === ADJ : arg0 : type,
+   NB1 : type === NB2 : type,
+   ADJ : cat === adj,
+   NB2 : cat === nb.
+
+W ord with :-
+   W : parse === with,
+   W : cat === p,
+   W : arg0 : type === action,
+   W : arg1 : type : major === physobj,
+   W : arg1 : type : minor === instrument.
+
+W ord with :-
+   W : parse === with,
+   W : cat === p,
+   W : arg0 : type : major === physobj ,
+   W : arg1 : type : major === physobj ,
+   W : arg1 : type : minor === component.
+
+W ord get :-
+   W : parse === get,
+   W : cat === tv,
+   W : arg1 : type : major === physobj.
+
+W ord a :-
+   W : parse === a,
+   W : cat === det.
+
+W ord your :-
+   W : parse === your,
+   W : cat === det.
+
+W ord screwdriver :-
+   W : parse === screwdriver,
+   W : cat === n,
+   W : type : major === physobj.
+
+W ord hand :-
+   W : parse === hand,
+   W : cat === n,
+   W : type : major === physobj,
+   W : type : minor === instrument.
+
+W ord blade :-
+   W : parse === blade,
+   W : cat === n,
+   W : type : major === physobj,
+   W : type : minor === component.
+
+W ord narrow :-
+   W : parse === narrow,
+   W : cat === adj,
+   W : arg0 : type : major === physobj.
+
+W ord left :-
+   W : parse === left,
+   W : cat === adj,
+   W : arg0 : type : major === physobj.

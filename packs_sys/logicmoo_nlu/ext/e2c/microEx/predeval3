@@ -1,0 +1,39 @@
+
+ $ tname :- name(abcd,X), conc([R0|R],Y,X),
+            name(Resu,[R0|R]), wf(Resu).
+
+ % ascii/2(?char,?code)
+ $ ascii(Char,Code) :- name(Char,[Code]).
+
+ % ascii_mot(+atom, ?code) 
+ % code du premier caractere de l'atome
+ $ ascii_mot(Mot,Code) :- name(Mot,[Code|R]).
+
+ $ geler(X,P) :- freeze(X,P).
+ $ foo(X) :- geler(X,write(X)).
+ $ tgeler :- foo(X), foo(Y), eq(X,Y), eq(X,f(a)).
+
+ $ geler_et(X,Y,B) :- freeze(X,freeze(Y,B)).
+ $ plus_g(X,Y,Z) :- geler_et(X,Y,plus(X,Y,Z)).
+
+ $ tgel :- geler(X,fg(X)), eq(X,a), !.
+ $ fg(a) :- write(1).
+ $ fg(a) :- write(2). 
+
+ $ tgel2 :- geler(X,fg2(X)), bar2(X).
+ $ bar2(a) :- write(1), !.
+ $ bar2(b).
+ $ fg2(X) :- write(fg2_1).
+ $ fg2(X) :- write(fg2_2).
+
+ $ tgel3 :- geler(X,fg3(X)), bar3(X).
+ $ bar3(a) :- write(1).
+ $ bar3(b) :- write(2).
+ $ fg3(X) :- write(fg3_1), !.
+ $ fg3(X) :- write(fg3_2).
+
+ $ tgel5 :- geler(X,fg5(X)), bar5(X).
+ $ bar5(a) :- write(1).
+ $ bar5(b) :- write(2).
+ $ fg5(X) :- write(fg5_1).
+ $ fg5(X) :- write(fg5_2).

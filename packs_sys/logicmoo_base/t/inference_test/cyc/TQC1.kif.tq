@@ -1,0 +1,26 @@
+(note TQC1)
+
+(located RasLanuf-OilRefinery Libya) 
+(subrelation located inRegion) 
+(instance RasLanuf-OilRefinery OilRefinery) 
+(located Sarir-OilRefinery Libya) 
+(instance Sarir-OilRefinery OilRefinery) 
+(located MarsaElBrega-Refinery Libya) 
+(instance MarsaElBrega-Refinery OilRefinery) 
+(located Zawiya-OilRefinery Libya) 
+(instance Zawiya-OilRefinery OilRefinery)
+(located Tobruk-OilRefinery Libya) 
+(instance Tobruk-OilRefinery OilRefinery) 
+
+(query (findall ?X
+  (and 
+    (instance ?X OilRefinery) 
+    (inRegion ?X Libya))))
+
+(answer RasLanuf-OilRefinery)
+(answer Sarir-OilRefinery)
+(answer MarsaElBrega-OilRefinery)
+(answer Zawiya-OilRefinery)
+(answer Tobruk-OilRefinery)  
+
+(end_of_file)

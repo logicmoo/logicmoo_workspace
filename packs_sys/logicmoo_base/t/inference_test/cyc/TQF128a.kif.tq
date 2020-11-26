@@ -1,0 +1,34 @@
+(note TQF128a)
+
+(hasBeliefSystems JihadGroup IslamicSocietyIdeology) 
+
+(hasBeliefSystems AlQaida IslamicSocietyIdeology) 
+
+(instance JihadGroup TerroristGroup) 
+
+(instance AlQaida TerroristGroup) 
+
+(query (findall ?RELATION ?SHARED-TRAIT)
+(or 
+   (?AL-QAIDA-RELATED-TO-JIHAD AlQaida JihadGroup) 
+   (?JIHAD-RELATED-TO-AL-QAIDA JihadGroup AlQaida) 
+   (?AL-QAIDA-RELATED-TO-JIHAD AlQaida JihadGroup ?OTHER) 
+   (?JIHAD-RELATED-TO-AL-QAIDA JihadGroup AlQaida ?OTHER) 
+   (?AL-QAIDA-RELATED-TO-JIHAD AlQaida ?OTHER JihadGroup) 
+   (?JIHAD-RELATED-TO-AL-QAIDA JihadGroup ?OTHER AlQaida) 
+   (?AL-QAIDA-RELATED-TO-JIHAD ?OTHER AlQaida JihadGroup) 
+   (?JIHAD-RELATED-TO-AL-QAIDA ?OTHER JihadGroup AlQaida) 
+   (and 
+       (?RELATION ?CORRELATE AlQaida) 
+       (?RELATION ?CORRELATE JihadGroup)) 
+   (and 
+       (?RELATION AlQaida ?SHARED-TRAIT) 
+       (?RELATION JihadGroup ?SHARED-TRAIT) 
+       (not 
+           (quotedCollection ?SHARED-TRAIT)))))
+
+(answer hasBeliefSystems IslamicSocietyIdeology)
+(answer instance TerroristGroup)
+
+(end_of_file)
+

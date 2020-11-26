@@ -1,0 +1,21 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests Retraction undoes Backchaining memo idea is working
+
+
+%  was_module(bc_01a,[]).
+
+:- include(test_header).
+:- cls.
+
+t(mudContains,a,b).
+
+t(mudContains,X,Y)==>t(mudInsideOf,Y,X).
+
+:- mpred_test(mudInsideOf(b,a)).
+

@@ -1,0 +1,115 @@
+(note TQF202b)
+
+(directingAgent Y2Stage3-IranianAnthraxTransfer Iran) 
+
+(implies 
+  (and 
+    (instance ?R ActorSlot) 
+    (?R ?SO ?X)) 
+  (playsRole ?SO ?X ?R)) 
+
+(implies 
+  (and 
+    (instance ?SIT ?ST) 
+    (playsRole ?SIT ?X ?R)) 
+  (behaviorCapable ?X ?ST ?R)) 
+
+(implies 
+  (and 
+    (obligationParts ModernInternationalRelationsCOC ?OBLIGATION) 
+    (obligatedAgent ?OBLIGATION ?SIGNEE) 
+    (behaviorCapable ?SIGNEE DiplomaticAction agent) 
+    (different ?SIGNEE ?VIOLATOR) 
+    (actionViolatesObligation ?VIOLATION ?OBLIGATION) 
+    (agent ?VIOLATION ?VIOLATOR)) 
+  (optionAvailableToAgent ?SIGNEE 
+    (TheSetOf ?DIPLOMATIC-CENSURE 
+      (and 
+        (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+        (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+        (maleficiary ?DIPLOMATIC-CENSURE ?VIOLATOR) 
+        (inReactionTo ?DIPLOMATIC-CENSURE ?VIOLATION))) agent))
+
+(obligatedAgent BiologicalAndToxinWeaponsConvention UnitedStatesOfAmerica) 
+(seller Y2Stage3-IranianAnthraxTransfer Y2Stage2-RussianMafiyaCell) 
+(agent Y2Stage4-StatementCondemningIran UnitedStatesOfAmerica) 
+(instance Y2Stage4-StatementCondemningIran DiplomaticAction) 
+(obligationParts ModernInternationalRelationsCOC BiologicalAndToxinWeaponsConvention) 
+(actionViolatesObligation Y2Stage3-IranianAnthraxTransfer BiologicalAndToxinWeaponsConvention) 
+
+(implies 
+  (and 
+    (obligatedAgent BiologicalAndToxinWeaponsConvention ?VIOLATOR) 
+    (agent ?ACQUISITION ?VIOLATOR) 
+    (toPossessor ?ACQUISITION ?VIOLATOR) 
+    (instance ?ACQUISITION GainingUserRights) 
+    (objectOfPossessionTransfer ?ACQUISITION ?TOXIN) 
+    (instance ?TOXIN BiologicalAgent)) 
+ (actionViolatesObligation ?ACQUISITION BiologicalAndToxinWeaponsConvention)) 
+
+(instance Y2Stage3-UnknownQuantityOfAnthrax Anthrax-Bacterium) 
+(subclass Anthrax-Bacterium BiologicalAgent) 
+(obligatedAgent BiologicalAndToxinWeaponsConvention Iran) 
+(toPossessor Y2Stage3-IranianAnthraxTransfer Iran) 
+(instance Y2Stage3-IranianAnthraxTransfer GainingUserRights) 
+(objectOfPossessionTransfer Y2Stage3-IranianAnthraxTransfer Y2Stage3-UnknownQuantityOfAnthrax) 
+(instance Y2Stage3-IranianAnthraxTransfer Buying) 
+(subclass Buying GainingUserRights) 
+
+(instance Y2Stage3-UnknownQuantityOfAnthrax BiologicalAgent) 
+
+(implies 
+ (and 
+ (obligatedAgent BiologicalAndToxinWeaponsConvention ?VIOLATOR) 
+ (agent ?ACQUISITION ?VIOLATOR) 
+ (toPossessor ?ACQUISITION ?VIOLATOR) 
+ (instance ?ACQUISITION GainingUserRights) 
+ (objectOfPossessionTransfer ?ACQUISITION ?TOXIN) 
+ (instance ?TOXIN BiologicalAgent)) 
+ (actionViolatesObligation ?ACQUISITION BiologicalAndToxinWeaponsConvention)) 
+
+(subclass Anthrax-Bacterium BiologicalAgent) 
+
+(instance Y2Stage3-UnknownQuantityOfAnthrax BiologicalAgent) 
+
+(query (findall ?THE-US-MIGHT-RESPOND-BY-ACTING-IN-AN-ELEMENT-OF
+ (implies 
+   (and 
+       (instance ?SMUGGLE 
+           (SmugglingFn Weapons-GradeFissileMaterial)) 
+       (instance ?SMUGGLER HPKB-ScenarioAgent) 
+       (agent ?SMUGGLE ?SMUGGLER) 
+       (instance ?MATERIEL Weapons-GradeFissileMaterial) 
+       (objectOfPossessionTransfer ?SMUGGLE ?MATERIEL) 
+       (actionViolatesObligation ?SMUGGLE NuclearNon-ProliferationTreaty) 
+       (obligationParts ModernInternationalRelationsCOC NuclearNon-ProliferationTreaty) 
+       (obligatedAgent NuclearNon-ProliferationTreaty UnitedStatesOfAmerica) 
+       (behaviorCapable UnitedStatesOfAmerica DiplomaticAction agent) 
+       (different UnitedStatesOfAmerica Iran) 
+       (actionViolatesObligation ?SMUGGLE NuclearNon-ProliferationTreaty) 
+       (agent ?SMUGGLE Iran) 
+       (fromLocation ?SMUGGLE Azerbaijan) 
+       (toLocation ?SMUGGLE Iran) 
+       (toPossessor ?SMUGGLE Iran) 
+       (agent ?SMUGGLE Iran)) 
+   (optionAvailableToAgent UnitedStatesOfAmerica ?THE-US-MIGHT-RESPOND-BY-ACTING-IN-AN-ELEMENT-OF agent)) 
+))
+
+(answer (list 
+(TheSetOf ?DIPLOMATIC-CENSURE 
+           (and 
+               (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+               (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+               (maleficiary ?DIPLOMATIC-CENSURE Iran) 
+               (inReactionTo ?DIPLOMATIC-CENSURE Y2Stage3-IranianAnthraxTransfer)))))
+
+(answer (list 
+(TheSetOf ?DIPLOMATIC-CENSURE 
+           (and 
+               (instance ?DIPLOMATIC-CENSURE DiplomaticAction) 
+               (instance ?DIPLOMATIC-CENSURE Censuring-CommunicationAct) 
+               (maleficiary ?DIPLOMATIC-CENSURE Y2Stage2-RussianMafiyaCell) 
+               (inReactionTo ?DIPLOMATIC-CENSURE Y2Stage3-IranianAnthraxTransfer)))))
+
+(end_of_file)
+

@@ -1,0 +1,3 @@
+[Country: c1]<-pat-[Possess]-
+		-actMode->[Want],
+		-obj->[Tomatos]-ownedBy->[Country: c2]

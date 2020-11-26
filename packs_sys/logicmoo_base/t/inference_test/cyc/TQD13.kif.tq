@@ -1,0 +1,73 @@
+(note TQD13)
+
+(exportRateThrough Tunisia NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) 0)) 
+
+(instance Tunisia MaghrebCountry) 
+
+
+
+
+
+(exportRateThrough Egypt NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) 0)) 
+
+(instance Egypt MaghrebCountry) 
+
+
+
+
+
+(exportRateThrough Libya NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) 0)) 
+
+(instance Libya MaghrebCountry) 
+
+
+
+ 
+
+(exportRateThrough Morocco NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) 0)) 
+
+(instance Morocco MaghrebCountry) 
+
+
+
+(exportRateThrough Algeria NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) 350000)) 
+
+(instance Algeria MaghrebCountry) 
+
+
+
+
+( query  (findall (  ?COUNTRY ?NEW-MEGA-CUBIC-FT-PER-YEAR ?OLD-MEGA-CUBIC-FT-PER-YEAR) (and 
+ (instance ?COUNTRY MaghrebCountry) 
+ (exportRateThrough ?COUNTRY NaturalGas GazoducMaghreb-EuropePipeline 
+ ((PerFn 
+ (Mega CubicFoot) YearsDuration) ?OLD-MEGA-CUBIC-FT-PER-YEAR)) 
+ (evaluate ?NEW-MEGA-CUBIC-FT-PER-YEAR 
+ (TimesFn 0.500000 ?OLD-MEGA-CUBIC-FT-PER-YEAR)))  
+))
+
+(answer Tunisia 0 0)
+(answer Egypt 0 0)
+(answer Libya 0 0)
+(answer Morocco 0 0)
+(answer Algeria 175000 350000)
+
+(end_of_file)
+
+
+
+
+
+
+
+

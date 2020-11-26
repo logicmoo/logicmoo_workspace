@@ -1,0 +1,171 @@
+%==============================================================================
+%----This transforms TPTP clauses and first order formulae into code format. 
+%----
+%----Written by Geoff Sutcliffe May 1999
+%==============================================================================
+%------------------------------------------------------------------------------
+%----If atomic, check if a variable (they're all atoms by here, so look
+%----at the first letter).
+code_variable(Variable):-
+    atom(Variable),
+    name(Variable,[FirstASCII|_]),
+    FirstASCII >= 65,
+    FirstASCII =< 90.
+
+%----Numbervars variables look like shit.
+code_variable('$VAR'(_)).
+%------------------------------------------------------------------------------
+%----Search for the variables occurring in the clause and rename to xN
+code_rename_variables(Original,Renamed):-
+    code_rename_variables(Original,[],1,Renamed,_,_).
+
+%----Empty list does nothing
+code_rename_variables([],RenameList,Index,[],RenameList,Index):-
+    !.
+
+%----If a list then do head and tail
+code_rename_variables([FirstTerm|RestOfTerms],RenameList,Index,
+[RenamedFirstTerm|RenamedRestOfTerms],NextRenameList,NextIndex):-
+    !,
+    code_rename_variables(FirstTerm,RenameList,Index,RenamedFirstTerm,
+MiddleRenameList,MiddleIndex),
+    code_rename_variables(RestOfTerms,MiddleRenameList,MiddleIndex,
+RenamedRestOfTerms,NextRenameList,NextIndex).
+
+%----First see if it has already been renamed
+code_rename_variables(Variable,RenameList,Index,Renamed,RenameList,Index):-
+    code_variable(Variable),
+    tptp2X_member(Variable-Renamed,RenameList),
+    !.
+
+%----If not renamed then make renaming
+code_rename_variables(Variable,RenameList,Index,NextName,[Variable-NextName|
+RenameList],NextIndex):-
+    code_variable(Variable),
+    !,
+    concatenate_atoms([x,Index],NextName),
+    NextIndex is Index + 1.
+
+%----Otherwise it's a function to pull apart
+code_rename_variables(Function,RenameList,Index,RenamedFunction,
+NextRenameList,NextIndex):-
+    Function =.. [Functor|Arguments],
+%----Can cope only if max 2 arguments
+    tptp2X_length(Arguments,Arity),
+    Arity =< 2,
+    code_rename_variables(Arguments,RenameList,Index,RenamedArguments,
+NextRenameList,NextIndex),
+    RenamedFunction =.. [Functor|RenamedArguments].
+%------------------------------------------------------------------------------
+%----Check these are all positive units with the predicate, and rename vars
+code_rename_variables_in_axioms([],_,[]).
+
+code_rename_variables_in_axioms([input_clause(Name,Type,[++AxiomAtom])|
+RestOfClauses],ThePredicate,[code_clause(Name,Type,Axiom,'')|RestOfAxioms]):-
+    AxiomAtom =.. [ThePredicate,AxiomTerm],
+    code_rename_variables(AxiomTerm,Axiom),
+    code_rename_variables_in_axioms(RestOfClauses,ThePredicate,RestOfAxioms).
+%------------------------------------------------------------------------------
+%----Find if a term occurs exactly in another, and at what position
+code_occurs_in_list(Subterm,[Term|_],ThisPosition,Position):-
+    code_occurs_in(Subterm,Term,Subposition),
+    !,
+    (Subposition == '' ->
+        Position = ThisPosition
+    ;   concatenate_atoms([ThisPosition,'.',Subposition],Position)).
+
+code_occurs_in_list(Subterm,[_|RestOfTerms],ThisPosition,Position):-
+    !,
+    NextPosition is ThisPosition + 1,
+    code_occurs_in_list(Subterm,RestOfTerms,NextPosition,Position).
+
+code_occurs_in(Subterm,Term,''):-
+    Subterm == Term,
+    !.
+
+code_occurs_in(Subterm,Term,Position):-
+    Term =.. [_|Arguments],
+    code_occurs_in_list(Subterm,Arguments,1,Position).
+%------------------------------------------------------------------------------
+%----Check if it's a condensed detachment clause
+code_clause(CDLiterals,CDAxiom,Pattern,ThePredicate):-
+    tptp2X_select(--CDAtom,CDLiterals,TwoOtherLiterals),
+    CDAtom =.. [ThePredicate,CDTerm],
+    tptp2X_select(--AntecedentAtom,TwoOtherLiterals,[++ConsequentAtom]),
+    AntecedentAtom =.. [ThePredicate,AntecedentTerm],
+    ConsequentAtom =.. [ThePredicate,ConsequentTerm],
+    code_occurs_in(AntecedentTerm,CDTerm,AntecedentPosition),
+    code_occurs_in(ConsequentTerm,CDTerm,ConsequentPosition),
+    concatenate_atoms([AntecedentPosition,' ',ConsequentPosition],Pattern),
+    code_rename_variables(CDTerm,CDAxiom).
+%------------------------------------------------------------------------------
+%----Check if it's condensed detachment, and rename variables too
+code_problem(Clauses,Axioms,code_clause(ExtendedCDName,axiom,CDAxiom,Pattern),
+code_clause(ConjectureName,negated_conjecture,Conjecture,'')):-
+%----Check there's a condensed detachment axiom
+    tptp2X_select(input_clause(CDName,_,CDLiterals),Clauses,NoCDClauses),
+    code_clause(CDLiterals,CDAxiom,Pattern,ThePredicate),
+    concatenate_atoms(['condensed_detachment_',CDName],ExtendedCDName),
+%----Allow only one CD clause
+    !,
+    ConjectureAtom =.. [ThePredicate,TPTPConjecture],
+    tptp2X_select(input_clause(ConjectureName,_,[--ConjectureAtom]),
+NoCDClauses,AxiomClauses),
+%----Check the rest are positive units, and rename the variables
+    code_rename_variables_in_axioms(AxiomClauses,ThePredicate,Axioms),
+    code_rename_variables(TPTPConjecture,Conjecture).
+%------------------------------------------------------------------------------
+%----Print a clause list: 
+code_print_formulae(_,[]).
+
+code_print_formulae(Label,[code_clause(Name,Type,Formula,Trailer)|
+RestOfFormulae]):-
+    write('# '), 
+    write(Type), 
+    write(' '), 
+    write(Name),
+    write(':'), 
+    nl,
+    write(Label),
+    write(' '),
+    write(Formula),
+    write(' '),
+    write(Trailer),
+    nl,
+    code_print_formulae(Label,RestOfFormulae).
+%------------------------------------------------------------------------------
+%----Convert TPTP to code. 
+code(code,Clauses,_):- 
+    tptp_clauses(Clauses),
+    code_problem(Clauses,Axioms,CDAxiom,Conjecture),
+    !, 
+    code_print_formulae(axiom,Axioms),
+    code_print_formulae(pattern,[CDAxiom]),
+    code_print_formulae(goal,[Conjecture]),
+    write('quota 30000000'),
+    nl,
+    write('limit 60000000'),
+    nl,
+    write('setparam 2 1'),
+    nl,
+    write(prove),
+    nl. 
+
+code(code,Formulalist,_):- 
+    tptp_clauses(Formulalist),
+    !, 
+    write('ERROR: Not a condensed detachment problem'),
+    nl.
+
+code(code,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in CoDe'),
+    nl.
+%------------------------------------------------------------------------------
+%----We chose # for comment. % was not possible because it is allowed in 
+%----identifiers. 
+code_format_information('#','.code').
+%------------------------------------------------------------------------------
+code_file_information(format,code,'CoDe format').
+%------------------------------------------------------------------------------

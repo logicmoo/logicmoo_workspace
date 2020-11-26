@@ -1,0 +1,17 @@
+
+
+% Chemins sans boucles de A. Colmerauer
+
+$ chemins :- bon_chemin(L), write(L), nl, fail.
+
+$ bon_chemin(L) :- differents(L), chemin(L).
+
+$ chemin([C]) :- etape(C).
+$ chemin([X|[Y|Z]]) :- route(X,Y), chemin([Y|Z]).
+
+$ route(X,Y) :- etape(X), etape(Y).
+
+$ etape('Marseille').
+$ etape('Angers').
+$ etape('Montreal').
+$ etape('Munich').

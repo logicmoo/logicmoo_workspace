@@ -1,0 +1,10 @@
+//////////////////// les faits    (// indique un commentaire)
+
+Parents_de(rachid, ali, aicha).
+Parents_de(hicham, khalid, fatima).
+
+//////////////// les règles
+
+pere_de (_Enfant, _Pere) :- parents_de (_Enfant, _Pere,_).
+
+enfant(_Enfant) :- pere_de(_Enfant, _).

@@ -1,0 +1,10 @@
+(note "Le Logica De Morgan")
+
+(queryyn (forall (?X ?Y) (<=> (not (and (f ?X ?Y) (g ?X ?Y)) )(or (not (f ?X ?Y)) (not (g ?X ?Y))))))
+
+(answer Yes)
+
+(end_of_file)
+
+
+

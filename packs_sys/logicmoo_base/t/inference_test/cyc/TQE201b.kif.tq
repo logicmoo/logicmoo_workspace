@@ -1,0 +1,30 @@
+(note TQE201b)
+
+(temporallySubsumes Y2ScenarioConflict 
+  (interests-Prop UnitedStatesOfAmerica 
+    (thereExists ?SIT 
+      (instance ?SIT 
+        (CollectionSubsetFn 
+          (MakingFn OilPipeline) 
+          (TheSetOf ?OBJ 
+            (and 
+              (directingAgent ?OBJ AIOC) 
+              (eventOccursAt ?OBJ Iran))))))))
+
+(query (temporallySubsumes Y2ScenarioConflict 
+               (interests-Prop UnitedStatesOfAmerica 
+                   (exists 
+                       (?SIT) 
+                       (instance ?SIT 
+                           (CollectionSubsetFn 
+                               (MakingFn OilPipeline) 
+                               (TheSetOf ?OBJ 
+                                   (and 
+                                       (directingAgent ?OBJ AIOC) 
+                                       (eventOccursAt ?OBJ Iran)))))))))
+
+(answer yes)
+
+(end_of_file)
+
+

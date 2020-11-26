@@ -1,0 +1,7 @@
+% -----------------------------------------------------------------------------
+% Name: RENAMING VARIABLES
+%
+% Legal TPTP variables (such as V_X) should not get renamed in the proof.
+% -----------------------------------------------------------------------------
+
+fof(goal, conjecture, (! [V_X, Y] : ? [Z] : ((p(V_X) | p(Y)) => p(Z)))).

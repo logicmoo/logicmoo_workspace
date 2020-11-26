@@ -1,0 +1,24 @@
+(note TQF124b)
+(abort)
+
+(hasBeliefSystems Taliban SunniIslam) 
+(instance Taliban PoliticalParty) 
+(residenceOfOrganization Taliban Afghanistan) 
+(instance Taliban RevoltOrganization) 
+
+(implies 
+ (assertedTermFormulas ?TERM ?FORMULA) 
+ (descriptionFormulas ?TERM ?FORMULA)) 
+
+(query (findall ?DESCRIPTIVE-FORMULA (and 
+   (descriptionFormulas Taliban ?DESCRIPTIVE-FORMULA) 
+   (not 
+       (assertedTermFormulas termOfUnit ?DESCRIPTIVE-FORMULA)))))
+
+(answer (list (hasBeliefSystems Taliban SunniIslam) ))
+(answer (list (instance Taliban PoliticalParty) ))
+(answer (list (residenceOfOrganization Taliban Afghanistan)  ))
+(answer (list (instance Taliban RevoltOrganization)  ))
+
+(end_of_file)
+

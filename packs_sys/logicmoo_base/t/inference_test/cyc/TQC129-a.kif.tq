@@ -1,0 +1,16 @@
+(note TQC129)
+
+(meetsSpatially Qatar PersianGulf) 
+
+(subrelation meetsSpatially near) 
+
+
+
+
+(queryyn
+
+ (near Qatar PersianGulf))
+
+(answer Yes)
+
+(end_of_file)  

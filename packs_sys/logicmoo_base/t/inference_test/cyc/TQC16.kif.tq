@@ -1,0 +1,32 @@
+(note TQC16)
+
+
+(productionAmountDuring Qatar PetroleumProduct 
+ (YearFn 1995) 
+ (BarrelsPerDay 498000)) 
+
+(instance 
+ (BarrelsPerDay 600000) FlowRate) 
+
+(productionCapacityDuring Qatar PetroleumProduct 
+ (YearFn 1995) 
+ (BarrelsPerDay 600000)) 
+
+
+
+
+(query (findall (?TIME ?FRACTION)
+
+ (thereExists ?PROD 
+ (thereExists ?PROD-CAP 
+ (and 
+ (productionAmountDuring Qatar PetroleumProduct ?TIME ?PROD) 
+ (productionCapacityDuring Qatar PetroleumProduct ?TIME ?PROD-CAP) 
+ (instance ?PROD-CAP FlowRate) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?PROD ?PROD-CAP))))))))
+ 
+(answer 1995 83.0000)  
+
+(end_of_file)

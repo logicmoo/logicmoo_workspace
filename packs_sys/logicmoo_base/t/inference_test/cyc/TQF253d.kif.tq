@@ -1,0 +1,68 @@
+(note TQF253d)
+
+(implies 
+  (and 
+    (subclass ?DEVICETYPE Pipeline) 
+    (instance ?DEVICE ?DEVICETYPE) 
+    (primaryFunction ?DEVICE 
+      (TransportFn ?GOODS) conveyor-Stationary)) 
+  (transportedInTypes ?GOODS ?DEVICETYPE)) 
+
+(subclass OilPipeline Pipeline) 
+(instance SuMedPipeline OilPipeline) 
+(primaryFunction SuMedPipeline 
+ (TransportFn Petroleum-CrudeOil) conveyor-Stationary) 
+
+(implies 
+  (instance ?FACIL OilTerminal) 
+  (transportFacilityFor ?FACIL OilTanker)) 
+
+(implies
+  (and
+    (instance ?TERMINAL OilTerminal)
+    (located ?OB ?LOC))
+  (thereExists ?X
+    (and
+      (instance ?X OilTanker)
+      (inRegion ?X LOC))))
+
+(implies
+  (and
+    (contains ?BIG ?SMALLER)
+    (contains ?SMALLER ?SMALLEST))
+  (contains ?BIG ?SMALLEST))
+  
+(contains PersianGulfRegion CityOfRasBahreganIran) 
+(located SeaportOfRasBahreganIran CityOfRasBahreganIran) 
+ 
+(transportedInTypes Petroleum-CrudeOil OilTanker) 
+
+(contains PersianGulfRegion Iraq) 
+(located Kirkuk-CeyhanPipeline Iraq) 
+(instance Kirkuk-CeyhanPipeline OilPipeline) 
+
+(instance SeaportOfRasBahreganIran OilTerminal) 
+
+(query (findall (?WAY-TO-TRANSPORT-OIL)
+  (exists 
+    (?CONVEYOR) 
+    (exists 
+      (?FACILITY) 
+      (exists 
+        (?REGION) 
+        (and 
+          (transportedInTypes Petroleum-CrudeOil ?WAY-TO-TRANSPORT-OIL) 
+          (or 
+            (and 
+              (instance ?CONVEYOR ?WAY-TO-TRANSPORT-OIL) 
+              (inRegion ?CONVEYOR ?REGION) 
+              (contains PersianGulfRegion ?REGION)) 
+            (and 
+              (inRegion ?FACILITY ?REGION) 
+              (contains PersianGulfRegion ?REGION) 
+              (transportFacilityFor ?FACILITY ?WAY-TO-TRANSPORT-OIL)))))))))
+
+(answer OilPipeline)
+(answer OilTanker)
+
+(end_of_file)

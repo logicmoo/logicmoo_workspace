@@ -1,0 +1,319 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----Waldmeister
+%----
+%----Written by Andreas Jaeger <jaeger@informatik.uni-kl.de>, July 1997.
+%----Last Change: 24th June 1998
+%==============================================================================
+% Call: tptp2X -q0 -t rm_equality:rstfp -f waldmeister -d
+%------------------------------------------------------------------------------
+%----Output sort information
+output_wm_sort(0):-
+	!.					% Red Cut
+
+output_wm_sort(Arity):-
+        write(' ANY'),
+        Arity1 is Arity - 1,
+        output_wm_sort(Arity1).
+%------------------------------------------------------------------------------
+%----Select constants
+select_wm_const([],[]).
+
+select_wm_const([Func/0|RestFunc],[Func/0|RestConst]):-
+	!,					% Red Cut
+	select_wm_const(RestFunc, RestConst).
+
+select_wm_const([_Func|RestFunc], RestConst):-
+	select_wm_const(RestFunc, RestConst).
+%------------------------------------------------------------------------------
+%----From format.tap
+%----Extract a functor, knowing it's below the atom level
+wm_functor_extract(Atom,Atom/0):-
+    atom(Atom),
+    !,
+%----Check it's not a variable
+    name(Atom,[FirstASCII|_]),
+    FirstASCII >= 97,
+    FirstASCII =< 122.
+ 
+wm_functor_extract([FirstTerm|RestOfTerms],Functor):-
+    !,
+    tptp2X_member(Term,[FirstTerm|RestOfTerms]),
+    wm_functor_extract(Term,Functor).
+
+%----Otherwise it's a function (hoorah)
+wm_functor_extract(Function,Functor/Arity):-
+    functor(Function,Functor,Arity).
+
+%----Extract functors from the arguments
+wm_functor_extract(Function,Functor):-
+    Function =.. [_|Terms],
+    wm_functor_extract(Terms,Functor).
+%------------------------------------------------------------------------------
+%----Extract functors
+select_wm_functor(Clauses,Functor):-
+    tptp2X_member(input_clause(_,_,Literals),Clauses),
+    tptp2X_member(Literal,Literals),
+    Literal =.. [_,Atom],
+    Atom =.. [_|Terms],
+    wm_functor_extract(Terms,Functor).
+%------------------------------------------------------------------------------
+%----Calculates: Set1 \ Set2
+set_diff_wm([],_,[]).
+
+set_diff_wm([First|Rest], Set2, NewSet):-
+	tptp2X_member(First, Set2),
+	!,					% Red Cut
+	set_diff_wm(Rest, Set2, NewSet).
+
+set_diff_wm([First|Rest], Set2, [First|NewRest]):-
+	set_diff_wm(Rest, Set2, NewRest).
+%------------------------------------------------------------------------------
+%----Select Skolem constants
+select_wm_skolemconst(AllFunctors, Clauses, SkolemConst):-
+	tptp2X_setof1(Functor,select_wm_functor(Clauses,Functor),Functors),
+	select_wm_const(Functors, Constants),
+	select_wm_const(AllFunctors, AllConstants),
+	set_diff_wm(AllConstants, Constants, SkolemConst).
+%------------------------------------------------------------------------------
+%----Sorting of Functors: Sort by Arity (unary > 2-ary > 3-ary >...)
+%----but make constants smaller than everything else (and skolem constants
+%----smaller than other constants).
+%----A skolem constant for WM is a constant that only occurs in the list
+%----of goals (conclusions).
+output_wm_func_greater(Func1/0,_Func2/0, SkolemConsts):-
+	!,					% Red Cut
+	tptp2X_member(Func1/0, SkolemConsts).
+
+output_wm_func_greater(_Func1/Arity1,_Func2/Arity2, _SkolemConsts):-
+	Arity1 \== 0,
+	Arity2 \== 0,
+	Arity1 > Arity2.
+
+output_wm_func_greater(_Func1/Arity1,_Func2/_Arity2, _SkolemConsts):-
+	Arity1 == 0.
+%------------------------------------------------------------------------------
+%----Insertion Sort (see Bratko, p. 214)
+output_wm_insertsort([],[], _).
+output_wm_insertsort([Func|RestFuncs],Sorted, SkolemConsts):-
+	output_wm_insertsort(RestFuncs, SortedTail, SkolemConsts),
+	output_wm_insert(Func, SortedTail, Sorted, SkolemConsts).
+
+output_wm_insert(Func1, [Func2|Sorted], [Func2|Sorted1], SkolemConsts):-
+	output_wm_func_greater(Func1, Func2, SkolemConsts),
+	!,					% Red Cut
+	output_wm_insert(Func1, Sorted, Sorted1, SkolemConsts).
+
+output_wm_insert(Func, Sorted, [Func|Sorted], _SkolemConsts).
+%------------------------------------------------------------------------------
+output_wm_declare_functions([]):-
+	!.
+
+output_wm_declare_functions([FirstFunction/Arity|RestFunctions]):-
+        write(FirstFunction),
+	write(':'),
+        output_wm_sort(Arity),
+        write(' -> ANY'),
+	nl,
+	(RestFunctions \== []  ->
+            tptp2X_tab(16);
+        true),
+	output_wm_declare_functions(RestFunctions).
+%------------------------------------------------------------------------------
+output_wm_declare_variables([]):-
+	!.
+
+output_wm_declare_variables([FirstVar|RestVars]):-
+        write(FirstVar),
+        (RestVars \== []  ->
+            write(',');
+        true),
+	output_wm_declare_variables(RestVars).
+%------------------------------------------------------------------------------
+output_wm_declare_all_variables([]):-
+        write('VARIABLES       X: ANY'),
+        nl.
+
+output_wm_declare_all_variables(VariableList):-
+        write('VARIABLES       '),
+        output_wm_declare_variables(VariableList),
+        write(': ANY'),
+        nl.
+%------------------------------------------------------------------------------
+%----Output weights for KBO
+output_wm_orderphi([]).
+
+output_wm_orderphi([Func/_Arity|RestFuncs]):-
+	write(Func),
+	write('=1'),
+	(RestFuncs \== []  ->
+            write(', ');
+	true),
+	output_wm_orderphi(RestFuncs).
+%------------------------------------------------------------------------------
+%----Output precedence for ordering
+output_wm_ordergt([]).
+
+output_wm_ordergt([Func/_Arity|RestFuncs]):-
+	write(Func),
+	(RestFuncs \== []  ->
+            write(' > ');
+	true),
+	output_wm_ordergt(RestFuncs).
+%------------------------------------------------------------------------------
+%----Generate a standard KBO
+output_wm_ordering(Functions,SkolemConsts):-
+        write('ORDERING        KBO'),
+	nl,
+	output_wm_insertsort(Functions, SortFunctions, SkolemConsts),
+ 	tptp2X_tab(16),
+ 	output_wm_orderphi(SortFunctions),
+ 	nl,
+	tptp2X_tab(16),
+	output_wm_ordergt(SortFunctions),
+	nl.
+%------------------------------------------------------------------------------
+all_negative_equality_literals([]).
+
+all_negative_equality_literals([--'$tptp_equal'(_,_)|RestOfLiterals]):-
+    all_negative_equality_literals(RestOfLiterals).
+%------------------------------------------------------------------------------
+check_theres_one_or_all_ground([_]).
+
+check_theres_one_or_all_ground(Literals):-
+    tptp2X_syntax_extract_variables(Literals,_,[]).
+%------------------------------------------------------------------------------
+select_wm_negative_clause(Clauses,input_clause(Name,Type,Literals),
+RestOfClauses):-
+    tptp2X_select(input_clause(Name,Type,Literals),Clauses,RestOfClauses),
+    all_negative_equality_literals(Literals),
+    check_theres_one_or_all_ground(Literals).
+%------------------------------------------------------------------------------
+all_positive_unit_equality([]).
+
+all_positive_unit_equality([input_clause(_,_,[++'$tptp_equal'(_,_)])|RestOfClauses]):-
+    all_positive_unit_equality(RestOfClauses).
+%------------------------------------------------------------------------------
+select_wm_equals(Clauses, PositiveEquations, NegativeGoals):-
+    select_wm_negative_clause(Clauses,input_clause(Name,Type,Literals),
+PositiveEquations),
+%DEBUG write('negative literals are '),write(Literals),nl,
+%DEBUG write('positive clauses are  '),write(PositiveEquations),nl,
+%----Check that there is no other
+    \+ select_wm_negative_clause(PositiveEquations,_,_),
+%----Check they're all unit equality
+    all_positive_unit_equality(PositiveEquations),
+    !,
+    tptp2X_setof1(input_clause(Name,Type,[Literal]),
+        tptp2X_member(Literal,Literals),
+        NegativeGoals).
+
+select_wm_equals(Clauses, Clauses, []):-
+    all_positive_unit_equality(Clauses),
+    !.
+
+select_wm_equals(_,[],[]):-
+    write('ERROR - More than 1 -ve clause or not UEQ or -ve clause is non-ground'),
+    nl.
+%------------------------------------------------------------------------------
+output_wm_declaration(Mode,Functions,Variables,_Predicates,EqClauses):-
+    write('NAME            Unknown'),
+    nl,nl,
+    write('MODE            '),
+    write(Mode),
+    nl,nl,
+    write('SORTS           ANY'),
+    nl,nl,
+    write('SIGNATURE       '),
+    output_wm_declare_functions(Functions),
+    nl,
+    select_wm_skolemconst(Functions, EqClauses, SkolemConsts),
+    output_wm_ordering(Functions, SkolemConsts),
+    nl,
+    output_wm_declare_all_variables(Variables),
+    nl.
+%------------------------------------------------------------------------------
+%----Output name of clause
+output_wm_name(Name):-
+        write('   % '),
+        write(Name).
+%------------------------------------------------------------------------------
+%----Output a clause
+output_wm_clause([],_).
+
+output_wm_clause([--'$tptp_equal'(LHS,RHS)], Name):-
+	!,					% Red Cut
+	write(LHS),
+	write(' = '),
+	write(RHS),
+        output_wm_name(Name).
+
+output_wm_clause([++'$tptp_equal'(LHS,RHS)], Name):-
+	!,					% Red Cut
+	write(LHS),
+	write(' = '),
+	write(RHS),
+        output_wm_name(Name).
+
+output_wm_clause([First|Rest], Name):-
+	Rest \== [],
+	!,					% Red Cut
+	output_wm_clause([First], Name),
+	nl,
+	tptp2X_tab(16),
+	output_wm_clause(Rest, Name).
+%------------------------------------------------------------------------------
+%----Output a list of clauses
+output_wm_clauses([]).
+
+output_wm_clauses([input_clause(Name, _Status, Literals)|
+                   RestClauses]):-
+        output_wm_clause(Literals, Name),
+        nl,
+        (RestClauses \== []  ->
+            tptp2X_tab(16);
+        true),
+        output_wm_clauses(RestClauses).
+%------------------------------------------------------------------------------
+% output_wm_all_clauses([]).
+
+output_wm_all_clauses(ClausesList):-
+        write('EQUATIONS       '),
+        output_wm_clauses(ClausesList).
+%------------------------------------------------------------------------------
+output_wm_all_theorems([]):-
+        nl,
+        write('CONCLUSION      '),
+        nl.
+
+output_wm_all_theorems(ClausesList):-
+        nl,
+        write('CONCLUSION      '),
+        output_wm_clauses(ClausesList).
+%------------------------------------------------------------------------------
+choose_wm_mode([],'COMPLETION').
+
+choose_wm_mode([_|_],'PROOF').
+%------------------------------------------------------------------------------
+%----Output all the clauses in wm format
+waldmeister(waldmeister,InputClauses,_):-
+%----Find all the variables
+    tptp2X_syntax_extract_variables(InputClauses,_,Variables),
+%----Extract functors
+    examine_formulae_for_functors(InputClauses,Functors,_),
+%----Extract predicates
+    examine_formulae_for_predicates(InputClauses,_,Predicates,_),
+%----Separate clauses and theorems
+    select_wm_equals(InputClauses, OtherClauses, TheoremClauses),
+    choose_wm_mode(TheoremClauses,Mode),
+    output_wm_declaration(Mode,Functors,Variables,Predicates,OtherClauses),
+%----Output declarations
+    output_wm_all_clauses(OtherClauses),
+    output_wm_all_theorems(TheoremClauses).
+%------------------------------------------------------------------------------
+%----Provide information about the wm format
+waldmeister_format_information('%','.pr').
+%------------------------------------------------------------------------------
+%----Provide information about the wm file
+waldmeister_file_information(format,waldmeister,'Waldmeister format').
+%------------------------------------------------------------------------------

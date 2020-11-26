@@ -1,0 +1,2 @@
+
+Compile the patterns used for ellipsis processing, which are defined by the ellipsis\_\-classes config file entry. The compiled patterns will be loaded next time you invoke LOAD\_\-TRANSLATE. 

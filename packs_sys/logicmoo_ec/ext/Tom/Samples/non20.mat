@@ -1,0 +1,6 @@
+%20.
+not (box a : (box a : not ( exists X : box a : not ( box a : (box a :  '$Ra'(X) implies box a :  '$Rb'(X)))) implies box a :  forall Y : box a : (box a : not ( box a :  '$Rb'(Y)) implies box a : not ( box a :  '$Ra'(Y))))).
+
+%%% Axioms of S4: reflexivity and transitivity
+%# modal_axiom_schema(reflexive,a).
+%# modal_axiom_schema(transitive,a).

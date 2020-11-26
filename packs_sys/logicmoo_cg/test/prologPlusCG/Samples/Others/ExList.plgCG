@@ -1,0 +1,32 @@
+membreP(e, (e|q)).
+membreP(e, (t|q)) :- membreP(e, t).
+membreP(e, (_|q)) :- membreP(e, q).
+
+papa(abdou, fanida).
+papa(abdou, mekki).
+papa(abdou, adil).
+
+// une bonne question serait : quel est la (les) combinaison z = x + y,  avec x, y et z des elem de la liste
+liste((1, 2, 3, 4)).
+
+insertion(e, x, (e|x)).
+insertion(e, (f|x), (f|y)) :- insertion(e, x, y).
+
+permutation((), ()).
+permutation((e|x), z) :- permutation(x, y), insertion(e, y, z).
+
+inclu((), L) :- /.
+inclu((x|q), L1) :- member(x, L1), inclu(q, L1), /.
+
+unif(x, x).
+
+dernier((e), e).
+dernier((_|q), e) :- dernier(q, e).
+
+membre(e, (e|q)).
+membre(e, (_|q)) :- membre(e, q).
+
+enleve(e, (), ()).
+enleve(e, (e|q), q1) :- enleve(e, q, q1).
+enleve(e, (x|q), (x|q1)) :- enleve(e, q, q1).
+

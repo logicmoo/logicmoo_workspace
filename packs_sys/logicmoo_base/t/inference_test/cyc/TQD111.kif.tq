@@ -1,0 +1,48 @@
+(note TQD111)
+ 
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 13 HPKBScenarioConflict) 
+ (SKF-19770703)) 
+
+(subProcess HPKBScenarioConflict 
+ (SKF-19770703)) 
+
+(maleficiary 
+ (SKF-19770703) Iran) 
+
+(instance SeaportOfRasTannurahSaudiArabia OilTerminal) 
+
+(instance 
+ (SKF-19770703) Action) 
+
+(instrument-Generic 
+ (SKF-19770703) SeaportOfRasTannurahSaudiArabia) 
+
+(not 
+ (quotedCollection OilTerminal)) 
+
+(completeExtentKnown quotedCollection) 
+
+
+
+
+(query (findall ?KIND
+
+ (thereExists ?ACT 
+ (thereExists ?ACTOR 
+ (and 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 13 HPKBScenarioConflict) ?ACT) 
+ (assertedFormula 
+ (instance ?ACTOR ?KIND)) 
+ (not 
+ (quotedCollection ?KIND)) 
+ (instrument-Generic ?ACT ?ACTOR) 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT Action) 
+ (maleficiary ?ACT Iran))))))
+
+(answer OilTerminal)  
+
+(end_of_file)
+

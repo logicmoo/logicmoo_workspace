@@ -1,0 +1,10 @@
+/*
+utterance:[sem= @ynq_sem(Sem)] -->
+  cp:[sem=Sem, cp_type=inv, tptype=ynq, vfinal=n, vform=finite, inv=y, has_v_gap=n, has_subj_gap=n, has_obj_gap=n, has_indirobj_gap=n].
+*/
+utterance:[sem= @dcl_sem(Sem)] -->
+	cp:[sem=Sem, headtype=english, cp_type=topic, tptype=dcl, vfinal=n, vform=finite, inv=n, has_v_gap=n].
+
+	
+utterance:[sem= @imperative_sem(Sem)] -->
+	cp:[sem=Sem, headtype=germanic, cp_type=inv, tptype=imp, vfinal=n, vform=imp, inv=y, has_v_gap=y, has_subj_gap=y, has_obj_gap=n, has_indirobj_gap=n].

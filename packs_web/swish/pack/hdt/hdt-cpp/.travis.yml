@@ -1,0 +1,55 @@
+language: cpp
+matrix:
+  include:
+    - os: osx
+      env: export HDT_CPP=clang++
+    - os: osx
+      env: export HDT_CPP=g++
+    - os: linux
+      env: export HDT_CPP=clang++
+    - os: linux
+      env: export HDT_CPP=g++
+    - os: linux
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8']
+      env: export HDT_CPP=g++-4.8
+    - os: linux
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+      env: export HDT_CPP=g++-5
+    - os: linux
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6']
+      env: export HDT_CPP=g++-6
+before_install:
+  - pushd $HOME
+  # Download and install SERD
+  - curl -s http://download.drobilla.net/serd-0.24.0.tar.bz2 | tar -xj
+  - pushd serd-* && ./waf configure --prefix=$HOME/local && ./waf && ./waf install && popd
+  # Download and install Raptor
+  - curl -s http://download.librdf.org/source/raptor2-2.0.15.tar.gz | tar -xz
+  - pushd raptor2-* && ./configure --prefix=$HOME/local && make -j2 && make install && popd
+  # Set up build environment
+  - $HDT_CPP --version
+  - export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/local/lib"
+  - export HDT_LDFLAGS="-I$HOME/local/include -L$HOME/local/lib"
+  - popd
+script:
+  # Build standalone binaries
+  - cd hdt-lib
+  - make -j2       CPP=$HDT_CPP LDFLAGS="$HDT_LDFLAGS"
+  # Make and run selected tests
+  - make -j2 tests CPP=$HDT_CPP LDFLAGS="$HDT_LDFLAGS"
+  - tests/bit375 > /dev/null
+  - tests/bitutiltest > /dev/null
+  - tests/listener > /dev/null
+  - tests/logarr > /dev/null
+  - tests/streamtest > /dev/null
+  - tests/testmax > /dev/null
+  - tools/hdtSearch -q 0 data/literals.hdt

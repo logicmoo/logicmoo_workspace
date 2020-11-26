@@ -1,0 +1,57 @@
+
+% Version for impersonal subject - House rule
+% there is a light
+s:[sem= @np_vp_sem_impersonal_subj(Np, Vp), 
+   wh=Wh, vform=finite, inv=n, whmoved=n, relagr=Agr, rel_sem_n_type=SubjType, operator_wrapped=n, takes_adv_type=AdvpType, 
+   gapsin=GIn, gapsout=GOut] -->
+np:[sem=Np, nform=(\(normal)),
+    agr=Agr, wh=Wh, sem_n_type=SubjType, @subj_feats_for_np(Subj), 
+    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj], 
+vp:[sem=Vp, agr=Agr, inv=n, vform=finite, @subj_feats_for_vp(Subj), 
+    takes_post_mods=n, passive_subj=n, takes_adv_type=AdvpType, 
+    gapsin=GIn, gapsout=GOut].
+
+% Like vbar_v_np_InvertedSubject, but with an impersonal subject - House rule
+% [is there] a light in the kitchen
+vbar:[sem= @inverted_subj_sem_impersonal_subj(V, Np),
+      agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=VPPassive,
+      @subj_feats_for_vp(Subj), 
+      @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType, passivised=n, passive_subj=n] -->
+v:[sem=V,
+   agr=Agr, subcat=Sub, inv=y, vform=VForm, vp_vform=VPVform, vp_passivised=VPPassive,
+   @subj_feats_for_vp(Subj), @takes_pps(PPs),
+   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+   obj_def=ObjDef, obj_syn_type=ObjSynType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType, passivised=n, passive_subj=n], 
+np:[sem=Np, nform=(\(normal)),
+    agr=Agr, wh=n, @subj_feats_for_np(Subj), takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj].
+
+% vp_v_np_ThereIs - House rule
+% (there) is a door 
+% Note that verb agrees with complement
+vp:[sem= @vp_v_np_there_is_sem(Verb, NP),
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb,
+      subcat=nx0vnx1_there_is, 
+      @vbar_feats_for_vp(Feats),
+      obj_sem_n_type=ObjSem, obj_def=ObjDef, obj_syn_type=ObjSynType], 
+np:[sem=NP, agr=Agr, wh=n, nform=normal, sem_n_type=ObjSem, def=ObjDef, syn_type=ObjSynType, 
+    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% Compound formed of N followed by NBAR - House rule
+% e.g. the [kitchen light]
+nbar:[sem= @nbar_n_nbar_sem(N1, N2), agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType] -->
+n:[sem=N1, sem_n_type=PreModType],
+nbar:[sem=N2, agr=Agr, sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod,
+      takes_det_type=DetType].
+

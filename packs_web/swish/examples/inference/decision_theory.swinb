@@ -1,0 +1,137 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm1">
+<h2>Decision theory</h2>
+Using cplint you can also solve decision theory problems using the method proposed in [1].
+Consider the following program:
+</div>
+
+<div class="nb-cell program" name="p1">
+:- use_module(library(pita)).
+:- pita.
+:- begin_lpad.
+
+0.3::rain.
+0.5::wind.
+
+% decision facts
+? :: umbrella.
+? :: raincoat.
+
+broken_umbrella :- rain,umbrella,wind.
+dry :- rain, raincoat.
+dry :- rain, umbrella, \+(broken_umbrella).
+dry :- \+(rain).
+
+% utility facts
+utility(broken_umbrella,-40).
+utility(raincoat,-20).
+utility(umbrella,-2).
+utility(dry,60).
+
+:- end_lpad.
+</div>
+
+<div class="nb-cell markdown" name="md1">
+It models a situation where a user is unsure whether bring an umbrella 
+or wearing a raincoat. There are two decision facts indicated with `?::`. The utility of each probabilistic fact is indicated with the predicate `utility/2`. For instance, `utility(broken_umbrella,-40)` means that the utility of the probabilistic fact `broken_umbrella` is `-40`. The goal here is to find the subset of the decision variables that gives the highest expected utility.
+To solve the program, you can use the predicate `dt_solve/2` in this way:
+</div>
+
+<div class="nb-cell query" name="q1">
+dt_solve(Decision,Utility).
+</div>
+
+<div class="nb-cell markdown" name="md4">
+The expected solution is to bring the `umbrella` which has expected utility `43`.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+Another possibility is to extend the [viralmarketing problem](http://cplint.eu/example/inference/viral.swinb) with decision facts. Suppose you have a list possible costumers that are connected in a social network. You have to decide which one to market in order to get the highest possible revenue. For instance, the program could be:
+</div>
+
+<div class="nb-cell program" name="p2">
+:- use_module(library(pita)).
+
+:- pita.
+
+:- begin_lpad.
+
+?:: marketed(theo).
+?:: marketed(bernd).
+?:: marketed(guy).
+?:: marketed(ingo).
+?:: marketed(angelika). 
+?:: marketed(martijn).
+?:: marketed(laura).
+?:: marketed(kurt).
+
+utility(marketed(theo),-2).
+utility(marketed(bernd),-2).
+utility(marketed(guy),-2).
+utility(marketed(ingo),-2).
+utility(marketed(angelika),-2).
+utility(marketed(martijn),-2).
+utility(marketed(laura),-2).
+utility(marketed(kurt),-2).
+
+utility(buys(theo),5).
+utility(buys(bernd),5).
+utility(buys(guy),5).
+utility(buys(ingo),5).
+utility(buys(angelika),5).
+utility(buys(martijn),5).
+utility(buys(laura),5).
+utility(buys(kurt),5).
+
+0.2 :: buy_from_marketing(_).
+0.3 :: buy_from_trust(_,_).
+
+trusts(X,Y) :- trusts_directed(X,Y).
+trusts(X,Y) :- trusts_directed(Y,X).
+
+trusts_directed(bernd,ingo).
+trusts_directed(ingo,theo).
+trusts_directed(theo,angelika).
+trusts_directed(bernd,martijn).
+trusts_directed(ingo,martijn).
+trusts_directed(martijn,guy).
+trusts_directed(guy,theo).
+trusts_directed(guy,angelika).
+trusts_directed(laura,ingo).
+trusts_directed(laura,theo).
+trusts_directed(laura,guy).
+trusts_directed(laura,martijn).
+trusts_directed(kurt,bernd).
+
+buys(X):-
+    marketed(X),
+    buy_from_marketing(X).
+buys(X):-
+    trusts(X,Y),
+    buy_from_trust(X,Y),
+    buys(Y).
+
+:- end_lpad.
+
+</div>
+
+<div class="nb-cell markdown" name="md3">
+You can ask what is the best strategy using as before `dt_solve/2`:
+</div>
+
+<div class="nb-cell query" name="q2">
+dt_solve(Decision,Utility).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+Here the expected solution is to market `theo`, `guy`, `ingo` and `martjin` which has expected utility `3.21`.
+</div>
+
+<div class="nb-cell html" name="htm2">
+<h3>References</h3>
+[1] 
+G. V. den Broeck, I. Thon, M. van Otterlo, L. D. Raedt, Dtproblog: A decision-theoretic probabilistic prolog, in: M. Fox, D. Poole (Eds.), 24th AAAI Conference on Artificial Intelligence, AAAI’10, Atlanta, Georgia, USA, July 11-15, 2010, AAAI Press, 2010, pp. 1217–1222.
+</div>
+
+</div>

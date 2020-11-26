@@ -1,0 +1,174 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="Latest Version">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine='"Parser_SUPPLE_SWI.exe"'/>
+			</Target>
+		</Menu>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
+		</Folder>
+		<Folder
+			Name="Header Files"
+			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if"/>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters=""/>
+	</CustomFolders>
+	<Files AutoFolders="PackageView">
+		<Folder Name="prolog">
+			<F N="prolog/best_parse.pl"/>
+			<F N="prolog/buchart.pl"/>
+			<F N="prolog/compile_grammar.pl"/>
+			<F N="prolog/compiled_grammar.pl"/>
+			<F N="prolog/dynamic.pl"/>
+			<F N="prolog/input.txt"/>
+			<F N="prolog/mkparser_plcafe.pl"/>
+			<F N="prolog/mkparser_sicstus.pl"/>
+			<F N="prolog/mkparser_swi.pl"/>
+			<F N="prolog/ne_rules.pl"/>
+			<F N="prolog/parse_file.pl"/>
+			<F N="prolog/plcafe_supple_io.pl"/>
+			<F N="prolog/plcafe_utils.pl"/>
+			<F N="prolog/semantics.pl"/>
+			<F N="prolog/sicstus3_utils.pl"/>
+			<F N="prolog/sicstus4_utils.pl"/>
+			<F N="prolog/supple.pl"/>
+			<F N="prolog/supple_io.pl"/>
+			<F N="prolog/supple_runtime.pl"/>
+			<F N="prolog/supple_utils.pl"/>
+			<F N="prolog/swi_utils.pl"/>
+			<F N="prolog/update_name_match.pl"/>
+		</Folder>
+		<Folder Name="prolog/grammar">
+			<F N="prolog/grammar/aircraft_ne_rules.pl"/>
+			<F N="prolog/grammar/default_ne_rules.pl"/>
+			<F N="prolog/grammar/general_ne_rules.pl"/>
+			<F N="prolog/grammar/load.pl"/>
+			<F N="prolog/grammar/location_ne_rules.pl"/>
+			<F N="prolog/grammar/measure_ne_rules.pl"/>
+			<F N="prolog/grammar/money_ne_rules.pl"/>
+			<F N="prolog/grammar/np_rules.pl"/>
+			<F N="prolog/grammar/npcore_rules.pl"/>
+			<F N="prolog/grammar/organ_ne_rules.pl"/>
+			<F N="prolog/grammar/person_ne_rules.pl"/>
+			<F N="prolog/grammar/plcafe_load.pl"/>
+			<F N="prolog/grammar/pp_rules.pl"/>
+			<F N="prolog/grammar/q_rules.pl"/>
+			<F N="prolog/grammar/q_rules_old.pl"/>
+			<F N="prolog/grammar/rel_rules.pl"/>
+			<F N="prolog/grammar/s_rules.pl"/>
+			<F N="prolog/grammar/semantic_rules.pl"/>
+			<F N="prolog/grammar/semantic_rules_1.pl"/>
+			<F N="prolog/grammar/semantic_rules_old.pl"/>
+			<F N="prolog/grammar/space_ne_rules.pl"/>
+			<F N="prolog/grammar/time_ne_rules.pl"/>
+			<F N="prolog/grammar/timex_ne_rules.pl"/>
+			<F N="prolog/grammar/vp_rules.pl"/>
+			<F N="prolog/grammar/vpcore_rules.pl"/>
+		</Folder>
+		<Folder
+			Name="shef.nlp.supple"
+			Type="Package">
+			<F N="src/shef/nlp/supple/SUPPLE.java"/>
+			<F N="src/shef/nlp/supple/SUPPLERecord.java"/>
+			<F N="src/shef/nlp/supple/TestSuite.java"/>
+		</Folder>
+		<Folder
+			Name="shef.nlp.supple.category"
+			Type="Package">
+			<F N="src/shef/nlp/supple/category/Category.java"/>
+			<F N="src/shef/nlp/supple/category/Chart.java"/>
+			<F N="src/shef/nlp/supple/category/Edge.java"/>
+			<F N="src/shef/nlp/supple/category/FeatureValue.java"/>
+			<F N="src/shef/nlp/supple/category/InitialEdge.java"/>
+		</Folder>
+		<Folder
+			Name="shef.nlp.supple.mapping"
+			Type="Package">
+			<F N="src/shef/nlp/supple/mapping/BrillToSUPPLE.java"/>
+		</Folder>
+		<Folder
+			Name="shef.nlp.supple.prolog"
+			Type="Package">
+			<F N="prolog-impls/sicstus/src/shef/nlp/supple/prolog/AbstractSICStusProlog.java"/>
+			<F N="src/shef/nlp/supple/prolog/Prolog.java"/>
+			<F N="prolog-impls/plcafe/src/shef/nlp/supple/prolog/PrologCafe.java"/>
+			<F N="prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog.java"/>
+			<F N="prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog3.java"/>
+			<F N="prolog-impls/sicstus/src/shef/nlp/supple/prolog/SICStusProlog4.java"/>
+			<F N="prolog-impls/swi/src/shef/nlp/supple/prolog/SWIJavaProlog.java"/>
+			<F N="prolog-impls/swi/src/shef/nlp/supple/prolog/SWIProlog.java"/>
+		</Folder>
+		<Folder
+			Name="shef.nlp.supple.utils"
+			Type="Package">
+			<F N="src/shef/nlp/supple/utils/BestParseOutput.java"/>
+			<F N="src/shef/nlp/supple/utils/EmptyFeatureMap.java"/>
+			<F N="src/shef/nlp/supple/utils/IllegalCategoryName.java"/>
+			<F N="src/shef/nlp/supple/utils/InvalidPosCategory.java"/>
+			<F N="src/shef/nlp/supple/utils/SemOutput.java"/>
+			<F N="src/shef/nlp/supple/utils/SortedAnnotationList.java"/>
+			<F N="src/shef/nlp/supple/utils/SynOutput.java"/>
+			<F N="src/shef/nlp/supple/utils/SynSemPair.java"/>
+			<F N="src/shef/nlp/supple/utils/SynSemTriple.java"/>
+		</Folder>
+		<F
+			N="build.xml"
+			Type="Ant"/>
+		<F N="creole.xml"/>
+		<F N="HISTORY"/>
+		<F N="README"/>
+	</Files>
+</Project>

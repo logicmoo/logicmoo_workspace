@@ -1,0 +1,573 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.43</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="strings.html">
+<link rel="next" href="solutionsequences.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="strings.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="solutionsequences.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:simplex"><a id="sec:A.43"><span class="sec-nr">A.43</span> <span class="sec-title">library(simplex): 
+Solve linear programming problems</span></a></h2>
+
+<a id="sec:simplex"></a>
+
+<p><a id="sec:simplex"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+<a class="url" href="https://www.metalevel.at">Markus Triska</a>
+</dd>
+</dl>
+
+<p><h3 id="sec:simplex-intro"><a id="sec:A.43.1"><span class="sec-nr">A.43.1</span> <span class="sec-title">Introduction</span></a></h3>
+
+<p><a id="sec:simplex-intro"></a>
+
+<p>A <b>linear programming problem</b> or simply <b>linear program</b> 
+(LP) consists of:
+
+<p>
+<ul class="compact">
+<li>a set of <i>linear</i> <b>constraints</b>
+<li>a set of <b>variables</b>
+<li>a <i>linear</i> <b>objective function</b>.
+</ul>
+
+<p>The goal is to assign values to the variables so as to <i>maximize</i> 
+(or minimize) the value of the objective function while satisfying all 
+constraints.
+
+<p>Many optimization problems can be modeled in this way. As one basic 
+example, consider a knapsack with fixed capacity C, and a number of 
+items with sizes <code>s(i)</code> and values <code>v(i)</code>. The 
+goal is to put as many items as possible in the knapsack (not exceeding 
+its capacity) while maximizing the sum of their values.
+
+<p>As another example, suppose you are given a set of <i>coins</i> with 
+certain values, and you are to find the minimum number of coins such 
+that their values sum up to a fixed amount. Instances of these problems 
+are solved below.
+
+<p>Solving an LP or integer linear program (ILP) with this library 
+typically comprises 4 stages:
+
+<p>
+<ol class="latex">
+<li>an initial state is generated with <a class="pred" href="simplex.html#gen_state/1">gen_state/1</a>
+<li>all relevant constraints are added with <a class="pred" href="simplex.html#constraint/3">constraint/3</a>
+<li><a class="pred" href="simplex.html#maximize/3">maximize/3</a> or <a class="pred" href="simplex.html#minimize/3">minimize/3</a> 
+are used to obtain a <i>solved state</i> that represents an optimum 
+solution
+<li><a class="pred" href="simplex.html#variable_value/3">variable_value/3</a> 
+and <a class="pred" href="simplex.html#objective/2">objective/2</a> are 
+used on the solved state to obtain variable values and the objective 
+function at the optimum.
+</ol>
+
+<p>The most frequently used predicates are thus:
+
+<dl class="latex">
+<dt class="pubdef"><a id="gen_state/1"><strong>gen_state</strong>(<var>-State</var>)</a></dt>
+<dd class="defbody">
+Generates an initial state corresponding to an empty linear program.</dd>
+<dt class="pubdef"><a id="constraint/3"><strong>constraint</strong>(<var>+Constraint, 
++S0, -S</var>)</a></dt>
+<dd class="defbody">
+Adds a linear or integrality constraint to the linear program 
+corresponding to state <var>S0</var>. A linear constraint is of the form <code>Left Op C</code>, 
+where <var>Left</var> is a list of <code>Coefficient*Variable</code> 
+terms (variables in the context of linear programs can be atoms or 
+compound terms) and <var>C</var> is a non-negative numeric constant. The 
+list represents the sum of its elements. <var>Op</var> can be <code>=</code>, <code>=&lt;</code> 
+or <code>&gt;=</code>. The coefficient <code>1</code> can be omitted. An 
+integrality constraint is of the form <code>integral(Variable)</code> 
+and constrains Variable to an integral value.</dd>
+<dt class="pubdef"><a id="maximize/3"><strong>maximize</strong>(<var>+Objective, 
++S0, -S</var>)</a></dt>
+<dd class="defbody">
+Maximizes the objective function, stated as a list of
+<code>Coefficient*Variable</code> terms that represents the sum of its 
+elements, with respect to the linear program corresponding to state
+<var>S0</var>. <code>\</code>arg{<var>S</var>} is unified with an 
+internal representation of the solved instance.</dd>
+<dt class="pubdef"><a id="minimize/3"><strong>minimize</strong>(<var>+Objective, 
++S0, -S</var>)</a></dt>
+<dd class="defbody">
+Analogous to <a class="pred" href="simplex.html#maximize/3">maximize/3</a>.</dd>
+<dt class="pubdef"><a id="variable_value/3"><strong>variable_value</strong>(<var>+State, 
++Variable, -Value</var>)</a></dt>
+<dd class="defbody">
+<var>Value</var> is unified with the value obtained for <var>Variable</var>. <var>State</var> 
+must correspond to a solved instance.</dd>
+<dt class="pubdef"><a id="objective/2"><strong>objective</strong>(<var>+State, 
+-Objective</var>)</a></dt>
+<dd class="defbody">
+Unifies <var>Objective</var> with the result of the objective function 
+at the obtained extremum. <var>State</var> must correspond to a solved 
+instance.
+</dd>
+</dl>
+
+<p>All numeric quantities are converted to rationals via <span class="pred-ext">rationalize/1</span>, 
+and rational arithmetic is used throughout solving linear programs. In 
+the current implementation, all variables are implicitly constrained to 
+be <i>non-negative</i>. This may change in future versions, and 
+non-negativity constraints should therefore be stated explicitly.
+
+<p><h3 id="sec:simplex-delayed-column"><a id="sec:A.43.2"><span class="sec-nr">A.43.2</span> <span class="sec-title">Delayed 
+column generation</span></a></h3>
+
+<p><a id="sec:simplex-delayed-column"></a>
+
+<p><i>Delayed column generation</i> means that more constraint columns 
+are added to an existing LP. The following predicates are frequently 
+used when this method is applied:
+
+<dl class="latex">
+<dt class="pubdef"><a id="constraint/4"><strong>constraint</strong>(<var>+Name, 
++Constraint, +S0, -S</var>)</a></dt>
+<dd class="defbody">
+Like <a class="pred" href="simplex.html#constraint/3">constraint/3</a>, 
+and attaches the name <var>Name</var> (an atom or compound term) to the 
+new constraint.</dd>
+<dt class="pubdef"><a id="shadow_price/3"><strong>shadow_price</strong>(<var>+State, 
++Name, -Value</var>)</a></dt>
+<dd class="defbody">
+Unifies <var>Value</var> with the shadow price corresponding to the 
+linear constraint whose name is <var>Name</var>. <var>State</var> must 
+correspond to a solved instance.</dd>
+<dt class="pubdef"><a id="constraint_add/4"><strong>constraint_add</strong>(<var>+Name, 
++Left, +S0, -S</var>)</a></dt>
+<dd class="defbody">
+<var>Left</var> is a list of <code>Coefficient*Variable</code> terms. 
+The terms are added to the left-hand side of the constraint named <var>Name</var>. <var>S</var> 
+is unified with the resulting state.
+</dd>
+</dl>
+
+<p>An example application of <i>delayed column generation</i> to solve a <i>bin 
+packing</i> task is available from:
+<a class="url" href="https://www.metalevel.at/various/colgen/"><b>metalevel.at/various/colgen/</b></a>
+
+<p><h3 id="sec:simplex-special-structure"><a id="sec:A.43.3"><span class="sec-nr">A.43.3</span> <span class="sec-title">Solving 
+LPs with special structure</span></a></h3>
+
+<p><a id="sec:simplex-special-structure"></a>
+
+<p>The following predicates allow you to solve specific kinds of LPs 
+more efficiently:
+
+<dl class="latex">
+<dt class="pubdef"><a id="transportation/4"><strong>transportation</strong>(<var>+Supplies, 
++Demands, +Costs, -Transport</var>)</a></dt>
+<dd class="defbody">
+Solves a transportation problem. <var>Supplies</var> and <var>Demands</var> 
+must be lists of non-negative integers. Their respective sums must be 
+equal. <var>Costs</var> is a list of lists representing the cost matrix, 
+where an entry (<i>i</i>,<i>j</i>) denotes the integer cost of 
+transporting one unit from <i>i</i> to <i>j</i>. A transportation plan 
+having minimum cost is computed and unified with <var>Transport</var> in 
+the form of a list of lists that represents the transportation matrix, 
+where element (<i>i</i>,<i>j</i>) denotes how many units to ship from <i>i</i> 
+to <i>j</i>.</dd>
+<dt class="pubdef"><a id="assignment/2"><strong>assignment</strong>(<var>+Cost, 
+-Assignment</var>)</a></dt>
+<dd class="defbody">
+Solves a linear assignment problem. <var>Cost</var> is a list of lists 
+representing the quadratic cost matrix, where element (i,j) denotes the 
+integer cost of assigning entity $i$ to entity $j$. An assignment with 
+minimal cost is computed and unified with
+<var>Assignment</var> as a list of lists, representing an adjacency 
+matrix.
+</dd>
+</dl>
+
+<p><h3 id="sec:simplex-examples"><a id="sec:A.43.4"><span class="sec-nr">A.43.4</span> <span class="sec-title">Examples</span></a></h3>
+
+<p><a id="sec:simplex-examples"></a>
+
+<p>We include a few examples for solving LPs with this library.
+
+<p><h4 id="sec:simplex-ex-1"><a id="sec:A.43.4.1"><span class="sec-nr">A.43.4.1</span> <span class="sec-title">Example 
+1</span></a></h4>
+
+<p><a id="sec:simplex-ex-1"></a>
+
+<p>This is the "radiation therapy" example, taken from
+<i>Introduction to Operations Research</i> by Hillier and Lieberman.
+
+<p><a class="url" href="https://www.metalevel.at/prolog/dcg"><b>Prolog 
+DCG notation</b></a> is used to <i>implicitly</i> thread the state 
+through posting the constraints:
+
+<pre class="code">
+:- use_module(library(simplex)).
+
+radiation(S) :-
+        gen_state(S0),
+        post_constraints(S0, S1),
+        minimize([0.4*x1, 0.5*x2], S1, S).
+
+post_constraints --&gt;
+        constraint([0.3*x1, 0.1*x2] =&lt; 2.7),
+        constraint([0.5*x1, 0.5*x2] = 6),
+        constraint([0.6*x1, 0.4*x2] &gt;= 6),
+        constraint([x1] &gt;= 0),
+        constraint([x2] &gt;= 0).
+</pre>
+
+<p>An example query:
+
+<pre class="code">
+?- radiation(S), variable_value(S, x1, Val1),
+                 variable_value(S, x2, Val2).
+Val1 = 15 rdiv 2,
+Val2 = 9 rdiv 2.
+</pre>
+
+<p><h4 id="sec:simplex-ex-2"><a id="sec:A.43.4.2"><span class="sec-nr">A.43.4.2</span> <span class="sec-title">Example 
+2</span></a></h4>
+
+<p><a id="sec:simplex-ex-2"></a>
+
+<p>Here is an instance of the knapsack problem described above, where
+<code>C = 8</code>, and we have two types of items: One item with value 
+7 and size 6, and 2 items each having size 4 and value 4. We introduce 
+two variables, <code>x(1)</code> and <code>x(2)</code> that denote how 
+many items to take of each type.
+
+<pre class="code">
+:- use_module(library(simplex)).
+
+knapsack(S) :-
+        knapsack_constraints(S0),
+        maximize([7*x(1), 4*x(2)], S0, S).
+
+knapsack_constraints(S) :-
+        gen_state(S0),
+        constraint([6*x(1), 4*x(2)] =&lt; 8, S0, S1),
+        constraint([x(1)] =&lt; 1, S1, S2),
+        constraint([x(2)] =&lt; 2, S2, S).
+</pre>
+
+<p>An example query yields:
+
+<pre class="code">
+?- knapsack(S), variable_value(S, x(1), X1),
+                variable_value(S, x(2), X2).
+X1 = 1
+X2 = 1 rdiv 2.
+</pre>
+
+<p>That is, we are to take the one item of the first type, and half of 
+one of the items of the other type to maximize the total value of items 
+in the knapsack.
+
+<p>If items can not be split, integrality constraints have to be 
+imposed:
+
+<pre class="code">
+knapsack_integral(S) :-
+        knapsack_constraints(S0),
+        constraint(integral(x(1)), S0, S1),
+        constraint(integral(x(2)), S1, S2),
+        maximize([7*x(1), 4*x(2)], S2, S).
+</pre>
+
+<p>Now the result is different:
+
+<pre class="code">
+?- knapsack_integral(S), variable_value(S, x(1), X1),
+                         variable_value(S, x(2), X2).
+
+X1 = 0
+X2 = 2
+</pre>
+
+<p>That is, we are to take only the <i>two</i> items of the second type. 
+Notice in particular that always choosing the remaining item with best 
+performance (ratio of value to size) that still fits in the knapsack 
+does not necessarily yield an optimal solution in the presence of 
+integrality constraints.
+
+<p><h4 id="sec:simplex-ex-3"><a id="sec:A.43.4.3"><span class="sec-nr">A.43.4.3</span> <span class="sec-title">Example 
+3</span></a></h4>
+
+<p><a id="sec:simplex-ex-3"></a>
+
+<p>We are given:
+
+<p>
+<ul class="compact">
+<li>3 coins each worth 1 unit
+<li>20 coins each worth 5 units and
+<li>10 coins each worth 20 units.
+</ul>
+
+<p>The task is to find a <i>minimal</i> number of these coins that 
+amount to 111 units in total. We introduce variables <code>c(1)</code>, <code>c(5)</code> 
+and <code>c(20)</code> denoting how many coins to take of the respective 
+type:
+
+<pre class="code">
+:- use_module(library(simplex)).
+
+coins(S) :-
+        gen_state(S0),
+        coins(S0, S).
+
+coins --&gt;
+        constraint([c(1), 5*c(5), 20*c(20)] = 111),
+        constraint([c(1)] =&lt; 3),
+        constraint([c(5)] =&lt; 20),
+        constraint([c(20)] =&lt; 10),
+        constraint([c(1)] &gt;= 0),
+        constraint([c(5)] &gt;= 0),
+        constraint([c(20)] &gt;= 0),
+        constraint(integral(c(1))),
+        constraint(integral(c(5))),
+        constraint(integral(c(20))),
+        minimize([c(1), c(5), c(20)]).
+</pre>
+
+<p>An example query:
+
+<pre class="code">
+?- coins(S), variable_value(S, c(1), C1),
+             variable_value(S, c(5), C5),
+             variable_value(S, c(20), C20).
+
+C1 = 1,
+C5 = 2,
+C20 = 5.
+</pre>
+
+<p></body></html>

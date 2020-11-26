@@ -1,0 +1,520 @@
+% ==========================================================F=========
+% File: SBHL.P 
+% ===================================================================
+
+% ===================================================================
+% multifile, table declarations 
+% ===================================================================
+
+:- multifile genlInverse/2, genlPreds/2, isa/2, greaterThanOrEqualTo/2.
+
+% ===================================================================
+% Dummy declarations 
+% ===================================================================
+
+genls(dum1,dum2).
+genlInverse(dum1,dum2).
+genlPreds(dum1,dum2).
+
+
+% ===================================================================
+%  Metalogical, HiLog, and ontological axioms)
+% ===================================================================
+% ===================================================================
+% assertedOfArgument(REL,X,Y) HiLog 
+% ===================================================================
+
+assertedOfArgument(REL,X,W):- REL(X,W).
+
+% assertedOfArgument(REL,X,Y,Z):- REL(X,Y,Z).
+
+% assertedOfArgument(REL,X,Y,Z,W):-	REL(X,Y,Z,W).
+
+% ===================================================================
+% differsFromArgument(REL,X,Y, PRED) HiLog 
+% ===================================================================
+
+differsFromArgument(REL,X,Y, PRED):- 
+	assertedOfArgument(REL,X,PRED),not assertedOfArgument(REL,Y,PRED).
+
+% ===================================================================
+% unknownOfArgument(ARG,X,Y) HiLog
+% ===================================================================
+
+% unknownOfArgument(ARG,X,Y):- 
+%	not((X(ARG,Y);X(Y,ARG))).
+
+% ===================================================================
+% samePreds(FORM1,FORM2,N) 
+% ===================================================================
+
+samePreds(F1,F2,N):-functor(F1,FUNC1,N),functor(F2,FUNC2,N),FUNC1==FUNC2.
+
+% ===================================================================
+% analogous(X,Y) Hilog
+% ===================================================================
+
+analogous(X,Z,A,B):- Z(X,A),Z(X,B).
+
+% ===================================================================
+% assertedPredArg  HiLog
+% ===================================================================
+
+assertedPredArg(ARG, LIST):- 
+	setof(X,( ( (X(ARG);( Y^ X(Y, ARG); Y^ X(ARG, Y) ) ); Y^ (Z^ X(ARG,Y,Z) ) ); (( Y^ (Z^ X(ARG,Y,Z))) ;  Y^ (Z^ 	X(Y,ARG,Z))); Y^ (Z^ X(Y,Z,ARG)))  , LIST).
+
+% ===================================================================
+% genlInverse (2 places) HiLog
+% ===================================================================
+
+GenPred(Y, X) :- 
+	GenPred\==Pred, 
+	genlInverse(Pred, GenPred), 
+	Pred(X, Y). 
+
+% ===================================================================
+% genlPreds (1 to 5 places) HiLog
+% ===================================================================
+
+GenPred(ARG1) :- 
+	GenPred\==Pred,
+	Pred(ARG1),
+	genlPreds(Pred, GenPred).
+
+GenPred(ARG1, ARG2) :- 
+	GenPred\==Pred, 
+	genlPreds(Pred, GenPred), 
+	Pred(ARG1, ARG2).
+
+GenPred(ARG1, ARG2, ARG3) :- 
+	GenPred\==Pred,
+	genlPreds(Pred, GenPred),
+	Pred(ARG1, ARG2, ARG3).
+
+GenPred(ARG1, ARG2, ARG3, ARG4) :- 
+	GenPred\==Pred,
+	genlPreds(Pred, GenPred),
+	Pred(ARG1, ARG2, ARG3, ARG4).
+
+GenPred(ARG1, ARG2, ARG3, ARG4, ARG5) :- 
+	GenPred\==Pred,
+	genlPreds(Pred, GenPred),
+	Pred(ARG1, ARG2, ARG3, ARG4, ARG5). 
+
+% ===================================================================
+% isa, t_isa , t_genls
+% ===================================================================
+
+%isa(Obj, SuperColl) :-
+%    Coll \= SuperColl,
+%    t_genls(Coll, SuperColl),
+%    isa(Obj, Coll).
+
+%t_isa(Obj, SuperColl) :-
+%   isa(Obj, SuperColl).
+
+%t_isa(Obj, SuperColl) :-
+%    Coll \= SuperColl,
+%    isa(Obj, Coll),
+%    t_genls(Coll, SuperColl).
+
+
+% ===================================================================
+% isa, genls 
+% =================================================================== 
+
+isa(OBJ, SUPERSET) :-
+	OBJ\=SUPERSET,
+	isa(OBJ, SUBSET),
+	genls(SUBSET, SUPERSET).
+
+% ===================================================================
+% t_genls 
+% ===================================================================
+
+%t_genls(Coll, SuperColl) :-
+% 	   genls(Coll, SuperColl).
+
+%t_genls(Coll, TSuperColl) :-
+%    genls(Coll, SuperColl), 
+%    t_genls(SuperColl, TSuperColl). 
+
+% ===================================================================
+% nearestIsa 
+% ===================================================================
+
+%nearestIsa(Obj, Coll) :-
+%    isa(Obj, Coll),
+%    findall(_, condFor_nearestIsa(Obj, Coll), List),
+%    List = [].
+
+%condFor_nearestIsa(Obj, Coll)  :-
+%    isa(Obj, SubColl),
+%    Coll \= SubColl,
+%    t_genls(SubColl, Coll).
+
+% ===================================================================
+% Mathematical definitions
+% ===================================================================
+
+greaterThanOrEqualTo(X,Y):- X>=Y.
+
+isa(X, positiveInteger):- integer(X),X>0.
+
+% ===================================================================
+% Food for thought: more axioms
+% ===================================================================
+
+/*
+
+isa(NAT, COL) :-
+	natFunction(NAT, FUNCTION),
+	resultIsa(FUNCTION, COL).
+
+
+relationAllExists(physicalParts, BIG, SMALL) :-
+	physicalPartTypes(BIG, SMALL).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa4_1(PRED, INDEP_COL, DEP_COL),
+	PRED(DEP_INS, ANY_ARG_2, ANY_ARG_3, INDEP_INS).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsMinAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG, sKF_56807125(ARG2, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMinFn(NUM))).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa2_5(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, INDEP_INS, ANY_ARG_3, ANY_ARG_4, DEP_INS).
+
+
+genls(COL, GENL) :-
+	isa(COL, TYPE_COL),
+	typeGenls(TYPE_COL, GENL).
+
+
+ not((negationPreds(NEG_PRED, PRED),
+	NEG_PRED(ARG1),
+	PRED(ARG1))).
+
+ not((negationPreds(NEG_PRED, PRED),
+	NEG_PRED(ARG1, ARG2, ARG3),
+	PRED(ARG1, ARG2, ARG3))).
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa4_3(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, DEP_INS, INDEP_INS).
+
+
+ not((negationPreds(NEG_PRED, PRED),
+	NEG_PRED(ARG1, ARG2, ARG3, ARG4, ARG5),
+	PRED(ARG1, ARG2, ARG3, ARG4, ARG5))).
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa5_4(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, ANY_ARG_3, DEP_INS, INDEP_INS).
+
+
+SLOT(ARG, ARG1) :-
+	isa(ARG1, UNIV_COL),
+	relationExistsAll(SLOT, EXIST_COL, UNIV_COL),
+	termOfUnit(ARG, sKF_13352259(ARG1, EXIST_COL, SLOT, UNIV_COL)).
+
+
+SLOT(ARG1, ARG) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsMin(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG, sKF_26730082(ARG1, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMinFn(NUM))).
+
+
+PRED(INS_1, INS_20024) :-
+	isa(PRED, binaryPredicate),
+	requiredArg1Pred(COL, PRED),
+	isa(INS_1, COL),
+	termOfUnit(INS_20024, sKF_33462840(INS_1, COL, PRED)).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExists(SLOT, UNIV_COL, EXIST_COL),
+	termOfUnit(ARG, sKF_7310435(ARG1, EXIST_COL, SLOT, UNIV_COL)).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsMax(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG, sKF_18510550(ARG1, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMaxFn(NUM))).
+
+
+SLOT(ARG10030, ARG2) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsCountAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG10030, sKF_55308482(SLOT, EXIST_COL, UNIV_COL, NUM, ARG2, NUM)).
+
+
+isa(ARG10030, EXIST_COL) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsCountAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG10030, sKF_55308482(SLOT, EXIST_COL, UNIV_COL, NUM, ARG2, NUM)).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa1_3(PRED, INDEP_COL, DEP_COL),
+	PRED(INDEP_INS, ANY_ARG_2, DEP_INS).
+
+
+SLOT(ARG, ARG2) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsMinAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG, sKF_56807125(ARG2, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMinFn(NUM))).
+
+
+not((negationInverse(GEN_PRED, PRED),
+	GEN_PRED(ARG2, ARG1),
+	PRED(ARG1, ARG2))).
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa2_3(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, INDEP_INS, DEP_INS).
+
+PRED(OBJ) :-
+	relationAll(PRED, COL),
+	isa(OBJ, COL).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsMaxAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG, sKF_5248057(ARG2, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMaxFn(NUM))).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	PRED(DEP_INS, INDEP_INS),
+	interArgIsa2_1(PRED, INDEP_COL, DEP_COL).
+
+
+PRED(INS1, INS2) :-
+	isa(INS1, COL1),
+	relationAllInstance(PRED, COL1, INS2).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	PRED(INDEP_INS, DEP_INS),
+	interArgIsa1_2(PRED, INDEP_COL, DEP_COL).
+
+
+GENL_PRED(ARG1, ARG2, ARG3, ARG4, ARG5) :-
+	genlPreds(PRED, GENL_PRED),
+	PRED(ARG1, ARG2, ARG3, ARG4, ARG5).
+
+
+not((negationPreds(NEG_PRED, PRED),
+	NEG_PRED(ARG1, ARG2),
+	PRED(ARG1, ARG2))).
+
+not((isa(OBJ, COL1),
+	isa(OBJ, COL2),
+	disjointWith(COL1, COL2))).
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa3_2(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, DEP_INS, INDEP_INS).
+
+
+SLOT(ARG1, ARG) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExists(SLOT, UNIV_COL, EXIST_COL),
+	termOfUnit(ARG, sKF_7310435(ARG1, EXIST_COL, SLOT, UNIV_COL)).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa3_1(PRED, INDEP_COL, DEP_COL),
+	PRED(DEP_INS, ANY_ARG_2, INDEP_INS).
+
+
+SLOT(ARG1, ARG) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsMax(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG, sKF_18510550(ARG1, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMaxFn(NUM))).
+
+
+PRED(INS_20022, INS_1) :-
+	isa(PRED, binaryPredicate),
+	requiredArg2Pred(COL, PRED),
+	isa(INS_1, COL),
+	termOfUnit(INS_20022, sKF_66403611(INS_1, COL, PRED)).
+
+
+GENL_PRED(ARG1, ARG2, ARG3, ARG4) :-
+	genlPreds(PRED, GENL_PRED),
+	PRED(ARG1, ARG2, ARG3, ARG4).
+
+
+GENL_PRED(ARG1) :-
+	PRED(ARG1),
+	genlPreds(PRED, GENL_PRED).
+
+
+genls(NAT, COL) :-
+	natFunction(NAT, FUNCTION),
+	resultGenl(FUNCTION, COL).
+
+
+physicalPartTypes(OBJ_TYPE, PART_TYPE) :-
+	relationAllExists(physicalParts, OBJ_TYPE, PART_TYPE).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa5_1(PRED, INDEP_COL, DEP_COL),
+	PRED(DEP_INS, ANY_ARG_2, ANY_ARG_3, ANY_ARG_4, INDEP_INS).
+
+
+SLOT(ARG1, ARG296) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsCount(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG296, sKF_45030807(SLOT, UNIV_COL, EXIST_COL, NUM, ARG1, NUM)).
+
+
+isa(OBJ, SUPERSET) :-
+	isa(OBJ, SUBSET),
+	genls(SUBSET, SUPERSET).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa5_2(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, DEP_INS, ANY_ARG_3, ANY_ARG_4, INDEP_INS).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa2_4(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, INDEP_INS, ANY_ARG_3, DEP_INS).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa4_5(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, ANY_ARG_3, INDEP_INS, DEP_INS).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa4_2(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, DEP_INS, ANY_ARG_3, INDEP_INS).
+
+
+SLOT(ARG, ARG2) :-
+	isa(ARG2, UNIV_COL),
+	relationExistsMaxAll(SLOT, EXIST_COL, UNIV_COL, NUM),
+	termOfUnit(ARG, sKF_5248057(ARG2, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMaxFn(NUM))).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa1_4(PRED, INDEP_COL, DEP_COL),
+	PRED(INDEP_INS, ANY_ARG_2, ANY_ARG_3, DEP_INS).
+
+
+isa(ARG296, EXIST_COL) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsCount(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG296, sKF_45030807(SLOT, UNIV_COL, EXIST_COL, NUM, ARG1, NUM)).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa1_5(PRED, INDEP_COL, DEP_COL),
+	PRED(INDEP_INS, ANY_ARG_2, ANY_ARG_3, ANY_ARG_4, DEP_INS).
+
+
+not((negationPreds(NEG_PRED, PRED),
+	NEG_PRED(ARG1, ARG2, ARG3, ARG4),
+	PRED(ARG1, ARG2, ARG3, ARG4))).
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa5_3(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, DEP_INS, ANY_ARG_4, INDEP_INS).
+
+
+GENL_PRED(ARG1, ARG2) :-
+	genlPreds(PRED, GENL_PRED),
+	PRED(ARG1, ARG2).
+
+
+GEN_PRED(ARG2, ARG1) :-
+	genlInverse(PRED, GEN_PRED),
+	PRED(ARG1, ARG2).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG1, UNIV_COL),
+	relationAllExistsMin(SLOT, UNIV_COL, EXIST_COL, NUM),
+	termOfUnit(ARG, sKF_26730082(ARG1, EXIST_COL, NUM, SLOT, UNIV_COL, intervalMinFn(NUM))).
+
+
+PRED(INS1, INS2) :-
+	isa(INS2, COL2),
+	relationInstanceAll(PRED, INS1, COL2).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa3_4(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, INDEP_INS, DEP_INS).
+
+
+isa(ARG, EXIST_COL) :-
+	isa(ARG1, UNIV_COL),
+	relationExistsAll(SLOT, EXIST_COL, UNIV_COL),
+	termOfUnit(ARG, sKF_13352259(ARG1, EXIST_COL, SLOT, UNIV_COL)).
+
+
+isa(DEP_INS, DEP_COL) :-
+	isa(INDEP_INS, INDEP_COL),
+	interArgIsa3_5(PRED, INDEP_COL, DEP_COL),
+	PRED(ANY_ARG_1, ANY_ARG_2, INDEP_INS, ANY_ARG_4, DEP_INS).
+
+
+GENL_PRED(ARG1, ARG2, ARG3) :-
+	genlPreds(PRED, GENL_PRED),
+	PRED(ARG1, ARG2, ARG3).
+
+
+isa(BLDG, BLDG_TYPE) :-
+	isa(AGENT, AGENT_TYPE),
+	pointOfContact_Types(AGENT_TYPE, CONTLOC_TYPE, BLDG_TYPE),
+	termOfUnit(BLDG, sKF_42008932(AGENT, AGENT_TYPE, BLDG_TYPE, CONTLOC_TYPE)).
+
+
+pointOfContact(AGENT, CONTLOC_TYPE, BLDG) :-
+	isa(AGENT, AGENT_TYPE),
+	pointOfContact_Types(AGENT_TYPE, CONTLOC_TYPE, BLDG_TYPE),
+	termOfUnit(BLDG, sKF_42008932(AGENT, AGENT_TYPE, BLDG_TYPE, CONTLOC_TYPE)).
+
+
+*/
+
+% ===================================================================
+% Notes section 
+% ===================================================================
+
+% ===================================================================
+
+

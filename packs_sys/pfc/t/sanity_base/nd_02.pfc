@@ -1,0 +1,50 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity,[]).
+
+
+:- include(test_header).
+
+:- abolish(a,1).
+:- abolish(b,2).
+:- dynamic((a/1,b/2)).
+
+:- debug_logicmoo(logicmoo(_)).
+:- mpred_trace_exec.
+:- mpred_warn.
+
+
+a(t).
+
+(a(X),{member(Y,[1,2,3,4,5])}) ==> b(X,Y).
+
+:- mpred_test(a(t)).
+:- mpred_test(b(t,1)).
+:- mpred_test(b(t,2)).
+:- mpred_test(b(t,3)).
+:- mpred_test(b(t,4)).
+:- mpred_test(b(t,5)).
+
+:- listing([nt/3,pt/2,spft/3]).
+
+% Sometimes there is a regression type bug can cause only the last 2 tests of the file to fail
+% somehow the removal of b(t,1) b(t,2) works but the a(t) having being gone makes the code think its done enough cleanup
+\+ a(t).
+
+% Hint: uncommenting the next two lines would "hide" the bug
+% \+ a(t).
+% \+ a(t).
+
+
+:- mpred_test(\+ a(t)).
+:- mpred_test(\+ b(t,1)).
+:- mpred_test(\+ b(t,2)).
+:- mpred_test(\+ b(t,3)).
+:- mpred_test(\+ b(t,4)).
+:- mpred_test(\+ b(t,5)).
+

@@ -1,0 +1,61 @@
+% -*-Prolog-*-
+
+% Tests Hybrid KB and Forward Chaining for the predicate do_and_undo/2 from module user
+
+% this is similar to the sum example.
+% given a set of assertions of the form:
+%
+%    income(person,source,year,$)
+%
+% this rule will maintain a set of yearly totals of the form
+%    
+%    total_income(person,year,$)
+%
+
+:- include(test_header).
+
+:- dynamic(total_income/3).
+
+% RULES
+income(Person,_Source,Year,Dollars) ==> {increment_income(Person,Year,Dollars)}.
+
+==> do_and_undo(increment_income(P,Y,D),decrement_income(P,Y,D)).
+
+increment_income(P,Y,D) :-
+  (retract(total_income(P,Y,Old)) -> New is Old+D ; New = D),
+  assert(total_income(P,Y,New)).
+
+decrement_income(P,Y,D) :-
+  retract(total_income(P,Y,Old)),
+  New is Old-D,
+  assert(total_income(P,Y,New)).
+
+% FACTS
+income(person,sourceOne,2035,6666).
+income(person,sourceTwo,2035,1111).
+income(person,sourceTwo,2036,2222).
+
+
+% RESULTS PT 1
+:- listing(total_income/3).
+/*
+
+total_income(person, 2035, 7777).
+total_income(person, 2036, 2222).
+
+*/
+
+
+% UPDATE Remove some income
+\+ income(person,_,2035,1111).
+
+
+% RESULTS PT 2
+:- listing(total_income/3).
+/*
+
+total_income(person, 2036, 2222).
+total_income(person, 2035, 6666).
+
+*/
+

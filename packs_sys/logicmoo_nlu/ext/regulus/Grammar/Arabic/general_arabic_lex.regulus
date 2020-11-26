@@ -1,0 +1,149 @@
+%%
+% v --> 3 yakun être
+v:[sem=[[state, be], [tense, present]],
+   subcat=pred, agr=3/\sing/\masc, vform=finite,
+   subj_np_type=symptom] --> @a('íßæä', yakun, 'be-sing3-PRESENT').
+
+% v --> 3 yakun être
+v:[sem=[[state, be], [tense, passé]],
+   subcat=pred, agr=3/\sing/\masc, vform=finite,
+   subj_np_type=symptom] --> @a('ßÇä', kana, 'be-sing3-PAST').
+
+% v --> 2 être
+v:[sem=[[state, be], [tense, present]],
+   subcat=pred, agr=2/\sing/\masc, vform=finite,
+   subj_np_type=agent] --> @a('Êßæä', takun, 'be-sing2-PRESENT').
+
+% v --> 2 être
+v:[sem=[[state, be], [tense, passé]],
+   subcat=pred, agr=2/\sing/\masc, vform=finite,
+   subj_np_type=agent] --> @a('ßäÊ', kunt, 'be-sing2-PAST').
+%%
+
+%%%%%%% SPEC
+% spec --> al (the, le,la)
+spec:[sem=[], agr=sing\/plur\/dual] --> @a('Çá', al, 'DEF').
+% spec --> nefs (le même)
+%spec:[sem=[[spec,nefs]]] --> @a('äÝÕ,Çá', (nefs,al)).
+% spec --> nefs (le même)
+spec:[sem=[[spec,nefs]]] --> @a(('äÝÓ','Çá'), (nefs,al), ('same','DEF')).
+
+% spec --> iddat (plusieurs)
+spec:[sem=[[spec,iddat]],agr=plur] --> @a('ÚÏÉ', iddat, 'many').
+% spec --> bad (quelques)
+%spec:[sem=[[spec,bad]],agr=plur] --> @a('ÈÚÖ,Çá', (bad,al)).
+spec:[sem=[[spec,bad]],agr=plur] --> @a(('ÈÚÖ','Çá'), (bad,al), (some, 'DEF')).
+% spec --> koul (chaque)
+%spec:[sem=[[spec,koul]],agr=sing] --> @a('ßá,Çá', (koul,al)).
+% ADJUSTED FOLLOWING TWO ENTRIES - MR, Jan 2 2007
+spec:[sem=[[spec,koul_pl]],agr=plur] --> @a(('ßá','Çá'), (koul,al), (all, 'DEF')).
+spec:[sem=[[spec,koul_sg]],agr=sing] --> @a(('ßá','Çá'), (koul,al), (all, 'DEF')).
+
+%%%%%%%% NUMBER
+
+%%+ de
+%comparative:[sem=[[comparative,akthar_min]]] --> @a(('ãä','ÃßËÑ'),(akthar,min)).
+comparative:[sem=[[comparative,akthar_min]]] --> @a(('ÃßËÑ','ãä'),(akthar,min), (more, 'than-COMPARATIVE')).
+%%- de
+%comparative:[sem=[[comparative,akal_min]]] --> @a(('ãä','ÃÞá'),(akal,min)).
+comparative:[sem=[[comparative,akal_min]]] --> @a(('ÃÞá','ãä'),(akal,min), (less, 'than-COMPARATIVE')).
+
+%number
+
+
+number:[sem=[[number,demi]], agr=sing/\masc] --> @a('äÕÝ',nisf).
+number:[sem=[[number,1]], agr=sing/\masc,position=postobj] --> @a('æÇÍÏ',wahid, 'NUMBER-one-masc').
+number:[sem=[[number,1]], agr=sing/\fem,position=postobj] --> @a('æÇÍÏÉ',wahida, 'NUMBER-one-fem').
+
+number:[sem=[[number,2]], agr=dual/\masc,position=postobj] --> @a('ÅËäÇä',ithnaan, 'NUMBER-two-masc').
+number:[sem=[[number,2]], agr=dual/\fem,position=postobj] --> @a('ÅËäÊÇä',ithnataan, 'NUMBER-two-fem').
+
+%%number:[sem=[[number,3]], agr=plur/\masc,position=postobj] --> @a('ËáÇË',thalath).
+number:[sem=[[number,3]], agr=plur/\masc,position=preobj] --> @a('ËáÇËÉ',thalathat, 'NUMBER-three-fem').
+number:[sem=[[number,3]], agr=plur/\fem,position=preobj] --> @a('ËáÇË',thalath, 'NUMBER-three-masc').
+
+%%number:[sem=[[number,4]], agr=plur/\masc,position=postobj] --> @a('ÃÑÈÚ',arba).
+number:[sem=[[number,4]], agr=plur/\masc,position=preobj] --> @a('ÃÑÈÚÉ',arbat, 'NUMBER-four-fem').
+number:[sem=[[number,4]], agr=plur/\fem,position=preobj] --> @a('ÃÑÈÚ',arba, 'NUMBER-four-masc').
+
+%%number:[sem=[[number,5]], agr=plur/\masc,position=postobj] --> @a('ÎãÓ',khams).
+number:[sem=[[number,5]], agr=plur/\masc,position=preobj] --> @a('ÎãÓÉ',khamsat, 'NUMBER-five-fem').
+number:[sem=[[number,5]], agr=plur/\fem,position=preobj] --> @a('ÎãÓ',khams, 'NUMBER-five-masc').
+
+%%number:[sem=[[number,6]], agr=plur/\masc,position=postobj] --> @a('ÓÊ',sit).
+number:[sem=[[number,6]], agr=plur/\masc,position=preobj] --> @a('ÓÊÉ',sitat, 'NUMBER-six-fem').
+number:[sem=[[number,6]], agr=plur/\fem,position=preobj] --> @a('ÓÊ',sit, 'NUMBER-six-masc').
+
+%%number:[sem=[[number,7]], agr=plur/\masc,position=postobj] --> @a('ÓÈÚ',sab).
+number:[sem=[[number,7]], agr=plur/\masc,position=preobj] --> @a('ÓÈÚÉ',sabat, 'NUMBER-seven-fem').
+number:[sem=[[number,7]], agr=plur/\fem,position=preobj] --> @a('ÓÈÚ',sab, 'NUMBER-seven-masc').
+
+%%number:[sem=[[number,8]], agr=plur/\masc,position=postobj] --> @a('ËãÇäí',thamani).
+number:[sem=[[number,8]], agr=plur/\masc,position=preobj] --> @a('ËãÇäíÉ',thamaniyat, 'NUMBER-eight-fem').
+number:[sem=[[number,8]], agr=plur/\fem,position=preobj] --> @a('ËãÇäí',thamani, 'NUMBER-eight-masc').
+
+%%number:[sem=[[number,9]], agr=plur/\masc,position=postobj] --> @a('ÊÓÚ',tis).
+number:[sem=[[number,9]], agr=plur/\masc,position=preobj] --> @a('ÊÓÚÉ',tisat, 'NUMBER-nine-fem').
+number:[sem=[[number,9]], agr=plur/\fem,position=preobj] --> @a('ÊÓÚ',tis, 'NUMBER-nine-masc').
+
+%%number:[sem=[[number,10]], agr=plur/\masc,position=postobj] --> @a('ÚÔÑ',achr).
+number:[sem=[[number,10]], agr=plur/\masc,position=preobj] --> @a('ÚÔÑÉ',achrat, 'NUMBER-ten-fem').
+number:[sem=[[number,10]], agr=plur/\fem,position=preobj] --> @a('ÚÔÑ',achr, 'NUMBER-ten-masc').
+
+%number:[sem=[[number,11]], agr=plur/\masc,position=preobj] --> @a(('ÃÍÏ','ÚÔÑ'),(ahada,achrat)).
+number:[sem=[[number,11]], agr=plur/\masc,position=preobj] --> @a(('ÃÍÏ','ÚÔÑ'),(ahada,achrat),('one-NUMBER', 'ten-NUMBER')).
+%number:[sem=[[number,11]], agr=plur/\fem,position=preobj] --> @a(('ÚÔÑÉ','ÅÍÏì'),(ihda,achar)).
+number:[sem=[[number,11]], agr=plur/\fem,position=preobj] --> @a(('ÅÍÏì','ÚÔÑÉ'),(ihda,achar), ('one-NUMBER', 'ten-NUMBER')).
+
+%number:[sem=[[number,12]], agr=plur/\masc,position=preobj] --> @a(('ÅËäì','ÚÔÑ'),(ithnay,achrat)).
+number:[sem=[[number,12]], agr=plur/\masc,position=preobj] --> @a(('ÅËäì','ÚÔÑ'),(ithnay,achrat), ('two-NUMBER', 'ten-NUMBER')).
+%number:[sem=[[number,12]], agr=plur/\fem,position=preobj] --> @a(('ÚÔÑÉ','ÅËäÊí'),(ithnatay,achar)).
+number:[sem=[[number,12]], agr=plur/\fem,position=preobj] --> @a(('ÅËäÊí','ÚÔÑÉ'),(ithnatay,achar), ('two-NUMBER', 'ten-NUMBER')).
+
+%%number:[sem=[[number,30]], agr=plur/\masc,position=postobj] --> @a('ËáÇËíä'thalathinr).
+number:[sem=[[number,30]], agr=sing,position=preobj] --> @a('ËáÇËíä',thalathin, 'NUMBER-thirteen').
+
+number:[sem=[[number,20]], agr=sing,position=preobj] --> @a('ÚÔÑíä',ichrin, 'NUMBER-twenty').
+
+%%Wh_PP 
+
+%où
+wh_pp:[sem= @lexical_pp_sem(loc, wh_loc, ayna)] --> @a('Ãíä', ayna, 'where-ADVERB_TIME').
+%quand
+wh_pp:[sem= @lexical_pp_sem(temporal, wh_temp, mataa)] --> @a('ãÊì', mataa, 'when-WHQ').
+%depuis combien de temps
+%wh_pp:[sem=[[wh_temp,moundhou_mataa]]] --> @a(('ãäÐ','ãÊì'), (moundhou,mataa)).
+wh_pp:[sem= @lexical_pp_sem(temporal, wh_temp, moundhou_mataa)] --> @a(('ãäÐ','ãÊì'), (moundhou,mataa), (since, 'when-WHQ')).
+%combien de fois
+wh_pp:[sem= @lexical_pp_sem(temporal, wh_temp, kam_marra)] --> @a(('ßã','ãÑÉ'), (kam,marra), ('how-many-WHQ', 'time')).
+%wh_pp:[sem=[[wh_temp,kam_marra]]] --> @a(('ßã','ãÑÉ'), (kam,marra)).
+%comment
+wh_pp:[sem= @lexical_pp_sem(manner, wh_manner, kayfa)] --> @a('ßíÝ', kayfa,'how-WHQ').
+
+
+% posse --> ka (mon)
+poss:[sem= @lexical_possessive(ka), agr=sing\/plur] --> @a('ß', ka,'your-PRONOUN_POSSESSIVE').
+
+
+%%%%%%%%
+%%PARTICULE
+%%%%%%%
+% prep --> bi (particule)
+prep:[sem=[], sem_pp_type=bi] --> @a('È', bi, 'PARTICULE').
+
+% prep --> bi (particule)
+prep:[sem=[], sem_pp_type=min] --> @a('ãä', min, 'PARTICULE').
+
+
+%%%%%%%%
+%%conj 
+%%%%%%%
+% sc
+sc:[sem= @sc(indama), sem_pp_type=duration] --> @a('ÚäÏãÇ', indama, 'when-TIME').
+
+%%%%%%%%
+%%pron
+%%%%%%%
+% pron ACCUSATIF CLITIQUE
+pron:[sem=[[pronoun,ka]], sem_np_type=agent] --> @a('ß', ka, 'yours-PRONOUN').
+

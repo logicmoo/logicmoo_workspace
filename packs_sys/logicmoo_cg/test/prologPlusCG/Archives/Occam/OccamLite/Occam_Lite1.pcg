@@ -1,0 +1,159 @@
+// ex: ?- integrateSituation([Robot]<-agnt-[Wash]-thme->[Car], [Robot, Wash, Car]).
+integrateSituation(G, L) :-
+    getOntology(_ontology),
+    "aminePlatform.engines.dynamicOntology.DynamicOntology":integrateSituation(_ontology, G, L), !.
+
+runSBL:-
+	event(zz1,[X = G1]),
+	integrateSituation(G1,[Goal, plan, Success_Goal_Outcome]),
+	event(rr1,[Y = G2]),
+	integrateSituation(G2,[Goal, plan, Failure_Goal_Outcome]),
+	event(dd1,[Z = G3]),
+	integrateSituation(G3, [Goal, plan, Success_Goal_Outcome]),
+	event(pp1,[F = G4]),
+	integrateSituation(G4, [Goal, plan, Success_Goal_Outcome]),
+	event(cc1,[E = G5]),
+	integrateSituation(G5, [Goal, plan, Success_Goal_Outcome]).
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+run_ebl(L) :- 
+	event(coer,G),
+	ask(G,L,g1),
+	def_schema(G,T),
+	genRule(T,[X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS]),
+	chainage([X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS]).
+//	integrateSituation(([X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS], L).
+	
+
+//chaine explanation
+chainage([X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS]):-
+	chain([X = _descrX]-result->[Y = _descrY]-enables->[Z = _descrZ]-result->[S = _descrS]),
+	rules(G1),
+         G1 = [X = _descrX]-result->[Y = _descrY],
+	rules(G2),
+         G2 = [Y = _descrY]-enables->[Z = _descrZ],		
+	rules(G3),
+	G3 = [Z = _descrZ]-result->[S = _descrS].
+
+//checher most specific schema : ask
+ask(G, L,g1) :-
+   getOntology(_ontology),
+   _rslt is "aminePlatform.engines.dynamicOntology.DynamicOntology":ask(_ontology, G, L),
+   writeRslt(_rslt,g1),!.
+
+writeRslt(_rslt,g1) :-
+    member(e, _rslt),
+    s1 is e:getResultInString(),
+    eq(s1,"MORE_SPECIFIC"),
+    g1 is e:getCG(),
+    !.
+writeRslt(_, []).
+
+member(e, [e|_]).
+member(e, [_|L]) :- 
+    member(e, L).
+
+eq(x,x).
+
+chain([Act = [Atrans : sell]-
+				-actor->[Actor = _actorDescr],
+				-object->[Object = _Obj],
+				-to->[Actor = _target],
+				-State_Value->[State_Value:No_State_Value]
+		]
+	 -result->[Y = _descrY]
+ -enables-> [Act = [Atrans : sell]-
+				-actor->[Polity  = [country : South_africa]-
+					-language->[Language:English],
+					-location->[Location:Southern_hemisphere],
+					-business_relationship->[Actor = _target],
+					-continent->[continent:Africa],
+					-exports->[Object = _Obj],
+					-imports->[oil]
+				],
+				-object->[Object = _Obj],
+			     	-price->[Price = [Money = 3000000]-
+									-currency->[Currency : Dollars],
+									-value->[value : sup_market]],
+				-to->[Actor = _target],
+				-State_Value->[State_Value:Yes_State_Value]
+			]
+
+   -result->[State = [Possess]-
+				 -object->[Object = _Obj],
+				 -actor->[Actor = _target],
+				 -State_Value->[State_Value:Yes_State_Value]
+	     ]).
+
+
+ebl :-
+	event(coer,G), 
+	[Act = [Coerce]-
+                  	  -actor->[Polity = _actor],
+                  	  -object->[Object = _Object],
+                  	  -target->[Polity = _target],
+                  	  -demand->[Act = _demand],
+                  	  -threat->[Act = _threat],
+			  -response->[Act = _response],
+                  	  -result->[State = _result]
+		   ] = G.
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//1
+TDL_Lite(L, G) :-
+	ask(G, L, S),   
+	U is S:getChildren(),
+	eq(U, null),
+	genRule1(G, _generalization),
+	integrateSituation(_generalization, L),
+	integrateSituation(G, L).
+
+//2
+TDL_Lite(L, G) :-
+	[Act = [_Act]-object->[_Object2]]-result->[_State =
+                                            [State_Value: No_State_Value]<-State_Value-[_State]-object->[_Object2]] = G,
+         ask([Act = [_Act]-object->[_Object1]]-after->[_State =
+                                            [State_Value: Yes_State_Value]<-State_Value-[_State]-object->[_Object1]], L, S),      
+         getOntology(_ontology),                
+         "aminePlatform.applications.Occam":moveChildren2GrdFather(_ontology, S),
+	integrateSituation(G, L).	
+         // là on doit prévoir l'autre cas de figure
+//2'
+TDL_Lite(L, G) :-
+	[Act = [_Act]-object->[_Object2]]-result->[_State =
+                                            [State_Value: Yes_State_Value]<-State_Value-[_State]-object->[_Object2]] = G,
+         ask([Act = [_Act]-object->[_Object1]]-after->[_State =
+                                            [State_Value: No_State_Value]<-State_Value-[_State]-object->[_Object1]], L, S),
+         getOntology(_ontology),                
+         "aminePlatform.applications.Occam":moveChildren2GrdFather(_ontology, S),
+	integrateSituation(G, L).	
+
+//3
+TDL_Lite(L, G) :-
+         getOntology(_ontology),  
+	S is "aminePlatform.engines.dynamicOntology.DynamicOntology":ask(_ontology, G, L),
+	[_Act = [_Act]-object->[_Object]]-after->[_State = 	
+                                            [State_Value: _St_Value]<-State_Value-[_State]-object->[_Object]] = G,
+	Same_State(S, _St_Value, S1),
+	genRule2(G, _generalization, _object),	
+	integrateSituation(_generalization, L),
+	_generalization:link(S1), 
+	S:removeLink(S1), 	
+	_generalization:link(G).
+
+Same_State(S, _St_Value, S1):-
+	membre(e, S),
+	e1 is e:getCG(),
+	[_Act = [_Act]-object->[_Object]]-after->[_State = 	
+                                            [State_Value: _St_Value]<-State_Value-[_State]-object->[_Object]] = e1,	
+	S1 is e1.
+
+
+//pas encore verifié	
+run(L):-
+	event(gl1, G1),
+	TDL_Lite(L, G1),
+	event(gl2, G2),
+	TDL_Lite(L, G2),
+	event(gl3, G3),
+	TDL_Lite(L, G3).

@@ -1,0 +1,1938 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>ACE 6.7 Syntax Report</title>
+
+<style type="text/css">
+.bug { background-color: #fdd }
+h1, h2, h3, h4, h5, h6 { font-family: sans-serif }
+td { border: 1px solid black; padding: 0.3em 0.3em 0.3em 0.3em }
+thead { font-weight: bold; background-color: #4b4; font-variant: small-caps }
+table { font-size: 90%; empty-cells: show; border-collapse: collapse }
+pre { padding: 1em 1em 1em 1em; background-color: #eee; border: 1px solid silver }
+body { font-family: serif }
+address { border-top: 1px solid black; margin-top: 2em; padding-top: 0.5em }
+span.u { text-decoration: underline }
+a[href]:link {color: black; text-decoration: none; }
+a[href]:visited {color: black; text-decoration: none; }
+a[href]:hover {color: blue; text-decoration: none; }
+</style>
+</head>
+
+<body>
+
+<h1>ACE 6.7 Syntax Report</h1>
+<pre id='toc'>
+1 <a href='#Introduction'>Introduction</a>
+1.1 <a href='#Notationalconventions'>Notational conventions</a>
+1.2 <a href='#Features'>Features</a>
+2 <a href='#ACEtexts'>ACE texts</a>
+3 <a href='#Queries'>Queries</a>
+3.1 <a href='#Topicalisedquestions'>Topicalised questions</a>
+3.2 <a href='#Questions'>Questions</a>
+4 <a href='#Commands'>Commands</a>
+5 <a href='#Specifications'>Specifications</a>
+5.1 <a href='#Sentencecoordination'>Sentence coordination</a>
+5.2 <a href='#Topicalisedsentences'>Topicalised sentences</a>
+5.3 <a href='#Compositesentences'>Composite sentences</a>
+6 <a href='#VerbPhrases'>Verb Phrases</a>
+6.1 <a href='#VerbPhraseCoordination'>Verb Phrase Coordination</a>
+6.2 <a href='#Subcategorizationofverbs'>Subcategorization of verbs</a>
+7 <a href='#NounPhrases'>Noun Phrases</a>
+7.1 <a href='#Specifiers'>Specifiers</a>
+7.2 <a href='#Variables'>Variables</a>
+7.3 <a href='#PossessiveNounPhrases'>Possessive Noun Phrases</a>
+7.4 <a href='#ArithmeticTerms'>Arithmetic Terms</a>
+8 <a href='#PrepositionalPhrases'>Prepositional Phrases</a>
+9 <a href='#RelativeClauses'>Relative Clauses</a>
+10 <a href='#AdjectivePhrasesAdverbPhrases'>Adjective Phrases / Adverb Phrases</a>
+11 <a href='#FunctionWords'>Function Words</a>
+12 <a href='#ContentWords'>Content Words</a>
+12.1 <a href='#Adverbs'>Adverbs</a>
+12.2 <a href='#IntransitiveAdjectives'>Intransitive Adjectives</a>
+12.3 <a href='#TransitiveAdjectives'>Transitive Adjectives</a>
+12.4 <a href='#TrunkNounsforAnonymousPronouns'>Trunk Nouns for Anonymous Pronouns</a>
+12.5 <a href='#CountableNouns'>Countable Nouns</a>
+12.6 <a href='#MassNouns'>Mass Nouns</a>
+12.7 <a href='#MeasurementNouns'>Measurement Nouns</a>
+12.8 <a href='#ProperNames'>Proper Names</a>
+12.9 <a href='#DitransitiveVerbs'>Ditransitive Verbs</a>
+12.10 <a href='#TransitiveVerbs'>Transitive Verbs</a>
+12.11 <a href='#IntransitiveVerbs'>Intransitive Verbs</a>
+12.12 <a href='#Prepositions'>Prepositions</a>
+</pre>
+<p>
+</p><h2><a name='Introduction'>1 Introduction</a></h2>
+<p>
+</p><p></p><h3><a name='Notationalconventions'>1.1 Notational conventions</a></h3>
+<p>
+ We use some notational conventions in our abstract grammar. The feature values of a constituent
+ are attached to it in square brackets. Required values take a plus sign (+), prohibited values are
+ marked with a minus sign (&ndash;). Features which are not discriminatory in the respective rule are
+ not made explicit. Alternatives are separated by a vertical bar (|) and optional elements are put
+ into parentheses.
+</p><p> Gaps left behind by moved constituents are indicated by a slash (/). A minus sign
+ after the slash (/&ndash;) indicates that the respective category is not allowed to contain a gap.
+ Feature values that are not indicated explicitly in the abstract grammar are not restricted, or
+ they are passed on by feature percolation.
+</p><p> For many rules we provide an example. Parts of the example that are not covered by the
+ respective rule, but are added to complete a sentence or to make the example more illustrative,
+ are put into square brackets.
+</p><p></p><h3><a name='Features'>1.2 Features</a></h3>
+<p>
+ We have made explicit use of a limited set of features in the abstract grammar presented in
+ this report. Nominal constituents are marked as nominative (<code><a href="#Features">+NOM</a></code>) or oblique (<code><a href="#Features">-NOM</a></code>), and
+ they can be either pronominal (<code><a href="#Features">+PRO</a></code>) or not (<code><a href="#Features">-PRO</a></code>).
+</p><p> Verb forms can be either finite (<code><a href="#Features">-INF</a></code>)
+ or infinite (<code><a href="#Features">+INF</a></code>). The only infinite verb form that exists in ACE is the bare infinitive. If a
+ verbal constituent has the copula as its head, it is marked <code><a href="#Features">+COPULA</a></code>, and if it must not have
+ a copula head <code><a href="#Features">-COPULA</a></code> respectively. Other verbs are categorized as intransitive (<code><a href="#Features">+ITR</a></code>),
+ transitive (<code><a href="#Features">+TR</a></code>), or ditransitive (<code><a href="#Features">+DITR</a></code>). Furthermore, the verb "be" can be present (<code><a href="#Features">+BE</a></code>),
+ which is the cases for copula and passive, or absent (<code><a href="#Features">-BE</a></code>).
+</p><p> Noun phrases can either be negative (<code><a href="#Features">+NEG</a></code>) or non-negative (<code><a href="#Features">-NEG</a></code>) depending their determiner.
+ Number, quantification and the WH value are indicated by non-boolean features. A noun
+ phrase can be definite (<code><a href="#Features">+DEF</a></code>), existentially quantified (<code><a href="#Features">+EXISTS</a></code>) or universally quantified
+ (<code><a href="#Features">+FORALL</a></code>). Likewise, a non-universally quantified noun phrase, i.e. one that is either definite
+ or existentially quantified, is marked as <code><a href="#Features">-FORALL</a></code>. Many constituents can have a WH value. Its
+ range includes interrogative (<code><a href="#Features">+Q</a></code>), relative (<code><a href="#Features">+R</a></code>), either (<code><a href="#Features">+WH</a></code>), neither (<code><a href="#Features">-WH</a></code>), non-interrogative
+ (<code><a href="#Features">-Q</a></code>) and non-relative (<code><a href="#Features">-R</a></code>). The number of a constituent is indicated as singular (<code><a href="#Features">+SG</a></code>), mass
+ (<code><a href="#Features">+MASS</a></code>) or plural (<code><a href="#Features">+PL</a></code>) and the respective complementary values. Furthermore, NPs can be in
+ third (<code><a href="#Features">+THIRD</a></code>) or second (<code><a href="#Features">+SECOND</a></code>) person form. The latter is only used for commands.
+</p><p> Adjectives can be positive (<code><a href="#Features">+POS</a></code>), comparative (<code><a href="#Features">+COMP</a></code>), or superlative (<code><a href="#Features">+SUP</a></code>).
+</p><p> If a sentence coordination is subordinated (<code><a href="#Features">+THAT</a></code>) then each sentence starts with 'that', which
+ is not the case for top-level sentence coordinations (<code><a href="#Features">-THAT</a></code>).
+</p><p></p><h2><a name='ACEtexts'>2 ACE texts</a></h2>
+<p>
+ An ACE text can be any sequence of declarative sentences ("specifications"), questions
+ ("queries"), and imperative sentences ("commands").
+</p><pre><a name="1a"><b>1a</b>
+
+<span><a name="ACEText">ACEText</a></span> &rarr;
+	[]
+
+<span><a name="ACEText">ACEText</a></span> &rarr;
+	<tt><a href="#CompleteSentence">CompleteSentence</a></tt> <tt><a href="#ACEText">ACEText</a></tt>
+</a></pre>
+
+<pre><a name="1b"><b>1b</b>
+
+<span><a name="CompleteSentence">CompleteSentence</a></span> &rarr;
+	<tt><a href="#Specification">Specification</a></tt> | <tt><a href="#Query">Query</a></tt> | <tt><a href="#Command">Command</a></tt>
+</a></pre>
+
+<p>
+</p><h2><a name='Queries'>3 Queries</a></h2>
+<p>
+ Queries end with a question mark.
+</p><pre><a name="19"><b>19</b>
+
+<span><a name="Query">Query</a></span> &rarr;
+	<tt><a href="#TopicalisedQuestion">TopicalisedQuestion</a></tt> '?'
+</a></pre>
+
+<p>
+</p><h3><a name='Topicalisedquestions'>3.1 Topicalised questions</a></h3>
+<p>
+ A topicalised question can start with an existential question topic (<tt><a href="#23">23</a></tt>, <tt><a href="#24">24</a></tt>).
+</p><pre><a name="20"><b>20</b>
+
+<span><a name="TopicalisedQuestion">TopicalisedQuestion</a></span> &rarr;
+	<tt><a href="#ExistentialQuestionTopic">ExistentialQuestionTopic</a></tt>
+
+<span class="u">Example:</span> Is there a card <span style="color: #888">[?]</span>
+</a></pre>
+
+<p> Likewise, a topicalised question can start with an universal topic followed
+ by another topicalised question (<tt><a href="#21">21</a></tt>). Note that this is a recursive rule.
+ In example <tt><a href="#21">21</a></tt>, the universal topic is <em>for every card</em>.
+</p><pre><a name="21"><b>21</b>
+
+<span><a name="TopicalisedQuestion">TopicalisedQuestion</a></span> &rarr;
+	<tt><a href="#UniversalTopic">UniversalTopic</a></tt> <tt><a href="#TopicalisedQuestion">TopicalisedQuestion</a></tt>
+
+<span class="u">Example:</span> For every card does a customer own it <span style="color: #888">[?]</span>
+</a></pre>
+
+<p> Last, a topicalised question need not have a topic at all but can just be an
+ ordinary question (<tt><a href="#22">22</a></tt>).
+</p><pre><a name="22"><b>22</b>
+
+<span><a name="TopicalisedQuestion">TopicalisedQuestion</a></span> &rarr;
+	<tt><a href="#Question">Question</a></tt>
+</a></pre>
+
+<p> An existential question topic can either consist of an interrogative NP followed by the existential
+ global question quantor <em>is there</em> (<tt><a href="#23">23</a></tt>), or it starts with the existential global question
+ quantor followed by an NP (<tt><a href="#24">24</a></tt>). Like in its declarative counterpart (<tt><a href="#10">10</a></tt>), this NP must not
+ stand in an oblique case (<code><a href="#Features">+NOM</a></code>) nor must it be unversially quantified (<code><a href="#Features">-FORALL</a></code>), relative or
+ interrogative (<code><a href="#Features">-WH</a></code>). In this way we prevent sentences like
+   </p><blockquote><p> * Is there every card? </p></blockquote>
+   <blockquote><p> * Is there which card? </p></blockquote>
+<p> Furthermore, an NP containing an interrogative element must not be coordinated,
+ preventing sentences like 
+   </p><blockquote><p> * A card and what are valid? </p></blockquote>
+   <blockquote><p> * Who and who enters a card? </p></blockquote>
+<pre><a name="23"><b>23</b>
+
+<span><a name="ExistentialQuestionTopic">ExistentialQuestionTopic</a></span> &rarr;
+	<tt><a href="#NP">NP</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+Q</a></code>] <tt><a href="#ExistentialGlobalQuestionQuantor">ExistentialGlobalQuestionQuantor</a></tt>
+
+<span class="u">Example:</span> Which code is there <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="24"><b>24</b>
+
+<span><a name="ExistentialQuestionTopic">ExistentialQuestionTopic</a></span> &rarr;
+	<tt><a href="#ExistentialGlobalQuestionQuantor">ExistentialGlobalQuestionQuantor</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">-WH</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> Is there a card <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Are there a code and a card <span style="color: #888">[?]</span>
+</a></pre>
+
+<p>
+</p><h3><a name='Questions'>3.2 Questions</a></h3>
+<p>
+ There are two types of questions: Yes/no-questions (<tt><a href="#26a">26a</a></tt>, <tt><a href="#26b">26b</a></tt>) and WH-questions (<tt><a href="#28">28</a></tt>&ndash;<tt><a href="#33">33</a></tt>).
+</p><pre><a name="25"><b>25</b>
+
+<span><a name="Question">Question</a></span> &rarr;
+	<tt><a href="#YesNoQuestion">YesNoQuestion</a></tt> | <tt><a href="#WhQuestion">WhQuestion</a></tt>
+</a></pre>
+
+<pre><a name="26a"><b>26a</b>
+
+<span><a name="YesNoQuestion">YesNoQuestion</a></span> &rarr;
+	<tt><a href="#SentenceQuestion">SentenceQuestion</a></tt> <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">+THAT</a></code>]
+
+<span class="u">Example:</span> Is it true that John waits <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Is it false that John waits <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Is it not true that John waits <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="26b"><b>26b</b>
+
+<span><a name="YesNoQuestion">YesNoQuestion</a></span> &rarr;
+	<tt><a href="#Aux">Aux</a></tt> <tt><a href="#SentenceWithoutVPCoord">SentenceWithoutVPCoord</a></tt>[<code><a href="#Features">-WH</a></code>]/Aux
+
+<span class="u">Example:</span> Does a customer enter a code <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Can a customer enter a code <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Must a customer enter a code <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Is a code entered by a customer <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Is a card valid <span style="color: #888">[?]</span>
+</a></pre>
+
+<p> WH-questions can take various forms (<tt><a href="#28">28</a></tt>&ndash;<tt><a href="#33">33</a></tt>).
+ The rule <tt><a href="#28">28</a></tt> handles WH-questions without inversion.
+ In WH-questions that ask for an objekt or an adjunct, 
+ the interrogative constituent is followed by an auxiliary (<tt><a href="#29">29</a></tt>, <tt><a href="#31">31</a></tt>, <tt><a href="#33">33</a></tt>). 
+ In these questions, the interrogative constituent can be an NP (<tt><a href="#29">29</a></tt>),
+ a prepositional phrase (<tt><a href="#31">31</a></tt>) or an adverb coordination (<tt><a href="#33">33</a></tt>).
+ The verbal phrases of these questions contain a gap for the constituent 
+ that was moved to the front of the sentence (i.e. the constituent that is asked for). 
+ The verb of these verbal phrases stands in the infinitive form.
+ Interrogative nominal phrases are never coordinations.
+</p><pre><a name="28"><b>28</b>
+
+<span><a name="WhQuestion">WhQuestion</a></span> &rarr;
+	<tt><a href="#Sentence">Sentence</a></tt>[<code><a href="#Features">+WH</a></code>]
+
+<span class="u">Example:</span> Which customer enters a card <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Who enters a card <span style="color: #888">[?]</span>
+<span class="u">Example:</span> John enters what <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="28b"><b>28b</b>
+
+<span><a name="WhQuestion">WhQuestion</a></span> &rarr;
+	<tt><a href="#ExistentialTopic">ExistentialTopic</a></tt>[<code><a href="#Features">+WH</a></code>]
+
+<span class="u">Example:</span> There is who <span style="color: #888">[?]</span>
+<span class="u">Example:</span> There is a man who knows who <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="29"><b>29</b>
+
+<span><a name="WhQuestion">WhQuestion</a></span> &rarr;
+	<tt><a href="#NP">NP</a></tt>[<code><a href="#Features">+Q</a></code>,<code><a href="#Features">-NOM</a></code>] <tt><a href="#Aux">Aux</a></tt> <tt><a href="#SentenceWithoutVPCoord">SentenceWithoutVPCoord</a></tt>/Aux,NP
+
+<span class="u">Example:</span> Which code does a customer enter <span style="color: #888">[?]</span>
+<span class="u">Example:</span> What does a customer enter <span style="color: #888">[?]</span>
+<span class="u">Example:</span> What is a customer interested in <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="31"><b>31</b>
+
+<span><a name="WhQuestion">WhQuestion</a></span> &rarr;
+	<tt><a href="#PP">PP</a></tt>[<code><a href="#Features">+Q</a></code>] <tt><a href="#Aux">Aux</a></tt> <tt><a href="#SentenceWithoutVPCoord">SentenceWithoutVPCoord</a></tt>/Aux,PP
+
+<span class="u">Example:</span> Into what does a customer enter a card <span style="color: #888">[?]</span>
+<span class="u">Example:</span> In what is a customer interested <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="33"><b>33</b>
+
+<span><a name="WhQuestion">WhQuestion</a></span> &rarr;
+	<tt><a href="#AdverbCoord">AdverbCoord</a></tt>[<code><a href="#Features">+Q</a></code>] <tt><a href="#Aux">Aux</a></tt> <tt><a href="#SentenceWithoutVPCoord">SentenceWithoutVPCoord</a></tt>/Aux,AdverbCoord
+
+<span class="u">Example:</span> How does a customer enter a card <span style="color: #888">[?]</span>
+<span class="u">Example:</span> Where is a card entered by a customer <span style="color: #888">[?]</span>
+<span class="u">Example:</span> When is a card valid <span style="color: #888">[?]</span>
+</a></pre>
+
+<p>
+</p><h2><a name='Commands'>4 Commands</a></h2>
+<p>
+ Commands end with an exclamation mark.
+</p><pre><a name="120"><b>120</b>
+
+<span><a name="Command">Command</a></span> &rarr;
+	<tt><a href="#ImperativeSentence">ImperativeSentence</a></tt> '!'
+</a></pre>
+
+<p> The addressee of the command has to be made explicit at the beginning of the sentence
+ (separated by a comma).
+</p><pre><a name="121"><b>121</b>
+
+<span><a name="ImperativeSentence">ImperativeSentence</a></span> &rarr;
+	<tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">-WH</a></code>,<code><a href="#Features">-NEG</a></code>,<code><a href="#Features">+SECOND</a></code>] ',' <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-WH</a></code>,<code><a href="#Features">+INF</a></code>]
+
+<span class="u">Example:</span> John, go to the house <span style="color: #888">[!]</span>
+</a></pre>
+
+<p>
+</p><h2><a name='Specifications'>5 Specifications</a></h2>
+<p>
+ Specifications end with a full stop.
+</p><p<a name="2"><b>2</b>
+
+<span><a name="Specification">Specification</a></span> &rarr;
+	<tt><a href="#SentenceCoord">SentenceCoord</a></tt> '.'
+
+<span class="u">Example:</span> A man waits.
+<span class="u">Example:</span> A man waits and a dog barks.
+<span class="u">Example:</span> A man waits. He eats.
+</a></pre>
+
+<p>
+</p><h3><a name='Sentencecoordination'>5.1 Sentence coordination</a></h3>
+<p>
+ Sentences can be coordinated by <em>and</em> and <em>or</em>. <em>And</em> refers to the logical conjunction,
+ while <em>or</em> denotes the logical disjunction. The logical conjunction has a higher precedence than
+ the disjunction. Both connectors are right-associative. The expression
+   </p><blockquote><p> <em>A or B and C or D</em> </p></blockquote>
+<p> is therefore ordered like
+   </p><blockquote><p> A &or; ((B &and; C) &or; D) </p></blockquote>
+<p> To enable more combinations, we have introduced comma-<em>and</em> and comma-<em>or</em>.
+ These expressions reverse the order of precedence. To achieve the order
+   </p><blockquote><p> A &or; (B &and; (C &or; D)) </p></blockquote>
+<p> we can write
+   </p><blockquote><p> <em>A, or B, and C or D</em> </p></blockquote>
+<p> A sentence coordination in general consists of a sentence coordination of a lower level
+ (thus ensuring right-associativity) optionally followed by the respective connector
+ and a sentence coordination of the same level (<tt><a href="#4">4</a></tt>).
+</p><pre><a name="4"><b>4</b>
+
+<span><a name="SentenceCoord">SentenceCoord</a></span> &rarr;
+	<tt><a href="#SentenceCoord_1">SentenceCoord_1</a></tt> ( <tt><a href="#CommaOr">CommaOr</a></tt> <tt><a href="#SentenceCoord">SentenceCoord</a></tt> )
+
+<span><a name="SentenceCoord_1">SentenceCoord_1</a></span> &rarr;
+	<tt><a href="#SentenceCoord_2">SentenceCoord_2</a></tt> ( <tt><a href="#CommaAnd">CommaAnd</a></tt> <tt><a href="#SentenceCoord_1">SentenceCoord_1</a></tt> )
+
+<span><a name="SentenceCoord_2">SentenceCoord_2</a></span> &rarr;
+	<tt><a href="#SentenceCoord_3">SentenceCoord_3</a></tt> ( <tt><a href="#Or">Or</a></tt> <tt><a href="#SentenceCoord_2">SentenceCoord_2</a></tt> )
+
+<span><a name="SentenceCoord_3">SentenceCoord_3</a></span>[<code><a href="#Features">-THAT</a></code>] &rarr;
+	<tt><a href="#TopicalisedSentence">TopicalisedSentence</a></tt> ( <tt><a href="#And">And</a></tt> <tt><a href="#SentenceCoord_3">SentenceCoord_3</a></tt>[<code><a href="#Features">-THAT</a></code>] )
+
+<span><a name="SentenceCoord_3">SentenceCoord_3</a></span>[<code><a href="#Features">+THAT</a></code>] &rarr;
+	that <tt><a href="#TopicalisedSentence">TopicalisedSentence</a></tt> ( <tt><a href="#And">And</a></tt> <tt><a href="#SentenceCoord_3">SentenceCoord_3</a></tt>[<code><a href="#Features">+THAT</a></code>] )
+
+
+<span class="u">Example:</span> A customer enters a card and a clerk enters a code and for every code that the customer enters the card is valid <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A man believes]</span> that a dog barks and that a cat eats a cake <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A man believes]</span> that a dog barks and that a cat eats a cake <span style="color: #888">[.]</span>
+</a></pre>
+
+<p>
+</p><h3><a name='Topicalisedsentences'>5.2 Topicalised sentences</a></h3>
+<p>
+ To avoid scope ambiguities ACE uses the 'principle of surface order' which makes the scope
+ of a quantifier uniquely predictable from the quantifier's position in the sentence. This
+ interpretation principle says that the relative scope of a quantifier corresponds to its
+ surface position. The scope opens at the textual position of the quantified noun phrase and
+ extends to the end of the sentence. If sentences are coordinated, the scope of a quantifier
+ extends only to the end of the sentence conjunct/disjunct containing the quantifier.
+ The sample sentence commonly used to illustrate scope amguities
+   </p><blockquote><p> <em>Every man loves a woman.</em> </p></blockquote>
+<p> is therefore unambiguously interpreted in ACE as
+   </p><blockquote><p> &forall; x: (man(x) &rArr; &exist; y: (woman(y) &and; loves(x,y))) </p></blockquote>
+<p> We may, however, want to express the reverse interpretation
+   </p><blockquote><p> &exist; y: (woman(y) &and; &forall; x: (man(x) &rArr; loves(x,y))) </p></blockquote>
+<p> To achieve the latter interpretation, we have introduced two ACE constructions that allow the
+ user to topicalise a quantifier (i.e. move it to the front of the sentence) and give it a
+ wider scope. The global quantifiers <em>there is/there are</em> (<tt><a href="#10">10</a></tt>) and
+ <em>for every/for each</em> (<tt><a href="#11">11</a></tt>, <tt><a href="#12">12</a></tt>) expand their scope over the whole sentence. In
+ ACE, the above interpretation can thus be expressed as
+   </p><blockquote><p> <em>There is a woman and every man loves her.</em> </p></blockquote>
+<p> or
+   </p><blockquote><p> <em>There is a woman that every man loves.</em> </p></blockquote>
+<p> The two readings of the sentence
+   </p><blockquote><p> <em>A man loves every woman.</em> </p></blockquote>
+<p> which are
+   </p><blockquote><p> &exist; x: (man(x) &and; &forall; y: (woman(y) &rArr; loves(x,y))) </p></blockquote>
+   <blockquote><p> &forall; y: (woman(y) &rArr; &exist; x: (man(x) &and; loves(x,y))) </p></blockquote>
+<p> can be made explicit in ACE as
+   </p><blockquote><p> <em>There is a man who loves every woman.</em> </p></blockquote>
+<p> which is equivalent to '<em>a man loves every woman</em>' and '<em>for every woman a man loves her</em>'.
+ A topicalised sentence can start with an existential topic (<tt><a href="#7">7</a></tt>) or a universal topic (<tt><a href="#8">8</a></tt>).
+ It needs, however, not be topicalised at all but can just be an ordinary composite sentence (<tt><a href="#9">9</a></tt>).
+</p><pre><a name="7"><b>7</b>
+
+<span><a name="TopicalisedSentence">TopicalisedSentence</a></span> &rarr;
+	<tt><a href="#ExistentialTopic">ExistentialTopic</a></tt>
+
+<span class="u">Example:</span> There is a card <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="8"><b>8</b>
+
+<span><a name="TopicalisedSentence">TopicalisedSentence</a></span> &rarr;
+	<tt><a href="#UniversalTopic">UniversalTopic</a></tt> <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">-THAT</a></code>]
+
+<span class="u">Example:</span> For every code there is a card that the code belongs to <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="9"><b>9</b>
+
+<span><a name="TopicalisedSentence">TopicalisedSentence</a></span> &rarr;
+	<tt><a href="#CompositeSentence">CompositeSentence</a></tt>
+</a></pre>
+
+<pre><a name="9a"><b>9a</b>
+
+<span><a name="TopicalisedSentence">TopicalisedSentence</a></span> &rarr;
+	<tt><a href="#ArithmeticalSentence">ArithmeticalSentence</a></tt>
+</a></pre>
+
+<p> Topics consist of a global quantifier enhanced by a noun phrase coordination (i.e. a noun phrase
+ or a coordination of noun phrases) and a VP coordination (a verb phrase or a coodination of verb
+ phrases) or by an N' respectively. An existential topic (<tt><a href="#10">10</a></tt>) takes the existential global quantifier
+ <em>there is/there are</em> and an NP coordination that has to be existentally quantified (<code><a href="#Features">+EXISTS</a></code>)
+ and must not be in an oblique case (<code><a href="#Features">+NOM</a></code>).
+</p><p> With these restrictions, we prohibit sentences like
+   </p><blockquote><p> * There is he. </p></blockquote>
+   <blockquote><p> * There is him. </p></blockquote>
+   <blockquote><p> * There is the man. </p></blockquote>
+   <blockquote><p> * There is every customer. </p></blockquote>
+<p>
+ We also prohibit the following
+   </p><blockquote><p> * There are John and Mary. </p></blockquote>
+   <blockquote><p> * There is a man. There are the man and a woman. </p></blockquote>
+<pre><a name="10"><b>10</b>
+
+<span><a name="ExistentialTopic">ExistentialTopic</a></span> &rarr;
+	<tt><a href="#ExistentialGlobalQuantor">ExistentialGlobalQuantor</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+EXISTS</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> There is a card which is valid <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There are a card and a code <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There is a man <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There is the man's dog <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There is John's dog <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There are a dog and a cat <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There are a man and less than 3 dogs <span style="color: #888">[.]</span>
+<span class="u">Example:</span> There are a man and more than 3 dogs <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> A universal global quantifier is only followed by an N' and not by a complete NP (<em>* for every a code</em>).
+ This N' must be in the nominative case and can be either in singular (<em>for every card</em>) or plural
+ (<em>for all cards</em>). Since <em>every</em> cannot be used with mass nouns (<em>* every money</em>), we use <em>every</em>
+ in combination with countable nouns (either singular and plural), and <em>all</em> in combination with mass nouns
+ and plural nouns.
+</p><pre><a name="11"><b>11</b>
+
+<span><a name="UniversalTopic">UniversalTopic</a></span> &rarr;
+	<tt><a href="#UniversalGlobalQuantor">UniversalGlobalQuantor</a></tt> <tt><a href="#NBar">N'</a></tt>[<code><a href="#Features">+NOM</a></code>]
+
+<span class="u">Example:</span> For every card <span style="color: #888">[there is a code.]</span>
+<span class="u">Example:</span> For all money there is a bank. 
+<span class="u">Example:</span> For everybody X <span style="color: #888">[a man sees X.]</span>
+<span class="u">Example:</span> For all cards <span style="color: #888">[there is a code.]</span>
+</a></pre>
+
+<p> A universal topic can also start with a distributive global quantifier <em>for each of</em>.
+ The distributive global quantifier must be followed by a complete
+ plural NP coordination in nominative case (<tt><a href="#12">12</a></tt>).
+</p><pre><a name="12"><b>12</b>
+
+<span><a name="UniversalTopic">UniversalTopic</a></span> &rarr;
+	<tt><a href="#DistributiveGlobalQuantor">DistributiveGlobalQuantor</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+PL</a></code>,<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> For each of the customers <span style="color: #888">[a clerk enters a code.]</span>
+<span class="u">Example:</span> For each of a customer and a clerk <span style="color: #888">[a code is valid.]</span>
+<span class="u">Example:</span> Not for each of the customers <span style="color: #888">[a clerk enters a code.]</span>
+<span class="u">Example:</span> Not for each of a customer and a clerk <span style="color: #888">[a code is valid.]</span>
+</a></pre>
+
+<p>
+</p><h3><a name='Compositesentences'>5.3 Composite sentences</a></h3>
+<p>
+</p><pre><a name="13"><b>13</b>
+
+<span><a name="CompositeSentence">CompositeSentence</a></span> &rarr;
+	<tt><a href="#SentenceInit">SentenceInit</a></tt> <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">+THAT</a></code>]
+
+<span class="u">Example:</span> It is false that John waits <span style="color: #888">[.]</span>
+<span class="u">Example:</span> It is possible that John waits <span style="color: #888">[.]</span>
+<span class="u">Example:</span> It is not necessary that John waits <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> A conditional sentence consists of an antecedent, introduced by <em>if</em>, and a consequent, introduced
+ by <em>then</em>. Both the antecedent and the consequent must be complete sentence coordinations.
+</p><pre><a name="16"><b>16</b>
+
+<span><a name="CompositeSentence">CompositeSentence</a></span> &rarr;
+	if <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">-THAT</a></code>] then <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">-THAT</a></code>]
+
+<span class="u">Example:</span> If a card is valid then its own code is valid and a customer enters the card <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="15"><b>15</b>
+
+<span><a name="CompositeSentence">CompositeSentence</a></span> &rarr;
+	<tt><a href="#Sentence">Sentence</a></tt>[<code><a href="#Features">-WH</a></code>]
+</a></pre>
+
+<pre><a name="17"><b>17</b>
+
+<span><a name="ArithmeticalSentence">ArithmeticalSentence</a></span> &rarr;
+	<tt><a href="#Term">Term</a></tt> '=' <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> '\=' <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> '&lt;' <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> '&gt;' <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> '=&lt;' <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> '&gt;=' <tt><a href="#Term">Term</a></tt>
+ 
+<span class="u">Example:</span> 3<code><a href="#Features">+X</a></code> &gt; 8
+<span class="u">Example:</span> L = {"a","bc","def"}
+</a></pre>
+
+<p> A simple declarative sentence consists of an NP coordination which is its subject.
+ It must be in nominative case and must not be relative or interrogative.
+ The VP coordination too must not contain any interrogative or relative arguments
+ or modifiers, and its form must be finite.
+</p><pre><a name="18"><b>18</b>
+
+<span><a name="Sentence">Sentence</a></span> &rarr;
+	<tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VPCoord">VPCoord</a></tt>[<code><a href="#Features">-INF</a></code>]
+
+<span class="u">Example:</span> A customer enters a green card into a slot <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="18b"><b>18b</b>
+
+<span><a name="SentenceWithoutVPCoord">SentenceWithoutVPCoord</a></span> &rarr;
+	<tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-INF</a></code>]
+</a></pre>
+
+<p>
+</p><h2><a name='VerbPhrases'>6 Verb Phrases</a></h2>
+<p>
+</p><p></p><h3><a name='VerbPhraseCoordination'>6.1 Verb Phrase Coordination</a></h3>
+<p>
+ A verb phrase coordination (<tt><a href="#35">35</a></tt>) does automatically take the feature value <code><a href="#Features">-COPULA</a></code>.
+ And, of course, both coordinated verb phrases have to agree in number and verb form
+ (either finite or infinite).
+</p><pre><a name="35"><b>35</b>
+
+<span><a name="VPCoord">VPCoord</a></span>[<code><a href="#Features">-COPULA</a></code>] &rarr;
+	<tt><a href="#VPCoord_1">VPCoord_1</a></tt> ( <tt><a href="#CommaOr">CommaOr</a></tt> <tt><a href="#VPCoord">VPCoord</a></tt> )
+
+<span><a name="VPCoord_1">VPCoord_1</a></span> &rarr;
+	<tt><a href="#VPCoord_2">VPCoord_2</a></tt> ( <tt><a href="#CommaAnd">CommaAnd</a></tt> <tt><a href="#VPCoord_1">VPCoord_1</a></tt> )
+
+<span><a name="VPCoord_2">VPCoord_2</a></span> &rarr;
+	<tt><a href="#VPCoord_3">VPCoord_3</a></tt> ( <tt><a href="#Or">Or</a></tt> <tt><a href="#VPCoord_2">VPCoord_2</a></tt> )
+
+<span><a name="VPCoord_3">VPCoord_3</a></span> &rarr;
+	<tt><a href="#VP">VP</a></tt> ( <tt><a href="#And">And</a></tt> <tt><a href="#VPCoord_3">VPCoord_3</a></tt> )
+</a></pre>
+
+<p> Usually, in an declarative context, a verb phrase consists of a V' only (<tt><a href="#37">37</a></tt>).
+ However, if the verb phrase is negated, it is preceded by an auxiliary
+ (or the copula respectively) and the negation <em>not</em> (<tt><a href="#38">38</a></tt>). 
+ In all cases, the verb form has to be infinite.
+</p><pre><a name="38"><b>38</b>
+
+<span><a name="VP">VP</a></span>[<code><a href="#Features">-INF</a></code>,<code><a href="#Features">-COPULA</a></code>] &rarr;
+	<tt><a href="#Auxiliary">Auxiliary</a></tt> <tt><a href="#VBar">V'</a></tt>[<code><a href="#Features">+INF</a></code>]
+
+<span><a name="VP">VP</a></span>[<code><a href="#Features">-INF</a></code>,<code><a href="#Features">+COPULA</a></code>] &rarr;
+	<tt><a href="#VModifiers">VModifiers</a></tt> <tt><a href="#Auxiliary">Auxiliary</a></tt>[<code><a href="#Features">+BE</a></code>] <tt><a href="#CopulaCompl">CopulaCompl</a></tt> <tt><a href="#VModifiers">VModifiers</a></tt>
+
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> does wait <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> is seen by a clerk <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> does not enter a card into a slot <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> is not seen by a clerk <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> can not enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> cannot enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> can't enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> must enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> has to enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Some customers]</span> have to enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> does not have to enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Some customers]</span> do not have to enter a card <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Who]</span> does not enter a card into a slot <span style="color: #888">[?]</span>
+<span class="u">Example:</span> is not in the garden
+<span class="u">Example:</span> is not a card
+<span class="u">Example:</span> <span style="color: #888">[A card]</span> is not valid <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[London]</span> can be sunny <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[London]</span> must be sunny <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[London]</span> can't be sunny <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[London]</span> does not have to be sunny <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Some countries]</span> do not have to be sunny <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="37"><b>37</b>
+
+<span><a name="VP">VP</a></span> &rarr;
+	<tt><a href="#VBar">V'</a></tt>[<code><a href="#Features">-BE</a></code>]
+</a></pre>
+
+<p> Auxiliaries are split into two parts: Aux and AuxRest. The first part is the one that occurs
+ at the sentence beginning in the case of questions.
+</p><pre><a name="130"><b>130</b>
+
+<span><a name="Auxiliary">Auxiliary</a></span> &rarr;
+	<tt><a href="#Aux">Aux</a></tt> <tt><a href="#AuxRest">AuxRest</a></tt>
+
+<span><a name="Auxiliary">Auxiliary</a></span>/Aux &rarr;
+	<tt><a href="#AuxRest">AuxRest</a></tt>
+
+<span class="u">Example:</span> is not
+<span class="u">Example:</span> does not have to
+</a></pre>
+
+<p> Verb phrase modifiers consist of adverbs and/or prepositional phrases. Adverbs are
+ coordinated (with "and") whereas prepositional phrases are simply concatenated.
+</p><pre><a name="131"><b>131</b>
+
+<span><a name="VModifiers">VModifiers</a></span> &rarr;
+	( <tt><a href="#AdverbCoord">AdverbCoord</a></tt> <tt><a href="#VModifiersX">VModifiersX</a></tt> | <tt><a href="#PP">PP</a></tt> <tt><a href="#VModifiers">VModifiers</a></tt> )
+
+<span><a name="VModifiersX">VModifiersX</a></span> &rarr;
+	( <tt><a href="#PP">PP</a></tt> <tt><a href="#VModifiers">VModifiers</a></tt> )
+
+<span class="u">Example:</span> in a house in the living-room
+<span class="u">Example:</span> quickly and thoroughly during one day
+</a></pre>
+
+<p>
+</p><h3><a name='Subcategorizationofverbs'>6.2 Subcategorization of verbs</a></h3>
+<p>
+ In ACE, verbs are subcategorised into intransitive verbs,
+ transitive verbs, ditransitive verbs and the copula. 
+ Intransitive verbs take no complement and do not have a passive form.
+</p><pre><a name="43"><b>43</b>
+
+<span><a name="ComplV">ComplV</a></span> &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+ITR</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A customer]</span> waits <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> Ditransitive verbs take two complements. Rule 48 comes in two versions.
+ Rule <tt><a href="#48b">48b</a></tt> is the version with a preposition. Rule <tt><a href="#48a">48a</a></tt> is the version with two NPs.
+</p><pre><a name="48b"><b>48b</b>
+
+<span><a name="ComplV">ComplV</a></span> &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+DITR</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#Preposition">Preposition</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man]</span> gives a book to a girl <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="84c"><b>84c</b>
+
+<span><a name="ComplV">ComplV</a></span>[<code><a href="#Features">+BE</a></code>] &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+DITR</a></code>] <tt><a href="#Preposition">Preposition</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] by <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A book]</span> is sent to Mary by John <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A direct object]</span> is sent an indirect object by a subject <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[It]</span> is sent to her by John <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[It]</span> is sent to Mary by him <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="84d"><b>84d</b>
+
+<span><a name="ComplV">ComplV</a></span>[<code><a href="#Features">+BE</a></code>] &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+DITR</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] by <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[Mary]</span> is sent a book by John <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[An indirect object]</span> is sent a direct object by a subject <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Mary]</span> is sent it by John <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Mary]</span> is sent him by John <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Mary]</span> is sent a book by her <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> Transitive verbs take one complement.
+</p><pre><a name="45"><b>45</b>
+
+<span><a name="ComplV">ComplV</a></span> &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+TR</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+</a></pre>
+
+<p> Transitive verbs can also be in passive. In this
+ case the participle form of the verb is used and the verb is surrounded by
+ 'is' and 'by'. The only difference with the active form of the verb is that
+ the arguments are inverted in the predicate condition.
+</p><pre><a name="45a"><b>45a</b>
+
+<span><a name="ComplV">ComplV</a></span>[<code><a href="#Features">+BE</a></code>] &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+TR</a></code>] by <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[John]</span> is seen by Mary <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John]</span> is not seen by Mary <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John]</span> is quickly seen by Mary <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Some men]</span> are seen by Mary <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Are some men]</span> seen by Mary <span style="color: #888">[?]</span>
+<span class="u">Example:</span> * There is a man who Mary is seen by.
+<span class="u">Example:</span> <span style="color: #888">[A book]</span> can be written by a man <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Are some men]</span> seen by Mary <span style="color: #888">[?]</span>
+<span class="u">Example:</span> <span style="color: #888">[Can a book]</span> be written by a man <span style="color: #888">[?]</span>
+</a></pre>
+
+<pre><a name="48a"><b>48a</b>
+
+<span><a name="ComplV">ComplV</a></span> &rarr;
+	<tt><a href="#V">V</a></tt>[<code><a href="#Features">+DITR</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man]</span> gives a girl a book <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> The copula can take adjective phrase coordinations (<em>is taller than his brother</em>),
+ noun phrase coordinations that are non-relative and non-pronominal (<em>is a customer</em>),
+ prepositional phrases (<em>is in the garden</em>), and query pronouns (<em>is where?</em>)
+ as its complement (<tt><a href="#52">52</a></tt>). 
+</p><pre><a name="52"><b>52</b>
+
+<span><a name="CopulaCompl">CopulaCompl</a></span> &rarr;
+	<tt><a href="#APCoord">APCoord</a></tt> | <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">-R</a></code>,<code><a href="#Features">+THIRD</a></code>] | <tt><a href="#PP">PP</a></tt>[<code><a href="#Features">-R</a></code>] | <tt><a href="#AdverbCoord">AdverbCoord</a></tt>[<code><a href="#Features">+Q</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A card is]</span> valid <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John is]</span> a customer <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A card is]</span> in a slot <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A code is]</span> 1234 <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A text is]</span> "abcdef" <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[What is]</span> when <span style="color: #888">[?]</span>
+</a></pre>
+
+<p> A verb (and its complements) can optionally be modified by an adverb coordination preceding the verb
+ and/or by verbal modifiers following the verb and its complements (<tt><a href="#41">41</a></tt>). Such verbal modifiers
+ (adjuncts) can be adverb coordinations, or prepositional phrases. A modifier is either a PP or an adverb.
+ Adverb(s) can precede or follow the verb, while PPs always follow the verb.
+</p><pre><a name="41"><b>41</b>
+
+<span><a name="VBar">V'</a></span> &rarr;
+	<tt><a href="#VModifiers">VModifiers</a></tt> <tt><a href="#ComplV">ComplV</a></tt> <tt><a href="#VModifiers">VModifiers</a></tt>
+</a></pre>
+
+<p> Transitive verbs can take a sentential complement, marked by <em>that</em>.
+</p><pre><a name="41b"><b>41b</b>
+
+<span><a name="VBar">V'</a></span> &rarr;
+	<tt><a href="#VModifiers">VModifiers</a></tt> <tt><a href="#V">V</a></tt>[<code><a href="#Features">+TR</a></code>] <tt><a href="#SentenceCoord">SentenceCoord</a></tt>[<code><a href="#Features">+THAT</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[John]</span> knows that Mary sleeps <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John]</span> does not know that Mary sleeps <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> Transitive verbs can be used as control verbs that take the preposition <em>to</em> and a verb phrase
+ as their complement.
+</p><pre><a name="41c"><b>41c</b>
+
+<span><a name="VBar">V'</a></span> &rarr;
+	<tt><a href="#VModifiers">VModifiers</a></tt> <tt><a href="#V">V</a></tt>[<code><a href="#Features">+TR</a></code>] to <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">+INF</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[John]</span> wants to run <span style="color: #888">[.]</span>
+</a></pre>
+
+<p>
+</p><h2><a name='NounPhrases'>7 Noun Phrases</a></h2>
+<p>
+ A noun phrase coordination can consist of the intermediate category that we call 'unmarked NP coordination'
+ either preceded  (<tt><a href="#53">53</a></tt>) or not by the distributive marker <em>each of</em> (<tt><a href="#54">54</a></tt>). A distributive noun phrase
+ coordination is always singular (<code><a href="#Features">+SG</a></code>) as a whole,  but its distributive marker can only precede a
+ non-negative unmarked NP coordination that is plural and non-universally quantified (<tt><a href="#53">53</a></tt>). Noun phrases
+ like <em>* each of no customer</em>, <em>* each of a customer</em> or  <em>* each of every customer</em> do not make sense.
+ We use the distributive marker <em>each of</em>, as well as its global counterpart <em>for each of</em> (<tt><a href="#12">12</a></tt>), to
+ resolve plural ambiguities. Unmarked NP coordinations that are not preceded by a distributive marker have no
+ restrictive feature values (<tt><a href="#54">54</a></tt>).
+</p><pre><a name="53"><b>53</b>
+
+<span><a name="NPCoord">NPCoord</a></span>[<code><a href="#Features">+SG</a></code>]/- &rarr;
+	<tt><a href="#DistributiveMarker">DistributiveMarker</a></tt> <tt><a href="#UnmarkedNPCoord">UnmarkedNPCoord</a></tt>[<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">+PL</a></code>]
+
+<span class="u">Example:</span> each of some customers
+<span class="u">Example:</span> each of them
+</a></pre>
+
+<pre><a name="54"><b>54</b>
+
+<span><a name="NPCoord">NPCoord</a></span>/- &rarr;
+	<tt><a href="#UnmarkedNPCoord">UnmarkedNPCoord</a></tt>
+
+<span class="u">Example:</span> some customers
+<span class="u">Example:</span> he
+<span class="u">Example:</span> they
+<span class="u">Example:</span> a card that is valid
+</a></pre>
+
+<p> A noun phrase coordination can be a gap if it has been moved to the front of
+ the sentence in a question.
+</p><pre><a name="56"><b>56</b>
+
+<span><a name="NPCoord">NPCoord</a></span>/NPCoord &rarr;
+	[]
+</a></pre>
+
+<p> If an unmarked NP coordination is an actual coordination of noun phrases, then it is automatically
+ assigned plural number (<code><a href="#Features">+PL</a></code>).  Interrogative, relative, negative or universally quantified NPs
+ cannot be coordinated in ACE; hence the <code><a href="#Features">-WH</a></code>, <code><a href="#Features">-NEG</a></code> and <code><a href="#Features">-FORALL</a></code> restriction in the LHS and RHS of
+ rule. Simple (not coordinated) noun phrases do not underlie such restrictions.
+</p><pre><a name="57"><b>57</b>
+
+<span><a name="UnmarkedNPCoord">UnmarkedNPCoord</a></span>[<code><a href="#Features">+PL</a></code>,<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">-NEG</a></code>,<code><a href="#Features">-WH</a></code>] &rarr;
+	<tt><a href="#NP">NP</a></tt>[<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">-NEG</a></code>,<code><a href="#Features">-WH</a></code>] and <tt><a href="#UnmarkedNPCoord">UnmarkedNPCoord</a></tt>[<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">-NEG</a></code>,<code><a href="#Features">-WH</a></code>]
+
+<span><a name="UnmarkedNPCoord">UnmarkedNPCoord</a></span> &rarr;
+	<tt><a href="#NP">NP</a></tt>
+
+<span class="u">Example:</span> a card and a code and a customer
+<span class="u">Example:</span> <span style="color: #888">[John sees]</span> Mary and more than 2 men <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John sees]</span> Mary and less than 2 men <span style="color: #888">[.]</span>
+<span class="u">Example:</span> * <span style="color: #888">[John sees]</span> Mary and every man <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="58"><b>58</b>
+
+<span><a name="NothingButNP">NothingButNP</a></span> &rarr;
+	<tt><a href="#NBar">N'</a></tt>[<code><a href="#Features">-SG</a></code>] | <tt><a href="#PropernameNP">PropernameNP</a></tt>
+</a></pre>
+
+<pre><a name="59a"><b>59a</b>
+
+<span><a name="NP">NP</a></span>[<code><a href="#Features">-PRO</a></code>] &rarr;
+	no <tt><a href="#N">N</a></tt> but <tt><a href="#NothingButNP">NothingButNP</a></tt>
+
+<span class="u">Example:</span> Nothing but men <span style="color: #888">[wait .]</span>
+<span class="u">Example:</span> <span style="color: #888">[A man enters]</span> nothing but cards <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John eats]</span> nothing but raw and expensive meat <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John likes]</span> nothing but Mary <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> Constructs the DOM for the then-part
+ of the implication in "nothing but" sentences.
+ Note that named(.) is not included in the DOM.
+ The type of X (either var or named(.)) must be known at the point
+ when this constructor is called.
+ In general, a noun phrase consists of a specifier followed by an N' (<tt><a href="#59">59</a></tt>).
+</p><pre><a name="59"><b>59</b>
+
+<span><a name="NP">NP</a></span>[<code><a href="#Features">-PRO</a></code>] &rarr;
+	<tt><a href="#Specifier">Specifier</a></tt> <tt><a href="#NBar">N'</a></tt>
+
+<span class="u">Example:</span> a card X
+<span class="u">Example:</span> some water
+<span class="u">Example:</span> the card that is valid
+<span class="u">Example:</span> the card of John
+<span class="u">Example:</span> every card
+<span class="u">Example:</span> whose card
+<span class="u">Example:</span> which card
+<span class="u">Example:</span> <span style="color: #888">[a customer]</span> a card of who <span style="color: #888">[is valid enters a code.]</span>
+<span class="u">Example:</span> the card of which customer
+<span class="u">Example:</span> the card of who
+<span class="u">Example:</span> which card of which customer
+<span class="u">Example:</span> 4 kg of apples
+<span class="u">Example:</span> at most 3 l of milk
+<span class="u">Example:</span> 2l of water <span style="color: #888">[flows.]</span>
+<span class="u">Example:</span> 2l of water <span style="color: #888">[flow.]</span>
+</a></pre>
+
+<p> Pronouns (<tt><a href="#62">62</a></tt>), proper names and variables (<tt><a href="#63">63</a></tt>) are also self-contained noun phrases. 
+ Proper names always start with a capital letter.
+ They can be used anaphorically, and they are in the lexicon. 
+ Variables also start with a capital letter, but they are not in the lexicon.
+ Variables can be used anaphorically when used in an apposition or as a self-contained NP.
+</p><pre><a name="62"><b>62</b>
+
+<span><a name="NP">NP</a></span>[<code><a href="#Features">+PRO</a></code>] &rarr;
+	<tt><a href="#Pronoun">Pronoun</a></tt>
+</a></pre>
+
+<p> Every NP is a proper name, a variable, or a term.
+</p><pre><a name="63"><b>63</b>
+
+<span><a name="NP">NP</a></span>[<code><a href="#Features">-PRO</a></code>,<code><a href="#Features">-WH</a></code>] &rarr;
+	<tt><a href="#PropernameNP">PropernameNP</a></tt> ( <tt><a href="#RelativeClauseCoord">RelativeClauseCoord</a></tt> ) | <tt><a href="#VariableNP">VariableNP</a></tt> | <tt><a href="#Term">Term</a></tt>
+</a></pre>
+
+<pre><a name="69a"><b>69a</b>
+
+<span><a name="PropernameNP">PropernameNP</a></span> &rarr;
+	<tt><a href="#Propername">Propername</a></tt>
+</a></pre>
+
+<p> Nouns can be optionally modified by a preceding adjective coordination and/or, following the noun, 
+ an apposition coordination, an of<code><a href="#Features">-PP</a></code> or a relative clause coordination (<tt><a href="#64">64</a></tt>).
+</p><pre><a name="64"><b>64</b>
+
+<span><a name="NBar">N'</a></span> &rarr;
+	( <tt><a href="#AdjectiveCoord">AdjectiveCoord</a></tt> ) <tt><a href="#N">N</a></tt> ( <tt><a href="#VariableApposition">VariableApposition</a></tt> ) ( of <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>] | <tt><a href="#RelativeClauseCoord">RelativeClauseCoord</a></tt> )
+
+<span class="u">Example:</span> a red and blue card X of a customer
+<span class="u">Example:</span> a red and blue card X which is valid
+</a></pre>
+
+<p>
+</p><h3><a name='Specifiers'>7.1 Specifiers</a></h3>
+<p>
+ In ACE, specifiers can be determiners, possessive NP coordinations or number phrases.
+ In a measurement noun phrase, however, the specifier consists of a number phrase (<em>2</em>, <em>at least 3</em>)
+ followed by a measurement noun (<em>kg</em>, <em>l</em>, <em>min</em>), and the preposition <em>of</em>.
+ Recursive Saxon Genitive is not supported.
+</p><pre><a name="66"><b>66</b>
+
+<span><a name="Specifier">Specifier</a></span> &rarr;
+	<tt><a href="#Determiner">Determiner</a></tt> | <tt><a href="#PositiveIntegerPhrase">PositiveIntegerPhrase</a></tt> | <tt><a href="#PossessiveNP">PossessiveNP</a></tt> | <tt><a href="#PositiveNumberPhrase">PositiveNumberPhrase</a></tt> <tt><a href="#MeasurementNoun">MeasurementNoun</a></tt> of
+
+<span class="u">Example:</span> the
+<span class="u">Example:</span> every
+<span class="u">Example:</span> some
+<span class="u">Example:</span> the clerk's
+<span class="u">Example:</span> at least 3
+<span class="u">Example:</span> 5
+<span class="u">Example:</span> 3l of
+<span class="u">Example:</span> * a clerk's customer's
+</a></pre>
+
+<p> A positive number phrase consists of a positive number which is optionally preceded by a generalised quantor.
+</p><pre><a name="67"><b>67</b>
+
+<span><a name="PositiveNumberPhrase">PositiveNumberPhrase</a></span> &rarr;
+	<tt><a href="#GeneralisedQuantor">GeneralisedQuantor</a></tt> <em>PositiveNumber</em>
+
+<span class="u">Example:</span> <span style="color: #888">[John has]</span> 6 <span style="color: #888">[kg of apples.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John has]</span> at most 5 <span style="color: #888">[kg of apples.]</span>
+<span class="u">Example:</span> <span style="color: #888">[John has]</span> at least 3.6 <span style="color: #888">[kg of salt.]</span>
+</a></pre>
+
+<pre><a name="68"><b>68</b>
+
+<span><a name="PositiveIntegerPhrase">PositiveIntegerPhrase</a></span> &rarr;
+	<tt><a href="#GeneralisedQuantor">GeneralisedQuantor</a></tt> <em>PositiveInteger</em>
+
+<span class="u">Example:</span> 3 <span style="color: #888">[men wait.]</span>
+<span class="u">Example:</span> at most 6 <span style="color: #888">[men wait.]</span>
+<span class="u">Example:</span> * at least 0 <span style="color: #888">[men wait.]</span>
+<span class="u">Example:</span> at most 1 <span style="color: #888">[man waits.]</span>
+<span class="u">Example:</span> * at most 1 <span style="color: #888">[men wait.]</span>
+</a></pre>
+
+<p>
+</p><h3><a name='Variables'>7.2 Variables</a></h3>
+<p>
+ Variables in apposition stand immediately after the nouns to which they are attached (see <tt><a href="#64">64</a></tt>).
+ Variables can be any upper case letter followed by zero or more digits.
+</p><pre><a name="69"><b>69</b>
+
+<span><a name="VariableApposition">VariableApposition</a></span> &rarr;
+	<tt><a href="#Variable">Variable</a></tt>
+
+<span class="u">Example:</span> <span style="color: #888">[A man]</span> X <span style="color: #888">[waits.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A man]</span> M23 <span style="color: #888">[waits.]</span>
+</a></pre>
+
+<pre><a name="69b"><b>69b</b>
+
+<span><a name="VariableNP">VariableNP</a></span>(<code><a href="#Features">-FORALL</a></code>) &rarr;
+	<tt><a href="#Variable">Variable</a></tt>
+
+<span class="u">Example:</span> X
+<span class="u">Example:</span> K54
+</a></pre>
+
+<p>
+</p><h3><a name='PossessiveNounPhrases'>7.3 Possessive Noun Phrases</a></h3>
+<p>
+ The specifier of a noun phrase can be a possessive noun phrase.
+ Possessive noun phrases are either noun phrases (a rich man X)
+ that are followed by a Saxon Genitive marker (i.e. so-called genitive noun phrases),
+ or possessive pronouns (his, his own).
+</p><pre><a name="76"><b>76</b>
+
+<span><a name="PossessiveNP">PossessiveNP</a></span> &rarr;
+	whose | <tt><a href="#PossessivePronoun">PossessivePronoun</a></tt> | <tt><a href="#GenitiveNP">GenitiveNP</a></tt>
+</a></pre>
+
+<pre><a name="77"><b>77</b>
+
+<span><a name="GenitiveNP">GenitiveNP</a></span> &rarr;
+	<tt><a href="#GenitiveSpecifier">GenitiveSpecifier</a></tt> <tt><a href="#GenitiveNBar">GenitiveN'</a></tt> <tt><a href="#SaxonGenitiveMarker">SaxonGenitiveMarker</a></tt>
+
+<span class="u">Example:</span> the man 's <span style="color: #888">[dog barks.]</span>
+<span class="u">Example:</span> a man 's <span style="color: #888">[dog barks.]</span>
+<span class="u">Example:</span> 5 men 's <span style="color: #888">[dog barks.]</span>
+<span class="u">Example:</span> everybody 's <span style="color: #888">[dog barks.]</span>
+<span class="u">Example:</span> <span style="color: #888">[There is]</span> the man 's <span style="color: #888">[card.]</span>
+<span class="u">Example:</span> <span style="color: #888">[There is]</span> a man 's <span style="color: #888">[card.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Mary likes]</span> a man 's <span style="color: #888">[fast car.]</span>
+</a></pre>
+
+<pre><a name="78"><b>78</b>
+
+<span><a name="GenitiveNP">GenitiveNP</a></span> &rarr;
+	<tt><a href="#PropernameNP">PropernameNP</a></tt> <tt><a href="#SaxonGenitiveMarker">SaxonGenitiveMarker</a></tt>
+
+<span><a name="GenitiveNP">GenitiveNP</a></span> &rarr;
+	<tt><a href="#VariableNP">VariableNP</a></tt> <tt><a href="#SaxonGenitiveMarker">SaxonGenitiveMarker</a></tt>
+
+<span class="u">Example:</span> John 's <span style="color: #888">[card is valid.]</span>
+<span class="u">Example:</span> <span style="color: #888">[There is a man X.]</span> X 's <span style="color: #888">[card is valid.]</span>
+<span class="u">Example:</span> Jimmy's <span style="color: #888">[dog barks.]</span>
+<span class="u">Example:</span> <span style="color: #888">[Mary likes]</span> John 's <span style="color: #888">[fast car.]</span>
+</a></pre>
+
+<p> Note that GenitiveNP functions as an existentially qualifying determiner.
+</p><pre><a name="82"><b>82</b>
+
+<span><a name="GenitiveSpecifier">GenitiveSpecifier</a></span> &rarr;
+	<tt><a href="#Determiner">Determiner</a></tt> | <tt><a href="#PositiveIntegerPhrase">PositiveIntegerPhrase</a></tt>
+
+<span class="u">Example:</span> A <span style="color: #888">[man's dog barks.]</span>
+<span class="u">Example:</span> Some <span style="color: #888">[men's dog barks.]</span>
+<span class="u">Example:</span> 5 <span style="color: #888">[men's dog barks.]</span>
+</a></pre>
+
+<pre><a name="75"><b>75</b>
+
+<span><a name="GenitiveNBar">GenitiveN'</a></span> &rarr;
+	(<tt><a href="#AdjectiveCoord">AdjectiveCoord</a></tt>) <tt><a href="#N">N</a></tt> (<tt><a href="#VariableApposition">VariableApposition</a></tt>)
+
+<span class="u">Example:</span> <span style="color: #888">[A]</span> rich and famous man X <span style="color: #888">['s dog barks.]</span>
+</a></pre>
+
+<p>
+</p><h3><a name='ArithmeticTerms'>7.4 Arithmetic Terms</a></h3>
+<p>
+ Arithmetic terms are treated as normal NPs.
+ Every operator is left-associative.
+ Every operator with the exception of '&amp;' must be used in numerical
+ context, '&amp;' requires string context.
+</p><p> The operator precedence levels are:
+</p><p>   </p><blockquote><p> 1. ^ </p></blockquote>
+   <blockquote><p> 2. *  / </p></blockquote>
+   <blockquote><p> 3. +  -  &amp; </p></blockquote>
+<pre><a name="140"><b>140</b>
+
+<span><a name="Term">Term</a></span> &rarr;
+	<tt><a href="#Term1">Term1</a></tt>
+
+<span><a name="Term1">Term1</a></span> &rarr;
+	<tt><a href="#Term2">Term2</a></tt> ( <tt><a href="#Term1_Tail">Term1_Tail</a></tt> )
+
+<span><a name="Term1_Tail">Term1_Tail</a></span> &rarr;
+	'+' <tt><a href="#Term1">Term1</a></tt> | '-' <tt><a href="#Term1">Term1</a></tt> | '&amp;' <tt><a href="#Term1">Term1</a></tt>
+
+<span class="u">Example:</span> 1234
+<span class="u">Example:</span> "abc" &amp; "def"
+<span class="u">Example:</span> 5*X - 4 - 5
+</a></pre>
+
+<pre><a name="141"><b>141</b>
+
+<span><a name="Term2">Term2</a></span> &rarr;
+	<tt><a href="#Term3">Term3</a></tt> ( <tt><a href="#Term2_Tail">Term2_Tail</a></tt> )
+
+<span><a name="Term2_Tail">Term2_Tail</a></span> &rarr;
+	'*' <tt><a href="#Term2">Term2</a></tt> | '/' <tt><a href="#Term2">Term2</a></tt>
+
+<span class="u">Example:</span> 1234
+<span class="u">Example:</span> X * Y * 3 * 5
+<span class="u">Example:</span> X / 4
+</a></pre>
+
+<pre><a name="142"><b>142</b>
+
+<span><a name="Term3">Term3</a></span> &rarr;
+	<tt><a href="#Term4">Term4</a></tt> ( <tt><a href="#Term3_Tail">Term3_Tail</a></tt> )
+
+<span><a name="Term3_Tail">Term3_Tail</a></span> &rarr;
+	'^' <tt><a href="#Term3">Term3</a></tt>
+
+<span class="u">Example:</span> X ^ 4
+</a></pre>
+
+<pre><a name="143"><b>143</b>
+
+<span><a name="Term4">Term4</a></span> &rarr;
+	<tt><a href="#AtomicTerm">AtomicTerm</a></tt> | '(' <tt><a href="#Term">Term</a></tt> ')' | '[' <tt><a href="#TermList">TermList</a></tt> ']' | '{' <tt><a href="#TermList">TermList</a></tt> '}'
+
+<span class="u">Example:</span> 1234
+<span class="u">Example:</span> ("abc" &amp; "def")
+<span class="u">Example:</span> [1,2,3]
+<span class="u">Example:</span> {"a",5,X}
+</a></pre>
+
+<pre><a name="144"><b>144</b>
+
+<span><a name="TermList">TermList</a></span> &rarr;
+	( <tt><a href="#Term">Term</a></tt> | <tt><a href="#Term">Term</a></tt> ',' <tt><a href="#TermList">TermList</a></tt> )
+
+<span class="u">Example:</span> 1,2,3
+</a></pre>
+
+<pre><a name="145"><b>145</b>
+
+<span><a name="AtomicTerm">AtomicTerm</a></span> &rarr;
+	<em>String</em> | <em>Integer</em> | <em>Real</em> | <tt><a href="#PropernameNP">PropernameNP</a></tt> | <tt><a href="#VariableNP">VariableNP</a></tt>
+
+<span class="u">Example:</span> "abc"
+<span class="u">Example:</span> 12
+<span class="u">Example:</span> 3.14
+<span class="u">Example:</span> John
+<span class="u">Example:</span> X
+</a></pre>
+
+<p>
+</p><h2><a name='PrepositionalPhrases'>8 Prepositional Phrases</a></h2>
+<p>
+ There are two types of prepositional phrases in ACE: ordinary prepositional phrases (<tt><a href="#84">84</a></tt>) and <em>of</em><code><a href="#Features">-PP</a></code>s (<tt><a href="#64">64</a></tt>). 
+ Ordinary prepositional phrases consist of a preposition followed by an NP coordination (<tt><a href="#84">84</a></tt>). Note that the
+ prepositional phrase as a whole is always non-pronominal (<code><a href="#Features">-PRO</a></code>). This is relevant for a prepositional phrase
+ containing a pronoun as its NP which is the complement of a transitive phrasal verb. Rule <tt><a href="#45">45</a></tt> states
+ that only non-pronominal complements can stand after the phrasal particle and prohibits sentences like
+   </p><blockquote><p> <em>A customer looks-up a code.</em> </p></blockquote>
+   <blockquote><p> <em>* A customer looks-up it.</em> </p></blockquote>
+<p> If the complement is a prepositional phrase, it can stand in the end position even if its NP is a pronoun:
+   </p><blockquote><p> <em>A boy looks-up to a famous actor.</em> </p></blockquote>
+   <blockquote><p> <em>A boy looks-up to him.</em> </p></blockquote>
+<p> This means that the pronominal feature is not passed on from an NP to its dominating PP and prepositional
+ phrases are always non-pronominal.
+</p><p> When a prepositional phrase has been moved to the front of a question, it leaves a gap behind (<tt><a href="#85">85</a></tt>). 
+ Note that, in an implementation, rule (<tt><a href="#85">85</a></tt>) can get into an infinite loop, if it is parsed in combination with
+ rule (<tt><a href="#41">41</a></tt>) and its gap feature is not properly restricted. An infinite number of emtpy verb modifiers (adjuncts)
+ would be generated in this case.
+</p><pre><a name="84"><b>84</b>
+
+<span><a name="PP">PP</a></span>[<code><a href="#Features">-PRO</a></code>] &rarr;
+	<tt><a href="#Preposition">Preposition</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> into a slot
+<span class="u">Example:</span> to a clerk
+<span class="u">Example:</span> with a card and a code
+</a></pre>
+
+<pre><a name="85"><b>85</b>
+
+<span><a name="PP">PP</a></span>/PP &rarr;
+	[].
+</a></pre>
+
+<p>
+</p><h2><a name='RelativeClauses'>9 Relative Clauses</a></h2>
+<p>
+ Rule (<tt><a href="#64">64</a></tt>) defines at which position relatives clauses occur within an N'.
+ Relative clauses can be coordinated (<tt><a href="#88">88</a></tt>).
+ Relative clauses follow the same coordination rules as clauses, with appropriate hierarchy for <em>or</em>, <em>and</em>
+ with and without comma.
+</p><pre><a name="88"><b>88</b>
+
+<span><a name="RelativeClauseCoord">RelativeClauseCoord</a></span> &rarr;
+	<tt><a href="#RelativeClauseCoord_1">RelativeClauseCoord_1</a></tt> ( <tt><a href="#CommaOr">CommaOr</a></tt> <tt><a href="#RelativeClauseCoord">RelativeClauseCoord</a></tt> )
+
+<span><a name="RelativeClauseCoord_1">RelativeClauseCoord_1</a></span> &rarr;
+	<tt><a href="#RelativeClauseCoord_2">RelativeClauseCoord_2</a></tt> ( <tt><a href="#CommaAnd">CommaAnd</a></tt> <tt><a href="#RelativeClauseCoord_1">RelativeClauseCoord_1</a></tt> )
+
+<span><a name="RelativeClauseCoord_2">RelativeClauseCoord_2</a></span> &rarr;
+	<tt><a href="#RelativeClauseCoord_3">RelativeClauseCoord_3</a></tt> ( <tt><a href="#Or">Or</a></tt> <tt><a href="#RelativeClauseCoord_2">RelativeClauseCoord_2</a></tt> )
+
+<span><a name="RelativeClauseCoord_3">RelativeClauseCoord_3</a></span> &rarr;
+	<tt><a href="#RelativeClause">RelativeClause</a></tt> ( <tt><a href="#And">And</a></tt> <tt><a href="#RelativeClauseCoord_3">RelativeClauseCoord_3</a></tt> )
+
+<span class="u">Example:</span> <span style="color: #888">[a card]</span> that is green and that is valid
+</a></pre>
+
+<p> A relative clause can either be introduced by the complementizer <em>that</em> (<tt><a href="#89">89</a></tt>, <tt><a href="#91">91</a></tt>) 
+ or by a relative NP coordination or PP (<tt><a href="#90">90</a></tt>, <tt><a href="#93">93</a></tt>). The constituent to which 
+ a relative clause refers can either be its subject (<tt><a href="#89">89</a></tt>&ndash;<tt><a href="#91">91</a></tt>), or it can be a complement 
+ or adjunct (<tt><a href="#93">93</a></tt>).  If it is a complement or an adjunct, like in rule <tt><a href="#93">93</a></tt>, 
+ then it has been moved from the VP of the relative clause and has left a corresponding gap, 
+ namely an NP coordination in an oblique case or a PP, which cannot be interrogative or relative. 
+ Furthermore, it is followed by the subject of the relative clause (a non-relative NP coordination in nominative case).
+</p><pre><a name="89"><b>89</b>
+
+<span><a name="RelativeClause">RelativeClause</a></span> &rarr;
+	that <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-INF</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[a customer]</span> that enters a card
+</a></pre>
+
+<pre><a name="91"><b>91</b>
+
+<span><a name="RelativeClause">RelativeClause</a></span> &rarr;
+	that <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-R</a></code>,<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-INF</a></code>]/NPCoord[<code><a href="#Features">-WH</a></code>,<code><a href="#Features">-NOM</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A card]</span> that a customer enters
+</a></pre>
+
+<pre><a name="90"><b>90</b>
+
+<span><a name="RelativeClause">RelativeClause</a></span> &rarr;
+	<tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+R</a></code>,<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-INF</a></code>]
+
+<span><a name="RelativeClause">RelativeClause</a></span> &rarr;
+	<tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+R</a></code>,<code><a href="#Features">-NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-R</a></code>,<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VPCoord">VPCoord</a></tt>[<code><a href="#Features">-INF</a></code>]/NPCoord[<code><a href="#Features">-WH</a></code>,<code><a href="#Features">-NOM</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[a table]</span> which is green
+<span class="u">Example:</span> <span style="color: #888">[a customer]</span> who enters a card
+<span class="u">Example:</span> <span style="color: #888">[a customer]</span> whose card is valid
+<span class="u">Example:</span> <span style="color: #888">[A card]</span> which a customer enters
+<span class="u">Example:</span> <span style="color: #888">[A man]</span> who a customer sees
+<span class="u">Example:</span> whose brother he sees
+</a></pre>
+
+<pre><a name="93"><b>93</b>
+
+<span><a name="RelativeClause">RelativeClause</a></span> &rarr;
+	<tt><a href="#PP">PP</a></tt>[<code><a href="#Features">+R</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">-R</a></code>,<code><a href="#Features">+NOM</a></code>,<code><a href="#Features">+THIRD</a></code>] <tt><a href="#VP">VP</a></tt>[<code><a href="#Features">-INF</a></code>]/PP[<code><a href="#Features">-WH</a></code>]
+
+<span class="u">Example:</span> at which he looks
+<span class="u">Example:</span> at each of which he looks
+</a></pre>
+
+<p>
+</p><h2><a name='AdjectivePhrasesAdverbPhrases'>10 Adjective Phrases / Adverb Phrases</a></h2>
+<p>
+ Adjective phrase coordinations (<tt><a href="#94a">94a</a></tt>, <tt><a href="#94b">94b</a></tt>) have a predicative usage only,
+ i.e. they function as the complement of the copula only (<tt><a href="#52">52</a></tt>).
+ Attributive usage, modifying a noun (<tt><a href="#64">64</a></tt>), is only possible with bare 
+ adjective coordinations (<tt><a href="#101">101</a></tt>). 
+</p><p> Only adjective phrases that do not contain a noun phrase are allowed to be
+ coordinated with "and".
+</p><pre><a name="94a"><b>94a</b>
+
+<span><a name="APCoord">APCoord</a></span> &rarr;
+	<tt><a href="#APCoordX">APCoordX</a></tt> | <tt><a href="#APItr">APItr</a></tt> | <tt><a href="#APTr">APTr</a></tt>
+
+<span class="u">Example:</span> more important and rich
+<span class="u">Example:</span> valid
+<span class="u">Example:</span> more important than Mary
+<span class="u">Example:</span> as important as Bill
+<span class="u">Example:</span> fond-of Mary
+<span class="u">Example:</span> more fond-of Mary than Bill
+<span class="u">Example:</span> as fond-of Mary as of Sue
+</a></pre>
+
+<pre><a name="94b"><b>94b</b>
+
+<span><a name="APCoordX">APCoordX</a></span> &rarr;
+	<tt><a href="#APItr">APItr</a></tt> ( and <tt><a href="#APCoordX">APCoordX</a></tt> )
+
+<span class="u">Example:</span> more important and rich
+</a></pre>
+
+<p> An adjective phrase (AP) can either be an intransitive adjective (<tt><a href="#99">99</a></tt>) or a
+ transitive adjective followed by an noun phrase (coordination) (<tt><a href="#100">100</a></tt>). Transitive adjective phrases receive
+ the feature values which indicate whether they contain a negative or universally
+ quantified noun phrase as their argument.
+</p><pre><a name="100"><b>100</b>
+
+<span><a name="APTr">APTr</a></span> &rarr;
+	<tt><a href="#TransitiveAdjective">TransitiveAdjective</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> fond-of Mary <span style="color: #888">[.]</span>
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> interested-in an account <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> Note that transitive adjectives must be followed by a noun phrase (coordination)
+ which is linguistically not correct, since instead, they should be followed by a PP.
+ We require the preposition of the PP to be attached to the adjective.
+</p><pre><a name="100a"><b>100a</b>
+
+<span><a name="APTr">APTr</a></span> &rarr;
+	<tt><a href="#TransitiveAdjective">TransitiveAdjective</a></tt>[<code><a href="#Features">+COMP</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>] than <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> more fond-of Mary than Bill <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="100b"><b>100b</b>
+
+<span><a name="APTr">APTr</a></span> &rarr;
+	<tt><a href="#TransitiveAdjective">TransitiveAdjective</a></tt>[<code><a href="#Features">+COMP</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>] than <tt><a href="#Preposition">Preposition</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> more fond-of Mary than of Bill <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="100c"><b>100c</b>
+
+<span><a name="APTr">APTr</a></span> &rarr;
+	as <tt><a href="#TransitiveAdjective">TransitiveAdjective</a></tt>[<code><a href="#Features">+POS</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>] as <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> as fond-of Mary as Bill <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="100d"><b>100d</b>
+
+<span><a name="APTr">APTr</a></span> &rarr;
+	as <tt><a href="#TransitiveAdjective">TransitiveAdjective</a></tt>[<code><a href="#Features">+POS</a></code>] <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>] as <tt><a href="#Preposition">Preposition</a></tt> <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[A man is]</span> as fond-of Mary as of Bill <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="99"><b>99</b>
+
+<span><a name="APItr">APItr</a></span>[<code><a href="#Features">-FORALL</a></code>,<code><a href="#Features">-NEG</a></code>] &rarr;
+	<tt><a href="#IntransitiveAdjective">IntransitiveAdjective</a></tt>
+
+<span class="u">Example:</span> <span style="color: #888">[A]</span> green <span style="color: #888">[card]</span>
+<span class="u">Example:</span> <span style="color: #888">[A card is]</span> green <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="96"><b>96</b>
+
+<span><a name="APItr">APItr</a></span> &rarr;
+	<tt><a href="#IntransitiveAdjective">IntransitiveAdjective</a></tt>[<code><a href="#Features">+COMP</a></code>] than <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[a customer A is]</span> more important than a customer B <span style="color: #888">[.]</span>
+</a></pre>
+
+<pre><a name="96b"><b>96b</b>
+
+<span><a name="APItr">APItr</a></span> &rarr;
+	as <tt><a href="#IntransitiveAdjective">IntransitiveAdjective</a></tt>[<code><a href="#Features">+POS</a></code>] as <tt><a href="#NPCoord">NPCoord</a></tt>[<code><a href="#Features">+THIRD</a></code>]
+
+<span class="u">Example:</span> <span style="color: #888">[a customer A is]</span> as important as a customer B <span style="color: #888">[.]</span>
+</a></pre>
+
+<p> In attributive position (<tt><a href="#64">64</a></tt>), only non-comparative intransitive adjectives or coordinations of them (<tt><a href="#101">101</a></tt>) can occur. 
+</p><pre><a name="101"><b>101</b>
+
+<span><a name="AdjectiveCoord">AdjectiveCoord</a></span> &rarr;
+	<tt><a href="#IntransitiveAdjective">IntransitiveAdjective</a></tt> ( and <tt><a href="#AdjectiveCoord">AdjectiveCoord</a></tt> )
+</a></pre>
+
+<p> Multiple adverbs must be conjoined by 'and' (not concatenated like PPs).
+ An adverb coordination can either be a coordination of one or more
+ non-interrogative (<code><a href="#Features">-Q</a></code>) adverbs, a single interrogative adverb (<tt><a href="#102">102</a></tt>),
+ or a gap left behind when an adjunct was moved to the front of a question (<tt><a href="#104">104</a></tt>).
+ Note that non-interrogative adverbs are not allowed in copula constructions.
+</p><pre><a name="102"><b>102</b>
+
+<span><a name="AdverbCoord">AdverbCoord</a></span>[<code><a href="#Features">-Q</a></code>] &rarr;
+	<tt><a href="#Adverb">Adverb</a></tt> ( and <tt><a href="#AdverbCoord">AdverbCoord</a></tt>[<code><a href="#Features">-Q</a></code>] )
+
+<span><a name="AdverbCoord">AdverbCoord</a></span>[<code><a href="#Features">+Q</a></code>] &rarr;
+	<tt><a href="#WhAdverb">WhAdverb</a></tt> ( and <tt><a href="#AdverbCoord">AdverbCoord</a></tt>[<code><a href="#Features">-Q</a></code>] )
+</a></pre>
+
+<pre><a name="104"><b>104</b>
+
+<span><a name="AdverbCoord">AdverbCoord</a></span>/AdverbCoord &rarr;
+	[]
+</a></pre>
+
+<p>
+</p><h2><a name='FunctionWords'>11 Function Words</a></h2>
+<p>
+ Function words are predefined and cannot be changed by the user.
+</p><pre><a name="151"><b>151</b>
+
+<span><a name="Aux">Aux</a></span> &rarr;
+	( do | does | are | is | be | must | can | should | may )
+</a></pre>
+
+<pre><a name="152"><b>152</b>
+
+<span><a name="AuxRest">AuxRest</a></span> &rarr;
+	( not | not provably | not provably not | has to | have to | not have to |
+	be | have to be | has to be | not have to be | not be )
+</a></pre>
+
+<p> Only the following combinations of "Aux (...) AuxRest" are possible (the content of Aux is marked by square brackets):
+ </p><pre>
+ [does]
+ [do]
+ [is]
+ [are]
+ [be]
+ [does] not
+ [do] not
+ [is] not
+ [are] not
+ [does] not provably
+ [do] not provably
+ [is] not provably
+ [are] not provably
+ [does] not provably not
+ [do] not provably not
+ [is] not provably not
+ [are] not provably not
+ [must]
+ [] has to
+ [] have to
+ [does] have to
+ [do] have to
+ [does] not have to
+ [do] not have to
+ [must] be
+ [] has to be
+ [] have to be
+ [does] have to be
+ [do] have to be
+ [does] not have to be
+ [do] not have to be
+ [can]
+ [can] be
+ [can] not
+ [can] not be
+ [should]
+ [should] be
+ [should] not
+ [should] not be
+ [may]
+ [may] be
+ [may] not
+ [may] not be  </pre>
+<pre><a name="154"><b>154</b>
+
+<span><a name="CommaAnd">CommaAnd</a></span> &rarr;
+	, and
+
+<span><a name="CommaOr">CommaOr</a></span> &rarr;
+	, or
+
+<span><a name="And">And</a></span> &rarr;
+	and
+
+<span><a name="Or">Or</a></span> &rarr;
+	or
+</a></pre>
+
+<pre><a name="155"><b>155</b>
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+DEF</a></code>] &rarr;
+	the
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+EXISTS</a></code>,<code><a href="#Features">+SG</a></code>] &rarr;
+	a | an
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+EXISTS</a></code>,<code><a href="#Features">-SG</a></code>] &rarr;
+	some
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+FORALL</a></code>,<code><a href="#Features">+NEG</a></code>] &rarr;
+	no
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+FORALL</a></code>,<code><a href="#Features">+SG</a></code>] &rarr;
+	every | each
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+FORALL</a></code>,<code><a href="#Features">+SG</a></code>,<code><a href="#Features">+NEG</a></code>] &rarr;
+	not every | not each
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+FORALL</a></code>,<code><a href="#Features">-SG</a></code>] &rarr;
+	all
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+FORALL</a></code>,<code><a href="#Features">-SG</a></code>,<code><a href="#Features">+NEG</a></code>] &rarr;
+	not all
+
+<span><a name="Determiner">Determiner</a></span>[<code><a href="#Features">+EXISTS</a></code>,<code><a href="#Features">-SG</a></code>,<code><a href="#Features">+Q</a></code>] &rarr;
+	how many | how much
+</a></pre>
+
+<p> Determiner[<code><a href="#Features">+EXISTS</a></code>,<code><a href="#Features">-MASS</a></code>,<code><a href="#Features">+Q</a></code>] &rarr;
+	which | whose
+</a></pre>
+
+<pre><a name="156"><b>156</b>
+
+<span><a name="DistributiveMarker">DistributiveMarker</a></span> &rarr;
+	each of
+</a></pre>
+
+<pre><a name="157"><b>157</b>
+
+<span><a name="DistributiveGlobalQuantor">DistributiveGlobalQuantor</a></span> &rarr;
+	for each of
+</a></pre>
+
+<pre><a name="158"><b>158</b>
+
+<span><a name="UniversalGlobalQuantor">UniversalGlobalQuantor</a></span> &rarr;
+	for | not for
+
+<span class="u">Example:</span> for <span style="color: #888">[every]</span>
+<span class="u">Example:</span> for <span style="color: #888">[all]</span>
+<span class="u">Example:</span> for <span style="color: #888">[no]</span>
+<span class="u">Example:</span> not for <span style="color: #888">[every]</span>
+</a></pre>
+
+<pre><a name="159"><b>159</b>
+
+<span><a name="ExistentialGlobalQuantor">ExistentialGlobalQuantor</a></span> &rarr;
+	there is | there are
+
+<span><a name="ExistentialGlobalQuestionQuantor">ExistentialGlobalQuestionQuantor</a></span> &rarr;
+	is there | are there
+</a></pre>
+
+<pre><a name="160"><b>160</b>
+
+<span><a name="GeneralisedQuantor">GeneralisedQuantor</a></span> &rarr;
+	( at most | at least | more than | less than | exactly )
+
+<span class="u">Example:</span> <span style="color: #888">[John sees]</span> at most <span style="color: #888">[5 dogs.]</span>
+</a></pre>
+
+<pre><a name="161"><b>161</b>
+
+<span><a name="SentenceInit">SentenceInit</a></span> &rarr;
+	it is false | it is not true | it is possible | it is not possible |
+	it is necessary | it is not necessary | it is not provable | it is true |
+	it is not false
+
+<span class="u">Example:</span> it is false <span style="color: #888">[that ...]</span>
+<span class="u">Example:</span> it is not true <span style="color: #888">[that ...]</span>
+<span class="u">Example:</span> it is possible <span style="color: #888">[that ...]</span>
+</a></pre>
+
+<pre><a name="162"><b>162</b>
+
+<span><a name="SentenceQuestion">SentenceQuestion</a></span> &rarr;
+	is it true | is it not true | is it false | is it not false
+
+<span class="u">Example:</span> Is it true <span style="color: #888">[that ... ?]</span>
+<span class="u">Example:</span> Is is not false <span style="color: #888">[that ... ?]</span>
+<span class="u">Example:</span> Is it false <span style="color: #888">[that ... ?]</span>
+<span class="u">Example:</span> Is it not true <span style="color: #888">[that ... ?]</span>
+</a></pre>
+
+<pre><a name="163a"><b>163a</b>
+
+<span><a name="PossessivePronoun">PossessivePronoun</a></span> &rarr;
+	<tt><a href="#IrreflexivePossessivePronoun">IrreflexivePossessivePronoun</a></tt>
+
+<span class="u">Example:</span> its
+<span class="u">Example:</span> their
+</a></pre>
+
+<pre><a name="163b"><b>163b</b>
+
+<span><a name="PossessivePronoun">PossessivePronoun</a></span> &rarr;
+	<tt><a href="#ReflexivePossessivePronoun">ReflexivePossessivePronoun</a></tt>
+
+<span class="u">Example:</span> his own
+<span class="u">Example:</span> their own
+</a></pre>
+
+<pre><a name="163c"><b>163c</b>
+
+<span><a name="IrreflexivePossessivePronoun">IrreflexivePossessivePronoun</a></span> &rarr;
+	its | his | her | his/her | her/his | their | your
+</a></pre>
+
+<pre><a name="163d"><b>163d</b>
+
+<span><a name="ReflexivePossessivePronoun">ReflexivePossessivePronoun</a></span> &rarr;
+	its own | his own | her own | his/her own | her/his own | their own |
+	your own
+</a></pre>
+
+<pre><a name="164a"><b>164a</b>
+
+<span><a name="Pronoun">Pronoun</a></span> &rarr;
+	<tt><a href="#IrreflexivePronoun">IrreflexivePronoun</a></tt>
+
+<span class="u">Example:</span> it
+<span class="u">Example:</span> him/her
+</a></pre>
+
+<pre><a name="164b"><b>164b</b>
+
+<span><a name="Pronoun">Pronoun</a></span> &rarr;
+	<tt><a href="#ReflexivePronoun">ReflexivePronoun</a></tt>
+
+<span class="u">Example:</span> herself
+<span class="u">Example:</span> themselves
+</a></pre>
+
+<pre><a name="164c"><b>164c</b>
+
+<span><a name="Pronoun">Pronoun</a></span>(<code><a href="#Features">+Q</a></code>) &rarr;
+	<tt><a href="#WhPronoun">WhPronoun</a></tt>
+
+<span class="u">Example:</span> what
+<span class="u">Example:</span> who
+</a></pre>
+
+<pre><a name="164d"><b>164d</b>
+
+<span><a name="Pronoun">Pronoun</a></span>(<code><a href="#Features">+R</a></code>) &rarr;
+	<tt><a href="#RelativePronoun">RelativePronoun</a></tt>
+
+<span class="u">Example:</span> which
+<span class="u">Example:</span> who
+</a></pre>
+
+<pre><a name="164e"><b>164e</b>
+
+<span><a name="IrreflexivePronoun">IrreflexivePronoun</a></span> &rarr;
+	it | he | she | he/she | she/he | they | you | him | her | him/her |
+	her/him | them
+</a></pre>
+
+<pre><a name="164f"><b>164f</b>
+
+<span><a name="ReflexivePronoun">ReflexivePronoun</a></span> &rarr;
+	itself | himself | herself | himself/herself | herself/himself |
+	themselves | yourself | yourselves
+</a></pre>
+
+<pre><a name="164g"><b>164g</b>
+
+<span><a name="WhPronoun">WhPronoun</a></span> &rarr;
+	what | who
+</a></pre>
+
+<pre><a name="164h"><b>164h</b>
+
+<span><a name="RelativePronoun">RelativePronoun</a></span> &rarr;
+	which | who
+</a></pre>
+
+<pre><a name="165"><b>165</b>
+
+<span><a name="SaxonGenitiveMarker">SaxonGenitiveMarker</a></span> &rarr;
+	's | '
+
+<span class="u">Example:</span> <span style="color: #888">[John]</span>'s <span style="color: #888">[car]</span>
+<span class="u">Example:</span> <span style="color: #888">[Thomas]</span>' <span style="color: #888">[dog]</span>
+</a></pre>
+
+<pre><a name="167"><b>167</b>
+
+<span><a name="WhAdverb">WhAdverb</a></span> &rarr;
+	how | where | when
+</a></pre>
+
+<pre><a name="170"><b>170</b>
+
+<span><a name="Variable">Variable</a></span> &rarr;
+	'A' | 'B' | ... | 'Z' | 'A1' | 'B1' | ... | 'Z1' | 'A2' | 'B2' | ...
+</a></pre>
+
+<p>
+</p><h2><a name='ContentWords'>12 Content Words</a></h2>
+<p>
+ Content words are defined in the lexicon. The users can add their own words.
+</p><p></p><h3><a name='Adverbs'>12.1 Adverbs</a></h3>
+<p>
+</p><pre><a name="200"><b>200</b>
+
+<span><a name="Adverb">Adverb</a></span>[<code><a href="#Features">+POS</a></code>] &rarr;
+	<em>PositiveAdverb</em>
+
+<span class="u">Example:</span> fast
+<span class="u">Example:</span> frequently
+</a></pre>
+
+<pre><a name="201"><b>201</b>
+
+<span><a name="Adverb">Adverb</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	<em>ComparativeAdverb</em>
+
+<span><a name="Adverb">Adverb</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	more <em>PositiveAdverb</em>
+
+<span class="u">Example:</span> faster
+<span class="u">Example:</span> more frequently
+</a></pre>
+
+<pre><a name="202"><b>202</b>
+
+<span><a name="Adverb">Adverb</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	<em>SuperlativeAdverb</em>
+
+<span><a name="Adverb">Adverb</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	most <em>PositiveAdverb</em>
+
+<span class="u">Example:</span> fastest
+<span class="u">Example:</span> most frequently
+</a></pre>
+
+<p>
+</p><h3><a name='IntransitiveAdjectives'>12.2 Intransitive Adjectives</a></h3>
+<p>
+</p><pre><a name="203"><b>203</b>
+
+<span><a name="IntransitiveAdjective">IntransitiveAdjective</a></span>[<code><a href="#Features">+POS</a></code>] &rarr;
+	<em>PositiveIntransitiveAdjective</em>
+
+<span class="u">Example:</span> rich
+<span class="u">Example:</span> expensive
+</a></pre>
+
+<pre><a name="204"><b>204</b>
+
+<span><a name="IntransitiveAdjective">IntransitiveAdjective</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	<em>ComparativeIntransitiveAdjective</em>
+
+<span><a name="IntransitiveAdjective">IntransitiveAdjective</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	more <em>PositiveIntransitiveAdjective</em>
+
+<span class="u">Example:</span> richer
+<span class="u">Example:</span> more expensive
+</a></pre>
+
+<pre><a name="205"><b>205</b>
+
+<span><a name="IntransitiveAdjective">IntransitiveAdjective</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	<em>SuperlativeIntransitiveAdjective</em>
+
+<span><a name="IntransitiveAdjective">IntransitiveAdjective</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	most <em>SuperlativeIntransitiveAdjective</em>
+
+<span class="u">Example:</span> richest
+<span class="u">Example:</span> most expensive
+</a></pre>
+
+<p>
+</p><h3><a name='TransitiveAdjectives'>12.3 Transitive Adjectives</a></h3>
+<p>
+</p><pre><a name="206"><b>206</b>
+
+<span><a name="TransitiveAdjective">TransitiveAdjective</a></span>[<code><a href="#Features">+POS</a></code>] &rarr;
+	<em>PositiveTransitiveAdjective</em>
+
+<span class="u">Example:</span> fond-of
+<span class="u">Example:</span> pessimistic-about
+</a></pre>
+
+<pre><a name="207"><b>207</b>
+
+<span><a name="TransitiveAdjective">TransitiveAdjective</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	<em>ComparativeTransitiveAdjective</em>
+
+<span><a name="TransitiveAdjective">TransitiveAdjective</a></span>[<code><a href="#Features">+COMP</a></code>] &rarr;
+	more <em>PositiveTransitiveAdjective</em>
+
+<span class="u">Example:</span> fonder-of
+<span class="u">Example:</span> more pessimistic-about
+</a></pre>
+
+<pre><a name="208"><b>208</b>
+
+<span><a name="TransitiveAdjective">TransitiveAdjective</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	<em>SuperlativeTransitiveAdjective</em>
+
+<span><a name="TransitiveAdjective">TransitiveAdjective</a></span>[<code><a href="#Features">+SUP</a></code>] &rarr;
+	most <em>PositiveTransitiveAdjective</em>
+
+<span class="u">Example:</span> fondest-of
+<span class="u">Example:</span> most pessimistic-about
+</a></pre>
+
+<p>
+</p><h3><a name='TrunkNounsforAnonymousPronouns'>12.4 Trunk Nouns for Anonymous Pronouns</a></h3>
+<p>
+ Anonymous pronouns like 'something', 'everyone', and 'nobody' are processed as 'a -thing',
+ 'every -one', and 'no -body', respectively. Rule <tt><a href="#209">209</a></tt> treats the trunks '-thing', '-body', and
+ '-one' as nouns.
+</p><pre><a name="209"><b>209</b>
+
+<span><a name="N">N</a></span> &rarr;
+	-thing | -body | -one
+</a></pre>
+
+<p>
+</p><h3><a name='CountableNouns'>12.5 Countable Nouns</a></h3>
+<p>
+</p><pre><a name="210"><b>210</b>
+
+<span><a name="N">N</a></span>[<code><a href="#Features">+SG</a></code>] &rarr;
+	<em>SingularCountableNoun</em>
+
+<span class="u">Example:</span> mouse
+<span class="u">Example:</span> credit-card
+</a></pre>
+
+<pre><a name="211"><b>211</b>
+
+<span><a name="N">N</a></span>[<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>PluralCountableNoun</em>
+
+<span class="u">Example:</span> mice
+<span class="u">Example:</span> credit-cards
+</a></pre>
+
+<p>
+</p><h3><a name='MassNouns'>12.6 Mass Nouns</a></h3>
+<p>
+</p><pre><a name="212"><b>212</b>
+
+<span><a name="N">N</a></span>[<code><a href="#Features">+MASS</a></code>] &rarr;
+	<em>MassNoun</em>
+
+<span class="u">Example:</span> water
+<span class="u">Example:</span> freedom
+</a></pre>
+
+<p>
+</p><h3><a name='MeasurementNouns'>12.7 Measurement Nouns</a></h3>
+<p>
+</p><pre><a name="213"><b>213</b>
+
+<span><a name="MeasurementNoun">MeasurementNoun</a></span>[<code><a href="#Features">+SG</a></code>] &rarr;
+	<em>SingularMeasurementNoun</em>
+
+<span class="u">Example:</span> kg
+<span class="u">Example:</span> man-hour
+</a></pre>
+
+<pre><a name="214"><b>214</b>
+
+<span><a name="MeasurementNoun">MeasurementNoun</a></span>[<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>PluralMeasurementNoun</em>
+
+<span class="u">Example:</span> kg
+<span class="u">Example:</span> man-hours
+</a></pre>
+
+<p>
+</p><h3><a name='ProperNames'>12.8 Proper Names</a></h3>
+<p>
+</p><pre><a name="216"><b>216</b>
+
+<span><a name="Propername">Propername</a></span>[<code><a href="#Features">+SG</a></code>] &rarr;
+	<em>SingularPropername</em>
+
+<span class="u">Example:</span> John
+<span class="u">Example:</span> Switzerland
+</a></pre>
+
+<pre><a name="217"><b>217</b>
+
+<span><a name="Propername">Propername</a></span>[<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>PluralPropername</em>
+
+<span class="u">Example:</span> USA
+</a></pre>
+
+<p>
+</p><h3><a name='DitransitiveVerbs'>12.9 Ditransitive Verbs</a></h3>
+<p>
+</p><pre><a name="218"><b>218</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+DITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">-PL</a></code>] &rarr;
+	<em>FiniteSingularDitransitiveVerb</em>
+
+<span class="u">Example:</span> gives
+</a></pre>
+
+<pre><a name="219"><b>219</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+DITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>InfinitePluralDitransitiveVerb</em>
+
+<span class="u">Example:</span> give
+</a></pre>
+
+<pre><a name="220"><b>220</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+DITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">+INF</a></code>] &rarr;
+	<em>InfinitePluralDitransitiveVerb</em>
+
+<span class="u">Example:</span> give
+</a></pre>
+
+<pre><a name="221"><b>221</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+DITR</a></code>,<code><a href="#Features">+BE</a></code>] &rarr;
+	<em>PastParticipleOfDitransitiveVerb</em>
+
+<span class="u">Example:</span> given
+</a></pre>
+
+<p>
+</p><h3><a name='TransitiveVerbs'>12.10 Transitive Verbs</a></h3>
+<p>
+</p><pre><a name="222"><b>222</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+TR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">-PL</a></code>] &rarr;
+	<em>FiniteSingularTransitiveVerb</em>
+
+<span class="u">Example:</span> sees
+</a></pre>
+
+<pre><a name="223"><b>223</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+TR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>InfinitePluralTransitiveVerb</em>
+
+<span class="u">Example:</span> see
+</a></pre>
+
+<pre><a name="224"><b>224</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+TR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">+INF</a></code>] &rarr;
+	<em>InfinitePluralTransitiveVerb</em>
+
+<span class="u">Example:</span> see
+</a></pre>
+
+<pre><a name="225"><b>225</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+TR</a></code>,<code><a href="#Features">+BE</a></code>] &rarr;
+	<em>PastParticipleOfTransitiveVerb</em>
+
+<span class="u">Example:</span> seen
+</a></pre>
+
+<p>
+</p><h3><a name='IntransitiveVerbs'>12.11 Intransitive Verbs</a></h3>
+<p>
+</p><pre><a name="226"><b>226</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+ITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">-PL</a></code>] &rarr;
+	<em>FiniteSingularIntransitiveVerb</em>
+
+<span class="u">Example:</span> waits
+</a></pre>
+
+<pre><a name="227"><b>227</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+ITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">-INF</a></code>,<code><a href="#Features">+PL</a></code>] &rarr;
+	<em>InfinitePluralIntransitiveVerb</em>
+
+<span class="u">Example:</span> wait
+</a></pre>
+
+<pre><a name="228"><b>228</b>
+
+<span><a name="V">V</a></span>[<code><a href="#Features">+ITR</a></code>,<code><a href="#Features">-BE</a></code>,<code><a href="#Features">+INF</a></code>] &rarr;
+	<em>InfinitePluralIntransitiveVerb</em>
+
+<span class="u">Example:</span> wait
+</a></pre>
+
+<p>
+</p><h3><a name='Prepositions'>12.12 Prepositions</a></h3>
+<p>
+</p><pre><a name="229"><b>229</b>
+
+<span><a name="Preposition">Preposition</a></span> &rarr;
+	<em>Preposition</em>
+
+<span class="u">Example:</span> in
+<span class="u">Example:</span> from
+<span class="u">Example:</span> thoughout
+</a></pre>
+
+</body>
+</html>

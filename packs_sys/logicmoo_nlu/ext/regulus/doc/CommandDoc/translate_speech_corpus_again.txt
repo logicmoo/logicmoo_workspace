@@ -1,0 +1,6 @@
+Process speech mode translation corpus, starting from the results
+saved from the most recent invocation of the TRANSLATE\_\-SPEECH\_\-CORPUS
+command. This is useful if you are testing speech translation
+performance, but have only changed the translation or generation
+files. The output files are the same as for the
+TRANSLATE\_\-SPEECH\_\-CORPUS command.

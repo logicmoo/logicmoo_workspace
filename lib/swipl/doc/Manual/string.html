@@ -1,0 +1,806 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 5.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ext-lists.html">
+<link rel="next" href="ext-syntax.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ext-lists.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="ext-syntax.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:string"><a id="sec:5.2"><span class="sec-nr">5.2</span> <span class="sec-title">The 
+string type and its double quoted syntax</span></a></h2>
+
+<a id="sec:string"></a>
+
+<p>As of SWI-Prolog version&nbsp;7, text enclosed in double quotes 
+(e.g.,
+<code>"Hello world"</code>) is read as objects of the type <em>string</em>. 
+A string is a compact representation of a character sequence that lives 
+on the global (term) stack. Strings represent sequences of Unicode 
+characters including the character code 0 (zero). The length strings is 
+limited by the available space on the global (term) stack (see
+<a id="idx:setprologstack2:1798"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a>). 
+Strings are distinct from lists, which makes it possible to detect them 
+at runtime and print them using the string syntax, as illustrated below:
+
+<pre class="code">
+?- write("Hello world!").
+Hello world!
+
+?- writeq("Hello world!").
+"Hello world!"
+</pre>
+
+<p><em>Back quoted</em> text (as in <code>`text`</code>) is mapped to a 
+list of character codes in version&nbsp;7. The settings for the flags 
+that control how double and back quoted text is read is summarised in
+<a class="tab" href="string.html#tab:quote-mapping">table 8</a>. 
+Programs that aim for compatibility should realise that the ISO standard 
+defines back quoted text, but does not define the <a class="flag" href="flags.html#flag:back_quotes">back_quotes</a> 
+Prolog flag and does not define the term that is produced by back quoted 
+text.
+
+<p><table class="latex frame-hsides center">
+<tr><td><b>Mode</b></td><td align=center><a class="flag" href="flags.html#flag:double_quotes">double_quotes</a> </td><td align=center><a class="flag" href="flags.html#flag:back_quotes">back_quotes</a> </td></tr>
+<tr class="hline"><td>Version&nbsp;7 default</td><td align=center>string</td><td align=center>codes </td></tr>
+<tr><td><strong>--traditional</strong> </td><td align=center>codes</td><td align=center>symbol_char </td></tr>
+</table>
+<div class="caption"><b>Table 8 : </b>Mapping of double and back quoted 
+text in the two modes.</div>
+<a id="tab:quote-mapping"></a>
+
+<p><a class="sec" href="string.html#sec:5.2.4">Section 5.2.4</a> 
+motivates the introduction of strings and mapping double quoted text to 
+this type.
+
+<p><h3 id="sec:string-predicates"><a id="sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Predicates 
+that operate on strings</span></a></h3>
+
+<a id="sec:string-predicates"></a>
+
+<p>Strings may be manipulated by a set of predicates that is similar to 
+the manipulation of atoms. In addition to the list below, <a id="idx:string1:1799"></a><a class="pred" href="typetest.html#string/1">string/1</a> 
+performs the type check for this type and is described in <a class="sec" href="typetest.html#sec:4.5">section 
+4.5</a>.
+
+<p>SWI-Prolog's string primitives are being synchronized with
+<a class="url" href="http://eclipseclp.org/wiki/Prolog/Strings">ECLiPSe</a>. 
+We expect the set of predicates documented in this section to be stable, 
+although it might be expanded. In general, SWI-Prolog's text 
+manipulation predicates accept any form of text as input argument and 
+produce the type indicated by the predicate name as output. This policy 
+simplifies migration and writing programs that can run unmodified or 
+with minor modifications on systems that do not support strings. Code 
+should avoid relying on this feature as much as possible for clarity as 
+well as to facilitate a more strict mode and/or type checking in future 
+releases.
+
+<dl class="latex">
+<dt class="pubdef"><a id="atom_string/2"><strong>atom_string</strong>(<var>?Atom, 
+?String</var>)</a></dt>
+<dd class="defbody">
+Bi-directional conversion between an atom and a string. At least one of 
+the two arguments must be instantiated. <var>Atom</var> can also be an 
+integer or floating point number.</dd>
+<dt class="pubdef"><a id="number_string/2"><strong>number_string</strong>(<var>?Number, 
+?String</var>)</a></dt>
+<dd class="defbody">
+Bi-directional conversion between a number and a string. At least one of 
+the two arguments must be instantiated. Besides the type used to 
+represent the text, this predicate differs in several ways from its ISO 
+cousin:<sup class="fn">154<span class="fn-text">Note that SWI-Prolog's 
+syntax for numbers is not ISO compatible either.</span></sup>
+
+<p>
+<ul class="latex">
+<li>If <var>String</var> does not represent a number, the predicate <em>fails</em> 
+rather than throwing a syntax error exception.
+<li>Leading white space and Prolog comments are <em>not</em> allowed.
+<li>Numbers may start with&rsquo;+' or&rsquo;-'.
+<li>It is <em>not</em> allowed to have white space between a leading&rsquo;+' 
+or&rsquo;-' and the number.
+<li>Floating point numbers in exponential notation do not require a dot 
+before exponent, i.e., <code>"1e10"</code> is a valid number.
+</ul>
+</dd>
+<dt class="pubdef"><a id="term_string/2"><strong>term_string</strong>(<var>?Term, 
+?String</var>)</a></dt>
+<dd class="defbody">
+Bi-directional conversion between a term and a string. If <var>String</var> 
+is instantiated, it is parsed and the result is unified with <var>Term</var>. 
+Otherwise <var>Term</var> is&lsquo;written' using the option <code>quoted(true)</code> 
+and the result is converted to <var>String</var>.</dd>
+<dt class="pubdef"><a id="term_string/3"><strong>term_string</strong>(<var>?Term, 
+?String, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:termstring2:1800"></a><a class="pred" href="string.html#term_string/2">term_string/2</a>, 
+passing <var>Options</var> to either <a id="idx:readterm2:1801"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+or <a id="idx:writeterm2:1802"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+For example:
+
+<pre class="code">
+?- term_string(Term, 'a(A)', [variable_names(VNames)]).
+Term = a(_G1466),
+VNames = ['A'=_G1466].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="string_chars/2"><strong>string_chars</strong>(<var>?String, 
+?Chars</var>)</a></dt>
+<dd class="defbody">
+Bi-directional conversion between a string and a list of characters 
+(one-character atoms). At least one of the two arguments must be 
+instantiated.</dd>
+<dt class="pubdef"><a id="string_codes/2"><strong>string_codes</strong>(<var>?String, 
+?Codes</var>)</a></dt>
+<dd class="defbody">
+Bi-directional conversion between a string and a list of character 
+codes. At least one of the two arguments must be instantiated.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="text_to_string/2"><strong>text_to_string</strong>(<var>+Text, 
+-String</var>)</a></dt>
+<dd class="defbody">
+Converts <var>Text</var> to a string. <var>Text</var> is an atom, string 
+or list of characters (codes or chars). When running in
+<strong>--traditional</strong> mode, <code>'[]'</code> is ambiguous and 
+interpreted as an empty string.</dd>
+<dt class="pubdef"><a id="string_length/2"><strong>string_length</strong>(<var>+String, 
+-Length</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Length</var> with the number of characters in <var>String</var>. 
+This predicate is functionally equivalent to <a id="idx:atomlength2:1803"></a><a class="pred" href="manipatom.html#atom_length/2">atom_length/2</a> 
+and also accepts atoms, integers and floats as its first argument.</dd>
+<dt class="pubdef"><a id="string_code/3"><strong>string_code</strong>(<var>?Index, 
++String, ?Code</var>)</a></dt>
+<dd class="defbody">
+True when <var>Code</var> represents the character at the 1-based <var>Index</var> 
+position in <var>String</var>. If <var>Index</var> is unbound the string 
+is scanned from index 1. Raises a domain error if <var>Index</var> is 
+negative. Fails silently if <var>Index</var> is zero or greater than the 
+length of
+<var>String</var>. The mode <code>string_code(-,+,+)</code> is 
+deterministic if the searched-for <var>Code</var> appears only once in <var>String</var>. 
+See also
+<a id="idx:substring5:1804"></a><a class="pred" href="string.html#sub_string/5">sub_string/5</a>.</dd>
+<dt class="pubdef"><a id="get_string_code/3"><strong>get_string_code</strong>(<var>+Index, 
++String, -Code</var>)</a></dt>
+<dd class="defbody">
+Semi-deterministic version of <a id="idx:stringcode3:1805"></a><a class="pred" href="string.html#string_code/3">string_code/3</a>. 
+In addition, this version provides strict range checking, throwing a 
+domain error if <var>Index</var> is less than 1 or greater than the 
+length of <var>String</var>. ECLiPSe provides this to support <code>String[Index]</code> 
+notation.</dd>
+<dt class="pubdef"><a id="string_concat/3"><strong>string_concat</strong>(<var>?String1, 
+?String2, ?String3</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:atomconcat3:1806"></a><a class="pred" href="manipatom.html#atom_concat/3">atom_concat/3</a>, 
+but the unbound argument will be unified with a string object rather 
+than an atom. Also, if both <var>String1</var> and
+<var>String2</var> are unbound and <var>String3</var> is bound to text, 
+it breaks
+<var>String3</var>, unifying the start with <var>String1</var> and the 
+end with
+<var>String2</var> as append does with lists. Note that this is not 
+particularly fast on long strings, as for each redo the system has to 
+create two entirely new strings, while the list equivalent only creates 
+a single new list-cell and moves some pointers around.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="split_string/4"><strong>split_string</strong>(<var>+String, 
++SepChars, +PadChars, -SubStrings</var>)</a></dt>
+<dd class="defbody">
+Break <var>String</var> into <var>SubStrings</var>. The <var>SepChars</var> 
+argument provides the characters that act as separators and thus the 
+length of
+<var>SubStrings</var> is one more than the number of separators found if
+<var>SepChars</var> and <var>PadChars</var> do not have common 
+characters. If
+<var>SepChars</var> and <var>PadChars</var> are equal, sequences of 
+adjacent separators act as a single separator. Leading and trailing 
+characters for each substring that appear in <var>PadChars</var> are 
+removed from the substring. The input arguments can be either atoms, 
+strings or char/code lists. Compatible with ECLiPSe. Below are some 
+examples:
+
+<pre class="code">
+% a simple split
+?- split_string("a.b.c.d", ".", "", L).
+L = ["a", "b", "c", "d"].
+% Consider sequences of separators as a single one
+?- split_string("/home//jan///nice/path", "/", "/", L).
+L = ["home", "jan", "nice", "path"].
+% split and remove white space
+?- split_string("SWI-Prolog, 7.0", ",", " ", L).
+L = ["SWI-Prolog", "7.0"].
+% only remove leading and trailing white space
+?- split_string("  SWI-Prolog  ", "", "\s\t\n", L).
+L = ["SWI-Prolog"].
+</pre>
+
+<p>In the typical use cases, <var>SepChars</var> either does not overlap
+<var>PadChars</var> or is equivalent to handle multiple adjacent 
+separators as a single (often white space). The behaviour with partially 
+overlapping sets of padding and separators should be considered 
+undefined. See also <a id="idx:readstring5:1807"></a><a class="pred" href="string.html#read_string/5">read_string/5</a>.</dd>
+<dt class="pubdef"><a id="sub_string/5"><strong>sub_string</strong>(<var>+String, 
+?Before, ?Length, ?After, ?SubString</var>)</a></dt>
+<dd class="defbody">
+<var>SubString</var> is a substring of <var>String</var>. There are <var>Before</var> 
+characters in <var>String</var> before <var>SubString</var>, <var>SubString</var> 
+contains <var>Length</var> character and is followed by <var>After</var> 
+characters in <var>String</var>. If not enough information is provided 
+to compute the start of the match, <var>String</var> is scanned 
+left-to-right. This predicate is functionally equivalent to <a id="idx:subatom5:1808"></a><a class="pred" href="manipatom.html#sub_atom/5">sub_atom/5</a>, 
+but operates on strings. The following example splits a string of the 
+form
+&lt;<var>name</var>&gt;=&lt;<var>value</var>&gt; into the name part (an 
+atom) and the value (a string).
+
+<pre class="code">
+name_value(String, Name, Value) :-
+        sub_string(String, Before, _, After, "="), !,
+        sub_string(String, 0, Before, _, NameString),
+        atom_string(Name, NameString),
+        sub_string(String, _, After, 0, Value).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="atomics_to_string/2"><strong>atomics_to_string</strong>(<var>+List, 
+-String</var>)</a></dt>
+<dd class="defbody">
+<var>List</var> is a list of strings, atoms, integers or floating point 
+numbers. Succeeds if <var>String</var> can be unified with the 
+concatenated elements of <var>List</var>. Equivalent to <code>atomics_to_string(List,&rsquo;&rsquo;, 
+String)</code>.</dd>
+<dt class="pubdef"><a id="atomics_to_string/3"><strong>atomics_to_string</strong>(<var>+List, 
++Separator, -String</var>)</a></dt>
+<dd class="defbody">
+Creates a string just like <a id="idx:atomicstostring2:1809"></a><a class="pred" href="string.html#atomics_to_string/2">atomics_to_string/2</a>, 
+but inserts
+<var>Separator</var> between each pair of inputs. For example:
+
+<pre class="code">
+?- atomics_to_string([gnu, "gnat", 1], ', ', A).
+
+A = "gnu, gnat, 1"
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="string_upper/2"><strong>string_upper</strong>(<var>+String, 
+-UpperCase</var>)</a></dt>
+<dd class="defbody">
+Convert <var>String</var> to upper case and unify the result with
+<var>UpperCase</var>.</dd>
+<dt class="pubdef"><a id="string_lower/2"><strong>string_lower</strong>(<var>+String, 
+LowerCase</var>)</a></dt>
+<dd class="defbody">
+Convert <var>String</var> to lower case and unify the result with
+<var>LowerCase</var>.</dd>
+<dt class="pubdef"><a id="read_string/3"><strong>read_string</strong>(<var>+Stream, 
+?Length, -String</var>)</a></dt>
+<dd class="defbody">
+Read at most <var>Length</var> characters from <var>Stream</var> and 
+return them in the string <var>String</var>. If <var>Length</var> is 
+unbound, <var>Stream</var> is read to the end and <var>Length</var> is 
+unified with the number of characters read.</dd>
+<dt class="pubdef"><a id="read_string/5"><strong>read_string</strong>(<var>+Stream, 
++SepChars, +PadChars, -Sep, -String</var>)</a></dt>
+<dd class="defbody">
+Read a string from <var>Stream</var>, providing functionality similar to
+<a id="idx:splitstring4:1810"></a><a class="pred" href="string.html#split_string/4">split_string/4</a>. 
+The predicate performs the following steps:
+
+<p>
+<ol class="latex">
+<li>Skip all characters that match <var>PadChars</var>
+<li>Read up to a character that matches <var>SepChars</var> or end of 
+file
+<li>Discard trailing characters that match <var>PadChars</var> from the 
+collected input
+<li>Unify <var>String</var> with a string created from the input and
+<var>Sep</var> with the separator character read. If input was 
+terminated by the end of the input, <var>Sep</var> is unified with -1.
+</ol>
+
+<p>The predicate <a id="idx:readstring5:1811"></a><a class="pred" href="string.html#read_string/5">read_string/5</a> 
+called repeatedly on an input until
+<var>Sep</var> is -1 (end of file) is equivalent to reading the entire 
+file into a string and calling <a id="idx:splitstring4:1812"></a><a class="pred" href="string.html#split_string/4">split_string/4</a>, 
+provided that <var>SepChars</var> and <var>PadChars</var> are not <em>partially 
+overlapping</em>.<sup class="fn">155<span class="fn-text">Behaviour that 
+is fully compatible would require unlimited look-ahead.</span></sup> 
+Below are some examples:
+
+<pre class="code">
+% Read a line
+read_string(Input, "\n", "\r", End, String)
+% Read a line, stripping leading and trailing white space
+read_string(Input, "\n", "\r\t ", End, String)
+% Read upto , or ), unifying End with 0', or 0')
+read_string(Input, ",)", "\t ", End, String)
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="open_string/2"><strong>open_string</strong>(<var>+String, 
+-Stream</var>)</a></dt>
+<dd class="defbody">
+True when <var>Stream</var> is an input stream that accesses the content 
+of
+<var>String</var>. <var>String</var> can be any text representation, 
+i.e., string, atom, list of codes or list of characters.
+</dd>
+</dl>
+
+<p><h3 id="sec:text-representation"><a id="sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Representing 
+text: strings, atoms and code lists</span></a></h3>
+
+<a id="sec:text-representation"></a>
+
+<p>With the introduction of strings as a Prolog data type, there are 
+three main ways to represent text: using strings, atoms or code lists. 
+This section explains what to choose for what purpose. Both strings and 
+atoms are <em>atomic</em> objects: you can only look inside them using 
+dedicated predicates. Lists of character codes are compound data 
+structures.
+
+<dl class="latex">
+<dt><b>Lists of character codes</b></dt>
+<dd>
+is what you need if you want to <em>parse</em> text using Prolog grammar 
+rules (DCGs, see <a id="idx:phrase3:1813"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>). 
+Most of the text reading predicates (e.g.,
+<a id="idx:readlinetocodes2:1814"></a><a class="pred" href="readutil.html#read_line_to_codes/2">read_line_to_codes/2</a>) 
+return a list of character codes because most applications need to parse 
+these lines before the data can be processed.</dd>
+<dt><b>Atoms</b></dt>
+<dd>
+are <em>identifiers</em>. They are typically used in cases where 
+identity comparison is the main operation and that are typically not 
+composed nor taken apart. Examples are RDF resources (URIs that identify 
+something), system identifiers (e.g., <code>'Boeing 747'</code>), but 
+also individual words in a natural language processing system. They are 
+also used where other languages would use <em>enumerated types</em>, 
+such as the names of days in the week. Unlike enumerated types, Prolog 
+atoms do not form a fixed set and the same atom can represent different 
+things in different contexts.</dd>
+<dt><b>Strings</b></dt>
+<dd>
+typically represents text that is processed as a unit most of the time, 
+but which is not an identifier for something. Format specifications for
+<a id="idx:format3:1815"></a><a class="pred" href="format.html#format/3">format/3</a> 
+is a good example. Another example is a descriptive text provided in an 
+application. Strings may be composed and decomposed using e.g., <a id="idx:stringconcat3:1816"></a><a class="pred" href="string.html#string_concat/3">string_concat/3</a> 
+and <a id="idx:substring5:1817"></a><a class="pred" href="string.html#sub_string/5">sub_string/5</a> 
+or converted for parsing using <a id="idx:stringcodes2:1818"></a><a class="pred" href="string.html#string_codes/2">string_codes/2</a> 
+or created from codes generated by a generative grammar rule, also using <a id="idx:stringcodes2:1819"></a><a class="pred" href="string.html#string_codes/2">string_codes/2</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:ext-dquotes-port"><a id="sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Adapting 
+code for double quoted strings</span></a></h3>
+
+<a id="sec:ext-dquotes-port"></a>
+
+<p>The predicates in this section can help adapting your program to the 
+new convention for handling double quoted strings. We have adapted a 
+huge code base with which we were not familiar in about half a day.
+
+<dl class="latex">
+<dt class="pubdef"><a id="list_strings/0"><strong>list_strings</strong></a></dt>
+<dd class="defbody">
+This predicate may be used to assess compatibility issues due to the 
+representation of double quoted text as string objects. See
+<a class="sec" href="string.html#sec:5.2">section 5.2</a> and <a class="sec" href="string.html#sec:5.2.4">section 
+5.2.4</a>. To use it, load your program into Prolog and run <a id="idx:liststrings0:1820"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>. 
+The predicate lists source locations of string objects encountered in 
+the program that are not considered safe. Such string need to be 
+examined manually, after which one of the actions below may be 
+appropriate:
+
+<p>
+<ul class="latex">
+<li>Rewrite the code. For example, change <code>[X] = "a"</code> into <code>X = 0'a</code>.
+<li>If a particular module relies heavily on representing strings as 
+lists of character code, consider adding the following directive to the 
+module. Note that this flag only applies to the module in which it 
+appears.
+
+<pre class="code">
+          :- set_prolog_flag(double_quotes, codes).
+          </pre>
+
+<p>
+<li>Use a back quoted string (e.g., <code>`text`</code>). Note that this 
+will not make your code run regardless of the <strong>--traditional</strong> 
+command line option and code exploiting this mapping is also not 
+portable to ISO compliant systems.
+<li>If the strings appear in facts and usage is safe, add a clause to 
+the multifile predicate <a id="idx:checkstringpredicate1:1821"></a><a class="pred" href="string.html#check:string_predicate/1">check:string_predicate/1</a> 
+to silence <a id="idx:liststrings0:1822"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+on all clauses of that predicate.
+<li>If the strings appear as an argument to a predicate that can handle 
+string objects, add a clause to the multifile predicate <a id="idx:checkvalidstringgoal1:1823"></a><a class="pred" href="string.html#check:valid_string_goal/1">check:valid_string_goal/1</a> 
+to silence <a id="idx:liststrings0:1824"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>.
+</ul>
+</dd>
+<dt class="pubdef"><a id="check:string_predicate/1"><strong>check:string_predicate</strong>(<var>:PredicateIndicator</var>)</a></dt>
+<dd class="defbody">
+Declare that <var>PredicateIndicator</var> has clauses that contain 
+strings, but that this is safe. For example, if there is a predicate 
+help_info/2 , where the second argument contains a double quoted string 
+that is handled properly by the predicates of the applications' help 
+system, add the following declaration to stop
+<a id="idx:liststrings0:1825"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+from complaining:
+
+<pre class="code">
+:- multifile check:string_predicate/1.
+
+check:string_predicate(user:help_info/2).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="check:valid_string_goal/1"><strong>check:valid_string_goal</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Declare that calls to <var>Goal</var> are safe. The module qualification 
+is the actual module in which <var>Goal</var> is defined. For example, a 
+call to <a id="idx:format3:1826"></a><a class="pred" href="format.html#format/3">format/3</a> 
+is resolved by the predicate <a id="idx:systemformat3:1827"></a><span class="pred-ext">system:format/3</span>. 
+and the code below specifies that the second argument may be a string 
+(system predicates that accept strings are defined in the library).
+
+<pre class="code">
+:- multifile check:valid_string_goal/1.
+
+check:valid_string_goal(system:format(_,S,_)) :- string(S).
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:ext-dquotes-motivation"><a id="sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Why 
+has the representation of double quoted text changed?</span></a></h3>
+
+<a id="sec:ext-dquotes-motivation"></a>
+
+<p>Prolog defines two forms of quoted text. Traditionally, single quoted 
+text is mapped to atoms while double quoted text is mapped to a list of
+<em>character codes</em> (integers) or characters represented as 
+1-character atoms. Representing text using atoms is often considered 
+inadequate for several reasons:
+
+<p>
+<ul class="latex">
+<li>It hides the conceptual difference between text and program symbols. 
+Where content of text often matters because it is used in I/O, program 
+symbols are merely identifiers that match with the same symbol 
+elsewhere. Program symbols can often be consistently replaced, for 
+example to obfuscate or compact a program.
+
+<p>
+<li>Atoms are globally unique identifiers. They are stored in a shared 
+table. Volatile strings represented as atoms come at a significant price 
+due to the required cooperation between threads for creating atoms. 
+Reclaiming temporary atoms using <em>Atom garbage collection</em> is a 
+costly process that requires significant synchronisation.
+
+<p>
+<li>Many Prolog systems (not SWI-Prolog) put severe restrictions on the 
+length of atoms or the maximum number of atoms.
+</ul>
+
+<p>Representing text as a list of character codes or 1-character atoms 
+also comes at a price:
+
+<p>
+<ul class="latex">
+<li>It is not possible to distinguish (at runtime) a list of integers or 
+atoms from a string. Sometimes this information can be derived from 
+(implicit) typing. In other cases the list must be embedded in a 
+compound term to distinguish the two types. For example, <code>s("hello world")</code> 
+could be used to indicate that we are dealing with a string.
+
+<p>Lacking runtime information, debuggers and the toplevel can only use 
+heuristics to decide whether to print a list of integers as such or as a 
+string (see <a id="idx:portraytext1:1828"></a><span class="pred-ext">portray_text/1</span>).
+
+<p>While experienced Prolog programmers have learned to cope with this, 
+we still consider this an unfortunate situation.
+
+<p>
+<li>Lists are expensive structures, taking 2 cells per character (3 for 
+SWI-Prolog in its current form). This stresses memory consumption on the 
+stacks while pushing them on the stack and dealing with them during 
+garbage collection is unnecessarily expensive.
+</ul>
+
+<p>We observe that in many programs, most strings are only handled as a 
+single unit during their lifetime. Examining real code tells us that 
+double quoted strings typically appear in one of the following roles:
+
+<dl class="latex">
+<dt><b> A DCG literal</b></dt>
+<dd>
+Although represented as a list of codes is the correct representation 
+for handling in DCGs, the DCG translator can recognise the literal and 
+convert it to the proper representation. Such code need not be modified.</dd>
+<dt><b> A format string</b></dt>
+<dd>
+This is a typical example of text that is conceptually not a program 
+identifier. Format is designed to deal with alternative representations 
+of the format string. Such code need not be modified.</dd>
+<dt><b> Getting a character code</b></dt>
+<dd>
+The construct <code>[X] = "a"</code> is a commonly used template for 
+getting the character code of the letter&rsquo;a'. ISO Prolog defines 
+the syntax <code>0'a</code> for this purpose. Code using this must be 
+modified. The modified code will run on any ISO compliant processor.</dd>
+<dt><b> As argument to list predicates to operate on strings</b></dt>
+<dd>
+Here, we see code such as <code>append("name:", Rest, Codes)</code>. 
+Such code needs to be modified. In this particular example, the 
+following is a good portable alternative: <code>phrase("name:", Codes, Rest)</code></dd>
+<dt><b> Checks for a character to be in a set</b></dt>
+<dd>
+Such tests are often performed with code such as this:
+<code>memberchk(C, "~!@#$")</code>. This is a rather inefficient check 
+in a traditional Prolog system because it pushes a list of character 
+codes cell-by-cell the Prolog stack and then traverses this list 
+cell-by-cell to see whether one of the cells unifies with <var>C</var>. 
+If the test is successful, the string will eventually be subject to 
+garbage collection. The best code for this is to write a predicate as 
+below, which pushes nothing on the stack and performs an indexed lookup 
+to see whether the character code is in&lsquo;my_class'.
+
+<pre class="code">
+my_class(0'~).
+my_class(0'!).
+...
+</pre>
+
+<p>An alternative to reach the same effect is to use term expansion to 
+create the clauses:
+
+<pre class="code">
+term_expansion(my_class(_), Clauses) :-
+        findall(my_class(C),
+                string_code(_, "~!@#$", C),
+                Clauses).
+
+my_class(_).
+</pre>
+
+<p>Finally, the predicate <a id="idx:stringcode3:1829"></a><a class="pred" href="string.html#string_code/3">string_code/3</a> 
+can be exploited directly as a replacement for the <a id="idx:memberchk2:1830"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a> 
+on a list of codes. Although the string is still pushed onto the stack, 
+it is more compact and only a single entity.
+</dd>
+</dl>
+
+<p>We offer the predicate <a id="idx:liststrings0:1831"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+to help porting your program.
+
+<p></body></html>

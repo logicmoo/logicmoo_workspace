@@ -1,0 +1,44 @@
+(note TQA98)
+
+(grossDomesticProduct SaudiArabia (YearFn 1996) (BillionDollars 205.600)) 
+(grossDomesticProduct Iran (YearFn 1996) (BillionDollars 343.500)) 
+(populationDuring Iran (MonthFn July (YearFn 1996)) 60600000) 
+(populationDuring SaudiArabia (MonthFn July (YearFn 1996)) 18800000) 
+(populationDuring Iran (MonthFn July (YearFn 1996)) 66094264) 
+(populationDuring SaudiArabia (MonthFn July (YearFn 1996)) 19409058) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY Country) 
+    (populationDuring ?COUNTRY (MonthFn ?MONTH (YearFn ?X)) ?NR)) 
+  (populationDuring ?COUNTRY (YearFn ?X) ?NR)) 
+
+(instance Iran Country) 
+(instance SaudiArabia Country) 
+
+(query (findall (?G-A1 ?G-A2 ?GREATER ?GREATER-AMT ?L-A1 ?L-A2 ?LESSER ?LESSER-AMT ?TIME)
+  (and 
+    (grossDomesticProduct ?GREATER ?TIME ?G-A1) 
+    (grossDomesticProduct ?LESSER ?TIME ?L-A1) 
+    (populationDuring ?GREATER ?TIME ?G-A2) 
+    (populationDuring ?LESSER ?TIME ?L-A2) 
+    (evaluate ?GREATER-AMT (QuotientFn ?G-A1 ?G-A2)) 
+    (evaluate ?LESSER-AMT (QuotientFn ?L-A1 ?L-A2)) 
+    (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+    (or 
+      (and 
+        (equals SaudiArabia ?GREATER) 
+        (equals Iran ?LESSER)) 
+      (and 
+        (equals Iran ?GREATER) 
+        (equals SaudiArabia ?LESSER))))))))))))))
+ 
+(answer 205600000000 18800000 SaudiArabia 10936.2 343500000000 60600000 Iran 5668.32 1996)
+(answer 205600000000 18800000 SaudiArabia 10936.2 343500000000 66094264 Iran 5197.12 1996)
+(answer 205600000000 19409058 SaudiArabia 10593 343500000000 60600000 Iran 5668.32 1996)
+(answer 205600000000 19409058 SaudiArabia 10593 343500000000 66094264 Iran 5197.12 1996)
+
+(end_of_file)
+
+
+

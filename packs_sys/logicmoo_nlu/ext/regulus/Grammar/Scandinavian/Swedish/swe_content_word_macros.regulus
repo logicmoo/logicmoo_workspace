@@ -1,0 +1,180 @@
+
+% Inherent reflexive pronoun
+%
+% e.g. "Han rör sig"
+
+macro(inherent_reflexive_pronoun(Surface, Agr),
+      ( reflexive_pronoun:[sem=[], agr=Agr, lexically_reflexive=y, case=nonsubj] --> Surface)).
+
+% Possessives
+
+macro(possessive(Word, Pron, Agr, Type),
+      ( possessive:[sem= @possessive_pron_sem(Pron), agr=Agr, sem_n_type=Type] --> Word )).
+
+%----------------------------------------------------------
+
+% Noun with all inflected forms
+% 
+% @noun([kniv, knivar, kniven, knivarna], real,
+%       [physobj, kniv], [physobj], [takes_det_type=null\/def\/indef, takes_loc_pp=y]).
+
+macro(noun(SurfaceForms, Gender, [SemType, SemConstant], [SortalType], OtherFeats),
+      @noun(SurfaceForms, Gender,
+	    [sem = @noun_sem(SemType, SemConstant),
+	     sem_n_type = SortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Noun with just indef forms
+%
+% @indef_only_noun([öl, öl], real,
+%                  [drink, öl], [liquid_substance], [takes_det_type=null]).
+
+macro(indef_only_noun(SurfaceForms, Gender, [SemType, SemConstant], [SortalType], OtherFeats),
+      @indef_only_noun(SurfaceForms, Gender,
+		       [sem = @noun_sem(SemType, SemConstant),
+			sem_n_type = SortalType |
+		       OtherFeats])).
+
+%----------------------------------------------------------
+
+% Noun with just def form
+%
+% @uninflected_noun_def(fönstret, 
+%                       [loc, fönster], [loc], sing/\neutrum, [takes_det_type=null]).
+
+macro(uninflected_noun_def(SurfaceForm, [SemType, SemConstant], [SortalType], Agr, OtherFeats),
+      ( n:[sem = @noun_sem(SemType, SemConstant),
+	   agr = Agr,
+	   def = y,
+	   sem_n_type = SortalType |
+	  OtherFeats] --> SurfaceForm )).
+
+%----------------------------------------------------------
+
+% Noun with just indef form
+%
+% @uninflected_noun_indef(kort, 
+%                         [loc, fönster], [loc], sing/\neutrum, [takes_det_type=null]).
+
+macro(uninflected_noun_indef(SurfaceForm, [SemType, SemConstant], [SortalType], Agr, OtherFeats),
+      ( n:[sem = @noun_sem(SemType, SemConstant),
+	   agr = Agr,
+	   def = n,
+	   sem_n_type = SortalType |
+	  OtherFeats] --> SurfaceForm )).
+
+%==========================================================================
+
+% Standard macro for adjectives
+%
+% @adjective([stor, stort, stora], [degree, severe], [symptom], [adjpos=prenom\/pred]).
+
+macro(adjective(SurfaceForms, [SemType, SemConstant], [SortalType], OtherFeats),
+      @adjective(SurfaceForms,
+		 [sem= @adj_sem(SemType, SemConstant),
+		  subj_sem_n_type=SortalType |
+		 OtherFeats])).
+
+macro(adjective([SingleForm], Feats),
+      ( adj:[agr=_Agr, def=_Def | Feats] --> SingleForm )).
+
+macro(adjective([SingIndefR, SingIndefN, PlurOrDef], Feats),
+      @adjective([SingIndefR, SingIndefN, PlurOrDef, PlurOrDef], Feats)).
+
+macro(adjective([SingIndefR, SingIndefN, Plur, DefSing], Feats),
+      ( adj:[agr=sing/\real, def=n | Feats] --> SingIndefR )).
+macro(adjective([SingIndefR, SingIndefN, Plur, DefSing], Feats),
+      ( adj:[agr=sing/\neutrum, def=n | Feats] --> SingIndefN )).
+macro(adjective([SingIndefR, SingIndefN, Plur, DefSing], Feats),
+      ( adj:[agr=plur | Feats] --> Plur )).
+macro(adjective([SingIndefR, SingIndefN, Plur, DefSing], Feats),
+      ( adj:[agr=sing, def=y | Feats] --> DefSing )).
+
+
+%==========================================================================
+
+% Standard macros for verbs
+
+%----------------------------------------------------------
+
+% Intransitive with reflexive
+% e.g. "Han lägger sig"
+%
+% @v_intransitive_reflexive([lägg, lägga, lägger, lade, lagt, läggande],
+%                 [action, lägga_sig], [agent], [takes_time_pp=y, takes_frequency_pp=y, takes_duration_pp=y]).
+
+macro(v_intransitive_reflexive(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0v,
+	     inv=_, takes_lexical_reflexive=y,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Intransitive with particle and reflexive
+% e.g. "Han böjer sig ned"
+%
+% @v_particle_reflexive([böj, böja, böjer, böjde, böjt, böjande],
+%                       [action, böja_sig_ned], [agent, ned], [takes_time_pp=y, takes_frequency_pp=y, takes_duration_pp=y]).
+
+macro(v_particle_reflexive(SurfaceForms, [SemType, SemConstant], [SubjSortalType, PType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vpl,
+	     inv=_, takes_lexical_reflexive=y,
+	     subj_sem_n_type=SubjSortalType, sem_p_type=PType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Reflexive verb taking ADJ complement
+% e.g. "han känner sig illamående"
+%
+% @v_adj_reflexive([känn, känna, känn, kände, känt, xxx], [event, Sem], [symptom\/agent],
+%	           [takes_time_pp=y, takes_duration_pp=y, can_be_postmod=y])
+
+macro(v_adj_reflexive(SurfaceForms, [SemType, SemConstant], [SubjSortalType], OtherFeats),
+      @verb(SurfaceForms,
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0va1,
+	     inv=_, takes_lexical_reflexive=y,
+	     subj_sem_n_type=SubjSortalType |
+	    OtherFeats])).
+
+%----------------------------------------------------------
+
+% Verb taking object and particle
+% e.g. "ni tar emot kreditkort", or "ni tar den emot" (?)
+%
+% v_object_particle([ta, ta, tar, tog, tagit, tagande, emottagen, emottaget, emottagna],
+%                   [action, ta_emot], [agent, payment_method, emot], []).
+
+macro(v_object_particle([Imp, Inf, Pres, Past, Sup, PresPart, PastPartR, PastPartN, PastPartPl],
+			[SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats),
+      @v_object_particle([Imp, Inf, Pres, Past, Sup, PresPart],
+			 [SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats)).
+macro(v_object_particle([Imp, Inf, Pres, Past, Sup, PresPart, PastPartR, PastPartN, PastPartPl],
+			[SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats),
+      @past_participles_for_verb([PastPartR, PastPartN, PastPartPl],
+				 [ @verb_sem(SemType, SemConstant)],
+				 [subcat=nx0vnx1,
+				  inv=_,
+				  subj_sem_n_type=SubjSortalType,
+				  obj_sem_n_type=ObjSortalType |
+				 OtherFeats])).
+
+macro(v_object_particle([Imp, Inf, Pres, Past, Sup, PresPart],
+			[SemType, SemConstant], [SubjSortalType, ObjSortalType, ParticleType], OtherFeats),
+      @verb([Imp, Inf, Pres, Past, Sup, PresPart],
+	    [ @verb_sem(SemType, SemConstant)],
+	    [subcat=nx0vnx1pl\/nx0vplnx1,
+	     inv=_, 
+	     subj_sem_n_type=SubjSortalType,
+	     obj_sem_n_type=ObjSortalType, 
+	     sem_p_type=ParticleType |
+	    OtherFeats])).
+

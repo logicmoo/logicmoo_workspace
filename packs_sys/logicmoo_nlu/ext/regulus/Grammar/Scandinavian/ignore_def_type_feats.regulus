@@ -1,0 +1,5 @@
+
+ignore_feature(def).
+ignore_feature(subj_def).
+ignore_feature(obj_def).
+ignore_feature(indobj_def).

@@ -1,0 +1,5 @@
+Switch off the grammar compaction step at the end of Regulus-to-Nuance
+compilation, as for example invoked by the {\tt NUANCE} command. 
+
+You should not normally wish to do this, since compaction is almost
+always beneficial and is very stable.

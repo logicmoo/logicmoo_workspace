@@ -1,0 +1,50 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Using RDF literals
+
+RDF literals are currently represented in one of the three formats below.  Note that RDF 1.1
+no longer has plain literals.  Plain literals are expected to be dropped.
+
+  - literal(Atom)
+  - literal(type(Type, Atom))
+  - literal(lang(Lang, Atom)).
+
+Also note that literals are expressed in their _lexical form_.  This means that the RDF
+literal value `42` is `literal(type('http://www.w3.org/2001/XMLSchema#integer', '42'))`.
+This is not very practical.  Future versions are likely to change this.  We consider the
+model below, following the _Turtle_ conventions.  In this case, `Value` will be a suitable
+Prolog representation for known values types.
+
+  - =|String@Lang|=
+  - =|Value^^Type|=
+  
+In addition to a simple direct match to a literal, rdf/3 and rdf/4 accept a query specification
+like below.  See rdf/3 for all possible specifications.  The _prefix_, _ge_ and _between_ searches exploit the fact that all literals are stored in a binary tree.
+</div>
+
+<div class="nb-cell query" data-tabled="true">
+rdf(S, P, literal(prefix('Jan'), Value)).
+</div>
+
+<div class="nb-cell markdown">
+## Full text search
+
+The library(semweb/rdf_litindex) indexes _tokens_ inside literal values.  The primary predicate is rdf_find_literal/2.  The following example finds all literals that contain a token that has the same stem as `exploit`.
+</div>
+
+<div class="nb-cell query">
+rdf_find_literal(stem(exploit), L).
+</div>
+
+<div class="nb-cell markdown">
+## Matching languages
+
+The predicate lang_matches/2 is provided to match a language pattern against a concrete language.  For example:
+</div>
+
+<div class="nb-cell query">
+lang_matches('EN.gb', 'en').
+</div>
+
+</div>

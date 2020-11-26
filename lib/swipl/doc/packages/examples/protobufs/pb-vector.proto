@@ -1,0 +1,66 @@
+
+enum VectorType {
+	DOUBLE 	= 2;
+	FLOAT 	= 3;
+	INTEGER	= 4;
+	INTEGER64 	= 5;
+	INTEGER32  = 6;
+	UNSIGNED  = 7;
+	BYTES	= 8;
+	ATOM	= 9;
+	STRING	= 10;
+	}
+
+message Vector {
+repeated double double_values 	= 2;
+repeated float float_values 	= 3;
+repeated sint32 integer_values	= 4;
+repeated fixed64 integer64_values	= 5;
+repeated fixed32 integer32_values	= 6;
+repeated uint32 unsigned_values	= 7;
+repeated bytes bytes_values		= 8;
+repeated string atom_values 	= 9;
+repeated string string_values 	= 10;
+}
+//
+
+message compound_protobuf {
+	optional group Complex = 12 {
+      required double real = 1;
+      required double img = 2;
+      };
+	optional group Fraction = 15 {
+      required sint64 num = 1;
+      required sint64 den = 2;
+      };
+    optional float float = 13;
+    optional double double = 14;
+    optional sint32 integer = 16;
+}
+
+message protobuf_bag {
+    repeated compound_protobuf bag = 1;
+}
+//
+message kv_pair {
+  required string key = 30;
+  optional sint64  int_value = 31;
+  optional double float_value  = 32;
+  optional string atom_value = 33;
+}
+
+message aux_xml_element {
+  optional string atom = 43;
+  optional xml_element element = 40;
+}
+
+message xml_element {
+  required string name = 21;
+  repeated kv_pair attributes = 22;
+  repeated aux_xml_element contents = 23;
+}
+
+message XMLFile {
+  repeated xml_element elements = 20;
+}
+

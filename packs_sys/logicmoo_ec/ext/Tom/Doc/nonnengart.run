@@ -1,0 +1,796 @@
+upsilon> cd Procom
+upsilon> protop
+--- You seem to have no resource file: .protop
+
+		--- Welcome to ProTop (1.49) ---
+
+ProTop -> include(nonnengart).
+tom.cfg    compiled traceable 40 bytes in 0.00 seconds
+modal_ops.pl compiled traceable 444 bytes in 0.03 seconds
+tom_common.pl compiled traceable 16700 bytes in 0.08 seconds
+nnf.pl     compiled traceable 6808 bytes in 0.05 seconds
+merge.pl   compiled traceable 2156 bytes in 0.00 seconds
+./tom.pl   compiled traceable 11160 bytes in 0.27 seconds
+% Input filter tom:  100 ms 
+% Input filter mult_taut_filter:  17 ms 
+9 clauses read in 33 ms 
+capri.pl   compiled traceable 0 bytes in 0.02 seconds
+./non1_descriptors compiled traceable 3344 bytes in 0.05 seconds
+--- ProCom: CaPrI module non1_descriptors loaded.
+complete_goals.pl compiled traceable 1396 bytes in 0.02 seconds
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph.pl compiled traceable 8132 bytes in 0.08 seconds
+connection_graph 66 ms 
+
+Compile time:  750 ms 
+...prover.pl compiled optimized 23840 bytes in 0.10 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 0 ms
+
+%| Proof with goal clause 8
+%|	 connection
+%|	 5 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  6 - 2
+%|	 |  --('$Rq') -> ++('$Rq')
+%|	 |  |  '*proof*'
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 6 - 2
+%|	 --('$Rq') -> ++('$Rq')
+%|	 |  connection
+%|	 |  7 - 1
+%|	 |  ++('$Rp') -> --('$Rp')
+%|	 |  |  '*proof*'
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  116 ms 
+% Input filter mult_taut_filter:  17 ms 
+9 clauses read in 67 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non2_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non2_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 83 ms 
+
+Compile time:  784 ms 
+...prover.pl compiled optimized 23432 bytes in 0.08 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+% Goal clause: 9
+%
+% ?-	--($Rq),
+%	--($Rp),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+B = $kolemPath1(0)
+A = $kolemPath1(0)
+
+%| Proof with goal clause 9
+%|	 connection
+%|	 8 - 1
+%|	 --('$Rq') -> ++('$Rq')
+%|	 |  connection
+%|	 |  5 - 1
+%|	 |  --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 5 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  33 ms 
+% Input filter mult_taut_filter:  17 ms 
+5 clauses read in 33 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non3_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non3_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 33 ms 
+
+Compile time:  650 ms 
+...prover.pl compiled optimized 13428 bytes in 0.07 seconds
+% Depth = 1
+Runtime 0 ms
+% Goal clause: 5
+%
+% ?-	--($Rp),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(0)
+
+%| Proof with goal clause 5
+%|	 connection
+%|	 4 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  50 ms 
+% Input filter mult_taut_filter:  33 ms 
+9 clauses read in 34 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non4_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non4_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 100 ms 
+
+Compile time:  767 ms 
+...prover.pl compiled optimized 21876 bytes in 0.07 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+% Goal clause: 9
+%
+% ?-	--($Rp),
+%	--($Rmod_a(C)),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+C = $kolemPath1(0)
+B = $kolemPath1(0)
+A = $kolemPath1(0)
+
+%| Proof with goal clause 9
+%|	 connection
+%|	 8 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  33 ms 
+% Input filter mult_taut_filter:  17 ms 
+7 clauses read in 66 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non5_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non5_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 17 ms 
+
+Compile time:  666 ms 
+...prover.pl compiled optimized 16044 bytes in 0.08 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 6 - 1
+%|	 --('$Rq') -> ++('$Rq')
+%|	 |  connection
+%|	 |  5 - 1
+%|	 |  --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  0 ms 
+% Input filter mult_taut_filter:  17 ms 
+1 clauses read in 17 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non6_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non6_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 0 ms 
+
+Compile time:  450 ms 
+...prover.pl compiled optimized 6444 bytes in 0.03 seconds
+% Depth = 1
+*** No goal left.
+Runtime 0 ms
+ No (more) solutions
+% Input filter tom:  84 ms 
+% Input filter mult_taut_filter:  16 ms 
+11 clauses read in 50 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non7_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non7_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 100 ms 
+
+Compile time:  966 ms 
+...prover.pl compiled optimized 28852 bytes in 0.12 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 9 - 2
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  11 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+% Input filter tom:  66 ms 
+% Input filter mult_taut_filter:  17 ms 
+10 clauses read in 100 ms 
+capri.pl   compiled optimized 0 bytes in 0.03 seconds
+./non8_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non8_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 100 ms 
+
+Compile time:  917 ms 
+...prover.pl compiled optimized 26116 bytes in 0.10 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+% Depth = 4
+Runtime 33 ms
+
+%| Proof with goal clause 10
+%|	 connection
+%|	 8 - 1
+%|	 --('$Rs') -> ++('$Rs')
+%|	 |  connection
+%|	 |  6 - 2
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  9 - 2
+%|	 |  |  ++('$Rp') -> --('$Rp')
+%|	 |  |  |  '*proof*'
+%|	 |  |  |  '*proof*'
+%|	 |  |  |  connection
+%|	 |  |  |  1 - 1
+%|	 |  |  |  --('$Rmod_a'('$kolemPath1'(_g20971))) -> ++('$Rmod_a'('$kolemPath1'(_g20971)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g21249))) -> ++('$Rmod_a'('$kolemPath1'(_g21249)))
+%|	 |  connection
+%|	 |  7 - 2
+%|	 |  ++('$Rp') -> --('$Rp')
+%|	 |  |  connection
+%|	 |  |  9 - 3
+%|	 |  |  ++('$Rq') -> --('$Rq')
+%|	 |  |  |  '*proof*'
+%|	 |  |  |  '*proof*'
+%|	 |  |  |  connection
+%|	 |  |  |  1 - 1
+%|	 |  |  |  --('$Rmod_a'('$kolemPath1'(_g21939))) -> ++('$Rmod_a'('$kolemPath1'(_g21939)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g22217))) -> ++('$Rmod_a'('$kolemPath1'(_g22217)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g22491))) -> ++('$Rmod_a'('$kolemPath1'(_g22491)))
+% Input filter tom:  33 ms 
+% Input filter mult_taut_filter:  17 ms 
+6 clauses read in 66 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non9_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non9_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 50 ms 
+
+Compile time:  650 ms 
+...prover.pl compiled optimized 16252 bytes in 0.07 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+% Goal clause: 6
+%
+% ?-	--($Rp),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(_g16586)
+
+%| Proof with goal clause 6
+%|	 connection
+%|	 5 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g16074))) -> ++('$Rmod_a'('$kolemPath1'(_g16074)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g16312))) -> ++('$Rmod_a'('$kolemPath1'(_g16312)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g16586))) -> ++('$Rmod_a'('$kolemPath1'(_g16586)))
+% Input filter tom:  50 ms 
+% Input filter mult_taut_filter:  17 ms 
+7 clauses read in 50 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non10_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non10_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 83 ms 
+
+Compile time:  700 ms 
+...prover.pl compiled optimized 19712 bytes in 0.08 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+% Goal clause: 7
+%
+% ?-	--($Rp),
+%	--($Rmod_a(C)),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+C = $kolemPath1(_g18533)
+B = $kolemPath1(_g18771)
+A = $kolemPath1(_g19009)
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 6 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g18021))) -> ++('$Rmod_a'('$kolemPath1'(_g18021)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g18259))) -> ++('$Rmod_a'('$kolemPath1'(_g18259)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g18533))) -> ++('$Rmod_a'('$kolemPath1'(_g18533)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g18771))) -> ++('$Rmod_a'('$kolemPath1'(_g18771)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g19009))) -> ++('$Rmod_a'('$kolemPath1'(_g19009)))
+% Input filter tom:  50 ms 
+% Input filter mult_taut_filter:  0 ms 
+7 clauses read in 67 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non11_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non11_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 66 ms 
+
+Compile time:  783 ms 
+...prover.pl compiled optimized 19496 bytes in 0.07 seconds
+% Depth = 1
+% Depth = 2
+Runtime 0 ms
+% Goal clause: 7
+%
+% ?-	--($Rp),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+B = $kolemPath1(_g18224)
+A = $kolemPath1(_g18462)
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 6 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g17470))) -> ++('$Rmod_a'('$kolemPath1'(_g17470)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g17708))) -> ++('$Rmod_a'('$kolemPath1'(_g17708)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g17946))) -> ++('$Rmod_a'('$kolemPath1'(_g17946)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g18224))) -> ++('$Rmod_a'('$kolemPath1'(_g18224)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g18462))) -> ++('$Rmod_a'('$kolemPath1'(_g18462)))
+% Input filter tom:  34 ms 
+% Input filter mult_taut_filter:  16 ms 
+6 clauses read in 67 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non12_descriptors compiled optimized 2944 bytes in 0.07 seconds
+--- ProCom: CaPrI module non12_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 50 ms 
+
+Compile time:  800 ms 
+...prover.pl compiled optimized 21840 bytes in 0.10 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 16 ms
+% Goal clause: 4
+%
+% ?-	--($Rp),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(_g21079)
+
+%| Proof with goal clause 4
+%|	 connection
+%|	 5 - 2
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  6 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g20051))) -> ++('$Rmod_a'('$kolemPath1'(_g20051)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g20289))) -> ++('$Rmod_a'('$kolemPath1'(_g20289)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g20563))) -> ++('$Rmod_a'('$kolemPath1'(_g20563)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g20801))) -> ++('$Rmod_a'('$kolemPath1'(_g20801)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g21079))) -> ++('$Rmod_a'('$kolemPath1'(_g21079)))
+% Input filter tom:  117 ms 
+% Input filter mult_taut_filter:  17 ms 
+11 clauses read in 83 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non13_descriptors compiled optimized 2944 bytes in 0.02 seconds
+--- ProCom: CaPrI module non13_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 17 ms 
+connection_graph 150 ms 
+
+Compile time:  1s 100 ms 
+...prover.pl compiled optimized 35340 bytes in 0.13 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 33 ms
+% Goal clause: 7
+%
+% ?-	--($Rp),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(_g7613)
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 9 - 2
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  11 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g6101))) -> ++('$Rmod_a'('$kolemPath1'(_g6101)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g6371))) -> ++('$Rmod_a'('$kolemPath1'(_g6371)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g6609))) -> ++('$Rmod_a'('$kolemPath1'(_g6609)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g6847))) -> ++('$Rmod_a'('$kolemPath1'(_g6847)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g7085))) -> ++('$Rmod_a'('$kolemPath1'(_g7085)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g7323))) -> ++('$Rmod_a'('$kolemPath1'(_g7323)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g7613))) -> ++('$Rmod_a'('$kolemPath1'(_g7613)))
+% Input filter tom:  117 ms 
+% Input filter mult_taut_filter:  33 ms 
+11 clauses read in 150 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non14_descriptors compiled optimized 2944 bytes in 0.07 seconds
+--- ProCom: CaPrI module non14_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 233 ms 
+
+Compile time:  1s 183 ms 
+...prover.pl compiled optimized 37368 bytes in 0.15 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 33 ms
+% Goal clause: 8
+%
+% ?-	--($Rp),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(_g7845)
+
+%| Proof with goal clause 8
+%|	 connection
+%|	 7 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  11 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g6333))) -> ++('$Rmod_a'('$kolemPath1'(_g6333)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g6571))) -> ++('$Rmod_a'('$kolemPath1'(_g6571)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g6809))) -> ++('$Rmod_a'('$kolemPath1'(_g6809)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g7087))) -> ++('$Rmod_a'('$kolemPath1'(_g7087)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g7325))) -> ++('$Rmod_a'('$kolemPath1'(_g7325)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g7563))) -> ++('$Rmod_a'('$kolemPath1'(_g7563)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g7845))) -> ++('$Rmod_a'('$kolemPath1'(_g7845)))
+% Input filter tom:  100 ms 
+% Input filter mult_taut_filter:  33 ms 
+11 clauses read in 167 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non15_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non15_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 17 ms 
+connection_graph 333 ms 
+
+Compile time:  1s 350 ms 
+...prover.pl compiled optimized 44336 bytes in 0.17 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 50 ms
+% Goal clause: 7
+%
+% ?-	--($Rp),
+%	--($Rmod_a(C)),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+C = $kolemPath1(_g23635)
+B = $kolemPath1(_g23873)
+A = $kolemPath1(_g24111)
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 9 - 2
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  11 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g22365))) -> ++('$Rmod_a'('$kolemPath1'(_g22365)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g22603))) -> ++('$Rmod_a'('$kolemPath1'(_g22603)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g22841))) -> ++('$Rmod_a'('$kolemPath1'(_g22841)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g23079))) -> ++('$Rmod_a'('$kolemPath1'(_g23079)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g23361))) -> ++('$Rmod_a'('$kolemPath1'(_g23361)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g23635))) -> ++('$Rmod_a'('$kolemPath1'(_g23635)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g23873))) -> ++('$Rmod_a'('$kolemPath1'(_g23873)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g24111))) -> ++('$Rmod_a'('$kolemPath1'(_g24111)))
+% Input filter tom:  100 ms 
+% Input filter mult_taut_filter:  17 ms 
+11 clauses read in 217 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non16_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non16_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 267 ms 
+
+Compile time:  1s 250 ms 
+...prover.pl compiled optimized 40264 bytes in 0.15 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 50 ms
+% Goal clause: 7
+%
+% ?-	--($Rp),
+%	--($Rmod_a(C)),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+C = $kolemPath1(_g20919)
+B = $kolemPath1(_g21157)
+A = $kolemPath1(_g21395)
+
+%| Proof with goal clause 7
+%|	 connection
+%|	 9 - 2
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  11 - 1
+%|	 |  ++('$Rq') -> --('$Rq')
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g19649))) -> ++('$Rmod_a'('$kolemPath1'(_g19649)))
+%|	 |  |  connection
+%|	 |  |  1 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(_g19887))) -> ++('$Rmod_a'('$kolemPath1'(_g19887)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g20161))) -> ++('$Rmod_a'('$kolemPath1'(_g20161)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g20399))) -> ++('$Rmod_a'('$kolemPath1'(_g20399)))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g20637))) -> ++('$Rmod_a'('$kolemPath1'(_g20637)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g20919))) -> ++('$Rmod_a'('$kolemPath1'(_g20919)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g21157))) -> ++('$Rmod_a'('$kolemPath1'(_g21157)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g21395))) -> ++('$Rmod_a'('$kolemPath1'(_g21395)))
+% Input filter tom:  167 ms 
+% Input filter mult_taut_filter:  33 ms 
+8 clauses read in 167 ms 
+capri.pl   compiled optimized 0 bytes in 0.00 seconds
+./non17_descriptors compiled optimized 2944 bytes in 0.03 seconds
+--- ProCom: CaPrI module non17_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 50 ms 
+
+Compile time:  767 ms 
+...prover.pl compiled optimized 19240 bytes in 0.08 seconds
+% Depth = 1
+% Depth = 2
+Runtime 17 ms
+% Goal clause: 5
+%
+% ?-	--($Rp),
+%	--($Rmod_a(B)),
+%	--($Rmod_a(A)).
+
+B = $kolemPath1(_g17300)
+A = $kolemPath1(_g17538)
+
+%| Proof with goal clause 5
+%|	 connection
+%|	 6 - 1
+%|	 --('$Rp') -> ++('$Rp')
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(_g17030))) -> ++('$Rmod_a'('$kolemPath1'(_g17030)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g17300))) -> ++('$Rmod_a'('$kolemPath1'(_g17300)))
+%|	 connection
+%|	 1 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(_g17538))) -> ++('$Rmod_a'('$kolemPath1'(_g17538)))
+% Input filter tom:  67 ms 
+% Input filter mult_taut_filter:  33 ms 
+11 clauses read in 84 ms 
+capri.pl   compiled optimized 0 bytes in 0.02 seconds
+./non20_descriptors compiled optimized 2944 bytes in 0.05 seconds
+--- ProCom: CaPrI module non20_descriptors loaded.
+% All negative clauses are considered as goals.
+complete_goals 0 ms 
+connection_graph 100 ms 
+
+Compile time:  850 ms 
+...prover.pl compiled optimized 26116 bytes in 0.10 seconds
+% Depth = 1
+% Depth = 2
+% Depth = 3
+Runtime 33 ms
+% Goal clause: 3
+%
+% ?-	--($Rb($kolem5($kolemPath1(0) + $kolemPath4($kolemPath1(0))))),
+%	--($Rmod_a(A)).
+
+A = $kolemPath1(0)
+
+%| Proof with goal clause 3
+%|	 connection
+%|	 2 - 1
+%|	 --('$Rb'('$kolem5'('$kolemPath1'(0) + '$kolemPath4'('$kolemPath1'(0))))) -> ++('$Rb'('$kolem5'('$kolemPath1'(0) + '$kolemPath4'('$kolemPath1'(0)))))
+%|	 |  connection
+%|	 |  1 - 1
+%|	 |  --('$Ra'('$kolem5'('$kolemPath1'(0) + '$kolemPath4'('$kolemPath1'(0))))) -> ++('$Ra'('$kolem5'('$kolemPath1'(0) + '$kolemPath4'('$kolemPath1'(0)))))
+%|	 |  |  connection
+%|	 |  |  4 - 1
+%|	 |  |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  4 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  4 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 |  connection
+%|	 |  4 - 1
+%|	 |  --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+%|	 connection
+%|	 4 - 1
+%|	 --('$Rmod_a'('$kolemPath1'(0))) -> ++('$Rmod_a'('$kolemPath1'(0)))
+ok.
+ProTop -> halt.
+
+bye.
+
+bye
+upsilon> 

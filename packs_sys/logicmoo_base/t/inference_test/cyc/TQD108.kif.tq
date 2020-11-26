@@ -1,0 +1,43 @@
+(note TQD108)
+
+(existant Stage2-BWAttackAtRasTannurah 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(infoTransferred Stage3-SAAnnouncesIranInvolvement 
+ (directingAgent Stage2-BWAttackAtRasTannurah Iran)) 
+
+(subProcess HPKBScenarioConflict Stage2-BWAttackAtRasTannurah) 
+
+(instance Stage2-BWAttackAtRasTannurah AttackOnTangible) 
+
+(instrument-Generic Stage2-BWAttackAtRasTannurah Stage2-BiologicalWeapon1) 
+
+(instance Stage2-BiologicalWeapon1 WeaponOfMassDestruction) 
+
+(instance Stage3-SAAnnouncesIranInvolvement Inform-CommunicationAct) 
+
+(senderOfInfo Stage3-SAAnnouncesIranInvolvement SaudiArabia) 
+
+
+( query (findall ?ACTOR (thereExists ?ACT 
+ (thereExists ?COMM 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (thereExists ?FORCE 
+ (and 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?FORCE WeaponOfMassDestruction))) 
+ (instance ?COMM Inform-CommunicationAct) 
+ (senderOfInfo ?COMM SaudiArabia) 
+ (infoTransferred ?COMM 
+ (directingAgent ?ACT ?ACTOR)) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 22 HPKBScenarioConflict) ?ACT))))  
+))
+
+(answer Iran)
+
+(end_of_file)

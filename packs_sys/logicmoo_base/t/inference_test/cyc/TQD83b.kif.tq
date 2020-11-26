@@ -1,0 +1,71 @@
+(note TQD83b)
+
+(implies 
+ (distanceBetween ?REGION1 ?REGION2 ?DISTANCE) 
+ (distanceBetween ?REGION2 ?REGION1 ?DISTANCE)) 
+
+(distanceBetween SuezCanal Iran 
+ (Kilometer 1300 2900)) 
+
+(relationInstanceExistsMany possesses Iran Su-24-Bomber) 
+
+(subclass Su-24-Bomber MilitaryHardware) 
+
+(relationAllInstance vehicleRange Su-24-Bomber 
+ (Kilometer 1900) ) 
+
+(distanceBetween Iran SuezCanal 
+ (Kilometer 1300 2900)) 
+
+(not 
+ (greaterThan 
+ (Kilometer 1300 2900) 
+ (Kilometer 1900))) 
+
+(implies 
+ (distanceBetween ?REGION1 ?REGION2 ?DISTANCE) 
+ (distanceBetween ?REGION2 ?REGION1 ?DISTANCE)) 
+
+(distanceBetween SuezCanal Iran 
+ (Kilometer 1300 2900)) 
+
+(relationInstanceExistsMany possesses Iran ModernNavalShip) 
+
+(subclass ModernNavalShip MilitaryHardware) 
+
+(relationAllInstance vehicleRange ModernNavalShip 
+ (Kilometer 2500)) 
+
+(distanceBetween Iran SuezCanal 
+ (Kilometer 1300 2900)) 
+
+(not 
+ (greaterThan 
+ (Kilometer 1300 2900) 
+ (Kilometer 2500) )) 
+
+(query (findall (?DISTANCE ?RANGE ?WEAPON)
+ (or 
+   (and 
+       (subclass ?WEAPON MilitaryHardware) 
+       (relationAllInstance weaponEffectiveRange-Max ?WEAPON ?RANGE) 
+       (distanceBetween Iran SuezCanal ?DISTANCE) 
+       (not 
+           (lessThan ?RANGE ?DISTANCE)) 
+       (relationInstanceExistsMany possesses Iran ?WEAPON)) 
+   (and 
+       (subclass ?WEAPON MilitaryHardware) 
+       (relationAllInstance vehicleRange ?WEAPON ?RANGE) 
+       (distanceBetween Iran SuezCanal ?DISTANCE) 
+       (not 
+           (lessThan ?RANGE ?DISTANCE)) 
+       (relationInstanceExistsMany possesses Iran ?WEAPON))) 
+))
+
+(answer (list  (Kilometer 1300 2900) ) (list  (Kilometer 1900)) Su-24-Bomber
+)
+(answer list  (Kilometer 1300 2900) ) (list  (Kilometer 2500)) ModernNavalShip
+)
+
+(end_of_file)
+

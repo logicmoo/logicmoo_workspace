@@ -1,0 +1,4 @@
+[console_scripts]
+black = black:main
+blackd = blackd:main [d]
+

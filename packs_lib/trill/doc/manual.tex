@@ -1,0 +1,275 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[pdftex]{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\RequirePackage[hyperindex]{hyperref}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\newcommand\cI{{\cal I}}
+\newcommand\cT{{\cal T}}
+\newcommand\cA{{\cal A}}
+\newcommand\cK{{\cal K}}
+\newcommand\cC{{\cal C}}
+\newcommand\cL{{\cal L}}
+\newcommand\fluffy{{\mathit{fluffy}}}
+
+\newenvironment{example}{}{}
+\newenvironment{definition}{}{}
+
+\begin{document}
+\title{TRILL Manual}
+
+\subtitle{SWI-Prolog Version}
+
+\author{Riccardo Zese\\
+riccardo.zese@unife.it}
+
+\maketitle
+
+
+\section{Introduction}
+
+
+TRILL is a framework born from the original TRILL project whose contained a single reasoner~\cite{ZesBelLamRig13-CILC13-NC}. The name of this reasoner, TRILL, is an acronym for ``Tableau Reasoner for descrIption Logics in Prolog''. In the next years, this project has been extended to the current framework (\cite{ZesBelRig16-AMAI-IJ,Zese17-SSW-BK,ZesBelCot19-TPLP-IJ}) that contains three different reasoners:
+\begin{itemize}
+	\item TRILL, which implements a tableau algorithm in Prolog to compute the set of all the explanations of a query;
+	\item TRILL$^P$ (``TRILL powered by Pinpointing formulas''), which is able to compute a Boolean formula, called \emph{pinpointing formula}, representing the set of explanations for a query;
+	\item TORNADO (``Trill powered by pinpOinting foRmula and biNAry DecisiOn diagrams'') which represent the pinpointing formula directly as a binary decision diagram, simplifying the management of the formula.
+\end{itemize}  
+
+After generating the set of explanations  or of the pinpointing formula, 
+TRILL and  TRILL$^P$ represent them as a binary decision diagram. From this diagram, all the reasoners of this framework can computes the probability of the query. The management of the tableau rules' non-determinism is delegated to the Prolog language.
+
+The TRILL framework forms a layer cake, shown in Figure~\ref{fig:trill_arch}, designed to facilitate its extension. The lower layer, called ``Translation Utilities'', contains a library for translating the input KB in case it is given in the RDF/XML format and loading it in the Prolog database, in order to be accessible to the upper layers.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/trill-architecture}
+	\caption{Software architecture of the old version of TRILL.}
+	\label{fig:trill_arch}
+\end{figure}
+
+TRILL framework is available in two versions, one for Yap Prolog and one for SWI-Prolog. They differ slightly in the features offered.
+The Yap version differs principally in the absence of the translation module form OWL/RDF to TRILL syntax and in a different management of the explanations in TRILL$^P$. the Yap version also lacks of TORNADO and it is no more maintained.
+
+\section{Installation}
+TRILL is distributed as a \href{http://www.swi-prolog.org/pack/list?p=trill}{pack} of \href{http://www.swi-prolog.org/}{SWI-Prolog}.
+It can be installed with \verb|pack_install/1|
+\begin{verbatim}
+$ swipl
+?- pack_install(trill).
+\end{verbatim}
+
+It requires the packs \verb|bddem|\footnote{\url{https://github.com/friguzzi/bddem}}. It is installed automatically when installing pack \verb|trill| or can installed manually as
+\begin{verbatim}
+$ swipl
+?- pack_install(bddem).
+\end{verbatim}
+The package \verb|bddem| uses a foreign library and contains the library binaries for 32 and 64 bits Linux and 64 bits Windows. If you want to recompile the foreign library you can use
+\begin{verbatim}
+?- pack_rebuild(bdeem).
+\end{verbatim}
+On 32 and 64 bits Linux this should work out of the box. On 64 bits Windows the library must be rebuilt by hand, see the pack page \url{https://github.com/friguzzi/bddem}
+
+You can upgrade the pack with
+\begin{verbatim}
+$ swipl
+?- pack_upgrade(trill).
+\end{verbatim}
+Note that the pack on which \verb|trill| depends are not upgraded automatically in this case so they need to be upgraded manually.
+
+To test the system you can simply run the following commands
+\begin{verbatim}
+$ swipl
+?- [library(trill_test/test)].
+?- test.
+\end{verbatim}
+
+\subsection{Example of use}
+\begin{verbatim}
+$ cd <pack>/trill/prolog/examples
+$ swipl
+?- [library(examples/peoplePets)].
+?- prob_instanceOf('natureLover','Kevin',Prob).
+\end{verbatim}
+	
+
+\input{syntax}
+\input{semantics}
+\input{inference}
+\input{inf_goals}
+\begin{verbatim}
+load_owl_kb(++filename:string)
+load_kb(++filename:string)
+\end{verbatim}
+The predicate \verb|load_owl_kb/1| allows to load a KB defined using a pure RDF/XML syntax. The predicate \verb|load_kb/1| allows to load a KB defined using the Prolog syntax, i.e., axioms and/or \verb|owl_rdf/1| predicate.
+
+\section{Loading a KB in TRILL}
+Once the KB is ready to be used, you must load it in TRILL to perform inference. There are two ways to do that:
+\begin{enumerate}
+	\item prepare the KB so that it contains also the necessary Prolog directives to load the reasoner and load the KB in the Prolog console;
+	\item run the Prolog console, load the reasoner and finally the KB.
+\end{enumerate}
+At this point you can run all the query you want.
+
+\subsection{Case 1: Self-Contained Prolog File}
+In the first case, it is necessary to specify which algorithm, TRILL, TRILL$^P$ or TORNADO, has to be loaded for performing inference. This is done by using at the beginning of the input file the directive
+\begin{verbatim}
+:- trill.
+\end{verbatim}
+for loading TRILL,
+\begin{verbatim}
+:- trillp.
+\end{verbatim}
+for TRILL$^P$ or
+\begin{verbatim}
+:- tornado.
+\end{verbatim}
+for TORNADO.
+
+The KB file will be similar to what shown in the following (\href{http://trill-sw.eu/example/trill/donVito.pl}{\texttt{donVito.pl}} examples):
+\begin{verbatim}
+% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.
+
+% Definition of the axioms of the KB
+classAssertion(cat, tom).
+propertyAssertion(hasPet, donVito, tom).
+subClassOf(cat, pet).
+subClassOf(someValuesFrom(hasAnimal, pet), natureLover).
+subClassOf(natureLover,goodPerson).
+subPropertyOf(hasPet,hasAnimal).
+\end{verbatim}
+
+\subsubsection{Executing a Query}
+\label{sec:trillq1}
+To run a query, you can simply load the Prolog file, for example \href{http://trill-sw.eu/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}}, as
+\begin{verbatim}
+?- [peoplePets].
+\end{verbatim}
+or by starting the Prolog console passing the file as argument
+\begin{verbatim}
+$ swipl peoplePets.pl
+\end{verbatim}
+\noindent
+The linked file contains axioms defined in both syntaxes accepted by TRILL, RDF/XML and Prolog Syntax, based on definition of \href{http://vangelisv.github.io/thea/}{Thea} library.
+\href{http://trill-sw.eu/example/trill/peoplePets.pl}{\texttt{peoplePets.pl}} is equivalent with the following KB
+\begin{verbatim}
+:- use_module(library(trill)).
+
+:- trill.
+
+:- add_kb_prefix('','http://cohse.semanticweb.org/ontologies/people#').
+
+subClassOf(someValuesFrom('has_animal', 'pet'), 'natureLover').
+subClassOf('cat', 'pet').
+annotationAssertion('disponte:probability', 
+        classAssertion('cat', 'Fluffy'), literal('0.4')).
+annotationAssertion('disponte:probability', 
+        classAssertion('cat', 'Tom'), literal('0.3')).
+annotationAssertion('disponte:probability', 
+        subClassOf('cat', 'pet'), literal('0.6')).
+propertyAssertion('has_animal', 'Kevin', 'Fluffy').
+propertyAssertion('has_animal', 'Kevin', 'Tom').
+classAssertion('cat', 'Fluffy').
+classAssertion('cat', 'Tom').
+\end{verbatim}
+
+At this point the KB is loaded, you can ask every query or run every predicate shown in Section~\ref{queries}.
+
+\subsection{Case 2: Independent KB File}
+If you do not want to specify in your KB which reasoner to use, you can prepare the KB to that it contains only the axioms. The KB file can be define using pure RDF/XML syntax or TRILL's Prolog syntax. In this case the file will NOT contain the directives:
+\begin{verbatim}
+% Load the reasoner
+:-use_module(library(trill)).
+
+% Init the reasoner
+:- trill. % or :- trillp. or :- tornado.
+\end{verbatim}
+
+\subsubsection{Executing a Query}
+\label{sec:trillq2}
+You can load the KB using the predicates \verb|load_owl_kb(<filename>).| and \verb|load_kb(<filename>).| in the following way:
+\begin{itemize}
+	\item run the Prolog console\\
+	\verb|$ swipl|
+	\item load TRILL library\\
+	\verb|?- use_module(library(trill)).|
+	\item initialize the algorithm you want to perform inference\\
+	\verb|?- init_trill(<algorithm_name>).|\\
+	For example, if you want to use TRILL$^P$ you should run \verb|init_trill(trillp).|
+	\item load the KB\\
+	\verb|?- load_owl_kb(<filename>).| or\\
+	\verb|?- load_kb(<filename>).|\\
+	For example:\\
+	\verb|load_owl_kb('./examples/biopaxLevel3_rdf.owl').| or\\
+	\verb|load_kb('./examples/biopaxLevel3.pl').|\\
+	The first predicate allows to load a RDF/XML file, while the second allows to load a KB defined using the Prolog syntax, i.e., axioms and/or \verb|owl_rdf/1| predicate.
+\end{itemize}
+\noindent
+Now the KB is loaded and the queries or TRILL's utility predicates can be executed in the usual way.
+
+\section{Files}
+The \texttt{pack/trill/prolog/examples} folder in SWI-Prolog home contains some example programs.
+The \texttt{pack/trill/doc} folder in SWI-Prolog home contains this manual in latex, html and pdf.
+
+
+\section{License}
+\label{license}
+
+
+
+TRILL follows the Artistic License 2.0 that you can find in TRILL root folder. The copyright is by Riccardo Zese.
+\vspace{3mm}
+
+The library \href{http://vangelisv.github.io/thea/}{Thea} at the basis of the translation module is available under the \href{http://www.gnu.org/copyleft/gpl.html}{GNU/GPL license}.
+
+The library \href{http://vlsi.colorado.edu/\string ~fabio/}{CUDD} for manipulating BDDs has the following license:
+
+\vspace{3mm}
+
+Copyright (c) 1995-2004, Regents of the University of Colorado
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+\begin{itemize}
+\item
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+\item
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+\item
+Neither the name of the University of Colorado nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+\end{itemize}
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRAN\-TIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAU-SED
+\\ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+
+\bibliographystyle{plain}
+\bibliography{bib}
+
+\appendix
+\input{appendix}
+
+\end{document}

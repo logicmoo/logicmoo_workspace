@@ -1,0 +1,19 @@
+(note TQC112)
+
+(or 
+ (behaviorCapable ?AGENT ?ACTIONTYPE agent) 
+ (viabilityOfAsForeignPolicyTool ?AGENT ?ACTIONTYPE None)) 
+
+(not 
+ (behaviorCapable Kuwait ChemicalAttack agent)) 
+
+(minimizeExtent behaviorCapable) 
+
+
+(query (findall ?ATTRIB
+
+ (viabilityOfAsForeignPolicyTool Kuwait ChemicalAttack ?ATTRIB)))
+
+(answer None)  
+
+(end_of_file)

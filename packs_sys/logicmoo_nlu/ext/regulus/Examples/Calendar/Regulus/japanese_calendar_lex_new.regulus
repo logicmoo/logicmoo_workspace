@@ -1,0 +1,317 @@
+ 
+feature_value_space(sem_np_type_value, [[loc, agent, abstract]]).
+ 
+@np_with_no(@j('²ñµÄ', kaigi, 'meeting-N'), [activity, kaigi], activity, temporal\/loc\/other\/abstract\/agent).
+@np_with_no(@j('¥ß¡¼¥Æ¥£¥ó¥°', miitingu, 'meeting-N'), [activity, miitingu], activity, temporal\/loc\/other\/abstract).
+
+@np_with_no(@j('·îÍËÆü', getsuyoubi, 'monday-N'), [dayofweek, getsuyoubi], temporal, temporal\/other).
+@np_with_no(@j('²ÐÍËÆü', kayoubi, 'tuesday-N'), [dayofweek, kayoubi], temporal, temporal\/other).
+@np_with_no(@j('¿åÍËÆü', suiyoubi, 'wednesday-N'), [dayofweek, suiyoubi], temporal, temporal\/other).
+@np_with_no(@j('¶âÍËÆü', mokuyoubi, 'thursday-N'), [dayofweek, mokuyoubi], temporal, temporal\/other).
+@np_with_no(@j('¶âÍËÆü', kinyoubi, 'friday-N'), [dayofweek, kinyoubi], temporal, temporal\/other).
+@np_with_no(@j('ÅÚÍËÆü', doyoubi, 'saturday-N'), [dayofweek, doyoubi], temporal, temporal\/other).
+@np_with_no(@j('ÆüÍËÆü', nichiyoubi, 'sunday-N'), [dayofweek, nichiyoubi], temporal, temporal\/other).
+
+@np_with_no(@j('·îÍË', getsuyou, 'monday-N'), [dayofweek, getsuyoubi], temporal, temporal\/other).
+@np_with_no(@j('²ÐÍË', kayou, 'tuesday-N'), [dayofweek, kayoubi], temporal, temporal\/other).
+@np_with_no(@j('¿åÍË', suiyou, 'wednesday-N'), [dayofweek, suiyoubi], temporal, temporal\/other).
+@np_with_no(@j('¶âÍË', mokuyou, 'thursday-N'), [dayofweek, mokuyoubi], temporal, temporal\/other).
+@np_with_no(@j('¶âÍË', kinyou, 'friday-N'), [dayofweek, kinyoubi], temporal, temporal\/other).
+@np_with_no(@j('ÅÚÍË', doyou, 'saturday-N'), [dayofweek, doyoubi], temporal, temporal\/other).
+@np_with_no(@j('ÆüÍË', nichiyou, 'sunday-N'), [dayofweek, nichiyoubi], temporal, temporal\/other).
+
+@np_with_no(@j('Ä«', asa, 'asa-N'), [time, asa], temporal, temporal\/other).
+@np_with_no(@j('¸áÁ°', gozen, 'morning-N'), [time, gozen], temporal, temporal\/other).
+@np_with_no(@j('¸á¸å', gogo, 'afternoon-N'), [time, gogo], temporal, temporal\/other).
+@lexical_np(@j('º£Ä«', kesa, 'this-morning-N'), [time, kesa], temporal).
+
+@lexical_np(@j('¤¹¤Ù¤Æ', subete, 'all-N'), [relation, subete], other).
+@lexical_np(@j('¼¡', tsugi, 'next-N'), [relation, tsugi], other).
+@lexical_np(@j('º£ÅÙ', kondo, 'next-N'), [relation, kondo], other).
+@lexical_np(@j('¼¡²ó', jikai, 'next-time-N'), [relation, jikai], other).
+@lexical_np(@j('ºÇ¸å', saigo, 'last-N'), [relation, saigo], other).
+
+@lexical_np(@j('¤ª¤È¤È¤¤', ototoi, 'day-before-yesterday-N'), [day, ototoi], temporal).
+@lexical_np(@j('¤ª¤È¤Ä¤¤', ototsui, 'day-before-yesterday-N'), [day, ototsui], temporal).
+@lexical_np(@j('ºòÆü', kinou, 'yesterday-N'), [day, kinou], temporal).
+@lexical_np(@j('º£Æü', kyou, 'today-N'), [day, kyou], temporal).
+@lexical_np(@j('ÌÀÆü', asu, 'tomorrow-N'), [day, asu], temporal).
+@lexical_np(@j('ÌÀÆü', ashita, 'tomorrow-N'), [day, ashita], temporal).
+@lexical_np(@j('¤¢¤µ¤Ã¤Æ', asatte, 'day-after-tomorrow-N'), [day, asatte], temporal).
+
+@lexical_np(@j('Àè½µ', sensyuu, 'last-week-N'), [period, sensyuu], temporal).
+@lexical_np(@j('º£½µ', konsyuu, 'this-week-N'), [period, konsyuu], temporal).
+@lexical_np(@j('Íè½µ', raisyuu, 'next-week-N'), [period, raisyuu], temporal).
+@lexical_np(@j('ºÆÍè½µ', saraisyuu, 'week-after-next-N'), [period, saraisyuu], temporal).
+
+@lexical_np(@j('Àè·î', sengetsu, 'last-month-N'), [period, sengetsu], temporal).
+@lexical_np(@j('º£·î', kongetsu, 'this-month-N'), [period, kongetsu], temporal).
+@lexical_np(@j('Íè·î', raigetsu, 'next-month-N'), [period, raigetsu], temporal).
+@lexical_np(@j('ºÆÍè·î', saraigetsu, 'month-after-next-N'), [period, saraigetsu], temporal).
+@lexical_np(@j('sensengetsu', sensengetsu, 'month-before-last-N'), [period, sensengetsu], temporal).
+
+@lexical_np(@j('º£Ç¯', kotoshi, 'this-year-N'), [period, kotoshi], temporal).
+@lexical_np(@j('µîÇ¯', kyonen, 'last-year-N'), [period, kyonen], temporal).
+@lexical_np(@j('ÍèÇ¯', rainen, 'next-year-N'), [period, rainen], temporal).
+
+@np_with_premod(@j('½µ´Ö', syuukan, 'week-N'), [unit, syuukan], time_unit, abstract).
+@np_with_premod(@j('¥ö·î´Ö', kagetsukan, 'month-N'), [unit, kagetsukan], time_unit, abstract).
+@np_with_premod(@j('¥ö·î´Ö', kagetsu, 'month-N'), [unit, kagetsu], time_unit, abstract).
+
+macro(number_timeunit(Surface, N, Unit),
+      (   np:[sem= @np_number_unit_sem(N, @n_sem(Unit)),
+	      sem_np_type=time_unit, sem_premod_type=abstract] -->
+	  Surface
+      )
+     ).
+
+% We can have both "kaigi no jikan" and "syuuryou jikan"
+@np_with_no_or_premod(@j('jikan', jikan, 'time-N'), [period, jikan], temporal, activity, temporal).
+
+@number_timeunit(@j('', ikkagetsu, 'one-month-N'), 1, [unit, kagetsu]).
+@number_timeunit(@j('', ikkagetsukan, 'one-month-N'), 1, [unit, kagetsu]).
+@number_timeunit(@j('', rokkagetsu, 'six-month-N'), 6, [unit, kagetsu]).
+@number_timeunit(@j('', rokkagetsukan, 'six-month-N'), 6, [unit, kagetsu]).
+@number_timeunit(@j('', jukkagetsu, 'ten-month-N'), 10, [unit, kagetsu]).
+@number_timeunit(@j('', jukkagetsukan, 'ten-month-N'), 10, [unit, kagetsu]).
+
+@np_with_no(@j('´Ö', aida, 'interval-N'), [period, aida], temporal, time_unit).
+
+@lexical_np(@j('²¿', nani, 'what-Q'), [wh, nani], abstract).
+@lexical_np(@j('²¿', nan, 'what-Q'), [wh, nani], abstract).
+@lexical_np(@j((nan, ban), (nan, ban), 'what-number-Q'), [wh, nan_ban], abstract).
+@lexical_np(@j('Ã¯', dare, 'who-Q'), [wh, dare], agent).
+@lexical_np(@j('¤É¤³', doko, 'where-Q'), [wh, doko], loc).
+@lexical_np(@j('²¿»þ', nanji, 'when-Q'), [temporal, nanji], temporal).
+@lexical_np(@j('¤¤¤Ä', itsu, 'when-Q'), [temporal, itsu], temporal).
+
+@np_with_no(@j('nichiji', nichiji, 'day-and-time-N'), [temporal, nichiji], temporal, activity).
+@np_with_no(@j('nittei', nittei, 'time-N'), [temporal, nittei], temporal, activity).
+@np_with_no(@j('kaishi', kaishi, 'start-N'), [temporal, kaishi], temporal, activity).
+@np_with_no(@j('syuuryou', syuuryou, 'end-N'), [temporal, syuuryou], temporal, activity).
+
+@lexical_np(@j('»ä', watashi, 'i-PRON'), [agent, watashi], agent).
+
+@np_with_no(@j('Ã¯¤«', dareka, 'anyone-Q'), [wh, dareka], agent, loc).
+@np_with_no(@j('½ÐÀÊ¼Ô', syussekisya, 'attendee'), [agent, syussekisya], agent, activity).
+@np_with_no(@j('menbaa', menbaa, 'member'), [agent, menbaa], agent, activity).
+@lexical_np(@j('hito', hito, 'person'), [agent, hito], agent).
+
+@lexical_np(@j('Éô²°', heya, 'room-Q'), [loc, heya], loc).
+ 
+@np_with_no(@j('½»½ê', juusyo, 'address-N'), [abstract, juusyo], abstract, agent\/loc).
+@np_with_no((@j('¥á¡¼¥ë', meeru, 'mail-N'), @j('¥¢¥É¥ì¥¹', adoresu, 'address-N')), [abstract, meeru_adoresu], abstract, agent).
+@np_with_no((@j('ÅÅÏÃ', denwa, 'phone-N'), @j('ÈÖ¹æ', bangou, 'number-N')), [abstract, denwa_bangou], abstract, agent).
+
+@np_with_no(@j('¾ì½ê', basyo, 'place-N'), [loc, basyo], loc, activity).
+
+%@pp(@j('¤¤¤Ä', itsu, 'when-Q'), [temporal, itsu], temporal).
+%@pp(@j('²¿»þ', nanji, 'when-Q'), [temporal, nanji], temporal).
+@pp(@j('', ikutsu, 'how-many-Q'), [wh, ikutsu], none).
+@pp(@j('', (nan, bon), 'how-many-Q'), [wh, nan_bon], none).
+@pp(@j('', (nan, ken), 'how-many-Q'), [wh, nan_ken], none).
+
+
+@lexical_np(@j('¸þ¤³¤¦', mukou, 'coming-N'), [temporal, mukou], abstract).
+@lexical_np(@j('¤³¤³', koko, 'here-N'), [temporal, koko], abstract).
+@lexical_np(@j('²áµî', kako, 'last-N'), [temporal, kako], abstract).
+@lexical_np(@j('', saikin, 'last-N'), [temporal, saikin], abstract).
+@lexical_np(@j(('', ''), (ichiban, saikin), ('most-ADV', 'last-N')), [temporal, ichiban_saikin], abstract).
+@lexical_np(@j(('', ''), (ichiban, saisyo), ('most-ADV', 'first-N')), [temporal, ichiban_saisyo], abstract).
+
+@np_with_no(@j('¥ê¥¹¥È', risuto, 'list-N'), [abstract, risuto], abstract, activity).
+
+@copula(activity, none\/temporal).
+@copula(abstract, abstract).
+@copula(loc, loc\/abstract).
+@copula(agent\/temporal\/loc, none).
+@copula(none, agent\/temporal\/loc\/none).
+
+v:[sem=[[tense, no_tense], @verb_sem([action, kudasai])], politeness=polite, vform=polite_imperative,
+   v_type=trans, sem_subj_type=agent, sem_obj_type=abstract] -->
+	@j('kudasai', kudasai, 'please').
+
+% aru
+@v_stem(@j('¤¢', a, 'exist-V'), r1, [state, aru], [v_type=intrans, sem_subj_type=activity\/abstract, sem_obj_type=none]).
+
+%@verb([@j('¤¢¤ë', aru, 'exist-V-PLAIN-PRESENT'),
+%       (@j('¤¢¤ê', ari, 'exist-V'), @masu),
+%       @j('¤¢¤Ã¤¿', atta, 'exist-V-PLAIN-PAST'),
+%       (@j('¤¢¤ê', ari, 'exist-V'), @mashita),
+%       @j('¤¢¤Ã¤Æ', atte, 'exist-V-CONNECTIVE')],
+%      [state, aru],
+%      [v_type=intrans, sem_subj_type=activity\/abstract, sem_obj_type=none]).
+
+% yotei suru
+@suru_verb( @j('Í½Äê', yotei, 'plan-N'), [event, yotei_suru], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([(@j('Í½Äê', yotei, 'plan-N'), @j('¤¹¤ë', suru, 'do-V-PLAIN-PRESENT')),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤·', shi, 'do-V'), @masu),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤·¤¿', shita, 'do-V-PLAIN-PAST')),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤·', shi, 'do-V'), @mashita),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤·¤Æ', shite, 'do-V-CONNECTIVE')),
+%       
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤µ¤ì¤ë', sareru, 'do-V-PLAIN-PRESENT-PASSIVE')),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤µ¤ì', sare, 'do-V-PASSIVE'), @masu),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤µ¤ì¤¿', sareta, 'do-V-PLAIN-PAST-PASSIVE')),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤µ¤ì', sare, 'do-V-PASSIVE'), @mashita),
+%       (@j('Í½Äê', yotei, 'plan-N'), @j('¤µ¤ì¤Æ', sarete, 'do-V-CONNECTIVE-PASSIVE'))],
+%      [event, yotei_suru],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% hiraku
+@v_stem(@j('³«¤', hira, 'hold-V'), k, [event, hiraku], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([@j('³«¤¯', hiraku, 'hold-V-PLAIN-PRESENT'),
+%       (@j('³«¤­', hiraki, 'hold-V'), @masu),
+%       @j('³«¤¤¤¿', hiraita, 'hold-V-PLAIN-PAST'),
+%       (@j('³«¤­', hiraki, 'hold-V'), @mashita),
+%       @j('³«¤¤¤Æ', hiraite, 'hold-V-CONNECTIVE'),
+%       
+%       @j('³«¤«¤ì¤ë', hirakareru, 'hold-V-PLAIN-PRESENT-PASSIVE'),
+%       (@j('³«¤«¤ì', hirakare, 'hold-V-PASSIVE'), @masu),
+%       @j('³«¤«¤ì¤¿', hirakareta, 'hold-V-PLAIN-PAST-PASSIVE'),
+%       (@j('³«¤«¤ì', hirakare, 'hold-V-PASSIVE'), @mashita),
+%       @j('³«¤«¤ì¤Æ', hirakarete, 'hold-V-CONNECTIVE-PASSIVE')],
+%      [event, hiraku],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% okonau
+@v_stem(@j('', okona, 'conduct-V'), null, [event, okonau], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([@j('', okonau, 'conduct-V-PLAIN-PRESENT'),
+%       (@j('', okonai, 'conduct-V'), @masu),
+%       @j('', okonatta, 'conduct-V-PLAIN-PAST'),
+%       (@j('', okonai, 'conduct-V'), @mashita),
+%       @j('', okonatte, 'conduct-V-CONNECTIVE'),
+%       
+%       @j('', okonawareru, 'conduct-V-PLAIN-PRESENT-PASSIVE'),
+%       (@j('', okonaware, 'conduct-V-PASSIVE'), @masu),
+%       @j('', okonawareta, 'conduct-V-PLAIN-PAST-PASSIVE'),
+%       (@j('', okonaware, 'conduct-V-PASSIVE'), @mashita),
+%       @j('', okonawarete, 'conduct-V-CONNECTIVE-PASSIVE')],
+%      [event, okonau],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% kurikaesu
+@v_stem(@j('', kurikae, 'repeat-V'), s, [path_proc, kurikaesu], [v_type=intrans, sem_subj_type=agent]).
+
+%@verb([@j('', kurikaesu, 'repeat-V-PLAIN-PRESENT'),
+%       (@j('', kurikaesi, 'repeat-V'), @masu),
+%       @j('', kurikaeshita, 'repeat-V-PLAIN-PAST'),
+%       (@j('', kurikaeshi, 'repeat-V'), @mashita),
+%       @j('', kurikaeshite, 'repeat-V-CONNECTIVE')],
+%      [path_proc, kurikaesu],
+%      [v_type=intrans, sem_subj_type=agent]).
+
+% douseki suru
+@suru_verb( @j('Æ±ÀÊ', douseki, 'attendance-N'), [path_proc, douseki_suru], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([(@j('Æ±ÀÊ', douseki, 'attendance-N'), @j('¤¹¤ë', suru, 'do-V-PLAIN-PRESENT')),
+%       (@j('Æ±ÀÊ', douseki, 'attendance-N'), @j('¤·', shi, 'do-V'), @masu),
+%       (@j('Æ±ÀÊ', douseki, 'attendance-N'), @j('¤·¤¿', shita, 'do-V-PLAIN-PAST')),
+%       (@j('Æ±ÀÊ', douseki, 'attendance-N'), @j('¤·', shi, 'do-V'), @mashita),
+%       (@j('Æ±ÀÊ', douseki, 'attendance-N'), @j('¤·¤Æ', shite, 'do-V-CONNECTIVE'))],
+%      [path_proc, douseki_suru],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% syusseki suru
+@suru_verb( @j('Æ±ÀÊ', syusseki, 'attendance-N'), [path_proc, syusseki_suru], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([(@j('Æ±ÀÊ', syusseki, 'attendance-N'), @j('¤¹¤ë', suru, 'do-V-PLAIN-PRESENT')),
+%       (@j('Æ±ÀÊ', syusseki, 'attendance-N'), @j('¤·', shi, 'do-V'), @masu),
+%       (@j('Æ±ÀÊ', syusseki, 'attendance-N'), @j('¤·¤¿', shita, 'do-V-PLAIN-PAST')),
+%       (@j('Æ±ÀÊ', syusseki, 'attendance-N'), @j('¤·', shi, 'do-V'), @mashita),
+%       (@j('Æ±ÀÊ', syusseki, 'attendance-N'), @j('¤·¤Æ', shite, 'do-V-CONNECTIVE'))],
+%      [path_proc, syusseki_suru],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% kesseki suru
+@suru_verb( @j('·çÀÊ', kesseki, 'miss-N'), [path_proc, kesseki_suru], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+%@verb([(@j('·çÀÊ', kesseki, 'miss-N'), @j('¤¹¤ë', suru, 'do-V-PLAIN-PRESENT')),
+%       (@j('·çÀÊ', kesseki, 'miss-N'), @j('¤·', shi, 'do-V'), @masu),
+%       (@j('·çÀÊ', kesseki, 'miss-N'), @j('¤·¤¿', shita, 'do-V-PLAIN-PAST')),
+%       (@j('·çÀÊ', kesseki, 'miss-N'), @j('¤·', shi, 'do-V'), @mashita),
+%       (@j('·çÀÊ', kesseki, 'miss-N'), @j('¤·¤Æ', shite, 'do-V-CONNECTIVE'))],
+%      [path_proc, kesseki_suru],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity]).
+
+% hajimaru
+@v_stem(@j('»Ï¤Þ', hajima,'start-V'), r1, [path_proc, hajimaru], [v_type=intrans, sem_subj_type=activity]).
+
+%@verb([@j('»Ï¤Þ¤ë', hajimaru,'start-V-PLAIN-PRESENT'),
+%       (@j('»Ï¤Þ¤ê', hajimari, 'start-V'), @masu),
+%       @j('»Ï¤Þ¤Ã¤¿', hajimatta, 'start-V-PLAIN-PAST'),
+%       (@j('»Ï¤Þ¤ê', hajimari, 'start-V'), @mashita),
+%       @j('»Ï¤Þ¤Ã¤Æ', hajimatte, 'start-V-CONNECTIVE')],
+%      [path_proc, hajimaru],
+%      [v_type=intrans, sem_subj_type=activity]).
+
+% owaru
+@v_stem(@j('½ª¤ï', owa, 'end-V'), r1, [path_proc, owaru], [v_type=intrans, sem_subj_type=activity]).
+
+%@verb([@j('½ª¤ï¤ë', owaru,'end-V-PLAIN-PRESENT'),
+%       (@j('½ª¤ï¤ê', owari, 'end-V'), @masu),
+%       @j('½ª¤ï¤Ã¤¿', owatta, 'end-V-PLAIN-PAST'),
+%       (@j('½ª¤ï¤ê', owari, 'end-V'), @mashita),
+%       @j('½ª¤ï¤Ã¤Æ', owatte, 'end-V-CONNECTIVE')],
+%      [path_proc, owaru],
+%      [v_type=intrans, sem_subj_type=activity]).
+
+@verb([@j('Íè¤ë', kuru, 'come-V-PLAIN-PRESENT'),
+       (@j('Íè', ki, 'come-V'), @masu),
+       @j('Íè¤¿', kita, 'come-V-PLAIN-PAST'),
+       (@j('Íè', ki, 'come-V'), @mashita),
+       @j('Íè¤Æ', kite, 'come-V-CONNECTIVE')],
+      [event, kuru],
+      [v_type=intrans, sem_subj_type=agent]). 
+
+% owaru
+@v_stem(@j('', irassya, 'come-V'), r1, [event, irassyaru], [v_type=intrans, sem_subj_type=agent]). 
+
+%@verb([@j('', irassyaru, 'come-V-PLAIN-PRESENT'),
+%       (@j('', irassyai, 'come-V'), @masu),
+%       @j('', irassyatta, 'come-V-PLAIN-PAST'),
+%       (@j('', irassyai, 'come-V'), @mashita),
+%       @j('', irassyatte, 'come-V-CONNECTIVE')],
+%      [event, irassyaru],
+%      [v_type=intrans, sem_subj_type=agent]). 
+
+@v_stem(@j('½Ð', de, 'attend-V'), r2, [event, activity], [v_type=intrans, sem_subj_type=agent]).
+
+%@verb([@j('½Ð¤ë', deru, 'attend-V-PLAIN-PRESENT'),
+%       (@j('½Ð', de, 'attend-V'), @masu),
+%       @j('½Ð¤¿', deta, 'attend-V-PLAIN-PAST'),
+%       (@j('½Ð', de, 'attend-V'), @mashita),
+%       @j('½Ð¤Æ', dete, 'attend-V-CONNECTIVE')],
+%      [event, deru],
+%      [v_type=intrans, sem_subj_type=agent]).
+
+@v_stem(@j('¶µ¤¨', oshie, 'teach-V'), r2, [event, oshieu], [v_type=trans, sem_subj_type=agent, sem_obj_type=activity\/abstract\/temporal\/loc\/agent]).
+
+%@verb([@j('¶µ¤¨¤ë', oshieu, 'teach-V-PLAIN-PRESENT'),
+%       (@j('¶µ¤¨', oshie, 'teach-V'), @masu),
+%       @j('¶µ¤¨¤¿', oshieta, 'teach-V-PLAIN-PAST'),
+%       (@j('¶µ¤¨', oshie, 'teach-V'), @mashita),
+%       @j('¶µ¤¨¤Æ', oshiete, 'teach-V-CONNECTIVE')],
+%      [event, oshieu],
+%      [v_type=trans, sem_subj_type=agent, sem_obj_type=activity\/abstract\/temporal\/loc\/agent]).
+
+% Can be followed by 'wa'
+@optionally_pre_wa_prep(@j('¤Ë', ni, 'AT-PARTICLE'), ni, ni, loc\/temporal\/activity).
+@optionally_pre_wa_prep(@j('¤Ç', de, 'AT-PARTICLE'), de, de, loc\/time_unit).
+@optionally_pre_wa_prep(@j('¤È', to, 'WITH-PARTICLE'), to, none, agent).
+
+% Can't be followed by 'wa'
+@prep(@j('¤«¤é', kara, 'FROM-PARTICLE'), kara, kara, temporal).
+@prep(@j('¤Þ¤Ç', made, 'TO-PARTICLE'), made, made, temporal).
+@prep(@j(('¤Þ¤Ç', '¤Ë'), (made, ni), ('TO-PARTICLE', 'AT-PARTICLE')), made_ni, made, temporal).
+@prep(@j(('mae', '¤Ë'), (mae, ni), ('BEFORE-PARTICLE', 'AT-PARTICLE')), mae_ni, ni, temporal\/time_unit).
+
+macro(place_name(Words, Sem),
+      ( name:[sem=Sem, sem_np_type=loc] --> Words )).
+
+macro(person_name(Words, Sem),
+      ( name:[sem=Sem, sem_np_type=agent] --> Words )).
+

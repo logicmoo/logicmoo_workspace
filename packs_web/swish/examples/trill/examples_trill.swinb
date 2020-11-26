@@ -1,0 +1,19 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Welcome to TRILL on SWISH
+
+You are reading a TRILL on SWISH _notebook_.  A notebook is a mixture of _text_, _programs_ and _queries_.  This notebook gives an overview of example programs shipped with TRILL on SWISH.
+
+- *Examples*
+  - [Biopax](example/trill/biopaxLevel3.pl) models metabolic pathways ([Home Page](http://www.biopax.org/)).
+  - [BRCA](example/trill/BRCA.pl) models risk factor of breast cancer, from Klinov, P., Parsia, B.: _Optimization and evaluation of reasoning in probabilistic
+    description logic: Towards a systematic approach_. In: International Semantic Web Conference. LNCS, vol. 5318, pp. 213-228. Springer (2008).
+  - [DBPedia](example/trill/DBPedia.pl) is an extract of the DBPedia ontology, it contains structured information from Wikipedia ([Home Page](http://dbpedia.org/)).
+  - [people+pets](example/trill/peoplePets.pl) uses both RDF/XML and Prolog syntax. It is inpired by the people+pets ontology from Patel-Schneider, P, F., Horrocks, I., and Bechhofer, S. 2003. _Tutorial  on OWL_. The knowledge base indicates that the individuals that own an animal which is a pet are nature lovers, from Zese, R.: _Reasoning with Probabilistic Logics_. ArXiv e-prints 1405.0915v3. Doctoral Consortium of the 30th International Conference on Logic Programming (ICLP 2014), July 19-22, Vienna, Austria.
+  - [Vicodi](example/trill/vicodi.pl) is an extract of the Vicodi knowledge base that contains information on European history ([Home Page](http://www.vicodi.org/)).
+  - [Commander](example/trill/commander.pl) is an example using only Prolog syntax.
+  - [John employee](example/trill/johnEmployee.pl) is the example shown in help.
+</div>
+
+</div>

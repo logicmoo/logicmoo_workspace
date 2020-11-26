@@ -1,0 +1,33 @@
+***********************************************************
+*							  *
+*                   M I L E S				  *
+*							  *
+***********************************************************
+
+January 1994 version.
+
+Enquiries to:
+Irene Stahl, stahl@informatik.uni-stuttgart.de
+Birgit Tausend, tausend@informatik.uni-stuttgart.de
+
+MILES is a flexible environment for tests with ILP methods
+and operators authored by Irene Stahl, Birgit Tausend,
+Bernhard Jung, Markus Mueller and Thorsten Volz.
+It is described in the file miles/doc/docu.ps.
+
+To run MILES, you need Quintus Prolog v3.1.1 on a Sun.
+To work without the X-interface X-MILES, load the file
+miles.pl. Then you have access to all operators as
+specified in the file /miles/doc/SYSTEM.
+To invoke X-MILES, load the file xm.pl (in prolog, NOT in qui). 
+Calling xm starts the X user interface. It can be suspended
+by pressing the 'Quit X-MILES'-button, and restarted by
+typing again xm. Before running xm, ensure that you have
+set the DISPLAY variable and the resource directory correctly
+by typing
+
+setenv DISPLAY <your-machine>:0.0
+setenv XAPPLRESDIR ~/miles/xmiles_resources/
+
+Also ensure that you have set the file search path in the file
+miles.pl according to your environment. 

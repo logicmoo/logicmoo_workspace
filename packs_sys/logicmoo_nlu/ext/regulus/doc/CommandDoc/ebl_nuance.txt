@@ -1,0 +1,5 @@
+Compile current specialised Regulus grammar into Nuance GSL form. Same
+as the {\tt NUANCE} command, but for the specialised grammar. The
+input is the file created by the {\tt EBL\_\-POSTPROCESS command}; the
+output Nuance GSL grammar is placed in the file defined by the {\tt
+ebl\_\-nuance\_\-grammar} config file entry.

@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.45</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="solutionsequences.html">
+<link rel="next" href="thread.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="solutionsequences.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="thread.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tables"><a id="sec:A.45"><span class="sec-nr">A.45</span> <span class="sec-title">library(tables): 
+XSB interface to tables</span></a></h2>
+
+<p><a id="sec:tables"></a>
+
+<p>This module provides an XSB compatible library to access tables as 
+created by tabling (see <a class="pred" href="tabling-preds.html#table/1">table/1</a>). 
+The aim of this library is first of all compatibility with XSB. This 
+library contains some old and internal XSB predicates that are marked 
+deprecated.
+
+<dl class="latex">
+<dt class="pubdef"><a id="tnot/1"><strong>tnot</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Tabled negation.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+This is a synonym to <a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="tfindall/3"><strong>tfindall</strong>(<var>+Template, 
+:Goal, -Answers</var>)</a></dt>
+<dd class="defbody">
+This predicate emerged in XSB in an attempt to provide a safer 
+alternative to <a class="pred" href="allsolutions.html#findall/3">findall/3</a>. 
+This doesn't really work in XSB and the SWI-Prolog emulation is a simple 
+call to <a class="pred" href="allsolutions.html#findall/3">findall/3</a>. 
+Note that <var>Goal</var> may not be a variant of an <i>incomplete</i> 
+table.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <a class="pred" href="allsolutions.html#findall/3">findall/3</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="set_pil_on/0"><strong>set_pil_on</strong></a></dt>
+<dt class="pubdef"><a id="set_pil_off/0"><strong>set_pil_off</strong></a></dt>
+<dd class="defbody">
+Dummy predicates for XSB compatibility.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+These predicates have no effect.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="get_call/3"><strong>get_call</strong>(<var>:CallTerm, 
+-Trie, -Return</var>)</a></dt>
+<dd class="defbody">
+True when <var>Trie</var> is an answer trie for a variant of <var>CallTerm</var>. <var>Return</var> 
+is a term ret/N with N variables that share with variables in
+<var>CallTerm</var>. The <var>Trie</var> contains zero or more instances 
+of the <var>Return</var> term. See also <a class="pred" href="tables.html#get_calls/3">get_calls/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_calls/3"><strong>get_calls</strong>(<var>:CallTerm, 
+-Trie, -Return</var>)</a></dt>
+<dd class="defbody">
+True when <var>Trie</var> is an answer trie for a variant that unifies 
+with
+<var>CallTerm</var> and Skeleton is the answer skeleton. See <a class="pred" href="tables.html#get_call/3">get_call/3</a> 
+for details.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_returns/2"><strong>get_returns</strong>(<var>+ATrie, 
+-Return</var>)</a></dt>
+<dd class="defbody">
+True when <var>Return</var> is an answer template for the AnswerTrie.
+<table class="arglist">
+<tr><td><var>Return</var> </td><td>is a term <code>ret(...)</code>. See <a class="pred" href="tables.html#get_calls/3">get_calls/3</a>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_returns/3"><strong>get_returns</strong>(<var>+AnswerTrie, 
+-Return, -NodeID</var>)</a></dt>
+<dd class="defbody">
+True when <var>Return</var> is an answer template for the <var>AnswerTrie</var> 
+and the answer is represented by the trie node <var>NodeID</var>.
+<table class="arglist">
+<tr><td><var>Return</var> </td><td>is a term <code>ret(...)</code>. See <a class="pred" href="tables.html#get_calls/3">get_calls/3</a>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_returns_and_tvs/3"><strong>get_returns_and_tvs</strong>(<var>+AnswerTrie, 
+-Return, -TruthValue</var>)</a></dt>
+<dd class="defbody">
+Identical to <a class="pred" href="tables.html#get_returns/2">get_returns/2</a>, 
+but also obtains the truth value of a given answer, setting <var>TruthValue</var> 
+to <code>t</code> if the answer is unconditional and to <code>u</code> 
+if it is conditional. If a conditional answer has multiple delay lists, 
+this predicate will succeed only once, so that using this predicate may 
+be more efficient than
+<a class="pred" href="tables.html#get_residual/2">get_residual/2</a> 
+(although less informative)</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_returns_and_dls/3"><strong>get_returns_and_dls</strong>(<var>+AnswerTrie, 
+-Return, :DelayLists</var>)</a></dt>
+<dd class="defbody">
+True when <var>Return</var> appears in <var>AnswerTrie</var> with the 
+given <var>DelayLists</var>.
+<var>DelayLists</var> is a list of lists, where the inner lists 
+expresses a conjunctive condition and and outer list a disjunction.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_residual/2"><strong>get_residual</strong>(<var>:CallTerm, 
+-DelayList</var>)</a></dt>
+<dd class="defbody">
+True if <var>CallTerm</var> appears in a table and has <var>DelayList</var>. 
+SWI-Prolog's representation for a delay is a body term, more 
+specifically a disjunction of conjunctions. The XSB representation is 
+non-deterministic and uses a list to represent the conjunction.
+
+<p>The delay condition is a disjunction of conjunctions and is 
+represented as such in the native SWI-Prolog interface as a nested term 
+of ;/2 and ,/2, using <code>true</code> if the answer is unconditional. 
+This XSB predicate returns the associated conjunctions 
+non-deterministically as a list.
+
+<p>See also <a class="pred" href="WFS.html#call_residual_program/2">call_residual_program/2</a> 
+from <code>library(wfs)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="get_returns_for_call/2"><strong>get_returns_for_call</strong>(<var>:CallTerm, 
+-AnswerTerm</var>)</a></dt>
+<dd class="defbody">
+True if <var>AnswerTerm</var> appears in the tables for the <i>variant</i> <var>CallTerm</var>.</dd>
+<dt class="pubdef"><a id="abolish_table_pred/1"><strong>abolish_table_pred</strong>(<var>:CallTermOrPI</var>)</a></dt>
+<dd class="defbody">
+Invalidates all tabled subgoals for the predicate denoted by the 
+predicate or term indicator Pred.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+If Pred has a subgoal that contains a conditional answer, the default 
+behavior will be to transitively abolish any tabled predicates with 
+subgoals having answers that depend on any conditional answers of S.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="abolish_table_call/1"><strong>abolish_table_call</strong>(<var>+Head</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="abolish_table_call/2"><strong>abolish_table_call</strong>(<var>+Head, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a>. 
+See also <a class="pred" href="tables.html#abolish_table_pred/1">abolish_table_pred/1</a>.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use abolish_table_subgoals/[1,2].
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="abolish_table_subgoals/2"><strong>abolish_table_subgoals</strong>(<var>:Head, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Behaves as <a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a>, 
+but allows the default
+<code>table_gc_action</code> to be over-ridden with a flag, which can be 
+either
+<code>abolish_tables_transitively</code> or <code>abolish_tables_singly</code>.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+<var>Options</var> is compatible with XSB, but does not follow the ISO 
+option handling conventions.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,41 @@
+(note TQD122)
+
+(agent ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram China-PeoplesRepublic) 
+
+
+(interestFostered ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram 
+ (IndustryOfRegionFn DevelopingInfrastructureForBuildingChemicalPlants Iran)) 
+
+(instance ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram HelpingAnAgent) 
+
+(subclass ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram MilitaryChemicalWeaponsProgram) 
+
+
+
+
+(beneficiary ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram Iran) 
+
+(interestFostered ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram 
+ (IndustryOfRegionFn DevelopingChemicalAgents Iran)) 
+
+
+(subclass DevelopingChemicalAgents MilitaryChemicalWeaponsProgram) 
+
+
+
+( query (findall (?HELP ?SUPPORT)  (and 
+ (subclass ?SUPPORT MilitaryChemicalWeaponsProgram) 
+ (instance ?HELP HelpingAnAgent) 
+ (beneficiary ?HELP Iran) 
+ (agent ?HELP China-PeoplesRepublic) 
+ (interestFostered ?HELP 
+ (IndustryOfRegionFn ?SUPPORT Iran)))  
+))
+
+(answer ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram DevelopingInfrastructureForBuildingChemicalPlants)
+
+(answer ChinaHelpsIranInItsMilitaryChemicalWeaponsProgram  DevelopingChemicalAgents)
+
+(end_of_file)
+
+

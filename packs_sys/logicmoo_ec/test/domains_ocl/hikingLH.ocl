@@ -1,0 +1,162 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: ron
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Oct 26 17:20:54 BST 2004
+ *  Date last modified: 2005/06/24 at 11:41:27 AM BST
+ *  Description:
+ *    This is a version of the hiking domain generated
+ *    from the Life History dialog
+ * Object Life History : hiking.gfx
+ */
+
+domain_name(hikingLH).
+
+% Sorts
+sorts(primitive_sorts,[tent,loc,car,person,stage]).
+
+% Objects
+objects(tent,[tent1]).
+objects(car,[car1,car2]).
+objects(person,[sue,fred]).
+objects(loc,[keswick,helvelyn,honister,derwent]).
+objects(stage,[none,one,two,three,four]).
+
+% Predicates
+predicates([
+    upAt(tent),
+    tentAt(tent,loc),
+    downAt(tent),
+    loadedInCar(tent,car),
+    carParked(car),
+    carAt(car,loc),
+    inCar(person,car),
+    walkedStage(person,stage),
+    personAt(person,loc),
+    fitAt(person),
+    tired(person),
+    next(loc,loc),
+    nextLeg(stage,stage),
+    couple(person,person)]).
+
+% Object Class Definitions
+substate_classes(tent,Tent,[
+    [upAt(Tent),tentAt(Tent,Loc)],
+    [downAt(Tent),tentAt(Tent,Loc)],
+    [loadedInCar(Tent,Car),tentAt(Tent,Loc)]]).
+substate_classes(car,Car,[
+    [carParked(Car),carAt(Car,Loc)]]).
+substate_classes(person,Person,[
+    [inCar(Person,Car),walkedStage(Person,Stage),personAt(Person,Loc)],
+    [fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)],
+    [tired(Person),walkedStage(Person,Stage),personAt(Person,Loc)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    couple(fred,sue),
+    next(keswick,helvelyn),
+    next(helvelyn,honister),
+    next(honister,derwent),
+    next(derwent,keswick),
+    nextLeg(none,one),
+    nextLeg(one,two),
+    nextLeg(two,three),
+    nextLeg(three,four)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(takeDown(Person,Stage,Loc,Tent),
+    % prevail
+    [     se(person,Person,[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % necessary
+    [     sc(tent,Tent,[upAt(Tent),tentAt(Tent,Loc)]=>[downAt(Tent),tentAt(Tent,Loc)])],
+    % conditional
+    []).
+operator(putUp(Person,Stage,Loc,Tent),
+    % prevail
+    [     se(person,Person,[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % necessary
+    [     sc(tent,Tent,[downAt(Tent),tentAt(Tent,Loc)]=>[upAt(Tent),tentAt(Tent,Loc)])],
+    % conditional
+    []).
+operator(load(Car,Loc,Person,Stage,Tent),
+    % prevail
+    [     se(car,Car,[carParked(Car),carAt(Car,Loc)]),
+     se(person,Person,[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % necessary
+    [     sc(tent,Tent,[downAt(Tent),tentAt(Tent,Loc)]=>[loadedInCar(Tent,Car),tentAt(Tent,Loc)])],
+    % conditional
+    []).
+operator(unload(Car,Loc,Person,Stage,Tent),
+    % prevail
+    [     se(car,Car,[carParked(Car),carAt(Car,Loc)]),
+     se(person,Person,[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % necessary
+    [     sc(tent,Tent,[loadedInCar(Tent,Car),tentAt(Tent,Loc)]=>[downAt(Tent),tentAt(Tent,Loc)])],
+    % conditional
+    []).
+operator(sleep(Tent,Loc,Person,Stage),
+    % prevail
+    [     se(tent,Tent,[upAt(Tent),tentAt(Tent,Loc)])],
+    % necessary
+    [     sc(person,Person,[tired(Person),walkedStage(Person,Stage),personAt(Person,Loc)]=>[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % conditional
+    []).
+operator(getIn(Car,Loc,Person,Stage),
+    % prevail
+    [     se(car,Car,[carParked(Car),carAt(Car,Loc)])],
+    % necessary
+    [     sc(person,Person,[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)]=>[inCar(Person,Car),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % conditional
+    []).
+operator(getOut(Car,Loc,Person,Stage),
+    % prevail
+    [     se(car,Car,[carParked(Car),carAt(Car,Loc)])],
+    % necessary
+    [     sc(person,Person,[inCar(Person,Car),walkedStage(Person,Stage),personAt(Person,Loc)]=>[fitAt(Person),walkedStage(Person,Stage),personAt(Person,Loc)])],
+    % conditional
+    []).
+operator(drive(Car,LocA,LocB,Person,Stage),
+    % prevail
+    [],
+    % necessary
+    [     sc(car,Car,[carParked(Car),carAt(Car,LocA)]=>[carParked(Car),carAt(Car,LocB)]),
+     sc(person,Person,[inCar(Person,Car),walkedStage(Person,Stage),personAt(Person,LocA)]=>[inCar(Person,Car),walkedStage(Person,Stage),personAt(Person,LocB)])],
+    % conditional
+    [     sc(tent,Tent,[loadedInCar(Tent,Car),tentAt(Tent,LocA)]=>[loadedInCar(Tent,Car),tentAt(Tent,LocB)]),
+     sc(person,PersonA,[inCar(PersonA,Car),walkedStage(PersonA,Stage),personAt(PersonA,LocA),ne(Person,PersonA)]=>[inCar(PersonA,Car),walkedStage(PersonA,Stage),personAt(PersonA,LocB)])]).
+operator(walk(Person1,StageA,LocA,LocB,StageB,Person2),
+    % prevail
+    [],
+    % necessary
+    [     sc(person,Person1,[fitAt(Person1),walkedStage(Person1,StageA),personAt(Person1,LocA),next(LocA,LocB),nextLeg(StageA,StageB),couple(Person1,Person2)]=>[tired(Person1),walkedStage(Person1,StageB),personAt(Person1,LocB)]),
+     sc(person,Person2,[fitAt(Person2),walkedStage(Person2,StageA),personAt(Person2,LocA),next(LocA,LocB),nextLeg(StageA,StageB)]=>[tired(Person2),walkedStage(Person2,StageB),personAt(Person2,LocB)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(car,car1,[carParked(car1),carAt(car1,helvelyn)]),
+     se(person,fred,[fitAt(fred),walkedStage(fred,one),personAt(fred,helvelyn)]),
+     se(person,sue,[fitAt(sue),walkedStage(sue,one),personAt(sue,helvelyn)])],
+    % INIT States
+    [
+     ss(car,car1,[carParked(car1),carAt(car1,keswick)]),
+     ss(car,car2,[carParked(car2),carAt(car2,keswick)]),
+     ss(tent,tent1,[downAt(tent1),tentAt(tent1,keswick)]),
+     ss(person,fred,[fitAt(fred),walkedStage(fred,none),personAt(fred,keswick)]),
+     ss(person,sue,[fitAt(sue),walkedStage(sue,none),personAt(sue,keswick)])]).

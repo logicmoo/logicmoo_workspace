@@ -1,0 +1,13 @@
+Relevant to translation applications. Take the results held in the
+file indicated by {\tt translation\_\-corpus\_\-results} and turn them
+into a sent-formatted file. Put the result in the file indicated by
+{\tt target\_\-sent\_\-corpus}. Thus, for example, the call
+\begin{verbatim}
+MAKE_TARGET_SENT_CORPUS .MAIN
+\end{verbatim}
+will create a file where, for each translation {\tt $\langle$Sent$\rangle$}
+in {\tt translation\_\-corpus\_\-results}, the file {\tt target\_\-sent\_\-corpus}
+will contain a record of the form
+\begin{verbatim}
+sent(<Sent>).
+\end{verbatim}

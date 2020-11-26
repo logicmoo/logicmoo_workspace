@@ -1,0 +1,34 @@
+(note TQF232b)
+
+(subclass HYP-Collection-47459903 Situation) 
+(subclass TerroristAct Situation) 
+(instance HYP-TerroristGroup-37015596 TerroristGroup) 
+
+(implies 
+  (instance ?GROUP TerroristGroup) 
+  (behaviorCapable ?GROUP TerroristAct agent)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+  (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+  (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+
+(queryyn
+  (implies
+    (and 
+      (instance ?GROUP TerroristGroup) 
+      (subclass ?EVENTTYPE 
+        (StoringFn Anthrax-DryForm))) 
+  (behaviorCapable ?GROUP ?EVENTTYPE agent)))
+
+(answer Yes)
+
+(end_of_file)
+

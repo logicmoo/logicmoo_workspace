@@ -1,0 +1,4 @@
+[State = [Nucleus]-
+	         -Mass->[Mass]-greatherThan->[Mass]<-Mass-[Electron]-Charge->[Charge]<-oppositeSign-[Charge #1],
+	         -Charge->[Charge #1] 
+	]

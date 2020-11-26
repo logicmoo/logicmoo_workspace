@@ -1,0 +1,52 @@
+(note TQC5)
+
+
+(instance 
+ (MillionBarrelsPerDay 1.43000) ScalarInterval) 
+
+(productionAmountDuring Libya PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 1.43000)) 
+
+(instance 
+ (MillionBarrelsPerDay 1.35000) ScalarInterval) 
+
+(productionAmountDuring Libya Petroleum-CrudeOil 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 1.35000)) 
+
+
+
+
+
+(productionAmountDuring Libya PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.43000)) 
+
+(instance 
+ (MillionBarrelsPerDay 1.39000) ScalarInterval) 
+
+(productionAmountDuring Libya Petroleum-CrudeOil 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.39000)) 
+
+
+
+
+(query (findall (?FRACTION ?TIME)
+
+ (thereExists ?A1 
+ (thereExists ?A2 
+ (and 
+ (productionAmountDuring Libya PetroleumProduct ?TIME ?A1) 
+ (instance ?A1 ScalarInterval) 
+ (productionAmountDuring Libya Petroleum-CrudeOil ?TIME ?A2) 
+ (instance ?A2 ScalarInterval) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?A2 ?A1))))))))
+
+(answer 94.4056 1997)
+(answer 97.2028 1995) 
+ 
+(end_of_file)

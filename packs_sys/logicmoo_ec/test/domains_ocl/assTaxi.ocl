@@ -1,0 +1,176 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: Stefan Helmchen (C0416041)
+ *  Institution: University of Huddersfield
+ *  Date created: Mon Nov 27 10:35:43 GMT 2006
+ *  Date last modified: 2006/12/09 at 08:14:36 PM GMT
+ *  Description:
+ *    
+ * Object Life History : assTaxi.gfx
+ */
+
+domain_name(mytaxi).
+
+% Sorts
+sorts(primitive_sorts,[taxi,location,person,fuel]).
+
+% Objects
+objects(taxi,[taxi001,taxi002]).
+objects(location,[new_street,old_street,high_street,low_street,water_bridge,slope_street,cr_1,cr_2,cr_3,cr_4,cr_5,cr_6,cr_7,river_road,river_close,boat_rent,main_road,short_street]).
+objects(person,[bill,james,peter,jill,ayumi]).
+objects(fuel,[full,threequarter,half_full,onequarter,empty]).
+
+% Predicates
+predicates([
+    taxiState(taxi),
+    tLocation(taxi,location),
+    insideTaxi(person,taxi),
+    pLocation(person,location),
+    outsideTaxi(person),
+    connects(location,location),
+    usefuel(fuel,fuel),
+    fillUpFuel(fuel,fuel),
+    tFuel(taxi,fuel)]).
+
+% Object Class Definitions
+substate_classes(taxi,Taxi,[
+    [taxiState(Taxi),tLocation(Taxi,Location),tFuel(Taxi,Fuel)]]).
+substate_classes(person,Person,[
+    [insideTaxi(Person,Taxi),pLocation(Person,Location)],
+    [outsideTaxi(Person),pLocation(Person,Location)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    connects(cr_1,old_street),
+    connects(cr_1,slope_street),
+    connects(cr_1,water_bridge),
+    connects(cr_1,high_street),
+    connects(cr_2,low_street),
+    connects(cr_2,old_street),
+    connects(cr_3,new_street),
+    connects(cr_3,low_street),
+    connects(cr_4,high_street),
+    connects(cr_4,new_street),
+    connects(cr_5,water_bridge),
+    connects(cr_5,river_road),
+    connects(cr_5,short_street),
+    connects(cr_6,main_road),
+    connects(cr_6,river_road),
+    connects(cr_6,river_close),
+    connects(cr_7,main_road),
+    connects(cr_7,short_street),
+    connects(main_road,cr_7),
+    connects(short_street,cr_7),
+    connects(short_street,cr_5),
+    connects(main_road,cr_6),
+    connects(river_road,cr_5),
+    connects(river_road,cr_6),
+    connects(river_close,cr_6),
+    connects(river_close,boat_rent),
+    connects(boat_rent,river_close),
+    connects(water_bridge,cr_5),
+    connects(water_bridge,cr_1),
+    connects(high_street,cr_1),
+    connects(old_street,cr_1),
+    connects(high_street,cr_4),
+    connects(new_street,cr_4),
+    connects(new_street,cr_3),
+    connects(low_street,cr_3),
+    connects(low_street,cr_2),
+    connects(old_street,cr_2),
+    connects(slope_street,cr_3),
+    usefuel(full,threequarter),
+    usefuel(threequarter,half_full),
+    usefuel(half_full,onequarter),
+    usefuel(onequarter,empty),
+    fillUpFuel(empty,full)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(getOut(Taxi,Location,Person),
+    % prevail
+    [     se(taxi,Taxi,[taxiState(Taxi),tLocation(Taxi,Location)])],
+    % necessary
+    [     sc(person,Person,[insideTaxi(Person,Taxi),pLocation(Person,Location)]=>[outsideTaxi(Person),pLocation(Person,Location)])],
+    % conditional
+    []).
+operator(getIn(Taxi,Location,Person),
+    % prevail
+    [     se(taxi,Taxi,[taxiState(Taxi),tLocation(Taxi,Location)])],
+    % necessary
+    [     sc(person,Person,[outsideTaxi(Person),pLocation(Person,Location)]=>[insideTaxi(Person,Taxi),pLocation(Person,Location)])],
+    % conditional
+    []).
+operator(move(Taxi,LocationA,FuelA,LocationB,FuelB),
+    % prevail
+    [],
+    % necessary
+    [     sc(taxi,Taxi,[taxiState(Taxi),tLocation(Taxi,LocationA),tFuel(Taxi,FuelA),connects(LocationA,LocationB),usefuel(FuelA,FuelB)]=>[taxiState(Taxi),tLocation(Taxi,LocationB),tFuel(Taxi,FuelB)])],
+    % conditional
+    [     sc(person,Person,[insideTaxi(Person,Taxi),pLocation(Person,LocationA),connects(LocationA,LocationB)]=>[insideTaxi(Person,Taxi),pLocation(Person,LocationB)])]).
+operator(fillFuel(Taxi,LocationA,FuelA,FuelB),
+    % prevail
+    [],
+    % necessary
+    [     sc(taxi,Taxi,[taxiState(Taxi),tLocation(Taxi,LocationA),tFuel(Taxi,FuelA),fillUpFuel(FuelA,FuelB)]=>[taxiState(Taxi),tLocation(Taxi,LocationA),tFuel(Taxi,FuelB)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(person,jill,[outsideTaxi(jill),pLocation(jill,slope_street)]),
+     se(person,peter,[outsideTaxi(peter),pLocation(peter,water_bridge)])],
+    % INIT States
+    [
+     ss(person,bill,[outsideTaxi(bill),pLocation(bill,cr_4)]),
+     ss(person,ayumi,[outsideTaxi(ayumi),pLocation(ayumi,boat_rent)]),
+     ss(person,james,[outsideTaxi(james),pLocation(james,cr_7)]),
+     ss(person,peter,[outsideTaxi(peter),pLocation(peter,cr_1)]),
+     ss(person,jill,[outsideTaxi(jill),pLocation(jill,cr_3)]),
+     ss(taxi,taxi001,[taxiState(taxi001),tLocation(taxi001,low_street),tFuel(taxi001,threequarter)])]).
+planner_task(2,
+    % Goals
+    [
+     se(person,bill,[outsideTaxi(bill),pLocation(bill,water_bridge)]),
+     se(person,james,[outsideTaxi(james),pLocation(james,boat_rent)])],
+    % INIT States
+    [
+     ss(person,bill,[outsideTaxi(bill),pLocation(bill,cr_4)]),
+     ss(person,james,[outsideTaxi(james),pLocation(james,cr_7)]),
+     ss(person,peter,[outsideTaxi(peter),pLocation(peter,cr_1)]),
+     ss(person,jill,[outsideTaxi(jill),pLocation(jill,cr_3)]),
+     ss(person,ayumi,[outsideTaxi(ayumi),pLocation(ayumi,boat_rent)]),
+     ss(taxi,taxi001,[taxiState(taxi001),tLocation(taxi001,old_street),tFuel(taxi001,threequarter)]),
+     ss(taxi,taxi002,[taxiState(taxi002),tLocation(taxi002,main_road),tFuel(taxi002,full)])]).
+planner_task(3,
+    % Goals
+    [
+     se(person,bill,[outsideTaxi(bill),pLocation(bill,boat_rent)]),
+     se(person,james,[outsideTaxi(james),pLocation(james,boat_rent)]),
+     se(person,peter,[outsideTaxi(peter),pLocation(peter,boat_rent)]),
+     se(person,jill,[outsideTaxi(jill),pLocation(jill,boat_rent)]),
+     se(person,ayumi,[outsideTaxi(ayumi),pLocation(ayumi,water_bridge)]),
+     se(taxi,taxi001,[taxiState(taxi001),tLocation(taxi001,cr_2),tFuel(taxi001,empty)])],
+    % INIT States
+    [
+     ss(person,bill,[outsideTaxi(bill),pLocation(bill,cr_4)]),
+     ss(person,james,[outsideTaxi(james),pLocation(james,cr_7)]),
+     ss(person,peter,[outsideTaxi(peter),pLocation(peter,cr_1)]),
+     ss(person,jill,[outsideTaxi(jill),pLocation(jill,cr_3)]),
+     ss(person,ayumi,[outsideTaxi(ayumi),pLocation(ayumi,boat_rent)]),
+     ss(taxi,taxi001,[taxiState(taxi001),tLocation(taxi001,cr_2),tFuel(taxi001,half_full)]),
+     ss(taxi,taxi002,[taxiState(taxi002),tLocation(taxi002,river_road),tFuel(taxi002,onequarter)])]).

@@ -1,0 +1,1504 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FIXUPS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (multiWordString
+;;        ("free") AVI-TheWord CountNoun
+;;        (and
+;;            (isa ?AVI AVIFile)
+;;            (isa ?INST FreeThing)
+;;            (instantiationOfWork ?AVI ?INST)))
+;;
+;; =>
+;;
+;;
+;; (multiWordString
+;;   (TheList "free") AVI-TheWord CountNoun
+;;   (and
+;;     (isa :NOUN AVIFile)
+;;     (isa :NOUN FreeThing)))
+
+default mt: GeneralEnglishMt.
+F:
+ (implies 
+       (and 
+	   (not (equals ?WORD (WordWithPrefixFn ??FIRSTPREFIX ??BASE)))
+	   (isa ?ThePrefix NegativePrefix)
+	   (isa ?ThePrefix DeAdjectivalAffix)
+           (adjSemTrans ?WORD ?NUM ?FRAME ?TRANS))
+      (ist GeneralEnglishMt (adjSemTrans (WordWithPrefixFn ?ThePrefix ?WORD) ?NUM ?FRAME (not ?TRANS)))).
+
+;; (implies
+;;        (and
+;;            (isa ?THEPREFIX DeAdjectivalAffix)
+;;            (isa ?THEPREFIX NegativePrefix)
+;;            (adjSemTrans ?WORD ?NUM ?FRAME ?TRANS))
+;;        (or
+;;            (equals ?WORD
+;;                (WordWithPrefixFn ??FIRSTPREFIX ??BASE))
+;;            (ist GeneralEnglishMt
+;;                (adjSemTrans
+;;                    (WordWithPrefixFn ?THEPREFIX ?WORD) ?NUM ?FRAME
+;;                    (not ?TRANS)))))
+
+
+default Mt: BaseKB.  
+F: (implies (givenNames ?AGNT ?STRING) (isa ?AGNT Agent-Generic)).
+F: (implies (and (arityMin ?PRED ??ARITY)  (isa ?PRED Function-Denotational) )(isa ?PRED VariableArityFunction)).
+F: (implies (and (arityMin ?PRED ??ARITY)  (isa ?PRED Predicate) )(isa ?PRED VariableArityPredicate)).
+F: (implies (arityMax ?PRED ??ARITY) (isa ?PRED VariableArityRelation)).
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; IsaFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default Mt: BaseKB.        
+constant: IsaFn.
+isa: CollectionDenotingFunction UnaryFunction Function-Denotational.
+arity: 1.
+resultIsa: Collection.
+arg1Isa: Thing. 
+F: (functionCorrespondingPredicate-Generic IsaFn isa 2).
+F: (implies (isa ?INST ?COL) (equals (IsaFn ?INST) ?COL)).
+F: (isa ?INST (IsaFn ?INST)).
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; substituteFrameKeywords
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default Mt: BaseKB.        
+constant: substituteFrameKeywords.
+F: (isa substituteFrameKeywords Predicate).
+F: (arity substituteFrameKeywords 6).
+
+F: (comment substituteFrameKeywords "(substituteFrameKeywords +TEMPLATE +SUBJECT +EVENT +OBJECT +TARGET -FACTS)").
+
+F: (substituteFrameKeywords ?TEMPLATE ?SUBJECT ?EVENT ?OBJECT ?TARGET 
+              (SubstituteFormulaFn ?OBJECT :OBJECT 
+                   (SubstituteFormulaFn ?SUBJECT :SUBJECT 
+                       (SubstituteFormulaFn ?EVENT :ACTION 
+                           (SubstituteFormulaFn ?TARGET :OBLIQUE-OBJECT 
+                             (SubstituteFormulaFn ?SUBJECT :NOUN 
+                                (SubstituteFormulaFn (IsaFn ?SUBJECT) :REPLACE ?TEMPLATE))))))).
+
+
+                                                                                                                                                     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; E2C-Parses-CCW
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+constant: E2C-Parses-CCW.
+default mt: UniversalVocabularyMt.
+isa :  PublishedMaterial TextualPCW .
+
+default mt: BaseKB.
+contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW) .
+
+;;;default mt: TKB-FETSourceDocumentsMt.
+;;;contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW)  .
+
+                                                       
+constant: E2C-Parses-CCW.
+default mt: UniversalVocabularyMt.
+isa :  PublishedMaterial TextualPCW .
+
+default mt: UniversalVocabularyMt.
+constant: VersuTemplateParsingMt.
+isa: EnglishLexicalMicrotheory TemplateParsingMicrotheory.
+default mt: BaseKB.
+genlMt: RKFParsingMt.
+default mt: UniversalVocabularyMt.
+constant: nlTemplateCatagoryForInstance.
+isa: BinaryPredicate NLPredicate.
+arity: 2.
+F: (argsIsa nlTemplateCatagoryForInstance Collection).
+F: (arg2Genl nlTemplateCatagoryForInstance ParsingTemplateCategory).
+F: (transitiveViaArg nlTemplateCatagoryForInstance genls 1).
+;;;F: (transitiveViaArg nlTemplateCatagoryForInstance genls 2).
+
+default mt: VersuTemplateParsingMt.
+contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW) .
+
+;;;default mt: TKB-FETSourceDocumentsMt.
+;;;contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW)  .
+
+
+default mt: (ParseMtForSourceFn E2C-Parses-CCW).
+
+default mt: UniversalVocabularyMt.
+
+F: (denotation He-TheWord SubjectPronoun 0 
+       (PronounFn ThirdPerson-NLAttr Singular-NLAttr Masculine-NLAttr SubjectPronoun)).
+
+
+
+constant:  hypotheticSubjectVerbObjectPrepOblique .
+constant:  hypotheticSubjectVerbPrepObjectOblique.
+constant:  hypotheticSubjectVerbObjectPrep .
+constant:  hypotheticSubjectVerbPrepObject .
+constant:  hypotheticSubjectVerbObject .
+constant:  hypotheticSubjectVerbPrep .
+constant:  hypotheticSubjectVerb .
+
+
+F: (and
+(isa hypotheticSubjectVerbObjectPrepOblique QuintaryPredicate)
+(isa hypotheticSubjectVerbPrepObjectOblique QuintaryPredicate)
+(isa hypotheticSubjectVerbObjectPrep QuaternaryPredicate)
+(isa hypotheticSubjectVerbPrepObject QuaternaryPredicate)
+(isa hypotheticSubjectVerbObject TernaryPredicate)
+(isa hypotheticSubjectVerbPrep TernaryPredicate)
+(isa hypotheticSubjectVerb BinaryPredicate)).
+
+
+
+;; default mt: UniversalVocabularyMt.
+;; constant: hypotheticDenotation.
+;; isa: TernaryPredicate.
+;; F: (isa hypotheticDenotation TernaryPredicate).
+;; F: (arg1Isa hypotheticDenotation IndeterminateTerm).
+;; F: (arg2Isa hypotheticDenotation TermPhrasesConstraint).
+;; F: (arg3Isa hypotheticDenotation LexicalWord).
+;; default mt: UniversalVocabularyMt.
+;; F: (implies
+;;        (and
+;;            (posOfPhraseType ?PHRASETYPE ?POSMASTER)
+;;            (genls  ?POS ?POSMASTER)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (hypotheticDenotation ?HYPOTHETIC ?PHRASETYPE ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;;         ;F: (hypotheticDenotation The-Slow-Car Slow-TheWord Adjective)
+;;;F: (hypotheticDenotation The-Slow-Car Car-TheWord Noun)
+;;
+;;;hypotheticPartOfSpeech         /LexicalWord
+;;;CycLReifiableDenotationalTerm NLWordForm SpeechPart
+;;
+;;
+;; default mt: BaseKB.
+;; constant: lexicallySubsumed.
+;; isa: BinaryPredicate.
+;; arg1Isa: Thing.
+;; arg2Isa: Thing.
+;; arg1Format: SetTheFormat.
+;; arg2Format: SetTheFormat.
+;; default mt: UniversalVocabularyMt.
+;; arg1Format: SetTheFormat.
+;; arg2Format: SetTheFormat.
+;; default mt: BaseKB.
+;; default mt: BaseKB.
+;; genlOrSpecPreds: genls isa equals posOfPhraseType nlPhraseTypeForTemplateCategory.
+;; default mt: BaseKB.
+;; F: (implies  (genlOrSpecPreds lexicallySubsumed ?PRED)
+;;      (ist BaseKB  (implies (?PRED ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2)))).
+;;
+;; F:  (and (implies (posOfPhraseType ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;; (backchainEncouraged lexicallySubsumed)
+;;  (implies (isa ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (genls ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (equals ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (nlPhraseTypeForTemplateCategory ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))).
+;;
+;; default mt: BaseKB.
+;;
+;; F: (lexicallySubsumed ProperNoun Noun).
+;; F: (implies
+;;        (and
+;;            (hypotheticDenotation ?HYPOTHETIC ?POSSOME ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (lexicallySubsumed ?POS ?POSSOME))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;;
+;;;F: (hypotheticDenotation The-Slow-Car Slow-TheWord Adjective)
+;;;F: (hypotheticDenotation The-Slow-Car Car-TheWord Noun)
+;;
+;;;hypotheticPartOfSpeech         /LexicalWord
+;;;CycLReifiableDenotationalTerm NLWordForm SpeechPart
+;;
+;; default mt: UniversalVocabularyMt.
+;; F: (implies
+;;        (and
+;;            (posOfPhraseType ?PHRASETYPE ?POSMASTER)
+;;            (genls  ?POS ?POSMASTER)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (hypotheticDenotation ?HYPOTHETIC ?PHRASETYPE ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;; default mt: (ParseMtForSourceFn E2C-Parses-CCW).
+;;
+;; F:   (implies (and (hypotheticDenotation ?HYPOTHETIC ?POS ?THEWORD) (denotation ?THEWORD ?POS ?N0 ?WHAT)) (isa ?HYPOTHETIC ?WHAT)).
+;;;F:   (implies (and (hypotheticDenotation ?HYPOTHETIC Pronoun ?THEWORD) (denotation ?THEWORD SubjectPronoun ?N0 ?WHAT)) (equals ?HYPOTHETIC ?WHAT)).
+;;;F:   (implies (and (hypotheticDenotation ?HYPOTHETIC ?Pronoun ?THEWORD) (denotation ?THEWORD ObjectPronoun ?N0 ?WHAT)) (equals ?HYPOTHETIC ?WHAT)).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; VersuCyclifyFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+default mt: UniversalVocabularyMt.
+constant: VersuCyclifyFn.
+isa:  VariableArityFunction EvaluatableFunction  .
+resultIsa:  (ListOfTypeFn CycLSentence)  .
+arg1QuotedIsa:  SubLString  .
+F: (evaluationDefn VersuCyclifyFn (SubLQuoteFn 'VERSU-CYCLIFY)).
+
+F:(comment  VersuCyclifyFn  "A function mapping English string to ordered lists of CycL interpretations. (evaluate ?W (VersuCyclifyFn \"I know you\" ))" ) .
+F:(exampleSentences  VersuCyclifyFn  
+  (#$evaluate ?X 
+  (#$VersuCyclifyFn "Two small curved ramps on either side of the
+room lead north to the lower part of the bridge, and a large circular
+skylight shows the space outside the ship"))).
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  paraphrasePattern / ParaphrasePatternFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: ReformulatorTestCase.
+isa: KBContentTestSpecificationType.
+genls: NLGenerationIntegrityTest.
+constant: paraphrasePattern.
+isa: FunctionalSlot BinaryPredicate TimeDependentRelation CycLReformulationRulePredicate StrictlyFunctionalPredicate CycLReformulationRulePredicate 
+  TransitiveBinaryPredicate IntangibleObjectRelatingPredicate ReformulatorDirectivePredicate DefaultMonotonicPredicate .
+genlPreds: reformulatorRule.
+constant: ParaphrasePatternFn.
+isa: EvaluatableFunction UnaryFunction TermMacroFunction NLGenerationFunction.
+genlFunctions: (FunctionToArg 2 paraphrasePattern).
+
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO functionCorrespondsToPredicate: (paraphrasePattern 2).;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+
+resultQuotedIsa: CycLDenotationalTerm.
+constant: paraphrasePattern.
+conceptuallyRelated: rewriteOf.
+argsQuotedIsa: CycLDenotationalTerm.
+afterAdding :  (SubLQuoteFn 'CYC-ADD-REFORMULATION-ASSERTION).
+afterRemoving :  (SubLQuoteFn 'CYC-REMOVE-REFORMULATION-ASSERTION).
+strictlyFunctionalInArgs: 2.
+canonicalizerDirectiveForAllArgs: AllowGenericArgVariables LeaveSomeTermsAtEL.
+F: (interArgIsa paraphrasePattern 1 NLPhrase 2 TemplateParsingSyntacticConstraint).
+F: (interArgGenls paraphrasePattern 1 NLPhraseType 2 ParsingTemplateCategory).
+F: (interArgIsa paraphrasePattern 1 SubLString 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 EnglishWord 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 SententialConstituent 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 CycLVariable 2 CycLVariable).
+F: (implies (interArgIsa1-2 paraphrasePattern ?C ?CC) (interArgResultIsa ParaphrasePatternFn 1 ?C ?CC)).
+F: (implies (interArgGenls paraphrasePattern 1 ?C 2 ?CC) (interArgResultGenl ParaphrasePatternFn 1 ?C ?CC)).
+F: (implies (?PRED paraphrasePattern ?VAL) (?PRED ParaphrasePatternFn ?VAL)).
+;;;F: (paraphrasePattern (ParaphrasePatternFn ?ARG1) ((FunctionToArg 2 paraphrasePattern) ?ARG1)).
+F: (paraphrasePattern (ParaphraseFn ?ARG1) (ParaphrasePatternFn ?ARG1)).
+inTopic:  SubcategorizationFrames-Lexicon-Topic.
+
+default mt: VersuTemplateParsingMt.
+  F: (and
+  (paraphrasePattern NLSentence STemplate)
+  (paraphrasePattern NounPhrase NPTemplate)
+  (paraphrasePattern (PhraseFn-Bar1 Noun) NPTemplate)
+  (paraphrasePattern (ParaphraseFn-Np ?ARG1) (ParaphrasePatternFn ?ARG1))
+
+  (paraphrasePattern (ConcatenatePhrasesFn . ?ARG1) (ParaphrasePatternFn (TheList . ?ARG1)))
+  (paraphrasePattern (BestStringOfNLPhraseFn ?ARG1) (ParaphrasePatternFn (StringTokenizeFn ?ARG1 " ")))
+ ;;VariableArityFunction NLFunction 
+  (paraphrasePattern (TheList ?ARG1) (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (TheList . ?ARGS) (NLPatternList (MapFunctionOverList ParaphrasePatternFn (TheList . ?ARGS))))
+  (paraphrasePattern (ParaphrasePatternFn (TheList ?ARG1))(ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (ParaphrasePatternFn (TheList . ?ARGS))(NLPatternList (MapFunctionOverList ParaphrasePatternFn (TheList . ?ARGS))))).
+
+
+
+default mt: VersuTemplateParsingMt.
+F: (and
+  (paraphrasePattern (TheDisjunctiveCoordinationSet ?ARG1)  (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (TheDisjunctiveCoordinationSet ?ARG1 ?ARG2 . ?ARGS) 
+      (NLPatternList (ParaphrasePatternFn ?ARG1) (OptionalSome "," "or" "unless" "with")
+                (ParaphrasePatternFn (TheDisjunctiveCoordinationSet ?ARG2 . ?ARGS))))
+
+  (paraphrasePattern (TheCoordinationSet ?ARG1)  (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (TheCoordinationSet ?ARG1 ?ARG2 . ?ARGS) (NLPatternList (ParaphrasePatternFn ?ARG1) (OptionalSome "," "and" "also" "with")
+                                                                            (ParaphrasePatternFn (TheCoordinationSet ?ARG2 . ?ARGS))))
+
+  (paraphrasePattern (ParaphraseFn-NpAndNp ?ARG1 ?ARG2) (NLPatternList (ParaphrasePatternFn ?ARG1) (OptionalSome "," "and" "also" "with")
+                                                                            (ParaphrasePatternFn (TheCoordinationSet ?ARG2 . ?ARGS))))
+
+  (paraphrasePattern (AndFn-Binary ?ARG1 ?ARG2) (NLPatternList (ParaphrasePatternFn ?ARG1) (OptionalSome "," "and" "also" "with")
+                                                                            (ParaphrasePatternFn (TheCoordinationSet ?ARG2 . ?ARGS))))
+
+  (paraphrasePattern (QuotedParaphraseFn ?ARG1)
+       (NLPatternList (OptionalOne TemplateDoubleQuoteMarker TemplateSingleQuoteMarker)(ParaphrasePatternFn ?ARG1) (OptionalOne TemplateDoubleQuoteMarker TemplateSingleQuoteMarker)))
+
+  (paraphrasePattern (ConditionalPhraseFn ??ANYTHING ?ARG1 ?ARG2)
+       (RequireOne (ParaphrasePatternFn ?ARG1) (ParaphrasePatternFn ?ARG2)))
+
+  (paraphrasePattern (WordFormFn ?WORD) (NLPattern-Word ?WORD  NLWordForm))
+
+  (paraphrasePattern (ParaphraseFn-Possessive ?ARG1) (NLPattern-Template PossessiveTemplate (ParaphrasePatternFn ?ARG1)))
+  (paraphrasePattern (ParaphraseFn-Constrained regularDegree ?ARG2) (NLPatternList (NLPattern-Template AdjPTemplate (ParaphrasePatternFn ?ARG2))))
+  (paraphrasePattern (ParaphraseFn-Constrained ?ARG1 ?ARG2) (ParaphrasePatternFn ?ARG2) )
+  (paraphrasePattern (NbarHeadedByNounFormFn ?ARG1 ?ARG2 ?ARG3) (NLPatternList (NLPattern-Word (ParaphrasePatternFn ?ARG1) Noun) (ParaphrasePatternFn  ?ARG3)))
+  (paraphrasePattern (WordFormFn-Constrained ?CONSTRAINT ?WORD ) (NLPatternList (NLPattern-Word ?WORD  (ParaphrasePatternFn ?CONSTRAINT))))
+  (paraphrasePattern (PhraseFn-TensedDefaultPast ?ARG1 ?ARG2)(NLPatternList (ParaphrasePatternFn ?ARG1)(ParaphrasePatternFn ?ARG2)))
+  (paraphrasePattern (RepeatForSubsequentArgsFn ??ANYTHING ?ARG2) (ParaphrasePatternFn ?ARG2))
+  (paraphrasePattern (PhraseFn-Constrained (:and ?ARG1 (:isa TermPhrasesConstraintPredicate)) (ParaphraseFn ?ARG2))
+        (NLPattern-Term (ParaphrasePatternFn ?ARG2) (ParaphrasePatternFn (ParaphrasePatternFn ?ARG1))))
+
+  (implies (partOfSpeech ?WORD ?POS ?STRING)(paraphrasePattern (BestStringOfNLPhraseFn ?STRING) (NLPattern-Word ?WORD ?POS)))
+
+ ;;(paraphrasePattern (PhraseFn-Constrained (:bind NLTYPE)(:bind SYNTAX)))
+  (paraphrasePattern (PhraseFn-Constrained ?ARG1 ?ARG2) (ParaphrasePatternFn ?ARG2))
+  (paraphrasePattern (StringMentionFn ?VAR)(NLPattern-Template StringTemplate ?VAR))
+
+  (paraphrasePattern (HeadWordOfPhraseFn ?WORD) (ParaphrasePatternFn ?WORD))
+
+  (paraphrasePattern (GenTemplateRecipeOmitsArgFn ??OMITTEDKW ?ARG2) (ParaphrasePatternFn ?ARG2))
+
+  (paraphrasePattern (VerbForSubjectFn ?WORD ??ANYTHING) (NLPattern-Word ?WORD Verb))
+  (paraphrasePattern (Pp-PNpFn ?PREP ?ARG2) (NLPatternList (NLPattern-Word ?PREP Preposition) (ParaphrasePatternFn ?ARG2)))
+
+  (paraphrasePattern (Sentence-NpHasNpAsNbarFn ?ARG1 ?ARG2 ?ARG3) 
+    (NLPatternList (ParaphrasePatternFn ?ARG1) (BestStringOfNLPhraseFn "has") 
+    (ParaphrasePatternFn ?ARG2) 
+    (BestStringOfNLPhraseFn "as") (ParaphrasePatternFn  ?ARG3)))).
+
+;;; ---------------------------------------------------------
+;;; ---------------------------------------------------------
+;;; ---------------------------------------------------------
+
+
+F: (and
+
+   (paraphrasePattern (NPIsXP-NLSentenceFn ?ARG1 ?ARG2)
+         (NLPatternList (ParaphrasePatternFn ?ARG1) (BestStringOfNLPhraseFn "is")  (ParaphrasePatternFn ?ARG2)))
+
+
+    (paraphrasePattern  (DefiniteNbarPPFn  ?ARG1 ?ARG2  ?ARG3)       
+         (ParaphrasePatternFn 
+          (Np-DetNbarFn-Definite 
+            (ConcatenatePhrasesFn 
+               (HeadWordOfPhraseFn (ParaphrasePatternFn ?ARG1) )
+                (BestStringOfNLPhraseFn (ParaphrasePatternFn ?ARG2) )
+               (PhraseFn-Constrained NounPhrase (ParaphrasePatternFn  ?ARG3))))))
+    (paraphrasePattern  (Np-DetNbarFn-Indefinite   ?ARG1 ?ARG2  ?ARG3)
+         (ParaphrasePatternFn 
+        (Np-DetNbarFn-Indefinite 
+            (ConcatenatePhrasesFn 
+               (HeadWordOfPhraseFn (ParaphrasePatternFn ?ARG1) )
+                (BestStringOfNLPhraseFn (ParaphrasePatternFn ?ARG2) )
+               (PhraseFn-Constrained NounPhrase (ParaphrasePatternFn  ?ARG3))))))
+   (paraphrasePattern (BestIndefiniteNounPPFn ?ARG1 ?ARG2  ?ARG3)
+      (ParaphrasePatternFn 
+        (Np-DetNbarFn 
+          (ParaphraseFn Indefinite-NLAttr) 
+           (ConcatenatePhrasesFn 
+             (HeadWordOfPhraseFn 
+              (WordFormFn-Constrained CountNoun (ParaphrasePatternFn ?ARG1)))
+                (BestStringOfNLPhraseFn (ParaphrasePatternFn ?ARG2))
+           (ParaphrasePatternFn  (PhraseFn-Constrained NounPhrase  (ParaphrasePatternFn  ?ARG3)))))))
+   (paraphrasePattern (Np-DetNPpFn-Definite ?ARG1 ?ARG2  ?ARG3)
+         (ParaphrasePatternFn 
+        (Np-DetNbarFn-Definite (ConcatenatePhrasesFn 
+             (HeadWordOfPhraseFn 
+              (WordFormFn-Constrained CountNoun (ParaphrasePatternFn ?ARG1)))
+                (BestStringOfNLPhraseFn (ParaphrasePatternFn ?ARG2))
+                (PhraseFn-Constrained NounPhrase  (ParaphrasePatternFn  ?ARG3))))))
+
+  (paraphrasePattern (HeadVerbForInitialSubjectFn ?ARG1) (NLPattern-Word ?ARG1 Verb))
+  (paraphrasePattern (Np-DetNbarFn-Indefinite ?ARG1)  (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (Np-DetNbarFn-Definite ?ARG1)  (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (Np-DetNbarFn ?ARG1 ?ARG2)(RequireOne (ParaphrasePatternFn ?ARG1) (ParaphrasePatternFn ?ARG2))).
+
+(implies
+ (and
+  (interArgIsa1-2 paraphrasePattern ?COL ?COL)
+  (quotedIsa ?VAR ?COL))
+  (paraphrasePattern ?VAR ?VAR))
+
+
+(implies
+ (and
+  (interArgIsa1-2 paraphrasePattern ?COL ?COL)
+  (isa ?VAR ?COL))
+  (paraphrasePattern ?VAR ?VAR))
+
+
+  ).
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+default mt: VersuTemplateParsingMt
+F: (comment nlTemplateCatagoryForInstance "(nlTemplateCatagoryForInstance ScalarInterval QuantityTemplate) say QuantityTemplate represents the best set of templates for parsing an instance of subclass of a ScalarInterval)").
+F: (nlTemplateCatagoryForInstance Collection NPTemplate).
+F: (nlTemplateCatagoryForInstance ScalarInterval QuantityTemplate).
+F: (nlTemplateCatagoryForInstance Quantity AdjPTemplate).
+F: (nlTemplateCatagoryForInstance CharacterString StringTemplate).
+F: (nlTemplateCatagoryForInstance ModalIndex DateTemplate).
+F: (nlTemplateCatagoryForInstance Integer NumberTemplate).
+F: (nlTemplateCatagoryForInstance NumericInterval NumberTemplate).
+;;
+;; (define CYCL-NLTEMPLATEEXPRESSION? (s) (ret (cor (CYCL-SENTENCE-ASSERTIBLE? s)(fort-p s)(nart-p s) (consp s) T (cand (consp s) (fort-p (car s))))))
+;; (define CYCL-NLTEMPLATEEXPRESSION? (&rest s) (ret T))
+;; (define CYCL-SENTENCE-ASSERTIBLE? (&rest s) (ret T))
+;; (define CYCL-EXPRESSION? (&rest s) (ret T))
+;;;;(fi-unassert '(defnIff NLTemplateExpression CYCL-SENTENCE-ASSERTIBLE?) UniversalVocabularyMt)
+;;;;(fi-unassert '(defnIff NLTemplateExpression (SubLQuoteFn CYCL-SENTENCE-ASSERTIBLE?)) UniversalVocabularyMt)
+;;;;(fi-unassert '(defnIff NLTemplateExpression (SubLQuoteFn CYCL-NLTemplateExpression?)) UniversalVocabularyMt)
+;;;;(fi-unassert '(defnIff NLTemplateExpression (SubLQuoteFn 'CYCL-NLTemplateExpression?)) UniversalVocabularyMt)
+;;;;(fi-assert '(defnIff NLTemplateExpression (SubLQuoteFn CYCL-NLTEMPLATEEXPRESSION?)) UniversalVocabularyMt)
+;; (fi-assert '(quotedDefnSufficient NLTemplateExpression (SubLQuoteFn CYCL-NLTEMPLATEEXPRESSION?)) LogicalTruthImplementationMt)
+;; (fi-assert '(defnSufficient NLTemplateExpression (SubLQuoteFn CYCL-NLTEMPLATEEXPRESSION?)) LogicalTruthImplementationMt)
+;;;;(fi-assert '(quotedDefnSufficient NLTemplateExpression (SubLQuoteFn CYCL-NLTEMPLATEEXPRESSION?)) UniversalVocabularyMt)
+;;;;(fi-assert '(defnSufficient NLTemplateExpression (SubLQuoteFn CYCL-NLTEMPLATEEXPRESSION?)) UniversalVocabularyMt)
+;; default mt: UniversalVocabularyMt.
+;; F: (quotedDefnSufficient NLTemplateExpression (SubLQuoteFn CYCL-NLTemplateExpression?)).
+;;
+;;;;(information-using -> story-frames <-> agenda-creation <-> agenda-processing  ) <-> have-a-conversation-about
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; NLTemplateForInstanceFn / nlTemplateForInstance
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: nlTemplateForInstance.
+isa:  TernaryPredicate FunctionalPredicate.
+arity: 3.
+functionalInArgs: 3.
+interArgGenls: (1 ParsingTemplateCategory 3 ParsingTemplateCategory).
+arg1Genl: ParsingTemplateCategory.
+arg3Genl: ParsingTemplateCategory.
+
+constant: NLTemplateForInstanceFn.
+isa:  BinaryFunction ReifiableFunction TotalFunction SubcollectionFunction.
+functionCorrespondingPredicate-Canonical: (nlTemplateForInstance 3).
+;;;isa: ReifiableFunction VariableArityFunction TotalFunction TermMacroFunction CollectionDenotingFunction NLFunction.
+arity: 2.
+skolemizeForward.
+preservesGenlsInArg: 1.
+resultGenl: ParsingTemplateCategory.
+resultGenlArg: 1.
+resultIsa: LinguisticObjectType.
+F: (equiv (?PRED NLTemplateForInstanceFn ?ARG2)(?PRED nlTemplateForInstance ?ARG2)).
+F: (equiv (interArgGenls nlTemplateForInstance ?N ?C 3 ?CC) (interArgResultGenl NLTemplateForInstanceFn ?N ?C ?CC)).
+F: (equiv (interArgIsa nlTemplateForInstance ?N ?C 3 ?CC) (interArgResultIsa NLTemplateForInstanceFn ?N ?C ?CC)).
+F: (nlTemplateForInstance ?TEMPLATE ?INSTANCE (NLTemplateForInstanceFn ?TEMPLATE ?INSTANCE)).
+F: (equiv (nlTemplateForInstance ?TEMPLATE ?INSTANCE (NLTemplateForInstanceFn ?TEMPLATE ?INSTANCE)) (genls (NLTemplateForInstanceFn ?TEMPLATE ?INSTANCE) ?TEMPLATE)).
+
+
+default mt: BaseKB.
+F: (salientAssertions functionCorrespondingPredicate-Canonical 
+ (implies 
+(and 
+  (functionCorrespondingPredicate-Canonical ?InstanceFn ?Instance ?ARITY)
+  (arity ?Instance ?ARITY))
+ (and 
+(forwardReificationRule ?InstanceFn 
+  (equiv (?PRED ?InstanceFn ?ARG2)(?PRED ?Instance ?ARG2)))
+(forwardReificationRule ?InstanceFn 
+  (equiv (interArgGenls ?Instance ?N ?C ?ARITY ?CC) (interArgResultGenl ?InstanceFn ?N ?C ?CC)))
+(forwardReificationRule ?InstanceFn 
+  (equiv (interArgIsa ?Instance ?N ?C ?ARITY ?CC) (interArgResultIsa ?InstanceFn ?N ?C ?CC))))
+(forwardReificationRule ?InstanceFn 
+  (equiv (?PRED ?InstanceFn ?ARG2)(?PRED ?Instance ?ARG2)))
+(forwardReificationRule ?InstanceFn 
+  (equiv (interArgGenls ?Instance ?N ?C ?ARITY ?CC) (interArgResultGenl ?InstanceFn ?N ?C ?CC)))
+(forwardReificationRule ?InstanceFn 
+  (equiv (interArgIsa ?Instance ?N ?C ?ARITY ?CC) (interArgResultIsa ?InstanceFn ?N ?C ?CC)))
+)).
+
+;; (templates-for "I")
+
+Function : TheResultOfParsing
+
+Bookkeeping Assertions : 
+
+(myCreationTime TheResultOfParsing 20000924) in BookkeepingMt
+
+GAF Arg : 1
+
+Mt : UniversalVocabularyMt
+isa :  VariableArityFunction UnreifiableFunction NLFunction  
+
+Mt : BookkeepingMt
+quotedIsa :  NLTerm  
+
+Mt : UniversalVocabularyMt
+resultIsa :  Thing  
+argsIsa :  Thing  
+arg1Isa :  CharacterString  
+
+Mt : TemplateParsingMt
+arg1Isa :  CharacterString  
+
+Mt : UniversalVocabularyMt
+arg2Isa :  List  
+
+Mt : TemplateParsingMt
+arg2Isa :  List  
+
+Mt : UniversalVocabularyMt
+arg3Genl :  ParsingTemplateCategory  
+
+Mt : TemplateParsingMt
+arg3Genl :  ParsingTemplateCategory  
+
+Mt : UniversalVocabularyMt
+arg4QuotedIsa :  CycLSentence  
+
+Mt : TemplateParsingMt
+arg4QuotedIsa :  CycLSentence  
+
+Mt : UniversalVocabularyMt
+(argGenl TheResultOfParsing 3 ParsingTemplateCategory)
+
+Mt : TemplateParsingMt
+(argGenl TheResultOfParsing 3 ParsingTemplateCategory)
+
+Mt : UniversalVocabularyMt
+(argIsa TheResultOfParsing 2 List)
+(argIsa TheResultOfParsing 1 CharacterString)
+Mt : TemplateParsingMt
+(argIsa TheResultOfParsing 2 List)
+(argIsa TheResultOfParsing 1 CharacterString)
+Mt : UniversalVocabularyMt
+(argQuotedIsa TheResultOfParsing 4 CycLSentence)
+Mt : TemplateParsingMt
+(argQuotedIsa TheResultOfParsing 4 CycLSentence)
+arityMin :  2  
+comment :  "(TheResultOfParsing <string> args) is used in parsing templates to mean that whatever string might mean in this context is to be substituted for the whole functional expession. This function is not meant to be used in inference."  
+Mt : EnglishParaphraseMt
+(genFormat TheResultOfParsing "[~a]" 
+       (TheList 1))
+Mt : MySentientKEIrrelevanceForQuestionAnsweringMt
+(keIrrelevantTerm-InternalCycTerm TheResultOfParsing)
+Mt : UniversalVocabularyMt
+quotedArgument :  4  
+
+
+
+deafult mt: RKFParsingMt
+  F: (termTemplate-Reln NPTemplate ?MAX
+           (NLPatternList 
+               (NLPattern-Agr :VAR 
+                   (Kappa 
+                       (?W ?S) 
+                       (and 
+                           (genls ?COL ?MAX) 
+                           (termPhrases ?COL CountNoun ?S)))))
+           (Simply (The ?COL))).
+
+'(termTemplate-Reln NPTemplate VariableFn 
+       (NLPatternList 
+           (RequireOne "what") 
+           (NLPattern-Template NBarTemplate :ARG2)) 
+
+
+
+F: (argIsa NLTemplateForInstanceFn 2 Collection).
+F: (comment NLTemplateForInstanceFn "(NLTemplateForInstanceFn NPTemplate Person) represents the best set of templates for parsing instances of Person into like \"Bob\" \"people\" \"man\")").
+F: (comment nlTemplateForInstance "(nlTemplateForInstance NPTemplate Person ?TEMPLATEs) represents the best set of ?TEMPLATEs for parsing instances of noun phrase templates to Person into like \"Bob\" \"people\" \"man\")").
+default mt: EnglishTemplateMt.
+F: (equiv (nlTemplateForInstance ?TEMPLATE ?THING (NLTemplateForInstanceFn ?TEMPLATE ?THING)) (genls (NLTemplateForInstanceFn ?TEMPLATE ?THING) ?TEMPLATE)).
+F: (termTemplate (NLTemplateForInstanceFn NPTemplate ?MAX) 
+       (NLPatternList 
+           (NLPattern-Agr :VAR (Kappa (?W ?S) (and (genls ?COL ?MAX) (termPhrases ?COL ?PCR ?STRING))))) (InstanceNamedFn ?COL :VAR)).
+F: (implies (nlTemplateForInstance ?TEMPLATE ?THING (NLTemplateForInstanceFn ?TEMPLATE ?THING))
+      (termTemplate-Test ?TEMPLATE 
+       (NLTemplateForInstanceFn ?TEMPLATE ?THING) 
+       (NLPatternList 
+          (NLPattern-Template ?TEMPLATE :VAR))
+       (InstanceNamedFn ?THING :VAR)
+       (semanticTest :VAR (TheSetOf ?X (isa ?X ?THING))))).
+F: (nlTemplateForInstance QuantityTemplate ScalarInterval QuantityTemplate).
+F: (nlTemplateForInstance StringTemplate CharacterString  StringTemplate).
+default mt: EnglishTemplateMt.
+F: (nlTemplateForInstance ?TEMPLATE ?THING  (NLTemplateForInstanceFn ?TEMPLATE ?THING)).
+F: (nlTemplateForInstance NPTemplate ?THING  (NLTemplateForInstanceFn NPTemplate ?THING)).
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; NLTemplateForPatternFn / nlTemplateForPattern
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: nlTemplateForPattern.
+isa:  TernaryPredicate FunctionalPredicate.
+arity: 3.
+functionalInArgs: 3.
+interArgGenls: (1 ParsingTemplateCategory 3 ParsingTemplateCategory).
+arg1Genl: ParsingTemplateCategory.
+arg3Genl: ParsingTemplateCategory.
+
+constant: NLTemplateForPatternFn.
+isa:  BinaryFunction ReifiableFunction TotalFunction SubcollectionFunction.
+functionCorrespondingPredicate-Canonical: (nlTemplateForPattern 3).
+;;;isa: ReifiableFunction VariableArityFunction TotalFunction TermMacroFunction CollectionDenotingFunction NLFunction.
+arity: 2.
+skolemizeForward.
+preservesGenlsInArg: 1.
+resultGenl: ParsingTemplateCategory.
+resultGenlArg: 1.
+resultIsa: LinguisticObjectType.
+F: (equiv (?PRED NLTemplateForPatternFn ?ARG2)(?PRED nlTemplateForPattern ?ARG2)).
+F: (equiv (interArgGenls nlTemplateForPattern ?N ?C 3 ?CC) (interArgResultGenl NLTemplateForPatternFn ?N ?C ?CC)).
+F: (equiv (interArgIsa nlTemplateForPattern ?N ?C 3 ?CC) (interArgResultIsa NLTemplateForPatternFn ?N ?C ?CC)).
+F: (nlTemplateForPattern ?TEMPLATE ?PATTERN (NLTemplateForPatternFn ?TEMPLATE ?PATTERN)).
+F: (equiv (nlTemplateForPattern ?TEMPLATE ?PATTERN (NLTemplateForPatternFn ?TEMPLATE ?PATTERN)) (genls (NLTemplateForPatternFn ?TEMPLATE ?PATTERN) ?TEMPLATE)).
+
+
+F: (coExtensional (NLTemplateForPatternFn ?TEMPLATE (NLPatternList (NLPattern-Template ?TEMPLATE ??KW ))) ?TEMPLATE).
+F: (arg2Isa NLTemplateForPatternFn TemplateParsingSyntacticConstraint).
+F: (totalFunctionOn NLTemplateForPatternFn TemplateParsingSyntacticConstraint).
+F: (comment NLTemplateForPatternFn "(NLTemplateForPatternFn NPTemplate (NLPatternList (NLPattern-Exact \"Joe\"))) represents a template catagory that can only parse parse \"Joe\"").
+F: (termTemplate (NLTemplateForPatternFn ?TEMPLATE ?PATTERN) ?PATTERN  (Simply :DENOT)).
+
+
+;;;(ke-unassert-now '(isa NLTemplateForPatternFn ReifiableFunction) UniversalVocabularyMt)
+;;;(ke-unassert-now '(isa NLTemplateForInstanceFn ReifiableFunction) UniversalVocabularyMt)
+;;;(ke-unassert-now '(isa NLTemplateForPatternFn TermMacroFunction) UniversalVocabularyMt)(ke-unassert-now '(isa NLTemplateForInstanceFn TermMacroFunction) UniversalVocabularyMt)
+
+   
+
+
+;;;(ke-assert-now '(implies (givenNames ?AGNT ?STRING) (isa ?AGNT Agent-Generic)) *mt* ':DEFAULT :FORWARD)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  NLPredicateConstraintFn
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: NLPredicateConstraintFn.
+isa: VariableArityFunction TermMacroFunction PredicateDenotingFunction.
+resultIsa: TermPhrasesConstraintPredicate BinaryPredicate NLSyntacticPredicate.
+arityMin: 2.
+resultArity: 2.
+F: (resultArgIsa NLPredicateConstraintFn 1 LexicalWord).
+F: (resultArgIsa NLPredicateConstraintFn 2 CharacterString).
+arg1QuotedIsa: CycLVariableList.
+arg2Isa: NLTemplateExpression.
+F: (arg2QuotedIsa (NLPredicateConstraintFn ??VARS ??EXPRESSION) SubLString).
+F: (predicateConventionMt (NLPredicateConstraintFn ??VARS ??EXPRESSION) VersuTemplateParsingMt).
+F: (expansion NLPredicateConstraintFn (Kappa (:ARG1) :ARG2)).
+default mt: VersuTemplateParsingMt.
+
+
+;;(implies 
+;;       (and 
+;;           (isa ?COLOR1 Color) 
+;;           (unknownSentence 
+;;               (genls ?COLOR1 ?COLOR2)) 
+;;           (unknownSentence 
+;;               (genls ?COLOR2 ?COLOR1)) 
+;;           (isa ?COLOR2 Color) 
+;;           (unknownSentence 
+;;               (thereExists ?SPEC 
+;;                   (and 
+;;                       (genls ?SPEC ?COLOR1) 
+;;                       (genls ?SPEC ?COLOR2))))) 
+;;       (disjointWith ?COLOR1 ?COLOR2))
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; predicateCatFrameTypes
+;;;;;
+;;;;; Sentence
+;;; default mt: UniversalVocabularyMt.
+;;; constant:  predicateCatFrameTypes.
+;;; isa: BinaryPredicate.
+;;;;;arg1Isa: NLSemanticPredicate.
+;;;;;arg2Isa: SubcategorizationFrame.
+;;;;;arg1Isa: NLSemanticPredicate.
+;;;;;arg2Isa: SubcategorizationFrame.
+;;; arity: 2.
+;;; F: (predicateConventionMt predicateCatFrameTypes VersuTemplateParsingMt).
+;;; default mt: VersuTemplateParsingMt.
+;;; F:
+;;;    (implies
+;;;     (and (semTransArg ?PRED 4)(?PRED ??WORD ??NUM ?FRAME ??CYCL))
+;;;     (ist VersuTemplateParsingMt (predicateCatFrameTypes ?PRED ?FRAME))).
+;;;
+;;; default mt: BaseKB.
+;;; F: (genlMt VersuTemplateParsingMt EverythingPSC).
+;;; F: (genlMt VersuTemplateParsingMt InferencePSC).
+;;;
+;;; default mt: BaseKB.
+;;; constant: VersuTemplateParsingMt.
+;;; isa: EnglishLexicalMicrotheory TemplateParsingMicrotheory.
+;;; genlMt: RKFParsingMt.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;*RTP-CORE-CONSTANTS* TemplateParsingMt
+;;*RTP-SYNTACTIC-MT*AllEnglishTemplateMt
+(csetq *RTP-CORE-CONSTANTS* (list *dt* TemplateParsingMt RKFParsingMt))
+ (RESET-ALL-RTP-DATASTRUCTURE-CACHES)
+ (RTP-PARSE-RANKING-INIT)
+(ENSURE-RTP-RULES)
+ (csetq *RTP-SYNTACTIC-MT* *dt*)
+
+ (csetq *RTP-EXHAUSTIVE-KB-PARSE?*  T)
+
+(RTP-GENERATE-MADLIBS "what ocean" 0)
+(EXTEND-RTP-FROM-MT *dt*)
+ (POPULATE-RTP-FROM-MT *dt*)
+ (ALLOCATE-RTP-RULES )
+ (CLEAR-TEMPLATE-RULES-MASTER-INDEX )
+
+ITP-REWRITE [function] (REQ-0 &OPTIONAL OPT-1 OPT-2 OPT-3)
+ITP-SEMANTICS-CYCL [function] (REQ-0)
+ALLOCATE-RTP-RULES  () 
+ 
+(ALLOCATE-TEMPLATE-RULES-MASTER-INDEX  )
+ 
+EXTEND-RTP-FROM-MT  
+
+EXTEND-RTP-WITH-TEMPLATE-ASSERTION  (ASSERTION) 
+ 
+POPULATE-META-MARKERS-FROM-MT  (MT &OPTIONAL (EXTEND NIL)) 
+ 
+POPULATE-RTP-FROM-MT  (MT) 
+ 
+(RESET-RTP-COMPLETELY )
+
+(define print-l (rest all)
+    (print all)
+    (ret nil))
+(RKF-SET-ACTIVE-CONCEPT-HARVESTER-METHODS (cons 'print-l (RKF-ACTIVE-CONCEPT-HARVESTER-METHODS )))
+(CATEGORIZING-TEMPLATE-PARSE  )
+;;SEM-PARSE  (SENTENCE MT &OPTIONAL (CAT STemplate) (COMPLETE-PARSES-ONLY T)) 
+(define rtp-versu (sent &optional &OPTIONAL (CAT STemplate) )
+  (clet ((*RTP-EXHAUSTIVE-KB-PARSE?*  T)( *TRACE-GET-CYCLS-FOR-STRING-ESCALATING?* t))
+  ;;STORE-RTP-PARSES-IN-PIPELINE  (SENTENCE-STRING PARSE PARSING-MT CATEGORY )
+  (ret (ITP-SEQUEL sent cat))))
+ ;;GET-CONSTRAINED-CYCL-FOR-STRING-INT  (STR CONSTRAINING-COLLECTION DOMAIN-MT &OPTIONAL (GENERATION-MT *PPH-LANGUAGE-MT*) (PARSING-MT EnglishMt) (QUIETLY-CREATE-UNKNOWN-INSTANCES T) (FORCE-CREATION-OF-UNKNOWN-INSTANCES NIL) (POSSIBLY-STRIP-EXTRANEOUS-PUNCTUATION? T) (FORCE :NONE) (NL-PREDS (LIST nonPlural-Generic)) (SENTENCE NIL) (ARG-POS NIL) (STRING-MATCH-OPTIONS '(:CASE-INSENSITIVE :TRUE :REGULAR-EXPRESSIONS :FALSE)) (INSTANCE-LIMIT 10)) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; templateSemTrans
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  Is a rollup of all the SemTransPred, SemTransTemplatePredicate:
+;;; 
+default mt: UniversalVocabularyMt.
+constant: VersuTemplateParsingMt.
+genlMt: EnglishTemplateMt.
+genlMt: RKFParsingMt.
+constant: RKFParsingMt.
+genlMt: VersuTemplateDataMt.
+
+F: (genls VersuTemplateParsingMicrotheory BroadMicrotheory).
+
+constant: VersuTemplateDataMt.
+genlMt: EnglishTemplateMt.
+genlMt: RKFParsingMt.
+constant: RKFParsingMt.
+genlMt: VersuTemplateDataMt.
+
+constant: templateSemTrans.
+;;isa: QuaternaryPredicate NLRelation NLSemanticPredicate NLSyntacticPredicate.
+isa: TernaryPredicate NLRelation NLSemanticPredicate NLSyntacticPredicate.
+;;arity: 4.
+F: (and (termDoesntNeedLexification templateSemTrans) (keIrrelevantTerm-InternalCycTerm templateSemTrans)).
+;; AllowGenericArgVariables LeaveSomeTermsAtEL 
+canonicalizerDirectiveForAllArgs: LeaveSomeTermsAtELAndAllowKeywordVariables. 
+predicateConventionMt: VersuTemplateDataMt.
+definingMt: VersuTemplateDataMt.
+argsQuotedIsa: CycLTerm.
+argsIsa: Thing.
+;;;F: (canonicalizerDirectiveForArg templateSemTrans 1 LeaveSomeTermsAtELAndAllowKeywordVariables).
+;;;F: (canonicalizerDirectiveForArg templateSemTrans 2 LeaveSomeTermsAtELAndAllowKeywordVariables).
+;;;F: (canonicalizerDirectiveForArg templateSemTrans 3 LeaveSomeTermsAtELAndAllowKeywordVariables).
+;;;F: (argIsa templateSemTrans 1 TemplateParsingSyntacticConstraint).
+;;;F: (argIsa templateSemTrans 1 ParsingTemplateCategory).
+F: (comment templateSemTrans "(ist VersuTemplateDataMt (templateSemTrans ParsingTemplateCategory TemplateParsingSyntacticConstraint SubcategorizationFrame NLTemplateExpression))").
+F: (comment templateSemTrans "(templateSemTrans ?ParsingTemplateCategory SYNTAX FRAME TRANS) means that the translation of any SYNTAX, appearing with subcategorization frame FRAME, means TRANS.").
+F: (argIsa templateSemTrans 1 TemplateParsingSyntacticConstraint).
+F: (argIsa templateSemTrans 2 SubcategorizationFrame).
+;;;F: (argIsa templateSemTrans 3 NLTemplateExpression).
+;;;F: (argIsa templateSemTrans 2 Thing).
+;;;F: (argIsa templateSemTrans 3 Thing).
+F: (genFormat templateSemTrans "the subcategorization frame ~a has a syntactic variation \"~a\" which parses to mean ~a" 
+       (TheList 2 1 3)).
+
+default mt: UniversalVocabularyMt.
+constant: VersuTemplateDataMt.
+isa: VersuTemplateParsingMicrotheory.
+;;remove (interArgIsa2-1 genlPreds TimeDependentRelation TimeDependentRelation)
+
+
+default mt: UniversalVocabularyMt.
+constant: VersuTemplateDataMt.
+isa: VersuMicrotheory.
+default mt: VersuTemplateDataMt.
+F:
+(implies 
+;;   (and 
+    ;;(subcatFrame ?WORD ?POS ??NUM ?FRAME)
+    ;;(genls ?POS ?GPOS)
+     ;;(posForTemplateCategory ?GPOS ?TEMPLATE))
+    (isa ?CYCL NLTemplateExpression)
+;;(ist VersuTemplateDataMt 
+;; (and ))
+ (and 
+  (implies 
+       (and (genls ?POS Adverb)(posForms ?WORD ?POS )
+       (adverbSemTrans ?WORD ??NUM ?FRAME ?CYCL))
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD ?POS)) ?FRAME ?CYCL))
+ (implies
+       (subordinatingConjunctionSemTrans ?WORD ??NUM ?FRAME ?CYCL)  
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD SubordinatingConjunction)) ?FRAME ?CYCL))
+   (implies 
+       (auxVerbSemTrans ?WORD ??NUM ?FRAME ?CYCL);;AuxVerb
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD AuxVerb)) ?FRAME ?CYCL))
+   (implies 
+       (possessiveSemTrans ?WORD ??NUM ?FRAME ?CYCL);;PossessiveMarker
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD PossessiveMarker)) ?FRAME ?CYCL))
+   (implies 
+       (modalVerbSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;Modal
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD Modal)) ?FRAME ?CYCL))
+   (implies 
+       (whPronounSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;WHPronoun        
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD WHPronoun)) ?FRAME ?CYCL))
+   (implies 
+       (nounSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;CountNoun
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD CountNoun)) ?FRAME ?CYCL))
+   (implies 
+       (agentiveNounSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;AgentiveNoun
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD AgentiveNoun)) ?FRAME ?CYCL))
+   (implies 
+       (massNounSemTrans ?WORD ??NUM ?FRAME ?CYCL) 
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD MassNoun)) ?FRAME ?CYCL)) ;;MassNoun
+   (implies 
+       (properNounSemTrans ?WORD ??NUM ?FRAME ?CYCL) 
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD ProperNoun)) ?FRAME ?CYCL))
+   (implies 
+       (verbSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;Verb
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD Verb)) ?FRAME ?CYCL)) 
+   (implies 
+       (adjSemTrans ?WORD ??NUM ?FRAME ?CYCL) ;;Adjective
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD Adjective)) ?FRAME ?CYCL))
+   (implies 
+       (prepSemTrans ?WORD ??NUM ?FRAME ?CYCL) 
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD Preposition)) ?FRAME ?CYCL));;Preposition
+   (implies 
+       (determinerSemTrans ?WORD ??NUM ?FRAME ?CYCL) 
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD Determiner)) ?FRAME ?CYCL));;Determiner
+   (implies 
+       (whDeterminerSemTrans ?WORD ??NUM ?FRAME ?CYCL) 
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD WHDeterminer)) ?FRAME ?CYCL));;
+      (implies 
+       (multiWordSemTrans (TheList . ?WORDLIST) ?WORD ?POS ?FRAME ?CYCL)
+       (templateSemTrans (NLPatternList (NLPattern-Exact . ?WORDLIST ) (NLPattern-Word ?WORD ?POS)) ?FRAME ?CYCL))
+  (implies 
+       (compoundSemTrans ?WORD (TheList . ?WORDLIST) ?POS ?FRAME ?CYCL)
+       (templateSemTrans (NLPatternList (NLPattern-Word ?WORD ?POS) (NLPattern-Exact . ?WORDLIST)) ?FRAME ?CYCL))
+
+   (implies 
+    (clauseSemTrans ?WORD ??NUM ?FRAME ?CYCL)
+     (templateSemTrans (NLPatternList (NLPattern-Word ?WORD ClosedClassWord)) ?FRAME ?CYCL))
+
+       (implies 
+       (whAdverbSemTrans ?WORD ??NUM ?FRAME ?CYCL)         
+           (templateSemTrans
+               (NLPatternList 
+                   (NLPattern-Word ?WORD WHAdverb)) ?FRAME ?CYCL)))). 
+
+		    ;;WHAdverb
+
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+   (nounPrep ?WORD ?PREP ?CYCL)
+   (templateSemTrans 
+       (NLPatternList 
+           (NLPattern-Term :NOUN Noun)(NLPattern-Word ?PREP Preposition))
+        RegularNounFrame 
+       ?CYCL)).
+
+;;;; from here
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+   (verbPrep-TransitiveTemplate ?EVENT ?PREP ?CYCL) 
+   (templateSemTrans 
+       (NLPatternList 
+           (NLPattern-Term :DENOT Verb)) 
+       (PPCompFrameFn TransitivePPFrameType ?PREP) 
+       (implies 
+           (isa :DENOT ?EVENT) ?CYCL))).
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and 
+           (elementOf ?POS (TheSet CountNoun MassNoun)) 
+           (denotation ?WORD ?POS ?SN ?COL)) 
+        (nounSemTrans ?WORD ?SN RegularNounFrame (isa :NOUN ?COL)))).
+
+default Mt: VersuTemplateParsingMt.        
+F:
+(implies 
+       (and 
+           (different ?WORD1 ?WORD2) 
+           (semTransPredForPOS ?POS ?PRED) 
+           (denotesOpposite ?WORD1 ?POS ?NUM1 ?CONCEPT) 
+           (denotation ?WORD2 ?POS ?NUM2 ?CONCEPT) 
+           (?PRED ?WORD2 ?NUM2 ?FRAME ?FORMULA))
+        (templateSemTrans  (NLPatternList (NLPattern-Word ?WORD1 ?POS)) ?FRAME 
+           (not ?FORMULA))).
+
+default mt: VersuTemplateParsingMt.
+F:
+  (implies 
+    (and 
+	(elementOf ?PRED (TheSet SemTransPred QuaternaryPredicate))
+	(semTransArg ?PRED 4)
+    (arg1Isa ?PRED LexicalWord)
+	(arg2Isa ?PRED Integer)
+    (arg3Isa ?PRED ?FrameType)
+    (genls ?FrameType SubcategorizationFrame)
+	(semTransPredForPOS ?POS ?PRED)
+	(?PRED ?WORD ??NUM ?FRAME ?CYCL))
+         (templateSemTrans (NLPatternList (NLPattern-Word ?WORD ?POS)) ?FRAME ?CYCL)).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+default mt: VersuTemplateParsingMt.
+F:
+  (implies
+   (and 
+     (semTransPredForPOS ?ProperCountNoun ?SemTransPRED)
+     (subcatFrame ?WORD ?ProperCountNoun ?SN ?DefiniteDeterminerFrame)
+     (senseExtensionForWord ?WORD ?ProperCountNoun ?COL)
+     (isa ?COL Collection))
+    (?SemTransPRED ?WORD ?SN ?DefiniteDeterminerFrame (isa :DENOT ?COL))).
+
+
+default mt: VersuTemplateParsingMt.
+F:
+   (implies 
+       (and 
+           (verbClassSemTrans ?WORD ??NUM ?FRAME ?CYCL)) 
+        (templateSemTrans 
+           (NLPatternList ?L 
+               (NLPattern-Word ?WORD ?POS) ?R) ?FRAME ?CYCL)).
+
+F:
+   (implies 
+       (and 
+           (verbSemTransPartialTemplate ?WORD ??NUM ?FRAME ?CYCL))
+        (templateSemTrans 
+           (NLPatternList ?L 
+               (NLPattern-Word ?WORD ?POS) ?R) ?FRAME ?CYCL)).
+
+F:
+   (implies 
+       (and 
+           (verbSemTransTotal ?WORD ??NUM ?FRAME ?CYCL)) 
+        (templateSemTrans 
+           (NLPatternList ?L 
+               (NLPattern-Word ?WORD ?POS) ?R) ?FRAME ?CYCL)).
+
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+   (and 
+      (denotation ?WORD ?POS ?SN ?COL)
+      (isa ?COL Collection)
+      (genls  ?POS Noun))
+    (templateSemTrans (NLPatternList (NLPattern-Word ?WORD ?POS)) RegularNounFrame (isa :NOUN ?COL))).
+
+
+;; default mt: VersuTemplateParsingMt.
+;; F:
+;; (implies
+;;   (nounPrep ?WORD ?PREP
+;;          (isa ?SELF
+;;            (?RollFn  . ?ARGS)))
+;;   (termTemplate NPTemplate
+;;      (NLPatternList (NLPattern-Word ?WORD Noun)(NLPattern-Word ?PREP Preposition)
+;;      (NLPattern-Template NPTemplate :OBLIQUE-OBJECT))
+;;     (?RollFn  . ?ARGS))).
+
+;; F:
+;; (implies
+;;  (and
+;;   (prepSemTrans-New ?WORD ?POS ?FRAME ?CYCL))
+;;    (templateSemTrans
+;;      (NLPatternList (NLPattern-Word ?WORD ?POS))
+;;      ?FRAME ?CYCL)).
+        
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+         (prepReln-Action ?ACTION ?OBLIQUE ?PREP ?CYCL) 
+         (templateSemTrans
+		     (NLPatternList 
+			      (NLPattern-Template (NLTemplateForInstanceFn VPTemplate ?ACTION) :ACTION)
+		          (NLPattern-Word ?PREP Preposition)
+			      (NLPattern-Template (NLTemplateForInstanceFn NPTemplate ?OBLIQUE) :OBLIQUE-OBJECT))
+		      UnderstoodReflexiveObjectFrame
+		     (and (isa :ACTION ?ACTION)(isa :OBLIQUE-OBJECT ?OBLIQUE) ?CYCL))).
+
+;; (NLTemplatePatternFn (NLPatternList (NLTemplateForInstanceFn NPTemplate ?ACTION) :ACTION)
+;;)
+
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+          (and 
+		    (prepReln-Object ?OBJECT ?OBLIQUE ?PREP ?CYCL) 
+		    (genNLTemplateCatagory Noun ?OBJECT :OBJECT ?TEMPLATE-OBJECT) 
+		    (genNLTemplateCatagory Noun ?OBLIQUE :OBLIQUE-OBJECT ?TEMPLATE-OBLIQUE))
+          (templateSemTrans
+		     (NLPatternList 
+			  ?TEMPLATE-OBJECT
+		          (NLPattern-Word ?PREP Preposition)
+			  ?TEMPLATE-OBLIQUE)
+		      UnderstoodReflexiveObjectFrame
+		   (and (isa :NOUN ?OBJECT) (isa :OBLIQUE-OBJECT ?OBLIQUE)  ?CYCL))).
+
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+         (and 
+            (adjSemTrans-Restricted ?WORD ??NUM ?FRAME ?COL ?CYCL)
+		    (genNLTemplateCatagory Noun ?COL :NOUN ?TEMPLATE-COL))
+          (templateSemTrans 
+     		    (NLPatternList 
+			       (NLPattern-Word ?WORD Adjective)
+			       ?TEMPLATE-COL)
+			       ?FRAME (and (isa :NOUN ?COL) ?CYCL))).
+			
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and 
+              (nonCompositionalVerbSemTrans ?WORD ?COL ?CYCL)
+              (genNLTemplateCatagory Noun ?COL :OBJECT ?TEMPLATE-COL))
+        (templateSemTrans (NLPatternList (NLPattern-Word ?WORD Verb) ?TEMPLATE-COL)
+				UnderstoodReflexiveObjectFrame (and (isa :OBJECT ?COL) ?CYCL))).
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+      (and (lightVerb-TransitiveSemTrans ?WORD ?COL ?CYCL)
+                (genNLTemplateCatagory Noun ?COL :OBJECT ?TEMPLATE-COL))
+         (templateSemTrans (NLPatternList (NLPattern-Word ?WORD Verb)
+			?TEMPLATE-COL) UnderstoodReflexiveObjectFrame (and (isa :OBJECT ?COL) ?CYCL))).
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+        (and (verbSemTransPartial ?WORD ??NUM ?FRAME ?CYCL)
+             (genNLTemplateCatagory Noun ?COL :OBJECT ?TEMPLATE-COL))
+     (templateSemTrans (NLPatternList 
+				(NLPattern-Word ?WORD Verb)?TEMPLATE-COL)  
+				?FRAME (and (isa :OBJECT ?COL) ?CYCL))).
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and 
+           (subcatFrame ?RUSH-THEWORD Verb ?NUM1 TransitiveNPFrame) 
+           (denotation ?RUSH-THEWORD Verb ?NUM0 ?CHARGING-RUSHING)) 
+       (verbSemTransPartial  ?RUSH-THEWORD ?NUM1 TransitiveNPFrame 
+           (thereExists ?ACTION 
+               (and 
+                   (situationConstituents ?ACTION :OBJECT) 
+                   (doneBy ?ACTION :SUBJECT) 
+                   (isa ?ACTION ?CHARGING-RUSHING))))).
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and 
+           (isa ?POS SpeechPart) 
+           (isa ?PRED SemTransTemplatePredicate)
+           (isa ?POSPRED SemTransPred)
+           (conceptuallyCoRelated ?POSPRED ?PRED)
+           (semTransPredForPOS ?POS ?POSPRED)
+	   (denotation ?WORD ?POS ??NUM ?COL)
+          ;;(?POSPRED ?POSCOL ?POSFRAME ?POSCYCL)
+	   (?PRED ?COL ?FRAME ?CYCL))
+   (and
+     ;  (templateSemTrans 
+      ;    (NLPatternList (RequireOne (NLPattern-Term ?POSCOL ?POS)(NLPattern-Word ?WORD ?POS)))
+	;       ?FRAME (SubstituteFormulaFn ?OBJ :DENOT (and (isa :DENOT ?COL) ?POSCYCL)))
+        (templateSemTrans 
+           (NLPatternList (RequireOne (NLPattern-Term ?COL ?POS)(NLPattern-Word ?WORD ?POS)))
+	       ?FRAME (SubstituteFormulaFn ?OBJ :DENOT (and (isa :DENOT ?COL) ?CYCL))))).
+
+                      		         
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and (denotation ?WORD ?POS ??NUM ?COL)
+       (isa ?COL Collection)(genls   ?POS Noun))
+         (templateSemTrans (NLPatternList (NLPattern-Word ?WORD Noun)   )RegularNounFrame (isa :NOUN ?COL))).
+
+                
+default Mt: VersuTemplateParsingMt.        
+;;; maybe delete dmiles
+F: 
+(implies 
+       (and 
+           (isa ?PRED BinaryPredicate) 
+           (or (denotation ?WORD ?POS ??NUM1 ?PRED) (denotationRelatedTo ?WORD ?POS ??NUM2 ?PRED)))
+        (templateSemTrans  (NLPatternList (NLPattern-Word ?WORD ?POS)(NLPattern-Template NPTemplate :OBJECT )) TransitiveNPFrame 
+           (thereExists ?ACTION 
+                   (holdsIn ?ACTION 
+                   ;;(isa :OBJECT ?POS)
+                       (?PRED :SUBJECT :OBJECT))))).
+
+           
+
+;;;;;;;;;;;;;;
+
+default Mt: VersuTemplateParsingMt.        
+F: 
+(implies (and  
+  (denotesOpposite ?WORD ?POS ??NUM ?PRED) 
+     (isa ?PRED BinaryPredicate)
+       (evaluate ?CYCL 
+              (SubstituteFormulaFn ?ACTION :ACTION
+                 (thereExists ?ACTION
+                        (holdsIn ?ACTION (?PRED :SUBJECT :OBJECT))))))
+    (templateSemTrans (NLPatternList (NLPattern-Word ?WORD ?POS)(NLPattern-Template NPTemplate :OBJECT )) TransitiveNPFrame 
+               (not ?CYCL))).
+
+
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+	(and 
+	   (derivedUsingSuffix (WordWithSuffixFn ?GIRL-THEWORD Ly_AdjectiveProducing-TheSuffix) Ly_AdjectiveProducing-TheSuffix) 
+	   (denotation ?GIRL-THEWORD CountNoun ??NUM ?FEMALECHILD))
+	 (templateSemTrans 
+	  (NLPatternList (NLPattern-Word (WordWithSuffixFn ?GIRL-THEWORD Ly_AdjectiveProducing-TheSuffix) Adjective)) RegularAdjFrame 
+	   (conceptuallyRelated :NOUN ?FEMALECHILD))).
+ 
+default Mt: VersuTemplateParsingMt.        
+F: (implies 
+       (and 
+           (relationInstanceAll performsInstancesAsPartOfJob ?REFINISHING ?REFINISHER) 
+           (subcatFrame ?RENOVATE-THEWORD Verb ??NUM ?TRANSITIVENPFRAME) 
+           (denotation ?RENOVATE-THEWORD AgentiveNoun ?NUM2 ?REFINISHER)) 
+        (templateSemTrans  (NLPatternList (NLPattern-Word ?RENOVATE-THEWORD Verb)) ?TRANSITIVENPFRAME 
+           (SubstituteFormulaFn ?SUBJECT :SUBJECT (thereExists ?ACTION
+               (and 
+                   (bodilyDoer :SUBJECT ?ACTION) 
+                   (isa ?ACTION ?REFINISHING) 
+                   (possible 
+                       (isa :SUBJECT ?REFINISHER))))))).
+
+
+
+default Mt: VersuTemplateParsingMt.        
+F: 
+(verbPrep-TransitiveTemplate HoldingAnObject By-TheWord 
+       (and 
+           (isa :ACTION :DENOT) 
+           (objectActedOn :ACTION :OBLIQUE-OBJECT) 
+           (physicalParts :OBJECT :OBLIQUE-OBJECT) 
+           (doneBy :ACTION :SUBJECT))).
+
+            ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;F: (argIsa templateSemTrans 3 NLTemplateExpression).
+;;;(ParsingTemplateCategory to SubcategorizationFrame)
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; genNLTemplateCatagory
+;;;
+;;; F: (genNLTemplateCatagory Noun ?COL ?NOUN (NLPattern-Template (NLTemplateForInstanceFn ?COL) ?NOUN))
+;;; F: (genNLTemplateCatagory Noun ?COL ?NOUN (NLPattern-Template NPTemplate ?NOUN))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: genNLTemplateCatagory.
+isa: QuaternaryPredicate.
+arity: 4.
+F: (predicateConventionMt genNLTemplateCatagory VersuTemplateParsingMt).
+arg1Isa: LinguisticObjectType.
+arg2Isa: Thing. ;; Variable
+arg2QuotedIsa: CycLVariable.
+arg3Isa: Thing. ;; Keyword
+arg3QuotedIsa: CycLTerm.
+arg4Isa: CycLTerm. ;; NLPattern-Template
+
+default mt: VersuTemplateParsingMt.
+F: (genNLTemplateCatagory Noun ?COL ?KW (NLPattern-Template (NLTemplateForInstanceFn ?COL) ?KW)).
+F: (genNLTemplateCatagory Verb ?COL ?KW (NLPattern-Template (NLTemplateForInstanceFn ?COL) ?KW)).
+F:(implies  (and (posForTemplateCategory ?POS ?CATA)(nlTemplateCatagoryForInstance ?COL ?CATA) (genls ?OBLIQUE ?COL))
+  (and (genls (NLTemplateForInstanceFn ?OBLIQUE) ?CATA)
+  (genNLTemplateCatagory ?POS ?OBLIQUE ?KW (NLPattern-Template (NLTemplateForInstanceFn ?OBLIQUE) ?KW)))).
+;;;F: (genNLTemplateCatagory Verb ?COL ?NOUN (NLPattern-Template (NLTemplateForInstanceFn (CollectionIntersectionFn ?COL Event)) ?NOUN)).
+
+
+ ;;;  (ke-unassert-now 
+ ;;;  '(ist VersuTemplateParsingMt 
+ ;;;         (implies 
+ ;;;             (and 
+ ;;;                 (posForTemplateCategory 
+ ;;;                     (TLVariableFn 0 "?POS") 
+ ;;;                     (TLVariableFn 1 "?CATA")) 
+ ;;;                 (termOfUnit 
+ ;;;                     (TLVariableFn 2 "?NLTEMPLATEFORSPECFN") 
+ ;;;                     (NLTemplateForInstanceFn 
+ ;;;                         (TLVariableFn 3 "?OBLIQUE")))) 
+ ;;;             (genls 
+ ;;;                 (TLVariableFn 2 "?NLTEMPLATEFORSPECFN") 
+ ;;;                 (TLVariableFn 1 "?CATA")))) 'VersuTemplateParsingMt)
+ ;;;     (implies 
+ ;;;         (and 
+ ;;;             (adverbSemTransTemplate ?WORD ??NUM ?FRAME ?CYCL)) 
+ ;;;          (templateSemTrans 
+ ;;;             (NLPatternList ?L 
+ ;;;                 (NLPattern-Word ?WORD ?POS) ?R) ?FRAME ?CYCL)) 
+ ;;;     (implies 
+ ;;;         (and 
+ ;;;             (verbSemTransTemplate ?WORD ??NUM ?FRAME ?CYCL)) 
+ ;;;          (templateSemTrans 
+ ;;;             (NLPatternList ?L 
+ ;;;                 (NLPattern-Word ?WORD ?POS) ?R) ?FRAME ?CYCL)) 
+ ;;;  
+ ;;;  (ask-template '
+ ;;;   (implies
+ ;;;      (?PRED ?WORD ??NUM ?FRAME ?CYCL)
+ ;;;   (ist VersuTemplateDataMt 
+ ;;;      (templateSemTrans 
+ ;;;        (NLPatternList 
+ ;;;          (NLPattern-Word ?WORD ?POS)) ?FRAME ?CYCL)))
+ ;;;  
+ ;;;  '(and 
+ ;;;    (arg1Isa ?PRED LexicalWord) 
+ ;;;    (arg2Isa ?PRED Integer) 
+ ;;;    (semTransArg ?PRED 4)
+ ;;;   ;;(elementOf ?PRED SemTransPred)
+ ;;;    (semTransPredForPOS ?POS ?PRED))
+ ;;;  
+ ;;;    EverythingPSC)
+ ;;;  
+ ;;;  
+ ;;;  
+ ;;;  
+ ;;;  (mapcar #'forward-mt (ask-template '?PRED
+ ;;;  
+ ;;;  '(and 
+ ;;;    (arg1Isa ?PRED LexicalWord) 
+ ;;;    (arg2Isa ?PRED Integer) 
+ ;;;    (semTransArg ?PRED 4)
+ ;;;   ;;(elementOf ?PRED SemTransPred)
+ ;;;    (semTransPredForPOS ?POSCLASS ?PRED))
+ ;;;  
+ ;;;    EverythingPSC))
+ ;;;  
+ ;;; 
+ ;;;  
+  
+
+
+ ;;; default Mt: VersuTemplateParsingMt.        
+ ;;;  constant: sentenceInSubL.
+ ;;;  isa: UnaryPredicate.
+ ;;;  arg1Isa: Thing.
+ ;;;  F: (implies 
+ ;;;        ((Kappa (?CALL ) 
+ ;;;                    (elementOf ?CALL (EvaluateSubLFn (ExpandSubLFn (?CALL) 
+ ;;;  		     (ask-template '(genls ?X Dog) '(and (genls ?X Dog)) EverythingPSC))))
+ ;;;              (genls ?X Dog))
+ ;;;                (sentenceInSubL ?SENT)).
+ ;;;  
+ ;;;  ((Kappa (?CALL) (and (evaluate ?H (EvaluateSubLFn 
+ ;;;    (ExpandSubLFn (?CALL) (ASK-TEMPLATE ?CALL (and ?CALL) EverythingPSC)))) (elementOf ?CALL ?H))) 
+ ;;;    (genls Dog ?X))
+ ;;;  
+
+;;;  (evaluate ?H (EvaluateSubLFn (ExpandSubLFn (?CALL) (ASK-TEMPLATE ?CALL (and ?CALL) EverythingPSC))))
+
+;;;  (evaluate ?H (EvaluateSubLFn (ExpandSubLFn () (ASK-TEMPLATE ?CALL (and (isa ?X Dog)) EverythingPSC))))
+
+
+            ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;http://www.cnn.com/2005/POLITICS/11/04/carter.lookback/index.html
+;;;ActiveVBarTemplate-NPGap   AdjPTemplate   AdjPTemplate-Predicative   AdvPTemplate   CardinalOrOrdinalTemplate   CycConstantTemplate   DateTemplate   GenericQuantityTemplate   GeopoliticalEntityTemplate   ImperativeTemplate   InfinitivalVBarTemplate   InfinitivalVPTemplate   ListTemplate   LocationTemplate   MovieTitleTemplate   NBarTemplate   NPTemplate   NumberTemplate   OrdinalTemplate   PPByTemplate   PPForTemplate   PPTemplate   PPTemporalDurationTemplate   PPTemporalTemplate   ParsingTemplateCategory   PassiveVBarTemplate   PassiveVBarTemplate-NPGap   PastTenseVBarTemplate   PercentTemplate   PerfectiveVBarTemplate   PerfectiveVPTemplate   PossessiveTemplate   PresentTenseVBarTemplate   ProgressiveVBarTemplate   ProgressiveVPTemplate   QuantityTemplate   QuestionTemplate   RTPActiveVBarTemplate   RTPPassiveVBarTemplate   RTPTensedVBarTemplate   RTPUntensedVBarTemplate   RatioTemplate   ResponseTemplate   STemplate   STemplate-NPGap   STemplate-RC   ScenarioTemplate   SinkTemplate   StringTemplate   SubAtomicParticleTemplate   TemporalTemplate   TokenTemplate   VBarTemplate   VPTemplate   VPTemplate-NPGap   VerbParticipleTemplate   
+;;;default mt: VersuTemplateParsingMt.
+;;;F: (implies (and (termStrings ?THING ?STRING) (isa ?THING Individual) ) (termTemplate NPTemplate (NLPatternList (NLPattern-Exact ?STRING)) ?THING)).
+;;;F: (implies (and (termStrings ?THING ?STRING) (isa ?THING Collection) ) (termTemplate NPTemplate (NLPatternList (NLPattern-Exact ?STRING)) (The ?THING))).
+
+
+
+
+;; F:
+;; (implies
+;;       (nounPrep ?WORD ?PREP  (?RollFn . ?ARGS))
+;;   (termTemplate-Reln NPTemplate ?RollFn
+;;      (NLPatternList
+;;      (NLPattern-Word ?WORD Noun)
+;;      (NLPattern-Word ?PREP Preposition)
+;;      (NLPattern-Template NPTemplate :OBLIQUE-OBJECT))
+;;     (?RollFn . ?ARGS ))).
+
+;; F:
+;; (implies
+;;        (and
+;;          (nlPhraseTypeForTemplateCategory ?FRAME ?TEMPLATE)
+;;             (templateSemTrans ?FRAME ?SYNTAX
+;;                (?LITTERFN . ?ARGS)))
+;;        (termTemplate-Reln ?TEMPLATE ?LITTERFN ?SYNTAX (?LITTERFN . ?ARGS))).
+;; F:
+;; (implies
+;;        (and
+;;          (nlPhraseTypeForTemplateCategory ?FRAME ?TEMPLATE)
+;;             (templateSemTrans ?FRAME ?SYNTAX
+;;                (isa ?SELF (?LITTERFN . ?ARGS))))
+;;        (termTemplate-Reln ?TEMPLATE ?LITTERFN ?SYNTAX (?LITTERFN . ?ARGS))).
+
+
+
+
+;;;http://www.cnn.com/2005/POLITICS/11/04/carter.lookback/index.html
+
+;;;AdjectiveModifyingFrame   AdverbModifyingFrame   AttributiveOnlyAdjFrame   ClausalSubjectTransitiveNPFrame   ClauseModifyingFrame   CopulaADJPFrame 
+;;;CopulaADVPFrame   CopulaGenericFrame   CopulaNPFrame   CopulaPPFrame   DefiniteDeterminerFrame   DeterminerModifyingFrame   DitransitiveADVP-PPFrame
+;;;DitransitiveGerundPhrase-NPFrame   DitransitiveGerundPhrase-PPFrame   DitransitiveNP-ADJPFrame   DitransitiveNP-ADVPFrame   DitransitiveNP-BareInfinitiveFrame
+;;;DitransitiveNP-GerundPhraseFrame   DitransitiveNP-InfinitivePhraseFrame   DitransitiveNP-NPFrame   DitransitiveNP-NPObjComplementFrame
+;;;DitransitiveNP-PassiveParticipleFrame   DitransitiveNP-QuoteFrame   DitransitiveNP-ThatClauseFrame   DitransitiveNP-WhClauseFrame
+;;;DitransitivePP-GenericFrame   DitransitivePP-NPFrame   DitransitivePP-PPFrame   DitransitivePP-ThatClauseFrame   GenitiveFrame
+;;;IntransitiveSubjectControlFrame   IntransitiveVerbFrame   MiddleVoiceFrame   NP-ADVP-PPFrame   NP-PP-PPFrame   NounPremodifierFrame
+;;;ObjectControlFrame   ObjectivePronounFrame   ObligatoryReflexiveObjectFrame   PP-PP-NPFrame   PP-PP-PPFrame   PleonasticForNPInfinitivePhraseFrame 
+;;;PleonasticThatClauseFrame   PossessiveMarkerFrame   Post-NounPhraseModifyingFrame   Post-VerbPhraseModifyingFrame   PostNominalAdjFrame   
+;;;PostNominalOnlyAdjFrame   PostPronominalAdjFrame   Pre-NounPhraseModifyingFrame   Pre-VerbPhraseModifyingFrame   PredicativeOnlyAdjFrame   
+;;;PrepositionalPhraseModifyingFrame   QuantifierFrame   RegularAdjFrame   RegularNounFrame   SubjectivePronounFrame   TransitiveADJPFrame   
+;;;TransitiveADVP-DirectionFrame   TransitiveADVP-LocationFrame   TransitiveADVP-MannerFrame   TransitiveADVP-TimeFrame   TransitiveBareInfinitiveFrame
+;;;TransitiveFiniteClauseFrame   TransitiveForNPInfinitivePhraseFrame   TransitiveGerundPhraseFrame   TransitiveInfinitivePhraseFrame 
+;;;TransitiveInfinitivePhraseNPGapFrame   TransitiveNPFrame   TransitivePPGenericFrame   TransitiveQuoteFrame   TransitiveSubjectControlFrame   
+;;;TransitiveThatClauseFrame   TransitiveVPFrame   TransitiveWhClauseFrame   UnderstoodReciprocalObjectFrame   UnderstoodReflexiveObjectFrame   
+;;;VerbPhraseModifyingFrame   WH-SententialClausalFrame   WNVerbFrame-1   WNVerbFrame-10   WNVerbFrame-11   WNVerbFrame-12   
+;;;WNVerbFrame-13   WNVerbFrame-14   WNVerbFrame-15   WNVerbFrame-16   WNVerbFrame-17   WNVerbFrame-18   WNVerbFrame-19   
+;;;WNVerbFrame-2   WNVerbFrame-20   WNVerbFrame-21   WNVerbFrame-22   WNVerbFrame-23   WNVerbFrame-24   WNVerbFrame-25   
+;;;WNVerbFrame-26   WNVerbFrame-27   WNVerbFrame-28   WNVerbFrame-29   WNVerbFrame-3   WNVerbFrame-30   WNVerbFrame-31   
+;;;WNVerbFrame-32   WNVerbFrame-33   WNVerbFrame-34   WNVerbFrame-35   WNVerbFrame-4   WNVerbFrame-5   WNVerbFrame-6   
+;;;WNVerbFrame-7   WNVerbFrame-8   WNVerbFrame-9   ZeroArticleFrame   (ActiveVoiceOnlyFrameFn TransitiveNPFrame)   
+;;;(PPCompFrameFn DitransitiveNP-PPGerundObjectFrameType From-TheWord)   (PPCompFrameFn DitransitivePP-NPFrameType For-TheWord)
+;;;(PPCompFrameFn DitransitivePP-NPFrameType To-TheWord)   (PPCompFrameFn DitransitivePPFrameType About-TheWord)   
+;;;(PPCompFrameFn DitransitivePPFrameType Across-TheWord)   (PPCompFrameFn DitransitivePPFrameType Against-TheWord)   (PPCompFrameFn DitransitivePPFrameType Around-TheWord)   (PPCompFrameFn DitransitivePPFrameType As-TheWord)   (PPCompFrameFn DitransitivePPFrameType At-TheWord)   (PPCompFrameFn DitransitivePPFrameType By-TheWord)   (PPCompFrameFn DitransitivePPFrameType For-TheWord)   (PPCompFrameFn DitransitivePPFrameType From-TheWord)   (PPCompFrameFn DitransitivePPFrameType In-TheWord)   (PPCompFrameFn DitransitivePPFrameType Into-TheWord)   (PPCompFrameFn DitransitivePPFrameType Of-TheWord)   (PPCompFrameFn DitransitivePPFrameType Off-Of-MWW)   (PPCompFrameFn DitransitivePPFrameType Off-TheWord)   (PPCompFrameFn DitransitivePPFrameType On-TheWord)   (PPCompFrameFn DitransitivePPFrameType Onto-TheWord)   (PPCompFrameFn DitransitivePPFrameType Out-Of-MWW)   (PPCompFrameFn DitransitivePPFrameType Out-TheWord)   (PPCompFrameFn DitransitivePPFrameType Round-TheWord)   (PPCompFrameFn DitransitivePPFrameType To-TheWord)   (PPCompFrameFn DitransitivePPFrameType With-TheWord)   (PPCompFrameFn TransitivePPFrameType About-TheWord)   (PPCompFrameFn TransitivePPFrameType Across-TheWord)   (PPCompFrameFn TransitivePPFrameType After-TheWord)   (PPCompFrameFn TransitivePPFrameType Against-TheWord)   (PPCompFrameFn TransitivePPFrameType Apart-TheWord)   (PPCompFrameFn TransitivePPFrameType Around-TheWord)   (PPCompFrameFn TransitivePPFrameType As-TheWord)   (PPCompFrameFn TransitivePPFrameType At-TheWord)   (PPCompFrameFn TransitivePPFrameType Away-TheWord)   (PPCompFrameFn TransitivePPFrameType Back-TheWord)   (PPCompFrameFn TransitivePPFrameType By-TheWord)   (PPCompFrameFn TransitivePPFrameType Down-TheWord)   (PPCompFrameFn TransitivePPFrameType During-TheWord)   (PPCompFrameFn TransitivePPFrameType For-TheWord)   (PPCompFrameFn TransitivePPFrameType From-TheWord)   (PPCompFrameFn TransitivePPFrameType In-TheWord)   (PPCompFrameFn TransitivePPFrameType Inside-TheWord)   (PPCompFrameFn TransitivePPFrameType Into-TheWord)   (PPCompFrameFn TransitivePPFrameType Near-TheWord)   (PPCompFrameFn TransitivePPFrameType Of-TheWord)   (PPCompFrameFn TransitivePPFrameType Off-Of-MWW)   (PPCompFrameFn TransitivePPFrameType Off-TheWord)   (PPCompFrameFn TransitivePPFrameType On-TheWord)   (PPCompFrameFn TransitivePPFrameType Onto-TheWord)   (PPCompFrameFn TransitivePPFrameType Out-Of-MWW)   (PPCompFrameFn TransitivePPFrameType Out-TheWord)   (PPCompFrameFn TransitivePPFrameType Outside-TheWord)   (PPCompFrameFn TransitivePPFrameType Over-TheWord)   (PPCompFrameFn TransitivePPFrameType To-TheWord)   (PPCompFrameFn TransitivePPFrameType Together-TheWord)   (PPCompFrameFn TransitivePPFrameType Toward-TheWord)   (PPCompFrameFn TransitivePPFrameType Up-TheWord)   (PPCompFrameFn TransitivePPFrameType Upon-TheWord)   (PPCompFrameFn TransitivePPFrameType With-TheWord)   (ParticleCompFrameFn IntransitiveParticleFrameType Off-TheWord)   (ParticleCompFrameFn IntransitiveParticleFrameType To-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Apart-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Away-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Back-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Down-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType In-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Off-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType On-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Out-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Over-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Together-TheWord)   (ParticleCompFrameFn TransitiveParticleNPFrameType Up-TheWord)   
+
+

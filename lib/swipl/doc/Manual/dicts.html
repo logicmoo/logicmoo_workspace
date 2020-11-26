@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.15</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="debug.html">
+<link rel="next" href="error.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="debug.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="error.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:dicts"><a id="sec:A.15"><span class="sec-nr">A.15</span> <span class="sec-title">library(dicts): 
+Dict utilities</span></a></h2>
+
+<p><a id="sec:dicts"></a>
+
+<p>This library defines utilities that operate on lists of dicts, 
+notably to make lists of dicts consistent by adding missing keys, 
+converting between lists of compounds and lists of dicts, joining and 
+slicing lists of dicts.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="dicts_same_tag/2"><strong>dicts_same_tag</strong>(<var>+List, 
+-Tag</var>)</a></dt>
+<dd class="defbody">
+True when <var>List</var> is a list of dicts that all have the tag <var>Tag</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="dict_keys/2"><strong>dict_keys</strong>(<var>+Dict, 
+-Keys</var>)</a></dt>
+<dd class="defbody">
+True when <var>Keys</var> is an ordered set of the keys appearing in <var>Dict</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="dicts_same_keys/2"><strong>dicts_same_keys</strong>(<var>+List, 
+-Keys</var>)</a></dt>
+<dd class="defbody">
+True if <var>List</var> is a list of dicts that all have the same keys 
+and
+<var>Keys</var> is an ordered set of these keys.</dd>
+<dt class="pubdef"><a id="dicts_to_same_keys/3"><strong>dicts_to_same_keys</strong>(<var>+DictsIn, 
+:OnEmpty, -DictsOut</var>)</a></dt>
+<dd class="defbody">
+<var>DictsOut</var> is a copy of <var>DictsIn</var>, where each dict 
+contains all keys appearing in all dicts of <var>DictsIn</var>. Values 
+for keys that are added to a dict are produced by calling <var>OnEmpty</var> 
+as below. The predicate <a class="pred" href="dicts.html#dict_fill/4">dict_fill/4</a> 
+provides an implementation that fills all new cells with a predefined 
+value.
+
+<pre class="code">
+call(:OnEmpty, +Key, +Dict, -Value)
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="dict_fill/4"><strong>dict_fill</strong>(<var>+ValueIn, 
++Key, +Dict, -Value</var>)</a></dt>
+<dd class="defbody">
+Implementation for the <a class="pred" href="dicts.html#dicts_to_same_keys/3">dicts_to_same_keys/3</a> <var>OnEmpty</var> 
+closure that fills new cells with a copy of <var>ValueIn</var>. Note 
+that
+<a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> does 
+not really copy ground terms. Below are two examples. Note that when 
+filling empty cells with a variable, each empty cell is bound to a new 
+variable.
+
+<pre class="code">
+?- dicts_to_same_keys([r{x:1}, r{y:2}], dict_fill(null), L).
+L = [r{x:1, y:null}, r{x:null, y:2}].
+?- dicts_to_same_keys([r{x:1}, r{y:2}], dict_fill(_), L).
+L = [r{x:1, y:_G2005}, r{x:_G2036, y:2}].
+</pre>
+
+<p>Use <span class="pred-ext">dict_no_fill/3</span> to raise an error if 
+a dict is missing a key.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="dicts_join/3"><strong>dicts_join</strong>(<var>+Key, 
++DictsIn, -Dicts</var>)</a></dt>
+<dd class="defbody">
+Join dicts in <var>Dicts</var> that have the same value for <var>Key</var>, 
+provided they do not have conflicting values on other keys. For example:
+
+<pre class="code">
+?- dicts_join(x, [r{x:1, y:2}, r{x:1, z:3}, r{x:2,y:4}], L).
+L = [r{x:1, y:2, z:3}, r{x:2, y:4}].
+</pre>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>existence_error(key, Key, Dict)</code> if a dict in Dicts1 or 
+Dicts2 does not contain <var>Key</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="dicts_join/4"><strong>dicts_join</strong>(<var>+Key, 
++Dicts1, +Dicts2, -Dicts</var>)</a></dt>
+<dd class="defbody">
+Join two lists of dicts (<var>Dicts1</var> and <var>Dicts2</var>) on <var>Key</var>. 
+Each pair D1-D2 from <var>Dicts1</var> and <var>Dicts2</var> that have 
+the same (<code>==</code>) value for
+<var>Key</var> creates a new dict D with the union of the keys from D1 
+and D2, provided D1 and D2 to not have conflicting values for some key. 
+For example:
+
+<pre class="code">
+?- DL1 = [r{x:1,y:1},r{x:2,y:4}],
+   DL2 = [r{x:1,z:2},r{x:3,z:4}],
+   dicts_join(x, DL1, DL2, DL).
+   DL = [r{x:1, y:1, z:2}, r{x:2, y:4}, r{x:3, z:4}].
+</pre>
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>existence_error(key, Key, Dict)</code> if a dict in <var>Dicts1</var> 
+or <var>Dicts2</var> does not contain <var>Key</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="dicts_slice/3"><strong>dicts_slice</strong>(<var>+Keys, 
++DictsIn, -DictsOut</var>)</a></dt>
+<dd class="defbody">
+<var>DictsOut</var> is a list of Dicts only containing values for <var>Keys</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="dicts_to_compounds/4"><strong>dicts_to_compounds</strong>(<var>?Dicts, 
++Keys, :OnEmpty, ?Compounds</var>)</a></dt>
+<dd class="defbody">
+True when <var>Dicts</var> and <var>Compounds</var> are lists of the 
+same length and each element of <var>Compounds</var> is a compound term 
+whose arguments represent the values associated with the corresponding 
+keys in
+<var>Keys</var>. When converting from dict to row, <var>OnEmpty</var> is 
+used to compute missing values. The functor for the compound is the same 
+as the tag of the pair. When converting from dict to row and the dict 
+has no tag, the functor <code>row</code> is used. For example:
+
+<pre class="code">
+?- Dicts = [_{x:1}, _{x:2, y:3}],
+   dicts_to_compounds(Dicts, [x], dict_fill(null), Compounds).
+Compounds = [row(1), row(2)].
+?- Dicts = [_{x:1}, _{x:2, y:3}],
+   dicts_to_compounds(Dicts, [x,y], dict_fill(null), Compounds).
+Compounds = [row(1, null), row(2, 3)].
+?- Compounds = [point(1,1), point(2,4)],
+   dicts_to_compounds(Dicts, [x,y], dict_fill(null), Compounds).
+Dicts = [point{x:1, y:1}, point{x:2, y:4}].
+</pre>
+
+<p>When converting from <var>Dicts</var> to <var>Compounds</var> <var>Keys</var> 
+may be computed by
+<a class="pred" href="dicts.html#dicts_same_keys/2">dicts_same_keys/2</a>.
+</dd>
+</dl>
+
+<p></body></html>

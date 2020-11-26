@@ -1,0 +1,112 @@
+(note TQD117)
+
+(instance JihadGroup TerroristGroup) 
+
+(givesSupportToAgent Iran JihadGroup 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+
+
+
+
+
+(instance IslamicGroup TerroristGroup) 
+
+(givesSupportToAgent Iran IslamicGroup 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+
+
+
+
+
+(instance HAMAS TerroristGroup) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+
+
+
+
+
+(instance AbuNidalOrganization TerroristGroup) 
+
+(givesSupportToAgent Iraq AbuNidalOrganization 
+ (HighAmountFn MilitarySupport)) 
+
+(relationInstanceExistsMany possesses Iraq BiologicalWeapon) 
+
+
+
+
+
+
+(instance ArmedIslamicGroup TerroristGroup) 
+
+(givesSupportToAgent Iran ArmedIslamicGroup 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+
+
+
+
+
+(instance LebaneseHizballah TerroristGroup) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+
+
+
+
+
+(instance PalestineIslamicJihad TerroristGroup) 
+
+(givesSupportToAgent Iran PalestineIslamicJihad 
+ (HighAmountFn MilitarySupport)) 
+
+
+
+(subclass BiologicalWeapon BiologicalWeapon) 
+
+(relationInstanceExistsMany possesses Iran BiologicalWeapon) 
+
+
+
+
+( query  (findall (?POTENTIALGROUP ?WITHHELPOF ?TRUST)   (thereExists ?WEAPONTYPE 
+ (and 
+ (instance ?POTENTIALGROUP TerroristGroup) 
+ (subclass ?WEAPONTYPE BiologicalWeapon) 
+ (or 
+ (relationInstanceExistsMany possesses ?POTENTIALGROUP ?WEAPONTYPE) 
+ (and 
+ (givesSupportToAgent ?WITHHELPOF ?POTENTIALGROUP 
+ (HighAmountFn MilitarySupport)) 
+ (relationInstanceExistsMany possesses ?WITHHELPOF ?WEAPONTYPE)))))  
+))
+
+(answer JihadGroup  Iran)
+(answer  IslamicGroup Iran)
+(answer HAMAS  Iran)
+(answer  AbuNidalOrganization Iran)
+(answer  ArmedIslamicGroup Iran)
+(answer  LebaneseHizballah Iran)
+(answer  PalestineIslamicJihad Iran)
+
+
+(end_of_file)
+
+

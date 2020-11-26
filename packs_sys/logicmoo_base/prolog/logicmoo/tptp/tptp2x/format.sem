@@ -1,0 +1,276 @@
+%=======================================================================%
+%----This outputs TPTP Problem Set clauses accompanied by function -----%
+%----declarations in a format acceptable to the SEM system. ------------%
+%-----------------------------------------------------------------------%
+%----Written by Nikolay Pelov, Nov,1999.
+%----Based on the module for FINDER.
+%----Updated by Geoff Sutcliffe, October 2002
+%=======================================================================%
+%=======================================================================%
+%----Module to output TPTP Problem Set CLAUSES in a SEM format. --------%
+%----Main entry point :-output_sem_clauses/1.---------------------------%
+%=======================================================================%
+%----------------------------------------------------------------------
+%----Output the atoms
+sem_output_atom('$tptp_equal'(A,B)):-
+    !,
+    write(A),
+    write(' = '),
+    write(B).
+sem_output_atom(Atom):-
+    write(Atom).
+
+output_sem_literal(--'$tptp_equal'(A,B)):-
+    !,
+    write(A),
+    write(' != '),
+    write(B).
+output_sem_literal(++Atom):-
+    sem_output_atom(Atom).
+
+output_sem_literal(--Atom):-
+    write('-'),
+    sem_output_atom(Atom).
+
+output_sem_literals([OneAtom]) :-
+    !,
+    output_sem_literal(OneAtom).
+
+output_sem_literals([OneAtom,TwoAtoms|RestAtoms]) :-
+    output_sem_literal(OneAtom),
+    write(' | '),
+    output_sem_literals([TwoAtoms|RestAtoms]).
+
+%----------------------------------------------------------------------
+%----Output the clauses in SEM format.
+
+output_sem_clause([]):-
+    !,
+    write('%---Empty clause---------------------------------------------------'), 
+    nl.
+output_sem_clause(Literals):-
+    write('[ '),
+    output_sem_literals(Literals),
+    write(' ]'),nl,
+    nl.
+%----------------------------------------------------------------------
+output_sem_clause_list([]).
+
+output_sem_clause_list([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    !,
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_sem_clause(Literals),
+    output_sem_clause_list(RestOfClauses).
+%----------------------------------------------------------------------
+%----Output clauses as a SEM clause list.
+%----Skip empty list and FOL formulae.
+output_sem_clauses([]):-
+    !,
+    write('%---No clauses to output---------------------------------------------------'), 
+    nl.
+
+output_sem_clauses(ClauseList):-
+    !,
+    write('%---Clauses to model-------------------------------------------------------'),
+    nl,
+    output_sem_clause_list(ClauseList).
+
+%=====================================================================%
+%----Module to output FUNCTION DECLARATIONS for functions occurring --%
+%----in TPTP Problem Set clauses in SEM format. ----------------------%
+%----Main entry point: output_sem_function_declarations/1.------------%
+%=====================================================================%
+%----------------------------------------------------------------------
+%----For each parameter in ParameterList write the default sort 
+%----declaration.
+output_sem_argument_sorts(0):-
+    !.
+
+output_sem_argument_sorts(Arity):-
+    write(' default'),
+    Arity1 is Arity - 1,
+    output_sem_argument_sorts(Arity1).
+
+
+%----------------------------------------------------------------------
+%----Output an appropriate variable declaration for each variable.
+
+declare_sem_variable(Variable):-
+    !,
+    write(' '),
+    write(Variable).
+%----------------------------------------------------------------------
+%----Output an appropriate function declaration for each function symbol.
+%----Don't do integers because SEM knows about them already
+declare_sem_function(Integer/0):-
+    integer(Integer),
+    !.
+
+declare_sem_function(Name/Arity):-
+    !,
+    write('{ '),
+    write(Name),
+    write(':'),
+    output_sem_argument_sorts(Arity),
+    write(' -> default }'),
+    nl.
+%----------------------------------------------------------------------
+%----Output an appropriate predicate declaration for each predicate.
+
+declare_sem_predicate(Name/Arity):-
+    !,
+    write('{ '),
+    write(Name),
+    write(': '),
+    output_sem_argument_sorts(Arity),
+    write(' -> BOOL }'),
+    nl.
+
+%----------------------------------------------------------------------
+declare_sem_function_list([]).
+
+declare_sem_function_list([Functor/_|RestOfFunctions]):-
+    name(Functor,[36|_]),
+    !,
+    declare_sem_function_list(RestOfFunctions).
+
+declare_sem_function_list([FirstFunction|RestOfFunctions]):-
+    declare_sem_function(FirstFunction),
+    declare_sem_function_list(RestOfFunctions).
+
+declare_sem_functions([]) :- 
+    !.
+
+%----Ignore defined
+declare_sem_functions([Functor/_]) :- 
+    name(Functor,[36|_]),
+    !.
+
+declare_sem_functions(FunctorStructures):-
+    !,
+    write('%---Function declarations--------------------------------------------------'),
+    nl,
+    declare_sem_function_list(FunctorStructures),
+    nl.
+
+%----------------------------------------------------------------------
+declare_sem_predicate_list([]).
+
+%----Ignore defined
+declare_sem_predicate_list([Predicate/_|RestOfPredicates]):-
+    name(Predicate,[36|_]),
+    !,
+    declare_sem_predicate_list(RestOfPredicates).
+
+declare_sem_predicate_list([FirstPredicate|RestOfPredicates]):-
+    declare_sem_predicate(FirstPredicate),
+    declare_sem_predicate_list(RestOfPredicates).
+
+declare_sem_predicates([]):- 
+    !.
+
+%----Ignore defined
+declare_sem_predicates([Predicate/_]):- 
+    name(Predicate,[36|_]),
+    !.
+
+declare_sem_predicates(UnsignedPredicateStructures):-
+    !,
+    write('%---Predicate declarations-------------------------------------------------'),
+    nl,
+    %---- prop constants have to come first
+    declare_sem_predicate_list(UnsignedPredicateStructures),
+    nl.
+
+%----------------------------------------------------------------------
+declare_sem_variable_list([]).
+
+declare_sem_variable_list([FirstVariable|RestOfVariables]):-
+    declare_sem_variable(FirstVariable),
+    declare_sem_variable_list(RestOfVariables).
+
+declare_sem_variables([]) :- 
+    !.
+
+declare_sem_variables(Variables):-
+    !,
+    write('%---Variable declarations--------------------------------------------------'),
+    nl,
+    write('<'),
+    declare_sem_variable_list(Variables),
+    write(': default >'),
+    nl.
+
+%----------------------------------------------------------------------
+%----Output function declarations for each function occurring in the
+%----clause/formula list.
+output_sem_declarations([]):-
+    !,
+    write('%---No functions to declare------------------------------------------------').
+
+%----If the clause list is not empty then there should be at least one
+%----functor other than equality.
+output_sem_declarations(Formulae):-
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,_),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+    tptp2X_syntax_extract_variables(Formulae,_,Variables),
+    declare_sem_predicates(UnsignedPredicateStructures),
+    declare_sem_functions(FunctorStructures),
+    declare_sem_variables(Variables).
+
+%=====================================================================%
+%----Module to output the HEADER for a generic SEM input file. -------%
+%----Main entry point: output_sem_header/1. --------------------------%
+%=====================================================================%
+
+%--------------------------------------------------------------------------
+%----Output a default sort declaration
+output_sem_default_sort(Cardinality):-
+%---Default sort-----------------------------------------------------------
+    write('( default ['), 
+    write(Cardinality),
+    write('] )'),
+    nl.
+%=====================================================================%
+%----Main Program Code.-----------------------------------------------%
+%----Calls each of the above modules in succession, and performs some-%
+%----appropriate error checking.--------------------------------------%
+%=====================================================================%
+%----------------------------------------------------------------------
+%----Output all the clauses in SEM format with appropriate function
+%----declarations. We can pick which clauses to declare or convert by 
+%----setting ToModel parameters lists.
+%----(note that empty lists default to 'none'.)
+
+sem(sem:ToModel:Cardinality,InputFormulae,_):-
+    tptp_clauses(InputFormulae),
+    !, 
+%----Otherwise backtrack and output the error message below
+    output_sem_default_sort(Cardinality),
+%----Use code from format.otter for this ...
+    output_sem_declarations(InputFormulae),
+    extract_otter_sos(InputFormulae,[ToModel],ModelFormulae,_),
+    output_sem_clauses(ModelFormulae),
+    nl.
+
+sem(_,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in SEM'),
+    nl.
+%----------------------------------------------------------------------
+%----Provide information about the SEM format.
+sem_format_information('%','.sem').
+%----------------------------------------------------------------------
+%----Provide information about the SEM file.
+sem_file_information(format,sem:toModel:cardinality,
+'ToModel is one of conjecture, hypothesis, not_conjecture, axioms, positive, negative, unit, none, all,
+ Cardinality is an integer').
+%----------------------------------------------------------------------

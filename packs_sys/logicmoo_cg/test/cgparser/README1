@@ -1,0 +1,61 @@
+Email message sent to Gerard Ellis on Tue 4 December, 1990.
+
+Gerard,
+	Just a few notes on the appendix I sent you yesterday.
+Firstly you will have probably guessed that CoGNO is the name
+of the program I wrote for my honours thesis (It stands for
+Conceptual Graph Node Organiser - well I liked the acronym and that's
+the best I could come up with).
+
++ I have used the CONGRES "subtype of <id> is <id>" statement
+  to construct the concept type hierarchy.
+  (this is not exactly part of the linear form).
+
++ As in CONGRES, I have used the dollar sign ($) to represent the
+  universal quantifier.
+
++ Oops, I have just picked up a typographical error
+  last line of CoGNO's grammar should be:
+  <varlist> ::= id ["," <varlist>]
+  (I have fixed this)
+
+
+Comparing CoGNO's grammar to the other two presented:
+
++ The grammar for CONGRES is quite good though it seems that
+  a few short-cuts have been taken, eg. "type" construct
+  is a monadic lambda abstraction and therefore should accept
+  only one parameter yet CONGRES allows <paramlist>.
+
++ CONGRES does not allow sets (though to be fair, CoGNO
+  does not deal with them either even though I have included
+  them in my YACC parser - they are neglected)
+
++ CoGNO allows referent [id] "#" [number] (e.g. Gerard #12345)
+  while CONGRES does not (as far as I could tell from the code - 
+  didn't have enough time to test this).
+
++ I think KRE has the simplest grammar.
+  I have made newlines significant in my grammar so that
+  it follows the linear form presented in the Sowa's book.
+  This presents a number of implementation problems though
+  since most computer languages treat newlines as white space.
+  KRE gets past this problem by using a colon (:)
+  separator - I didn't like this idea.
+  It also allows fewer types of referent and does not
+  provide for abstraction and numbering of arcs (neither
+  does CONGRES - CoGNO does but the numbers are ignored
+  I should have more to say about this when I send you my grammar).
+
+That's about all I can think of at the moment - if I come up with more
+I'll get back to you.
+
+BTW, I have started modifying my YACC grammar. I hope to write
+a small README file for you also to outline a few of the decisions
+made, problems etc. I hope to have it finished in the next few days
+(are you in a hurry? - At the latest I hope to have it done by the end of the
+week ).
+
+Maurice.
+__
+email: morri@csis.dit.csiro.au

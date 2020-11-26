@@ -1,0 +1,1 @@
+Defines the top-level category of the grammar.

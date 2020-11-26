@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sciffReport>
+  <h event="start" time="0.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G597626])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, _G595442])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, _G593818])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, _G592733])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h
+      event="event(rent_a_car(alice, ag, bo-123, 10))"
+      time="10.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, _G814142])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, _G809512])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, _G806111])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G803684])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, _G801842])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, _G800560])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(break_down(bo-123))" time="12.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1097333])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, _G1089290])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, _G1084883])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, _G1081765])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G1079680])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, _G1078359])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(tick)" time="14.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G1304518])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1298420])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, _G1293953])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, _G1290835])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G1288750])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, _G1287429])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h
+      event="event(replace_car(ag, alice, bo-123, bo-124))"
+      time="15.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G1960230])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, _G1942165])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, _G1929596])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G1918335])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G1908528])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G1899855])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1894606])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G1892622])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(tick)" time="18.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G531031])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, _G512966])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, _G500397])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G489136])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G479329])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G470656])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G465407])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G463423])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(porto_rispetto)" time="19.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G827699])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, _G809634])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, _G797065])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G785804])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G775997])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G767324])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G762075])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G760091])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(drive_back(alice, bo-124, ag))" time="21.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), discharged), [21.0, _G1262117])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [21.0, _G1240970])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G1228012])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G1216629])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G1206822])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G1198149])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1192900])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G1190916])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(tick)" time="22.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), discharged), [21.0, _G1544116])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [21.0, _G1522969])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G1510011])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G1498628])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G1488821])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G1480148])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1474899])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G1472915])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(tick)" time="26.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), discharged), [21.0, _G788830])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [21.0, _G767683])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G754725])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G743342])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G733535])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G724862])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G719613])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G717629])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(tick)" time="30.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), discharged), [21.0, _G1070801])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [21.0, _G1049654])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, _G1036696])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, _G1025313])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, _G1015506])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, _G1006833])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, _G1001584])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, _G999600])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-123), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+  <h event="event(complete)" time="32.0">
+    <abdSet>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), discharged), [21.0, 32.0])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [21.0, 32.0])"
+	  time="21.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), discharged), [15.0, 32.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(15.0, 22.0), in_agency(ag, bo-124))), active), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-124, 22.0), [15.0, 21.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [15.0, 32.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(car_replaced(bo-123), [15.0, 32.0])"
+	  time="15.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), canceled), [14.0, 32.0])"
+	  time="14.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), compensated), [12.0, 32.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(e(12.0, 13.0), car_replaced(bo-123))), active), [12.0, 14.0])"
+	  time="12.0"/>
+      <abd
+	  predicate="mholds_for(status(c(ag, alice, property(u(10.0, 13.0), great_car(bo-123))), active), [10.0, 12.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(status(c(alice, ag, property(e(10.0, 20.0), in_agency(ag, bo-123))), active), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(hired_until(alice, bo-123, 20.0), [10.0, 15.0])"
+	  time="10.0"/>
+      <abd
+	  predicate="mholds_for(great_car(bo-124), [0.0, 32.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds3), [0.0, 12.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-124), [0.0, 15.0])"
+	  time="0.0"/>
+      <abd
+	  predicate="mholds_for(in_agency(ag, bo-123), [0.0, 10.0])"
+	  time="0.0"/>
+    </abdSet>
+    <pendingSet>
+      <positive/>
+      <negative/>
+    </pendingSet>
+  </h>
+</sciffReport> </h>
+</sciffReport>

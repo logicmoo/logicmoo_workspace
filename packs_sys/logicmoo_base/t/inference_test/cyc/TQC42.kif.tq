@@ -1,0 +1,60 @@
+(note TQC42)
+
+(desires Iran 
+ (economicStability 
+ (EconomicSystemFn SaudiArabia) Low)) 
+
+(desires Iran 
+ (politicalStability SaudiArabia Low)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (deviceUsed ?ATTACK ?BIOCHEM) 
+    (instance ?BIOCHEM BiologicalWeapon) 
+    (eventOccursAt ?ATTACK ?REGION) 
+    (inRegion ?REGION ?COUNTRY) 
+    (instance ?COUNTRY GeographicalAgent)) 
+  (increasesCausally ?ATTACK 
+    (economicStability 
+      (EconomicSystemFn ?COUNTRY) Low) likelihood)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (deviceUsed ?ATTACK ?BIOCHEM) 
+    (instance ?BIOCHEM BiologicalWeapon) 
+    (eventOccursAt ?ATTACK ?REGION) 
+    (inRegion ?REGION ?COUNTRY) 
+    (instance ?COUNTRY GeographicalAgent)) 
+  (increasesCausally ?ATTACK 
+    (politicalStability ?COUNTRY Low) likelihood))
+
+(subclass MilitaryAttack AttackOnTangible) 
+(instance SaudiArabia GeographicalAgent) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (agent ?ACT Iran) 
+      (instance ?ACT MilitaryAttack) 
+      (eventOccursAt ?ACT ?TARGET) 
+      (inRegion ?TARGET SaudiArabia) 
+      (deviceUsed ?ACT ?FORCE) 
+      (instance ?FORCE BiologicalWeapon)) 
+    (or 
+      (and 
+        (desires Iran ?PROP) 
+        (increasesCausally ?ACT ?PROP likelihood)) 
+      (and 
+        (desires Iran (not ?PROP)) 
+        (decreasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list  
+  (economicStability (EconomicSystemFn SaudiArabia) Low))
+
+(answer (list (politicalStability SaudiArabia Low)))
+
+(end_of_file)
+
+   

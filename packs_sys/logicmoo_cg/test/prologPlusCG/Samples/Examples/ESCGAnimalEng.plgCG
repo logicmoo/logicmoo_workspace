@@ -1,0 +1,32 @@
+Universal > Object, Animal, Person, Action, State, Attribute.
+Object > Hair, Meat, Teeth, Claw, Eye.
+Animal > Mammal, Carnivore, Cheetah.
+Person > Man.
+Action > Eat.
+State > Belong.
+Attribute > Color, Component, Twany, Dark, Pointed, Forward.
+
+Man = Robert.
+Animal = Yala.
+
+[Animal : x]-is->[Cheetah] :- 
+  [Animal : x]-is->[Mammal], 
+  [Animal : x]-is->[Carnivore], 
+  [Animal : x]-colorOf->[Color]-attr->[Twany], 
+  [Animal : x]-partOf->[Component]-attr->[Dark].
+
+[Animal : x]-is->[Mammal] :- [Animal : x]-poss->[Hair].
+[Animal : x]-is->[Carnivore] :- [Eat] -
+                                       -obj->[Meat],
+                                       -agnt->[Animal : x].
+[Animal : x]-is->[Carnivore] :- 
+  [Animal : x]-poss->[Teeth]-attr->[Pointed], 
+  [Animal : x]-poss->[Claw], 
+  [Animal : x]-has->[Eye]-attr->[Forward].
+
+[Belong] -
+          -bnfcre->[Man : Robert],
+          -pat->[Animal : Yala] -
+                                 -colorOf->[Color]-attr->[Twany],
+                                 -poss->[Teeth]-attr->[Pointed],
+                                 -has->[Eye]-attr->[Forward];.

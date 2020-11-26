@@ -1,0 +1,6 @@
+fact(0,1) :- !.
+
+fact(_N,_F) :- 
+	_NN is _N - 1,
+	fact(_NN,_FF),
+ 	_F is _N*_FF.

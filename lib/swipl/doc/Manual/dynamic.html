@@ -1,0 +1,441 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.15</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="db.html">
+<link rel="next" href="examineprog.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="db.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="examineprog.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:declare"><a id="sec:4.15"><span class="sec-nr">4.15</span> <span class="sec-title">Declaring 
+predicate properties</span></a></h2>
+
+<a id="ch:dynamic"></a>
+<a id="sec:declare"></a>
+
+<p>This section describes directives which manipulate attributes of 
+predicate definitions. The functors <a id="idx:dynamic1:1015"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, <a id="idx:multifile1:1016"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>,
+<a id="idx:discontiguous1:1017"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+and <a id="idx:public1:1018"></a><a class="pred" href="dynamic.html#public/1">public/1</a> 
+are operators of priority 1150 (see <a id="idx:op3:1019"></a><a class="pred" href="operators.html#op/3">op/3</a>), 
+which implies that the list of predicates they involve can just be a 
+comma-separated list:
+
+<pre class="code">
+:- dynamic
+        foo/0,
+        baz/2.
+</pre>
+
+<p>In SWI-Prolog all these directives are just predicates. This implies 
+they can also be called by a program. Do not rely on this feature if you 
+want to maintain portability to other Prolog implementations.
+
+<p>Notably with the introduction of tabling (see <a class="sec" href="tabling.html#sec:7">section 
+7</a>) it is common that a set of predicates require multiple options to 
+be set. SWI-Prolog offers two mechanisms to cope with this. The 
+predicate
+<a id="idx:dynamic2:1020"></a><a class="pred" href="dynamic.html#dynamic/2">dynamic/2</a> 
+can be used to make a list of predicates dynamic and set additional 
+options. In addition and for compatibility with XSB,<sup class="fn">86<span class="fn-text">Note 
+that <code>as</code> is in XSB a high-priority operator and in SWI a 
+low-priority and therefore both the sets of predicate indicators as 
+multiple options require parenthesis.</span></sup> all the predicates 
+below accept a term <code>as((:PredicateIndicator, ... ), (+Options))</code>, 
+where <var>Options</var> is a <em>comma-list</em> of one of more of the 
+following options:
+
+<dl class="latex">
+<dt><strong>incremental</strong></dt>
+<dd class="defbody">
+Include a dynamic predicate into the incremental tabling dependency 
+graph. See <a class="sec" href="tabling-incremental.html#sec:7.7">section 
+7.7</a>.
+</dd>
+<dt><strong>opaque</strong></dt>
+<dd class="defbody">
+Opposite of <code>incremental</code>. For XSB compatibility.<sup class="fn">87<span class="fn-text">In 
+XSB, <code>opaque</code> is distinct from the default in the sense that 
+dynamic switching between <code>opaque</code> and <code>incremental</code> 
+is allowed.</span></sup>
+</dd>
+<dt><strong>abstract</strong>(<var>Level</var>)</dt>
+<dd class="defbody">
+Used together with <code>incremental</code> to reduce the dependency 
+graph. See <a class="sec" href="tabling-incremental.html#sec:7.7">section 
+7.7</a>.
+</dd>
+<dt><strong>volatile</strong></dt>
+<dd class="defbody">
+Do not save this predicate. See <a id="idx:volatile1:1021"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>.
+</dd>
+<dt><strong>multifile</strong></dt>
+<dd class="defbody">
+Predicate may have clauses in multiple clauses. See <a id="idx:multifile1:1022"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.
+</dd>
+<dt><strong>discontiguous</strong></dt>
+<dd class="defbody">
+Predicate clauses may not be contiguous in the file. See
+<a id="idx:discontiguous1:1023"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a>.
+</dd>
+<dt><strong>shared</strong></dt>
+<dd class="defbody">
+Dynamic predicate is shared between all threads. This is currently the 
+default.
+</dd>
+<dt><strong>local</strong></dt>
+<dt><strong>private</strong></dt>
+<dd class="defbody">
+Dynamic predicate has distinct set of clauses in each thread. See
+<a id="idx:threadlocal1:1024"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.
+</dd>
+</dl>
+
+<p>Below are some examples, where the last two are semantically 
+identical.
+
+<pre class="code">
+:- dynamic person/2 as incremental.
+:- dynamic (person/2,organization/2) as (incremental, abstract(0)).
+:- dynamic([ person/2,
+             organization/2
+           ],
+           [ incremental(true),
+             abstract(0)
+           ]).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="dynamic/1"><strong>dynamic</strong> <var>:PredicateIndicator, 
+...</var></a></dt>
+<dd class="defbody">
+Informs the interpreter that the definition of the predicate(s) may 
+change during execution (using <a id="idx:assert1:1025"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+and/or <a id="idx:retract1:1026"></a><a class="pred" href="db.html#retract/1">retract/1</a>). 
+In the multithreaded version, the clauses of dynamic predicates are 
+shared between the threads. The directive <a id="idx:threadlocal1:1027"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a> 
+provides an alternative where each thread has its own clause list for 
+the predicate. Dynamic predicates can be turned into static ones using
+<a id="idx:compilepredicates1:1028"></a><a class="pred" href="dynamic.html#compile_predicates/1">compile_predicates/1</a>.</dd>
+<dt class="pubdef"><a id="dynamic/2"><strong>dynamic</strong>(<var>:ListOfPredicateIndicators, 
++Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:dynamic1:1029"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, 
+but allows for setting additional properties. This predicate allows for 
+setting multiple properties on multiple predicates in a single call. 
+SWI-Prolog also offers the XSB compatible <code>:- dynamic (<a id="idx:p1:1030"></a><span class="pred-ext">p/1</span>) 
+as (incremental,abstract(0)).</code> syntax. See the introduction of <a class="sec" href="dynamic.html#sec:4.15">section 
+4.15</a>. Defined <var>Options</var> are:
+
+<dl class="latex">
+<dt><strong>incremental</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Make the dynamic predicate signal depending <em>tables</em>. See
+<a class="sec" href="tabling-incremental.html#sec:7.7">section 7.7</a>.
+</dd>
+<dt><strong>abstract</strong>(<var>0</var>)</dt>
+<dd class="defbody">
+This option must be used together with <code>incremental</code>. The 
+only supported value is <code>0</code>. With this option a call to the 
+incremental dynamic predicate is recorded as the most generic term for 
+the predicate rather than the specific variant.
+</dd>
+<dt><strong>thread</strong>(<var>+Local</var>)</dt>
+<dd class="defbody">
+<var>Local</var> is one of <code>shared</code> (default) or <code>local</code>. 
+See also <a id="idx:threadlocal1:1031"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.
+</dd>
+<dt><strong>multifile</strong>(<var>+Boolean</var>)</dt>
+<dt><strong>discontiguous</strong>(<var>+Boolean</var>)</dt>
+<dt><strong>volatile</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Set the corresponding property. See <a id="idx:multifile1:1032"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>, <a id="idx:discontiguous1:1033"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+and <a id="idx:volatile1:1034"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="compile_predicates/1"><strong>compile_predicates</strong>(<var>:ListOfPredicateIndicators</var>)</a></dt>
+<dd class="defbody">
+Compile a list of specified dynamic predicates (see <a id="idx:dynamic1:1035"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+and
+<a id="idx:assert1:1036"></a><a class="pred" href="db.html#assert/1">assert/1</a>) 
+into normal static predicates. This call tells the Prolog environment 
+the definition will not change anymore and further calls to <a id="idx:assert1:1037"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+or <a id="idx:retract1:1038"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+on the named predicates raise a permission error. This predicate is 
+designed to deal with parts of the program that are generated at runtime 
+but do not change during the remainder of the program execution.<sup class="fn">88<span class="fn-text">The 
+specification of this predicate is from Richard O'Keefe. The 
+implementation is allowed to optimise the predicate. This is not yet 
+implemented. In multithreaded Prolog, however, static code runs faster 
+as it does not require synchronisation. This is particularly true on SMP 
+hardware.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="multifile/1"><strong>multifile</strong> <var>:PredicateIndicator, 
+...</var></a></dt>
+<dd class="defbody">
+Informs the system that the specified predicate(s) may be defined over 
+more than one file. This stops <a id="idx:consult1:1039"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+from redefining a predicate when a new definition is found.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="discontiguous/1"><strong>discontiguous</strong> <var>:PredicateIndicator, 
+...</var></a></dt>
+<dd class="defbody">
+Informs the system that the clauses of the specified predicate(s) might 
+not be together in the source file. See also <a id="idx:stylecheck1:1040"></a><a class="pred" href="debugger.html#style_check/1">style_check/1</a>.</dd>
+<dt class="pubdef"><a id="public/1"><strong>public</strong> <var>:PredicateIndicator, 
+...</var></a></dt>
+<dd class="defbody">
+Instructs the cross-referencer that the predicate can be called. It has 
+no semantics.<sup class="fn">89<span class="fn-text">This declaration is 
+compatible with SICStus. In YAP, <a id="idx:public1:1041"></a><a class="pred" href="dynamic.html#public/1">public/1</a> 
+instructs the compiler to keep the source. As the source is always 
+available in SWI-Prolog, our current interpretation also enhances the 
+compatibility with YAP.</span></sup> The public declaration can be 
+queried using <a id="idx:predicateproperty2:1042"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>. 
+The <a id="idx:public1:1043"></a><a class="pred" href="dynamic.html#public/1">public/1</a> 
+directive does
+<em>not</em> export the predicate (see <a id="idx:module1:1044"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a> 
+and <a id="idx:export1:1045"></a><a class="pred" href="altmoduleapi.html#export/1">export/1</a>). 
+The public directive is used for (1) direct calls into the module from, 
+e.g., foreign code, (2) direct calls into the module from other modules, 
+or (3) flag a predicate as being called if the call is generated by 
+meta-calling constructs that are not analysed by the cross-referencer.</dd>
+<dt class="pubdef"><a id="non_terminal/1"><strong>non_terminal</strong> <var>:PredicateIndicator, 
+...</var></a></dt>
+<dd class="defbody">
+Sets the <code>non_terminal</code> property on the predicate. This 
+indicates that the predicate implements a <em>grammar rule</em>. See
+<a id="idx:predicateproperty2:1046"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>. 
+The <code>non_terminal</code> property is set for predicates exported as <var>Name</var>//<var>Arity</var> 
+as well as predicates that have at least one clause written using the
+<code><code>--&gt;</code>/2</code> notation.
+</dd>
+</dl>
+
+<p></body></html>

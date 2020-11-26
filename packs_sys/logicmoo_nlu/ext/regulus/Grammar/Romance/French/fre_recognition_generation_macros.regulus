@@ -1,0 +1,4 @@
+
+include('$REGULUS/Grammar/Romance/French/fre_recognition_macros_main.regulus').
+
+macro(surface_realisation_of_hyphen, '--').

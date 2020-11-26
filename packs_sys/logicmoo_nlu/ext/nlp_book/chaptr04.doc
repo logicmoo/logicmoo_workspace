@@ -1,0 +1,568 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Grammars
+
+Diagrams are not, given the limitations of present computers, a
+convenient data structure to use for NLP.  The simplest way to handle
+trees is to manipulate them as lists where the first element is the
+root category and subsequent elements are the daughter subtrees in
+order of occurrence.  Thus the tree above would be:
+
+    [s,[np,'MediCenter'],[vp,[v,employed],[np,nurses]]]
+
+This kind of list would appear in a "pretty-printed" format as
+follows:
+
+    [s
+        [np
+            'MediCenter']
+        [vp
+            [v
+                employed]
+            [np
+                nurses]]]
+
+The general principle used here is that a tree is represented by a
+list whose first element is the top label and whose subsequent
+elements are the immediate subtrees in order.  These elements are then
+themselves lists, representing the subtrees according to the same
+convention.  In this scheme, a leaf node of a tree is treated as a
+tree with a label but no immediate subtrees.  Thus it will be
+represented by a list with one element - the label.
+
+An alternative and equivalent representation of a tree is as a term:
+
+     s(np('MediCenter'),vp(v(employed),np(nurses)))
+
+It is as straightforward to represent a CF-PSG in Prolog data
+structures as it is to represent transition networks.  One way is to
+have a predicate 'rule' which takes two arguments, for the LHS
+category and the sequence of categories appearing as the RHS
+(represented as a list).  Here is how the rules of Grammar1 would
+appear in this representation:
+
+    rule(s,[np,vp]).
+    rule(vp,[v,np]).
+    rule(vp,[v]).
+
+For lexical entries, we can adopt the same convention as with
+transition networks, introducing assertions like:
+
+    word(np,'Dr. Chan').
+    word(np,nurses).
+    word(np,'Medicenter').
+    word(v,died).
+
+A grammar is a formal set of rules describing what it is to be a
+string in a particular language.  Prolog, as a language based on
+logic, is eminently suitable for writing formal descriptions and
+definitions of various kinds.  It is therefore natural to consider
+expressing a grammar directly as a logical specification in Prolog.
+In fact, it is extremely simple to translate the little grammar that
+we have been using as an example into Prolog clauses talking directly
+about strings of words and which ones are grammatical.  As it happens,
+the resulting Prolog code can be used to recognize exactly the strings
+of words that the grammar claims to be grammatical and to generate
+example grammatical sentences.  The translation of grammar rules into
+Prolog clauses just requires thinking carefully about what each rule
+is actually saying.  Our sentence rule can be readily paraphrased as
+claiming that a string of words, Z, counts as a sentence if there is a
+string of words, X, that counts as a noun phrase, and a string of
+words, Y, that counts as a verb phrase, and that Z is merely Y
+appended to X.  And this paraphrase can be more concisely expressed as
+a Prolog Horn clause:
+
+    s(Z)   :- np(X), vp(Y),
+              append(X,Y,Z).
+
+The rule for verb plus object verb phrases is isomorphic:
+
+    vp(Z)  :- v(X), np(Y),
+              append(X,Y,Z).
+
+And the intransitive case is trivial:
+
+    vp(Z)  :- v(Z).
+
+We need a lexicon, of course, and this can be provided as follows:
+
+    np(['Dr. Chan']).
+    np(['MediCenter']).
+    np([nurses]).
+    np([patients]).
+    v([died]).
+    v([employed]).
+
+And that is it -- we have a recognizer for a tiny fragment of English
+which can be invoked thus:
+
+    ?- s([patients,died]).
+    ?- s(['MediCenter',employed,nurses]).
+
+Thanks to its wholly declarative character, we can use this very same
+code to do generation as well as recognition.  Try the following:
+
+    ?- s(Sentence).
+
+Although elegant in comparison with the code one would need to perform
+the same task in a procedural language, this scheme for writing
+recognizers is less than ideal.  Considerations of both efficiency and
+aesthetics suggest that we should eliminate the explicit 'append'
+statements if we can.  The difference list technique, which we have
+already exploited in our net traversal programs, allows us both to
+eliminate the offending 'append' statements and to make the Prolog
+code close to isomorphic to the rules of the grammar whose language is
+recognized, thus simultaneously addressing our efficiency and
+aesthetic concerns.  We recode the recognizer as follows:
+
+    s(X,Z)   :- np(X,Y), vp(Y,Z).
+    vp(X,Z)  :- v(X,Z).
+    vp(X,Z)  :- v(X,Y), np(Y,Z).
+
+    np(['Dr. Chan'|X],X).
+    np(['MediCenter'|X],X).
+    np([nurses|X],X).
+    np([patients|X],X).
+    v([died|X],X).
+    v([employed|X],X).                     
+
+    ?- s([patients,died],[]).
+    ?- s(['MediCenter',employed,nurses],[]).
+
+The first rule here can be paraphrased as saying that we can find an S
+at the start of X (with Z the portion of string left behind after it))
+if we can find an NP at the beginning of X, leaving Y behind, and a VP
+at the beginning of Y, with Z left behind after that.
+
+As before, we can use this very same code to do generation as well as
+recognition.  Try the following:
+
+    ?- s(Sentence,[]).
+
+It is straightforward to convert the recognizer into a parser, simply
+by the addition of extra arguments.  Each predicate in the program,
+which captures the notion of a particular grammatical category, is
+provided with an extra argument (appearing as the first argument, say)
+which describes (as a list) the structure of the phrase.  In the logic
+translation of each phrase-structure rule the tree corresponding to
+the LHS category will be simply a list consisting of the category name
+followed by the trees of the RHS categories.  For example:
+
+    s([s,NP,VP],X,Z)   :- np(NP,X,Y), vp(VP,Y,Z).
+
+    np([np,nurses],[nurses|X],X).
+
+Translated into English (and forgetting about the arguments concerned
+with portions of the string), the first clause says that one form of a
+sentence is as a NP followed by a VP.  If a sentence has this form,
+then its parse tree will be a list of the form "[s,NP,VP]", where NP
+is the parse tree of the noun phrase and VP is the parse tree of the
+verb phrase.  The code for our difference list recognizer above bears
+such a close relationship to the corresponding PSG that one might
+reasonably expect to be able to get from the latter to the former
+automatically.  We would like to be able to get a program to convert
+clauses written essentially as phrase structure rules into clauses
+that would implement difference list recognition.  Thus our input to
+the program might be expressed thus:
+
+    s ---> np, vp.
+
+    np ---> [nurses].
+
+(given an appropriate operator declaration for '--->'), where the
+annotated ("variabilised") difference list output we want is:
+
+    s(_1,_2) :- np(_1,_3), vp(_3,_2).
+
+    np([nurses|_4],_4).
+
+This turns out not to be too difficult.  We define a predicate
+'translate' as follows:
+
+    translate((LHS_in ---> RHS_in), (LHS_out :- RHS_out)) :-
+        LHS_out =.. [LHS_in,S0,Sn],
+        add_vars(RHS_in,S0,Sn,RHS_out).
+
+This sets up templates for the input rule and output clause, forms the
+LHS of the output by wrapping a couple of difference list variables up
+with the LHS of the input, and concludes by handing the RHS over to
+'add_vars':
+
+    add_vars((RHS_in1,RHS_in2),S0,Sn,RHS_out) :- !,
+        add_vars(RHS_in1,S0,S1,RHS_out1),
+        add_vars(RHS_in2,S1,Sn,RHS_out2),
+        combine(RHS_out1,RHS_out2,RHS_out).
+
+If there is more than one item on the RHS of the input, then split it
+into two at the first comma, and recursively reapply 'add_vars' to the
+two pieces, then combine the results.
+
+    add_vars(RHS_in,S0,Sn,true) :-
+        islist(RHS_in), !,
+        append(RHS_in,Sn,S0).
+
+If the RHS just consists of a list, and is thus a lexical entry,
+append the terminating difference list variable to it, and then unify
+the resulting list with the initial difference list variable.
+
+    add_vars(RHS_in,S0,Sn,RHS_out) :-
+        atom(RHS_in),
+        RHS_out =.. [RHS_in,S0,Sn].
+
+If RHS is just a single atom, then treat it the same way as the LHS
+symbol.
+
+It only remains to define 'combine':
+
+    combine(true,RHS_out2,RHS_out2) :- !.
+    combine(RHS_out1,true,RHS_out1) :- !.
+    combine(RHS_out1,RHS_out2,(RHS_out1,RHS_out2)).
+
+This just says that RHS results which unify with 'true' can be ignored
+-- otherwise you get what you expect.
+
+Definite Clause Grammars      
+
+Although translating CF-PSGs directly into Prolog clauses is
+straightforward, there are important new issues to be faced in
+translating general feature based grammars.  In such grammars, a
+category is a bundle of features and so cannot be represented simply
+by an atomic predicate relating strings of words.  What we have to do
+is translate each category into a predicate together with a sequence
+of arguments which encode the features in the bundle, as well as
+saying the right things about portions of the string.  As before, it
+would be useful to have a more abbreviated notation that would allow
+us to write such grammars as Prolog programs but without having to
+worry about the difference lists.  Fortunately, many Prolog systems
+come complete with a built in interpreter for such a notation, the
+notation of Definite Clause Grammars (DCGs).
+
+In fact, we have already almost seen DCGs in a preceding section --
+the following expressions are DCG rules:
+
+    s --> np, vp.
+
+    np --> [kim].
+
+Prolog interpreters equipped with a DCG translator will automatically
+convert these expressions into the difference list recognition format
+that we have already discussed.  It might seem from this example as if
+"DCG" is just a fancy name for a minor variant on standard PSG
+formalism.  But the example is misleading in that the DCG formalism
+allows one to do something not countenanced in PSG - namely to
+associate as arguments, terms and/or logical variables, as many as you
+want, with categories.  Hence the following rule is also a legitimate
+statement in the DCG formalism:
+
+    s --> np(Person,Number,nominative), vp(Person,Number,tensed).
+
+one which a DCG-equipped Prolog system will translate into something
+equivalent to this:
+
+    s(_12,_13) :- np(_14,_15,nominative,_12,_16),
+                  vp(_14,_15,tensed,_16,_13).
+
+Assuming that the variables and constants in the original DCG rule are
+not perversely named, that rule claims that a sentence can consist of
+a nominative NP followed by a tensed VP, where the NP and VP share the
+same values for both person and number.  In PATR, this would be
+rendered by something like:
+
+    Rule S -> NP VP:
+       <NP person> = <VP person>
+       <NP number> = <VP number>
+       <NP case> = nominative
+       <VP vform> = tensed.
+
+Note that in the DCG version the number and order of arguments is
+fixed and crucial.  Thus whilst 'np(third,plural,Case)' is probably
+both meaningful and useful in the context of the rule just given, the
+superficially similar 'np(third,plural)' and 'np(plural,Case,third)'
+are most likely to be both useless and misleading.  (We hedge our
+claims here, since their truth depends on how the rest of the grammar
+is set up.  One could use 'Case' as a variable to range over number
+values, or use 'tensed' as the name of a case, but it would be
+thoroughly perverse to do so.)
+
+The PATR notation does not suffer from these fixed arity and fixed
+order requirements on the equations that annotate its rules.  Notice
+also that whilst we have chosen mnemonic names for the variables in
+our example rule, these names will typically not be maintained
+internally by the Prolog system, and so the effect of tracing a parse,
+say, may be to exhibit expressions like 'np(_43, _76, accusative, _15,
+_16), vp(_43, _56, _97, _16, _19)' thus requiring one to remember that
+the third argument in 'vp' deals with tense, the second argument in
+'np' deals with number, and so on.  This latter problem can be
+overcome, albeit at the cost of a little prolixity, by using terms
+separated by a colon (or "=" or some other symbol which is declared as
+an infix operator) in place of bare variables.  The first component of
+these terms can then be a constant which provides a mnemonic name for
+the function of the slot in which it appears, thus:
+
+    s   -->  np(person:P,number:N,sex:S,case:nominative),
+          vp(person:P,number:N,sex:S,verb_form:tensed).
+
+    vp(person:P1,number:N1,sex:S1,verb_form:V1)  -->
+          xv(person:P1,number:N1,verb_form:V1),
+          np(person:P2,number:N2,sex:S2,case:accusative),
+          vp(person:P2,number:N2,sex:S2,verb_form:infinitive).
+
+And, in a grammar along these lines, the lexical entries need to look
+like this:
+
+    np(person:3,number:singular,sex:_,case:_)  --> [kim].
+    np(person:3,number:singular,sex:female,case:nominative)
+                     --> [she].
+    det(number:singular)  --> [a].
+    det(number:_)  --> [the].
+    nn(number:plural,sex:none)  --> [scissors].
+    nn(number:_,sex:_)  --> [sheep].
+    nn(number:plural,sex:none)  --> [scissors].
+    bv(person:_,number:plural,verb_form:tensed)  --> [are].
+    tv(person:_,number:_,verb_form:tensed)  --> [ate].
+    xv(person:3,number:singular,verb_form:tensed)  --> [sees].
+
+Since DCGs allow one to nest terms and variables to arbitrary depth,
+rules such as the following are quite permissible:
+
+    s   -->  np(person:P,number:N,sex:S,case:C),
+          s(slash:np(person:P,number:N,sex:S,case:C)).
+
+    vp(person:P,number:N,sex:_,verb_form:V,slash:np(person:_,
+          number:_,sex:_,case:accusative))  -->
+          tv(person:P,number:N,verb_form:V).
+
+Notice that the ":" notation, although it leads to more perspicuous
+grammars and traces, does not liberate the grammar writer from having
+to worry about always using the same argument position of a predicate
+consistently for the same feature (something the PATR user does not
+have to worry about).
+
+Our examples so far have concentrated on using DCGs as feature-based
+recognizers, but nothing about the formalism constrains them to mere
+recognition.  Since the arguments to the categories can contain
+arbitrary terms, we can use them for parsing, and, more generally,
+syntactic translation.  Thus to parse, we could write rules like this:
+
+    s([s,NP,VP]) --> np(NP),vp(VP).
+
+    vp([vp,XV,NP,VP]) --> xv(XV),np(NP),vp(VP).
+
+or like this:
+
+    s(s(NP,VP)) --> np(NP),vp(VP).
+
+    vp(vp(XV,NP,VP)) --> xv(XV),np(NP),vp(VP).
+
+depending on whether we want the parse returned in the form of a list
+or a term.  And, since there is no limit to the number of permissible
+arguments, we can, if we wish, simply add this parse-construction
+argument to the feature arguments already illustrated.
+
+The formulation of feature based grammar in DCG that has been
+illustrated relies on a fundamental property of the grammars
+concerned, namely that there is a feature (we have called it cat)
+whose value is atomic and always provided in any description of a
+category given in the grammar.  This property has been needed, because
+we have consistently used the cat value as the Prolog predicate in the
+formulation, and in Prolog it is impossible to have a goal whose
+predicate is unknown (a variable).  Of course, in a rule like:
+
+        Rule {coordination}
+            X0 -> X1 C X2:
+            ...
+
+the whole point is not to have to specify the cat features of X0, X1
+and X2.  With a grammar having rules of this kind, we have little
+choice but to treat cat just like every other feature and provide a
+dummy predicate, 'p' say, that is used with every category.  This
+predicate must always take the same number of arguments (have an
+argument for every possible feature) in order that there can be
+category descriptions analogous to X0 above that will match with every
+possible category.  The result of translating a PATR grammar of this
+kind into a DCG will be a set of rules such as the following:
+
+    p(s,Person1,Number1,Case1,Vform1) -->
+        p(np,Person,Number,nominative,Vform2),
+        p(vp,Person,Number,Case2,tensed).
+
+(where the 'p' arguments represent cat, person, number, case and vform
+in that order).
+
+In summary, the DCG formalism represents a rather natural extension of
+CF-PSG within the Prolog context.  It is convenient, being standardly
+provided with Prolog systems, and perspicuous, it has a semantics that
+is as declarative as that of Prolog and, of course, it integrates well
+with Prolog.  The arguments associated with categories permit both
+parsing and translation more generally (for example, translation from
+English to logic, as we shall see in Chapter 8).  As we will see in
+the next chapter, the parser that the standard interpretation of the
+formalism provides is a left-to-right, top-down, back-tracking one, a
+parser, in fact, whose search strategy is exactly that of Prolog
+itself.  For this reason, DCG parsers are fast (since they employ
+Prolog very directly) but inefficient (since they fail to store
+intermediate results), though no worse in this respect than a typical
+ATN of comparable coverage.  From the point of view of the grammar-
+writer, the major disadvantage of the DCG formalism is its assumption
+of "term unification" as opposed to the "graph unification" of PATR.
+This means that all the slots for featural information have to be
+explicitly provided in a fixed order on every category to which they
+apply, even when no information is available and the slot just
+contains a variable.  This makes for grammatical and lexical
+verbosity, whereas graph unification based formalisms allow unknown or
+irrelevant featural information to be suppressed.  This is a topic
+which we shall be returning to in Chapter 7.
+
+The use of arguments and variables in DCGs allows them to be used to                     
+define recognizers for languages that fall outside the CFL class.  As
+we saw earlier, one of the distinguishing features of a context-free
+rule is that it makes no restriction on the context in which its LHS
+can be realised as its RHS.  There is no reason, however, why we
+should not consider other kinds of rules in describing languages, for
+instance rules like 'LHS can be realised as RHS if it is preceded by a
+A and followed by a B'.  If we allow ourselves to use such rules, then
+we will be able to describe languages that cannot be descibed by CF-
+PSGs.  One such language is the language anbncn.  Since the rule
+format for DCGs is that of the CF-PSGs and since there is no apparent
+reference to syntactic context, it may not be immediately obvious how
+DCGs are able to provide recognizers for non-CFLs.  The key to this
+puzzle lies in the fact that DCGs can take account of context by
+recording information in extra arguments to the predicates.  We begin
+by considering a grammar for the anbncn language that is standardly
+used as an example of a non-CFL language.  In this grammar, the extra
+arguments are used to remember how many bs and cs are to be accepted
+after the as.  This information is stored as a term of the form:
+
+    i(i(i(....i(i)....)))
+
+where the number of is is the number of symbols to be accepted.
+
+The first a seen:
+
+    s   -->  [a], s(i).
+
+every subsequent a seen pushes an i onto the i-stack kept in the
+category's argument slot:
+
+    s(I)  -->   [a], s(i(I)).
+
+We are through with as, so we copy the entire i-stack, which now
+records the exact number of as seen, onto two new categories:
+
+    s(I)  -->   bn(I), cn(I).
+
+and use the first of these to check the length of the b-string by
+popping one i off the stack for each b seen:
+
+    bn(i(I)) -->  [b], bn(I).
+    bn(i) -->   [b].
+
+and then doing exactly the same with the c-string:
+
+    cn(i(I)) -->  [c], cn(I).
+    cn(i) -->   [c].
+
+Another familiar chestnut from the formal language literature, one
+which perhaps has more potential relevance to NLP than the case we
+have just looked at, is the string copying language xx, x in {a,b,c}*.
+This is the language of strings made out of the symbols a, b and c
+where each string consists of two halves, the second being an exact
+copy of the first.  This succumbs to a rather similar technique: get
+the first character in the string and put it on the (empty) stack:                     
+
+    x   -->  [a], x(a).
+    x   -->  [b], x(b).
+    x   -->  [c], x(c).
+
+push subsequent characters onto the stack as they occur:
+
+    x(I)  -->   [a], x(a(I)).
+    x(I)  -->   [b], x(b(I)).
+    x(I)  -->   [c], x(c(I)).
+
+copy the stack to a new category:
+
+    x(I)  -->   y(I).
+
+and start popping the characters off, as you encounter them in the
+string:
+
+    y(a(I))  -->  y(I),[a].
+    y(b(I))  -->  y(I),[b].
+    y(c(I))  -->  y(I),[c].
+
+until you reach the last character in the string:
+
+    y(a)  -->   [a].
+    y(b)  -->   [b].
+    y(c)  -->   [c].
+
+It is worth reflecting on the efficiency of this grammar used as a DCG
+recognizer under the standard interpretation of DCGs.  Arranged with
+the order of clauses used above, the program will begin by putting the
+entire string on the stack, reach the end, backtrack one character,
+apply the 'x(I) --> y(I)' rule, try and accept the final character,
+backtrack over the penultimate character, retry the 'x(I) --> y(I)'
+rule, and so forth, until it has backtracked to the exact middle of
+the string.  Only then will it be able to make it through to the end
+of the string.  Compare this with the operation of the DCG recognizer
+for anbncn given above: that does not need to backtrack at all when
+presented with grammatical strings.  The moral is a simple one: the
+fact that DCGs make it easy to write elegant grammars for such
+languages does not entail that the recognition process they induce
+will be efficient.
+
+One problem that has much interested linguists in the last few years,
+and even attracted the attention of some computational linguists, is
+that posed by languages with very free word or constituent order.  One
+of the simplest free word order languages that one can imagine is the
+language {a,b}* such that n(a) = n(b).  This simple language is
+outside the class of regular languages, but inside the class of CFLs.
+Here is a DCG version of a CF-PSG for the language:
+
+    s1    -->   [a], y1.
+    s1    -->   [b], x1.
+    x1    -->   [a], s1.
+    x1    -->   [b], x1,x1.
+    x1    -->   [a].
+    y1    -->   [b], s1.
+    y1    -->   [a], y1,y1.
+    y1    -->   [b].
+
+This works, but its workings are remarkably opaque for such a simple
+grammar.  Much more perspicuous is the following DCG, that exploits to
+the full the possibilities offered by using arguments as stacks in
+order to count occurrences:
+
+     %
+     %    start two counters:
+    x     -->   x(a,b).
+     %    if there is an a, then increment the b counter:
+    x(A,B)   -->  [a], x(A,b(B)).
+     %    alternatively, if there is an a,
+     %    then decrement the a counter:
+    x(a(A),B)   -->  [a],x(A,B).
+     %    if there is an b, then increment the a counter:
+    x(A,B)   -->  [b], x(a(A),B).
+     %    alternatively, if there is an b,
+     %    then decrement the b counter:
+    x(A,b(B))   -->  [b],x(A,B).
+     %    eliminate the nonterminal:
+    x(a,b)   -->  [].
+
+This section has served to illustrate some of the formal techniques
+that can be used to handle grammatical phenomena such as sequences of
+matching length, isomorphic sequences, and very free order which
+sometimes prove awkward, or even mathematically impossible, to handle
+with just the resources of CF-PSG.  To the extent that such phenomena
+show up in the languages of the world, and it is a very limited
+extent, these techniques are of potential relevance to NLP.  We have
+restricted ourselves to relatively simple formal language examples
+since the background necessary to provide grammar fragments from
+languages like Swiss German (isomorphic sequences) or Djirbal (free
+order) would take more space than these relatively exotic topics
+warrant.

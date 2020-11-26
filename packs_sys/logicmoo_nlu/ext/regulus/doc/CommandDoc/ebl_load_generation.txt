@@ -1,0 +1,9 @@
+Compile and load the current specialised generation grammar. This will
+be the file {\tt $\langle$prefix$\rangle$\_\-specialised\_\-no\_\-binarise\_\-default.regulus},
+where {\tt $\langle$prefix$\rangle$} is the value of the config file
+entry {\tt working\_\-file\_\-prefix}. The resulting compiled
+generation grammar is placed in the file defined by the {\tt
+generation\_\-rules} config file entry.
+
+Note that {\tt EBL\_\-LOAD\_\-GENERATION} places the compiled
+generation grammar in the same place as LOAD\_\-GENERATION.

@@ -1,0 +1,26 @@
+use human as knowledge.
+%use robot as knowledge.
+use messageTranslation as knowledge.
+use humanActions.
+
+exit=always.
+
+module message {
+	% the associate(Agt,Id) message connects GOAL Agent names with BW4T agent IDs.
+	forall (Agt).sent(associate(Id)) do insert(associate(Agt,Id)).
+	
+	% we still need to translate these messages.
+	forall (Agt).sent(msg(Mess)), 
+		bel(associate(Agt, SenderId), translate(SenderId,Mess,Transl), strjoin([SenderId, ' says'],WhoSays)) 
+	do sendToGUI(WhoSays,Transl).
+
+	% handle user's request to send message.
+	forall percept(sendMessage(allother,Mess)), bel(ownId(Me), translate(Me,Mess,Transl))
+	do allother.send(msg(Mess)) + sendToGUI('I say',Transl).
+	
+	% GUI asks to send message to a BW4T-ID.
+	forall percept(sendMessage(ReceiverId,Mess)), 
+		bel(not(ReceiverId=all), not(ReceiverId=allother), ownId(Me), translate(Me,Mess,Transl),
+			associate(Receiver,ReceiverId))
+	do (Receiver).send(msg(Mess)) + sendToGUI('I say',Transl). 
+}

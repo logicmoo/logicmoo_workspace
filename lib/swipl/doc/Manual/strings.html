@@ -1,0 +1,414 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.42</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="settings.html">
+<link rel="next" href="simplex.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="settings.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="simplex.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:strings"><a id="sec:A.42"><span class="sec-nr">A.42</span> <span class="sec-title">library(strings): 
+String utilities</span></a></h2>
+
+<p><a id="sec:strings"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="format.html#format/3">format/3</a> can format to 
+a string as well. The <code>library(lynx/format)</code> provides 
+primitive to wrap long strings. <br>
+- The core system provides many additional string processing predicates.
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+There are probably many other high level string predicates that belong 
+in this library. For example, predicates similar to the functions in <a class="url" href="https://docs.python.org/3/library/textwrap.html">https://docs.python.org/3/library/textwrap.html</a>
+</dd>
+</dl>
+
+<p>This module provides string handling utilities, currently notably for 
+dealing with multi-line strings and <i>interpolation</i>. The library 
+provides a couple of primitives as well definitions for the <code>string</code>
+<i>quasi quotation</i> syntax. The latter allows for constructing both 
+single line and multi-line long strings based on template interpolation. 
+Below is a simple example using the quasi quotation syntax.
+
+<pre class="code">
+test(To) :-
+    write({|string(To)||
+           | Dear {To},
+           |
+           | I'm happy to announce a string interpolation quasi quoter.
+           |}.
+</pre>
+
+<p><b>Warning</b>
+
+<p>The general purpose string interpolation implemented by this library 
+should <b>not</b> be used to create strings for a formal language such 
+as HTML, JavaScript, SQL, etc. because the result will be subject to
+<b>injection attacks</b>, providing a serious <b>security risc</b>. The 
+core idea of quasi quotation is to know about the target language and 
+interpolate Prolog data into the template <b>while respecting the syntax 
+of the target language</b>, notable to <b>escape certain characters 
+where needed</b>. See also <code>library(http/html_write)</code> and <code>library(http/js_write)</code> 
+which define quasi quotation rules for HTML and JavaScript.
+
+<dl class="latex">
+<dt class="pubdef"><a id="string/4"><strong>string</strong>(<var>+Content, 
++Args, +Binding, -DOM</var>)</a></dt>
+<dd class="defbody">
+Implements the quasi quotation syntax <code>string</code>. If the first 
+character of the content is a newline (i.e., there is a newline
+<i>immediately</i> after the <code>||</code> token) this first uses
+<a class="pred" href="strings.html#dedent_lines/3">dedent_lines/3</a> to 
+the remove common white space prefix from the lines. This is called with 
+the option <code>chars("\s\t|")</code>, i.e., also removing <code>|</code> 
+characters and <code>tab(8)</code>.
+
+<p>If the quasi quotation syntax carries arguments (e.g., <code>string(To)</code>), 
+the string is compiled into a function that produces the result of 
+interpolating the arguments into the template. See user functions on 
+dict objects. If there are no arguments, the result is simply the final 
+string.
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="strings.html#interpolate_string/4">interpolate_string/4</a> 
+for the interpolation syntax. <br>
+- Section for examples and discussion.
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Specify tab width and allow for {@Goal} templates.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="interpolate_string/4"><strong>interpolate_string</strong>(<var>:In, 
+-Out, +Map, +Options</var>)</a></dt>
+<dd class="defbody">
+Establish a string from a template by replacing patterns. Supported 
+patterns are:
+
+<dl class="latex">
+<dt>{<var>Name</var>}</dt>
+<dd class="defbody">
+If <var>Map</var> contains <code>Name=Value</code>, insert <var>Value</var> 
+using <a class="pred" href="termrw.html#write/1">write/1</a>. If <var>Name</var> 
+does not appear in <var>Map</var>, raise an existence error.
+<var>Name</var> must satisfy the rules for a Prolog variable.</dd>
+<dt>{<var>Name,Default</var>}</dt>
+<dd class="defbody">
+As above, but if <var>Name</var> does not appear in <var>Map</var>, use <var>Value</var></dd>
+<dt>{<var>@(Goal)</var>}</dt>
+<dd class="defbody">
+Insert the output (to <code>current_output</code>) of <var>Goal</var> 
+here. For safety reasons only accepted if <var>Options</var> contains
+<code>goals(true)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="string_lines/2"><strong>string_lines</strong>(<var>?String, 
+?Lines</var>)</a></dt>
+<dd class="defbody">
+True when <var>String</var> represents <var>Lines</var>. This follows 
+the normal text convention that a line is defined as a possible empty 
+string followed by a newline character ("<code>\n</code>"). E.g.
+
+<pre class="code">
+?- string_lines("a\nb\n", L).
+L = ["a", "b"].
+?- string_lines(S, ["a", "b"]).
+S = "a\nb\n".
+</pre>
+
+<p>This predicate is a true <i>relation</i> if both arguments are in 
+canonical form, i.e. all text is represented as strings and the first 
+argument ends with a newline. The implementation tolerates non-canonical 
+input: other types than strings are accepted and
+<var>String</var> does not need to end with a newline.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="string.html#split_string/4">split_string/4</a>. 
+Using <code>split_string(String, "\n", "", Lines)</code> on a string 
+that ends in a newline adds an additional empty string compared to <a class="pred" href="strings.html#string_lines/2">string_lines/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="dedent_lines/3"><strong>dedent_lines</strong>(<var>+In, 
+-Out, +Options</var>)</a></dt>
+<dd class="defbody">
+Remove shared indentation for all lines in a string. Lines are separated 
+by "<code>\n</code>" -- conversion to and from external forms (such as "<code>\</code>r<code>\n</code>") 
+are typically done by the I/O predicates. A final "<code>\n</code>" is 
+preserved.
+
+<p><var>Options</var>:
+
+<dl class="latex">
+<dt><strong>tab</strong>(<var>N</var>)</dt>
+<dd class="defbody">
+Assume tabs at columns of with <var>N</var>. When omitted, tabs are 
+taken literally and only exact matches are removed.
+</dd>
+<dt><strong>chars</strong>(<var>CodesOrString</var>)</dt>
+<dd class="defbody">
+Characters to remove. This can notably be used to remove additional 
+characters such as <code>*</code> or&lsquo;<code>|</code>&lsquo;. 
+Default is
+<code>" \t"</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="indent_lines/3"><strong>indent_lines</strong>(<var>+Prefix, 
++In, -Out</var>)</a></dt>
+<dd class="defbody">
+Add <var>Prefix</var> to the beginning of lines in <var>In</var>. Lines 
+are separated by "<code>\n</code>" -- conversion to and from external 
+forms (such as "<code>\</code>r<code>\n</code>") are typically done by 
+the I/O predicates. Lines that consist entirely of whitespace are left 
+as-is.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="indent_lines/4"><strong>indent_lines</strong>(<var>:Filter, 
++Prefix, +In, -Out</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="pred" href="strings.html#indent_lines/3">indent_lines/3</a>, 
+but only adds <var>Prefix</var> to lines for which
+<code>call(Filter, Line)</code> succeeds.
+</dd>
+</dl>
+
+<p></body></html>

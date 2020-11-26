@@ -1,0 +1,122 @@
+div.notification
+{ display: inline-block;
+  position: absolute;
+  min-width: 10em;
+  background: #cff;
+  padding: 5px 1em;
+  display: none;
+  z-index: 1000;
+}
+
+a.dropdown-toggle.avatar
+{ padding: 0px;
+  margin-left: 2px;
+}
+
+div.avatar-container
+{ display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  overflow: visible;
+  width: 24px;
+  height: 24px;
+  margin: 4px 0px;
+}
+
+span.avatar.svg svg
+{ position: relative;
+  top: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+span.avatar
+{ display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+span.avatar:hover
+{ position: absolute;
+  z-index: 10;
+  top: -4px;
+  left: -4px;
+  width: 32px;
+  height: 32px;
+}
+
+img.avatar
+{ width: 100%;
+  height: 100%;
+}
+
+img.avatar:hover
+{ position: absolute;
+  z-index: 10;
+  top: -4px;
+  left: -4px;
+  width: 32px;
+  height: 32px;
+}
+
+div.user-count
+{ clear: both;
+  text-align:center;
+  color: #888;
+  font-style: italic;
+  font-size: 75%;
+  display: none;
+}
+
+li.myself
+{ border-bottom: 3px solid green;
+}
+
+li.user.lost
+{ opacity: 0.2;
+}
+
+.navbar-nav > li > a.broadcast-bell {
+  padding: 15px 5px 9px;
+}
+
+#broadcast-bell {
+  display: inline-block;
+  height: 30px;
+  width: 26px;
+}
+
+#broadcast-bell .glyphicon {
+  font-size: 200%;
+}
+
+
+/* http://www.cssarrowplease.com/ */
+
+.notify-arrow {
+	background: #cff;
+	border: 1px solid #888;
+        border-radius: 5px;
+        box-shadow: 6px 6px 3px #aaa;
+}
+.notify-arrow:after, .notify-arrow:before {
+	bottom: 100%;
+	right: 12px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+}
+.notify-arrow:after {
+	border-color: rgba(192, 255, 255, 0);
+	border-bottom-color: #cff;
+	border-width: 14px;
+	margin-left: -14px;
+}
+.notify-arrow:before {
+	border-color: rgba(128, 128, 128, 0);
+	border-bottom-color: #888;
+	border-width: 15px;
+	margin-left: -15px;
+}

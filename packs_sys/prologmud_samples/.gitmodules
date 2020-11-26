@@ -1,0 +1,33 @@
+[submodule "prolog/prologmud_sample_games/cpack/amalgame"]
+	path = prolog/prologmud_sample_games/cpack/amalgame
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/amalgame.git
+[submodule "prolog/prologmud_sample_games/cpack/void"]
+	path = prolog/prologmud_sample_games/cpack/void
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/void.git
+[submodule "prolog/prologmud_sample_games/cpack/EDM"]
+	path = prolog/prologmud_sample_games/cpack/EDM
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/EDM.git
+[submodule "prolog/prologmud_sample_games/cpack/cpack_repository"]
+	path = prolog/prologmud_sample_games/cpack/cpack_repository
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/cpack_repository.git
+[submodule "prolog/prologmud_sample_games/cpack/find_resource"]
+	path = prolog/prologmud_sample_games/cpack/find_resource
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/find_resource.git
+[submodule "prolog/prologmud_sample_games/cpack/isearch"]
+	path = prolog/prologmud_sample_games/cpack/isearch
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/isearch.git
+[submodule "prolog/prologmud_sample_games/cpack/autocompletion"]
+	path = prolog/prologmud_sample_games/cpack/autocompletion
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/autocompletion.git
+[submodule "prolog/prologmud_sample_games/cpack/cloud"]
+	path = prolog/prologmud_sample_games/cpack/cloud
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/cloud.git
+[submodule "prolog/prologmud_sample_games/cpack/ecdemo"]
+	path = prolog/prologmud_sample_games/cpack/ecdemo
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/ecdemo.git
+[submodule "prolog/prologmud_sample_games/cpack/foaf"]
+	path = prolog/prologmud_sample_games/cpack/foaf
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/foaf.git
+[submodule "prolog/prologmud_sample_games/cpack/foaf_user"]
+	path = prolog/prologmud_sample_games/cpack/foaf_user
+	url = http://cliopatria.swi-prolog.org/git/cpack-mirrors/foaf_user.git

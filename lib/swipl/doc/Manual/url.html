@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.49</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ugraphs.html">
+<link rel="next" href="varnumbers.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ugraphs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="varnumbers.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:url"><a id="sec:A.49"><span class="sec-nr">A.49</span> <span class="sec-title">library(url): 
+Analysing and constructing URL</span></a></h2>
+
+<p><a id="sec:url"></a>
+
+<dl class="tags">
+<dt class="mtag">author</dt>
+<dd>
+- Jan Wielemaker <br>
+- Lukas Faulstich
+</dd>
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <code>library(uri)</code>, provided by the <code>clib</code> 
+package.
+</dd>
+</dl>
+
+<p>This library deals with the analysis and construction of a URL, 
+Universal Resource Locator. URL is the basis for communicating locations 
+of resources (data) on the web. A URL consists of a protocol identifier 
+(e.g. HTTP, FTP, and a protocol-specific syntax further defining the 
+location. URLs are standardized in RFC-1738.
+
+<p>The implementation in this library covers only a small portion of the 
+defined protocols. Though the initial implementation followed RFC-1738 
+strictly, the current is more relaxed to deal with frequent violations 
+of the standard encountered in practical use.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="global_url/3"><strong>global_url</strong>(<var>+URL, 
++Base, -Global</var>)</a></dt>
+<dd class="defbody">
+Translate a possibly relative <var>URL</var> into an absolute one.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>syntax_error(illegal_url)</code> if <var>URL</var> is not legal.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="is_absolute_url/1"><strong>is_absolute_url</strong>(<var>+URL</var>)</a></dt>
+<dd class="defbody">
+True if <var>URL</var> is an absolute <var>URL</var>. That is, a <var>URL</var> 
+that starts with a protocol identifier.</dd>
+<dt class="pubdef"><a id="http_location/2"><strong>http_location</strong>(<var>?Parts, 
+?Location</var>)</a></dt>
+<dd class="defbody">
+Construct or analyze an HTTP location. This is similar to
+<a class="pred" href="url.html#parse_url/2">parse_url/2</a>, but only 
+deals with the location part of an HTTP URL. That is, the path, search 
+and fragment specifiers. In the HTTP protocol, the first line of a 
+message is
+
+<pre class="code">
+&lt;Action&gt; &lt;Location&gt; HTTP/&lt;version&gt;
+</pre>
+
+<table class="arglist">
+<tr><td><var>Location</var> </td><td>Atom or list of character codes. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="parse_url/2"><strong>parse_url</strong>(<var>?URL, 
+?Attributes</var>)</a></dt>
+<dd class="defbody">
+Construct or analyse a <var>URL</var>. <var>URL</var> is an atom holding 
+a <var>URL</var> or a variable. <var>Attributes</var> is a list of 
+components. Each component is of the format Name(Value). Defined 
+components are:
+
+<dl class="latex">
+<dt><strong>protocol</strong>(<var>Protocol</var>)</dt>
+<dd class="defbody">
+The used protocol. This is, after the optional <code>url:</code>, an 
+identifier separated from the remainder of the <var>URL</var> using :.
+<a class="pred" href="url.html#parse_url/2">parse_url/2</a> assumes the <code>http</code> 
+protocol if no protocol is specified and the <var>URL</var> can be 
+parsed as a valid HTTP url. In addition to the RFC-1738 specified 
+protocols, the <code>file</code> protocol is supported as well.
+</dd>
+<dt><strong>host</strong>(<var>Host</var>)</dt>
+<dd class="defbody">
+<var>Host</var>-name or IP-address on which the resource is located. 
+Supported by all network-based protocols.
+</dd>
+<dt><strong>port</strong>(<var>Port</var>)</dt>
+<dd class="defbody">
+Integer port-number to access on the <code>\</code>arg{Host}. This only 
+appears if the port is explicitly specified in the <var>URL</var>. 
+Implicit default ports (e.g., 80 for HTTP) do <i>not</i> appear in the 
+part-list.
+</dd>
+<dt><strong>path</strong>(<var>Path</var>)</dt>
+<dd class="defbody">
+(File-) path addressed by the <var>URL</var>. This is supported for the
+<code>ftp</code>, <code>http</code> and <code>file</code> protocols. If 
+no path appears, the library generates the path <code>/</code>.
+</dd>
+<dt><strong>search</strong>(<var>ListOfNameValue</var>)</dt>
+<dd class="defbody">
+Search-specification of HTTP <var>URL</var>. This is the part after the
+<code>?</code>, normally used to transfer data from HTML forms that use 
+the HTTP GET method. In the <var>URL</var> it consists of a 
+www-form-encoded list of Name=Value pairs. This is mapped to a list of 
+Prolog Name=Value terms with decoded names and values.
+</dd>
+<dt><strong>fragment</strong>(<var>Fragment</var>)</dt>
+<dd class="defbody">
+<var>Fragment</var> specification of HTTP <var>URL</var>. This is the 
+part after the <code>#</code> character.
+</dd>
+</dl>
+
+<p>The example below illustrates all of this for an HTTP <var>URL</var>.
+
+<pre class="code">
+?- parse_url('http://www.xyz.org/hello?msg=Hello+World%21#x',
+       P).
+
+P = [ protocol(http),
+      host('www.xyz.org'),
+      fragment(x),
+      search([ msg = 'Hello World!'
+             ]),
+      path('/hello')
+    ]
+</pre>
+
+<p>By instantiating the parts-list this predicate can be used to create 
+a <var>URL</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="parse_url/3"><strong>parse_url</strong>(<var>+URL, 
++BaseURL, -Attributes</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="pred" href="url.html#parse_url/2">parse_url/2</a> 
+for relative URLs. If <var>URL</var> is relative, it is resolved using 
+the absolute <var>URL</var> <var>BaseURL</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="www_form_encode/2"><strong>www_form_encode</strong>(<var>+Value, 
+-XWWWFormEncoded</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="www_form_encode/2"><strong>www_form_encode</strong>(<var>-Value, 
++XWWWFormEncoded</var>)</a></dt>
+<dd class="defbody">
+En/decode to/from application/x-www-form-encoded. Encoding encodes all 
+characters except RFC 3986 <i>unreserved</i> (ASCII
+<code>alnum</code> (see <a class="pred" href="chartype.html#code_type/2">code_type/2</a>)), 
+and one of "-._<code>~</code>" using percent encoding. Newline is mapped 
+to <code>%OD%OA</code>. When decoding, newlines appear as a single 
+newline (10) character.
+
+<p>Note that a space is encoded as <code>%20</code> instead of <code>+</code>. 
+Decoding decodes both to a space.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Use <span class="pred-ext">uri_encoded/3</span> for new code.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="set_url_encoding/2"><strong>set_url_encoding</strong>(<var>?Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Query and set the encoding for URLs. The default is <code>utf8</code>. 
+The only other defined value is <code>iso_latin_1</code>.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Having a global flag is highly inconvenient, but a work-around for old 
+sites using ISO Latin 1 encoding.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="url_iri/2"><strong>url_iri</strong>(<var>+Encoded, 
+-Decoded</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="url_iri/2"><strong>url_iri</strong>(<var>-Encoded, 
++Decoded</var>)</a></dt>
+<dd class="defbody">
+Convert between a URL, encoding in US-ASCII and an IRI. An IRI is a 
+fully expanded Unicode string. Unicode strings are first encoded into 
+UTF-8, after which %-encoding takes place.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="parse_url_search/2"><strong>parse_url_search</strong>(<var>?Spec, 
+?Fields:list(Name=Value)</var>)</a></dt>
+<dd class="defbody">
+Construct or analyze an HTTP search specification. This deals with form 
+data using the MIME-type
+<code>application/x-www-form-urlencoded</code> as used in HTTP GET 
+requests.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="file_name_to_url/2"><strong>file_name_to_url</strong>(<var>+File, 
+-URL</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="file_name_to_url/2"><strong>file_name_to_url</strong>(<var>-File, 
++URL</var>)</a></dt>
+<dd class="defbody">
+Translate between a filename and a file:<code>//</code> <var>URL</var>.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Current implementation does not deal with paths that need special 
+encoding.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

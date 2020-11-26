@@ -1,0 +1,28 @@
+(note TQB100-b)
+
+(meetsSpatially Iran ClarenceStrait) 
+(instance ClarenceStrait BodyOfWater) 
+(meetsSpatially StraitOfHormuz Iran) 
+(instance meetsSpatially SymmetricRelation) 
+(instance StraitOfHormuz BodyOfWater) 
+(meetsSpatially CaspianSea Iran) 
+(instance CaspianSea BodyOfWater) 
+(meetsSpatially PersianGulf Iran) 
+(instance PersianGulf BodyOfWater) 
+(meetsSpatially GulfOfOman Iran) 
+(instance GulfOfOman BodyOfWater) 
+
+(query (findall ?X
+  (and 
+    (instance ?X BodyOfWater) 
+    (meetsSpatially ?X Iran))))
+
+(answer ClarenceStrait)
+(answer StraitOfHormuz) 
+(answer CaspianSea)
+(answer PersianGulf)  
+(answer GulfOfOman)
+
+(end_of_file)
+
+

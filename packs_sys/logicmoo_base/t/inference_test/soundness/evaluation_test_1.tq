@@ -1,0 +1,7 @@
+(note "Evaluation - Division by Zero ")
+
+(query (evaluate (DivisionFn 11 0) ?R))
+
+(answer (DivisionFn 11 0))
+
+

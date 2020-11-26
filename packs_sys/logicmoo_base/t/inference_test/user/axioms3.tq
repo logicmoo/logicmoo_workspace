@@ -1,0 +1,29 @@
+; =================================================
+; Test #3
+; feature tested - instance-of/subclass-of reasoning
+; test KB:
+
+(note "instance-of/subclass-of reasoning")
+
+(instance Bob Human)
+
+(subclass Human Mammal)
+
+(instance behaviorCapableOf BinaryRelation)
+
+(arg1isa behaviorCapableOf Mammal)
+
+(arg2genls behaviorCapableOf Event)
+
+(implies
+   (instance ?X Mammal)
+   (behaviorCapableOf ?X Breathing))
+
+(query (behaviorCapableOf Bob ?X) )
+
+ (answer Breathing)
+
+(end_of_file)
+
+
+

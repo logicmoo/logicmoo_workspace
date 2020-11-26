@@ -1,0 +1,45 @@
+
+
+    % exemples du chapitres III
+ 
+
+
+    $   mot(X) :- s(X,[]).
+    $   s(X,Y) :- s1(X,Z), s2(Z,Y).
+    $   s1(X,X).
+    $   s1([a|X],Y) :- s1(X,[b|Y]).
+    $   s2(X,X).
+    $   s2([c|X],Y) :- s2(X,Y).
+  % contrainte en longueur
+    $   lg_inf([],X).
+    $   lg_inf([T|Q],s(X)) :- freeze(Q,lg_inf(Q,X)).
+  % test
+    $   test :- lg_inf(X,s(s(s(s(zero))))), mot(X), write(X), nl, fail.
+
+
+
+  % meme_feuilles
+    $   memes_feuilles(X,Y) :- freeze(F,feuilles(X,F)),
+                               freeze(F,feuilles(Y,F)),
+                               liste(F).
+    $   feuilles(f(X),[X]).
+    $   feuilles(a(f(X),Y),[X|Fy]) :- freeze(Fy,feuilles(Y,Fy)).
+    $   feuilles(a(a(X,Y),Z),F) :- feuilles(a(X,a(Y,Z)),F).
+    $   liste([]).
+    $   liste([T|Q]) :- liste(Q).
+    $   tf1 :- memes_feuilles(a(a(a(f(1),f(1)),f(1)),f(1)),
+                              a(a(a(f(1),f(1)),f(1)),f(1))).
+    $   tf2 :- memes_feuilles(a(a(a(f(1),f(2)),f(1)),f(1)),
+                              a(a(a(f(1),f(1)),f(1)),f(1))).
+
+
+
+  $ conc3(A,B,D,E) :- conc_(A,B,C), conc_(C,D,E).
+  $ conc_(X,Y,Z) :- freeze2_ou(X,Z,conc1(X,Y,Z)).
+  $ conc1([],X,X).
+  $ conc1([T|Q],L,[T|R]) :- conc_(Q,L,R).
+  $ tconc3 :- conc3(X,[3],[4],[1,2,3,4]), wf(X).
+
+$ exemple :- freeze(V,consom(V)), product(0,V).
+$ product(X,[X|L]) :- plus(X,1,X1), frozen_goals, get(C), product(X1,L).
+$ consom([X|L]) :- write(X), freeze(L,consom(L)).

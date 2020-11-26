@@ -1,0 +1,18 @@
+# TAB-delimited three-field line-based record file:
+# FIELD1: Prolog program name (in this directory)
+# FIELD2: goal to run
+# FIELD3: name of file containing expected output (in this directory)
+#
+# ***REMEMBER*** to switch to Fundamental mode in Emacs...
+#
+family.plgCG	brother_of(X,Y).	family_brother_of.out
+maxmincomtypes.plgCG	minComSuperTypes(XXC, XXD, L).	maxmincomtypes_XXC_XXD_min.out
+maxmincomtypes.plgCG	maxComSubTypes(XXA, XXB, L).	maxmincomtypes_XXA_XXB.out
+maxmincomtypes.plgCG	maxComSubTypes(XXA, XXF, L).	maxmincomtypes_XXA_XXF.out
+maxmincomtypes.plgCG	maxComSubTypes(XXE, XXF, L).	maxmincomtypes_XXE_XXF.out
+maxmincomtypes.plgCG	maxComSubTypes(XXC, XXD, L).	maxmincomtypes_XXC_XXD_max.out
+wolf1.plgCG	wolf(I).	wolf1_wolf.out
+aconcat.plgCG	testBig(X,Y,Z),test(A),test1(B),test2(C).	aconcat.out
+Romeo1.plgCG	Romeo(I,C).	Romeo1_Romeo.out
+Romeo1.plgCG	Romeo2(I,C).	Romeo1_Romeo2.out
+Romeo1.plgCG	AllConcepts(I,C),/.	Romeo1_AllConcepts_cut.out

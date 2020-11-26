@@ -1,0 +1,440 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.16</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="dicts.html">
+<link rel="next" href="gensym.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="dicts.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="gensym.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:error"><a id="sec:A.16"><span class="sec-nr">A.16</span> <span class="sec-title">library(error): 
+Error generating support</span></a></h2>
+
+<p><a id="sec:error"></a>
+
+<dl class="tags">
+<dt class="mtag">author</dt>
+<dd>
+- Jan Wielemaker <br>
+- Richard O'Keefe <br>
+- Ulrich Neumerkel</dd>
+<dt class="mtag">See also</dt>
+<dd>
+- <code>library(debug)</code> and <code>library(prolog_stack)</code>. <br>
+- <a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+is used to print (uncaught) error terms.
+</dd>
+</dl>
+
+<p>This module provides predicates to simplify error generation and 
+checking. It's implementation is based on a discussion on the SWI-Prolog 
+mailinglist on best practices in error handling. The utility predicate
+<a class="pred" href="error.html#must_be/2">must_be/2</a> provides 
+simple run-time type validation. The *_error predicates are simple 
+wrappers around <a class="pred" href="exception.html#throw/1">throw/1</a> 
+to simplify throwing the most common ISO error terms.
+
+<dl class="latex">
+<dt class="pubdef"><a id="type_error/2"><strong>type_error</strong>(<var>+ValidType, 
++Culprit</var>)</a></dt>
+<dd class="defbody">
+Tell the user that <var>Culprit</var> is not of the expected <var>ValidType</var>. 
+This error is closely related to <a class="pred" href="error.html#domain_error/2">domain_error/2</a> 
+because the notion of types is not really set in stone in Prolog. We 
+introduce the difference using a simple example.
+
+<p>Suppose an argument must be a non-negative integer. If the actual 
+argument is not an integer, this is a <i>type_error</i>. If it is a 
+negative integer, it is a <i>domain_error</i>.
+
+<p>Typical borderline cases are predicates accepting a compound term, 
+e.g., <code>point(X,Y)</code>. One could argue that the basic type is a 
+compound-term and any other compound term is a domain error. Most Prolog 
+programmers consider each compound as a type and would consider a 
+compound that is not <code>point(_,_)</code> a <i>type_error</i>.</dd>
+<dt class="pubdef"><a id="domain_error/2"><strong>domain_error</strong>(<var>+ValidDomain, 
++Culprit</var>)</a></dt>
+<dd class="defbody">
+The argument is of the proper type, but has a value that is outside the 
+supported values. See <a class="pred" href="error.html#type_error/2">type_error/2</a> 
+for a more elaborate discussion of the distinction between type- and 
+domain-errors.</dd>
+<dt class="pubdef"><a id="existence_error/2"><strong>existence_error</strong>(<var>+ObjectType, 
++Culprit</var>)</a></dt>
+<dd class="defbody">
+<var>Culprit</var> is of the correct type and correct domain, but there 
+is no existing (external) resource of type <var>ObjectType</var> that is 
+represented by it.</dd>
+<dt class="pubdef"><a id="existence_error/3"><strong>existence_error</strong>(<var>+ObjectType, 
++Culprit, +Set</var>)</a></dt>
+<dd class="defbody">
+<var>Culprit</var> is of the correct type and correct domain, but there 
+is no existing (external) resource of type <var>ObjectType</var> that is 
+represented by it in the provided set. The thrown exception term carries 
+a formal term structured as follows: <code>existence_error(ObjectType, Culprit, Set)</code>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+This error is outside the ISO Standard.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="permission_error/3"><strong>permission_error</strong>(<var>+Operation, 
++PermissionType, +Culprit</var>)</a></dt>
+<dd class="defbody">
+It is not allowed to perform <var>Operation</var> on (whatever is 
+represented by) <var>Culprit</var> that is of the given <var>PermissionType</var> 
+(in fact, the ISO Standard is confusing and vague about these terms' 
+meaning).</dd>
+<dt class="pubdef"><a id="instantiation_error/1"><strong>instantiation_error</strong>(<var>+FormalSubTerm</var>)</a></dt>
+<dd class="defbody">
+An argument is under-instantiated. I.e. it is not acceptable as it is, 
+but if some variables are bound to appropriate values it would be 
+acceptable.
+<table class="arglist">
+<tr><td><var>FormalSubTerm</var> </td><td>is the term that needs 
+(further) instantiation. Unfortunately, the ISO error does not allow for 
+passing this term along with the error, but we pass it to this predicate 
+for documentation purposes and to allow for future enhancement. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="uninstantiation_error/1"><strong>uninstantiation_error</strong>(<var>+Culprit</var>)</a></dt>
+<dd class="defbody">
+An argument is over-instantiated. This error is used for output 
+arguments whose value cannot be known upfront. For example, the goal
+<code>open(File, read, input)</code> cannot succeed because the system 
+will allocate a new unique stream handle that will never unify with
+<code>input</code>.</dd>
+<dt class="pubdef"><a id="representation_error/1"><strong>representation_error</strong>(<var>+Flag</var>)</a></dt>
+<dd class="defbody">
+A representation error indicates a limitation of the implementation. 
+SWI-Prolog has no such limits that are not covered by other errors, but 
+an example of a representation error in another Prolog implementation 
+could be an attempt to create a term with an arity higher than supported 
+by the system.</dd>
+<dt class="pubdef"><a id="syntax_error/1"><strong>syntax_error</strong>(<var>+Culprit</var>)</a></dt>
+<dd class="defbody">
+A text has invalid syntax. The error is described by <var>Culprit</var>. 
+According to the ISO Standard, <var>Culprit</var> should be an 
+implementation-dependent atom.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Deal with proper description of the location of the error. For short 
+texts, we allow for Type(Text), meaning Text is not a valid Type. E.g. <code>syntax_error(number('1a'))</code> 
+means that <code>1a</code> is not a valid number.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="resource_error/1"><strong>resource_error</strong>(<var>+Resource</var>)</a></dt>
+<dd class="defbody">
+A goal cannot be completed due to lack of resources. According to the 
+ISO Standard, <var>Resource</var> should be an implementation-dependent 
+atom.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="must_be/2"><strong>must_be</strong>(<var>+Type, 
+@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> satisfies the type constraints for <var>Type</var>. 
+Defined types are <code>atom</code>, <code>atomic</code>, <code>between</code>, <code>boolean</code>, <code>callable</code>,
+<code>chars</code>, <code>codes</code>, <code>text</code>, <code>compound</code>, <code>constant</code>, <code>float</code>,
+<code>integer</code>, <code>nonneg</code>, <code>positive_integer</code>, <code>negative_integer</code>,
+<code>nonvar</code>, <code>number</code>, <code>oneof</code>, <code>list</code>, <code>list_or_partial_list</code>,
+<code>symbol</code>, <code>var</code>, <code>rational</code>, <code>encoding</code>, <code>dict</code> 
+and <code>string</code>.
+
+<p>Most of these types are defined by an arity-1 built-in predicate of 
+the same name. Below is a brief definition of the other types.
+<blockquote>
+<table class="latex frame-box">
+<tr><td>acyclic</td><td>Acyclic term (tree); see <a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> </td></tr>
+<tr><td>any</td><td>any term </td></tr>
+<tr><td><code>between(FloatL,FloatU)</code> </td><td>Number 
+[FloatL..FloatU] </td></tr>
+<tr><td><code>between(IntL,IntU)</code> </td><td>Integer [IntL..IntU] </td></tr>
+<tr><td>boolean</td><td>One of <code>true</code> or <code>false</code> </td></tr>
+<tr><td>char</td><td>Atom of length 1 </td></tr>
+<tr><td>chars</td><td>Proper list of 1-character atoms </td></tr>
+<tr><td>code</td><td>Representation Unicode code point </td></tr>
+<tr><td>codes</td><td>Proper list of Unicode character codes </td></tr>
+<tr><td>constant</td><td>Same as <code>atomic</code> </td></tr>
+<tr><td>cyclic</td><td>Cyclic term (rational tree); see <a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a> </td></tr>
+<tr><td>dict</td><td>A dictionary term; see <a class="pred" href="bidicts.html#is_dict/1">is_dict/1</a> </td></tr>
+<tr><td>encoding</td><td>Valid name for a character encoding; see <span class="pred-ext">current_encoding/1</span> </td></tr>
+<tr><td>list</td><td>A (non-open) list; see <a class="pred" href="builtinlist.html#is_list/1">is_list/1</a> </td></tr>
+<tr><td>negative_integer</td><td>Integer <var>&lt;</var> 0 </td></tr>
+<tr><td>nonneg</td><td>Integer <code>&gt;=</code> 0 </td></tr>
+<tr><td><code>oneof(L)</code> </td><td>Ground term that is member of L </td></tr>
+<tr><td>pair</td><td>Key-Value pair </td></tr>
+<tr><td>positive_integer</td><td>Integer <var>&gt;</var> 0 </td></tr>
+<tr><td>proper_list</td><td>Same as list </td></tr>
+<tr><td><code>list(Type)</code> </td><td>Proper list with elements of <var>Type</var> </td></tr>
+<tr><td>list_or_partial_list</td><td>A list or an open list (ending in a 
+variable); see <span class="pred-ext">is_list_or_partial_list/1</span> </td></tr>
+<tr><td>stream</td><td>A stream name or valid stream handle; see <a class="pred" href="IO.html#is_stream/1">is_stream/1</a> </td></tr>
+<tr><td>symbol</td><td>Same as <code>atom</code> </td></tr>
+<tr><td>text</td><td>One of <code>atom</code>, <code>string</code>, <code>chars</code> 
+or <code>codes</code> </td></tr>
+<tr><td>type</td><td><var>Term</var> is a valid type specification </td></tr>
+</table>
+</blockquote>
+
+<p>Note: The Windows version can only represent Unicode code points up 
+to 2<code>^</code>16-1. Higher values cause a representation error on 
+most text handling predicates.
+
+<dl class="tags">
+<dt class="tag">throws</dt>
+<dd>
+instantiation_error if <var>Term</var> is insufficiently instantiated 
+and <code>type_error(Type, Term)</code> if <var>Term</var> is not of <var>Type</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_of_type/2"><strong>is_of_type</strong>(<var>+Type, 
+@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> satisfies <var>Type</var>.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="has_type/2"><strong>has_type</strong>(<var>+Type, 
+@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> satisfies <var>Type</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_type/3"><strong>current_type</strong>(<var>?Type, 
+@Var, -Body</var>)</a></dt>
+<dd class="defbody">
+True when <var>Type</var> is a currently defined type and <var>Var</var> 
+satisfies <var>Type</var> of the body term <var>Body</var> succeeds.
+</dd>
+</dl>
+
+<p></body></html>

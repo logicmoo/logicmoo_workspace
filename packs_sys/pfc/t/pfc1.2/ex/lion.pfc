@@ -1,0 +1,51 @@
+%% this is a planning problem from C. Elkan,  "Incremental Approximate
+%% Planning: Abductive Default Reasoning, AAAI Spring Symposium on
+%% Automated Abduction, 1990.
+
+%% holds(proposition,state).
+%% causes(action,state,new_state).
+%% can(state,action).
+
+
+%% rules for how the world evolves:
+
+holds(P,do(S,A)) <= causes(A,S,P).
+
+holds(P,do(S,A)) <= holds(P,S), ~ cancels(A,S,P).
+
+%% the effects of actions:
+
+causes(pounce(lion,X),S,eats(lion,X)) <=
+  can(S,pounce(lion,X)).
+
+can(S,pounce(lion,X)) <= 
+  holds(in(X,L),S),
+  holds(in(Y,L),S),
+  {X\==Y},
+  ~ holds(eats(X,_),S).
+
+causes(jump(X),S,in(X,arena)) <=
+  can(jump(X),S),
+  holds(in(X,cage),S).
+
+can(jump(lion),S) <=
+  holds(eats(lion,trainer),S).
+
+cancels(drop(X,Y),S,eats(X,Y)) <=
+  can(drop(X,Y),S).
+
+can(drop(X,Y),S) <=
+  holds(eats(X,Y),S).
+
+holds(in(X,H),S) <=
+  holds(eats(lion,X),S),
+  holds(in(lion,H),S).
+
+%% initial state of the world.
+=> holds(in(christian,arena),s0).
+=> holds(in(lion,cage),s0).
+=> holds(in(trainer,cage),s0).
+
+
+%% 
+query <= holds(eats(lion,christian),P).

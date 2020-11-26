@@ -1,0 +1,101 @@
+[KnowledgeBase:
+  [TypeHierarchy:
+    (GT [TypeLabel: "Entity"]
+        [TypeLabel: @Col{"Block", "Hand", "Location"} ]
+        ;block, hand, and location are entities; )
+    (GT [TypeLabel: "Act"]
+        [TypeLabel: @Col{"Pickup", "Putdown", "MoveHand", "MoveBlock"}]
+        ;pickup, putdown, movehand, and moveblock are actions; )
+    (Def [TypeLabel: "Block"]
+         [LambdaExpression:
+            "(lambda (Entity*b)
+                   (ATTR ?b [Color])
+                   (CHRC ?b [Shape]))" ]
+     ;Definition that each BLOCK has a color and shape; )
+    (Def [TypeLabel: "Pickup"]
+         [LambdaExpression:
+            "(lambda (Act*p)
+                   (PTNT ?p [Block*b])
+                   (INST ?p [Hand*h])
+                   (RSLT ?p [Situation: (GRASP ?h ?b)]) )" ]
+     ;Definition that each block is PICKUP using a hand; )
+    (Def [TypeLabel: "Putdown"]
+         [LambdaExpression:
+            "(lambda (Act*p)
+                   (PTNT ?p [Block*b])
+                   (DEST ?p [Location*l])
+                   (INST ?p [Hand])
+                   (RSLT ?p [Situation: (Top ?b ?l)]) )" ]
+     ;Definition that each block is PUTDOWN at a location from the hand; )
+    (Def [TypeLabel: "MoveHand"]
+         [LambdaExpression:
+            "(lambda (Act*m)
+                   (DEST ?m [Location*l])
+                   (INST ?m [Hand*h])
+                   (RSLT ?m [Situation: (At ?h ?l)]) )" ]
+     ;Definition of action that MOVEHAND to a location; )
+    (Def [TypeLabel: "MoveBlock"]
+         [LambdaExpression:
+            "(lambda (Act*m)
+                   (DEST ?m [Location*l])
+                   (PTNT ?m [Block*b])
+                   (INST ?m [Hand])
+                   (RSLT ?m [Situation: (At ?b ?l)]) )" ]
+     ;Definition of action that MOVEBLOCK to a location;)
+  ;Type Hierarchy defines some entities and actions and their type relationships;
+  ]
+  [RelationHierarchy:
+    (GT [RelationLabel: "Relation"]
+        [RelationLabel:
+               @Col{"At", "Above", "OnTable", "Top", "EmptyHand"}]
+        ;New relations - at, above, ontable, top, and emptyhand; )
+    (Def [RelationLabel: "At"]
+         [LambdaExpression:
+            "(lambda (Entity*e1, Location*l)
+                   (POS ?e1 ?l))" ]
+     ;Definition of an entity that is positioned AT a location; )
+    (Def [RelationLabel: "Top"]
+         [LambdaExpression:
+            "(lambda (Block*b1,Location*l)
+                   (OnTable ?b1 ?l)
+                   ~[(Above [Block*b2] ?b1)])" ]
+     ;Definition of a block on TOP is at a location and has no blocks above it; )
+    (Def [RelationLabel: "EmptyHand"]
+         [LambdaExpression:
+            "(lambda (Hand*h)
+                   ~[(GRASP ?h [Block])])" ]
+     ;Definition of a EMPTYHAND is when no blocks are in it; )
+    (Def [RelationLabel: "OnTable"]
+         [LambdaExpression:
+            "(lambda (Block*b,Location*l)
+                   (At ?b ?l)
+                   ~[(GRASP [Hand] ?b)])" ]
+     ;Definition of a block ONTABLE is at a location and not in the hand; )
+    (Def [RelationLabel: "Above"]
+         [LambdaExpression:
+            "(lambda (Block*b1,Block*b2)
+                   (OnTable ?b1 [Location*l])
+                   (OnTable ?b2 ?l))" ]
+     ;Definition of the first block is ABOVE the second block at the same location; )
+  ;Relation Hierarchy defines some new relations; 
+  ]
+  [CatalogOfIndividuals:
+    [Block:#1] [Block:#2] [Block:#3] [Hand:#4] [Location:#5] [Location:#6]
+  ]
+  [Assertion:
+    [Block:@3]
+    (ATTR [Block:#1] [Color:'Red'] ;Block #1 is red;)
+    (ATTR [Block:#2] [Color:'Blue'] ;Block #2 is blue;)
+    (ATTR [Block:#3] [Color:'Green'] ;Block #3 is green;)
+    (OnTable [Block:#1] [Location:#5])
+    (OnTable [Block:#2] [Location:#6])
+    (OnTable [Block:#3] [Location:#5])
+    (Above [Block:#1] [Block:#3] ;Block #1 is above block #3, and block #2 is at a different location;)
+    (Emptyhand [Hand:#4] ;All the blocks are on the table and not in the hand;)
+    [Either: [Or: (ATTR [Block:#1] [Color:'Blue'])]
+             [Or: (ATTR [Block:#2] [Color:'Blue'])]]
+    (CHRC [Block:@every] [Shape:'Cubical'] ;All blocks are cubical;)
+  ;These are beginning fact graphs in the knowledge base;
+  ]
+;This is a Blocks World KB.  It is not meant to be complete.;
+]

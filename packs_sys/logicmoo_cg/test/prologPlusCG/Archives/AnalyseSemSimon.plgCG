@@ -1,0 +1,215 @@
+//Analyse syntaxico-semantique d'un fragment du francais
+// Les deux analyses se font en même temps
+// ph est une phrase déclarative composée d'un sn + sv
+ph(P, P1, S) :- sn(P, P2, S1, E1), sv(P2, P1, S1, E1, S), assertz(semPhrase(S), ()), /.
+
+questionQui((qui|P), _reponse) :- eq(S1, [Entité]), concOfCG(E1, S1), sv(P, P1, S1, E1, S2), semPhrase(S3), subsume(S2, S3), or(eq(X-agnt->_reponse, S3), eq(X-pat->_reponse, S3)), /.
+
+or(p, q) :- p, /.
+or(p, q) :- q.
+
+// sn peut etre un nom propre
+// ou un det + sadj_optionnel + nom + suiteGN_optionnel
+sn(P, P1, S, E) :- nomPropre(P, P1, S, E), /.
+sn(P, P1, S, E) :- det(P, P2), sadj(P2, P3, S1, E1), nom(P3, P4, S2, E2), joindre(S1, E1, S2, E2, S3, E3), suiteGN(P4, P1, S3, E3, S, E), /.
+sn(P, P1, S, E) :- quant(P, P2), sn(P2, P1, S, E), /.
+
+// joindre considere le cas ou le sadj et non existant
+joindre(null, null, S, E, S, E) :- /.
+joindre(S1, E1, S2, E2, S, E) :- maximalJoin(S1, E1, S2, E2, S, E), /.
+
+suiteGN(P, P1, S1, E1, S, E) :- prepDeNom(P, P2, S_De, E_De), sn(P2, P1, S3, E3), maximalJoin(S3, E3, S_De, E_De, S2, _), eq(X-poss->E2, S2), maximalJoin(S1, E1, S2, E2, S, E), /.
+suiteGN(P, P1, S1, E1, S, E) :- phRelative(P, P1, S2), concOfCG([Utterance = S_U], S2), eq(G, [Entité]-descr->[Utterance = S_U]), eq(E_G-descr->X, G), maximalJoin(S1, E1, G, E_G, S, E), /.
+suiteGN(P, P, S, E, S, E).
+
+sadj(P, P1, S, E) :- adj(P, P1, S, E, _), /.
+sadj(P, P1, S, E) :- adv(P, P2, S1, A1), adj(P2, P1, S2, N2, A2), maximalJoin(S1, A1, S2, A2, S, _), concOfCG(E, S), eq(E, N2), /.
+sadj(P, P, null, null).
+
+sv(P, P1, S_SN, E_SSN, S_SV) :- constrVerbale(P, P2, S_SN, E_SSN, S1, E1), advEventuel(P2, P3, S1, E1, S2, E2), suiteSV(P3, P1, S2, E2, S_SV), /.
+
+advEventuel(P, P1, S1, E1, S, E) :- adv(P, P1, S2, E2), maximalJoin(S1, E1, S2, E2, S, E), /.
+advEventuel(P, P, S, E, S, E).
+
+suiteSV(P, P1, S_GV, _, S_SV) :- sn(P, P1, S2, E2), eq(X-obj->E_SGV, S_GV), maximalJoin(S_GV, E_SGV, S2, E2, S_SV, _), /.
+suiteSV(P, P1, S_GV, E_GV, S_SV) :- prepDeVerbe(P, P2, S1, E1), sn(P2, P1, S2, E2), maximalJoin(S1, E1, S2, E2, S3, _), eq(E3-loc->X, S3), maximalJoin(S_GV, E_GV, S3, E3, S_SV, _), /.
+suiteSV(P, P1, S_GV, _, S_SV) :- phComp(P, P1, S2), concOfCG(E2, S2), eq(X-obj->E_SGV, S_GV), maximalJoin(S_GV, E_SGV, S2, E2, S_SV, _), /.
+suiteSV(P, P, S_GV, _, S_GV).
+
+checkTypeSituation(S, E, agnt) :- eq(X-agnt->E, S), /.
+checkTypeSituation(S, E, pat) :- eq(X-pat->E, S), /.
+
+constrVerbale(P, P1, S1, E1, S, E) :- aux(P, P2), participe(P2, P1, S2, E2), checkTypeSituation(S2, E21, R), maximalJoin(S1, E1, S2, E21, S, _), eq(E-R->Y, S), /.
+constrVerbale(P, P1, S1, E1, S, E) :- verbe(P, P1, S2, E2), checkTypeSituation(S2, E21, R), maximalJoin(S1, E1, S2, E21, S, _), eq(E-R->Y, S), /.
+constrVerbale(P, P1, S1, E1, S, E) :- est(P, P2), suiteConstrVerbale(P2, P1, S1, E1, S, E), /.
+
+suiteConstrVerbale(P, P1, S1, E1, S, E) :- sadj(P, P1, S2, E2), maximalJoin(S1, E1, S2, E2, S, E), /.
+suiteConstrVerbale(P, P, S, E, S, E).
+
+phRelative(P, P1, S) :- pronom(P, P2), phInterne(P2, P1, S), /.
+
+phComp(P, P1, S) :- conj(P, P2), phInterne(P2, P1, S), /.
+
+phInterne(P, P1, [Utterance = S]) :- snEventuel(P, P2, S_SN, E_SSN), sv(P2, P1, S_SN, E_SSN, S), /.
+
+// generalize ..juste pour avoir en sortie un GC composé d'un concept
+snEventuel(P, P1, S, E) :- sn(P, P1, S, E), /.
+snEventuel(P, P, S, E) :- eq(S, [Entité]), concOfCG(E, S), /.
+
+nomPropre((N|P), P, S, E) :- nomPropre(N, S), concOfCG(E, S), /.
+
+nom((N|P), P, S, E) :- nom(N, S, E), /.
+
+det((N|P), P) :- det(N), /.
+
+adj((N|P), P, S, E, A) :- adj(N, S, E, A).
+
+adv((N|P), P, S, E) :- adv(N, S, E).
+
+prepDeNom((N|P), P, S, E) :- prepDeNom(N, S, E), /.
+
+prepDeVerbe((N|P), P, S, E) :- prepDeVerbe(N, S, E), /.
+
+verbe((N|P), P, S, E) :- verbe(N, S, E).
+
+est((N|P), P) :- etre(N), /.
+
+aux((N|P), P) :- aux(N), /.
+
+participe((N|P), P, S, E) :- participe(N, S, E).
+
+pronom((N|P), P) :- pronom(N).
+
+conj((N|P), P) :- conj(N), /.
+
+quant((N|P), P) :- quant(N), /.
+
+nomPropre(pierre, [Homme : pierre]).
+nomPropre(paul, [Homme : paul]).
+
+nom(N, S, E) :- nom(N, S), eq(S, [Universal]), concOfCG(E, S), /.
+nom(N, S, E) :- nom(N, S), eq(E-R->X, S), /.
+
+nom(soeur, [Soeur]).
+nom(soupe, [Soupe]).
+nom(mere, [Mere]).
+nom(chien, [Chien]).
+nom(os, [Os]).
+nom(cour, [Cour]).
+nom(voisin, [Voisin]).
+nom(voisine, [Voisine]).
+nom(colis, [Colis]).
+nom(frere, [Frere]).
+nom(membres, [Membre]).
+nom(famille, [Famille]).
+nom(informatique, [Informatique]).
+nom(travail, [Travail]).
+
+det(ma).
+det(mon).
+det(la).
+det(le).
+det(les).
+det("l").
+det(du).
+
+// N pour la jointure avec le nom et A pour une eventuelle jointure avec un adverbe
+adj(jolie, S, N, A) :- eq(S, [Objet]-chrc->[Qualité : jolie]), eq(N-chrc->A, S), /.
+adj(gros, S, N, A) :- eq(S, [Objet]-tailleDe->[Taille : grosse]), eq(N-tailleDe->A, S), /.
+
+adv(tres, S, E) :- eq(S, [Attribut]-intensiteDe->[Intensité : tres]), eq(E-intensiteDe->[Intensité : tres], S), /.
+adv(bien, S, E) :- eq(S, [Action] -
+                                   -qlte->[Qualité : bien],
+                                   -agnt->[Universal]), eq(E-agnt->X, S), /.
+adv(bien, S, E) :- eq(S, [Etat] -
+                                 -qlte->[Qualité : bien],
+                                 -pat->[Universal]), eq(E-pat->X, S), /.
+adv(hier, S, E) :- eq(S, [Etat]-ptime->[Passé : hier]), eq(E-ptime->X, S), /.
+adv(hier, S, E) :- eq(S, [Action]-ptime->[Passé : hier]), eq(E-ptime->X, S), /.
+
+prepDeNom(de, S, E) :- eq(S, [Entité]-poss->[Entité]), eq(E-poss->A, S), /.
+
+prepDeVerbe(dans, S, E) :- eq(S, [Situation]-loc->[Lieu]), eq(A-loc->E, S), /.
+
+verbe(pense, S, E) :- eq(S, [Penser] -
+                                      -obj->[Proposition],
+                                      -agnt->[Humain]), eq(E-agnt->X, S), /.
+verbe(était, S, E) :- eq(S, [Etre]-pat->[Objet]), eq(E-pat->X, S), /.
+verbe(aime, S, E) :- eq(S, [Aimer] -
+                                    -obj->[Universal],
+                                    -agnt->[ObjetAnimé]), eq(E-agnt->X, S), /.
+verbe(disent, S, E) :- eq(S, [Dire] -
+                                     -obj->[Locution],
+                                     -agnt->[Humain]), eq(E-agnt->X, S), /.
+verbe(apporte, S, E) :- eq(S, [Apporter] -
+                                          -obj->[ObjetTransportable],
+                                          -dest->[Animal],
+                                          -agnt->[Animal]), eq(E-agnt->X, S).
+verbe(apporte, S, E) :- eq(S, [Apporter] -
+                                          -obj->[Entité],
+                                          -dest->[Entité],
+                                          -agnt->[Entité]), eq(E-agnt->X, S), /.
+
+etre(est).
+etre(était).
+
+aux("a").
+aux(avait).
+aux(est).
+aux(était).
+
+participe(arrivé, S, E) :- eq(S, [Arriver] -
+                                            -srce->[Lieu],
+                                            -dest->[Lieu],
+                                            -ptime->[Passé],
+                                            -pat->[Objet]), eq(E-pat->X, S), /.
+participe(commandé, S, E) :- eq(S, [Commander] -
+                                                -obj->[ObjetTransportable],
+                                                -ptime->[Passé],
+                                                -agnt->[Personne]), eq(E-agnt->X, S), /.
+participe(rongé, S, E) :- member(R, (loc, sur, sous)), eq(S, [Ronger] -
+                                                                       -obj->[Objet]-R->[Lieu : *1],
+                                                                       -loc->[Lieu : *1],
+                                                                       -ptime->[Passé],
+                                                                       -agnt->[ObjetAnimé]), eq(E-agnt->X, S), /.
+
+pronom(qui).
+pronom(que).
+
+conj(que).
+
+quant(tous).
+
+Homme = pierre, paul.
+Qualité = jolie, bien.
+Taille = grosse.
+Intensité = tres.
+Passé = hier.
+
+Universal > Utterance, Entité, Attribut, Situation.
+Situation > Etat, Action.
+Action > Penser, Aimer, Dire, Apporter, Commander, Ronger.
+Lieu > Cour.
+Etat > Etre, Arriver.
+Entité > Objet, EntitéAbstraite.
+Attribut > Qualité, Taille, Intensité, Temps.
+Temps > Passé.
+EntitéAbstraite > Lieu, Famille, Informatique, Travail, Membre.
+Objet > ObjetConsommable, ObjetAnimé, ObjetNonAnimé, ObjetTransportable, ObjetNonTransportable.
+ObjetNonTransportable > Riviere, Lune, Terre, Etoile, Montagne, Pluie.
+ObjetTransportable > ObjetConsommable, Colis, ObjetAnimé.
+ObjetAnimé > Animal, Humain.
+ObjetNonAnimé > Colis.
+Animal > Chien.
+Humain > Personne, Membre.
+Personne > Homme, Femme.
+Femme > Soeur, Mere, Voisine.
+Homme > Voisin, Frere.
+ObjetConsommable > Soupe, Os.
+Utterance > Proposition, Locution.
+
+semPhrase([Aimer] -
+                   -agnt->[Homme : pierre],
+                   -obj->[Soupe]<-poss-[Mere],
+                   -qlte->[Qualité : bien]).
+

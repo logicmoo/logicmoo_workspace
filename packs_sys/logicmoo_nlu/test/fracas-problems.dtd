@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT fracas-problems (comment|problem)+>
+
+<!-- miscellaneous comment, not necessarily on a specific problem -->
+<!ELEMENT comment (#PCDATA)>
+<!ATTLIST comment
+          class (intro|section|subsection|subsubsection) #IMPLIED>
+
+<!ELEMENT problem (p+,q?,h,a?,why?,note?)>
+
+<!-- fracas_answer is one of four canonical answers for Fracas problems -->
+<!ATTLIST problem
+          id CDATA #REQUIRED
+          fracas_answer (yes|no|unknown|undef) #IMPLIED
+          fracas_nonstandard (true) #IMPLIED>
+	  
+<!-- premise elements, possibly more than one -->
+<!ELEMENT p (#PCDATA)>
+<!ATTLIST p
+          idx (1|2|3|4|5) #REQUIRED>
+
+<!-- question element, optional -->
+<!ELEMENT q (#PCDATA)>
+
+<!-- hypothesis element -->
+<!ELEMENT h (#PCDATA)>
+
+<!-- original answer for FraCaS problem (sometimes non-standard) -->
+<!ELEMENT a (#PCDATA)>
+
+<!-- justification for FraCaS answer -->
+<!ELEMENT why (#PCDATA)>
+
+<!-- miscellaneous note or comment about problem -->
+<!ELEMENT note (#PCDATA)>

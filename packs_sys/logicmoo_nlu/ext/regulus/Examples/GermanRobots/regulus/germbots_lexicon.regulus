@@ -1,0 +1,75 @@
+feature_value_space(n_type, [[findable, makable, weapon, cardinal, direction]]).
+feature_value_space(adv_types, [[direction]]).
+
+
+
+%[Base, Pres_1_Sing, Pres_2_Sing, Pres_3_Sing, Pres_Formal, Pres_2_Plur, Participle, Imp_2_Sing, Imp_2_Plur]
+%----------------------------------------------------------------------------------------------
+
+
+%VERBS RELATED TO FINDING OBJECTS
+%finde den menschen
+@transitive_verb([finden, finde, findest, findet, finden, findet, gefunden, finde, findet], [action, find], [agent, findable], [nom, acc], []). 
+
+%VERBS FOR INTERACTING WITH FOUND OBJECTS
+%bewache den menschen
+@transitive_verb([bewachen, bewache, bewachst, bewacht, bewachen, bewacht, bewacht, bewache, bewacht], [action, guard], [agent, findable],[nom, acc], []). 
+
+%VERBS RELATED TO MOVEMENT
+%gehe nach norden - gehe geradeaus
+@intransitive_verb([gehen, gehe, gehst, geht, gehen, geht, gegangen, gehe, geht], [action, move], [agent], [nom], [[takes_pp_type=loc, advp_align=left, takes_adv_type=direction]]).
+
+
+%VERBS RELATED TO MAKING FORMATIONS
+%mache ein dreieck
+@transitive_verb([machen, mache, machst, macht, machen, macht, gemacht, mache, macht], [action, make], [agent, makable], [nom, acc], []).
+
+@transitive_verb([formen, forme, formst, formt, formen, formt, geformt, forme, formt], [action, make], [agent, makable], [nom, acc], []).
+
+%VERBS FOR STOPPING ACTIONS
+
+@intransitive_verb([halten, halte, hältst, hält, halten, haltet, gehalten, halte, haltet], [action, stop], [agent], [nom], []).
+
+@intransitive_verb([stoppen, stoppe, stoppst, stoppt, stoppen, stoppt, gestoppt, stoppe, stoppt], [action, stop], [agent], [nom], []).
+
+%VERBS FOR FUN ACTIONS
+%feuere laser!
+@transitive_verb([feuern,	feuere, feuerst, feuert, feuern, 	feuert, gefeuert, feuere, feuert ], [action, fire], [agent, weapon],[nom, acc], []).
+
+%NOUNS ----------------------------------------------------------------------------------------
+
+%THINGS WE CAN FIND
+%@gendered_noun([robot, robot, robot, roboten, roboten, roboten, roboten], masc, agent, [system, robot],[takes_det_type=def]).
+
+@gendered_noun([mensch, menschen, menschen, menschen, menschen, menschen, menschen],masc, findable,[object,human],[takes_det_type=def]).
+
+%@gendered_noun([blume, blume, blume, blume, blumen, blumen, blumen], fem, findable,[object,flower],[takes_det_type=def]).
+
+
+%NOUNS FOR FORMATIONS 
+@gendered_noun([dreieck, dreieck, dreieck, dreieckes, dreiecke, dreiecken, dreiecke], neu, makable, [shape, triangle], [takes_det_type=def]).
+
+%NOUNS FOR DIRECTIONAL MOVEMENT
+@gendered_noun([sud, sud, sud, sudes, sude, suden, sude], masc, cardinal, [cardinal, south], [takes_det_type=def\/null]).
+@gendered_noun([nord, nord, nord, nordes, norde, norden, norde], masc, cardinal, [cardinal, north], [takes_det_type=def\/null]).
+@gendered_noun([west, west, west, westes, weste, westen, weste], masc, cardinal, [cardinal, north], [takes_det_type=def\/null]).
+@gendered_noun([ost, ost, ost, ostes, oste, osten, oste], masc, cardinal, [cardinal, north], [takes_det_type=def\/null]).
+
+@gendered_noun([links, links, links, links, links, links, links], masc, direction, [direction, left], [takes_det_type=null]).
+@gendered_noun([rechts, rechts, rechts, rechts, rechts, rechts, rechts], masc, direction, [direction, right], [takes_det_type=null]).
+@gendered_noun([hinten, hinten, hinten, hinten, hinten, hinten, hinten], masc, direction, [direction, backward], [takes_det_type=null]).
+
+%WEAPONS!
+@gendered_noun([laser, laser, laser, lasers, laser, lasern, laser],masc, weapon,[weapon,laser],[takes_det_type=def\/null]).
+
+
+%ADVERBS ---------------------------------------------------------------------------------------
+%@adv([immer],[freq,always], frequency, []).
+
+%gehe rückwärts 
+@adv([geradeaus],[direction,forward], direction, []).
+@adv([rückwärts],[direction,backward], direction, []).
+
+%PREPOSITIONS -----------------------------------------------------------
+%gehe [nach suden]
+@prep([nach], loc, loc, direction\/cardinal, dat). 

@@ -1,0 +1,100 @@
+#
+# File models.configuration.  This specifies default configuration values
+# associated with the model set found in the same directory.
+#
+
+mp.Version                              4
+ 
+# General Recognizer parameters:
+rec.NumPasses				1
+rec.PauseDefinitionsFile                ${NUANCE}/data/lang/English.America/master.package/1.2.0/PAUSES
+rec.PhonesFile                          ${NUANCE}/data/lang/English.America/master.package/1.2.0/PHONES
+rec.MasterPackageLocation               ${NUANCE}/data/lang/English.America/master.package/1.2.0
+
+# Pass 1 parameters:
+rec.Pruning				750
+rec.pass1.RejectFlag			TRUE
+rec.pass1.RejectWord			@reject@
+rec.pass1.RejectWeight			-50
+rec.PruneRejects                        TRUE
+
+# Phone Processor parameters:
+rec.pass1.pp.Method			standard
+rec.pass1.pp.Models			${NUANCE}/data/lang/English.America/master.package/1.2.0/models.models
+rec.NuanceInternal_11408  		${NUANCE}/data/lang/English.America/master.package/1.2.0/models
+
+# Grammar Processor parameters:
+rec.pass1.gp.Method			fast
+rec.GrammarWeight			5.0
+rec.pass1.gp.WTW			-200
+rec.pass1.gp.IgnoreConstraints		TRUE
+
+rec.pass1.gp.ppr_enrollment_models_file ${NUANCE}/data/lang/English.America/master.package/1.2.0/GpmMapping
+rec.EnrollCount                         1001
+rec.EnrollOffset                        0
+
+rec.NuanceInternal_27658                -_clk_exh_inh_noi_rej_hes
+rec.NuanceInternal_55460                -100
+rec.NuanceInternal_8392                 TRUE
+rec.NuanceInternal_8513                 ${NUANCE}/data/lang/English.America/master.package/1.2.0/confidence_calibration
+
+# Backtrace parameters:
+rec.pass1.bt.Method			standard
+rec.pass1.bt.Times			TRUE
+rec.pass1.bt.StartTimes			FALSE
+rec.pass1.bt.Duration			FALSE
+rec.pass1.bt.Probs			TRUE
+rec.pass1.bt.GProbs			FALSE
+
+
+# Pronunciation Dictionary parameters
+pron.SystemDictionary                   ${NUANCE}/data/lang/English.America/master.package/1.2.0/DICTIONARY
+pron.ModelSet                           ${NUANCE}/data/lang/English.America/autopron/2
+pron.MaxProns                           10
+ 
+ 
+# front end parameters that were in fe.control
+fe.NuanceInternal_4322                  FALSE
+rec.SamplingRate                        8000
+fe.NuanceInternal_1753                  TRUE
+fe.NuanceInternal_6315                  0.9990
+fe.NuanceInternal_8615                  TRUE
+fe.NuanceInternal_2305                  205
+fe.NuanceInternal_1126                  256
+fe.NuanceInternal_2862                  -1.052632
+fe.NuanceInternal_9811                  80
+fe.NuanceInternal_15470                 4
+fe.NuanceInternal_21268                 4
+fe.NuanceInternal_10146                 0.05
+fe.NuanceInternal_8466                  0.00
+
+fe.EnableNoiseReduction                 TRUE
+fe.NuanceInternal_16303                 FALSE
+fe.NuanceInternal_10175                 7
+fe.NuanceInternal_9126                  122
+fe.NuanceInternal_24878                 ${NUANCE}/data/lang/English.America/front-end/fe2/mel-filterbank-20-bands
+fe.NuanceInternal_22105                 ${NUANCE}/data/lang/English.America/front-end/fe2/mel-cep-20-to-12
+fe.NuanceInternal_4093                  ${NUANCE}/data/lang/English.America/front-end/fe2/hamming-205-padded-256-window
+fe.NuanceInternal_18748                 ${NUANCE}/data/lang/English.America/front-end/fe2/binary-tree.frame_single_feature_sahara
+fe.NuanceInternal_20908                 ${NUANCE}/data/lang/English.America/front-end/fe2/feature-configuration
+
+# obs parameters from obs.control
+obs.NuanceInternal_6279                 mixt
+obs.NuanceInternal_1502                 TRUE
+obs.NuanceInternal_10271                FALSE
+obs.NumFeatures                         1
+obs.Feature0                            frame_single_feature:32:1.0:10000
+obs.NuanceInternal_4280                 0.7
+obs.Shortlist0                          ${NUANCE}/data/lang/English.America/master.package/1.2.0/shortlist.9
+rec.NuanceInternal_13040                ${NUANCE}/data/lang/English.America/master.package/1.2.0/models.priors
+
+rec.NuanceInternal_8907               ${NUANCE}/data/lang/English.America/master.package/1.2.0/DynamicParameters
+
+obs.NuanceInternal_9973                 -1137579.3126
+
+
+### The following lines are copied from master_package_info file ###
+
+
+### End of lines copied from master_package_info file ###
+

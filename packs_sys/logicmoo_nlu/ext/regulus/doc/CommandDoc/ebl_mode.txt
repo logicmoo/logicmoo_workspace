@@ -1,0 +1,12 @@
+Put the top-loop in a mode where it shows the results of doing
+EBL-based processing on input sentences. For this to make sense,
+you need to have loaded a general grammar and have a config file
+entry for {\tt ebl\_\-operationality}.
+
+When the top loop is in EBL mode, input sentences are parsed
+and then subjected to EBL generalisation, using the rules in
+{\tt ebl\_\-operationality}. The file is reloaded each time.
+The learned rules are printed in schematic form, as they
+are in the files output by the {EBL\_\-POSTPROCESS} and
+related commands. Each rule is paired with the phrase used
+to induce it.

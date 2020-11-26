@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.29</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ordsets.html">
+<link rel="next" href="persistency.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ordsets.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="persistency.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:pairs"><a id="sec:A.29"><span class="sec-nr">A.29</span> <span class="sec-title">library(pairs): 
+Operations on key-value lists</span></a></h2>
+
+<p><a id="sec:pairs"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jan Wielemaker
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="builtinlist.html#keysort/2">keysort/2</a>, <code>library(assoc)</code>
+</dd>
+</dl>
+
+<p>This module implements common operations on Key-Value lists, also 
+known as <i>Pairs</i>. Pairs have great practical value, especially due 
+to
+<a class="pred" href="builtinlist.html#keysort/2">keysort/2</a> and the 
+library <code>assoc.pl</code>.
+
+<p>This library is based on discussion in the SWI-Prolog mailinglist, 
+including specifications from Quintus and a library proposal by Richard 
+O'Keefe.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pairs_keys_values/3"><strong>pairs_keys_values</strong>(<var>?Pairs, 
+?Keys, ?Values</var>)</a></dt>
+<dd class="defbody">
+True if <var>Keys</var> holds the keys of <var>Pairs</var> and <var>Values</var> 
+the values.
+
+<p>Deterministic if any argument is instantiated to a finite list and 
+the others are either free or finite lists. All three lists are in the 
+same order.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="pairs.html#pairs_values/2">pairs_values/2</a> and <a class="pred" href="pairs.html#pairs_keys/2">pairs_keys/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pairs_values/2"><strong>pairs_values</strong>(<var>+Pairs, 
+-Values</var>)</a></dt>
+<dd class="defbody">
+Remove the keys from a list of Key-Value pairs. Same as
+<code>pairs_keys_values(Pairs, _, Values)</code></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pairs_keys/2"><strong>pairs_keys</strong>(<var>+Pairs, 
+-Keys</var>)</a></dt>
+<dd class="defbody">
+Remove the values from a list of Key-Value pairs. Same as
+<code>pairs_keys_values(Pairs, Keys, _)</code></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="group_pairs_by_key/2"><strong>group_pairs_by_key</strong>(<var>+Pairs, 
+-Joined:list(Key-Values)</var>)</a></dt>
+<dd class="defbody">
+Group values with equivalent (<a class="pred" href="compare.html#==/2">==/2</a>) 
+consecutive keys. For example:
+
+<pre class="code">
+?- group_pairs_by_key([a-2, a-1, b-4, a-3], X).
+
+X = [a-[2,1], b-[4], a-[3]]
+</pre>
+
+<p>Sorting the list of pairs before grouping can be used to group
+<i>all</i> values associated with a key. For example, finding all values 
+associated with the largest key:
+
+<pre class="code">
+?- sort(1, @&gt;=, [a-1, b-2, c-3, a-4, a-5, c-6], Ps),
+   group_pairs_by_key(Ps, [K-Vs|_]).
+K = c,
+Vs = [3, 6].
+</pre>
+
+<p>In this example, sorting by key only (first argument of <a class="pred" href="builtinlist.html#sort/4">sort/4</a> 
+is 1) ensures that the order of the values in the original list of pairs 
+is maintained.
+<table class="arglist">
+<tr><td><var>Pairs</var> </td><td><var>Key</var>-Value list </td></tr>
+<tr><td><var>Joined</var> </td><td>List of <var>Key</var>-Group, where 
+Group is the list of <var>Values</var> associated with equivalent 
+consecutive Keys in the same order as they appear in <var>Pairs</var>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="transpose_pairs/2"><strong>transpose_pairs</strong>(<var>+Pairs, 
+-Transposed</var>)</a></dt>
+<dd class="defbody">
+Swap Key-Value to Value-Key. The resulting list is sorted using
+<a class="pred" href="builtinlist.html#keysort/2">keysort/2</a> on the 
+new key.</dd>
+<dt class="pubdef"><a id="map_list_to_pairs/3"><strong>map_list_to_pairs</strong>(<var>:Function, 
++List, -Keyed</var>)</a></dt>
+<dd class="defbody">
+Create a Key-Value list by mapping each element of <var>List</var>. For 
+example, if we have a list of lists we can create a list of Length-<var>List</var> 
+using
+
+<pre class="code">
+        map_list_to_pairs(length, ListOfLists, Pairs),
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

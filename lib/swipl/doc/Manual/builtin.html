@@ -1,0 +1,455 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="idesummary.html">
+<link rel="next" href="preddesc.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="idesummary.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="preddesc.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:builtin"><a id="sec:4"><span class="sec-nr">4</span> <span class="sec-title">Built-in 
+Predicates</span></a></h1>
+
+<a id="sec:builtin"></a>
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="preddesc.html"><span class="sec-nr">4.1</span> <span class="sec-title">Notation 
+of Predicate Descriptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.1"><span class="sec-nr">4.1.1</span> <span class="sec-title">The 
+argument mode indicator</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.2"><span class="sec-nr">4.1.2</span> <span class="sec-title">Predicate 
+indicators</span></a></div>
+<div class="toc-h4"><a class="sec" href="preddesc.html#sec:4.1.2.1"><span class="sec-nr">4.1.2.1</span> <span class="sec-title">Non-terminal 
+indicators</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.3"><span class="sec-nr">4.1.3</span> <span class="sec-title">Predicate 
+behaviour and determinism</span></a></div>
+<div class="toc-h2"><a class="sec" href="chars.html"><span class="sec-nr">4.2</span> <span class="sec-title">Character 
+representation</span></a></div>
+<div class="toc-h2"><a class="sec" href="consulting.html"><span class="sec-nr">4.3</span> <span class="sec-title">Loading 
+Prolog source files</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.1"><span class="sec-nr">4.3.1</span> <span class="sec-title">Conditional 
+compilation and program transformation</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.1.1"><span class="sec-nr">4.3.1.1</span> <span class="sec-title">Program 
+transformation with source layout info</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.1.2"><span class="sec-nr">4.3.1.2</span> <span class="sec-title">Conditional 
+compilation</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.2"><span class="sec-nr">4.3.2</span> <span class="sec-title">Reloading 
+files, active code and threads</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.2.1"><span class="sec-nr">4.3.2.1</span> <span class="sec-title">Compilation 
+of mutually dependent code</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.2.2"><span class="sec-nr">4.3.2.2</span> <span class="sec-title">Compilation 
+with multiple threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.3"><span class="sec-nr">4.3.3</span> <span class="sec-title">Quick 
+load files</span></a></div>
+<div class="toc-h2"><a class="sec" href="edit.html"><span class="sec-nr">4.4</span> <span class="sec-title">Editor 
+Interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="edit.html#sec:4.4.1"><span class="sec-nr">4.4.1</span> <span class="sec-title">Customizing 
+the editor interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="typetest.html"><span class="sec-nr">4.5</span> <span class="sec-title">Verify 
+Type of a Term</span></a></div>
+<div class="toc-h2"><a class="sec" href="compare.html"><span class="sec-nr">4.6</span> <span class="sec-title">Comparison 
+and Unification of Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="compare.html#sec:4.6.1"><span class="sec-nr">4.6.1</span> <span class="sec-title">Standard 
+Order of Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="compare.html#sec:4.6.2"><span class="sec-nr">4.6.2</span> <span class="sec-title">Special 
+unification and comparison predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="control.html"><span class="sec-nr">4.7</span> <span class="sec-title">Control 
+Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="metacall.html"><span class="sec-nr">4.8</span> <span class="sec-title">Meta-Call 
+Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="delcont.html"><span class="sec-nr">4.9</span> <span class="sec-title">Delimited 
+continuations</span></a></div>
+<div class="toc-h2"><a class="sec" href="exception.html"><span class="sec-nr">4.10</span> <span class="sec-title">Exception 
+handling</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.1"><span class="sec-nr">4.10.1</span> <span class="sec-title">Urgency 
+of exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.2"><span class="sec-nr">4.10.2</span> <span class="sec-title">Debugging 
+and exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.3"><span class="sec-nr">4.10.3</span> <span class="sec-title">The 
+exception term</span></a></div>
+<div class="toc-h4"><a class="sec" href="exception.html#sec:4.10.3.1"><span class="sec-nr">4.10.3.1</span> <span class="sec-title">General 
+form of the ISO standard exception term</span></a></div>
+<div class="toc-h4"><a class="sec" href="exception.html#sec:4.10.3.2"><span class="sec-nr">4.10.3.2</span> <span class="sec-title">Throwing 
+exceptions from applications and libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="printmsg.html"><span class="sec-nr">4.11</span> <span class="sec-title">Printing 
+messages</span></a></div>
+<div class="toc-h3"><a class="sec" href="printmsg.html#sec:4.11.1"><span class="sec-nr">4.11.1</span> <span class="sec-title">Printing 
+from libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="signal.html"><span class="sec-nr">4.12</span> <span class="sec-title">Handling 
+signals</span></a></div>
+<div class="toc-h3"><a class="sec" href="signal.html#sec:4.12.1"><span class="sec-nr">4.12.1</span> <span class="sec-title">Notes 
+on signal handling</span></a></div>
+<div class="toc-h2"><a class="sec" href="DCG.html"><span class="sec-nr">4.13</span> <span class="sec-title">DCG 
+Grammar rules</span></a></div>
+<div class="toc-h2"><a class="sec" href="db.html"><span class="sec-nr">4.14</span> <span class="sec-title">Database</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.1"><span class="sec-nr">4.14.1</span> <span class="sec-title">Managing 
+(dynamic) predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="db.html#sec:4.14.1.1"><span class="sec-nr">4.14.1.1</span> <span class="sec-title">Transactions</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.2"><span class="sec-nr">4.14.2</span> <span class="sec-title">The 
+recorded database</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.3"><span class="sec-nr">4.14.3</span> <span class="sec-title">Flags</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.4"><span class="sec-nr">4.14.4</span> <span class="sec-title">Tries</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.5"><span class="sec-nr">4.14.5</span> <span class="sec-title">Update 
+view</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.6"><span class="sec-nr">4.14.6</span> <span class="sec-title">Indexing 
+databases</span></a></div>
+<div class="toc-h2"><a class="sec" href="dynamic.html"><span class="sec-nr">4.15</span> <span class="sec-title">Declaring 
+predicate properties</span></a></div>
+<div class="toc-h2"><a class="sec" href="examineprog.html"><span class="sec-nr">4.16</span> <span class="sec-title">Examining 
+the program</span></a></div>
+<div class="toc-h2"><a class="sec" href="IO.html"><span class="sec-nr">4.17</span> <span class="sec-title">Input 
+and output</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.1"><span class="sec-nr">4.17.1</span> <span class="sec-title">Predefined 
+stream aliases</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.2"><span class="sec-nr">4.17.2</span> <span class="sec-title">ISO 
+Input and Output Streams</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.3"><span class="sec-nr">4.17.3</span> <span class="sec-title">Edinburgh-style 
+I/O</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.4"><span class="sec-nr">4.17.4</span> <span class="sec-title">Switching 
+between Edinburgh and ISO I/O</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.5"><span class="sec-nr">4.17.5</span> <span class="sec-title">Adding 
+IRI schemas</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.6"><span class="sec-nr">4.17.6</span> <span class="sec-title">Write 
+onto atoms, code-lists, etc.</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.7"><span class="sec-nr">4.17.7</span> <span class="sec-title">Fast 
+binary term I/O</span></a></div>
+<div class="toc-h2"><a class="sec" href="streamstat.html"><span class="sec-nr">4.18</span> <span class="sec-title">Status 
+of streams</span></a></div>
+<div class="toc-h2"><a class="sec" href="chario.html"><span class="sec-nr">4.19</span> <span class="sec-title">Primitive 
+character I/O</span></a></div>
+<div class="toc-h2"><a class="sec" href="termrw.html"><span class="sec-nr">4.20</span> <span class="sec-title">Term 
+reading and writing</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipterm.html"><span class="sec-nr">4.21</span> <span class="sec-title">Analysing 
+and Constructing Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="manipterm.html#sec:4.21.1"><span class="sec-nr">4.21.1</span> <span class="sec-title">Non-logical 
+operations on terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipatom.html"><span class="sec-nr">4.22</span> <span class="sec-title">Analysing 
+and Constructing Atoms</span></a></div>
+<div class="toc-h2"><a class="sec" href="locale.html"><span class="sec-nr">4.23</span> <span class="sec-title">Localization 
+(locale) support</span></a></div>
+<div class="toc-h2"><a class="sec" href="chartype.html"><span class="sec-nr">4.24</span> <span class="sec-title">Character 
+properties</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.1"><span class="sec-nr">4.24.1</span> <span class="sec-title">Case 
+conversion</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.2"><span class="sec-nr">4.24.2</span> <span class="sec-title">White 
+space normalization</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.3"><span class="sec-nr">4.24.3</span> <span class="sec-title">Language-specific 
+comparison</span></a></div>
+<div class="toc-h2"><a class="sec" href="operators.html"><span class="sec-nr">4.25</span> <span class="sec-title">Operators</span></a></div>
+<div class="toc-h2"><a class="sec" href="charconv.html"><span class="sec-nr">4.26</span> <span class="sec-title">Character 
+Conversion</span></a></div>
+<div class="toc-h2"><a class="sec" href="arith.html"><span class="sec-nr">4.27</span> <span class="sec-title">Arithmetic</span></a></div>
+<div class="toc-h3"><a class="sec" href="arith.html#sec:4.27.1"><span class="sec-nr">4.27.1</span> <span class="sec-title">Special 
+purpose integer arithmetic</span></a></div>
+<div class="toc-h3"><a class="sec" href="arith.html#sec:4.27.2"><span class="sec-nr">4.27.2</span> <span class="sec-title">General 
+purpose arithmetic</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.1"><span class="sec-nr">4.27.2.1</span> <span class="sec-title">Arithmetic 
+types</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.2"><span class="sec-nr">4.27.2.2</span> <span class="sec-title">Rational 
+number examples</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.3"><span class="sec-nr">4.27.2.3</span> <span class="sec-title">Rational 
+numbers or floats</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.4"><span class="sec-nr">4.27.2.4</span> <span class="sec-title">IEEE 
+754 floating point arithmetic</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.5"><span class="sec-nr">4.27.2.5</span> <span class="sec-title">Arithmetic 
+Functions</span></a></div>
+<div class="toc-h2"><a class="sec" href="miscarith.html"><span class="sec-nr">4.28</span> <span class="sec-title">Misc 
+arithmetic support predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="builtinlist.html"><span class="sec-nr">4.29</span> <span class="sec-title">Built-in 
+list operations</span></a></div>
+<div class="toc-h2"><a class="sec" href="allsolutions.html"><span class="sec-nr">4.30</span> <span class="sec-title">Finding 
+all Solutions to a Goal</span></a></div>
+<div class="toc-h2"><a class="sec" href="forall2.html"><span class="sec-nr">4.31</span> <span class="sec-title">Forall</span></a></div>
+<div class="toc-h2"><a class="sec" href="format.html"><span class="sec-nr">4.32</span> <span class="sec-title">Formatted 
+Write</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.1"><span class="sec-nr">4.32.1</span> <span class="sec-title">Writef</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.2"><span class="sec-nr">4.32.2</span> <span class="sec-title">Format</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.3"><span class="sec-nr">4.32.3</span> <span class="sec-title">Programming 
+Format</span></a></div>
+<div class="toc-h2"><a class="sec" href="gvar.html"><span class="sec-nr">4.33</span> <span class="sec-title">Global 
+variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="gvar.html#sec:4.33.1"><span class="sec-nr">4.33.1</span> <span class="sec-title">Compatibility 
+of SWI-Prolog Global Variables</span></a></div>
+<div class="toc-h2"><a class="sec" href="tty.html"><span class="sec-nr">4.34</span> <span class="sec-title">Terminal 
+Control</span></a></div>
+<div class="toc-h2"><a class="sec" href="system.html"><span class="sec-nr">4.35</span> <span class="sec-title">Operating 
+System Interaction</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.1"><span class="sec-nr">4.35.1</span> <span class="sec-title">Windows-specific 
+Operating System Interaction</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.2"><span class="sec-nr">4.35.2</span> <span class="sec-title">Dealing 
+with time and date</span></a></div>
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.1"><span class="sec-nr">4.35.2.1</span> <span class="sec-title">Time 
+and date data structures</span></a></div>
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.2"><span class="sec-nr">4.35.2.2</span> <span class="sec-title">Time 
+and date predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.3"><span class="sec-nr">4.35.3</span> <span class="sec-title">Controlling 
+the <b>swipl-win.exe</b> console window</span></a></div>
+<div class="toc-h2"><a class="sec" href="files.html"><span class="sec-nr">4.36</span> <span class="sec-title">File 
+System Interaction</span></a></div>
+<div class="toc-h2"><a class="sec" href="toplevel.html"><span class="sec-nr">4.37</span> <span class="sec-title">User 
+Top-level Manipulation</span></a></div>
+<div class="toc-h2"><a class="sec" href="protocol.html"><span class="sec-nr">4.38</span> <span class="sec-title">Creating 
+a Protocol of the User Interaction</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugger.html"><span class="sec-nr">4.39</span> <span class="sec-title">Debugging 
+and Tracing Programs</span></a></div>
+<div class="toc-h2"><a class="sec" href="statistics.html"><span class="sec-nr">4.40</span> <span class="sec-title">Obtaining 
+Runtime Statistics</span></a></div>
+<div class="toc-h2"><a class="sec" href="profile.html"><span class="sec-nr">4.41</span> <span class="sec-title">Execution 
+profiling</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.1"><span class="sec-nr">4.41.1</span> <span class="sec-title">Profiling 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.2"><span class="sec-nr">4.41.2</span> <span class="sec-title">Visualizing 
+profiling data</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.3"><span class="sec-nr">4.41.3</span> <span class="sec-title">Information 
+gathering</span></a></div>
+<div class="toc-h4"><a class="sec" href="profile.html#sec:4.41.3.1"><span class="sec-nr">4.41.3.1</span> <span class="sec-title">Profiling 
+in the Windows Implementation</span></a></div>
+<div class="toc-h2"><a class="sec" href="memory.html"><span class="sec-nr">4.42</span> <span class="sec-title">Memory 
+Management</span></a></div>
+<div class="toc-h3"><a class="sec" href="memory.html#sec:4.42.1"><span class="sec-nr">4.42.1</span> <span class="sec-title">Garbage 
+collection</span></a></div>
+<div class="toc-h3"><a class="sec" href="memory.html#sec:4.42.2"><span class="sec-nr">4.42.2</span> <span class="sec-title">Heap 
+memory (malloc)</span></a></div>
+<div class="toc-h2"><a class="sec" href="DDE.html"><span class="sec-nr">4.43</span> <span class="sec-title">Windows 
+DDE interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="DDE.html#sec:4.43.1"><span class="sec-nr">4.43.1</span> <span class="sec-title">DDE 
+client interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="DDE.html#sec:4.43.2"><span class="sec-nr">4.43.2</span> <span class="sec-title">DDE 
+server mode</span></a></div>
+<div class="toc-h2"><a class="sec" href="miscpreds.html"><span class="sec-nr">4.44</span> <span class="sec-title">Miscellaneous</span></a></div>
+</div>
+</body></html>

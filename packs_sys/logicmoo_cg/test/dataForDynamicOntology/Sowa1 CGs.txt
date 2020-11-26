@@ -1,0 +1,78 @@
+-------------------CGs in sowa example--------------------------
+
+[Animate]<-agnt-[Act]-thme->[Entity]
+
+[Robot]<-agnt-[Wash]-thme->[Truck]
+
+[Animal]<-agnt-[Chase]-thme->[Entity]
+
+[Human]<-agnt-[Chase]-thme->[Human]
+
+[President]<-agnt-[Chase]-
+			-thme->[Intern],
+			-arnd->[Desk]
+
+[Dog:Macula]<-agnt-[Chase]-thme->[Chevrolet]
+
+
+[Cat]<-agnt-[Chase]-thme->[Mouse]
+
+[Cat:Yojo]<-agnt-[Chase]-
+		-manr->[Vigorous],
+		-thme->[Mouse]-attr->[Brown]
+
+
+[Cat:Tigerlily]<-agnt-[Chase]-thme->[Mouse]-attr->[Gray]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------Sequence of CGs integrated in the ont-----
+
+1- [Robot]<-agnt-[Wash]-thme->[Truck]
+
+2- [Human]<-agnt-[Chase]-thme->[Human]		
+
+3- [Cat:Yojo]<-agnt-[Chase]-
+		-manr->[Vigorous],
+		-thme->[Mouse]-attr->[Brown]
+
+4- [Cat:Tigerlily]<-agnt-[Chase]-thme->[Mouse]-attr->[Gray]
+
+5- [Dog:Macula]<-agnt-[Chase]-thme->[Chevrolet]
+
+6- [President]<-agnt-[Chase]-
+			-thme->[Intern],
+			-arnd->[Desk]
+
+----------------Other CGs created by generalisation---------
+
+[Animal]<-agnt-[Chase]-thme->[Animal]
+
+[Chase #0] -
+        -agnt->[Cat],
+        -thme->[Mouse]-attr->[Attribute]
+
+[Chase #0] -
+        -agnt->[Animal],
+        -thme->[Entity]
+
+
+

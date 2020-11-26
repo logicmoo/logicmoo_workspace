@@ -1,0 +1,740 @@
+:- include(test_header).
+;;
+;; deduct-einstein.scm
+;;
+;; Full set of Einstein Puzzle facts.
+;; There are 15 explicitly stated facts, and four additional implicit
+;; facts about ordinal counting (ordering of houses in a row).
+;;
+;; The facts are stated in a fashion that is as close as possible to
+;; the natural-language source. The point being that we want the
+;; expression of facts to be closely tied to human patterns of speech.
+;; Being "efficient" or "clever" is NOT the point.
+
+(define (stv mean conf) (cog-new-stv mean conf))
+
+;; A little handly-dandy utility to avoid over-reporting of "obvious"
+;; results. We declare that person1 is the same as person1, etc.
+;; A kind-of pauli-exclusion-principle at work.
+(define (same person)
+	(EvaluationLink (stv 1 1)
+		(PredicateNode "IsSamePerson")
+		(ListLink
+			(FeatureNode person) ; AvatarNode
+			(FeatureNode person) ; AvatarNode
+		)
+	)
+)
+
+;; A declaration of fact: it is true that pred has value for person.
+(define (fact person pred value)
+	(same person)
+	(EvaluationLink (stv 1 1)
+		(PredicateNode pred)
+		(ListLink
+			(FeatureNode person)
+			(ConceptNode value)
+		)
+	)
+)
+
+;; A neighbor-predicate: two people live next to each other.
+(define (neighbor person1 person2)
+	(same person1)
+	(same person2)
+	(EvaluationLink (stv 1 1)
+		(PredicateNode "Neighbor")
+		(ListLink
+			(FeatureNode person1)
+			(FeatureNode person2)
+		)
+	)
+)
+
+;; A left-of predicate: one house is left of another
+(define (left-of house1 house2)
+	(EvaluationLink (stv 1 1)
+		(PredicateNode "LeftOf")
+		(ListLink
+			(ConceptNode house1)
+			(ConceptNode house2)
+		)
+	)
+)
+
+
+;; 1. The Englishman lives in the red house.
+(fact "person1" "Nationality" "Englishman")
+(fact "person1" "LivesIn" "red house")
+
+;; 2. The Swede keeps dogs.
+(fact "person2" "Nationality" "Swede")
+(fact "person2" "Keeps" "dogs")
+
+;; 3. The Dane drinks tea.
+(fact "person3" "Nationality" "Dane")
+(fact "person3" "Drinks" "tea")
+
+;; 4. The green house is just to the left of the white one.
+(left-of "green house" "white house")
+
+;; 5. The owner of the green house drinks coffee.
+(fact "person5" "LivesIn" "green house")
+(fact "person5" "Drinks" "coffee")
+
+;; 6. The Pall Mall smoker keeps birds.
+(fact "person6" "Smokes" "PallMall")
+(fact "person6" "Keeps" "birds")
+
+;; 7. The owner of the yellow house smokes Dunhills.
+(fact "person7" "Smokes" "Dunhill")
+(fact "person7" "LivesIn" "yellow house")
+
+;; 8. The man in the center house drinks milk.
+(fact "person8" "Drinks" "milk")
+(fact "person8" "Address" "103 Main Street")
+
+;; 9. The Norwegian lives in the first house.
+(fact "person9" "Nationality" "Norwegian")
+(fact "person9" "Address" "101 Main Street")
+
+;; 10. The Blend smoker has a neighbor who keeps cats.
+(fact "person10" "Smokes" "Blend")
+(neighbor "person10" "catperson")
+(fact "catperson" "Keeps" "cats")
+
+;; 11. The man who smokes Blue Masters drinks bier.
+(fact "person11" "Smokes" "Blue Master")
+(fact "person11" "Drinks" "bier")
+
+;; 12. The man who keeps horses lives next to the Dunhill smoker.
+(fact "person12" "Keeps" "horses")
+(neighbor "person12" "dun_smoke_person")
+(fact "dun_smoke_person" "Smokes" "Dunhill")
+
+;; 13. The German smokes Prince.
+(fact "person13" "Nationality" "German")
+(fact "person13" "Smokes" "Prince")
+
+;; 14. The Norwegian lives next to the blue house.
+(fact "person14" "Nationality" "Norwegian")
+(neighbor "person14" "blue_person")
+(fact "blue_person" "LivesIn" "blue house")
+
+;; 15. The Blend smoker has a neighbor who drinks water.
+(fact "person15" "Smokes" "Blend")
+(neighbor "person15" "water_person")
+(fact "water_person" "Drinks" "water")
+
+;; ---------------------------------------------------------------
+;; Assorted supplemental facts.  These are somehow implicit in the
+;; problem statement. We'd mostly like to derive these, from more
+;; basic assumptions, but, for now, we'l just state them.
+;;
+;; A supplemental fact for fact 4: someone lives in the white house.
+(fact "person4" "LivesIn" "white house")
+
+;; Supplemental fact: someone keeps fish.
+(fact "fish_person" "Keeps" "fish")
+
+;; State some implicitly assumed facts about neighboring houses
+;; This is the 'successor' function for ordinal numbers.
+(define (successor house1 house2)
+	(EvaluationLink (stv 1 1)
+		(PredicateNode "Successor")
+		(ListLink
+			(ConceptNode house1)
+			(ConceptNode house2)
+		)
+	)
+)
+
+(successor "101 Main Street" "102 Main Street")
+(successor "102 Main Street" "103 Main Street")
+(successor "103 Main Street" "104 Main Street")
+(successor "104 Main Street" "105 Main Street")
+
+;; ---------------------------------------------------------------
+;; By-process-of-elimination facts
+;; If person doesn't live in one of the four houses, they must live in
+;; the fifth. Likewsie, if person doesn't smoke/drink/keep one of the four,
+;; they must have the fifth.
+
+(define (is-a x y)
+	(InheritanceLink
+		(ConceptNode x)
+		(ConceptNode y)
+	)
+)
+
+(is-a "red house" "house")
+(is-a "white house" "house")
+(is-a "green house" "house")
+(is-a "yellow house" "house")
+(is-a "blue house" "house")
+
+(is-a "water" "drink")
+(is-a "milk" "drink")
+(is-a "bier" "drink")
+(is-a "coffee" "drink")
+(is-a "tea" "drink")
+
+(is-a "Prince" "tobacco")
+(is-a "PallMall" "tobacco")
+(is-a "Dunhill" "tobacco")
+(is-a "Blend" "tobacco")
+(is-a "Blue Master" "tobacco")
+
+(is-a "fish" "pet")
+(is-a "dogs" "pet")
+(is-a "birds" "pet")
+(is-a "cats" "pet")
+(is-a "horses" "pet")
+
+(is-a "Englishman" "citizenship")
+(is-a "Swede" "citizenship")
+(is-a "Dane" "citizenship")
+(is-a "Norwegian" "citizenship")
+(is-a "German" "citizenship")
+;;
+;; deduct-keep.scm
+;;
+;; Print out who keeps what
+;;
+;; Part of the "Einstein puzzle" demo.
+
+(define (print-ownership)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(TypedVariableLink
+				(VariableNode "$person")
+				(TypeNode "FeatureNode")
+			)
+			(VariableNode "$nationality")
+			(VariableNode "$house")
+			(VariableNode "$pet")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(EvaluationLink
+				(PredicateNode "Nationality")
+				(ListLink
+					(VariableNode "$person")
+					(VariableNode "$nationality")
+				)
+			)
+			(EvaluationLink
+				(PredicateNode "LivesIn")
+				(ListLink
+					(VariableNode "$person")
+					(VariableNode "$house")
+				)
+			)
+			(EvaluationLink
+				(PredicateNode "KeepsPet")
+				(ListLink
+					(VariableNode "$person")
+					(VariableNode "$pet")
+				)
+			)
+		)
+		(OrderedLink
+			(VariableNode "$person")
+			(VariableNode "$nationality")
+			(VariableNode "$house")
+			(VariableNode "$pet")
+		)
+	)
+)
+
+
+(define (print-results)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(TypedVariableLink
+				(VariableNode "$person")
+				(TypeNode "FeatureNode")
+			)
+			(VariableNode "$pred")
+			(TypedVariableLink
+				(VariableNode "$attr")
+				(TypeNode "ConceptNode")
+			)
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(EvaluationLink
+				(VariableNode "$pred")
+				(ListLink
+					(VariableNode "$person")
+					(VariableNode "$attr")
+				)
+			)
+		)
+		(OrderedLink
+			(VariableNode "$person")
+			(VariableNode "$pred")
+			(VariableNode "$attr")
+		)
+	)
+)
+
+
+;;
+;; deduct-rules.scm
+;;
+;; Deduction rules for Einstein puzzle.
+;;
+;; The rules here are written in a fashion as close as possible to
+;; 'ordinary' common-sense deductive rules.  In particular, they are
+;; not written to predispose the problem into a 5x5 solution grid
+;; (although this is what they eventually must lead to). In other
+;; words, there is no effort made to make this the most "efficient"
+;; possible set of rules; instead, they're the most "natural" or
+;; "common-sense-like" for this task.
+
+(use-modules (srfi srfi-1))
+
+;; Define simple truth value
+(define (stv mean conf) (cog-new-stv mean conf))
+
+;; Shorthand for the node types
+(define VN VariableNode)
+(define PN PredicateNode)
+(define CN ConceptNode)
+(define AN FeatureNode) ; AvatarNode
+
+;; Predicate clause specifies a predicate that associates attribute to person
+(define (clause t1 v1 t2 v2 t3 v3)
+	(EvaluationLink
+		(t1 v1)
+		(ListLink
+			(t2 v2)
+			(t3 v3)
+		)
+	)
+)
+
+;; Predicate clause negating the third attribute.
+(define (not-clause t1 v1 t2 v2 t3 v3)
+	(EvaluationLink
+		(t1 v1)
+		(ListLink
+			(t2 v2)
+			(NotLink (t3 v3))
+		)
+	)
+)
+
+;; Predicate clause, asserting that v2 and v3 are different atoms.
+(define (differ t2 v2 t3 v3)
+	(EvaluationLink
+		(GroundedPredicateNode "c++:exclusive")
+		(ListLink
+			(t2 v2)
+			(t3 v3)
+		)
+	)
+)
+
+;; Declare a variable var to be of type type
+(define (decl-var type var)
+	(TypedVariableLink
+		(VariableNode var)
+		(TypeNode type)
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; "Is the same person" deduction rule.
+;; If person A and person B both share the same predicate and property,
+;; then they must be the same person.
+(define (is-same-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "PredicateNode" "$predicate")
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "ConceptNode" "$attribute")
+		)
+		;; body -- if all parts of AndLink hold true ... 
+		(AndLink
+			(clause VN "$predicate" VN "$person_a" VN "$attribute")
+			(clause VN "$predicate" VN "$person_b" VN "$attribute")
+			;; Avoid reporting things we already know.
+			;; Basically, if we already know that person A and B
+			;; are the same person, then lets not deduce it again.
+			;; This not link is identical to the conclusion below
+			(AbsentLink
+				(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
+			)
+		)
+		;; implicand -- then the following is true too
+		(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Transitive deduction rule.
+;;
+;; If attribute X holds for person A, and person A is same as person B
+;; then attribute X also holds for person B.
+(define (transitive-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "PredicateNode" "$predicate")
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "ConceptNode" "$attribute")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause VN "$predicate" VN "$person_a" VN "$attribute")
+			(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
+			;; Don't deduce thigs we already know...
+			;; i.e. this not link is identical to conclusion, below.
+			(AbsentLink
+				(clause VN "$predicate" VN "$person_b" VN "$attribute")
+			)
+		)
+		;; implicand -- then the following is true too
+		(clause VN "$predicate" VN "$person_b" VN "$attribute")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Transitive-not deduction rule.
+;;
+;; If attribute X doesn't hold for person A, and person A is same as person B
+;; then attribute X also doesn't hold for person B.
+;;
+;; Very similar to above
+(define (transitive-not-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "PredicateNode" "$predicate")
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "ConceptNode" "$attribute")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(not-clause VN "$predicate" VN "$person_a" VN "$attribute")
+			(clause PN "IsSamePerson" VN "$person_a" VN "$person_b")
+			;; Don't deduce thigs we already know...
+			;; i.e. this not link is identical to conclusion, below.
+			(AbsentLink
+				(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
+			)
+		)
+		;; implicand -- then the following is true too
+		(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; elimination
+
+(define (by-elimination-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person")
+			(decl-var "PredicateNode" "$predicate")
+			(decl-var "ConceptNode" "$attr_a")
+			(decl-var "ConceptNode" "$attr_b")
+			(decl-var "ConceptNode" "$attr_c")
+			(decl-var "ConceptNode" "$attr_d")
+			(decl-var "ConceptNode" "$attr_e")
+			(decl-var "ConceptNode" "$attr_type")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			;; If person does NOT have atttribute a,b,c or d ...
+			(not-clause VN "$predicate" VN "$person" VN "$attr_a")
+			(not-clause VN "$predicate" VN "$person" VN "$attr_b")
+			(not-clause VN "$predicate" VN "$person" VN "$attr_c")
+			(not-clause VN "$predicate" VN "$person" VN "$attr_d")
+			;; and the attributes a,b,c,d,e are all of the same kind
+			(InheritanceLink (VN "$attr_a") (VN "$attr_type"))
+			(InheritanceLink (VN "$attr_b") (VN "$attr_type"))
+			(InheritanceLink (VN "$attr_c") (VN "$attr_type"))
+			(InheritanceLink (VN "$attr_d") (VN "$attr_type"))
+			(InheritanceLink (VN "$attr_e") (VN "$attr_type"))
+			;; and attributes a,b,c,d,e are all different from one-another
+			(EvaluationLink
+				(GroundedPredicateNode "c++:exclusive")
+				(ListLink
+					(VN "$attr_a")
+					(VN "$attr_b")
+					(VN "$attr_c")
+					(VN "$attr_d")
+					(VN "$attr_e")
+				)
+			)
+			;; Don't deduce thigs we already know...
+			;; i.e. this not link is identical to conclusion, below.
+			;(AbsentLink
+			;	(clause VN "$predicate" VN "$person" VN "$attr_e")
+			;)
+		)
+
+		;; implicand -- then the following is true too
+		;; Then by elimination, person must have attribute e.
+		(clause VN "$predicate" VN "$person" VN "$attr_e")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; distinct-attr rule.
+;; If, for a given attribute, person a and person b take on different
+;; values, then they cannot be the same person.  Therefore, any other
+;; attributes they have must also be exclusive.
+
+(define (distinct-attr-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "PredicateNode" "$predicate_common")
+			(decl-var "ConceptNode" "$attribute_comm_a")
+			(decl-var "ConceptNode" "$attribute_comm_b")
+			(decl-var "PredicateNode" "$predicate_exclusive")
+			(decl-var "ConceptNode" "$attribute_excl")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause VN "$predicate_common" VN "$person_a" VN "$attribute_comm_a")
+			(clause VN "$predicate_common" VN "$person_b" VN "$attribute_comm_b")
+			(differ VN "$attribute_comm_a" VN "$attribute_comm_b")
+			(clause VN "$predicate_exclusive" VN "$person_a" VN "$attribute_excl")
+			;; Don't deduce thigs we already know...
+			;; i.e. this not link is identical to conclusion, below.
+			;(AbsentLink
+			;	(not-clause VN "$predicate_exclusive" VN "$person_b" VN "$attribute_excl")
+			;)
+		)
+
+		;; implicand -- then the following is true too
+		(not-clause VN "$predicate_exclusive" VN "$person_b" VN "$attribute_excl")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; neighbor-not-attr rule.
+;; If some attribute holds true for a person, it cannot hold for the
+;; person's neighbor.
+
+(define (neighbor-not-attr-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "PredicateNode" "$predicate")
+			(decl-var "ConceptNode" "$attribute")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause VN "$predicate" VN "$person_a" VN "$attribute")
+			(clause PN "Neighbor" VN "$person_a" VN "$person_b")
+			;; Don't deduce thigs we already know...
+			;; i.e. this not link is identical to conclusion, below.
+			(AbsentLink
+				(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
+			)
+		)
+
+		;; implicand -- then the following is true too
+		(not-clause VN "$predicate" VN "$person_b" VN "$attribute")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Houses at the end of the street can only have one neighbor, ever.
+;; This is a rather narrow rule, as it can only ever apply to the first
+;; address (first ordinal -- a boundary condition).
+;; This is used to combine rules 9 and 14.
+;; There should be a symmetric rule for the last address too ...
+(define (first-addr-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "ConceptNode" "$addr_a")
+			(decl-var "ConceptNode" "$addr_b")
+		)
+		;; body -- if all parts of AndLink hold true ... 
+		(AndLink
+			;; if adress of personA is 1st house
+			(clause PN "Address" VN "$person_a" CN "101 Main Street")
+			(clause PN "Address" VN "$person_a" VN "$addr_a")
+			;; and A is neighbor of B
+			(clause PN "Neighbor" VN "$person_a" VN "$person_b")
+			;; and the next house is one over
+			(clause PN "Successor" VN "$addr_a" VN "$addr_b")
+			;; and we don't already know the conclusion
+			(AbsentLink
+				(clause PN "Address" VN "$person_b" VN "$addr_b")
+			)
+		)
+		;; implicand -- then the B lives one house over.
+		(clause PN "Address" VN "$person_b" VN "$addr_b")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Neighbor deduction rule.
+;;
+;; If Address X is left of address Y, then person who lives in X is
+;; a neighbor of person who lives in Y
+(define (neighbor-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+			(decl-var "ConceptNode" "$addr_a")
+			(decl-var "ConceptNode" "$addr_b")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause PN "Address" VN "$person_a" VN "$addr_a")
+			(clause PN "Address" VN "$person_b" VN "$addr_b")
+			(clause PN "Successor" VN "$addr_a" VN "$addr_b")
+			; Not interested in what we already know.
+			(AbsentLink
+				(clause PN "Neighbor" VN "$person_a" VN "$person_b")
+			)
+		)
+		;; implicand -- then the following is true too
+		(clause PN "Neighbor" VN "$person_a" VN "$person_b")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Neighbor relation is symmetric
+;;
+;; If A is a neighbor of B then B is a neighbor of A
+(define (neighbor-symmetry-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person_a")
+			(decl-var "FeatureNode" "$person_b")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause PN "Neighbor" VN "$person_a" VN "$person_b")
+			; Not interested in what we already know.
+			(AbsentLink
+				(clause PN "Neighbor" VN "$person_b" VN "$person_a")
+			)
+		)
+		;; implicand -- then the following is true too
+		(clause PN "Neighbor" VN "$person_b" VN "$person_a")
+	)
+)
+
+;; ---------------------------------------------------------------------
+;; Deduce if a solution has been found ... this simply tries to see
+;; if all attributes have been deduced, and if so, just clumps them
+;; together.
+(define (found-solution-rule)
+	(BindLink
+		;; variable declarations
+		(VariableList
+			(decl-var "FeatureNode" "$person")
+			(decl-var "ConceptNode" "$nationality")
+			(decl-var "ConceptNode" "$drink")
+			(decl-var "ConceptNode" "$smoke")
+			(decl-var "ConceptNode" "$pet")
+			(decl-var "ConceptNode" "$house")
+			(decl-var "ConceptNode" "$addr")
+		)
+		;; body -- if all parts of AndLink hold true ... then
+		(AndLink
+			(clause PN "Nationality" VN "$person" VN "$nationality")
+			(clause PN "Drinks"      VN "$person" VN "$drink")
+			(clause PN "Smokes"      VN "$person" VN "$smoke")
+			(clause PN "Keeps"       VN "$person" VN "$pet")
+			(clause PN "LivesIn"     VN "$person" VN "$house")
+			(clause PN "Address"     VN "$person" VN "$addr")
+
+			;; Don't report a fact we already know.
+			(AbsentLink
+     		(OrderedLink
+					(VN "$nationality")
+					(VN "$drink")
+					(VN "$smoke")
+					(VN "$pet")
+					(VN "$house")
+					(VN "$addr")
+				)
+			)
+		)
+		;; implicand -- We're just going to use a plain-old ordered
+		;; link here to report the results. Why not ...
+     (OrderedLink
+			(VN "$nationality")
+			(VN "$drink")
+			(VN "$smoke")
+			(VN "$pet")
+			(VN "$house")
+			(VN "$addr")
+		)
+	)
+)
+;;
+;; deduct-trivial.scm
+;;
+;; Trivial example of deduction.
+;;
+;; Part of the "Einstein puzzle" demo.
+;;
+
+(define (stv mean conf) (cog-new-stv mean conf))
+
+;; The Englishman lives in the red house.
+(EvaluationLink (stv 1 1)
+	(PredicateNode "Nationality")
+	(ListLink
+		(FeatureNode "person1") ; AvatarNode
+		(ConceptNode "British")
+	)
+)
+
+(EvaluationLink (stv 1 1)
+	(PredicateNode "LivesIn")
+	(ListLink
+		(FeatureNode "person1") ; AvatarNode
+		(ConceptNode "red_house")
+	)
+)
+
+;; The person who lives in the red house keeps fish.
+(EvaluationLink (stv 1 1)
+	(PredicateNode "LivesIn")
+	(ListLink
+		(FeatureNode "person2")
+		(ConceptNode "red_house")
+	)
+)
+
+(EvaluationLink (stv 1 1)
+	(PredicateNode "KeepsPet")
+	(ListLink
+		(FeatureNode "person2")
+		(ConceptNode "fish")
+	)
+)
+
+
+

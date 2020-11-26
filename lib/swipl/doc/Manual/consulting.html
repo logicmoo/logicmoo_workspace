@@ -1,0 +1,1746 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="chars.html">
+<link rel="next" href="edit.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="chars.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="edit.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:consulting"><a id="sec:4.3"><span class="sec-nr">4.3</span> <span class="sec-title">Loading 
+Prolog source files</span></a></h2>
+
+<a id="sec:consulting"></a>
+
+<p>This section deals with loading Prolog source files. A Prolog source 
+file is a plain text file containing a Prolog program or part thereof. 
+Prolog source files come in three flavours:
+
+<dl class="latex">
+<dt><b> A traditional</b></dt>
+<dd>
+Prolog source file contains Prolog clauses and directives, but no <em>module 
+declaration</em> (see
+<a id="idx:module1:428"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>). 
+They are normally loaded using <a id="idx:consult1:429"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+or <a id="idx:ensureloaded1:430"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>. 
+Currently, a non-module file can only be loaded into a single module.<sup class="fn">49<span class="fn-text">This 
+limitation may be lifted in the future. Existing limitations in 
+SWI-Prolog's source code administration make this non-trivial.</span></sup></dd>
+<dt><b> A module</b></dt>
+<dd>
+Prolog source file starts with a module declaration. The subsequent 
+Prolog code is loaded into the specified module, and only the <em>exported</em> 
+predicates are made available to the context loading the module. Module 
+files are normally loaded with <a id="idx:usemodule12:431"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>. 
+See <a class="sec" href="modules.html#sec:6">chapter 6</a> for details.</dd>
+<dt><b> An include</b></dt>
+<dd>
+Prolog source file is loaded using the <a id="idx:include1:432"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+directive, textually including Prolog text into another Prolog source. A 
+file may be included into multiple source files and is typically used to 
+share <em>declarations</em> such as multifile or dynamic between source 
+files.
+</dd>
+</dl>
+
+<p>Prolog source files are located using <a id="idx:absolutefilename3:433"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+with the following options:
+
+<pre class="code">
+locate_prolog_file(Spec, Path) :-
+        absolute_file_name(Spec,
+                           [ file_type(prolog),
+                             access(read)
+                           ],
+                           Path).
+</pre>
+
+<p>The <code>file_type(prolog)</code> option is used to determine the 
+extension of the file using <a id="idx:prologfiletype2:434"></a><a class="pred" href="consulting.html#prolog_file_type/2">prolog_file_type/2</a>. 
+The default extension is
+<code>.pl</code>. <var>Spec</var> allows for the <em>path alias</em> 
+construct defined by <a id="idx:absolutefilename3:435"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+The most commonly used path alias is <code>library(LibraryFile)</code>. 
+The example below loads the library file <code>ordsets.pl</code> 
+(containing predicates for manipulating ordered sets).
+
+<pre class="code">
+:- use_module(library(ordsets)).
+</pre>
+
+<p>SWI-Prolog recognises grammar rules (<a id="idx:DCG:436">DCG</a>) as 
+defined in
+<cite><a class="cite" href="Bibliography.html#Clocksin:87">Clocksin &amp; 
+Melish, 1987</a></cite>. The user may define additional compilation of 
+the source file by defining the dynamic multifile predicates
+<a id="idx:termexpansion2:437"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>, <a id="idx:termexpansion4:438"></a><a class="pred" href="consulting.html#term_expansion/4">term_expansion/4</a>, <a id="idx:goalexpansion2:439"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+and
+<a id="idx:goalexpansion4:440"></a><a class="pred" href="consulting.html#goal_expansion/4">goal_expansion/4</a>. 
+It is not allowed to use <a id="idx:assert1:441"></a><a class="pred" href="db.html#assert/1">assert/1</a>, <a id="idx:retract1:442"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+or any other database predicate in <a id="idx:termexpansion2:443"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+other than for local computational purposes.<sup class="fn">50<span class="fn-text">It 
+does work for normal loading, but not for <a id="idx:qcompile1:444"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>.</span></sup> 
+Code that needs to create additional clauses must use <a id="idx:compileauxclauses1:445"></a><a class="pred" href="consulting.html#compile_aux_clauses/1">compile_aux_clauses/1</a>. 
+See <code>library(library(apply_macros))</code> for an example.
+
+<p>A <em>directive</em> is an instruction to the compiler. Directives 
+are used to set (predicate) properties (see <a class="sec" href="dynamic.html#sec:4.15">section 
+4.15</a>), set flags (see <a id="idx:setprologflag2:446"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a>) 
+and load files (this section). Directives are terms of the form <code><code>:-</code></code> &lt;<var>term</var>&gt;. 
+. Here are some examples:
+
+<pre class="code">
+:- use_module(library(lists)).
+:- dynamic
+        store/2.                % Name, Value
+</pre>
+
+<p>The directive <a id="idx:initialization1:447"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+can be used to run arbitrary Prolog goals. The specified goal is started <em>after</em> 
+loading the file in which it appears has completed.
+
+<p>SWI-Prolog compiles code as it is read from the file, and directives 
+are executed as <em>goals</em>. This implies that directives may call 
+any predicate that has been defined before the point where the directive 
+appears. It also accepts <code><code>?-</code></code> &lt;<var>term</var>&gt;. 
+as a synonym.
+
+<p><a id="idx:reconsult:448"></a>SWI-Prolog does not have a separate 
+reconsult/1 predicate. Reconsulting is implied automatically by the fact 
+that a file is consulted which is already loaded.
+
+<p>Advanced topics are handled in subsequent sections: mutually 
+dependent files (<a class="sec" href="consulting.html#sec:4.3.2.1">section 
+4.3.2.1</a>), multithreaded loading (<a class="sec" href="consulting.html#sec:4.3.2.2">section 
+4.3.2.2</a>) and reloading running code (<a class="sec" href="consulting.html#sec:4.3.2">section 
+4.3.2</a>).
+
+<p>The core of the family of loading predicates is <a id="idx:loadfiles2:449"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+The predicates
+<a id="idx:consult1:450"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, <a id="idx:ensureloaded1:451"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>, <a id="idx:usemodule1:452"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, <a id="idx:usemodule2:453"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+and <a id="idx:reexport1:454"></a><a class="pred" href="reexport.html#reexport/1">reexport/1</a> 
+pass the file argument directly to <a id="idx:loadfiles2:455"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+and pass additional options as expressed in the <a class="tab" href="consulting.html#tab:loadpreds">table 
+4</a>:
+
+<p><table class="latex frame-hsides center">
+<tr><td><b>Predicate</b></td><td align=center><b>if</b></td><td align=center><b>must_be_module</b></td><td align=center><b>import </b></td></tr>
+<tr class="hline"><td><a id="idx:consult1:456"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> </td><td align=center><code>true</code> </td><td align=center><code>false</code> </td><td align=center>all </td></tr>
+<tr><td><a id="idx:ensureloaded1:457"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a> </td><td align=center><code>not_loaded</code> </td><td align=center><code>false</code> </td><td align=center>all </td></tr>
+<tr><td><a id="idx:usemodule1:458"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> </td><td align=center><code>not_loaded</code> </td><td align=center><code>true</code> </td><td align=center>all</td></tr>
+<tr><td><a id="idx:usemodule2:459"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> </td><td align=center><code>not_loaded</code> </td><td align=center><code>true</code> </td><td align=center>specified </td></tr>
+<tr><td><a id="idx:reexport1:460"></a><a class="pred" href="reexport.html#reexport/1">reexport/1</a> </td><td align=center><code>not_loaded</code> </td><td align=center><code>true</code> </td><td align=center>all </td></tr>
+<tr><td><a id="idx:reexport2:461"></a><a class="pred" href="reexport.html#reexport/2">reexport/2</a> </td><td align=center><code>not_loaded</code> </td><td align=center><code>true</code> </td><td align=center>specified </td></tr>
+</table>
+<div class="caption"><b>Table 4 : </b>Properties of the file-loading 
+predicates. The <i>import</i> column specifies what is imported if the 
+loaded file is a module file.</div>
+<a id="tab:loadpreds"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="load_files/1"><strong>load_files</strong>(<var>:Files</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>load_files(Files,[])</code>. Same as <a id="idx:consult1:462"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, 
+See <a id="idx:loadfiles2:463"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+for supported options.
+</dd>
+<dt class="pubdef"><a id="load_files/2"><strong>load_files</strong>(<var>:Files, 
++Options</var>)</a></dt>
+<dd class="defbody">
+The predicate <a id="idx:loadfiles2:464"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+is the parent of all the other loading predicates except for <a id="idx:include1:465"></a><a class="pred" href="consulting.html#include/1">include/1</a>. 
+It currently supports a subset of the options of Quintus <a id="idx:loadfiles2:466"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. <var>Files</var> 
+is either a single source file or a list of source files. The 
+specification for a source file is handed to <a id="idx:absolutefilename2:467"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a>. 
+See this predicate for the supported expansions. <var>Options</var> is a 
+list of options using the format <var>OptionName</var>(<var>OptionValue</var>).
+
+<p>The following options are currently supported:
+
+<dl class="latex">
+<dt><strong>autoload</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), indicate that this 
+load is a
+<em>demand</em> load. This implies that, depending on the setting of the 
+Prolog flag <a class="flag" href="flags.html#flag:verbose_autoload">verbose_autoload</a>, 
+the load action is printed at level <code>informational</code> or <code>silent</code>. 
+See also <a id="idx:printmessage2:468"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+and <a id="idx:currentprologflag2:469"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>.</dd>
+<dt><strong>check_script</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>false</code> (default <code>true</code>), do not check the 
+first character to be <code><code>#</code></code> and skip the first 
+line when found.</dd>
+<dt><strong>derived_from</strong>(<var>File</var>)</dt>
+<dd class="defbody">
+Indicate that the loaded file is derived from <var>File</var>. Used by
+<a id="idx:make0:470"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+to time-check and load the original file rather than the derived file.</dd>
+<dt><strong>dialect</strong>(<var>+Dialect</var>)</dt>
+<dd class="defbody">
+Load <var>Files</var> with enhanced compatibility with the target Prolog 
+system identified by <var>Dialect</var>. See <a id="idx:expectsdialect1:471"></a><a class="pred" href="dialect.html#expects_dialect/1">expects_dialect/1</a> 
+and
+<a class="sec" href="dialect.html#sec:C">section C</a> for details.</dd>
+<dt><strong>encoding</strong>(<var>Encoding</var>)</dt>
+<dd class="defbody">
+Specify the way characters are encoded in the file. Default is taken 
+from the Prolog flag <a class="flag" href="flags.html#flag:encoding">encoding</a>. 
+See <a class="sec" href="widechars.html#sec:2.19.1">section 2.19.1</a> 
+for details.</dd>
+<dt><strong>expand</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, run the filenames through <a id="idx:expandfilename2:472"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a> 
+and load the returned files. Default is <code>false</code>, except for <a id="idx:consult1:473"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+which is intended for interactive use. Flexible location of files is 
+defined by <a id="idx:filesearchpath2:474"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+<dt><strong>format</strong>(<var>+Format</var>)</dt>
+<dd class="defbody">
+Used to specify the file format if data is loaded from a stream using 
+the <code>stream(Stream)</code> option. Default is <code>source</code>, 
+loading Prolog source text. If <code>qlf</code>, load QLF data (see <a id="idx:qcompile1:475"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>).</dd>
+<dt><strong>if</strong>(<var>Condition</var>)</dt>
+<dd class="defbody">
+Load the file only if the specified condition is satisfied. The value
+<code>true</code> loads the file unconditionally, <code>changed</code> 
+loads the file if it was not loaded before or has been modified since it 
+was loaded the last time, and <code>not_loaded</code> loads the file if 
+it was not loaded before.</dd>
+<dt><strong>imports</strong>(<var>Import</var>)</dt>
+<dd class="defbody">
+Specify what to import from the loaded module. The default for
+<a id="idx:usemodule1:476"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+is <code>all</code>. <var>Import</var> is passed from the second 
+argument of <a id="idx:usemodule2:477"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
+Traditionally it is a list of predicate indicators to import. As part of 
+the SWI-Prolog/YAP integration, we also support <var>Pred</var> as <var>Name</var> 
+to import a predicate under another name. Finally, <var>Import</var> can 
+be the term <code>except(Exceptions)</code>, where <var>Exceptions</var> 
+is a list of predicate indicators that specify predicates that are <em>not</em> 
+imported or <var>Pred</var> as <var>Name</var> terms to denote renamed 
+predicates. See also <a id="idx:reexport2:478"></a><a class="pred" href="reexport.html#reexport/2">reexport/2</a> 
+and
+<a id="idx:usemodule2:479"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.<sup class="fn">bug<span class="fn-text"><var>Name</var>/<var>Arity</var> 
+as <var>NewName</var> is currently implemented using a <em>link clause</em>. 
+This harms efficiency and does not allow for querying the relation 
+through <a id="idx:predicateproperty2:480"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.</span></sup>
+
+<p>If <var>Import</var> equals <code>all</code>, all operators are 
+imported as well. Otherwise, operators are <em>not</em> imported. 
+Operators can be imported selectively by adding terms <code>op(Pri,Assoc,Name)</code> 
+to the
+<var>Import</var> list. If such a term is encountered, all exported 
+operators that unify with this term are imported. Typically, this 
+construct will be used with all arguments unbound to import all 
+operators or with only <var>Name</var> bound to import a particular 
+operator.</dd>
+<dt><strong>modified</strong>(<var>TimeStamp</var>)</dt>
+<dd class="defbody">
+Claim that the source was loaded at <var>TimeStamp</var> without 
+checking the source. This option is intended to be used together with 
+the <code>stream(Input)</code> option, for example after extracting the 
+time from an HTTP server or database.</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Load the indicated file into the given module, overruling the module 
+name specified in the <code>:- module(Name, ...)</code> directive. This 
+currently serves two purposes: (1) allow loading two module files that 
+specify the same module into the same process and force and (2): force 
+loading source code in a specific module, even if the code provides its 
+own module name. Experimental.</dd>
+<dt><strong>must_be_module</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, raise an error if the file is not a module file. 
+Used by
+<a id="idx:usemodule12:481"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.</dd>
+<dt><strong>qcompile</strong>(<var>Atom</var>)</dt>
+<dd class="defbody">
+How to deal with quick-load-file compilation by <a id="idx:qcompile1:482"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>. 
+Values are:
+
+<dl class="latex">
+<dt><strong>never</strong></dt>
+<dd class="defbody">
+Default. Do not use qcompile unless called explicitly.
+</dd>
+<dt><strong>auto</strong></dt>
+<dd class="defbody">
+Use qcompile for all writeable files. See comment below.
+</dd>
+<dt><strong>large</strong></dt>
+<dd class="defbody">
+Use qcompile if the file is&lsquo;large'. Currently, files larger than 
+100&nbsp;Kbytes are considered large.
+</dd>
+<dt><strong>part</strong></dt>
+<dd class="defbody">
+If <a id="idx:loadfiles2:483"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+appears in a directive of a file that is compiled into Quick Load Format 
+using <a id="idx:qcompile1:484"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>, 
+the contents of the argument files are included in the <code>.qlf</code> 
+file instead of the loading directive.
+</dd>
+</dl>
+
+<p>If this option is not present, it uses the value of the Prolog flag <a class="flag" href="flags.html#flag:qcompile">qcompile</a> 
+as default.</dd>
+<dt><strong>optimise</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Explicitly set the optimization for compiling this module. See
+<a class="flag" href="flags.html#flag:optimise">optimise</a>.</dd>
+<dt><strong>redefine_module</strong>(<var>+Action</var>)</dt>
+<dd class="defbody">
+Defines what to do if a file is loaded that provides a module that is 
+already loaded from another file. <var>Action</var> is one of <code>false</code> 
+(default), which prints an error and refuses to load the file, or
+<code>true</code>, which uses <a id="idx:unloadfile1:485"></a><a class="pred" href="consulting.html#unload_file/1">unload_file/1</a> 
+on the old file and then proceeds loading the new file. Finally, there 
+is <code>ask</code>, which starts interaction with the user. <code>ask</code> 
+is only provided if the stream <code>user_input</code> is associated 
+with a terminal.</dd>
+<dt><strong>reexport</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> re-export the imported predicate. Used by <a id="idx:reexport1:486"></a><a class="pred" href="reexport.html#reexport/1">reexport/1</a> 
+and <a id="idx:reexport2:487"></a><a class="pred" href="reexport.html#reexport/2">reexport/2</a>.</dd>
+<dt><strong>register</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>false</code>, do not register the load location and options. 
+This option is used by <a id="idx:make0:488"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+and load_hotfixes/1 to avoid polluting the load-context database. See <a id="idx:sourcefileproperty2:489"></a><a class="pred" href="consulting.html#source_file_property/2">source_file_property/2</a>.</dd>
+<dt><strong>sandboxed</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Load the file in <em>sandboxed</em> mode. This option controls the flag <a class="flag" href="flags.html#flag:sandboxed_load">sandboxed_load</a>. 
+The only meaningful value for
+<var>Bool</var> is <code>true</code>. Using <code>false</code> while the 
+Prolog flag is set to <code>true</code> raises a permission error.</dd>
+<dt><strong>scope_settings</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Scope <a id="idx:stylecheck1:490"></a><a class="pred" href="debugger.html#style_check/1">style_check/1</a> 
+and <a id="idx:expectsdialect1:491"></a><a class="pred" href="dialect.html#expects_dialect/1">expects_dialect/1</a> 
+to the file and files loaded from the file after the directive. Default 
+is <code>true</code>. The system and user initialization files (see <strong>-f</strong> 
+and
+<strong>-F</strong>) are loading with <code>scope_settings(false)</code>.</dd>
+<dt><strong>silent</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code>, load the file without printing a message. The 
+specified value is the default for all files loaded as a result of 
+loading the specified files. This option writes the Prolog flag
+<a class="flag" href="flags.html#flag:verbose_load">verbose_load</a> 
+with the negation of <var>Bool</var>.</dd>
+<dt><strong>stream</strong>(<var>Input</var>)</dt>
+<dd class="defbody">
+This SWI-Prolog extension compiles the data from the stream
+<var>Input</var>. If this option is used, <var>Files</var> must be a 
+single atom which is used to identify the source location of the loaded 
+clauses as well as to remove all clauses if the data is reconsulted.
+
+<p>This option is added to allow compiling from non-file locations such 
+as databases, the web, the <em>user</em> (see <a id="idx:consult1:492"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>) 
+or other servers. It can be combined with <code>format(qlf)</code> to 
+load QLF data from a stream.
+</dd>
+</dl>
+
+<p>The <a id="idx:loadfiles2:493"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+predicate can be hooked to load other data or data from objects other 
+than files. See <a id="idx:prologloadfile2:494"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a> 
+for a description and
+<code>library(http/http_load)</code> for an example. All hooks for <a id="idx:loadfiles2:495"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+are documented in <a class="sec" href="loadfilehook.html#sec:B.9">section 
+B.9</a>.</dd>
+<dt class="pubdef"><a id="consult/1"><strong>consult</strong>(<var>:File</var>)</a></dt>
+<dd class="defbody">
+Read <var>File</var> as a Prolog source file. Calls to <a id="idx:consult1:496"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+may be abbreviated by just typing a number of filenames in a list. 
+Examples:
+
+<p><table class="latex frame-void center">
+<tr><td><code>?- consult(load).</code> </td><td>% consult <code>load</code> 
+or <code>load.pl</code> </td></tr>
+<tr><td><code>?- [library(lists)].</code> </td><td>% load library lists </td></tr>
+<tr><td><code>?- [user].</code> </td><td>% Type program on the terminal </td></tr>
+</table>
+
+<p>The predicate <a id="idx:consult1:497"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+is equivalent to <code>load_files(File, [])</code>, except for handling 
+the special file <code>user</code>, which reads clauses from the 
+terminal. See also the <code>stream(Input)</code> option of
+<a id="idx:loadfiles2:498"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+Abbreviation using <code>?- [file1,file2].</code> does
+<em>not</em> work for the empty list (<code>[]</code>). This facility is 
+implemented by defining the list as a predicate. Applications may only 
+rely on using the list abbreviation at the Prolog toplevel and in 
+directives.</dd>
+<dt class="pubdef"><a id="ensure_loaded/1"><strong>ensure_loaded</strong>(<var>:File</var>)</a></dt>
+<dd class="defbody">
+If the file is not already loaded, this is equivalent to <a id="idx:consult1:499"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>. 
+Otherwise, if the file defines a module, import all public predicates. 
+Finally, if the file is already loaded, is not a module file, and the 
+context module is not the global user module, <a id="idx:ensureloaded1:500"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a> 
+will call <a id="idx:consult1:501"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>.
+
+<p>With this semantics, we hope to get as close as possible to the clear 
+semantics without the presence of a module system. Applications using 
+modules should consider using <a id="idx:usemodule12:502"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
+
+<p>Equivalent to <code>load_files(Files, [if(not_loaded)]).</code><sup class="fn">51<span class="fn-text">On 
+older versions the condition used to be <code>if(changed)</code>. Poor 
+time management on some machines or copying often caused problems. The <a id="idx:make0:503"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+predicate deals with updating the running system after changing the 
+source code.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="include/1"><strong>include</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+Textually include the content of <var>File</var> at the position where 
+the
+<em>directive</em> <code>:- include(File).</code> appears. The include 
+construct is only honoured if it appears as a directive in a source 
+file. <em>Textual</em> include (similar to C/C++ #include) is obviously 
+useful for sharing declarations such as <a id="idx:dynamic1:504"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+or
+<a id="idx:multifile1:505"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a> 
+by including a file with directives from multiple files that use these 
+predicates.
+
+<p>Textually including files that contain <em>clauses</em> is less 
+obvious. Normally, in SWI-Prolog, clauses are <em>owned</em> by the file 
+in which they are defined. This information is used to <em>replace</em> 
+the old definition after the file has been modified and is reloaded by, 
+e.g.,
+<a id="idx:make0:506"></a><a class="pred" href="consulting.html#make/0">make/0</a>. 
+As we understand it, <a id="idx:include1:507"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+is intended to include the same file multiple times. Including a file 
+holding clauses multiple times into the same module is rather 
+meaningless as it just duplicates the same clauses. Including a file 
+holding clauses in multiple modules does not suffer from this problem, 
+but leads to multiple equivalent
+<em>copies</em> of predicates. Using <a id="idx:usemodule1:508"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+can achieve the same result while <em>sharing</em> the predicates.
+
+<p>If <a id="idx:include1:509"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+is used to load files holding clauses, and if these files are loaded 
+only once, then these <a id="idx:include1:510"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+directives can be replaced by other predicates (such as <a id="idx:consult1:511"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>). 
+However, there are several cases where either <a id="idx:include1:512"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+has no alternative, or using any alternative also requires other 
+changes. An example of the former is using <a id="idx:include1:513"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+to share directives. An example of the latter are cases where clauses of 
+different predicates are distributed over multiple files: If these files 
+are loaded with <a id="idx:include1:514"></a><a class="pred" href="consulting.html#include/1">include/1</a>, 
+the directive <a id="idx:discontiguous1:515"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+is appropriate, whereas if they are consulted, one must use the 
+directive <a id="idx:multifile1:516"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.
+
+<p>To accommodate included files holding clauses, SWI-Prolog 
+distinguishes between the source location of a clause (in this case the 
+included file) and the <em>owner</em> of a clause (the file that 
+includes the file holding the clause). The source location is used by, 
+e.g., <a id="idx:edit1:517"></a><a class="pred" href="edit.html#edit/1">edit/1</a>, 
+the graphical tracer, etc., while the owner is used to determine which 
+clauses are removed if the file is modified. Relevant information is 
+found with the following predicates:
+
+<p>
+<ul class="latex">
+<li><a id="idx:sourcefile2:518"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a> 
+describes the owner relation.
+<li><a id="idx:predicateproperty2:519"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+describes the source location (of the first clause).
+<li><a id="idx:clauseproperty2:520"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a> 
+provides access to both source and ownership.
+<li><a id="idx:sourcefileproperty2:521"></a><a class="pred" href="consulting.html#source_file_property/2">source_file_property/2</a> 
+can be used to query include relationships between files.
+</ul>
+</dd>
+<dt class="pubdef"><a id="require/1"><strong>require</strong>(<var>+Predicates</var>)</a></dt>
+<dd class="defbody">
+Declare that this file/module requires the specified predicates to be 
+defined &ldquo;with their commonly accepted definition''. <var>Predicates</var> 
+is either a list of predicate indicators or a <em>comma-list</em> of 
+predicate indicators. First, all built-in predicates are removed from 
+the set. The remaining predicates are searched using the library index 
+used for autoloading and mapped to a set of <a id="idx:autoload2:522"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+directives. This implies that the targets will be loaded lazily if 
+autoloading is not completely disabled and loaded using <a id="idx:usemodule2:523"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+otherwise. See
+<a class="flag" href="flags.html#flag:autoload">autoload</a>.
+
+<p>The <a id="idx:require1:524"></a><a class="pred" href="consulting.html#require/1">require/1</a> 
+directive provides less control over the exact nature and location of 
+the predicate. As <a id="idx:autoload2:525"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>, 
+it prevents a local definition of this predicate. As SWI-Prolog 
+guarantees that the set of built-in predicates and predicates available 
+for autoloading is unambiguous (i.e., has no duplicates) the 
+specification is unambiguous. It provides four advantages over <a id="idx:autoload2:526"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>: 
+(1) the user does not have to remember the exact library, (2) the 
+directive can be supported in other Prolog systems<sup class="fn">52<span class="fn-text">SICStus 
+provides it</span></sup>, providing compatibility despite differences in 
+library and built-in predicate organization, (3) it is robust against 
+changes to the SWI-Prolog libraries and (4) it is less typing.</dd>
+<dt class="pubdef"><a id="encoding/1"><strong>encoding</strong>(<var>+Encoding</var>)</a></dt>
+<dd class="defbody">
+This directive can appear anywhere in a source file to define how 
+characters are encoded in the remainder of the file. It can be used in 
+files that are encoded with a superset of US-ASCII, currently UTF-8 and 
+ISO Latin-1. See also <a class="sec" href="widechars.html#sec:2.19.1">section 
+2.19.1</a>.</dd>
+<dt class="pubdef"><a id="make/0"><strong>make</strong></a></dt>
+<dd class="defbody">
+Consult all source files that have been changed since they were 
+consulted. It checks <var>all</var> loaded source files: files loaded 
+into a compiled state using <code>pl -c ...</code> and files loaded 
+using <a id="idx:consult1:527"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+or one of its derivatives. The predicate <a id="idx:make0:528"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+is called after
+<a id="idx:edit1:529"></a><a class="pred" href="edit.html#edit/1">edit/1</a>, 
+automatically reloading all modified files. If the user uses an external 
+editor (in a separate window), <a id="idx:make0:530"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+is normally used to update the program after editing. In addition, <a id="idx:make0:531"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+updates the autoload indices (see <a class="sec" href="autoload.html#sec:2.14">section 
+2.14</a>) and runs <a id="idx:listundefined0:532"></a><a class="pred" href="check.html#list_undefined/0">list_undefined/0</a> 
+from the <code>library(check)</code> library to report on undefined 
+predicates.</dd>
+<dt class="pubdef"><a id="library_directory/1"><strong>library_directory</strong>(<var>?Atom</var>)</a></dt>
+<dd class="defbody">
+Dynamic predicate used to specify library directories. Defaults to
+<code>app_config(lib)</code> (see <a id="idx:filesearchpath2:533"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>) 
+and the system's library (in this order) are defined. The user may add 
+library directories using
+<a id="idx:assertz1:534"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>, <a id="idx:asserta1:535"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
+or remove system defaults using <a id="idx:retract1:536"></a><a class="pred" href="db.html#retract/1">retract/1</a>. 
+Deprecated. New code should use <a id="idx:filesearchpath2:537"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+<dt class="pubdef"><a id="file_search_path/2"><strong>file_search_path</strong>(<var>+Alias, 
+-Path</var>)</a></dt>
+<dd class="defbody">
+Dynamic multifile hook predicate used to specify&lsquo;path aliases'. 
+This hook is called by <a id="idx:absolutefilename3:538"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+to search files specified as
+<code>Alias(Name)</code>, e.g., <code>library(lists)</code>. This 
+feature is best described using an example. Given the definition:
+
+<pre class="code">
+file_search_path(demo, '/usr/lib/prolog/demo').
+</pre>
+
+<p>the file specification <code>demo(myfile)</code> will be expanded to
+<code>/usr/lib/prolog/demo/myfile</code>. The second argument of
+<a id="idx:filesearchpath2:539"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+may be another alias.
+
+<p>Below is the initial definition of the file search path. This path 
+implies <code>swi(&lt;<var>Path</var>&gt;)</code> and refers to a file 
+in the SWI-Prolog home directory. The alias <code>foreign(&lt;<var>Path</var>&gt;)</code> 
+is intended for storing shared libraries (<code>.so</code> or <code>.DLL</code> 
+files). See also
+<a id="idx:useforeignlibrary1:540"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a>.
+
+<pre class="code">
+user:file_search_path(library, X) :-
+    library_directory(X).
+user:file_search_path(swi, Home) :-
+    current_prolog_flag(home, Home).
+user:file_search_path(foreign, swi(ArchLib)) :-
+    current_prolog_flag(arch, Arch),
+    atom_concat('lib/', Arch, ArchLib).
+user:file_search_path(foreign, swi(lib)).
+user:file_search_path(path, Dir) :-
+    getenv('PATH', Path),
+    (   current_prolog_flag(windows, true)
+    -&gt;  atomic_list_concat(Dirs, (;), Path)
+    ;   atomic_list_concat(Dirs, :, Path)
+    ),
+    member(Dir, Dirs).
+user:file_search_path(user_app_data, Dir) :-
+    '$xdg_prolog_directory'(data, Dir).
+user:file_search_path(common_app_data, Dir) :-
+    '$xdg_prolog_directory'(common_data, Dir).
+user:file_search_path(user_app_config, Dir) :-
+    '$xdg_prolog_directory'(config, Dir).
+user:file_search_path(common_app_config, Dir) :-
+    '$xdg_prolog_directory'(common_config, Dir).
+user:file_search_path(app_data, user_app_data('.')).
+user:file_search_path(app_data, common_app_data('.')).
+user:file_search_path(app_config, user_app_config('.')).
+user:file_search_path(app_config, common_app_config('.')).
+</pre>
+
+<p><a id="idx:XDGdirectories:541"></a>The '$xdg_prolog_directory'/2 uses 
+either the
+<a class="url" href="https://wiki.archlinux.org/index.php/XDG_Base_Directory">XDG 
+Base Directory</a> or <a id="idx:winfolder2:542"></a><a class="pred" href="system.html#win_folder/2">win_folder/2</a> 
+on Windows. On Windows, user config is mapped to roaming appdata 
+(CSIDL_APPDATA), user data to the non-roaming (CSIDL_LOCAL_APPDATA) and 
+common data to (CSIDL_COMMON_APPDATA).
+
+<p>The <a id="idx:filesearchpath2:543"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+expansion is used by all loading predicates as well as by <a id="idx:absolutefilename23:544"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/[2,3]</a>.
+
+<p>The Prolog flag <a class="flag" href="flags.html#flag:verbose_file_search">verbose_file_search</a> 
+can be set to <code>true</code> to help debugging Prolog's search for 
+files.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="expand_file_search_path/2"><strong>expand_file_search_path</strong>(<var>+Spec, 
+-Path</var>)</a></dt>
+<dd class="defbody">
+Unifies <var>Path</var> with all possible expansions of the filename 
+specification <var>Spec</var>. See also <a id="idx:absolutefilename3:545"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>.</dd>
+<dt class="pubdef"><a id="prolog_file_type/2"><strong>prolog_file_type</strong>(<var>?Extension, 
+?Type</var>)</a></dt>
+<dd class="defbody">
+This dynamic multifile predicate defined in module <code>user</code> 
+determines the extensions considered by <a id="idx:filesearchpath2:546"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.
+<var>Extension</var> is the filename extension without the leading dot, 
+and
+<var>Type</var> denotes the type as used by the <code>file_type(Type)</code> 
+option of <a id="idx:filesearchpath2:547"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>. 
+Here is the initial definition of
+<a id="idx:prologfiletype2:548"></a><a class="pred" href="consulting.html#prolog_file_type/2">prolog_file_type/2</a>:
+
+<pre class="code">
+user:prolog_file_type(pl,       prolog).
+user:prolog_file_type(Ext,      prolog) :-
+        current_prolog_flag(associate, Ext),
+        Ext \== pl.
+user:prolog_file_type(qlf,      qlf).
+user:prolog_file_type(Ext,      executable) :-
+        current_prolog_flag(shared_object_extension, Ext).
+</pre>
+
+<p>Users can add extensions for Prolog source files to avoid conflicts 
+(for example with <b>perl</b>) as well as to be compatible with another 
+Prolog implementation. We suggest using <code>.pro</code> for avoiding 
+conflicts with <b>perl</b>. Overriding the system definitions can stop 
+the system from finding libraries.</dd>
+<dt class="pubdef"><a id="source_file/1"><strong>source_file</strong>(<var>?File</var>)</a></dt>
+<dd class="defbody">
+True if <var>File</var> is a loaded Prolog source file. <var>File</var> 
+is the absolute and canonical path to the source file.</dd>
+<dt class="pubdef"><a id="source_file/2"><strong>source_file</strong>(<var>:Pred, 
+?File</var>)</a></dt>
+<dd class="defbody">
+True if the predicate specified by <var>Pred</var> is owned by file
+<var>File</var>, where <var>File</var> is an absolute path name (see
+<a id="idx:absolutefilename2:549"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a>). 
+Can be used with any instantiation pattern, but the database only 
+maintains the source file for each predicate. If
+<var>Pred</var> is a <em>multifile</em> predicate this predicate 
+succeeds for all files that contribute clauses to <var>Pred</var>.<sup class="fn">53<span class="fn-text">The 
+current implementation performs a linear scan through all clauses to 
+establish this set of files.</span></sup> See also <a id="idx:clauseproperty2:550"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>. 
+Note that the relation between files and predicates is more complicated 
+if <a id="idx:include1:551"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+is used. The predicate describes the <em>owner</em> of the predicate. 
+See
+<a id="idx:include1:552"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+for details.</dd>
+<dt class="pubdef"><a id="source_file_property/2"><strong>source_file_property</strong>(<var>?File, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of the loaded file <var>File</var>. 
+If <var>File</var> is non-var, it can be a file specification that is 
+valid for <a id="idx:loadfiles2:553"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+Defined properties are:
+
+<dl class="latex">
+<dt><strong>derived_from</strong>(<var>Original, OriginalModified</var>)</dt>
+<dd class="defbody">
+<var>File</var> was generated from the file <var>Original</var>, which 
+was last modified at time <var>OriginalModified</var> at the time it was 
+loaded. This property is available if <var>File</var> was loaded using 
+the
+<code>derived_from(Original)</code> option to <a id="idx:loadfiles2:554"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.</dd>
+<dt><strong>includes</strong>(<var>IncludedFile, IncludedFileModified</var>)</dt>
+<dd class="defbody">
+<var>File</var> used <a id="idx:include1:555"></a><a class="pred" href="consulting.html#include/1">include/1</a> 
+to include <var>IncludedFile</var>. The last modified time of <var>IncludedFile</var> 
+was <var>IncludedFileModified</var> at the time it was included.</dd>
+<dt><strong>included_in</strong>(<var>MasterFile, Line</var>)</dt>
+<dd class="defbody">
+<var>File</var> was included into <var>MasterFile</var> from line <var>Line</var>. 
+This is the inverse of the <code>includes</code> property.</dd>
+<dt><strong>load_context</strong>(<var>Module, Location, Options</var>)</dt>
+<dd class="defbody">
+<var>Module</var> is the module into which the file was loaded. If <var>File</var> 
+is a module, this is the module into which the exports are imported. 
+Otherwise it is the module into which the clauses of the non-module file 
+are loaded. <var>Location</var> describes the file location from which 
+the file was loaded. It is either a term &lt;<var>file</var>&gt;:&lt;<var>line</var>&gt; 
+or the atom
+<code>user</code> if the file was loaded from the terminal or another 
+unknown source. <var>Options</var> are the options passed to <a id="idx:loadfiles2:556"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+Note that all predicates to load files are mapped to <a id="idx:loadfiles2:557"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>, 
+using the option argument to specify the exact behaviour.</dd>
+<dt><strong>load_count</strong>(<var>-Count</var>)</dt>
+<dd class="defbody">
+<var>Count</var> is the number of times the file have been loaded, i.e., 
+1 (one) if the file has been loaded once.</dd>
+<dt><strong>modified</strong>(<var>Stamp</var>)</dt>
+<dd class="defbody">
+File modification time when <var>File</var> was loaded. This is used by
+<a id="idx:make0:558"></a><a class="pred" href="consulting.html#make/0">make/0</a> 
+to find files whose modification time is different from when it was 
+loaded.</dd>
+<dt><strong>source</strong>(<var>Source</var>)</dt>
+<dd class="defbody">
+One of <code>file</code> if the source was loaded from a file,
+<code>resource</code> if the source was loaded from a resource or
+<code>state</code> if the file was included in the saved state.</dd>
+<dt><strong>module</strong>(<var>Module</var>)</dt>
+<dd class="defbody">
+<var>File</var> is a module file that declares the module <var>Module</var>.</dd>
+<dt><strong>number_of_clauses</strong>(<var>Count</var>)</dt>
+<dd class="defbody">
+<var>Count</var> is the number of clauses associated with <var>File</var>. 
+Note that clauses loaded from included files are counted as part of the 
+main file.</dd>
+<dt><strong>reloading</strong></dt>
+<dd class="defbody">
+Present if the file is currently being <b>re</b>loaded.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="exists_source/1"><strong>exists_source</strong>(<var>+Source</var>)</a></dt>
+<dd class="defbody">
+True if <var>Source</var> (a term valid for <a id="idx:loadfiles2:559"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>) 
+exists. Fails without error if this is not the case. The predicate is 
+intended to be used with <em>conditional compilation</em> (see
+<a class="sec" href="consulting.html#sec:4.3.1.2">section 4.3.1.2</a> 
+For example:
+
+<pre class="code">
+:- if(exists_source(library(error))).
+:- use_module_library(error).
+:- endif.
+</pre>
+
+<p>The implementation uses <a id="idx:absolutefilename3:560"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+using
+<code>file_type(prolog)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="exists_source/2"><strong>exists_source</strong>(<var>+Source, 
+-File</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:existssource1:561"></a><a class="pred" href="consulting.html#exists_source/1">exists_source/1</a>, 
+binding <var>File</var> to an atom describing the full absolute path to 
+the source file.</dd>
+<dt class="pubdef"><a id="unload_file/1"><strong>unload_file</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+Remove all clauses loaded from <var>File</var>. If <var>File</var> 
+loaded a module, clear the module's export list and disassociate it from 
+the file. <var>File</var> is a canonical filename or a file indicator 
+that is valid for <a id="idx:loadfiles2:562"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.
+
+<p>This predicate should be used with care. The multithreaded nature of 
+SWI-Prolog makes removing static code unsafe. Attempts to do this should 
+be reserved for development or situations where the application can 
+guarantee that none of the clauses associated to <var>File</var> are 
+active.</dd>
+<dt class="pubdef"><a id="prolog_load_context/2"><strong>prolog_load_context</strong>(<var>?Key, 
+?Value</var>)</a></dt>
+<dd class="defbody">
+Obtain context information during compilation. This predicate can be 
+used from directives appearing in a source file to get information about 
+the file being loaded as well as by the <a id="idx:termexpansion2:563"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+and
+<a id="idx:goalexpansion2:564"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+hooks. See also <a id="idx:sourcelocation2:565"></a><a class="pred" href="consulting.html#source_location/2">source_location/2</a> 
+and <a id="idx:if1:566"></a><a class="pred" href="consulting.html#if/1">if/1</a>. 
+The following keys are defined:
+
+<p><table class="latex frame-box center">
+<tr><td><b>Key</b></td><td><b>Description </b></td></tr>
+<tr class="hline"><td><code>directory</code> </td><td>Directory in which <code>source</code> 
+lives </td></tr>
+<tr><td><code>dialect</code> </td><td>Compatibility mode. See <a id="idx:expectsdialect1:567"></a><a class="pred" href="dialect.html#expects_dialect/1">expects_dialect/1</a>. </td></tr>
+<tr><td><code>file</code> </td><td>Similar to <code>source</code>, but 
+returns the file being included when called while an include file is 
+being processed </td></tr>
+<tr><td><code>module</code> </td><td>Module into which file is loaded </td></tr>
+<tr><td><code>reload</code> </td><td><code>true</code> if the file is 
+being
+<b>re</b>loaded. Not present on first load </td></tr>
+<tr><td><code>script</code> </td><td>Boolean that indicates whether the 
+file is loaded as a script file (see
+<strong>-s</strong>) </td></tr>
+<tr><td><code>source</code> </td><td>File being loaded. If the system is 
+processing an included file, the value is the <em>main</em> file. 
+Returns the original Prolog file when loading a
+<code>.qlf</code> file. </td></tr>
+<tr><td><code>stream</code> </td><td>Stream identifier (see <a id="idx:currentinput1:568"></a><a class="pred" href="IO.html#current_input/1">current_input/1</a>) </td></tr>
+<tr><td><code>term_position</code> </td><td>Start position of last term 
+read. See also
+<a id="idx:streamproperty2:569"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+(<code>position</code> property and
+<a id="idx:streampositiondata3:570"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>.<sup class="fn">54<span class="fn-text">Up 
+to version 7.1.22, the position term carried fake data except for the <code>line_count</code> 
+and had <b>five</b> arguments, where the position property of a stream 
+only has <b>four</b>.</span></sup> </td></tr>
+<tr><td><code>term</code> </td><td>Term being expanded by <a id="idx:expandterm2:571"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>. </td></tr>
+<tr><td><code>variable_names</code></td><td>A list of&lsquo;<var>Name</var> 
+= <var>Var</var>&rsquo;of the last term read. See <a id="idx:readterm2:572"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+for details. </td></tr>
+</table>
+
+<p>The <code>directory</code> is commonly used to add rules to <a id="idx:filesearchpath2:573"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>, 
+setting up a search path for finding files with <a id="idx:absolutefilename3:574"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+For example:
+
+<pre class="code">
+:- dynamic user:file_search_path/2.
+:- multifile user:file_search_path/2.
+
+:- prolog_load_context(directory, Dir),
+   asserta(user:file_search_path(my_program_home, Dir)).
+
+    ...
+    absolute_file_name(my_program_home('README.TXT'), ReadMe,
+                       [ access(read) ]),
+    ...
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="source_location/2"><strong>source_location</strong>(<var>-File, 
+-Line</var>)</a></dt>
+<dd class="defbody">
+If the last term has been read from a physical file (i.e., not from the 
+file <code>user</code> or a string), unify <var>File</var> with an 
+absolute path to the file and <var>Line</var> with the line number in 
+the file. New code should use <a id="idx:prologloadcontext2:575"></a><a class="pred" href="consulting.html#prolog_load_context/2">prolog_load_context/2</a>.</dd>
+<dt class="pubdef"><a id="at_halt/1"><strong>at_halt</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Register <var>Goal</var> to be run from <a class="func" href="foreigninclude.html#PL_cleanup()">PL_cleanup()</a>, 
+which is called when the system halts. The hooks are run in the reverse 
+order they were registered (FIFO). Success or failure executing a hook 
+is ignored. If the hook raises an exception this is printed using <a id="idx:printmessage2:576"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+An attempt to call <a id="idx:halt01:577"></a><a class="pred" href="toplevel.html#halt/0">halt/[0,1]</a> 
+from a hook is ignored. Hooks may call
+<a id="idx:cancelhalt1:578"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>, 
+causing <a id="idx:halt0:579"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a> 
+and <a class="func" href="foreigninclude.html#PL_halt()">PL_halt(0)</a> 
+to print a message indicating that halting the system has been 
+cancelled.</dd>
+<dt class="pubdef"><a id="cancel_halt/1"><strong>cancel_halt</strong>(<var>+Reason</var>)</a></dt>
+<dd class="defbody">
+If this predicate is called from a hook registered with <a id="idx:athalt1:580"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>, 
+halting Prolog is cancelled and an informational message is printed that 
+includes <var>Reason</var>. This is used by the development tools to 
+cancel halting the system if the editor has unsaved data and the user 
+decides to cancel.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="initialization/1">:- <strong>initialization</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Call <var>Goal</var> <em>after</em> loading the source file in which 
+this directive appears has been completed. In addition, <var>Goal</var> 
+is executed if a saved state created using <a id="idx:qsaveprogram1:581"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/1</a> 
+is restored.
+
+<p>The ISO standard only allows for using <code>:- Term</code> if <var>Term</var> 
+is a
+<em>directive</em>. This means that arbitrary goals can only be called 
+from a directive by means of the <a id="idx:initialization1:582"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directive. SWI-Prolog does not enforce this rule.
+
+<p>The <a id="idx:initialization1:583"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directive must be used to do program initialization in saved states (see <a id="idx:qsaveprogram1:584"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/1</a>). 
+A saved state contains the predicates, Prolog flags and operators 
+present at the moment the state was created. Other resources (records, 
+foreign resources, etc.) must be recreated using <a id="idx:initialization1:585"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directives or from the entry goal of the saved state.
+
+<p>Up to SWI-Prolog 5.7.11, <var>Goal</var> was executed immediately 
+rather than after loading the program text in which the directive 
+appears as dictated by the ISO standard. In many cases the exact moment 
+of execution is irrelevant, but there are exceptions. For example,
+<a id="idx:loadforeignlibrary1:586"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a> 
+must be executed immediately to make the loaded foreign predicates 
+available for exporting. SWI-Prolog now provides the directive <a id="idx:useforeignlibrary1:587"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+to ensure immediate loading as well as loading after restoring a saved 
+state. If the system encounters a directive <code>:- 
+initialization(load_foreign_library(...))</code>, it will load the 
+foreign library immediately and issue a warning to update your code. 
+This behaviour can be extended by providing clauses for the multifile 
+hook predicate <code>prolog:initialize_now(Term, Advice)</code>, where <var>Advice</var> 
+is an atom that gives advice on how to resolve the compatibility issue.</dd>
+<dt class="pubdef"><a id="initialization/2"><strong>initialization</strong>(<var>:Goal, 
++When</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:initialization1:588"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>, 
+but allows for specifying when <var>Goal</var> is executed while loading 
+the program text:
+
+<dl class="latex">
+<dt><strong>now</strong></dt>
+<dd class="defbody">
+Execute <var>Goal</var> immediately.</dd>
+<dt><strong>after_load</strong></dt>
+<dd class="defbody">
+Execute <var>Goal</var> after loading the program text in which the 
+directive appears. This is the same as
+<a id="idx:initialization1:589"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>.</dd>
+<dt><strong>prepare_state</strong></dt>
+<dd class="defbody">
+Execute <var>Goal</var> as part of <a id="idx:qsaveprogram2:590"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>. 
+This hook can be used for example to eagerly execute initialization that 
+is normally done lazily on first usage.</dd>
+<dt><strong>restore_state</strong></dt>
+<dd class="defbody">
+Do not execute <var>Goal</var> while loading the program, but <em>only</em> 
+when restoring a saved state.<sup class="fn">55<span class="fn-text">Used 
+to be called <code>restore</code>. <code>restore</code> is still 
+accepted for backward compatibility.</span></sup></dd>
+<dt><strong>program</strong></dt>
+<dd class="defbody">
+Execute <var>Goal</var> once after executing the <strong>-g</strong> 
+goals at program startup. Registered goals are executed in the order 
+encountered and a failure or exception causes the Prolog to exit with 
+non-zero exit status. These goals are <em>not</em> executed if the
+<strong>-l</strong> is given to merely <em>load</em> files. In that case 
+they may be executed explicitly using <a id="idx:initialize0:591"></a><a class="pred" href="consulting.html#initialize/0">initialize/0</a>. 
+See also
+<a class="sec" href="compilation.html#sec:2.11.2.1">section 2.11.2.1</a>.</dd>
+<dt><strong>main</strong></dt>
+<dd class="defbody">
+When Prolog starts, the last goal registered using
+<code>initialization(Goal, main)</code> is executed as main goal. If
+<var>Goal</var> fails or raises an exception, the process terminates 
+with non-zero exit code. If not explicitly specified using the
+<strong>-t</strong> the <em>toplevel goal</em> is set to <a id="idx:halt0:592"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a>, 
+causing the process to exit with status 0. An explicitly specified 
+toplevel is executed normally. This implies that <code>-t prolog</code> 
+causes the application to start the normal interactive toplevel after 
+completing
+<var>Goal</var>. See also the Prolog flag <a class="flag" href="flags.html#flag:toplevel_goal">toplevel_goal</a> 
+and
+<a class="sec" href="compilation.html#sec:2.11.2.1">section 2.11.2.1</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="initialize/0"><strong>initialize</strong></a></dt>
+<dd class="defbody">
+Run all initialization goals registered using
+<code>initialization(Goal, program)</code>. Raises an error
+<code>initialization_error(Reason, Goal, File:Line)</code> if <var>Goal</var> 
+fails or raises an exception. <var>Reason</var> is <code>failed</code> 
+or the exception raised.</dd>
+<dt class="pubdef"><a id="compiling/0"><strong>compiling</strong></a></dt>
+<dd class="defbody">
+True if the system is compiling source files with the <strong>-c</strong> 
+option or <a id="idx:qcompile1:593"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a> 
+into an intermediate code file. Can be used to perform conditional code 
+optimisations in <a id="idx:termexpansion2:594"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+(see also the
+<strong>-O</strong> option) or to omit execution of directives during 
+compilation.
+</dd>
+</dl>
+
+<p><h3 id="sec:progtransform"><a id="sec:4.3.1"><span class="sec-nr">4.3.1</span> <span class="sec-title">Conditional 
+compilation and program transformation</span></a></h3>
+
+<a id="sec:progtransform"></a>
+
+<p><a id="idx:transformationofprogram:595"></a>ISO Prolog defines no way 
+for program transformations such as macro expansion or conditional 
+compilation. Expansion through <a id="idx:termexpansion2:596"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+and <a id="idx:expandterm2:597"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a> 
+can be seen as part of the de-facto standard. This mechanism can do 
+arbitrary translation between valid Prolog terms read from the source 
+file to Prolog terms handed to the compiler. As
+<a id="idx:termexpansion2:598"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+can return a list, the transformation does not need to be term-to-term.
+
+<p>Various Prolog dialects provide the analogous <a id="idx:goalexpansion2:599"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+and
+<a id="idx:expandgoal2:600"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a> 
+that allow for translation of individual body terms, freeing the user of 
+the task to disassemble each clause.
+
+<dl class="latex">
+<dt class="pubdef"><a id="term_expansion/2"><strong>term_expansion</strong>(<var>+Term1, 
+-Term2</var>)</a></dt>
+<dd class="defbody">
+Dynamic and multifile predicate, normally not defined. When defined by 
+the user all terms read during consulting are given to this predicate. 
+If the predicate succeeds Prolog will assert <var>Term2</var> in the 
+database rather than the read term (<var>Term1</var>). <var>Term2</var> 
+may be a term of the form <code>?- Goal.</code> or <code>:- Goal</code>. <var>Goal</var> 
+is then treated as a directive. If <var>Term2</var> is a list, all terms 
+of the list are stored in the database or called (for directives). If
+<var>Term2</var> is of the form below, the system will assert <var>Clause</var> 
+and record the indicated source location with it:
+<blockquote>
+<code>&rsquo;$source_location'(&lt;<var>File</var>&gt;, &lt;<var>Line</var>&gt;):&lt;<var>Clause</var>&gt;</code>
+</blockquote>
+
+<p>When compiling a module (see <a class="sec" href="modules.html#sec:6">chapter 
+6</a> and the directive <a id="idx:module2:601"></a><a class="pred" href="defmodule.html#module/2">module/2</a>),
+<a id="idx:expandterm2:602"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a> 
+will first try <a id="idx:termexpansion2:603"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+in the module being compiled to allow for term expansion rules that are 
+local to a module. If there is no local definition, or the local 
+definition fails to translate the term, <a id="idx:expandterm2:604"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a> 
+will try <a id="idx:termexpansion2:605"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+in module
+<code>user</code>. For compatibility with SICStus and Quintus Prolog, 
+this feature should not be used. See also <a id="idx:expandterm2:606"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>, <a id="idx:goalexpansion2:607"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+and
+<a id="idx:expandgoal2:608"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a>.
+
+<p>It is possible to act on the beginning and end of a file by expanding 
+the terms <code>begin_of_file</code> and <code>end_of_file</code>. The 
+latter is supported by most Prolog systems that support term expansion 
+as
+<a id="idx:readterm3:609"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+returns <code>end_of_file</code> on reaching the end of the input. 
+Expanding <code>begin_of_file</code> may be used to initialise the 
+compilation, for example base on the file name extension. It was added 
+in SWI-Prolog 8.1.1.</dd>
+<dt class="pubdef"><a id="expand_term/2"><strong>expand_term</strong>(<var>+Term1, 
+-Term2</var>)</a></dt>
+<dd class="defbody">
+This predicate is normally called by the compiler on terms read from the 
+input to perform preprocessing. It consists of four steps, where each 
+step processes the output of the previous step.
+
+<p>
+<ol class="latex">
+<li>Test conditional compilation directives and translate all input to <code>[]</code> 
+if we are in a&lsquo;false branch' of the conditional compilation. See <a class="sec" href="consulting.html#sec:4.3.1.2">section 
+4.3.1.2</a>.
+
+<p>
+<li>Call <a id="idx:termexpansion2:610"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>. 
+This predicate is first tried in the module that is being compiled and 
+then in modules from which this module inherits according to <a id="idx:defaultmodule2:611"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>. 
+The output of the expansion in a module is used as input for the next 
+module. Using the default setup and when compiling a normal application 
+module <var>M</var>, this implies expansion is executed in <var>M</var>, <code>user</code> 
+and finally in <code>system</code>. Library modules inherit directly 
+from <code>system</code> and can thus not be re-interpreted by term 
+expansion rules in <code>user</code>.
+
+<p>
+<li>Call DCG expansion (<a id="idx:dcgtranslaterule2:612"></a><a class="pred" href="consulting.html#dcg_translate_rule/2">dcg_translate_rule/2</a>).
+
+<p>
+<li>Call <a id="idx:expandgoal2:613"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a> 
+on each body term that appears in the output of the previous steps.
+</ol>
+</dd>
+<dt class="pubdef"><a id="goal_expansion/2"><strong>goal_expansion</strong>(<var>+Goal1, 
+-Goal2</var>)</a></dt>
+<dd class="defbody">
+Like <a id="idx:termexpansion2:614"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>, <a id="idx:goalexpansion2:615"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+provides for macro expansion of Prolog source code. Between <a id="idx:expandterm2:616"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a> 
+and the actual compilation, the body of clauses analysed and the goals 
+are handed to <a id="idx:expandgoal2:617"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a>, 
+which uses the <a id="idx:goalexpansion2:618"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+hook to do user-defined expansion.
+
+<p>The predicate <a id="idx:goalexpansion2:619"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+is first called in the module that is being compiled, and then follows 
+the module inheritance path as defined by <a id="idx:defaultmodule2:620"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>, 
+i.e., by default <code>user</code> and <code>system</code>. If <var>Goal</var> 
+is of the form <var>Module</var>:<var>Goal</var> where <var>Module</var> 
+is instantiated, <a id="idx:goalexpansion2:621"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+is called on <var>Goal</var> using rules from module <var>Module</var> 
+followed by default modules for <var>Module</var>.
+
+<p>Only goals appearing in the body of clauses when reading a source 
+file are expanded using this mechanism, and only if they appear 
+literally in the clause, or as an argument to a defined meta-predicate 
+that is annotated using&lsquo;0' (see <a id="idx:metapredicate1:622"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>). 
+Other cases need a real predicate definition.
+
+<p>The expansion hook can use <a id="idx:prologloadcontext2:623"></a><a class="pred" href="consulting.html#prolog_load_context/2">prolog_load_context/2</a> 
+to obtain information about the context in which the goal is expanded 
+such as the module, variable names or the encapsulating term.</dd>
+<dt class="pubdef"><a id="expand_goal/2"><strong>expand_goal</strong>(<var>+Goal1, 
+-Goal2</var>)</a></dt>
+<dd class="defbody">
+This predicate is normally called by the compiler to perform 
+preprocessing using <a id="idx:goalexpansion2:624"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a>. 
+The predicate computes a fixed-point by applying transformations until 
+there are no more changes. If optimisation is enabled (see <strong>-O</strong> 
+and
+<a class="flag" href="flags.html#flag:optimise">optimise</a>), <a id="idx:expandgoal2:625"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a> 
+simplifies the result by removing unneeded calls to <a id="idx:true0:626"></a><a class="pred" href="control.html#true/0">true/0</a> 
+and <a id="idx:fail0:627"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+as well as trivially unreachable branches.
+
+<p>If <a id="idx:goalexpansion2:628"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> <em>wraps</em> 
+a goal as in the example below the system still reaches fixed-point as 
+it prevents re-expanding the expanded term while recursing. It does 
+re-enable expansion on the
+<em>arguments</em> of the expanded goal as illustrated in t2/1 in the 
+example.<sup class="fn">56<span class="fn-text">After discussion with 
+Peter Ludemann and Paulo Moura on the forum.</span></sup>
+
+<pre class="code">
+:- meta_predicate run(0).
+
+may_not_fail(test(_)).
+may_not_fail(run(_)).
+
+goal_expansion(G, (G *-&gt; true ; error(goal_failed(G),_))) :-
+    may_not_fail(G).
+
+t1(X) :- test(X).
+t2(X) :- run(run(X)).
+</pre>
+
+<p>Is expanded into
+
+<pre class="code">
+t1(X) :-
+    (   test(X)
+    *-&gt; true
+    ;   error(goal_failed(test(X)), _)
+    ).
+
+t2(X) :-
+    (   run((run(X)*-&gt;true;error(goal_failed(run(X)), _)))
+    *-&gt; true
+    ;   error(goal_failed(run(run(X))), _)
+    ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="compile_aux_clauses/1"><strong>compile_aux_clauses</strong>(<var>+Clauses</var>)</a></dt>
+<dd class="defbody">
+Compile clauses on behalf of <a id="idx:goalexpansion2:629"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a>. 
+This predicate compiles the argument clauses into static predicates, 
+associating the predicates with the current file but avoids changing the 
+notion of current predicate and therefore discontiguous warnings.
+
+<p>Note that in some cases multiple expansions of similar goals can 
+share the same compiled auxiliary predicate. In such cases, the 
+implementation of <a id="idx:goalexpansion2:630"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+can use <a id="idx:predicateproperty2:631"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+using the property
+<code>defined</code> to test whether the predicate is already defined in 
+the current context.</dd>
+<dt class="pubdef"><a id="dcg_translate_rule/2"><strong>dcg_translate_rule</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+This predicate performs the translation of a term <code>Head--&gt;Body</code> 
+into a normal Prolog clause. Normally this functionality should be 
+accessed using <a id="idx:expandterm2:632"></a><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a>.</dd>
+<dt class="pubdef"><a id="var_property/2"><strong>var_property</strong>(<var>+Var, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of <var>Var</var>. These 
+properties are available during goal- and term-expansion. Defined 
+properties are below. Future versions are likely to provide more 
+properties, such as whether the variable is referenced in the remainder 
+of the term. See also <a id="idx:goalexpansion2:633"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a>.
+
+<dl class="latex">
+<dt><strong>fresh</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+<var>Bool</var> has the value <code>true</code> if the variable is 
+guaranteed to be unbound at entry of the goal, otherwise its value is <var>false</var>. 
+This implies that the variable first appears in this goal or a previous 
+appearance was in a negation (<a class="pred" href="control.html#\+/1">\+/1</a>) 
+or a different branch of a disjunction.</dd>
+<dt><strong>singleton</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+<var>Bool</var> has the value <code>true</code> if the variable is a
+<em>syntactic</em> singleton in the term it appears in. Note that this 
+tests that the variable appears exactly once in the term being expanded 
+without making any claim on the syntax of the variable. Variables that 
+appear only once in multiple branches are <em>not</em> singletons 
+according to this property. Future implementations may improve on that.</dd>
+<dt><strong>name</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+True when variable appears with the given name in the source.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h4 id="sec:progtransform-layout"><a id="sec:4.3.1.1"><span class="sec-nr">4.3.1.1</span> <span class="sec-title">Program 
+transformation with source layout info</span></a></h4>
+
+<a id="sec:progtransform-layout"></a>
+
+<p>This sections documents extended versions of the program 
+transformation predicates that also transform the source layout 
+information. Extended layout information is currently processed, but 
+unused. Future versions will use for the following enhancements:
+
+<p>
+<ul class="latex">
+<li>More precise locations of warnings and errors
+<li>More reliable setting of breakpoints
+<li>More reliable source layout information in the graphical debugger.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><a id="expand_goal/4"><strong>expand_goal</strong>(<var>+Goal1, 
+?Layout1, -Goal2, -Layout2</var>)</a></dt>
+<dt class="pubdef"><a id="goal_expansion/4"><strong>goal_expansion</strong>(<var>+Goal1, 
+?Layout1, -Goal2, -Layout2</var>)</a></dt>
+<dt class="pubdef"><a id="expand_term/4"><strong>expand_term</strong>(<var>+Term1, 
+?Layout1, -Term2, -Layout2</var>)</a></dt>
+<dt class="pubdef"><a id="term_expansion/4"><strong>term_expansion</strong>(<var>+Term1, 
+?Layout1, -Term2, -Layout2</var>)</a></dt>
+<dt class="pubdef"><a id="dcg_translate_rule/4"><strong>dcg_translate_rule</strong>(<var>+In, 
+?LayoutIn, -Out, -LayoutOut</var>)</a></dt>
+<dd class="defbody">
+These versions are called <em>before</em> their 2-argument counterparts. 
+The input layout term is either a variable (if no layout information is 
+available) or a term carrying detailed layout information as returned by 
+the <code>subterm_positions</code> of <a id="idx:readterm2:634"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>.
+</dd>
+</dl>
+
+<p><h4 id="sec:conditionalcompilation"><a id="sec:4.3.1.2"><span class="sec-nr">4.3.1.2</span> <span class="sec-title">Conditional 
+compilation</span></a></h4>
+
+<a id="sec:conditionalcompilation"></a>
+
+<p><a id="idx:ifdirective:635"></a>Conditional compilation builds on the 
+same principle as
+<a id="idx:termexpansion2:636"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>, <a id="idx:goalexpansion2:637"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+and the expansion of grammar rules to compile sections of the source 
+code conditionally. One of the reasons for introducing conditional 
+compilation is to simplify writing portable code. See <a class="sec" href="dialect.html#sec:C">section 
+C</a> for more information. Here is a simple example:
+
+<pre class="code">
+:- if(\+source_exports(library(lists), suffix/2)).
+
+suffix(Suffix, List) :-
+        append(_, Suffix, List).
+
+:- endif.
+</pre>
+
+<p>Note that these directives can only appear as separate terms in the 
+input. Typical usage scenarios include:
+
+<p>
+<ul class="compact">
+<li>Load different libraries on different dialects.
+<li>Define a predicate if it is missing as a system predicate.
+<li>Realise totally different implementations for a particular part of 
+the code due to different capabilities.
+<li>Realise different configuration options for your software.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><a id="if/1">:- <strong>if</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Compile subsequent code only if <var>Goal</var> succeeds. For enhanced 
+portability, <var>Goal</var> is processed by <a id="idx:expandgoal2:638"></a><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a> 
+before execution. If an error occurs, the error is printed and 
+processing proceeds as if
+<var>Goal</var> has failed.</dd>
+<dt class="pubdef"><a id="elif/1">:- <strong>elif</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>:- else. :-if(Goal).</code> ... <code>:- endif.</code> 
+In a sequence as below, the section below the first matching <code>elif</code> 
+is processed. If no test succeeds, the else branch is processed.
+
+<pre class="code">
+:- if(test1).
+section_1.
+:- elif(test2).
+section_2.
+:- elif(test3).
+section_3.
+:- else.
+section_else.
+:- endif.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="else/0">:- <strong>else</strong></a></dt>
+<dd class="defbody">
+Start&lsquo;else' branch.</dd>
+<dt class="pubdef"><a id="endif/0">:- <strong>endif</strong></a></dt>
+<dd class="defbody">
+End of conditional compilation.
+</dd>
+</dl>
+
+<p><h3 id="sec:loadrunningcode"><a id="sec:4.3.2"><span class="sec-nr">4.3.2</span> <span class="sec-title">Reloading 
+files, active code and threads</span></a></h3>
+
+<a id="sec:loadrunningcode"></a>
+
+<p>Traditionally, Prolog environments allow for reloading files holding 
+currently active code. In particular, the following sequence is a valid 
+use of the development environment:
+
+<p>
+<ul class="compact">
+<li>Trace a goal
+<li>Find unexpected behaviour of a predicate
+<li>Enter a <em>break</em> using the <b>b</b> command
+<li>Fix the sources and reload them using <a id="idx:make0:639"></a><a class="pred" href="consulting.html#make/0">make/0</a>
+<li>Exit the break, <em>retry</em> executing the now fixed predicate 
+using the <b>r</b> command
+</ul>
+
+<p><em>Reloading</em> a previously loaded file is safe, both in the 
+debug scenario above and when the code is being executed by another
+<em>thread</em>. Executing threads switch atomically to the new 
+definition of modified predicates, while clauses that belong to the old 
+definition are (eventually) reclaimed by
+<a id="idx:garbagecollectclauses0:640"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>.<sup class="fn">57<span class="fn-text">As 
+of version 7.3.12. Older versions wipe all clauses originating from the 
+file before loading the new clauses. This causes threads that executes 
+the code to (typically) die with an <em>undefined predicate</em> 
+exception.</span></sup> Below we describe the steps taken for <em>reloading</em> 
+a file to help understanding the limitations of the process.
+
+<p>
+<ol class="latex">
+<li>If a file is being reloaded, a <em>reload context</em> is associated 
+to the file administration. This context includes a table keeping track 
+of predicates and a table keeping track of the module(s) associated with 
+this source.
+<li>If a new predicate is found, an entry is added to the context 
+predicate table. Three options are considered:
+<ol class="latex">
+<li>The predicate is new. It is handled the same as if the file was 
+loaded for the first time.
+<li>The predicate is foreign or thread local. These too are treated as 
+if the file was loaded for the first time.
+<li>Normal predicates. Here we initialise a pointer to the <em>current 
+clause</em>.
+</ol>
+<li>New clauses for&lsquo;normal predicates' are considered as follows:
+<ol class="latex">
+<li>If the clause's byte-code is the same as the predicates current 
+clause, discard the clause and advance the current clause pointer.
+<li>If the clause's byte-code is the same as some clause further into 
+the clause list of the predicate, discard the new clause, mark all 
+intermediate clauses for future deletion, and advance the current clause 
+pointer to the first clause after the matched one.
+<li>If the clause's byte-code matches no clause, insert it for <em>future 
+activation</em> before the current clause and keep the current clause.
+</ol>
+<li><em>Properties</em> such as <code>dynamic</code> or <code>meta_predicate</code> 
+are in part applied immediately and in part during the fixup process 
+after the file completes loading. Currently, <code>dynamic</code> and
+<code>thread_local</code> are applied immediately.
+<li>New modules are recorded in the reload context. Export declarations 
+(the module's public list and <a id="idx:export1:641"></a><a class="pred" href="altmoduleapi.html#export/1">export/1</a> 
+calls) are both applied and recorded.
+<li>When the end-of-file is reached, the following fixup steps are taken
+<ol class="latex">
+<li>For each predicate
+<ol class="latex">
+<li>The current clause and subsequent clauses are marked for future 
+deletion.
+<li>All clauses marked for future deletion or creation are (in)activated 
+by changing their&lsquo;erased' or&lsquo;created'
+<em>generation</em>. Erased clauses are (eventually) reclaimed by the <em>clause 
+garbage collector</em>, see
+<a id="idx:garbagecollectclauses0:642"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>.
+<li>Pending predicate property changes are applied.
+</ol>
+<li>For each module
+<ol class="latex">
+<li>Exported predicates that are not encountered in the reload context 
+are removed from the export list.
+</ol>
+</ol>
+</ol>
+
+<p>The above generally ensures that changes to the <em>content</em> of 
+source files can typically be activated safely using <a id="idx:make0:643"></a><a class="pred" href="consulting.html#make/0">make/0</a>. 
+Global changes such as operator changes, changes of module names, 
+changes to multi-file predicates, etc. sometimes require a restart. In 
+almost all cases, the need for restart is indicated by permission or 
+syntax errors during the reload or existence errors while running the 
+program.
+
+<p>In some cases the content of a source file refers&lsquo;to itself'. 
+This is notably the case if local rules for <a id="idx:goalexpansion2:644"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+or <a id="idx:termexpansion2:645"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+are defined or goals are executed using
+<em>directives</em>.<sup class="fn">58<span class="fn-text">Note that <a id="idx:initialization1:646"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directives are executed <em>after</em> loading the file. SWI-Prolog 
+allows for directives that are executed <em>while</em> loading the file 
+using <code>:- Goal.</code> or <a id="idx:initialization2:647"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a></span></sup>. 
+Up to version 7.5.12 it was typically needed to reload the file <em>twice</em>, 
+once for updating the code that was used for compiling the remainder of 
+the file and once to effectuate this. As of version 7.5.13, conventional <em>transaction 
+semantics</em> apply. This implies that for the thread performing the 
+reload the file's content is first wiped and gradually rebuilt, while 
+other threads see an <em>atomic</em> update from the old file content to 
+the new.<sup class="fn">59<span class="fn-text">This feature was 
+implemented by Keri Harris.</span></sup>
+
+<p><h4 id="sec:depload"><a id="sec:4.3.2.1"><span class="sec-nr">4.3.2.1</span> <span class="sec-title">Compilation 
+of mutually dependent code</span></a></h4>
+
+<a id="sec:depload"></a>
+
+<p>Large programs are generally split into multiple files. If file <var>A</var> 
+accesses predicates from file <var>B</var> which accesses predicates 
+from file
+<var>A</var>, we consider this a mutual or circular dependency. If 
+traditional load predicates (e.g., <a id="idx:consult1:648"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>) 
+are used to include file <var>B</var> from <var>A</var> and <var>A</var> 
+from <var>B</var>, loading either file results in a loop. This is 
+because
+<a id="idx:consult1:649"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+is mapped to <a id="idx:loadfiles2:650"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+using the option <code>if(true)(.)</code> Such programs are typically 
+loaded using a <em>load file</em> that consults all required 
+(non-module) files. If modules are used, the dependencies are made 
+explicit using <a id="idx:usemodule1:651"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+statements. The
+<a id="idx:usemodule1:652"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+predicate, however, maps to <a id="idx:loadfiles2:653"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+with the option
+<code>if(not_loaded)(.)</code> A <a id="idx:usemodule1:654"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+on an already loaded file merely makes the public predicates of the used 
+module available.
+
+<p>Summarizing, mutual dependency of source files is fully supported 
+with no precautions when using modules. Modules can use each other in an 
+arbitrary dependency graph. When using <a id="idx:consult1:655"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, 
+predicate dependencies between loaded files can still be arbitrary, but 
+the consult relations between files must be a proper tree.
+
+<p><h4 id="sec:mtload"><a id="sec:4.3.2.2"><span class="sec-nr">4.3.2.2</span> <span class="sec-title">Compilation 
+with multiple threads</span></a></h4>
+
+<a id="sec:mtload"></a>
+
+<p>This section discusses compiling files for the first time. For 
+reloading, see <a class="sec" href="consulting.html#sec:4.3.2">section 
+4.3.2</a>.
+
+<p>In older versions, compilation was thread-safe due to a global
+<em>lock</em> in <a id="idx:loadfiles2:656"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+and the code dealing with
+<em>autoloading</em> (see <a class="sec" href="autoload.html#sec:2.14">section 
+2.14</a>). Besides unnecessary stalling when multiple threads trap 
+unrelated undefined predicates, this easily leads to deadlocks, notably 
+if threads are started from an
+<a id="idx:initialization1:657"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directive.<sup class="fn">60<span class="fn-text">Although such goals 
+are started after loading the file in which they appear, the calling 
+thread is still likely to hold the&lsquo;load' lock because it is 
+compiling the file from which the file holding the directive is loaded.</span></sup>
+
+<p>Starting with version 5.11.27, the autoloader is no longer locked and 
+multiple threads can compile files concurrently. This requires special 
+precautions only if multiple threads wish to load the same file at the 
+same time. Therefore, <a id="idx:loadfiles2:658"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+checks automatically whether some other thread is already loading the 
+file. If not, it starts loading the file. If another thread is already 
+loading the file, the thread blocks until the other thread finishes 
+loading the file. After waiting, and if the file is a module file, it 
+will make the public predicates available.
+
+<p>Note that this schema does not prevent deadlocks under all 
+situations. Consider two mutually dependent (see <a class="sec" href="consulting.html#sec:4.3.2.1">section 
+4.3.2.1</a>) module files <var>A</var> and <var>B</var>, where thread&nbsp;1 
+starts loading <var>A</var> and thread&nbsp;2 starts loading
+<var>B</var> at the same time. Both threads will deadlock when trying to 
+load the used module.
+
+<p>The current implementation does not detect such cases and the 
+involved threads will freeze. This problem can be avoided if a mutually 
+dependent collection of files is always loaded from the same start file.
+
+<p><h3 id="sec:qlf"><a id="sec:4.3.3"><span class="sec-nr">4.3.3</span> <span class="sec-title">Quick 
+load files</span></a></h3>
+
+<a id="sec:qlf"></a>
+
+<p>SWI-Prolog supports compilation of individual or multiple Prolog 
+source files into&lsquo;Quick Load Files'. A&lsquo;Quick Load File' (<code>.qlf</code> 
+file) stores the contents of the file in a precompiled format.
+
+<p>These files load considerably faster than source files and are 
+normally more compact. They are machine-independent and may thus be 
+loaded on any implementation of SWI-Prolog. Note, however, that clauses 
+are stored as virtual machine instructions. Changes to the compiler will 
+generally make old compiled files unusable.
+
+<p>Quick Load Files are created using <a id="idx:qcompile1:659"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>. 
+They are loaded using
+<a id="idx:consult1:660"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+or one of the other file-loading predicates described in
+<a class="sec" href="consulting.html#sec:4.3">section 4.3</a>. If <a id="idx:consult1:661"></a><a class="pred" href="consulting.html#consult/1">consult/1</a> 
+is given an explicit <code>.pl</code> file, it will load the Prolog 
+source. When given a <code>.qlf</code> file, it will load the file. When 
+no extension is specified, it will load the
+<code>.qlf</code> file when present and the <code>.pl</code> file 
+otherwise.
+
+<dl class="latex">
+<dt class="pubdef"><a id="qcompile/1"><strong>qcompile</strong>(<var>:File</var>)</a></dt>
+<dd class="defbody">
+Takes a file specification as <a id="idx:consult1:662"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, 
+etc., and, in addition to the normal compilation, creates a <em>Quick 
+Load File</em> from <var>File</var>. The file extension of this file is <code>.qlf</code>. 
+The basename of the Quick Load File is the same as the input file.
+
+<p>If the file contains&lsquo;<code>:- consult(<var>+File</var>)</code>&rsquo;,&lsquo;<code>:- 
+[<var>+File</var>]</code>&rsquo;or&lsquo;<code>:- load_files(<var>+File</var>, 
+[qcompile(part), ...])</code>&rsquo;statements, the referred files are 
+compiled into the same <code>.qlf</code> file. Other directives will be 
+stored in the
+<code>.qlf</code> file and executed in the same fashion as when loading 
+the
+<code>.pl</code> file.
+
+<p>For <a id="idx:termexpansion2:663"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>, 
+the same rules as described in
+<a class="sec" href="compilation.html#sec:2.11">section 2.11</a> apply.
+
+<p>Conditional execution or optimisation may test the predicate
+<a id="idx:compiling0:664"></a><a class="pred" href="consulting.html#compiling/0">compiling/0</a>.
+
+<p>Source references (<a id="idx:sourcefile2:665"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a>) 
+in the Quick Load File refer to the Prolog source file from which the 
+compiled code originates.</dd>
+<dt class="pubdef"><a id="qcompile/2"><strong>qcompile</strong>(<var>:File, 
++Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:qcompile1:666"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>, 
+but processes additional options as defined by
+<a id="idx:loadfiles2:667"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.<sup class="fn">bug<span class="fn-text">Option 
+processing is currently incomplete.</span></sup>
+</dd>
+</dl>
+
+<p></body></html>

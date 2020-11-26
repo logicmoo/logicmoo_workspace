@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+<title>SCIFF Errors</title>
+</head>
+<body>
+
+<a name="index"></a><h1>SCIFF Errors</h1>
+
+<p>This manual reports some of the errors the user can get using SCIFF.
+
+<h2>CLPFD Integer Overflow</h2>
+<p>Example:
+<p><samp>! Representation error in user:'t>=u+c'/3<br>
+! CLPFD integer overflow<br>
+! goal:  't>=u+c'(_2536,_2473,1)
+</samp>
+<p>This derives from the way SICStus represents domains in CLP(FD).
+You can reproduce the error with the following
+query at the SICStus prompt:
+<p><kbd>?-  X #> Y, Y #> X, X #> 0.
+</kbd>
+<p>The previous query should logically fail, but in SICStus it first proves that
+since X must be at least 1, Y must be at least 2, so X should be at least 3, ...
+until you get an integer overflow.
+
+<p>One solution is to ask SICStus to fail in case of CLPFD overflow, instead
+of reporting an error. This can be done with the goal
+<p><center><kbd>?- fd_flag(overflow,_,fail).</kbd></center>
+
+<p>This can be quite slow; in general it is advisable to 
+give a domain to all CLPFD variables.
+
+<p>Another possibility is to use a different <a href="devman.html#solvers">constraint solver</a>.
+The <code>r_solver</code> should not suffer from this problem.
+<hr>
+<h2>SCIFF does not print all answer constraints</h2>
+<p>This is due to SICStus; you can force SICStus to show all constraints
+with the following goal:
+<p><center><kbd>?- assert(clpfd:full_answer).</kbd></center>
+
+<hr>
+<h2>Type error</h2>
+<pre><samp>! Type error in argument 2 of = /2
+! 'a real number' expected, but 10 found
+! goal:  _135=10</samp></pre>
+<p>This error can occur if the <code>r_solver</code> is used.
+See the documentation for the <a href="devman.html#solvers">solvers</a>.
+</body>
+</html>

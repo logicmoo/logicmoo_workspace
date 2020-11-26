@@ -1,0 +1,3 @@
+[Rich]<-attr-[Man : Karim]<-agnt-[Give]-
+		              -obj->[Money],
+		              -rcpt->[Artist]

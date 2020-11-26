@@ -1,0 +1,99 @@
+(note TQD49)
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(contains LevantRegion Israel) 
+
+(presentInRegion PopularFrontForLiberationOfPalestine Israel) 
+
+(instance 
+ (HighAmountFn MilitarySupport) MilitarySupport) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PopularFrontForLiberationOfPalestine TerroristGroup) 
+
+(givesSupportToAgent Libya PopularFrontForLiberationOfPalestine 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(contains LevantRegion Lebanon) 
+
+(presentInRegion PFLP-GeneralCommand Lebanon) 
+
+(instance 
+ (HighAmountFn MilitarySupport) MilitarySupport) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance PFLP-GeneralCommand TerroristGroup) 
+
+(givesSupportToAgent Libya PFLP-GeneralCommand 
+ (HighAmountFn MilitarySupport)) 
+
+(implies 
+ (instance ?X PrimitiveAttributeType) 
+ (followingValue 
+ (MediumAmountFn ?X) 
+ (HighAmountFn ?X))) 
+
+(instance MilitarySupport PrimitiveAttributeType) 
+
+(contains LevantRegion Syria) 
+
+(presentInRegion DemocraticFrontForLiberationOfPalestine Syria) 
+
+(instance 
+ (HighAmountFn MilitarySupport) MilitarySupport) 
+
+(followingValue 
+ (MediumAmountFn MilitarySupport) 
+ (HighAmountFn MilitarySupport)) 
+
+(instance DemocraticFrontForLiberationOfPalestine TerroristGroup) 
+
+(givesSupportToAgent Libya DemocraticFrontForLiberationOfPalestine 
+ (HighAmountFn MilitarySupport)) 
+
+(query (findall ?AGENT
+(thereExists ?AREA 
+   (and 
+       (presentInRegion ?AGENT ?AREA) 
+       (contains LevantRegion ?AREA) 
+       (instance ?AGENT TerroristGroup) 
+       (or 
+           (thereExists ?SUPPORT 
+               (thereExists ?SUPP-TYPE 
+                   (and 
+                       (instance ?SUPPORT ?SUPP-TYPE) 
+                       (givesSupportToAgent Libya ?AGENT ?SUPPORT) 
+                       (followingValue 
+                           (MediumAmountFn ?SUPP-TYPE) ?SUPPORT)))) 
+           (positiveVestedInterest ?AGENT Libya))))
+))
+
+(answer DemocraticFrontForLiberationOfPalestine 
+)
+(answer PFLP-GeneralCommand 
+)
+(answer PopularFrontForLiberationOfPalestine
+)
+(end_of_file)
+

@@ -1,0 +1,1655 @@
+%==============================================================================
+%----The tptp2X  utility is used  to make transformations on the 
+%----clauses in TPTP problem, and to output the clauses in formats 
+%----accepted  by existing ATP systems. 
+%----
+%----Written by Geoff Sutcliffe, July 1992.
+%----Updated by Geoff Sutcliffe, November 1992.
+%----Updated by Geoff Sutcliffe, March 1993.
+%----Revised by Geoff Sutcliffe, January, 1994.
+%----Updated by Geoff Sutcliffe, April, 1994.
+%----Revised by Geoff Sutcliffe, May-August 1994, with ideas from
+%----    Gerd Neugebauer
+%----Revised by Geoff Sutcliffe, May, 1995.
+%----Extensions for FOF by Geoff Sutcliffe, October 1996.
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Load the configuration file
+:-consult('tptp2X.config').
+%------------------------------------------------------------------------------
+%----These are used in the TPTP and need to exist before the 
+%----transformations and formats are loaded. They are also declared at 
+%----runtime in tptp2X/4.
+:-op(70,fx,'$$').
+:-op(80,fx,'$').
+:-op(85,fx,'&').    %----DLF dereference 
+:-op(90,xfx,/).     %----Rationals need to bind tighter than =
+:-op(100,fx,++).
+:-op(100,fx,--).
+%----Postfix for !=
+:-op(100,xf,'!').
+%---- .. used for range in tptp2X. Needs to be stronger than :
+:-op(400,xfx,'..').
+%----! and ? are of higher precedence than : so ![X]:p(X) is :(![X],p(X))
+%----Otherwise ![X]:![Y]:p(X,Y) cannot be parsed.
+%----! is fy so Prolog can read !! (blah) as !(!(blah)) and it gets fixed
+:-op(400,fy,!).
+:-op(400,fx,?).
+:-op(400,fx,^).
+:-op(400,fx,'!>').
+:-op(400,fx,'?*').
+:-op(400,fx,'@-').
+:-op(400,fx,'@+').
+:-op(401,fx,'@@-').
+:-op(401,fx,'@@+').
+:-op(402,fx,'!!').
+:-op(402,fx,'??').
+:-op(403,yfx,*).     %----X product
+:-op(403,yfx,+).     %----Union
+%----DLF ++ and ** and <+> and -= stronger than = and << and >>
+:-op(403,yfx,'**').  %----DLF intersection
+:-op(403,yfx,'++').  %----DLF union
+:-op(403,yfx,'<+>'). %----DLF disjoint union
+%----= must bind more tightly than : for ! [X] : a = X. = must binder looser
+%----than quantifiers for otherwise X = ! [Y] : ... is a syntax error (the =
+%----grabs the quantifier). That means for THF it is necessary to bracket 
+%----formula terms, e.g., a = (! [X] : p(X))
+:-op(405,xfx,'=').
+%---!= not possible because ! is special - see postfix cheat :-op(405,xfx,'!=').
+:-op(440,xfy,>).     %----Type arrow
+:-op(450,xfx,'-=').  %----DLF role inverse_of
+:-op(450,xfx,'<>').  %----DLF class disjoint
+:-op(450,xfx,'<<').  %----DLF subclass, Subtype arrow
+:-op(450,xfx,'>>').  %----DLF superclass
+%----Need : stronger than binary connectives for ! [X] : p(X) <=> !Y ...
+%----Need ~ and : equal and right-assoc for ![X] : ~p and for ~![X] : ...
+:-op(450,fy,~).      %----Logical negation
+:-op(450,xfy,:).
+:-op(501,yfx,@).
+% :-op(502,xfy,'|').
+:-(system_mode(true),op(502,xfy,'|'),system_mode(false)).
+:-op(502,xfx,'~|').
+:-op(503,xfy,&).
+:-op(503,xfx,~&).
+:-op(504,xfx,=>).
+:-op(504,xfx,<=).
+:-op(505,xfx,<=>).
+:-op(505,xfx,<~>).
+:-op(510,xfx,-->).
+
+%----DLF separators, very weak, but stronger than :=
+:-op(525,xfx,#).
+:-op(525,xf,#).
+
+:-op(550,xfx,:=).
+
+%----DLF == is built in, precedence 700 - weak!
+%------------------------------------------------------------------------------
+%----Runtime version of operators
+declare_TPTP_operators:-
+    op(70,fx,'$$'),
+    op(80,fx,'$'),
+    op(85,fx,'&'),
+    op(90,xfx,/),
+    op(100,fx,++),
+    op(100,fx,--),
+    op(100,xf,'!'),
+    op(400,xfx,'..'),
+    op(400,fy,!),
+    op(400,fx,?),
+    op(400,fx,^),
+    op(400,fx,'!>'),
+    op(400,fx,'?*'),
+    op(400,fx,'@-'),
+    op(400,fx,'@+'),
+    op(400,fx,'@@-'),
+    op(400,fx,'@@+'),
+    op(402,fx,'!!'),
+    op(402,fx,'??'),
+    op(403,yfx,*),
+    op(403,yfx,+),
+    op(403,yfx,'**'),
+    op(403,yfx,'++'),
+    op(403,yfx,'<+>'),
+    op(405,xfx,'='),
+    op(440,xfy,>),
+    op(450,yfx,'-='),
+    op(450,yfx,'<>'),
+    op(450,xfx,'<<'),
+    op(450,xfx,'>>'),
+    op(450,fy,~),
+    op(450,xfy,:),
+    op(501,yfx,@),
+%    op(502,xfy,'|'),
+    (system_mode(true),op(502,xfy,'|'),system_mode(false)),
+    op(502,xfx,'~|'),
+    op(503,xfy,&),
+    op(503,xfx,~&),
+    op(504,xfx,=>),
+    op(504,xfx,<=),
+    op(505,xfx,<=>),
+    op(505,xfx,<~>),
+    op(510,xfx,-->),
+    op(525,xfx,#),
+    op(525,xf,#),
+    op(550,xfx,':=').
+%------------------------------------------------------------------------------
+%----This specifies the transformations that will be loaded. Currently
+%----all are loaded, but you comment out any you don't want. Always keep
+%----transform.arrange for none transformation.
+:-['transform.arrange'].
+:-['transform.equality'].
+:-['transform.expand'].
+:-['transform.fofify'].
+:-['transform.magic'].
+:-['transform.reform'].
+:-['transform.shorten'].
+:-['transform.xdb'].
+%------------------------------------------------------------------------------
+%----This specifies the output formats that will be loaded. Currently
+%----all are loaded, but you comment out any you don't want. Don't
+%----leave a space between the comment % and the command, as that will
+%----confuse tptp2X_install
+:-['format.bliksem'].
+% NO LONGER USED :-['format.carine'].
+% NO LONGER USED ['format.clif'].
+% NO LONGER USED ['format.code'].
+:-['format.dedam'].
+:-['format.dfg'].
+:-['format.dimacs'].
+:-['format.eqp'].
+% NO LONGER USED ['format.finder'].
+:-['format.geo'].
+% NO LONGER USED ['format.ilf'].
+% NO LONGER USED :-['format.isabelle'].
+% NO LONGER USED ['format.kif'].
+:-['format.leancop'].
+:-['format.lf'].
+% NO LONGER USED ['format.tap'].
+% NO LONGER USED :-['format.leantap'].
+:-['format.metitarski'].
+% NO LONGER USED ['format.omdoc'].
+% NO LONGER USED ['format.oscar'].
+:-['format.otter'].
+% NO LONGER USED :-['format.protein'].
+:-['format.prover9'].
+% NO LONGER USED ['format.pttp'].
+% NO LONGER USED ['format.satchmo'].
+% NO LONGER USED ['format.scott'].
+% NO LONGER USED ['format.sem'].
+% NO LONGER USED :-['format.setheo'].
+% NO LONGER USED :-['format.sex'].
+:-['format.smt'].
+% NO LONGER USED ['format.sprfn'].
+% NO LONGER USED ['format.thinker'].
+:-['format.tps'].
+% NO LONGER USED :-['format.oldtptp'].
+:-['format.tptp'].
+% NO LONGER USED :-['format.prefix'].
+:-['format.waldmeister'].
+%------------------------------------------------------------------------------
+%----Use the standard TPTP read code. 
+:-['tptp2X.read'].
+:-['tptp2X.generate'].
+:-['tptp2X.syntax'].
+:-['tptp2X.format'].
+%------------------------------------------------------------------------------
+%----Invert sign 
+tptp2X_invert_sign(++,--).
+
+tptp2X_invert_sign(--,++).
+%------------------------------------------------------------------------------
+%----Invert the sign of a TPTP literal
+tptp2X_invert_literal(++Atom,--Atom).
+
+tptp2X_invert_literal(--Atom,++Atom).
+%------------------------------------------------------------------------------
+%----Used by generator files to include others. When Prolog is standard
+%----this can be improved to use ensure_loaded.
+tptp2X_include(TPTPFileName):-
+    assertz(tptp2X_file_to_include(TPTPFileName)).
+%------------------------------------------------------------------------------
+%----Load a single file (used for loading generators)
+%----Check if already loaded not possible with a call, due to existence
+%----errors. Not possible with clause/2 as it's not dynamic. Shit.
+% tptp2X_load_one_file(TPTPFileName):-
+%----Can't find a portable way!
+%     !.
+
+%----Use consult for BinProlog, which has a different compiling attitude.
+tptp2X_load_one_file(TPTPFileName):-
+    prolog_dialect(PrologDialect),
+    tptp2X_member(PrologDialect,[binprolog,gnu,generic]),
+    !,
+    tptp_path_name(TPTPFileName,TPTPPathName),
+    consult(TPTPPathName).
+
+tptp2X_load_one_file(TPTPFileName):-
+    tptp_path_name(TPTPFileName,TPTPPathName),
+    compile(TPTPPathName).
+%------------------------------------------------------------------------------
+%----Load a file, and those which are tptp2X_included
+tptp2X_load(TPTPFileName):-
+    tptp2X_load_one_file(TPTPFileName),
+    (retract(tptp2X_file_to_include(FileToInclude)) ->
+        tptp2X_load(FileToInclude)
+    ;   true).
+%------------------------------------------------------------------------------
+%----Make a subset of a list
+tptp2X_subset([],[]).
+
+tptp2X_subset([_|T],Subset):-
+    tptp2X_subset(T,Subset).
+
+tptp2X_subset([H|T],[H|RestOfSubset]):-
+    tptp2X_subset(T,RestOfSubset).
+%------------------------------------------------------------------------------
+%----Simple append, required in tptpread. Renamed to avoid confusion 
+%----with builtins.
+tptp2X_append([],List,List).
+
+tptp2X_append([Head|Tail],List,[Head|TailList]):-
+    tptp2X_append(Tail,List,TailList).
+%------------------------------------------------------------------------------
+%----Simple select. Renamed to avoid confusion with builtins.
+tptp2X_select(Element,[Element|Tail],Tail).
+
+tptp2X_select(Element,[Head|Tail],[Head|SelectedTail]):-
+    tptp2X_select(Element,Tail,SelectedTail).
+%------------------------------------------------------------------------------
+%----Select the Nth element.
+tptp2X_select_Nth(Element,[Element|Tail],1,Tail).
+
+tptp2X_select_Nth(Element,[Head|Tail],N,[Head|SelectedTail]):-
+    integer(N),
+    N > 1,
+    NewN is N - 1,
+    tptp2X_select_Nth(Element,Tail,NewN,SelectedTail).
+
+tptp2X_select_Nth(Element,[Head|Tail],N,[Head|SelectedTail]):-
+    var(N),
+    tptp2X_select_Nth(Element,Tail,NewN,SelectedTail),
+    N is NewN + 1.
+%------------------------------------------------------------------------------
+%----List difference
+tptp2X_list_difference(Remainder,[],Remainder).
+
+tptp2X_list_difference(List,[FirstToRemove|RestToRemove],Remainder):-
+    tptp2X_select(FirstToRemove,List,OthersInList),
+    !,
+    tptp2X_list_difference(OthersInList,RestToRemove,Remainder).
+
+tptp2X_list_difference(List,[_|RestToRemove],Remainder):-
+    tptp2X_list_difference(List,RestToRemove,Remainder).
+%------------------------------------------------------------------------------
+%----Simple member. Renamed to avoid confusion with builtins.
+tptp2X_member(Element,[Element|_]).
+
+tptp2X_member(Element,[_|Tail]):-
+    tptp2X_member(Element,Tail).
+%------------------------------------------------------------------------------
+%----Exact member without unification. Only a test, not for extraction
+tptp2X_exact_member(Element,[Head|_]):-
+    Element == Head.
+
+tptp2X_exact_member(Element,[_|Tail]):-
+    tptp2X_exact_member(Element,Tail).
+%------------------------------------------------------------------------------
+%----Simple length. Renamed to avoid confusion with builtins.
+tptp2X_length([],0).
+
+tptp2X_length([_|Tail],Length):-
+    tptp2X_length(Tail,TailLength),
+    Length is TailLength + 1.
+%------------------------------------------------------------------------------
+tptp2X_atom_length(Atom,AtomLength):-
+     name(Atom,AtomASCII),
+     tptp2X_length(AtomASCII,AtomLength).
+%------------------------------------------------------------------------------
+%----Setof1 does setof, but allows empty list to be returned
+tptp2X_setof1(Variable,Goal,List):-
+    setof(Variable,Goal,List),
+    !.
+
+tptp2X_setof1(_,_,[]).
+%------------------------------------------------------------------------------
+%----bagof1 does bagof, but allows empty list to be returned
+tptp2X_bagof1(Variable,Goal,List):-
+    bagof(Variable,Goal,List),
+    !.
+
+tptp2X_bagof1(_,_,[]).
+%------------------------------------------------------------------------------
+%----setof that ignores other variables and returns an empty list rather
+%----than failing.
+tptp2X_findall_setof1(Variable,Predicate,UniqueValues):-
+    findall(Variable,Predicate,AllValues),
+    tptp2X_setof1(Member,tptp2X_member(Member,AllValues),UniqueValues).
+%------------------------------------------------------------------------------
+%----Doing an occurs check
+tptp2X_occurs_check_list(_,[]).
+
+tptp2X_occurs_check_list(Variable,[H|T]):-
+    tptp2X_occurs_check(Variable,H),
+    tptp2X_occurs_check_list(Variable,T).
+%------------------------------------------------------------------------------
+tptp2X_occurs_check(Variable,Term):-
+    var(Term),
+    !,
+    Variable \== Term.
+
+tptp2X_occurs_check(Variable,Term):-
+    Term =.. [_|Arguments],
+    tptp2X_occurs_check_list(Variable,Arguments).
+%------------------------------------------------------------------------------
+%----Remove all elements upto the last delimiter
+tptp2X_list_tail([],_,[],not_found):-
+    !.
+    
+%----Check if the delimiter is further down the list
+tptp2X_list_tail([_|ListTail],Delimiter,TailTail,found):-
+    tptp2X_list_tail(ListTail,Delimiter,TailTail,found),
+    !.
+
+%----Check if this is the delimiter
+tptp2X_list_tail([Delimiter|ListTail],Delimiter,ListTail,found):-
+    !.
+
+%----Otherwise pass back this list
+tptp2X_list_tail(List,_,List,not_found).
+%------------------------------------------------------------------------------
+%----Choose the maximum of two values
+tptp2X_choose_maximum(FirstNumber,SecondNumber,FirstNumber):-
+    FirstNumber >= SecondNumber,
+    !.
+
+tptp2X_choose_maximum(_,SecondNumber,SecondNumber).
+%------------------------------------------------------------------------------
+%----Find the maximal value in a list of positive numbers
+tptp2X_maximal_in_list([],0).
+
+tptp2X_maximal_in_list([H|T],Maximum):-
+    tptp2X_maximal_in_list(T,TMaximum),
+    tptp2X_choose_maximum(H,TMaximum,Maximum).
+%------------------------------------------------------------------------------
+%----Add vectors of numbers
+tptp2X_list_add([],[],[]).
+
+tptp2X_list_add([H1|T1],[H2|T2],[ResultH|ResultT]):-
+    tptp2X_list_add(T1,T2,ResultT),
+    ResultH is H1 + H2.
+%------------------------------------------------------------------------------
+%----Product of all values in a list
+tptp2X_sum_logs([],0):-
+    !.
+
+tptp2X_sum_logs([H|T],SumLogs):-
+    tptp2X_sum_logs(T,TSumLogs),
+    SumLogs is log(H) + TSumLogs.
+%------------------------------------------------------------------------------
+%----Compute geometric average
+tptp2X_geometric_average([],0):-
+    !.
+
+tptp2X_geometric_average(List,Average):-
+    tptp2X_sum_logs(List,SumLogs),
+    tptp2X_length(List,Length),
+%----This is not currently in use because Eclipse rounds to an integer
+    Average is round(exp(SumLogs / Length)).
+%------------------------------------------------------------------------------
+%----Sum a list
+tptp2X_sum([],0).
+
+tptp2X_sum([H|T],Sum):-
+    tptp2X_sum(T,TSum),
+    Sum is H + TSum.
+%------------------------------------------------------------------------------
+%----Compute arithmetic average
+tptp2X_arithmetic_average([],0):-
+    !.
+
+tptp2X_arithmetic_average(List,Average):-
+    tptp2X_sum(List,Sum),
+    tptp2X_length(List,Length),
+    Average is Sum // Length.
+%------------------------------------------------------------------------------
+%----Generating random integers in a given range
+%----Generic version - Integers in range 0 to 4095 (may not be adequate
+%----for all uses).
+tptp2X_random_integer_for_dialect(generic,Lowest,Highest,Random):-
+%----Seed already saved, use it.
+    retract(seed(BigRandom)),
+    !,
+    NewSeed is (125 * BigRandom + 1) mod 4096,
+    asserta(seed(NewSeed)),
+    Random is Lowest + (BigRandom mod (Highest - Lowest + 1)).
+
+%----First time - make seed from Lowest and Highest
+tptp2X_random_integer_for_dialect(generic,Lowest,Highest,Random):-
+    Seed is Highest - Lowest,
+    asserta(seed(Seed)),
+    tptp2X_random_integer_for_dialect(generic,Lowest,Highest,Random).
+
+%----BinProlog version
+tptp2X_random_integer_for_dialect(binprolog,Lowest,Highest,Random):-
+%----Integer in some range (not in manual)
+    random(BigRandom),
+    Random is Lowest + (BigRandom mod (Highest - Lowest + 1)).
+
+%----SWI prolog
+tptp2X_random_integer_for_dialect(swi,Lowest,Highest,Random):-
+    Range is (Highest-Lowest) + 1,
+    RandomInRange is random(Range),
+    Random is Lowest + RandomInRange.
+
+%----YAP prolog
+tptp2X_random_integer_for_dialect(yap,Lowest,Highest,Random):-
+    Random is Lowest + integer(random * (Highest-Lowest+1)).
+
+%----SICStus 2.1 version.
+tptp2X_random_integer_for_dialect(sicstus,Lowest,Highest,Random):-
+    HighestPlus1 is Highest + 1,
+    random(Lowest,HighestPlus1,Random).
+
+%----GNU Prolog version.
+tptp2X_random_integer_for_dialect(gnu,Lowest,Highest,Random):-
+    HighestPlus1 is Highest + 1,
+    random(Lowest,HighestPlus1,Random).
+
+%----Eclipse version
+tptp2X_random_integer_for_dialect(eclipse,Lowest,Highest,Random):-
+%----Integer in range 0 to (2^32 - 1)
+    random(BigRandom),
+    Random is Lowest + (BigRandom mod (1+ Highest - Lowest)).
+
+%----Quintus version - Integer in specified range
+tptp2X_random_integer_for_dialect(quintus,Lowest,Highest,Random):-
+    use_module(library(random)),
+    HighestPlus1 is Highest + 1,
+    random(Lowest,HighestPlus1,Random).
+
+tptp2X_random_integer(Lowest,Highest,Random):-
+    prolog_dialect(Dialect),
+    tptp2X_random_integer_for_dialect(Dialect,Lowest,Highest,Random).
+%------------------------------------------------------------------------------
+%----Extracts the .XXX from a filename
+tptp2X_extension(FullName,Extension):-
+    name(FullName,FullASCII),
+    tptp2X_append(_,[46|ExtensionASCII],FullASCII),
+%----Force the last . to be taken
+    \+ tptp2X_member(46,ExtensionASCII),
+    !,
+    name(Extension,[46|ExtensionASCII]).
+
+%----No extension
+tptp2X_extension(_,'').
+%------------------------------------------------------------------------------
+%----Procedure to do the same as the UNIX basename command
+tptp2X_basename(FullName,Suffix,Basename):-
+    name(FullName,FullNameList),
+    name(Suffix,SuffixList),
+%----Delete upto last / (ASCII 47)
+    tptp2X_list_tail(FullNameList,47,FullNameTailList,_),
+%----Try to delete suffix from list
+    (tptp2X_append(BasenameList,SuffixList,FullNameTailList) ->
+        name(Basename,BasenameList);
+%----If not possible, then ignore the suffix
+        name(Basename,FullNameTailList)).
+%------------------------------------------------------------------------------
+%----Procedure to do the same as the UNIX dirname command
+tptp2X_dirname(FullName,Dirname):-
+    name(FullName,FullNameList),
+%----Remove the tptp2X_basename
+    tptp2X_basename(FullName,'',Basename),
+    name(Basename,BasenameList),
+%----Find what is before the tptp2X_basename, if anything
+    (tptp2X_append(DirnameList,[47|BasenameList],FullNameList) ->
+        name(Dirname,DirnameList);
+%----If no directory then it's the current one
+        Dirname = '.').
+%------------------------------------------------------------------------------
+%----Provide a range of integers through backtracking
+tptp2X_integer_in_range(Low,High,Low):-
+    Low =< High.
+
+tptp2X_integer_in_range(Low,High,Integer):-
+    Low < High,
+    NewLow is Low + 1,
+    tptp2X_integer_in_range(NewLow,High,Integer).
+%------------------------------------------------------------------------------
+%-----Convert from an integer to a list of characters
+tptp2X_integer_name(Integer,FinalString):-
+    tptp2X_integer_name(Integer,[],FinalString).
+
+tptp2X_integer_name(Integer,StringSoFar,[Character|StringSoFar]):-
+    Integer < 10,
+    !,
+    Character is Integer + 48.
+
+tptp2X_integer_name(Integer,StringSoFar,FinalString):-
+    TopHalf is Integer // 10,
+    BottomHalf is Integer mod 10,
+    Character is BottomHalf + 48,
+    tptp2X_integer_name(TopHalf,[Character|StringSoFar],FinalString).
+%------------------------------------------------------------------------------
+%----Do text substitution in a list
+replace_in_list(SearchFor,OldList,ReplaceWith,NewList):-
+    tptp2X_append(SearchFor,EndOfOldList,OldTail),
+    tptp2X_append(StartOfOldList,OldTail,OldList),
+    !,
+    tptp2X_append(ReplaceWith,EndOfOldList,NewTail),
+    tptp2X_append(StartOfOldList,NewTail,MiddleList),
+    replace_in_list(SearchFor,MiddleList,ReplaceWith,NewList).
+
+replace_in_list(_,List,_,List).
+%------------------------------------------------------------------------------
+%----Replace bits of atoms - this is a shitty way of updating the
+%----header which is maintained as a list of atoms, one atom per line.
+replace_in_atoms([],Atoms,Atoms):-
+%----Not sure if this cut is needed really (fuck)
+    !.
+
+replace_in_atoms([FirstPair|RestOfPairs],Atoms,ReplacedAtoms):-
+    !,
+    replace_in_atoms(FirstPair,Atoms,Atoms1),
+    replace_in_atoms(RestOfPairs,Atoms1,ReplacedAtoms).
+
+replace_in_atoms(_,[],[]).
+
+replace_in_atoms(SearchForAtom-ReplaceWithAtom,[FirstAtom|RestOfAtoms],
+[FirstReplacedAtom|RestOfReplacedAtoms]):-
+%----These two could be abstracted, but it's out of the way here
+    name(SearchForAtom,SearchForList),
+    name(ReplaceWithAtom,ReplaceWithList),
+%----Convert to ASCII list
+    name(FirstAtom,FirstAtomList),
+    replace_in_list(SearchForList,FirstAtomList,ReplaceWithList,
+FirstReplacedAtomList),
+    name(FirstReplacedAtom,FirstReplacedAtomList),
+    replace_in_atoms(SearchForAtom-ReplaceWithAtom,RestOfAtoms,
+RestOfReplacedAtoms).
+%------------------------------------------------------------------------------
+%----Any name for lists
+list_name([OneElement],OneElementList):-
+    !,
+    any_name(OneElement,OneElementList).
+
+list_name([H|T],ListList):-
+    any_name(H,HList),
+    list_name(T,TList),
+    tptp2X_append(HList,[44|TList],ListList).
+%------------------------------------------------------------------------------
+%----Do name for anything
+any_name(Variable,"_"):-
+    var(Variable),
+    !.
+
+any_name([],"[]"):-
+    !.
+
+any_name([H|T],ListList):-
+    !,
+    list_name([H|T],InteriorList),
+%----91 = [ and 93 = ]
+    tptp2X_append([91|InteriorList],"]",ListList).
+
+any_name(Atom,AtomList):-
+    atomic(Atom),
+    !,
+    name(Atom,AtomList).
+
+any_name(Integer,IntegerList):-
+    integer(Integer),
+    !,
+    tptp2X_integer_name(Integer,IntegerList).
+
+%----Operators (hacks for special cases)
+%---- : = 58
+any_name(Operand1:Operand2,ColonList):-
+    !,
+    any_name(Operand1,OperandList1),
+    any_name(Operand2,OperandList2),
+    tptp2X_append(OperandList1,[58|OperandList2],ColonList).
+
+%---- .. = 46 46
+any_name(Operand1..Operand2,DotDotList):-
+    !,
+    any_name(Operand1,OperandList1),
+    any_name(Operand2,OperandList2),
+    tptp2X_append(OperandList1,[46,46|OperandList2],DotDotList).
+
+%---- + = 43
+any_name(Operand1+Operand2,PlusList):-
+    !,
+    any_name(Operand1,OperandList1),
+    any_name(Operand2,OperandList2),
+    tptp2X_append(OperandList1,[43|OperandList2],PlusList).
+
+%----Functions
+any_name(Function,FunctionList):-
+    Function =.. [Functor|Arguments],
+    name(Functor,FunctorList),
+    list_name(Arguments,ArgumentsList),
+%----40 = (
+    tptp2X_append(FunctorList,[40|ArgumentsList],List1),
+    tptp2X_append(List1,")",FunctionList).
+%------------------------------------------------------------------------------
+%----Append each list element's list
+concatenate_atoms_list([],[]).
+
+concatenate_atoms_list([H|T],ASCII):-
+    any_name(H,HList),
+    concatenate_atoms_list(T,TList),
+    tptp2X_append(HList,TList,ASCII).
+%------------------------------------------------------------------------------
+%----Concatenate a list of terms into a big atom
+concatenate_atoms(Atoms,Atom):-
+    concatenate_atoms_list(Atoms,AtomsList),
+    name(Atom,AtomsList).
+%------------------------------------------------------------------------------
+%-----Fast reverse a list
+fast_reverse_list([],ReverseList,ReverseList):-
+    !.
+
+fast_reverse_list([Head|Tail],ReverseSoFar,ReverseList):-
+    fast_reverse_list(Tail,[Head|ReverseSoFar],ReverseList).
+%------------------------------------------------------------------------------
+%----Put the header comment in a tptp2X line
+%----Escape for suppressing when I do TPTP maintenance
+add_tptp2X_comment_entry(_,CommentEntries,_,CommentEntries):-
+    fail,
+    !.
+
+%----Already more than one tptp2X comments, and the one we want exists (old)
+add_tptp2X_comment_entry(old,CommentEntries,CommentText,NewCommentEntries):-
+%----Find first tptp2X comment
+    tptp2X_append(FirstEntries,[TPTP2XEntry1|RestOfEntries],CommentEntries),
+    name(TPTP2XEntry1,TPTP2XEntryASCII1),
+    tptp2X_append("          : tptp2X ",_,TPTP2XEntryASCII1),
+%----Find second tptp2X comment
+    tptp2X_member(TPTP2XEntry2,RestOfEntries),
+    name(TPTP2XEntry2,TPTP2XEntryASCII2),
+    tptp2X_append("          : tptp2X ",_,TPTP2XEntryASCII2),
+    !,
+%----Insert comment on rest of entries
+    add_tptp2X_comment_entry(old,RestOfEntries,CommentText,
+NewRestOfCommentEntries),
+    tptp2X_append(FirstEntries,[TPTP2XEntry1|NewRestOfCommentEntries],
+NewCommentEntries).
+
+%----Already a tptp2X comment that we want (old)
+add_tptp2X_comment_entry(old,CommentEntries,CommentText,NewCommentEntries):-
+%----Find the tptp2X comment
+    tptp2X_append(FirstEntries,[CommentEntry|RestOfEntries],CommentEntries),
+    name(CommentEntry,CommentASCII),
+    tptp2X_append("          : tptp2X ",TPTP2XCommentASCII,CommentASCII),
+    !,
+%----Add the new text in front
+    name(CommentText,CommentTextASCII),
+    tptp2X_append("          : tptp2X ",CommentTextASCII,ASCII1),
+    tptp2X_append(ASCII1,[32|TPTP2XCommentASCII],ASCII2),
+    name(NewEntry,ASCII2),
+    tptp2X_append(FirstEntries,[NewEntry|RestOfEntries],NewCommentEntries).
+
+%----If no tptp2X comment then do nothing for old
+add_tptp2X_comment_entry(old,CommentEntries,_,CommentEntries).
+
+%----Make the tptp2X entry (new)
+add_tptp2X_comment_entry(new,CommentEntries,CommentText,NewCommentEntries):-
+    concatenate_atoms(['          : tptp2X ',CommentText],CommentEntry),
+    tptp2X_append(CommentEntries,[CommentEntry],NewCommentEntries).
+%------------------------------------------------------------------------------
+%----Add a comment explaining how this was all created
+add_tptp2X_comment(OldOrNew,FileHeader,CommentText,CommentedFileHeader):-
+    tptp2X_append(EarlierFields,['Comments'-CommentEntries|RestOfFields],
+FileHeader),
+    !,
+    add_tptp2X_comment_entry(OldOrNew,CommentEntries,CommentText,
+NewCommentEntries),
+    tptp2X_append(EarlierFields,['Comments'-NewCommentEntries|RestOfFields],
+CommentedFileHeader).
+
+%----If the comment fields is missing, then do nothing
+add_tptp2X_comment(_,FileHeader,_,FileHeader).
+%------------------------------------------------------------------------------
+extract_formulae_of_type([],_,[],[]).
+
+extract_formulae_of_type([FirstFormula|RestOfFormulae],Type,
+[FirstFormula|RestOfType],NotOfType):-
+    FirstFormula =.. [_,_,Type|_],
+    !,
+    extract_formulae_of_type(RestOfFormulae,Type,RestOfType,NotOfType).
+
+extract_formulae_of_type([FirstFormula|RestOfFormulae],Type,OfType,
+[FirstFormula|RestNotOfType]):-
+    extract_formulae_of_type(RestOfFormulae,Type,OfType,RestNotOfType).
+%------------------------------------------------------------------------------
+%----Get information about this tptp2X file for generators
+get_tptp2X_file_information(BaseInputName,generator,GenerationFormat,
+GenerationConstraints,SOTAGenerations):-
+    concatenate_atoms([BaseInputName,'_file_information'],
+InformationQueryPredicate),
+    InformationQuery =.. [InformationQueryPredicate,generator,
+sizes(GenerationFormat,GenerationConstraints),SOTATerm],
+    InformationQuery,
+    SOTATerm =.. [sota|SOTAGenerations].
+
+get_tptp2X_file_information(BaseInputName,format,ListOfFormats):-
+    concatenate_atoms([BaseInputName,'_file_information'],
+InformationQueryPredicate),
+    InformationQuery =.. [InformationQueryPredicate,format,AFormat,_],
+    findall(AFormat,InformationQuery,ListOfFormats).
+
+get_tptp2X_file_information(BaseInputName,transform,ListOfFormats):-
+    concatenate_atoms([BaseInputName,'_file_information'],
+InformationQueryPredicate),
+    InformationQuery =.. [InformationQueryPredicate,transform,AFormat,_],
+    findall(AFormat,InformationQuery,ListOfFormats).
+%------------------------------------------------------------------------------
+%----If no comment atom then suppress
+output_comment_line(_,''):-
+    !.
+
+output_comment_line(Content,Start-End):-
+    !,
+    write(Start),
+    write(Content),
+    write(End),
+    nl.
+
+output_comment_line(Content,Start):-
+    write(Start),
+    write(Content),
+    nl.
+%------------------------------------------------------------------------------
+comment_atom_length(Start-End,Length):-
+    !,
+    tptp2X_atom_length(Start,StartLength),
+    tptp2X_atom_length(End,EndLength),
+    Length is StartLength + EndLength.
+
+comment_atom_length(Start,Length):-
+    tptp2X_atom_length(Start,Length).
+%------------------------------------------------------------------------------
+generate_separator_list(0,[]).
+
+generate_separator_list(Length,[45|RestOfSeparatorList]):-
+    Length > 0,
+    Length1 is Length - 1,
+    generate_separator_list(Length1,RestOfSeparatorList).
+%------------------------------------------------------------------------------
+generate_separator(Length,Separator):-
+    generate_separator_list(Length,SeparatorList),
+    name(Separator,SeparatorList).
+%------------------------------------------------------------------------------
+%----Write a comment line
+output_separator_line(CommentAtom):-
+    comment_atom_length(CommentAtom,CommentAtomLength),
+    SeparatorLength is 79 - CommentAtomLength,
+    generate_separator(SeparatorLength,Separator),
+    output_comment_line(Separator,CommentAtom).
+%------------------------------------------------------------------------------
+%----Output field lines one by one.
+output_field_lines([],_).
+
+output_field_lines([FirstLine|RestOfLines],CommentAtom):-
+    output_comment_line(FirstLine,CommentAtom),
+    output_field_lines(RestOfLines,CommentAtom).
+%------------------------------------------------------------------------------
+%----Output the file header using the given comment atom
+output_file_header([],_):-
+    !.
+
+%----Suppress if no comment atom
+output_file_header([_|RestOfHeaderLines],''):-
+    !,
+    output_file_header(RestOfHeaderLines,'').
+
+%----No leading comment char for empty lines
+output_file_header(['Blank'-_|RestOfHeaderLines],CommentAtom):-
+    !,
+    nl,
+    output_file_header(RestOfHeaderLines,CommentAtom).
+
+output_file_header([_-FieldLines|RestOfHeaderLines],CommentAtom):-
+    output_field_lines(FieldLines,CommentAtom),
+    output_file_header(RestOfHeaderLines,CommentAtom).
+%------------------------------------------------------------------------------
+%----If no header then nothing
+possibly_output_file_header([],_):-
+    !.
+
+%----If some header then header and separator line
+possibly_output_file_header(Header,CommentAtom):-
+    output_file_header(Header,CommentAtom),
+    output_separator_line(CommentAtom).
+%------------------------------------------------------------------------------
+%----Output each of the include directives
+output_each_include_directive([]).
+
+output_each_include_directive([include(FileName)|RestOfDirectives]):-
+    write('include('),
+%----Portable writing of a ' for the filename (a Prolog atom here)
+    put_code(39),
+    write(FileName),
+    put_code(39),
+    write(').'),
+    nl,
+    output_each_include_directive(RestOfDirectives).
+%------------------------------------------------------------------------------
+%----Output include directives for other files. Only in tptp format.
+output_include_directives([],_,tptp):-
+    !.
+
+output_include_directives(IncludeDirectives,CommentAtom,tptp):-
+    !,
+    output_each_include_directive(IncludeDirectives),
+    output_separator_line(CommentAtom).
+
+%----Other formats only if no directives
+output_include_directives([],_,_).
+%------------------------------------------------------------------------------
+%----Output the formulae in the required format
+%----If none, then do nothing.
+output_formulae([],_,_,_):-
+    !.
+
+%----Otherwise build a query and execute it
+output_formulae(OutputFormulae,FileHeader,OutputFormat,FormatName):-
+    FormatQuery =.. [FormatName,OutputFormat,OutputFormulae,FileHeader],
+    FormatQuery.
+%------------------------------------------------------------------------------
+%----Make the output file name
+%----If the output directory is user, then output to stdout
+make_output_file_name(user,_,_,user):-
+    !.
+
+make_output_file_name(OutputDirectory,OutputName,FileNameExtension,
+OutputFileName):-
+    concatenate_atoms([OutputDirectory,'/',OutputName,FileNameExtension],
+OutputFileName).
+%------------------------------------------------------------------------------
+%----Extract the first part, and whole parts of : separated terms
+get_format_or_transform_name(Name:Arguments,Name,WholeAtom):-
+    !,
+    any_name(Name:Arguments,ASCII),
+    name(WholeAtom,ASCII).
+
+%----Simple ones without :s
+get_format_or_transform_name(Name,Name,Name).
+%------------------------------------------------------------------------------
+%----Extract the format information from the file
+get_format_information(FormatName,CommentAtom,FileNameExtension):-
+    concatenate_atoms([FormatName,'_format_information'],
+InformationQueryPredicate),
+    InformationQuery =.. [InformationQueryPredicate,CommentAtom,
+FileNameExtension],
+    InformationQuery,
+    !.
+
+%----Error case
+get_format_information(FormatName,_,_):-
+    write('%----ERROR : Cannot get the format information for '),
+    write(FormatName),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----Do the output, file is already open
+%----If no clauses or header, then do nothing (used for emptying files).
+output_formulae_in_format([],[],[],_,_,_):-
+    !.
+
+output_formulae_in_format(FileHeader,IncludeDirectives,OutputFormulae,
+OutputFormat,FormatName,CommentAtom):-
+    output_separator_line(CommentAtom),
+    possibly_output_file_header(FileHeader,CommentAtom),
+    output_include_directives(IncludeDirectives,CommentAtom,FormatName),
+    output_formulae(OutputFormulae,FileHeader,OutputFormat,FormatName),
+%----Put a comment line
+    output_separator_line(CommentAtom),
+    !.
+
+%----Error case. Don't fail - the file still has to be closed.
+output_formulae_in_format(_,_,_,OutputFormat,_,_):-
+%----Close the file so output goes to user
+%----Hmmm, it might be stdout, should I close that?
+%----Output error message
+    write('%----ERROR : Output in '),
+    write(OutputFormat),
+    write(' format failed.'),
+    nl.
+%------------------------------------------------------------------------------
+%----Reject variable formats
+output_formulae_in_format_to_file(_,_,_,Variable,_,_,_,_):-
+    var(Variable),
+    !,
+    write(
+'%----ERROR : The output format is invalid (it looks like a variable).'),nl,
+    fail.
+
+%----Allow multiple output formats (useful for the competition). Done
+%----by backtracking over formats specified.
+output_formulae_in_format_to_file(FileHeader,IncludeDirectives,
+OutputFormulae,[FirstFormat|RestOfFormats],OutputName,OutputDirectory,
+OutputFormatUsed,OutputFileName):-
+    !,
+    tptp2X_member(OutputFormatUsed,[FirstFormat|RestOfFormats]),
+    output_formulae_in_format_to_file(FileHeader,IncludeDirectives,
+OutputFormulae,OutputFormatUsed,OutputName,OutputDirectory,
+OutputFormatUsed,OutputFileName).
+
+%----Format the clauses and write to file
+output_formulae_in_format_to_file(FileHeader,IncludeDirectives,
+OutputFormulae,OutputFormat,OutputName,OutputDirectory,OutputFormat,
+OutputFileName):-
+%----Extract the main name of the output format.
+    get_format_or_transform_name(OutputFormat,FormatName,FormatAtom),
+%----Get the format information (Not a nice way, really).
+    get_format_information(FormatName,CommentAtom,FileNameExtension),
+%----Make indicator of output format
+    concatenate_atoms(['-f ',FormatAtom],OutputFormatText),
+    add_tptp2X_comment(old,FileHeader,OutputFormatText,CommentedFileHeader),
+%----Make the output file name
+    make_output_file_name(OutputDirectory,OutputName,FileNameExtension,
+BasicOutputFileName),
+    tptp_path_name(BasicOutputFileName,OutputFileName),
+%----Redirect the output, opening and closing in case of previous errors
+    (OutputFileName \== user -> (
+        current_output(CurrentOutput),
+        open(OutputFileName,write,OutputFileStream),
+        set_output(OutputFileStream))
+    ;   true),
+%----Do the output
+    output_formulae_in_format(CommentedFileHeader,IncludeDirectives,
+OutputFormulae,OutputFormat,FormatName,CommentAtom),
+%----Restore output direction
+    (OutputFileName \== user -> (
+        close(OutputFileStream),
+        set_output(CurrentOutput))
+    ;   true).
+%------------------------------------------------------------------------------
+%----Delete a file, however the dialect does it
+%----Generic simply makes the file 0 bytes, and prays for cleanup later
+tptp2X_delete_file_for_dialect(generic,FileName):-
+    telling(CurrentOutput),
+    tell(FileName),
+    told,
+    tell(CurrentOutput).
+
+tptp2X_delete_file_for_dialect(binprolog,FileName):-
+    tptp2X_delete_file_for_dialect(generic,FileName).
+
+tptp2X_delete_file_for_dialect(yap,FileName):-
+    delete_file(FileName).
+
+tptp2X_delete_file_for_dialect(swi,FileName):-
+    delete_file(FileName).
+
+tptp2X_delete_file_for_dialect(quintus,FileName):-
+    delete_file(FileName).
+
+tptp2X_delete_file_for_dialect(gnu,FileName):-
+    delete_file(FileName).
+
+tptp2X_delete_file_for_dialect(sicstus,FileName):-
+    delete_file(FileName).
+
+tptp2X_delete_file_for_dialect(eclipse,FileName):-
+    delete(FileName).
+
+tptp2X_delete_file(FileName):-
+    prolog_dialect(Dialect),
+    tptp2X_delete_file_for_dialect(Dialect,FileName).
+%------------------------------------------------------------------------------
+%----Get a unique value. 
+%----Get from a fact that was asserted by the tptp2X script
+get_tptp2X_unique_value(UniqueValue):-
+%----Use clause to avoid BinProlog error - this means it must be
+%----dynamic, which it is if asserted.
+    clause(tptp2X_unique_value(UniqueValue),_),
+    !.
+
+%----Otherwise give a default
+get_tptp2X_unique_value(tptp2X).
+%------------------------------------------------------------------------------
+%----Make a unique file name for this process, for temporary file
+temporary_file_name(TaskForFileName,FileName):-
+    get_tptp2X_unique_value(UniqueForProcess),
+%----Cut to avoid using other unique values
+    !,
+    concatenate_atoms(['TemporaryFile',TaskForFileName,UniqueForProcess],
+FileName).
+%------------------------------------------------------------------------------
+%----Write out and reload the clauses, to make real variables
+reload_formulae(Formulae,IncludeDirectives,ReloadedFormulae,
+ReloadedDictionary):-
+    temporary_file_name('ForReload',TemporaryFileName),
+    output_formulae_in_format_to_file([],IncludeDirectives,Formulae,tptp,
+TemporaryFileName,'/tmp',_OutputFormatUsed,OutputFileName),
+    read_formulae_from_file(OutputFileName,ReloadedFormulae,
+ReloadedDictionary),
+%----Delete the temporary file
+    tptp2X_delete_file(OutputFileName).
+%------------------------------------------------------------------------------
+%----Reject variable transformations
+transform_formulae(_,_,_,_,Variable,_,_,_,_,_):-
+    var(Variable),
+    !,
+    write(
+'%----ERROR : The transformation is invalid (it looks like a variable).'),nl,
+    fail.
+
+%----If a list of transformations, then do each one. Use member due
+%----to backtracking approach
+transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+[OneTransformation|OtherTransformations],TransformedFileHeader,
+OutputFormulae,OutputName,NewDictionary,TransformationDone):-
+    !,
+    tptp2X_member(Transformation,[OneTransformation|OtherTransformations]),
+    transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+Transformation,TransformedFileHeader,OutputFormulae,OutputName,NewDictionary,
+TransformationDone).
+
+%----If a sequence of transformations, do first then rest
+transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+FirstTransformation + RestOfTransformations,TransformedFileHeader,
+OutputFormulae,OutputName,NewDictionary,
+FirstTransformationDone+RestOfTransformationsDone):-
+    !,
+%DEBUG write('DO TRANFORM '),write(FirstTransformation),nl,
+%DEBUG write('InputFormulae'),nl,write(InputFormulae),nl,
+%DEBUG write('Dictionary'),nl,write(Dictionary),nl,
+    transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+FirstTransformation,IntermediateFileHeader,IntermediateFormulae,
+IntermediateName,IntermediateDictionary,FirstTransformationDone),
+%DEBUG write('DONE TRANFORM '),write(FirstTransformation),nl,
+%DEBUG write('IntermediateFormulae'),nl,write(IntermediateFormulae),nl,
+%DEBUG write('IntermediateDictionary'),nl,write(IntermediateDictionary),nl,
+    transform_formulae(IntermediateFileHeader,IntermediateFormulae,
+IntermediateName,IntermediateDictionary,RestOfTransformations,
+TransformedFileHeader,OutputFormulae,OutputName,NewDictionary,
+RestOfTransformationsDone).
+
+%----The syntax transformation is internal, to force recomputing syntax
+transform_formulae(FileHeader,Formulae,Name,Dictionary,syntax,FileHeader,
+Formulae,Name,Dictionary,syntax):-
+    !.
+
+%----If a backtrackable transformation, then do them
+transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+Transformation,FileHeader,OutputFormulae,OutputName,NewDictionary,
+TransformationAtom):-
+    tptp2X_member(Transformation,[expand:conjectures]),
+    !,
+%----Extract the main name of the transformation
+    get_format_or_transform_name(Transformation,TransformationName,
+TransformationAtom),
+%----Make the transformation query
+    TransformationQuery =.. [TransformationName,InputFormulae,Dictionary,
+Transformation,OutputFormulae,NewDictionary,FileNameSuffix],
+%----Do the transformation
+    TransformationQuery,
+    concatenate_atoms([InputName,FileNameSuffix],OutputName).
+
+%----If a single transformation, then do it
+transform_formulae(FileHeader,InputFormulae,InputName,Dictionary,
+Transformation,FileHeader,OutputFormulae,OutputName,NewDictionary,
+TransformationAtom):-
+%----Extract the main name of the transformation
+    get_format_or_transform_name(Transformation,TransformationName,
+TransformationAtom),
+%----Make the transformation query
+    TransformationQuery =.. [TransformationName,InputFormulae,Dictionary,
+Transformation,OutputFormulae,NewDictionary,FileNameSuffix],
+%----Do the transformation
+    TransformationQuery,
+    !,
+    concatenate_atoms([InputName,FileNameSuffix],OutputName).
+
+%----Error message
+transform_formulae(_,_,_,_,Transformation,_,_,_,_,_):-
+    write('%----ERROR : The transformation '),
+    write(Transformation),
+    write(' failed.'),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----If shorten transformation, then clobber the header
+shorten_header(TransformationsDone,_,
+['File'-[' File     : Shortened file, so there is no header']]):-
+    any_name(TransformationsDone,ASCII),
+%----ASCII for shorten (aaargh, crap code)
+    tptp2X_append(_,[115,104,111,114,116,101,110|_],ASCII),
+    !.
+
+%----Others do nothing right now
+shorten_header(_,FileHeader,FileHeader).
+%------------------------------------------------------------------------------
+%----Make the Syntax field from the values given
+%----CNF case
+make_syntax_header_field(SyntaxReplacements,[ClausesLine,LiteralsLine,
+ClauseSizeLine,PredicateLine,FunctionLine,VariablesLine,TermDepthLine]):-
+    tptp2X_member('CNFF'-Clauses,SyntaxReplacements),
+    !,
+    tptp2X_member('NNHN'-NonHornClauses,SyntaxReplacements),
+    tptp2X_member('UNIT'-UnitClauses,SyntaxReplacements),
+    tptp2X_member('RARE'-RangeRestrictedClauses,SyntaxReplacements),
+    concatenate_atoms([' Syntax   : Number of clauses    : ',
+Clauses,' (',NonHornClauses,' non-Horn;',UnitClauses,' unit;',
+RangeRestrictedClauses,' RR)'],ClausesLine),
+%----Make literals line
+    tptp2X_member('LITS'-Literals,SyntaxReplacements),
+    tptp2X_member('EQLS'-EqualityLiterals,SyntaxReplacements),
+    concatenate_atoms(['            Number of literals   : ',
+Literals,' (',EqualityLiterals,' equality)'],LiteralsLine),
+%----Make clause size line
+    tptp2X_member('CLSZ'-MaximalClauseSize,SyntaxReplacements),
+    tptp2X_member('CLAS'-AverageClauseSize,SyntaxReplacements),
+    concatenate_atoms(['            Maximal clause size  : ',
+MaximalClauseSize,' (',AverageClauseSize,' average)'],ClauseSizeLine),
+%----Make predicate symbols line
+    tptp2X_member('PRED'-PredicateSymbols,SyntaxReplacements),
+    tptp2X_member('PROP'-PropositionalSymbols,SyntaxReplacements),
+    tptp2X_member('MINP'-MinimalPredicateArity,SyntaxReplacements),
+    tptp2X_member('MAXP'-MaximalPredicateArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of predicates : ',
+PredicateSymbols,' (',PropositionalSymbols,' propositional; ',
+MinimalPredicateArity,'-',MaximalPredicateArity,' arity)'],PredicateLine),
+%----Make function symbols line
+    tptp2X_member('FUNC'-FunctionSymbols,SyntaxReplacements),
+    tptp2X_member('CNST'-ConstantSymbols,SyntaxReplacements),
+    tptp2X_member('MINF'-MinimalFunctorArity,SyntaxReplacements),
+    tptp2X_member('MAXF'-MaximalFunctorArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of functors   : ',
+FunctionSymbols,' (',ConstantSymbols,' constant; ',MinimalFunctorArity,
+'-',MaximalFunctorArity,' arity)'],FunctionLine),
+%----Make variables line
+    tptp2X_member('VARS'-Variables,SyntaxReplacements),
+    tptp2X_member('SGTN'-Singletons,SyntaxReplacements),
+    concatenate_atoms(['            Number of variables  : ',
+Variables,' (',Singletons,' sgn)'],VariablesLine),
+%----Make term depth line
+    tptp2X_member('TMDP'-MaximalTermDepth,SyntaxReplacements),
+    tptp2X_member('TMAD'-AverageTermDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal term depth   : ',
+MaximalTermDepth,' (',AverageTermDepth,' average)'],TermDepthLine).
+
+%----FOF case
+make_syntax_header_field(SyntaxReplacements,[FormulaeLine,AtomsLine,
+FormulaDepthLine,ConnectivesLine1,ConnectivesLine2,ConnectivesLine3,
+PredicateLine,FunctionLine,VariablesLine,TermDepthLine]):-
+%----Make formulae line. Leave the CommentAtom off the front as that is
+%----added on output.
+    tptp2X_member('FOFF'-NumberOfFormulae,SyntaxReplacements),
+    !,
+    tptp2X_member('UNIT'-NumberOfUnitFormulae,SyntaxReplacements),
+    concatenate_atoms([' Syntax   : Number of formulae    : ',
+NumberOfFormulae,' (',NumberOfUnitFormulae,' unit)'],FormulaeLine),
+%----Atoms line
+    tptp2X_member('ATOM'-NumberOfAtoms,SyntaxReplacements),
+    tptp2X_member('EQAT'-NumberOfEqualityAtoms,SyntaxReplacements),
+    concatenate_atoms(['            Number of atoms       : ',
+NumberOfAtoms,' (',NumberOfEqualityAtoms,' equality)'],AtomsLine),
+%----Formula depth line
+    tptp2X_member('FMDP'-MaximalFormulaDepth,SyntaxReplacements),
+    tptp2X_member('FMAD'-AverageFormulaDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal formula depth : ',
+MaximalFormulaDepth,' (',AverageFormulaDepth,' average)'],FormulaDepthLine),
+%----1st connectives line
+    tptp2X_member('CONN'-NumberOfConnectives,SyntaxReplacements),
+    tptp2X_member('NOTS'-NumberOfNOTs,SyntaxReplacements),
+    tptp2X_member('ORSS'-NumberOfORs,SyntaxReplacements),
+    tptp2X_member('ANDS'-NumberOfANDs,SyntaxReplacements),
+    concatenate_atoms(['            Number of connectives : ',
+NumberOfConnectives,' (',NumberOfNOTs,'   ~;',NumberOfORs,'   |;',
+NumberOfANDs,'   &)'],ConnectivesLine1),
+%----2nd connectives line
+    tptp2X_member('EQVS'-NumberOfEQUIVs,SyntaxReplacements),
+    tptp2X_member('IMPS'-NumberOfIMPLYs,SyntaxReplacements),
+    tptp2X_member('PMIS'-NumberOfIMPLIEDs,SyntaxReplacements),
+    tptp2X_member('XORS'-NumberOfXORs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfEQUIVs,' <=>;',NumberOfIMPLYs,'  =>;',NumberOfIMPLIEDs,'  <=;',
+NumberOfXORs,' <~>)'],ConnectivesLine2),
+%----3rd connectives line
+    tptp2X_member('NORS'-NumberOfNORs,SyntaxReplacements),
+    tptp2X_member('NANS'-NumberOfNANDs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfNORs,'  ~|;',NumberOfNANDs,'  ~&)'],ConnectivesLine3),
+%----Predicates line
+    tptp2X_member('PRED'-NumberOfPredicateSymbols,SyntaxReplacements),
+    tptp2X_member('PROP'-NumberOfPropositions,SyntaxReplacements),
+    tptp2X_member('MINP'-MinimalPredicateArity,SyntaxReplacements),
+    tptp2X_member('MAXP'-MaximalPredicateArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of predicates  : ',
+NumberOfPredicateSymbols,' (',NumberOfPropositions,' propositional; ',
+MinimalPredicateArity,'-',MaximalPredicateArity,' arity)'],PredicateLine),
+%----Functors line
+    tptp2X_member('FUNC'-NumberOfFunctors,SyntaxReplacements),
+    tptp2X_member('CNST'-NumberOfConstants,SyntaxReplacements),
+    tptp2X_member('MINF'-MinimalFunctorArity,SyntaxReplacements),
+    tptp2X_member('MAXF'-MaximalFunctorArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of functors    : ',
+NumberOfFunctors,' (',NumberOfConstants,' constant; ',MinimalFunctorArity,
+'-',MaximalFunctorArity,' arity)'],FunctionLine),
+%----Variables line
+    tptp2X_member('VARS'-NumberOfVariables,SyntaxReplacements),
+    tptp2X_member('SGTN'-NumberOfSingletons,SyntaxReplacements),
+    tptp2X_member('UNIV'-NumberOfUniversals,SyntaxReplacements),
+    tptp2X_member('EXIS'-NumberOfExistentials,SyntaxReplacements),
+    concatenate_atoms(['            Number of variables   : ',
+NumberOfVariables,' (',NumberOfSingletons,' sgn;',NumberOfUniversals,
+'   !;',NumberOfExistentials,'   ?)'],VariablesLine),
+%----Term depth line
+    tptp2X_member('TMDP'-MaximalTermDepth,SyntaxReplacements),
+    tptp2X_member('TMAD'-AverageTermDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal term depth    : ',
+MaximalTermDepth,' (',AverageTermDepth,' average)'],TermDepthLine).
+
+%----TFF case
+make_syntax_header_field(SyntaxReplacements,[FormulaeLine,AtomsLine,
+FormulaDepthLine,ConnectivesLine1,ConnectivesLine2,ConnectivesLine3,
+TypeConnectivesLine,PredicateLine,FunctionLine,VariablesLine,TermDepthLine|
+ArithmeticList]):-
+%----Make formulae line. Leave the CommentAtom off the front as that is
+%----added on output.
+    tptp2X_member('TFFF'-NumberOfFormulae,SyntaxReplacements),
+    !,
+    tptp2X_member('UNIT'-NumberOfUnitFormulae,SyntaxReplacements),
+    tptp2X_member('TFRM'-NumberOfTypeDecs,SyntaxReplacements),
+    concatenate_atoms([' Syntax   : Number of formulae    : ',
+NumberOfFormulae,' (',NumberOfUnitFormulae,' unit;',NumberOfTypeDecs,' type)'],
+FormulaeLine),
+%----Atoms line
+    tptp2X_member('ATOM'-NumberOfAtoms,SyntaxReplacements),
+    tptp2X_member('EQAT'-NumberOfEqualityAtoms,SyntaxReplacements),
+    concatenate_atoms(['            Number of atoms       : ',
+NumberOfAtoms,' (',NumberOfEqualityAtoms,' equality)'],AtomsLine),
+%----Formula depth line
+    tptp2X_member('FMDP'-MaximalFormulaDepth,SyntaxReplacements),
+    tptp2X_member('FMAD'-AverageFormulaDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal formula depth : ',
+MaximalFormulaDepth,' (',AverageFormulaDepth,' average)'],FormulaDepthLine),
+%----1st connectives line
+    tptp2X_member('CONN'-NumberOfConnectives,SyntaxReplacements),
+    tptp2X_member('NOTS'-NumberOfNOTs,SyntaxReplacements),
+    tptp2X_member('ORSS'-NumberOfORs,SyntaxReplacements),
+    tptp2X_member('ANDS'-NumberOfANDs,SyntaxReplacements),
+    concatenate_atoms(['            Number of connectives : ',
+NumberOfConnectives,' (',NumberOfNOTs,'   ~;',NumberOfORs,'   |;',
+NumberOfANDs,'   &)'],ConnectivesLine1),
+%----2nd connectives line
+    tptp2X_member('EQVS'-NumberOfEQUIVs,SyntaxReplacements),
+    tptp2X_member('IMPS'-NumberOfIMPLYs,SyntaxReplacements),
+    tptp2X_member('PMIS'-NumberOfIMPLIEDs,SyntaxReplacements),
+    tptp2X_member('XORS'-NumberOfXORs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfEQUIVs,' <=>;',NumberOfIMPLYs,'  =>;',NumberOfIMPLIEDs,'  <=;',
+NumberOfXORs,' <~>)'],ConnectivesLine2),
+%----3rd connectives line
+    tptp2X_member('NORS'-NumberOfNORs,SyntaxReplacements),
+    tptp2X_member('NANS'-NumberOfNANDs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfNORs,'  ~|;',NumberOfNANDs,'  ~&)'],ConnectivesLine3),
+%----Type connectives line
+    tptp2X_member('TCON'-NumberOfTypeConnectives,SyntaxReplacements),
+    tptp2X_member('MAPS'-NumberOfMaps,SyntaxReplacements),
+    tptp2X_member('XPRO'-NumberOfXProds,SyntaxReplacements),
+    tptp2X_member('UNIO'-NumberOfUnions,SyntaxReplacements),
+    tptp2X_member('SUBT'-NumberOfSubtypes,SyntaxReplacements),
+    concatenate_atoms(['            Number of type conns  : ',
+NumberOfTypeConnectives,' (',NumberOfMaps,'   >;',NumberOfXProds,'   *;',
+NumberOfUnions,'   +;',NumberOfSubtypes,'  <<)'],TypeConnectivesLine),
+%----Predicates line
+    tptp2X_member('PRED'-NumberOfPredicateSymbols,SyntaxReplacements),
+    tptp2X_member('PROP'-NumberOfPropositions,SyntaxReplacements),
+    tptp2X_member('MINP'-MinimalPredicateArity,SyntaxReplacements),
+    tptp2X_member('MAXP'-MaximalPredicateArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of predicates  : ',
+NumberOfPredicateSymbols,' (',NumberOfPropositions,' propositional; ',
+MinimalPredicateArity,'-',MaximalPredicateArity,' arity)'],PredicateLine),
+%----Functors line
+    tptp2X_member('FUNC'-NumberOfFunctors,SyntaxReplacements),
+    tptp2X_member('CNST'-NumberOfConstants,SyntaxReplacements),
+    tptp2X_member('MINF'-MinimalFunctorArity,SyntaxReplacements),
+    tptp2X_member('MAXF'-MaximalFunctorArity,SyntaxReplacements),
+    concatenate_atoms(['            Number of functors    : ',
+NumberOfFunctors,' (',NumberOfConstants,' constant; ',MinimalFunctorArity,
+'-',MaximalFunctorArity,' arity)'],FunctionLine),
+%----Variables line
+    tptp2X_member('VARS'-NumberOfVariables,SyntaxReplacements),
+    tptp2X_member('SGTN'-NumberOfSingletons,SyntaxReplacements),
+    tptp2X_member('UNIV'-NumberOfUniversals,SyntaxReplacements),
+    tptp2X_member('EXIS'-NumberOfExistentials,SyntaxReplacements),
+    concatenate_atoms(['            Number of variables   : ',
+NumberOfVariables,' (',NumberOfSingletons,' sgn;',NumberOfUniversals,
+'   !;',NumberOfExistentials,'   ?)'],VariablesLine),
+%----Term depth line
+    tptp2X_member('TMDP'-MaximalTermDepth,SyntaxReplacements),
+    tptp2X_member('TMAD'-AverageTermDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal term depth    : ',
+MaximalTermDepth,' (',AverageTermDepth,' average)'],TermDepthLine),
+    tptp2X_member('MATT'-NumberOfArithmeticSymbols,SyntaxReplacements),
+    (   NumberOfArithmeticSymbols == '   0'
+   ->   ArithmeticList = []
+    ;   (   tptp2X_member('MATP'-NumberOfMathPredicates,SyntaxReplacements),
+            tptp2X_member('MATF'-NumberOfMathFunctions,SyntaxReplacements),
+            tptp2X_member('MATN'-NumberOfNumbers,SyntaxReplacements),
+            concatenate_atoms(['            Arithmetic symbols    : ',
+NumberOfArithmeticSymbols,' (',NumberOfMathPredicates,' pred;',
+NumberOfMathFunctions,' func;',NumberOfNumbers,' numbers)'],
+ArithmeticLine),
+            ArithmeticList = [ArithmeticLine]
+        )
+    ).
+
+%----THF case
+make_syntax_header_field(SyntaxReplacements,[FormulaeLine,AtomsLine,
+FormulaDepthLine,ConnectivesLine1,ConnectivesLine2,ConnectivesLine3,
+TypeConnectivesLine,SymbolsLine,VariablesLine1,VariablesLine2]):-
+%----Make formulae line. Leave the CommentAtom off the front as that is
+%----added on output.
+    tptp2X_member('THFF'-NumberOfFormulae,SyntaxReplacements),
+    !,
+    tptp2X_member('UNIT'-NumberOfUnitFormulae,SyntaxReplacements),
+    tptp2X_member('TFRM'-NumberOfTypeFormulae,SyntaxReplacements),
+    tptp2X_member('DFRM'-NumberOfDefnFormulae,SyntaxReplacements),
+    concatenate_atoms([' Syntax   : Number of formulae    : ',
+NumberOfFormulae,' (',NumberOfUnitFormulae,' unit;',NumberOfTypeFormulae,
+' type;',NumberOfDefnFormulae,' defn)'],FormulaeLine),
+%----Atoms line
+    tptp2X_member('ATOM'-NumberOfAtoms,SyntaxReplacements),
+    tptp2X_member('EQAT'-NumberOfEqualityAtoms,SyntaxReplacements),
+    tptp2X_member('VAAT'-NumberOfVariableAtoms,SyntaxReplacements),
+    concatenate_atoms(['            Number of atoms       : ',
+NumberOfAtoms,' (',NumberOfEqualityAtoms,' equality;',NumberOfVariableAtoms,
+' variable)'],AtomsLine),
+%----Formula depth line
+    tptp2X_member('FMDP'-MaximalFormulaDepth,SyntaxReplacements),
+    tptp2X_member('FMAD'-AverageFormulaDepth,SyntaxReplacements),
+    concatenate_atoms(['            Maximal formula depth : ',
+MaximalFormulaDepth,' (',AverageFormulaDepth,' average)'],FormulaDepthLine),
+%----1st connectives line
+    tptp2X_member('CONN'-NumberOfConnectives,SyntaxReplacements),
+    tptp2X_member('NOTS'-NumberOfNOTs,SyntaxReplacements),
+    tptp2X_member('ORSS'-NumberOfORs,SyntaxReplacements),
+    tptp2X_member('ANDS'-NumberOfANDs,SyntaxReplacements),
+    tptp2X_member('APPY'-NumberOfAPPLYs,SyntaxReplacements),
+    concatenate_atoms(['            Number of connectives : ',
+NumberOfConnectives,' (',NumberOfNOTs,'   ~;',NumberOfORs,'   |;',
+NumberOfANDs,'   &;',NumberOfAPPLYs,'   @)'],ConnectivesLine1),
+%----2nd connectives line
+    tptp2X_member('EQVS'-NumberOfEQUIVs,SyntaxReplacements),
+    tptp2X_member('IMPS'-NumberOfIMPLYs,SyntaxReplacements),
+    tptp2X_member('PMIS'-NumberOfIMPLIEDs,SyntaxReplacements),
+    tptp2X_member('XORS'-NumberOfXORs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfEQUIVs,' <=>;',NumberOfIMPLYs,'  =>;',NumberOfIMPLIEDs,'  <=;',
+NumberOfXORs,' <~>)'],ConnectivesLine2),
+%----3rd connectives line
+    tptp2X_member('NORS'-NumberOfNORs,SyntaxReplacements),
+    tptp2X_member('NANS'-NumberOfNANDs,SyntaxReplacements),
+    tptp2X_member('PIPI'-NumberOfPis,SyntaxReplacements),
+    tptp2X_member('SIGM'-NumberOfSigmas,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfNORs,'  ~|;',NumberOfNANDs,'  ~&;',NumberOfPis,'  !!;',
+NumberOfSigmas,'  ??)'],ConnectivesLine3),
+%----Type connectives line
+    tptp2X_member('TCON'-NumberOfTypeConnectives,SyntaxReplacements),
+    tptp2X_member('MAPS'-NumberOfMaps,SyntaxReplacements),
+    tptp2X_member('XPRO'-NumberOfXProds,SyntaxReplacements),
+    tptp2X_member('UNIO'-NumberOfUnions,SyntaxReplacements),
+    tptp2X_member('SUBT'-NumberOfSubtypes,SyntaxReplacements),
+    concatenate_atoms(['            Number of type conns  : ',
+NumberOfTypeConnectives,' (',NumberOfMaps,'   >;',NumberOfXProds,'   *;',
+NumberOfUnions,'   +;',NumberOfSubtypes,'  <<)'],TypeConnectivesLine),
+%----Symbols line
+    tptp2X_member('FUNC'-NumberOfSymbols,SyntaxReplacements),
+    tptp2X_member('GTYP'-NumberOfGlobalTypeDecs,SyntaxReplacements),
+%NOT USED    tptp2X_member('GDEF'-NumberOfGlobalDefns,SyntaxReplacements),
+    concatenate_atoms(['            Number of symbols     : ',
+NumberOfSymbols,' (',NumberOfGlobalTypeDecs,'   :)'],SymbolsLine),
+%NOT USED (printing definitions) ;',NumberOfGlobalDefns,'  :=)'],SymbolsLine),
+%NOT USED tptp2X_member('CNST'-NumberOfConstants,SyntaxReplacements),
+%NOT USED tptp2X_member('MINF'-MinimalSymbolArity,SyntaxReplacements),
+%NOT USED tptp2X_member('MAXF'-MaximalSymbolArity,SyntaxReplacements),
+%NOT USED ,' (',NumberOfConstants,' constant; ',MinimalSymbolArity,
+%NOT USED '-',MaximalSymbolArity,' arity)'],SymbolsLine),
+%----1st variables line
+    tptp2X_member('VARS'-NumberOfVariables,SyntaxReplacements),
+    tptp2X_member('SGTN'-NumberOfSingletons,SyntaxReplacements),
+    tptp2X_member('UNIV'-NumberOfUniversals,SyntaxReplacements),
+    tptp2X_member('EXIS'-NumberOfExistentials,SyntaxReplacements),
+    tptp2X_member('LMDA'-NumberOfLambdas,SyntaxReplacements),
+    concatenate_atoms(['            Number of variables   : ',
+NumberOfVariables,' (',NumberOfSingletons,' sgn;',NumberOfUniversals,
+'   !;',NumberOfExistentials,'   ?;',NumberOfLambdas,'   ^)'],VariablesLine1),
+%----2nd variables line
+    tptp2X_member('TYPE'-NumberOfTypeDecs,SyntaxReplacements),
+%NOT USED    tptp2X_member('DEFN'-NumberOfDefns,SyntaxReplacements),
+    tptp2X_member('BIPI'-NumberOfPIs,SyntaxReplacements),
+    tptp2X_member('BISI'-NumberOfSIGMAs,SyntaxReplacements),
+    concatenate_atoms(['                                         (',
+NumberOfTypeDecs,'   :;',
+%NOT USED (printing definitions) NumberOfDefns,'  :=;',
+NumberOfPIs,'  !>;',NumberOfSIGMAs,'  ?*)'],VariablesLine2).
+%------------------------------------------------------------------------------
+%----Put leading blanks to get an atom in a field of 4
+integer_to_4_digit_atom(Number,Atom):-
+    tptp2X_integer_name(Number,NumberASCII),
+    (   [D1,D2,D3,D4] = NumberASCII ;
+        [D1,D2,D3,D4] = [32|NumberASCII] ;
+        [D1,D2,D3,D4] = [32,32|NumberASCII] ;
+        [D1,D2,D3,D4] = [32,32,32|NumberASCII]),
+    !,
+    name(Atom,[D1,D2,D3,D4]).
+
+%----Case where the number is more than 4 characters
+integer_to_4_digit_atom(Number,Number).
+%------------------------------------------------------------------------------
+%----Convert integers to 4 digit atoms for layout
+make_syntax_replacement_list([],[]).
+
+%---Minimal and maximal arities are excluded
+make_syntax_replacement_list([FirstLabel-FirstValue|RestOfLabelledValues],
+[FirstLabel-FirstValue|RestOfLabelledValue4s]):-
+    tptp2X_member(FirstLabel,['MINP','MAXP','MINF','MAXF']),
+    !,
+    make_syntax_replacement_list(RestOfLabelledValues,RestOfLabelledValue4s).
+
+make_syntax_replacement_list([FirstLabel-FirstValue|RestOfLabelledValues],
+[FirstLabel-FirstValue4|RestOfLabelledValue4s]):-
+    integer_to_4_digit_atom(FirstValue,FirstValue4),
+    make_syntax_replacement_list(RestOfLabelledValues,RestOfLabelledValue4s).
+%------------------------------------------------------------------------------
+%----Update the header with the syntactic information.
+%----Clausal case
+update_syntax_field(changed,Formulae,FileHeader,UpdatedFileHeader):-
+%----Put in a fail here to avoid updating the syntax field
+%----Check there's a header
+    tptp2X_append(EarlierFields,['Syntax'-_|RestOfFields],FileHeader),
+    !,
+%----Compute the syntactic information. It's easiest to write it all
+%----out to a file and read again, as variables in generated clauses
+%----are typically atoms in reality. Other cases too, from transformations.
+    reload_formulae(Formulae,[],ReloadedFormulae,_),
+%----Do detailed syntactic analysis
+    examine_input_syntactics(ReloadedFormulae,SyntacticValues),
+%----Make 4 character atoms from values
+    make_syntax_replacement_list(SyntacticValues,SyntaxReplacements),
+%----Replace in the header
+    make_syntax_header_field(SyntaxReplacements,SyntaxFieldLines),
+    tptp2X_append(EarlierFields,['Syntax'-SyntaxFieldLines|RestOfFields],
+UpdatedFileHeader).
+
+%----Default, do nothing
+update_syntax_field(_,_,FileHeader,FileHeader).
+%------------------------------------------------------------------------------
+%----Extract the base name and type, one of clauses or generator
+base_filename_and_type(TPTPFileName,BaseInputName,_FormulaFormat,
+TPTPExtension):-
+%----Strip off the .Type from the file name
+    tptp2X_extension(TPTPFileName,Extension),
+%----Get the base name
+    tptp2X_basename(TPTPFileName,Extension,BaseInputName),
+    !,
+%----Need to check the extension. Used to differentiate between problems
+%----and generators. Default to .p (erg)
+    (tptp2X_member(Extension,['.p','.ax','.eq','.g']) ->
+        TPTPExtension = Extension
+    ;   TPTPExtension = '.p').
+
+%----In case something goes wrong with the filename, give error message
+base_filename_and_type(TPTPFileName,_,_,_):-
+    write('%----ERROR : '),
+    write(TPTPFileName),
+    write(' is not a valid TPTP file name, and has been ignored.'),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----Get the clauses from file or by generation
+get_header_and_formulae(TPTPFileName,BaseInputName,FileHeader,Extension,_,
+BaseInputName,CommentedFileHeader,Formulae,Dictionary):-
+%----Check for problem and axiom files
+    tptp2X_member(Extension,['.p','.ax','.eq']),
+%----Read in the formulae
+    read_formulae_from_file(TPTPFileName,Formulae,Dictionary),
+%----Make indicator of source
+    concatenate_atoms([BaseInputName,Extension],ReadingText),
+    add_tptp2X_comment(old,FileHeader,ReadingText,CommentedFileHeader).
+
+get_header_and_formulae(TPTPFileName,BaseInputName,RawFileHeader,'.g',
+GenerationSpecification,BaseOutputName,CommentedFileHeader,ReloadedFormulae,
+ReloadedDictionary):-
+%----Load the file with its code
+    tptp2X_load(TPTPFileName),
+%----Generate the clauses and make output name
+    generate_clauses_and_header(BaseInputName,RawFileHeader,
+GenerationSpecification,BaseOutputName,UpdatedFileHeader,Formulae,Generation),
+%----Reload the clauses to get real variables. Numbervars to give them names.
+    numbervars_each_formula(Formulae),
+    reload_formulae(Formulae,[],ReloadedFormulae,ReloadedDictionary),
+%----Make indicator of source. Do hack to make two parameters use infix :
+    concatenate_atoms(['-s',Generation,' ',BaseInputName,'.g'],GenerationText),
+    add_tptp2X_comment(old,UpdatedFileHeader,GenerationText,
+CommentedFileHeader).
+%------------------------------------------------------------------------------
+%----Numbervars each of the axioms
+numbervars_each_formula([]).
+
+numbervars_each_formula([FirstFormula|RestOfFormulae]):-
+    FirstFormula =.. [_,_,_,Formula|_],
+    numbervars(Formula,0,_),
+    numbervars_each_formula(RestOfFormulae).
+%------------------------------------------------------------------------------
+%----Check if the formulae have changed, in which case statistics are computed
+%----This one for dubugging - forces it to happen
+%DEBUG has_changed_for_syntax(_,_,_,_,changed):-!.
+
+%----Needed if specified as the transformation
+has_changed_for_syntax(_,_,syntax,_,changed):-
+    !.
+
+%----Not needed if existing syntax field is unchanged
+has_changed_for_syntax(Formulae,OutputFormulae,_,_,unchanged):-
+    Formulae == OutputFormulae,
+    !.
+
+%----For problems that never had any syntax - do nothing
+has_changed_for_syntax(_,_,_,FileHeader,unchanged):-
+    \+ tptp2X_member('Syntax'-_,FileHeader),
+    !.
+
+has_changed_for_syntax(_,_,_,_,changed).
+%------------------------------------------------------------------------------
+%----Do this in all possible ways by backtracking
+make_all_outputs(TPTPFileName,BaseInputName,Extension,GenerationSpecification,
+Transformation,OutputFormat,OutputDirectory):-
+%----Read in the file header
+    read_header_from_file(TPTPFileName,BaseInputName,FileHeader),
+%----Add a new tptp2X line to the comments
+    add_tptp2X_comment(new,FileHeader,'',CommentedFileHeader),
+%----Get the formulae
+    get_header_and_formulae(TPTPFileName,BaseInputName,CommentedFileHeader,
+Extension,GenerationSpecification,UpdatedBaseInputName,FormulaeFileHeader,
+Formulae,Dictionary),
+%----Do a transformation by combination from the transformation list.
+    transform_formulae(FormulaeFileHeader,Formulae,UpdatedBaseInputName,
+Dictionary,Transformation,TransformedFileHeader,OutputFormulae,BaseOutputName,
+NewDictionary,TransformationDone),
+%----Add comment about transformations done if not none
+    (TransformationDone == none
+    ->  TransformCommentedFileHeader = TransformedFileHeader
+    ;   (   concatenate_atoms(['-t ',TransformationDone],TransformationText),
+            add_tptp2X_comment(old,TransformedFileHeader,TransformationText,
+TransformCommentedFileHeader)
+        )
+    ),
+%----If shorten transformation, then clobber the header
+    shorten_header(TransformationDone,TransformCommentedFileHeader,
+ShortenedFileHeader),
+%----Instantiate variables to their names. First use the names picked
+%----up from reading, then use numbervars to catch any new unnamed variables
+%----that may have been added during transformation. Note: This is done
+%----before update_syntax_field because there's a reload in there, and
+%----Eclipse has some problems with variables when they become singleton.
+    instantiate_variables_from_dictionary(NewDictionary),
+    numbervars_each_formula(OutputFormulae),
+%----Check if header needs syntax update (avoid where possible)
+    has_changed_for_syntax(Formulae,OutputFormulae,TransformationDone,
+ShortenedFileHeader,ChangedOrNot),
+%----Update the Syntax field in the header for the new formulae
+    update_syntax_field(ChangedOrNot,OutputFormulae,ShortenedFileHeader,
+SyntaxFileHeader),
+%----Do the output
+    output_formulae_in_format_to_file(SyntaxFileHeader,[],OutputFormulae,
+OutputFormat,BaseOutputName,OutputDirectory,_OutputFormatUsed,
+OutputFileName),
+    (OutputDirectory \== user ->
+        (   write(TPTPFileName),
+%----Need the full name for SystemOnTPTP processing
+%----        (   write(BaseInputName),
+            write(' -> '),
+            write(OutputFileName),
+            nl)
+        ;   true),
+    fail.
+
+make_all_outputs(_,_,_,_,_,_,_).
+%------------------------------------------------------------------------------
+%----Check that a Prolog dialect and a tptp_directory exist
+check_tptp2X_installation:-
+    prolog_dialect(_),
+    get_tptp_directory(_),
+    !.
+
+check_tptp2X_installation:-
+    write('The tptp2X utility has not been installed correctly'),
+    nl,
+    write('Please check that a Prolog dialect and the TPTP directory'),
+    nl,
+    write('have been specified in the tptp2X.config file.'),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+%----The entry point 
+tptp2X(TPTPFileName,GenerationSpecification,Transformation,OutputFormat,
+OutputDirectory):-
+%----Check that tptp2X has been installed
+    check_tptp2X_installation,
+%----Declare the operators used in the TPTP. They must be declared here
+%----so that they are declared at run, rather than compile time. If 
+%----they are only done as :-op(100,fx,++)., then compiled versions of 
+%----this code will not work
+    declare_TPTP_operators,
+%----Extract the base file name
+    base_filename_and_type(TPTPFileName,BaseInputName,_,Extension),
+%----Get header and the clauses from file or by generation. There is 
+%----backtracking to do all combinations here.
+    make_all_outputs(TPTPFileName,BaseInputName,Extension,
+GenerationSpecification,Transformation,OutputFormat,OutputDirectory).
+%------------------------------------------------------------------------------
+%----The old entry point, for backwards compatibility
+tptp2X(TPTPFileName,Transformation,OutputFormat,OutputDirectory):-
+    tptp2X(TPTPFileName,none,Transformation,OutputFormat,OutputDirectory).
+%------------------------------------------------------------------------------

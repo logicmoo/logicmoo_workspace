@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.37</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="quasiquotations.html">
+<link rel="next" href="readutil.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="quasiquotations.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="readutil.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:random"><a id="sec:A.37"><span class="sec-nr">A.37</span> <span class="sec-title">library(random): 
+Random numbers</span></a></h2>
+
+<p><a id="sec:random"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+R.A. O'Keefe, V.S. Costa, L. Damas, Jan Wielemaker
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+Built-in function <a class="pred" href="random.html#random/1">random/1</a>: 
+A is <code>random(10)</code>
+</dd>
+</dl>
+
+<p>This library is derived from the DEC10 library random. Later, the 
+core random generator was moved to C. The current version uses the 
+SWI-Prolog arithmetic functions to realise this library. These functions 
+are based on the GMP library.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random/1"><strong>random</strong>(<var>-R:float</var>)</a></dt>
+<dd class="defbody">
+Binds <var>R</var> to a new random float in the <i>open</i> interval 
+(0.0,1.0).
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="random.html#setrand/1">setrand/1</a>, <a class="pred" href="random.html#getrand/1">getrand/1</a> 
+may be used to fetch/set the state. <br>
+- In SWI-Prolog, <a class="pred" href="random.html#random/1">random/1</a> 
+is implemented by the function
+<span class="pred-ext">random_float/0</span>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="random_between/3"><strong>random_between</strong>(<var>+L:int, 
++U:int, -R:int</var>)</a></dt>
+<dd class="defbody">
+Binds <var>R</var> to a random integer in [<var>L</var>,<var>U</var>] 
+(i.e., including both <var>L</var> and
+<var>U</var>). Fails silently if <var>U</var><var>&lt;</var><var>L</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random/3"><strong>random</strong>(<var>+L:int, 
++U:int, -R:int</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random/3"><strong>random</strong>(<var>+L:float, 
++U:float, -R:float</var>)</a></dt>
+<dd class="defbody">
+Generate a random integer or float in a range. If <var>L</var> and <var>U</var> 
+are both integers, <var>R</var> is a random integer in the half open 
+interval [<var>L</var>,<var>U</var>). If <var>L</var> and <var>U</var> 
+are both floats, <var>R</var> is a float in the open interval (<var>L</var>,<var>U</var>).
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+Please use <a class="pred" href="random.html#random/1">random/1</a> for 
+generating a random float and <a class="pred" href="random.html#random_between/3">random_between/3</a> 
+for generating a random integer. Note that
+<a class="pred" href="random.html#random_between/3">random_between/3</a> 
+includes the upper bound, while this predicate excludes it.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="setrand/1"><strong>setrand</strong>(<var>+State</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="getrand/1"><strong>getrand</strong>(<var>-State</var>)</a></dt>
+<dd class="defbody">
+Query/set the state of the random generator. This is intended for 
+restarting the generator at a known state only. The predicate <a class="pred" href="random.html#setrand/1">setrand/1</a> 
+accepts an opaque term returned by
+<a class="pred" href="random.html#getrand/1">getrand/1</a>. This term 
+may be asserted, written and read. The application may not make other 
+assumptions about this term.
+
+<p>For compatibility reasons with older versions of this library,
+<a class="pred" href="random.html#setrand/1">setrand/1</a> also accepts 
+a term <code>rand(A,B,C)</code>, where A, B and C are integers in the 
+range 1..30,000. This argument is used to seed the random generator. 
+Deprecated.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>existence_error(random_state, _)</code> is raised if the 
+underlying infrastructure cannot fetch the random state. This is 
+currently the case if SWI-Prolog is not compiled with the GMP library.
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="miscarith.html#set_random/1">set_random/1</a> and <a class="pred" href="miscarith.html#random_property/1">random_property/1</a> 
+provide the SWI-Prolog native implementation.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="maybe/0"><strong>maybe</strong></a></dt>
+<dd class="defbody">
+Succeed/fail with equal probability (variant of <a class="pred" href="random.html#maybe/1">maybe/1</a>).</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="maybe/1"><strong>maybe</strong>(<var>+P</var>)</a></dt>
+<dd class="defbody">
+Succeed with probability <var>P</var>, fail with probability 1-<var>P</var></dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="maybe/2"><strong>maybe</strong>(<var>+K, 
++N</var>)</a></dt>
+<dd class="defbody">
+Succeed with probability <var>K</var>/<var>N</var> (variant of <a class="pred" href="random.html#maybe/1">maybe/1</a>)</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="random_perm2/4"><strong>random_perm2</strong>(<var>?A, 
+?B, ?X, ?Y</var>)</a></dt>
+<dd class="defbody">
+Does <var>X</var>=<var>A</var>,<var>Y</var>=<var>B</var> or <var>X</var>=<var>B</var>,<var>Y</var>=<var>A</var> 
+with equal probability.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="random_member/2"><strong>random_member</strong>(<var>-X, 
++List:list</var>)</a></dt>
+<dd class="defbody">
+<var>X</var> is a random member of <var>List</var>. Equivalent to 
+random_between(1,
+<code>|</code><var>List</var><code>|</code>), followed by <a class="pred" href="lists.html#nth1/3">nth1/3</a>. 
+Fails of <var>List</var> is the empty list.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+Quintus and SICStus libraries.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="random_select/3"><strong>random_select</strong>(<var>-X, 
++List, -Rest</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_select/3"><strong>random_select</strong>(<var>+X, 
+-List, +Rest</var>)</a></dt>
+<dd class="defbody">
+Randomly select or insert an element. Either <var>List</var> or <var>Rest</var> 
+must be a list. Fails if <var>List</var> is the empty list.
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+Quintus and SICStus libraries.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="randset/3"><strong>randset</strong>(<var>+K:int, 
++N:int, -S:list(int)</var>)</a></dt>
+<dd class="defbody">
+<var>S</var> is a sorted list of <var>K</var> unique random integers in 
+the range 1..<var>N</var>. The implementation uses different techniques 
+depending on the ratio
+<var>K</var>/<var>N</var>. For small <var>K</var>/<var>N</var> it 
+generates a set of <var>K</var> random numbers, removes the duplicates 
+and adds more numbers until <code>|</code><var>S</var><code>|</code> is <var>K</var>. 
+For a large <var>K</var>/<var>N</var> it enumerates 1..<var>N</var> and 
+decides randomly to include the number or not. For example:
+
+<pre class="code">
+?- randset(5, 5, S).
+S = [1, 2, 3, 4, 5].          (always)
+?- randset(5, 20, S).
+S = [2, 7, 10, 19, 20].
+</pre>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="random.html#randseq/3">randseq/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="randseq/3"><strong>randseq</strong>(<var>+K:int, 
++N:int, -List:list(int)</var>)</a></dt>
+<dd class="defbody">
+S is a list of <var>K</var> unique random integers in the range 1..<var>N</var>. 
+The order is random. Defined as
+
+<pre class="code">
+randseq(K, N, List) :-
+      randset(K, N, Set),
+      random_permutation(Set, List).
+</pre>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="random.html#randset/3">randset/3</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_permutation/2"><strong>random_permutation</strong>(<var>+List, 
+-Permutation</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_permutation/2"><strong>random_permutation</strong>(<var>-List, 
++Permutation</var>)</a></dt>
+<dd class="defbody">
+<var>Permutation</var> is a random permutation of <var>List</var>. This 
+is intended to process the elements of <var>List</var> in random order. 
+The predicate is symmetric.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+instantiation_error, <code>type_error(list, _)</code>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

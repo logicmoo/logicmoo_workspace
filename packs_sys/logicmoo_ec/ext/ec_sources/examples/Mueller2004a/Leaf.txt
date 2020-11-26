@@ -1,0 +1,106 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2004a/Leaf.e
+loading foundations/Root.e
+loading foundations/EC.e
+120 variables and 704 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Height(Leaf, 9).
+Happens(StartFalling(Leaf), 0).
+1
+-Height(Leaf, 9).
++Falling(Leaf).
++Height(Leaf, 8).
+2
+-Height(Leaf, 8).
++Height(Leaf, 5).
+3
+-Height(Leaf, 5).
++Height(Leaf, 0).
+Happens(HitsGround(Leaf), 3).
+4
+-Falling(Leaf).
+P
+ReleasedAt(Height(Leaf, 0), 1).
+ReleasedAt(Height(Leaf, 0), 2).
+ReleasedAt(Height(Leaf, 0), 3).
+ReleasedAt(Height(Leaf, 1), 1).
+ReleasedAt(Height(Leaf, 1), 2).
+ReleasedAt(Height(Leaf, 1), 3).
+ReleasedAt(Height(Leaf, 1), 4).
+ReleasedAt(Height(Leaf, 2), 1).
+ReleasedAt(Height(Leaf, 2), 2).
+ReleasedAt(Height(Leaf, 2), 3).
+ReleasedAt(Height(Leaf, 2), 4).
+ReleasedAt(Height(Leaf, 3), 1).
+ReleasedAt(Height(Leaf, 3), 2).
+ReleasedAt(Height(Leaf, 3), 3).
+ReleasedAt(Height(Leaf, 3), 4).
+ReleasedAt(Height(Leaf, 4), 1).
+ReleasedAt(Height(Leaf, 4), 2).
+ReleasedAt(Height(Leaf, 4), 3).
+ReleasedAt(Height(Leaf, 4), 4).
+ReleasedAt(Height(Leaf, 5), 1).
+ReleasedAt(Height(Leaf, 5), 2).
+ReleasedAt(Height(Leaf, 5), 3).
+ReleasedAt(Height(Leaf, 5), 4).
+ReleasedAt(Height(Leaf, 6), 1).
+ReleasedAt(Height(Leaf, 6), 2).
+ReleasedAt(Height(Leaf, 6), 3).
+ReleasedAt(Height(Leaf, 6), 4).
+ReleasedAt(Height(Leaf, 7), 1).
+ReleasedAt(Height(Leaf, 7), 2).
+ReleasedAt(Height(Leaf, 7), 3).
+ReleasedAt(Height(Leaf, 7), 4).
+ReleasedAt(Height(Leaf, 8), 1).
+ReleasedAt(Height(Leaf, 8), 2).
+ReleasedAt(Height(Leaf, 8), 3).
+ReleasedAt(Height(Leaf, 8), 4).
+ReleasedAt(Height(Leaf, 9), 1).
+ReleasedAt(Height(Leaf, 9), 2).
+ReleasedAt(Height(Leaf, 9), 3).
+ReleasedAt(Height(Leaf, 9), 4).
+!Happens(HitsGround(Leaf), 0).
+!Happens(HitsGround(Leaf), 1).
+!Happens(HitsGround(Leaf), 2).
+!Happens(HitsGround(Leaf), 4).
+!Happens(StartFalling(Leaf), 1).
+!Happens(StartFalling(Leaf), 2).
+!Happens(StartFalling(Leaf), 3).
+!Happens(StartFalling(Leaf), 4).
+!ReleasedAt(Falling(Leaf), 0).
+!ReleasedAt(Falling(Leaf), 1).
+!ReleasedAt(Falling(Leaf), 2).
+!ReleasedAt(Falling(Leaf), 3).
+!ReleasedAt(Falling(Leaf), 4).
+!ReleasedAt(Height(Leaf, 0), 0).
+!ReleasedAt(Height(Leaf, 0), 4).
+!ReleasedAt(Height(Leaf, 1), 0).
+!ReleasedAt(Height(Leaf, 2), 0).
+!ReleasedAt(Height(Leaf, 3), 0).
+!ReleasedAt(Height(Leaf, 4), 0).
+!ReleasedAt(Height(Leaf, 5), 0).
+!ReleasedAt(Height(Leaf, 6), 0).
+!ReleasedAt(Height(Leaf, 7), 0).
+!ReleasedAt(Height(Leaf, 8), 0).
+!ReleasedAt(Height(Leaf, 9), 0).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Leaf: 0 predicates, 0 functions, 2 fluents, 2 events, 10 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 2.1s
+solution 0.0s
+total 2.3s
+Discrete Event Calculus Reasoner 1.0

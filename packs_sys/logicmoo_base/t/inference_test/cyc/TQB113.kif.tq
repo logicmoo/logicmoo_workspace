@@ -1,0 +1,31 @@
+(note TQB113)
+
+(internationalOrg-MemberCountry OAPEC SaudiArabia)
+(internationalOrg-MemberCountry OAPEC Bahrain) 
+(internationalOrg-MemberCountry OAPEC Iraq) 
+(internationalOrg-MemberCountry OAPEC Kuwait)
+(internationalOrg-MemberCountry OAPEC Qatar) 
+(internationalOrg-MemberCountry OAPEC Syria) 
+(internationalOrg-MemberCountry OAPEC Libya) 
+(internationalOrg-MemberCountry OAPEC Algeria)
+(internationalOrg-MemberCountry OAPEC Egypt) 
+(internationalOrg-MemberCountry OAPEC Tunisia) 
+(internationalOrg-MemberCountry OAPEC UnitedArabEmirates) 
+
+(query (findall ?COUNTRY
+  (internationalOrg-MemberCountry OAPEC ?COUNTRY)))
+
+(answer SaudiArabia)
+(answer Bahrain)
+(answer Iraq)
+(answer Kuwait)
+(answer Qatar)
+(answer Syria)
+(answer Libya)
+(answer Algeria)
+(answer Egypt)
+(answer Tunisia)
+(answer UnitedArabEmirates)
+
+(end_of_file)
+

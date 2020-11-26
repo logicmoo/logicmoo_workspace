@@ -1,0 +1,113 @@
+
+PSA:
+
+70 grammar rules
+42 features
+
+Time to parse training corpus (5408 utts, 633 out of coverage): 469.44 secs
+
+Time to do EBL processing: 110.05 secs
+
+Time for Regulus -> Nuance compilation: 30.14 secs
+
+Rules in generated Nuance grammar: 2080
+
+Initial nodes: 3169
+
+After optimization: 2602
+
+------------------------------------------------------------------------------------------
+
+PSA + HOUSE:
+
+74 grammar rules
+46 features
+
+Time to parse training corpus (5408 utts, 231 out of coverage): 590.63 secs
+
+Time to do EBL processing: 155.72 secs
+
+Time for Regulus -> Nuance compilation: 57.83 secs
+
+Rules in generated Nuance grammar: 3080
+
+Initial nodes: 4476
+
+After optimization: 9497
+
+------------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS:
+
+106 grammar rules
+56 features
+
+Time to parse training corpus (5408 utts, 201 out of coverage): 1191.29 secs
+
+Time to do EBL processing: 204.75 secs
+
+Time for Regulus -> Nuance compilation: 61.62 secs
+
+Rules in generated Nuance grammar: 3369
+
+Initial nodes: 4856
+
+After optimization: 12225
+
+------------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED:
+
+127 grammar rules
+64 features
+
+Time to parse training corpus (5408 utts, 188 out of coverage): 1902.53 secs
+
+Time to do EBL processing: 299.93 secs
+
+Time for Regulus -> Nuance compilation: 67.58 secs
+
+Rules in generated Nuance grammar: 3599
+
+Initial nodes: 5228
+
+After optimization: 12280
+
+------------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED + CHECKLIST (no syn-feats):
+
+139 grammar rules
+68 features
+
+Time to parse training corpus (5408 utts, 188 out of coverage): 2071.53 secs
+
+Time to do EBL processing: 341.00 secs
+
+Time for Regulus -> Nuance compilation: 91.91 secs
+
+Rules in generated Nuance grammar: 4460
+
+Initial nodes: 6100
+
+After optimization: 14392
+
+------------------------------------------------------------------------------------------
+
+PSA + HOUSE + TRAVEL_DEALS + MED + CHECKLIST + MOBILE_AGENTS (no syn-feats):
+
+145 grammar rules
+68 features
+
+Time to parse training corpus (5408 utts, 188 out of coverage): 2118.08 secs
+
+Time to do EBL processing: 408.86 secs
+
+Time for Regulus -> Nuance compilation: 90.52 secs
+
+Rules in generated Nuance grammar: 4460
+
+Initial nodes: 6100
+
+After optimization: 14392
+

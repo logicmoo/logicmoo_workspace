@@ -1,0 +1,5 @@
+.Top SLMRule
+
+SLMRule:slm "NewMP3.pfsg" = []
+
+UNK [ @reject@ ]

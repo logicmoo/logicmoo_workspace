@@ -1,0 +1,1 @@
+Relevant to bidirectional translation applications: switches off the mode switched on by {\tt BIDIRECTIONAL\_ON}.

@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 12.5</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="foreigninclude.html">
+<link rel="next" href="findhome.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="foreigninclude.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="findhome.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:plld"><a id="sec:12.5"><span class="sec-nr">12.5</span> <span class="sec-title">Linking 
+embedded applications using swipl-ld</span></a></h2>
+
+<a id="sec:plld"></a>
+
+<p>The utility program <b>swipl-ld</b> (Win32: swipl-ld.exe) may be used 
+to link a combination of C files and Prolog files into a stand-alone 
+executable.
+<b>swipl-ld</b> automates most of what is described in the previous 
+sections.
+
+<p>In normal usage, a copy is made of the default embedding template
+<code>.../swipl/include/stub.c</code>. The main() routine is modified to 
+suit your application. <a class="func" href="foreigninclude.html#PL_initialise()">PL_initialise()</a> <strong>must</strong> 
+be passed the program name (<var>argv[0]</var>) (Win32: the executing 
+program can be obtained using GetModuleFileName()). The other elements 
+of the command line may be modified. Next, <b>swipl-ld</b> is typically 
+invoked as:
+
+<pre class="code">
+swipl-ld -o output stubfile.c [other-c-or-o-files] [plfiles]
+</pre>
+
+<p><b>swipl-ld</b> will first split the options into various groups for 
+both the C compiler and the Prolog compiler. Next, it will add various 
+default options to the C compiler and call it to create an executable 
+holding the user's C code and the Prolog kernel. Then, it will call the 
+SWI-Prolog compiler to create a saved state from the provided Prolog 
+files and finally, it will attach this saved state to the created 
+emulator to create the requested executable.
+
+<p>Below, it is described how the options are split and which additional 
+options are passed.
+
+<dl class="latex">
+<dt><strong>-help</strong> <var></var></dt>
+<dd class="defbody">
+Print brief synopsis.
+</dd>
+<dt><strong>-pl</strong> <var>prolog</var></dt>
+<dd class="defbody">
+Select the Prolog to use. This Prolog is used for two purposes: get the 
+home directory as well as the compiler/linker options and create a saved 
+state of the Prolog code.
+</dd>
+<dt><strong>-ld</strong> <var>linker</var></dt>
+<dd class="defbody">
+Linker used to link the raw executable. Default is to use the C compiler 
+(Win32: <b>link.exe</b>).
+</dd>
+<dt><strong>-cc</strong> <var>C compiler</var></dt>
+<dd class="defbody">
+Compiler for <code>.c</code> files found on the command line. Default is 
+the compiler used to build SWI-Prolog accessible through the Prolog flag
+<a class="flag" href="flags.html#flag:c_cc">c_cc</a> (Win32: <b>cl.exe</b>).
+</dd>
+<dt><strong>-c++</strong> <var>C++-compiler</var></dt>
+<dd class="defbody">
+Compiler for C++ source file (extensions <code>.cpp</code>, <code>.cxx</code>,
+<code>.cc</code> or <code>.C</code>) found on the command line. Default 
+is
+<b>c++</b> or <b>g++</b> if the C compiler is <b>gcc</b> (Win32: 
+cl.exe).</dd>
+<dt><strong>-nostate</strong> <var></var></dt>
+<dd class="defbody">
+Just relink the kernel, do not add any Prolog code to the new kernel. 
+This is used to create a new kernel holding additional foreign 
+predicates on machines that do not support the shared-library (DLL) 
+interface, or if building the state cannot be handled by the default 
+procedure used by
+<b>swipl-ld</b>. In the latter case the state is created separately and 
+appended to the kernel using <code>cat &lt;<var>kernel</var>&gt; &lt;<var>state</var>&gt; 
+&gt; &lt;<var>out</var>&gt;</code> (Win32: <code>copy /b &lt;<var>kernel</var>&gt;+&lt;<var>state</var>&gt; &lt;<var>out</var>&gt;</code>).</dd>
+<dt><strong>-shared</strong> <var></var></dt>
+<dd class="defbody">
+Link C, C++ or object files into a shared object (DLL) that can be 
+loaded by the <a id="idx:loadforeignlibrary1:2412"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a> 
+predicate. If used with
+<strong>-c</strong> it sets the proper options to compile a C or C++ 
+file ready for linking into a shared object.</dd>
+<dt><strong>-dll</strong> <var></var></dt>
+<dd class="defbody">
+<em>Windows only</em>. Embed SWI-Prolog into a DLL rather than an 
+executable.</dd>
+<dt><strong>-c</strong> <var></var></dt>
+<dd class="defbody">
+Compile C or C++ source files into object files. This turns
+<b>swipl-ld</b> into a replacement for the C or C++ compiler, where 
+proper options such as the location of the include directory are passed 
+automatically to the compiler.</dd>
+<dt><strong>-E</strong> <var></var></dt>
+<dd class="defbody">
+Invoke the C preprocessor. Used to make <b>swipl-ld</b> a replacement 
+for the C or C++ compiler.</dd>
+<dt><strong>-pl-options</strong> <var>, ...</var></dt>
+<dd class="defbody">
+Additional options passed to Prolog when creating the saved state. The 
+first character immediately following <code>pl-options</code> is used as 
+separator and translated to spaces when the argument is built. Example: <code>-pl-options,-F,xpce</code> 
+passes <code>-F xpce</code> as additional flags to Prolog.
+</dd>
+<dt><strong>-ld-options</strong> <var>, ...</var></dt>
+<dd class="defbody">
+Passes options to the linker, similar to <strong>-pl-options</strong>.
+</dd>
+<dt><strong>-cc-options</strong> <var>, ...</var></dt>
+<dd class="defbody">
+Passes options to the C/C++ compiler, similar to <strong>-pl-options</strong>.
+</dd>
+<dt><strong>-v</strong> <var></var></dt>
+<dd class="defbody">
+Select verbose operation, showing the various programs and their 
+options.
+</dd>
+<dt><strong>-o</strong> <var>outfile</var></dt>
+<dd class="defbody">
+Reserved to specify the final output file.
+</dd>
+<dt><strong>-l</strong><var>library</var></dt>
+<dd class="defbody">
+Specifies a library for the C compiler. By default, <code>-lswipl</code> 
+(Win32: libpl.lib) and the libraries needed by the Prolog kernel are 
+given.
+</dd>
+<dt><strong>-L</strong><var>library-directory</var></dt>
+<dd class="defbody">
+Specifies a library directory for the C compiler. By default the 
+directory containing the Prolog C library for the current architecture 
+is passed.
+</dd>
+<dt><strong><strong>-g</strong> | <strong>-I<var>include-directory</var></strong> 
+| <strong>-D<var>definition</var></strong></strong> <var></var></dt>
+<dd class="defbody">
+These options are passed to the C compiler. By default, the include 
+directory containing <code>SWI-Prolog.h</code> is passed. <b>swipl-ld</b> 
+adds two additional <strong>*</strong> <var>-D</var>def flags:
+
+<dl class="latex">
+<dt><strong>-D</strong><var><code>__SWI_PROLOG__</code></var></dt>
+<dd class="defbody">
+Indicates the code is to be connected to SWI-Prolog.
+</dd>
+<dt><strong>-D</strong><var><code>__SWI_EMBEDDED__</code></var></dt>
+<dd class="defbody">
+Indicates the creation of an embedded program.
+</dd>
+</dl>
+
+</dd>
+<dt><strong></strong> <var>*.o | *.c | *.C | *.cxx | *.cpp</var></dt>
+<dd class="defbody">
+Passed as input files to the C compiler.
+</dd>
+<dt><strong></strong> <var>*.pl | *.qlf</var></dt>
+<dd class="defbody">
+Passed as input files to the Prolog compiler to create the saved state.
+</dd>
+<dt><strong></strong> <var><code>*</code></var></dt>
+<dd class="defbody">
+All other options. These are passed as linker options to the C compiler.
+</dd>
+</dl>
+
+<p><h3 id="sec:foreign-example"><a id="sec:12.5.1"><span class="sec-nr">12.5.1</span> <span class="sec-title">A 
+simple example</span></a></h3>
+
+<a id="sec:foreign-example"></a>
+
+<p>The following is a very simple example going through all the steps 
+outlined above. It provides an arithmetic expression evaluator. We will 
+call the application <b>calc</b> and define it in the files <code>calc.c</code> 
+and <code>calc.pl</code>. The Prolog file is simple:
+
+<pre class="code">
+calc(Atom) :-
+        term_to_atom(Expr, Atom),
+        A is Expr,
+        write(A),
+        nl.
+</pre>
+
+<p>The C part of the application parses the command line options, 
+initialises the Prolog engine, locates the <code>calc/1</code> predicate 
+and calls it. The coder is in <a class="fig" href="plld.html#fig:calc">figure 
+9</a>.
+
+<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;SWI-Prolog.h&gt;
+
+#define MAXLINE 1024
+
+int
+main(int argc, char **argv)
+{ char expression[MAXLINE];
+  char *e = expression;
+  char *program = argv[0];
+  char *plav[2];
+  int n;
+
+  /* combine all the arguments in a single string */
+
+  for(n=1; n&lt;argc; n++)
+  { if ( n != 1 )
+      *e++ = ' ';
+    strcpy(e, argv[n]);
+    e += strlen(e);
+  }
+
+  /* make the argument vector for Prolog */
+
+  plav[0] = program;
+  plav[1] = NULL;
+
+  /* initialise Prolog */
+
+  if ( !PL_initialise(1, plav) )
+    PL_halt(1);
+
+  /* Lookup calc/1 and make the arguments and call */
+
+  { predicate_t pred = PL_predicate("calc", 1, "user");
+    term_t h0 = PL_new_term_refs(1);
+    int rval;
+
+    PL_put_atom_chars(h0, expression);
+    rval = PL_call_predicate(NULL, PL_Q_NORMAL, pred, h0);
+
+    PL_halt(rval ? 0 : 1);
+  }
+
+  return 0;
+}
+</pre>
+
+<div class="caption"><b>Figure 9 : </b>C source for the calc application</div>
+<a id="fig:calc"></a>
+
+<p>The application is now created using the command line below. The 
+option
+<code>-goal true</code> sets the Prolog initialization goal to suppress 
+the banner. Note that the <code>-o calc</code> does not specify an 
+extension. If the platform uses a file extension for executables, <b>swipl-ld</b> 
+will add this (e.g., <code>.exe</code> on Windows).
+
+<pre class="code">
+% swipl-ld -goal true -o calc calc.c calc.pl
+</pre>
+
+<p>The created program <b>calc</b> is a native executable with the 
+Prolog code attached to it. Note that the program typically depends on 
+the shared object <code>libswipl</code> and, depending on the platform 
+and configuration, on several external shared objects.
+
+<pre class="code">
+% ./calc pi/2
+1.5708
+</pre>
+
+<p></body></html>

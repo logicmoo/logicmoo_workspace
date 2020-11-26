@@ -1,0 +1,23 @@
+(note TQF125b)
+
+(nearestCommonIsa HAMAS Taliban RevoltOrganization) 
+
+(nearestCommonIsa HAMAS Taliban PoliticalOrganization) 
+
+(query (findall ?INSTANCE-OF (or 
+   (and 
+       (nearestCommonIsa HAMAS Taliban ?INSTANCE-OF) 
+       (not 
+           (quotedCollection ?INSTANCE-OF))) 
+   (and 
+       (standsInRelationship HAMAS ?RELATION-ARG1 1 ?RELATION-TO) 
+       (standsInRelationship Taliban ?RELATION-ARG1 1 ?RELATION-TO) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (standsInRelationship HAMAS ?RELATION-ARG2 2 ?RELATION-TO) 
+       (standsInRelationship Taliban ?RELATION-ARG2 2 ?RELATION-TO)))))
+
+(answer (list (nearestCommonIsa HAMAS Taliban RevoltOrganization)))
+(answer (list (nearestCommonIsa HAMAS Taliban PoliticalOrganization)))
+
+(end_of_file)

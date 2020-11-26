@@ -1,0 +1,81 @@
+
+% passivised verb taking NP and PP - MobileAgents rule
+% the voice note associated with okra
+vp:[sem= @vp_v_pp_sem_passivised(Verb, PP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb, subcat=nx0vnx1pnx2_passivised, @vbar_feats_for_vp(Feats), pp_sem_pp_type=PPSem], 
+pp:[sem=PP, wh=n, sem_pp_type=PPSem, 
+    gapsin=GIn, gapsout=GOut].
+
+% vp_v_np - Mobile Agents
+% passivized ditransitive
+% (is) called okra
+vp:[sem= @vp_v_np_sem_passivised(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GOut] -->
+vbar:[sem=Verb, subcat=nx0vnx1x2_passivised, @vbar_feats_for_vp(Feats), 
+      obj_sem_n_type=ObjSem, obj_def=ObjDef, obj_syn_type=ObjSynType], 
+np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, def=ObjDef, 
+    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj, syn_type=ObjSynType].
+
+%----------------------------------------------------------------------
+
+% Passivization
+
+% Passivised ditransitive - Mobile Agents rule
+v:[sem=V,
+   subcat=nx0vnx1x2_passivised, passivised=y, passive_subj=y,
+   agr=Agr, inv=n, vform=en, vp_vform=none, vp_passivised=n,
+   subj_nform=normal, subj_sem_n_type=IndObjType, subj_def=IndObjDef, subj_syn_type=IndObjSynType,
+   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=y,
+   obj_sem_n_type=ObjType, obj_def=ObjDef, obj_syn_type=ObjSynType,
+   pp_sem_pp_type=none, sem_p_type=none, 
+   indobj_sem_n_type=none, indobj_def=n, indobj_syn_type=none, 
+   takes_advp=TakesAdvp, takes_adv_type=AdvpType] -->
+v:[sem=V,
+   subcat=nx0vnx1x2, passivised=n, passive_subj=n,
+   agr=Agr, inv=n, vform=en, vp_vform=none, 
+   subj_nform=normal, 
+   @takes_pps_except_passive_by(PPs),
+   obj_sem_n_type=ObjType, obj_def=ObjDef, obj_syn_type=ObjSynType, 
+   pp_sem_pp_type=none, sem_p_type=none, 
+   indobj_sem_n_type=IndObjType, indobj_def=IndObjDef, indobj_syn_type=IndObjSynType, 
+   takes_advp=TakesAdvp, takes_adv_type=AdvpType].
+
+% Passivised verb that takes NP + PP - Mobile Agents rule
+v:[sem=V,
+   subcat=nx0vnx1pnx2_passivised, passivised=y, passive_subj=y,
+   agr=Agr, inv=n, vform=en, vp_vform=none, vp_passivised=n,
+   subj_nform=normal, subj_sem_n_type=ObjType, subj_def=ObjDef, subj_syn_type=ObjSynType,
+   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=y,
+   obj_sem_n_type=none, obj_def=n, obj_syn_type=none, 
+   pp_sem_pp_type=PPType, sem_p_type=none, 
+   indobj_sem_n_type=none, indobj_def=n, indobj_syn_type=none, 
+   takes_advp=TakesAdvp, takes_adv_type=AdvpType] -->
+v:[sem=V,
+   subcat=nx0vnx1pnx2, passivised=n, passive_subj=n,
+   agr=Agr, inv=n, vform=en, vp_vform=none, 
+   subj_nform=normal, 
+   @takes_pps_except_passive_by(PPs),
+   obj_sem_n_type=ObjType, 
+   pp_sem_pp_type=PPType, sem_p_type=none, 
+   obj_def=ObjDef, obj_syn_type=ObjSynType, takes_advp=TakesAdvp, takes_adv_type=AdvpType].
+
+% passive vp post mods - Mobile Agents
+% e.g. location named broccoli
+post_mods:[sem= @mods_mod_mods_sem( @rel_s_sem( @np_vp_sem_passive( @rel_pron_sem, @unspecified_tense_sem(VP))), Mods), 
+           gap=n, post_mod_type=nominal,
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut] -->
+vp:[sem=VP, inv=n, passivised=y, passive_subj=y, vform=en, takes_post_mods=n, gapsin=null, gapsout=null],
+post_mods:[sem=Mods, post_mod_type=nominal,
+           takes_gap_mod=n, n_of_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+           gapsin=GIn, gapsout=GOut]. 
+
+% Postmodifying name - MobileAgents rule
+% np_n_name_postmod
+% e.g. location okra
+np:[sem= @np_nbar_name_postmod_sem(N1, N2), nform=normal, sem_n_type=Type, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=none, @takes_pps(PPs), agr=(3/\sing), syn_type=np_with_noun] -->
+nbar:[sem=N1, sem_n_type=Type, n_post_mod_type=ModType, @takes_pps(PPs), agr=(3/\sing)], 
+name:[sem=N2, sem_n_type=ModType].
+

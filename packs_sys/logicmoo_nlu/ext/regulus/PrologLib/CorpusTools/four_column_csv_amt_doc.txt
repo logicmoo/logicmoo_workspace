@@ -1,0 +1,63 @@
+
+DOCUMENTATION FOR USING THE SCRIPTS TO DO AMT JUDGING OF COMPARATIVE TRANSLATIONS
+
+The idea is to use the Amazon Mechanical Turk (AMT) to support judge
+the contrasting quality of pairs of translations.
+
+The intended scenario is that we have a set of source sentences, each
+of which is translated by a baseline system, and then by a number of
+other systems, each identified by a label. At the moment, these labels
+are most likely to correspond to pre-processing rules.
+
+The input is presented as a four-column tab-separated UTF-8 CSV file, whose format is
+
+<Source>  <BaselineTrans>  <VariantTrans> <Label>
+ 
+There are two scripts. The first takes the input file and produces
+another CSV file, which can be used as input to the AMT task. When the
+task has run, you download the result file (also CSV) and run the
+second script to get the final results
+
+--------------------------------------
+
+RUNNING THE FIRST SCRIPT (PRODUCING AMT INPUT)
+
+Invoke as follows:
+
+sicstus -l four_column_csv_to_amt_input.pl -a <CSVFile> <NumberOfLinesInHIT>
+
+where 
+
+<CSVFile> is the CSV file you want to process 
+<NumberOfLinesInHIT> is the number of items in the HITs you will produce.
+
+The name of the output AMT file will be of the form 
+
+<CSVFile>_<Label>_randomised_spreadsheet.csv.
+
+The lines from the original file will be presented in random order,
+and the order of <BaselineTrans> <VariantTrans> will be randomised
+within each line.
+
+Example:
+
+sicstus -l four_column_csv_to_amt_input.pl -a $ACCEPT/MT/Evaluations/combined_RSource_RTrans_PrEdTrans.csv 50
+
+--------------------------------------
+
+RUNNING THE SECOND SCRIPT (INTREPRETING THE AMT OUTPUT)
+
+Invoke as follows:
+
+sicstus -l four_column_csv_and_amt_output_to_results.pl -a <CSVFile> 
+
+where <CSVFile> is the original four-column CSV file you want to process 
+
+This assumes that the AMT results file name is of the form <CSVFile>_amt.csv
+
+The name of the summary files will be of the form
+<CSVFile>_<Label>_results.csv, one for each <Label> in the input data
+
+Example:
+
+sicstus -l four_column_csv_and_amt_output_to_results.pl -a $ACCEPT/MT/Evaluations/combined_RSource_RTrans_PrEdTrans.csv 

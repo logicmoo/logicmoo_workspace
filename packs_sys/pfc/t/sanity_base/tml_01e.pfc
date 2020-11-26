@@ -1,0 +1,602 @@
+#!/usr/bin/env swipl
+
+% Quick fwd test
+:- include(test_header).
+
+:- use_module(library(statistics)).
+:- mpred_notrace_exec.
+:- statistics.
+:- cls.
+% reset runtime counter
+:- statistics(runtime,_Secs).
+
+%~path(X,X).
+
+transitive(P) ==>
+  ((t(P,X,Y),t(P,Y,Z)/(dif(X,Y),dif(Y,Z),dif(X,Z)))==> t(P, X, Z)).
+
+taxinomicPair(E,P) ==>
+  (t(P,X,Y),t(E,Y,Z) ==> t(P, X, Z)).
+
+subRelation(E,P) ==>
+  ((t(E,X,Y)/(dif(X,Y))) ==> t(P,X,Y)).
+
+edge(1,2). 
+edge(2,3).
+edge(3,4).
+
+subRelation(edge,hop).
+subRelation(hop,path).
+symmetric(hop).
+
+symmetric(P) ==>
+  (t(P,X,Y) ==> t(P,Y,X)).
+antisymmetric(P)/fail ==>
+  (t(P,X,Y) <==> ~t(P,Y,X)).
+reflexive(P) ==> 
+   t(P,X,X).
+antireflexive(P) ==> 
+  ~t(P,X,X).
+
+:- cls.
+% things that cannot be true are removed
+% unneeded when loaded from main system: ~t(P,X,X) ==> \+ t(P,X,X).
+
+:- mpred_why(edge(X,Y)==>hop(X,Y)).
+
+% bug .. giving the wrong proof!
+:- mpred_why(edge(X,Y)==>hop(Y,X)).
+
+% bug .. not giving any proof!
+:- dif(X,Y), mpred_why(edge(X,Y)==>hop(Y,X)).
+
+reflexive(reachable).
+antisymmetric(reachable).
+transitive(reachable).
+
+antireflexive(path).
+transitive(path).
+
+path(X,Y)==>reachable(X,Y).
+
+
+
+% provably not a subrelation of equality
+% antireflexive(P) <==> ~subRelation(P,equals).
+%~t(P,X,X) <==> ~subRelation(P,equals).
+
+:- statistics(runtime,[_|MS]),
+   dmsg(assert_time_took_with_printing=ms(MS)).
+
+:- listing(edge/2).
+:- listing(hop/2).
+:- listing(path/2).
+:- listing(reachable/2).
+
+% thus this is true
+:- mpred_why(~path(X,X)).
+:- mpred_why(hop(3,2)).
+:- mpred_why(hop(2,3)).
+:- mpred_why(path(3,2)).
+:- mpred_why(reachable(3,3)).
+:- mpred_why(reachable(3,1)).
+
+%:- statistics.
+
+
+end_of_file.
+:- dynamic baseKB:edge/2.
+:- multifile baseKB:edge/2.
+:- public baseKB:edge/2.
+:- module_transparent baseKB:edge/2.
+
+
+:- dynamic edge/2.
+:- multifile edge/2.
+:- public edge/2.
+:- module_transparent edge/2.
+
+edge(3, 4).
+edge(2, 3).
+edge(1, 2).
+edge(A, B) :-
+        inherit_above(header_sane, edge(A, B)).
+
+:- dynamic baseKB:hop/2.
+:- multifile baseKB:hop/2.
+:- public baseKB:hop/2.
+:- module_transparent baseKB:hop/2.
+
+
+:- dynamic hop/2.
+:- multifile hop/2.
+:- public hop/2.
+:- module_transparent hop/2.
+
+hop(4, 3).
+hop(3, 2).
+hop(2, 1).
+hop(1, 2).
+hop(2, 3).
+hop(3, 4).
+hop(A, B) :-
+        inherit_above(header_sane, hop(A, B)).
+
+:- dynamic baseKB:path/2.
+:- multifile baseKB:path/2.
+:- public baseKB:path/2.
+:- module_transparent baseKB:path/2.
+
+
+:- dynamic path/2.
+:- multifile path/2.
+:- public path/2.
+:- module_transparent path/2.
+
+path(1, 3).
+path(1, 4).
+path(2, 4).
+path(3, 1).
+path(4, 1).
+path(4, 2).
+path(4, 3).
+path(3, 2).
+path(2, 1).
+path(3, 4).
+path(2, 3).
+path(1, 2).
+path(A, B) :-
+        inherit_above(header_sane, path(A, B)).
+
+:- dynamic baseKB:reachable/2.
+:- multifile baseKB:reachable/2.
+:- public baseKB:reachable/2.
+:- module_transparent baseKB:reachable/2.
+
+
+:- dynamic reachable/2.
+:- multifile reachable/2.
+:- public reachable/2.
+:- module_transparent reachable/2.
+
+reachable(1, 2).
+reachable(3, 2).
+reachable(4, 2).
+reachable(4, 3).
+reachable(2, 3).
+reachable(2, 1).
+reachable(4, 1).
+reachable(3, 4).
+reachable(3, 1).
+reachable(2, 4).
+reachable(1, 4).
+reachable(1, 3).
+reachable(A, A).
+reachable(A, B) :-
+        inherit_above(header_sane, reachable(A, B)).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:75
+
+Justifications for ~path(_782348,_782348):
+
+    1.1 antireflexive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:51]
+    1.2 antireflexive(W4)==> ~t(W4,X4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:38]
+    1.3 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,51)
+    1.4 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,38)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:76
+
+Justifications for hop(3,2):
+
+    1.1 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_793594]
+    1.2 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_794398]
+    1.3 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    1.4 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_795332]
+    1.5 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    1.6 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    1.7 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    1.8 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    1.9 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    1.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    1.11 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    1.12 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    1.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:77
+
+Justifications for hop(2,3):
+
+    1.1 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    1.2 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_806766]
+    1.3 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    1.4 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    1.5 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    1.6 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    1.7 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    2.1 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_808458]
+    2.2 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_809262]
+    2.3 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_809880]
+    2.4 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    2.5 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    2.6 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    2.7 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_811630]
+    2.8 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    2.9 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    2.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    2.11 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    2.12 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    2.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    2.14 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:78
+
+Justifications for path(3,2):
+
+    1.1 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_870372]
+    1.2 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_871176]
+    1.3 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_871794]
+    1.4 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_872598]
+    1.5 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    1.6 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    1.7 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    1.8 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_874196]
+    1.9 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    1.10 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    1.11 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    1.12 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    1.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    1.14 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    1.15 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    1.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    1.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    2.1 path(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_876560]
+    2.2 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_877338]
+    2.3 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_878170]
+    2.4 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_878788]
+    2.5 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_879592]
+    2.6 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_880210]
+    2.7 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_880988]
+    2.8 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    2.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    2.10 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    2.11 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_882794]
+    2.12 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    2.13 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    2.14 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_884076]
+    2.15 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_884854]
+    2.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    2.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    2.18 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    2.19 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    2.20 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    2.21 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    2.22 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_886598]
+    2.23 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_887216]
+    2.24 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    2.25 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    2.26 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    2.27 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    2.28 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    2.29 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    2.30 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    3.1 path(4,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_889480]
+    3.2 path(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_890258]
+    3.3 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_891090]
+    3.4 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_891708]
+    3.5 path(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_892486]
+    3.6 hop(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_893264]
+    3.7 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_894068]
+    3.8 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    3.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    3.10 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_895398]
+    3.11 hop(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_896176]
+    3.12 edge(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:26]
+    3.13 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_897270]
+    3.14 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    3.15 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    3.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    3.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    3.18 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_898812]
+    3.19 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_899616]
+    3.20 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,26)
+    3.21 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    3.22 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    3.23 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    3.24 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    3.25 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    3.26 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    3.27 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    3.28 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    3.29 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    3.30 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:79
+
+Justifications for reachable(3,3):
+
+    1.1 reflexive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:47]
+    1.2 reflexive(W4)==>t(W4,X4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:36]
+    1.3 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,47)
+    1.4 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,36)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:80
+
+Justifications for reachable(3,1):
+
+    1.1 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1104954]
+    1.2 path(W4,X4)==>reachable(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:54]
+    1.3 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1106066]
+    1.4 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1106844]
+    1.5 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1107676]
+    1.6 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,54)
+    1.7 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1108424]
+    1.8 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1109228]
+    1.9 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1109846]
+    1.10 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    1.11 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    1.12 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1111336]
+    1.13 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1112140]
+    1.14 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    1.15 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    1.16 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1113422]
+    1.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    1.18 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    1.19 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    1.20 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1114776]
+    1.21 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    1.22 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    1.23 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    1.24 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    1.25 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    1.26 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    1.27 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    1.28 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    1.29 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    1.30 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    1.31 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    2.1 reachable(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1117560]
+    2.2 reachable(3,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1118338]
+    2.3 reachable(X4,W4),reachable(W4,Y4)/(X4\==Y4)==>reachable(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1119170]
+    2.4 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1119788]
+    2.5 path(W4,X4)==>reachable(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:54]
+    2.6 reflexive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:47]
+    2.7 reflexive(W4)==>t(W4,X4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:36]
+    2.8 transitive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:49]
+    2.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    2.10 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1122236]
+    2.11 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1123014]
+    2.12 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1123846]
+    2.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,54)
+    2.14 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,47)
+    2.15 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,36)
+    2.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,49)
+    2.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    2.18 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1125114]
+    2.19 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1125918]
+    2.20 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1126536]
+    2.21 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    2.22 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1127604]
+    2.23 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1128408]
+    2.24 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    2.25 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    2.26 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1129690]
+    2.27 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    2.28 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    2.29 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1130914]
+    2.30 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    2.31 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    2.32 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    2.33 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    2.34 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    2.35 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    2.36 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    2.37 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    2.38 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    2.39 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    2.40 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    3.1 reachable(1,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1133698]
+    3.2 reachable(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1134476]
+    3.3 reachable(X4,W4),reachable(W4,Y4)/(X4\==Y4)==>reachable(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1135308]
+    3.4 reflexive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:47]
+    3.5 reflexive(W4)==>t(W4,X4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:36]
+    3.6 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1136550]
+    3.7 path(W4,X4)==>reachable(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:54]
+    3.8 transitive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:49]
+    3.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    3.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,47)
+    3.11 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,36)
+    3.12 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1138634]
+    3.13 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1139412]
+    3.14 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1140244]
+    3.15 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,54)
+    3.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,49)
+    3.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    3.18 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1141252]
+    3.19 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1142056]
+    3.20 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1142674]
+    3.21 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    3.22 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1143742]
+    3.23 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1144546]
+    3.24 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    3.25 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    3.26 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1145828]
+    3.27 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    3.28 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    3.29 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1147052]
+    3.30 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    3.31 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    3.32 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    3.33 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    3.34 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    3.35 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    3.36 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    3.37 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    3.38 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    3.39 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    3.40 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    4.1 reachable(4,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1149836]
+    4.2 reachable(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1150614]
+    4.3 reachable(X4,W4),reachable(W4,Y4)/(X4\==Y4)==>reachable(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1151446]
+    4.4 path(4,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1152064]
+    4.5 path(W4,X4)==>reachable(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:54]
+    4.6 reachable(1,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1153176]
+    4.7 reachable(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1153954]
+    4.8 transitive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:49]
+    4.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    4.10 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1155444]
+    4.11 path(4,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1156222]
+    4.12 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1157054]
+    4.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,54)
+    4.14 path(1,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1157802]
+    4.15 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1158580]
+    4.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,49)
+    4.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    4.18 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1159618]
+    4.19 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1160422]
+    4.20 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1161040]
+    4.21 path(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1161818]
+    4.22 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    4.23 path(2,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1162886]
+    4.24 path(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1163664]
+    4.25 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1164442]
+    4.26 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1165246]
+    4.27 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    4.28 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    4.29 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1166528]
+    4.30 hop(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1167306]
+    4.31 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    4.32 path(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1168214]
+    4.33 path(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1168992]
+    4.34 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    4.35 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1170086]
+    4.36 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    4.37 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    4.38 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    4.39 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    4.40 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1171620]
+    4.41 hop(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1172398]
+    4.42 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    4.43 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    4.44 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    4.45 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    4.46 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    4.47 edge(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:26]
+    4.48 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+    4.49 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    4.50 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,26)
+    5.1 reachable(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1174846]
+    5.2 reachable(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1175624]
+    5.3 reachable(X4,W4),reachable(W4,Y4)/(X4\==Y4)==>reachable(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1176456]
+    5.4 reachable(4,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1177074]
+    5.5 reachable(2,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1177852]
+    5.6 reachable(4,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1178630]
+    5.7 reachable(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1179408]
+    5.8 transitive(reachable)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:49]
+    5.9 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)/(Y4\==Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:15]
+    5.10 path(4,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1180898]
+    5.11 path(W4,X4)==>reachable(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:54]
+    5.12 path(2,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1182010]
+    5.13 path(4,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1182788]
+    5.14 reachable(1,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1183566]
+    5.15 reachable(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1184344]
+    5.16 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,49)
+    5.17 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,15)
+    5.18 path(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1185382]
+    5.19 path(X4,W4),path(W4,Y4)/(X4\==Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1186214]
+    5.20 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,54)
+    5.21 path(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1186962]
+    5.22 path(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1187740]
+    5.23 path(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1188518]
+    5.24 path(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1189296]
+    5.25 path(1,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1190074]
+    5.26 path(3,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1190852]
+    5.27 hop(2,1)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1191630]
+    5.28 hop(W4,X4)==>path(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1192434]
+    5.29 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:52]
+    5.30 hop(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1193342]
+    5.31 hop(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1194120]
+    5.32 hop(3,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1194898]
+    5.33 hop(4,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1195676]
+    5.34 path(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1196454]
+    5.35 hop(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:_1197232]
+    5.36 hop(X4,W4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1198036]
+    5.37 subRelation(hop,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:29]
+    5.38 subRelation(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:21]
+    5.39 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,52)
+    5.40 edge(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:26]
+    5.41 edge(W4,X4)==>hop(W4,X4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_1199764]
+    5.42 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:25]
+    5.43 edge(1,2)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:24]
+    5.44 symmetric(hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:30]
+    5.45 symmetric(W4)==>(t(W4,Y4,X4)==>t(W4,X4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:32]
+    5.46 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,29)
+    5.47 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,21)
+    5.48 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,26)
+    5.49 subRelation(edge,hop)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc:28]
+    5.50 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,25)
+    5.51 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,24)
+    5.52 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,30)
+    5.53 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,32)
+    5.54 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc,28)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Started at Mon Jun  4 05:32:25 2018
+% 8.128 seconds cpu time for 27,905,238 inferences
+% 16,018 atoms, 12,063 functors, 11,645 predicates, 224 modules, 691,902 VM-codes
+%
+%                        Limit    Allocated       In use
+% Local  stack: 16,000,004,096      258,048        5,416 Bytes
+% Global stack: 16,000,004,096    6,287,344    4,420,816 Bytes
+% Trail  stack: 16,000,002,048    2,095,096          544 Bytes
+%
+% 540 garbage collections gained 84,216,808 bytes in 0.105 seconds.
+% 4 atom garbage collections gained 40,335 atoms in 0.012 seconds.
+% 94 clause garbage collections gained 11,008 clauses in 0.008 seconds.
+% Stack shifts: 3 local, 7 global, 5 trail in 0.002 seconds
+% 2 threads, 0 finished threads used 0.000 seconds
+% init_why(after('/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc')).
+% init_why(after('/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01e.pfc')).
+% init_why(program).
+header_sane:  ?-
+

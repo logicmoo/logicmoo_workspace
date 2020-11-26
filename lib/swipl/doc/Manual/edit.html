@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="consulting.html">
+<link rel="next" href="typetest.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="consulting.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="typetest.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:edit"><a id="sec:4.4"><span class="sec-nr">4.4</span> <span class="sec-title">Editor 
+Interface</span></a></h2>
+
+<a id="sec:edit"></a>
+
+<p>SWI-Prolog offers an extensible interface which allows the user to 
+edit objects of the program: predicates, modules, files, etc. The editor 
+interface is implemented by <a id="idx:edit1:668"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+and consists of three parts:
+<em>locating</em>, <em>selecting</em> and <em>starting</em> the editor. 
+Any of these parts may be customized. See <a class="sec" href="edit.html#sec:4.4.1">section 
+4.4.1</a>.
+
+<p>The built-in edit specifications for <a id="idx:edit1:669"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+(see <a id="idx:prologeditlocate3:670"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>) 
+are described in the table below:
+
+<p><table class="latex frame-box center">
+<tr><td colspan=2 align=center><b>Fully specified objects</b></tr>
+<tr class="hline"><td>&lt;<var>Module</var>&gt;:&lt;<var>Name</var>&gt;/&lt;<var>Arity</var>&gt; </td><td>Refers 
+to a predicate </td></tr>
+<tr><td>module(&lt;<var>Module</var>&gt;)</td><td>Refers to a module </td></tr>
+<tr><td>file(&lt;<var>Path</var>&gt;)</td><td>Refers to a file </td></tr>
+<tr><td>source_file(&lt;<var>Path</var>&gt;)</td><td>Refers to a loaded 
+source file </td></tr>
+<tr class="hline"><td colspan=2 align=center><b>Ambiguous specifications</b></tr>
+<tr class="hline"><td>&lt;<var>Name</var>&gt;/&lt;<var>Arity</var>&gt; </td><td>Refers 
+to this predicate in any module </td></tr>
+<tr><td>&lt;<var>Name</var>&gt; </td><td>Refers to (1) the named 
+predicate in any module with any arity, (2) a (source) file, or (3) a 
+module. </td></tr>
+</table>
+
+<dl class="latex">
+<dt class="pubdef"><a id="edit/1"><strong>edit</strong>(<var>+Specification</var>)</a></dt>
+<dd class="defbody">
+First, exploit <a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a> 
+to translate
+<var>Specification</var> into a list of <em>Locations</em>. If there is 
+more than one&lsquo;hit', the user is asked to select from the locations 
+found. Finally, <a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a> 
+is used to invoke the user's preferred editor. Typically, <a id="idx:edit1:671"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+can be handed the name of a predicate, module, basename of a file, XPCE 
+class, XPCE method, etc.</dd>
+<dt class="pubdef"><a id="edit/0"><strong>edit</strong></a></dt>
+<dd class="defbody">
+Edit the&lsquo;default' file using <a id="idx:edit1:672"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+The default file is the file loaded with the command line option <strong>-s</strong> 
+or, in Windows, the file loaded by double-clicking from the Windows 
+shell.
+</dd>
+</dl>
+
+<p><h3 id="sec:customedit"><a id="sec:4.4.1"><span class="sec-nr">4.4.1</span> <span class="sec-title">Customizing 
+the editor interface</span></a></h3>
+
+<a id="sec:customedit"></a>
+
+<p>The predicates described in this section are <em>hooks</em> that can 
+be defined to disambiguate specifications given to <a id="idx:edit1:673"></a><a class="pred" href="edit.html#edit/1">edit/1</a>, 
+find the related source, and open an editor at the given source 
+location.
+
+<dl class="latex">
+<dt class="pubdef"><a id="prolog_edit:locate/3"><strong>prolog_edit:locate</strong>(<var>+Spec, 
+-FullSpec, -Location</var>)</a></dt>
+<dd class="defbody">
+Where <var>Spec</var> is the specification provided through <a id="idx:edit1:674"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+This multifile predicate is used to enumerate locations where an object 
+satisfying the given <var>Spec</var> can be found. <var>FullSpec</var> 
+is unified with the complete specification for the object. This 
+distinction is used to allow for ambiguous specifications. For example, 
+if <var>Spec</var> is an atom, which appears as the basename of a loaded 
+file and as the name of a predicate, <var>FullSpec</var> will be bound 
+to <code>file(Path)</code> or <var>Name</var>/<var>Arity</var>.
+
+<p><var>Location</var> is a list of attributes of the location. 
+Normally, this list will contain the term <code>file(File)</code> and, 
+if available, the term <code>line(Line)</code>.</dd>
+<dt class="pubdef"><a id="prolog_edit:locate/2"><strong>prolog_edit:locate</strong>(<var>+Spec, 
+-Location</var>)</a></dt>
+<dd class="defbody">
+Same as <a id="idx:prologeditlocate3:675"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>, 
+but only deals with fully specified objects.</dd>
+<dt class="pubdef"><a id="prolog_edit:edit_source/1"><strong>prolog_edit:edit_source</strong>(<var>+Location</var>)</a></dt>
+<dd class="defbody">
+Start editor on <var>Location</var>. See <a id="idx:prologeditlocate3:676"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a> 
+for the format of a location term. This multifile predicate is normally 
+not defined. If it succeeds, <a id="idx:edit1:677"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+assumes the editor is started.
+
+<p>If it fails, <a id="idx:edit1:678"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+uses its internal defaults, which are defined by the Prolog flag <a class="flag" href="flags.html#flag:editor">editor</a> 
+and/or the environment variable
+<code>EDITOR</code>. The following rules apply. If the Prolog flag <a class="flag" href="flags.html#flag:editor">editor</a> 
+is of the format <code>$</code>&lt;<var>name</var>&gt;, the editor is 
+determined by the environment variable &lt;<var>name</var>&gt;. Else, if 
+this flag is <code>pce_emacs</code> or <code>built_in</code>
+<em>and</em> XPCE is loaded or can be loaded, the built-in Emacs clone 
+is used. Else, if the environment <code>EDITOR</code> is set, this 
+editor is used. Finally,
+<b>vi</b> is used as default on Unix systems and <b>notepad</b> on 
+Windows.
+
+<p>See the default user preferences file <code>customize/init.pl</code> 
+for examples.</dd>
+<dt class="pubdef"><a id="prolog_edit:edit_command/2"><strong>prolog_edit:edit_command</strong>(<var>+Editor, 
+-Command</var>)</a></dt>
+<dd class="defbody">
+Determines how <var>Editor</var> is to be invoked using <a id="idx:shell1:679"></a><a class="pred" href="system.html#shell/1">shell/1</a>. <var>Editor</var> 
+is the determined editor (see <a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a>), 
+without the full path specification, and without a possible (<code>.exe</code>) 
+extension. <var>Command</var> is an atom describing the command. The 
+following %-sequences are replaced in <var>Command</var> before the 
+result is handed to <a id="idx:shell1:680"></a><a class="pred" href="system.html#shell/1">shell/1</a>:
+
+<p><table class="latex frame-box center">
+<tr><td>%e</td><td>Replaced by the (OS) command name of the editor </td></tr>
+<tr><td>%f</td><td>Replaced by the (OS) full path name of the file </td></tr>
+<tr><td>%d</td><td>Replaced by the line number </td></tr>
+</table>
+
+<p>If the editor can deal with starting at a specified line, two clauses 
+should be provided. The first pattern invokes the editor with a line 
+number, while the second is used if the line number is unknown.
+
+<p>The default contains definitions for <b>vi</b>, <b>emacs</b>,
+<b>emacsclient</b>, <b>vim</b>, <b>notepad</b><var>^*</var> and
+<b>wordpad</b><var>^*</var>. Starred editors do not provide starting at 
+a given line number.
+
+<p>Please contribute your specifications to <a class="url" href="mailto:bugs@swi-prolog.org">bugs@swi-prolog.org</a>.</dd>
+<dt class="pubdef"><a id="prolog_edit:load/0"><strong>prolog_edit:load</strong></a></dt>
+<dd class="defbody">
+Normally an undefined multifile predicate. This predicate may be defined 
+to provide loading hooks for user extensions to the edit module. For 
+example, XPCE provides the code below to load <code>library(swi_edit)</code>, 
+containing definitions to locate classes and methods as well as to bind 
+this package to the PceEmacs built-in editor.
+
+<pre class="code">
+:- multifile prolog_edit:load/0.
+
+prolog_edit:load :-
+        ensure_loaded(library(swi_edit)).
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

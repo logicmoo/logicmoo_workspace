@@ -1,0 +1,15 @@
+(note TQA62)
+
+(statementOfPurpose InternationalAtomicEnergyAgency to_promote_economic_and_social_development_in_Latin_America) 
+
+
+(query (findall ?PURPOSE 
+ (statementOfPurpose InternationalAtomicEnergyAgency ?PURPOSE)))
+
+
+(answer to_promote_economic_and_social_development_in_Latin_America) 
+
+(end_of_file)
+
+
+  

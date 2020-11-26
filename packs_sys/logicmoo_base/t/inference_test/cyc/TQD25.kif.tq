@@ -1,0 +1,17 @@
+(note TQD25)
+
+(primaryFunction GazoducMaghreb-EuropePipeline 
+ (TransportFn NaturalGas) conveyor-Stationary) 
+
+
+(query (findall ?GOODS
+
+(primaryFunction GazoducMaghreb-EuropePipeline 
+ (TransportFn ?GOODS) conveyor-Stationary) 
+
+))
+
+(answer NaturalGas
+)
+
+(end_of_file)

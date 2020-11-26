@@ -1,0 +1,306 @@
+(note TQF216b)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?ATTACK MilitaryAttack) 
+        (directingAgent ?ATTACK Israel) 
+        (objectActedOn ?ATTACK 
+          (IndustryOfRegionFn 
+            (IndustryFn WeaponOfMassDestruction) Iran))))) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?FACTIONAL-CONFLICT 
+      (and 
+        (instance ?FACTIONAL-CONFLICT FactionalConflict) 
+        (targetOfContention ?FACTIONAL-CONFLICT 
+          (GovernmentFn Iran))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (forAll ?SHIA 
+    (forAll ?IRAN-NEIGHBOR 
+      (implies 
+        (and 
+          (instance ?IRAN-NEIGHBOR Country) 
+          (hasBeliefSystems ?SHIA ShiiteIslam) 
+          (meetsSpatially Iran ?IRAN-NEIGHBOR) 
+          (residesInRegion ?SHIA ?IRAN-NEIGHBOR)) 
+      (not 
+        (relationExistsInstance maleficiary Persecution ?SHIA))))) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (thereExists ?EVT 
+    (increases-Generic ?EVT Iran 
+      (Kappa 
+        (?OWNER ?COUNT) 
+        (relationInstanceExistsCount possesses ?OWNER BallisticMissile ?COUNT)))) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?COOPERATION 
+      (and 
+        (instance ?COOPERATION MilitaryEvent) 
+        (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION)))) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (powerInRegion-Geopolitical Iraq PersianGulfRegion Low) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE Afghanistan) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE (CentralRegionFn ContinentOfAsia)) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (thereExists ?WMD 
+    (and 
+      (instance ?WMD WeaponOfMassDestruction) 
+      (possesses Iran ?WMD))) NationalDefenseGoal) 
+
+(goalCategoryForAgent Iran 
+  (thereExists ?EVT 
+    (increases-Generic ?EVT Iran 
+      (Kappa 
+        (?OWNER ?COUNT) 
+        (relationInstanceExistsCount possesses ?OWNER WeaponOfMassDestruction ?COUNT)))) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) NationalDefenseGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE Turkey) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE Azerbaijan) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE Georgia-TheNation) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?TAKING-REFUGE 
+      (thereExists ?REFUGEE 
+        (and 
+          (instance ?REFUGEE Refugee) 
+          (instance ?TAKING-REFUGE TakingRefuge) 
+          (toLocation ?TAKING-REFUGE Iran) 
+          (fromLocation ?TAKING-REFUGE Armenia) 
+          (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal) 
+
+(implies 
+  (contains (CentralRegionFn ContinentOfAsia) ?STATE) 
+  (goalCategoryForAgent Iran 
+    (not 
+      (thereExists ?TAKING-REFUGE 
+        (thereExists ?REFUGEE 
+          (and 
+            (instance ?REFUGEE Refugee) 
+            (instance ?TAKING-REFUGE TakingRefuge) 
+            (toLocation ?TAKING-REFUGE Iran) 
+            (agent ?TAKING-REFUGE ?REFUGEE) 
+            (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal))
+
+(contains 
+  (CentralRegionFn ContinentOfAsia) 
+  (CentralRegionFn ContinentOfAsia)) 
+
+(implies 
+  (and 
+    (different Iran ?STATE) 
+    (instance ?STATE CaucasusCountry)) 
+  (goalCategoryForAgent Iran 
+    (not 
+      (thereExists ?TAKING-REFUGE 
+        (thereExists ?REFUGEE 
+          (and 
+            (instance ?REFUGEE Refugee) 
+            (instance ?TAKING-REFUGE TakingRefuge) 
+            (toLocation ?TAKING-REFUGE Iran) 
+            (agent ?TAKING-REFUGE ?REFUGEE) 
+            (fromLocation ?TAKING-REFUGE ?STATE))))) InternalSecurityGoal))
+
+(instance Turkey CaucasusCountry) 
+(instance Azerbaijan CaucasusCountry) 
+(instance Georgia-TheNation CaucasusCountry) 
+(instance Armenia CaucasusCountry) 
+
+(query (findall (?SECURITY-GOAL ?SECURITY-GOAL-CATEGORY ?DEFENSE-GOAL ?DEFENSE-GOAL-CATEGORY)
+   (or 
+       (and 
+           (goalCategoryForAgent Iran ?SECURITY-GOAL ?SECURITY-GOAL-CATEGORY) 
+           (subAttribute ?SECURITY-GOAL-CATEGORY InternalSecurityGoal)) 
+       (and 
+           (goalCategoryForAgent Iran ?DEFENSE-GOAL ?DEFENSE-GOAL-CATEGORY) 
+           (subAttribute ?DEFENSE-GOAL-CATEGORY NationalDefenseGoal)))))
+
+(answer (List
+  (not 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?ATTACK MilitaryAttack) 
+        (directingAgent ?ATTACK Israel) 
+        (objectActedOn ?ATTACK 
+          (IndustryOfRegionFn 
+            (IndustryFn WeaponOfMassDestruction) Iran)))))) NationalDefenseGoal ?? ??)
+
+(answer ?? ??  (List (not 
+ (thereExists ?FACTIONAL-CONFLICT 
+ (and 
+ (instance ?FACTIONAL-CONFLICT FactionalConflict) 
+ (targetOfContention ?FACTIONAL-CONFLICT 
+ (GovernmentFn Iran)))))) InternalSecurityGoal) 
+
+(answer (List (forAll ?SHIA 
+ (forAll ?IRAN-NEIGHBOR 
+ (implies 
+ (and 
+ (instance ?IRAN-NEIGHBOR Country) 
+ (hasBeliefSystems ?SHIA ShiiteIslam) 
+ (meetsSpatially Iran ?IRAN-NEIGHBOR) 
+ (residesInRegion ?SHIA ?IRAN-NEIGHBOR)) 
+ (not 
+ (relationExistsInstance maleficiary Persecution ?SHIA)))))) NationalDefenseGoal ?? ??)
+
+(answer (List (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER BallisticMissile ?COUNT))))) NationalDefenseGoal ?? ??) 
+
+(answer (List
+ (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION MilitaryEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION))))) NationalDefenseGoal ?? ??)
+
+(answer (List
+ (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE 
+ (CentralRegionFn ContinentOfAsia)) 
+ (agent ?TAKING-REFUGE ?REFUGEE))))) InternalSecurityGoal ?? ??)
+
+(answer (List
+ (powerInRegion-Geopolitical Iraq PersianGulfRegion Low)) NationalDefenseGoal ?? ??) 
+
+(answer (List (thereExists ?WMD 
+ (and 
+ (instance ?WMD WeaponOfMassDestruction) 
+ (possesses Iran ?WMD)))) NationalDefenseGoal ?? ??)
+
+(answer (List  (thereExists ?EVT 
+ (increases-Generic ?EVT Iran 
+ (Kappa 
+ (?OWNER ?COUNT) 
+ (relationInstanceExistsCount possesses ?OWNER BallisticMissile ?COUNT))))) NationalDefenseGoal ?? ??)
+
+(answer  (List (powerInRegion-Geopolitical UnitedStatesOfAmerica PersianGulfRegion Low) )NationalDefenseGoal ?? ??) 
+
+(answer (List  (not 
+ (thereExists ?COOPERATION 
+ (and 
+ (instance ?COOPERATION MilitaryEvent) 
+ (partnersInCooperation SaudiArabia UnitedStatesOfAmerica ?COOPERATION))))) NationalDefenseGoal ?? ??)
+
+(answer ?? ??  (List (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Afghanistan) 
+ (agent ?TAKING-REFUGE ?REFUGEE)))))) InternalSecurityGoal) 
+
+(answer ?? ?? (List (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Turkey) 
+ (agent ?TAKING-REFUGE ?REFUGEE)))))) InternalSecurityGoal) 
+
+(answer ?? ?? (List  (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE 
+ (CentralRegionFn ContinentOfAsia)) 
+ (agent ?TAKING-REFUGE ?REFUGEE)))))) InternalSecurityGoal) 
+
+(answer ?? ?? (List (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Georgia-TheNation) 
+ (agent ?TAKING-REFUGE ?REFUGEE)))))) InternalSecurityGoal) 
+
+(answer ?? ?? (List  (not 
+ (thereExists ?TAKING-REFUGE 
+ (thereExists ?REFUGEE 
+ (and 
+ (instance ?REFUGEE Refugee) 
+ (instance ?TAKING-REFUGE TakingRefuge) 
+ (toLocation ?TAKING-REFUGE Iran) 
+ (fromLocation ?TAKING-REFUGE Armenia) 
+ (agent ?TAKING-REFUGE ?REFUGEE)))))) InternalSecurityGoal) 
+
+(end_of_file)
+
+

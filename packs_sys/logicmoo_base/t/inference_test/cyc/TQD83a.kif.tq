@@ -1,0 +1,20 @@
+(note TQD83a)
+
+(relationInstanceExistsMany possesses Libya ChemicalWeapon) 
+
+(different WeaponOfMassDestruction ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(query (findall ?FORCE
+(and 
+   (subclass ?FORCE WeaponOfMassDestruction) 
+   (different ?FORCE WeaponOfMassDestruction) 
+   (relationInstanceExistsMany possesses Libya ?FORCE))
+))
+
+(answer ChemicalWeapon
+)
+
+(end_of_file)
+

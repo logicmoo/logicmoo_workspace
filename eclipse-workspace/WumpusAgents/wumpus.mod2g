@@ -1,0 +1,12 @@
+use initGoals as goals.
+use initBeliefs as beliefs.
+use facts as knowledge.
+use wumpus as actionspec.
+
+order=random.
+
+module wumpus {
+	if bel( true ) then forward.
+	if bel( true ) then turn(left).
+	if bel( true ) then turn(right).
+}

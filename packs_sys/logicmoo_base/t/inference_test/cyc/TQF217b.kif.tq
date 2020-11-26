@@ -1,0 +1,58 @@
+(note TQF217b)
+(abort)
+
+(internationalOrg-MemberCountry SixPlusTwo-InternationalOrganization Pakistan) 
+
+(or 
+(trueFormula 
+(?RELATION-1 SixPlusTwo-InternationalOrganization Pakistan)) 
+(trueFormula 
+(?RELATION-2 Pakistan SixPlusTwo-InternationalOrganization)) 
+(and 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 Pakistan)) 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 SixPlusTwo-InternationalOrganization))) 
+(trueFormula 
+(?RELATION-5 Pakistan SixPlusTwo-InternationalOrganization ?WHAT-3)) 
+(trueFormula 
+(?RELATION-6 SixPlusTwo-InternationalOrganization Pakistan ?WHAT-4)) 
+(trueFormula 
+(?RELATION-7 SixPlusTwo-InternationalOrganization ?WHAT-5 Pakistan)) 
+(trueFormula 
+(?RELATION-8 Pakistan ?WHAT-6 SixPlusTwo-InternationalOrganization)) 
+(trueFormula 
+(?RELATION-9 ?WHAT-7 SixPlusTwo-InternationalOrganization Pakistan)) 
+(trueFormula 
+(?RELATION-10 ?WHAT-8 Pakistan SixPlusTwo-InternationalOrganization)))
+
+
+(query (findall (?RELATION-1 ?RELATION-2 ?RELATION-3 ?WHAT-1 ?RELATION-5 ?WHAT-3 ?RELATION-6 ?WHAT-4 ?RELATION-7 ?WHAT-5 ?RELATION-8 ?WHAT-6 ?RELATION-9 ?WHAT-7 ?RELATION-10 ?WHAT-8)
+
+(or 
+(trueFormula 
+(?RELATION-1 SixPlusTwo-InternationalOrganization Pakistan)) 
+(trueFormula 
+(?RELATION-2 Pakistan SixPlusTwo-InternationalOrganization)) 
+(and 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 Pakistan)) 
+(trueFormula 
+(?RELATION-3 ?WHAT-1 SixPlusTwo-InternationalOrganization))) 
+(trueFormula 
+(?RELATION-5 Pakistan SixPlusTwo-InternationalOrganization ?WHAT-3)) 
+(trueFormula 
+(?RELATION-6 SixPlusTwo-InternationalOrganization Pakistan ?WHAT-4)) 
+(trueFormula 
+(?RELATION-7 SixPlusTwo-InternationalOrganization ?WHAT-5 Pakistan)) 
+(trueFormula 
+(?RELATION-8 Pakistan ?WHAT-6 SixPlusTwo-InternationalOrganization)) 
+(trueFormula 
+(?RELATION-9 ?WHAT-7 SixPlusTwo-InternationalOrganization Pakistan)) 
+(trueFormula 
+(?RELATION-10 ?WHAT-8 Pakistan SixPlusTwo-InternationalOrganization)))
+)) 
+
+(answer internationalOrg-MemberCountry ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??)
+
+(end_of_file)

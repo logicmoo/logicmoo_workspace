@@ -1,0 +1,284 @@
+%========================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the leanTAP system.
+%----
+%----Written by Karla Geiss, March, 1995.
+%----Minor modifications by Geoff Sutcliffe, May, 1995.
+%========================================================================
+%========================================================================
+%----FOF output
+%========================================================================
+%DEBUG output_leantap_formula(F):-write('OLF--- '),display(F),fail.
+
+output_leantap_formula(?[Variable]:Formula) :-
+	!,
+	write('ex('),
+	write(Variable),
+	write(','),
+	nl,
+	output_leantap_formula(Formula),
+	nl,
+	write(')').
+
+output_leantap_formula(?[Variable|Variables]:Formula) :-
+	!,
+	write('ex('),
+	write(Variable),
+	write(', '),
+	output_leantap_formula(?Variables:Formula),
+	write(')').
+
+output_leantap_formula(![Variable]:Formula) :-
+	!,
+	write('all('),
+	write(Variable),
+	write(','),
+	nl,
+	output_leantap_formula(Formula),
+	nl,
+	write(')').
+
+output_leantap_formula(![Variable|Variables]:Formula) :-
+	!,
+	write('all('),
+	write(Variable),
+	write(', '),
+	output_leantap_formula(!Variables:Formula),
+	write(')').
+
+output_leantap_formula(P & Q) :-
+	!,
+	write('('),
+	output_leantap_formula(P),
+	write(')'),
+	nl,
+	write(' & '),
+	nl,
+	write('('),
+	output_leantap_formula(Q),
+	write(')').
+
+output_leantap_formula(P '|' Q) :-
+	!,
+	write('(('),
+	output_leantap_formula(P),
+	write(')'),
+	nl,
+	write(' v '),
+	nl,
+	write('('),
+	output_leantap_formula(Q),
+	write('))').
+
+output_leantap_formula(P => Q) :-
+	!,
+	write('(('),
+	output_leantap_formula(P),
+	write(')'),
+	nl,
+	write(' => '),
+	nl,
+	write('('),
+	output_leantap_formula(Q),
+	write('))').
+
+output_leantap_formula(P <=> Q) :-
+	!,
+	write('(('),
+	output_leantap_formula(P),
+	write(')'),
+	nl,
+	write(' <=> '),
+	nl,
+	write('('),
+	output_leantap_formula(Q),
+	write('))').
+
+output_leantap_formula(~P) :-
+	!,
+	write('-('),
+	output_leantap_formula(P),
+    write(')').
+
+output_leantap_formula('$true'):-
+    !,
+    write('true__ v -(true__)').
+
+output_leantap_formula('$false'):-
+    !,
+    write('false__ & -(false__)').
+
+output_leantap_formula('$tptp_equal'(LHS,RHS)):-
+    !,
+    output_leantap_formula(equal(LHS,RHS)).
+
+output_leantap_formula(Term) :-
+	write(Term).
+
+%========================================================================
+%----CNF output
+%========================================================================
+%----Print out a literal with - for negative, nothing for positive.
+output_leantap_signed_literal(--Atom):-
+    !,
+    write('-'),
+    output_leantap_formula(Atom).
+
+output_leantap_signed_literal(++Atom):-
+    write(' '),
+    output_leantap_formula(Atom).
+%----------------------------------------------------------------------
+%----Print out the literals of a clause in leanTAP format.
+%----Special case of an empty clause
+output_leantap_literals([]):-
+    !,
+    write('dummy & -dummy').
+
+output_leantap_literals([OneLiteral]):-
+    !,
+    output_leantap_signed_literal(OneLiteral).
+
+output_leantap_literals([FirstLiteral|RestOfLiterals]):-
+    output_leantap_signed_literal(FirstLiteral),
+    write('  v'),
+    nl,
+    write(' '),
+    output_leantap_literals(RestOfLiterals).
+%----------------------------------------------------------------------
+%----Print out the clause in leanTAP format.
+output_leantap_clause([],Literals):-
+    !,
+    write('('),
+    output_leantap_literals(Literals),
+    write(')').
+
+output_leantap_clause([FirstVariable|RestOfVariables],Literals):-
+    write('all('),
+    write(FirstVariable),
+    write(','),
+    (RestOfVariables == [] ->
+        nl;
+        true),
+    output_leantap_clause(RestOfVariables,Literals),   
+    write(')'). 
+%----------------------------------------------------------------------
+%----Print out the clauses in leanTAP format.
+output_leantap_cf([]):-
+    !.
+output_leantap_cf([input_clause(Name,Status,Variables,Literals)|
+RestOfClauses]):-
+    !,
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_leantap_clause(Variables,Literals),
+    (RestOfClauses \== []  ->
+        (nl,
+         nl,
+         write('  &'),
+         nl,
+         nl);
+         true),
+    output_leantap_cf(RestOfClauses).
+
+output_leantap_cf([fof(Name,Status,Formula)|RestOfFormulae]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_leantap_formula(Formula),
+    (RestOfFormulae \== []  ->
+        (nl,
+         nl,
+         write('  &'),
+         nl,
+         nl);
+         true),
+    output_leantap_cf(RestOfFormulae).
+%----------------------------------------------------------------------
+%----Print out the list of input clauses/formulae as a formula in leanTAP 
+%----format.
+leantap_reorder_cf(L, [fof(Name, conjecture, ~(Formula))| Rest]) :-
+	tptp2X_select(fof(Name, conjecture, Formula), L, Rest),
+	!,
+    write('%----This is the conjecture with negated conjecture'),
+    nl.
+
+leantap_reorder_cf(L, L).
+%----------------------------------------------------------------------
+output_leantap([]):-
+    !.
+
+output_leantap(CF):-
+    nl,
+    write('fml(t,0,('),
+    nl,
+    nl,
+    leantap_reorder_cf(CF, Reordered),
+    output_leantap_cf(Reordered),
+    nl,
+    nl,
+    write(')).'),
+    nl,
+    nl.    
+%----------------------------------------------------------------------
+%----Search for the variables occurring in the clause.
+%----If atomic, check if a variable (they're all atoms by here, so look
+%----at the first letter).
+leantap_variable(Variable,Variable):-
+    atom(Variable),
+    !,
+    name(Variable,[FirstASCII|_]),
+    FirstASCII >= 65,
+    FirstASCII =< 90.
+
+%----Numbervars variables look like shit.
+leantap_variable('$VAR'(Index),'$VAR'(Index)):-
+    !.
+
+%----If a list then do head and tail
+leantap_variable([FirstTerm|RestOfTerms],Variable):-
+    !,
+    tptp2X_member(Term,[FirstTerm|RestOfTerms]),
+    leantap_variable(Term,Variable).
+
+%----Otherwise it's a function to pull apart
+leantap_variable(Function,Variable):-
+    Function =.. [_|Arguments],
+    leantap_variable(Arguments,Variable).
+%----------------------------------------------------------------------
+%----Extend each input clause, adding the list of variables occurring
+%----in that clause.
+make_leantap_clauses([],[]):-
+    !.
+
+make_leantap_clauses([input_clause(Name,Status,Literals)|
+RestOfClauses],[input_clause(Name,Status,ClauseVariables,Literals)|
+RestOfLeantapClauses]):-
+    tptp2X_setof1(Variable,leantap_variable(Literals,Variable),
+ClauseVariables),
+    make_leantap_clauses(RestOfClauses,RestOfLeantapClauses).
+%----------------------------------------------------------------------
+%----Print out all the clauses in leanTAP format.
+leantap(leantap,Clauses,_):-
+    tptp_clauses(Clauses),
+    make_leantap_clauses(Clauses,LeantapClauses),
+    output_leantap(LeantapClauses).
+
+%----Print out all the formulae in leanTAP format.
+leantap(leantap,Formulae,_):-
+    tptp_formulae(Formulae),
+    output_leantap(Formulae).
+%----------------------------------------------------------------------
+%----Provide information about the leanTAP format.
+leantap_format_information('%','.leantap').
+%----------------------------------------------------------------------
+%----Provide information about the TPTP file
+leantap_file_information(format,leantap,'LeanTAP format').
+%----------------------------------------------------------------------
+

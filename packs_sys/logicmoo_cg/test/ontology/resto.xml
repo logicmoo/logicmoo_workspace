@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\resto.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>Fr</Language>
+    <Language>En</Language>
+  </Languages>
+  <MainLanguage>Fr</MainLanguage>
+  <RelationRoot>relation</RelationRoot>
+  <Root>
+    <Key>universel</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>universel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>universel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>relation</Key>
+        </Child>
+        <Child>
+          <Key>Instrument</Key>
+        </Child>
+        <Child>
+          <Key>Aliment</Key>
+        </Child>
+        <Child>
+          <Key>Personne</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Personne</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms>
+            <Synonym>Person</Synonym>
+            <Synonym>Agent</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Personne</Synonym>
+            <Synonym>Agent</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Client</Key>
+        </Child>
+        <Child>
+          <Key>Proprietaire</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Proprietaire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Proprietaire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Karim</Key>
+        </Child>
+        <Child>
+          <Key>Farida</Key>
+        </Child>
+        <Child>
+          <Key>Aicha</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Personne</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Aicha</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Aicha</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Proprietaire</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Proprietaire</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Farida</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Farida</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Proprietaire</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Proprietaire</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Karim</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Karim</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Proprietaire</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Proprietaire</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Client</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Client</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Lauriere</Key>
+        </Child>
+        <Child>
+          <Key>Hamid</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Personne</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Hamid</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Hamid</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Client</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Client</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Lauriere</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Lauriere</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Client</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Client</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Aliment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Aliment</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Gerent</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Gerent</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Gerent</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Aliment</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Instrument</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Instrument</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Couteau</Key>
+        </Child>
+        <Child>
+          <Key>Cuilliere</Key>
+        </Child>
+        <Child>
+          <Key>Bole</Key>
+        </Child>
+        <Child>
+          <Key>Poele</Key>
+        </Child>
+        <Child>
+          <Key>Casserole</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Casserole</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Casserole</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Poele</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Poele</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Poele_Frite</Key>
+        </Child>
+        <Child>
+          <Key>Poele_Viande</Key>
+        </Child>
+        <Child>
+          <Key>Poele_Couscous</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Poele_Couscous</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Poele_Couscous</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Poele</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Poele_Viande</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Poele_Viande</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Poele</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Poele_Frite</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Poele_Frite</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Poele_Frite_Class</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Poele</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Poele_Frite_Class</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Poele_Frite_Class</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Poele_Frite</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Bole</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Bole</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Cuilliere</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Cuilliere</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Couteau</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>Couteau</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Instrument</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>En</Language>
+          <Synonyms />
+        </Lexicon>
+        <Lexicon>
+          <Language>Fr</Language>
+          <Synonyms>
+            <Synonym>relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>universel</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

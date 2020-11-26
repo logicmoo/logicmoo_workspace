@@ -1,0 +1,7 @@
+(note "Kalish & Montague, Theorem 244: soundness check")
+
+(not (exists ?X (F ?X)))
+
+(queryyn (forall ?X (implies (G ?X) (F ?X))))
+
+(answer Unproven)

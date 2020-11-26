@@ -1,0 +1,101 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/GiunchigliaEtAl2004/MonkeyPrediction.e
+loading foundations/Root.e
+loading foundations/EC.e
+loading examples/GiunchigliaEtAl2004/MonkeyBananas.e
+185 variables and 863 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+At(Bananas, L2).
+At(Box, L3).
+At(Monkey, L1).
+Happens(Walk(L3), 0).
+1
+-At(Monkey, L1).
++At(Monkey, L3).
+Happens(PushBox(L2), 1).
+2
+-At(Box, L3).
+-At(Monkey, L3).
++At(Box, L2).
++At(Monkey, L2).
+P
+!Happens(ClimbOff(), 0).
+!Happens(ClimbOff(), 1).
+!Happens(ClimbOff(), 2).
+!Happens(ClimbOn(), 0).
+!Happens(ClimbOn(), 1).
+!Happens(ClimbOn(), 2).
+!Happens(GraspBananas(), 0).
+!Happens(GraspBananas(), 1).
+!Happens(GraspBananas(), 2).
+!Happens(PushBox(L1), 0).
+!Happens(PushBox(L1), 1).
+!Happens(PushBox(L1), 2).
+!Happens(PushBox(L2), 0).
+!Happens(PushBox(L2), 2).
+!Happens(PushBox(L3), 0).
+!Happens(PushBox(L3), 1).
+!Happens(PushBox(L3), 2).
+!Happens(Walk(L1), 0).
+!Happens(Walk(L1), 1).
+!Happens(Walk(L1), 2).
+!Happens(Walk(L2), 0).
+!Happens(Walk(L2), 1).
+!Happens(Walk(L2), 2).
+!Happens(Walk(L3), 1).
+!Happens(Walk(L3), 2).
+!ReleasedAt(At(Bananas, L1), 0).
+!ReleasedAt(At(Bananas, L1), 1).
+!ReleasedAt(At(Bananas, L1), 2).
+!ReleasedAt(At(Bananas, L2), 0).
+!ReleasedAt(At(Bananas, L2), 1).
+!ReleasedAt(At(Bananas, L2), 2).
+!ReleasedAt(At(Bananas, L3), 0).
+!ReleasedAt(At(Bananas, L3), 1).
+!ReleasedAt(At(Bananas, L3), 2).
+!ReleasedAt(At(Box, L1), 0).
+!ReleasedAt(At(Box, L1), 1).
+!ReleasedAt(At(Box, L1), 2).
+!ReleasedAt(At(Box, L2), 0).
+!ReleasedAt(At(Box, L2), 1).
+!ReleasedAt(At(Box, L2), 2).
+!ReleasedAt(At(Box, L3), 0).
+!ReleasedAt(At(Box, L3), 1).
+!ReleasedAt(At(Box, L3), 2).
+!ReleasedAt(At(Monkey, L1), 0).
+!ReleasedAt(At(Monkey, L1), 1).
+!ReleasedAt(At(Monkey, L1), 2).
+!ReleasedAt(At(Monkey, L2), 0).
+!ReleasedAt(At(Monkey, L2), 1).
+!ReleasedAt(At(Monkey, L2), 2).
+!ReleasedAt(At(Monkey, L3), 0).
+!ReleasedAt(At(Monkey, L3), 1).
+!ReleasedAt(At(Monkey, L3), 2).
+!ReleasedAt(HasBananas(), 0).
+!ReleasedAt(HasBananas(), 1).
+!ReleasedAt(HasBananas(), 2).
+!ReleasedAt(OnBox(), 0).
+!ReleasedAt(OnBox(), 1).
+!ReleasedAt(OnBox(), 2).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+MonkeyBananas: 0 predicates, 0 functions, 3 fluents, 5 events, 16 axioms
+MonkeyPrediction: 0 predicates, 0 functions, 0 fluents, 0 events, 5 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.2s
+solution 0.0s
+total 0.5s
+Discrete Event Calculus Reasoner 1.0

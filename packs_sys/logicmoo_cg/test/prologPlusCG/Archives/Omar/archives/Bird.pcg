@@ -1,0 +1,50 @@
+//Bird's diet 
+Bird( x, Food):: [Bird : x] <-actor- [Eat] -obj-> [Food = ["Verre_De_Terre", "cheese", "Baies_Sauvages"]].
+
+// the shelter of the agent Arthur
+Bird( x, State):: [Bird : x] <-actor-  [Live] -livesIn-> [Shelter = "nest"] -locatedIn-> [Location = "tree"].
+
+//a constraint to specify that jhon is a bear
+Bird( Arthur ).
+
+//the agent's  behaviour
+Bird( Arthur, Personality):: [Bird : Arthur] <-actor- [Character] -has-> [List = [Nice]].
+
+//relationship with other animals
+Bird( Arthur, Friend ):: [Bird : Arthur] <-actor- [Friend] -has-> [List = [John]].
+
+//knowledge of the agent
+Bird( Arthur, Knowledge):: [Object = "fish"] -locatedIn-> [Position = [20,11]].
+Bird( Arthur, Knowledge):: [Object = "honey"] -locatedIn-> [Position = [24,6]].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -locatedIn-> [CurrentPosition = [16,7]].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 20].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 10].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "Baies_Sauvages"] -quantityOf-> [Quantity = 5].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 10].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 5].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "cheese"] -quantityOf-> [Quantity = 2].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "very much"]
+				-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 30].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "normal"]
+				-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 20].
+Bird( Arthur, Knowledge ):: [Bird : Arthur] -has-> [Hungry] -
+				-intensityOf-> [Intensity = "few"]
+				-quantityOfFood-> [Food = "Verre_De_Terre"] -quantityOf-> [Quantity = 10].
+
+Bird( Arthur, Perception ):: [Bird : Arthur] -has-> [Perception = 3].
+
+Bird(x,y)::B:-Animal(x,y)::B.

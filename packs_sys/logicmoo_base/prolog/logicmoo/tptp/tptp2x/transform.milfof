@@ -1,0 +1,294 @@
+%==============================================================================
+%----Translation of modal and intuitionistic logic to FOL
+%----
+%----Written by Geoff Sutcliffe, March 2009
+%==============================================================================
+%---For some reason I don't understand, I have to redeclare @. Others OK. Fuck.
+:-op(501,yfx,@).
+%------------------------------------------------------------------------------
+mil_include(ifof,goedel1,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL010^0.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+ 
+mil_include(ifof,goedel2,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL011^0.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+ 
+mil_include(ifof,mckinsey,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL012^0.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+ 
+mil_include(mfof:Logic,benzmueller,AllFormulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^0.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary),
+    mil_include(mfof,Logic,LogicFormulae),
+    tptp2X_append(Formulae,LogicFormulae,AllFormulae).
+ 
+mil_include(mfof,k,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^1.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+
+mil_include(mfof,d,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^2.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+
+mil_include(mfof,m,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^3.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+
+mil_include(mfof,b,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^4.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+
+mil_include(mfof,s4,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^5.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+
+mil_include(mfof,s5,Formulae):-
+    !,
+    read_formulae_from_file('Axioms/LCL013^6.ax',_,all,Formulae,Dictionary),
+    instantiate_variables_from_dictionary(Dictionary).
+ 
+mil_include(_,_,[]).
+%------------------------------------------------------------------------------
+mil_functor_type_for_arity(0,mu).
+
+mil_functor_type_for_arity(Arity,mu > RestOfType):-
+    Arity > 0,
+    Arity1 is Arity - 1,
+    mil_functor_type_for_arity(Arity1,RestOfType).
+%------------------------------------------------------------------------------
+mil_functor_types([],[]).
+
+mil_functor_types([Functor/Arity|RestOfFunctors],
+[thf(Name,type,Functor: Type)|RestOfTypes]):-
+    mil_functor_type_for_arity(Arity,Type),
+    concatenate_atoms([Functor,'_type'],Name),
+    mil_predicate_types(RestOfFunctors,RestOfTypes).
+%------------------------------------------------------------------------------
+mil_predicate_type_for_arity(0,$i > $o).
+
+mil_predicate_type_for_arity(Arity,mu > RestOfType):-
+    Arity > 0,
+    Arity1 is Arity - 1,
+    mil_predicate_type_for_arity(Arity1,RestOfType).
+%------------------------------------------------------------------------------
+mil_predicate_types([],[]).
+
+%----Skip $true and $false that are already known
+mil_predicate_types([Predefined/_|RestOfPredicates],Types):-
+    tptp2X_member(Predefined,['$true','$false']),
+    !,
+    mil_predicate_types(RestOfPropositions,Types).
+
+mil_predicate_types([Predicate/Arity|RestOfPredicates],
+[thf(Name,type,Predicate: Type)|RestOfTypes]):-
+    mil_predicate_type_for_arity(Arity,Type),
+    concatenate_atoms([Predicate,'_type'],Name),
+    mil_predicate_types(RestOfPredicates,RestOfTypes).
+%------------------------------------------------------------------------------
+mil_translate_connective(MILConnective,ifof,THFConnective):-
+    tptp2X_member((MILConnective)-(THFConnective),[
+    ('~')-(inot),
+    ('&')-(iand),
+    ('|')-(ior),
+    ('=>')-(iimplies),
+    ('<=')-(iimplied),
+    ('<=>')-(iequiv),
+    ('<~>')-(ixor)
+]),
+    !.
+
+mil_translate_connective(MILConnective,mfof:Logic,THFConnective):-
+    tptp2X_member(Logic,[k,d,m,b,s4,s5]),
+    tptp2X_member((MILConnective)-(BaseConnective),[
+    ('!!')-(mbox),
+    ('??')-(mdia)
+]),
+    !,
+    concatenate_atoms([BaseConnective,'_',Logic],THFConnective).
+
+%----This includes mbox and mdia for mm logic
+mil_translate_connective(MILConnective,mfof:_,THFConnective):-
+    tptp2X_member((MILConnective)-(THFConnective),[
+    ('~')-(mnot),
+    ('!!')-(mbox),
+    ('??')-(mdia),
+    ('&')-(mand),
+    ('|')-(mor),
+    ('=>')-(mimplies),
+    ('<=')-(mimplied),
+    ('<=>')-(mequiv),
+    ('<~>')-(mxor),
+    ('!')-(mforall_ind),
+    ('?')-(mexists_ind)
+]),
+    !.
+
+mil_translate_connective(Connective,Translation,Connective):-
+    write('% WARNING: Unknown '),
+    write(Translation),
+    write(' connective '),
+    write(Connective),
+    nl.
+%------------------------------------------------------------------------------
+mil_translate_atom('$true',ifof,itrue):-
+    !.
+
+mil_translate_atom('$false',ifof,ifalse):-
+    !.
+
+mil_translate_atom('$true',mfof,mtrue):-
+    !.
+
+mil_translate_atom('$false',mfof,mfalse):-
+    !.
+
+mil_translate_atom(Atom,_,Atom).
+%------------------------------------------------------------------------------
+%----Right associative apply for a list
+mil_apply_list(ApplicationsSoFar,[],_,ApplicationsSoFar).
+
+mil_apply_list(ApplicationsSoFar,[FOFHead|FOFTail],Translation,
+FinalApplications):-
+   mil_translate_logic(FOFHead,Translation,THFHead),
+   mil_apply_list(ApplicationsSoFar @ THFHead,FOFTail,Translation,
+FinalApplications).
+%------------------------------------------------------------------------------
+%DEBUG mil_translate_logic(F,T,_):-write('ITL--- '),write(T),nl,write(F),nl,fail.
+mil_translate_logic(Variable,mfof:_,Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+mil_translate_logic(MILQuantified,Translation,(THFQuantifier @ 
+(^ [Variable: mu] : THFFormula))):-
+    tptp_quantified_formula(MILQuantified,MILQuantifier,[Variable],MILFormula),
+    !,
+    mil_translate_connective(MILQuantifier,Translation,THFQuantifier),
+    mil_translate_logic(MILFormula,Translation,THFFormula).
+
+mil_translate_logic(MILBinary,Translation,(THFConnective @ THFLHS @ THFRHS)):-
+    tptp_binary_formula(MILBinary,MILConnective,MILLHS,MILRHS),
+    !,
+    mil_translate_connective(MILConnective,Translation,THFConnective),
+    mil_translate_logic(MILLHS,Translation,THFLHS),
+    mil_translate_logic(MILRHS,Translation,THFRHS).
+    
+mil_translate_logic(MILUnary,Translation,(THFConnective @ THFFormula)):-
+    tptp_unary_formula(MILUnary,MILConnective,MILFormula),
+    !,
+    mil_translate_connective(MILConnective,Translation,THFConnective),
+    mil_translate_logic(MILFormula,Translation,THFFormula).
+
+mil_translate_logic(Atom,ifof,(iatom @ THFAtom)):-
+    tptp_atomic_formula(Atom),
+    !,
+    mil_translate_atom(Atom,ifof,THFAtom).
+
+mil_translate_logic(Atom,mfof:_,THFAtom):-
+    atom(Atom),
+    !,
+    mil_translate_atom(Atom,mfof,THFAtom).
+
+mil_translate_logic('$tptp_equal'(LHS,RHS),mfof:Logic,
+(meq_ind @ THFLHS @ THFRHS)):-
+    !,
+    mil_translate_logic(LHS,mfof:Logic,THFLHS),
+    mil_translate_logic(RHS,mfof:Rogic,THFLHS).
+
+mil_translate_logic(Term,mfof:Logic,THFTerm):-
+    !,
+    Term =.. [Principle|Arguments],
+    mil_apply_list(Principle,Arguments,mfof:Logic,THFTerm).
+
+mil_translate_logic(Formula,Translation,Formula):-
+    write('% WARNING: Unknown '),
+    write(Translation),
+    write(' formula type '),
+    write(Formula),
+    nl.
+%------------------------------------------------------------------------------
+mil_translate([],_,_,[]).
+
+mil_translate([fof(Name,Role,MILLogic)|RestOfMILFormulae],Translation,
+ApplyThis,[thf(Name,Role,(@(ApplyThis,THFLogic)))|RestOfTHFFormulae]):-
+    mil_translate_logic(MILLogic,Translation,THFLogic),
+    mil_translate(RestOfMILFormulae,Translation,ApplyThis,RestOfTHFFormulae).
+%------------------------------------------------------------------------------
+milfof_name_suffix((Translation:Logic):Axioms,NameSuffix):-
+    !
+    concatenate_atoms(['+',Translation,'_',Logic,'_',Axioms],NameSuffix).
+
+milfof_name_suffix(Translation:Axioms,NameSuffix):-
+    concatenate_atoms(['+',Translation,'_',Axioms],NameSuffix).
+%------------------------------------------------------------------------------
+milfof(MILFormulae,Dictionary,Translation:Axioms,ApplyThis,Formulae,
+Dictionary,NameSuffix):-
+    tptp_propositional(MILFormulae),
+    mil_include(Translation,Axioms,Includes),
+    numbervars(Includes,0,_),
+    examine_formulae_for_functors(MILFormulae,Functors,_),
+    mil_functor_types(Functors,FunctorTypes),
+    examine_formulae_for_predicates(MILFormulae,_,Predicates,_),
+    mil_predicate_types(Predicates,PredicateTypes),
+    mil_translate(MILFormulae,Translation,ApplyThis,THFFormulae),
+    tptp2X_append(FunctorTypes,PredicateTypes,Types),
+    tptp2X_append(Includes,Types,IncludesAndTypes),
+    tptp2X_append(IncludesAndTypes,THFFormulae,Formulae),
+    milfof_name_suffix(Translation:Axioms,NameSuffix).
+
+ifof(ILFormulae,Dictionary,ifof:Axioms,Formulae,Dictionary,NameSuffix):-
+    milfof(ILFormulae,Dictionary,ifof:Axioms,ivalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:mm:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:mm):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:k:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:k):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:d:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:d):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:m:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:m):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:b:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:b):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:s4:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:s4):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:s5:Axioms,Formulae,Dictionary,NameSuffix):-
+    !,
+    milfof(MFormulae,Dictionary,(mfof:s5):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+
+mfof(MFormulae,Dictionary,mfof:Axioms,Formulae,Dictionary,NameSuffix):-
+    milfof(MFormulae,Dictionary,(mfof:mm):Axioms,mvalid,Formulae,Dictionary,
+NameSuffix).
+%------------------------------------------------------------------------------
+ifof_file_information(transform,ifof:Axioms,'Intuitionistic FOL translation').
+mfof_file_information(transform,mfof:Logic:Axioms,'Modal FOL translation').
+%------------------------------------------------------------------------------

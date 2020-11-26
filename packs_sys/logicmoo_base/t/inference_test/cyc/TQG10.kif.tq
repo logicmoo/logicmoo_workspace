@@ -1,0 +1,7 @@
+(note TQG10)
+
+(not (capability Reasoning agent Robot1))
+
+(query (not (exists (?THING) (wants Robot1 ?THING))))
+
+(answer Yes)

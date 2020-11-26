@@ -1,0 +1,274 @@
+
+macro(utt_ynq_sem(Sem),
+      [[ynq, Sem]]).
+
+macro(utt_pp_ynq_sem(Postmods, Sem),
+      [[ynq, concat(Postmods,Sem)]]).
+
+macro(utt_whq_sem(Sem),
+      [[whq, Sem]]).
+
+macro(utt_dcl_sem(Interj, Sem),
+      [[dcl, concat(Interj,Sem)]]).
+
+macro(utt_pp_dcl_sem(Interj, Postmods, Sem),
+      [[dcl, concat(Interj, Postmods, Sem)]]).
+
+macro(utt_elliptical_sem(Sem),
+      [[elliptical, Sem]]).
+
+macro(elliptical_interj_x_sem(Sem, Interj),
+      concat(Sem, Interj)).
+
+macro(elliptical_adj_douleur_sem(Adj),
+      concat([[symptom, douleur]], Adj)).
+
+macro(elliptical_spec(N, Interj),
+      concat(N, Interj)).
+
+macro(np_vp_subject_sem(Np, Vp),
+      concat([[subj, Np]], Vp)).
+
+macro(np_vp_object_sem(Np, Vp),
+      concat([[obj, Np]], Vp)).
+
+macro(fronting_sem(Fronted, S),
+      [apply, [lambda, x, S], Fronted]).
+
+macro(implicit_subj_value(you), [[pronoun, @french_catalan_or_spanish(vous, vostè, usted)]]).
+macro(implicit_subj_value(they), [[pronoun, implicit_3_pl]]).
+macro(implicit_subj_value(i), [[pronoun, yo]]).
+macro(implicit_subj_value(he), [[pronoun, el]]).
+macro(implicit_subj_value(it), [[pronoun, implicit_3_sg]]).
+
+%macro(whq_np_vp_subject_sem(NP, Vp),
+%      concat([[subj, NP]], Vp)).
+
+%macro(whq_np_vp_object_sem(NP, Vp),
+%      concat([[obj, NP]], Vp)).
+
+%macro(whq_np_s_subject_sem(NP, S),
+%      concat([[subj, NP]], S)).
+
+%macro(whq_np_s_object_sem(NP, S),
+%      concat([[obj, NP]], S)).
+
+macro(whq_np_s_sem(NP, S),
+      concat(NP, S)).
+
+macro(whq_pp_s_sem(NP, S),
+      concat(NP, S)).
+
+macro(que_est_ce_qui_sem,
+      [[pronoun, @french_catalan_or_spanish(que, que, qué)]]).
+
+%macro(dcl_np_vp_active_sem(Np, Vp),
+%      concat([[subj, Np]], Vp)).
+
+%macro(dcl_np_vp_passive_sem(Np, Vp),
+%      concat([[obj, Np]], Vp)).
+
+%macro(s_np_vp_sem(Np, Vp),
+%      concat([[subj, Np]], Vp)).
+
+macro(vbar_v_advp_sem(V, Advp),
+      concat(V, Advp)).
+
+macro(vbar_v_advp_passive_sem(V, Advp),
+      concat(V, Advp)).
+
+macro(vbar_clitic_v_subject_sem(Pron, V),
+      concat([[subj, Pron]], V)).
+
+macro(vbar_clitic_v_object_sem(Pron, V),
+      concat([[obj, Pron]], V)).
+
+macro(vbar_clitic_v_indobj_sem(Pron, V),
+      concat([[indobj, Pron]], V)).
+
+macro(aux_clitic_aux_subject_sem(Pron, AuxV),
+      concat([[subj, Pron]], AuxV)).
+
+macro(aux_aux_advp_sem(AuxV, Advp),
+      concat(AuxV, Advp)).
+
+macro(vbar_v_np_advp_advp_sem(V, Np, Advp, Advp2),
+      concat(V, [[subj, Np]], Advp2, Advp)).
+
+macro(vbar_aux_v_sem(AuxV, V),
+      concat(AuxV, V)).
+
+macro(vp_v_comps_postmods_sem(V, Comps, Postmods),
+      concat(V, Comps, Postmods)).
+
+macro(postmods_advp_postmods_sem(Advp,Postmods),
+      concat(Advp, Postmods)).
+
+macro(comps_adjp_sem(Adj),
+      [[verb_type, adj], [adj, Adj]]).
+
+macro(comps_np_sem(Np),
+      [[verb_type, trans], [obj, Np]]).
+
+macro(comps_np_ditrans_with_clitic_sem(Np),
+      [[verb_type, ditrans], [obj, Np]]).
+
+macro(comps_for_intrans_sem,
+      [[verb_type, intrans]]).
+
+macro(comps_for_trans_with_clitic_sem,
+      [[verb_type, trans]]).
+
+macro(comps_for_ind_obj_with_clitic_sem,
+      [[verb_type, ind_obj]]).
+
+macro(comps_pp_sem(Pp),
+      [[verb_type, pp], [subcat_pp, Pp]]).
+
+macro(comps_de_pp_sem(Pp),
+      concat([[verb_type, de_pp]], Pp)).
+
+macro(comps_vp_sem(Vp),
+      [[verb_type, vp_nonmodal], [prop_obj, Vp]]).
+
+macro(comps_passivise_pp_sem(Np),
+      [[verb_type, trans_passivised_surface_roles], [passive_compl, Np]]).
+
+macro(comps_for_passivised_trans_sem,
+      [[verb_type, trans_passivised_surface_roles]]).
+
+macro(advp_adv_adv_sem(Sem1, Sem2),
+      concat(Sem1, Sem2)).
+
+macro(pp_advp_pp_sem(Sem1, Sem2),
+      concat(Sem1, Sem2)).
+
+macro(np_infinitive_vp_sem(Vp),
+      [[nested_infinitive, Vp]]).
+
+macro(infinitive_vp_v_sem(V),
+      concat([[tense, unspecified], [subj, @np_pron_sem(unspecified)]], V)).
+
+macro(np_np_rel_sem(Np, Rel),
+      concat(Np, Rel)).
+
+macro(np_np_de_pp_sem(Np, Pp),
+      concat(Np, Pp)).
+
+macro(np_spec_nbar_sem(Spec, Nbar),
+      concat([[spec, Spec]], Nbar)).
+
+macro(np_pron_sem(Pron),
+      [[spec, null], [head, Pron]]).
+
+macro(np_advp_nbar_sem(Spec, Nbar),
+      concat(Spec, Nbar)).
+
+macro(np_nbar_sem(Nbar),
+      concat([[spec, null]], Nbar)).
+
+macro(nbar_n_adjp_sem(N, Adjp),
+      concat([[head, N]], Adjp)).
+
+macro(nbar_n_sem(N),
+      [[head, N]]).
+
+macro(spec_number_sem(N),
+      N).
+
+macro(spec_number_range_sem(N1, N2),
+      [number_range, [N1, N2]]).
+
+macro(spec_comparative_n_sem(Comparative, N),
+      [Comparative, N]).
+
+macro(de_pp_np_sem(Np),
+      [[de, Np]]).
+
+macro(pp_temporal_np_sem(Np),
+      [[temporal, Np]]).
+
+macro(pp_np_pp_frequency_sem(Np, Freq),
+      concat([[pendant, Np]], Freq)).
+      %concat([[duration_prep, pendant], [prep, frequency]], concat(Np, Freq))).
+
+macro(pp_pp_pp_sem(PP1, PP2),
+      concat(PP1, PP2)).
+
+macro(pp_p_np_sem(P, Np),
+      [[P, Np]]).
+
+macro(pp_de_np_duration_sem(Np),
+      [[duration, Np]]).
+
+macro(pp_sc_s_sem(Sc, S),
+      [[Sc, S]]).
+
+macro(adjp_de_typ_adjp_sem(Adjp),
+      Adjp).
+
+macro(adjp_deg_adjp_sem(Deg, Adjp),
+      concat(Deg, Adjp)).
+
+macro(adjp_adjp_de_pp_sem(Adjp, Pp),
+      concat(Adjp, Pp)).
+
+macro(rel_pron_vp_sem(Pron, Vp),
+      concat(Pron, [[clause, Vp]])).
+
+macro(s_vp_sem(Vp),
+      Vp).
+
+macro(np_gap,
+      x).
+
+macro(pp_gap,
+      [x]).
+
+macro(de_pp_gap,
+      [x]).
+
+macro(sc_sem(SC),
+      SC).
+
+macro(n_sem([Type, Const]),
+      Const).
+
+macro(pron_sem([Type, Const]),
+      Const).
+
+macro(comparative_sem([Type, Const]),
+      Const).
+
+macro(article_sem(Article),
+      Article).
+
+macro(spec_sem(Spec),
+      Spec).
+
+macro(verb_sem([Type, Const]),
+      [verb, Const]).
+
+macro(p_sem([Type, Const]),
+      Const).
+
+macro(lexical_pp_sem([Role, Constant]),
+      [[Role, [[spec, null], [head, Constant]]]]).
+
+macro(complex_lexical_pp_sem([PrepType, Prep], [Role, Constant]),
+      [[Prep, [[spec, null], [head, Constant]]]]).
+
+macro(lexical_wh_pp_sem([Role, Constant]),
+      [Role, [[spec, null], [head, Constant]]]).
+
+macro(complex_lexical_wh_pp_sem([PrepType, Prep], [Role, Constant]),
+      [Prep, [[spec, null], [head, Constant]]]).
+
+macro(wh_np_sem([Type, Const]),
+      [[spec, null], [head, Const]]).
+
+macro(wh_np_de_pp_sem([Type, Const], [DeType, DeConst]),
+      [[spec, null], [head, Const], [de, [[spec, null], [head, DeConst]]]]).
+
+macro(wh_spec_np_sem([SpecType, SpecConst], [Type, Const]),
+      [[spec, SpecConst], [head, Const]]).

@@ -1,0 +1,276 @@
+(note TQD79)
+
+(implies 
+  (instance ?COUNTRY Country) 
+  (desires ?COUNTRY 
+    (not 
+      (thereExists ?BLAME 
+        (and 
+          (instance ?BLAME Censuring-CommunicationAct) 
+          (senderOfInfo ?BLAME InternationalCommunity) 
+          (maleficiary ?BLAME ?COUNTRY)))))) 
+
+(instance Libya Country) 
+
+(implies 
+  (and 
+    (instance ?SUPPORT HelpingAnAgent) 
+    (beneficiary ?SUPPORT ?TERR-GR) 
+    (instance ?TERR-GR TerroristGroup) 
+    (agent ?SUPPORT ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+  (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(agent HYP-HelpingAnAgent-60484209 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-60484209 HYP-TerroristGroup-61601382) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+  (actionViolatesObligation ?ACT ?WIDE))
+
+(actionViolatesObligation HYP-HelpingAnAgent-60484209 DontSupportTerrorism) 
+
+(obligationParts ModernInternationalRelationsCOC DontSupportTerrorism) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?BLAME 
+      (and 
+        (instance ?BLAME Censuring-CommunicationAct) 
+        (senderOfInfo ?BLAME InternationalCommunity) 
+        (maleficiary ?BLAME ?AGT))) likelihood)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-60484209 ModernInternationalRelationsCOC) 
+
+(believes InternationalCommunity 
+ (agent HYP-HelpingAnAgent-60484209 Libya)) 
+
+(implies 
+  (and 
+    (instance ?SUPPORT HelpingAnAgent) 
+    (beneficiary ?SUPPORT ?TERR-GR) 
+    (instance ?TERR-GR TerroristGroup) 
+    (agent ?SUPPORT ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+  (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(instance Libya Country) 
+
+(agent HYP-HelpingAnAgent-60484209 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-60484209 HYP-TerroristGroup-61601382) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(desires Libya 
+  (not 
+    (thereExists ?BLAME 
+      (and 
+        (instance ?BLAME Censuring-CommunicationAct) 
+        (senderOfInfo ?BLAME InternationalCommunity) 
+        (maleficiary ?BLAME Libya))))) 
+
+(increasesCausally #$HYP-HelpingAnAgent-60484209 
+  (thereExists ?BLAME 
+    (and 
+      (instance ?BLAME Censuring-CommunicationAct) 
+      (senderOfInfo ?BLAME InternationalCommunity) 
+      (maleficiary ?BLAME Libya))) likelihood) 
+
+(implies 
+  (instance ?GEOPOL GeopoliticalEntity) 
+  (desires ?GEOPOL 
+    (not 
+      (thereExists ?SANCTION 
+        (and 
+          (instance ?SANCTION ImposingSanctions) 
+          (maleficiary ?SANCTION ?GEOPOL)))))) 
+
+(instance Libya GeopoliticalEntity) 
+
+(implies 
+  (and 
+    (instance ?SUPPORT HelpingAnAgent) 
+    (beneficiary ?SUPPORT ?TERR-GR) 
+    (instance ?TERR-GR TerroristGroup) 
+    (agent ?SUPPORT ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+    (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(instance Libya Country) 
+
+(agent HYP-HelpingAnAgent-60484209 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-60484209 HYP-TerroristGroup-61601382) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ?OB) 
+    (obligationParts ?WIDE ?OB)) 
+    (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-60484209 DontSupportTerrorism) 
+
+(obligationParts ModernInternationalRelationsCOC DontSupportTerrorism) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+    (believes InternationalCommunity 
+    (agent ?ACT ?AGT))) 
+    (increasesCausally ?ACT 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION ?AGT))) likelihood)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-60484209 ModernInternationalRelationsCOC) 
+
+(believes InternationalCommunity 
+ (agent HYP-HelpingAnAgent-60484209 Libya)) 
+
+(desires Libya 
+  (not 
+    (thereExists ?SANCTION 
+      (and 
+        (instance ?SANCTION ImposingSanctions) 
+        (maleficiary ?SANCTION Libya))))) 
+
+(increasesCausally #$HYP-HelpingAnAgent-60484209 
+  (thereExists ?SANCTION 
+    (and 
+      (instance ?SANCTION ImposingSanctions) 
+      (maleficiary ?SANCTION Libya))) likelihood) 
+
+(implies 
+  (instance ?AGT GeopoliticalEntity) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?MIL-OP 
+        (and 
+          (instance ?MIL-OP MilitaryOperation) 
+          (maleficiary ?MIL-OP ?AGT)))))) 
+
+(instance Libya GeopoliticalEntity) 
+
+(implies 
+  (and 
+    (instance ?SUPPORT HelpingAnAgent) 
+    (beneficiary ?SUPPORT ?TERR-GR) 
+    (instance ?TERR-GR TerroristGroup) 
+    (agent ?SUPPORT ?COUNTRY) 
+    (instance ?COUNTRY Country)) 
+    (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(instance Libya Country) 
+
+(agent HYP-HelpingAnAgent-60484209 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-60484209 HYP-TerroristGroup-61601382) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-HelpingAnAgent-60484209 HelpingAnAgent) 
+
+(instance HYP-TerroristGroup-61601382 TerroristGroup) 
+
+(implies 
+  (and 
+    (actionViolatesObligation ?ACT DontSupportTerrorism) 
+    (instance ?AGT Country) 
+    (believes InternationalCommunity 
+      (agent ?ACT ?AGT))) 
+  (increasesCausally ?ACT 
+    (thereExists ?MIL-OP 
+      (and 
+        (instance ?MIL-OP MilitaryOperation) 
+        (maleficiary ?MIL-OP ?AGT))) likelihood)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-60484209 DontSupportTerrorism) 
+
+(believes InternationalCommunity 
+ (agent HYP-HelpingAnAgent-60484209 Libya)) 
+
+(desires Libya 
+  (not 
+    (thereExists ?MIL-OP 
+      (and 
+        (instance ?MIL-OP MilitaryOperation) 
+        (maleficiary ?MIL-OP Libya))))) 
+
+(increasesCausally #$HYP-HelpingAnAgent-60484209 
+  (thereExists ?MIL-OP 
+    (and 
+      (instance ?MIL-OP MilitaryOperation) 
+      (maleficiary ?MIL-OP Libya))) likelihood) 
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (instance ?GROUP TerroristGroup) 
+       (instance ?ACT HelpingAnAgent) 
+       (believes InternationalCommunity 
+           (agent ?ACT Libya)) 
+       (agent ?ACT Libya) 
+       (beneficiary ?ACT ?GROUP) 
+       (startsAfterStartingOf ?ACT 
+           (DateInSituationFn CalendarDay 16 HPKBScenarioConflict))) 
+   (or 
+       (and 
+           (desires Libya ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires Libya 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list (thereExists ?BLAME 
+  (and 
+    (instance ?BLAME Censuring-CommunicationAct) 
+    (senderOfInfo ?BLAME InternationalCommunity) 
+    (maleficiary ?BLAME Libya)))))
+ 
+(answer (list 
+ (thereExists ?SANCTION 
+   (and 
+     (instance ?SANCTION ImposingSanctions) 
+     (maleficiary ?SANCTION Libya)))))
+ 
+(answer (list  (thereExists ?MIL-OP 
+ (and 
+   (instance ?MIL-OP MilitaryOperation) 
+   (maleficiary ?MIL-OP Libya)))))
+
+(end_of_file)
+

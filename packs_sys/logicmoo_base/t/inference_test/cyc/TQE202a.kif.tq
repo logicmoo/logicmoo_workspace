@@ -1,0 +1,48 @@
+(note TQE202a)
+(fromLocation Y2Stage3-AnthraxTransportedToIran Russia) 
+
+(subOrganizations 
+ (GovernmentFn Russia) RussianFederalSecurityBureau) 
+
+(doneBy Y2Stage5-RussiaSharesIntelligenceWithUS RussianFederalSecurityBureau) 
+(agent Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownAzeriCourier) 
+(subrelation senderOfInfo doneBy) 
+(inReactionTo Y2Stage5-RussiaSharesIntelligenceWithUS Y2Stage3-AnthraxTransportedToIran) 
+(toLocation Y2Stage3-AnthraxTransportedToIran Iran) 
+(driverActor Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownAzeriCourier) 
+(subrelation driverActor agent) 
+(instance Y2Stage3-UnknownAzeriCourier HPKB-ScenarioAgent) 
+(transportees Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownQuantityOfAnthrax) 
+(instance Y2Stage3-UnknownQuantityOfAnthrax Anthrax-Bacterium) 
+
+(instance Y2Stage3-AnthraxTransportedToIran 
+ (SmugglingFn Anthrax-Bacterium)) 
+
+(query (findall ?ACTION-DONE-BY-RUSSIA
+(exists 
+    (?INTRNATL-AGENT) 
+    (exists 
+      (?SMUGGLE) 
+      (exists 
+        (?ANTHRAX) 
+        (exists 
+          (?RUSSIAN-ORG) 
+          (and 
+            (instance ?ANTHRAX Anthrax-Bacterium) 
+            (instance ?INTRNATL-AGENT HPKB-ScenarioAgent) 
+            (instance ?SMUGGLE 
+              (SmugglingFn Anthrax-Bacterium)) 
+            (subOrganizations 
+              (GovernmentFn Russia) ?RUSSIAN-ORG) 
+            (toLocation ?SMUGGLE Iran) 
+            (fromLocation ?SMUGGLE Russia) 
+            (transportees ?SMUGGLE ?ANTHRAX) 
+            (doneBy ?ACTION-DONE-BY-RUSSIA ?RUSSIAN-ORG) 
+            (agent ?SMUGGLE ?INTRNATL-AGENT) 
+            (or 
+              (inReactionTo ?ACTION-DONE-BY-RUSSIA ?SMUGGLE) 
+              (reasonForAction ?ACTION-DONE-BY-RUSSIA knowsAbout Russia ?SMUGGLE)))))))))
+            
+(answer Y2Stage5-RussiaSharesIntelligenceWithUS)
+
+(end_of_file)

@@ -1,0 +1,143 @@
+(define (domain flp)
+
+ (:requirements :negative-preconditions :conditional-effects
+  :equality :typing :fluents :durative-actions
+  :derived-predicates)
+
+ (:types 
+  person - intelligentAgent
+  intelligentAgent residence vehicle tool container - object
+  vehicle - container
+  object physicalLocation - thing
+  residence - physicalLocation
+  modeOfTransportation - category
+
+  ;; add things like different rooms, and walking between them, then
+  ;; say the bluetooth keyboard is in a certain place and figure out
+  ;; how to get it
+
+  )
+
+ (:timing
+  (units 0000-00-00_01:00:00)
+  )
+
+ (:predicates
+  (autonomous ?a - intelligentAgent)
+  (location ?o - object ?l - physicalLocation)
+  (contains ?c - container ?o - object)
+  (mobile ?ob - object)
+  (directly-holding ?a - intelligentAgent ?o - object)
+  (travel-path ?m - modeOfTransportation ?l0 ?l1 - physicalLocation)
+  (driving-p ?m - modeOfTransportation)
+  (walking-p ?m - modeOfTransportation)
+  )
+
+ (:functions
+  (travel-distance ?m - modeOfTransportation ?l0 ?l1 - physicalLocation)
+  (travel-duration ?m - modeOfTransportation ?l0 ?l1 - physicalLocation)
+  )
+
+ (:durative-action walk
+  :parameters (?a - intelligentAgent ?l0 ?l1 - physicalLocation ?m - modeOfTransportation)
+  :duration (= ?duration (travel-duration ?m ?l0 ?l1))
+  :condition (and
+	      (over all (walking-p ?m))
+	      (over all (travel-path ?m ?l0 ?l1))
+	      (over all (autonomous ?a))
+	      (at start (location ?a ?l0))
+	      )
+  :effect (and
+	   (at end (not (location ?a ?l0)))
+	   (at end (location ?a ?l1))
+	   )
+  )
+
+ (:durative-action pick-up
+  :parameters (?a - intelligentAgent ?o - object ?l - physicalLocation)
+  :duration (= ?duration 0)
+  :condition (and
+	      (over all (autonomous ?a))
+	      (over all (mobile ?o))
+	      (at start (not (directly-holding ?a ?o)))
+	      (at start (location ?a ?l))
+	      (at start (location ?o ?l))
+	      )
+  :effect (and
+	   (at end (directly-holding ?a ?o))
+	   )
+  )
+
+ (:durative-action set-down
+  :parameters (?a - intelligentAgent ?o - object ?l - physicalLocation)
+  :duration (= ?duration 0)
+  :condition (and
+	      (over all (autonomous ?a))
+	      (over all (mobile ?o))
+	      (at start (directly-holding ?a ?o))
+	      (at start (location ?a ?l))
+	      )
+  :effect (and
+	   (at end (location ?o ?l))
+	   (at end (not (directly-holding ?a ?o)))
+	   )
+  )
+
+ (:durative-action carry
+  :parameters (?a - intelligentAgent ?o - object ?l0 ?l1 - physicalLocation ?m - modeOfTransportation)
+  :duration (= ?duration (travel-duration ?m ?l0 ?l1))
+  :condition (and
+	      (over all (walking-p ?m))
+	      (over all (travel-path ?m ?l0 ?l1))
+	      (over all (autonomous ?a))
+	      (over all (mobile ?o))
+	      (over all (directly-holding ?a ?o))
+	      (at start (location ?a ?l0))
+	      (at start (location ?o ?l0))
+	      )
+  :effect (and
+	   (at end (not (location ?a ?l0)))
+	   (at end (not (location ?o ?l0)))
+
+	   (at end (location ?a ?l1))
+	   (at end (location ?o ?l1))
+	   )
+  )
+
+ (:durative-action place-into
+  :parameters (?a - intelligentAgent ?o - object ?c - container ?l - physicalLocation )
+  :duration (= ?duration 0)
+  :condition (and
+	      (over all (autonomous ?a))
+	      (over all (mobile ?o))
+	      (at start (directly-holding ?a ?o))
+	      (at start (location ?a ?l))
+	      (at start (location ?o ?l))
+	      (at start (location ?c ?l))
+	      (at start (not (contains ?c ?o)))
+	      )
+  :effect (and
+	   (at end (contains ?c ?o))
+	   (at end (not (directly-holding ?a ?o)))
+	   )
+  )
+
+ (:durative-action drive
+  :parameters (?a - intelligentAgent ?v - vehicle ?l0 ?l1 - physicalLocation ?m - modeOfTransportation)
+  :duration (= ?duration (travel-duration ?m ?l0 ?l1))
+  :condition (and
+	      (over all (driving-p ?m))
+	      (over all (travel-path ?m ?l0 ?l1))
+	      (over all (autonomous ?a))
+	      (over all (mobile ?v))
+	      (at start (location ?a ?l0))
+	      (at start (location ?v ?l0))
+	      )
+  :effect (and
+	   (at end (not (location ?a ?l0)))
+	   (at end (not (location ?v ?l0)))
+	   (at end (location ?a ?l1))
+	   (at end (location ?v ?l1))
+	   )
+  )
+ )

@@ -1,0 +1,34 @@
+\begin{thebibliography}{1}
+
+\bibitem{MRS}
+M.~Genesereth et.~al.
+\newblock {\it MRS Manual}.
+\newblock Technical Report, Stanford University, 1983.
+
+\bibitem{Fritzson88a}
+Rich Fritzson and Tim Finin.
+\newblock {\it Protem - An Integrated Expert SystemsTool}.
+\newblock Technical Report~LBS Technical Memo Number 84, Unisys Paoli Research
+  Center, May 1988.
+
+\bibitem{DUCK}
+Drew McDermott.
+\newblock {\it DUCK: A {Lisp}-Based Deductive System}.
+\newblock Technical Report, Computer Science, Yale University, 1983.
+
+\bibitem{mcdermott85}
+Drew McDermott and Eugene Charniak.
+\newblock {\it Introduction to Artificial Intelligence}.
+\newblock Addison Wesley, 1985.
+
+\bibitem{Nilsson80}
+Nils Nilsson.
+\newblock {\it Principles of Artificial Intelligence}.
+\newblock Tioga Publishing Co., Palo Alto, California, 1980.
+
+\bibitem{Petrie88}
+Charles~J. Petrie and Michael~N. Huhns.
+\newblock {\it Controlling Forward Rule Inferences}.
+\newblock Technical Report~ACA-AI-012-88, MCC, January 1988.
+
+\end{thebibliography}

@@ -1,0 +1,8 @@
+%14.
+not (diamond a : box a : (box a : ('$Rp' or diamond a :  '$Rq') equivalent (box a :  '$Rp' or diamond a :  '$Rq'))).
+
+%not (diamond a : box a : ((box a : ('$Rp' or diamond a :  '$Rq') implies (box a :  '$Rp' or diamond a :  '$Rq')) and ( (box a :  '$Rp' or diamond a :  '$Rq') implies box a : ('$Rp' or diamond a :  '$Rq') ))).
+
+%%% Axioms of S4: reflexivity and transitivity
+%# modal_axiom_schema(reflexive,a).
+%# modal_axiom_schema(transitive,a).

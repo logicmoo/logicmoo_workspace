@@ -1,0 +1,44 @@
+(note TQC11-12)
+
+
+
+(instance 
+ (MillionBarrelsPerDay 74.1000) ScalarInterval) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 74.1000)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct BabElMandeb-Strait 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 3.30000)) 
+
+
+
+
+(instance 
+ (MillionBarrelsPerDay 69.8600) ScalarInterval) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 69.8600)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct BabElMandeb-Strait 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 3.40000)) 
+
+(query (findall (?FRACTION ?THROUGH-1 ?TIME)
+
+ (thereExists ?MEASURE-2 
+ (and 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME ?MEASURE-2) 
+ (instance ?MEASURE-2 ScalarInterval) 
+ (supplyThroughAmountDuring PlanetEarth PetroleumProduct BabElMandeb-Strait ?TIME ?THROUGH-1) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?THROUGH-1 ?MEASURE-2)))))))
+
+(answer 4.45344  3.30000 1997)
+(answer 4.86688  3.40000 1995)
+
+(end_of_file)

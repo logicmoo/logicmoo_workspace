@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--www.brics.dk/DSD/hsfr/ant/ant.dsd-->
+<project name="JarBuilder" default="dist" basedir=".">
+	<description>
+        builds jar files for projects pdt depends on and
+				puts them into PDT/lib
+    </description>
+	<macrodef name="depjar">
+		<attribute name="name"/>
+		<sequential>
+			<jar jarfile="PDT/lib/@{name}.jar" basedir="@{name}/bin"/>
+		</sequential>		
+	</macrodef>
+	<macrodef name="library">
+		<attribute name="name"/>		
+		<sequential>
+			<delete failonerror="false" dir="PDT/engine/@{name}"></delete>
+			<copydir dest="PDT/engine/@{name}" src="@{name}/pl"></copydir>
+		</sequential>
+	</macrodef>
+	
+	<target name="dist" description="generate the distribution">
+			<depjar name="Common" />
+<!--			<depjar name="RaPlaRPC" />-->
+			<depjar name="Console" />
+			<depjar name="MetaData" />
+			<depjar name="PrologProcess" />		
+			<depjar name="PrologProcess-Socket" />		
+			<!--<depjar name="PrologProcess-XML" />		-->
+		<delete failonerror="false" dir="PDT/engine"></delete>
+		<copydir dest="PDT/engine" src="PDT/pl"></copydir>
+		<!--<library name="Console" />-->
+		<library name="MetaData" />
+		<library name="PrologProcess" />		
+
+	</target>	
+</project>

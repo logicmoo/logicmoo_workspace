@@ -1,0 +1,4 @@
+10,0a01a8c0_00000f40_48cd550e_0001_0000,LOG,WARN,0,2008/09/14 20:16:46.468,eti087-PB,MFCWaveEdit,3196,AUDIO,AudioClientImpl::InitializeFromConfig,135,Audio provider does not support barge-in because it cannot perform full duplex play and record-- setting client.AllowBargeIn to false.
+10,0a01a8c0_00000f40_48cd550e_0001_0000,LOG,WARN,0,2008/09/14 20:16:54.031,eti087-PB,MFCWaveEdit,3328,AUDIO,WavOpen,93,failed to open file Marianne-DSantaholma-Aeti-Dunige-Dch.wav because NUANCE_CANNOT_OPEN_FILE
+10,0a01a8c0_00000f40_48cd550e_0001_0000,LOG,WARN,0,2008/09/14 20:16:54.031,eti087-PB,MFCWaveEdit,3328,AUDIO,WavOpen,93,failed to open file Marianne-DSantaholma-Aeti-Dunige-Dch.wav because NUANCE_CANNOT_OPEN_FILE
+10,0a01a8c0_00000f40_48cd550e_0001_0000,LOG,ERROR,0,2008/09/14 20:16:54.031,eti087-PB,MFCWaveEdit,3328,XWAVEDIT,GetWavFileInfo,68,Unable to open wav file "Marianne-DSantaholma-Aeti-Dunige-Dch.wav".

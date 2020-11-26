@@ -1,0 +1,75 @@
+(note TQC84)
+
+
+(relationInstanceExistsMany possesses Iran HydrogenCyanide) 
+
+(different ChemicalAgent HydrogenCyanide) 
+
+(subclass HydrogenCyanide ChemicalAgent) 
+
+
+
+
+(relationInstanceExistsMany possesses Iran Phosgene) 
+
+(different ChemicalAgent Phosgene) 
+
+(subclass Phosgene ChemicalAgent) 
+
+
+
+
+(relationInstanceExistsMany possesses Iran MustardGas) 
+
+(different ChemicalAgent MustardGas) 
+
+(subclass MustardGas ChemicalAgent) 
+
+ 
+
+(subclass MustardGas BlisterAgent) 
+
+(different ChemicalAgent BlisterAgent) 
+
+(subclass BlisterAgent ChemicalAgent) 
+
+(implies 
+ (and 
+ (subclass ?TYPE1 ?TYPE2) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE1)) 
+ (relationInstanceExistsMany possesses ?AGT ?TYPE2)) 
+
+
+
+(subclass Phosgene ChokingAgent) 
+
+(different ChemicalAgent ChokingAgent) 
+
+(subclass ChokingAgent ChemicalAgent) 
+
+
+
+(subclass HydrogenCyanide BloodAgent) 
+
+(different ChemicalAgent BloodAgent) 
+
+(subclass BloodAgent ChemicalAgent) 
+
+
+
+
+(query (findall ?WEAPONTYPE
+
+ (and 
+ (subclass ?WEAPONTYPE ChemicalAgent) 
+ (different ?WEAPONTYPE ChemicalAgent) 
+ (relationInstanceExistsMany possesses Iran ?WEAPONTYPE))))
+
+(answer HydrogenCyanide)
+(answer Phosgene)
+(answer MustardGas)
+(answer BlisterAgent)
+(answer ChokingAgent)
+(answer ChokingAgent)  
+
+(end_of_file)

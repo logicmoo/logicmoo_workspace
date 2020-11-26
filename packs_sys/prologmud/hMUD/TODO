@@ -1,0 +1,22 @@
+
+TODO:
+
+- Simple and intuitive log saving in html (well, flash is boring, it does not
+  let me call FileReference.save() through ExternalInterface, I'm thinking in
+  some solutions but it will take more time than I expected).
+- beep
+- clear character sequence (sent from MUD)
+- better telnet parsing
+- better modularization
+- Multiple commands separated by ';' (or maybe a multiline textarea when doing SHIFT+ENTER)
+- Implement a better way of knowing when the server is asking for password,
+  instead os relying on Telnet echo commands. So that, even when echo is off on
+  the client side the commands will still be added to the history normally.
+  Only sensitive data (password) would be treated differently.
+  Suggestions:
+    - create an option echoOnByServerIsPassword (true or false)
+      so that servers that use echo for other things will have it disabled.
+    - create option passwordRegexp = /^Password:/ that will check
+      when the server asks for password and swap the command line with
+      a password input field.
+

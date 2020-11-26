@@ -1,0 +1,4 @@
+Relevant to generation grammars, in particular paraphrase grammars. If
+value is 'yes', allow semantic values to be arbitrary Prolog
+expressions (by default, only Regulus-formatted GSL expressions
+are allowed).

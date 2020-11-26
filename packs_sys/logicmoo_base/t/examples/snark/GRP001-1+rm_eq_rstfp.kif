@@ -1,0 +1,78 @@
+;--------------------------------------------------------------------------
+; File     : GRP001-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Group Theory
+; Problem  : X^2 = identity => commutativity
+; Version  : [MOW76] axioms.
+; English  : If the square of every element is the identity, the system 
+;            is commutative.
+
+; Refs     : [Rob63] Robinson (1963), Theorem Proving on the Computer
+;          : [Wos65] Wos (1965), Unpublished Note
+;          : [MOW76] McCharen et al. (1976), Problems and Experiments for a
+;          : [WM76]  Wilson & Minker (1976), Resolution, Refinements, and S
+;          : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+; Source   : [MOW76]
+; Names    : - [Rob63]
+;          : wos10 [WM76]
+;          : G1 [MOW76]
+;          : CADE-11 Competition 1 [Ove90]
+;          : THEOREM 1 [LM93]
+;          : xsquared.ver1.in [ANL]
+
+; Status   : unsatisfiable
+; Rating   : 0.00 v2.0.0
+; Syntax   : Number of clauses    :   11 (   0 non-Horn;   8 unit;   5 RR)
+;            Number of literals   :   19 (   1 equality)
+;            Maximal clause size  :    4 (   1 average)
+;            Number of predicates :    2 (   0 propositional; 2-3 arity)
+;            Number of functors   :    6 (   4 constant; 0-2 arity)
+;            Number of variables  :   23 (   0 singleton)
+;            Maximal term depth   :    2 (   1 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp GRP001-1.p 
+;--------------------------------------------------------------------------
+; left_identity, axiom.
+(or (product identity ?A ?A))
+
+; right_identity, axiom.
+(or (product ?A identity ?A))
+
+; left_inverse, axiom.
+(or (product (inverse ?A) ?A identity))
+
+; right_inverse, axiom.
+(or (product ?A (inverse ?A) identity))
+
+; total_function1, axiom.
+(or (product ?A ?B (multiply ?A ?B)))
+
+; total_function2, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?A ?B ?D))
+    (= ?C ?D))
+
+; associativity1, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?B ?D ?E))
+    (not (product ?C ?D ?F))
+    (product ?A ?E ?F))
+
+; associativity2, axiom.
+(or (not (product ?A ?B ?C))
+    (not (product ?B ?D ?E))
+    (not (product ?A ?E ?F))
+    (product ?C ?D ?F))
+
+; square_element, hypothesis.
+(or (product ?A ?A identity))
+
+; a_times_b_is_c, hypothesis.
+(or (product a b c))
+
+; prove_b_times_a_is_c, conjecture.
+(or (not (product b a c)))
+
+;--------------------------------------------------------------------------

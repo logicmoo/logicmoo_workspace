@@ -1,0 +1,55 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests Retraction undoes Backchaining memo idea is working
+
+
+%:- module(baseKB,[]).
+
+:- include(test_header).
+
+:- baseKB=BaseKB,
+   set_defaultAssertMt(BaseKB),
+   module(BaseKB),'$set_typein_module'(BaseKB),'$set_source_module'(BaseKB),set_fileAssertMt(BaseKB).
+
+
+:- kb_global(mudContains/2).
+mudContains(a,b).
+
+%:- kb_shared(genlInverse/2).
+%:- kb_shared(mudInsideOf/2).
+
+meta_argtypes(genlInverse(rtBinaryPredicate,rtBinaryPredicate)).
+
+:- cls.
+
+:- mpred_trace_exec.
+
+(((P/(has_functor(P),get_functor(P,F,_A), \+ prologSideEffects(F)) ==> {deduceEachArgType(P)}))).
+
+:- mpred_trace_exec.
+
+genlInverse(mudContains,mudInsideOf).
+
+% :- baseKB:deduceEachArgType(genlInverse(mudContains,mudInsideOf)).
+
+% :- must(ain((( genlInverse(P1,P2),arity(P1,2),arity(P2,2), t(P1,A,B)) ==> t(P2,B,A)))).
+
+%:- must(ain((( genlInverse(P1,P2),arity(P1,2),arity(P2,2)) ==> ( t(P1,A,B) ==> t(P2,B,A))))).
+
+genlInverse(P1,P2) ==> ( t(P1,A,B) ==> t(P2,B,A)).
+
+
+
+%:-ain((((P/(has_functor(P),get_functor(P,F,A), \+prologSideEffects(F),mpred_literal(P)) ==> {baseKB:agenda_slow_op_enqueue(deduceEachArgType(P))})))).
+
+
+:- mpred_test(mudInsideOf(b,a)).
+:- mpred_test(isa(mudInsideOf,rtBinaryPredicate)).
+
+
+

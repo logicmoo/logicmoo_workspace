@@ -1,0 +1,7 @@
+prologCGData((23, John, "John is the Hero", true, "ImgPrlg.gif", 
+            (iccs, 2000), book(John, KR, 2000),
+            [Man:John]<-agnt-[Write]-obj->[Book]-attr->[New]) ).
+
+dataExple(x) :-
+  prologCGData(D),
+  member(x, D).

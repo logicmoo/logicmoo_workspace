@@ -1,0 +1,79 @@
+(note TQE125b)
+(nearestCommonIsa HAMAS LebaneseHizballah InternationalOrganization) 
+
+(nearestCommonIsa HAMAS LebaneseHizballah TerroristGroup) 
+
+(residenceOfOrganization LebaneseHizballah MiddleEast-Region) 
+
+(residenceOfOrganization HAMAS MiddleEast-Region) 
+
+(implies 
+ (?PRED ?OBJ ?VAL) 
+ (standsInRelationship ?OBJ ?PRED 1 
+   (TheSet ?VAL))) 
+
+(givesSupportToAgent Iran LebaneseHizballah 
+ (HighAmountFn EconomicSupport)) 
+
+(givesSupportToAgent Iran HAMAS 
+ (HighAmountFn EconomicSupport) ) 
+
+(implies 
+ (?PRED ?VAL1 ?OBJ ?VAL2) 
+ (standsInRelationship ?OBJ ?PRED 2 
+   (TheSet ?VAL1 ?VAL2)))
+
+(hasBeliefSystems LebaneseHizballah IslamicSocietyIdeology) 
+
+(hasBeliefSystems HAMAS IslamicSocietyIdeology) 
+
+(hasBeliefSystems LebaneseHizballah IslamicNationalistIdeology) 
+
+(hasBeliefSystems HAMAS IslamicNationalistIdeology) 
+
+(relationInstanceExistsMany perpetrator LebaneseHizballah TerroristAttack) 
+
+(relationInstanceExists perpetrator HAMAS TerroristAttack) 
+
+(positiveVestedInterest Iran LebaneseHizballah) 
+
+(positiveVestedInterest Iran HAMAS) 
+
+(query (findall (?INSTANCE-OF ?RELATION-ARG1 ?RELATION-ARG2 ?RELATION-TO)
+(or 
+  (and 
+    (nearestCommonIsa HAMAS LebaneseHizballah ?INSTANCE-OF) 
+    (not 
+      (quotedCollection ?INSTANCE-OF))) 
+  (and 
+    (standsInRelationship HAMAS ?RELATION-ARG1 1 
+      (TheSet ?RELATION-TO)) 
+    (standsInRelationship LebaneseHizballah ?RELATION-ARG1 1 
+      (TheSet ?RELATION-TO)) 
+    (different ?RELATION-ARG1 instance)) 
+  (and 
+    (not 
+      (instance ?RELATION-ARG1 BinaryRelation)) 
+    (standsInRelationship HAMAS ?RELATION-ARG1 1 ?RELATION-TO) 
+    (standsInRelationship LebaneseHizballah ?RELATION-ARG1 1 ?RELATION-TO)) 
+  (and 
+    (standsInRelationship HAMAS ?RELATION-ARG2 2 
+      (TheSet ?RELATION-TO)) 
+    (standsInRelationship LebaneseHizballah ?RELATION-ARG2 2 
+      (TheSet ?RELATION-TO ))))))
+
+(answer InternationalOrganization ?? ?? ??)
+(answer  TerroristGroup ?? ?? ??)
+(answer ?? residenceOfOrganization ?? MiddleEast-Region)
+(answer ?? ?? givesSupportToAgent 
+     (list  (TheSet Iran 
+ (HighAmountFn EconomicSupport) )))
+ 
+(answer ?? hasBeliefSystems ?? IslamicSocietyIdeology)
+(answer ?? hasBeliefSystems ?? IslamicNationalistIdeology)
+
+(answer ?? ??  relationInstanceExists 
+     (list  (TheSet perpetrator TerroristAttack)))
+(answer ?? ?? positiveVestedInterest (list (theSet Iran)))
+
+(end_of_file)

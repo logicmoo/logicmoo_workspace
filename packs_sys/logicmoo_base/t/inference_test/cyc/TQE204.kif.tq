@@ -1,0 +1,69 @@
+(note TQE204)
+
+(subProcess Iranian-TalibanConflict-1998 TalibanTakeHostages) 
+(maleficiary TalibanTakeHostages Iran) 
+(instance Taliban RevoltOrganization) 
+(directingAgent TalibanTakeHostages Taliban) 
+(objectActedOn TalibanTakeHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+(instance TalibanTakeHostages TakingSomeoneHostage) 
+(instance Iran Country) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?CITIZEN 
+      (and 
+        (citizens Iran ?CITIZEN) 
+        (relationExistsInstance maleficiary ViolentAction ?CITIZEN)))) CitizenSafetyGoal)
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn (CitizensFn Iran))) 
+
+(implies 
+  (and 
+    (instance ?ACTION TakingSomeoneHostage) 
+    (objectActedOn ?ACTION ?CITIZEN) 
+    (instance ?CITIZEN (GroupFn (CitizensFn ?COUNTRY))) 
+    (instance ?COUNTRY Country) 
+    (goalCategoryForAgent ?COUNTRY ?GOAL CitizenSafetyGoal)) 
+  (decreases-Generic ?ACTION ?GOAL likelihood))
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(implies 
+  (and 
+    (instance ?MALEFICIARY Country) 
+    (maleficiary ?ACTION ?MALEFICIARY) 
+    (agent ?ACTION ?ORG) 
+    (instance ?ORG RevoltOrganization) 
+    (goalCategoryForAgent ?MALEFICIARY ?GOAL VitalNationalInterest) 
+    (decreases-Generic ?ACTION ?GOAL likelihood)) 
+  (causes-SitProp ?ACTION 
+    (increases-Generic ?ACTION StateOfDiplomaticTension 
+      (Kappa (?STATUS ?AMOUNT) 
+        (statusWithAgent-Gradient ?ORG ?MALEFICIARY ?STATUS ?AMOUNT))) ) ) 
+
+(query (findall ?DAMAGETORELATIONS
+               (exists 
+                   (?TAKING) 
+                   (exists 
+                       (?CITIZEN) 
+                       (and 
+                           (instance ?TAKING TakingSomeoneHostage) 
+                           (agent ?TAKING Taliban) 
+                           (subProcess Iranian-TalibanConflict-1998 ?TAKING) 
+                           (objectActedOn ?TAKING ?CITIZEN) 
+                           (instance ?CITIZEN 
+                               (GroupFn 
+                                   (CitizensFn Iran))) 
+                           (causes-SitProp ?TAKING ?DAMAGETORELATIONS))))))
+ 
+(answer (list 
+    (increases-Generic TalibanTakeHostages StateOfDiplomaticTension 
+      (Kappa (?STATUS ?AMOUNT) 
+        (statusWithAgent-Gradient TheTaliban Iran ?STATUS ?AMOUNT))) ))
+
+(end_of_file)

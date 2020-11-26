@@ -1,0 +1,158 @@
+(note "TQF125c - needs work")
+(abort)
+
+(unknownFormula 
+ (residenceOfOrganization HAMAS Afghanistan)) 
+
+(residenceOfOrganization Taliban Afghanistan) 
+
+(instance HAMAS TerroristGroup) 
+
+(not 
+ (instance Taliban TerroristGroup)) 
+
+(unknownFormula 
+ (territoriesControlled HAMAS Afghanistan)) 
+
+(territoriesControlled Taliban Afghanistan) 
+
+(instance Taliban PoliticalParty) 
+
+(not 
+ (instance HAMAS PoliticalParty)) 
+
+(unknownFormula 
+ (residenceOfOrganization Taliban Palestine-Modern)) 
+
+(residenceOfOrganization HAMAS Palestine-Modern) 
+
+(unknownFormula 
+ (desires HAMAS 
+ (portionOf MiddleEasternCountry 
+ (TheSetOf ?COUNTRY 
+ (religionOfRule ?COUNTRY SunniIslam)) 1))) 
+
+(desires Taliban 
+ (portionOf MiddleEasternCountry 
+ (TheSetOf ?COUNTRY 
+ (religionOfRule ?COUNTRY SunniIslam)) 1)) 
+
+(unknownFormula 
+ (desires HAMAS 
+ (territoriesControlled Taliban Afghanistan))) 
+
+(desires Taliban 
+ (territoriesControlled Taliban Afghanistan)) 
+
+(unknownFormula 
+ (presentInRegion Taliban WestBank)) 
+
+(presentInRegion HAMAS WestBank) 
+
+(unknownFormula 
+ (hasBeliefSystems HAMAS SunniIslam)) 
+
+(hasBeliefSystems Taliban SunniIslam) 
+
+(unknownFormula 
+ (positiveVestedInterest Iran Taliban)) 
+
+(positiveVestedInterest Iran HAMAS) 
+
+(unknownFormula 
+ (presentInRegion Taliban Jordan-TheNation)) 
+
+(presentInRegion HAMAS Jordan-TheNation) 
+
+(unknownFormula 
+ (presentInRegion Taliban Israel)) 
+
+(presentInRegion HAMAS Israel) 
+
+(unknownFormula 
+ (presentInRegion Taliban GazaStrip)) 
+
+(presentInRegion HAMAS GazaStrip) 
+
+(unknownFormula 
+ (desires Taliban 
+ (thereExists ?DESTRUCTION 
+ (and 
+ (instance ?DESTRUCTION 
+ (DestructionFn Country)) 
+ (inputsDestroyed ?DESTRUCTION Israel))))) 
+
+(desires HAMAS 
+ (thereExists ?DESTRUCTION 
+ (and 
+ (instance ?DESTRUCTION 
+ (DestructionFn Country)) 
+ (inputsDestroyed ?DESTRUCTION Israel)))) 
+
+(unknownFormula 
+ (desires Taliban 
+ (governmentType Palestine-Modern IslamicRepublic))) 
+
+(desires HAMAS 
+ (governmentType Palestine-Modern IslamicRepublic)) 
+
+(query (findall (?ONLY-HAMAS-ISA ?ONLY-TALIBAN-ISA ?RELATION-ARG1 ?RELATION-ARG2 ?VALUE-HAMAS ?VALUE-TALIBAN)
+(or 
+   (and 
+       (assertedFormula 
+           (instance HAMAS ?ONLY-HAMAS-ISA)) 
+       (not 
+           (instance Taliban ?ONLY-HAMAS-ISA))) 
+   (and 
+       (assertedFormula 
+           (instance Taliban ?ONLY-TALIBAN-ISA)) 
+       (not 
+           (instance HAMAS ?ONLY-TALIBAN-ISA))) 
+   (and 
+       (?RELATION-ARG1 HAMAS ?VALUE-HAMAS) 
+       (unknownFormula 
+           (?RELATION-ARG1 Taliban ?VALUE-HAMAS)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG1 Taliban ?VALUE-TALIBAN) 
+       (unknownFormula 
+           (?RELATION-ARG1 HAMAS ?VALUE-TALIBAN)) 
+       (not 
+           (instance ?RELATION-ARG1 DocumentationConstant)) 
+       (different ?RELATION-ARG1 instance)) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-HAMAS HAMAS) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-HAMAS Taliban)) 
+       (not 
+           (instance ?RELATION-ARG2 Role))) 
+   (and 
+       (?RELATION-ARG2 ?VALUE-TALIBAN Taliban) 
+       (unknownFormula 
+           (?RELATION-ARG2 ?VALUE-TALIBAN HAMAS)) 
+       (not 
+           (instance ?RELATION-ARG2 Role))))
+))
+
+
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+(answer )
+
+(end_of_file)
+
+

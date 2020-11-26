@@ -1,0 +1,2317 @@
+;; Copyright 1998 Cycorp, Inc., All Rights Reserved.  This file and
+;; its contents are products of Cycorp, Inc.  They are released only
+;; under specific license agreement with Cycorp, and must be treated
+;; as Cycorp Confidential Information, as per that license agreement,
+;; including translations into another language (including but not
+;; limited to Conceptual Graphs, KIF, Ontolingua, GFP, LOOM,
+;; PowerLOOM, CycL, C, C++, IDL, predicate logic, and English) and any
+;; logically equivalent rearrangement or renaming of assertion
+;; components, terms, or variables.  This paragraph shall not be
+;; altered or removed. This file is provided "AS IS", without any
+;; warranty; the cumulative liability of Cycorp for all claims
+;; relating to this file shall not exceed the amount of one dollar.
+;; Cycorp, 3721 Executive Center Dr., Austin, TX 78731, USA; Website:
+;; www.cyc.com, Tel: (512) 342-4000.
+
+;; KIF assertion-specs for microtheory : #$DesertShieldMt
+;; 10/02/2000 14:49:36
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo PassingUNSC-Resolution661 IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents OPECMeetingInGeneva UAEAcceptsProductionQuota)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo BushDoublesNumberOfTroopsInSaudiArabia IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqAgreesToMeetWithKuwait Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict UnitedArabEmirates Iraq PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar UAEAsksForUSSupport)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (DayFn 2 
+        (MonthFn August 
+          (YearFn 1990))) 
+      (DayFn 27 
+        (MonthFn February 
+          (YearFn 1991)))) 
+    (beliefs UnitedStatesOfAmerica 
+      (goals Iraq 
+        (exists 
+          (?ATTACK) 
+          (exists 
+            (?WEAPON) 
+            (and 
+              (isa ?ATTACK MilitaryAttack) 
+              (isa ?WEAPON WeaponOfMassDestruction) 
+              (performedBy ?ATTACK Iraq) 
+              (intendedMaleficiary ?ATTACK 
+                (ArmyFn UnitedStatesOfAmerica)) 
+              (deviceUsed ?ATTACK ?WEAPON)))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (toLocation USForcesArriveInSA SaudiArabia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (topicOfInfoTransfer UNDeclaresAnnexationVoid IraqAnnexesKuwait)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (=> 
+    (and 
+      (temporallySubsumes BlockadeOfIraq ?EXPORT) 
+      (isa ?EXPORT ImportExportEvent) 
+      (fromLocation ?EXPORT Iraq) 
+      (relationInstanceExists transportees ?EXPORT PetroleumProduct)) 
+    (causes-SitProp BlockadeOfIraq 
+      (failureForAgents ?EXPORT Iraq)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants IraqAndUSNegotiate UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo-Intended UAEAsksForUSSupport UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqThreatensIsrael Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq Kuwait TerritorialDispute-RumailaOilField)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (hasLeaders DesertShieldCoalition UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo IraqObjectsToOverProductionOfOil Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo CongressAuthorizesMilitaryAction IraqAndUSNegotiate)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (=> 
+    (toLocation IraqMassesTroopsOnSaudiBorder ?LOCATION) 
+    (near 
+      (BorderBetweenFn Kuwait SaudiArabia) ?LOCATION))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo UNImposesSanctionsOnIraq IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqAccusesKuwaitOfOilTheft "The communication event mentioned in the Y2 document sentence 'Iraq accuses Kuwait of stealing oil from the Rumaila oil field on Iraq-Kuwait border and warns of military action.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (fromLocation EmirFleesKuwait Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants EgyptMeetsWithIraq Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqDeclaresKuwaitIts19thProvince)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (purposeInEvent UN-SecurityCouncil PassingUNSC-Resolution678 
+    (exists 
+      (?WITHDRAWAL) 
+      (and 
+        (isa ?WITHDRAWAL MilitaryWithdrawal) 
+        (performedBy ?WITHDRAWAL 
+          (ArmyFn Iraq)) 
+        (toLocation ?WITHDRAWAL Iraq) 
+        (fromLocation ?WITHDRAWAL Kuwait))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqiTroopMovements 
+    (DayFn 19 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UNOrdersIraqiWithdrawal 
+    (DayFn 2 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment OPECMeetingInGeneva "The meeting mentioned in the Y2 document sentence 'First, during an OPEC meeting in Geneva, Kuwait and the UAE accept oil production schedules that Iraq deems satisfactory, and OPEC agrees to establish better mechanisms to safeguard compliance with oil production quotas.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UKAnnouncesTroopDeployments UnitedKingdomOfGreatBritainAndNorthernIreland)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar PassingUNSC-Resolution661)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UAEAcceptsProductionQuota "One of the two events mentioned in the Y2 document passage '... Kuwait and the UAE accept oil production schedules that Iraq deems satisfactory ...'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqAgreesToMeetWithKuwait "The agreement mentioned in the Y2 document sentence 'Iraq agrees to participate in talks with Kuwait to resolve the differences between the two states.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq UnitedArabEmirates PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar UAEMobilizesTroops)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (DayFn 2 
+        (MonthFn August 
+          (YearFn 1990))) 
+      (DayFn 27 
+        (MonthFn February 
+          (YearFn 1991)))) 
+    (beliefs UnitedStatesOfAmerica 
+      (goals Iraq 
+        (exists 
+          (?ATTACK) 
+          (exists 
+            (?WEAPON) 
+            (and 
+              (isa ?ATTACK MilitaryAttack) 
+              (isa ?WEAPON WeaponOfMassDestruction) 
+              (performedBy ?ATTACK Iraq) 
+              (intendedMaleficiary ?ATTACK Israel) 
+              (deviceUsed ?ATTACK ?WEAPON)))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred UAEAsksForUSSupport 
+    (exists 
+      (?MISSION) 
+      (and 
+        (isa ?MISSION MilitaryAircraftMission) 
+        (assistsInActionByDoing UnitedStatesOfAmerica UAEMobilizesTroops ?MISSION))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment USForcesArriveInSA "The event mentioned in the Y2 document passage 'The first US military forces arrive in Saudi Arabia ...'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar UNDeclaresAnnexationVoid)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo FranceAnnouncesTroopDeployments IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (YearFn 1988) 
+      (YearFn 1989)) 
+    (statusWithAgent-Gradient Iraq UnitedStatesOfAmerica StateOfDiplomaticTension Positive))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (maleficiary BlockadeOfIraq Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants IraqAndUSNegotiate Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqThreatensIsrael "The communication event mentioned in the Y2 document sentence 'Iraq threatens to 'incinerate' Israel.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (territoryDisputed TerritorialDispute-RumailaOilField RumailaOilFieldIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqObjectsToOverProductionOfOil Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startingDate OperationDesertStorm 
+    (DayFn 17 
+      (MonthFn January 
+        (YearFn 1991))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (directingAgent IraqMassesTroopsOnSaudiBorder Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (maleficiary UNImposesSanctionsOnIraq Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants EgyptMeetsWithIraq Egypt)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqDeclaresKuwaitIts19thProvince 
+    (DayFn 28 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqiTroopMovements "The event mentioned in the Y2 document sentence 'Iraq moves two Republican Guard divisions to the Kuwaiti border and mobilizes other troops.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo UNOrdersIraqiWithdrawal Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UKAnnouncesTroopDeployments "One of the communication events mentioned in the Y2 document sentence 'The United Kingdom and France announce the deployment of troops to the Persian Gulf.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar FranceAnnouncesTroopDeployments)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (topicOfInfoTransfer USDemandsInfoAboutTroopMovements IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar SaudiArabiaRequestsUSTroops)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Kuwait Iraq PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred HusseinMakesPromiseToUS 
+    (exists 
+      (?NEGOTIATING) 
+      (and 
+        (socialParticipants ?NEGOTIATING Iraq) 
+        (socialParticipants ?NEGOTIATING Kuwait) 
+        (isa ?NEGOTIATING Negotiating) 
+        (holdsIn 
+          (TimeIntervalInclusiveFn HusseinMakesPromiseToUS ?NEGOTIATING) 
+          (not 
+            (exists 
+              (?ATTACK) 
+              (and 
+                (isa ?ATTACK MilitaryAttack) 
+                (maleficiary ?ATTACK Kuwait) 
+                (deliberateActors ?ATTACK Iraq))))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar USDemandsInfoAboutTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo UAEAsksForUSSupport UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (purposeInEvent Iraq IraqInvadingKuwait 
+    (forall 
+      (?OIL-FIELD) 
+      (=> 
+        (and 
+          (isa ?OIL-FIELD OilField) 
+          (objectFoundInLocation ?OIL-FIELD Kuwait)) 
+        (territoriesControlled Iraq ?OIL-FIELD))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (relationInstanceExistsCount outputsCreated PassingUNSC-Resolution678 Agreement 1)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UNDeclaresAnnexationVoid 
+    (DayFn 9 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startingDate BlockadeOfIraq 
+    (DayFn 12 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqAndUSNegotiate "The negotiations mentioned in the Y2 document sentence 'Talks between the US Secretary of State and the Iraqi foreign minister end in stalemate.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqiMinisterAnnouncesTalks 
+    (exists 
+      (?NEGOTIATING) 
+      (and 
+        (socialParticipants ?NEGOTIATING Iraq) 
+        (socialParticipants ?NEGOTIATING Kuwait) 
+        (isa ?NEGOTIATING Negotiating) 
+        (eventOccursAt ?NEGOTIATING CityOfBaghdadIraq))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterStartingOf TerritorialDispute-RumailaOilField 
+    (MonthFn August 
+      (YearFn 1988)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqObjectsToOverProductionOfOil 
+    (DayFn 30 
+      (MonthFn May 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar CongressAuthorizesMilitaryAction)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo UAEAcceptsProductionQuota IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqMassesTroopsOnSaudiBorder)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UNImposesSanctionsOnIraq UN-SecurityCouncil)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent EgyptMeetsWithIraq 
+    (DayFn 22 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo IraqDeclaresKuwaitIts19thProvince Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo UNOrdersIraqiWithdrawal UnitedNationsOrganization)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (reasonForAction OperationDesertStorm beliefs DesertShieldCoalition 
+    (failureForAgents IraqAndUSNegotiate UnitedStatesOfAmerica))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo USDemandsInfoAboutTroopMovements Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent SaudiArabiaRequestsUSTroops 
+    (DayFn 7 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo BlockadeOfIraq IraqOccupiesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar BushDoublesNumberOfTroopsInSaudiArabia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesCausally IraqInvadingKuwait 
+    (exists 
+      (?RETALIATION) 
+      (and 
+        (isa ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION Iraq))) likelihood)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq Kuwait PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar KuwaitiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo UAEAsksForUSSupport UnitedArabEmirates)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar PassingUNSC-Resolution678)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (deliberateActors IraqOccupiesKuwait Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (eventOccursAt BlockadeOfIraq PersianGulf)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo UNDeclaresAnnexationVoid Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment BlockadeOfIraq "The event mentioned in the Y2 document sentence 'A total blockade of Iraq begins, halting all shipments of Iraqi oil and other goods.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqiMinisterAnnouncesTalks 
+    (DayFn 31 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo UAEMobilizesTroops IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment TerritorialDispute-RumailaOilField "The conflict mentioned in the following phrases: '...tensions 
+resulting from a number of existing Iraqi-Kuwaiti disputes (including a 
+boundary disagreement over the Rumalia [sic] oil field...).'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqObjectsToOverProductionOfOil "The communication event mentioned in the Y2 document sentence 'Iraq asserts that Kuwait and the United Arab Emirates are conducting 'economic warfare' against Iraq by overproducing oil.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterStartingOf IraqOccupiesKuwait IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo KuwaitAcceptsProductionQuota IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterStartingOf IraqMassesTroopsOnSaudiBorder IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent EmirFleesKuwait 
+    (DayFn 2 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment EgyptMeetsWithIraq "The event mentioned in the Y2 document sentence 'Egypt meets with the Iraqi Foreign Minister in an attempt to resolve the crisis.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqDeclaresKuwaitIts19thProvince Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UNOrdersIraqiWithdrawal UnitedNationsOrganization)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo IraqRejectsUNResolutions UNDeclaresAnnexationVoid)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (directingAgent KuwaitiTroopMovements Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred KuwaitAcceptsProductionQuota 
+    (exists 
+      (?QUOTA-AMOUNT) 
+      (exists 
+        (?PRODUCTION-AMOUNT) 
+        (exists 
+          (?TIME) 
+          (and 
+            (temporallySubsumes 
+              (YearFn 1990) ?TIME) 
+            (greaterThanOrEqualTo ?QUOTA-AMOUNT ?PRODUCTION-AMOUNT) 
+            (productionAmountDuring Kuwait Petroleum-CrudeOil ?TIME ?PRODUCTION-AMOUNT) 
+            (productionQuotaDuring Kuwait Petroleum-CrudeOil ?TIME ?QUOTA-AMOUNT))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent FranceAnnouncesTroopDeployments 
+    (DayFn 15 
+      (MonthFn September 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo USDemandsInfoAboutTroopMovements UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo SaudiArabiaRequestsUSTroops UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (successfulForAgents IraqInvadingKuwait Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (capableOfDoing UnitedNationsOrganization PreludeToPersianGulfWar mediators)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (directingAgent UAEMobilizesTroops UnitedArabEmirates)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent HusseinMakesPromiseToUS 
+    (DayFn 25 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UAEAsksForUSSupport UnitedArabEmirates)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent PassingUNSC-Resolution678 
+    (DayFn 29 
+      (MonthFn November 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo UNDeclaresAnnexationVoid UN-SecurityCouncil)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (objectActedOn IraqOccupiesKuwait Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent CongressAuthorizesMilitaryAction 
+    (DayFn 12 
+      (MonthFn January 
+        (YearFn 1991))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startingDate IraqMassesTroopsOnSaudiBorder 
+    (DayFn 2 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment EmirFleesKuwait "One of the events mentioned in the Y2 document sentence 'Kuwait's Emir flees, and the UN condemns Iraq's invasion, demanding an immediate withdrawal.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqDeclaresKuwaitIts19thProvince "The communication event mentioned in the Y2 document sentence 'Iraq declares Kuwait its 19th province and renames Kuwait City al-Kadhima.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UNOrdersIraqiWithdrawal "One of the events mentioned in the Y2 document sentence 'Kuwait's Emir flees, and the UN condemns Iraq's invasion, demanding an immediate withdrawal.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo IraqRejectsUNResolutions PassingUNSC-Resolution661)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent KuwaitiTroopMovements 
+    (DayFn 19 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy KuwaitAcceptsProductionQuota Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo FranceAnnouncesTroopDeployments France)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy USDemandsInfoAboutTroopMovements UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo SaudiArabiaRequestsUSTroops SaudiArabia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent BushDoublesNumberOfTroopsInSaudiArabia 
+    (DayFn 8 
+      (MonthFn November 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Israel Iraq PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UAEMobilizesTroops 
+    (DayFn 22 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqAnnexesKuwait Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (purposeInEvent Iraq IraqInvadingKuwait 
+    (increases-Generic IraqInvadingKuwait Iraq 
+      (Kappa 
+        (?AGT ?AMT) 
+        (powerInRegion-Geopolitical ?AGT MiddleEast-Region ?AMT))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo HusseinMakesPromiseToUS UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqAccusesKuwaitOfOilTheft)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UAEAsksForUSSupport 
+    (DayFn 22 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (maleficiary PassingUNSC-Resolution678 Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (lastSubEvents PreludeToPersianGulfWar IraqiMinisterAnnouncesTalks)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UNDeclaresAnnexationVoid UN-SecurityCouncil)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqRejectsUNResolutions 
+    (forall 
+      (?RESOLUTION) 
+      (forall 
+        (?RES-AGREEMENT) 
+        (=> 
+          (and 
+            (isa ?RESOLUTION PassingAResolution) 
+            (performedBy ?RESOLUTION UN-SecurityCouncil) 
+            (maleficiary ?RESOLUTION Iraq) 
+            (temporallySubsumes 
+              (TimeIntervalInclusiveFn IraqInvadingKuwait PassingUNSC-Resolution678) ?RESOLUTION) 
+            (outputsCreated ?RESOLUTION ?RES-AGREEMENT)) 
+          (not 
+            (agreeingAgents ?RES-AGREEMENT Iraq))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqOccupiesKuwait 
+    (ArmyFn Iraq))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqMassesTroopsOnSaudiBorder "The event referred to in the following statement: 'Iraq...masses 
+troops along the Saudi border.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo IraqAndUSNegotiate IraqRejectsUNResolutions)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (goalCategoryForAgent Iraq 
+    (changesQuantityInDirection 
+      (TimeIntervalInclusiveFn 
+        (YearFn 1990) 
+        (YearFn 1991)) OPEC oilPriceCharged None) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (deliberateActors UNDeclaresAnnexationVoid UnitedNationsOrganization)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment KuwaitiTroopMovements "The event mentioned in the Y2 document sentence 'Kuwait answers with a limited mobilization of its forces.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo BlockadeOfIraq IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent KuwaitAcceptsProductionQuota 
+    (DayFn 25 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy FranceAnnouncesTroopDeployments France)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent USDemandsInfoAboutTroopMovements 
+    (DayFn 20 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy SaudiArabiaRequestsUSTroops SaudiArabia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment BushDoublesNumberOfTroopsInSaudiArabia "The event mentioned in the Y2 document sentence 'President Bush doubles the number of troops in Saudi Arabia.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq Israel PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UAEMobilizesTroops "The event mentioned in the Y2 document sentence 'The UAE mobilizes its forces to defend its oil platforms in the Persian Gulf and asks for US aerial support, which the US dispatches the next day.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqAnnexesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqObjectsToOverProductionOfOil)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UAEAsksForUSSupport "The communication event mentioned in the Y2 document sentence 'The UAE mobilizes its forces to defend its oil platforms in the Persian Gulf and asks for US aerial support, which the US dispatches the next day.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy PassingUNSC-Resolution678 UN-SecurityCouncil)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (firstSubEvents PreludeToPersianGulfWar IraqThreatensIsrael)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (objectActedOn BlockadeOfIraq 
+    (ShippingSystemFn PersianGulf))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UNDeclaresAnnexationVoid "The communication event mentioned in the Y2 document passage '... the UN declares the Iraqi annexation of Kuwait void.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqRejectsUNResolutions)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo UKAnnouncesTroopDeployments IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqiMinisterAnnouncesTalks "The communication event mentioned in the Y2 document sentence 'The Iraqi foreign minister announces that talks will resume in Baghdad.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqOccupiesKuwait "The 1990-1991 #$MilitaryOccupation of Kuwait by Iraq; this occupation began shortly after the Iraqi invasion of Kuwait in August 1990, and ended in February 1991.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment CongressAuthorizesMilitaryAction "The event mentioned in the Y2 document sentence 'The US Congress grants President Bush the authority to use force against Iraq to uphold the UN resolution.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (goals Iraq 
+    (changesQuantityInDirection 
+      (TimeIntervalInclusiveFn 
+        (YearFn 1990) 
+        (YearFn 1991)) OPEC oilPriceCharged None))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo UNDeclaresAnnexationVoid IraqAnnexesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsSometimeDuring 
+    (TimeIntervalInclusiveFn 
+      (MonthFn August 
+        (YearFn 1988)) 
+      (MonthFn July 
+        (YearFn 1990))) 
+    (knows UnitedStatesOfAmerica 
+      (exists 
+        (?CW) 
+        (and 
+          (isa ?CW ChemicalWeapon) 
+          (owns Iraq ?CW)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents OPECMeetingInGeneva KuwaitAcceptsProductionQuota)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment FranceAnnouncesTroopDeployments "One of the communication events mentioned in the Y2 document sentence 'The United Kingdom and France announce the deployment of troops to the Persian Gulf.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment USDemandsInfoAboutTroopMovements "The communication event mentioned in the Y2 document sentence 'The US demands that Iraq declare its intentions with regard to the recent troop movements.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment SaudiArabiaRequestsUSTroops "The communication event mentioned in the Y2 document sentence 'Saudi Arabia requests the presence of US troops to defend against a possible Iraqi attack.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment PreludeToPersianGulfWar "This is the complex conflict which eventually resulted in the 
+Persian Gulf War.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqAnnexesKuwait 
+    (DayFn 8 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar UNImposesSanctionsOnIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqThreatensIsrael)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (goals UnitedStatesOfAmerica 
+    (not 
+      (exists 
+        (?BLOCK) 
+        (and 
+          (isa ?BLOCK BlockingTraffic) 
+          (relationInstanceExists objectActedOn ?BLOCK 
+            (ShippingLaneOfRegionFn PersianGulf))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment PassingUNSC-Resolution678 "One of the events mentioned in the Y2 document sentence 'The UN sets a 15 January 1991 deadline for Iraqi withdrawal; Iraq rejects all UN resolutions.' Note that the Y2 document does not contain the information that the deadline was one of the provisions of UNSC 678; this information was obtained from the US Information Agency's 'Iraq Chronology' at http://www.usia.gov/regional/nea/gulfsec/irqchrn.htm.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo KuwaitiTroopMovements IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqiMinisterAnnouncesTalks)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (failureForAgents IraqAndKuwaitNegotiate Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo IraqRejectsUNResolutions PassingUNSC-Resolution678)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqObjectsToOverProductionOfOil 
+    (exists 
+      (?ACTION) 
+      (and 
+        (maleficiary ?ACTION Iraq) 
+        (deliberateActors ?ACTION UnitedArabEmirates))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn IraqOccupiesKuwait 
+    (possesses Iraq 
+      (IndustryOfRegionFn OilIndustry Kuwait)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo SaudiArabiaRequestsUSTroops IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (goalCategoryForAgent Iraq 
+    (changesQuantityInDirection 
+      (TimeIntervalInclusiveFn 
+        (YearFn 1990) 
+        (YearFn 1991)) OPEC oilPriceCharged None) NationalEconomyGoal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqAccusesKuwaitOfOilTheft 
+    (exists 
+      (?ATTACK) 
+      (and 
+        (isa ?ATTACK MilitaryAttack) 
+        (directingAgent ?ATTACK Iraq) 
+        (intendedMaleficiary ?ATTACK Kuwait))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment KuwaitAcceptsProductionQuota "One of the two events mentioned in the Y2 document passage '... Kuwait and the UAE accept oil production schedules that Iraq deems satisfactory ...'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo USForcesArriveInSA IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqAnnexesKuwait "The event mentioned in the Y2 document sentence 'Iraq annexes Kuwait.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy BlockadeOfIraq UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment HusseinMakesPromiseToUS "The communication event mentioned in the Y2 document sentence 'Finally, President Hussein promises the American ambassador that Iraq will not take any actions before the negotiations.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (causes-EventEvent PreludeToPersianGulfWar PersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (goalCategoryForAgent UnitedStatesOfAmerica 
+    (not 
+      (exists 
+        (?BLOCK) 
+        (and 
+          (isa ?BLOCK BlockingTraffic) 
+          (relationInstanceExists objectActedOn ?BLOCK 
+            (ShippingLaneOfRegionFn PersianGulf))))) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (preconditionFor-Events PassingUNSC-Resolution678 IraqRejectsUNResolutions)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (contiguousAfter 
+    (STIF UNOrdersIraqiWithdrawal) UNOrdersIraqiWithdrawal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqAndKuwaitNegotiate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (DayFn 2 
+        (MonthFn August 
+          (YearFn 1990))) 
+      (DayFn 27 
+        (MonthFn February 
+          (YearFn 1991)))) 
+    (beliefs UnitedStatesOfAmerica 
+      (goals Iraq 
+        (exists 
+          (?ATTACK) 
+          (exists 
+            (?WEAPON) 
+            (exists 
+              (?TARGET) 
+              (and 
+                (isa ?ATTACK MilitaryAttack) 
+                (isa ?WEAPON WeaponOfMassDestruction) 
+                (performedBy ?ATTACK Iraq) 
+                (near 
+                  (BorderFn Iraq) ?TARGET) 
+                (eventOccursNear ?ATTACK 
+                  (BorderFn Iraq)) 
+                (deviceUsed ?ATTACK ?WEAPON) 
+                (intendedMaleficiary ?ATTACK ?TARGET))))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (decreasesCausally HusseinMakesPromiseToUS PreludeToPersianGulfWar conflictLevel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (failureForAgents IraqAndKuwaitNegotiate Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqRejectsUNResolutions 
+    (DayFn 29 
+      (MonthFn November 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (postEvents SaudiArabiaRequestsUSTroops USForcesArriveInSA)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterEndingOf USForcesArriveInSA SaudiArabiaRequestsUSTroops)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (causes-EventEvent TerritorialDispute-RumailaOilField PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqObjectsToOverProductionOfOil 
+    (exists 
+      (?ACTION) 
+      (and 
+        (maleficiary ?ACTION Iraq) 
+        (deliberateActors ?ACTION Kuwait))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqOccupiesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo UAEAsksForUSSupport IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (firstSubEvents PersianGulfWar IraqInvadingKuwait)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (=> 
+    (holdsIn 
+      (STIB BushDoublesNumberOfTroopsInSaudiArabia) 
+      (entityCardinality 
+        (TheSetOf ?TROOP 
+          (exists 
+            (?MMO) 
+            (and 
+              (isa ?MMO ModernMilitaryOrganization) 
+              (isa ?TROOP MilitaryPerson) 
+              (inRegion ?MMO SaudiArabia) 
+              (officialArmedForces 
+                (GovernmentFn UnitedStatesOfAmerica) ?MMO) 
+              (hasMembers ?MMO ?TROOP)))) ?NUM)) 
+    (increasesByAmount BushDoublesNumberOfTroopsInSaudiArabia 
+      (TheSetOf ?TROOP 
+        (exists 
+          (?MMO) 
+          (and 
+            (isa ?MMO ModernMilitaryOrganization) 
+            (isa ?TROOP MilitaryPerson) 
+            (inRegion ?MMO SaudiArabia) 
+            (officialArmedForces 
+              (GovernmentFn UnitedStatesOfAmerica) ?MMO) 
+            (hasMembers ?MMO ?TROOP)))) entityCardinality ?NUM))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (deliberateActors USForcesArriveInSA UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesImmediatelyCausally IraqInvadingKuwait 
+    (powerInRegion-Geopolitical Iraq MiddleEast-Region MediumToVeryHigh) likelihood)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment UNImposesSanctionsOnIraq "The imposition of a trade embargo against #$Iraq by the #$UN-SecurityCouncil which occurred shortly after, and in response to, #$Iraq's invasion of #$Kuwait.  This sanctioning or embargo event is mentioned twice in the Desert Storm source document: 'The UN Security Council immediately demanded Iraq's withdrawal and imposed economic sanctions ...' and '(On August 6), the UN imposes a trade embargo on Iraq'.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict SaudiArabia Iraq PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (deliberateActors IraqMassesTroopsOnSaudiBorder Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar HusseinMakesPromiseToUS)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (preconditionFor-Events IraqInvadingKuwait IraqOccupiesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (decreasesCausally IraqAgreesToMeetWithKuwait PreludeToPersianGulfWar conflictLevel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo USForcesArriveInSA SaudiArabiaRequestsUSTroops)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants IraqAndKuwaitNegotiate Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo IraqRejectsUNResolutions UN-SecurityCouncil)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (postEvents PassingUNSC-Resolution678 IraqRejectsUNResolutions)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar IraqAndUSNegotiate)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increases-Generic IraqAnnexesKuwait PersianGulfWar conflictLevel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterEndingOf IraqRejectsUNResolutions PassingUNSC-Resolution678)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqThreatensIsrael 
+    (exists 
+      (?ATTACK) 
+      (and 
+        (isa ?ATTACK MilitaryAttack) 
+        (directingAgent ?ATTACK Iraq) 
+        (maleficiary ?ATTACK Israel))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (positiveVestedInterest Kuwait RumailaOilFieldIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqObjectsToOverProductionOfOil 
+    (exists 
+      (?QUANTITY1) 
+      (exists 
+        (?QUANTITY) 
+        (and 
+          (productionAmountDuring UnitedArabEmirates Petroleum-CrudeOil 
+            (QuarterFn 1 
+              (YearFn 1990)) ?QUANTITY) 
+          (productionQuotaDuring UnitedArabEmirates Petroleum-CrudeOil 
+            (QuarterFn 1 
+              (YearFn 1990)) ?QUANTITY1) 
+          (greaterThan ?QUANTITY ?QUANTITY1)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (temporallySubsumes 
+    (TimeIntervalInclusiveFn 
+      (DayFn 2 
+        (MonthFn August 
+          (YearFn 1990))) 
+      (DayFn 27 
+        (MonthFn February 
+          (YearFn 1991)))) IraqOccupiesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo PassingUNSC-Resolution678 IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesCausally BushDoublesNumberOfTroopsInSaudiArabia 
+    (TheSetOf ?TROOP 
+      (exists 
+        (?MMO) 
+        (and 
+          (isa ?TROOP MilitaryPerson) 
+          (isa ?MMO ModernMilitaryOrganization) 
+          (inRegion ?MMO SaudiArabia) 
+          (officialArmedForces 
+            (GovernmentFn UnitedStatesOfAmerica) ?MMO) 
+          (hasMembers ?MMO ?TROOP)))) entityCardinality)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqAccusesKuwaitOfOilTheft 
+    (DayFn 17 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo EmirFleesKuwait IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (deliberateActors BushDoublesNumberOfTroopsInSaudiArabia UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (objectActedOn IraqInvadingKuwait Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar UKAnnouncesTroopDeployments)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred UAEAcceptsProductionQuota 
+    (exists 
+      (?QUOTA-AMOUNT) 
+      (exists 
+        (?PRODUCTION-AMOUNT) 
+        (exists 
+          (?TIME) 
+          (and 
+            (temporallySubsumes 
+              (YearFn 1990) ?TIME) 
+            (greaterThanOrEqualTo ?QUOTA-AMOUNT ?PRODUCTION-AMOUNT) 
+            (productionAmountDuring UnitedArabEmirates Petroleum-CrudeOil ?TIME ?PRODUCTION-AMOUNT) 
+            (productionQuotaDuring UnitedArabEmirates Petroleum-CrudeOil ?TIME ?QUOTA-AMOUNT))))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (contiguousAfter BushDoublesNumberOfTroopsInSaudiArabia 
+    (STIB BushDoublesNumberOfTroopsInSaudiArabia))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq SaudiArabia PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqMassesTroopsOnSaudiBorder 
+    (ArmyFn Iraq))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar IraqAgreesToMeetWithKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (decreasesCausally OPECMeetingInGeneva PreludeToPersianGulfWar conflictLevel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (socialParticipants IraqAndKuwaitNegotiate Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo IraqRejectsUNResolutions Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startsAfterStartingOf DesertShieldCoalition PersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqAndUSNegotiate 
+    (DayFn 9 
+      (MonthFn January 
+        (YearFn 1991))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo-Intended SaudiArabiaRequestsUSTroops UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqThreatensIsrael 
+    (MonthFn April 
+      (YearFn 1990)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (objectOfPossessionTransfer IraqAnnexesKuwait Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (positiveVestedInterest Iraq RumailaOilFieldIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqObjectsToOverProductionOfOil 
+    (exists 
+      (?QUANTITY1) 
+      (exists 
+        (?QUANTITY) 
+        (and 
+          (productionAmountDuring Kuwait Petroleum-CrudeOil 
+            (QuarterFn 1 
+              (YearFn 1990)) ?QUANTITY) 
+          (productionQuotaDuring Kuwait Petroleum-CrudeOil 
+            (QuarterFn 1 
+              (YearFn 1990)) ?QUANTITY1) 
+          (greaterThan ?QUANTITY ?QUANTITY1)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo IraqAccusesKuwaitOfOilTheft Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (directingAgent EgyptMeetsWithIraq Egypt)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startingDate IraqInvadingKuwait 
+    (DayFn 2 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqDeclaresKuwaitIts19thProvince 
+    (nameOfAgent CityOfKuwaitKuwait "al-Kadhima"))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (startingDate UNImposesSanctionsOnIraq 
+    (DayFn 6 
+      (MonthFn August 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesCausally IraqiTroopMovements 
+    (TheSetOf ?MMO 
+      (exists 
+        (?LOCATION) 
+        (and 
+          (isa ?MMO ModernMilitaryOrganization) 
+          (officialArmedForces 
+            (GovernmentFn Iraq) ?MMO) 
+          (near 
+            (BorderBetweenFn Kuwait Iraq) ?LOCATION) 
+          (objectFoundInLocation ?MMO ?LOCATION)))) entityCardinality)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry OPEC ?COUNTRY) 
+    (socialParticipants OPECMeetingInGeneva ?COUNTRY))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (adversarialResponseTo BlockadeOfIraq IraqAnnexesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy UAEAcceptsProductionQuota UnitedArabEmirates)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqAgreesToMeetWithKuwait 
+    (exists 
+      (?MEETING) 
+      (and 
+        (socialParticipants ?MEETING Iraq) 
+        (socialParticipants ?MEETING Kuwait) 
+        (isa ?MEETING MeetingTakingPlace))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict UnitedStatesOfAmerica Iraq PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (contiguousAfter 
+    (STIF IraqAnnexesKuwait) IraqAnnexesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increases-Generic IraqAccusesKuwaitOfOilTheft PreludeToPersianGulfWar conflictLevel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar OPECMeetingInGeneva)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (relationInstanceExists subOrganizations 
+    (ArmyFn Iraq) ArmoredUnit-MilitarySpecialty)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar USForcesArriveInSA)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (temporallySubsumes 
+    (TimeIntervalInclusiveFn 
+      (MonthFn April 
+        (YearFn 1990)) 
+      (DayFn 31 
+        (MonthFn July 
+          (YearFn 1990)))) PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (endingDate IraqAndKuwaitNegotiate 
+    (DayFn 31 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqRejectsUNResolutions Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (failureForAgents IraqAndUSNegotiate UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (preconditionFor-Events IraqOccupiesKuwait IraqDeclaresKuwaitIts19thProvince)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo IraqThreatensIsrael Israel)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (toPossessor IraqAnnexesKuwait Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (capableOfDoing UnitedNationsOrganization TerritorialDispute-RumailaOilField mediators)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo IraqObjectsToOverProductionOfOil Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo IraqAccusesKuwaitOfOilTheft Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar EmirFleesKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo EgyptMeetsWithIraq IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (maleficiary IraqInvadingKuwait Kuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (infoTransferred IraqDeclaresKuwaitIts19thProvince 
+    (geographicalSubRegions Iraq Kuwait))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (=> 
+    (toLocation IraqiTroopMovements ?LOCATION) 
+    (near 
+      (BorderBetweenFn Kuwait Iraq) ?LOCATION))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar UNOrdersIraqiWithdrawal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (eventOccursAt OPECMeetingInGeneva CityOfGenevaSwitzerland)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UKAnnouncesTroopDeployments 
+    (DayFn 15 
+      (MonthFn September 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (authorizesAgentToDo PassingUNSC-Resolution678 DesertShieldCoalition MilitaryAttack)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent UAEAcceptsProductionQuota 
+    (DayFn 25 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (dateOfEvent IraqAgreesToMeetWithKuwait 
+    (DayFn 25 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Iraq UnitedStatesOfAmerica PreludeToPersianGulfWar)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PreludeToPersianGulfWar EgyptMeetsWithIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo UKAnnouncesTroopDeployments UnitedKingdomOfGreatBritainAndNorthernIreland)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (temporallySubsumes OPECMeetingInGeneva 
+    (DayFn 25 
+      (MonthFn July 
+        (YearFn 1990))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo UNOrdersIraqiWithdrawal IraqInvadingKuwait)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (directingAgent IraqiTroopMovements Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesCausally IraqInvadingKuwait 
+    (exists 
+      (?RETALIATION) 
+      (and 
+        (isa ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION 
+          (ArmyFn Iraq)))) likelihood)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (not 
+    (and 
+      (geographicalSubRegions Kuwait ?LOCATION) 
+      (toLocation EmirFleesKuwait ?LOCATION)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (performedBy IraqAccusesKuwaitOfOilTheft Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (increasesCausally IraqThreatensIsrael Iraq 
+    (Kappa 
+      (?AGENT ?LEVEL) 
+      (statusWithAgent-Gradient ?AGENT UnitedStatesOfAmerica StateOfDiplomaticTension ?LEVEL)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo IraqObjectsToOverProductionOfOil UnitedArabEmirates)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (opponentsInConflict Kuwait Iraq TerritorialDispute-RumailaOilField)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (senderOfInfo IraqThreatensIsrael Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (inReactionTo USDemandsInfoAboutTroopMovements IraqiTroopMovements)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (recipientOfInfo-Intended HusseinMakesPromiseToUS UnitedStatesOfAmerica)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (failureForAgents IraqAndUSNegotiate Iraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (holdsIn 
+    (DayFn 31 
+      (MonthFn July 
+        (YearFn 1990))) 
+    (trueFormula 
+      (thereExistAtLeast 100000 ?SOLDIER 
+        (and 
+          (isa ?SOLDIER MilitaryPerson) 
+          (hasMembers 
+            (ArmyFn Iraq) ?SOLDIER) 
+          (near 
+            (BorderBetweenFn Kuwait Iraq) ?SOLDIER)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (subEvents PersianGulfWar BlockadeOfIraq)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqRejectsUNResolutions "The communication event mentioned in the Y2 document sentence 'The UN sets a 15 January 1991 deadline for Iraqi withdrawal; Iraq rejects all UN resolutions.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (comment IraqAndKuwaitNegotiate "The negotiations between Kuwait and Iraq mentioned in the Y2 document sentence 'Talks between Kuwait and Iraq fail due to Iraq's insistence that Kuwait forgive its debt.'")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY DesertShieldMt
+ :KIF
+  (endingDate USForcesArriveInSA 
+    (DayFn 9 
+      (MonthFn August 
+        (YearFn 1990))))
+)

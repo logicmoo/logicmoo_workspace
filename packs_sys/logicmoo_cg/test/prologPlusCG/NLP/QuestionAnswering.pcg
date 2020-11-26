@@ -1,0 +1,56 @@
+// The meaning (semantic) of the story is represented by a (compound) CG which is an overlap of three structures (nets) :
+// a) temporal structure represented here by "after" relation which specify the temporal succession of actions, events, and states.
+// b) causal structure representedd here by "cause" relation
+// c) intentional structure represented here by "motivationOf" and "reason" relations.
+story(
+[Action #act1 = [Time : Early]<-time-[WakeUp]-pat->[Man: John]]-after->
+[State #stt1 = [Hungry]-pat->[Man: John]]-after->
+[Action #act2 = [Store]<-dest-[Drive]-agnt->[Man: John]]-after->
+[Action #act3 = [Man:John]<-obj-[See]-
+		           -agnt->[Woman: Mary],
+		           -loc->[Store]]-after->
+[Action #act4 = [Man:John]<-dest-[WaveAt]-agnt->[Woman: Mary]]-after->
+[Action #act5 = [Man:John]<-agnt-[Buy]-obj->[OatMeal]]-after->
+[Event #evt1 = [Man:John]<-agnt-[Drop]-
+		               -obj->[OatMeal],
+		               -loc->[Outside]]-after->
+[Event #evt2 = [Trunk]<-dest-[Spill]-pat->[OatMeal]]-after->
+[Action #act6 = [OatMeal]<-obj-[Put]-
+		   -agnt->[Man: John],
+		   -in->[Container]]-after->
+[Action #act7 = [OatMeal]<-obj-[Cook]-agnt->[Man: John]]-after->
+[Action #act8 = [OatMeal]<-obj-[Eat]-agnt->[Man: John]]
+
+[State #stt1]<-reason-[Goal = [Action = [Food]<-obj-[Eat]-agnt->[Man: John]]]-
+					<-reason-[Action #act2],
+					<-reason-[Action #act5],
+					<-reason-[Action #act7],
+					<-reason-[Action #act8]
+
+[Action #act3]<-motivationOf-[Goal = [Action = [Man:John]<-dest-[Greet]-agnt->[Woman: Mary]]]<-reason-[Action #act4]
+
+[Event #evt1]-
+               -cause->[State #stt2 = [ParkingLot]<-pat-[Slick]],
+               <-cause-[Event #evt2]
+			).
+// Example: questionAnswering("why did john drive to the store ?", _answer). 
+questionAnswering(_sentence, _answer) :-
+   readSentence(_sentence, _question), 
+   interrogative_sentence(_question, [T = _kernelOfQuest]-modalityOf->[Modality = interrogative]-attr->[_questionType]),
+   answer(_questionType, _kernelOfQuest, _answer).
+
+// We consider here only one kind of request: why question 
+answer(Why, _kernelOfQuest, _answer) :-
+   answerWhy(_kernelOfQuest, _answer).
+
+answerWhy(A, Y) :- 
+   story(_story),
+   branchOfCG(B, [T = G]<-reason-[T2 = A], _story),
+   reason([T = G], Y).
+
+reason(X, X).
+reason([T = G], Y) :-
+   story(_story),
+   branchOfCG(B, [T1 = G1]<-reason-[T = G], _story),
+   reason([T1 = G1], Y).
+

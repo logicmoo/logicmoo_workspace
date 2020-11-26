@@ -1,0 +1,511 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.19</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="streamstat.html">
+<link rel="next" href="termrw.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="streamstat.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="termrw.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:chario"><a id="sec:4.19"><span class="sec-nr">4.19</span> <span class="sec-title">Primitive 
+character I/O</span></a></h2>
+
+<a id="sec:chario"></a>
+
+<p>See <a class="sec" href="chars.html#sec:4.2">section 4.2</a> for an 
+overview of supported character representations.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="nl/0"><strong>nl</strong></a></dt>
+<dd class="defbody">
+Write a newline character to the current output stream. On Unix systems
+<a id="idx:nl0:1249"></a><a class="pred" href="chario.html#nl/0">nl/0</a> 
+is equivalent to <code>put(10)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="nl/1"><strong>nl</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Write a newline to <var>Stream</var>.</dd>
+<dt class="pubdef"><a id="put/1"><strong>put</strong>(<var>+Char</var>)</a></dt>
+<dd class="defbody">
+Write <var>Char</var> to the current output stream. <var>Char</var> is 
+either an integer expression evaluating to a character code or an atom 
+of one character. Deprecated. New code should use <a id="idx:putchar1:1250"></a><a class="pred" href="chario.html#put_char/1">put_char/1</a> 
+or <a id="idx:putcode1:1251"></a><a class="pred" href="chario.html#put_code/1">put_code/1</a>.</dd>
+<dt class="pubdef"><a id="put/2"><strong>put</strong>(<var>+Stream, 
++Char</var>)</a></dt>
+<dd class="defbody">
+Write <var>Char</var> to <var>Stream</var>. See <a id="idx:put1:1252"></a><a class="pred" href="chario.html#put/1">put/1</a> 
+for details.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_byte/1"><strong>put_byte</strong>(<var>+Byte</var>)</a></dt>
+<dd class="defbody">
+Write a single byte to the output. <var>Byte</var> must be an integer 
+between 0 and 255.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_byte/2"><strong>put_byte</strong>(<var>+Stream, 
++Byte</var>)</a></dt>
+<dd class="defbody">
+Write a single byte to <var>Stream</var>. <var>Byte</var> must be an 
+integer between 0 and 255.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_char/1"><strong>put_char</strong>(<var>+Char</var>)</a></dt>
+<dd class="defbody">
+Write a character to the current output, obeying the encoding defined 
+for the current output stream. Note that this may raise an exception if 
+the encoding of the output stream cannot represent <var>Char</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_char/2"><strong>put_char</strong>(<var>+Stream, 
++Char</var>)</a></dt>
+<dd class="defbody">
+Write a character to <var>Stream</var>, obeying the encoding defined for
+<var>Stream</var>. Note that this may raise an exception if the encoding 
+of <var>Stream</var> cannot represent <var>Char</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_code/1"><strong>put_code</strong>(<var>+Code</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:putchar1:1253"></a><a class="pred" href="chario.html#put_char/1">put_char/1</a>, 
+but using a <em>character code</em>. <var>Code</var> is a non-negative 
+integer. Note that this may raise an exception if the encoding of the 
+output stream cannot represent <var>Code</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="put_code/2"><strong>put_code</strong>(<var>+Stream, 
++Code</var>)</a></dt>
+<dd class="defbody">
+Same as <a id="idx:putcode1:1254"></a><a class="pred" href="chario.html#put_code/1">put_code/1</a> 
+but directing <var>Code</var> to <var>Stream</var>.</dd>
+<dt class="pubdef"><a id="tab/1"><strong>tab</strong>(<var>+Amount</var>)</a></dt>
+<dd class="defbody">
+Write <var>Amount</var> spaces on the current output stream. <var>Amount</var> 
+should be an expression that evaluates to a positive integer (see
+<a class="sec" href="arith.html#sec:4.27">section 4.27</a>).</dd>
+<dt class="pubdef"><a id="tab/2"><strong>tab</strong>(<var>+Stream, 
++Amount</var>)</a></dt>
+<dd class="defbody">
+Write <var>Amount</var> spaces to <var>Stream</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="flush_output/0"><strong>flush_output</strong></a></dt>
+<dd class="defbody">
+Flush pending output on current output stream. <a id="idx:flushoutput0:1255"></a><a class="pred" href="chario.html#flush_output/0">flush_output/0</a> 
+is automatically generated by <a id="idx:read1:1256"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and derivatives if the current input stream is <code>user</code> and the 
+cursor is not at the left margin.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="flush_output/1"><strong>flush_output</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Flush output on the specified stream. The stream must be open for 
+writing.</dd>
+<dt class="pubdef"><a id="ttyflush/0"><strong>ttyflush</strong></a></dt>
+<dd class="defbody">
+Flush pending output on stream <code>user</code>. See also <a id="idx:flushoutput01:1257"></a><a class="pred" href="chario.html#flush_output/0">flush_output/[0,1]</a>.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_byte/1"><strong>get_byte</strong>(<var>-Byte</var>)</a></dt>
+<dd class="defbody">
+Read the current input stream and unify the next byte with <var>Byte</var> 
+(an integer between 0 and 255). <var>Byte</var> is unified with -1 on 
+end of file.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_byte/2"><strong>get_byte</strong>(<var>+Stream, 
+-Byte</var>)</a></dt>
+<dd class="defbody">
+Read the next byte from <var>Stream</var> and unify <var>Byte</var> with 
+an integer between 0 and 255.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_code/1"><strong>get_code</strong>(<var>-Code</var>)</a></dt>
+<dd class="defbody">
+Read the current input stream and unify <var>Code</var> with the 
+character code of the next character. <var>Code</var> is unified with -1 
+on end of file. See also <a id="idx:getchar1:1258"></a><a class="pred" href="chario.html#get_char/1">get_char/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_code/2"><strong>get_code</strong>(<var>+Stream, 
+-Code</var>)</a></dt>
+<dd class="defbody">
+Read the next character code from <var>Stream</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_char/1"><strong>get_char</strong>(<var>-Char</var>)</a></dt>
+<dd class="defbody">
+Read the current input stream and unify <var>Char</var> with the next 
+character as a one-character atom. See also <a id="idx:atomchars2:1259"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>. 
+On end-of-file, <var>Char</var> is unified to the atom <code>end_of_file</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="get_char/2"><strong>get_char</strong>(<var>+Stream, 
+-Char</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Char</var> with the next character from <var>Stream</var> as 
+a one-character atom. See also <a id="idx:getchar2:1260"></a><a class="pred" href="chario.html#get_char/2">get_char/2</a>, <a id="idx:getbyte2:1261"></a><a class="pred" href="chario.html#get_byte/2">get_byte/2</a> 
+and <a id="idx:getcode2:1262"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="get0/1"><strong>get0</strong>(<var>-Char</var>)</a></dt>
+<dd class="defbody">
+Edinburgh version of the ISO <a id="idx:getcode1:1263"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a> 
+predicate. Note that Edinburgh Prolog didn't support wide characters and 
+therefore technically speaking
+<a id="idx:get01:1264"></a><a class="pred" href="chario.html#get0/1">get0/1</a> 
+should have been mapped to <a id="idx:getbyte1:1265"></a><a class="pred" href="chario.html#get_byte/1">get_byte/1</a>. 
+The intention of <a id="idx:get01:1266"></a><a class="pred" href="chario.html#get0/1">get0/1</a>, 
+however, is to read character codes.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="get0/2"><strong>get0</strong>(<var>+Stream, 
+-Char</var>)</a></dt>
+<dd class="defbody">
+Edinburgh version of the ISO <a id="idx:getcode2:1267"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
+predicate. See also <a id="idx:get01:1268"></a><a class="pred" href="chario.html#get0/1">get0/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="get/1"><strong>get</strong>(<var>-Char</var>)</a></dt>
+<dd class="defbody">
+Read the current input stream and unify the next non-blank character 
+with <var>Char</var>. <var>Char</var> is unified with -1 on end of file. 
+The predicate <a id="idx:get1:1269"></a><a class="pred" href="chario.html#get/1">get/1</a> 
+operates on character <em>codes</em>. See also <a id="idx:get01:1270"></a><a class="pred" href="chario.html#get0/1">get0/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="get/2"><strong>get</strong>(<var>+Stream, 
+-Char</var>)</a></dt>
+<dd class="defbody">
+Read the next non-blank character from <var>Stream</var>. See also
+<a id="idx:get1:1271"></a><a class="pred" href="chario.html#get/1">get/1</a>, <a id="idx:get01:1272"></a><a class="pred" href="chario.html#get0/1">get0/1</a> 
+and <a id="idx:get02:1273"></a><a class="pred" href="chario.html#get0/2">get0/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_byte/1"><strong>peek_byte</strong>(<var>-Byte</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_byte/2"><strong>peek_byte</strong>(<var>+Stream, 
+-Byte</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_code/1"><strong>peek_code</strong>(<var>-Code</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_code/2"><strong>peek_code</strong>(<var>+Stream, 
+-Code</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_char/1"><strong>peek_char</strong>(<var>-Char</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="peek_char/2"><strong>peek_char</strong>(<var>+Stream, 
+-Char</var>)</a></dt>
+<dd class="defbody">
+Read the next byte/code/char from the input without removing it. These 
+predicates do not modify the stream's position or end-of-file status. 
+These predicates require a buffered stream (see <a id="idx:setstream2:1274"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>) 
+and raise a permission error if the stream is unbuffered or the buffer 
+is too small to hold the longest multi-byte sequence that might need to 
+be buffered.</dd>
+<dt class="pubdef"><a id="peek_string/3"><strong>peek_string</strong>(<var>+Stream, 
++Len, -String</var>)</a></dt>
+<dd class="defbody">
+Read the next <var>Len</var> characters (if the stream is a text stream) 
+or bytes (if the stream is binary) from Stream without removing the 
+data. If <var>Len</var> is larger that the stream buffer size, the 
+buffer size is increased to <var>Len</var>. <var>String</var> can be 
+shorter than <var>Len</var> if the stream contains less data. This 
+predicate is intended to guess the content type of data read from 
+non-repositionable streams.</dd>
+<dt class="pubdef"><a id="skip/1"><strong>skip</strong>(<var>+Code</var>)</a></dt>
+<dd class="defbody">
+Read the input until <var>Code</var> or the end of the file is 
+encountered. A subsequent call to <a id="idx:getcode1:1275"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a> 
+will read the first character after
+<var>Code</var>.</dd>
+<dt class="pubdef"><a id="skip/2"><strong>skip</strong>(<var>+Stream, 
++Code</var>)</a></dt>
+<dd class="defbody">
+Skip input (as <a id="idx:skip1:1276"></a><a class="pred" href="chario.html#skip/1">skip/1</a>) 
+on <var>Stream</var>.</dd>
+<dt class="pubdef"><a id="get_single_char/1"><strong>get_single_char</strong>(<var>-Code</var>)</a></dt>
+<dd class="defbody">
+Get a single character from input stream&lsquo;user' (regardless of the 
+current input stream). Unlike <a id="idx:getcode1:1277"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a>, 
+this predicate does not wait for a return. The character is not echoed 
+to the user's terminal. This predicate is meant for keyboard menu 
+selection, etc. If SWI-Prolog was started with the <strong>--no-tty</strong> 
+option this predicate reads an entire line of input and returns the 
+first non-blank character on this line, or the character code of the 
+newline (10) if the entire line consisted of blank characters. See also <a id="idx:withttyraw1:1278"></a><a class="pred" href="chario.html#with_tty_raw/1">with_tty_raw/1</a>.</dd>
+<dt class="pubdef"><a id="with_tty_raw/1"><strong>with_tty_raw</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Run goal with the user input and output streams set in <em>raw mode</em>, 
+which implies the terminal makes the input available immediately instead 
+of line-by-line and input that is read is not echoed. As a consequence, 
+line editing does not work. See also <a id="idx:getsinglechar1:1279"></a><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="at_end_of_stream/0"><strong>at_end_of_stream</strong></a></dt>
+<dd class="defbody">
+Succeeds after the last character of the current input stream has been 
+read. Also succeeds if there is no valid current input stream.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="at_end_of_stream/1"><strong>at_end_of_stream</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Succeeds after the last character of the named stream is read, or
+<var>Stream</var> is not a valid input stream. The end-of-stream test is 
+only available on buffered input streams (unbuffered input streams are 
+rarely used; see <a id="idx:open4:1280"></a><a class="pred" href="IO.html#open/4">open/4</a>).</dd>
+<dt class="pubdef"><a id="set_end_of_stream/1"><strong>set_end_of_stream</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Set the size of the file opened as <var>Stream</var> to the current file 
+position. This is typically used in combination with the open-mode <code>update</code>.</dd>
+<dt class="pubdef"><a id="copy_stream_data/3"><strong>copy_stream_data</strong>(<var>+StreamIn, 
++StreamOut, +Len</var>)</a></dt>
+<dd class="defbody">
+Copy <var>Len</var> codes from <var>StreamIn</var> to <var>StreamOut</var>. 
+Note that the copy is done using the semantics of <a id="idx:getcode2:1281"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
+and
+<a id="idx:putcode2:1282"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a>, 
+taking care of possibly recoding that needs to take place between two 
+text files. See <a class="sec" href="widechars.html#sec:2.19.1">section 
+2.19.1</a>.</dd>
+<dt class="pubdef"><a id="copy_stream_data/2"><strong>copy_stream_data</strong>(<var>+StreamIn, 
++StreamOut</var>)</a></dt>
+<dd class="defbody">
+Copy all (remaining) data from <var>StreamIn</var> to
+<var>StreamOut</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="fill_buffer/1"><strong>fill_buffer</strong>(<var>+Stream</var>)</a></dt>
+<dd class="defbody">
+Fill the <var>Stream</var>&rsquo;s input buffer. Subsequent calls try to 
+read more input until the buffer is completely filled. This predicate is 
+used together with <a id="idx:readpendingcodes3:1283"></a><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a> 
+to process input with minimal buffering.</dd>
+<dt class="pubdef"><a id="read_pending_codes/3"><strong>read_pending_codes</strong>(<var>+StreamIn, 
+-Codes, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Read input pending in the input buffer of <var>StreamIn</var> and return 
+it in the difference list <var>Codes</var>-<var>Tail</var>. That is, the 
+available characters codes are used to create the list <var>Codes</var> 
+ending in the tail <var>Tail</var>. On encountering end-of-file, both
+<var>Codes</var> and <var>Tail</var> are unified with the empty list (<code>[]</code>).
+
+<p>This predicate is intended for efficient unbuffered copying and 
+filtering of input coming from network connections or devices. It also 
+enables the library <code>library(pure_input)</code>, which processes 
+input from files and streams using a DCG.
+
+<p>The following code fragment realises efficient non-blocking copying 
+of data from an input to an output stream. The <a id="idx:atendofstream1:1284"></a><a class="pred" href="chario.html#at_end_of_stream/1">at_end_of_stream/1</a> 
+call checks for end-of-stream and fills the input buffer. Note that the 
+use of a <a id="idx:getcode2:1285"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
+and <a id="idx:putcode2:1286"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a> 
+based loop requires a <a id="idx:flushoutput1:1287"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a> 
+call after <em>each</em> <a id="idx:putcode2:1288"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a>. 
+The <a id="idx:copystreamdata2:1289"></a><a class="pred" href="chario.html#copy_stream_data/2">copy_stream_data/2</a> 
+does not allow for inspection of the copied data and suffers from the 
+same buffering issues.
+
+<pre class="code">
+copy(In, Out) :-
+        repeat,
+            fill_buffer(In),
+            read_pending_codes(In, Chars, Tail),
+            \+ \+ ( Tail = [],
+                    format(Out, '~s', [Chars]),
+                    flush_output(Out)
+                  ),
+            (   Tail == []
+            -&gt;  !
+            ;   fail
+            ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="read_pending_chars/3"><strong>read_pending_chars</strong>(<var>+StreamIn, 
+-Chars, ?Tail</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:readpendingcodes3:1290"></a><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a>, 
+but returns a difference list of one-character atoms.
+</dd>
+</dl>
+
+<p></body></html>

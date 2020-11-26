@@ -1,0 +1,136 @@
+nlp :-
+   readSentence(P),
+   analyze_sentence(P, G),
+   writeln(G), !.
+
+analyze_sentence(P, G) :-
+   imperative_sentence(P, G), !.
+analyze_sentence(P, G) :-
+   interrogative_sentence(P, G), !.
+analyze_sentence(P, G) :-
+   declarative_sentence(P, G).
+
+// Question Analysis: a simple example: why  + DeclarativeSentence + QuestionMark.
+interrogative_sentence(["why", _aux |P], [T_TypeOfSentence = G]-modalityOf->[Modality = interrogative]-attr->[Why]) :-
+   NP(P, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, ["?"], G_NP, E_NP, T_TypeOfSentence, G).
+
+imperative_sentence(P, [Action = G]-modalityOf->[Modality = imperative]) :- 
+   ActiveVP(P, ["."], G).
+
+declarative_sentence(P, [T_TypeOfSentence = G]-modalityOf->[Modality = declarative]) :-
+   NP(P, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, ["."], G_NP, E_NP, T_TypeOfSentence, G).
+
+stativeOrActiveVP(P, P1, G_NP, E_NP, State, G) :-
+   isVerb(P, R),
+   stativePart(R, P1, G_NP, E_NP, G), !.
+stativeOrActiveVP(P, P1, G_NP, E_NP, Action, G) :-
+   ActiveVP(P, P1, G_NP, E_NP, G).
+
+// ex: karim is red
+ stativePart([A|P1], P1, G_NP, E_NP, G) :-
+   Adj(A, R1, T1, V1), !, 
+   eq([N : A1], E_NP),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B, [N : A1]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   G:specialize(E_N, G_NP, E_NP).
+
+// ex: karim is a big man
+stativePart(P, P1, G_NP, E_NP, G_NP) :-
+   NP(P, P1, G_NP1, E_NP1),
+   G_NP:specialize(E_NP, G_NP1, E_NP1).
+
+ActiveVP(P, P1, G_SUBJ, E_SUBJ, G) :-
+   ActiveVP(P, P1, G),
+   branchOfCG(B_Branch, [Action]-agnt->[X], G),
+   E_G_SUBJ is B_Branch:getTargetConcept(),
+   G:specialize(E_G_SUBJ, G_SUBJ, E_SUBJ).
+
+ActiveVP([V|P1], P3, G) :-
+   Verb(V, G_lexicon),
+   G is G_lexicon:copy(),
+   cod(P1, P2, G),
+   complement(P2, P3, G).
+
+cod(P1, P2, G) :-
+   NP(P1, P2, G_COD, E_NP1),
+   branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+   E_GV_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_GV_COD, G_COD, E_NP1), !.
+cod(P, P, G).
+
+complement([v], [v], G) :- !.
+complement(P, P2, G) :-
+   Prep(P, P1, s_prep),
+   NP(P1, P2, G_NP, E_G_NP),
+   branchOfCG(B_Branch, [T_Verb]-s_prep->[X], G),
+   E_COD is B_Branch:getTargetConcept(),
+   G:specialize(E_COD, G_NP, E_G_NP).
+
+NP(P, P1, G, E) :-
+   Art(P, P2, A1),
+   AdjsSynt(P2, P3, L_Adjs),
+   Noun(P3, P4, N),
+   suiteNP(P4, P1, N, A1, L_Adjs, G, E), !.
+
+suiteNP([N1|P1], P1, N, A1, L_Adjs, G, E) :-
+   not(lexicon(N1, _, _)),
+   not(lexicon(N1, _, _, _, _)),
+   SemAdjs(L_Adjs, N, N1, G, E), !.
+suiteNP(P4, P1, N, A1, L_Adjs, G, E) :-
+   SemAdjs(L_Adjs, N, A1, S, E1),
+   AdjsSynt(P4, P1, L_Adjs2),
+   SemAdjs(L_Adjs2, N, A1, S1, E11),
+   maximalJoin(S, E1, S1, E11, G, E).
+
+maximalJoin(G1, E1, G2, E2, G3, E3) :-
+   _resMatchCG is G1:maximalJoin(E1, G2, E2),
+   G3 is _resMatchCG:getCG(),
+   E3 is _resMatchCG:getConcept(), !.
+
+
+AdjsSynt([A|P], P1, [A|L_Adjs]) :-
+  lexicon(A, adj, _, _, _),
+  AdjsSynt(P, P1, L_Adjs), !.
+AdjsSynt(P, P, []).
+
+SemAdjs(L_Adjs, [T:D], A, S, E) :-
+   SemAdjsBis(L_Adjs, T, D, S, E), !.
+SemAdjs(L_Adjs, N, A, S, E) :-
+   SemAdjsBis(L_Adjs, N, A, S, E).
+
+SemAdjsBis([A|P], N, A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B, [N : A1]-R1->[T1 = V1], G),
+   E_N is B:getSourceConcept(),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), !.
+SemAdjsBis([], N, A1, G, E) :-
+   eq(G, [N : A1]),
+   concOfCG(E, [N : A1], G).
+
+// G is C:toCG(),
+
+SemAdjs2([A|P], G, E_N, N, A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   branchOfCG(B, [N : A1]-R->[T = V], G1),
+   E_N1 is B:getSourceConcept(),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), !.
+SemAdjs2([], G, E, _, _, G, E).
+
+Verb(v, G) :- lexicon(v, verb, G).
+
+isVerb(["is"|P], P).
+
+Prep([v|P], P, T) :- lexicon(v, prep, T).
+
+Art([v|P], P, T) :- lexicon(v, art, T), !.
+Art(P, P, undefined).
+
+Noun([v|P], P, T) :- lexicon(v, noun, T).
+
+Adj(A, R, T, V) :- lexicon(A, adj, R, T, V).

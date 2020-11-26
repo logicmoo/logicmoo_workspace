@@ -1,0 +1,39 @@
+(note TQC59)
+(temporallySubsumes Iran-IraqWar 
+ (SKF-44260020)) 
+
+(agent 
+ (SKF-44260020) Iraq) 
+
+(instance 
+ (SKF-44260020) AttackOnTangible) 
+
+(stuffUsed 
+ (SKF-44260020) 
+ (SKF-10934903)) 
+
+(subrelation stuffUsed instrument-Generic) 
+
+(instance 
+ (SKF-10934903) WeaponOfMassDestruction) 
+
+(instance Iran-IraqWar WagingWar) 
+
+
+
+(query (findall ?WAR
+
+ (thereExists ?ACT 
+ (thereExists ?FORCE 
+ (and 
+ (agent ?ACT Iraq) 
+ (instance ?ACT AttackOnTangible) 
+ (instance ?FORCE WeaponOfMassDestruction) 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?WAR WagingWar) 
+ (temporallySubsumes ?WAR ?ACT))))))
+
+(answer Iran-IraqWar) 
+
+(end_of_file)
+ 

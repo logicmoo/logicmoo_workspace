@@ -1,0 +1,27 @@
+C:/dummy1 | switch on light | switch on the light
+C:/dummy2 | switch on 2 light | switch on two lights
+C:/dummy3 | is light on | is the light switched on
+C:/dummy4 | is light kitchen on | is the light in the kitchen switched on
+C:/dummy5 | is light living_room on | is the light in the living room switched on
+C:/dummy6 | is light off | is the light off
+C:/dummy7 | dim light | dim the light
+C:/dummy8 | dim light kitchen | dim the light in the kitchen
+
+#Replace 'light' with 'fan'
+C:/dummy11 | switch on fan | switch on the fan
+C:/dummy12 | switch on 2 fan | switch on two fans
+C:/dummy13 | is fan on | is the fan switched on
+C:/dummy14 | is fan kitchen on | is the fan in the kitchen switched on
+C:/dummy15 | is fan living_room on | is the fan in the living room switched on
+C:/dummy16 | is fan off | is the fan off
+
+#Replace 'on' with 'off'
+C:/dummy21 | switch off light | switch off the light
+C:/dummy22 | switch off 2 light | switch off two lights
+C:/dummy23 | is light off | is the light switched off
+C:/dummy24 | is light kitchen off | is the light in the kitchen switched off
+C:/dummy25 | is light living_room off | is the light in the living room switched off
+
+C:/dummy34 | is light living_room on | is the light in the living room switched on
+C:/dummy35 | is light kitchen on | is the light in the kitchen switched on
+C:/dummy38 | dim light living_room | dim the light in the living room

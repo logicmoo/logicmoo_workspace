@@ -1,0 +1,65 @@
+(note TQF203b)
+
+(subProcess AbuMusaConflict-1992 UAEDemandsIranLeaveTumbs) 
+(subProcess Iran-UAEGulfIslandsDispute IranReassertsSovereignty) 
+(instance UnitedArabEmirates GeopoliticalEntity) 
+(agent UAEDemandsIranLeaveTumbs UnitedArabEmirates) 
+
+(temporallySubsumes 
+ (MonthFn December 
+ (YearFn 1992)) UAEDemandsIranLeaveTumbs) 
+
+(instance UAEDemandsIranLeaveTumbs PurposefulAction) 
+(adversarialResponseTo UAEDemandsIranLeaveTumbs IranReassertsSovereignty) 
+(territoryDisputed Iran-UAEGulfIslandsDispute TheTumbsIslands) 
+(subProcess Iran-UAEGulfIslandsDispute IranDeniesAccess) 
+(subProcess AbuMusaConflict-1992 IranAndUAENegotiate) 
+(failureForAgents IranAndUAENegotiate UnitedArabEmirates) 
+
+(existant IranAndUAENegotiate 
+ (MonthFn December 
+ (YearFn 1992))) 
+
+(inverse existant temporallySubsumes) 
+(instance IranAndUAENegotiate PurposefulAction) 
+(inReactionTo IranAndUAENegotiate IranDeniesAccess) 
+(territoryDisputed Iran-UAEGulfIslandsDispute TheTumbsIslands) 
+(subProcess Iran-UAEGulfIslandsDispute UAEDemandsIranLeaveTumbs) 
+(lastSubEvents AbuMusaConflict-1992 RafsanjaniWarnsUAE) 
+(instance Iran GeopoliticalEntity) 
+(agent RafsanjaniWarnsUAE Iran) 
+
+(temporallySubsumes 
+ (MonthFn December 
+ (YearFn 1992)) RafsanjaniWarnsUAE) 
+
+(instance RafsanjaniWarnsUAE PurposefulAction) 
+(inReactionTo RafsanjaniWarnsUAE UAEDemandsIranLeaveTumbs) 
+ (territoryDisputed Iran-UAEGulfIslandsDispute TheTumbsIslands) 
+
+(query (findall ?ACT (and 
+   (instance ?ACT PurposefulAction) 
+   (thereExists ?AGENT 
+       (and 
+           (agent ?ACT ?AGENT) 
+           (instance ?AGENT GeopoliticalEntity))) 
+   (subProcess AbuMusaConflict-1992 ?ACT) 
+   (temporallySubsumes 
+       (MonthFn December 
+           (YearFn 1992)) ?ACT) 
+   (thereExists ?CLAIMS-UPON-TUNBS 
+       (and 
+           (inReactionTo ?ACT ?CLAIMS-UPON-TUNBS) 
+           (thereExists ?EVENT 
+               (and 
+                   (subProcess ?EVENT ?CLAIMS-UPON-TUNBS) 
+                   (territoryDisputed ?EVENT TheTumbsIslands))))))))
+
+(answer UAEDemandsIranLeaveTumbs)
+(answer RafsanjaniWarnsUAE)
+(answer IranAndUAENegotiate)
+
+(end_of_file)
+
+
+

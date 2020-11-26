@@ -1,0 +1,63 @@
+SemLink 1.2
+
+Questions/Comments/Concerns:
+Kevin Stowe
+University of Colorado, Boulder
+kevincstowe@gmail.com
+
+Includes:
+Current VN-FN frame mapping
+	-Updated out of date VN classes
+	-Updated Verbs that moved classes
+	-Other minor fixes
+Current VN-FN role mapping
+	-Updated out of date VN Roles/Fn Elements
+	-Updated elements that moved Classes/Frames
+	-Increased coverage of Vn to Fn role mapping
+WSJ Instances
+
+The WSJ files are in the following format:
+(document_id) (sentence number) (token number) (standard) (verb-v) (VerbNet class) (Framenet Frame) (PB grouping) (SI grouping) (tense/aspect/mood info) (ArgPointer)-ARGX=(VN Role);(FN Role/Optional Extra Fn Roles)
+
+The Argument Pointers are based on the PropBank trees.  The documentation can be found here: 
+http://verbs.colorado.edu/~mpalmer/projects/ace/EPB-data-format.txt
+
+Sample Instance:
+----------------
+nw/wsj/00/wsj_0001.parse 0 8 gold join-v 22.1-2-1 Cause_to_amalgamate join.01 null vf--a 0:2-ARG0=Agent;Agent 7:0-ARGM-MOD 8:0-rel 9:1-ARG1=Patient;Part_1 11:1-ARGM-PRD 15:1-ARGM-TMP  
+
+Document : "nw/wsj/00/wsj_0001.parse"
+Sentence : 0
+Token : 8
+Standard : gold
+Verb : join-v
+VerbNet Class : 22.1-2-1
+Framenet Frame : Cause_to_amalgamate
+PB grouping : join.01
+SI grouping : null (there is not a sense-inventory grouping for this instance)
+Tense/Aspect/Mood : vf--a 
+Arguments :
+0:2-ARG0=Agent;Agent
+7:0-ARGM-MOD
+8:0-rel
+9:1-ARG1=Patient;Part_1
+11:1-ARGM-PRD
+15:1-ARGM-TMP  
+
+nw/wsj/00/wsj_0020.parse 0 4 gold claim-v 37.7-1 Statement claim.01 2 p---a 0:1*3:1-ARG0=Agent;Speaker 4:0-rel 5:2-ARG1=Topic;Message/Topic 
+
+Document : "nw/wsj/00/wsj_0020.parse"
+Sentence : 0
+Token : 4
+Standard : gold
+Verb : claim-v
+VerbNet Class : 37.7-1
+Framenet Frame : Statement
+PB grouping : claim.01
+SI grouping : 2
+Tense/Aspect/Mood : p---a
+Arguments :
+0:1*3:1-ARG0=Agent;Speaker
+4:0-rel
+5:2-ARG1=Topic;Message/Topic  
+(More than one possible Fn Role matches to VN Topic)

@@ -1,0 +1,1 @@
+Relevant to applications using grammar specialisation. Points to the specialised Nuance GSL grammar file produced by the EBL\_\-NUANCE operation.

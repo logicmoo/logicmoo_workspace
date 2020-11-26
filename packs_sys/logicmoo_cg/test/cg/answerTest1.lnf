@@ -1,0 +1,2 @@
+// ontology required (to load first): aminePlatform/samples/ontology/VehicleOntology.xml
+[state = volatile]<-state-[gasoline]<-fuel-[PetrolEngine]<-mass-[bus]-engn->[RocketEngine]-fuel->[OxyHyd]

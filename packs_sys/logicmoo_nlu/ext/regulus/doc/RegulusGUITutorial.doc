@@ -1,0 +1,4338 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 11">
+<meta name=Originator content="Microsoft Word 11">
+<link rel=File-List href="RegulusGUITutorial_fichiers/filelist.xml">
+<link rel=Preview href="RegulusGUITutorial_fichiers/preview.wmf">
+<link rel=Edit-Time-Data href="RegulusGUITutorial_fichiers/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Using the Regulus GUI</title>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="metricconverter"/>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:LastAuthor>SANTAHOLMA</o:LastAuthor>
+  <o:Revision>3</o:Revision>
+  <o:TotalTime>70</o:TotalTime>
+  <o:LastPrinted>2007-04-04T15:11:00Z</o:LastPrinted>
+  <o:Created>2007-04-04T16:15:00Z</o:Created>
+  <o:LastSaved>2007-04-04T16:27:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>3283</o:Words>
+  <o:Characters>18714</o:Characters>
+  <o:Company>ETI</o:Company>
+  <o:Lines>155</o:Lines>
+  <o:Paragraphs>43</o:Paragraphs>
+  <o:CharactersWithSpaces>21954</o:CharactersWithSpaces>
+  <o:Version>11.6360</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:DrawingGridHorizontalSpacing>0 pt</w:DrawingGridHorizontalSpacing>
+  <w:DrawingGridVerticalSpacing>0 pt</w:DrawingGridVerticalSpacing>
+  <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+  <w:DisplayVerticalDrawingGridEvery>0</w:DisplayVerticalDrawingGridEvery>
+  <w:UseMarginsForDrawingGridOrigin/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:DrawingGridHorizontalOrigin>0 pt</w:DrawingGridHorizontalOrigin>
+  <w:DrawingGridVerticalOrigin>0 pt</w:DrawingGridVerticalOrigin>
+  <w:Compatibility>
+   <w:SpaceForUL/>
+   <w:BalanceSingleByteDoubleByteWidth/>
+   <w:DoNotLeaveBackslashAlone/>
+   <w:ULTrailSpace/>
+   <w:DoNotExpandShiftReturn/>
+   <w:AdjustLineHeightInTable/>
+   <w:SelectEntireFieldWithStartOrEnd/>
+   <w:UseWord2002TableStyleRules/>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]--><!--[if !mso]><object
+ classid="clsid:38481807-CA0E-42D2-BF39-B33AF135CC4D" id=ieooui></object>
+<style>
+st1\:*{behavior:url(#ieooui) }
+</style>
+<![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"Arial Unicode MS";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;
+	mso-font-alt:"Arial Unicode MS";
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+@font-face
+	{font-family:"Lucida Sans Unicode";
+	panose-1:2 11 6 2 3 5 4 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-2147476737 14699 0 0 63 0;}
+@font-face
+	{font-family:StarSymbol;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 268468224 0 0 1 0;}
+@font-face
+	{font-family:"Wingdings 2";
+	panose-1:5 2 1 2 1 5 7 7 7 7;
+	mso-font-charset:2;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:"\@MS Gothic";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:none;
+	mso-hyphenate:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Lucida Sans Unicode";
+	mso-ansi-language:EN-US;}
+h1
+	{mso-style-parent:Heading;
+	mso-style-next:"Corps de texte";
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	text-indent:0cm;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	mso-list:l4 level1 lfo1;
+	mso-hyphenate:none;
+	tab-stops:list 0cm;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-bidi-font-family:Tahoma;
+	mso-font-kerning:0pt;
+	mso-ansi-language:EN-US;}
+h2
+	{mso-style-parent:Heading;
+	mso-style-next:"Corps de texte";
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	text-indent:0cm;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	mso-list:l4 level2 lfo1;
+	mso-hyphenate:none;
+	tab-stops:list 0cm;
+	font-size:14.0pt;
+	font-family:Arial;
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;
+	font-style:italic;}
+h3
+	{mso-style-parent:Heading;
+	mso-style-next:"Corps de texte";
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	text-indent:0cm;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	mso-list:l4 level3 lfo1;
+	mso-hyphenate:none;
+	tab-stops:list 0cm;
+	font-size:14.0pt;
+	font-family:Arial;
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;}
+p.MsoList, li.MsoList, div.MsoList
+	{mso-style-parent:"Corps de texte";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:none;
+	mso-hyphenate:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Lucida Sans Unicode";
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:none;
+	mso-hyphenate:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Lucida Sans Unicode";
+	mso-ansi-language:EN-US;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"MS Mincho";}
+p.Heading, li.Heading, div.Heading
+	{mso-style-name:Heading;
+	mso-style-next:"Corps de texte";
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-hyphenate:none;
+	font-size:14.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:"MS Mincho";
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;}
+p.Caption, li.Caption, div.Caption
+	{mso-style-name:Caption;
+	margin-top:6.0pt;
+	margin-right:0cm;
+	margin-bottom:6.0pt;
+	margin-left:0cm;
+	mso-pagination:no-line-numbers;
+	mso-hyphenate:none;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Lucida Sans Unicode";
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;
+	font-style:italic;}
+p.Index, li.Index, div.Index
+	{mso-style-name:Index;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:no-line-numbers;
+	mso-hyphenate:none;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Lucida Sans Unicode";
+	mso-bidi-font-family:Tahoma;
+	mso-ansi-language:EN-US;}
+span.Bullets
+	{mso-style-name:Bullets;
+	mso-style-parent:"";
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	font-family:StarSymbol;
+	mso-ascii-font-family:StarSymbol;
+	mso-fareast-font-family:StarSymbol;
+	mso-hansi-font-family:StarSymbol;
+	mso-bidi-font-family:StarSymbol;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+ /* Page Definitions */
+ @page
+	{mso-footnote-position:beneath-text;}
+@page Section1
+	{size:595.25pt 841.85pt;
+	margin:2.0cm 2.0cm 2.0cm 2.0cm;
+	mso-header-margin:36.0pt;
+	mso-footer-margin:36.0pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;
+	mso-footnote-position:beneath-text;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1;
+	mso-list-template-ids:1;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F06C;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Wingdings;
+	mso-hansi-font-family:Wingdings;
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F081;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:"Wingdings 2";
+	mso-hansi-font-family:"Wingdings 2";
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	margin-left:72.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:StarSymbol;
+	mso-hansi-font-family:StarSymbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F06C;
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:90.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Wingdings;
+	mso-hansi-font-family:Wingdings;
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F081;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:108.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:"Wingdings 2";
+	mso-hansi-font-family:"Wingdings 2";
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:126.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:StarSymbol;
+	mso-hansi-font-family:StarSymbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F06C;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	margin-left:144.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Wingdings;
+	mso-hansi-font-family:Wingdings;
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F081;
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:"Wingdings 2";
+	mso-hansi-font-family:"Wingdings 2";
+	mso-bidi-font-family:StarSymbol;}
+@list l0:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:180.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:StarSymbol;
+	mso-hansi-font-family:StarSymbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1
+	{mso-list-id:2;
+	mso-list-template-ids:2;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	margin-left:72.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:90.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:108.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:126.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	margin-left:144.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l1:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:180.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2
+	{mso-list-id:3;
+	mso-list-template-ids:3;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	margin-left:72.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:90.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:108.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:126.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	margin-left:144.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l2:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:180.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3
+	{mso-list-id:4;
+	mso-list-template-ids:4;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:35.45pt;
+	mso-level-number-position:left;
+	margin-left:35.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:107.45pt;
+	mso-level-number-position:left;
+	margin-left:107.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:143.45pt;
+	mso-level-number-position:left;
+	margin-left:143.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:179.45pt;
+	mso-level-number-position:left;
+	margin-left:179.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:215.45pt;
+	mso-level-number-position:left;
+	margin-left:215.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:251.45pt;
+	mso-level-number-position:left;
+	margin-left:251.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:287.45pt;
+	mso-level-number-position:left;
+	margin-left:287.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l3:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:323.45pt;
+	mso-level-number-position:left;
+	margin-left:323.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l4
+	{mso-list-id:5;
+	mso-list-template-ids:5;}
+@list l4:level1
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level2
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level3
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level4
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level5
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level6
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level7
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level8
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l4:level9
+	{mso-level-number-format:none;
+	mso-level-suffix:none;
+	mso-level-text:"";
+	mso-level-tab-stop:0cm;
+	mso-level-number-position:left;
+	margin-left:0cm;
+	text-indent:0cm;}
+@list l5
+	{mso-list-id:6;
+	mso-list-template-ids:6;}
+@list l5:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:54.0pt;
+	mso-level-number-position:left;
+	margin-left:54.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	margin-left:72.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:90.0pt;
+	mso-level-number-position:left;
+	margin-left:90.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	margin-left:108.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:126.0pt;
+	mso-level-number-position:left;
+	margin-left:126.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	margin-left:144.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:162.0pt;
+	mso-level-number-position:left;
+	margin-left:162.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l5:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	margin-left:180.0pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6
+	{mso-list-id:7;
+	mso-list-template-ids:7;}
+@list l6:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:35.45pt;
+	mso-level-number-position:left;
+	margin-left:35.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:107.45pt;
+	mso-level-number-position:left;
+	margin-left:107.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:143.45pt;
+	mso-level-number-position:left;
+	margin-left:143.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:179.45pt;
+	mso-level-number-position:left;
+	margin-left:179.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:215.45pt;
+	mso-level-number-position:left;
+	margin-left:215.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:251.45pt;
+	mso-level-number-position:left;
+	margin-left:251.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:287.45pt;
+	mso-level-number-position:left;
+	margin-left:287.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l6:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:323.45pt;
+	mso-level-number-position:left;
+	margin-left:323.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7
+	{mso-list-id:8;
+	mso-list-template-ids:8;}
+@list l7:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:35.45pt;
+	mso-level-number-position:left;
+	margin-left:35.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:107.45pt;
+	mso-level-number-position:left;
+	margin-left:107.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:143.45pt;
+	mso-level-number-position:left;
+	margin-left:143.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:179.45pt;
+	mso-level-number-position:left;
+	margin-left:179.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:215.45pt;
+	mso-level-number-position:left;
+	margin-left:215.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:251.45pt;
+	mso-level-number-position:left;
+	margin-left:251.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:287.45pt;
+	mso-level-number-position:left;
+	margin-left:287.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l7:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:323.45pt;
+	mso-level-number-position:left;
+	margin-left:323.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8
+	{mso-list-id:9;
+	mso-list-template-ids:9;}
+@list l8:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:35.45pt;
+	mso-level-number-position:left;
+	margin-left:35.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:107.45pt;
+	mso-level-number-position:left;
+	margin-left:107.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:143.45pt;
+	mso-level-number-position:left;
+	margin-left:143.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:179.45pt;
+	mso-level-number-position:left;
+	margin-left:179.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:215.45pt;
+	mso-level-number-position:left;
+	margin-left:215.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:251.45pt;
+	mso-level-number-position:left;
+	margin-left:251.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:287.45pt;
+	mso-level-number-position:left;
+	margin-left:287.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l8:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:323.45pt;
+	mso-level-number-position:left;
+	margin-left:323.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9
+	{mso-list-id:10;
+	mso-list-template-ids:10;}
+@list l9:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:35.45pt;
+	mso-level-number-position:left;
+	margin-left:35.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:71.45pt;
+	mso-level-number-position:left;
+	margin-left:71.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:107.45pt;
+	mso-level-number-position:left;
+	margin-left:107.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:143.45pt;
+	mso-level-number-position:left;
+	margin-left:143.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:179.45pt;
+	mso-level-number-position:left;
+	margin-left:179.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:215.45pt;
+	mso-level-number-position:left;
+	margin-left:215.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:251.45pt;
+	mso-level-number-position:left;
+	margin-left:251.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:287.45pt;
+	mso-level-number-position:left;
+	margin-left:287.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l9:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:323.45pt;
+	mso-level-number-position:left;
+	margin-left:323.45pt;
+	text-indent:-18.0pt;
+	mso-ansi-font-size:9.0pt;
+	mso-bidi-font-size:9.0pt;
+	mso-ascii-font-family:Symbol;
+	mso-hansi-font-family:Symbol;
+	mso-bidi-font-family:StarSymbol;}
+@list l10
+	{mso-list-id:1095706742;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-531175776 134807553 134807555 134807557 134807553 134807555 134807557 134807553 134807555 134807557;}
+@list l10:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Tableau Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="3074">
+  <o:colormenu v:ext="edit" fillcolor="none [4]" strokecolor="none [1]"
+   shadowcolor="none [2]"/>
+ </o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-GB style='tab-interval:35.45pt;line-break:strict'>
+
+<div class=Section1>
+
+<h1 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Using
+the Regulus GUI</span></h1>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>The Regulus GUI is a tool which gives
+developers a window and menu-based view of the Regulus development environment.
+To start the GUI on a Windows machine, open an Explorer window to the directory
+$REGULUS/Java, and double-click on <span class=SpellE>run_prolog.bat</span>:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shapetype id="_x0000_t75"
+  coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe"
+  filled="f" stroked="f">
+  <v:stroke joinstyle="miter"/>
+  <v:formulas>
+   <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+   <v:f eqn="sum @0 1 0"/>
+   <v:f eqn="sum 0 0 @1"/>
+   <v:f eqn="prod @2 1 2"/>
+   <v:f eqn="prod @3 21600 pixelWidth"/>
+   <v:f eqn="prod @3 21600 pixelHeight"/>
+   <v:f eqn="sum @0 0 1"/>
+   <v:f eqn="prod @6 1 2"/>
+   <v:f eqn="prod @7 21600 pixelWidth"/>
+   <v:f eqn="sum @8 21600 0"/>
+   <v:f eqn="prod @7 21600 pixelHeight"/>
+   <v:f eqn="sum @10 21600 0"/>
+  </v:formulas>
+  <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+  <o:lock v:ext="edit" aspectratio="t"/>
+ </v:shapetype><v:shape id="_x0000_s1070" type="#_x0000_t75" style='position:absolute;
+  margin-left:0;margin-top:0;width:481.8pt;height:271.75pt;z-index:45;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image001.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=362
+ src="RegulusGUITutorial_fichiers/image002.jpg" v:shapes="_x0000_s1070"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>A window like the following should come up:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1069"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:243.35pt;z-index:44;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image003.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=324
+ src="RegulusGUITutorial_fichiers/image004.jpg" v:shapes="_x0000_s1069"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='mso-special-character:line-break;page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Next, click on <span class=SpellE>run_java.bat</span>
+in the same directory. This brings up the main <span class=SpellE>RegulusGUI</span>
+window, which should look something like this:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1052"
+  type="#_x0000_t75" style='position:absolute;margin-left:-1.5pt;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:27;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image005.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout;position:
+ relative;z-index:27;left:-2px;top:0px;width:642px;height:450px'><img
+ width=642 height=450 src="RegulusGUITutorial_fichiers/image006.jpg" v:shapes="_x0000_s1052"></span><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><br clear=all style='mso-special-character:line-break;
+page-break-before:always'>
+</span></p>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Loading
+a <span class=SpellE>config</span> file</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>In order to do any processing within the
+GUI, you first need to load a Configuration (<span class=SpellE>config</span>)
+file. Click on the Start menu and select the file you need, as follows:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1026"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:1;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image007.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image008.jpg" v:shapes="_x0000_s1026"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>When the file has <span class=GramE>finished<span
+style='mso-spacerun:yes'>  </span>loading</span>, it will give you an
+information message, telling you if the loading of the <span class=SpellE>config</span>
+file has succeeded or failed. It will also tell you if the commands which can
+be attached to the configuration file have been successfully loaded.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>This configuration file has been
+successfully loaded, but had no load commands attached to it.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1027"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:271.45pt;height:86.2pt;z-index:2;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image009.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=362 height=115
+ src="RegulusGUITutorial_fichiers/image010.jpg" v:shapes="_x0000_s1027"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='page-break-after:avoid'><span lang=EN-US>This is an
+example showing successful loading of a configuration file which has load
+commands attached.<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1028"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:271.45pt;height:181.45pt;z-index:3;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image011.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=362 height=242
+ src="RegulusGUITutorial_fichiers/image012.jpg" v:shapes="_x0000_s1028"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Click on OK after you have read the
+message.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Loading
+resources</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Depending on have many, if any, load commands
+were associated with the configuration file you have <span class=GramE>loaded,</span>
+you may or may not want to do more Loads. For example, if you are going <span
+class=GramE>to<span style='mso-spacerun:yes'>  </span>use</span> the
+Translation tool within the GUI, you will need to load Translation resources. </span></p>
+
+<p class=MsoNormal><span lang=EN-US>In our example above, after we have
+selected the Toy1 configuration file we need to do a load the grammar in order
+to be able to use the Stepper. We do this as follows, using the Load (load
+grammar) command:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1029"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:4;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image013.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image014.jpg" v:shapes="_x0000_s1029"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>   </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>You will get a message telling you if the
+loading of the grammar has been successful or not.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1030"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:86.2pt;z-index:5;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image015.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=115
+ src="RegulusGUITutorial_fichiers/image016.jpg" v:shapes="_x0000_s1030"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>We will show examples of other types of
+load command later.<br clear=all style='page-break-before:always'>
+</span><b><i><span lang=EN-US style='font-size:14.0pt;font-family:Arial;
+mso-fareast-font-family:"MS Mincho";mso-bidi-font-family:Tahoma'>The Stepper</span></i></b></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>The Stepper is a tool that lets you create,
+examine and manipulate grammatical structures defined by Regulus grammars. To
+enter the Stepper<span class=GramE>,<span style='mso-spacerun:yes'> 
+</span>click</span> on the Mode menu and choose Start Stepper:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1031"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:6;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image017.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image018.jpg" v:shapes="_x0000_s1031"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>This will bring up a Stepper window.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1053"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:28;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image019.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image020.jpg" v:shapes="_x0000_s1053"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>The box at the top of the Stepper window is
+an input area, where you can enter words or phrases which you want to parse or
+look up in the lexicon.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>The box immediately beneath is the item
+output area. “Items” hold results of performing Regulus linguistic operations,
+such as lexical lookup, parsing or generation. Whenever you have successfully
+done something like parsing or a generating a sentence, this will produce new lines
+in the item output area. If you select items, you can view them as trees by
+clicking on the Show Tree button.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The buttons on the right-hand side of the
+Stepper window have the following functions:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span lang=EN-US>Parse:</span></b><span
+lang=EN-US> This button will parse the sentence you have entered in the input
+area.<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE><b><span lang=EN-US>Lex</span></b></span><span
+lang=EN-US>: Parse the word you have entered in the input area. <br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span lang=EN-US>Generate:</span></b><span
+lang=EN-US> Select an item in the item output area. Pressing the Generate
+button will invoke the generation grammar to create new items. A generation
+grammar must be loaded first.<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span lang=EN-US>Show Tree:</span></b><span
+lang=EN-US><span style='mso-spacerun:yes'>  </span>Select an item in the item
+output area. When you press the Show Tree button, a tree representation of the
+grammatical structure of the selected item will be displayed. <br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span lang=EN-US>Join Trees:</span></b><span
+lang=EN-US> Select two items in the item output area. When you press the Join
+Tree button, these two trees will be joined into a third tree which you will
+find in the item output area.<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;
+tab-stops:36.0pt'><![if !supportLists]><span lang=EN-US style='font-size:9.0pt;
+font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>l<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><b><span lang=EN-US>Combine Items:</span></b><span
+lang=EN-US><span style='mso-spacerun:yes'>  </span>For this button you will
+need to select one or more items in the item output area. When you press the
+Combine Items button, the stepper will attempt to find a grammar rule which it
+can use to combine the selected items into a new item which will be added to
+the items output area. If there is more than one applicable rule, it will show
+alternatives in a menu.</span></p>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US><br>
+Parsing a sentence</span></h2>
+
+<p class=MsoNormal><span lang=EN-US>To parse a sentence, write it in the input
+window and press the Parse button. In this example, we enter the sentence
+“switch on the light”.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1032"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:7;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image021.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image022.jpg" v:shapes="_x0000_s1032"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>After the parse button is pressed, a
+message appears showing whether the sentence has been successfully parsed or
+not. <span class=GramE>Click on OK.</span> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1033"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:86.2pt;z-index:8;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image023.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=115
+ src="RegulusGUITutorial_fichiers/image024.jpg" v:shapes="_x0000_s1033"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>If the sentence has been successfully
+parsed and you have clicked OK, the sentence will appear as an item in the item
+window in the stepper window. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Adding
+lexical items</span></h2>
+
+<p class=MsoNormal><span lang=EN-US>You can also create Items corresponding to
+individual lexical entries. To do this, enter the surface form of the lexical <span
+class=GramE>item<span style='mso-spacerun:yes'>  </span>in</span> the input
+field, just as you did when parsing a sentence, and press the <span
+class=SpellE>Lex</span> button. If there is more than one item with the given
+surface form, a menu is displayed.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>In this example, we enter the word “on” in
+the input field.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1034"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:9;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image025.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image026.jpg" v:shapes="_x0000_s1034"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US>After the <span class=SpellE>Lex</span>
+button is pressed, you will get a message saying whether the word has been
+successfully found or not. <span class=GramE>Click on OK.</span> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1035"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:86.2pt;z-index:10;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image027.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=115
+ src="RegulusGUITutorial_fichiers/image028.jpg" v:shapes="_x0000_s1035"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>If the word was found, the lexical entry
+will appear as an Item in the item window.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-spacerun:yes'> </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Generating
+sentences</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>To be able to use the Regulus generation
+capability, you first need to load a generation grammar. You do this by
+selecting the Load Generation option from the Load menu. The generation grammar
+</span></p>
+
+<p class=MsoNormal><span class=GramE><span lang=EN-US>grammar</span></span><span
+lang=EN-US> must be defined in the current <span class=SpellE>config</span>
+file.</span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1037"
+  type="#_x0000_t75" style='position:absolute;margin-left:-4.5pt;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:12;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image029.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout;position:
+ relative;z-index:12;left:-6px;top:0px;width:642px;height:450px'><img
+ width=642 height=450 src="RegulusGUITutorial_fichiers/image030.jpg" v:shapes="_x0000_s1037"></span><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US>Once you have loaded the generation
+grammar, you can attempt to perform generation on any item currently in the
+Item Area. <br>
+<br>
+Here is a Finnish language example, using the Finnish grammar developed by
+Marianne Santaholma under the MedSLT project. Start by entering the Finnish
+sentence “<span class=SpellE>tuntuuko</span> <span class=SpellE>kipu</span> <span
+class=SpellE>otsalla</span><span class=GramE>”(</span>is the pain frontal):</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1036"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:11;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image031.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image032.jpg" v:shapes="_x0000_s1036"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>   </span></span></p>
+
+<p class=MsoNormal style='page-break-after:avoid'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1038" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:13;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image033.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image034.jpg" v:shapes="_x0000_s1038"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US>As described above, parse it by pressing the Parse button.
+This creates a new Item.</span></p>
+
+<p class=MsoNormal style='page-break-after:avoid'><span lang=EN-US>Select this
+sentence in the item window:<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1039"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:14;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image035.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image036.jpg" v:shapes="_x0000_s1039"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Click on the Generate button in order to
+generate sentences from the item which you have selected.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The system will tell you if you have been
+successful in generating items from your selected sentence, and how many items
+you have generated.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1040"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:262.45pt;height:86.2pt;z-index:15;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image037.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=350 height=115
+ src="RegulusGUITutorial_fichiers/image038.jpg" v:shapes="_x0000_s1040"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Click on the OK button.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The generated sentences will appear in the
+Items window.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1041"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:16;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image039.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image040.jpg" v:shapes="_x0000_s1041"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Displaying
+items</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>To display an Item, first select it in the
+Item window:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1042"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:17;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image041.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image042.jpg" v:shapes="_x0000_s1042"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='page-break-after:avoid'><span lang=EN-US>Now press the
+Show Tree button. A new window will appear with the item's grammatical
+structure displayed as a tree.<br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1043"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:18;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image043.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image044.jpg" v:shapes="_x0000_s1043"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>   </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Cutting
+and Joining Items</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>One of the most interesting capabilities of
+the Stepper is that it allows the developer to try to build up new linguistic
+analyses by combining pieces of structure from existing ones. The Cut and Join
+buttons are used for this purpose. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Suppose that we trying to find out exactly
+why the Toy1 grammar is unable to parse the sentence “switch on the kitchen”.
+We start by using the Parse command to build Items for “switch on the light”
+and “is the fan in the kitchen switched on”. Our strategy will be to cut out
+the phrase “the light” from the first sentence and “the kitchen” from the
+second, and then try to paste “the kitchen” into the hole left in the first
+sentence. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>We use the Show Tree command to display the
+first Item, and select the NP node for “the light”: </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1054"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:29;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image045.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image046.jpg" v:shapes="_x0000_s1054"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>We then press the Cut button. This produces
+the message</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1055"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:91.45pt;z-index:30;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image047.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=122
+ src="RegulusGUITutorial_fichiers/image048.jpg" v:shapes="_x0000_s1055"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>After we press “OK”, we can see that two
+new Items, 3 and 4, have appeared in the Item Area. Number 3 is marked “.MAIN
+--&gt; <span class=SpellE>switch<span class=GramE>,on,np</span></span>” - this
+is the version of Item <st1:metricconverter ProductID="1 in" w:st="on">1 in</st1:metricconverter>
+which “the light” has been cut out, leaving an NP gap. Number 4 is the NP that
+has been removed.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1057"
+  type="#_x0000_t75" style='position:absolute;margin-left:.3pt;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:32;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image049.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout'>
+ <table cellpadding=0 cellspacing=0 align=left>
+  <tr>
+   <td width=1 height=0></td>
+  </tr>
+  <tr>
+   <td></td>
+   <td><img width=642 height=450 src="RegulusGUITutorial_fichiers/image050.jpg"
+   v:shapes="_x0000_s1057"></td>
+  </tr>
+ </table>
+ </span><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal style='page-break-after:avoid'><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US>In the same way, we can show the tree for
+Item 2, “is the fan switched on in the kitchen”, and cut out the NP marked “the
+kitchen”. This produces two more Items, 5 and 6. As before, the first of these
+(Item 5) is the original item with an NP hole, and the second (Item 6) is the
+material that has been removed. Finally, we select Items 3 and 6 (to select
+more than one item, hold down the Ctrl key and click on the items) and press
+Join Trees:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1058"
+  type="#_x0000_t75" style='position:absolute;margin-left:-.75pt;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:33;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image051.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><span style='mso-ignore:vglayout;position:
+ relative;z-index:33;left:-1px;top:0px;width:642px;height:450px'><img
+ width=642 height=450 src="RegulusGUITutorial_fichiers/image052.jpg" v:shapes="_x0000_s1058"></span><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>We get the following informative message:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1056"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:327.7pt;height:197.95pt;z-index:31;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image053.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=437 height=264
+ src="RegulusGUITutorial_fichiers/image054.jpg" v:shapes="_x0000_s1056"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>This shows that the incompatibility is
+specifically in the feature <span class=SpellE>sem_np_type</span>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>We now show an example of the Join command
+succeeding. In the Tree 2 window, select the NP node marked “the fan in the
+kitchen”, and press Cut again. We get two more Items, 7 and 8. Select Items 3
+(“switch on NP”) and 8 (“the fan in the kitchen”), and press Join:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1059"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:34;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image055.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image056.jpg" v:shapes="_x0000_s1059"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>This time, we get the message</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1060"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:91.45pt;z-index:35;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image057.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=122
+ src="RegulusGUITutorial_fichiers/image058.jpg" v:shapes="_x0000_s1060"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span class=GramE><span lang=EN-US>and</span></span><span
+lang=EN-US> we find a new Item has been added, for “switch on the fan in the
+kitchen”.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1061"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:36;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image059.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image060.jpg" v:shapes="_x0000_s1061"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><br clear=all style='page-break-before:always'>
+</span><b><i><span lang=EN-US style='font-size:14.0pt;font-family:Arial;
+mso-fareast-font-family:"MS Mincho";mso-bidi-font-family:Tahoma'>Bottom-up
+combination of Items</span></i></b></p>
+
+<p class=MsoNormal><span lang=EN-US>The easiest ways to build up new Items are
+those we have already seen: parsing, lexical lookup, cutting and joining. If
+none of these work, however, it is also possible to combine Items bottom-up. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>For example, in the Toy1 grammar, suppose
+we wanted to build up an Item representing the NP “the fan in the living room”.
+We start by using the <span class=SpellE>Lex</span> command to add Items for
+the lexical entries “fan” and “living room”, after which the display looks like
+this:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1062"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:37;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image061.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image062.jpg" v:shapes="_x0000_s1062"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US>We first build the Item for the NP “the living
+room”. We press “Combine Items”. A window appears:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1044"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:246.7pt;height:90.7pt;z-index:19;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image063.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=329 height=121
+ src="RegulusGUITutorial_fichiers/image064.jpg" v:shapes="_x0000_s1044"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'> </span></span></p>
+
+<p class=MsoNormal style='page-break-after:avoid'><span lang=EN-US>There is a
+slightly tricky point here: in this grammar, the word “the” in “the living
+room” is <span class=SpellE>syncategorematic</span>, in other words comes
+directly from a grammar rule rather from a lexical item. This means that,
+rather paradoxically, we build “the living room” only out of the Item for
+“living room”, so we fill in the box as follows:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1063"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:246.7pt;height:95.95pt;z-index:38;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image065.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=329 height=128
+ src="RegulusGUITutorial_fichiers/image066.jpg" v:shapes="_x0000_s1063"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>The combine command succeeds:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1045"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:200.95pt;height:86.2pt;z-index:20;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image067.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=268 height=115
+ src="RegulusGUITutorial_fichiers/image068.jpg" v:shapes="_x0000_s1045"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='mso-special-character:line-break;page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><span lang=EN-US>and</span></span><span
+lang=EN-US> the new state of the display is</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1064"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:39;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image069.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image070.jpg" v:shapes="_x0000_s1064"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>Next, we form the <span class=SpellE>location_pp</span>
+“in the living room”. In the Toy1 grammar, “in” is also <span class=SpellE>syncategorematic</span>,
+so the command looks like this:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1065"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:246.7pt;height:95.95pt;z-index:40;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image071.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=329 height=128
+ src="RegulusGUITutorial_fichiers/image072.jpg" v:shapes="_x0000_s1065"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='mso-special-character:line-break;page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><span lang=EN-US>giving</span></span><span
+lang=EN-US> the following state of the display:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1066"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:41;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image073.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image074.jpg" v:shapes="_x0000_s1066"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>Finally, we build up the phrase “the fan in
+the living room”. This consists of a <span class=SpellE>syncategorematic</span>
+“the”, the noun “fan”, and the <span class=SpellE>location_pp</span> “in the
+living room”. The command is thus:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1067"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:246.7pt;height:95.95pt;z-index:42;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image075.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=329 height=128
+ src="RegulusGUITutorial_fichiers/image076.jpg" v:shapes="_x0000_s1067"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='mso-special-character:line-break;page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>We show the final state of the display,
+after we have selected the new Item and displayed the associated tree.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1068"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:43;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image077.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image078.jpg" v:shapes="_x0000_s1068"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:14.0pt;font-family:Arial;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Tahoma;mso-ansi-language:EN-US;mso-fareast-language:
+JA;mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always'>
+</span>
+
+<h2 style='margin-left:0cm;text-indent:0cm;tab-stops:0cm'><span lang=EN-US>Deleting
+items</span></h2>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>To delete a single item, start by selecting
+it from the item output area:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1046"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:21;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image079.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image080.jpg" v:shapes="_x0000_s1046"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'> </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Press the Delete Button. A dialog box
+appears, asking you if you want to delete the selected item.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1047"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:212.95pt;height:86.2pt;z-index:22;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image081.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=284 height=115
+ src="RegulusGUITutorial_fichiers/image082.jpg" v:shapes="_x0000_s1047"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Click on <span class=GramE>OK .</span> The
+display<span style='mso-spacerun:yes'>  </span>shows that the item has been
+removed; note that the<span style='mso-spacerun:yes'>  </span>item previously
+in second place has now been renumbered, so that it has become the new number
+1.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1048"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:23;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image083.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image084.jpg" v:shapes="_x0000_s1048"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<span lang=EN-US style='font-size:12.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Lucida Sans Unicode";mso-ansi-language:EN-US;
+mso-fareast-language:JA;mso-bidi-language:AR-SA'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><span lang=EN-US>It is also possible to delete several items
+at once. Select them in turn while holding down the Ctrl key:</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1049"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:24;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image085.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image086.jpg" v:shapes="_x0000_s1049"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Press the delete button. For every item
+which you have requested to delete, a dialogue box will appear and you will
+have to confirm if you really want to delete the item or not.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1050"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:212.95pt;height:86.2pt;z-index:25;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image087.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=284 height=115
+ src="RegulusGUITutorial_fichiers/image088.jpg" v:shapes="_x0000_s1050"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1051"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:26;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image089.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image090.jpg" v:shapes="_x0000_s1051"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><i><span lang=EN-US style='font-size:16.0pt'>The Translation
+Window<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span lang=EN-US style='font-size:16.0pt'><o:p>&nbsp;</o:p></span></i></p>
+
+<p class=MsoNormal><span lang=EN-US>To be able to use the Translation Window
+you need to load a <span class=SpellE>config</span> file which holds
+Translation <span class=GramE>stuff<span style='mso-spacerun:yes'>  </span>#</span>###Marianne
+Manny please explain what stuff <span class=SpellE>precicely</span>#####</span></p>
+
+<p class=MsoNormal><span lang=EN-US>You do this by clicking on the Start Menu
+and selecting this kind of file.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>In this example you start the configuration
+file “MedSLT <span class=SpellE>EngSpa</span> Sore Throat Restricted”.</span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1073"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:48;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image091.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image092.jpg" v:shapes="_x0000_s1073"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US>This <span class=SpellE>configutation</span> file has load
+options put into it. Be especially aware of the load option LOAD_TRANSLATE. It
+is necessary to do a LOAD_<span class=GramE>TRANSLATE<span
+style='mso-spacerun:yes'>  </span>before</span> using the translation tools.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1074"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:230.2pt;height:181.45pt;z-index:49;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image093.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=307 height=242
+ src="RegulusGUITutorial_fichiers/image094.jpg" v:shapes="_x0000_s1074"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>If you click on OK, all these Load options
+will be carried out.</span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1075"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:271.45pt;height:181.45pt;z-index:50;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image011.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=362 height=242
+ src="RegulusGUITutorial_fichiers/image012.jpg" v:shapes="_x0000_s1075"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US>When all the Load options are successfully
+completed you get a dialog box like this.</span></p>
+
+<p class=MsoNormal><span class=GramE><span lang=EN-US>Click on OK.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>The Translation Window is <span
+class=GramE>a is</span> an area that lets you examine the results of your
+translations. To enter the Translation window<span class=GramE>,<span
+style='mso-spacerun:yes'>  </span>click</span> on the Mode menu and choose
+Start Translate:</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:16.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:16.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1071"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:46;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image095.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image096.jpg" v:shapes="_x0000_s1071"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US>This will bring up a Translate window.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1072"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:47;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image097.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image098.jpg" v:shapes="_x0000_s1072"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+</p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:36.0pt'><span
+     lang=EN-US>The box at the top of the Stepper window is an input area,
+     where you can enter phrases which you want to translate.</span></li>
+</ul>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l5 level1 lfo4;tab-stops:36.0pt'><span
+     lang=EN-US>The Translate Button should be pressed after you have entered a
+     sentence in the above mentioned input Area. </span></li>
+</ul>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:36.0pt'><span
+     lang=EN-US>After you have pressed the above mentioned button the
+     translated sentence and <span class=GramE>it's</span> grammatical
+     components ## Marianne Manny what exactly###<span
+     style='mso-spacerun:yes'>   </span>is displayed in the area beneath the
+     input Area.</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:36.0pt'><span lang=EN-US>You can decide how
+much information you want to display in this <span class=SpellE>outputArea</span>
+by selecting or deselecting fields in the View Menu. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-tab-count:1'>            </span><b>The
+Menu Bar on the Translation window holds the following Menu items and tools<o:p></o:p></b></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l3 level1 lfo6;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US>The Load Menu item which does a
+<span class=SpellE>Load_Translate</span>. </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l6 level1 lfo7;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US>The Set Flags Menu Item which
+decide which Mode you want to be in when you are <span class=GramE>on<span
+style='mso-spacerun:yes'>  </span>the</span> Translation Page. The options <span
+class=GramE>are :</span> Answer Ellipsis on/<span class=SpellE>off,Translate</span>
+Trace on/off. </span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt'><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l6 level1 lfo7;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US><span
+style='mso-spacerun:yes'> </span>The Corpus Menu Item from where you can load
+corpus data.<span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l7 level1 lfo8;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US>The Judge Menu Item from where you
+can load judge data.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l8 level1 lfo9;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US>The History Menu Item which
+gives you a list of the last words or sentences which you recently typed in.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:35.45pt;text-indent:-18.0pt;mso-list:
+l9 level1 lfo10;tab-stops:35.45pt'><![if !supportLists]><span lang=EN-US
+style='font-size:9.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
+mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=EN-US>The Bidirectional Mode Menu
+Item which <span class=SpellE>allowes</span> you to switch on and off the
+Bidirectional Mode.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-tab-count:1'>            </span>Lastly
+the question and Answer boxes are used when <span class=SpellE>bidirection</span>
+mode is switched on. In <span style='mso-tab-count:1'>        </span>this mode
+you want to know which language and domain you are in. If you for example <span
+style='mso-tab-count:1'>   </span>have <span class=GramE>a</span>
+English/Spanish file loaded you want to know if you are on the question side </span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-tab-count:1'>            </span>-English,
+or the answer side -Spanish.<span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><span style='mso-spacerun:yes'>  </span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US style='font-size:18.0pt'>Translating
+a Sentence<o:p></o:p></span></i></b></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><span lang=EN-US>To translate a sentence, write it in the
+input window and press the Translate button. In this example, we enter the
+sentence “where is the pain”<b><i>.<o:p></o:p></i></b></span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1076"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:51;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image099.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image100.jpg" v:shapes="_x0000_s1076"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><b><i><o:p></o:p></i></b></span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US style='font-size:18.0pt'><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><span lang=EN-US>After the Translate button is pressed, the output
+area below is filled with information showing the actual translation and other
+information. </span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1077"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:52;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image101.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image102.jpg" v:shapes="_x0000_s1077"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><b><i><o:p></o:p></i></b></span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><span lang=EN-US>You can regulate how much or little you
+want to see by choosing <span class=GramE>the<span style='mso-spacerun:yes'> 
+</span>view</span> menu option and selecting or de selecting fields. </span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1078"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:53;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image103.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image104.jpg" v:shapes="_x0000_s1078"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><b><i><o:p></o:p></i></b></span></p>
+
+<p class=MsoNormal><b><span lang=EN-US><span style='mso-spacerun:yes'> </span></span></b><span
+lang=EN-US>Select To Interlingua Trace.</span></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><b><i><span lang=EN-US><o:p>&nbsp;</o:p></span></i></b></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><o:wrapblock><v:shape id="_x0000_s1079"
+  type="#_x0000_t75" style='position:absolute;margin-left:0;margin-top:0;
+  width:481.8pt;height:337.2pt;z-index:54;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image105.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image106.jpg" v:shapes="_x0000_s1079"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US><b><i><o:p></o:p></i></b></span></p>
+
+<p class=MsoNormal><span lang=EN-US>This is what it will look like.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span lang=EN-US>This is a list of the fields that you can
+look at after you have pressed the Translate button.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><o:p>&nbsp;</o:p></span></b></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Source<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Source language sentence.</span></span><span lang=EN-US> <span
+class=GramE>The translated sentence.</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>:<span style='mso-spacerun:yes'>   </span><span style='mso-tab-count:
+1'>        </span>Source: in your <span class=SpellE>face+itami</span> <span
+class=SpellE><span class=GramE>wa</span></span> <span class=SpellE>atama</span>
+no <span class=SpellE>ryougawa</span> <span class=SpellE>desu</span> ka<b
+style='mso-bidi-font-weight:normal'><o:p></o:p></b></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><o:p>&nbsp;</o:p></span></b></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Target</span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Target language sentence.</span></span><span lang=EN-US> The
+translation (using the character <span class=GramE>set<span
+style='mso-spacerun:yes'>  </span>)</span><span style='mso-spacerun:yes'> 
+</span>. </span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US
+style='mso-fareast-font-family:"MS Gothic"'>Example</span></u><span lang=EN-US
+style='mso-fareast-font-family:"MS Gothic"'>: <span style='mso-tab-count:1'> </span></span><span
+lang=PL style='mso-fareast-font-family:"MS Gothic";mso-ansi-language:PL'>Target:
+itami <span class=GramE>wa</span> kao desu ka </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Gloss Translation<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>MANNY?</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span>Gloss: severe pain
+BE-POLITE-PRESENT Q</span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><o:p>&nbsp;</o:p></span></b></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Parses<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Indicates the number of possible parses for source language
+sentence.</span></span><span lang=EN-US> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Parse Time<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Indicates how
+much the time the parsing of the source language sentence took.</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Source Representation<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Indicates the result of analysis of the source language sentence
+(the parse).</span></span><span lang=EN-US> <span class=GramE>A list of
+semantic elements.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example: <span
+style='mso-tab-count:1'> </span><o:p></o:p></span></u></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Source
+representation: [[<span class=SpellE>body_part<span class=GramE>,face</span></span>],
+[possessive,[[[<span class=SpellE>pronoun,you</span>]]]], [<span class=SpellE>prep,in_loc</span>],<span
+style='mso-spacerun:yes'>  </span>[<span class=SpellE>utterance_type,phrase</span>]]</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>To Source Discourse
+     Trace<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Traces the context of the source sentence.</span></span><span
+lang=EN-US> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Source Discourse<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>The context of analyzed sentence.</span></span><span lang=EN-US> <span
+class=GramE>As the context is taken the preceding analyzed sentence.</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Source discourse: [[<span class=SpellE>body_part<span
+class=GramE>,face</span></span>],[<span class=SpellE>prep,in_loc</span>],[<span
+class=SpellE>utterance_type,phrase</span>]]</span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Resolved Source
+     Discourse<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Result of
+analysis after the context resolving, <span class=SpellE>i.e</span> after the
+incomplete sentence like ellipsis has been expanded in the context of preceding
+dialog. <b style='mso-bidi-font-weight:normal'><o:p></o:p></b></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Resolved source discourse: [[<span
+class=SpellE>body_part<span class=GramE>,face</span></span>], [<span
+class=SpellE>prep,in_loc</span>], [<span class=SpellE>symptom,pain</span>], [<span
+class=SpellE>tense,present</span>], [<span class=SpellE>utterance_type,ynq</span>],
+[<span class=SpellE>verb,be</span>], [<span class=SpellE>voice,active</span>]]</span></p>
+
+<p class=MsoNormal><span style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Resolution Processing<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>MANNY?</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Indicates the
+possible rules used for resolution of the dialog context …?</span></p>
+
+<p class=MsoNormal><u><span lang=EN-US style='mso-fareast-font-family:"MS Gothic"'><o:p><span
+ style='text-decoration:none'>&nbsp;</span></o:p></span></u></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Resolution processing: trivial<br>
+<u>Example</u>: <span style='mso-tab-count:1'> </span>Resolution processing: <span
+class=SpellE>ellipsis_<span class=GramE>substitution</span></span><span
+class=GramE>(</span><span class=SpellE>place_of_pain_pp</span>, ([[<span
+class=SpellE>body_part,head</span>], [<span class=SpellE>part,side</span>], [<span
+class=SpellE>prep,in_loc</span>], [<span class=SpellE>spec,both</span>]] --&gt;
+<span style='mso-spacerun:yes'> </span><span
+style='mso-spacerun:yes'> </span>[[<span class=SpellE>body_part,face</span>],[<span
+class=SpellE>prep,in_loc</span>]]))</span></p>
+
+<p class=MsoNormal><span style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>To Interlingua Trace<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>A trace associating the source and target atoms used by each <span
+class=SpellE>SourceLanguage</span>-to-Interlingua rule.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Interlingua<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Indicates the language independent level of representation.</span></span><span
+lang=EN-US> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Interlingua: [[<span class=SpellE>body_part<span
+class=GramE>,face</span></span>], [<span class=SpellE>prep,in_loc</span>], [<span
+class=SpellE>symptom,pain</span>], [<span class=SpellE>tense,present</span>], <span
+style='mso-spacerun:yes'> </span>[<span class=SpellE>utterance_type,ynq</span>],
+[<span class=SpellE>verb,be</span>], [<span class=SpellE>voice,active</span>]]</span></p>
+
+<p class=MsoNormal><span style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Interlingua Surface<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>MANNY?</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Interlingua surface: YN-QUESTION be pain
+in-loc face PRESENT ACTIVE</span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span lang=EN-US><o:p>&nbsp;</o:p></span></b></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>From Interlingua
+     Trace<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>A trace associating the source and target atoms used by each
+Interlingua-to-<span class=SpellE>TargetLanguage</span> representation rule.</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Target Representation<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Indicates the input for generation.</span></span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><u><span lang=EN-US>Example</span></u><span
+lang=EN-US>: <span style='mso-tab-count:1'> </span><span
+style='mso-spacerun:yes'> </span>Target representation: [[<span class=SpellE>body_part<span
+class=GramE>,kao</span></span>], [<span class=SpellE>symptom,itami</span>], [<span
+class=SpellE>tense,present</span>], [<span class=SpellE>utterance_type,sentence</span>],
+[<span class=SpellE>verb,desu</span>]]</span></p>
+
+<p class=MsoNormal><span style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Number Generations<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>Indicates the number of possible generations for target language
+sentence.</span></span><span lang=EN-US> </span></p>
+
+<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Generation Time<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Indicates the
+time needed for the generation of target language sentence.</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Other Translations <o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>Other possible
+translations for source language sentence beside of “Target”</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Tagged Translations<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span class=GramE><span
+lang=EN-US>MANNY?</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+<ul style='margin-top:0cm' type=disc>
+ <li class=MsoNormal style='mso-list:l10 level1 lfo11;tab-stops:list 36.0pt'><b
+     style='mso-bidi-font-weight:normal'><span lang=EN-US>Original Script
+     Translation<o:p></o:p></span></b></li>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>The translation
+printed using the original characters if other than Latin alphabets (for
+example Arabic and Japanese).</span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>&nbsp;<u>Example</u>:
+<span style='mso-tab-count:1'>           </span><span
+style='mso-spacerun:yes'> </span>Original script: </span><span lang=JA
+style='font-family:"Lucida Sans Unicode";mso-ascii-font-family:"Times New Roman";
+mso-hansi-font-family:"Times New Roman";mso-bidi-font-family:"Times New Roman"'>&#28608;&#12375;&#12356;&#30171;&#12415;&#12391;&#12377;&#12363;</span><span
+lang=EN-US><br style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<b><span lang=EN-US style='font-size:16.0pt;font-family:"Times New Roman";
+mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black;mso-ansi-language:EN-US;mso-fareast-language:JA;mso-bidi-language:
+AR-SA'><br clear=all style='page-break-before:always'>
+</span></b>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>The Load Menu<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>In the Translation Window there is a Load Menu Option. This menu
+option contains just one item the Load Translate.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1080" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:55;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image107.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image108.jpg" v:shapes="_x0000_s1080"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><span style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>If you click on Load Translate, you will get this message when all
+the Translation related files are loaded. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1081" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:212.95pt;height:86.2pt;z-index:56;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image109.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=284 height=115
+ src="RegulusGUITutorial_fichiers/image110.jpg" v:shapes="_x0000_s1081"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Click OK.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>Set Flags Menu<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The Set Flags Menu <span class=GramE>option,</span> holds a Mode
+sub menu, under this sub menu there are two Menu Items that are flags which can
+either be switched on or off.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>This is the Mode sub Menu option.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1082" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:57;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image111.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image112.jpg" v:shapes="_x0000_s1082"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>These are the two set of flags that can either be switched on or
+off.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1083" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:58;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image113.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image114.jpg" v:shapes="_x0000_s1083"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><span style='mso-spacerun:yes'> </span>This is where
+you either switch ellipsis on or off by clicking on the relevant Menu option.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1084" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:59;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image115.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image116.jpg" v:shapes="_x0000_s1084"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>This is where you either switch Translate <span class=GramE>Trace<span
+style='mso-spacerun:yes'>  </span>on</span> or off by clicking on the relevant Menu
+option.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>You can see the translate trace output in the Translation Output
+field To Interlingua Trace.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1085" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:60;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image117.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image118.jpg" v:shapes="_x0000_s1085"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><span
+style='mso-spacerun:yes'> </span></span></b><span lang=EN-US style='mso-fareast-font-family:
+"Courier New";mso-bidi-font-family:"Courier New";color:black'>In this example
+you switch on the Translate Trace by clicking on it.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1086" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:61;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image119.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image120.jpg" v:shapes="_x0000_s1086"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>You <span class=GramE>get<span style='mso-spacerun:yes'> 
+</span>this</span> message , if Translate has been successfully switched
+on.<span style='mso-spacerun:yes'>  </span><span
+style='mso-spacerun:yes'>                                           </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1087" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:229.45pt;height:86.2pt;z-index:62;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image121.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=306 height=115
+ src="RegulusGUITutorial_fichiers/image122.jpg" v:shapes="_x0000_s1087"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>The Corpus Menu<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>At The Corpus Menu option Menu there are two <span class=GramE>kind</span>
+of sub menus. The first <span class=GramE>kind are</span> the non generic ones.
+<b>Translate Corpus</b>, <b>Translate Speech Corpus</b> and <b>Translate Speech
+Corpus Again</b>.<span style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Then there are the generic commands which are the above commands
+but something is added to them. For example you could have a generic command of
+Translate Corpus which would be called something like Translate Corpus
+alternate.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>If you want to do Translate Corpus, then select it at the Corpus
+Menu <span class=SpellE>option.Like</span> this.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1088" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:63;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image123.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image124.jpg" v:shapes="_x0000_s1088"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>When you clicked on Translate Corpus and everything went okay.
+This is what you get. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1089" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:222.7pt;height:86.2pt;z-index:64;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image125.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=297 height=115
+ src="RegulusGUITutorial_fichiers/image126.jpg" v:shapes="_x0000_s1089"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now click on OK. <span class=GramE>And<span
+style='mso-spacerun:yes'>  </span>below</span> you see the window being
+displayed with information about the Corpus run.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>####Write why the info is important and what it means.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1090" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:65;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image127.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image128.jpg" v:shapes="_x0000_s1090"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>If you want to see what a generic command looks like, then look at
+this window. We have now selected the generic corpus command <span
+class=SpellE>Translate_Corpus</span> <span class=SpellE>alternate.We</span>
+select the command.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><span style='mso-spacerun:yes'> </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1091" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:66;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image129.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image130.jpg" v:shapes="_x0000_s1091"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>And get this Dialog box.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1092" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:282.7pt;height:86.2pt;z-index:67;mso-wrap-distance-left:0;
+  mso-wrap-distance-right:0;mso-position-horizontal:center' filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image131.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=377 height=115
+ src="RegulusGUITutorial_fichiers/image132.jpg" v:shapes="_x0000_s1092"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>The Judge Menu<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The judge Menu resembles the Corpus Menu in the respect that there
+are static and generic commands.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The static commands are the following <b>Update Recognition <span
+class=SpellE>Judgements</span></b>, <b>Update Translation</b> <span
+class=SpellE><b>Judgements</b></span><b> </b>and Update Translation <span
+class=SpellE>Judgements</span> Speech.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Then there are the generic commands which are the above commands
+but something is added to them. For example you could have a generic command of
+Update Recognition <span class=SpellE>Judgements</span> which would be called
+something like Update Recognition <span class=SpellE>Judgements</span>
+alternate.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>If you want to do Update Translation <span class=SpellE>Judgements</span>,
+then select it at the Judge Menu <span class=SpellE>option.Like</span> this.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1093" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:68;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image133.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image134.jpg" v:shapes="_x0000_s1093"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now click on it. This is what happens.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1094" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:284.95pt;height:86.2pt;z-index:69;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image135.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=380 height=115
+ src="RegulusGUITutorial_fichiers/image136.jpg" v:shapes="_x0000_s1094"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>If you want to see what a generic command looks like, then look <span
+class=GramE>at<span style='mso-spacerun:yes'>  </span>the</span> command selected
+in the window below. We have selected the generic Judge command Update
+Translation <span class=SpellE>Judgements</span> <span class=SpellE>alternate.We</span>
+select the command.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1095" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:70;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image137.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image138.jpg" v:shapes="_x0000_s1095"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><span style='mso-spacerun:yes'>  </span>After selecting the above
+command we click on it and this dialog box appears.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1096" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:353.95pt;height:86.2pt;z-index:71;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image139.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=472 height=115
+ src="RegulusGUITutorial_fichiers/image140.jpg" v:shapes="_x0000_s1096"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>The History Menu <o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The history <span class=GramE>Menu <b><span
+style='mso-spacerun:yes'> </span></b>is</span> simply an area where<b> </b>the
+latest entered words and sentences are saved. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>When you develop a system you often want to use the same words and
+sentences again and again to test if the system gets better. To save you a lot
+of <span class=SpellE>repetative</span> typing <span class=GramE>use</span> this
+Menu.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>This is how you use it.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>In the window below we enter the sentence “where is the pain”. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1097" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:72;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image141.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image142.jpg" v:shapes="_x0000_s1097"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><span style='mso-spacerun:yes'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now press the Translate button and this is the screen you get.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1098" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:73;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image143.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image144.jpg" v:shapes="_x0000_s1098"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now, say you want to enter this sentence again. <span class=GramE>Click
+on the History Menu.</span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1099" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:74;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image145.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image146.jpg" v:shapes="_x0000_s1099"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><span style='mso-spacerun:yes'> </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Your <span class=GramE>sentence appear</span> in the sub menu. If
+you want to <span class=GramE>enter<span style='mso-spacerun:yes'>  </span>this</span>
+sentence again. <span class=GramE>Click on it.</span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1100" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:75;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image147.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image148.jpg" v:shapes="_x0000_s1100"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><span style='mso-spacerun:yes'> </span><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The sentence appears in the input area. If you use this sentence
+again by clicking the Translate button.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1101" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:76;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image147.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image148.jpg" v:shapes="_x0000_s1101"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>As it is the same sentence it will only occur once in the History
+Menu<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1102" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:77;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image145.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image146.jpg" v:shapes="_x0000_s1102"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span class=GramE><span
+lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'>However if you entered a different sentence.</span></span><span
+lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'> In the window below you have just entered “Is the
+pain frontal”?<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1103" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:78;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image149.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image150.jpg" v:shapes="_x0000_s1103"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now look in the history Menu. Both sentences appear there.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1104" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:79;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image151.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image152.jpg" v:shapes="_x0000_s1104"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'>The Radio Buttons Answer and
+Question<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><b><span
+lang=EN-US style='font-size:16.0pt;mso-fareast-font-family:"Courier New";
+mso-bidi-font-family:"Courier New";color:black'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The Answer and question radio button fill a function only when the
+Translation page has the Bidirectional Mode switched on.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>In the bidirectional mode the system functions with having a
+Question Language and an Answer Language.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>You start by entering a question <span class=GramE>in<span
+style='mso-spacerun:yes'>  </span>the</span> first language the <b>Question <span
+class=SpellE>Langauge</span></b>, the question gets translated into the second
+language the <b>Answer <span class=SpellE>Language<span style='font-weight:
+normal'>.During</span></span></b> this phase in the bidirectional mode, the
+radio button shows that the <b>Question</b> is switched on. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>The next stage is the Answer stage the system switches on the <b>Answer</b>
+button and the user enters an answer in the <b>Second Language</b>. This answer
+gets translated into the <b>First Language</b>.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>In this example you start the configuration file “MedSLT <span
+class=SpellE>EngSpa</span> Sore Throat Restricted”.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1105" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:80;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image091.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image092.jpg" v:shapes="_x0000_s1105"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now load all the <span class=SpellE>the</span> extra files and
+settings <span class=GramE>In</span> this example pay special attention that
+Bidirectional Mode is switched on.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1106" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:230.2pt;height:181.45pt;z-index:81;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image093.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=307 height=242
+ src="RegulusGUITutorial_fichiers/image094.jpg" v:shapes="_x0000_s1106"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Everything loaded OK.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1107" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:271.45pt;height:181.45pt;z-index:82;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image011.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=362 height=242
+ src="RegulusGUITutorial_fichiers/image012.jpg" v:shapes="_x0000_s1107"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now enter the Translation Mode.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1108" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:83;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image153.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image154.jpg" v:shapes="_x0000_s1108"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>You are in the Translation window. Bidirectional mode is switched
+on.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1109" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:84;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image155.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image156.jpg" v:shapes="_x0000_s1109"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Enter a question in the first language. The Configuration files
+will be named to give you a hint what the languages are. In this case the file
+name begins with Eng and Spa. The <b>first language</b> or the <b>question
+language</b> is <span class=SpellE><span class=GramE>english</span></span>. The
+<b>second language</b> or the <b>answer language</b> is <span class=SpellE><span
+class=GramE>spanish</span></span>.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>In this example we enter the question “where is the pain”? And
+Press the Translate button.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1110" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:85;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image101.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image102.jpg" v:shapes="_x0000_s1110"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'>Now you want to answer the question. In this example we enter the
+answer “en la <span class=SpellE>garganta</span>”. I have a sore throat. Press
+the Translate button.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><!--[if gte vml 1]><o:wrapblock><v:shape
+  id="_x0000_s1111" type="#_x0000_t75" style='position:absolute;margin-left:0;
+  margin-top:0;width:481.8pt;height:337.2pt;z-index:86;
+  mso-wrap-distance-left:0;mso-wrap-distance-right:0;mso-position-horizontal:center'
+  filled="t">
+  <v:fill color2="black"/>
+  <v:imagedata src="RegulusGUITutorial_fichiers/image157.png" o:title=""/>
+  <w:wrap type="topAndBottom"/>
+ </v:shape><![endif]--><![if !vml]><img width=642 height=450
+ src="RegulusGUITutorial_fichiers/image158.jpg" v:shapes="_x0000_s1111"><![endif]><!--[if gte vml 1]></o:wrapblock><![endif]--><br
+style='mso-ignore:vglayout' clear=ALL>
+<span lang=EN-US style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:
+"Courier New";color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='text-autospace:ideograph-numeric'><span lang=EN-US
+style='mso-fareast-font-family:"Courier New";mso-bidi-font-family:"Courier New";
+color:black'><span style='mso-spacerun:yes'> </span>Pay special attention to
+the fact that the radio button now automatically switched to answer.<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

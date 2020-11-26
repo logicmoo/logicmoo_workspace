@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<project name="swicli" default="all">
+
+<!--<project basedir='.' default='all' name='swicli'>
+  <property name='src' value='src'/>
+  <property name='build' value='bin'/>
+  <target depends='' name='all'/>
+</project> -->
+
+
+    <!-- find ilasm.exe -->
+    <if test="${(not property::exists('ilasm')) and file::exists(path::combine(framework::get-framework-directory(framework::get-target-framework()), 'ilasm.exe'))}">
+        <property name="ilasm" value="${path::combine(framework::get-framework-directory(framework::get-target-framework()), 'ilasm.exe')}" />
+    </if>
+
+    <!-- find peverify.exe -->
+    <if test="${(not property::exists('peverify')) and framework::sdk-exists(framework::get-target-framework()) and file::exists(path::combine(framework::get-sdk-directory(framework::get-target-framework()), 'peverify.exe'))}">
+        <property name="peverify" value="${path::combine(framework::get-sdk-directory(framework::get-target-framework()), 'peverify.exe')}" />
+    </if>
+    <!-- we can't use framework::sdk-exists('net-2.0') on Linux, because NAnt will barf on it... -->
+    <if test="${platform::is-win32()}">
+        <if test="${(not property::exists('peverify')) and framework::sdk-exists('net-2.0') and file::exists(path::combine(framework::get-sdk-directory('net-2.0'), 'peverify.exe'))}">
+            <property name="peverify" value="${path::combine(framework::get-sdk-directory('net-2.0'), 'peverify.exe')}" />
+        </if>
+    </if>
+
+    <property name='nant.settings.currentframework' value='net-4.0'/>
+    <property overwrite="false" name="signoption" value="" />
+
+    <property name="pathsep" value=":" />
+    <if test="${platform::is-win32()}">
+        <property name="pathsep" value=";" />
+    </if>
+
+    <property name="LM_WORKSPACE" value="${project::get-base-directory()}/../" />
+    <property name="LM_LIBDIR" value="${project::get-base-directory()}/lib/" />
+
+<!--
+    <target name="all" depends="classes rmi vfs resources core">
+    <target name="all" depends="clean core">
+-->
+    <target name="all" depends="clean">
+    </target>
+
+    <target name="version">
+        <property name="VERSION" value="${assemblyname::get-version(assemblyname::get-assembly-name(path::combine(project::get-base-directory(), '../bin/IKVM.Runtime.dll')))}" />
+        <property name="OPENJDK_VERSION" value="OpenJDK 6 b22" />
+    </target>
+
+    <target name="core" depends="version">
+<!--
+        <copy file="../bin/IKVM.Runtime.dll" todir="." />
+        <copy file="../bin/IKVM.AWT.WinForms.dll" todir="." />
+            <arg value="-r:mscorlib.dll" />
+            <arg value="-r:System.dll" />
+            <arg value="-r:System.Core.dll" />
+            <arg value="-r:IKVM.Runtime.dll" />
+-->
+        <exec program="${project::get-base-directory()}/lib/ikvmc.exe" useruntimeengine="true">
+            <arg value="-version:${VERSION}" />
+            <arg value="${signoption}" />
+            <arg value="-compressresources" />
+            <arg value="-opt:fields" />
+          <!-- <arg value="-nostdlib" /> <arg value="-strictfinalfieldsemantics" /> -->
+            <arg value="-removeassertions" />
+
+            <arg value="-lib:${LM_LIBDIR}" />
+            <arg value="-target:library" />
+            <arg value="-sharedclassloader" />
+            <!-- we already know that the JNI assembly is not available, so suppress the warning -->
+            <arg value="-nowarn:110" />
+        </exec>
+
+
+    </target>
+
+
+
+
+    <target name="clean" depends="version">
+            <!--
+        <delete>
+            <fileset basedir="../classpath">
+                <include name="**.class"/>
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir="${OpenJDK.dir}">
+                <include name="**.class"/>
+            </fileset>
+        </delete>
+        <delete>
+            <fileset basedir=".">
+                <include name="**.class"/>
+                <include name="mscorlib.jar" />
+                <include name="System.jar" />
+                <include name="System.Core.jar" />
+                <include name="System.Data.jar" />
+                <include name="System.Drawing.jar" />
+                <include name="IKVM.Runtime.jar" />
+            </fileset>
+        </delete>
+         -->
+    </target>
+
+
+</project>

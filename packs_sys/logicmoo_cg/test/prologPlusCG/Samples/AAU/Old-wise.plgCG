@@ -1,0 +1,8 @@
+old(Timothy).
+old(Elizabeth).
+
+wise(Peter).
+wise(Lydia).
+
+happy(X) :- old(X).
+happy(X) :- wise(X).

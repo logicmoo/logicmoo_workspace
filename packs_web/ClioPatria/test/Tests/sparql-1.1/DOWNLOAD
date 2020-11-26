@@ -1,0 +1,5 @@
+Downloaded at Sep 21, 2012
+
+Using the command
+
+wget -rnH --no-parent http://www.w3.org/2009/sparql/docs/tests/

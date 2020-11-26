@@ -1,0 +1,12 @@
+(note UE test)
+
+(forall (?X ?Y) (r ?X ?Y))
+
+(queryyn (exists (?X ?Y) (r ?X ?Y)))
+
+
+(answer Yes)
+
+(end_of_file)
+
+

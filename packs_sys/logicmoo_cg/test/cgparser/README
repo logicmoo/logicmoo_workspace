@@ -1,0 +1,129 @@
+YACC Grammar for the linear form of a Conceptual Graph
+
+I have tried to put together, using code I developed for my honours
+project, a sample parser for the linear form of a Conceptual Graph.
+Hopefully this will give an idea of how such a parser may be constructed
+and provide some insight into the issues involved. I have put the code
+together rather quickly (cutting, pasting and adding to the original code
+I had - especially, I removed a lot of problem specific code that is of
+little use to others). So, the code is neither elegant nor efficient
+(far from it) but, I hope it is relatively bug free.
+
+The following files are included:
+
+README		- this file
+
+README1		- email message sent to Gerard Ellis discussing an appendix
+		   to my thesis (see below).
+
+gram.skel.y	- skeleton grammar for linear form.
+
+cog.y		- implementation of grammar for linear form.
+		  Note: not all of the grammar from gram.skel.y has
+		  been implemented. Also, the code may make it harder
+		  to read than gram.skel.y
+
+cog.h		- include file for sample application.
+
+parse.c		- C code for sample application
+		 (lexical analyser, symbol table, etc.).
+
+Makefile	- Makefile for sample application
+
+Test		- Directory containing very simple
+		  (and very meaningless) tests
+		  Interesting files are test3 and test4 - from Sowa's book.
+
+grammar.app.mm	- appendix from my thesis contrasting 3 grammars for
+		  Conceptual Graphs:
+		  1. CoGNO - my honours project
+		    ("CoGNO - A Graphical User Interface to Conceptual Graphs", Nov 1990)
+		  2. CONGRES
+		  Rao, A. S. and Foo, N. Y.,
+		  "CONGRES - Conceptual Graph Reasoning System",
+		  in Proc. 3rd IEEE Conference on AI Applications, Orlando, Florida.
+		  (I actually looked at the code to work out the grammar
+		  - sorry for any errors made.)
+
+		  3. KRE 
+		  Joyce, R.,
+		  "Knowledge Representation Environment for Shared World Knowledge"
+		  Technical Report 88/3, Department of Computer Science, James Cook`
+		  University of North Queensland, Australia, 1988.
+		  Print using
+		  tbl grammar.app.mm | eqn | troff -mm | <printer>
+
+Notes on the sample application
+
+- Compile by typing: make
+- Run by typing: cogno <files...>
+	or	 cogno	(expects input from stdin)
+
+- Data structure used: edge list
+  i.e there is a linked list of nodes. Each node in this list
+  has a linked list of "edges" which are pointers to nodes
+  (signifying that there is an edge from the node "towards"
+  each node on its edge list)
+
+- All commas must be inserted. I have not taken care of the condition
+  where all commas preceding a period may be omitted.
+  This could probably be handled by the lexical analyser.
+
+- Remember that every relation must have one (and only one) arc exiting
+  from it.
+  In some cases it is not possible to immediately determine the orientation
+  of arcs connecting relations listed after a dash "-" .
+  I have delayed the choice by pushing relation/concept node pairs
+  onto a stack - when the end of the graph is reached I resolve
+  any directions by looking at the node pairs: if the relation
+  does not have an arc exiting it then I make a connection
+  from the relation to the concept otherwise I make a connection
+  from the concept to the relation.
+  This is ok in most cases but, Sowa mentions that numbering arcs
+  can also be used to resolve this problem - I have neglected
+  arc numbers but they should be checked.
+  One other check that should be performed here is to ensure that
+  each relation has one arc exiting from it.
+  This shouldn't be too hard to implement.
+  At present the graph [A]->(B) will be accepted!
+
+- In the sample application nested subgraphs are treated as separate entities -
+  I do not make any attempt to associate them to the node in which they are
+  nested. Also, the memory they use is deallocated after they have been
+  parsed. 
+
+- The two shift reduce errors produced on running the grammar through yacc
+  are due to the <sep> rule as a result of the newline character (\n)
+  being significant - you can probably get rid of them using yacc's %left
+  but they don't affect the result anyway.
+
+- I don't treat the word PROPOSITION in any special way (I did at one time -
+  but it's just a concept type label and therefore I don't consider
+  it to have any special meaning even though in most cases it does).
+  Any concept label can be used in a concept node with nested
+  subgraphs.
+
+- Not much checking is done - some others that may be performed are commented
+  into the code. (e.g., in type definitions we should check that
+  the parameter supplied actually exists in the graph).
+
+- The sample application exits immediately if a syntax error is detected
+  you may wish to modify this behaviour.
+
+- Unfortunately I have put this together in haste. Therefore I am sorry
+  for any errors, lack of information and clarity, etc., that exists.
+  I hope that the grammar may be of use.
+
+
+Maurice Pagnucco
+--
+
+Basser Department of Computer Science
+Madsen Building, F09
+University of Sydney,
+NSW 2006
+AUSTRALIA
+
+email: morri@cs.su.oz.au
+
+(temporary email address - Nov 1990 - Feb 15, 1991 morri@csis.dit.csiro.au)

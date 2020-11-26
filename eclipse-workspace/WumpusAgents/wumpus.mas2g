@@ -1,0 +1,10 @@
+use "wumpusworld-1.3.0.jar" as environment with file = "WumpusWorlds/wumpus1.wld".
+
+define wumpus as agent {
+	use wumpus as main module.
+	use events as event module.
+}
+
+launchpolicy{
+	when * launch wumpus.
+}

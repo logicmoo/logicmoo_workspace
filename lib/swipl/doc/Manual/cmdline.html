@@ -1,0 +1,612 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="initgoal.html">
+<link rel="next" href="theme.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="initgoal.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="theme.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:cmdline"><a id="sec:2.4"><span class="sec-nr">2.4</span> <span class="sec-title">Command 
+line options</span></a></h2>
+
+<a id="sec:cmdline"></a>
+
+<p>SWI-Prolog can be executed in one of the following modes:
+
+<dl class="latex">
+<dt><b><code>swipl --help</code></b></dt>
+<dt><b><code>swipl --version</code></b></dt>
+<dt><b><code>swipl --arch</code></b></dt>
+<dt><b><code>swipl --dump-runtime-variables</code></b></dt>
+<dd class="defbody">
+These options must appear as only option. They cause Prolog to print an 
+informational message and exit. See <a class="sec" href="cmdline.html#sec:2.4.1">section 
+2.4.1</a>.</dd>
+<dt><b><code>swipl</code> [<var>option</var> ...] <var>script-file</var> 
+[<var>arg</var> ...]</b></dt>
+<dd class="defbody">
+These arguments are passed on Unix systems if file that starts with <code>#!/path/to/executable</code> 
+[<var>option</var> ...] is executed. Arguments after the script file are 
+made available in the Prolog flag <a class="flag" href="flags.html#flag:argv">argv</a>.</dd>
+<dt><b><code>swipl</code> [<var>option</var> ...] <var>prolog-file</var> 
+... [[<code>--</code>] <var>arg</var> ...]</b></dt>
+<dd class="defbody">
+This is the normal way to start Prolog. The options are described in
+<a class="sec" href="cmdline.html#sec:2.4.2">section 2.4.2</a>, <a class="sec" href="cmdline.html#sec:2.4.3">section 
+2.4.3</a> and <a class="sec" href="cmdline.html#sec:2.4.4">section 2.4.4</a>. 
+The Prolog flag <a class="flag" href="flags.html#flag:argv">argv</a> 
+provides access to <var>arg</var> ... If the <var>options</var> are 
+followed by one or more Prolog file names (i.e., names with extension <code>.pl</code>, <code>.prolog</code> 
+or (on Windows) the user preferred extension registered during 
+installation), these files are loaded. The first file is registered in 
+the Prolog flag
+<a class="flag" href="flags.html#flag:associated_file">associated_file</a>. 
+In addition, <b>pl-win[.exe]</b> switches to the directory in which this 
+primary source file is located using <a id="idx:workingdirectory2:30"></a><a class="pred" href="files.html#working_directory/2">working_directory/2</a>.</dd>
+<dt><b><code>swipl</code> -o <var>output</var> -c <var>prolog-file</var> 
+...</b></dt>
+<dd class="defbody">
+The <strong>-c</strong> option is used to compile a set of Prolog files 
+into an executable. See <a class="sec" href="cmdline.html#sec:2.4.5">section 
+2.4.5</a>.</dd>
+<dt><b><code>swipl</code> -o <var>output</var> -b <var>bootfile</var> <var>prolog-file</var> 
+...</b></dt>
+<dd class="defbody">
+Bootstrap compilation. See <a class="sec" href="cmdline.html#sec:2.4.6">section 
+2.4.6</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:info-options"><a id="sec:2.4.1"><span class="sec-nr">2.4.1</span> <span class="sec-title">Informational 
+command line options</span></a></h3>
+
+<a id="sec:info-options"></a>
+
+<dl class="latex">
+<dt><strong>--arch</strong> <var></var></dt>
+<dd class="defbody">
+When given as the only option, it prints the architecture identifier 
+(see Prolog flag <a class="flag" href="flags.html#flag:arch">arch</a>) 
+and exits. See also
+<strong>--dump-runtime-variables</strong>.</dd>
+<dt><strong>--dump-runtime-variables</strong> <var>[=format]</var></dt>
+<dd class="defbody">
+When given as the only option, it prints a sequence of variable settings 
+that can be used in shell scripts to deal with Prolog parameters. This 
+feature is also used by <b>swipl-ld</b> (see <a class="sec" href="plld.html#sec:12.5">section 
+12.5</a>). Below is a typical example of using this feature.
+
+<pre class="code">
+eval `swipl --dump-runtime-variables`
+cc -I$PLBASE/include -L$PLBASE/lib/$PLARCH ...
+</pre>
+
+<p>The option can be followed by <code>=sh</code> to dump in POSIX shell 
+format (default) or <code>=cmd</code> to dump in MS-Windows <b>cmd.exe</b> 
+compatible format.</dd>
+<dt><strong>--help</strong> <var></var></dt>
+<dd class="defbody">
+When given as the only option, it summarises the most important options.</dd>
+<dt><strong>--version</strong> <var></var></dt>
+<dd class="defbody">
+When given as the only option, it summarises the version and the 
+architecture identifier.</dd>
+<dt><strong>--abi-version</strong> <var></var></dt>
+<dd class="defbody">
+Print a key (string) that represents the binary compatibility on a 
+number of aspects. See <a class="sec" href="abi-versions.html#sec:2.22">section 
+2.22</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:running-options"><a id="sec:2.4.2"><span class="sec-nr">2.4.2</span> <span class="sec-title">Command 
+line options for running Prolog</span></a></h3>
+
+<a id="sec:running-options"></a>
+
+<p>Note that <em>boolean options</em> may be written as <code>--name</code> 
+(true), <code>--noname</code> or <code>--no-name</code> (false). They 
+are written as <code>--no-name</code> below as the default is&lsquo;true'.
+
+<dl class="latex">
+<dt><strong>--home=DIR</strong> <var></var></dt>
+<dd class="defbody">
+Use <var>DIR</var> as home directory. See <a class="sec" href="findhome.html#sec:12.6">section 
+12.6</a> for details.</dd>
+<dt><strong>--quiet</strong> <var></var></dt>
+<dd class="defbody">
+<a id="idx:verbose:31"></a><a id="idx:quiet:32"></a>Set the Prolog flag <a class="flag" href="flags.html#flag:verbose">verbose</a> 
+to <code>silent</code>, suppressing informational and banner messages. 
+Also available as <strong>-q</strong>.</dd>
+<dt><strong>--no-debug</strong> <var></var></dt>
+<dd class="defbody">
+Disable debugging. See the <a id="idx:currentprologflag2:33"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+flag
+<a class="flag" href="flags.html#flag:generate_debug_info">generate_debug_info</a> 
+for details.</dd>
+<dt><strong>--no-signals</strong> <var></var></dt>
+<dd class="defbody">
+Inhibit any signal handling by Prolog, a property that is sometimes 
+desirable for embedded applications. This option sets the flag
+<a class="flag" href="flags.html#flag:signals">signals</a> to <code>false</code>. 
+See <a class="sec" href="foreigninclude.html#sec:12.4.23.1">section 
+12.4.23.1</a> for details. Note that the handler to unblock system calls 
+is still installed. This can be prevented using <code>--sigalert=0</code> 
+additionally. See <strong>--sigalert</strong>.</dd>
+<dt><strong>--no-threads</strong> <var></var></dt>
+<dd class="defbody">
+Disable threading for the multi-threaded version at runtime. See also 
+the flags <a class="flag" href="flags.html#flag:threads">threads</a> and <a class="flag" href="flags.html#flag:gc_thread">gc_thread</a>.</dd>
+<dt><strong>--no-packs</strong> <var></var></dt>
+<dd class="defbody">
+Do <em>not</em> attach extension packages (add-ons). See also
+<a id="idx:attachpacks0:34"></a><a class="pred" href="packs.html#attach_packs/0">attach_packs/0</a> 
+and the Prolog flag <a class="flag" href="flags.html#flag:packs">packs</a>.</dd>
+<dt><strong>--no-pce</strong> <var></var></dt>
+<dd class="defbody">
+Enable/disable the xpce GUI subsystem. The default is to make it 
+available as autoload component if it is installed and the system can 
+access the graphics. Using <code>--pce</code> load the xpce system in 
+user space and <code>--no-pce</code> makes it unavailable in the 
+session.</dd>
+<dt><strong>--pldoc</strong> <var>[=port]</var></dt>
+<dd class="defbody">
+Start the PlDoc documentation system on a free network port and launch 
+the user's browser on <code>http://localhost:</code><var>port</var>. If
+<var>port</var> is specified, the server is started at the given port 
+and the browser is <em>not</em> launched.</dd>
+<dt><strong>--sigalert=NUM</strong> <var></var></dt>
+<dd class="defbody">
+Use signal <var>NUM</var> (1 ... 31) for alerting a thread. This is 
+needed to make <a id="idx:threadsignal2:35"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>, 
+and derived Prolog signal handling act immediately when the target 
+thread is blocked on an interruptible system call (e.g., <a id="idx:sleep1:36"></a><a class="pred" href="miscpreds.html#sleep/1">sleep/1</a>, 
+read/write to most devices). The default is to use <code>SIGUSR2</code>. 
+If <var>NUM</var> is 0 (zero), this handler is not installed. See <a id="idx:prologalertsignal2:37"></a><a class="pred" href="signal.html#prolog_alert_signal/2">prolog_alert_signal/2</a> 
+to query or modify this value at runtime.</dd>
+<dt><strong>--no-tty</strong> <var></var></dt>
+<dd class="defbody">
+Unix only. Switches controlling the terminal for allowing 
+single-character commands to the tracer and <a id="idx:getsinglechar1:38"></a><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a>. 
+By default, manipulating the terminal is enabled unless the system 
+detects it is not connected to a terminal or it is running as a 
+GNU-Emacs inferior process. See also <a class="flag" href="flags.html#flag:tty_control">tty_control</a>.</dd>
+<dt><strong>--win-app</strong> <var></var></dt>
+<dd class="defbody">
+This option is available only in <b>swipl-win.exe</b> and is used for 
+the start-menu item. If causes <b>plwin</b> to start in the folder
+<code>...\My Documents\Prolog</code> or local equivalent thereof (see
+<a id="idx:winfolder2:39"></a><a class="pred" href="system.html#win_folder/2">win_folder/2</a>). 
+The <code>Prolog</code> subdirectory is created if it does not exist.</dd>
+<dt><strong>-O</strong> <var></var></dt>
+<dd class="defbody">
+Optimised compilation. See <a id="idx:currentprologflag2:40"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+flag
+<a class="flag" href="flags.html#flag:optimise">optimise</a> for 
+details.</dd>
+<dt><strong>-l</strong> <var>file</var></dt>
+<dd class="defbody">
+Load <var>file</var>. This flag provides compatibility with some other 
+Prolog systems.<sup class="fn">10<span class="fn-text">YAP, SICStus</span></sup> 
+It is used in SWI-Prolog to skip the program initialization specified 
+using <a id="idx:initialization2:41"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+directives. See also <a class="sec" href="compilation.html#sec:2.11.2.1">section 
+2.11.2.1</a>, and <a id="idx:initialize0:42"></a><a class="pred" href="consulting.html#initialize/0">initialize/0</a>.</dd>
+<dt><strong>-s</strong> <var>file</var></dt>
+<dd class="defbody">
+Use <var>file</var> as a script file. The script file is loaded after 
+the initialisation file specified with the <strong>-f</strong> <var>file</var> 
+option. Unlike <strong>-f</strong> <var>file</var>, using <strong>-s</strong> 
+does not stop Prolog from loading the personal initialisation file.</dd>
+<dt><strong>-f</strong> <var>file</var></dt>
+<dd class="defbody">
+Use <var>file</var> as initialisation file instead of the default
+<code>init.pl</code>.&lsquo;<strong>-f</strong> <var>none</var>&rsquo;stops 
+SWI-Prolog from searching for a startup file. This option can be used as 
+an alternative to
+<strong>-s</strong> <var>file</var> that stops Prolog from loading the 
+personal initialisation file. See also <a class="sec" href="initfile.html#sec:2.2">section 
+2.2</a>.</dd>
+<dt><strong>-F</strong> <var>script</var></dt>
+<dd class="defbody">
+Select a startup script from the SWI-Prolog home directory. The script 
+file is named <code>&lt;<var>script</var>&gt;.rc</code>. The default
+<var>script</var> name is deduced from the executable, taking the 
+leading alphanumerical characters (letters, digits and underscore) from 
+the program name. <strong>-F</strong> <var>none</var> stops looking for 
+a script. Intended for simple management of slightly different versions. 
+One could, for example, write a script <code>iso.rc</code> and then 
+select ISO compatibility mode using <code>pl -F iso</code> or make a 
+link from <b>iso-pl</b> to
+<b>pl</b>.</dd>
+<dt><strong>-x</strong> <var>bootfile</var></dt>
+<dd class="defbody">
+Boot from <var>bootfile</var> instead of the system's default boot file. 
+A boot file is a file resulting from a Prolog compilation using the
+<strong>-b</strong> or <strong>-c</strong> option or a program saved 
+using
+<a id="idx:qsaveprogram12:43"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>.</dd>
+<dt><strong>-p</strong> <var>alias=path1[:path2 ... ]</var></dt>
+<dd class="defbody">
+Define a path alias for file_search_path. <var>alias</var> is the name 
+of the alias, and arg path1 ... is a list of values for the alias. On 
+Windows the list separator is <code><code>;</code></code>. On other 
+systems it is <code><code>:</code></code>. A value is either a term of 
+the form alias(value) or pathname. The computed aliases are added to <a id="idx:filesearchpath2:44"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+using <a id="idx:asserta1:45"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>, 
+so they precede predefined values for the alias. See <a id="idx:filesearchpath2:46"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+for details on using this file location mechanism.</dd>
+<dt><strong>--traditional</strong> <var></var></dt>
+<dd class="defbody">
+This flag disables the most important extensions of SWI-Prolog version&nbsp;7 
+(see <a class="sec" href="extensions.html#sec:5">section 5</a>) that 
+introduce incompatibilities with earlier versions. In particular, lists 
+are represented in the traditional way, double quoted text is 
+represented by a list of character codes and the functional notation on 
+dicts is not supported. Dicts as a syntactic entity, and the predicates 
+that act on them, are still supported if this flag is present.</dd>
+<dt><strong>--</strong> <var></var></dt>
+<dd class="defbody">
+<a id="idx:commandlinearguments:47"></a>Stops scanning for more 
+arguments, so you can pass arguments for your application after this 
+one. See <a id="idx:currentprologflag2:48"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+using the flag <a class="flag" href="flags.html#flag:argv">argv</a> for 
+obtaining the command line arguments.
+</dd>
+</dl>
+
+<p><h3 id="sec:stacksizes"><a id="sec:2.4.3"><span class="sec-nr">2.4.3</span> <span class="sec-title">Controlling 
+the stack sizes</span></a></h3>
+
+<a id="sec:stacksizes"></a>
+
+<p>As of version 7.7.14 the stacks are no longer limited individually. 
+Instead, only the combined size is limited. Note that 32&nbsp;bit 
+systems still pose a 128Mb limit. See <a class="sec" href="limits.html#sec:2.20.1">section 
+2.20.1</a>. The combined limit is by default 1Gb on 64&nbsp;bit machines 
+and 512Mb on 32&nbsp;bit machines.
+
+<p>For example, to limit the stacks to 32Gb use the command below. Note 
+that the stack limits apply <em>per thread</em>. Individual threads may 
+be controlled using the <code>stack_limit(+Bytes)</code> option of 
+thread_create. Any thread can call <code>set_prolog_flag(stack_limit, 
+Limit)</code> (see
+<a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>) to 
+adjust the stack limit. This limit is inherited by threads created from 
+this thread.
+
+<pre class="code">
+$ swipl --stack-limit=32g
+</pre>
+
+<dl class="latex">
+<dt><strong>--stack-limit</strong><var>=size[bkmg]</var></dt>
+<dd class="defbody">
+Limit the combined size of the Prolog stacks to the indicated <var>size</var>. 
+The suffix specifies the value as <i>bytes</i>, <i>Kbytes</i>,
+<i>Mbytes</i> or <i>Gbytes</i>.</dd>
+<dt><strong>--table-space</strong><var>=size[bkmg]</var></dt>
+<dd class="defbody">
+Limit for the <var>table space</var>. This is where tries holding 
+memoized<sup class="fn">11<span class="fn-text">The letter M is used 
+because the T was already in use. It is a memnonic for <b>M</b>emoizing.</span></sup> 
+answers for
+<em>tabling</em> are stored. The default is 1Gb on 64&nbsp;bit machines 
+and 512Mb on 32&nbsp;bit machines. See the Prolog flag
+<a class="flag" href="flags.html#flag:table_space">table_space</a>.
+</dd>
+<dt><strong>--shared-table-space</strong><var>=size[bkmg]</var></dt>
+<dd class="defbody">
+Limit for the table space for <em>shared</em> tables. See
+<a class="sec" href="tabling-shared.html#sec:7.9">section 7.9</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:runoptions"><a id="sec:2.4.4"><span class="sec-nr">2.4.4</span> <span class="sec-title">Running 
+goals from the command line</span></a></h3>
+
+<a id="sec:runoptions"></a>
+
+<dl class="latex">
+<dt><strong>-g</strong> <var>goal</var></dt>
+<dd class="defbody">
+<var>Goal</var> is executed just before entering the top level. This 
+option may appear multiple times. See <a class="sec" href="initgoal.html#sec:2.3">section 
+2.3</a> for details. If no initialization goal is present the system 
+calls <a id="idx:version0:49"></a><a class="pred" href="printmsg.html#version/0">version/0</a> 
+to print the welcome message. The welcome message can be suppressed with
+<strong>--quiet</strong>, but also with <strong>-g</strong> <var>true</var>. <var>goal</var> 
+can be a complex term. In this case quotes are normally needed to 
+protect it from being expanded by the shell. A safe way to run a goal 
+non-interactively is below. If go/0 succeeds
+<strong>-g</strong> <var>halt</var> causes the process to stop with exit 
+code 0. If it fails, the exit code is 1; and if it raises an exception, 
+the exit code is 2.
+
+<pre class="code">
+% swipl &lt;options&gt; -g go -g halt
+</pre>
+
+</dd>
+<dt><strong>-t</strong> <var>goal</var></dt>
+<dd class="defbody">
+Use <var>goal</var> as interactive top level instead of the default goal
+<a id="idx:prolog0:50"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>. 
+The <var>goal</var> can be a complex term. If the top-level goal 
+succeeds SWI-Prolog exits with status 0. If it fails the exit status is 
+1. If the top level raises an exception, this is printed as an uncaught 
+error and the top level is <em>restarted</em>. This flag also determines 
+the goal started by <a id="idx:break0:51"></a><a class="pred" href="toplevel.html#break/0">break/0</a> 
+and <a id="idx:abort0:52"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>. 
+If you want to prevent the user from entering interactive mode, start 
+the application with&lsquo;<strong>-g</strong> <var>goal</var> <strong>-t</strong> <var>halt</var>&rsquo;.
+</dd>
+</dl>
+
+<p><h3 id="sec:compoptions"><a id="sec:2.4.5"><span class="sec-nr">2.4.5</span> <span class="sec-title">Compilation 
+options</span></a></h3>
+
+<a id="sec:compoptions"></a>
+
+<dl class="latex">
+<dt><strong>-c</strong> <var>file ...</var></dt>
+<dd class="defbody">
+Compile files into an&lsquo;intermediate code file'. See <a class="sec" href="compilation.html#sec:2.11">section 
+2.11</a>.</dd>
+<dt><strong>-o</strong> <var>output</var></dt>
+<dd class="defbody">
+Used in combination with <strong>-c</strong> or <strong>-b</strong> to 
+determine output file for compilation.
+</dd>
+</dl>
+
+<p><h3 id="sec:maintoptions"><a id="sec:2.4.6"><span class="sec-nr">2.4.6</span> <span class="sec-title">Maintenance 
+options</span></a></h3>
+
+<a id="sec:maintoptions"></a>
+
+<p>The following options are for system maintenance. They are given for 
+reference only.
+
+<dl class="latex">
+<dt><strong>-b</strong> <var>initfile ...<strong>-c</strong> file ...</var></dt>
+<dd class="defbody">
+Boot compilation. <var>initfile ...</var> are compiled by the C-written 
+bootstrap compiler, <var>file ...</var> by the normal Prolog compiler. 
+System maintenance only.</dd>
+<dt><strong>-d</strong> <var>token1,token2,...</var></dt>
+<dd class="defbody">
+Print debug messages for DEBUG statements tagged with one of the 
+indicated tokens. Only has effect if the system is compiled with the
+<code>-DO_DEBUG</code> flag. System maintenance only.
+</dd>
+</dl>
+
+<p></body></html>

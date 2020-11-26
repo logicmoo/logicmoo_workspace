@@ -1,0 +1,13 @@
+ERROR: Invalid ACE text:
+The word "mammal" is unknown.
+The word "fur" is unknown; did you mean "far"?
+The word "mammal" is unknown.
+The word "lays" is unknown; did you mean "plays"?
+The word "mammal" is unknown.
+The word "bill" is unknown; did you mean "till"?
+The word "mammal" is unknown.
+The word "fur" is unknown; did you mean "far"?
+The word "lays" is unknown; did you mean "plays"?
+The word "bill" is unknown; did you mean "till"?
+"Every monotreme is a <> mammal.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

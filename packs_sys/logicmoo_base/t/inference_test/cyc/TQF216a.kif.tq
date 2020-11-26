@@ -1,0 +1,88 @@
+(note TQF216a)
+
+(goalCategoryForAgent Iran 
+  (forAll ?ENERGY 
+    (implies 
+      (subclass ?ENERGY EnergyStuff) 
+        (thereExists ?DEVELOPMENT 
+          (and 
+            (instance ?DEVELOPMENT DevelopmentEvent) 
+            (vestedInterest Iran ?DEVELOPMENT) 
+            (objectActedOn ?DEVELOPMENT 
+              (IndustryOfRegionFn 
+                (IndustryFn ?ENERGY) CaspianRegion)))))) NationalEconomyGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?DECREASE 
+      (decreases-Generic ?DECREASE Iran economicStability))) EconomicGoal) 
+
+(goalCategoryForAgent Iran 
+ (oilRevenue Iran HighIncomeLevel) NationalEconomyGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?EVENT 
+      (decreases-Generic ?EVENT Petroleum-CrudeOil basicPriceForType)))  NationalEconomyGoal)
+
+(goalCategoryForAgent Iran 
+ (powerInRegion-Economic Iran PersianGulfRegion MediumToVeryHigh) NationalEconomyGoal) 
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?EVENT 
+      (decreases-Generic ?EVENT OPEC oilPriceCharged))) NationalEconomyGoal)
+
+(goalCategoryForAgent Iran 
+  (not 
+    (thereExists ?EVENT 
+      (increases-Generic ?EVENT OPEC oilProduction))) NationalEconomyGoal) 
+
+(implies 
+  (and 
+    (subAttribute ?SPEC ?GEN) 
+    (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+  (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(query (findall  (?ECONOMIC-GOAL ?ECONOMIC-GOAL-CATEGORY)
+  (and 
+    (goalCategoryForAgent Iran ?ECONOMIC-GOAL ?ECONOMIC-GOAL-CATEGORY) 
+    (subAttribute ?ECONOMIC-GOAL-CATEGORY EconomicGoal))))
+
+(answer (List (not 
+ (thereExists ?DECREASE 
+ (decreases-Generic ?DECREASE Iran economicStability)))) EconomicGoal) 
+
+(answer (List 
+ (forAll ?ENERGY 
+ (implies 
+ (subclass ?ENERGY EnergyStuff) 
+ (thereExists ?DEVELOPMENT 
+ (and 
+ (instance ?DEVELOPMENT DevelopmentEvent) 
+ (vestedInterest Iran ?DEVELOPMENT) 
+ (objectActedOn ?DEVELOPMENT 
+ (IndustryOfRegionFn 
+ (IndustryFn ?ENERGY) CaspianRegion))))))) NationalEconomyGoal) 
+
+(answer 
+  (List 
+    (powerInRegion-Economic Iran PersianGulfRegion MediumToVeryHigh)) NationalEconomyGoal)
+
+(answer (List  (not 
+ (thereExists ?EVENT 
+ (decreases-Generic ?EVENT OPEC oilPriceCharged)))) NationalEconomyGoal) 
+
+(answer (List  (not 
+ (thereExists ?EVENT 
+ (increases-Generic ?EVENT OPEC oilProduction)))) NationalEconomyGoal) 
+
+(answer (List  (not 
+ (thereExists ?EVENT 
+ (decreases-Generic ?EVENT Petroleum-CrudeOil basicPriceForType)))) NationalEconomyGoal) 
+
+(answer (List  (oilRevenue Iran HighIncomeLevel)) NationalEconomyGoal) 
+
+(end_of_file)
+
+

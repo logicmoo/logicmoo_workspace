@@ -1,0 +1,88 @@
+phrase(_Sem, _Structure, _S) :-
+	phrase(_Sem, _Structure, _S, []).
+
+phrase([_Sem], phrase(_PS), _S, _T) :-
+	phrase_simple(_Sem, _PS, _S, _T).
+phrase([_Str_Sem], phrase(_PS, _ET), _S, _T) :-
+	phrase_simple(_Sem, _PS, _S, _U),
+	et_terme(_Sems, _ET, _U, _T),
+	conc([_Sem], _Sems, _Str_Sem).
+
+et_terme(_Sem, et(_CO, _PH), _S, _T) :-
+	conjonction(_CO, _S, _U),
+	phrarse(_Sems, _PH, _U, _T).
+
+phrase_simple(_Sem, ps(_GV, _PR, _GN), _S, _T) :-
+	groupe_verbal(_Action, _Direction, _Origine, _GV, _S, _U),	
+	preposition(_PR, _U, _V),
+	groupe_nominal(_Nombre, _GN, _V, _T),
+	structure_semantique(_Action, _Direction, _Origine, _Nombre, _Sem).
+
+groupe_verbal(_Action, _Direction, _Origine, gv(_VE, _LO), _S, _T) :-
+	verbe(_Action, _Direction, _VE, _S, _U),
+	locution1(_Origine, _LO, _U, _T).
+groupe_verbal(_Action, _Direction, _, gv(_VE, _LO), _S, _T) :-
+	verbe(_Action, _, _VE, _S, _U),
+	locution2(_Direction, _LO, _U, _T).
+groupe_verbal(_Action, _Direction, _, gv(_VE), _S, _T) :-
+	verbe(_Action, _Direction, _VE, _S, _T).
+
+locution1(_Origine, lo(_PR, _N), _S, _T) :-
+	preposition(_PR, _S, _U),
+	article(_A, _Genre, _Nombre, _U, _V),
+	nom(_Origine, _N, _Genre, _Nombre, _V, _T).
+
+locution2(_Direction, lo(_PR, _N), _S, _T) :-
+	preposition(_PR, _S, _U),
+	nom(_Direction, _N, _, _, _U, _T).
+
+groupe_nominal(_Valeur, gn(_NB, _NO), _S, _T) :-
+	nombre(_Classe_nombre, _NB, _Nombre, _S, _U),
+	nom(_Classe_nom, _NO, _, _Nombre, _U, _T),
+	eq(_Classe_nom, _Classe_nombre),
+	eq(_NB, nombre_(_Valeur)).
+
+conjonction(conj(et), [et | _U], _U).
+
+verbe(rotation, _, verbe(tourne), [tourne | _U], _U).
+verbe(rotation, _, verbe(vire), [vire | _U], _U).
+verbe(translation_hor, avant, verbe(avance), [avance | _U], _U).
+verbe(translation_hor, arriere, verbe(recule), [recule | _U], _U).
+verbe(translation_vert, haut, verbe(souleve), [souleve | _U], _U).
+verbe(translation_vert, bas, verbe(abaisse), [abaisse | _U], _U).
+
+preposition(preposition(aa), [aa | _U], _U).
+preposition(preposition(de), [de | _U], _U).
+
+article(article("l'"), masculin, singulier, ["l'" | _U], _U).
+article(article(la), feminin, singulier, [la | _U], _U).
+
+nom(gauche, nom(gauche), feminin, singulier, [gauche | _U], _U).
+nom(droite, nom(droite), feminin, singulier, [droite | _U], _U).
+nom(degres, nom(degres), masculin, pluriel, [degres | _U], _U).
+nom(etabli, nom(etabli), masculin, singulier, [etabli | _U], _U).
+nom(table, nom(table), feminin, singulier, [table | _U], _U).
+nom(centimetre, nom(centimetre), masculin, singulier, [centimetre | _U], _U).
+nom(centimetres, nom(centimetres), masculin, pluriel, [centimetres | _U], _U).
+nom(unite, nom(unite), feminin, singulier, [unite | _U], _U).
+nom(unites, nom(unites), feminin, pluriel, [unites | _U], _U).
+
+nombre(_, nombre_(1), singulier, [1 | _U], _U).
+nombre(centimetres, nombre_(2), pluriel, [2 | _U], _U).
+nombre(unites, nombre_(5), pluriel, [5 | _U], _U).
+nombre(unites, nombre_(10), pluriel, [10 | _U], _U).
+nombre(degres, nombre_(30), pluriel, [30 | _U], _U).
+nombre(degres, nombre_(45), pluriel, [45 | _U], _U).
+nombre(degres, nombre_(60), pluriel, [60 | _U], _U).
+nombre(degres, nombre_(90), pluriel, [90 | _U], _U).
+
+structure_semantique(rotation, _Direction, _, _Nombre, [rotation, _Direction, _Nombre]).
+structure_semantique(translation_hor, _Direction, absente, _Nombre, [translation, _Direction, _Nombre]).
+structure_semantique(translation_vert, _Direction, _Origine, _Nombre, [translation, _Direction, _Origine, _Nombre]).
+
+eq(_X, _X).
+
+conc([],A,A).
+
+conc([X|L],Y,[X|Q]) :- conc(L,Y,Q).
+

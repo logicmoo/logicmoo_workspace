@@ -1,0 +1,46 @@
+
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+	utterance:[sem=S].
+
+utterance:[sem=S] -->
+	(   command:[sem=S] ;
+	    yn_question:[sem=S]
+	).
+
+%command:[sem=concat([[utterance_type, command]], Op, OnOff, Np)] -->
+command:[sem=strcat('concat(', strcat('[[', utterance_type, ', ', command, ']]'), ', ', Op, ', ', OnOff, ', ', Np, ')')] -->
+	verb:[sem=Op, vform=imperative, vtype=switch, obj_sem_np_type=ObjType],
+	onoff:[sem=OnOff],
+	np:[sem=Np, sem_np_type=ObjType].
+ 
+%command:[sem=concat([[utterance_type, command]], Op, Np)] -->
+command:[sem=strcat('concat(', strcat('[[', utterance_type, ', ', command, ']]'), ', ', Op, ', ', Np, ')')] -->
+	verb:[sem=Op, vform=imperative, vtype=transitive, obj_sem_np_type=ObjType],
+	np:[sem=Np, sem_np_type=ObjType].
+
+%yn_question:[sem=concat([[utterance_type, query]], Verb, OnOff, Np, Loc)] -->
+yn_question:[sem=strcat('concat(', strcat('[[', utterance_type, ', ', query, ']]'), ', ', Verb, ', ', OnOff, ', ', Np, ', ', Loc, ')')] -->
+	verb:[sem=Verb, vform=finite, vtype=be, singplur=N, obj_sem_np_type=n],
+	np:[sem=Np, singplur=N, sem_np_type=switchable],
+	onoff:[sem=OnOff],
+	optional_location_pp:[sem=Loc].
+
+%np:[sem=concat(Noun, Loc), singplur=N, sem_np_type=SemType] -->
+np:[sem=strcat('concat(', Noun, ', ', Loc, ')'), singplur=N, sem_np_type=SemType] -->
+	the,
+	noun:[sem=Noun, singplur=N, sem_np_type=SemType],
+	optional_location_pp:[sem=Loc, mother_sem_np_type=SemType].
+
+optional_location_pp:[sem=Loc, mother_sem_np_type=SemType] -->
+	location_pp:[sem=Loc, mother_sem_np_type=SemType].
+
+optional_location_pp:[sem='[]'] --> [].
+
+location_pp:[sem=Loc, mother_sem_np_type=(\(location))] -->
+	in,
+	np:[sem=Loc, sem_np_type=location].
+
+
+

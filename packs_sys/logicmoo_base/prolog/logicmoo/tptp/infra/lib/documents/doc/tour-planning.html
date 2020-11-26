@@ -1,0 +1,940 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <link rel=stylesheet type="text/css" href="manual.css">
+    <title>Guided Tour: Planning with InfraEngine</title>
+</head>
+<body>
+
+<h1>Guided Tour: Planning with InfraEngine</h1>
+
+We illustrate the use of the <a
+href="http://www.infraengine.com">InfraEngine</a> system as a planning engine
+over inputs represented by RDF documents.
+
+Relevant key features of the system are
+<ul>
+<li>A planning engine is integrated into an RDF processor.
+<li>Inputs to planning tasks &ndash; rules, and
+specifications for start and goal states &ndash;
+are represented by RDF documents.
+<li>Outputs of planning tasks &ndash; partial-order plans &ndash;
+have RDF representations.
+<li>The evaluation of planning tasks and the
+inspection of result plans is integrated into
+RDF schema browsing.
+<li>RDF schema information is utilized by the planning engine.
+</ul>
+
+<h2>Related Documents</h2>
+
+<ul>
+<li> <a href="manual.html">InfraEngine User Manual (Draft)</a>
+<li> <a href="tour-browsing.html">Guided Tour: 
+RDF Schema Browsing with InfraEngine</a>
+<li> <a href="examples/examples.html">InfraEngine Example RDF Documents</a>
+<li> <a href="planner/planner_manual.html"><i>Liner</i> Planning System
+&ndash; User Manual</a>
+</ul>
+
+
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#sec-pre">1. Prerequisites</a>
+  <ul>
+  <li><a href="#sec-pre-suss">1.1 Running Example: The Sussman Anomaly</a> 
+  <li><a href="#sec-pre-kb">1.2 Documents in the Knowledgebase</a>
+  </ul>
+<li><a href="#sec-classes">2. Overview on Classes in the Example</a>
+<li><a href="#n-ary">3. Representation of N-Ary Relations by Classes</a>
+<li><a href="#sec-quoted">4. Quoting</a>
+<li><a href="#sec-rules">5. Rules</a>
+  <ul>
+  <li><a href="#sec-rules-sem">5.1 Semantics of Rules &ndash; Resource Oriented
+  View of Planning</a>
+  <li><a href="#sec-rules-props">5.2 Properties of Rules</a>
+  <li><a href="#sec-facts">5.3 Notation for Facts</a> 
+  <li><a href="#sec-vars">5.4 Typed Variables in Rules</a> 
+  <li><a href="#sec-types">5.5 Type System</a> 
+</ul>
+<li><a href="#queries">6. Queries in View of the Query Designer</a>
+  <ul>
+  <li><a href="#sec-query-props">6.1 Properties of Queries</a>
+  <li><a href="#sec-query-vars">6.2 Typed Variables in Queries</a>
+  </ul>
+<li><a href="#sec-queries">7. Queries in View of the User</a>
+<li><a href="#sec-solutions">8. Solution Plans</a>
+
+<li><a href="#sec-query-params">9. Queries with Parameters</a>
+<li><a href="#sec-constraints">10. Arithmetic Constraints in Rules and
+ Queries</a>
+<li><a href="#blocks-rdf">Appendix: The Blocks RDF Document</a>
+<li><a href="#table-rdf">Appendix: The Table Document</a>
+</ul>
+
+<h2><a name="sec-pre">1. Prerequisites</a></h2>
+
+<h3><a name="sec-pre-suss">1.1 Running Example: The Sussman Anomaly</a></h3> 
+
+Our running example is a blocks world planning problem, the so-called <a
+href="http://en.wikipedia.org/wiki/Sussman_Anomaly">Sussman anomaly</a>.
+
+Our formalization for InfraEngine is based on the <a
+href="planner/planner_manual.html#ex-sussman"><i>Liner Planning System User
+Manual &ndash; Example: Sussman Anomaly</i></a>, where the problem is
+described and formalized for <i>Liner</i>, the system that underlies plan
+computation in InfraEngine.  The example is worked out there in Prolog
+readable syntax, less cluttered than in RDF.  Consulting the <i>Liner</i>
+documentation might also be helpful to clarify concepts and RDF notation for
+planning with InfraEngine.
+
+
+<h3><a name="sec-pre-kb">1.2 Documents in the Knowledgebase</a></h3>
+<p>It is assumed that the following RDF documents
+have been loaded into the current knowledgebase:
+<ul>
+<li> <i>blocks.rdf</i>
+<li> <i>infraengine_schema.rdf</i>. 
+</ul>
+This can be achieved as <a href="tour-browsing.html#sec-loading">described for
+in <i>Guided Tour: RDF Schema Browsing
+with InfraEngine</i></a>.  Like <i>vehicles.rdf</i>, these documents are also
+linked from the <a href="examples/examples.html">Examples</a> page.
+
+<p>The document <i>infraengine_schema.rdf</i> is not strictly necessary for
+the <i>blocks.rdf</i> example. If it is loaded, additional information about
+classes in the <i>inf</i> namespace is provided, resulting in more comment
+lines and fewer void effective domain properties for classes in the <i>bs</i>
+namespace.
+
+<h2><a name="sec-classes">2. Overview on Classes in the Example</a></h2>
+
+We first take a look at the <i>Classes</i> page.
+
+<p style="text-align:center">
+<a name="img1">
+<img src="images/blocks-classes.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>Objects with namespace <i>inf</i> are declared in
+<i>infraengine_schema.rdf</i>. They can be considered as constituting the
+language in which planning tasks can be expressed with <i>InfraEngine</i>.
+
+<p>Objects with namespace <i>bs</i> are provided by the user in document
+<i>blocks.rdf</i>, making use of <i>inf</i> objects.  The classes
+<i>bs:WorldObject</i>, <i>bs:Block</i> and <i>bs:Table</i> represent objects
+of the blocks world.
+
+RDF
+
+A way to represent 
+
+<h2><a name="n-ary">3. Representation of N-Ary Relations by Classes</a></h2>
+
+<p>We represent in RDF a n-ary relation, where n is a natural number &gt;= 0,
+by a class with arguments identified by properties instead of position
+numbers.
+
+For example, the relation <i>on top of</i>, between blocks, is represented by
+the class <i>bs:on</i>, the domain of two properties <i>bs:onTop</i> and
+<i>bs:onBottom</i>.  Further relations represented as classes in this way are
+<i>bs:clear</i> and <i>bs:PutOn</i>.
+
+
+<p style="text-align:center">
+<a name="img2">
+<img src="images/blocks-fluent-on.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<h2><a name="sec-quoted">4. Quoting</a></h2>
+
+<p>In planning we reason about the truth values of facts in different states.
+Thus, in the specifications of start states, goal states and planning rules
+facts are not asserted, but &ldquo;mentioned&rdquo;. We model this with a
+quoting mechanism included in RDF, the <i>rdf:parseType=Literal</i> construct.
+
+<p>Consider for example the object <i>bs:rulePutOn</i>, an instance of the
+class <i>inf:Rule</i>. Its <i>Object</i> page, displayed below, can be
+accessed starting from a <i>Classes</i> page, via the <i>Direct Instances</i>
+field of the <i>Class</i> page for <i>inf:Rule</i>.
+
+
+<p style="text-align:center">
+<a name="img-rule-puton">
+<img src="images/blocks-rule-puton.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>
+The quoting mechanism is used for the
+values of <i>bs:action</i>, <i>bs:after</i> , <i>bs:before</i>, and
+<i>bs:remaining</i>.  For example, the value of
+<i>inf:after</i> is a quoted sequence of two facts, an instance
+of the 2-ary <i>bs:on</i> relation and an instance of the 1-ary
+<i>bs:clear</i> relation. (The InfraEngine browser currently
+displays such quoted structures just as
+pretty printed RDF text.)
+
+<h2><a name="sec-rules">5. Rules</a></h2>
+
+We stay with the rule <i>bs:rulePutOn</i>, displayed in the <a
+href="#img-rule-puton">screenshot of the previous section</a> to
+discuss planning rules in more detail.
+
+<h3><a name="sec-rules-sem">5.1 Semantics of Rules &ndash; Resource Oriented
+View of Planning</a></h3>
+
+Rules are semantically understood as &ldquo;resource oriented&rdquo; planning
+rules. See the user manual of the underlying planning system <a
+href="planner/planner_manual.html"><i>Liner</i></a>, especially Sections <a
+href="planner/planner_manual.html#overview"><i>Overview: Resource Oriented
+View of Planning</i></a> and <a
+href="planner/planner_manual.html#rulebase"><i>Rulebase</i></a>, for more
+information and references.
+
+<h3><a name="sec-rules-props">5.2 Properties of Rules</a></h3>
+A rule is represented by an instance of the class <i>inf:Rule</i>.
+This class is the domain of the following properties:
+<ul>
+<li><i>bs:action</i> &ndash; A quoted object that specifies the action 
+represented by the rule. Corresponds to
+the <i>action</i> argument of a
+<a href="planner/planner_manual.html#def-rule"><i>Liner</i> rule</a>.
+<p>
+<li><i>bs:after</i> &ndash; A sequence of quoted objects that specifies the
+multiset of the fluents that are newly produced by an application of the rule.
+<p>
+<li><i>bs:before</i> &ndash; A sequence of quoted objects
+that specifies the multiset of the fluents that are consumed by an application
+of the rule or must be true for the rule to be applicable.
+<p>
+<li><i>bs:remaining</i> &ndash; A sequence of quoted objects that specifies
+the multiset of the fluents that are consumed as well as produced by an
+application of the rule.
+<p>
+</ul>
+Compared to a
+<a href="planner/planner_manual.html#def-rule"><i>Liner</i> rule</a>,
+<ul>
+<li> the <i>consequent</i> corresponds to the multiset union
+of <i>bs:after</i> and <i>bs:remaining</i>, and 
+<li>the <i>antecedent</i>
+to the multiset union of <i>bs:before</i> and <i>bs:remaining</i>.
+</ul>
+
+
+<h3><a name="sec-facts">5.3 Notation for Facts</a></h3> 
+
+A fact is just expressed as a rule with no
+<i>bs:before</i>, <i>bs:remaining</i> and <i>bs:action</i> component.
+The rule <i>bs:ruleTableAlwaysClear</i> is an example.
+<p>
+The <i>Liner</i> system, in contrast, provides <a
+href="planner/planner_manual.html#def-fact">special syntax for facts.</a>
+
+
+<h3><a name="sec-vars">5.4 Typed Variables in Rules</a></h3> 
+
+The values of <i>bs:action</i>, <i>bs:after</i> , <i>bs:before</i>, and
+<i>bs:remaining</i> can involve logic variables, similar to a <a
+href="planner/planner_manual.html#def-rule"><i>Liner</i> rule</a>.  The
+<i>inf:var</i> attribute is used to identify such variables.  The scope of
+such a variable is the rule (this means that if a variable with the same
+identifier is used in another rule, it is considered as another variable).
+
+<p>A variable has a type, which is a class. For example, in the rule
+<i>bs:rulePutOn</i> the phrase 
+<pre>
+    &lt;bs:Block inf:var="Moved" /&gt;
+</pre>
+denotes the variable <i>Moved</i> with type <i>bs:Block</i>.
+
+<p>In the <i>Liner</i> system, in contrast, variables are not typed.
+
+<h3><a name="sec-types">5.5 Type System</a></h3> 
+The variable typing is internally used to make plan
+computation feasible.  Planning tasks submitted to <i>Liner</i> are outputs of
+a compilation step that maps RDF types to a type encoding for logic
+programs. In contrast to RDFS, this internally used type system does not
+support multiple inheritance. In such a case, evaluation of a planning query
+yields an error page that indicates the problem.
+
+<p>Note: An error message <i>Item ... has multiple direct types: [inf_Literal,
+rdfs_Literal].</i> can be remedied by loading the document
+<i>infraengine_schema.rdf</i>, which asserts that <i>inf:Literal</i>
+is a subclass of <i>rdfs:Literal</i>.
+
+<h2><a name="queries">6. Queries in View of the Query Designer</a></h2>
+
+Like rules, queries that expresses planning tasks are represented as RDF
+objects of a certain class, <i>inf:Query</i>.  The quoting mechanism described
+<a href="#sec-quoted">Section <i>Quoting</i></a> is also used for
+queries.  Consider for example the object <i>bs:querySussman</i>, an instance
+of the class <i>inf:Query</i>.  Its <i>Object</i> page, displayed below, can
+be accessed starting from a <i>Classes</i> page analogously as described for
+<i>bs:rulePutOn</i> in <a href="#sec-quoted">Section <i>Quoted Facts</i></a>.
+
+<p style="text-align:center">
+<a name="img5">
+<img src="images/blocks-query-object.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<h3><a name="sec-query-props">6.1 Properties of Queries</a></h3>
+A query is represented by an instance of the class <i>inf:Query</i>.
+This class is the domain of the following properties:
+
+<ul>
+<li><i>bs:goal</i> &ndash; A sequence of quoted objects that specifies the
+multiset of the fluents that must be consumable in the goal state of the
+planning tasks and facts that must be true.  Corresponds to the
+<i>GoalMultiset</i> argument of the <a
+href="planner/planner_manual.html#def-plan5">predicate <i>plan/5</i> of
+<i>Liner</i> </a>.  <p><li><i>bs:start</i> &ndash; A sequence of quoted
+objects that specifies the multiset of the fluents that are consumable in the
+start state of the planning task.  Corresponds to the <i>StartMultiset</i>
+argument of the <a href="planner/planner_manual.html#def-plan5">predicate
+<i>plan/5</i> of <i>Liner</i></a>.
+</ul>
+
+<h3><a name="sec-query-vars">6.2 Typed Variables in Queries</a></h3>
+The values of <i>bs:goal</i> and <i>bs:start</i>
+can involve logic variables, as <a href="#sec-vars">described for rules</a>.
+The scope of such a variable is the query.
+
+<h2><a name="sec-queries">7. Queries in View of the User</a></h2>
+
+The <a href="manual.html#queries"><i>Queries</i></a> page lists the queries
+that are present in the current knowledgebase. In our example, this is just
+<i>bs:querySussman</i>.
+
+<p style="text-align:center">
+<a name="img-queries">
+<img src="images/blocks-queries.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+The link <i>bs:querySussman</i> opens a <a
+href="manual.html#query"><i>Query</i></a> view for the query object:
+
+<p style="text-align:center">
+<a name="img-query">
+<img src="images/blocks-query-sussman.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+The <i>Evaluate Query</i> button triggers evaluation of the query.
+Additional fields allow to set evaluation parameters.
+
+<ul>
+<li><i>Evaluation Timeout</i> &ndash; Timeout for
+the query evaluation in seconds.  
+<p>
+<li><i>Number of solutions</i> &ndash; The
+value <i>Single</i> means that query evaluation stops as soon as a plan has
+been found.  The value <i>Many</i> means that
+all plans returned in the specified timeout time are
+gathered and returned as solutions. The system 
+removes plans considered as redundant from
+this set of solutions.
+</ul>
+
+<h2><a name="sec-solutions">8. Solution Plans</a></h2>
+
+Submitting <i>Evaluate Query</i> in <a
+href="manual.html#query"><i>Query</i></a> view leads to a <a
+href="manual.html#solutions"><i>Solutions</i></a> page that lists the
+solutions for the query. In our example the list contains just a single
+solution. In addition attributes of the solutions, such as the plan size
+(number of actions) are shown in the list.
+
+<p style="text-align:center">
+<a name="img-solutions">
+<img src="images/blocks-solutions.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+<p>
+The solutions are, of course, represented by RDF objects.
+They reside in a knowledgebase that is newly generated
+for the query evaluation, in our example <i>sys:result1</i>.
+<p>
+The links to the listed solution object opens a
+<a href="manual.html#solution"><i>Solution</i></a> view for the object:
+
+<p style="text-align:center">
+<a name="img-solution">
+<img src="images/blocks-plan.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+The partial-order plan represented by the solution object is displayed as
+graph.  The actions are pretty printed in boxes. Property values
+and classes are indicated by indentation.
+<p>
+Clicking on an action box leads to an <a
+href="manual.html#object"><i>Object</i></a> view of the RDF object that
+represents the corresponding node in the solution graph (quite low-level).
+
+<h2><a name="sec-query-params">9. Queries with Parameters</a></h2>
+
+We now leave the blocks world example to show further features of planning
+with InfraEngine. It is assumed that the following RDF documents have been
+loaded into the current knowledgebase:
+<ul>
+<li> <i>table.rdf</i>
+<li> <i>infraengine_schema.rdf</i>. 
+</ul>
+
+The document <i>table.rdf</i> basically is a translation into the RDF
+representation of the <a href="planner/planner_manual.html#ex-cop">constraints
+example</a> in the <i>Liner</i> planning system manual.  The goal of the
+planning task is having a table. In the start situation there is a budget of
+100 Euros. A solution is buying a table board and four table legs, and
+assembling these.  The RDF version generalizes the example by permitting the
+user to supply the start budget and the goal object.
+
+<p style="text-align:center">
+<a name="img-query-params">
+<img src="images/table-query-params.png" alt="[Screenshot]" border=2>
+</a>
+</p>
+
+Suitable alternatives for <i>GoalObject</i> are <i>...#tableBoard</i> and
+<i>...#tableLeg</i>, which all can be achieved by plans with a single buying
+action.  If <i>StartBudget</i> is too small, the planner stops
+after the timeout without finding a plan.
+<p>
+Parameters in queries are specified with an extension of the
+<a href="#sec-vars">variable mechanism that has been described
+in the context of rules</a>. The following fragment of the
+<i>table.rdf</i> illustrates what is behind the query just shown.
+
+<pre>
+  &lt;inf:Query rdf:ID="queryTable"
+    rdfs:comment="From a given budget to having a world object."&gt;
+
+    &lt;inf:parameter&gt;
+      &lt;inf:Parameter
+	inf:parameterVar="GoalObject"
+	rdfs:comment="The goal is having this world object."
+	inf:parameterDefaultValue="http://www.infraengine.com/examples/table#table" /&gt;
+    &lt;/inf:parameter&gt;
+
+    &lt;inf:parameter&gt;
+      &lt;inf:Parameter
+	inf:parameterVar="StartBudget"
+	rdfs:comment="The initially given budget."
+	inf:parameterDefaultValue="100" /&gt;
+    &lt;/inf:parameter&gt;
+
+    &lt;inf:goal rdf:parseType="Literal"&gt;
+      &lt;ex:have&gt;
+        &lt;ex:haveObject&gt;
+          &lt;ex:WorldObject inf:var="GoalObject" /&gt;
+        &lt;/ex:haveObject&gt;
+      &lt;/ex:have&gt;
+    &lt;/inf:goal&gt;
+
+    &lt;inf:start rdf:parseType="Literal"&gt;
+      &lt;ex:budget&gt;
+	&lt;ex:budgetAmount&gt;
+           &lt;inf:Literal inf:var="StartBudget" /&gt;
+        &lt;/ex:budgetAmount&gt;
+      &lt;/ex:budget&gt;
+    &lt;/inf:start&gt;
+
+  &lt;/inf:Query&gt;
+</pre>
+
+
+<h2><a name="sec-constraints">10. Arithmetic Constraints
+in Rules and Queries</a></h2>
+
+The <a href="planner/planner_manual.html#constr"> constraint mechanism of the
+<i>Liner</i> planning system</a> is also available for rules and queries in
+the RDF representation.  Aside of the properties listed in Sections <a
+href="#sec-rules"><i>Rules</i></a> and <a href="#queries"><i>Queries in View
+of the Query Designer</i></a>, a superclass of both <i>inf:Rule</i> and
+<i>inf:Query</i> is the domain of the <i>inf:constrained</i> property, which
+specifies constraints between variables.  The following fragment of
+<i>table.rdf</i> illustrates the use of the <i>inf:constrained</i> property.
+
+<pre>
+  &lt;inf:Rule rdf:about="buyingRule"
+    rdfs:comment="The agent buys a world object."&gt;
+
+    ...
+
+    &lt;inf:constrained rdf:parseType="Literal"&gt;
+      &lt;inf:ArithmeticConstraint
+	    inf:expression="NewBudget =:= OldBudget - Price" /&gt;
+      &lt;inf:ArithmeticConstraint
+	    inf:expression="NewBudget &gt;= 0" /&gt;
+    &lt;/inf:constrained&gt;
+ 
+  &lt;/inf:Rule&gt;
+</pre>
+
+<h2><a name="blocks-rdf">Appendix: The Blocks RDF Document</a></h2>
+<p>
+
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE rdf:RDF SYSTEM "blocks_generated.dtd" []&gt; 
+
+&lt;rdf:RDF
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:inf="http://www.infraengine.com/planner/"
+  xml:base="http://www.infraengine.com/examples/blocks"
+  xmlns:bs="http://www.infraengine.com/examples/blocks#" &gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Objects in the Blocks World --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;rdfs:Class rdf:ID="WorldObject"
+    rdfs:comment="An object in the blocks world."/&gt;
+  
+  &lt;rdfs:Class rdf:ID="Block"
+    rdfs:comment="A block that can be moved." &gt;
+    &lt;rdfs:subClassOf rdf:resource="#WorldObject" /&gt;
+  &lt;/rdfs:Class&gt;
+
+  &lt;rdfs:Class rdf:ID="Table"
+    rdfs:comment="A table with blocks on it." &gt;
+    &lt;rdfs:subClassOf rdf:resource="#WorldObject" /&gt;
+  &lt;/rdfs:Class&gt;
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Fluents --&gt;
+  &lt;!-- ================================================================== --&gt;
+    
+  &lt;!-- Fluent "on(top:Block, bottom:WorldObject)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="on" 
+    rdfs:comment="Fluent: One block is on top of the other."/&gt;
+  
+  &lt;rdf:Property rdf:ID="onTop"
+    rdfs:comment="Fluent parameter: Top block." &gt;
+    &lt;rdfs:domain rdf:resource="#on" /&gt;
+    &lt;rdfs:range rdf:resource="#Block" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;rdf:Property rdf:ID="onBottom"
+    rdfs:comment="Fluent parameter: Bottom block." &gt;
+    &lt;rdfs:domain rdf:resource="#on" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;!-- Fluent "clear(object:WorldObject)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="clear"
+    rdfs:comment="Fluent: The object is clear."/&gt;
+  
+  &lt;rdf:Property rdf:ID="clearWorldObject"
+    rdfs:comment="Fluent parameter: The clear object." &gt;
+    &lt;rdfs:domain rdf:resource="#clear" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- The PutOn Action --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;!-- Action "PutOn(block:Block, from:WorldObject, to:WorldObject)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="PutOn"
+    rdfs:comment="Action: Put a block on to another block or the table." /&gt;
+  
+  &lt;rdf:Property rdf:ID="putOnBlock"
+    rdfs:comment="Action parameter: The block that is moved."&gt;
+    &lt;rdfs:domain rdf:resource="#PutOn" /&gt;
+    &lt;rdfs:range rdf:resource="#Block" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;rdf:Property rdf:ID="putOnFrom"
+    rdfs:comment="Action parameter: The object on which the block
+    was lying before." &gt;
+    &lt;rdfs:domain rdf:resource="#PutOn" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;rdf:Property rdf:ID="putOnTo"
+    rdfs:comment="Action parameter: The object on which the block
+    is put." &gt;
+    &lt;rdfs:domain rdf:resource="#PutOn" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Rules --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;!-- Rule 1: We have a table that is always clear. --&gt;
+
+  &lt;inf:Rule rdf:ID="ruleTableAlwaysClear"
+    rdfs:comment="We have an instance of Table that is always clear."&gt;
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject&gt;
+	  &lt;bs:Table rdf:about="#table" /&gt;
+	&lt;/bs:clearWorldObject&gt;
+      &lt;/bs:clear&gt;
+    &lt;/inf:after&gt;
+
+  &lt;/inf:Rule&gt;
+
+  &lt;!-- Rule 2: The effect of PutOn --&gt;
+
+  &lt;inf:Rule rdf:ID="rulePutOn"
+    rdfs:comment="The effect of PutOn."&gt;
+
+    &lt;inf:action rdf:parseType="Literal"&gt;
+      &lt;bs:PutOn&gt;
+	&lt;bs:putOnBlock&gt;&lt;bs:Block inf:var="Moved"/&gt;&lt;/bs:putOnBlock&gt;
+	&lt;bs:putOnFrom&gt;&lt;bs:WorldObject inf:var="From"/&gt;&lt;/bs:putOnFrom&gt;
+	&lt;bs:putOnTo&gt;&lt;bs:WorldObject inf:var="To"/&gt;&lt;/bs:putOnTo&gt;
+      &lt;/bs:PutOn&gt;
+    &lt;/inf:action&gt;
+
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;bs:on&gt;
+	&lt;bs:onTop&gt;&lt;bs:Block inf:var="Moved"/&gt;&lt;/bs:onTop&gt;
+	&lt;bs:onBottom&gt;&lt;bs:WorldObject inf:var="To"/&gt;&lt;/bs:onBottom&gt;
+      &lt;/bs:on&gt;
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject&gt;&lt;bs:WorldObject inf:var="From"/&gt;&lt;/bs:clearWorldObject&gt;
+      &lt;/bs:clear&gt;
+    &lt;/inf:after&gt;
+
+    &lt;inf:remaining rdf:parseType="Literal"&gt;
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject&gt;&lt;bs:Block inf:var="Moved"/&gt;&lt;/bs:clearWorldObject&gt;
+      &lt;/bs:clear&gt;
+    &lt;/inf:remaining&gt;
+
+    &lt;inf:before rdf:parseType="Literal"&gt;
+      &lt;bs:on&gt;
+	&lt;bs:onTop&gt;&lt;bs:Block inf:var="Moved"/&gt;&lt;/bs:onTop&gt;
+	&lt;bs:onBottom&gt;&lt;bs:WorldObject inf:var="From"/&gt;&lt;/bs:onBottom&gt;
+      &lt;/bs:on&gt;
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject&gt;&lt;bs:WorldObject inf:var="To"/&gt;&lt;/bs:clearWorldObject&gt;
+      &lt;/bs:clear&gt;
+    &lt;/inf:before&gt;
+
+  &lt;/inf:Rule&gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Queries --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;inf:Query rdf:ID="querySussman"
+    rdfs:comment="The Sussman anomaly."&gt;
+
+    &lt;inf:goal rdf:parseType="Literal"&gt;
+
+      &lt;bs:on&gt;
+	&lt;bs:onTop rdf:resource="#a" /&gt;
+	&lt;bs:onBottom rdf:resource="#b" /&gt;
+      &lt;/bs:on&gt;
+
+      &lt;bs:on&gt;
+	&lt;bs:onTop rdf:resource="#b" /&gt;
+	&lt;bs:onBottom rdf:resource="#c" /&gt;
+      &lt;/bs:on&gt;
+
+    &lt;/inf:goal&gt;
+    
+
+    &lt;inf:start rdf:parseType="Literal"&gt;
+
+      &lt;bs:on&gt;
+	&lt;bs:onTop rdf:resource="#b" /&gt;
+	&lt;bs:onBottom rdf:resource="#table" /&gt;
+      &lt;/bs:on&gt;
+
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject rdf:resource="#b" /&gt;
+      &lt;/bs:clear&gt;
+
+      &lt;bs:on&gt;
+	&lt;bs:onTop rdf:resource="#a" /&gt;
+	&lt;bs:onBottom rdf:resource="#table" /&gt;
+      &lt;/bs:on&gt;
+
+      &lt;bs:on&gt;
+	&lt;bs:onTop rdf:resource="#c" /&gt;
+	&lt;bs:onBottom rdf:resource="#a" /&gt;
+      &lt;/bs:on&gt;
+
+      &lt;bs:clear&gt;
+	&lt;bs:clearWorldObject rdf:resource="#c" /&gt;
+      &lt;/bs:clear&gt;
+
+    &lt;/inf:start&gt;
+
+  &lt;/inf:Query&gt;
+  
+&lt;/rdf:RDF&gt;
+</pre>
+
+<h2><a name="table-rdf">Appendix: The Table RDF Document</a></h2>
+
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE rdf:RDF SYSTEM "table_generated.dtd" [
+         &lt;!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#"&gt;
+         &lt;!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#"&gt; 
+]&gt;
+
+&lt;rdf:RDF
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:inf="http://www.infraengine.com/planner/"
+  xml:base="http://www.infraengine.com/examples/table"
+  xmlns:ex="http://www.infraengine.com/examples/table#" &gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Objects in the World --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;rdfs:Class rdf:ID="WorldObject"
+    rdfs:comment="A world object."/&gt;
+  
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Fluents --&gt;
+  &lt;!-- ================================================================== --&gt;
+    
+  &lt;!-- Fluent "have(object:WorldObject)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="have" 
+    rdfs:comment="Fluent: The agent has a world object at his disposal."/&gt;
+  
+  &lt;rdf:Property rdf:ID="haveObject"
+    rdfs:comment="Fluent parameter: The world object." &gt;
+    &lt;rdfs:domain rdf:resource="#have" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;!-- Fluent "budget(amount:Number)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="budget" 
+    rdfs:comment="Fluent: The agent has an amount of Euros at his disposal."/&gt;
+  
+  &lt;rdf:Property rdf:ID="budgetAmount"
+    rdfs:comment="Fluent parameter: The amount of Euros." &gt;
+    &lt;rdfs:domain rdf:resource="#budget" /&gt;
+    &lt;rdfs:range rdf:resource="&amp;rdfs;Literal" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;!-- Fluent "offered(object:WorldObject, price:Number)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="offered" 
+    rdfs:comment="Fluent: A world object is on offer at a certain price."/&gt;
+  
+  &lt;rdf:Property rdf:ID="offeredObject"
+    rdfs:comment="Fluent parameter: The offered world object." &gt;
+    &lt;rdfs:domain rdf:resource="#offered" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;rdf:Property rdf:ID="offeredPrice"
+    rdfs:comment="Fluent parameter: The price of the offering." &gt;
+    &lt;rdfs:domain rdf:resource="#offered" /&gt;
+    &lt;rdfs:range rdf:resource="&amp;rdfs;Literal" /&gt;
+  &lt;/rdf:Property&gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Actions --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;!-- Action "Buy(object:WorldObject, price:Literal)" --&gt;
+
+  &lt;rdfs:Class rdf:ID="Buy"
+    rdfs:comment="Action: The agent buys a world object." &gt;
+  &lt;/rdfs:Class&gt;
+
+  &lt;rdf:Property rdf:ID="buyObject"
+    rdfs:comment="Action parameter: The bought world object."&gt;
+    &lt;rdfs:domain rdf:resource="#Buy" /&gt;
+    &lt;rdfs:range rdf:resource="#WorldObject" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;rdf:Property rdf:ID="buyPrice"
+    rdfs:comment="Action parameter: The price."&gt;
+    &lt;rdfs:domain rdf:resource="#Buy" /&gt;
+    &lt;rdfs:range rdf:resource="&amp;rdfs;Literal" /&gt;
+  &lt;/rdf:Property&gt;
+
+  &lt;!-- Action "AssembleTable" --&gt;
+
+  &lt;rdfs:Class rdf:ID="AssembleTable"
+    rdfs:comment="Action: The agent assembles a table." &gt;
+  &lt;/rdfs:Class&gt;
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Rules --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;!-- Rule 1: The agent buys a world object. --&gt;
+
+  &lt;inf:Rule rdf:about="buyingRule"
+    rdfs:comment="The agent buys a world object."&gt;
+
+    &lt;inf:action rdf:parseType="Literal"&gt;
+      &lt;ex:Buy&gt;
+	&lt;ex:buyObject&gt;&lt;ex:WorldObject inf:var="Object"/&gt;&lt;/ex:buyObject&gt;
+	&lt;ex:buyPrice&gt;&lt;inf:Literal inf:var="Price" /&gt;&lt;/ex:buyPrice&gt;
+      &lt;/ex:Buy&gt;
+    &lt;/inf:action&gt;
+
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;ex:have&gt;
+	&lt;ex:haveObject&gt;&lt;ex:WorldObject inf:var="Object" /&gt;&lt;/ex:haveObject&gt;
+      &lt;/ex:have&gt;
+      &lt;ex:budget&gt;
+	&lt;ex:budgetAmount&gt;
+           &lt;inf:Literal inf:var="NewBudget" /&gt;
+        &lt;/ex:budgetAmount&gt;
+      &lt;/ex:budget&gt;
+    &lt;/inf:after&gt;
+
+    &lt;inf:before rdf:parseType="Literal"&gt;
+      &lt;ex:offered&gt;
+	&lt;ex:offeredObject&gt;
+          &lt;ex:WorldObject inf:var="Object" /&gt;
+       &lt;/ex:offeredObject&gt;
+	&lt;ex:offeredPrice&gt;
+          &lt;inf:Literal inf:var="Price" /&gt;
+        &lt;/ex:offeredPrice&gt;
+      &lt;/ex:offered&gt;
+      &lt;ex:budget&gt;
+	&lt;ex:budgetAmount&gt;
+          &lt;inf:Literal inf:var="OldBudget" /&gt;
+        &lt;/ex:budgetAmount&gt;
+      &lt;/ex:budget&gt;
+    &lt;/inf:before&gt;
+
+    &lt;inf:constrained rdf:parseType="Literal"&gt;
+      &lt;inf:ArithmeticConstraint
+	    inf:expression="NewBudget =:= OldBudget - Price" /&gt;
+      &lt;inf:ArithmeticConstraint
+	    inf:expression="NewBudget &gt;= 0" /&gt;
+    &lt;/inf:constrained&gt;
+
+  &lt;/inf:Rule&gt;
+
+
+  &lt;!-- Rule 2: The agent assembles a table. --&gt;
+
+  &lt;inf:Rule rdf:about="assembleTableRule"
+    rdfs:comment="The agent assembles a table from four legs and a board."&gt;
+
+    &lt;inf:action rdf:parseType="Literal"&gt;
+      &lt;ex:AssembleTable /&gt;
+    &lt;/inf:action&gt;
+
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#table" /&gt;&lt;/ex:have&gt;
+    &lt;/inf:after&gt;
+
+    &lt;inf:before rdf:parseType="Literal"&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#tableBoard" /&gt;&lt;/ex:have&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#tableLeg" /&gt;&lt;/ex:have&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#tableLeg" /&gt;&lt;/ex:have&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#tableLeg" /&gt;&lt;/ex:have&gt;
+      &lt;ex:have&gt;&lt;ex:haveObject rdf:resource="#tableLeg" /&gt;&lt;/ex:have&gt;
+    &lt;/inf:before&gt;
+
+  &lt;/inf:Rule&gt;
+
+
+  &lt;!-- Facts --&gt;
+
+  &lt;inf:Rule rdf:about="offeredTableBoardFact"&gt;
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;ex:offered&gt; 
+         &lt;ex:offeredObject rdf:resource="#tableBoard" /&gt;
+         &lt;ex:offeredPrice&gt;10&lt;/ex:offeredPrice&gt;
+      &lt;/ex:offered&gt;
+    &lt;/inf:after&gt;
+  &lt;/inf:Rule&gt;
+
+  &lt;inf:Rule rdf:about="offeredTableLegFact"&gt;
+    &lt;inf:after rdf:parseType="Literal"&gt;
+      &lt;ex:offered&gt; 
+         &lt;ex:offeredObject rdf:resource="#tableLeg" /&gt;
+         &lt;ex:offeredPrice&gt;5&lt;/ex:offeredPrice&gt;
+      &lt;/ex:offered&gt;
+    &lt;/inf:after&gt;
+  &lt;/inf:Rule&gt;
+
+
+
+  &lt;!-- ================================================================== --&gt;
+  &lt;!-- Queries --&gt;
+  &lt;!-- ================================================================== --&gt;
+
+  &lt;inf:Query rdf:ID="queryTable"
+    rdfs:comment="From a given budget to having a world object."&gt;
+
+    &lt;inf:parameter&gt;
+      &lt;inf:Parameter
+	inf:parameterVar="GoalObject"
+	rdfs:comment="The goal is having this world object."
+	inf:parameterDefaultValue="http://www.infraengine.com/examples/table#table" /&gt;
+    &lt;/inf:parameter&gt;
+
+    &lt;inf:parameter&gt;
+      &lt;inf:Parameter
+	inf:parameterVar="StartBudget"
+	rdfs:comment="The initially given budget."
+	inf:parameterDefaultValue="100" /&gt;
+    &lt;/inf:parameter&gt;
+
+    &lt;inf:goal rdf:parseType="Literal"&gt;
+      &lt;ex:have&gt;
+        &lt;ex:haveObject&gt;
+          &lt;ex:WorldObject inf:var="GoalObject" /&gt;
+        &lt;/ex:haveObject&gt;
+      &lt;/ex:have&gt;
+    &lt;/inf:goal&gt;
+
+    &lt;inf:start rdf:parseType="Literal"&gt;
+      &lt;ex:budget&gt;
+	&lt;ex:budgetAmount&gt;
+           &lt;inf:Literal inf:var="StartBudget" /&gt;
+        &lt;/ex:budgetAmount&gt;
+      &lt;/ex:budget&gt;
+    &lt;/inf:start&gt;
+
+  &lt;/inf:Query&gt;
+
+&lt;/rdf:RDF&gt;
+</pre>
+
+
+
+
+<hr>
+
+Christoph Wernhard 
+(<a href="mailto:info@cs.christophwernhard.com">info@cs.christophwernhard.com</a>)
+
+</body>
+</html>

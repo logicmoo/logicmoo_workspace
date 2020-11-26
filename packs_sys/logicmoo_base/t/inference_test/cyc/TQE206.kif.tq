@@ -1,0 +1,98 @@
+(note TQE206)
+(subProcess Iranian-TalibanConflict-1998 UNMediationOfIranian-TalibanConflict) 
+
+(instance Iranian-TalibanConflict-1998 ConflictEvent) 
+
+(subProcess Iranian-TalibanConflict-1998 TalibanHoldHostages) 
+
+(hasPositionIn LakhdarBrahimi UnitedNationsOrganization Envoy-Diplomatic) 
+
+(mediators UNMediationOfIranian-TalibanConflict LakhdarBrahimi) 
+
+(directingAgent TalibanHoldHostages Taliban) 
+
+(inReactionTo UNMediationOfIranian-TalibanConflict TalibanHoldHostages) 
+
+(objectControlled TalibanHoldHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+
+(instance UNMediationOfIranian-TalibanConflict 
+ (AttemptingFn ResolveByMediation)) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn 
+ (CitizensFn Iran))) 
+
+(instance TalibanHoldHostages HoldingHostages) 
+
+(subProcess Iranian-TalibanConflict-1998 UNMediationOfIranian-TalibanConflict) 
+
+(instance Iranian-TalibanConflict-1998 ConflictEvent) 
+
+(subProcess Iranian-TalibanConflict-1998 TalibanHoldHostages) 
+
+(directingAgent TalibanHoldHostages Taliban) 
+
+(subclass DeclaringCeaseFire MakingAnAgreement) 
+
+(topicOfInfoTransfer SixPlusTwoCallForCeaseFire DeclaringCeaseFire) 
+
+(inReactionTo UNMediationOfIranian-TalibanConflict TalibanHoldHostages) 
+
+(objectControlled TalibanHoldHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+
+(inReactionTo SixPlusTwoCallForCeaseFire TalibanHoldHostages) 
+
+(senderOfInfo SixPlusTwoCallForCeaseFire SixPlusTwo-InternationalOrganization) 
+
+(instance SixPlusTwoCallForCeaseFire DiplomaticRequest) 
+
+(instance UNMediationOfIranian-TalibanConflict 
+ (AttemptingFn ResolveByMediation)) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn 
+ (CitizensFn Iran))) 
+
+(instance TalibanHoldHostages HoldingHostages) 
+
+(implies 
+  (and 
+    (instance ?REQ DiplomaticRequest) 
+    (inReactionTo ?REQ ?SIT) 
+    (senderOfInfo ?REQ ?MEDIATOR) 
+    (topicOfInfoTransfer ?REQ ?AGREEING) 
+    (subclass ?AGREEING MakingAnAgreement)) 
+  (mediators ?SIT ?MEDIATOR)) 
+
+
+(query (findall (?ORGANIZATION ?POSITION ?WHO)
+(exists 
+               (?CONFLICT) 
+               (exists 
+                   (?HOLDING) 
+                   (exists 
+                       (?RESOLVING) 
+                       (exists 
+                           (?HOSTAGES) 
+                           (and 
+                               (instance ?CONFLICT ConflictEvent) 
+                               (instance ?HOLDING HoldingHostages) 
+                               (instance ?RESOLVING 
+                                   (AttemptingFn ResolveByMediation)) 
+                               (instance ?HOSTAGES 
+                                   (GroupFn 
+                                       (CitizensFn Iran))) 
+                               (subProcess ?CONFLICT ?HOLDING) 
+                               (subProcess ?CONFLICT ?RESOLVING) 
+                               (inReactionTo ?RESOLVING ?HOLDING) 
+                               (objectControlled ?HOLDING ?HOSTAGES) 
+                               (agent ?HOLDING Taliban) 
+                               (or 
+                                   (mediators ?HOLDING ?WHO) 
+                                   (and 
+                                       (mediators ?RESOLVING ?WHO) 
+                                       (hasPositionIn ?WHO ?ORGANIZATION ?POSITION))))))))))
+
+(answer UnitedNationsOrganization Envoy-Diplomatic LakhdarBrahimi)
+(answer ?? ?? SixPlusTwo-InternationalOrganization)
+(end_of_file)

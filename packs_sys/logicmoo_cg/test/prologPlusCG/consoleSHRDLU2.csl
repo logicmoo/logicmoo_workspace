@@ -1,0 +1,55 @@
+************************************************
+         PROLOG+CG, Version 3.0, 2004         
+             (c) Dr. Adil KABBAJ              
+                  Amine Group             
+************************************************
+
+?- loadOntology("C:\Amine\AmineCourant\src\aminePlatform\classes\aminePlatform\samples\ontology\ManOntology2.xml").
+yes
+?- consult(["SHRDLU2.pcg"]).
+yes
+?- debug(true).
+yes
+?- nlp.
+|: the big man is red.
+ no
+?- nlp.
+|: the big man is red.
+ no
+?- reconsult(["SHRDLU2.pcg"]).
+yes
+?- nlp.
+|: the big man is red.
+[State = [Man #0] -
+      -colorOf->[Color = red],
+      -sizeOf->[Size = big]]-modalityOf->[Modality = declarative]
+ yes
+?- nlp.
+|: the big man is a small man.
+ no
+?- nlp.
+|: the big man is a small man.
+ no
+?- nlp.
+|: the big man is a red man.
+[State = [Man #0] -
+      -sizeOf->[Size = big],
+      -colorOf->[Color = red]]-modalityOf->[Modality = declarative]
+ yes
+?- nlp.
+|: the big man push the big pyramid on the red sphere.
+[Action = [Push #0] -
+       -agnt->[Man]-sizeOf->[Size = big],
+       -obj->[Pyramid]-sizeOf->[Size = big],
+       -on->[Sphere]-colorOf->[Color = red]]-modalityOf->[Modality = declarative]
+ yes
+?- nlp.
+|: push the big red sphere on the small pyramid.
+[Action = [Push #0] -
+       -agnt->[Human],
+       -obj->[Sphere #1] -
+                      -sizeOf->[Size = big],
+                      -colorOf->[Color = red];
+       -on->[Pyramid]-sizeOf->[Size = small]]-modalityOf->[Modality = imperative]
+ yes
+?- 

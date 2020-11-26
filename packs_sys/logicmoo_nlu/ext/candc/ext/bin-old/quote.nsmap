@@ -1,0 +1,9 @@
+
+struct Namespace namespaces[] =
+{ {"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/"},
+  {"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/"},
+  {"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance"},
+  {"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema"},
+  {"ns", "urn:xmethods-delayed-quotes"},
+  {NULL, NULL}
+};

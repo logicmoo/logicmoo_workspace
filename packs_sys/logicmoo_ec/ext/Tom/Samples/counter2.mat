@@ -1,0 +1,8 @@
+box diamond box not q.
+
+box diamond q.
+
+%diamond a : box a : not p.
+
+%# modal_axiom_schema(transitive,a).
+%%%%# modal_axiom_schema(reflexive,a).

@@ -1,0 +1,12 @@
+(note "Unification over Formulas Level 0")
+
+(goals Bob BeHappy)
+
+(query (goals Bob ?H))
+
+(answer  BeHappy)
+
+
+
+
+

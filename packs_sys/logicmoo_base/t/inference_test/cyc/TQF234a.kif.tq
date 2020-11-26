@@ -1,0 +1,106 @@
+(note TQF234a)
+
+(subProcess Y2ScenarioConflict Y2Stage4-AgreementToHoldJointExercises) 
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+(instance Y2Stage4-IranIncreasesTroopsOnAbuMusa Process) 
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage4-IranIncreasesTroopsOnAbuMusa) 
+
+(topicOfInfoTransfer Y2Stage4-AgreementToHoldJointExercises 
+  (thereExists ?EXERCISE 
+    (and 
+      (instance ?EXERCISE MilitaryExercise) 
+      (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland)
+      (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+      (eventOccursAt ?EXERCISE PersianGulf) 
+      (directingAgent ?EXERCISE GulfCooperationCouncil)))) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(implies 
+  (and 
+    (instance ?SIT Process) 
+    (inReactionTo ?ACT ?SIT)) 
+  (eventOutcomes ?SIT ?ACT)) 
+
+(instance Y2Scenario-IranianNavalExercise Process) 
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Scenario-IranianNavalExercise) 
+
+(implies 
+  (and 
+    (instance ?EVENT1 Process) 
+    (instance ?EVENT2 Process) 
+    (startingDate ?EVENT1 (DateInSituationFn CalendarDay ?M ?SIT)) 
+    (endingDate ?EVENT2 (DateInSituationFn CalendarDay ?N ?SIT)) 
+    (greaterThan ?M ?N)) 
+  (startsAfterEndingOf ?EVENT1 ?EVENT2)) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises DiplomaticAction) 
+(subclass DiplomaticAction Process) 
+
+(existant Y2Stage3-TerroristAttack 
+ (DateInSituationFn CalendarDay 41 Y2ScenarioConflict)) 
+
+(existant Y2Stage4-AgreementToHoldJointExercises 
+ (DateInSituationFn CalendarDay 49 Y2ScenarioConflict)) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises PoliticalEvent) 
+(subclass PoliticalEvent Process) 
+
+(implies 
+  (and 
+    (instance ?EARLIER Process) 
+    (inReactionTo ?LATER ?EARLIER) 
+    (startsAfterEndingOf ?LATER ?EARLIER)) 
+  (postEvents ?EARLIER ?LATER)) 
+
+(inverse postEvents startsAfterEndingOf) 
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TerroristAttack) 
+(instance Y2Stage3-TerroristAttack Process) 
+(startsAfterEndingOf Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TerroristAttack) 
+(subProcess Y2ScenarioConflict Y2Stage4-AgreementToHoldJointExercises) 
+(agent Y2Stage4-AgreementToHoldJointExercises UnitedStatesOfAmerica) 
+(postEvents Y2Stage3-TerroristAttack Y2Stage4-AgreementToHoldJointExercises) 
+(instance Y2Stage4-AgreementToHoldJointExercises MakingAnAgreement) 
+
+(existant Y2Stage3-TruckBombingInRiyadh 
+ (DateInSituationFn CalendarDay 38 Y2ScenarioConflict)) 
+
+(instance Y2Stage4-AgreementToHoldJointExercises Process) 
+
+(existant Y2Stage4-AgreementToHoldJointExercises 
+ (DateInSituationFn CalendarDay 49 Y2ScenarioConflict)) 
+
+(instance Y2Stage3-TruckBombingInRiyadh Process) 
+
+(instance Y2Stage3-TruckBombingInRiyadh 
+ (AttemptingFn CoercingAnAgent)) 
+
+(subclass 
+ (AttemptingFn CoercingAnAgent) Process) 
+
+(inReactionTo Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TruckBombingInRiyadh) 
+(startsAfterEndingOf Y2Stage4-AgreementToHoldJointExercises Y2Stage3-TruckBombingInRiyadh)  
+(postEvents Y2Stage3-TruckBombingInRiyadh Y2Stage4-AgreementToHoldJointExercises) 
+
+(query (finall ?RELEVANT-EVENT
+  (thereExists ?AGREEING 
+    (and 
+      (agent ?AGREEING UnitedStatesOfAmerica) 
+      (temporallySubsumes Y2ScenarioConflict ?AGREEING) 
+      (instance ?AGREEING MakingAnAgreement) 
+      (topicOfInfoTransfer ?AGREEING 
+        (thereExists ?EXERCISE 
+          (and 
+            (instance ?EXERCISE MilitaryExercise) 
+            (directingAgent ?EXERCISE UnitedKingdomOfGreatBritainAndNorthernIreland) 
+            (directingAgent ?EXERCISE UnitedStatesOfAmerica) 
+            (eventOccursAt ?EXERCISE PersianGulf) 
+            (directingAgent ?EXERCISE GulfCooperationCouncil))))
+      (or 
+        (eventOutcomes ?RELEVANT-EVENT ?AGREEING) 
+        (reasonForAction ?AGREEING ?PROPOSITIONAL-ATTITUDE ?AGENT ?REASON))))))
+
+(answer Y2Stage4-IranIncreasesTroopsOnAbuMusa)
+(answer Y2Scenario-IranianNavalExercise)
+(answer Y2Stage3-TerroristAttack)
+(answer Y2Stage3-TruckBombingInRiyadh)

@@ -1,0 +1,14 @@
+In dialogue processing applications where words like ``I'' and ``me''
+are used, it can be important to know the identity of the speaker; for
+example, in the Calendar application, one could say ``When is my next
+meeting?'' or ``Am I attending a meeting on Friday?'' When doing
+regression testing, it is then useful to be able to set a notional
+speaker, so that responses to time-dependent utterances stay stable.
+
+The {\tt SET\_\-NOTIONAL\_\-SPEAKER} command makes it possible to set the identity 
+of the notional speaker from the command-line. The argument should be an atom, e.g.
+\begin{verbatim}
+SET_NOTIONAL_SPEAKER manny
+\end{verbatim}
+The notional speaker can be retrieved using the predicate 
+{\tt get\_\-notional\_\-time/1} in {\tt PrologLib/utilities.pl}.

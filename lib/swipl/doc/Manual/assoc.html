@@ -1,0 +1,476 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="apply.html">
+<link rel="next" href="broadcast.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="apply.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="broadcast.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:assoc"><a id="sec:A.4"><span class="sec-nr">A.4</span> <span class="sec-title">library(assoc): 
+Association lists</span></a></h2>
+
+<a id="sec:assoc"></a>
+<a id="sec:lib:assoc"></a>
+
+<p>Authors: <em>Richard A. O'Keefe, L.Damas, V.S.Costa and <a class="url" href="https://www.metalevel.at">Markus 
+Triska</a></em>
+
+<p><h3 id="sec:assoc-introduction"><a id="sec:A.4.1"><span class="sec-nr">A.4.1</span> <span class="sec-title">Introduction</span></a></h3>
+
+<p><a id="sec:assoc-introduction"></a>
+
+<p>An <i>association list</i> as implemented by this library is a 
+collection of unique <i>keys</i> that are associated to <i>values</i>. 
+Keys must be ground, values need not be.
+
+<p>An association list can be used to <i>fetch</i> elements via their 
+keys and to <i>enumerate</i> its elements in ascending order of their 
+keys.
+
+<p>This library uses <b>AVL trees</b> to implement association lists. 
+This means that
+
+<p>
+<ul class="compact">
+<li>inserting a key
+<li>changing an association
+<li>fetching a single element
+</ul>
+
+<p>are all <i>O(<code>log(N)</code>)</i> <i>worst-case</i> (and 
+expected) time operations, where
+<i>N</i> denotes the number of elements in the association list.
+
+<p>The logarithmic overhead is often acceptable in practice. Notable 
+advantages of association lists over several other methods are:
+
+<p>
+<ul class="latex">
+<li><code>library(assoc)</code> is written entirely in Prolog, making it 
+portable to other systems
+<li>the interface predicates fit the declarative nature of Prolog, 
+avoiding destructive updates to terms
+<li>AVL trees scale very predictably and can be used to represent sparse 
+arrays efficiently.
+</ul>
+
+<p><h3 id="sec:assoc-creation"><a id="sec:A.4.2"><span class="sec-nr">A.4.2</span> <span class="sec-title">Creating 
+association lists</span></a></h3>
+
+<p><a id="sec:assoc-creation"></a>
+
+<p>An association list is <i>created</i> with one of the following 
+predicates:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="empty_assoc/1"><strong>empty_assoc</strong>(<var>?Assoc</var>)</a></dt>
+<dd class="defbody">
+Is true if <var>Assoc</var> is the empty association list.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_to_assoc/2"><strong>list_to_assoc</strong>(<var>+Pairs, 
+-Assoc</var>)</a></dt>
+<dd class="defbody">
+Create an association from a list <var>Pairs</var> of Key-Value pairs. 
+List must not contain duplicate keys.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>domain_error(unique_key_pairs, List)</code> if List contains 
+duplicate keys
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="ord_list_to_assoc/2"><strong>ord_list_to_assoc</strong>(<var>+Pairs, 
+-Assoc</var>)</a></dt>
+<dd class="defbody">
+<var>Assoc</var> is created from an ordered list <var>Pairs</var> of 
+Key-Value pairs. The pairs must occur in strictly ascending order of 
+their keys.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>domain_error(key_ordered_pairs, List)</code> if pairs are not 
+ordered.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:assoc-querying"><a id="sec:A.4.3"><span class="sec-nr">A.4.3</span> <span class="sec-title">Querying 
+association lists</span></a></h3>
+
+<p><a id="sec:assoc-querying"></a>
+
+<p>An association list can be <i>queried</i> with:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="get_assoc/3"><strong>get_assoc</strong>(<var>+Key, 
++Assoc, -Value</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Value</var> is an association in <var>Assoc</var>.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>type_error(assoc, Assoc)</code> if <var>Assoc</var> is not an 
+association list.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="get_assoc/5"><strong>get_assoc</strong>(<var>+Key, 
++Assoc0, ?Val0, ?Assoc, ?Val</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Val0</var> is in <var>Assoc0</var> and <var>Key</var>-<var>Val</var> 
+is in <var>Assoc</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="max_assoc/3"><strong>max_assoc</strong>(<var>+Assoc, 
+-Key, -Value</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Value</var> is in <var>Assoc</var> and <var>Key</var> 
+is the largest key.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="min_assoc/3"><strong>min_assoc</strong>(<var>+Assoc, 
+-Key, -Value</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Value</var> is in assoc and <var>Key</var> 
+is the smallest key.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="gen_assoc/3"><strong>gen_assoc</strong>(<var>?Key, 
++Assoc, ?Value</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Value</var> is an association in <var>Assoc</var>. 
+Enumerates keys in ascending order on backtracking.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="assoc.html#get_assoc/3">get_assoc/3</a>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:assoc-modifications"><a id="sec:A.4.4"><span class="sec-nr">A.4.4</span> <span class="sec-title">Modifying 
+association lists</span></a></h3>
+
+<p><a id="sec:assoc-modifications"></a>
+
+<p>Elements of an association list can be changed and inserted with:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="put_assoc/4"><strong>put_assoc</strong>(<var>+Key, 
++Assoc0, +Value, -Assoc</var>)</a></dt>
+<dd class="defbody">
+<var>Assoc</var> is <var>Assoc0</var>, except that <var>Key</var> is 
+associated with
+<var>Value</var>. This can be used to insert and change associations.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="del_assoc/4"><strong>del_assoc</strong>(<var>+Key, 
++Assoc0, ?Value, -Assoc</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-<var>Value</var> is in <var>Assoc0</var>. <var>Assoc</var> 
+is <var>Assoc0</var> with
+<var>Key</var>-<var>Value</var> removed.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="del_min_assoc/4"><strong>del_min_assoc</strong>(<var>+Assoc0, 
+?Key, ?Val, -Assoc</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-Value is in <var>Assoc0</var> and <var>Key</var> 
+is the smallest key.
+<var>Assoc</var> is <var>Assoc0</var> with <var>Key</var>-Value removed. 
+Warning: This will succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> 
+if <var>Assoc0</var> is empty.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="del_max_assoc/4"><strong>del_max_assoc</strong>(<var>+Assoc0, 
+?Key, ?Val, -Assoc</var>)</a></dt>
+<dd class="defbody">
+True if <var>Key</var>-Value is in <var>Assoc0</var> and <var>Key</var> 
+is the greatest key.
+<var>Assoc</var> is <var>Assoc0</var> with <var>Key</var>-Value removed. 
+Warning: This will succeed with <i>no</i> bindings for <var>Key</var> or <var>Val</var> 
+if <var>Assoc0</var> is empty.
+</dd>
+</dl>
+
+<p><h3 id="sec:assoc-conversion"><a id="sec:A.4.5"><span class="sec-nr">A.4.5</span> <span class="sec-title">Conversion 
+predicates</span></a></h3>
+
+<p><a id="sec:assoc-conversion"></a>
+
+<p>Conversion of (parts of) an association list to <i>lists</i> is 
+possible with:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assoc_to_list/2"><strong>assoc_to_list</strong>(<var>+Assoc, 
+-Pairs</var>)</a></dt>
+<dd class="defbody">
+Translate <var>Assoc</var> to a list <var>Pairs</var> of Key-Value 
+pairs. The keys in <var>Pairs</var> are sorted in ascending order.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assoc_to_keys/2"><strong>assoc_to_keys</strong>(<var>+Assoc, 
+-Keys</var>)</a></dt>
+<dd class="defbody">
+True if <var>Keys</var> is the list of keys in <var>Assoc</var>. The 
+keys are sorted in ascending order.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="assoc_to_values/2"><strong>assoc_to_values</strong>(<var>+Assoc, 
+-Values</var>)</a></dt>
+<dd class="defbody">
+True if <var>Values</var> is the list of values in <var>Assoc</var>. <var>Values</var> 
+are ordered in ascending order of the key to which they were associated. <var>Values</var> 
+may contain duplicates.
+</dd>
+</dl>
+
+<p><h3 id="sec:assoc-reasoning"><a id="sec:A.4.6"><span class="sec-nr">A.4.6</span> <span class="sec-title">Reasoning 
+about association lists and their elements</span></a></h3>
+
+<p><a id="sec:assoc-reasoning"></a>
+
+<p>Further inspection predicates of an association list and its elements 
+are:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_assoc/1"><strong>is_assoc</strong>(<var>+Assoc</var>)</a></dt>
+<dd class="defbody">
+True if <var>Assoc</var> is an association list. This predicate checks 
+that the structure is valid, elements are in order, and tree is balanced 
+to the extent guaranteed by AVL trees. I.e., branches of each subtree 
+differ in depth by at most 1.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="map_assoc/2"><strong>map_assoc</strong>(<var>:Pred, 
++Assoc</var>)</a></dt>
+<dd class="defbody">
+True if <var>Pred</var>(Value) is true for all values in <var>Assoc</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="map_assoc/3"><strong>map_assoc</strong>(<var>:Pred, 
++Assoc0, ?Assoc</var>)</a></dt>
+<dd class="defbody">
+Map corresponding values. True if <var>Assoc</var> is <var>Assoc0</var> 
+with <var>Pred</var> applied to all corresponding pairs of of values.
+</dd>
+</dl>
+
+<p></body></html>

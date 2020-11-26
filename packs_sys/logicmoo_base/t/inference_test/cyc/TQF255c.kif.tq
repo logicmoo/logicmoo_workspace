@@ -1,0 +1,54 @@
+(note TQF255c)
+
+(agent ArabLeagueAndGCCSupportUAE GulfCooperationCouncil) 
+(eventOutcomes UAEDemandsIranLeaveTumbs ArabLeagueAndGCCSupportUAE) 
+
+(infoTransferred ArabLeagueAndGCCSupportUAE 
+  (thereExists ?WITHDRAWAL 
+    (and 
+      (instance ?WITHDRAWAL Translation-LocationChange) 
+      (fromLocation ?WITHDRAWAL TheTumbsIslands) 
+      (temporallySubsumes (STIF ?WITHDRAWAL) 
+        (not 
+          (thereExists ?IRANIAN 
+            (and 
+              (instance ?IRANIAN IranianPerson) 
+              (residesInRegion ?IRANIAN TheTumbsIslands)))))))) 
+
+(instance ArabLeagueAndGCCSupportUAE Objecting-CommunicationAct) 
+
+(implies 
+  (and 
+    (instance ?SIT Process) 
+    (inReactionTo ?ACT ?SIT)) 
+  (eventOutcomes ?SIT ?ACT)) 
+
+(instance IranDeniesAccess Process) 
+(inReactionTo ArabLeagueAndGCCSupportUAE IranDeniesAccess) 
+
+(query (findall (?EARLIER-EVENT)
+  (exists 
+    (?CRITICISM) 
+    (and 
+      (instance ?CRITICISM Objecting-CommunicationAct) 
+      (agent ?CRITICISM GulfCooperationCouncil) 
+      (infoTransferred ?CRITICISM 
+        (exists 
+          (?WITHDRAWAL) 
+          (and 
+            (instance ?WITHDRAWAL Translation-LocationChange) 
+            (fromLocation ?WITHDRAWAL TheTumbsIslands) 
+            (temporallySubsumes (STIF ?WITHDRAWAL) 
+              (not 
+                (exists 
+                  (?IRANIAN) 
+                  (and 
+                    (instance ?IRANIAN IranianPerson) 
+                    (residesInRegion ?IRANIAN TheTumbsIslands))))))))
+      (eventOutcomes ?EARLIER-EVENT ?CRITICISM)))))
+
+(answer UAEDemandsIranLeaveTumbs)
+(answer IranDeniesAccess)
+
+(end_of_file)
+

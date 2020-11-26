@@ -1,0 +1,12 @@
+(note "existential generalization test")
+
+
+
+(queryyn 
+(implies (F ?X) (exists ?X (F ?X)))
+)
+
+(answer Yes)
+
+(end_of_file)
+

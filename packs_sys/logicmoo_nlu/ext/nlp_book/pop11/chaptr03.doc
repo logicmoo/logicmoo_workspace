@@ -1,0 +1,533 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+RTNs in POP-11
+
+We can represent recursive transition networks as list structures in
+the same way as finite-state networks.  In general, we now need to
+present more than one network simultaneously, however.  We also need
+to allow networks to be named and arcs to have network names as
+labels, as well as symbols, abbreviations and #s.  The way that we
+will achieve this is to have a global variable networks which will
+contain a list of all the networks and their names.  In the networks
+list we will adopt the convention that network names alternate with
+networks, each name immediately preceding its network.  So here are
+the ENGLISH-2 networks in POP-11 form:
+
+    [ S
+      [  [Initial  0]
+         [Final   2]
+         [From 0 to 1 by NP]
+         [From 1 to 2 by VP]]
+      NP
+      [  [Initial  0]
+         [Final   2]
+         [From 0 to 1 by DET]
+         [From 1 to 2 by N]
+         [From 2 to 3 by WH]                     
+         [From 3 to 2 by VP]]
+      VP
+      [  [Initial  0]
+         [Final  1 2]
+         [From 0 to 1 by V]
+         [From 1 to 2 by NP]
+         [From 1 to 3 by that]
+         [From 3 to 2 by S]]
+    ] -> networks;
+
+Here, of course, NP is the name of a network whereas V is only an
+abbreviation.  Our network traverser can tell what the possibilities
+are, because only words that appear at the top level of networks name
+networks.  When our network traversers come across a label that is not
+#, we will assume that if the label is not in networks, then it must
+be either an abbreviation or a simple symbol.
+
+To make our network traversal programs of Chapter 2 work with
+recursive networks, we need to revise our concept of state and
+incorporate this revision into the arguments for the relevant next
+procedures.  A state now has an extra component - a stack of locations
+to return to.  Our previous next procedures, for various recognition
+and generation tasks, took arguments as follows:
+
+    define next(node, tape, network);
+     ...
+
+where node was the name of the node in the network, tape was the list
+of symbols remaining to be processed and network was the network.  For
+recursive networks, we will revise this to be:
+
+    define next(networkname, node, tape, stack);
+     ...
+
+where networkname and node together say where the kangaroo is (in
+which network and at what node of that network), tape gives the list
+of symbols and stack represents the line of waiting kangaroos.
+
+We need to have ways to manipulate the stack of locations; in
+particular, to push an item on to the top of a stack, yielding a new
+stack; to pop the top item off a stack, to discover what the item is
+and what is left of the stack; finally, it is useful to be able to
+test whether a stack is empty.  In fact, it is very straightforward to
+implement stacks as lists, where the head of the list is the top
+element of the stack and the tail of the list is the remaining stack.
+If we use this representation, pushing an item on to a stack amounts
+to using '::' to create a new list with that item on the front,
+popping an item from a stack amounts to using the matcher to access
+the head and tail of the list and, finally, the empty stack is
+represented by the empty list.
+
+We now need some ways of manipulating locations themselves.                     
+Previously, when we were restricted to a single network, a location
+could be simply the name of a node.  Now, we will represent a location
+by a pair of values:
+
+    [?net ?node]
+
+where net is the name of a network and node is the name of a node in
+that network.  Having the network name explicitly available inside the
+location data structure means that we can quickly tell which network
+we are in and can switch networks quickly.  It is also essential if we
+have used the same node names in different networks.
+
+The top-level procedure for RTN recognition is very similar to the
+finite-state case.  However, note that we pass in the name of the
+network (that is, a word) through the first argument networkname,
+rather than the network itself (that is, a complex list structure).
+In RTN traversal, we are constantly passing around references to
+different networks; hence, it will make things like trace output much
+more comprehensible if we pass around the names rather than the list
+structures.
+
+    define rtn_recognize(networkname, tape);
+       vars i;
+       for i in initial_nodes(get_network(networkname)) do
+           rtn_recognize_next(networkname, i, tape,[])
+       endfor;
+       false
+    enddefine;
+
+Notice that each initial state considered has an empty stack (the last
+argument to rtn_recognize_next).  We will frequently need to get the
+network list structure from the name of a network and the procedure
+get_network will do this job for us:
+
+    define get_network(name) -> network;
+       networks --> [== ^name ?network ==]
+    enddefine;
+
+Here now is the next procedure (called rtn_recognize_next) for
+recognition with RTNs.  As in the finite-state case, it exits as soon
+as it has made a successful traversal.
+
+    define rtn_recognize_next(networkname, node, tape, stack);
+       vars newnode label;
+       if member(node,final_nodes(get_network(networkname))) then
+          rtn_recognize_pop(networkname, node, tape, stack);
+       endif;
+       foreach [From ^node to ?newnode by ?label] in transitions(get_network(networkname)) do
+          if member(label, networks) then
+             rtn_recognize_push(label, networkname, newnode, tape, stack)
+          endif;
+          rtn_recognize_traverse(label, networkname, newnode, tape, stack)                     
+       endforeach
+    enddefine;
+
+For this definition, the main work is parcelled up in three
+subprocedures.  The procedure RTN_RECOGNIZE_TRAVERSE contains a kernel
+(dealing with the SYM', ABB' and JMP' rules), like the non-recursive
+RECOGNIZE_NEXT.  Its job is to deal with the consequences of
+traversing a single arc:
+
+    define rtn_recognize_traverse(label,networkname,newnode,tape,stack);
+       vars newtape;
+       for newtape in [%rtn_recognize_move(label,tape)%] do
+          rtn_recognize_next(networkname,newnode,newtape,stack)
+       endfor
+    enddefine;
+
+This subprocedure calls rtn_recognize_move to move the tape in all
+possible ways, parcelling up each new tape into a new state which will
+be examined by another RTN_RECOGNIZE_NEXT.  As well as
+RTN_RECOGNIZE_TRAVERSE, RTN_RECOGNIZE_NEXT also calls the
+subprocedures RTN_RECOGNIZE_PUSH and RTN_RECOGNIZE_POP, corresponding
+to the PUSH and POP rules.  The POP rule can be tried if NODE is a
+final node in its network.  If the stack is empty and the tape is also
+exhausted, then we have successfully finished the original traversal.
+If on the other hand the stack is not empty, we take the top item off
+the stack, storing the new stack in NEWSTACK.  The top item is the
+location to return to; its network name is put in NEWNETWORKNAME and
+its node in NEWNODE.  We then explore the new state that results from
+resuming at this point with the popped stack:
+
+    define rtn_recognize_pop(networkname,node,tape,stack);
+       vars newnetworkname newnode newstack;
+       if stack = [] and tape = [] then
+          true;
+          exitfrom(rtn_recognize)
+       elseif stack matches [[?newnetworkname ?newnode] ??newstack] then
+          rtn_recognize_next(newnetworkname,newnode,tape,newstack)
+       endif
+    enddefine;
+
+With the PUSH rule (which applies if an arc label is an element of
+NETWORKS), we construct a new state for each initial node of the
+subnetwork.  This state has the same tape as the original state and a
+stack which has the destination of the arc pushed onto it.  So when we
+emerge from that network, we will continue from wherever this arc
+leads:
+
+    define rtn_recognize_push(label,networkname,newnode,tape,stack);
+       vars i;
+       for i in initial_nodes(get_network(label)) do
+          rtn_recognize_next(label,i,tape,[[^networkname ^newnode] ^^stack])
+       endfor
+    enddefine;                     
+
+Note that even if the PUSH rule does apply for a given arc, in
+RTN_RECOGNIZE_NEXT we still check for the label being an abbreviation,
+a symbol, etc. in the usual way (using RTN_RECOGNIZE_TRAVERSE).
+
+We still have not defined rtn_recognize_move, which finds all legal
+ways of moving the tape during the traversal of an arc.  This
+procedure is exactly the same as the one used in the finite-state
+network recognizer:
+
+    recognize_move -> rtn_recognize_move;
+
+Implementation of ATNs                           
+
+ATNs are just RTNs annotated with extra tests and actions, and so we
+can represent them as list structures simply by embellishing our
+existing notation.  We will require that each network declare the
+registers that are to be used within it, just as a POP-11 procedure
+declares its local variables.  In addition, a network will specify
+tests and actions to be performed:
+
+    Initially, when the network is entered.
+    Finally, when the network is exited.
+    On all transitions, as each transition is made.
+
+Here is our example ATN expressed in list notation (it also appears as
+lib atnarcs1).  We use POP-11 lists, built by the procedure LIST
+explained later, to represent the sequences of symbols built by the
+program.
+
+    [
+    S
+    [[Registers pps auxs mood mainverb arg0 arg1]
+     [Initial 0           [true] [[] -> pps; [] -> auxs]]
+     [Final 3             [true]
+                          [list(mood,
+                                list(mainverb,
+                                     list("arg0", arg0, 2),
+                                     list("arg1", arg1, 2),
+                                     3) <> pps,
+                                2)]]
+     [From 0 to 1 by NP   [true] [star -> arg0; "add" -> mood]]
+     [From 1 to 2 by V    [true] [star -> mainverb]]
+     [From 2 to 2 by V    [true] [mainverb :: auxs -> auxs; star -> mainverb]]
+     [From 2 to 3 by NP   [true] [star -> arg1]]
+     [From 2 to 3 by #    [true] [[] -> arg1]]
+     [From 3 to 3 by PP   [true]  [star :: pps -> pps]]]
+
+    NP
+    [[Registers res]                     
+     [Initial 0           [true] []]
+     [Final 1             [true] [res]]
+     [From 0 to 1 by PN   [true] [star -> res]]]
+
+    PP
+    [[Registers p arg]
+     [Initial 0           [true] []]
+     [Final 2             [true] [list(p, arg, 2)]]
+     [From 0 to 1 by P    [true] [star -> p]]
+     [From 1 to 2 by NP   [true] [star -> arg]]]] -> networks;
+
+    [[PN abbreviates john mary susan peter]
+     [P  abbreviates with behind]
+     [V  abbreviates will see]] -> abbreviations;
+
+Each network now has an additional registers statement, which
+specifies the (local) registers that are going to be used within that
+network.  At the end of each Initial or Final statement, as well as at
+the end of each transition statement, there are two extra list
+components, specifying the tests and actions to be performed.  Tests
+and actions are represented by lists containing normal POP-11 code,
+which may treat the local registers of the network and the global
+registers star (which represents *) and hold like normal POP-11
+variables.  These lists will be executed at appropriate times by the
+use of popval.  Note, however, that, because % and ^ are interpreted
+by POP-11 when the (network) list structure is originally built, we
+cannot include these characters inside actions.  So we have used an
+auxiliary POP-11 procedure list wherever an action needs to construct
+a list. List is defined as follows:
+
+    define list(n) -> res;
+       [] -> res;
+       repeat n times conspair(res)->res endrepeat
+    enddefine;
+
+List is given a variable number of arguments, the last of which (n)
+specifies how many other arguments there are.  It simply makes a list
+consisting of these n items:
+
+    : list([], "a", 3, "b", 4) =>
+    ** [[] a 3 b]
+
+Many ATN systems use a special restricted language for actions and
+tests, which are then evaluated by an interpreter.  We will not
+present such a language: firstly, because the common actions of
+assignment and building lists are so naturally expressed in a normal
+programming language and, secondly, because there seems to be no
+principled way of restricting the actions and tests that might be
+needed.  We therefore allow actions and tests to be arbitrary POP-11
+code, which may or may not produce results, as appropriate.  Tests are
+obviously expected to produce results, as are the actions associated
+with the final parts of networks (whose results will be used as the
+value of the * register in the calling network).  On the other hand,                     
+any results returned by other action code will simply be ignored.
+
+Lib atnrecog implements a simple ATN traverser that works with ATNs
+represented as we have just discussed.  Although the details of the
+implementation are unimportant and much of the following description
+can be skipped, it is important to have some conception of how the
+implementation of an ATN differs from that of an RTN.  First of all,
+since the ATN list structures have more components that RTNs, we need
+to redefine our basic network-accessing procedures accordingly.  Apart
+from redefining procedures like initial_nodes to take account of the
+extra components, we need to introduce new procedures to extract the
+tests and actions from various places in the networks:
+
+    define initial_tests(n) -> t;
+       n --> [== [Initial == ?t =] ==]
+    enddefine;
+
+    define initial_actions(n) -> a;
+       n --> [== [Initial == ?a] ==]
+    enddefine;
+
+    define final_tests(n) -> t;
+       n --> [== [Final == ?t =] ==]
+    enddefine;
+
+    define final_actions(n) -> a;
+       n --> [== [Final == ?a] ==]
+    enddefine;
+
+Here are two important procedures to do with accessing registers:
+
+    define regs_used(network) -> r;
+       network --> [== [Registers ??r] ==]
+    enddefine;
+
+    define initial_regs(network);
+       [% regs_used(network),
+          [% for r in regs_used(network) do false endfor %]
+       %]
+    enddefine;
+
+Regs_used just enables us to find out the local registers declared for
+a given network.  initial_regs returns a list with two elements, the
+first being the list of register names and the second being a list
+with the same length, each element of which is false:
+
+    : regs_used(get_nework("S")) =>
+    ** [pps auxs mood mainverb arg0 arg1]
+    : initial_regs(get_network("S")) =>
+    ** [[pps     auxs    mood    mainverb arg0    arg1]
+        [<false> <false> <false> <false>  <false> <false>]]
+
+When we store the values of the registers of a network, we will use                     
+precisely this representation: a list of the register names followed
+by a list of the register values, where each value is associated with
+the corresponding element of the register name list.  Here, we use
+false as the initial value of a register (as POP-11 uses undef
+objects), and so the initial_regs of a network represent the registers
+together with their initial values.
+
+We can derive an ATN traverser from our RTN traverser in much the same
+way that we derived our RTN traverser from a finite state network
+traverser.  That is, we can create an ATN traverser by appropriately
+enriching the notion of a state to include the values of the registers
+in all the networks being traversed.  The appropriate next procedure
+header now looks like the following:
+
+    define atn_recognize_next(networkname, node, tape, stack, regs, hold);
+
+where regs is the set of registers and their values for the current
+network, and hold is the current value of the hold register.  Where
+are the values of the registers in other active networks kept?  They
+are kept in the stack, a stack element now being of the form:
+
+    [?newnetworkname ?newnode ?newregs ?tests ?actions]
+
+where newnetworkname and newnode are as before - these specify in
+which network and to which node the system is to return.  newregs,
+tests and actions specify the current registers of that network, and
+any tests and actions that have to be performed before the system can
+successfully return to that network.  Notice that, although the HOLD
+register is global, its value is part of the search state, that is, it
+may have different values on different traversals of the network.
+This is why we do not actually implement it as a global variable in
+POP-11.  Here is the definition of atn_recognize_next.  As with the
+RTN recognizer, the main work is dealt with by specialized procedures
+to push, pop and traverse an arc:
+
+    define atn_recognize_next(networkname, node, tape, stack, regs, hold);
+       vars newnode label newtape star newregs tests actions newhold;
+       if member(node,final_nodes(get_network(networkname))) then
+          atn_recognize_pop(networkname, node, tape, stack, regs, hold)
+       endif;
+       foreach [From ^node to ?newnode by ?label ?tests ?actions]
+        in transitions(get_network(networkname)) do
+          if member(label,networks) then
+             atn_recognize_push(label, networkname ,newnode, tape, stack, regs,
+                                       hold, tests, actions)
+          endif;
+          atn_recognize_traverse(label, networkname, newnode, tape, stack, regs,
+                                       hold, tests, actions)
+       endforeach
+    enddefine;
+
+As in the RTN case, the first thing for atn_recognize_next is to try
+to pop from the current network.  If node is a final node in the                     
+current network, then atn_recognize_pop is called:
+
+    define atn_recognize_pop(networkname, node, tape, stack, regs, hold);
+       vars star newhold newnetworkname newnode newregs tests actions newstack;
+       if dotests(regs, final_tests(get_network(networkname)), hold, false) then
+          dopopactions(regs, final_actions(get_network(networkname)),
+                                                  hold, false)
+            -> star -> newhold;
+          if stack == [] and tape == [] then
+             star;
+             exitfrom(atn_recognize)
+          elseif stack matches
+           [[?newnetworkname ?newnode ?newregs ?tests ?actions] ??newstack] then
+             if dotests(newregs, tests, newhold, star) then
+                doactions(newregs, actions, newhold, star)
+                    -> newregs -> newhold;
+                atn_recognize_next(newnetworkname, newnode,
+                     tape, newstack, newregs, newhold)
+             endif
+          endif
+       endif
+    enddefine;
+
+Before initiating a pop, this procedure checks that the final tests
+associated with the network are satisfied (calling procedure dotests).
+The final actions, executed by the procedure dopopactions, then
+produce two results, one of which becomes the new value of the star
+register, and the second of which will be the new value of the hold
+register.  Star is returned as the result of the whole analysis if
+both the stack and the tape are empty.  If the stack is not empty, it
+is necessary to resume in a higher network, restoring the values that
+are saved in the stack.  In this case, it is also necessary to apply
+the tests saved from the push arc before continuing.
+
+After attempting to pop, the only other possibility is to find a
+network arc from node that can be traversed.  Thus atn_recognize_next
+iterates through the arcs that leave this node.  If the label is the
+name of a network, it calls atn_recognize_push to attempt to enter
+that subnetwork.  If the initial tests in that network succeed, we
+push to the new network, producing a new stack which has the
+networkname, destination newnode of the arc, registers regs and the
+arc tests and actions pushed on the front:
+
+    define atn_recognize_push(label, networkname, newnode, tape, stack, regs,
+                                   hold, tests, actions);
+       vars newregs newhold i;
+       if dotests(initial_regs(get_network(label)),
+                  initial_tests(get_network(label)),
+                  hold,false) then
+          initial_regs(get_network(label)) -> newregs;
+          doactions(newregs, initial_actions(get_network(label)), hold, false)
+              -> newregs -> newhold;
+          for i in initial_nodes(get_network(label)) do                     
+             atn_recognize_next(label, i,
+                tape, [[^networkname ^newnode ^regs ^tests
+                       ^actions] ^^stack], newregs, newhold)
+          endfor
+       endif
+    enddefine;
+
+Notice that the tests and actions associated with the push arc are
+saved up to be tried when the subnetwork is finally popped from.  If
+the label is not the name of a network, we move the tape in the
+standard way according to what the label is, and we also check that
+the arc tests succeed and compute the new registers and new value of
+hold that result from executing the arc actions.  This is done by
+atn_recognize_traverse:
+
+    define atn_recognize_traverse(label, networkname, newnode, tape, stack, regs,
+                                           hold, tests, actions);
+       vars newtape;
+       for newtape in [%atn_recognize_move(label, tape)%] do
+          diff_tape(newtape, tape) -> star;
+          if dotests(regs, tests, hold, star) then
+             doactions(regs, actions, hold, star) -> newregs -> newhold;
+             atn_recognize_next(networkname, newnode, newtape, stack, newregs,
+                                           newhold)
+          endif
+       endfor
+    enddefine;
+
+This completes the definition of atn_recognize_next and its main
+subprocedures.
+
+There are a few other main procedures that remain to be defined.
+Diff_tape is used to set the * register; it simply looks to see how
+much of the tape has been consumed by a transition.  Dotests is used
+to execute a set of tests, whereas doactions and dopopactions are used
+to execute a set of actions.  Dopopactions is for actions performed as
+a network is exited (which must return a value for *), whereas
+doactions is for other sets of actions (which do not produce results).
+Doactions expects arguments as follows:
+
+    define doactions(regs, actions, hold, star) -> newregs -> newhold;
+
+where regs is the current local registers and their values, actions is
+the list of actions to be performed, and hold and star are the current
+values of the appropriate global registers The result newregs will
+hold the new local registers and the result newhold will hold the new
+value of the hold register after the actions have been performed.  For
+instance, the following call executes the actions:
+
+    [star -> arg0; "add" -> mood]
+
+in a network with registers PPS, AUXS, MOOD, MAINVERB, ARG0 and ARG1,
+all with values false, in a context where hold is false and star(the *
+register) is np:
+
+    : doactions([[pps    auxs   mood   mainverb arg0   arg1]
+                 [^false ^false ^false ^false   ^false ^false]],
+                 [star -> arg0; "add" -> mood], false,"np")
+
+This call will produce two results: first of all the new values of the
+registers:
+
+    [[pps     auxs     mood  mainverb arg0 arg1]
+     [<false> <false>  add   <false>  np   <false>]]
+
+and, secondly, the new value of the HOLD register, here simply false.
+Notice how the register values returned reflect the changes to ARG0
+and MOOD.  Doactions works by creating a list of items representing a
+POP-11 procedure that contains the appropriate actions.  Using the
+system procedure popval, it then converts this into an actual
+procedure.  In this example, the procedure that results would be
+essentially what would arise from the following definition:
+
+    define xxx(hold, star, pps, auxs, mood, mainverb, arg0, arg1);
+        star -> arg0;
+        "add" -> mood;
+        [^pps ^auxs ^mood ^mainverb ^arg0 ^arg1];   ;;; new reg values
+        hold;                                       ;;; new hold
+    enddefine;
+
+Finally, this procedure is called, with the appropriate arguments
+supplied, and the results are manipulated into the results of
+doactions.  Dotests and dopopactions are defined using very similar
+techniques.

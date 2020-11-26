@@ -1,0 +1,68 @@
+
+INPUT TEXT:
+If there is a cephalopod then it is a mollusk.
+If there is a nautilus then it is a cephalopod.
+Mollusk-Rule: If there is a mollusk then it is a shellbearer.
+Cephalopond-Rule: If there is a cephalopod then it is not a shellbearer.
+Nautilus-Rule: If there is a nautilus then it is a shellbearer.
+Molly is a mollusk.
+Sophie is a cephalopod.
+Natalie is a nautilus.
+Nautilus-Rule overrides Cephalopond-Rule.
+Cephalopond-Rule overrides Mollusk-Rule.
+Nautilus-Rule overrides Mollusk-Rule.
+
+RULES:
+group([object(A,mollusk,countable,na,eq,1)]) <- [group([object(A,cephalopod,countable,na,eq,1)])].
+group([object(A,cephalopod,countable,na,eq,1)]) <- [object(A,nautilus,countable,na,eq,1)].
+group([object(named('Molly'),mollusk,countable,na,eq,1)]).
+group([object(named('Sophie'),cephalopod,countable,na,eq,1)]).
+object(named('Molly'),'Molly',named,na,eq,1).
+object(named('Natalie'),'Natalie',named,na,eq,1).
+object(named('Natalie'),nautilus,countable,na,eq,1).
+object(named('Sophie'),'Sophie',named,na,eq,1).
+'Cephalopond-Rule':: -group([object(A,shellbearer,countable,na,eq,1)]) <- [group([object(A,cephalopod,countable,na,eq,1)])].
+'Mollusk-Rule':: group([object(A,shellbearer,countable,na,eq,1)]) <- [group([object(A,mollusk,countable,na,eq,1)])].
+'Nautilus-Rule':: group([object(A,shellbearer,countable,na,eq,1)]) <- [object(A,nautilus,countable,na,eq,1)].
+overrides('Nautilus-Rule','Cephalopond-Rule').
+overrides('Cephalopond-Rule','Mollusk-Rule').
+overrides('Nautilus-Rule','Mollusk-Rule').
+
+SIMPLE RULES:
+mollusk(A) <- [cephalopod(A)].
+cephalopod(A) <- [nautilus(A)].
+mollusk(named('Molly')).
+cephalopod(named('Sophie')).
+nautilus(named('Natalie')).
+'Cephalopond-Rule':: -shellbearer(A) <- [cephalopod(A)].
+'Mollusk-Rule':: shellbearer(A) <- [mollusk(A)].
+'Nautilus-Rule':: shellbearer(A) <- [nautilus(A)].
+overrides('Nautilus-Rule','Cephalopond-Rule').
+overrides('Cephalopond-Rule','Mollusk-Rule').
+overrides('Nautilus-Rule','Mollusk-Rule').
+
+ANSWERSET #1:
+-group([object(named('Sophie'),shellbearer,countable,na,eq,1)]).
+group([object(named('Molly'),mollusk,countable,na,eq,1)]).
+group([object(named('Molly'),shellbearer,countable,na,eq,1)]).
+group([object(named('Natalie'),cephalopod,countable,na,eq,1)]).
+group([object(named('Natalie'),mollusk,countable,na,eq,1)]).
+group([object(named('Natalie'),shellbearer,countable,na,eq,1)]).
+group([object(named('Sophie'),cephalopod,countable,na,eq,1)]).
+group([object(named('Sophie'),mollusk,countable,na,eq,1)]).
+object(named('Molly'),'Molly',named,na,eq,1).
+object(named('Natalie'),'Natalie',named,na,eq,1).
+object(named('Natalie'),nautilus,countable,na,eq,1).
+object(named('Sophie'),'Sophie',named,na,eq,1).
+
+ANSWERTEXT #1:
+Natalie is a nautilus.
+Sophie is a mollusk.
+Sophie is a cephalopod.
+Natalie is a shellbearer.
+Natalie is a mollusk.
+Natalie is a cephalopod.
+Molly is a shellbearer.
+Molly is a mollusk.
+It is false that Sophie is a shellbearer.
+

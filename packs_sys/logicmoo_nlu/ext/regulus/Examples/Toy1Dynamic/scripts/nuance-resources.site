@@ -1,0 +1,8 @@
+lm.Addresses	localhost:8471
+rm.Addresses	localhost:7777
+comp.Port       10101
+client.TTSAddresses	localhost:32323
+audio.InputVolume 	50
+
+
+

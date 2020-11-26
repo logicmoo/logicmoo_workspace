@@ -1,0 +1,417 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.7</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="gemacs.html">
+<link rel="next" href="history.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="gemacs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="history.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:online-help"><a id="sec:2.7"><span class="sec-nr">2.7</span> <span class="sec-title">Online 
+Help</span></a></h2>
+
+<a id="sec:online-help"></a>
+
+<p><h3 id="sec:help"><a id="sec:2.7.1"><span class="sec-nr">2.7.1</span> <span class="sec-title">library(help): 
+Text based manual</span></a></h3>
+
+<p><a id="sec:help"></a>
+
+<p>This module provides <a class="pred" href="online-help.html#help/1">help/1</a> 
+and <a class="pred" href="online-help.html#apropos/1">apropos/1</a> that 
+give help on a topic or searches the manual for relevant topics.
+
+<p>By default the result of <a class="pred" href="online-help.html#help/1">help/1</a> 
+is sent through a <i>pager</i> such as
+<code>less</code>. This behaviour is controlled by the following:
+
+<p>
+<ul class="latex">
+<li>The Prolog flag <code>help_pager</code>, which can be set to one of 
+the following values:
+
+<dl class="latex">
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+Never use a pager.
+</dd>
+<dt><strong>default</strong></dt>
+<dd class="defbody">
+Use default behaviour. This tries to determine whether Prolog is running 
+interactively in an environment that allows for a pager. If so it 
+examines the environment variable <code>PAGER</code> or otherwise tries 
+to find the <code>less</code> program.
+</dd>
+<dt><strong><var>Callable</var></strong></dt>
+<dd class="defbody">
+A <var>Callable</var> term is interpreted as <code>program_name(Arg, ...)</code>. 
+For example, <code>less('-r')</code> would be the default. Note that the 
+program name can be an absolute path if single quotes are used.
+</dd>
+</dl>
+
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="help/0"><strong>help</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="help/1"><strong>help</strong>(<var>+What</var>)</a></dt>
+<dd class="defbody">
+Show help for <var>What</var>. <var>What</var> is a term that describes 
+the <code>topics(s)</code> to give help for. Notations for <var>What</var> 
+are:
+
+<dl class="latex">
+<dt><strong><var>Atom</var></strong></dt>
+<dd class="defbody">
+This ambiguous form is most commonly used and shows all matching 
+documents. For example:
+
+<pre class="code">
+?- help(append).
+</pre>
+
+</dd>
+<dt><var><var>Name</var></var> <strong><code>/</code></strong> <var><var>Arity</var></var></dt>
+<dd class="defbody">
+Give help on predicates with matching <var>Name</var>/<var>Arity</var>. <var>Arity</var> 
+may be unbound.
+</dd>
+<dt><var><var>Name</var></var> <strong><code>//</code></strong> <var><var>Arity</var></var></dt>
+<dd class="defbody">
+Give help on the matching DCG rule (non-terminal)
+</dd>
+<dt><strong>f</strong>(<var>Name/Arity</var>)</dt>
+<dd class="defbody">
+Give help on the matching Prolog arithmetic functions.
+</dd>
+<dt><strong>c</strong>(<var>Name</var>)</dt>
+<dd class="defbody">
+Give help on the matching C interface function
+</dd>
+<dt><strong>section</strong>(<var>Label</var>)</dt>
+<dd class="defbody">
+Show the section from the manual with matching <var>Label</var>.
+</dd>
+</dl>
+
+<p>If an exact match fails this predicates attempts fuzzy matching and, 
+when successful, display the results headed by a warning that the 
+matches are based on fuzzy matching.
+
+<p>If possible, the results are sent through a <i>pager</i> such as the
+<code>less</code> program. This behaviour is controlled by the Prolog 
+flag
+<code>help_pager</code>. See section level documentation.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="online-help.html#apropos/1">apropos/1</a> for 
+searching the manual names and summaries.
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="show_html_hook/1"><strong>show_html_hook</strong>(<var>+HTML:string</var>)</a></dt>
+<dd class="defbody">
+Hook called to display the extracted <var>HTML</var> document. If this 
+hook fails the <var>HTML</var> is rendered to the console as plain text 
+using
+<span class="pred-ext">html_text/2</span>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="apropos/1"><strong>apropos</strong>(<var>+Query</var>)</a></dt>
+<dd class="defbody">
+Print objects from the manual whose name or summary match with
+<var>Query</var>. <var>Query</var> takes one of the following forms:
+
+<dl class="latex">
+<dt><var><var>Type</var></var><strong><code>:</code></strong><var><var>Text</var></var></dt>
+<dd class="defbody">
+Find objects matching <var>Text</var> and filter the results by <var>Type</var>.
+<var>Type</var> matching is a case intensitive <i>prefix</i> match. 
+Defined types are <code>section</code>, <code>cfunction</code>, <code>function</code>,
+<code>iso_predicate</code>, <code>swi_builtin_predicate</code>, <code>library_predicate</code>,
+<code>dcg</code> and aliases <code>chapter</code>, <code>arithmetic</code>, <code>c_function</code>,
+<code>predicate</code>, <code>nonterminal</code> and <code>non_terminal</code>. 
+For example:
+
+<pre class="code">
+?- apropos(c:close).
+?- apropos(f:min).
+</pre>
+
+</dd>
+<dt><strong><var>Text</var></strong></dt>
+<dd class="defbody">
+<var>Text</var> is broken into tokens. A topic matches if all tokens 
+appear in the name or summary of the topic. Matching is case 
+insensitive. Results are ordered depending on the quality of the match.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:explain"><a id="sec:2.7.2"><span class="sec-nr">2.7.2</span> <span class="sec-title">library(explain): 
+Describe Prolog Terms</span></a></h3>
+
+<p><a id="sec:explain"></a>
+
+<p>The <code>library(explain)</code> describes prolog-terms. The most 
+useful functionality is its cross-referencing function.
+
+<pre class="code">
+?- explain(subset(_,_)).
+"subset(_, _)" is a compound term
+        Referenced from 2-th clause of lists:subset/2
+        Referenced from 46-th clause of prolog_xref:imported/3
+        Referenced from 68-th clause of prolog_xref:imported/3
+lists:subset/2 is a predicate defined in
+        /staff/jan/lib/pl-5.6.17/library/lists.pl:307
+        Referenced from 2-th clause of lists:subset/2
+        Possibly referenced from 2-th clause of lists:subset/2
+</pre>
+
+<p>Note that the help-tool for XPCE provides a nice graphical 
+cross-referencer.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="explain/1"><strong>explain</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+Give an explanation on <var>Term</var>. The argument may be any Prolog 
+data object. If the argument is an atom, a term of the form <code>Name/Arity</code> 
+or a term of the form <code>Module:Name/Arity</code>, <a class="pred" href="online-help.html#explain/1">explain/1</a> 
+describes the predicate as well as possible references to it. See also <a class="pred" href="xref.html#gxref/0">gxref/0</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="explain/2"><strong>explain</strong>(<var>@Term, 
+-Explanation</var>)</a></dt>
+<dd class="defbody">
+True when <var>Explanation</var> is an explanation of <var>Term</var>.
+</dd>
+</dl>
+
+<p></body></html>

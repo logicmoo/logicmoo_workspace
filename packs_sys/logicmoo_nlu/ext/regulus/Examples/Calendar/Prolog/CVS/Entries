@@ -1,0 +1,25 @@
+/calendar_nbest.pl/1.13/Fri May 30 15:13:49 2008//
+/calendar_utils.pl/1.16/Sat Dec  1 22:10:05 2007//
+/create_name_lexicon.pl/1.2/Sun Aug  5 03:55:14 2007//
+/database1.pl/1.21/Sat May 17 21:01:02 2008//
+/database_im2.pl/1.5/Tue Aug  7 15:14:15 2007//
+/dialogue_manager.pl/1.25/Sun Mar  9 19:45:06 2008//
+/dialogue_utils.pl/1.8/Sat Aug 25 22:17:36 2007//
+/ellipsis_classes.pl/1.7/Fri May 30 15:14:02 2008//
+/fre_operationality_recognition.pl/1.1/Mon Sep 10 14:02:50 2007//
+/fre_parse_preferences.pl/1.1/Mon Sep 10 14:02:50 2007//
+/help_classes.pl/1.2/Fri Sep 21 22:04:49 2007//
+/input_manager.pl/1.19/Sun Mar  9 19:45:06 2008//
+/lf_patterns.pl/1.29/Wed May 28 16:56:16 2008//
+/make_transcriptions_data_into_sents_data.pl/1.2/Fri Oct 26 04:56:42 2007//
+/operationality_recognition.pl/1.1/Mon May 28 16:42:04 2007//
+/orthography_rules.pl/1.4/Sat Dec  1 18:06:52 2007//
+/output_manager.pl/1.16/Sun Mar  9 19:45:06 2008//
+/parse_preferences.pl/1.4/Sat May 17 21:01:03 2008//
+/parse_xml_rec_result.pl/1.1/Wed Oct 17 07:36:42 2007//
+/randomly_split_transcriptions_data.pl/1.1/Mon Nov  5 04:20:34 2007//
+/resolve_dialogue_move.pl/1.11/Sat Dec  1 22:10:09 2007//
+/resolve_lf.pl/1.8/Thu May 29 21:51:31 2008//
+/toy1_app_using_server.pl/1.23/Wed Mar 12 15:11:56 2008//
+/update_transcriptions.pl/1.2/Mon Sep 10 01:33:28 2007//
+D

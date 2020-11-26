@@ -1,0 +1,142 @@
+(provide [primary_market *x0] [investment *x1])(attr ?x1 [new])(operate_with ?x0 [stock *x3])(attr ?x3 [newly_issued])
+  /* Primary market operates with newly issued stocks and provides new investments */
+(agnt [trade *x0] [buyer])(agnt ?x0 [seller])(loc ?x0 [market :lambda])(thm ?x0 [financial_instrument])
+  /* Financial market is market where buyers and sellers trade financial instruments */
+(trade [primary_market] [security *x1])(attr ?x1 [newly_issued])
+  /* Primary market trades newly issued securities */
+(trade [primary_market] [loan *x1])(attr ?x1 [newly_issued])
+  /* Primary market trades newly issued loans */
+(provide [primary_market] [investment *x1])(attr ?x1 [new])
+  /* Primary market provides new investments */
+(trade [primary_market] [corporate_bond *x1])(attr ?x1 [newly_issued])
+  /* Primary market trades newly issued corporate bonds */
+(provide [primary_market *x0] [investment *x1])(attr ?x1 [new])(trade ?x0 [security *x3])(attr ?x3 [newly_issued])
+  /* Primary market trades newly issued securities and provides new investments */
+(goal [primary_market] [Situation: (raise [primary_market] [money_value *x1])(of ?x1 [capital])])
+  /* The goal of primary market is to raise capital */
+(raise [primary_market] [money_value *x1])(of ?x1 [capital])
+  /* Primary market raise money value of capital */
+(provide [primary_market] [capital *x1])(rcpt ?x1 [investment *x2])(attr ?x2 [new])
+  /* Primary market provides capital for new investments */
+(trade [financial_market :lambda] [financial_instrument *x1])(attr ?x1 [newly_issued])
+  /* Primary market is a financial market which trades newly issued financial instruments */
+(operate_with [financial_market :lambda] [security *x1])(attr ?x1 [already_issued])
+  /* Secondary market is a financial market which operates with already issued securities */
+(operate_with [financial_market :lambda] [loan *x1])(attr ?x1 [already_issued])
+  /* Secondary market is a financial market which operates with already issued loans */
+(trade [secondary_market] [security *x1])(attr ?x1 [already_issued])
+  /* Secondary market trades already issued securities */
+(trade [secondary_market] [loan *x1])(attr ?x1 [already_issued])
+  /* Secondary market trades already issued loans */
+(provide [secondary_market] [Situation: (convert_into [security] [cash])])(rcpt Situation: (convert_into [security] [cash]) [investor])
+  /* Secondary market provides investors with liquidity */
+(convert_into [security] [cash])
+  /* situation liquidity : converting securities into cash. */
+(support [secondary_market] [investment *x1])(attr ?x1 [new])
+  /* Secondary market  supports new investment */
+(trade [financial_market :lambda *x0] [security])(agnt ?x0 [seller *x2])(poss ?x2 [access *x3])(attr ?x3 [free])(rcpt ?x0 [buyer *x5])(poss ?x5 [access *x6])(attr ?x6 [free])
+  /* Open market is a financial market which trades securities and where buyer and seller have free access */
+(trade [financial_market :lambda *x0] [loan])(agnt ?x0 [seller *x2])(poss ?x2 [access *x3])(attr ?x3 [free])(rcpt ?x0 [buyer *x5])(poss ?x5 [access *x6])(attr ?x6 [free])
+  /* Open market is a financial market which trades loans and where buyer and seller have free access */
+(operate_with [financial_market :lambda *x0] [security *x1])(attr ?x1 [short_term])(operate_with ?x0 [loan *x3])(attr ?x3 [short_term])
+  /* Money market is a financial market which operates with short term securities and loans */
+(trade [money_market] [security *x1])(attr ?x1 [short_term])
+  /* Money market trades with short term securities */
+(trade [money_market] [loan *x1])(attr ?x1 [short_term])
+  /* Money market trades with short term loans */
+(provide [money_market] [Situation: (convert_into [money_market_investment] [cash])])
+  /* Money market provides liquidity */
+(convert_into [money_market_investment] [cash])
+  /* situation liquidity : converting money market instrument into cash. */
+(obj [money_market *x0] [security *x1])(attr ?x1 [short_term])(agnt ?x0 [seller])(rcpt ?x0 [buyer])
+  /* On the money market buyer and seller trades short term securities */
+(char [financial_instrument :lambda *x0] [maturity *x1])(attr ?x1 [short_term])(sell [lender] ?x0)(buy [borrower] ?x0)
+  /* Money market instrument is a financial instrument which with short term maturity sold by lender and brought by borrower */
+(trade [financial_market :lambda] [investment *x1])(attr ?x1 [long_term])(agnt [range *x3] ?x1)(manr ?x3 [broad])(dim ?x3 [size])
+  /*  Capital market is a financial market which trades long term investments which range broadly in size */
+(trade [negotiated_market *x0] [security])(method ?x0 [bargain *x2])(agnt ?x2 [seller])(rcpt ?x2 [buyer])(attr ?x2 [direct])
+  /* Negotiated market trades securities with direct bargaining between buyer and seller */
+(trade [negotiated_market *x0] [loan])(method ?x0 [bargain *x2])(agnt ?x2 [seller])(rcpt ?x2 [buyer])(attr ?x2 [direct])
+  /* Negotiated market trades loans with direct bargaining between buyer and seller */
+(agnt [financial_market :lambda *x0] [seller])(rcpt ?x0 [buyer])(obj ?x0 [commodity *x3])(method ?x3 [deliver *x4])(attr ?x4 [instant])
+  /* Spot market is a financial market where people buy and sell commodities for instant delivery */
+(agnt [financial_market :lambda *x0] [seller])(rcpt ?x0 [buyer])(obj ?x0 [financial_instrument *x3])(method ?x3 [deliver *x4])(attr ?x4 [instant])
+  /* Spot market is a financial market where people buy and sell financial instruments for instant delivery */
+(agnt [future_market *x0] [seller])(rcpt ?x0 [buyer])(obj ?x0 [financial_instrument *x3])(method ?x3 [deliver *x4])(attr ?x4 [future])
+  /* On the future market people buy and sell financial instruments for future delivery */
+(trade [future_market] [commodity])
+  /* Future market trades commodities */
+(trade [future_market] [future_contract])
+  /* Future market trades future contracts */
+(represent [financial_instrument :lambda] [debt *x1])(of ?x1 [corporation])
+  /* Security is a financial instrument which represents debt of corporation */
+(represent [financial_instrument :lambda] [ownership *x1])(in ?x1 [corporation])
+  /* Stock is a financial instrument which represents ownership in corporation */
+(represent [security :lambda] [debt *x1])(of ?x1 [corporation])
+  /* Bond is a security which represents debt of corporation */
+(convert_into [bond :lambda] [common_stock *x1])(of ?x1 [company])
+  /* Convertible bond is a bond converted into common stock of company */
+(reduce [Situation: (convert_into [bond] [common_stock])] [debt *x1])(of ?x1 [corporation])
+  /* When a bond is converted to common stock, the corporate debt is reduced */
+(convert_into [bond] [common_stock])
+  /* Bond convert into common stock */
+(issue_by [municipal_bond *x0] [municipal_authority *x1])(pay_for ?x0 [project *x2])(attr ?x2 [infrastructural])(poss ?x1 ?x2)
+  /* Municipal bonds are issued by municipal authority to pay for its infrastructural projects */
+(secured_by [municipal_bond :lambda] [mortgage *x1])(of ?x1 [house])
+  /* Housing bond is a municipal bond secured by mortgage of house */
+(char [municipal_bond :lambda] [maturity *x1])(attr ?x1 [short_term])
+  /* Municipal note is a municipal bond with short term maturity */
+(attr [bond :lambda *x0] [coupon *x1])(goal ?x1 [represent *x2])(obj ?x2 [interest *x3])(attr ?x0 ?x3)(att ?x3 [semiannual])
+  /* Coupon bond is a bond with coupons representing semiannual interest payments attached */
+(issued_by [defensive_stock *x0] [industry])(stable_in ?x0 [recession])
+  /* Defensive stock is issued by industry and is stable in recession */
+(char [penny_stock *x0] [price *x1])(attr ?x1 [low])(trade ?x0 [over_the_counter])
+  /* Penny stock has low price and trade over the counter */
+(provide [stock :lambda] [divident *x1])(attr ?x1 [fixed])
+  /* Preferred stock is a stock with fixed dividents */
+(provide [stock :lambda *x0] [voting_right])(provide ?x0 [divident *x2])(attr ?x2 [floating])
+  /* Common stock is a stock with floating dividents and provide voting rights */
+(agnt [supply *x0] [organization :lambda])(obj ?x0 [loan *x2])(attr ?x2 [short_term])(rcpt ?x0 [private_individual])
+  /* Bank is an organization which supply private individuals with short term loans */
+(attr [organization :lambda] [total_worth *x1])(divide_into ?x1 [stock])
+  /* Corporatin is an organization in which the total worth is divided into stocks */
+(agnt [trade *x0] [lender])(obj ?x0 [financial_instrument])(loc ?x0 [market])
+  /* On the market lender trades financial instruments called credit.  */
+(agnt [trade *x0] [borrower])(obj ?x0 [financial_instrument])(loc ?x0 [market])
+  /* On the market borrower trades financial instruments called capital. */
+(trade [secondary_market *x0] [security *x1])(attr ?x1 [already_issued *x2])(trade ?x0 [loan *x3])(attr ?x3 ?x2)(rcpt ?x0 [buyer])(agnt ?x0 [seller])(rcpt [primary_market *x6] [buyer])(agnt ?x6 [issuing_authority *x8])(trade ?x8 [security *x9])(attr ?x9 [newly_issued *x10])(trade ?x8 [loan *x11])(attr ?x11 ?x10)
+  /* On the secondary market buyer and seller trade already issued securities and loans */
+(rcpt [primary_market *x0] [buyer])(agnt ?x0 [issuing_authority *x2])(trade ?x2 [security *x3])(attr ?x3 [newly_issued *x4])(trade ?x2 [loan *x5])(attr ?x5 ?x4)
+  /* Issuing authority trades newly issued securities and loans on the primary market */
+(agnt [operate *x0] [entity :lambda])(with ?x0 [entity :lambda])
+  /* Definition of relation operate_with */
+(agnt [provide *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation provide */
+(agnt [trade *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation trade */
+(agnt [raise *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation raise */
+(agnt [goal *x0] [entity :lambda])(result ?x0 [entity :lambda])
+  /* Definition of relation goal */
+(agnt [convert *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation convert_into */
+(agnt [support *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation support */
+(agnt [buy *x0] [animate :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation buy */
+(agnt [sell *x0] [animate :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation sell */
+(obj [dimension *x0] [entity :lambda])(char ?x0 [entity :lambda])
+  /* Definition of relation dim */
+(agnt [method *x0] [entity :lambda])(inst ?x0 [entity :lambda])
+  /* Definition of relation method */
+(agnt [represent *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation represent */
+(agnt [reduce *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation reduce */
+(agnt [secure *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation secured_by */
+(agnt [stable *x0] [entity :lambda])(loc ?x0 [entity :lambda])
+  /* Definition of relation stable_in */
+(agnt [divide *x0] [entity :lambda])(obj ?x0 [entity :lambda])
+  /* Definition of relation divide_into */

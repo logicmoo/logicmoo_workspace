@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Prepare running ClioPatria by localizing the install scripts. The real
+# work is done by the  Prolog   script  setup.pl to maintain portability
+# with Windows. Windows users should   double-click win-config.exe. This
+# executable performs a  similar  task:   locate  SWI-Prolog  using  the
+# registry and open `setup.pl` with Prolog.
+#
+# Running (2nd variation to select a specific SWI-Prolog version)
+#
+#	$ ./configure
+#	$ SWIPL=swi-prolog ./configure
+#
+# Author: Jan Wielemaker
+# Copyright: Public Domain
+
+findexe()
+{ oldifs="$IFS"
+  IFS=:
+  for d in $PATH; do
+    if [ -x $d/$1 ]; then
+       IFS="$oldifs"
+       return 0
+    fi
+  done
+  IFS="$oldifs"
+  return 1
+}
+
+if [ -z "$SWIPL" ]; then
+  for f in swi-prolog swipl; do
+    if [ -z "$SWIPL" ] && findexe $f; then
+       SWIPL=$f
+    fi
+  done
+fi
+
+if [ -z "$SWIPL" ]; then
+  echo "ERROR: Cannot find SWI-Prolog."
+  exit 1
+fi
+
+setup="$(dirname $0)/setup.pl"
+
+$SWIPL -q -f "$setup" -- $*

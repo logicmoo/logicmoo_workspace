@@ -1,0 +1,50 @@
+(note TQF251e)
+
+(implies 
+  (and 
+    (relationInstanceAll ?PRED ?VALUE ?COL) 
+    (instance ?OBJ ?COL)) 
+  (?PRED ?VALUE ?OBJ)) 
+
+(relationInstanceAll contains PlanetEarth GeographicalArea) 
+
+(instance Iran GeographicalArea) 
+
+(instance UnitedStatesOfAmerica IndependentCountry) 
+
+(implies 
+  (instance ?COUNTRY IndependentCountry) 
+  (goalCategoryForAgent ?COUNTRY 
+    (not 
+      (thereExists ?EVENT 
+        (increases-Generic ?EVENT PlanetEarth 
+          (Kappa 
+            (?REGION ?RATE) 
+              (productionRate ?REGION WeaponOfMassDestruction ?RATE))))) NationalDefenseGoal))
+
+(implies 
+  (and 
+    (subAttribute ?STRATEGIC-INTEREST StrategicInterest) 
+    (goalCategoryForAgent ?AGENT ?GOAL ?STRATEGIC-INTEREST)) 
+  (goalImportance ?AGENT ?GOAL HighToVeryHigh)) 
+
+(query (findall (?IMPORTANCE)
+  (exists 
+    (?IRAN-REGION) 
+    (and 
+      (or 
+        (= Iran ?IRAN-REGION) 
+        (contains ?IRAN-REGION Iran)) 
+      (goalImportance UnitedStatesOfAmerica 
+        (not 
+          (exists 
+            (?PROLIFERATION) 
+              (increases-Generic ?PROLIFERATION ?IRAN-REGION 
+                (Kappa 
+                  (?REGION ?RATE) 
+                  (productionRate ?REGION WeaponOfMassDestruction ?RATE))))) ?IMPORTANCE)))))
+
+(answer HighToVeryHigh)
+
+(end_of_file)
+

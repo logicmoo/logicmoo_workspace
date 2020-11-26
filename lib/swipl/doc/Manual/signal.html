@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.12</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="printmsg.html">
+<link rel="next" href="DCG.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="printmsg.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="DCG.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:signal"><a id="sec:4.12"><span class="sec-nr">4.12</span> <span class="sec-title">Handling 
+signals</span></a></h2>
+
+<a id="sec:signal"></a>
+
+<p>As of version 3.1.0, SWI-Prolog is able to handle software interrupts 
+(signals) in Prolog as well as in foreign (C) code (see <a class="sec" href="foreigninclude.html#sec:12.4.15">section 
+12.4.15</a>).
+
+<p>Signals are used to handle internal errors (execution of a 
+non-existing CPU instruction, arithmetic domain errors, illegal memory 
+access, resource overflow, etc.), as well as for dealing with 
+asynchronous interprocess communication.
+
+<p>Signals are defined by the POSIX standard and part of all Unix 
+machines. The MS-Windows Win32 provides a subset of the signal handling 
+routines, lacking the vital functionality to raise a signal in another 
+thread for achieving asynchronous interprocess (or interthread) 
+communication (Unix kill() function).
+
+<dl class="latex">
+<dt class="pubdef"><a id="on_signal/3"><strong>on_signal</strong>(<var>+Signal, 
+-Old, :New</var>)</a></dt>
+<dd class="defbody">
+Determines how <var>Signal</var> is processed. <var>Old</var> is unified 
+with the old behaviour, while the behaviour is switched to <var>New</var>. 
+As with similar environment control predicates, the current value is 
+retrieved using <code>on_signal(Signal, Current, Current)</code>.
+
+<p>The action description is an atom denoting the name of the predicate 
+that will be called if <var>Signal</var> arrives. <a id="idx:onsignal3:874"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a> 
+is a meta-predicate, which implies that &lt;<var>Module</var>&gt;:&lt;<var>Name</var>&gt; 
+refers to &lt;<var>Name</var>&gt;/1 in module &lt;<var>Module</var>&gt;. 
+The handler is called with a single argument: the name of the signal as 
+an atom. The Prolog names for signals are explained below.
+
+<p>Three names have special meaning. <code>throw</code> implies Prolog 
+will map the signal onto a Prolog exception as described in <a class="sec" href="exception.html#sec:4.10">section 
+4.10</a>,
+<code>debug</code> specifies the debug interrupt prompt that is 
+initially bound to <code>SIGINT</code> (Control-C) and <code>default</code> 
+resets the handler to the settings active before SWI-Prolog manipulated 
+the handler.
+
+<p>Signals bound to a foreign function through <a class="func" href="foreigninclude.html#PL_signal()">PL_signal()</a> 
+are reported using the term <code>&rsquo;$foreign_function'(Address)</code>.
+
+<p>After receiving a signal mapped to <code>throw</code>, the exception 
+raised has the following structure:
+<blockquote><code>error(signal(&lt;<var>SigName</var>&gt;, &lt;<var>SigNum</var>&gt;), &lt;<var>Context</var>&gt;)
+</code></blockquote>
+
+<p>The signal names are defined by the POSIX standard as symbols of the 
+form <code>SIG</code>&lt;<var>SIGNAME</var>&gt;. The Prolog name for a 
+signal is the lowercase version of &lt;<var>SIGNAME</var>&gt;. The 
+predicate <a id="idx:currentsignal3:875"></a><a class="pred" href="signal.html#current_signal/3">current_signal/3</a> 
+may be used to map between names and signals.
+
+<p>Initially, the following signals are handled unless the command line 
+option <strong>--no-signals</strong> is specified:
+
+<dl class="latex">
+<dt><b>int</b></dt>
+<dd class="defbody">
+Prompts the user, allowing to inspect the current state of the process 
+and start the tracer.
+</dd>
+<dt><b>usr2</b></dt>
+<dd class="defbody">
+Bound to an empty signal handler used to make blocking system calls 
+return. This allows <a id="idx:threadsignal2:876"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+to interrupt threads blocked in a system call. See also <a id="idx:prologalertsignal2:877"></a><a class="pred" href="signal.html#prolog_alert_signal/2">prolog_alert_signal/2</a>.
+</dd>
+<dt><b>hup, term, abrt, quit</b></dt>
+<dd class="defbody">
+Causes normal Prolog cleanup (e.g., <a id="idx:athalt1:878"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>) 
+before terminating the process with the same signal.
+</dd>
+<dt><b>segv, ill, bus, sys</b></dt>
+<dd class="defbody">
+Dumps the C and Prolog stacks and runs cleanup before terminating the 
+process with the same signal.
+</dd>
+<dt><b>fpe, alrm, xcpu, xfsz, vtalrm</b></dt>
+<dd class="defbody">
+Throw a Prolog exception (see above).
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="current_signal/3"><strong>current_signal</strong>(<var>?Name, 
+?Id, ?Handler</var>)</a></dt>
+<dd class="defbody">
+Enumerate the currently defined signal handling. <var>Name</var> is the 
+signal name, <var>Id</var> is the numerical identifier and <var>Handler</var> 
+is the currently defined handler (see <a id="idx:onsignal3:879"></a><a class="pred" href="signal.html#on_signal/3">on_signal/3</a>).</dd>
+<dt class="pubdef"><a id="prolog_alert_signal/2"><strong>prolog_alert_signal</strong>(<var>?Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Query or set the signal used to unblock blocking system calls on Unix 
+systems and process pending Prolog signals. The default is
+<code>SIGUSR2</code>. See also <strong>--sigalert</strong>.
+</dd>
+</dl>
+
+<p><h3 id="sec:signalhandling"><a id="sec:4.12.1"><span class="sec-nr">4.12.1</span> <span class="sec-title">Notes 
+on signal handling</span></a></h3>
+
+<a id="sec:signalhandling"></a>
+
+<p>Before deciding to deal with signals in your application, please 
+consider the following:
+
+<p>
+<ul class="latex">
+<li><i>Portability</i><br>
+On MS-Windows, the signal interface is severely limited. Different Unix 
+brands support different sets of signals, and the relation between 
+signal name and number may vary. Currently, the system only supports 
+signals numbered 1 to 32<sup class="fn">76<span class="fn-text">TBD: the 
+system should support the Unix realtime signals</span></sup>. Installing 
+a signal outside the limited set of supported signals in MS-Windows 
+crashes the application.
+
+<p>
+<li><i>Safety</i><br>
+Immediately delivered signals (see below) are unsafe. This implies that 
+foreign functions called from a handler cannot safely use the SWI-Prolog 
+API and cannot use C longjmp(). Handlers defined as <code>throw</code> 
+are unsafe. Handlers defined to call a predicate are safe. Note that the 
+predicate can call <a id="idx:throw1:880"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, 
+but the delivery is delayed until Prolog is in a safe state.
+
+<p>The C-interface described in <a class="sec" href="foreigninclude.html#sec:12.4.15">section 
+12.4.15</a> provides the option
+<code>PL_SIGSYNC</code> to select either safe synchronous or unsafe 
+asynchronous delivery.
+
+<p>
+<li><i>Time of delivery</i><br>
+Using <code>throw</code> or a foreign handler, signals are delivered 
+immediately (as defined by the OS). When using a Prolog predicate, 
+delivery is delayed to a safe moment. Blocking system calls or foreign 
+loops may cause long delays. Foreign code can improve on that by calling <a class="func" href="foreigninclude.html#PL_handle_signals()">PL_handle_signals()</a>.
+
+<p>Signals are blocked when the garbage collector is active.
+</ul>
+
+<p></body></html>

@@ -1,0 +1,1 @@
+(goal [primary_market] [situation: (raise [primary_market] [money_value *x1])(of ?x1 [capital])])

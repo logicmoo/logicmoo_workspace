@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.30</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="pairs.html">
+<link rel="next" href="pio.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="pairs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="pio.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:persistency"><a id="sec:A.30"><span class="sec-nr">A.30</span> <span class="sec-title">library(persistency): 
+Provide persistent dynamic predicates</span></a></h2>
+
+<p><a id="sec:persistency"></a>
+
+<dl class="tags">
+<dt class="mtag">To be done</dt>
+<dd>
+- Provide type safety while loading <br>
+- Thread safety must now be provided at the user-level. Can we provide 
+generic thread safety? Basically, this means that we must wrap all 
+exported predicates. That might better be done outside this library. <br>
+- Transaction management? <br>
+- Should assert_<var>&lt;</var>name<var>&gt;</var> only assert if the 
+database does not contain a variant? <br>
+- Since we have <a class="pred" href="prolog-event.html#prolog_listen/2">prolog_listen/2</a>, 
+we could use direct <a class="pred" href="db.html#assert/1">assert/1</a> 
+and
+<a class="pred" href="db.html#retract/1">retract/1</a> and use the 
+system hooks to deal with the updates.
+</dd>
+</dl>
+
+<p>This module provides simple persistent storage for one or more 
+dynamic predicates. A database is always associated with a module. A 
+module that wishes to maintain a database must declare the terms that 
+can be placed in the database using the directive <a class="pred" href="persistency.html#persistent/1">persistent/1</a>.
+
+<p>The <a class="pred" href="persistency.html#persistent/1">persistent/1</a> 
+expands each declaration into four predicates:
+
+<p>
+<ul class="compact">
+<li><code>name(Arg, ...)</code>
+<li><code>assert_name(Arg, ...)</code>
+<li><code>retract_name(Arg, ...)</code>
+<li><code>retractall_name(Arg, ...)</code>
+</ul>
+
+<p>As mentioned, a database can only be accessed from within a single 
+module. This limitation is on purpose, forcing the user to provide a 
+proper API for accessing the shared persistent data.
+
+<p>This module requires the same thread-synchronization as the normal 
+Prolog database. This implies that if each individual assert or retract 
+takes the database from one consistent state to the next, no additional 
+locking is required. If more than one elementary database operation is 
+required to get from one consistent state to the next, both updating and 
+querying the database must be locked using <a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>.
+
+<p>Below is a simple example, where adding a user does not need locking 
+as it is a single <i>assert</i>, while modifying a user requires both a 
+retract and assert and thus needs to be locked.
+
+<pre class="code">
+:- module(user_db,
+          [ attach_user_db/1,           % +File
+            current_user_role/2,        % ?User, ?Role
+            add_user/2,                 % +User, +Role
+            set_user_role/2             % +User, +Role
+          ]).
+:- use_module(library(persistency)).
+
+:- persistent
+        user_role(name:atom, role:oneof([user,administrator])).
+
+attach_user_db(File) :-
+        db_attach(File, []).
+
+%%      current_user_role(+Name, -Role) is semidet.
+
+current_user_role(Name, Role) :-
+        with_mutex(user_db, user_role(Name, Role)).
+
+add_user(Name, Role) :-
+        assert_user_role(Name, Role).
+
+set_user_role(Name, Role) :-
+        user_role(Name, Role), !.
+set_user_role(Name, Role) :-
+        with_mutex(user_db,
+                   (  retractall_user_role(Name, _),
+                      assert_user_role(Name, Role))).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="persistent/1"><strong>persistent</strong> <var>+Spec</var></a></dt>
+<dd class="defbody">
+Declare dynamic database terms. Declarations appear in a directive and 
+have the following format:
+
+<pre class="code">
+:- persistent
+        &lt;callable&gt;,
+        &lt;callable&gt;,
+        ...
+</pre>
+
+<p>Each specification is a callable term, following the conventions of <code>library(record)</code>, 
+where each argument is of the form
+
+<pre class="code">
+name:type
+</pre>
+
+<p>Types are defined by <code>library(error)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_persistent_predicate/1"><strong>current_persistent_predicate</strong>(<var>:PI</var>)</a></dt>
+<dd class="defbody">
+True if <var>PI</var> is a predicate that provides access to the 
+persistent database DB.</dd>
+<dt class="pubdef"><a id="db_attach/2"><strong>db_attach</strong>(<var>:File, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Use <var>File</var> as persistent database for the calling module. The 
+calling module must defined <a class="pred" href="persistency.html#persistent/1">persistent/1</a> 
+to declare the database terms. Defined options:
+
+<dl class="latex">
+<dt><strong>sync</strong>(<var>+Sync</var>)</dt>
+<dd class="defbody">
+One of <code>close</code> (close journal after write), <code>flush</code> 
+(default, flush journal after write) or <code>none</code> (handle as 
+fully buffered stream).
+</dd>
+</dl>
+
+<p>If <var>File</var> is already attached this operation may change the <code>sync</code> 
+behaviour.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="db_attached/1"><strong>db_attached</strong>(<var>:File</var>)</a></dt>
+<dd class="defbody">
+True if the context module attached to the persistent database <var>File</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="db_detach/0"><strong>db_detach</strong></a></dt>
+<dd class="defbody">
+Detach persistency from the calling module and delete all persistent 
+clauses from the Prolog database. Note that the file is not affected. 
+After this operation another file may be attached, providing it 
+satisfies the same persistency declaration.</dd>
+<dt class="pubdef"><a id="db_sync/1"><strong>db_sync</strong>(<var>:What</var>)</a></dt>
+<dd class="defbody">
+Synchronise database with the associated file. <var>What</var> is one 
+of:
+
+<dl class="latex">
+<dt><strong>reload</strong></dt>
+<dd class="defbody">
+Database is reloaded from file if the file was modified since loaded.
+</dd>
+<dt><strong>update</strong></dt>
+<dd class="defbody">
+As <code>reload</code>, but use incremental loading if possible. This 
+allows for two processes to examine the same database file, where one 
+writes the database and the other periodycally calls <code>db_sync(update)</code> 
+to follow the modified data.
+</dd>
+<dt><strong>gc</strong></dt>
+<dd class="defbody">
+Database was re-written, deleting all retractall statements. This is the 
+same as <code>gc(50)</code>.
+</dd>
+<dt><strong>gc</strong>(<var>Percentage</var>)</dt>
+<dd class="defbody">
+GC DB if the number of deleted terms is greater than the given 
+percentage of the total number of terms.
+</dd>
+<dt><strong>gc</strong>(<var>always</var>)</dt>
+<dd class="defbody">
+GC DB without checking the percentage.
+</dd>
+<dt><strong>close</strong></dt>
+<dd class="defbody">
+Database stream was closed
+</dd>
+<dt><strong>detach</strong></dt>
+<dd class="defbody">
+Remove all registered persistency for the calling module
+</dd>
+<dt><strong>nop</strong></dt>
+<dd class="defbody">
+No-operation performed
+</dd>
+</dl>
+
+<p>With unbound <var>What</var>, <a class="pred" href="persistency.html#db_sync/1">db_sync/1</a> 
+reloads the database if it was modified on disk, gc it if it is dirty 
+and close it if it is opened.</dd>
+<dt class="pubdef"><a id="db_sync_all/1"><strong>db_sync_all</strong>(<var>+What</var>)</a></dt>
+<dd class="defbody">
+Sync all registered databases.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,98 @@
+(note TQC14)
+
+(exportsThrough Bahrain Petroleum-CrudeOil Iraq-SaudiArabiaPipeline) 
+(exportsThrough Bahrain PetroleumProduct StraitOfHormuz) 
+(exportsThrough Kuwait PetroleumProduct StraitOfHormuz) 
+(exportsThrough Oman PetroleumProduct StraitOfHormuz) 
+(exportsThrough Qatar PetroleumProduct StraitOfHormuz) 
+(exportsThrough SaudiArabia Petroleum-CrudeOil SuMedPipeline)
+(exportsThrough SaudiArabia PetroleumProduct BabElMandeb-Strait) 
+(exportsThrough SaudiArabia PetroleumProduct PetrolinePipeline) 
+(exportsThrough SaudiArabia PetroleumProduct StraitOfHormuz) 
+(exportsThrough UnitedArabEmirates PetroleumProduct StraitOfHormuz) 
+
+(subclass Petroleum-CrudeOil PetroleumProduct) 
+(subclass PetroleumProduct CommodityProduct) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+(internationalOrg-MemberCountry GulfCooperationCouncil Kuwait) 
+(internationalOrg-MemberCountry GulfCooperationCouncil Oman) 
+(internationalOrg-MemberCountry GulfCooperationCouncil Qatar) 
+(internationalOrg-MemberCountry GulfCooperationCouncil SaudiArabia) 
+(internationalOrg-MemberCountry GulfCooperationCouncil SaudiArabia) 
+(internationalOrg-MemberCountry GulfCooperationCouncil UnitedArabEmirates) 
+
+(implies 
+  (and 
+    (greaterThan ?NUM 0) 
+    (exportThroughAmountDuring ?REGION ?PROD ?ROUTE ?DATE (?UNIT ?NUM))) 
+  (exportsThrough ?REGION ?PROD ?ROUTE)) 
+
+(exportThroughAmountDuring Kuwait PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 1.94441)) 
+
+(exportThroughAmountDuring Bahrain PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (BarrelsPerDay 240820)) 
+
+(exportThroughAmountDuring SaudiArabia PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 6.30286)) 
+
+(exportThroughAmountDuring UnitedArabEmirates PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.21477)) 
+
+(exportThroughAmountDuring Qatar PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (BarrelsPerDay 436760)) 
+
+(implies 
+  (exportThroughAmountDuring ?COUNTRY ?PRODUCT ?PATH ?TIME ?AMOUNT) 
+  (exportsThrough ?COUNTRY ?PRODUCT ?PATH)) 
+
+(exportThroughAmountDuring Bahrain Petroleum-CrudeOil Iraq-SaudiArabiaPipeline 
+ (TimeIntervalInclusiveFn PersianGulfWar Now) 
+ (BarrelsPerDay 0)) 
+
+(implies 
+  (and 
+    (instance ?PIPELINE Pipeline) 
+    (temporallySubsumes ?TIME 
+      (stateOfDevice ?PIPELINE FlowControlDeviceClosedState))) 
+  (exportThroughAmountDuring ?COUNTRY ?PRODUCT ?PIPELINE ?TIME (BarrelsPerDay 0))) 
+
+(instance Iraq-SaudiArabiaPipeline Pipeline) 
+
+(temporallySubsumes (TimeIntervalInclusiveFn PersianGulfWar Now) 
+ (stateOfDevice Iraq-SaudiArabiaPipeline FlowControlDeviceClosedState)) 
+
+(instance Petroleum-CrudeOil ProductType) 
+(instance Bahrain GeographicalArea) 
+(subclass ?X ?X)
+
+(query (findall (?CONDUIT ?COUNTRY ?PRODUCTTYPE)
+  (and 
+    (exportsThrough ?COUNTRY ?PRODUCTTYPE ?CONDUIT) 
+    (or 
+      (subclass ?PRODUCTTYPE Petroleum-CrudeOil) 
+      (and 
+        (subclass Petroleum-CrudeOil ?PRODUCTTYPE) 
+        (subclass ?PRODUCTTYPE CommodityProduct)))
+    (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY))))
+
+(answer StraitOfHormuz Kuwait PetroleumProduct)
+(answer StraitOfHormuz Qatar PetroleumProduct)
+(answer SuMedPipeline SaudiArabia Petroleum-CrudeOil)
+(answer PetrolinePipeline SaudiArabia PetroleumProduct)
+(answer BabElMandeb-Strait SaudiArabia PetroleumProduct)
+(answer StraitOfHormuz Oman PetroleumProduct)
+(answer StraitOfHormuz Bahrain PetroleumProduct)
+(answer StraitOfHormuz SaudiArabia PetroleumProduct)
+(answer StraitOfHormuz UnitedArabEmirates PetroleumProduct)
+(answer Iraq-SaudiArabiaPipeline Bahrain Petroleum-CrudeOil)  
+
+(end_of_file)
+
+

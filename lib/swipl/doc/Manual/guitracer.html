@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 3.5</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="pceemacs.html">
+<link rel="next" href="navigator.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="pceemacs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="navigator.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:guitracer"><a id="sec:3.5"><span class="sec-nr">3.5</span> <span class="sec-title">The 
+Graphical Debugger</span></a></h2>
+
+<a id="sec:guitracer"></a>
+
+<p>SWI-Prolog offers two debuggers. One is the traditional text 
+console-based 4-port Prolog tracer and the other is a window-based 
+source level debugger. The window-based debugger requires XPCE 
+installed. It operates based on the <a id="idx:prologtraceinterception4:380"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
+hook and other low-level functionality described in <a class="sec" href="hack.html#sec:B">chapter 
+B</a>.
+
+<p>Window-based tracing provides a much better overview due to the 
+eminent relation to your source code, a clear list of named variables 
+and their bindings as well as a graphical overview of the call and 
+choice point stack. There are some drawbacks though. Using a textual 
+trace on the console, one can scroll back and examine the past, while 
+the graphical debugger just presents a (much better) overview of the 
+current state.
+
+<p><h3 id="sec:start-guitracer"><a id="sec:3.5.1"><span class="sec-nr">3.5.1</span> <span class="sec-title">Invoking 
+the window-based debugger</span></a></h3>
+
+<a id="sec:start-guitracer"></a>
+
+<p>Whether the text-based or window-based debugger is used is controlled 
+using the predicates <a id="idx:guitracer0:381"></a><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a> 
+and <a id="idx:noguitracer0:382"></a><a class="pred" href="guitracer.html#noguitracer/0">noguitracer/0</a>. 
+Entering debug mode is controlled using the normal predicates for this: <a id="idx:trace0:383"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+and
+<a id="idx:spy1:384"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>. 
+In addition, PceEmacs prolog mode provides the command
+<strong>Prolog/Break at</strong> (<code>Control-c b</code>) to insert a 
+break-point at a specific location in the source code.
+
+<p>The graphical tracer is particularly useful for debugging threads. 
+The tracer must be loaded from the <code>main</code> thread before it 
+can be used from a background thread.
+
+<dl class="latex">
+<dt class="pubdef"><a id="guitracer/0"><strong>guitracer</strong></a></dt>
+<dd class="defbody">
+This predicate installs the above-mentioned hooks that redirect tracing 
+to the window-based environment. No window appears. The debugger window 
+appears as actual tracing is started through <a id="idx:trace0:385"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>, 
+by hitting a spy point defined by <a id="idx:spy1:386"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+or a break point defined using the PceEmacs command <strong>Prolog/Break 
+at</strong> (<code>Control-c b</code>).</dd>
+<dt class="pubdef"><a id="noguitracer/0"><strong>noguitracer</strong></a></dt>
+<dd class="defbody">
+Disable the hooks installed by <a id="idx:guitracer0:387"></a><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a>, 
+reverting to normal text console-based tracing.</dd>
+<dt class="pubdef"><a id="gtrace/0"><strong>gtrace</strong></a></dt>
+<dd class="defbody">
+Utility defined as <code>guitracer,trace</code>.</dd>
+<dt class="pubdef"><a id="gdebug/0"><strong>gdebug</strong></a></dt>
+<dd class="defbody">
+Utility defined as <code>guitracer,debug</code>.</dd>
+<dt class="pubdef"><a id="gspy/1"><strong>gspy</strong>(<var>+Predicate</var>)</a></dt>
+<dd class="defbody">
+Utility defined as <code>guitracer,spy(Predicate)</code>.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,52 @@
+(note TQE212)
+
+(implies 
+  (and 
+    (instance ?INVASION MilitaryInvasion) 
+    (agent ?INVASION ?AGENT-1) 
+    (objectActedOn ?INVASION ?REGION) 
+    (power-Military ?AGENT-1 ?POWER-LEVEL) 
+    (followingValue Medium ?POWER-LEVEL) 
+    (different ?AGENT-1 ?AGENT-2) 
+    (temporallySubsumes (STIB ?INVASION) 
+      (territoriesControlled ?AGENT-2 ?REGION))) 
+  (decreasesImmediatelyCausally ?INVASION 
+    (territoriesControlled ?AGENT-2 ?REGION) likelihood)) 
+
+(instance HYP-MilitaryInvasion-39842452 MilitaryInvasion) 
+(followingValue Medium High) 
+(objectActedOn HYP-MilitaryInvasion-39842452 AbuMusaIsland) 
+(directingAgent HYP-MilitaryInvasion-39842452 UnitedStatesOfAmerica) 
+(power-Military UnitedStatesOfAmerica High) 
+
+(temporallySubsumes (STIB HYP-MilitaryInvasion-39842452) 
+ (territoriesControlled Iran AbuMusaIsland)) 
+
+(decreasesImmediatelyCausally HYP-MilitaryInvasion-39842452 
+ (territoriesControlled Iran AbuMusaIsland) likelihood) 
+
+(query (findall ?SLOT
+
+(implies
+  (and 
+    (instance ?INVASION MilitaryInvasion) 
+    (temporallySubsumes AbuMusaConflict-1992 ?INVASION) 
+    (temporallySubsumes 
+      (MonthFn July 
+        (YearFn 1992)) ?INVASION) 
+    (temporallySubsumes 
+      (STIB ?INVASION) 
+      (territoriesControlled Iran AbuMusaIsland)) 
+    (directingAgent ?INVASION UnitedStatesOfAmerica) 
+    (objectActedOn ?INVASION AbuMusaIsland)) 
+  (and 
+    (trueFormula 
+      (?SLOT ?INVASION 
+        (territoriesControlled Iran AbuMusaIsland) likelihood)) 
+    (instance ?SLOT SlotTrendPredicate)))))
+
+(answer decrease)
+
+(end_of_file)
+
+

@@ -1,0 +1,125 @@
+(note TQF201c)
+
+(doesBusinessWith Turkey SaudiArabia) 
+(instance SaudiArabia GeographicalAgent) 
+
+(formulaImplies 
+  (thereExists ?MAKING 
+    (thereExists ?PIPELINE 
+      (and 
+        (instance ?MAKING 
+          (CollectionSubsetFn 
+            (MakingFn OilPipeline) 
+            (TheSetOf ?OBJ 
+              (eventOccursNear ?OBJ Caucasus-Region))))
+        (instance ?PIPELINE OilPipeline) 
+        (directingAgent ?MAKING AIOC) 
+        (importanceOfThingInSet ?PIPELINE OilPipeline High))))
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region))))))
+
+(interests-Prop SaudiArabia 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region)))))) 
+
+(doesBusinessWith Turkey Azerbaijan) 
+(instance Azerbaijan GeographicalAgent) 
+
+(interests-Prop Azerbaijan 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region))))))
+
+(doesBusinessWith Turkey Iran) 
+(instance Iran GeographicalAgent) 
+
+(interests-Prop Iran 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region))))))
+
+(customers Turkey SaudiArabia) 
+(inverse customers doesBusinessWith) 
+(customers Turkey Azerbaijan) 
+(inverse customers doesBusinessWith) 
+(customers Turkey Iran) 
+(inverse customers doesBusinessWith) 
+
+(desires SaudiArabia 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region)))))) 
+
+(desires Azerbaijan 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region)))))) 
+
+(desires Iran 
+  (thereExists ?MAKING 
+    (instance ?MAKING 
+      (CollectionSubsetFn 
+        (MakingFn OilPipeline) 
+        (TheSetOf ?OBJ 
+          (eventOccursNear ?OBJ Caucasus-Region)))))) 
+
+(query (findall ?AGENT ?PROP)
+   (and 
+       (instance ?AGENT GeographicalAgent) 
+       (doesBusinessWith Turkey ?AGENT) 
+       (interests-Prop ?AGENT ?PROP) 
+       (formulaImplies 
+           (thereExists ?MAKING 
+               (thereExists ?PIPELINE 
+                   (and 
+                       (instance ?MAKING 
+                           (CollectionSubsetFn 
+                               (MakingFn OilPipeline) 
+                               (TheSetOf ?OBJ 
+                                   (eventOccursNear ?OBJ Caucasus-Region)))) 
+                       (directingAgent ?MAKING AIOC) 
+                       (instance ?PIPELINE OilPipeline) 
+                       (importanceOfThingInSet ?PIPELINE OilPipeline High)))) ?PROP)))
+
+(answer Iran (list (thereExists ?MAKING 
+  (instance ?MAKING 
+    (CollectionSubsetFn 
+      (MakingFn OilPipeline) 
+      (TheSetOf ?OBJ 
+        (eventOccursNear ?OBJ Caucasus-Region)))))))
+
+(answer Azerbaijan (list (thereExists ?MAKING 
+ (instance ?MAKING 
+ (CollectionSubsetFn 
+ (MakingFn OilPipeline) 
+ (TheSetOf ?OBJ 
+ (eventOccursNear ?OBJ Caucasus-Region)))))))
+ 
+(answer SaudiArabia (list (thereExists ?MAKING 
+ (instance ?MAKING 
+ (CollectionSubsetFn 
+ (MakingFn OilPipeline) 
+ (TheSetOf ?OBJ 
+ (eventOccursNear ?OBJ Caucasus-Region)))))))
+
+(end_of_file)

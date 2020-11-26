@@ -1,0 +1,13 @@
+:- consult('configuration').
+:- consult('iem_parser').
+:- consult('normal_form').
+:- consult('export_domain').
+:- consult('export_problem').
+:- consult('dates').
+:- consult('profile').
+:- consult('world_knowledge').
+:- consult('atTime').
+:- consult('baseKB').
+:- consult('flp_convert_pl_to_verb').
+:- consult('generate_glosses').
+:- consult('dialog_interface').

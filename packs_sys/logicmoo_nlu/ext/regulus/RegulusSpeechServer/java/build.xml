@@ -1,0 +1,54 @@
+<project name="RegulusSpeechServer" default="compile" basedir=".">
+    <description>
+        regulus protege plugin build file
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="regulus" location="C:/home/speech/Regulus"/>
+	<property name="src" location="${regulus}/RegulusSpeechServer/java"/>
+	<property name="runtime" location="${regulus}/RegulusSpeechServer/runtime"/>
+	
+	<property name="commonsCollection" location="C:/java/commons-collections-3.1/commons-collections-3.1.jar" />
+	<property name="commonsConfig" location="C:/java/commons-configuration-1.1.jar" />
+	<property name="commonsLang" location="C:/java/commons-lang-2.1/commons-lang-2.1.jar" />
+	<property name="commonsLogging" location="C:/java/commons/commons-logging.jar" />
+	<property name="commonsLibs" value="${commonsLang}:${commonsCollection}:${commonsConfig}:${commonsLogging}" />
+
+	<property name="protege"  location="C:/Program Files/Protege_3.1" />
+	<property name="protege.plugins.regulus"  location="C:/Program Files/Protege_3.1/plugins/net.sf.regulus.plugins.protege"/>
+
+	<target name="compile" description="compile the source" depends="clean">
+		<!-- Compile the java code and copy it to required places -->
+		<javac srcdir="${src}" classpath="${commonsLibs}:${protege}/protege.jar:${protege}/looks.jar:${protege}/unicode_panel.jar" debug="true" />
+
+		<jar destfile="${runtime}/regClient.jar">
+			<fileset dir="${src}" includes="net/**/*.class" />
+			<manifest>
+				<section name="net/sf/regulus/plugins/protege/ProtegeExporter.class">
+					<attribute name="Export-Plugin" value="True" />
+				</section>
+			</manifest>
+		</jar>
+
+		<copy file="${runtime}/regClient.jar" todir="${protege.plugins.regulus}" />
+		<copy file="${commonsCollection}" todir="${protege.plugins.regulus}" />
+		<copy file="${commonsLang}" todir="${protege.plugins.regulus}" />
+		<copy file="${commonsConfig}" todir="${protege.plugins.regulus}" />
+		<copy file="${commonsLogging}" todir="${protege.plugins.regulus}" />
+			
+		<copy file="${runtime}/regClient.jar" tofile="${protege.plugins.regulus}/regClient.zip" />
+
+		<copy file="${src}/about_regulus_exporter.html" todir="${protege.plugins.regulus}" />
+		<copy file="${src}/plugin.properties" todir="${protege.plugins.regulus}" />
+	</target>
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="${src}" includes="net/**/*.class"/>
+			<fileset dir="${protege.plugins.regulus}" includes="*.jar" />
+			<fileset dir="${protege.plugins.regulus}" includes="*.zip" />
+			<fileset dir="${protege.plugins.regulus}" includes="*.properties" />
+			<fileset file="${runtime}/regClient.jar" />
+		</delete>
+	</target>
+</project>

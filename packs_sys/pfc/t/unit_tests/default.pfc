@@ -1,0 +1,43 @@
+% -*-Prolog-*-
+
+:- use_module(library(pfc)).
+% here is an example which defines default facts and rules.  Will it work?
+
+% BWD chaining
+default((Q <- P))/mpred_literal(Q) ==> (Q <-(P, \+ ~(Q))).
+
+% FWD chaining
+default(P==>Q)/nonvar(Q) ==> (((P ==> default(Q)))).
+
+% NEG chaining
+default(~Q)/mpred_positive_fact(Q)  ==>  (( \+ Q ) ==> ~ Q ).
+
+% POS chaining 1 (Neg Trigger)
+default(Q)/(mpred_positive_fact(Q),if_missing_mask(Q,R,Test)) ==> (  ( ( \+R /(ground(R),Test), (\+ ~Q )) ==> Q )).
+
+% POS chaining 2 (Pos Trigger)
+default(Q)/(mpred_positive_fact(Q),if_missing_mask(Q,R,Test)) ==> ( ((R/(ground(R), Test, \+(R=Q))) ==> (\+ Q))).
+
+
+% birds fly by default.
+==> default((bird(X) ==> fly(X))).
+
+% here's one way to do an isa hierarchy.
+% isa = subclass.
+
+isa(C1,C2) ==>
+  {P1 =.. [C1,X],
+    P2 =.. [C2,X]},
+  (P1 ==> P2).
+
+==> isa(canary,bird).
+==> isa(penguin,bird).
+
+% penguins do ~ fly.
+penguin(X) ==> ~fly(X).
+
+% chilly is a penguin.
+==> penguin(chilly).
+
+% tweety is a canary.
+==> canary(tweety).

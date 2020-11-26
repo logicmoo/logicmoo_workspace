@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<!-- 
+    Changes by:    Riccardo Zese
+    E-mail:        riccardo.zese@unife.it
+    Copyright:	   2014-2018, University of Ferrara
+-->
+
+<html>
+  <head>
+  <title>About TRILL on SWISH notebooks</title>
+  </head>
+<body>
+<style>
+p.note { margin-left: 5%; margin-top: 1em; position: relative }
+p.note span.glyphicon-hand-right {
+float: left; font-size: 120%; color: orange; padding-right: 0.2em;
+}
+
+a.nb-no-cell.program { margin: 0px; }
+</style>
+<p>
+A notebook is a list of <i>cells</i>. Notebooks are different from a
+program with examples because they can <em>tell a story</em>, mixing
+properly formatted text with knowledge bases and queries. The story is
+<em>interactive</em>. The reader can edit program fragments and/or
+queries and see the result. This makes notebooks particularly
+interesting for writing <em>tutorials</em> as well as writing
+<em>cookbooks</em> that document data analysis and transformation steps.
+A Prolog notebook supports three types of cells:
+
+  <ul>
+    <li><b>Markdown</b> cells allow you to write text in the SWI-Prolog
+    <a href="/pldoc/man?section=wiki">PlDoc</a> variation of markdown.
+    <li><b>HTML</b> cells allow you to write custom style web pages
+    as well as interative web applications.  See the
+    <a class="file" href="/example/htmlcell.swinb">HTML cell</a> demo.
+    <li><b>Prolog</b> cells contain a Prolog program.
+    <li><b>LPAD</b> cells contain a LPAD program.
+    <li><b>Query</b> cells contain a Prolog query, operating
+    on the nearest program above it.
+    <li><b>HTML</b> cells allow you to write custom style web pages
+    as well as interative web applications.  See the
+    <a class="file" href="/example/htmlcell.swinb">HTML cell</a> demo.
+    <li><b>Program</b> cells contain a (part of a) knowledge base.
+  </ul>
+
+<h3>Creating a notebook</h3>
+
+<p>Creating and managing a notebook is supposed to be intuitive.  Below
+we describe the first starting point as well as some less obvious
+operations.
+
+<ul>
+<li>
+To <b>add a new cell</b>, click the <a class="btn btn-info btn-xs"><span
+class="glyphicon glyphicon-plus"></span></a> button and select the
+desired cell type. The other buttons allow for deleting, copy/paste
+and moving cells.
+
+<li>
+To <b>link to another notebook</b>, create a markdown cell and use the
+markdown notation <code>[label](reference)</code>, e.g.,
+<code>[All about lists](lists.swinb)</code>
+<li>
+To <b>link to file in the store</b>, create a markdown cell and use the
+markdown notation <code>[label](myfile.pl)</code>, e.g.,
+<code>[Basic predicates](basics.pl)</code>
+</ul>
+
+<h3>Notebook queries and programs</h3>
+
+<p>
+A notebook <em>query</em> cell is executed against the program cell
+<strong>above it</strong> and all program cells marked as
+<em>background</em> using the <a class="nb-no-cell btn-default program
+background btn btn-image btn-xs"><span
+class="image-icon"></span></a> button. Click the <a class="nb-no-cell
+btn-default program btn btn-image btn-xs"><span
+class="image-icon"></span></a> button to turn a normal program cell
+into a <i>background</i> cell.
+
+<p class="note"><span class="glyphicon glyphicon-hand-right"></span>
+Longer fragments of code that are required throughout a notebook and
+possibly on multiple notebooks are defined in a <em>program</em> tab,
+saved and included using, e.g., <code>:- include(mybasics).</code> in a
+background program kept at the bottom of the notebook.
+
+<p class="note"><span class="glyphicon glyphicon-hand-right"></span>
+If you want to have multiple related queries in a notebook you can
+add a <i>background</i> program at the end of the notebook and above
+this program pairs of a normal program and query where the normal
+program provides data and/or parameters by defining predicates that
+are missing from the background program.
+</body>
+</html>

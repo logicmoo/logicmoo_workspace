@@ -1,0 +1,21 @@
+(note TQD97)
+
+(instance 
+ (BarrelsPerDay 8000) FlowRate) 
+
+(importFromAmountDuring UnitedStatesOfAmerica Petroleum-CrudeOil Algeria 
+ (YearFn 1996) 
+ (BarrelsPerDay 8000)) 
+
+(query (findall (?A2 ?TIME) 
+
+(and 
+   (importFromAmountDuring UnitedStatesOfAmerica Petroleum-CrudeOil Algeria ?TIME ?A2) 
+   (instance ?A2 FlowRate))
+))
+
+(answer 8000 1996
+)
+
+(end_of_file)
+

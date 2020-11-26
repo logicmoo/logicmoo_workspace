@@ -1,0 +1,179 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----Mark Stickel's PTTP system.
+%----
+%----Written by Geoff Sutcliffe, June, 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%----------------------------------------------------------------------
+%----Output the Prolog clause header for the problem definition
+output_pttp_problem_header:-
+    write(prove_this),
+%----Write the : and - separately, to avoid BinProlog problems
+    write(':'),
+    write('-'),
+    nl,
+    write('    nl,'),
+    nl,
+    write('    write('),
+    write(prove_this),
+    write('),'),
+    nl,
+    write('    nl,'),
+    nl,
+    write('    pttp(('),
+    nl.
+%--------------------------------------------------------------------
+%----Output a literal, compiling negation into the name
+output_pttp_literal(++ '$true', '','not_'):-
+    !,
+    write(true).
+
+output_pttp_literal(++ '$false','','not_'):-
+    !,
+    write(false).
+
+output_pttp_literal(-- '$true', '','not_'):-
+    !,
+    write(false).
+
+output_pttp_literal(-- '$false','','not_'):-
+    !,
+    write(true).
+
+output_pttp_literal(++ '$true', 'not_',''):-
+    !,
+    write(false).
+
+output_pttp_literal(++ '$false','not_',''):-
+    !,
+    write(true).
+
+output_pttp_literal(-- '$true', 'not_',''):-
+    !,
+    write(true).
+
+output_pttp_literal(-- '$false','not_',''):-
+    !,
+    write(false).
+
+output_pttp_literal(++Atom,PositivePrefix,_):-
+    write(PositivePrefix),
+    write(Atom).
+
+output_pttp_literal(--Atom,_,NegativePrefix):-
+    write(NegativePrefix),
+    write(Atom).
+%--------------------------------------------------------------------
+%----Output the literals of the clause, as a clause.
+%----Special case of an empty clause
+output_pttp_literals([],_,_,_):-
+    !.
+
+output_pttp_literals([Literal],_,PositivePrefix,NegativePrefix):-
+    !,
+    output_pttp_literal(Literal,PositivePrefix,NegativePrefix).
+
+output_pttp_literals([Literal|RestOfLiterals],Separator,
+PositivePrefix,NegativePrefix):-
+    output_pttp_literal(Literal,PositivePrefix,NegativePrefix),
+    write(Separator),
+    nl,
+    write('            '),
+    output_pttp_literals(RestOfLiterals,Separator,PositivePrefix,
+NegativePrefix).
+%--------------------------------------------------------------------
+%----Output each clause in PTTP format, ; separated.
+output_pttp_problem([]):-
+    !.
+
+output_pttp_problem([input_clause(_,_,Literals)|RestOfClauses]):-
+    write('        ('),
+    output_pttp_literals(Literals,';','','not_'),
+    write('),'),
+    nl,
+    output_pttp_problem(RestOfClauses).
+%--------------------------------------------------------------------
+%----Output the top clause in it's format
+%----Special case of an empty clause
+output_pttp_query([]):-
+    !,
+    write('        (query))'),
+    nl.
+
+output_pttp_query(QueryLiterals):-
+    write('        (query:-'),
+    nl,
+    write('            '),
+    output_pttp_literals(QueryLiterals,',','not_',''),
+    write(')'),
+    nl.
+%--------------------------------------------------------------------
+%----Output the Prolog clause tail for the problem definition
+output_pttp_problem_tail:-
+    write('        )),'),
+    nl,
+    write('    !,'),
+    nl,
+%----Output call to proof mechanism
+    write('    prove(query).'),
+    nl,
+%----Output comment about the possible problem here
+    write('%----Note that the query is executed in the context of the'),
+    nl,
+    write('%----compilation, which means some stack space may be unavailable'),
+    nl.
+%--------------------------------------------------------------------
+%----Output the Prolog clause that activates the query after
+%----compilation.
+%----This version changed to the current, on Stickel's advice
+% output_pttp_query_call(ProblemName):-
+%     writeq(ProblemName),
+%     write(':-'),
+%     nl,
+%     write('    prove(query).'),
+%     nl.
+%--------------------------------------------------------------------
+%----Select a clause as the top of the deduction
+%----First look for negative one with status conjecture
+select_pttp_query(InputClauses,Literals):-
+    tptp2X_member(input_clause(_,negated_conjecture,Literals),InputClauses),
+    split_literals_by_sign(Literals,[],Literals),
+    !.
+
+%----If no negative, take any conjecture
+select_pttp_query(InputClauses,Literals):-
+    tptp2X_member(input_clause(_,negated_conjecture,Literals),InputClauses),
+    !.
+
+%----If no conjecture, then simply take first
+select_pttp_query([input_clause(_,_,Literals)|_],Literals).
+%--------------------------------------------------------------------
+%----Output the Prolog clauses that define the problem.
+pttp(pttp,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+%----Output the start of the first Prolog clause
+    output_pttp_problem_header,
+%----Choose a clause as the query clause
+    select_pttp_query(Clauses,QueryLiterals),
+%----Output the other clauses in clausal form.
+    output_pttp_problem(Clauses),
+%----Output the query in it's special form.
+    output_pttp_query(QueryLiterals),
+%----Output the end of first Prolog clause.
+    output_pttp_problem_tail.
+
+%----Do nothing for FOF - just leave a comment
+pttp(pttp,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in PTTP'),
+    nl.
+%--------------------------------------------------------------------
+%----Provide information about the PTTP format
+pttp_format_information('%','.pttp').
+%--------------------------------------------------------------------
+%----Provide information about the PTTP file
+pttp_file_information(format,pttp,'PTTP format').
+%--------------------------------------------------------------------

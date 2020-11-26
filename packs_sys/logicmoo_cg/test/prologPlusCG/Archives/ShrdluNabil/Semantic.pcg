@@ -1,0 +1,41 @@
+maximalJoin(G1, E1, G2, E2, G3, E3) :-
+   _resMatchCG is G1:maximalJoin(E1, G2, E2),
+   G3 is _resMatchCG:getCG(),
+   E3 is _resMatchCG:getConcept(), !.
+
+stativePart([A|P1], P1, G_NP, E_NP, G) :-
+   Adj(A, R1, T1, V1), !, 
+   eq([N : M], E_NP),
+   eq(G, [N : M]-R1->[T1 = V1]), !.
+
+//   branchOfCG(B, [N : M]-R1->[T1 = V1], G),
+//   E_N is B:getSourceConcept(),
+//   G:specialize(E_N, G_NP, E_NP).
+
+stativePart(P, P1, G_NP, E_NP, G_NP) :-
+   NP(P, P1, G_NP1, E_NP1),
+   G_NP:specialize(E_NP, G_NP1, E_NP1).
+
+stativePart(P, P1, G_NP, E_NP, G):-
+   Pronoun(P, P1, R, T, V),
+   eq([N : A1], E_NP),
+   eq(G, [N : A1]-R->[T = V]),
+   branchOfCG(B_Branch, [N : A1]-R->[T = V], G),
+   E_N is B_Branch:getSourceConcept(),
+   G:specialize(E_N, G_NP, E_NP).
+
+//Groupe Verbal
+ActiveVP(P, P1, G_SUBJ, E_SUBJ, G) :-
+   ActiveVP(P, P1, G),
+   branchOfCG(B_Branch, [Action]-agnt->[X], G),
+   E_G_SUBJ is B_Branch:getTargetConcept(),
+   G:specialize(E_G_SUBJ, G_SUBJ, E_SUBJ).
+
+ActiveVP([V|P1], P3, G) :-
+   Verb(V, G_lexicon),
+   G is G_lexicon:copy(),
+   cod(P1, P2, G),
+   complement(P2, P3, G).
+
+
+

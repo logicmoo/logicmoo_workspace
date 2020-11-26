@@ -1,0 +1,11 @@
+Relevant to applications using targeted help. The corpus defined by the config file parameter
+\begin{verbatim}
+help_corpus
+\end{verbatim}
+which should be in \verb!sent(...)! form, is passed through help processing, and the results
+are written out to the file defined by
+config file parameter
+\begin{verbatim}
+help_corpus_results
+\end{verbatim}
+Help resources must be defined and loaded.

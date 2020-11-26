@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://roots.iai.uni-bonn.de/downloads/update-site">
+      JTransformer is a query and transformation engine for Java source code, available as a plug-in for the Eclipse JDT .
+
+JTransformer creates an Abstract Syntax Tree (AST) representation of a Java project as a Prolog database consisting of Program Element Facts (PEFs). Using the PDT Prolog IDE, programmers can quickly implement powerful queries and transformations on the logic fact base. Analyses can be performed on the entire source and byte code of a project. The source code can be transformed via Conditonal Transformations (CTs).
+The JTransformer Eclipse plugin takes care of synchronizing the logical AST representation with Java source code:
+
+    * The result of applying Conditonal Transformations is reflected either in the original source code or in a copy of it, depending on the option chosen.
+    * Every change in the Java sources that compiles without errors in the Eclipse IDE is incrementally synchronized with the fact representation.
+   </description>
+   <feature url="features/PDTFeature_3.1.2.qualifier.jar" id="PDTFeature" version="3.1.2.qualifier">
+      <category name="Prolog Development Tool (PDT)"/>
+   </feature>
+   <category-def name="Prolog Development Tool (PDT)" label="Prolog Development Tool (PDT)"/>
+</site>

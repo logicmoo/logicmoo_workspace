@@ -1,0 +1,90 @@
+; nuance grammar for GoDiS agendatalk domain/lexicon
+
+.Asrg_agenda_english LexiconAgendaEnglish
+
+LexiconAgendaEnglish  [ ( ?(+ICM) -pau- ?Answer ?ShortAns) 
+			( ?(+ICM) -pau- ?Question ) 
+			Greet
+			Quit
+			YesNo
+			]
+
+Greet [ hello
+	hi]
+Quit [ bye
+	goodbye
+	quit
+	exit]
+YesNo [ yes
+	yeah
+	okay
+	ok
+        (-pau- yes)
+        (yes please)
+	no 
+        (-pau- no)]
+
+;user answers***************
+
+Answer[(?[(i want to take down)(take down)(note down)(i have) (i want to book)] ?a Event ?Date ?Time) (go up) (go back) (add some more information) (change some information) (i need some help) (check the time) (add to the calendar)]
+
+ShortAns[Date Time (?a Event) (check calendar) (take down) (?(i want to) take down an event) (take a note) book AMPM (change ?the [date time]) yes help (what can i do) ([delete erase] ?it all) add top (WeekDay [night morning])]
+
+;user questions**********
+
+Question [ ([(what time) when (what day)] is the ?Event ?Date ) (am i [booked free busy] ?Date ?Time) (what is on my [schedule calendar] ?Date) (do i have ?[any a an] Event ?Date)(do i have anything scheduled ?Date) (what am i up to ?Date) (check if i am booked) (what do i have ?Date) (what about Date)]
+
+
+; ICM**************
+ICM [ pardon
+      okay
+	ok
+      (dont know) ]
+
+;TIMES*************
+
+Time [ (?at half past Hour) (?at a quarter past Hour) ( ?at Hour ?Min ?AMPM) (?at Hour o clock) (at noon) (at midnight)]
+
+AMPM [pm (a m) (in the morning) (in the afternoon) (before lunch) (after lunch) this afternoon) (this morning)]
+
+Hour [ Digit Teen twenty (twenty one) (twenty two) (twenty three) ]
+
+Min  [ Digit Teen (Twenty2Fifty ?Digit) ]
+
+Twenty2Fifty [ twenty thirty forty fifty ] 
+
+;DATES************
+
+Date [today tomorrow tonight (the day after tomorrow) (?on WeekDay) (next WeekDay) (the Day ?of Month) (next week) (WeekDay the Day) (Month Day) ([christmas (newyear)] [day eve])]
+
+WeekDay[ monday 
+	 tuesday
+	 wednesday
+	 thursday
+	 friday
+	 saturday
+	 sunday
+]
+
+Month [ january
+	february
+	march
+	april
+	may
+	june
+	july
+	august
+	september	
+	october
+	november
+	december ]
+
+Day [  first second third fourth fifth sixth seventh eighth ninth tenth eleventh twelfth thirteenth fourteenth fifteenth sixteenth seventeenth eighteenth nineteenth twentieth (twenty first) (twenty second) (twenty third) (twenty fourth) (twenty fifth) (twenty sixth) (twenty seventh) (twenty eighth) (twenty ninth) thirtieth (thirty first)
+	]
+
+Digit [zero one two three four five six seven eight nine ]
+
+Teen [ ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen 
+       nineteen ]
+
+Event [ meeting appointment class conference hairdresser dentist party date deadline presentation lecture training shopping movie museum ]

@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.19</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="jitindex.html">
+<link rel="next" href="limits.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="jitindex.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="limits.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:widechars"><a id="sec:2.19"><span class="sec-nr">2.19</span> <span class="sec-title">Wide 
+character support</span></a></h2>
+
+<a id="sec:widechars"></a>
+
+<p><a id="idx:UTF8:325"></a><a id="idx:Unicode:326"></a><a id="idx:UCS:327"></a><a id="idx:internationalization:328"></a>SWI-Prolog 
+supports <em>wide characters</em>, characters with character codes above 
+255 that cannot be represented in a single <em>byte</em>.
+<em>Universal Character Set</em> (UCS) is the ISO/IEC 10646 standard 
+that specifies a unique 31-bit unsigned integer for any character in any 
+language. It is a superset of 16-bit Unicode, which in turn is a 
+superset of ISO 8859-1 (ISO Latin-1), a superset of US-ASCII. UCS can 
+handle strings holding characters from multiple languages, and character 
+classification (uppercase, lowercase, digit, etc.) and operations such 
+as case conversion are unambiguously defined.
+
+<p>For this reason SWI-Prolog has two representations for atoms and 
+string objects (see <a class="sec" href="string.html#sec:5.2">section 
+5.2</a>). If the text fits in ISO Latin-1, it is represented as an array 
+of 8-bit characters. Otherwise the text is represented as an array of 
+32-bit numbers. This representational issue is completely transparent to 
+the Prolog user. Users of the foreign language interface as described in <a class="sec" href="foreign.html#sec:12">chapter 
+12</a> sometimes need to be aware of these issues though.
+
+<p>Character coding comes into view when characters of strings need to 
+be read from or written to file or when they have to be communicated to 
+other software components using the foreign language interface. In this 
+section we only deal with I/O through streams, which includes file I/O 
+as well as I/O through network sockets.
+
+<p><h3 id="sec:encoding"><a id="sec:2.19.1"><span class="sec-nr">2.19.1</span> <span class="sec-title">Wide 
+character encodings on streams</span></a></h3>
+
+<a id="sec:encoding"></a>
+
+<p>Although characters are uniquely coded using the UCS standard 
+internally, streams and files are byte (8-bit) oriented and there are a 
+variety of ways to represent the larger UCS codes in an 8-bit octet 
+stream. The most popular one, especially in the context of the web, is 
+UTF-8. Bytes 0&nbsp;...&nbsp;127 represent simply the corresponding 
+US-ASCII character, while bytes 128&nbsp;...&nbsp;255 are used for 
+multi-byte encoding of characters placed higher in the UCS space. 
+Especially on MS-Windows the 16-bit Unicode standard, represented by 
+pairs of bytes, is also popular.
+
+<p>Prolog I/O streams have a property called <em>encoding</em> which 
+specifies the used encoding that influences <a id="idx:getcode2:329"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> 
+and <a id="idx:putcode2:330"></a><a class="pred" href="chario.html#put_code/2">put_code/2</a> 
+as well as all the other text I/O predicates.
+
+<p>The default encoding for files is derived from the Prolog flag
+<a class="flag" href="flags.html#flag:encoding">encoding</a>, which is 
+initialised from
+<code>setlocale(LC_CTYPE, NULL)</code> to one of <code>text</code>, <code>utf8</code> 
+or
+<code>iso_latin_1</code>. One of the latter two is used if the encoding 
+name is recognized, while <code>text</code> is used as default. Using
+<code>text</code>, the translation is left to the wide-character 
+functions of the C library.<sup class="fn">37<span class="fn-text">The 
+Prolog native UTF-8 mode is considerably faster than the generic 
+mbrtowc() one.</span></sup> The encoding can be specified explicitly in <a id="idx:loadfiles2:331"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+for loading Prolog source with an alternative encoding, <a id="idx:open4:332"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+when opening files or using <a id="idx:setstream2:333"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
+on any open stream. For Prolog source files we also provide the <a id="idx:encoding1:334"></a><a class="pred" href="consulting.html#encoding/1">encoding/1</a> 
+directive that can be used to switch between encodings that are 
+compatible with US-ASCII (<code>ascii</code>, <code>iso_latin_1</code>, <code>utf8</code> 
+and many locales). See also <a class="sec" href="projectfiles.html#sec:3.1.3">section 
+3.1.3</a> for writing Prolog files with non-US-ASCII characters and <a class="sec" href="syntax.html#sec:2.16.1.9">section 
+2.16.1.9</a> for syntax issues. For additional information and Unicode 
+resources, please visit
+<a class="url" href="http://www.unicode.org/">http://www.unicode.org/</a>.
+
+<p>SWI-Prolog currently defines and supports the following encodings:
+
+<dl class="latex">
+<dt><strong>octet</strong></dt>
+<dd class="defbody">
+Default encoding for <code>binary</code> streams. This causes the stream 
+to be read and written fully untranslated.</dd>
+<dt><strong>ascii</strong></dt>
+<dd class="defbody">
+7-bit encoding in 8-bit bytes. Equivalent to <code>iso_latin_1</code>, 
+but generates errors and warnings on encountering values above 127.</dd>
+<dt><strong>iso_latin_1</strong></dt>
+<dd class="defbody">
+8-bit encoding supporting many Western languages. This causes the stream 
+to be read and written fully untranslated.</dd>
+<dt><strong>text</strong></dt>
+<dd class="defbody">
+C library default locale encoding for text files. Files are read and 
+written using the C library functions mbrtowc() and wcrtomb(). This may 
+be the same as one of the other locales, notably it may be the same as <code>iso_latin_1</code> 
+for Western languages and <code>utf8</code> in a UTF-8 context.</dd>
+<dt><strong>utf8</strong></dt>
+<dd class="defbody">
+Multi-byte encoding of full UCS, compatible with <code>ascii</code>. See 
+above.</dd>
+<dt><strong>unicode_be</strong></dt>
+<dd class="defbody">
+Unicode <em>Big Endian</em>. Reads input in pairs of bytes, most 
+significant byte first. Can only represent 16-bit characters.</dd>
+<dt><strong>unicode_le</strong></dt>
+<dd class="defbody">
+Unicode <em>Little Endian</em>. Reads input in pairs of bytes, least 
+significant byte first. Can only represent 16-bit characters.
+</dd>
+</dl>
+
+<p>Note that not all encodings can represent all characters. This 
+implies that writing text to a stream may cause errors because the 
+stream cannot represent these characters. The behaviour of a stream on 
+these errors can be controlled using <a id="idx:setstream2:335"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>. 
+Initially the terminal stream writes the characters using Prolog escape 
+sequences while other streams generate an I/O exception.
+
+<p><h4 id="sec:bom"><a id="sec:2.19.1.1"><span class="sec-nr">2.19.1.1</span> <span class="sec-title">BOM: 
+Byte Order Mark</span></a></h4>
+
+<a id="sec:bom"></a>
+
+<p><a id="idx:BOM:336"></a><a id="idx:ByteOrderMark:337"></a>From <a class="sec" href="widechars.html#sec:2.19.1">section 
+2.19.1</a>, you may have got the impression that text files are 
+complicated. This section deals with a related topic, making life often 
+easier for the user, but providing another worry to the programmer.
+<b>BOM</b> or <em>Byte Order Marker</em> is a technique for identifying 
+Unicode text files as well as the encoding they use. Such files start 
+with the Unicode character 0xFEFF, a non-breaking, zero-width space 
+character. This is a pretty unique sequence that is not likely to be the 
+start of a non-Unicode file and uniquely distinguishes the various 
+Unicode file formats. As it is a zero-width blank, it even doesn't 
+produce any output. This solves all problems, or ... Some formats start 
+off as US-ASCII and may contain some encoding mark to switch to UTF-8, 
+such as the <code>encoding="UTF-8"</code> in an XML header. Such formats 
+often explicitly forbid the use of a UTF-8 BOM. In other cases there is 
+additional information revealing the encoding, making the use of a BOM 
+redundant or even illegal.
+
+<p>The BOM is handled by SWI-Prolog <a id="idx:open4:338"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+predicate. By default, text files are probed for the BOM when opened for 
+reading. If a BOM is found, the encoding is set accordingly and the 
+property <code>bom(true)</code> is available through <a id="idx:streamproperty2:339"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>. 
+When opening a file for writing, writing a BOM can be requested using 
+the option <code>bom(true)</code> with
+<a id="idx:open4:340"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+
+<p></body></html>

@@ -1,0 +1,498 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.48</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="threadpool.html">
+<link rel="next" href="url.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="threadpool.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="url.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:ugraphs"><a id="sec:A.48"><span class="sec-nr">A.48</span> <span class="sec-title">library(ugraphs): 
+Unweighted Graphs</span></a></h2>
+
+<a id="sec:ugraphs"></a>
+<a id="sec:lib:ugraphs"></a> Authors: <em>Richard O'Keefe &amp; Vitor 
+Santos Costa</em>
+<blockquote><i>Implementation and documentation are copied from YAP 
+5.0.1. The
+<code>library(ugraph)</code> library is based on code originally written 
+by Richard O'Keefe. The code was then extended to be compatible with the 
+SICStus Prolog ugraphs library. Code and documentation have been cleaned 
+and style has been changed to be more in line with the rest of 
+SWI-Prolog.</i>
+
+<p><i>The ugraphs library was originally released in the public domain. 
+The YAP version is covered by the Perl Artistic license, version 2.0. 
+This code is dual-licensed under the modified GPL as used for all 
+SWI-Prolog libraries or the Perl Artistic license, version 2.0.
+</i>
+</blockquote>
+
+<p>The routines assume directed graphs; undirected graphs may be 
+implemented by using two edges.
+
+<p>Originally graphs were represented in two formats. The SICStus 
+library and this version of <code>library(ugraphs.pl)</code> only use 
+the
+<em>S-representation</em>. The S-representation of a graph is a list of 
+(vertex-neighbors) pairs, where the pairs are in standard order (as 
+produced by keysort) and the neighbors of each vertex are also in 
+standard order (as produced by sort). This form is convenient for many 
+calculations. Each vertex appears in the S-representation, even if it 
+has no neighbors.
+
+<dl class="latex">
+<dt class="pubdef"><a id="vertices_edges_to_ugraph/3"><strong>vertices_edges_to_ugraph</strong>(<var>+Vertices, 
++Edges, -Graph</var>)</a></dt>
+<dd class="defbody">
+Given a graph with a set of <var>Vertices</var> and a set of <var>Edges</var>,
+<var>Graph</var> must unify with the corresponding S-representation. 
+Note that vertices without edges will appear in <var>Vertices</var> but 
+not in
+<var>Edges</var>. Moreover, it is sufficient for a vertex to appear in
+<var>Edges</var>.
+
+<pre class="code">
+?- vertices_edges_to_ugraph([],[1-3,2-4,4-5,1-5], L).
+L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[]]
+</pre>
+
+<p>In this case all vertices are defined implicitly. The next example 
+shows three unconnected vertices:
+
+<pre class="code">
+?- vertices_edges_to_ugraph([6,7,8],[1-3,2-4,4-5,1-5], L).
+L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[], 6-[], 7-[], 8-[]] ?
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="vertices/2"><strong>vertices</strong>(<var>+Graph, 
+-Vertices</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Vertices</var> with all vertices appearing in <var>Graph</var>. 
+Example:
+
+<pre class="code">
+?- vertices([1-[3,5],2-[4],3-[],4-[5],5-[]], L).
+L = [1, 2, 3, 4, 5]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="edges/2"><strong>edges</strong>(<var>+Graph, 
+-Edges</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Edges</var> with all edges appearing in <var>Graph</var>. 
+Example:
+
+<pre class="code">
+?- edges([1-[3,5],2-[4],3-[],4-[5],5-[]], L).
+L = [1-3, 1-5, 2-4, 4-5]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="add_vertices/3"><strong>add_vertices</strong>(<var>+Graph, 
++Vertices, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with a new graph obtained by adding the list 
+of
+<var>Vertices</var> to <var>Graph</var>. Example:
+
+<pre class="code">
+?- add_vertices([1-[3,5],2-[]], [0,1,2,9], NG).
+NG = [0-[], 1-[3,5], 2-[], 9-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="del_vertices/3"><strong>del_vertices</strong>(<var>+Graph, 
++Vertices, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with a new graph obtained by deleting the list 
+of
+<var>Vertices</var> and all edges that start from or go to a vertex in
+<var>Vertices</var> from <var>Graph</var>. Example:
+
+<pre class="code">
+?- del_vertices([2,1],
+                [1-[3,5],2-[4],3-[],4-[5],
+                 5-[],6-[],7-[2,6],8-[]],
+                NL).
+NL = [3-[],4-[5],5-[],6-[],7-[6],8-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="add_edges/3"><strong>add_edges</strong>(<var>+Graph, 
++Edges, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with a new graph obtained by adding the list 
+of
+<var>Edges</var> to <var>Graph</var>. Example:
+
+<pre class="code">
+?- add_edges([1-[3,5],2-[4],3-[],4-[5],
+              5-[],6-[],7-[],8-[]],
+             [1-6,2-3,3-2,5-7,3-2,4-5],
+             NL).
+NL = [1-[3,5,6], 2-[3,4], 3-[2], 4-[5],
+      5-[7], 6-[], 7-[], 8-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="del_edges/3"><strong>del_edges</strong>(<var>+Graph, 
++Edges, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with a new graph obtained by removing the list 
+of
+<var>Edges</var> from <var>Graph</var>. Notice that no vertices are 
+deleted. Example:
+
+<pre class="code">
+?- del_edges([1-[3,5],2-[4],3-[],4-[5],5-[],6-[],7-[],8-[]],
+             [1-6,2-3,3-2,5-7,3-2,4-5,1-3],
+             NL).
+NL = [1-[5],2-[4],3-[],4-[],5-[],6-[],7-[],8-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="transpose_ugraph/2"><strong>transpose_ugraph</strong>(<var>+Graph, 
+-NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with a new graph obtained from <var>Graph</var> 
+by replacing all edges of the form V1-V2 by edges of the form V2-V1. The 
+cost is <var>O(|V|^2)</var>. Notice that an undirected graph is its own 
+transpose. Example:
+
+<pre class="code">
+?- transpose_ugraph([1-[3,5],2-[4],3-[],4-[5],
+              5-[],6-[],7-[],8-[]], NL).
+NL = [1-[],2-[],3-[1],4-[2],5-[1,4],6-[],7-[],8-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="neighbours/3"><strong>neighbours</strong>(<var>+Vertex, 
++Graph, -Vertices</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Vertices</var> with the list of neighbours of vertex <var>Vertex</var> 
+in <var>Graph</var>. Example:
+
+<pre class="code">
+?- neighbours(4,[1-[3,5],2-[4],3-[],
+                 4-[1,2,7,5],5-[],6-[],7-[],8-[]], NL).
+NL = [1,2,7,5]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="neighbors/3"><strong>neighbors</strong>(<var>+Vertex, 
++Graph, -Vertices</var>)</a></dt>
+<dd class="defbody">
+American version of <a id="idx:neighbours3:2529"></a><a class="pred" href="ugraphs.html#neighbours/3">neighbours/3</a>.</dd>
+<dt class="pubdef"><a id="complement/2"><strong>complement</strong>(<var>+Graph, 
+-NewGraph</var>)</a></dt>
+<dd class="defbody">
+Unify <var>NewGraph</var> with the graph complementary to <var>Graph</var>. 
+Example:
+
+<pre class="code">
+?- complement([1-[3,5],2-[4],3-[],
+               4-[1,2,7,5],5-[],6-[],7-[],8-[]], NL).
+NL = [1-[2,4,6,7,8],2-[1,3,5,6,7,8],3-[1,2,4,5,6,7,8],
+      4-[3,5,6,8],5-[1,2,3,4,6,7,8],6-[1,2,3,4,5,7,8],
+      7-[1,2,3,4,5,6,8],8-[1,2,3,4,5,6,7]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="compose/3"><strong>compose</strong>(<var>+LeftGraph, 
++RightGraph, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+Compose <var>NewGraph</var> by connecting the <em>drains</em> of <var>LeftGraph</var> 
+to the <em>sources</em> of <var>RightGraph</var>. Example:
+
+<pre class="code">
+?- compose([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
+L = [1-[4], 2-[1,2,4], 3-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="ugraph_union/3"><strong>ugraph_union</strong>(<var>+Graph1, 
++Graph2, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+<var>NewGraph</var> is the union of <var>Graph1</var> and <var>Graph2</var>. 
+Example:
+
+<pre class="code">
+?- ugraph_union([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
+L = [1-[2], 2-[3,4], 3-[1,2,4]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="top_sort/2"><strong>top_sort</strong>(<var>+Graph, 
+-Sort</var>)</a></dt>
+<dd class="defbody">
+Generate the set of nodes <var>Sort</var> as a topological sorting of
+<var>Graph</var>, if one is possible. A toplogical sort is possible if 
+the graph is connected and acyclic. In the example we show how 
+topological sorting works for a linear graph:
+
+<pre class="code">
+?- top_sort([1-[2], 2-[3], 3-[]], L).
+L = [1, 2, 3]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="top_sort/3"><strong>top_sort</strong>(<var>+Graph, 
+-Sort0, -Sort</var>)</a></dt>
+<dd class="defbody">
+Generate the difference list Sort-Sort0 as a topological sorting of
+<var>Graph</var>, if one is possible.</dd>
+<dt class="pubdef"><a id="transitive_closure/2"><strong>transitive_closure</strong>(<var>+Graph, 
+-Closure</var>)</a></dt>
+<dd class="defbody">
+Generate the graph Closure as the transitive closure of
+<var>Graph</var>. Example:
+
+<pre class="code">
+ ?- transitive_closure([1-[2,3],2-[4,5],4-[6]],L).
+L = [1-[2,3,4,5,6], 2-[4,5,6], 4-[6]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="reachable/3"><strong>reachable</strong>(<var>+Vertex, 
++Graph, -Vertices</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Vertices</var> with the set of all vertices in <var>Graph</var> 
+that are reachable from <var>Vertex</var>. Example:
+
+<pre class="code">
+?- reachable(1,[1-[3,5],2-[4],3-[],4-[5],5-[]],V).
+V = [1, 3, 5]
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

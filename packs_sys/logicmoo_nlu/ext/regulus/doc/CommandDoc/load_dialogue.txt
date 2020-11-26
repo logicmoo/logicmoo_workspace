@@ -1,0 +1,6 @@
+Relevant to dialogue applications: compile the files defined by the
+{\tt dialogue\_\-files} config file entry. These should at a minimum
+define the predicates {\tt lf\_\-to\_\-dialogue\_\-move}, {\tt
+initial\_\-dialogue\_\-state}, {\tt update\_\-dialogue\_\-state} and {\tt
+abstract\_\-action\_\-to\_\-action} with appropriate arities.
+

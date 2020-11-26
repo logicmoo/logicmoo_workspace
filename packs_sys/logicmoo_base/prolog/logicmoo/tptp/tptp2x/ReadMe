@@ -1,0 +1,55 @@
+===============================================================================
+
+Introduction
+------------
+The tptp2X utility is a multi-functional utility for reformating, transforming,
+and generating TPTP problem files. In particular, it
++ Converts from the TPTP format to formats used by existing ATP systems.
++ Applies various transformations to the clauses of TPTP problems.
++ Controls the generation of TPTP problem files from TPTP generator files.
+
+Installation
+------------
+tptp2X is written in Prolog, and should run on most Prolog systems. It is known
+to run on current versions of  Eclipse, SICStus,  SWI, and YAP  Prolog.  Before 
+using tptp2X,  it is necessary  to install the  code for the dialect  of Prolog
+that is to be used.  Installation of the tptp2X utility requires simple changes
+in the tptp2X script,  the tptp2X.config file, and the tptp2X.main file.  These 
+changes can be made by  running tptp2X_install,  which will prompt for required 
+information.  More information about installing tptp2X can be found in the TPTP 
+technical report.
+
+    WARNING:  For historical  reasons TPTP2X  omits  the quotes around  some 
+    constants and function  symbols that should  be 'Quoted', e.g., as found
+    in PUZ001+2.  I'm really sorry  about this - it's an  artifact of a very 
+    generic printing framework that became overloaded when THF formulae came 
+    into the TPTP.  Changing it would be a HUGE task, and now there's TPTP4X
+    that is better in most respects.
+
+Using tptp2X
+------------
+The most convenient  way of using the tptp2X utility is  through the tptp2X csh
+script. The use of this script is:
+
+   tptp2X -h
+or tptp2X <Options> <Files>
+
+where the <Options> are:
+    [-q<Level>][-i][-s<Size>][-t<Transform>][-f<Format>][-d<Dir>] 
+and the <Files> are specified by a list of file names in a file:
+    -l<NamesFile>
+or directly on the command line.
+
+A common first use of tptp2X is to convert TPTP problems to another format.  To
+convert all  TPTP problems  to another  format,  the use  is tptp2X -f<Format>,
+where <Format> is one of kif, leantap, tap,  meteor, mgtp, otter, pttp, setheo,
+sprfn,  tptp,  e.g. tptp2X -fotter.  To limit  the conversion  to one  or  more
+domains,   the   domain  names   are  specified  after  the   <Format>,   e.g.,
+tptp2X -fdfg ALG GRP LDA.
+***** If you are a new TPTP user, this is probably the use that you want. *****
+
+The  other tptp2X  script flags  give the  user many  options for  reformating,
+transforming,  and generating TPTP problem files.  More information about using
+the tptp2X script can be found in the TPTP technical report.
+
+===============================================================================

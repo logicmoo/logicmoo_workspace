@@ -1,0 +1,53 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1997/BusRide.e
+loading foundations/Root.e
+loading foundations/EC.e
+30 variables and 74 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Happens(Buy(), 0).
+1
++HasTicket().
+Happens(Board(), 1).
+Happens(BoardRed(), 1).
+2
++OnRed().
+P
+!Happens(Board(), 0).
+!Happens(Board(), 2).
+!Happens(BoardRed(), 0).
+!Happens(BoardRed(), 2).
+!Happens(BoardYellow(), 0).
+!Happens(BoardYellow(), 1).
+!Happens(BoardYellow(), 2).
+!Happens(Buy(), 1).
+!Happens(Buy(), 2).
+!ReleasedAt(HasTicket(), 0).
+!ReleasedAt(HasTicket(), 1).
+!ReleasedAt(HasTicket(), 2).
+!ReleasedAt(OnRed(), 0).
+!ReleasedAt(OnRed(), 1).
+!ReleasedAt(OnRed(), 2).
+!ReleasedAt(OnYellow(), 0).
+!ReleasedAt(OnYellow(), 1).
+!ReleasedAt(OnYellow(), 2).
+BusRide: 0 predicates, 0 functions, 3 fluents, 4 events, 11 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

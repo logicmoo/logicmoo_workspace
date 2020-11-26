@@ -1,0 +1,40 @@
+(note TQB118)
+
+(desires SaudiArabia 
+ (decreases-Generic SaudiArabia PetroleumProduct basicPriceForType)) 
+
+(exports SaudiArabia PetroleumProduct) 
+
+(implies 
+ (and 
+ (exports ?AGENT PetroleumProduct) 
+ (desires ?AGENT 
+ (decreases-Generic ?AGENT PetroleumProduct basicPriceForType))) 
+ (causes-ThingProp ?AGENT 
+ (thereExists ?EVENT 
+ (and 
+ (agent ?EVENT ?AGENT) 
+ (increases-Generic ?EVENT ?AGENT oilProduction))))) 
+
+
+
+
+(query (findall ?PROP
+
+ (implies 
+ (desires SaudiArabia 
+ (decreases-Generic SaudiArabia PetroleumProduct basicPriceForType)) 
+ (causes-ThingProp SaudiArabia ?PROP))  )
+)
+
+(answer (list (thereExists  ?EVENT 
+(and (agent ?EVENT ?AGENT) 
+(increases-Generic  ?EVENT ?AGENT oilProduction ))) )
+)
+
+
+(end_of_file)
+
+
+
+

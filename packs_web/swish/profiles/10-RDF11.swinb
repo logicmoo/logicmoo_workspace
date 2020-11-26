@@ -1,0 +1,17 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+Use new RDF 1.1 api
+</div>
+
+<div class="nb-cell program">
+</div>
+
+<div class="nb-cell query">
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- use_module(library(semweb/rdf11)).
+</div>
+
+</div>

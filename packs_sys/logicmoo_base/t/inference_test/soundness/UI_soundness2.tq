@@ -1,0 +1,9 @@
+(note universal implication soundness check2)
+
+(not (F ?X ?Y))
+
+(queryyn 
+(implies (F ?X ?Y) (not (F ?Y ?X)))
+)
+
+(answer Unproven)

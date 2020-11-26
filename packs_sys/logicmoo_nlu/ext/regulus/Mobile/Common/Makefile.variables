@@ -1,0 +1,144 @@
+
+#
+#	Intel 80386 (or newer)
+#
+ifeq ($(MACHINE_TYPE), i386-linux)
+
+	ARCH  = _ARCH_I386_LINUX
+	SHELL = /bin/sh
+
+	CC    = gcc
+	CXX   = g++
+	DEPC  = $(CC) $(DEFAULT_CCFLAGS) $(INCLUDES) -MM
+	DEPXX = $(CXX) $(DEFAULT_CXXFLAGS) $(INCLUDES) -MM
+
+	OBJ_SUFFIX = .o
+	EXE_SUFFIX = 
+
+	LIB_PREFIX = lib
+	LIB_BIN_SUFFIX = so
+	LIB_LIB_SUFFIX = so
+
+	LIB_GENERATOR  = $(CXX) -shared -fpic
+	EXE_GENERATOR  = $(CXX) -fpic
+
+	# i386-linux exported build environment.
+
+	CCFLAGS   = $(DEFAULT_CCFLAGS) $(INCLUDES)
+	CXXFLAGS  = $(DEFAULT_CXXFLAGS) $(INCLUDES)
+	LDFLAGS   = $(DEFAULT_LDFLAGS) $(DEFAULT_LIBRARIES) -L$(LIBDIR) -L$(MAEMO_APPS_LIBDIR)
+
+	# i386-linux default flags and libraries - includes
+	# are common for all platforms.
+
+	DEFAULT_CCFLAGS   = -g -D$(ARCH) -D_IS_LITTLE_ENDIAN -D_REENTRANT -D_USE_PTHREADS -D_GNU_SOURCE -D_UNICODE -D_MAEMO -DACE_NTRACE=0 -D_DEBUG -D_DEBUG_0
+	# -D_DEBUG_0 -D_DEBUG_1 -D_DEBUG_2 -D_DEBUG_3	
+	# -DACE_NLOGGING=1
+	DEFAULT_CCFLAGS  += -O2 -fpic -Wall $(ADDITIONAL_CCFLAGS)
+	DEFAULT_CXXFLAGS  = $(DEFAULT_CCFLAGS) $(ADDITIONAL_CXXFLAGS)
+	DEFAULT_LDFLAGS   = $(ADDITIONAL_LDFLAGS) 
+	DEFAULT_LIBRARIES = -ldl -lpthread $(ADDITIONAL_LIBRARIES)
+			
+endif
+
+#
+#       ARM OMAP
+#
+ifeq ($(MACHINE_TYPE), armel-linux)
+
+	ARCH  = _ARCH_ARMEL_LINUX
+	SHELL = /bin/sh
+
+	CC    = gcc
+	CXX   = g++
+	DEPC  = $(CC) $(DEFAULT_CCFLAGS) $(INCLUDES) -MM
+	DEPXX = $(CXX) $(DEFAULT_CXXFLAGS) $(INCLUDES) -MM
+	
+	OBJ_SUFFIX = .o
+	EXE_SUFFIX =
+	
+	LIB_PREFIX = lib
+	LIB_BIN_SUFFIX = so
+	LIB_LIB_SUFFIX = so
+	
+	LIB_GENERATOR  = $(CXX) -shared -fpic
+	EXE_GENERATOR  = $(CXX) -fpic
+
+	# i386-linux exported build environment.
+	
+	CCFLAGS   = $(DEFAULT_CCFLAGS) $(INCLUDES)
+	CXXFLAGS  = $(DEFAULT_CXXFLAGS) $(INCLUDES)
+	LDFLAGS   = $(DEFAULT_LDFLAGS) $(DEFAULT_LIBRARIES) -L$(LIBDIR) -L$(MAEMO_APPS_LIBDIR)
+	
+	# i386-linux default flags and libraries - includes
+	# are common for all platforms.
+   
+	DEFAULT_CCFLAGS   = -D$(ARCH) -D_IS_LITTLE_ENDIAN -D_REENTRANT -D_USE_PTHREADS -D_GNU_SOURCE -D_UNICODE -D_MAEMO -DACE_NTRACE=0 -D_DEBUG -D_DEBUG_0 
+	# -D_DEBUG_1 -D_DEBUG_2 -D_DEBUG_3
+	# -DACE_NLOGGING=1
+	DEFAULT_CCFLAGS  += -O2 -fpic -Wall $(ADDITIONAL_CCFLAGS)
+	DEFAULT_CXXFLAGS  = $(DEFAULT_CCFLAGS) $(ADDITIONAL_CXXFLAGS)
+	DEFAULT_LDFLAGS   = $(ADDITIONAL_LDFLAGS)
+	DEFAULT_LIBRARIES = -ldl -lpthread $(ADDITIONAL_LIBRARIES)
+
+endif
+
+#
+#       WIN32
+#
+ifeq ($(MACHINE_TYPE), win32)
+
+	ARCH  = _ARCH_WIN32
+	SHELL = /bin/sh
+
+	CC    = gcc
+	CXX   = g++
+	DEPC  = $(CC) $(DEFAULT_CCFLAGS) $(INCLUDES) -MM
+	DEPXX = $(CXX) $(DEFAULT_CXXFLAGS) $(INCLUDES) -MM
+	
+	OBJ_SUFFIX = .obj
+	EXE_SUFFIX = .exe
+	
+	LIB_PREFIX = lib
+	LIB_BIN_SUFFIX = dll
+	LIB_LIB_SUFFIX = dll
+	
+	LIB_GENERATOR  = $(CXX) -shared -fpic
+	EXE_GENERATOR  = $(CXX) -fpic
+
+	# win32-linux exported build environment.
+	
+	CCFLAGS   = $(DEFAULT_CCFLAGS) $(INCLUDES)
+	CXXFLAGS  = $(DEFAULT_CXXFLAGS) $(INCLUDES)
+	LDFLAGS   = $(DEFAULT_LDFLAGS) $(DEFAULT_LIBRARIES) -L$(LIBDIR)
+	
+	# win32-linux default flags and libraries - includes
+	# are common for all platforms.
+   
+	DEFAULT_CCFLAGS   = -D$(ARCH) -D_IS_LITTLE_ENDIAN -D_REENTRANT -D_USE_PTHREADS -D_GNU_SOURCE -D_UNICODE -DACE_NTRACE=0 -D_DEBUG -D_DEBUG_0 -w
+	# -D_DEBUG_1 -D_DEBUG_2 -D_DEBUG_3
+	# -DACE_NLOGGING=1
+	DEFAULT_CCFLAGS  += -O2 -fpic -Wall $(ADDITIONAL_CCFLAGS)
+	DEFAULT_CXXFLAGS  = $(DEFAULT_CCFLAGS) $(ADDITIONAL_CXXFLAGS)
+	DEFAULT_LDFLAGS   = $(ADDITIONAL_LDFLAGS)
+	DEFAULT_LIBRARIES = -ldl -lpthread $(ADDITIONAL_LIBRARIES)
+
+endif
+
+# Absolute directory paths.
+
+MAEMO_APPS_INCDIR = $(MAEMO_APPS_HOME)/include
+MAEMO_APPS_LIBDIR = $(MAEMO_APPS_HOME)/lib/$(MACHINE_TYPE)
+MAEMO_APPS_BINDIR = $(MAEMO_APPS_HOME)/bin/$(MACHINE_TYPE)
+
+# Relative to module paths.
+
+INCDIR = ../include
+LIBDIR = ../lib/$(MACHINE_TYPE)
+BINDIR = ../bin/$(MACHINE_TYPE)
+OBJDIR = ./obj/$(MACHINE_TYPE)
+SRCDIR = ./src
+
+# Include paths are common for all platforms.
+
+INCLUDES  = -I. -I$(INCDIR) -I$(MAEMO_APPS_INCDIR) $(ADDITIONAL_INCLUDES)

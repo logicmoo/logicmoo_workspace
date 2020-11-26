@@ -1,0 +1,22 @@
+<rdf:RDF xmlns="http://www.infraengine.com/config/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <GeneralConfig>
+        <tmp_dir>$HOME/.infra/tmp</tmp_dir>
+    </GeneralConfig>
+    <PagesConfig>
+        <pages_brief_comment_size>50</pages_brief_comment_size>
+        <pages_dotgraph_fontname>Arial</pages_dotgraph_fontname>
+        <pages_dotgraph_fontsize>11</pages_dotgraph_fontsize>
+    </PagesConfig>
+    <PlannerConfig>
+        <planner_dotgraph_fontname>Courier-Bold</planner_dotgraph_fontname>
+        <planner_dotgraph_fontsize>11</planner_dotgraph_fontsize>
+    </PlannerConfig>
+    <WebgetConfig>
+        <webget_client>wget</webget_client>
+        <webget_wget_parameters>--user-agent=Seahorse/1.0</webget_wget_parameters>
+    </WebgetConfig>
+    <WebserverConfig>
+        <webserver_password_file>$HOME/.infra/passwd</webserver_password_file>
+    </WebserverConfig>
+</rdf:RDF>

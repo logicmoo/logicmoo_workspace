@@ -1,0 +1,30 @@
+(note TQC98)
+
+
+(grossDomesticProduct SaudiArabia 
+ (YearFn 1995) 
+ (BillionDollars 189.300)) 
+
+(grossDomesticProduct Libya 
+ (YearFn 1995) 
+ (BillionDollars 34.5000)) 
+
+
+
+(query (findall (?GREATER ?GREATER-AMT ?LESSER ?LESSER-AMT ?TIME)
+
+ (and 
+ (grossDomesticProduct ?GREATER ?TIME ?GREATER-AMT) 
+ (grossDomesticProduct ?LESSER ?TIME ?LESSER-AMT) 
+ (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+ (or 
+ (and 
+ (equals Libya ?GREATER) 
+ (equals SaudiArabia ?LESSER)) 
+ (and 
+ (equals SaudiArabia ?GREATER) 
+ (equals Libya ?LESSER))))))
+
+(answer Saudi Arabia 189.300 Libya 34.5000 1995)
+
+(end_of_file)

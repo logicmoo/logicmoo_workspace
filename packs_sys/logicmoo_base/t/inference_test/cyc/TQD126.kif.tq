@@ -1,0 +1,11 @@
+(note TQD126)
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(queryyn  (subclass ChemicalWeapon WeaponOfMassDestruction)  
+)
+
+(answer Yes)
+
+(end_of_file)
+

@@ -1,0 +1,319 @@
+#!/usr/bin/env swipl
+
+% Quick fwd test
+:- include(test_header).
+
+:- use_module(library(statistics)).
+:- statistics.
+:- cls.
+% reset runtime counter
+:- statistics(runtime,_Secs).
+
+% Quick fwd test
+(taxinomicPair(E,P) ==>
+  (t(E,X,Y) ==> t(P,X,Y) ,
+  (t(P,X,Y),t(E,Y, Z) ==> t(P, X, Z)))).
+edge(1,2). 
+edge(2,3).
+edge(3,4).
+
+taxinomicPair(edge,path).
+transitive(path).
+
+(transitive(P) ==>
+  (t(P,X,Y),t(P,Y, Z) ==> t(P, X, Z))).
+
+(symmetric(P) ==>
+  (t(P,X,Y) ==> t(P,Y,X))).
+
+transitive(path).
+
+~path(X,X).
+
+
+:- statistics(runtime,[_|MS]),
+   dmsg(assert_time_took_with_printing=ms(MS)).
+
+:- time(mpred_test(path(2,4))).
+
+:- listing(path/2).
+
+:- statistics.
+
+end_of_file.
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:13
+% mpred_fwc1((taxinomicPair(_67294, _67296)==>(t(_67294, _67308, _67310)==>t(_67296, _67308, _67310), (t(_67296, _67308, _67310), t(_67294, _67310, _67352)==>t(_67296, _67308, _67352))))).
+%       Adding positive
+%               trigger: taxinomicPair(_68936,_68938)
+%               body: rhs([(t(_68936,_63016,_63018)==>t(_68938,_63016,_63018),(t(_68938,_63016,_63018),t(_68936,_63018,_63060)==>t(_68938,_63016,_63060)))])
+%        Support: (taxinomicPair(_68162,_68164)==>(t(_68162,_68176,_68178)==>t(_68164,_68176,_68178),(t(_68164,_68176,_68178),t(_68162,_68178,_68220)==>t(_68164,_68176,_68220)))),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',13)
+% make_as_dynamic(do_call_inherited(baseKB, taxinomicPair(_103284, _103286)), baseKB, taxinomicPair, 2).
+%       Found positive trigger: taxinomicPair(_103894,_103896)==>(t(_103894,_103908,_103910)==>t(_103896,_103908,_103910),(t(_103896,_103908,_103910),t(_103894,_103910,_103952)==>t(_103896,_103908,_103952)))
+%               body: mpred_positive_fact((taxinomicPair(_103894,_103896)==>(t(_103894,_103908,_103910)==>t(_103896,_103908,_103910),(t(_103896,_103908,_103910),t(_103894,_103910,_103952)==>t(_103896,_103908,_103952)))))*->rhs([\+ ~ (taxinomicPair(_103894,_103896)==>(t(_103894,_103908,_103910)==>t(_103896,_103908,_103910),(t(_103896,_103908,_103910),t(_103894,_103910,_103952)==>t(_103896,_103908,_103952))))])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:16
+% mpred_fwc1(edge(1, 2)).
+%       Found positive trigger: edge(1,2)
+%               body: mpred_positive_fact(edge(1,2))*->rhs([\+ ~edge(1,2)])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:17
+% mpred_fwc1(edge(2, 3)).
+%       Found positive trigger: edge(2,3)
+%               body: mpred_positive_fact(edge(2,3))*->rhs([\+ ~edge(2,3)])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:18
+% mpred_fwc1(edge(3, 4)).
+%       Found positive trigger: edge(3,4)
+%               body: mpred_positive_fact(edge(3,4))*->rhs([\+ ~edge(3,4)])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:20
+% mpred_fwc1(taxinomicPair(edge, path)).
+%       Found positive trigger: taxinomicPair(edge,path)
+%               body: rhs([(t(edge,_155308,_155310)==>t(path,_155308,_155310),(t(path,_155308,_155310),t(edge,_155310,_155352)==>t(path,_155308,_155352)))])
+%       RHS-Post1: t(edge,_155308,_155310)==>t(path,_155308,_155310),(t(path,_155308,_155310),t(edge,_155310,_155352)==>t(path,_155308,_155352))
+%       Support: taxinomicPair(edge,path),pt(taxinomicPair(edge,path),rhs([(t(edge,_155308,_155310)==>t(path,_155308,_155310),(t(path,_155308,_155310),t(edge,_155310,_155352)==>t(path,_155308,_155352)))]))
+% mpred_fwc1((edge(_173626, _173628)==>path(_173626, _173628), (path(_173626, _173628), edge(_173628, _173664)==>path(_173626, _173664)))).
+%       Adding positive
+%               trigger: edge(_215292,_215294)
+%               body: rhs([path(_215292,_215294),(path(_215292,_215294),edge(_215294,_169852)==>path(_215292,_169852))])
+%        Support: (edge(_174326,_174328)==>path(_174326,_174328),(path(_174326,_174328),edge(_174328,_174364)==>path(_174326,_174364))),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       RHS-Post1: path(3,4)
+%       Support: edge(3,4),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1(path(3, 4)).
+%       Found positive trigger: path(3,4)
+%               body: mpred_positive_fact(path(3,4))*->rhs([\+ ~path(3,4)])
+%       RHS-Post1: path(3,4),edge(4,_169852)==>path(3,_169852)
+%       Support: edge(3,4),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1((path(3, 4), edge(4, _267502)==>path(3, _267502))).
+%       Adding positive
+%               trigger: path(3,4)
+%               body: edge(4,_268580)*->rhs([path(3,_268580)])
+%        Support: (path(3,4),edge(4,_268160)==>path(3,_268160)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+% make_as_dynamic(do_call_inherited(baseKB, edge(4, _297464)), baseKB, edge, 2).
+%       Adding positive
+%               trigger: edge(4,_298430)
+%               body: path(3,4)*->rhs([path(3,_298430)])
+%        Support: (path(3,4),edge(4,_298010)==>path(3,_298010)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       Found positive trigger: path(3,4),edge(4,_307878)==>path(3,_307878)
+%               body: mpred_positive_fact((path(3,4),edge(4,_307878)==>path(3,_307878)))*->rhs([\+ ~ (path(3,4),edge(4,_307878)==>path(3,_307878))])
+%       RHS-Post1: path(2,3)
+%       Support: edge(2,3),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1(path(2, 3)).
+%       Found positive trigger: path(2,3)
+%               body: mpred_positive_fact(path(2,3))*->rhs([\+ ~path(2,3)])
+%       RHS-Post1: path(2,3),edge(3,_169852)==>path(2,_169852)
+%       Support: edge(2,3),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1((path(2, 3), edge(3, _341540)==>path(2, _341540))).
+%       Adding positive
+%               trigger: path(2,3)
+%               body: edge(3,_342618)*->rhs([path(2,_342618)])
+%        Support: (path(2,3),edge(3,_342198)==>path(2,_342198)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       RHS-Post1: path(2,4)
+%       Support: path(2,3),pt(path(2,3),(edge(3,_350390)*->rhs([path(2,_350390)])))
+% mpred_fwc1(path(2, 4)).
+%       Found positive trigger: path(2,4)
+%               body: mpred_positive_fact(path(2,4))*->rhs([\+ ~path(2,4)])
+%       Adding positive
+%               trigger: edge(3,_366872)
+%               body: path(2,3)*->rhs([path(2,_366872)])
+%        Support: (path(2,3),edge(3,_366452)==>path(2,_366452)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       RHS-Post1: path(2,4)
+%       Support: edge(3,4),pt(edge(3,_374638),(path(2,3)*->rhs([path(2,_374638)])))
+%       Found positive trigger: path(2,3),edge(3,_380192)==>path(2,_380192)
+%               body: mpred_positive_fact((path(2,3),edge(3,_380192)==>path(2,_380192)))*->rhs([\+ ~ (path(2,3),edge(3,_380192)==>path(2,_380192))])
+%       RHS-Post1: path(1,2)
+%       Support: edge(1,2),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1(path(1, 2)).
+%       Found positive trigger: path(1,2)
+%               body: mpred_positive_fact(path(1,2))*->rhs([\+ ~path(1,2)])
+%       RHS-Post1: path(1,2),edge(2,_169852)==>path(1,_169852)
+%       Support: edge(1,2),pt(edge(_239036,_239038),rhs([path(_239036,_239038),(path(_239036,_239038),edge(_239038,_239084)==>path(_239036,_239084))]))
+% mpred_fwc1((path(1, 2), edge(2, _413876)==>path(1, _413876))).
+%       Adding positive
+%               trigger: path(1,2)
+%               body: edge(2,_414954)*->rhs([path(1,_414954)])
+%        Support: (path(1,2),edge(2,_414534)==>path(1,_414534)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       RHS-Post1: path(1,3)
+%       Support: path(1,2),pt(path(1,2),(edge(2,_422726)*->rhs([path(1,_422726)])))
+% mpred_fwc1(path(1, 3)).
+%       Found positive trigger: path(1,3)
+%               body: mpred_positive_fact(path(1,3))*->rhs([\+ ~path(1,3)])
+%       Adding positive
+%               trigger: edge(2,_439208)
+%               body: path(1,2)*->rhs([path(1,_439208)])
+%        Support: (path(1,2),edge(2,_438788)==>path(1,_438788)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',20)
+%       RHS-Post1: path(1,3)
+%       Support: edge(2,3),pt(edge(2,_446974),(path(1,2)*->rhs([path(1,_446974)])))
+%       Found positive trigger: path(1,2),edge(2,_452528)==>path(1,_452528)
+%               body: mpred_positive_fact((path(1,2),edge(2,_452528)==>path(1,_452528)))*->rhs([\+ ~ (path(1,2),edge(2,_452528)==>path(1,_452528))])
+%       Found positive trigger: edge(_457840,_457842)==>path(_457840,_457842),(path(_457840,_457842),edge(_457842,_457878)==>path(_457840,_457878))
+%               body: mpred_positive_fact((edge(_457840,_457842)==>path(_457840,_457842),(path(_457840,_457842),edge(_457842,_457878)==>path(_457840,_457878))))*->rhs([\+ ~ (edge(_457840,_457842)==>path(_457840,_457842),(path(_457840,_457842),edge(_457842,_457878)==>path(_457840,_457878)))])
+%       Found positive trigger: taxinomicPair(edge,path)
+%               body: mpred_positive_fact(taxinomicPair(edge,path))*->rhs([\+ ~taxinomicPair(edge,path)])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:21
+% mpred_fwc1(transitive(path)).
+%       Found positive trigger: transitive(path)
+%               body: mpred_positive_fact(transitive(path))*->rhs([\+ ~transitive(path)])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:23
+% mpred_fwc1((transitive(_489036)==>(t(_489036, _489054, _489056), t(_489036, _489056, _489064)==>t(_489036, _489054, _489064)))).
+%       Adding positive
+%               trigger: transitive(_490386)
+%               body: rhs([(t(_490386,_485138,_485140),t(_490386,_485140,_485148)==>t(_490386,_485138,_485148))])
+%        Support: (transitive(_489834)==>(t(_489834,_489852,_489854),t(_489834,_489854,_489862)==>t(_489834,_489852,_489862))),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',23)
+%       RHS-Post1: t(path,_485138,_485140),t(path,_485140,_485148)==>t(path,_485138,_485148)
+%       Support: transitive(path),pt(transitive(_520212),rhs([(t(_520212,_520240,_520242),t(_520212,_520242,_520250)==>t(_520212,_520240,_520250))]))
+% mpred_fwc1((path(_532626, _532628), path(_532628, _532634)==>path(_532626, _532634))).
+%       Adding positive
+%               trigger: path(_533862,_533884)
+%               body: path(_533884,_533864)*->rhs([path(_533862,_533864)])
+%        Support: (path(_533350,_533352),path(_533352,_533358)==>path(_533350,_533358)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',23)
+%       RHS-Post1: path(1,4)
+%       Support: path(1,3),pt(path(_541710,_541712),(path(_541712,_541724)*->rhs([path(_541710,_541724)])))
+% mpred_fwc1(path(1, 4)).
+%       Found positive trigger: path(1,4)
+%               body: path(4,_553738)*->rhs([path(1,_553738)])
+% make_as_dynamic(do_call_inherited(baseKB, path(4, _561184)), baseKB, path, 2).
+%       Found positive trigger: path(1,4)
+%               body: mpred_positive_fact(path(1,4))*->rhs([\+ ~path(1,4)])
+%       RHS-Post1: path(1,4)
+%       Support: path(1,2),pt(path(_541710,_541712),(path(_541712,_541724)*->rhs([path(_541710,_541724)])))
+%       RHS-Post1: path(1,3)
+%       Support: path(1,2),pt(path(_541710,_541712),(path(_541712,_541724)*->rhs([path(_541710,_541724)])))
+%       RHS-Post1: path(2,4)
+%       Support: path(2,3),pt(path(_541710,_541712),(path(_541712,_541724)*->rhs([path(_541710,_541724)])))
+%       Adding positive
+%               trigger: path(_583500,_583482)
+%               body: path(_583480,_583500)*->rhs([path(_583480,_583482)])
+%        Support: (path(_582968,_582970),path(_582970,_582976)==>path(_582968,_582976)),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',23)
+%       RHS-Post1: path(1,4)
+%       Support: path(2,4),pt(path(_591328,_591330),(path(_591340,_591328)*->rhs([path(_591340,_591330)])))
+%       RHS-Post1: path(1,3)
+%       Support: path(2,3),pt(path(_591328,_591330),(path(_591340,_591328)*->rhs([path(_591340,_591330)])))
+%       RHS-Post1: path(1,4)
+%       Support: path(3,4),pt(path(_591328,_591330),(path(_591340,_591328)*->rhs([path(_591340,_591330)])))
+%       RHS-Post1: path(2,4)
+%       Support: path(3,4),pt(path(_591328,_591330),(path(_591340,_591328)*->rhs([path(_591340,_591330)])))
+%       Found positive trigger: path(_614060,_614062),path(_614062,_614068)==>path(_614060,_614068)
+%               body: mpred_positive_fact((path(_614060,_614062),path(_614062,_614068)==>path(_614060,_614068)))*->rhs([\+ ~ (path(_614060,_614062),path(_614062,_614068)==>path(_614060,_614068))])
+% make_as_dynamic(do_call_inherited(baseKB, transitive(_622412)), baseKB, transitive, 1).
+%       Found positive trigger: transitive(_623000)==>(t(_623000,_623018,_623020),t(_623000,_623020,_623028)==>t(_623000,_623018,_623028))
+%               body: mpred_positive_fact((transitive(_623000)==>(t(_623000,_623018,_623020),t(_623000,_623020,_623028)==>t(_623000,_623018,_623028))))*->rhs([\+ ~ (transitive(_623000)==>(t(_623000,_623018,_623020),t(_623000,_623020,_623028)==>t(_623000,_623018,_623028)))])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:26
+% mpred_fwc1((symmetric(_637588)==>(t(_637588, _637600, _637602)==>t(_637588, _637602, _637600)))).
+%       Adding positive
+%               trigger: symmetric(_638772)
+%               body: rhs([(t(_638772,_633888,_633890)==>t(_638772,_633890,_633888))])
+%        Support: (symmetric(_638344)==>(t(_638344,_638356,_638358)==>t(_638344,_638358,_638356))),mfl(header_sane,'/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc',26)
+% make_as_dynamic(do_call_inherited(baseKB, symmetric(_671180)), baseKB, symmetric, 1).
+%       Found positive trigger: symmetric(_671752)==>(t(_671752,_671764,_671766)==>t(_671752,_671766,_671764))
+%               body: mpred_positive_fact((symmetric(_671752)==>(t(_671752,_671764,_671766)==>t(_671752,_671766,_671764))))*->rhs([\+ ~ (symmetric(_671752)==>(t(_671752,_671764,_671766)==>t(_671752,_671766,_671764)))])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:31
+% mpred_fwc1(~path(_685950, _685950)).
+%       Found positive trigger: ~path(_686548,_686548)
+%               body: mpred_positive_fact(path(_686548,_686548))*->pt(path(_686548,_686548),rhs([{dmsg(warn(conflict(path(_686548,_686548))))}]))
+%       Adding positive
+%               trigger: path(_686548,_686548)
+%               body: rhs([{dmsg(warn(conflict(path(_686548,_686548))))}])
+%        Support: ~path(_682578,_682578),pt(~path(_686548,_686548),(mpred_positive_fact(path(_686548,_686548))*->pt(path(_686548,_686548),rhs([{dmsg(warn(conflict(path(_686548,_686548))))}]))))
+%       Found positive trigger: ~path(_686548,_686548)
+%               body: mpred_positive_fact(path(_686548,_686548))*->rhs([\+path(_686548,_686548)])
+%               RHS-Withdrawing-Neg: path(_686548,_686548)
+%       Support: ~path(_682578,_682578),pt(~path(_686548,_686548),(mpred_positive_fact(path(_686548,_686548))*->rhs([\+path(_686548,_686548)])))
+%       Found positive trigger: ~path(_686548,_686548)
+%               body: mpred_positive_fact(~path(_686548,_686548))*->rhs([\+ ~ (~path(_686548,_686548))])
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:34
+% assert_time_took_with_printing=ms([281]).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% /opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:37
+
+Justifications for path(2,4):
+
+    1.1 path(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:_757712]
+    1.2 path(2,3),edge(3,W4)==>path(2,W4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_758314]
+    1.3 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:17]
+    1.4 edge(W4,X4)==>path(W4,X4),(path(W4,X4),edge(X4,Y4)==>path(W4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_759288]
+    1.5 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,17)
+    1.6 taxinomicPair(edge,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:20]
+    1.7 taxinomicPair(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4),(t(X4,Y4,Z4),t(W4,Z4,A5)==>t(X4,Y4,A5)))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:13]
+    1.8 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,20)
+    1.9 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,13)
+    2.1 edge(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:18]
+    2.2 path(2,3),edge(3,W4)==>path(2,W4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_761386]
+    2.3 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,18)
+    2.4 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:17]
+    2.5 edge(W4,X4)==>path(W4,X4),(path(W4,X4),edge(X4,Y4)==>path(W4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_762490]
+    2.6 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,17)
+    2.7 taxinomicPair(edge,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:20]
+    2.8 taxinomicPair(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4),(t(X4,Y4,Z4),t(W4,Z4,A5)==>t(X4,Y4,A5)))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:13]
+    2.9 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,20)
+    2.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,13)
+    3.1 path(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:_764270]
+    3.2 path(X4,W4),path(W4,Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_764886]
+    3.3 edge(2,3)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:17]
+    3.4 edge(W4,X4)==>path(W4,X4),(path(W4,X4),edge(X4,Y4)==>path(W4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_765860]
+    3.5 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:21]
+    3.6 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:23]
+    3.7 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,17)
+    3.8 taxinomicPair(edge,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:20]
+    3.9 taxinomicPair(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4),(t(X4,Y4,Z4),t(W4,Z4,A5)==>t(X4,Y4,A5)))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:13]
+    3.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,21)
+    3.11 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,23)
+    3.12 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,20)
+    3.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,13)
+    4.1 path(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:_768588]
+    4.2 path(X4,W4),path(W4,Y4)==>path(X4,Y4)  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_769204]
+    4.3 edge(3,4)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:18]
+    4.4 edge(W4,X4)==>path(W4,X4),(path(W4,X4),edge(X4,Y4)==>path(W4,Y4))  % [/opt/logicmoo_workspace/packs_sys/pfc/prolog/pfclib/system_autoexec.pfc.pl:_770178]
+    4.5 transitive(path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:21]
+    4.6 transitive(W4)==>(t(W4,Y4,X4),t(W4,X4,Z4)==>t(W4,Y4,Z4))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:23]
+    4.7 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,18)
+    4.8 taxinomicPair(edge,path)  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:20]
+    4.9 taxinomicPair(W4,X4)==>(t(W4,Y4,Z4)==>t(X4,Y4,Z4),(t(X4,Y4,Z4),t(W4,Z4,A5)==>t(X4,Y4,A5)))  % [/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc:13]
+    4.10 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,21)
+    4.11 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,23)
+    4.12 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,20)
+    4.13 mfl(header_sane,/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc,13)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 122,673 inferences, 0.043 CPU in 0.043 seconds (100% CPU, 2861112 Lips)
+:- dynamic baseKB:path/2.
+:- multifile baseKB:path/2.
+:- public baseKB:path/2.
+:- module_transparent baseKB:path/2.
+
+
+:- dynamic path/2.
+:- multifile path/2.
+:- public path/2.
+:- module_transparent path/2.
+
+path(1, 4).
+path(1, 3).
+path(1, 2).
+path(2, 4).
+path(2, 3).
+path(3, 4).
+path(A, B) :-
+        inherit_above(header_sane, path(A, B)).
+
+% Started at Mon Jun  4 03:25:27 2018
+% 7.676 seconds cpu time for 26,390,698 inferences
+% 16,132 atoms, 12,057 functors, 11,633 predicates, 224 modules, 680,420 VM-codes
+%
+%                        Limit    Allocated       In use
+% Local  stack: 16,000,004,096      258,048        5,416 Bytes
+% Global stack: 16,000,004,096    4,190,192    3,040,896 Bytes
+% Trail  stack: 16,000,002,048    1,046,520          544 Bytes
+%
+% 540 garbage collections gained 84,185,552 bytes in 0.106 seconds.
+% 4 atom garbage collections gained 40,613 atoms in 0.014 seconds.
+% 87 clause garbage collections gained 10,624 clauses in 0.007 seconds.
+% Stack shifts: 3 local, 6 global, 4 trail in 0.002 seconds
+% 2 threads, 0 finished threads used 0.000 seconds
+% init_why(after('/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc')).
+% init_why(after('/opt/logicmoo_workspace/packs_sys/pfc/t/sanity_base/tml_01c.pfc')).
+% init_why(program).
+header_sane:  ?- ^D
+% halt
+

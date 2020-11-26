@@ -1,0 +1,7 @@
+(note "Evaluation - Basic Addition ")
+
+(query (evaluate (PlusFn 1 1) ?R))
+
+(answer 2)
+
+

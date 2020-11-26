@@ -1,0 +1,2058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\Amine8_Release\aminePlatform8\aminePlatform8Release\classes\aminePlatform\samples\ontology\CyrusSample.xml</Name>
+  <Ontologies2Import />
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+    <Language>Francais</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Universel</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>Action</Key>
+        </Child>
+        <Child>
+          <Key>Object</Key>
+        </Child>
+        <Child>
+          <Key>Human</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Human</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Human</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Humain</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>vance</Key>
+        </Child>
+        <Child>
+          <Key>NATOMember</Key>
+        </Child>
+        <Child>
+          <Key>IsraeliLeader</Key>
+        </Child>
+        <Child>
+          <Key>Iraki</Key>
+        </Child>
+        <Child>
+          <Key>Saoudi</Key>
+        </Child>
+        <Child>
+          <Key>UNDiplomat</Key>
+        </Child>
+        <Child>
+          <Key>DefenseMinister</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>DefenseMinister</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>DefenseMinister</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>UNDiplomat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>UNDiplomat</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Saoudi</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Saoudi</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Iraki</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Iraki</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>IsraeliLeader</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>IsraeliLeader</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>NATOMember</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>NATOMember</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>vance</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>vance</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Human</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Human</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Object</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Object</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Objet</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Country</Key>
+        </Child>
+        <Child>
+          <Key>Organisation</Key>
+        </Child>
+        <Child>
+          <Key>Region</Key>
+        </Child>
+        <Child>
+          <Key>AbstractEntity</Key>
+        </Child>
+        <Child>
+          <Key>ConsumableEntity</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>ConsumableEntity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>ConsumableEntity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Petrol</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Petrol</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Petrol</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>ConsumableEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>AbstractEntity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>AbstractEntity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Meeting</Key>
+        </Child>
+        <Child>
+          <Key>Strategy</Key>
+        </Child>
+        <Child>
+          <Key>SelfDefense</Key>
+        </Child>
+        <Child>
+          <Key>Adhesion</Key>
+        </Child>
+        <Child>
+          <Key>Flow</Key>
+        </Child>
+        <Child>
+          <Key>Invasion</Key>
+        </Child>
+        <Child>
+          <Key>Army</Key>
+        </Child>
+        <Child>
+          <Key>Investment</Key>
+        </Child>
+        <Child>
+          <Key>StrategicInterest</Key>
+        </Child>
+        <Child>
+          <Key>Embargo</Key>
+        </Child>
+        <Child>
+          <Key>Terrorism</Key>
+        </Child>
+        <Child>
+          <Key>InternationalSecurity</Key>
+        </Child>
+        <Child>
+          <Key>Mode</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Mode</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Mode</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>InternationalSecurity</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>InternationalSecurity</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Terrorism</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Terrorism</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Embargo</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Embargo</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>StrategicInterest</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>StrategicInterest</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Investment</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Investment</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Army</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Army</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>MoujahidineArmy</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>MoujahidineArmy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>MoujahidineArmy</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Army</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Invasion</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Invasion</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Flow</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Flow</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>IslamicFlow</Key>
+        </Child>
+        <Child>
+          <Key>CommunistFlow</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>CommunistFlow</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>CommunistFlow</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Flow</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>IslamicFlow</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>IslamicFlow</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Flow</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Adhesion</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Adhesion</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>SelfDefense</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>SelfDefense</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Strategy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Strategy</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>WarStrategy</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>WarStrategy</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>WarStrategy</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Strategy</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Meeting</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Meeting</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>AbstractEntity</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Region</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Region</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>MiddleEast</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>MiddleEast</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>MiddleEast</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Region</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Region</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Organisation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Organisation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>NATO</Key>
+        </Child>
+        <Child>
+          <Key>UN</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>UN</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>UN</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Organisation</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Organisation</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>NATO</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>NATO</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Organisation</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Organisation</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Country</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Country</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>USA</Key>
+        </Child>
+        <Child>
+          <Key>SaudiArabia</Key>
+        </Child>
+        <Child>
+          <Key>Iran</Key>
+        </Child>
+        <Child>
+          <Key>Irak</Key>
+        </Child>
+        <Child>
+          <Key>Afghanistan</Key>
+        </Child>
+        <Child>
+          <Key>Israel</Key>
+        </Child>
+        <Child>
+          <Key>USSR</Key>
+        </Child>
+        <Child>
+          <Key>Libya</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Object</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Libya</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Libya</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>USSR</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>USSR</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Israel</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Israel</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Afghanistan</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Afghanistan</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Irak</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Irak</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>Iran</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Iran</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>SaudiArabia</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>SaudiArabia</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Individual>
+      <Key>USA</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>USA</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Country</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Country</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Action</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Action</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Meet</Key>
+        </Child>
+        <Child>
+          <Key>Suppose</Key>
+        </Child>
+        <Child>
+          <Key>Dominate</Key>
+        </Child>
+        <Child>
+          <Key>Join</Key>
+        </Child>
+        <Child>
+          <Key>Negotiate</Key>
+        </Child>
+        <Child>
+          <Key>Accept</Key>
+        </Child>
+        <Child>
+          <Key>Treat</Key>
+        </Child>
+        <Child>
+          <Key>Stop</Key>
+        </Child>
+        <Child>
+          <Key>Search</Key>
+        </Child>
+        <Child>
+          <Key>Found</Key>
+        </Child>
+        <Child>
+          <Key>Study</Key>
+        </Child>
+        <Child>
+          <Key>Install</Key>
+        </Child>
+        <Child>
+          <Key>Preserve</Key>
+        </Child>
+        <Child>
+          <Key>Impose</Key>
+        </Child>
+        <Child>
+          <Key>Attack</Key>
+        </Child>
+        <Child>
+          <Key>Declare</Key>
+        </Child>
+        <Child>
+          <Key>Fight</Key>
+        </Child>
+        <Child>
+          <Key>Expect</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Expect</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Expect</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Fight</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Fight</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Declare</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Declare</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Attack</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Attack</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Impose</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Impose</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Preserve</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Preserve</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Install</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Install</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Study</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Study</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Found</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Found</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Search</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Search</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Stop</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Stop</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Treat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Treat</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Accept</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Accept</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Negotiate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Negotiate</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Join</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Join</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Dominate</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Dominate</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Suppose</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Suppose</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Meet</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Meet</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>Rencontrer</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Action</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>with</Key>
+        </Child>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>goal</Key>
+        </Child>
+        <Child>
+          <Key>against</Key>
+        </Child>
+        <Child>
+          <Key>target</Key>
+        </Child>
+        <Child>
+          <Key>attr</Key>
+        </Child>
+        <Child>
+          <Key>subj</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>subj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>subj</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>suj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>attr</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>attr</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>target</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>target</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>cible</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>against</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>against</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>contre</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>goal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>goal</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>but</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>with</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>with</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms>
+            <Synonym>avec</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+        <Lexicon>
+          <Language>Francais</Language>
+          <Synonyms />
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

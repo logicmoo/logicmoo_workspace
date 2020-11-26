@@ -1,0 +1,351 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section C.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="portabilitystrategies.html">
+<link rel="next" href="glossary.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="portabilitystrategies.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="glossary.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:dialect-notes"><a id="sec:C.2"><span class="sec-nr">C.2</span> <span class="sec-title">Notes 
+on specific dialects</span></a></h2>
+
+<a id="sec:dialect-notes"></a>
+
+<p>The level of maturity of the various dialect emulation 
+implementations varies enormously. All of them have been developed to 
+realise portability for one or more, often large, programs. This section 
+provides some notes on emulating a particular dialect.
+
+<p><h3 id="sec:dialect-xsb"><a id="sec:C.2.1"><span class="sec-nr">C.2.1</span> <span class="sec-title">Notes 
+on specific dialects</span></a></h3>
+
+<a id="sec:dialect-xsb"></a>
+
+<p><a class="url" href="http://xsb.sourceforge.net/">XSB</a> Prolog 
+compatibility emerged from a project to integrate XSB's advanced tabling 
+support in SWI-Prolog (see <a class="sec" href="tabling.html#sec:7">section 
+7</a>). This project has been made possible by
+<a class="url" href="https://kyndi.com/">Kyndi</a>.<sup class="fn">210<span class="fn-text">This 
+project was initiated by Benjamin Grosof and carried out in cooperation 
+with Theresa Swift, David S. Warren and Fabrizio Riguzzi.</span></sup> 
+The XSB dialect implementation has been created to share as much as 
+possible of the XSB test suite as well as some larger programs to 
+evaluate both tabling implementations. The dialect emulation was 
+extended to support
+<a class="url" href="https://github.com/cmu-sei/pharos">Pharos</a>.<sup class="fn">211<span class="fn-text">Pharos 
+was used to evaluate <em>incremental tabling</em> (<a class="sec" href="tabling-incremental.html#sec:7.7">section 
+7.7</a>), a protect with Edward Schwatz and Cory Cohen from CMU</span></sup>.
+
+<p>Emulating XSB is relatively complicated due to the large distance 
+from the Quintus descendant Prolog systems. Notably XSB's name based 
+module system is hard to map on SWI-Prolog's predicate based module 
+system. As a result, only non-modular projects or projects with basic 
+usage of modules are supported. For the development of new projects that 
+require modules more advanced module support we suggest using
+<a class="url" href="https://logtalk.org/">Logtalk</a>.
+
+<p><h4 id="sec:xsb-source"><a id="sec:C.2.1.1"><span class="sec-nr">C.2.1.1</span> <span class="sec-title">Loading 
+XSB source files</span></a></h4>
+
+<a id="sec:xsb-source"></a>
+
+<p>SWI-Prolog's emulation of XSB depends on the XSB preferred file name 
+extension <code>.P</code>. This extension is used by
+<code>library(dialect/xsb/source)</code> to initiate a two phase loading 
+process based on <a id="idx:termexpansion2:2641"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+of the virtual term <code>begin_of_file</code>.
+
+<p>
+<ol class="latex">
+<li>In the first phase the file is read with XSB compatible operator 
+declarations and all directives (:- Term) are extracted. The directives 
+are used to determine that the file defines a module (iff the file 
+contains an <a id="idx:export1:2642"></a><a class="pred" href="altmoduleapi.html#export/1">export/1</a> 
+directive) and construct a SWI-Prolog compatible module declaration. As 
+XSB has a two phase compiler where SWI has a single phase compiler, this 
+is also used to move some directives to the start of the file.
+
+<p>
+<li>The second phase loads the file as normal.
+</ol>
+
+<p>To load a project in both XSB and SWI-Prolog it is advised to make 
+sure all source files use the <code>.P</code> file name extension. Next, 
+write a SWI-Prolog loader in a <code>.pl</code> file that contains e.g.,
+
+<pre class="code">
+:- use_module(library(dialect/xsb/source)).
+
+:- [main_file].
+</pre>
+
+<p>It is also possible to put the able <a id="idx:usemodule1:2643"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+directive in your personal initialization file (see <a class="sec" href="initfile.html#sec:2.2">section 
+2.2</a>), after which XSB files can be loaded as normal SWI-Prolog files 
+using
+
+<pre class="code">
+% swipl file.P
+</pre>
+
+<p><a id="idx:gppXSBproprocessor:2644"></a>XSB code may depend on the <b>gpp</b> 
+preprocessor. We do not provide <b>gpp</b>. It is however possible to 
+send XSB source files through <b>gpp</b> by loading <code>library(library/dialect/xsb/gpp)</code>. 
+This require <b>gpp</b> to be accessible through the environment 
+variable <code>PATH</code> or the <a id="idx:filesearchpath2:2645"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+alias <code>path</code>. We refer to the <code>gpp</code> library for 
+details.
+
+<p><h3 id="sec:xsb-import"><a id="sec:C.2.2"><span class="sec-nr">C.2.2</span> <span class="sec-title">The 
+XSB import directive</span></a></h3>
+
+<a id="sec:xsb-import"></a>
+
+<p>The XSB import directive takes the form as below.
+
+<pre class="code">
+:- import p/1, q/2, ... from &lt;lib&gt;.
+</pre>
+
+<p>This import directive is resolved as follows:
+
+<p>
+<ul class="latex">
+<li>If the referenced library is found as a local file, it is loaded and 
+the requested predicates are imported.
+<li>Otherwise, the referenced library is searched for in the <code>dialect/xsb</code> 
+directory of the SWI-Prolog library. If found, the predicates are 
+imported from this library.
+<li>The referenced predicates are searched for in SWI-Prolog built-in 
+predicates and the SWI-Prolog library. If found, they are made available 
+if necessary.
+</ul>
+
+<p></body></html>

@@ -1,0 +1,42 @@
+
+planner_task(1,
+
+  [se(bag,briefcase,[at_bag(briefcase,office)])], 
+
+  [ss(bag,briefcase,[at_bag(briefcase,home)]), 
+   ss(thing,cheque,[at_thing(cheque,home), inside(cheque,briefcase)]), 
+   ss(thing,dictionary,[at_thing(dictionary,home), 
+                     inside(dictionary,briefcase)])
+   ]).
+
+planner_task(2,
+
+  [se(bag,briefcase,[at_bag(briefcase,office)]),
+   se(thing,cheque,[at_thing(cheque,office),outside(cheque)])], 
+
+  [ss(bag,briefcase,[at_bag(briefcase,home)]), 
+   ss(thing,cheque,[at_thing(cheque,home), inside(cheque,briefcase)]), 
+   ss(thing,dictionary,[at_thing(dictionary,home), outside(dictionary)])
+   ]).
+
+planner_task(3,
+
+  [se(thing,dictionary,[at_thing(dictionary,home), 
+                            inside(dictionary,briefcase) ])], 
+
+  [ss(bag,briefcase,[at_bag(briefcase,office)]), 
+   ss(thing,cheque,[at_thing(cheque,office), inside(cheque,briefcase)]), 
+   ss(thing,dictionary,[at_thing(dictionary,home), outside(dictionary)]) 
+   ]).
+
+planner_task(4,
+
+ [se(bag,briefcase,[at_bag(briefcase,office)]),
+  se(thing,dictionary,[at_thing(dictionary,office)]),
+  se(thing,cheque,[at_thing(cheque,home)])], 
+
+ [ss(bag,briefcase,[at_bag(briefcase,home)]),
+  ss(thing,cheque,[at_thing(cheque,home), inside(cheque,briefcase)]),
+  ss(thing,dictionary,[at_thing(dictionary,home), outside(dictionary)])
+  ]).
+

@@ -1,0 +1,137 @@
+<HTML>
+<TITLE>Paradigms of AI Programming Source Code</TITLE> 
+<!-- Changed by: Peter Norvig,  2-Jul-1996 -->
+<BODY bgcolor="#ffffff"> 
+<h1>Paradigms of AI Programming Source Code</h1> 
+
+<p>
+This page is the index for the Lisp source code files
+for the book <i>Paradigms of Artificial
+Intelligence Programming</i>.  The code is offered as
+open source freeware under <a href="../license.html">this license</a>.
+You can browse all the files in <a href="../paip/">this directory</a>.
+
+<h1>Installation Instructions</h1>
+
+<ol>
+<li> Download the file <a href="paip.zip">paip.zip</a> and unzip it.
+<li> You must have a <a href="http://www-2.cs.cmu.edu/Groups/AI/html/faqs/lang/lisp/part4/faq-doc-1.html">lisp compiler/interpreter</a>.
+<li> To test all the code, do the following:
+<pre>
+(load "auxfns.lisp")
+(requires "examples")
+(do-examples :all)
+</pre>
+This should print out a long list of inputs and outputs, and the last output
+should be the total number of errors.  If all goes well, this should be "0".
+</ol>
+
+<h1>Use</h1>
+
+To use the code, edit any of the files or add new files.  You will
+always have to do <tt>(load "auxfns.lisp")</tt> first, and you will
+typically have to do <tt>(requires "<i>file</i>")</tt>, for various
+instances of <i>file</i> that you want to use. 
+
+<p>
+The function "requires"
+is used for a primitive form of control over what files require other
+files to be loaded first.  If "requires" does not work properly on
+your system you may have to alter its definition, in the file
+"auxfns.lisp".  For more complicated use of these files, you should
+follow the guidelines for organizing files explained in Chapter 24.
+
+<p>
+The function <tt>do-examples</tt>, which takes as an argument either <tt>:all</tt>
+or a chapter number or a list of chapter numbers, can be used to see examples
+of the use of various functions.  For example, <tt>(do-examples 1)</tt> shows
+the examples from chapter 1.
+
+<h1>The Files</h1>
+
+The index below gives the chapter in the book, file
+name, and short description for each file.  
+
+
+<pre>
+CH Filename		Description
+== =======		===========
+-  <a href="README.html">README.html</a>		This file: explanation and index
+-  <a href="examples.lisp">examples.lisp</a>	A list of example inputs taken from the book
+-  <a href="tutor.lisp">tutor.lisp</a>		An interactive application for running the examples
+-  <a href="gui-capi.lisp">gui-capi.lisp</a>	Graphical User Interface for Harlequin's CAPI
+-  <a href="gui-mcl.lisp">gui-mcl.lisp</a>		Graphical User Interface for Macintosh Common Lisp
+
+24 <a href="loop.lisp">loop.lisp</a>		Load this first if your Lisp doesn't support ANSI LOOP
+-  <a href="auxfns.lisp">auxfns.lisp</a>		Auxiliary functions; load this before anything else
+
+1  <a href="intro.lisp">intro.lisp</a>		A few simple definitions
+2  <a href="simple.lisp">simple.lisp</a>		Random sentence generator (two versions)
+3  <a href="overview.lisp">overview.lisp</a>	14 versions of LENGTH and other examples
+
+4  <a href="gps1.lisp">gps1.lisp</a>		Simple version of General Problem Solver
+4  <a href="gps.lisp">gps.lisp</a>		Final version of General Problem Solver
+
+5  <a href="eliza1.lisp">eliza1.lisp</a>		Basic version of Eliza program
+5  <a href="eliza.lisp">eliza.lisp</a>		Eliza with more rules; different reader
+
+6  <a href="patmatch.lisp">patmatch.lisp</a>	Pattern Matching Utility
+6  <a href="eliza-pm.lisp">eliza-pm.lisp</a>	Version of Eliza using utilities
+6  <a href="search.lisp">search.lisp</a>		Search Utility
+6  <a href="gps-srch.lisp">gps-srch.lisp</a>	Version of GPS using the search utility 
+
+7  <a href="student.lisp">student.lisp</a>		The Student Program
+
+8  <a href="macsyma.lisp">macsyma.lisp</a>		The Macsyma Program
+8  <a href="macsymar.lisp">macsymar.lisp</a>	Simplification and integration rules for Macsyma
+
+9-10			(no files; important functions in <a href="auxfns.lisp">auxfns.lisp</a>	
+
+11 <a href="unify.lisp">unify.lisp</a>		Unification functions
+11 <a href="prolog1.lisp">prolog1.lisp</a>		First version of Prolog interpreter
+11 <a href="prolog.lisp">prolog.lisp</a>		Final version of Prolog interpreter
+
+12 <a href="prologc1.lisp">prologc1.lisp</a>	First version of Prolog compiler
+12 <a href="prologc2.lisp">prologc2.lisp</a>	Second version of Prolog compiler
+12 <a href="prologc.lisp">prologc.lisp</a>		Final version of Prolog compiler
+12 <a href="prologcp.lisp">prologcp.lisp</a>	Primitives for Prolog compiler
+
+13 <a href="clos.lisp">clos.lisp</a>		Some object-oriented and CLOS code
+
+14 <a href="krep1.lisp">krep1.lisp</a>		Knowledge Representation code: first version 
+14 <a href="krep2.lisp">krep2.lisp</a>		Knowledge Representation code with conjunctions
+14 <a href="krep.lisp">krep.lisp</a>		Final KR code: worlds and attached functions
+
+15 <a href="cmacsyma.lisp">cmacsyma.lisp</a>	Efficient Macsyma with canonical form
+
+16 <a href="mycin.lisp">mycin.lisp</a>		The Emycin expert system shell
+16 <a href="mycin-r.lisp">mycin-r.lisp</a>		Some rules for a medical application of emycin
+
+17 <a href="waltz.lisp">waltz.lisp</a>		A Line-Labeling program using the Waltz algorithm
+
+18 <a href="othello.lisp">othello.lisp</a>		The Othello playing program and some strategies
+18 <a href="othello2.lisp">othello2.lisp</a>	Additional strategies for Othello
+18 <a href="edge-tab.lisp">edge-tab.lisp</a>	Edge table for Iago strategy
+
+19 <a href="syntax1.lisp">syntax1.lisp</a>		Syntactic Parser
+19 <a href="syntax2.lisp">syntax2.lisp</a>		Syntactic Parser with semantics
+19 <a href="syntax3.lisp">syntax3.lisp</a>		Syntactic Parser with semantics and preferences
+
+20 <a href="unifgram.lisp">unifgram.lisp</a>	Unification Parser
+
+21 <a href="grammar.lisp">grammar.lisp</a>		Comprehensive grammar of English
+21 <a href="lexicon.lisp">lexicon.lisp</a>		Sample Lexicon of English
+
+22 <a href="interp1.lisp">interp1.lisp</a>		Scheme interpreter, including version with macros
+22 <a href="interp2.lisp">interp2.lisp</a>		A tail recurive Scheme interpreter
+22 <a href="interp3.lisp">interp3.lisp</a>		A Scheme interpreter that handles call/cc
+
+23 <a href="compile1.lisp">compile1.lisp</a>	Simple Scheme compiler
+23 <a href="compile2.lisp">compile2.lisp</a>	Compiler with tail recursion and primitives
+23 <a href="compile3.lisp">compile3.lisp</a>	Compiler with peephole optimizer
+23 <a href="compopt.lisp">compopt.lisp</a>		Peephole optimizers for compile3.lisp
+</pre>
+<p>
+<hr>
+<i><a href="http://www.norvig.com">Peter Norvig</a></i>
+

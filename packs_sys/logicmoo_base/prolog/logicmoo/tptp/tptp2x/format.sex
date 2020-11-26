@@ -1,0 +1,98 @@
+%============================================================================
+%----This outputs TPTP as s-expressions
+%----
+%----Written by Geoff Sutcliffe, April 2009
+%============================================================================
+%----------------------------------------------------------------------------
+sex_translate_atom(Atom,SexAtom):-
+    tptp2X_member((Atom)-(SexAtom),[
+('$tptp_equal')-('='),('$tptp_not_equal')-('!=')
+]),
+    !.
+
+sex_translate_atom(Atom,Atom).
+%----------------------------------------------------------------------------
+output_sex_list_elements([]).
+
+output_sex_list_elements([One]):-
+    !,
+    output_sex_formula(One).
+
+output_sex_list_elements([H|T]):-
+    output_sex_formula(H),
+    write(' '),
+    output_sex_list_elements(T).
+%----------------------------------------------------------------------------
+output_sex_list(List):-
+    write('('),
+    output_sex_list_elements(List),
+    write(')').
+%----------------------------------------------------------------------------
+output_sex_formula(Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    write('"'),
+    write(Variable),
+    write('"').
+
+output_sex_formula(QuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula),
+    !,
+    output_sex_list([Quantifier,Variables,Formula]).
+
+output_sex_formula(Atom):-
+    atomic(Atom),
+    !,
+    sex_translate_atom(Atom,SexAtom),
+    write('"'),
+    write(SexAtom),
+    write('"').
+
+output_sex_formula([H|T]):-
+    !,
+    output_sex_list([H|T]).
+
+output_sex_formula(LHS:RHS):-
+    !,
+    output_sex_list([':',LHS,RHS]).
+
+output_sex_formula(LHS := RHS):-
+    !,
+    output_sex_list([':=',LHS,RHS]).
+
+output_sex_formula(Complex):-
+    Complex =.. List,
+    output_sex_list(List).
+%----------------------------------------------------------------------------
+note_sexy_conjecture(AnnotatedFormula):-
+    AnnotatedFormula =.. [thf,_,conjecture|_],
+    !,
+    write('; This is the conjecture'),
+    nl.
+
+note_sexy_conjecture(_).
+%----------------------------------------------------------------------------
+output_sex_formulae([]).
+
+output_sex_formulae([H|T]):-
+    note_sexy_conjecture(H),
+    output_sex_formula(H),
+    nl,nl,
+    output_sex_formulae(T).
+%----------------------------------------------------------------------------
+%----Output s-sexpressions
+sex(sex,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    convert_clauses_to_tptp(Clauses,Formulae),
+    output_sex_formulae(Formulae).
+
+sex(sex,Formulae,_):-
+    output_sex_formulae(Formulae).
+%----------------------------------------------------------------------------
+%----Provide information about the TPS format
+sex_format_information(';','.sex').
+%----------------------------------------------------------------------------
+%----Provide information about the TPS file
+sex_file_information(format,sex,'s-expression format').
+%----------------------------------------------------------------------------

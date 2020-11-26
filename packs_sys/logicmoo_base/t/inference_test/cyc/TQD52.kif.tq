@@ -1,0 +1,87 @@
+(note TQD52)
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (inRegion ?AREA ?COUNTRY1) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1))
+
+(instance Iran Country) 
+
+(different SaudiArabia Iran) 
+
+(inRegion HYP-SomethingExisting-48167795 Iran) 
+
+(eventOccursAt HYP-AttackOnTangible-23322126 HYP-SomethingExisting-48167795) 
+
+(instance SaudiArabia Country) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT2) 
+ (instance ?AGT2 Agent) 
+ (agent ?ATTACK ?AGT1)) 
+ (increasesCausally ?ATTACK 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION ?AGT1))) likelihood))
+
+(instance HYP-AttackOnTangible-23322126 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-23322126 SaudiArabia) 
+
+(instance Iran Agent) 
+
+(maleficiary HYP-AttackOnTangible-23322126 Iran) 
+
+(increasesCausally #$HYP-AttackOnTangible-23322126 
+ (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION SaudiArabia))) likelihood) 
+
+(instance SaudiArabia Agent) 
+
+(implies 
+ (instance ?AGT Agent) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (maleficiary ?ATTACK ?AGT))))))
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (agent ?ACT SaudiArabia) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET Iran) 
+       (deviceUsed ?ACT ?FORCE) 
+       (instance ?FORCE ConventionalWeapon) 
+       (startsAfterStartingOf ?ACT 
+           (DateInSituationFn CalendarDay 28 HPKBScenarioConflict))) 
+   (or 
+       (and 
+           (desires SaudiArabia ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires SaudiArabia 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list (thereExists ?RETALIATION 
+ (and 
+ (instance ?RETALIATION AttackOnTangible) 
+ (maleficiary ?RETALIATION SaudiArabia)))))
+
+(end_of_file)
+

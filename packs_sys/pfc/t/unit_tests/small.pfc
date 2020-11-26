@@ -1,0 +1,15 @@
+% -*-Prolog-*-
+
+:- use_module(library(pfc)).
+
+% a very simple example from the kinship domain.
+
+spouse(P1,P2) <==> spouse(P2,P1).
+
+parent(X,Y), male(X) ==> father(X,Y).
+
+==> spouse(tim,janet).
+
+==> male(tim).
+
+==> parent(tim,katie).

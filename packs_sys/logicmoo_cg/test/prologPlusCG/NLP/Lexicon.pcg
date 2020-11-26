@@ -1,0 +1,34 @@
+lexicon("push", verb, [Push]-
+		-agnt->[Human],
+		-obj->[Object],
+		-on->[Object]).
+lexicon("create", verb, [Human]<-agnt-[Create]-obj->[Object]-colorOf->[Color]).
+lexicon("drive", verb, [Human]<-agnt-[Drive]-dest->[Place]).
+
+lexicon("is", aux_verb, _).
+lexicon("did", aux_verb, _).
+
+lexicon("pyramid", noun, Pyramid).
+lexicon("cube", noun, Cube).
+lexicon("sphere", noun, Sphere).
+lexicon("man", noun, Man).
+lexicon("woman", noun, Woman).
+lexicon("karim", noun, [Man : Karim]).
+lexicon("john", noun, [Boy : John]).
+lexicon("store", noun, Store).
+
+lexicon("small", adj, sizeOf, Size, small).
+lexicon("big", adj, sizeOf, Size, big).
+lexicon("red", adj, colorOf, Color, red).
+lexicon("blue", adj, colorOf, Color, blue).
+
+lexicon("on", prep, on).
+lexicon("under", prep, under).
+lexicon("left", prep, left).
+lexicon("right", prep, right).
+lexicon("to", prep, dest).
+
+lexicon("why", noun, Why).
+
+lexicon("the", art, x).
+lexicon("a", art, x).

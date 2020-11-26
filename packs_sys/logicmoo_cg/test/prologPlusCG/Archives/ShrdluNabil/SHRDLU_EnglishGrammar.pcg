@@ -1,0 +1,368 @@
+//TODO
+//il faut commencer par créer les CG pour le Complément
+
+
+// *******   utilities *******
+not(p) :- p, !, fail.
+not(p).
+eq(x, x).
+member(e, [e|q]).
+member(e, [_|q]) :- member(e, q).
+
+maximalJoin(G1, E1, G2, E2, G3, E3) :-
+   _resMatchCG is G1:maximalJoin(E1, G2, E2),
+   G3 is _resMatchCG:getCG(),
+   E3 is _resMatchCG:getConcept(), !.
+//**********************
+shrdlu :-
+   writeln("**** Welcome to the SHRDLU Program - INSEA 2005 - MOROCCO *******"),
+   writeln("**** Write 'Thank you.' to finish SHRDLU dialog. *******"),
+   readSentence(P),
+   SuiteShrdlu(P), !.
+
+SuiteShrdlu(["thank","you","."]):- writeln("YOU ARE WELCOME."), !.
+SuiteShrdlu(P) :- 
+        Sentence(P, T),
+        writeln(T), !,
+        readSentence(s),
+        SuiteShrdlu(s), !.
+
+
+InterrogativeSentence([A|P], [T_TypeOfSentence = G]-modalityOf->[Modality = interrogative]-attr->[Why]) :-
+   eq(A,"why"),
+   NP(P, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, ["?"], G_NP, E_NP, T_TypeOfSentence, G).
+
+InterrogativeSentence([A|P], [T_TypeOfSentence = G]-modalityOf->[Modality = interrogative]-attr->[What]) :-
+   eq(A,"what"),
+   AuxVerb(P,R),
+   NP(R, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, ["?"], G_NP, E_NP, T_TypeOfSentence, G).
+
+ImperativeSentence(P, [Action = G]-modalityOf->[Modality = imperative]):- ActiveVP(P, ["."], G).
+
+DeclarativeSentence(P, [T_TypeOfSentence = G]-modalityOf->[Modality = declarative]) :-
+   NounPhrase(P, P1, G_NP, E_NP),
+   stativeOrActiveVP(P1, ["."], G_NP, E_NP, T_TypeOfSentence, G).
+
+Sentence(P,G) :- InterrogativeSentence(P, G), !.
+Sentence(P,G) :- ImperativeSentence(P, G), !.
+Sentence(P,G) :- DeclarativeSentence(P, G), !.
+Sentence(P,"I DON'T UNDERSTAND").
+
+stativeOrActiveVP(P, G_NP, E_NP, State, G) :-
+   isVerb(P, R),
+   stativePart(R, G_NP, E_NP, G), !.
+
+stativeOrActiveVP(P, G_NP, E_NP, Action, G) :-
+   ActiveVP(P, G_NP, E_NP, G).
+
+//Groupe Verbal
+ActiveVP(P, P1, G_SUBJ, E_SUBJ, G) :-
+   ActiveVP(P, P1, G),
+   branchOfCG(B_Branch, [Action]-agnt->[X], G),
+   E_G_SUBJ is B_Branch:getTargetConcept(),
+   G:specialize(E_G_SUBJ, G_SUBJ, E_SUBJ).
+
+//les verbes intransitifs n'admettent pas de complément après
+ActiveVP(P, P2, G) :-
+   MainVerb(P, P1, InTrans, G_lexicon, n),
+   Subject(P1,P2,E1,G1),   
+   G is G_lexicon:copy(),
+   B_Branch is branchOfCG([Y]-agnt->[X],G),
+   E_G_Subj is B_Branch:getTargetConcept(),
+   G:specialize(E_G_Subj, G1, E1).
+
+//Les verbes transitifs admettent un complement après
+ActiveVP(P, P3, G) :-
+   MainVerb(P, P1, T_Verb, G_lexicon, n),//TypeVerb=Transitif (in)direct,n:negatif
+   G is G_lexicon:copy(),
+   Subject(P1,P2,E1,G1),   
+   G is G_lexicon:copy(),
+   SuiteActiveVP(P2,P3,G),
+   B_Branch is branchOfCG([Y]-agnt->[X],G),
+   E_G_Subj is B_Branch:getTargetConcept(),
+   G:specialize(E_G_Subj, G1, E1).
+
+SuiteActiveVP(L, L1, G):- 
+                Complement(L ,L1 ,E1 ,G1),
+                branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+                E_GV_Cmpl is B_Branch:getTargetConcept(),
+                G:specialize(E_GV_Cmpl, G1, E1),!.
+
+SuiteActiveVP(L, L1, G):- 
+                DirectObject(L ,L1 ,E1 ,G1),
+                branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+                E_GV_DO is B_Branch:getTargetConcept(),
+                G:specialize(E_GV_DO, G1, E1),!.
+
+SuiteActiveVP(L, L1, G):- 
+                ObjectComplement(L ,L1 ,E1 ,G1),
+                branchOfCG(B_Branch, [T_Verb]-obj->[X], G),
+                E_GV_OC is B_Branch:getTargetConcept(),
+                G:specialize(E_GV_OC, G1, E1),!.
+
+//**********************
+//unités terminales
+Particule([A|L],L):- lexicon(A, particule).
+Particule(L,L).
+Quantifier([A|L],L, x):- lexicon(A, Quantifier, x).
+ArticleDefinite([A|L],L, x):- lexicon(A, artDef, x).
+ArticleIndefinite([A|L],L, undefined):- lexicon(A, artIndef, x).
+
+PronounDeictic([A|L],L, x):- lexicon(A,PronounDeictic, x).
+PronounPersonal([A|L],L, x):- lexicon(A,PronounPersonal, x).
+PronounIndefinite([A|L],L, x):- lexicon(A,PronounIndefinite, x).
+PronounInterrogative([A|L],L, x):- lexicon(A,PronounInterrogative, x).
+PronounRelative([A|L],L, x):- lexicon(A,PronounRelative, x).
+
+Conjonction([A|L],L, x):- lexicon(A, conjonction, x).
+Subordination([A|L],L, x):- lexicon(A, subordination, x).
+
+Negative([A|L],L, x):- lexicon(A, Negation, x).
+Negative(L,L,_).
+
+Number([A|L],L ,R ,M ,V):- lexicon(A, numbr, R, M, V).
+
+// on ne va pas traiter la morphologie pour le moment
+Noun([A|L], L, T, N):- lexicon(A, noun, T, N). //T pour tense et G le concept
+
+Participle(L,L1,G):- IngParticiple(L, L1, IngParticiple, G),!.
+Participle(L,L1,G):- EdParticiple(L, L1, EdParticiple , G),!.
+
+Adjective([A|L],L,R,M,V):- lexicon(A, adj, R, M, V).
+
+Adverb([A|L],L, x):- lexicon(A, Adverb, x).
+
+Quest_Auxil([A|L],L, x):- lexicon(A, PronounInterrogative, x).
+
+FormBase([A|L1], L1, T, G) :- lexicon(A, verb, T , BaseForm, G), !.
+IngParticiple([A|L1], L1, T, G) :- lexicon(A, verb, T , IngParticiple, G), !.
+EdParticiple([A|L1], L1, T, G) :- lexicon(A, verb, T , EdParticiple, G), !.
+//la négation n'est utilisé ici qu'avec les auxiliaires et les verbes modaux
+FormsModal([A|L],L1, n) :- lexicon(A, ModalVerb), Negative(L,L1,n).
+FormsHave([A|L],L1, n)  :- lexicon(A, HaveVerb), Negative(L,L1,n).
+FormsBe([A|L],L1, n)    :- lexicon(A, IsVerb), Negative(L,L1,n).
+FormsDo([A|L],L1, n)    :- lexicon(A, DoVerb),Negative(L,L1,n).
+
+AuxModal(L,L2,T,G,n)   :- FormsModal(L,L1,n), FormBase(L1,L2,T,G).
+AuxPerfect(L,L2,T,G,n) :- FormsHave(L,L1,n), EdParticiple(L1,L2,T,G).
+AuxProgressive(L,L2,T,G,n) :- FormsBe(L,L1,n), IngParticiple(L1,L2,T,G).
+AuxPassive(L,L2,T,G,n) :- FormsBe(L,L1,n), EdParticiple(L1,L2,T,G).
+AuxSupport(L,L2,T,G,n) :- FormsDo(L,L1,n), FormBase(L1,L2,T,G).
+
+QuestionVerb(L,L1,n) :- FormsModal(L,L1,n).
+QuestionVerb(L,L1,n) :- FormsHave(L,L1,n).
+QuestionVerb(L,L1,n) :- FormsBe(L,L1,n).
+QuestionVerb(L,L1,n) :- FormsDo(L,L1,n).
+
+MainVerb(L,L3,T,G,n) :- FormBase(L,L1,T,G), Particule(L1,L2),Negative(L2,L3,n).
+MainVerb(L,L3,T,G,n) :- EdParticiple(L,L1,T,G), Particule(L1,L2),Negative(L2,L3,n).
+
+isVerb([A|P],P1,n):- lexicon(A, IsVerb), Negative(P,P1,n).
+
+Preposition([A|L],L, x) :- lexicon(A, prep, x).
+
+//unités non terminales
+Predeterminer(L,L1,x) :- Quantifier(L,L1,x).
+Predeterminer(L,L,_).  //facultatif
+
+Article(L,L1,x) :- ArticleDefinite(L,L1,x),!.
+Article(L,L1,x) :- ArticleIndefinite(L,L1,x),!.
+
+CentralDeterminer(L,L1,x) :- Article(L,L1,x),!.
+//CentralDeterminer(L,L1) :- Pronoun(L,L1),!.
+CentralDeterminer(L,L1,x) :- Negative(L,L1,x),!.
+CentralDeterminer(L,L,_).  //facultatif
+
+Pronoun(L,L1,x) :- PronounDeictic(L,L1,x),!.
+Pronoun(L,L1,x) :- PronounPersonal(L,L1,x),!.
+Pronoun(L,L1,x) :- PronounIndefinite(L,L1,x),!.
+Pronoun(L,L1,x) :- PronounInterrogative(L,L1,x),!.
+
+PostDeterminer(L,L1,V) :- Number(L,L1,R, M, V).
+PostDeterminer(L,L,undefined).  //pour dire que c'est facultatif
+
+PostModifierAdjPhrase(L,L1,x) :- Adverb(L,L1,x).
+PostModifierAdjPhrase(L,L1,x) :- Complementation(L,L1,x).
+
+Head(L,L1,N) :- Noun(L,L1,T,N),!.
+Head(L,L1,N) :- Pronoun(L,L1,N),!.
+
+HeadAdverbPhrase(L,L1,E_G,G) :- Adverb(L,L1,G).
+HeadAdjPhrase(L,L1,E_G,G) :- Adjectives(L,L1,G).
+HeadAdjPhrase(L,L1,E_G,G) :- Participle(L,L1,G).
+
+Adjectives([A|P], P1, [A|L_Adjs]) :-
+	 lexicon(A, adj, _, _, _),
+	 Adjectives(P, P1, L_Adjs), !.
+Adjectives(P, P, []).
+
+SemAdjs(L_Adjs, N, undefined, S, E) :- SemAdjsBis(L_Adjs, N, x, S, E),!.
+SemAdjs(L_Adjs, [T : D], A, S, E) :- SemAdjsBis(L_Adjs, T, D, S, E).
+
+SemAdjsBis([A|P], N, A1, S, E_N_S) :-
+   lexicon(A, adj, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   branchOfCG(B_Branch, [N : A1]-R1->[T1 = V1], G),
+   E_N is B_Branch:getSourceConcept(),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), !.
+
+SemAdjsBis([], N, A1, G, E) :-
+   eq(G, [N : A1]),
+   concOfCG(E, [N : A1], G).
+
+SemAdjs2([A|P], G, E_N, N, A1, S, E_S) :-
+   lexicon(A, adj, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   branchOfCG(B, [N : A1]-R->[T = V], G1),
+   E_N1 is B:getSourceConcept(),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), !.
+
+SemAdjs2([], G, E, _, _, G, E).
+
+PrepositionalPhrase(L,L2,G) :- 
+              Preposition(L,L1,s_Prep),
+              NounPhrase(L1,L2,E_NP,G_NP),
+              branchOfCG(B_Branch, [T_Verb]-s_prep->[X], G),
+              E_Suite is B_Branch:getTargetConcept(),
+              G:specialize(E_Suite, G_NP, E_NP).
+
+//Complement(L1,L2).  // e.g : in the afternoon
+
+//Attention il faut se rappeler que ds ce cas le G est déjà rempli par le sujet et le verbe
+Complement(L,L1,G) :- InfinitiveClause(L,L1,G). //à revoir !!
+Complement(L,L1,G) :- PrepositionalPhrase(L,L1,G).
+Complement(L,L1,G) :- Clause(L,L1,G).
+//ici le NounPhrase nous ramène un graphe et une entrée et il faut les fusionner avec le G
+Complement(L,L2,G) :- NounPhrase(L,L1,E,G),Particule(L1,L2).
+Complement(L,L1,G) :- Adjective(L,L1,_,_,_).
+Complement(L,L1,G) :- Adverb(L,L1,x).
+
+Clause(L,L1,G) :- IngClause(L,L1,G).
+Clause(L,L1,G) :- RelativeClause(L,L1,G).
+
+IngClause(L,L2,G):- IngParticiple(L, L1, E_G, G), NounPhrase(L1,L2,E_G,G). 
+EdClause(L,L2,E_G,G):- EdParticiple(L, L1, E_G,G), PrepositionalPhrase(L,L2,E_G,G).
+
+RelativeClause(L,L3,G):- PronounRelative(L,L1,x),Verb(L1,L2,T,G1,n),Complement(L2,L3,E_G,G). //e.g:who was reading that book // TODO
+
+NonFiniteClause(L,L1,E1,G1,E_G,G) :- IngClause(L,L1,E1,G1,E_G,G). // e.g:writting lettrer
+NonFiniteClause(L,L1,E1,G1,E_G,G) :- EdClause(L,L1,E1,G1,E_G,G). // e.g:shocked by the news
+NonFiniteClause(L,L2,E1,G1,E_G,G) :- EdParticiple(L,L1,E1,G1,E_G,G), Preposition(L1,L2,x).//e.g:supported by
+NonFiniteClause(L,L1,E1,G1,E_G,G) :- InfinitiveClause(L,L1,E1,G1,E_G,G). //(e.g: to see)
+
+Complementation(L, L1, E1, G1, E_G, G):- PrepositionalPhrase(L,L1,E1, G1, E_G, G).//(e.g:for me)
+Complementation(L, L1, E1, G1, E_G, G):- InfinitiveClause(L,L1,E1, G1, E_G, G).//(e.g: to see)
+
+//TODO voir comment enlever les verbes dans postmodifier car cela cause des problèmes
+//e.g : have you picked up pyramid?
+
+PostModifier(L,L1,E1,G1,E_G,G) :- PrepositionalPhrase(L,L1,E1,G1,E_G,G).
+PostModifier(L,L1,E1,G1,E_G,G) :- RelativeClause(L,L1,E1,G1,E_G,G).
+PostModifier(L,L1,E1,G1,E_G,G) :- NonFiniteClause(L,L1,E1,G1,E_G,G).
+//PostModifier(L,L1) :- Preposition(L,L1). // à revoir
+PostModifier(L,L,E,G,E,G).
+
+InfinitiveClause([A|L],L1,E1,G1,E_G,G) :- eq(A,"to"), MainVerb(L,L1,E1,G1,E_G,G,_).
+
+PostModifierAdverbPhrase(L,L1,E_G,G) :- Adverb(L,L1,G).
+PostModifierAdverbPhrase(L,L1,E_G,G) :- Complementation(L,L1,E_G,G).
+
+Auxiliary(L,L1,T,G,n) :- AuxModal(L,L1,T,G,n).
+Auxiliary(L,L1,T,G,n) :- AuxPerfect(L,L1,T,G,n).
+Auxiliary(L,L1,T,G,n) :- AuxProgressive(L,L1,T,G,n).
+Auxiliary(L,L1,T,G,n) :- AuxPassive(L,L1,T,G,n).
+Auxiliary(L,L1,T,G,n) :- AuxSupport(L,L1,T,G,n).
+
+NounPhrase(L, L6, E_G, G) :- 
+     Predeterminer(L,L1,x),
+     CentralDeterminer(L1,L2,A1),
+     PostDeterminer(L2,L3,V), //on stock la valeur de nombre si elle existe sinon c undefined
+     Adjectives(L3, L4, L_Adjs),
+     Head(L4,L5,N),
+     SemAdjs(L_Adjs, N, A1, S, E1),
+     Numero(V, N, S, E1, G1, E1),
+     PostModifier(L5, L6, E1, G1, E_G, G), !.
+
+Verb(L,L1,T,G,n) :- Auxiliary(L,L1,T,G,n).
+Verb(L,L1,T,G,n) :- MainVerb(L,L1,T,G,n).
+
+Numero(undefined , _, G, E, G, E).
+
+Numero(V1, [N : A1] , G1, E1, G, E) :-
+   lexicon(X, numbr, R1, T1, V1),
+   eq([N : A1], E1),
+   eq([N : A1]-R1->[T1 = V1], G),
+   branchOfCG(B, [N : A1]-countOf->[S], G),
+   E is B:getSourceConcept(),
+   G:specialize(E, G1, E1), !.
+
+Numero(V1, N, G1, E1, G, E) :-
+   lexicon(X, numbr, R1, T1, V1),
+   eq([N]-R1->[T1 = V1], G),
+   branchOfCG(B, [N]-countOf->[S], G),
+   E is B:getSourceConcept(),
+   G:specialize(E, G1, E1), !.
+
+AdjectivePhrase(L,L3,E_G,G):- HeadAdjPhrase(L,L2,E1,G1), PostModifierAdjPhrase(L2,L3,E2,G2).
+AdverbPhrase(L,L3,E_G,G):- HeadAdverbPhrase(L,L2,E1,G1), PostModifierAdverbPhrase(L2,L3,E2,G2).
+
+ObjectComplements(L,L2,E_G,G) :- NounPhrase(L,L1,E_G,G), Particule(L1,L2).
+ObjectComplements(L,L1,E_G,G) :- AdjectivePhrase(L,L1,E_G,G).
+ObjectComplements(L,L1,E_G,G) :- Clause(L,L1,E_G,G).
+ObjectComplements(L,L,_,_).
+
+DirectObject(L,L2,E_G,G) :- NounPhrase(L,L1,E_G,G), Particule(L1,L2).
+DirectObject(L,L1,E_G,G) :- Clause(L,L1,E_G,G).
+//car lorsqu'on a un IndirectObject on doit obligatoirement trouver un DirectObject après
+FaculDirectObject(L,L1,E_G,G):- DirectObject(L,L1,E_G,G).
+FaculDirectObject(L,L,_,_).
+
+Adverbial(L,L1,E_G,G) :- AdverbPhrase(L,L1,E_G,G).
+Adverbial(L,L1,E_G,G) :- PrepositionalPhrase(L,L1,E_G,G).
+Adverbial(L,L1,E_G,G) :- Clause(L,L1,E_G,G).
+Adverbial(L,L1,E_G,G) :- NounPhrase(L,L1,E_G,G).
+Adverbial(L,L,E_G,G). //facultatif; à voir
+
+//DeclarativeSentence(L,L4,E_G,G) :- Subject(L,L1,E1,G1), Verb(L1,L2,E2,G2,_), SuiteSentence(L2,L3,E3,G3), SuiteDeclarSentence(L3,L4,E1,G).
+SuiteDeclarSentence(L,L2,E_G,G):- Conjonction(L,L1,x), DeclarativeSentence(L1,L2,E_G,G).
+SuiteDeclarSentence(L,L2,E_G,G):- Subordination(L,L1,x), DeclarativeSentence(L1,L2,E_G,G).
+SuiteDeclarSentence(L,L,_,_). //facultatif
+
+//ImperativeSentence(L,L3,E_G,G) :- MainVerb(L,L1,E1,G1,_), Subject(L1,L2,E_G,G2), SuiteSentence(L2,L3,E3,G).
+
+SuiteSentence(L,L1,E_G,G):- Complement(L,L1,E_G,G).
+SuiteSentence(L,L1,E_G,G):- DirectObject(L,L1,E_G,G).
+SuiteSentence(L,L1,E_G,G):- ObjectComplement(L,L1,E_G,G).
+SuiteSentence(L,L,_,_).
+
+//---------- Définition de la phrase interrogative ---------------------------------------
+//InterrogativeSentence(A ,T, E_G, G):- YesNo_Question(A, T, E_G, G).
+//InterrogativeSentence(A ,T,E_G, G):- Wh_Question(A, T, E_G, G).
+
+Wh_Question(A, T, E_G, G) :- Quest_Auxil(A,L1,x), SuiteWh_Question(L1, T, E_G, G).
+
+SuiteWh_Question(A, T, E_G, G) :- Subject(A, L,E_G,G1), QuestionVerb(L,L1,G2), DeclarativeSentence(L1, T,E_G,G).
+SuiteWh_Question(A, T,E_G,G) :- QuestionVerb(A,L1,n), SuiteWh(L1, T, E_G, G).
+SuiteWh(A, T, E_G, G) :- DeclarativeSentence(A, T, E_G, G).
+SuiteWh(A, T, E_G, G) :- Complement(A, T, E_G, G).
+SuiteWh_Question(A, T, E_G, G) :- DeclarativeSentence(A, T, E_G, G).
+SuiteWh_Question(L, L, _, _). //cas des question e.g : Why?
+
+YesNo_Question(A,T,E_G,G) :- QuestionVerb(A,L1,n), SuiteYesNo(L1, T,E_G,G).
+SuiteYesNo(A, T,E_G,G):- DeclarativeSentence(A,T,E_G,G).
+SuiteYesNo(A, T,E_G,G):- Adverb(A, L1,x), Adverbial(L1, T,E_G,G).
+
+//----------------------------------------------------------------------------------------------
+VerbPhrase(L,L1,E_G,G) :- Verb(L,L1,T,G,n).
+//------------------------------------
+Subject(L,L1,E_G,G):- PronounPersonal(L,L1,x),
+                      eq(G,[x:t]),
+                      branchOfCG(B_Branch, [x], G),
+                      E_G is B_Branch.getConcept().
+
+Subject(L,L1,E_G,G):- NounPhrase(L,L1,E_G,G).
+//Verb,[IndirectObject],[DirectObject],[SubjectComplement],[ObjectComplement],[AdverbialComplement]
+

@@ -1,0 +1,2056 @@
+sicstus -l build_nuance_files.pl
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/scripts/build_nuance_files.pl...}
+{consulting c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/scripts/config.pl...}
+{consulted c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/scripts/config.pl in module user, 0 msec 2376 bytes}
+{compiling c:/home/speech/regulus/prolog/load.pl...}
+{compiling c:/home/speech/regulus/prolog/regulus2nuance.pl...}
+{compiling c:/home/speech/regulus/prolog/regulus_declarations.pl...}
+{module regulus_preds imported into user}
+{compiled c:/home/speech/regulus/prolog/regulus_declarations.pl in module regulus_preds, 10 msec 7048 bytes}
+{compiling c:/home/speech/cambridgeprologlib/utilities.pl...}
+{module utilities imported into user}
+{loading c:/program files/sicstus prolog/library/system.po...}
+{module system imported into utilities}
+{loaded c:/program files/sicstus prolog/library/system.po in module system, 0 msec 18760 bytes}
+{loading c:/program files/sicstus prolog/library/lists.po...}
+{module lists imported into utilities}
+{loaded c:/program files/sicstus prolog/library/lists.po in module lists, 10 msec 13800 bytes}
+{loading c:/program files/sicstus prolog/library/terms.po...}
+{module terms imported into utilities}
+{loading c:/program files/sicstus prolog/library/assoc.po...}
+{module assoc imported into terms}
+{module lists imported into assoc}
+{loaded c:/program files/sicstus prolog/library/assoc.po in module assoc, 10 msec 10760 bytes}
+{loaded c:/program files/sicstus prolog/library/terms.po in module terms, 10 msec 18688 bytes}
+{compiling c:/home/speech/cambridgeprologlib/dcg_parsing.pl...}
+{module dcg_parsing imported into utilities}
+{compiled c:/home/speech/cambridgeprologlib/dcg_parsing.pl in module dcg_parsing, 130 msec 40000 bytes}
+{compiled c:/home/speech/cambridgeprologlib/utilities.pl in module utilities, 290 msec 142776 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus2nuance_main.pl...}
+{compiling c:/home/speech/regulus/prolog/regulus_read.pl...}
+{module regulus_read imported into user}
+{module regulus_preds imported into regulus_read}
+{module utilities imported into regulus_read}
+{compiling c:/home/speech/regulus/prolog/regulus_utilities.pl...}
+{module regulus_utilities imported into regulus_read}
+{module regulus_preds imported into regulus_utilities}
+{module utilities imported into regulus_utilities}
+{module lists imported into regulus_utilities}
+{module terms imported into regulus_utilities}
+{loading c:/program files/sicstus prolog/library/ordsets.po...}
+{module ordsets imported into regulus_utilities}
+{loaded c:/program files/sicstus prolog/library/ordsets.po in module ordsets, 0 msec 13528 bytes}
+{module assoc imported into regulus_utilities}
+{module system imported into regulus_utilities}
+{compiled c:/home/speech/regulus/prolog/regulus_utilities.pl in module regulus_utilities, 130 msec 60072 bytes}
+{module lists imported into regulus_read}
+{module terms imported into regulus_read}
+{module ordsets imported into regulus_read}
+{module assoc imported into regulus_read}
+{module system imported into regulus_read}
+{compiled c:/home/speech/regulus/prolog/regulus_read.pl in module regulus_read, 300 msec 140472 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus_expand.pl...}
+{module regulus_expand imported into user}
+{module regulus_preds imported into regulus_expand}
+{module regulus_utilities imported into regulus_expand}
+{module utilities imported into regulus_expand}
+{module lists imported into regulus_expand}
+{module terms imported into regulus_expand}
+{module ordsets imported into regulus_expand}
+{module assoc imported into regulus_expand}
+{module system imported into regulus_expand}
+{compiled c:/home/speech/regulus/prolog/regulus_expand.pl in module regulus_expand, 181 msec 76688 bytes}
+{module regulus_utilities imported into user}
+{compiling c:/home/speech/regulus/prolog/regulus_write_nuance.pl...}
+{module regulus_write_nuance imported into user}
+{module regulus_preds imported into regulus_write_nuance}
+{module regulus_utilities imported into regulus_write_nuance}
+{module utilities imported into regulus_write_nuance}
+{module lists imported into regulus_write_nuance}
+{module terms imported into regulus_write_nuance}
+{module ordsets imported into regulus_write_nuance}
+{module assoc imported into regulus_write_nuance}
+{module system imported into regulus_write_nuance}
+{compiled c:/home/speech/regulus/prolog/regulus_write_nuance.pl in module regulus_write_nuance, 60 msec 29480 bytes}
+{module lists imported into user}
+{compiled c:/home/speech/regulus/prolog/regulus2nuance_main.pl in module user, 561 msec 256880 bytes}
+{compiled c:/home/speech/regulus/prolog/regulus2nuance.pl in module user, 901 msec 412280 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus_top.pl...}
+{compiling c:/home/speech/regulus/prolog/stanford_parser.pl...}
+{module stanford_parser imported into user}
+{module utilities imported into stanford_parser}
+{module regulus_preds imported into stanford_parser}
+{compiled c:/home/speech/regulus/prolog/stanford_parser.pl in module stanford_parser, 30 msec 17096 bytes}
+{compiling c:/home/speech/regulus/prolog/stanford_parser_compile.pl...}
+{module stanford_parser_compile imported into user}
+{module utilities imported into stanford_parser_compile}
+{module regulus_preds imported into stanford_parser_compile}
+{module lists imported into stanford_parser_compile}
+{compiled c:/home/speech/regulus/prolog/stanford_parser_compile.pl in module stanford_parser_compile, 30 msec 15344 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus2dcg.pl...}
+{module regulus2dcg imported into user}
+{module regulus_preds imported into regulus2dcg}
+{module regulus_utilities imported into regulus2dcg}
+{module utilities imported into regulus2dcg}
+{module regulus_read imported into regulus2dcg}
+{module lists imported into regulus2dcg}
+{module terms imported into regulus2dcg}
+{module ordsets imported into regulus2dcg}
+{module assoc imported into regulus2dcg}
+{module system imported into regulus2dcg}
+{compiled c:/home/speech/regulus/prolog/regulus2dcg.pl in module regulus2dcg, 130 msec 53216 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus2gemini.pl...}
+{module regulus2gemini imported into user}
+{module regulus_preds imported into regulus2gemini}
+{module regulus_utilities imported into regulus2gemini}
+{module utilities imported into regulus2gemini}
+{module regulus_read imported into regulus2gemini}
+{module lists imported into regulus2gemini}
+{compiled c:/home/speech/regulus/prolog/regulus2gemini.pl in module regulus2gemini, 100 msec 44248 bytes}
+{compiling c:/home/speech/regulus/prolog/regulus_eval.pl...}
+{module regulus_eval imported into user}
+{module utilities imported into regulus_eval}
+{module regulus_utilities imported into regulus_eval}
+{module lists imported into regulus_eval}
+{module terms imported into regulus_eval}
+{compiled c:/home/speech/regulus/prolog/regulus_eval.pl in module regulus_eval, 70 msec 31208 bytes}
+{module system imported into user}
+{compiled c:/home/speech/regulus/prolog/regulus_top.pl in module user, 450 msec 206920 bytes}
+{compiling c:/home/speech/regulus/prolog/ebl_make_training_data.pl...}
+{compiled c:/home/speech/regulus/prolog/ebl_make_training_data.pl in module user, 20 msec 6288 bytes}
+{compiling c:/home/speech/regulus/prolog/ebl_train.pl...}
+{module ebl_train imported into user}
+{compiling c:/home/speech/regulus/prolog/ebl_generalise.pl...}
+{module ebl_generalise imported into ebl_train}
+{compiling c:/home/speech/regulus/prolog/ebl_operational.pl...}
+{module ebl_operational imported into ebl_generalise}
+{module lists imported into ebl_operational}
+{module utilities imported into ebl_operational}
+{compiled c:/home/speech/regulus/prolog/ebl_operational.pl in module ebl_operational, 30 msec 13648 bytes}
+{module utilities imported into ebl_generalise}
+{module lists imported into ebl_generalise}
+{compiled c:/home/speech/regulus/prolog/ebl_generalise.pl in module ebl_generalise, 50 msec 25136 bytes}
+{module ebl_operational imported into ebl_train}
+{module system imported into ebl_train}
+{module utilities imported into ebl_train}
+{compiled c:/home/speech/regulus/prolo(Load current Regulus grammar in DCG and left-corner form)
+
+--- LOADING GRAMMAR IN DCG FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 374 declarations, 70 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.08 secs
+Prolog-compiling generated file
+
+
+--- LOADING GRAMMAR IN REFLECTIVE DCG FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 374 declarations, 70 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.12 secs
+Prolog-compiling generated file
+
+
+--- LOADING GRAMMAR IN LEFT-CORNER PARSER FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 374 declarations, 70 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.13 secs
+Prolog-compiling generated file
+
+
+Building left-corner parser tables... 
+-- Building reachable_cat
+-- Building reachable word
+-- Building reaches_gap
+-- Writing out tables
+done, 3.48 secs
+(Parse all sentences in current EBL training set into treebank form)
+
+Parsing corpus data in c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/corpora/psa_sents.pl:
+......................
+*** Parsing failed for: [what,was,the,temperature,at,the,storage,locker,at,fifteen,hundred,six]
+....................................................
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,two]
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,hundred,two]
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,hundred,two]
+*** Parsing failed for: [what,is,the,temperature,at,fifteen,two]
+........
+*** Parsing failed for: [close,storage,doors]
+*** Parsing failed for: [close,storage,doors]
+*** Parsing failed for: [close,all,the,storage,doors]
+........
+*** Parsing failed for: [close,storage,locker,doors]
+*** Parsing failed for: [close,storage,locker,doors]
+............
+*** Parsing failed for: [go,to,sleep]
+*** Parsing failed for: [go,to,sleep]
+*** Parsing failed for: [go,to,sleep]
+..
+*** Parsing failed for: [is,the,temperature]
+...............
+*** Parsing failed for: [at,p,s,a,sensors]
+*** Parsing failed for: [at,p,s,a,sensors]
+........
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+..............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..........................
+*** Parsing failed for: [close,crew,hatch,door]
+................
+*** Parsing failed for: [measure,the,carbon,dioxide,levels,of]
+...............
+*** Parsing failed for: [close,hatch]
+.........................................
+*** Parsing failed for: [what,is,the,temperature,now]
+*** Parsing failed for: [what,is,the,temperature,now]
+.................................................
+*** Parsing failed for: [check,c,o,two,using,p,s,a,sensor]
+*** Parsing failed for: [check,c,o,two]
+*** Parsing failed for: [check,c,o,two,with,p,s,a,sensor]
+*** Parsing failed for: [check,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,c,o]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,temperature,with,p,s,a,sensor]
+...............
+*** Parsing failed for: [move,to,storage,locker]
+.............
+*** Parsing failed for: [move,to,storage,locker]
+.................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+...........
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+......................
+*** Parsing failed for: [move,to,sleep,area]
+*** Parsing failed for: [move,to,sleep,station]
+......
+*** Parsing failed for: [close,the,access,ladder]
+................................
+*** Parsing failed for: [move,to,storage,area]
+.................
+*** Parsing failed for: [move,to,storage,locker]
+.............
+*** Parsing failed for: [measure,carbon,dioxide,at,access,ladder,ladder,and,lower,deck]
+..................................................
+*** Parsing failed for: [what,is,the,temperature,at,the,storage,locker]
+.................................
+*** Parsing failed for: [what,is,the,carbon,dioxide,and,temperature,according,to,the,p,s,a]
+....
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,according,to,fixed,sensors]
+.......
+*** Parsing failed for: [what,is,the,temperature,of,lower,of,mid,deck]
+....................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+................
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature]
+......
+*** Parsing failed for: [turn,on,the,fan,to,the,access,ladder]
+.........
+*** Parsing failed for: [what,is,the,c,o,two,reading]
+*** Parsing failed for: [what,is,the,c,o,two,level]
+.
+*** Parsing failed for: [is,the,carbon,dioxide]
+..............................................................
+*** Parsing failed for: [is,the,carbon,dioxide,level,in,decreasing,at,access,ladder]
+........................
+*** Parsing failed for: [what,is,the]
+*** Parsing failed for: [what,is]
+.................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+................................
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,lockers]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,locker]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,lockers]
+*** Parsing failed for: [what,is,the,temperature,in,the,fixed,lockers,according,to,the,fixed,sensors]
+..
+*** Parsing failed for: [what,is,the,temperature,in,the,fixed,in,the,storage,lockers,according,to,the,fixed,sens]
+..........
+*** Parsing failed for: [according,to,p,s,a,sensors,what,is,the,temperature,in,the,storage,lockers]
+...........
+*** Parsing failed for: [measure,carbon,dioxide,at,access,letter,ladder,and,lower,deck]
+.....................................................
+*** Parsing failed for: [measure,again]
+*** Parsing failed for: [repeat]
+.............................
+*** Parsing failed for: [measure,temperature,according,to,fixed,sensors,at]
+........................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [measure,the,carbon,dioxide,level,and,then,the,temperature,at,the,lower,deck,mid,deck,an]
+*** Parsing failed for: [then,the,flight,deck]
+....................
+*** Parsing failed for: [measure,again]
+.
+*** Parsing failed for: [measure,temperature,at,crew,hatch,with,p,s,a,sensor]
+........
+*** Parsing failed for: [measure,temperature,at]
+.
+*** Parsing failed for: [give,the,fixed,sensor]
+*** Parsing failed for: [what,is,the,fixed,sensor,reading]
+*** Parsing failed for: [what,is,fixed,temperature,for,crew,hatch]
+.
+*** Parsing failed for: [measure,temperature,at]
+..........
+*** Parsing failed for: [what,is,the,fixed,sensor,reading,for,temperature]
+*** Parsing failed for: [what,is,access,fixed,temperature]
+.
+*** Parsing failed for: [turn,on,access,ladder,fan]
+..
+*** Parsing failed for: [what,is,fixed,sensor,reading]
+.........
+*** Parsing failed for: [what,is,p,s,a,temperature]
+.
+*** Parsing failed for: [turn,on,crew,hatch,fan]
+*** Parsing failed for: [is,crew,hatch,fan,on]
+...
+*** Parsing failed for: [measure,temperature,with,p,s,a]
+....
+*** Parsing failed for: [measure,temperature,with,fixed,sensors]
+.
+*** Parsing failed for: [turn,off,access,fan]
+*** Parsing failed for: [go,to]
+...............................................................
+*** Parsing failed for: [move,to,the,lower,deck,and,measure,temperature,and,carbon,dioxide,level,according,to,p]
+*** Parsing failed for: [a,sensor]
+......................
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,levels,according,to,p,s,a,sensor]
+..............
+*** Parsing failed for: [measure,temperature,and,c,o,two,level,at,the,access,ladder,according,to,p,s,a,sensor]
+..
+*** Parsing failed for: [is,the,temperature,and,c,o,two,level,according,to,p,s,a,sensor]
+............................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.................................................................
+*** Parsing failed for: [is,the,radiation,level,stable]
+*** Parsing failed for: [is,the,radiation,level,stable]
+..
+*** Parsing failed for: [close,the,storage,door]
+*** Parsing failed for: [close,the,storage,door]
+..............
+*** Parsing failed for: [open,storage,door]
+....................................................................
+*** Parsing failed for: [measure,temperatures]
+......
+*** Parsing failed for: [no,go,to,access,deck]
+............................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..............................
+*** Parsing failed for: [measure,temperature,in,sleep,and,storage]
+...........................................................................
+*** Parsing failed for: [repeat]
+..................
+*** Parsing failed for: [what,was,the,temperature,at,the,mid,deck,at,fifteen,hundred,hours]
+.......................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+........................
+*** Parsing failed for: [according,to,p,s,a,standards]
+.............
+*** Parsing failed for: [is,the,flight,deck,fan,on]
+..
+*** Parsing failed for: [turn,off]
+...................................................
+*** Parsing failed for: [according,to,fixed]
+..................
+*** Parsing failed for: [check,temperature,levels]
+.
+*** Parsing failed for: [go,to,access,letter,ladder]
+.
+*** Parsing failed for: [check,access,ladder]
+*** Parsing failed for: [go,to,access]
+...
+*** Parsing failed for: [check,carbon,dioxide,levels]
+..
+*** Parsing failed for: [check,carbon,dioxide,levels]
+*** Parsing failed for: [check,carbon,dioxide,levels]
+*** Parsing failed for: [carbon,dioxide,levels]
+*** Parsing failed for: [temperature,level]
+*** Parsing failed for: [temperature,level]
+*** Parsing failed for: [what,is,the,temperature,level]
+..........
+*** Parsing failed for: [close,storage,door]
+....
+*** Parsing failed for: [go,to,sleep]
+.........
+*** Parsing failed for: [what,is,the,carbon,dioxide,levels]
+............................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..
+*** Parsing failed for: [measure]
+*** Parsing failed for: [measure]
+...
+*** Parsing failed for: [measure,the]
+.......
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,levels]
+..
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,levels]
+...
+*** Parsing failed for: [measure,temperature,again]
+*** Parsing failed for: [measure,temperature,again]
+*** Parsing failed for: [measure,temperature,again]
+..........
+*** Parsing failed for: [close,crew,hatch,door]
+..
+*** Parsing failed for: [measure,temperature,level]
+..................
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,level,at,sleep]
+....
+*** Parsing failed for: [measure,temperature,level,at]
+.....
+*** Parsing failed for: [move,to,commanders,seat,and,check,radiation]
+......................................
+*** Parsing failed for: [check,temperature,and,carbon,dioxide,at,commanders,seat]
+....................
+*** Parsing failed for: [what,is,temperature,and,carbon,dioxide,at]
+..................
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,of,storage]
+.........................
+*** Parsing failed for: [is,the,fan,at,the,crew,hatch,switch,on]
+..
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,fixed,sens]
+.............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.........
+*** Parsing failed for: [check,carbon,dioxide,at,crew,hatch]
+..
+*** Parsing failed for: [check,temperature]
+...
+*** Parsing failed for: [check,temperature,at,crew,hatch]
+..
+*** Parsing failed for: [go,to,access,ladder,and,check,temperature]
+......
+*** Parsing failed for: [what,is]
+...........................
+*** Parsing failed for: [close,hatch]
+..
+*** Parsing failed for: [fan,on]
+....
+*** Parsing failed for: [what,is,radiation,mid,deck]
+*** Parsing failed for: [what,is,radiation,mid,deck]
+........
+*** Parsing failed for: [fan,on]
+................................................................
+*** Parsing failed for: [what,is,the,c,o,two,level,here]
+*** Parsing failed for: [measure,the,c,o,two,level,here]
+.............................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,fixed,sens]
+................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.............................
+*** Parsing failed for: [close,mid,deck,door]
+....................
+*** Parsing failed for: [turn,off,crew,hatch,fan]
+*** Parsing failed for: [turn,off,crew,hatch,fan]
+*** Parsing failed for: [turn,off,crew,hatch,fan]
+*** Parsing failed for: [turn,off,crew,hatch,fan]
+.......
+*** Parsing failed for: [measure,temperature,at,sleep]
+*** Parsing failed for: [measure,temperature,at,sleep]
+*** Parsing failed for: [measure,temperature,at,sleep,station]
+......
+*** Parsing failed for: [open,storage,door]
+.....
+*** Parsing failed for: [what,is,the,current,temperature]
+.................................................
+*** Parsing failed for: [measure,at,storage,lockers]
+...........
+*** Parsing failed for: [at,the,other,two,decks]
+....
+*** Parsing failed for: [check,the,access,ladder]
+......
+*** Parsing failed for: [what,is,it,at,the,lower,and,mid,deck]
+.......
+*** Parsing failed for: [check,temperature,and,carbon,dioxide,at,storage]
+...........
+*** Parsing failed for: [what,is,it,at,mid,and,lower,deck]
+....
+*** Parsing failed for: [check,both,at,flight,deck]
+*** Parsing failed for: [check,temperature,and,carbon,dioxide,at,flight,deck]
+.............
+*** Parsing failed for: [what,is,the,temperature,at,the,access,hatch]
+........
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+...................
+*** Parsing failed for: [what,'s,the,temperature,at,the,storage,locker]
+.........
+*** Parsing failed for: [check,the,lower,deck]
+..
+*** Parsing failed for: [check,the,other,two,decks]
+*** Parsing failed for: [check,the,temperature,at,the,other,two,decks]
+*** Parsing failed for: [get,temperature,at,mid,deck,and,flight,deck]
+.............
+*** Parsing failed for: [is,the,temperature,decreasing,now]
+*** Parsing failed for: [is,the,temperature,decreasing,now]
+......................
+*** Parsing failed for: [check,radiation,at,all,three,decks]
+...
+*** Parsing failed for: [close,the,mid,deck,door]
+..
+*** Parsing failed for: [close,the,hatch,at,storage,lockers]
+......
+*** Parsing failed for: [close,access,ladder]
+....
+*** Parsing failed for: [is,buzz,alive]
+................................................
+*** Parsing failed for: [what,is,the,c,o,two,level,here]
+*** Parsing failed for: [what,is,the,c,o,two,level,here]
+.........
+*** Parsing failed for: [go,to,the,storage,lockers,and,tell,me,what,the,temperature,is]
+..
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,level,here,according,to,the,fixed,sensors]
+.
+*** Parsing failed for: [what,is,the,temperature,and,the,carbon,dioxide,level,here,according,to,the,p,s,a]
+....
+*** Parsing failed for: [repeat,that]
+*** Parsing failed for: [never,mind]
+.
+*** Parsing failed for: [what,is,the,temperature,and,the,carbon,dioxide,level,here,according,to,the,p,s,a,sensor]
+*** Parsing failed for: [go,to,the,sleeping,quarters]
+.......
+*** Parsing failed for: [and,at,the,lower,deck]
+...........
+*** Parsing failed for: [go,to,sleep]
+...........................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+..............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.........................................................................
+*** Parsing failed for: [what,is,the,carbon,dioxide,level,here,according,to,the,fixed,sensor,and,to,the,p,s,a]
+.
+*** Parsing failed for: [and,according,to,the,p,s,a]
+................................................
+*** Parsing failed for: [yeah/home/speech/Gemini/PSA/Nuance/data/000323-14:12:58/utt01.wav,what,is,the,temperatu]
+......
+*** Parsing failed for: [measure,the,c,oh,two]
+..............
+*** Parsing failed for: [at,fifteen,oh,five,what,was,the,temperature,at,the,crew,hatch]
+......................
+*** Parsing failed for: [good]
+.
+*** Parsing failed for: [go,the,middle,deck]
+.........
+*** Parsing failed for: [measure,the,temperature,and,carbon,dioxide,level,at,storage,and,crew,hatch,and,lower,de]
+....
+*** Parsing failed for: [measure,at,access,ladder]
+...................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.............................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..............
+*** Parsing failed for: [according,to]
+*** Parsing failed for: [according,to,ships,sensors]
+......................
+*** Parsing failed for: [according,to,fixed,sensors,what,is,the,temperature,at,the,crew,hatch]
+.
+*** Parsing failed for: [according,to,p,s,a,sensors,what,is,the,temperature,at,the,crew,hatch]
+......................
+*** Parsing failed for: [close,the,lower,deck]
+*** Parsing failed for: [close,the,lower,deck]
+.................................
+*** Parsing failed for: [measure,the,temperature,and,carbon,dioxide,and,radiation]
+.....
+*** Parsing failed for: [absolutely]
+............
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,at,storage,according]
+.............................................................
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,sleep]
+....................
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,at,the,commanders,seat,according,to,the,fixe]
+......
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,and,carbon,dioxide,in,sleep]
+*** Parsing failed for: [what,is,the,carbon,dioxide,and,temperature,in,sleep,according,to,the,fixed,sensors]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,carbon,dioxide,and,temperature,in,the,sleep]
+....
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,at,the,pilots,seat]
+..............................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [what,is,the,carbon,dioxide,level,and]
+...
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..........
+*** Parsing failed for: [go,to,storage,locker]
+.....
+*** Parsing failed for: [do,that,in,the,storage,lockers]
+*** Parsing failed for: [repeat,that,in,the,storage,lockers]
+*** Parsing failed for: [do,the,same,for,the,storage,lockers]
+.
+*** Parsing failed for: [do,the,same]
+*** Parsing failed for: [do,the,same,for,the,access,ladder]
+...
+*** Parsing failed for: [and,the,carbon,dioxide]
+.......
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,at,the,pilots,seat,and,the,comma]
+*** Parsing failed for: [seat]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,and,carbon,dioxide,at,the,pilots]
+.
+*** Parsing failed for: [what,is,the,temperature,and,the,carbon,dioxide,at,the,pilots,seat,according,to,the,fixe]
+.......
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,and,the,carbon,dioxide]
+*** Parsing failed for: [what,is,the,temperature,and,the,carbon,dioxide,according,to,the,p,s,a,sensors]
+.....
+*** Parsing failed for: [is,the,temperature,stable]
+*** Parsing failed for: [is,the,temperature,stable]
+...........
+*** Parsing failed for: [go,to,sleep]
+..
+*** Parsing failed for: [all]
+*** Parsing failed for: [close,storage,door]
+*** Parsing failed for: [close,door,to,storage]
+*** Parsing failed for: [close,storage,door]
+*** Parsing failed for: [close,storage,hatch]
+.......................................................................
+*** Parsing failed for: [check,c,o,two,using,p,s,a,sensor]
+*** Parsing failed for: [check,c,o,two]
+*** Parsing failed for: [check,c,o,two,with,p,s,a,sensor]
+*** Parsing failed for: [check,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,c,o]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,temperature,with,p,s,a,sensor]
+...............
+*** Parsing failed for: [move,to,storage,locker]
+.............
+*** Parsing failed for: [move,to,storage,locker]
+.................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+...........
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+......................
+*** Parsing failed for: [move,to,sleep,area]
+*** Parsing failed for: [move,to,sleep,station]
+......
+*** Parsing failed for: [close,the,access,ladder]
+................................
+*** Parsing failed for: [move,to,storage,area]
+.................
+*** Parsing failed for: [move,to,storage,locker]
+..............................
+*** Parsing failed for: [is,the,carbon,dioxide,level,in,decreasing,at,access,ladder]
+........................
+*** Parsing failed for: [what,is,the]
+*** Parsing failed for: [what,is]
+.................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+................................
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,lockers]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,locker]
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature,in,the,storage,lockers]
+*** Parsing failed for: [what,is,the,temperature,in,the,fixed,lockers,according,to,the,fixed,sensors]
+..
+*** Parsing failed for: [what,is,the,temperature,in,the,fixed,in,the,storage,lockers,according,to,the,fixed,sens]
+..........
+*** Parsing failed for: [according,to,p,s,a,sensors,what,is,the,temperature,in,the,storage,lockers]
+...............................................................
+*** Parsing failed for: [move,to,the,lower,deck,and,measure,temperature,and,carbon,dioxide,level,according,to,p]
+*** Parsing failed for: [a,sensor]
+......................
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,levels,according,to,p,s,a,sensor]
+..............
+*** Parsing failed for: [measure,temperature,and,c,o,two,level,at,the,access,ladder,according,to,p,s,a,sensor]
+..
+*** Parsing failed for: [is,the,temperature,and,c,o,two,level,according,to,p,s,a,sensor]
+............................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.................................................................
+*** Parsing failed for: [is,the,radiation,level,stable]
+*** Parsing failed for: [is,the,radiation,level,stable]
+..
+*** Parsing failed for: [close,the,storage,door]
+*** Parsing failed for: [close,the,storage,door]
+..............
+*** Parsing failed for: [open,storage,door]
+...........................................................
+*** Parsing failed for: [repeat]
+..................
+*** Parsing failed for: [what,was,the,temperature,at,the,mid,deck,at,fifteen,hundred,hours]
+.......................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+........................
+*** Parsing failed for: [according,to,p,s,a,standards]
+.............
+*** Parsing failed for: [is,the,flight,deck,fan,on]
+..
+*** Parsing failed for: [turn,off]
+...............................
+*** Parsing failed for: [move,to,commanders,seat,and,check,radiation]
+......................................
+*** Parsing failed for: [check,temperature,and,carbon,dioxide,at,commanders,seat]
+....................
+*** Parsing failed for: [what,is,temperature,and,carbon,dioxide,at]
+..................
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,of,storage]
+.........................
+*** Parsing failed for: [is,the,fan,at,the,crew,hatch,switch,on]
+..
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,fixed,sens]
+.............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.........
+*** Parsing failed for: [check,carbon,dioxide,at,crew,hatch]
+..
+*** Parsing failed for: [check,temperature]
+...
+*** Parsing failed for: [check,temperature,at,crew,hatch]
+..
+*** Parsing failed for: [go,to,access,ladder,and,check,temperature]
+......
+*** Parsing failed for: [what,is]
+...........................
+*** Parsing failed for: [close,hatch]
+..
+*** Parsing failed for: [fan,on]
+....
+*** Parsing failed for: [what,is,radiation,mid,deck]
+*** Parsing failed for: [what,is,radiation,mid,deck]
+........
+*** Parsing failed for: [fan,on]
+..........................................................................
+*** Parsing failed for: [stop/home/speech/Gemini/PSA/Nuance/data/000404-14:36:16/utt01.wav,go,to,storage,and,mea]
+..
+*** Parsing failed for: [and,according,to,fixed,sensors]
+..........
+*** Parsing failed for: [measure,carbon,dioxide,and,temperature,in,the,sleep,area]
+*** Parsing failed for: [measure,carbon,dioxide,and,temperature,in,the,sleep,area]
+*** Parsing failed for: [measure,carbon,dioxide,and,temperature,in,the,sleep,station]
+....
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,level,at,the,mid,deck,according,to,fixed,sen]
+..........................................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+................................
+*** Parsing failed for: [measure,the,carbon,dioxide,levels,at,crew,hatch,and,access,ladder]
+...
+*** Parsing failed for: [do,the,same,for,storage]
+.
+*** Parsing failed for: [do,the,same,at,lower,deck]
+..
+*** Parsing failed for: [measure,carbon,dioxide,and,temperature,at,your,current,location]
+...
+*** Parsing failed for: [and,at,the,lower,deck]
+.....................
+*** Parsing failed for: [what,is,the,radiation,at,present,location]
+.........
+*** Parsing failed for: [okay,yes]
+....
+*** Parsing failed for: [that's,right]
+..........
+*** Parsing failed for: [what,was,the,temperature,at,the,storage,lockers,at,fifteen,point,oh,six]
+*** Parsing failed for: [what,was,the,temperature,at,the,storage,lockers,at,fifteen,point,oh,six]
+......................
+*** Parsing failed for: [move,to]
+................
+*** Parsing failed for: [is,carbon,dioxide,stable,at,crew,hatch]
+....
+*** Parsing failed for: [check,carbon,dioxide,level,at,storage]
+............
+*** Parsing failed for: [go,to]
+..
+*** Parsing failed for: [measure,temperature,at,storage,i,think,we,already,did,this]
+......................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+..................
+*** Parsing failed for: [is,the,carbon,dioxide,level,in,decreasing,at,storage]
+...........
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+.........................
+*** Parsing failed for: [move,to]
+.......
+*** Parsing failed for: [measure,measure,carbon,dioxide,according,to,p,s,a,sensor]
+...................
+*** Parsing failed for: [send,buzz,home]
+.........
+*** Parsing failed for: [go,to]
+..........
+*** Parsing failed for: [according,to,fixed,fixed,sensors]
+...........
+*** Parsing failed for: [measure,carbon,dioxide,at,access,letter,ladder,and,lower,deck]
+..............................
+*** Parsing failed for: [to,lower,flight,deck]
+..
+*** Parsing failed for: [give,me,the,temperature,and,carbon,dioxide,readings,according,to,p,s,a]
+.
+*** Parsing failed for: [what,is,the,temperature,here,to,p,s,a]
+*** Parsing failed for: [measure,the,temperature,according,to,p,s,a,sensor,okay]
+...
+*** Parsing failed for: [move,to,storage,lockers,and,measure,temperature,and,carbon,dioxide,according,to,p,s,a,s]
+........
+*** Parsing failed for: [move,to,sleep]
+......
+*** Parsing failed for: [move,to,storage,ladder,access,ladder]
+................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+..................................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+..
+*** Parsing failed for: [measure,carbon,dioxide,level,at,commanders,seat,according,to,p,s,a,sensor,okay]
+...............
+*** Parsing failed for: [move,to,sleep,station]
+...........
+*** Parsing failed for: [measure,temperature,and,carbon,dioxide,at,storage,ladder]
+....
+*** Parsing failed for: [go,ahead]
+.................
+*** Parsing failed for: [what,is,the,radiation,now]
+......
+*** Parsing failed for: [close,door,to,access,ladder]
+.....................
+*** Parsing failed for: [measure,radiation,at,storage,lockers,crew,hatch,and,access,ladder,according,to,fixed,se]
+......................................
+
+Results of parsing written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_trees.pl.
+
+5440 items, 494.01 secs
+
+378 items failed to parse (6.9%)
+(Do EBL training on current treebank)
+
+Doing EBL training on parsed data from c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_trees.pl:
+......................-....................................................----........---........--............---..-...............--........-.-..............................-..........................-................-...............-.........................................--.................................................--------...............-.............-.................................................-............................-...........--......................--......-................................-.................-.............-..................................................-.................................-....-.......-....................-............................-................-......-.........--.-..............................................................-........................--.................................................-............................-................................----..-..........-...........-.....................................................--.............................-........................-............................--....................-.-........-.---.-..........--.-..-.........-.--...-....-.--...............................................................--......................-..............-..-............................-.................................-.................................................................--..--..............-....................................................................-......-............................................-............................--..............................-...........................................................................-..................-.......................................................-.............................-........................-.............-..-...................................................-..................-.-.--...-..------..........-....-.........-............................-.............................--..--...-.......-..-...---..........-..-..................-....-.....-......................................-....................-..................-.........................-..-.............................-.........-..-...-..-......-...........................-..-....--........-................................................................--.............................................................-................................-.............................-....................----.......---......-.....-.................................................-...........-....-......-.......-...........-....--.............-........-.................................-...................-.........-..---.............--......................-...-..-......-....-................................................--.........-..-.-....--.--.......-...........-...........................-.-..............................-.........................................................................-.-................................................-......-..............-......................-.-.........-....-...................-.............................................-..............--......................-.-......................--.................................-.....-............-.............................................................-....................-......---....-..............................-............................-...--..........-.....---.--...-.......---.-.......--.....--...........-..-----.......................................................................--------...............-.............-.................................................-............................-...........--......................--......-................................-.................-..............................-........................--.................................................-............................-................................----..-..........-...............................................................--......................-..............-..-............................-.................................-.................................................................--..--..............-...........................................................-..................-.......................................................-.............................-........................-.............-..-...............................-......................................-....................-..................-.........................-..-.............................-.........-..-...-..-......-...........................-..-....--........-..........................................................................-..-..........---....-..........................................................-................................-...-.-..-...-.....................-.........-....-..........--......................-................-....-............-..-......................-..................-...........-.........................-.......-...................-.........-..........-...........-..............................-..-.--...-........-......-................................................-..................................-..-...............-...........-....-.................-......-.....................-......................................
+
+Output of EBL learning phase written to c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised_raw.regulus.
+
+EBL training complete, 121.66 secs
+(Postprocess results of EBL training into specialised Regulus grammar)
+
+Post-processing raw EBL rules from c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised_raw.regulus:
+
+  -- Reading and classifying raw EBL rules.
+
+  -- Combining rules and contexts, and converting to Regulus form.
+*** Error: call failed: prolog_dcg_rule_to_regulus((.MAIN(phrase(.MAIN,phrase(top,phrase(utterance_intro,empty_constituent))),[],_805097,_805093,_805099,_805099):-merge_globals([value=[]],_805093)),_1270792)
+*** Error: bad call: combine_rule_with_context_and_convert_to_regulus((.MAIN(phrase(.MAIN,phrase(top,phrase(utterance_intro,empty_constituent))),[],A,B,C,C):-merge_globals([value=[]],B))-[(.MAIN(_805095,[],_805097,_805098,_805099,_805100):-merge_globals(_805092,_805093)),[[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]],[[,]]]],_1270789,10)
+Unable to process loop command "[EBL_POSTPROCESS]"
+(Compile current specialised Regulus grammar into Nuance GSL form)
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus
+
+ -- Read file(s): 154 declarations, 36 non-lexical rules, 39 lexical rules, 42 distinct vocabulary items.
+
+ -- Expanding and filtering using features: [toptype,stype,politeness_pos,interjection_type].
+
+   -- Expanding rules... 0.0 secs (0.19 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 30 categories, 105 rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Filtering bottom-up: 30 categories, 105 rules... 0 cycles, 0.0 secs (0.10 msecs/rule)
+
+   -- Filtering top-down: 30 categories, 105 rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Filtering complete: 30 categories, 105 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 308-343
+3     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+3     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+3     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+3     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+
+ -- Expanding and filtering using features: [wh,vform,inv,whmoved,operator_wrapped,gap,subcat,vp_vform,vp_passivised,passivised,passive_subj].
+
+   -- Expanding rules... 0.0 secs (0.13 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 72 categories, 238 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 72 categories, 237 rules... 3 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 60 categories, 126 rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering complete: 49 categories, 112 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 308-343
+3     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+
+ -- Expanding and filtering using features: [postposition,conj,prenumber,adjpos,advpos].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 58 categories, 129 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 58 categories, 129 rules... 1 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 58 categories, 119 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 56 categories, 116 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+5     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+
+ -- Expanding and filtering using features: [case].
+
+   -- Expanding rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 56 categories, 116 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 56 categories, 116 rules... 0 cycles, 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering top-down: 56 categories, 116 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 56 categories, 116 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+5     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+
+ -- Expanding and filtering using features: [takes_post_mods,post_mod_type,can_be_premod,takes_advp].
+
+   -- Expanding rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 56 categories, 116 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 56 categories, 116 rules... 0 cycles, 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering top-down: 56 categories, 116 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 56 categories, 116 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+5     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+
+ -- Expanding and filtering using features: [gapsin,gapsout].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 140 categories, 244 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 140 categories, 242 rules... 3 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 80 categories, 162 rules... 0.0 secs (0.06 msecs/rule)
+
+   -- Filtering complete: 56 categories, 114 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 308-343
+
+ -- Expanding and filtering using features: [nform,subj_nform].
+
+   -- Expanding rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 56 categories, 114 rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering bottom-up: 56 categories, 114 rules... 0 cycles, 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering top-down: 56 categories, 114 rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering complete: 56 categories, 114 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 308-343
+
+ -- Expanding and filtering using features: [pronoun].
+
+   -- Expanding rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 56 categories, 114 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 56 categories, 114 rules... 0 cycles, 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering top-down: 56 categories, 114 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 56 categories, 114 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 642-647
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 632-637
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+4     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 308-343
+
+ -- Expanding and filtering using features: [agr,relagr].
+
+   -- Expanding rules... 0.0 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 157 categories, 352 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 157 categories, 352 rules... 4 cycles, 0.0 secs (0.09 msecs/rule)
+
+   -- Filtering top-down: 121 categories, 257 rules... 0.0 secs (0.04 msecs/rule)
+
+   -- Filtering complete: 91 categories, 202 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [num_type,time_type,can_be_np].
+
+   -- Expanding rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 93 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering bottom-up: 93 categories, 204 rules... 2 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 92 categories, 200 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 92 categories, 200 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [sem_pp_type,pp_sem_pp_type,sem_p_type,takes_gap_mod].
+
+   -- Expanding rules... 0.1 secs (0.07 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 161 categories, 2240 rules... 0.0 secs (0.02 msecs/rule)
+
+   -- Filtering bottom-up: 161 categories, 2240 rules... 4 cycles, 0.3 secs (0.13 msecs/rule)
+
+   -- Filtering top-down: 107 categories, 213 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 100 categories, 205 rules
+
+ -- Expanding and filtering done, 0.5 secs
+
+Most expanded rules:
+
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [takes_loc_pp].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 111 categories, 245 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 111 categories, 245 rules... 1 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 111 categories, 214 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 111 categories, 214 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_from_pp].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 111 categories, 214 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 111 categories, 214 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 111 categories, 214 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 111 categories, 214 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_to_pp].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 112 categories, 264 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 112 categories, 264 rules... 2 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_with_pp].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_duration_pp].
+
+   -- Expanding rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_date_pp].
+
+   -- Expanding rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.10 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_time_pp].
+
+   -- Expanding rules... 0.0 secs (0.04 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 251 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 251 rules... 1 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_attrib_pp].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 251 rules... 0.0 secs (0.04 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 251 rules... 1 cycles, 0.0 secs (0.04 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_about_pp].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_cost_pp].
+
+   -- Expanding rules... 0.0 secs (0.10 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_passive_by_pp].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [def,subj_def,obj_def,indobj_def].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [adv_type].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.0 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_adv_type].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 110 categories, 204 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 110 categories, 204 rules... 0 cycles, 0.0 secs (0.10 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [det_type].
+
+   -- Expanding rules... 0.0 secs (0.04 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 122 categories, 240 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 122 categories, 240 rules... 2 cycles, 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 110 categories, 204 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 110 categories, 204 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [takes_det_type].
+
+   -- Expanding rules... 0.0 secs (0.04 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 139 categories, 254 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 139 categories, 252 rules... 3 cycles, 0.0 secs (0.04 msecs/rule)
+
+   -- Filtering top-down: 131 categories, 239 rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering complete: 116 categories, 222 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+13    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 620-625
+8     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+7     expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+
+ -- Expanding and filtering using features: [sem_n_type].
+
+   -- Expanding rules... 0.1 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 433 categories, 822 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 433 categories, 822 rules... 6 cycles, 0.1 secs (0.09 msecs/rule)
+
+   -- Filtering top-down: 232 categories, 436 rules... 0.0 secs (0.02 msecs/rule)
+
+   -- Filtering complete: 226 categories, 430 rules
+
+ -- Expanding and filtering done, 0.2 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+23    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 512-513
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 561-562
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+15    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+
+ -- Expanding and filtering using features: [subj_sem_n_type].
+
+   -- Expanding rules... 0.1 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 398 categories, 1081 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 398 categories, 1081 rules... 4 cycles, 0.1 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 302 categories, 480 rules... 0.0 secs (0.02 msecs/rule)
+
+   -- Filtering complete: 211 categories, 387 rules
+
+ -- Expanding and filtering done, 0.2 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+15    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 563-569
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 731-732
+12    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 648-653
+
+ -- Expanding and filtering using features: [obj_sem_n_type].
+
+   -- Expanding rules... 0.1 secs (0.09 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 319 categories, 1069 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 319 categories, 1045 rules... 2 cycles, 0.1 secs (0.08 msecs/rule)
+
+   -- Filtering top-down: 242 categories, 400 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.2 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [indobj_sem_n_type].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [rel_sem_n_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [n_pre_mod_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.03 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [n_post_mod_type].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 550 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 550 rules... 1 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [n_of_mod_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [syn_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [subj_syn_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [obj_syn_type].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.03 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [indobj_syn_type].
+
+   -- Expanding rules... 0.0 secs (0.08 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.03 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Expanding and filtering using features: [].
+
+   -- Expanding rules... 0.0 secs (0.05 msecs/rule)
+
+   -- Start filtering...
+
+   -- Removing duplicate rules: 225 categories, 382 rules... 0.0 secs (0.00 msecs/rule)
+
+   -- Filtering bottom-up: 225 categories, 382 rules... 0 cycles, 0.0 secs (0.05 msecs/rule)
+
+   -- Filtering top-down: 225 categories, 382 rules... 0.0 secs (0.03 msecs/rule)
+
+   -- Filtering complete: 225 categories, 382 rules
+
+ -- Expanding and filtering done, 0.1 secs
+
+Most expanded rules:
+
+24    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 477-485
+18    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 545-546
+16    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 738-739
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 612-617
+14    expanded rules: file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_specialised.regulus, lines 547-553
+
+ -- Writing out rules... 
+   -- Nuance slot names written to file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_recogniser.slot_definitions
+   -- Nuance rules written to file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_recogniser.grammar
+0.1 secs
+
+Compilation finished, 3.73 secs
+(Load current Regulus grammar in DCG and left-corner form)
+
+--- LOADING GRAMMAR IN DCG FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 370 declarations, 74 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.18 secs
+Prolog-compiling generated file
+
+
+--- LOADING GRAMMAR IN REFLECTIVE DCG FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 370 declarations, 74 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.19 secs
+Prolog-compiling generated file
+
+
+--- LOADING GRAMMAR IN LEFT-CORNER PARSER FORM ---
+
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_psa.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_house.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/riacs_sem.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/gen_eng_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/psa_lex.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_travel_deals.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_med.regulus
+Reading Regulus file c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/regulus/ignore_feats_checklist.regulus
+
+ -- Read file(s): 370 declarations, 74 non-lexical rules, 780 lexical rules, 399 distinct vocabulary items.
+
+Writing out rules...
+Compilation finished, 1.10 secs
+Prolog-compiling generated file
+
+
+Building left-corner parser tables... 
+-- Building reachable_cat
+-- Building reachable word
+-- Building reaches_gap
+-- Writing out tables
+done, 4.22 secs
+(Parse all sentences in current EBL training set into treebank form)
+
+Parsing corpus data in c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/corpora/psa_sents.pl:
+......................
+*** Parsing failed for: [what,was,the,temperature,at,the,storage,locker,at,fifteen,hundred,six]
+....................................................
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,two]
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,hundred,two]
+*** Parsing failed for: [what,was,the,temperature,at,fifteen,hundred,two]
+*** Parsing failed for: [what,is,the,temperature,at,fifteen,two]
+...................
+*** Parsing failed for: [close,storage,locker,doors]
+*** Parsing failed for: [close,storage,locker,doors]
+............
+*** Parsing failed for: [go,to,sleep]
+*** Parsing failed for: [go,to,sleep]
+*** Parsing failed for: [go,to,sleep]
+..
+*** Parsing failed for: [is,the,temperature]
+...............
+*** Parsing failed for: [at,p,s,a,sensors]
+*** Parsing failed for: [at,p,s,a,sensors]
+........
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+.
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+..............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+...........................................
+*** Parsing failed for: [measure,the,carbon,dioxide,levels,of]
+...............
+*** Parsing failed for: [close,hatch]
+.........................................
+*** Parsing failed for: [what,is,the,temperature,now]
+*** Parsing failed for: [what,is,the,temperature,now]
+.................................................
+*** Parsing failed for: [check,c,o,two,using,p,s,a,sensor]
+*** Parsing failed for: [check,c,o,two]
+*** Parsing failed for: [check,c,o,two,with,p,s,a,sensor]
+*** Parsing failed for: [check,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,c,o]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,carbon,dioxide,with,p,s,a,sensor]
+*** Parsing failed for: [measure,temperature,with,p,s,a,sensor]
+...............
+*** Parsing failed for: [move,to,storage,locker]
+.............
+*** Parsing failed for: [move,to,storage,locker]
+.................................................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+...........
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+*** Parsing failed for: [do,the,same,at,crew,hatch]
+......................
+*** Parsing failed for: [move,to,sleep,area]
+*** Parsing failed for: [move,to,sleep,station]
+......
+*** Parsing failed for: [close,the,access,ladder]
+................................
+*** Parsing failed for: [move,to,storage,area]
+.................
+*** Parsing failed for: [move,to,storage,locker]
+.............
+*** Parsing failed for: [measure,carbon,dioxide,at,access,ladder,ladder,and,lower,deck]
+..................................................
+*** Parsing failed for: [what,is,the,temperature,at,the,storage,locker]
+.................................
+*** Parsing failed for: [what,is,the,carbon,dioxide,and,temperature,according,to,the,p,s,a]
+....
+*** Parsing failed for: [what,is,the,temperature,and,carbon,dioxide,according,to,fixed,sensors]
+.......
+*** Parsing failed for: [what,is,the,temperature,of,lower,of,mid,deck]
+....................
+*** Parsing failed for: [what,was,the,temperature,at,the,access,ladder,at,fifteen,oh,two,according,to,the,fixed]
+............................
+*** Parsing failed for: [do,the,same,for,all,three,decks]
+................
+*** Parsing failed for: [according,to,the,fixed,sensors,what,is,the,temperature]
+......
+*** Parsing failed for: [turn,on,the,fan,to,the,access,ladder]
+.........
+*** Parsing failed for: [what,is,the,c,o,two,reading]
+*** Parsing failed for: [what,is,the,c,o,two,level]
+.
+*** Parsing failed for: [is,the,carbon,dioxide]
+..............................................................
+*** Parsing failed for: [is,the,carbon,dioxide,level,in,decreasing,at,access,ladder]
+........................
+*** Parsing failed for: [what,is,the]
+*** Parsing failed for: [what,is]
+...................................g/ebl_train.pl in module ebl_train, 90 msec 40752 bytes}
+{compiling c:/home/speech/regulus/prolog/ebl_postprocess.pl...}
+{module ebl_postprocess imported into user}
+{compiling c:/home/speech/regulus/prolog/regulus_binarise.pl...}
+{module regulus_binarise imported into ebl_postprocess}
+{module lists imported into regulus_binarise}
+{module terms imported into regulus_binarise}
+{module ordsets imported into regulus_binarise}
+{module utilities imported into regulus_binarise}
+{module regulus_utilities imported into regulus_binarise}
+{module regulus_preds imported into regulus_binarise}
+{compiled c:/home/speech/regulus/prolog/regulus_binarise.pl in module regulus_binarise, 50 msec 26984 bytes}
+{module regulus_preds imported into ebl_postprocess}
+{compiling c:/home/speech/regulus/prolog/dcg2regulus.pl...}
+{module dcg2regulus imported into ebl_postprocess}
+{module lists imported into dcg2regulus}
+{module terms imported into dcg2regulus}
+{module utilities imported into dcg2regulus}
+{module regulus_utilities imported into dcg2regulus}
+{module regulus_preds imported into dcg2regulus}
+{compiled c:/home/speech/regulus/prolog/dcg2regulus.pl in module dcg2regulus, 40 msec 20032 bytes}
+{module utilities imported into ebl_postprocess}
+{module system imported into ebl_postprocess}
+{module lists imported into ebl_postprocess}
+{module terms imported into ebl_postprocess}
+{module assoc imported into ebl_postprocess}
+{compiled c:/home/speech/regulus/prolog/ebl_postprocess.pl in module ebl_postprocess, 150 msec 74592 bytes}
+{compiled c:/home/speech/regulus/prolog/load.pl in module user, 1622 msec 743536 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_dcg.pl in module user, 1743 msec 761480 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_reflective_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_reflective_dcg.pl in module user, 1832 msec 790056 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_stanford_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_stanford_dcg.pl in module user, 1502 msec 655832 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_lc_tables.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_original_lc_tables.pl in module user, 3125 msec 1283904 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_dcg.pl in module user, 1872 msec 62600 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_reflective_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_reflective_dcg.pl in module user, 1933 msec 61472 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_stanford_dcg.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_stanford_dcg.pl in module user, 1582 msec 38128 bytes}
+{compiling c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_lc_tables.pl...}
+{compiled c:/home/speech/regulus/doc/acl2003/experiments/grammarscaling/generatedfiles/psa_house_lc_tables.pl in module user, 3415 msec 83888 bytes}
+
+Prolog interruption (h for help)? |: make: *** [default] Error 1

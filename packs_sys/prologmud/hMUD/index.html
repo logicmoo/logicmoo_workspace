@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+/*
+ * hMUD v0.5
+ */
+
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2009 Alonso Andres
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/*
+ * Originally created for DeBo MUD (debomud.org 4000)
+ */
+
+/*
+ * Icons from http://free.imil.to/
+ */
+-->
+<html>
+<head>
+<title>hMUD (loading...)</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<link rel="shortcut icon" href="favicon.ico"> 
+<!-- Styles that apply to the system interface go here -->
+<style type="text/css">
+html {overflow:hidden; }
+form {margin:0;padding:0;}
+body { margin:0; }
+#hMUDBridgePlugin { position: absolute; visibility: hidden; }
+#output {
+    border: 10px solid #222222;
+}
+#output.scrollLock {
+    border-color: #000080;
+}
+.cmdline {
+    color: #C0C0C0;
+    background-color: #333;
+    padding:8px 0 0 10px;
+    border: 0;
+    border-left: 10px solid #222;
+    margin: 0;
+    height: 23px;
+    outline: none;
+}
+
+#cmdGuide { position:absolute; right: 30px; background-color:#000; width:300px; display: none; border:1px solid #333;}
+#cmdGuide .closeBtn { float:right; background-color:#800000; color:#FFFFFF; cursor:default; }
+#cmdGuide .closeBtn:hover { background-color:#800000; color:#FF0000;}
+#cmdGuide .caption { color:#FFFFFF; text-align: center; background-color:#000080;}
+#cmdGuide table { margin:10px; }
+#cmdGuide th { text-align:left; color: #008000; font-weight:normal; }
+#cmdGuide td { padding-left:10px; }
+#cmdGuide .command-name:hover { background-color:#C0C0C0; color:#000; cursor:default; }
+#cmdGuide .command-description { border:1px solid #333; width:278px; color:#FFF; padding:10px; background-color:#000; position: absolute; left:0;}
+
+#iconsBar { position:absolute; }
+#iconsBar img { background-color: #333; cursor: default; vertical-align: top; }
+#iconsBar img:hover { background-color: #666; }
+
+#cmdline-swap { display: none; }
+#submit { position:absolute; top: -1000px; left: -1000px; }
+
+#logSave { width: 60%; height: 80%; display: none; position: absolute; top: 50px; left: 50px; }
+#logSaveTA { width: 95%; height: 95%; position: absolute; }
+
+.iconMenu { display: none; background-color: #000; border:1px solid #333; position: absolute; padding:10px; color: #FFF; white-space: nowrap; }
+.iconMenu fieldset { border-color: #222; display: block; padding:0 10px 10px 10px; }
+.iconMenu fieldset legend { color: #008000; display: block; margin-bottom:10px; }
+.iconMenu ul { list-style-type: none; margin: 0; padding: 0; }
+.iconMenu li { cursor: default; }
+.iconMenu li:hover { background-color: #FFF; color: #444; }
+</style>
+<!--[if IE]>
+<style type="text/css">
+.cmdline {margin-top:-1px;}
+</style>
+<![endif]-->
+
+<!-- Styles that apply to the raw log go here -->
+<style type="text/css" id="logStyle">
+html { background-color: #000; color: #C0C0C0; }
+body.font-fixed * {
+    font-family: "Fixedsys Excelsior 3.01", "Fixedsys Excelsior 3.00", "Fixedsys", monospace;
+    font-size: 16px;
+    line-height: 16px;
+}
+body.font-monospace * {
+    font-family: "Monospace", monospace;
+    font-size: 14px;
+}
+body.font-courier * {
+    font-family: "Courier New", "Lucida Console", monospace;
+    font-size: 10pt;
+}
+body.font-courier-b * {
+    font-family: "Courier New", "Lucida Console", monospace;
+    font-size: 10pt;
+    font-weight:bold;
+}
+body.font-terminal * {
+    font-family: "Terminal", monospace;
+    font-size: 12px;
+}
+#output {
+    overflow: auto;
+    padding:10px;
+    margin:0;
+
+    white-space: pre-wrap;    /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    white-space: -pre-wrap;   /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;    /* Internet Explorer 5.5+ */
+}
+.loading { color: #FFF; }
+.loaded { color: #00F; }
+.connecting { color: #FFF; }
+.connected { color: #00F; }
+.disconnected { color: #F00; }
+
+/*
+ * ANSI Colors
+ */
+b { font-weight: normal; }
+
+b.b { color: #FFFFFF; }					/* Bold		*/
+b.r { color: #C0C0C0; background-color: #000000; }	/* Default	*/
+b.u { text-decoration: underline; }			/* Underline	*/
+b.l { text-decoration: blink; border: 1px dashed; }	/* Blink	*/
+
+/* Dark */
+b.c30 { color: #222222; }				/* Black (what?)*/
+b.c31 { color: #800000; }				/* Red		*/
+b.c32 { color: #008000; }				/* Green	*/
+b.c33 { color: #808000; }				/* Yellow	*/
+b.c34 { color: #000080; }				/* Blue		*/
+b.c35 { color: #800080; }				/* Magenta	*/
+b.c36 { color: #008080; }				/* Cyan		*/
+b.c37 { color: #C0C0C0; }				/* Grey		*/
+
+/* Bold */
+b.bc30 { color: #808080; }				/* Grey		*/
+b.bc31 { color: #FF0000; }				/* Red		*/
+b.bc32 { color: #00FF00; }				/* Green	*/
+b.bc33 { color: #FFFF00; }				/* Yellow	*/
+b.bc34 { color: #0000FF; }				/* Blue		*/
+b.bc35 { color: #FF00FF; }				/* Magenta	*/
+b.bc36 { color: #00FFFF; }				/* Cyan		*/
+b.bc37 { color: #FFFFFF; }				/* White	*/
+
+/* Background */
+b.c40 { background-color: #000000; }			/* Black	*/
+b.c41 { background-color: #800000; }			/* Red		*/
+b.c42 { background-color: #008000; }			/* Green	*/
+b.c43 { background-color: #808000; }			/* Yellow	*/
+b.c44 { background-color: #000080; }			/* Blue		*/
+b.c45 { background-color: #800080; }			/* Magenta	*/
+b.c46 { background-color: #008080; }			/* Cyan		*/
+b.c47 { background-color: #C0C0C0; }			/* Grey		*/
+</style>
+<script src="swfobject/swfobject.js" type="text/javascript"></script>
+<script src="browser-detect.js" type="text/javascript"></script>
+<script src="cookies.js" type="text/javascript"></script>
+<script src="messages.js" type="text/javascript"></script>
+<script src="guide.js" type="text/javascript"></script>
+<script src="config.js" type="text/javascript"></script>
+<script src="client.js" type="text/javascript"></script>
+<script src="ui.js" type="text/javascript"></script>
+<script type="text/javascript">
+window.onload = function() { HMUD_UI.init(); };
+</script>
+</head>
+<body class="font-fixed">
+<span id="numLinesInScreen" style="display:none">&nbsp;</span>
+<div id="hMUDBridgePlugin">&nbsp;</div>
+<pre id="output"></pre>
+<div id="cmdGuide"><span class="closeBtn" onclick="HMUD_Menu.hideGuide(true);">[ X ]</span></div>
+<div id="optionsMenu" class="iconMenu"></div>
+<div id="connectionMenu" class="iconMenu"></div>
+<div id="logSave" class="iconMenu"><form><textarea id="logSaveTA"></textarea></form></div>
+<form action="" id="cmdForm"><input type="text" class="cmdline" autocomplete="off" id="cmdline"><input type="password" class="cmdline" id="cmdline-swap"><span id="iconsBar"></span><input type="submit" value="Send" id="submit"></form>
+</body>
+</html>

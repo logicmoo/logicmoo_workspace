@@ -1,0 +1,42 @@
+<div class="notebook">
+
+<div class="nb-cell program" data-background="true" data-singleline="false">
+
+
+make_ex_some(Var,Statement,AltStatement):-
+  copy_term(Var+Statement,AltVar+AltStatement),
+  AltVar = ex(Var,Statement).
+
+
+%= save compiled clauses using forward chaining storage (by default)
+%= we are using forward chaining just so any logical errors, performance and program bugs manefest
+%= immediately
+:- use_module(library(pfc)).		
+:- set_clause_compile(fwc).
+:- mpred_trace_exec.
+
+% Maintains the Skollem only if needed
+( (ex_some(Var,Statement)/
+      make_ex_some(Var,Statement,AltStatement))
+          ==> (( Statement ==> \+ AltStatement),
+	       (\+ Statement  ==> AltStatement))).
+
+
+person(C) ==> ex_some(P,bio_father(C,P)).
+
+% Creates the Skollem
+==> person(joe).
+
+% Removes the Skollem
+==> bio_father(joe,joes_father).
+
+</div>
+
+<div class="nb-cell query">
+% Should not show the Skollem but instead the real thing
+ mpred_why(bio_father(joe, _)).
+</div>
+
+</div>
+
+

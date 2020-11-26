@@ -1,0 +1,125 @@
+<?xml version='1.0'?>
+<!DOCTYPE rdf:RDF SYSTEM "dtd/rdf_schema.dtd" [
+         <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+         <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#"> 
+] >
+
+<!-- RDFS Schema of the InfraEngine Configuration -->
+
+<rdf:RDF
+  xmlns:rdf="&rdf;"
+  xmlns:rdfs="&rdfs;"
+  xml:base="http://www.infraengine.com/config/">
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="Config"
+    rdfs:comment="Abstract superclass of configuration classes.
+    General notes: pathname specifiers are pathnames that may involve
+    environment variables (starting with $) and '~' (for the user's
+    home directory)." />
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="GeneralConfig"
+    rdfs:comment="Configuration of general aspects.">
+    <rdfs:subClassOf rdf:resource="Config" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="tmp_dir"
+    rdfs:comment="Directory for temporary files.
+    The value is a pathname specifier.">
+    <rdfs:domain rdf:resource="GeneralConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="WebgetConfig"
+    rdfs:comment="Configuration of the WWW client.">
+    <rdfs:subClassOf rdf:resource="Config" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="webget_client"
+    rdfs:comment="Specifies the client implementation to use.
+    Supported values are: wget - use the wget program;
+    pce - use an internal client implementation.">
+    <rdfs:domain rdf:resource="WebgetConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="webget_wget_parameters"
+    rdfs:comment="Extra arguments submitted to the wget program.
+    The value is a string.">
+    <rdfs:domain rdf:resource="WebgetConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="WebserverConfig"
+    rdfs:comment="Configuration of the WWW server.">
+    <rdfs:subClassOf rdf:resource="Config" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="webserver_password_file"
+    rdfs:comment="The value is the pathname specifier of a
+    password file. See the manual for more information.">
+    <rdfs:domain rdf:resource="WebserverConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="PagesConfig"
+    rdfs:comment="Configuration of presentation aspects.">
+    <rdfs:subClassOf rdf:resource="Config" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="pages_brief_comment_size"
+    rdfs:comment="Approximate size of abbreviated RDF comments that
+    are displayed along with objects in the RDF browser. The value is
+    a number.">
+    <rdfs:domain rdf:resource="PagesConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="pages_dotgraph_fontname"
+    rdfs:comment="The fontname used by the dot program of graphviz 
+    to draw graphs. The value is a string. Available fonts depend
+    on the site specific configuration of graphviz.">
+    <rdfs:domain rdf:resource="PagesConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="pages_dotgraph_fontsize"
+    rdfs:comment="The fontsize used by the dot program of graphviz to
+    draw graphs. The value is a number.">
+    <rdfs:domain rdf:resource="PagesConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- ==================================================================== -->
+
+  <rdfs:Class rdf:about="PlannerConfig"
+    rdfs:comment="Configuration of presentation aspects of plans.">
+    <rdfs:subClassOf rdf:resource="Config" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="planner_dotgraph_fontname"
+    rdfs:comment="The fontname used by the dot program of graphviz 
+    to draw graphs. The value is a string. Available fonts depend
+    on the site specific configuration of graphviz.">
+    <rdfs:domain rdf:resource="PlannerConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="planner_dotgraph_fontsize"
+    rdfs:comment="The fontsize used by the dot program of graphviz to
+    draw graphs. The value is a number.">
+    <rdfs:domain rdf:resource="PlannerConfig" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+</rdf:RDF>
+

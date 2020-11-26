@@ -1,0 +1,12 @@
+(note "EQ change of variable test" )
+
+(exists ?X (F ?X))
+
+(queryyn 
+(exists ?Y (F ?Y))
+)
+
+(answer Yes)
+
+(end_of_file)
+

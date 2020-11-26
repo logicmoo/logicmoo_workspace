@@ -1,0 +1,46 @@
+(note TQB37)
+
+(implies 
+  (hasStatusWithAgent ?AGT1 ?AGT2 DissidentStatus) 
+  (negativeVestedInterest ?AGT1 ?AGT2)) 
+
+(hasStatusWithAgent MEK-MKO Iran DissidentStatus) 
+(residenceOfOrganization MEK-MKO Iran) 
+(instance MEK-MKO DissidentGroup) 
+
+(hasStatusWithAgent LiberationMovementOfIran Iran DissidentStatus) 
+(residenceOfOrganization LiberationMovementOfIran Iran) 
+(instance LiberationMovementOfIran DissidentGroup) 
+
+(hasStatusWithAgent NationOfIranParty Iran DissidentStatus) 
+(residenceOfOrganization NationOfIranParty Iran) 
+(instance NationOfIranParty DissidentGroup) 
+
+(hasStatusWithAgent SocietyForTheDefenseOfFreedom Iran DissidentStatus) 
+(residenceOfOrganization SocietyForTheDefenseOfFreedom Iran) 
+(instance SocietyForTheDefenseOfFreedom DissidentGroup) 
+
+(hasStatusWithAgent DemocraticPartyOfIranianKurdistan Iran DissidentStatus) 
+(residenceOfOrganization DemocraticPartyOfIranianKurdistan Iran) 
+(instance DemocraticPartyOfIranianKurdistan DissidentGroup) 
+
+(hasStatusWithAgent PeoplesFedayeen Iran DissidentStatus) 
+(residenceOfOrganization PeoplesFedayeen Iran) 
+(instance PeoplesFedayeen DissidentGroup) 
+
+(query (findall ?AGENT
+  (and 
+    (residenceOfOrganization ?AGENT Iran) 
+    (instance ?AGENT DissidentGroup) 
+    (hasStatusWithAgent ?AGENT Iran DissidentStatus) 
+    (negativeVestedInterest ?AGENT Iran))))
+
+(answer MEK-MKO)
+(answer LiberationMovementOfIran)
+(answer NationOfIranParty)
+(answer SocietyForTheDefenseOfFreedom)
+(answer DemocraticPartyOfIranianKurdistan)
+(answer PeoplesFedayeen)
+
+(end_of_file)
+

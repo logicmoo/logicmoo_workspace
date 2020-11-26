@@ -1,0 +1,31 @@
+//
+// branchOfCG example
+//
+// Available in the AAU directory as branchOfCG.plgCG
+//
+// Ulrik Petersen
+// Created: September 19, 2003
+// Last update: September 19, 2003
+
+// Type hierarchy
+Entity > Animal, Act, Proposition.
+
+// Catalog of instances
+Act = Say.
+Animal = Dolly.
+
+// Dolly says to Dollay: "B-a-a-a-a-a"
+graph(gr1, [Act : Say]-
+                -AGNT->[Animal : Dolly],
+                -RCPT->[Animal : Dolly],
+                -THME->[Proposition = "B-a-a-a-a-a"]).
+
+// List all branches
+branch(B) :-
+    graph(L, G),
+    branchOfCG(B, G).
+
+// Find the agent 
+agent(A) :-
+    graph(L, G),
+    branchOfCG([Act]-AGNT->[Animal: A], G).

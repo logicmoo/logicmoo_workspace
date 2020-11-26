@@ -1,0 +1,582 @@
+;; Copyright 1998 Cycorp, Inc., All Rights Reserved.  This file and
+;; its contents are products of Cycorp, Inc.  They are released only
+;; under specific license agreement with Cycorp, and must be treated
+;; as Cycorp Confidential Information, as per that license agreement,
+;; including translations into another language (including but not
+;; limited to Conceptual Graphs, KIF, Ontolingua, GFP, LOOM,
+;; PowerLOOM, CycL, C, C++, IDL, predicate logic, and English) and any
+;; logically equivalent rearrangement or renaming of assertion
+;; components, terms, or variables.  This paragraph shall not be
+;; altered or removed. This file is provided "AS IS", without any
+;; warranty; the cumulative liability of Cycorp for all claims
+;; relating to this file shall not exceed the amount of one dollar.
+;; Cycorp, 3721 Executive Center Dr., Austin, TX 78731, USA; Website:
+;; www.cyc.com, Tel: (512) 342-4000.
+
+;; KIF assertion-specs for microtheory : #$RegionalOrganizationsInTheMiddleEastFactsheetMt
+;; 09/27/2000 15:47:06
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Meyer :CREATION-DATE 19990805
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (comment 
+    (=> 
+      (and 
+        (hasMembers LeagueOfArabStates ?COUNTRY1) 
+        (hasMembers LeagueOfArabStates ?COUNTRY2) 
+        (hasPositionIn ?AGENT LeagueOfArabStates Envoy-Diplomatic) 
+        (opponentsInConflict ?COUNTRY1 ?COUNTRY2 ?CONFLICT)) 
+      (missionOfOrganization LeagueOfArabStates 
+        (actsInCapacity ?AGENT performedBy 
+          (CollectionSubsetFn ResolveByMediation 
+            (TheSetOf ?OBJ 
+              (resolvedBy ?CONFLICT ?OBJ))) MainFunction))) "If an agent has aposition of envoy in the League of Arab States, then, according to 
+          the mission statement of the League of Arab States, as a main
+          function of his position, this agent resolves through mediation disputes between
+          member countries of the League of Arab States.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR Meyer :CREATION-DATE 19990805
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (hasMembers LeagueOfArabStates ?COUNTRY1) 
+      (hasMembers LeagueOfArabStates ?COUNTRY2) 
+      (opponentsInConflict ?COUNTRY1 ?COUNTRY2 ?CONFLICT) 
+      (hasPositionIn ?AGENT LeagueOfArabStates Envoy-Diplomatic)) 
+    (missionOfOrganization LeagueOfArabStates 
+      (actsInCapacity ?AGENT performedBy 
+        (CollectionSubsetFn ResolveByMediation 
+          (TheSetOf ?OBJ 
+            (resolvedBy ?CONFLICT ?OBJ))) MainFunction)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Meyer :CREATION-DATE 19990723
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (comment MissionStatementOfTheArabLeague "The mission statement of the League of Arab States.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR Meyer :CREATION-DATE 19990723
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa MissionStatementOfTheArabLeague MissionStatement-Organization)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goals Iran 
+    (exists 
+      (?EVENT) 
+      (increases-Generic ?EVENT OPEC oilPriceCharged)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Watson :CREATION-DATE 19990323
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goalCategoryForAgent Iran 
+    (exists 
+      (?EVENT) 
+      (increases-Generic ?EVENT OPEC oilPriceCharged)) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goals Libya 
+    (exists 
+      (?EVENT) 
+      (increases-Generic ?EVENT OPEC oilPriceCharged)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Watson :CREATION-DATE 19990323
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goalCategoryForAgent Libya 
+    (exists 
+      (?EVENT) 
+      (increases-Generic ?EVENT OPEC oilPriceCharged)) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goals Libya 
+    (exists 
+      (?EVENT) 
+      (decreases-Generic ?EVENT OPEC oilExport)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Watson :CREATION-DATE 19990323
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goalCategoryForAgent Libya 
+    (exists 
+      (?EVENT) 
+      (decreases-Generic ?EVENT OPEC oilExport)) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goals Iran 
+    (exists 
+      (?EVENT) 
+      (decreases-Generic ?EVENT OPEC oilExport)))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR Watson :CREATION-DATE 19990323
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (goalCategoryForAgent Iran 
+    (exists 
+      (?EVENT) 
+      (decreases-Generic ?EVENT OPEC oilExport)) StrategicNationalInterest)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (subOrganizations OPEC MinisterialMonitoringSubcommittee-OPEC)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose MinisterialMonitoringSubcommittee-OPEC "To monitor oil production and exports by #$OPEC member countries.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose OPEC "OPEC is a voluntary intergovernmental organization that coordinates and unifies the petroleum policies of its member countries. OPEC seeks to: (1) ensure the stabilization of oil prices in international oil markets with a view toward eliminating harmful and unnecessary fluctuations while minding the interests of producing nations, and especially their need to secure a steady income. (2) Ensure an efficient, economical, and regular supply of petroleum to consuming nations. (3) Ensure a fair return on capital to those investing in the petroleum industry.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (powerInOrganization SaudiArabia OPEC HighToVeryHigh)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose IslamicSummitConference "To define the strategy for achieving the goals of the #$OrganizationOfTheIslamicConference.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (controllingSuborganizations OrganizationOfTheIslamicConference IslamicSummitConference)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose OrganizationOfTheIslamicConference "To promote Islamic solidarity in economic, social, cultural, and political affairs among the Islamic countries of the world.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa MinisterialCouncil-OAPEC IKBConstant)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990310
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose JudicialTribunal-OAPEC "To serve as a specialized Arab tribunal 
+for reconciling disputes over petroleum matters between members, or between any member and an oil company
+operating in the territory of the member Judgements of the tribunal are final and binding on the parties to the dispute and enforceable in the territory of the members.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?DISPUTE DisputeEvent) 
+      (internationalOrg-MemberCountry OAPEC ?COUNTRY) 
+      (isa ?OPPONENT OilCompany) 
+      (opponentsInConflict ?COUNTRY ?OPPONENT ?DISPUTE)) 
+    (capableOfDoing JudicialTribunal-OAPEC ?DISPUTE judicialAgents))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?DISPUTE DisputeEvent) 
+      (internationalOrg-MemberCountry OAPEC ?COUNTRY) 
+      (isa ?OPPONENT IndependentCountry) 
+      (opponentsInConflict ?COUNTRY ?OPPONENT ?DISPUTE)) 
+    (capableOfDoing JudicialTribunal-OAPEC ?DISPUTE judicialAgents))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (subOrganizations OAPEC JudicialTribunal-OAPEC)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (comment JudicialTribunal-OAPEC "The judicial unit of #$OAPEC.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa JudicialTribunal-OAPEC Tribunal)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (groupMemberType JudicialTribunal-OAPEC IntelligentAgent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa JudicialTribunal-OAPEC 
+    (GroupFn IntelligentAgent))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry OAPEC ?COUNTRY) 
+    (trueFormula 
+      (thereExistExactly 1 ?OFFICIAL 
+        (and 
+          (citizens ?COUNTRY ?OFFICIAL) 
+          (hasMembers MinisterialCouncil-OAPEC ?OFFICIAL) 
+          (isa ?OFFICIAL PublicOfficial)))))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry OAPEC ?COUNTRY) 
+    (trueFormula 
+      (thereExistExactly 1 ?OFFICIAL 
+        (and 
+          (citizens ?COUNTRY ?OFFICIAL) 
+          (hasMembers MinisterialCouncil-OAPEC ?OFFICIAL) 
+          (isa ?OFFICIAL PublicOfficial)))))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry OAPEC ?COUNTRY) 
+    (trueFormula 
+      (thereExistExactly 1 ?OFFICIAL 
+        (and 
+          (citizens ?COUNTRY ?OFFICIAL) 
+          (hasMembers MinisterialCouncil-OAPEC ?OFFICIAL) 
+          (isa ?OFFICIAL PublicOfficial)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arg2Isa SKF-51271520 NonNegativeScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arg1Isa SKF-51271520 Country)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (resultIsa SKF-51271520 PublicOfficial)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arity SKF-51271520 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa SKF-51271520 SkolemFuncN)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (controllingSuborganizations OAPEC MinisterialCouncil-OAPEC)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose MinisterialCouncil-OAPEC "To draw up #$OAPEC's general policy decisions, direct its activities, and make the rules that govern it.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (comment MinisterialCouncil-OAPEC "The leadership unit of #$OAPEC.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa MinisterialCouncil-OAPEC Organization)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (groupMemberType MinisterialCouncil-OAPEC IntelligentAgent)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa MinisterialCouncil-OAPEC 
+    (GroupFn IntelligentAgent))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (YearFn 1968) 
+      (YearFn 1986)) 
+    (memberStatusInOrganization Tunisia OAPEC CurrentMember))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (holdsIn 
+    (TimeIntervalInclusiveFn 
+      (YearFn 1986) Now) 
+    (memberStatusInOrganization Tunisia OAPEC NonMember))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose OAPEC "To promote cooperation and close ties between the member countries in economic activities related to the oil industry; to determine ways of safeguarding their legitimate interests, both individual and collective, in the oil industry; to unite their efforts so as to ensure the flow of oil to consumer markets on equitable and reasonable terms; and to create a favorable climate for the investment of capital and expertise in their petroleum industries.")
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (headOfStateOf ?PERSON ?COUNTRY) 
+      (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY)) 
+    (hasMembers SupremeCouncil-GCC ?PERSON))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (powerInOrganization SaudiArabia GulfCooperationCouncil HighToVeryHigh)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (keyMembers GulfCooperationCouncil SaudiArabia)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (controllingSuborganizations GulfCooperationCouncil SupremeCouncil-GCC)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose SupremeCouncil-GCC "To provide guidance and direction on decisions made by the #$GulfCooperationCouncil.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose GulfCooperationCouncil "To effect coordination, integration, and interconnection between member states in all fields in order to achieve unity between them; to deepen and strengthen relations, links, and scopes of cooperation prevailing between their people in various fields; to formulate similar regulations in various fields, including economic and financial affairs, agriculture, industry, commerce, customs, and communications, education and culture, social and health affairs, information and tourism, and legislative and administrative affairs; to stimulate scientific and technological progress in various fields; to establish scientific research centers and implement common projects; and to encourage cooperation by the private sector.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (behaviorCapable JointDefenseCouncil-ArabLeague PassingAResolution performedBy)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?DISPUTE DisputeEvent) 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+      (opponentsInConflict ?COUNTRY ?COUNTRY-1 ?DISPUTE)) 
+    (capableOfDoing CouncilOfTheArabLeague ?DISPUTE mediators))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (isa ?ATTACK MilitaryAttack) 
+      (maleficiary ?ATTACK ?COUNTRY) 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY)) 
+    (holdsIn 
+      (STIF ?ATTACK) 
+      (givesSupportToAgent LeagueOfArabStates ?COUNTRY 
+        (HighAmountFn MilitarySupport))))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+      (hasPositionIn ?PERSON ?COUNTRY MinisterOfForeignAffairs)) 
+    (hasMembers JointDefenseCouncil-ArabLeague ?PERSON))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+      (hasPositionIn ?PERSON ?COUNTRY MinisterOfDefense)) 
+    (hasMembers JointDefenseCouncil-ArabLeague ?PERSON))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (subOrganizations LeagueOfArabStates JointDefenseCouncil-ArabLeague)
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+    (agreeingAgents JointDefenseAndEconomicCooperationTreaty-ArabLeague ?COUNTRY))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (startingDate JointDefenseAndEconomicCooperationTreaty-ArabLeague 
+    (YearFn 1950))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+    (trueFormula 
+      (thereExistExactly 1 ?REP 
+        (and 
+          (citizens ?COUNTRY ?REP) 
+          (hasMembers CouncilOfTheArabLeague ?REP)))))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (internationalOrg-MemberCountry LeagueOfArabStates ?COUNTRY) 
+    (trueFormula 
+      (thereExistExactly 1 ?REP 
+        (and 
+          (citizens ?COUNTRY ?REP) 
+          (hasMembers CouncilOfTheArabLeague ?REP)))))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arg2Isa SKF-57799934 NonNegativeScalarInterval)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arg1Isa SKF-57799934 Country)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (holdsIn 
+    (YearFn 1993) 
+    (memberStatusInOrganization Iraq LeagueOfArabStates SuspendedMember))
+)
+
+(:DIRECTION :BACKWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (=> 
+    (and 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?NATION1) 
+      (different ?NATION1 ?NATION2) 
+      (internationalOrg-MemberCountry LeagueOfArabStates ?NATION2)) 
+    (allies ?NATION1 ?NATION2))
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose LeagueOfArabStates "The League seeks to promote closer ties among member states and coordinate their policies and economic, cultural, and security plans with a view to developing collective cooperation, protecting national security, maintaining the independence and sovereignty of member states, and enhancing the potential for joint Arab action in all fields. In the political field, the League is entrusted with the tasks of defending the interests and national causes of the Arab world. The League is also entrusted with the task of examining whichever disputes may arise between member states and to adopt whichever resolutions and measures as may be deemed necessary to settle such disputes by peaceful means.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (statementOfPurpose CouncilOfTheArabLeague "The Council focuses on realizing the objectives of the League and implementing plans and programs that the member states adopt. The Coucil also acts to mediate disputes that threaten or lead to the eruption of hostilities between two of the member states or between a member state and a third party.")
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR KathyBurns :CREATION-DATE 19990309
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (controllingSuborganizations LeagueOfArabStates CouncilOfTheArabLeague)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (isa SKF-57799934 SkolemFuncN)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :MONOTONIC :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (arity SKF-57799934 2)
+)
+
+(:DIRECTION :FORWARD :MONOTONICITY :DEFAULT :CREATOR NIL :CREATION-DATE NIL
+ :MICROTHEORY RegionalOrganizationsInTheMiddleEastFactsheetMt
+ :KIF
+  (resultIsa SKF-57799934 Person)
+)

@@ -1,0 +1,529 @@
+
+% LEX MACROS
+
+/*
+macro(lexical_np_taking_de(Surface, Sem, SemType, Agr, PPSemType, PPAgr, Can_be_PP),
+     ( core_np:[sem=[Sem], sem_np_type=SemType, agr=Agr, 
+		subcat=de_pp\/null, de_pp_sem_type=PPSemType, de_pp_agr=PPAgr, can_be_pp=Can_be_PP] --> Surface )).
+
+@lexical_np_taking_de((la, fréquence), [degree, fréquence], degree, 3/\sg/\fem, symptom, _PPAgr, _).
+*/
+
+macro(n_taking_de(Surface, Sem, SemType, Agr, PPSemType, Can_be_PP, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, 
+	  subcat=de_pp\/null, de_pp_sem_type=PPSemType,
+	  can_be_pp=Can_be_PP, takes_spec_type=non_numeric, de_pp_prep=de, elision=Elision] --> Surface )).
+
+
+macro(n_taking_de_numeric(Surface, Sem, SemType, Agr, PPSemType, Can_be_PP, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, 
+	  subcat=de_pp\/null, de_pp_sem_type=PPSemType,
+	  can_be_pp=Can_be_PP, takes_spec_type=numeric, de_pp_prep=de, elision=Elision] --> Surface )).
+
+
+macro(n_taking_a(Surface, Sem, SemType, Agr, PPSemType, Can_be_PP, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, 
+	  subcat=de_pp\/null, de_pp_sem_type=PPSemType,
+	  can_be_pp=Can_be_PP, takes_spec_type=numeric, de_pp_prep=a, elision=Elision] --> Surface )).
+
+macro(simple_n(Surface, Sem, SemType, Agr, CanBePP, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, subcat=null,
+	  de_pp_sem_type=none, can_be_pp=CanBePP, takes_spec_type=non_numeric, elision=Elision] --> Surface )).
+
+
+macro(simple_n_underspecified(Surface, Sem, SemType, Agr, CanBePP, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, subcat=null,
+	  de_pp_sem_type=none, can_be_pp=CanBePP, elision=Elision] --> Surface )).
+
+macro(noun(Surface, Sem, SemType, Agr, Elision),
+     ( n:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, subcat=null, 
+	  de_pp_sem_type=none, can_be_pp=yes, takes_spec_type=numeric, elision=Elision] --> Surface )).
+
+macro(npr(Surface, Sem, SemType, Agr, Elision),
+     ( npr:[sem= @n_sem(Sem), sem_np_type=SemType, agr=Agr, elision=Elision] --> Surface )).
+
+macro(lexical_pp(Surface, Sem, SemType),
+     ( pp:[sem= Sem, sem_pp_type=SemType, gapsin=GIn, gapsout=GIn] --> Surface )).
+
+macro(wh_np(Surface, Sem, Agr),
+     ( wh_np:[sem=Sem, agr=Agr, subj_sem_np_type=wh] --> Surface )).
+
+macro(prep(Surface, Sem, PPType, NPType, Elision),
+     ( prep:[sem= @p_sem(Sem), sem_pp_type=PPType, sem_np_type=NPType, np_agr=_, np_has_spec=yes, elision=Elision] --> Surface )).
+
+macro(contracted_prep(Surface, Sem, PPType, NPType, NPAgr, Elision),
+     ( prep:[sem= @p_sem(Sem), sem_pp_type=PPType, sem_np_type=NPType, np_agr=NPAgr, np_has_spec=no, elision=Elision] --> Surface )).
+
+
+
+
+%%verbe 1 pers
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Pres1Sg)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Pres1Plu)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Cond1Sg)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Cond1Pl)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, futur], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Fut1Sg)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, futur], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Fut1Pl)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, imparfait], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Imp1Sg)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, imparfait], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Imp1Pl)).
+macro(verb1([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Imp1Sg,Imp1Pl,Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(pol/\sg) | Feats] --> Cond2sg)).
+
+
+%%verbe 1 pers
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Pres1Sg)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Pres1Plu)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Cond1Sg)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Cond1Pl)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, futur], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Fut1Sg)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, futur], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Fut1Pl)).
+macro(verb1etre([Pres1Sg, Pres1Plu, Cond1Sg, Cond1Pl, Fut1Sg, Fut1Pl, Cond2sg], Sem, Feats),
+      ( verb:[sem=[[tense, conditional], @verb_sem(Sem)], vform=finite, agr=(2/\pl) | Feats] --> Cond2sg)).
+
+macro(verb1imp([Imp1Sg,Imp1Pl], Sem, Feats),
+      ( verb:[sem=[[tense, imparfait], @verb_sem(Sem)], vform=finite, agr=(1/\sg) | Feats] --> Imp1Sg)).
+macro(verb1imp([Imp1Sg,Imp1Pl], Sem, Feats),
+      ( verb:[sem=[[tense, imparfait], @verb_sem(Sem)], vform=finite, agr=(1/\pl) | Feats] --> Imp1Pl)).
+
+
+%%verbe autres
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(3/\sg) | Feats] --> Pres3Sg )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(3/\pl) | Feats] --> Pres3Pl )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[ @verb_sem(Sem)], vform=past_participle, agr=(3/\sg/\masc), voice=active | Feats] --> PP3SgMasc )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[ @verb_sem(Sem)], vform=past_participle, agr=(3/\sg/\fem), voice=active | Feats] --> PP3SgFem )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[ @verb_sem(Sem)], vform=past_participle, agr=(3/\pl/\masc), voice=active | Feats] --> PP3PlMasc )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[ @verb_sem(Sem)], vform=past_participle, agr=(3/\pl/\fem), voice=active| Feats] --> PP3PlFem )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, Ppre], Sem, Feats),
+      ( verb:[sem=[ @verb_sem(Sem)], vform=infinitive | Feats] --> Inf)).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, agr=(pol/\sg) | Feats] --> Pre2Plu )).
+macro(verb([Pre2Plu, Pres3Sg, Pres3Pl, PP3SgMasc, PP3SgFem, PP3PlMasc, PP3PlFem, Inf, PPre], Sem, Feats),
+      ( verb:[sem= @np_vp_subject_sem( @np_pron_sem( @pron_sem([pronoun, vous])),
+				       [[tense, present], @verb_sem(Sem)]),
+	      vform=pres_participle, voice=active | Feats] --> PPre)).
+
+macro(pp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, DEPPPREP),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, de_pp_prep=DEPPPREP, agr=sg/\masc, adj_subcat=pp, gapsin=G, gapsout=G,prep=no] --> SgMasc)).
+macro(pp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, DEPPPREP),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, de_pp_prep=DEPPPREP, agr=sg/\fem, adj_subcat=pp, gapsin=G, gapsout=G,prep=no] --> SgFem)).
+macro(pp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, DEPPPREP),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, de_pp_prep=DEPPPREP, agr=pl/\masc, adj_subcat=pp, gapsin=G, gapsout=G,prep=no] --> PlMasc)).
+macro(pp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, DEPPPREP),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, de_pp_prep=DEPPPREP, agr=pl/\fem, adj_subcat=pp, gapsin=G, gapsout=G,prep=no] --> PlFem)).
+
+
+macro(vp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType,agr=sg/\masc, adj_subcat=inf_de, gapsin=G, gapsout=G,prep=no] --> SgMasc)).
+macro(vp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType,agr=sg/\fem, adj_subcat=inf_de, gapsin=G, gapsout=G,prep=no] --> SgFem)).
+macro(vp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\masc, adj_subcat=inf_de, gapsin=G, gapsout=G,prep=no] --> PlMasc)).
+macro(vp_adj([SgMasc, SgFem, PlMasc, PlFem], Sem),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\fem, adj_subcat=inf_de, gapsin=G, gapsout=G,prep=no] --> PlFem)).
+
+
+macro(inflected_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=sg/\masc, gapsin=G, gapsout=G, elision=Elision,prep=no] --> SgMasc)).
+macro(inflected_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=sg/\fem, gapsin=G, gapsout=G, elision=Elision,prep=no] --> SgFem)).
+macro(inflected_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\masc, gapsin=G, gapsout=G, elision=Elision,prep=no] --> PlMasc)).
+macro(inflected_adj([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\fem, gapsin=G, gapsout=G, elision=Elision,prep=no] --> PlFem)).
+
+
+macro(inflected_adj_de([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=sg/\masc, gapsin=G, gapsout=G, elision=Elision,prep=yes] --> SgMasc)).
+macro(inflected_adj_de([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=sg/\fem, gapsin=G, gapsout=G, elision=Elision,prep=yes] --> SgFem)).
+macro(inflected_adj_de([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\masc, gapsin=G, gapsout=G, elision=Elision,prep=yes] --> PlMasc)).
+macro(inflected_adj_de([SgMasc, SgFem, PlMasc, PlFem], Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, agr=pl/\fem, gapsin=G, gapsout=G, elision=Elision,prep=yes] --> PlFem)).
+
+
+macro(uninflected_adj(Surface, Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, gapsin=G, gapsout=G, elision=Elision,prep=no] --> Surface)).
+
+
+macro(uninflected_adj_de(Surface, Sem, SemAdjType, Elision),
+     ( adjp:[sem=[Sem], sem_adj_type=SemAdjType, gapsin=G, gapsout=G, elision=Elision,prep=yes] --> Surface)).
+
+macro(adverb(Surface, Sem, Pos),
+     ( adv:[sem=[Sem], position=Pos] --> Surface )).
+
+%AVOIR
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=3/\sg, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> a.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=3/\pl, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> ont.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=pol/\sg, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> avez.
+
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=1/\sg, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> ai.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=1/\pl, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> avons.
+%aux_verb:[sem=[[tense, passe_compose]], aux_v_type=avoir, vform=finite, participle_vform=past_participle, agr=1/\sg, participle_agr=3/\sg/\masc, voice=active,elision=yes] --> avez.
+
+
+
+%ETRE present
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\sg/\masc, participle_agr=3/\sg/\masc, voice=passive] --> est.
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\pl/\masc, participle_agr=3/\pl/\masc, voice=passive] --> sont.
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=2/\pl/\masc, participle_agr=3/\pl/\masc, voice=passive] --> êtes.
+
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\sg/\fem, participle_agr=3/\sg/\fem, voice=passive] --> est.
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\pl/\fem, participle_agr=3/\pl/\fem, voice=passive] --> sont.
+aux_verb:[sem=[[tense, present]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=2/\pl/\fem, participle_agr=3/\pl/\fem, voice=passive] --> êtes.
+
+%Etre passe composé
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\sg/\masc, participle_agr=3/\sg/\masc, voice=active] --> est.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\pl/\masc, participle_agr=3/\pl/\masc, voice=active] --> sont.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=2/\pl/\masc, participle_agr=3/\pl/\masc, voice=active] --> êtes.
+
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\sg/\fem, participle_agr=3/\sg/\fem, voice=active] --> est.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=3/\pl/\fem, participle_agr=3/\pl/\fem, voice=active] --> sont.
+aux_verb:[sem=[[tense, passe_compose]], aux_v_type=être, vform=finite, participle_vform=past_participle, agr=2/\pl/\fem, participle_agr=3/\pl/\fem, voice=active] --> êtes.
+
+macro(spec(Surface, Sem, Agr, SpecType, Elision, Elisiondet),
+     ( spec:[sem=Sem, agr=Agr, spec_type=SpecType, elision=Elision, elisiondet=Elisiondet] --> Surface )).
+
+@spec(quelques, @spec_sem(quelque), pl, _NumericOrNon, _, no).
+@spec(plusieurs, @spec_sem(plusieurs), 3/\pl, _NumericOrNon, _, no).
+
+@spec(le, @article_sem(def), 3/\sg/\masc, non_numeric\/numeric, no, no).
+@spec(la, @article_sem(def), 3/\sg/\fem, non_numeric\/numeric, no, no).
+@spec(l, @article_sem(def), 3/\sg, non_numeric\/numeric, yes, no).
+@spec(les, @article_sem(def), 3/\pl, non_numeric\/numeric, _, no).
+
+@spec(un, @article_sem(indef), 3/\sg/\masc, non_numeric, _,yes).
+@spec(une, @article_sem(indef), 3/\sg/\fem, non_numeric, _,yes).
+@spec(des, @article_sem(indef), 3/\pl, non_numeric, _, no).
+
+@spec(du, @article_sem(indef), 3/\sg/\masc, non_numeric, no, no).
+@spec((de, la), @article_sem(indef), 3/\sg/\fem, non_numeric, no, no).
+@spec((de, l), @article_sem(indef), 3/\sg, non_numeric, yes, no).
+
+@spec(votre, @spec_sem(poss2), 3/\sg, non_numeric, _, no).
+@spec(vos, @spec_sem(poss2), 3/\pl, non_numeric, _, no).
+@spec(son, @spec_sem(poss), 3/\masc/\sg, non_numeric, _, no).
+@spec(sa, @spec_sem(poss), 3/\fem/\sg, non_numeric, _, no).
+@spec(mon, @spec_sem(poss1), 3/\masc/\sg, non_numeric\/numeric, _, no).
+@spec(ma, @spec_sem(poss1), 3/\fem/\sg, non_numeric\/numeric, _, no).
+@spec(mes, @spec_sem(poss1), 3/\pl, non_numeric\/numeric, _, no).
+@spec(ses, @spec_sem(poss), 3/\pl, non_numeric, _, no).
+
+@spec(ce, @spec_sem(dem), 3/\sg/\masc, non_numeric\/numeric, _, no).
+@spec(cet, @spec_sem(dem), 3/\sg/\masc, non_numeric\/numeric, _, no).
+@spec(cette, @spec_sem(dem), 3/\sg/\fem, non_numeric\/numeric, _, no).
+@spec(ces, @spec_sem(dem), 3/\pl, non_numeric\/numeric, _, no).
+
+@spec((le, même), @spec_sem(le_même), 3/\sg/\masc, non_numeric, _, no).
+@spec((la, même), @spec_sem(le_même), 3/\sg/\fem, non_numeric, _, no).
+
+%%peut-être numeric but not with the actual lexicon
+@spec((un, seul), @spec_sem(un_seul), 3/\sg/\masc, non_numeric, _, yes).
+@spec((une, seule), @spec_sem(un_seul), 3/\sg/\fem, non_numeric, _, yes).
+
+%%elision_det pour elision avec est-ce que par exemple.
+%pronoun:[sem=[[pronoun, vous]], agr=(2/\sg/\masc), pron_type=normal_pronoun] --> vous.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, vous])),
+	 agr= @agreement_for_vous, pron_type=normal_pronoun,elision_déb=no] --> vous.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, je])),
+	 agr= (1/\sg/\_), pron_type=normal_pronoun,elision=no,elision_déb=no] --> je.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, je])),
+	 agr= (1/\sg/\_), pron_type=normal_pronoun,elision=yes,elision_déb=no] --> j.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, tu])),
+	 agr= (2/\sg/\_), pron_type=normal_pronoun,elision_déb=no] --> tu.
+
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal])),
+	 agr=(3/\sg/\fem), pron_type=normal_pronoun,elision_déb=yes] --> elle.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal])),
+	 agr=(3/\sg/\masc), pron_type=normal_pronoun,sem_np_type=(\(impers)),elision_déb=yes] --> il.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal_3_pl])),
+	 agr=(3/\pl/\fem), pron_type=normal_pronoun,elision_déb=yes] --> elles.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal_3_pl])),
+	 agr=(3/\pl/\masc), pron_type=normal_pronoun] --> ils.
+pronoun:[sem=[[pronoun, impersonal]], agr=(3/\sg/\masc), pron_type=normal_pronoun,sem_np_type=impers,elision_déb=yes] --> il.
+
+pronoun:[sem=[], agr=(3/\sg/\fem), pron_type=dummy_pronoun] --> elle.
+pronoun:[sem=[], agr=(3/\sg/\masc), pron_type=dummy_pronoun] --> il.
+pronoun:[sem=[], agr=(3/\pl/\fem), pron_type=dummy_pronoun] --> elles.
+pronoun:[sem=[], agr=(3/\pl/\masc), pron_type=dummy_pronoun] --> ils.
+
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal])), pron_type=clitic] --> vous.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal_1])), pron_type=clitic,elision=no] --> me.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal_1])), pron_type=clitic,elision=yes] --> m.
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, personal_3])), pron_type=clitic,elision=yes] --> s.
+
+reflexive_pronoun:[agr=pol] --> vous.
+%%reflexive_pronoun:[agr=3] --> @se_or_s.
+reflexive_pronoun:[agr=3, elision=no] --> se.
+reflexive_pronoun:[agr=3, elision=yes] --> s.
+
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, quelqu_un])),
+	 agr=(3/\sg/\masc), pron_type=indefini, sem_np_type=person] --> 'quelqu''un'.
+
+pronoun:[sem= @np_pron_sem( @pron_sem([pronoun, qui])), agr=_, pron_type=rel] --> qui.
+
+macro(wh_pron(Surface, Sem, Agr),
+     ( wh_pron:[sem= @np_pron_sem( @pron_sem(Sem)), agr=Agr, subj_sem_np_type=wh] --> Surface )).
+
+@wh_pron(quel, [pronoun, quel], (sg/\masc)).
+@wh_pron(quelle, [pronoun, quel], (sg/\fem)).
+@wh_pron(quels, [pronoun, quel], (pl/\masc)).
+@wh_pron(quelles, [pronoun, quel], (pl/\fem)).
+
+macro(wh_pp(Surface, Sem),
+     ( wh_pp:[sem=Sem] --> Surface )).
+
+@wh_pp(quand, @lexical_wh_pp_sem([temporal, quand])).
+@wh_pp(comment, @lexical_wh_pp_sem([temporal, comment])).
+@wh_pp((combien, de, temps), @lexical_wh_pp_sem([temporal, combien_de_temps])).
+@wh_pp((pendant, combien, de, temps), @complex_lexical_wh_pp_sem([duration_prep, pendant], [temporal, combien_de_temps])).
+@wh_pp((depuis, combien, de, temps), @complex_lexical_wh_pp_sem([duration_prep, depuis], [temporal, combien_de_temps])).
+@wh_pp((en, combien, de, temps), @complex_lexical_wh_pp_sem([duration_prep, en], [temporal, combien_de_temps])).
+@wh_pp(où, @lexical_wh_pp_sem([locative, où])).
+@wh_pp(quoi, @lexical_wh_pp_sem([pronoun, que])).
+
+macro(wh_de_pp(Surface, Sem, DE),
+     ( wh_de_pp:[sem=Sem, de_pp_prep=DE] --> Surface )).
+
+@wh_de_pp((de, quoi), [[pronoun, quel]],de).
+@wh_de_pp((à, quoi), [[pronoun, quel]],a).
+
+macro(de_prep(Surface,De,Elision),
+     ( de_prep:[np_agr=_, np_has_spec=_, de_pp_prep=De, elision=Elision] --> Surface )).
+
+@de_prep(d,de,yes).
+@de_prep(de,de,no).
+@de_prep(à,a,_).
+
+
+macro(passive_prep(Surface,Elision),
+     ( passive_prep:[elision=Elision] --> Surface )).
+
+@passive_prep(par,_).
+@passive_prep(d,yes).
+@passive_prep(de,no).
+
+macro(contracted_de_prep(Surface, NPAgr,De),
+     ( de_prep:[np_agr=NPAgr, de_pp_prep=De, np_has_spec=no] --> Surface )).
+
+@contracted_de_prep(du, sg/\masc,de).
+@contracted_de_prep(des, pl,de).
+@contracted_de_prep(au, sg/\masc,a).
+@contracted_de_prep(aux, pl,a).
+
+macro(sc(Surface, Sem, PPType, Type),
+     ( sc:[sem=Sem, sem_pp_type=PPType, sctype=Type] --> Surface )).
+
+@sc(quand, @sc_sem(quand), temporal, quand).
+@sc(lorsque, @sc_sem(lorsque), temporal, quand).
+@sc(en, @sc_sem(en), temporal, en).
+
+macro(comparative(Surface, Sem, Elision),
+     ( comparative:[sem= @comparative_sem(Sem), elision=Elision] --> Surface )).
+
+@comparative((plus, de), [comparative, plus_de],no).
+@comparative((plus, d), [comparative, plus_de],yes).
+@comparative((plus, que), [comparative, plus_que],no).
+@comparative((plus, qu), [comparative, plus_que],yes).
+@comparative((moins, de), [comparative, moins_de],no).
+@comparative((moins, d), [comparative, moins_de],yes).
+@comparative((moins, que), [comparative, moins_que],no).
+@comparative((moins, qu), [comparative, moins_que],yes).
+@comparative((au, moins), [comparative, au_moins],_).
+
+macro(number(Surface, N, Agr, Elision, Type),
+     ( number:[sem=N, agr=Agr, elision=Elision, type_num=Type] --> Surface )).
+
+@number((une, demi), demi, sg/\fem,_,autre).
+@number(un, 1, sg/\masc,_, heure_d).
+@number(une, 1, sg/\fem,_, heure_d).
+@number(premier, 1, sg/\masc,_, jour).
+@number(deux, 2, pl,no, heure_d\/jour).
+@number(trois, 3, pl,no, heure_d\/jour).
+@number(quatre, 4, pl,no, heure_d\/jour).
+@number(cinq, 5, pl,no, heure_d\/jour).
+@number(six, 6, pl,no, heure_d\/jour).
+@number(sept, 7, pl,no, heure_d\/jour).
+% Hack ((c) David Carter, 1994) to let us deal with the fact that "huit" is an exception to the elision rules
+% See orthography.pl and fre_generation_new.pl
+@number(huit, 8, pl,no, heure_d\/jour).
+@number(neuf, 9, pl,no, heure_d\/jour).
+@number(dix, 10, pl,no, heure_d\/jour).
+@number(onze, 11, pl,no, heure_d\/jour).
+@number(douze, 12, pl,no, heure_d\/jour).
+@number(treize, 13, pl,no, heure_v\/jour).
+@number(quatorze, 14, pl,no, heure_v\/jour).
+@number(quinze, 15, pl,no, heure_v\/jour).
+@number(seize, 16, pl,no, heure_v\/jour).
+@number('dix-sept', 17, pl,no, heure_v\/jour).
+@number('dix-huit', 18, pl,no, heure_v\/jour).
+@number('dix-neuf', 19, pl,no, heure_v\/jour).
+@number(vingt, 20, pl,no, heure_v\/jour).
+@number((vingt, et, un), 21, pl\/masc,no, heure_v\/jour).
+@number((vingt, et, une), 21, pl\/fem,no, heure_v\/jour).
+@number('vingt-deux', 22, pl,no, heure_v\/jour).
+@number('vingt-trois', 23, pl,no, heure_v\/jour).
+@number('vingt-quatre', 24, pl,no, heure_v\/jour).
+@number('vingt-cinq', 25, pl,no, minute\/heure_v2\/jour).
+@number('vingt-six', 26, pl,no, minute\/heure_v2\/jour).
+@number('vingt-sept', 27, pl,no, minute\/heure_v2\/jour).
+@number('vingt-huit', 28, pl,no, minute\/heure_v2\/jour).
+@number('vingt-neuf', 29, pl,no, minute\/heure_v2\/jour).
+@number(trente, 30, pl,no, minute\/jour).
+@number((trente, et, un), 31, pl\/masc,no, minute\/jour).
+@number((trente, et, une), 31, pl\/fem,no, minute).
+@number('trente-deux', 32, pl,no, minute).
+@number('trente-trois', 33, pl,no, minute).
+@number('trente-quatre', 34, pl,no, minute).
+@number('trente-cinq', 35, pl,no, minute).
+@number('trente-six', 36, pl,no, minute).
+@number('trente-sept', 37, pl,no, minute).
+@number('trente-huit', 38, pl,no, minute).
+@number('trente-neuf', 39, pl,no, minute).
+@number(quarante, 40, pl,no, minute).
+@number((quarante, et, un), 41, pl\/masc,no, minute).
+@number((quarante, et, une), 41, pl\/fem,no, minute).
+@number('quarante-deux', 42, pl,no, minute).
+@number('quarante-trois', 43, pl,no, minute).
+@number('quarante-quatre', 44, pl,no, minute).
+@number('quarante-cinq', 45, pl,no, minute).
+@number('quarante-six', 46, pl,no, minute).
+@number('quarante-sept', 47, pl,no, minute).
+@number('quarante-huit', 48, pl,no, minute).
+@number('quarante-neuf', 49, pl,no, minute).
+@number(cinquante, 50, pl,no, minute).
+@number((cinquante, et, un), 51, pl\/masc,no, minute).
+@number((cinquante, et, une), 51, pl\/fem,no, minute).
+@number('cinquante-deux', 52, pl,no, minute).
+@number('cinquante-trois', 53, pl,no, minute).
+@number('cinquante-quatre', 54, pl,no, minute).
+@number('cinquante-cinq', 55, pl,no, minute).
+@number('cinquante-six', 56, pl,no, minute).
+@number('cinquante-sept', 57, pl,no, minute).
+@number('cinquante-huit', 58, pl,no, minute).
+@number('cinquante-neuf', 59, pl,no, minute).
+@number(soixante, 60, pl,no, minute).
+@number((soixante, et, un), 61, pl\/masc,no, autre).
+@number((soixante, et, une), 61, pl\/fem,no, autre).
+@number('soixante-deux', 62, pl,no,autre).
+@number('soixante-trois', 63, pl,no,autre).
+@number('soixante-quatre', 64, pl,no,autre).
+@number('soixante-cinq', 65, pl,no,autre).
+@number('soixante-six', 66, pl,no,autre).
+@number('soixante-sept', 67, pl,no,autre).
+@number('soixante-huit', 68, pl,no,autre).
+@number('soixante-neuf', 69, pl,no,autre).
+@number(septante, 70, pl,no,autre).
+@number((septante, et, un), 71, pl,no,autre).
+@number('septante-deux', 72, pl,no,autre).
+@number('septante-trois', 73, pl,no,autre).
+@number('septante-quatre', 74, pl,no,autre).
+@number('septante-cinq', 75, pl,no,autre).
+@number('septante-six', 76, pl,no,autre).
+@number('septante-sept', 77, pl,no,autre).
+@number('septante-huit', 78, pl,no,autre).
+@number('septante-neuf', 79, pl,no,autre).
+@number((soixante, et, onze), 71, pl,no,autre).
+@number('soixante-douze', 72, pl,no,autre).
+@number('soixante-treize', 73, pl,no,autre).
+@number('soixante-quatorze', 74, pl,no,autre).
+@number('soixante-quinze', 75, pl,no,autre).
+@number('soixante-seize', 76, pl,no,autre).
+@number('soixante-dix-sept', 77, pl,no,autre).
+@number('soixante-dix-huit', 78, pl,no,autre).
+@number('soixante-dix-neuf', 79, pl,no,autre).
+@number('quatre-vingt', 80, pl,no,autre).
+@number(('quatre-vingt', un), 81, pl\/masc,no,autre).
+@number(('quatre-vingt', une), 81, pl\/fem,no,autre).
+@number(('quatre-vingt', deux), 82, pl,no,autre).
+@number(('quatre-vingt', trois), 83, pl,no,autre).
+@number(('quatre-vingt', quatre), 84, pl,no,autre).
+@number(('quatre-vingt', cinq), 85, pl,no,autre).
+@number(('quatre-vingt', six), 86, pl,no,autre).
+@number(('quatre-vingt', sept), 87, pl,no,autre).
+@number(('quatre-vingt', huit), 88, pl,no,autre).
+@number(('quatre-vingt', neuf), 89, pl,no,autre).
+@number(('quatre-vingt', onze), 91, pl,no,autre).
+@number(('quatre-vingt', douze), 92, pl,no,autre).
+@number(('quatre-vingt', treize), 93, pl,no,autre).
+@number(('quatre-vingt', quatorze), 94, pl,no,autre).
+@number(('quatre-vingt', quinze), 95, pl,no,autre).
+@number(('quatre-vingt', seize), 96, pl,no,autre).
+@number(('quatre-vingt', 'dix-sept'), 97, pl,no,autre).
+@number(('quatre-vingt', 'dix-huit'), 98, pl,no,autre).
+@number(('quatre-vingt', 'dix-neuf'), 99, pl,no,autre).
+@number(nonante, 90, pl,no,autre).
+@number((nonante, et, un), 91, pl\/masc,no,autre).
+@number((nonante, et, une), 91, pl\/fem,no,autre).
+@number((nonante, deux), 92, pl,no,autre).
+@number((nonante, trois), 93, pl,no,autre).
+@number((nonante, quatre), 94, pl,no,autre).
+@number((nonante, cinq), 95, pl,no,autre).
+@number((nonante, six), 96, pl,no,autre).
+@number((nonante, sept), 97, pl,no,autre).
+@number((nonante, huit), 98, pl,no,autre).
+@number((nonante, neuf), 99, pl,no,autre).
+@number(cent, 100, pl,no,autre).
+@number((mille,neuf,cent,'soixante-trois'), 1963, pl,no,année).
+@number((mille,neuf,cent,'quatre-vingt', quatre), 1984, pl,no,année).
+@number((mille,neuf,cent,('quatre-vingt', onze)), 1991, pl,no,année).
+@number((mille,neuf,cent,('quatre-vingt', quatorze)), 1994, pl,no,année).
+@number((mille,neuf,cent,('quatre-vingt', douze)), 1992, pl,no,année).
+@number((mille,neuf,cent,('quatre-vingt', treize)), 1993, pl,no,année).
+@number((mille,neuf,cent,('quatre-vingt', 'dix-huit')), 1998, pl,no,année).
+
+
+
+macro(mod_time_et(Surface, N, Agr),
+     ( mod_time_et:[sem=N,agr=Agr] --> Surface )).
+@mod_time_et((et,quart), 15,_).
+@mod_time_et((un,quart), 15,_).
+@mod_time_et((et,demie), 30,fem).
+@mod_time_et((et,demi), 30,masc).
+
+macro(mod_time_moins(Surface, N),
+     ( mod_time_moins:[sem=N] --> Surface )).
+@mod_time_moins((moins,le,quart), 15).
+@mod_time_moins((moins,un,quart), 15).
+
+macro(num_heure(Surface, N,Agr),
+     (num_heure:[sem=N,agr=Agr] --> Surface )).
+@num_heure(midi, 12,masc).
+@num_heure(minuit, 24,masc).
+
+
+macro(interj(Surface, Sem,Type),
+     (interj:[sem=[Sem],i_type=Type] --> Surface )).
+
+@interj(oui, [interj, oui],oui).
+@interj(non, [interj, non],oui).
+@interj(('s\'il',vous,plaît), [interj, svp],svp).
+
+macro(degré(Surface, Sem),
+     (degré:[sem=[Sem]] --> Surface )).
+
+@degré(très, [degre,très]).
+
+
+est_ce_que:[elision=no] --> 'est-ce',que.
+est_ce_que:[elision=yes] --> 'est-ce',qu.

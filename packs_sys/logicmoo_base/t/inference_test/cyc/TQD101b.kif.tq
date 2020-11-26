@@ -1,0 +1,54 @@
+(note TQD101b)
+
+(existant Stage1-SACitizensOrderedOut 
+ (DateInSituationFn CalendarDay 19 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(agent Stage1-SACitizensOrderedOut SaudiArabia) 
+
+(goalCategoryForAgent SaudiArabia 
+ (forAll ?PERSON 
+ (implies 
+ (citizens SaudiArabia ?PERSON) 
+ (not 
+ (thereExists ?EVT 
+ (and 
+ (instance ?EVT ViolentAction) 
+ (maleficiary ?EVT ?PERSON)))))) CitizenSafetyGoal) 
+
+(instance Stage1-SACitizensOrderedOut Action) 
+
+(causes-PropProp 
+ (desires SaudiArabia 
+ (forAll ?PERSON 
+ (implies 
+ (citizens SaudiArabia ?PERSON) 
+ (not 
+ (thereExists ?ATTACK 
+ (and 
+ (instance ?ATTACK ViolentAction) 
+ (maleficiary ?ATTACK ?PERSON))))))) 
+ (agent Stage1-SACitizensOrderedOut SaudiArabia)) 
+
+
+
+
+
+
+( query (findall ?AGENT (thereExists ?PROTECT-ACTION 
+ (thereExists ?SAFETY-GOAL 
+ (and 
+ (instance ?PROTECT-ACTION Action) 
+ (agent ?PROTECT-ACTION ?AGENT) 
+ (goalCategoryForAgent ?AGENT ?SAFETY-GOAL CitizenSafetyGoal) 
+ (causes-PropProp 
+ (desires ?AGENT ?SAFETY-GOAL) 
+ (agent ?PROTECT-ACTION ?AGENT)) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 19 HPKBScenarioConflict) ?PROTECT-ACTION))))  
+))
+
+(answer SaudiArabia)
+
+(end_of_file)

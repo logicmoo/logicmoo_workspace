@@ -1,0 +1,1 @@
+Reload the current Regulus config file, plus any files it may include.

@@ -1,0 +1,95 @@
+(note TQF207a)
+
+(implies 
+  (and 
+    (temporallyIntersects ?TIME-ONE ?TIME-TWO) 
+    (temporallySubsumes ?TIME-ONE ?PROP)) 
+  (holdsSometimeDuring ?TIME-TWO ?PROP)) 
+
+(temporallyIntersects Y2Stage6-AIOCAnnouncement 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 41 Y2ScenarioConflict) 
+  (DateInSituationFn CalendarDay 71 Y2ScenarioConflict))) 
+
+(temporallySubsumes Y2Stage6-AIOCAnnouncement 
+  (believes SaudiArabia 
+    (directingAgent Y2Stage3-TruckBombingInRiyadh Iran))) 
+
+(implies 
+  (temporallySubsumes ?Y ?X) 
+  (temporallyIntersects ?X ?Y)) 
+
+(temporallySubsumes 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 41 Y2ScenarioConflict) 
+    (DateInSituationFn CalendarDay 71 Y2ScenarioConflict)) Y2Stage6-AIOCAnnouncement)
+
+(implies 
+  (and 
+    (temporallySubsumes ?LONG-TIME ?SHORT-TIME) 
+    (temporallySubsumes ?LONG-TIME 
+      (believes ?AGENT ?PROP))) 
+  (temporallySubsumes ?SHORT-TIME 
+    (believes ?AGENT ?PROP))) 
+
+(temporallySubsumes Y2ScenarioConflict Y2Stage6-AIOCAnnouncement) 
+
+(temporallySubsumes Y2ScenarioConflict 
+  (believes SaudiArabia 
+    (directingAgent Y2Stage3-TruckBombingInRiyadh Iran))) 
+
+(holdsSometimeDuring 
+  (TimeIntervalInclusiveFn 
+    (DateInSituationFn CalendarDay 41 Y2ScenarioConflict) 
+    (DateInSituationFn CalendarDay 71 Y2ScenarioConflict)) 
+  (believes SaudiArabia 
+    (directingAgent Y2Stage3-TruckBombingInRiyadh Iran))) 
+
+(decreasesCausally Y2Stage3-TruckBombingInRiyadh SaudiArabia politicalStability) 
+
+(implies 
+  (and 
+    (instance ?TERR TerroristAct) 
+    (maleficiary ?TERR ?GEOPOL) 
+    (instance ?GEOPOL GeopoliticalEntity)) 
+  (decreasesCausally ?TERR ?GEOPOL politicalStability)) 
+
+(instance Y2Stage3-TruckBombingInRiyadh TerroristAct) 
+(maleficiary Y2Stage3-TruckBombingInRiyadh SaudiArabia) 
+(instance SaudiArabia GeopoliticalEntity) 
+(subProcess Y2ScenarioConflict Y2Stage6-AIOCAnnouncement) 
+
+(implies 
+  (and 
+    (instance ?ASSERTION Inform-CommunicationAct) 
+    (senderOfInfo ?ASSERTION ?SPEAKER) 
+    (subProcess ?SUPER-EVENT ?ASSERTION) 
+    (instance ?ROLE Role) 
+    (infoTransferred ?ASSERTION 
+    (?ROLE ?EVENT ?AGENT))) 
+  (temporallySubsumes ?SUPER-EVENT 
+    (believes ?SPEAKER 
+      (?ROLE ?EVENT ?AGENT)))) 
+
+(instance Y2Stage3-SaudiArabiaAccusesIran Inform-CommunicationAct) 
+(senderOfInfo Y2Stage3-SaudiArabiaAccusesIran SaudiArabia) 
+(subProcess Y2ScenarioConflict Y2Stage3-SaudiArabiaAccusesIran) 
+
+(infoTransferred Y2Stage3-SaudiArabiaAccusesIran 
+ (directingAgent Y2Stage3-TruckBombingInRiyadh Iran)) 
+
+(queryyn (thereExists ?EVENT 
+   (and 
+       (decreasesCausally ?EVENT SaudiArabia politicalStability) 
+       (holdsSometimeDuring 
+           (TimeIntervalInclusiveFn 
+               (DateInSituationFn CalendarDay 41 Y2ScenarioConflict) 
+               (DateInSituationFn CalendarDay 71 Y2ScenarioConflict)) 
+           (believes SaudiArabia 
+               (directingAgent ?EVENT Iran))))))
+               
+(answer Yes)
+
+(end_of_file)
+
+

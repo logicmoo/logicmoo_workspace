@@ -1,0 +1,36 @@
+(note TQC25)
+(importsThrough WesternEurope NaturalGas Transmed-Pipeline) 
+
+
+
+
+(implies 
+ (and 
+ (contains ?BIGREGION ?COUNTRY) 
+ (importsThrough ?COUNTRY ?PRODUCT ?PATH)) 
+ (importsThrough ?BIGREGION ?PRODUCT ?PATH)) 
+
+(contains WesternEurope Italy) 
+
+(importsThrough Italy NaturalGas Transmed-Pipeline) 
+
+
+
+
+(implies 
+ (instance ?COUNTRY WesternEuropeanCountry) 
+ (contains WesternEurope ?COUNTRY)) 
+
+(instance Italy WesternEuropeanCountry) 
+
+
+
+
+(query (findall ?MATERIALGOODS
+
+ (importsThrough WesternEurope ?MATERIALGOODS Transmed-Pipeline)))
+
+(answer NaturalGas)  
+
+(end_of_file)
+

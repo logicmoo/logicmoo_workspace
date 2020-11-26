@@ -1,0 +1,55 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in POP-11"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Transitive verbs and quantification
+
+By way of example, here is the DBQ DAG, in POP-11 form, that we get
+from the sentence 'an airline took over every hotel chain':
+
+    [[sem [[quantifier exists]
+           [variable _x]
+           [restriction [[arg0 _x] [predicate airline] [& _152211]]]
+           [body [[quantifier all]
+                  [variable _y]
+                  [restriction [[arg0 _y] [predicate hotel_chain] [& _152237]]]
+                  [body [[arg0 _x]
+                         [arg1 _y]
+                         [predicate took_over]
+                         [& _152262]]]
+                  [& _152242]]]
+           [& _152215]]]
+     [& _152192]]
+
+And here is what we get for 'every hotel chain took over an airline':
+
+    [[sem [[quantifier all]
+           [variable _x]
+           [restriction [[arg0 _x] [predicate hotel_chain] [& _152137]]]
+           [body [[quantifier exists]
+                  [variable _y]
+                  [restriction [[arg0 _y] [predicate airline] [& _152163]]]
+                  [body [[arg0 _x]
+                         [arg1 _y]
+                         [predicate took_over]
+                         [& _152188]]]
+                  [& _152168]]]
+           [& _152141]]]
+     [& _152118]]
+
+Building semantic checking into the grammar
+
+Now, if we use this grammar to parse 'get a screwdiver with a narrow
+blade', we get the following parse tree:
+
+    [[VP [TV get]
+         [NP [NP [Det a] [NB [N screwdriver]]]
+             [PP [P with] [NP [Det a] [NB [Adj narrow] [NB [N blade]]]]]]]]
+
+whereas if we use it to parse 'get a screwdriver with your left hand',
+we get a quite different structure:
+
+    [[VP [VP [TV get] [NP [Det a] [NB [N screwdriver]]]]
+         [PP [P with] [NP [Det your] [NB [Adj left] [NB [N hand]]]]]]]

@@ -1,0 +1,23 @@
+(note TQB85)
+
+(thereExists (?X ?Y)
+  (and
+    (agent ?X Iraq) 
+    (instance ?Y BallisticMissile) 
+    (deviceUsed ?X ?Y) 
+    (instance ?X AttackOnTangible)))
+
+(subrelation deviceUsed instrument-Generic) 
+
+(queryyn
+  (thereExists ?ACT 
+    (thereExists ?FORCE 
+      (and 
+        (agent ?ACT Iraq) 
+        (instance ?ACT AttackOnTangible) 
+        (instance ?FORCE BallisticMissile) 
+        (instrument-Generic ?ACT ?FORCE)))))
+
+(answer Yes)
+
+(end_of_file)

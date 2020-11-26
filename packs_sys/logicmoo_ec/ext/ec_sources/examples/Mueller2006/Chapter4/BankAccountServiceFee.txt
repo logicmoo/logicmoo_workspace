@@ -1,0 +1,140 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter4/BankAccountServiceFee.e
+loading foundations/Root.e
+loading foundations/EC.e
+423 variables and 3659 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Balance(Account1, 3).
+Balance(Account2, 1).
+Happens(Transfer(Account1, Account2, 1), 0).
+1
+-Balance(Account1, 3).
+-Balance(Account2, 1).
++Balance(Account1, 2).
++Balance(Account2, 2).
+Happens(ChargeServiceFee(Account1), 1).
+2
+-Balance(Account1, 2).
++Balance(Account1, 1).
++ServiceFeeCharged(Account1).
+3
+P
+!EndOfMonth(0).
+!EndOfMonth(1).
+!EndOfMonth(2).
+!EndOfMonth(3).
+!Happens(ChargeServiceFee(Account1), 0).
+!Happens(ChargeServiceFee(Account1), 2).
+!Happens(ChargeServiceFee(Account1), 3).
+!Happens(ChargeServiceFee(Account2), 0).
+!Happens(ChargeServiceFee(Account2), 1).
+!Happens(ChargeServiceFee(Account2), 2).
+!Happens(ChargeServiceFee(Account2), 3).
+!Happens(MonthlyReset(Account1), 0).
+!Happens(MonthlyReset(Account1), 1).
+!Happens(MonthlyReset(Account1), 2).
+!Happens(MonthlyReset(Account1), 3).
+!Happens(MonthlyReset(Account2), 0).
+!Happens(MonthlyReset(Account2), 1).
+!Happens(MonthlyReset(Account2), 2).
+!Happens(MonthlyReset(Account2), 3).
+!Happens(Transfer(Account1, Account1, 1), 0).
+!Happens(Transfer(Account1, Account1, 1), 1).
+!Happens(Transfer(Account1, Account1, 1), 2).
+!Happens(Transfer(Account1, Account1, 1), 3).
+!Happens(Transfer(Account1, Account1, 2), 0).
+!Happens(Transfer(Account1, Account1, 2), 1).
+!Happens(Transfer(Account1, Account1, 2), 2).
+!Happens(Transfer(Account1, Account1, 2), 3).
+!Happens(Transfer(Account1, Account1, 3), 0).
+!Happens(Transfer(Account1, Account1, 3), 1).
+!Happens(Transfer(Account1, Account1, 3), 2).
+!Happens(Transfer(Account1, Account1, 3), 3).
+!Happens(Transfer(Account1, Account2, 1), 1).
+!Happens(Transfer(Account1, Account2, 1), 2).
+!Happens(Transfer(Account1, Account2, 1), 3).
+!Happens(Transfer(Account1, Account2, 2), 0).
+!Happens(Transfer(Account1, Account2, 2), 1).
+!Happens(Transfer(Account1, Account2, 2), 2).
+!Happens(Transfer(Account1, Account2, 2), 3).
+!Happens(Transfer(Account1, Account2, 3), 0).
+!Happens(Transfer(Account1, Account2, 3), 1).
+!Happens(Transfer(Account1, Account2, 3), 2).
+!Happens(Transfer(Account1, Account2, 3), 3).
+!Happens(Transfer(Account2, Account1, 1), 0).
+!Happens(Transfer(Account2, Account1, 1), 1).
+!Happens(Transfer(Account2, Account1, 1), 2).
+!Happens(Transfer(Account2, Account1, 1), 3).
+!Happens(Transfer(Account2, Account1, 2), 0).
+!Happens(Transfer(Account2, Account1, 2), 1).
+!Happens(Transfer(Account2, Account1, 2), 2).
+!Happens(Transfer(Account2, Account1, 2), 3).
+!Happens(Transfer(Account2, Account1, 3), 0).
+!Happens(Transfer(Account2, Account1, 3), 1).
+!Happens(Transfer(Account2, Account1, 3), 2).
+!Happens(Transfer(Account2, Account1, 3), 3).
+!Happens(Transfer(Account2, Account2, 1), 0).
+!Happens(Transfer(Account2, Account2, 1), 1).
+!Happens(Transfer(Account2, Account2, 1), 2).
+!Happens(Transfer(Account2, Account2, 1), 3).
+!Happens(Transfer(Account2, Account2, 2), 0).
+!Happens(Transfer(Account2, Account2, 2), 1).
+!Happens(Transfer(Account2, Account2, 2), 2).
+!Happens(Transfer(Account2, Account2, 2), 3).
+!Happens(Transfer(Account2, Account2, 3), 0).
+!Happens(Transfer(Account2, Account2, 3), 1).
+!Happens(Transfer(Account2, Account2, 3), 2).
+!Happens(Transfer(Account2, Account2, 3), 3).
+!ReleasedAt(Balance(Account1, 1), 0).
+!ReleasedAt(Balance(Account1, 1), 1).
+!ReleasedAt(Balance(Account1, 1), 2).
+!ReleasedAt(Balance(Account1, 1), 3).
+!ReleasedAt(Balance(Account1, 2), 0).
+!ReleasedAt(Balance(Account1, 2), 1).
+!ReleasedAt(Balance(Account1, 2), 2).
+!ReleasedAt(Balance(Account1, 2), 3).
+!ReleasedAt(Balance(Account1, 3), 0).
+!ReleasedAt(Balance(Account1, 3), 1).
+!ReleasedAt(Balance(Account1, 3), 2).
+!ReleasedAt(Balance(Account1, 3), 3).
+!ReleasedAt(Balance(Account2, 1), 0).
+!ReleasedAt(Balance(Account2, 1), 1).
+!ReleasedAt(Balance(Account2, 1), 2).
+!ReleasedAt(Balance(Account2, 1), 3).
+!ReleasedAt(Balance(Account2, 2), 0).
+!ReleasedAt(Balance(Account2, 2), 1).
+!ReleasedAt(Balance(Account2, 2), 2).
+!ReleasedAt(Balance(Account2, 2), 3).
+!ReleasedAt(Balance(Account2, 3), 0).
+!ReleasedAt(Balance(Account2, 3), 1).
+!ReleasedAt(Balance(Account2, 3), 2).
+!ReleasedAt(Balance(Account2, 3), 3).
+!ReleasedAt(ServiceFeeCharged(Account1), 0).
+!ReleasedAt(ServiceFeeCharged(Account1), 1).
+!ReleasedAt(ServiceFeeCharged(Account1), 2).
+!ReleasedAt(ServiceFeeCharged(Account1), 3).
+!ReleasedAt(ServiceFeeCharged(Account2), 0).
+!ReleasedAt(ServiceFeeCharged(Account2), 1).
+!ReleasedAt(ServiceFeeCharged(Account2), 2).
+!ReleasedAt(ServiceFeeCharged(Account2), 3).
+BankAccountServiceFee: 1 predicates, 2 functions, 2 fluents, 3 events, 22 axioms
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 3.2s
+solution 0.1s
+total 4.2s
+Discrete Event Calculus Reasoner 1.0

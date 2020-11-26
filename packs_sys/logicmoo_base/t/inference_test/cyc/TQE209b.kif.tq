@@ -1,0 +1,129 @@
+(note TQE209b)
+
+(implies 
+  (opponentsInConflict ?X ?Y ?EVENT) 
+  (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(opponentsInConflict Iran SaudiArabia Y2ScenarioConflict) 
+
+(purposeInEvent Iran Y2ScenarioConflict 
+  (thereExists ?ENDER 
+    (and 
+      (instance ?ENDER EndingAnAgreement) 
+      (objectActedOn ?ENDER Azerbaijan-SaudiAramcoAgreement)))) 
+
+(subProcess Y2ScenarioConflict Y2Stage3-TruckBombingInRiyadh) 
+(geopoliticalSubdivision SaudiArabia CityOfRiyadhSaudiArabia) 
+(inverse geopoliticalSubdivision inRegion) 
+(eventOccursAt Y2Stage3-TruckBombingInRiyadh CityOfRiyadhSaudiArabia) 
+(instance Y2ScenarioConflict ConflictEvent) 
+(instance SaudiArabia IndependentCountry) 
+(opponentsInConflict SaudiArabia Iran Y2ScenarioConflict) 
+
+(existant Y2Stage3-TruckBombingInRiyadh 
+ (DateInSituationFn CalendarDay 38 Y2ScenarioConflict)) 
+
+(instance Iran IndependentCountry) 
+(directingAgent Y2Stage3-TruckBombingInRiyadh Iran) 
+(instance Y2Stage3-TruckBombingInRiyadh TerroristAct) 
+(instance Y2Stage3-TruckBombingInRiyadh TerroristAttack) 
+(deviceUsed Y2Stage3-TruckBombingInRiyadh Y2Stage3-TruckBomb02) 
+(instance Y2Stage3-TruckBomb02 TruckBomb) 
+
+(implies 
+  (and 
+    (instance ?TERROR TerroristAct) 
+    (directingAgent ?TERROR ?SPONSORING-STATE) 
+    (instance ?SPONSORING-STATE IndependentCountry) 
+    (eventOccursAt ?TERROR ?LOCATION) 
+    (inRegion ?LOCATION ?TARGET-COUNTRY) 
+    (instance ?TARGET-COUNTRY IndependentCountry) 
+    (instance ?CONFLICT ConflictEvent) 
+    (opponentsInConflict ?TARGET-COUNTRY ?SPONSORING-STATE ?CONFLICT) 
+    (purposeInEvent ?SPONSORING-STATE ?CONFLICT ?GOAL)) 
+  (increasesCausally ?TERROR ?GOAL likelihood)) 
+
+(purposeInEvent Iran Y2ScenarioConflict 
+  (thereExists ?RENEGOTIATION 
+    (thereExists ?DEAL 
+      (thereExists ?AGREEMENT 
+        (and 
+          (instance ?AGREEMENT Agreement) 
+          (instance ?DEAL MakingAnAgreement) 
+          (instance ?RENEGOTIATION Negotiating) 
+          (negotiators ?RENEGOTIATION SaudiArabia) 
+          (negotiators ?RENEGOTIATION Iran) 
+          (negotiators ?RENEGOTIATION Azerbaijan) 
+          (negotiators ?RENEGOTIATION AIOC) 
+          (negotiators ?RENEGOTIATION SaudiAramco) 
+          (lastSubEvents ?RENEGOTIATION ?DEAL) 
+          (outputsCreated ?DEAL ?AGREEMENT) 
+          (ist ?AGREEMENT 
+            (thereExists ?PIPELINE 
+              (and 
+                (instance ?PIPELINE OilPipeline) 
+                (between ?PIPELINE Iran Azerbaijan))))))))) 
+
+
+(purposeInEvent Iran Y2ScenarioConflict 
+ (powerInRegion-Geopolitical Iran PersianGulfRegion High)) 
+
+(purposeInEvent Iran Y2ScenarioConflict 
+ (not 
+ (powerInRegion-Geopolitical SaudiArabia PersianGulfRegion High))) 
+
+(existant Y2Stage3-TruckBombingInRiyadh 
+ (DateInSituationFn CalendarDay 38 Y2ScenarioConflict)) 
+
+(query (findall ?REWARD-FOR-IRAN
+  (exists 
+    (?ATTACK) 
+    (exists 
+      (?BOMB) 
+      (exists 
+        (?LOCATION) 
+        (and 
+          (instance ?ATTACK TerroristAttack) 
+          (instance ?BOMB TruckBomb) 
+          (subProcess Y2ScenarioConflict ?ATTACK) 
+          (existant?ATTACK 
+            (DateInSituationFn CalendarDay 38 Y2ScenarioConflict)) 
+          (inRegion ?LOCATION SaudiArabia) 
+          (purposeInEvent Iran Y2ScenarioConflict ?REWARD-FOR-IRAN) 
+          (eventOccursAt ?ATTACK ?LOCATION) 
+          (deviceUsed ?ATTACK ?BOMB) 
+          (increasesCausally ?ATTACK ?REWARD-FOR-IRAN likelihood)))))))
+
+(answer (list (thereExists ?ENDER 
+                   (and 
+                       (instance ?ENDER EndingAnAgreement) 
+                       (objectActedOn ?ENDER Azerbaijan-SaudiAramcoAgreement)))))
+                       
+(answer (list (thereExists ?RENEGOTIATION 
+                   (thereExists ?DEAL 
+                       (thereExists ?AGREEMENT 
+                           (and 
+                               (instance ?AGREEMENT Agreement) 
+                               (instance ?DEAL MakingAnAgreement) 
+                               (instance ?RENEGOTIATION Negotiating) 
+                               (negotiators ?RENEGOTIATION SaudiArabia) 
+                               (negotiators ?RENEGOTIATION Iran) 
+                               (negotiators ?RENEGOTIATION Azerbaijan) 
+                               (negotiators ?RENEGOTIATION AIOC) 
+                               (negotiators ?RENEGOTIATION SaudiAramco) 
+                               (lastSubEvents ?RENEGOTIATION ?DEAL) 
+                               (outputsCreated ?DEAL ?AGREEMENT) 
+                               (ist ?AGREEMENT 
+                                   (thereExists ?PIPELINE 
+                                       (and 
+                                           (instance ?PIPELINE OilPipeline) 
+                                           (between ?PIPELINE Iran Azerbaijan)))))))))))
+                                           
+(answer (list (powerInRegion-Geopolitical Iran PersianGulfRegion High))
+
+(answer (list (not 
+                   (powerInRegion-Geopolitical SaudiArabia PersianGulfRegion High))) )
+                   
+(end_of_file)
+
+

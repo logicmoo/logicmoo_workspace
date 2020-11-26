@@ -1,0 +1,33 @@
+[submodule "pack/swish"]
+	path = pack/swish
+	url = https://github.com/logicmoo/swish.git
+[submodule "pack/ClioPatria"]
+	path = pack/ClioPatria
+	url = https://github.com/ClioPatria/ClioPatria
+[submodule "pack/clause_attvars"]
+	path = pack/clause_attvars
+	url = https://github.com/TeamSPoon/clause_attvars.git
+[submodule "pack/predicate_streams"]
+	path = pack/predicate_streams
+	url = https://github.com/TeamSPoon/predicate_streams.git
+[submodule "pack/dictoo"]
+	path = pack/dictoo
+	url = https://github.com/TeamSPoon/dictoo.git
+[submodule "pack/must_trace"]
+	path = pack/must_trace
+	url = https://github.com/TeamSPoon/must_trace.git
+[submodule "pack/gvar_syntax"]
+	path = pack/gvar_syntax
+	url = https://github.com/TeamSPoon/gvar_syntax.git
+[submodule "pack/no_repeats"]
+	path = pack/no_repeats
+	url = https://github.com/TeamSPoon/no_repeats.git
+[submodule "pack/xlisting"]
+	path = pack/xlisting
+	url = https://github.com/TeamSPoon/xlisting.git
+[submodule "pack/each_call_cleanup"]
+	path = pack/each_call_cleanup
+	url = https://github.com/TeamSPoon/each_call_cleanup.git
+[submodule "pack/with_thread_local"]
+	path = pack/with_thread_local
+	url = https://github.com/TeamSPoon/with_thread_local.git

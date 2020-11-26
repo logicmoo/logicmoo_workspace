@@ -1,0 +1,4 @@
+:- expects_dialect(swi).
+:- use_module(library(pfc)).
+
+cg(CG)==> test123(CG).

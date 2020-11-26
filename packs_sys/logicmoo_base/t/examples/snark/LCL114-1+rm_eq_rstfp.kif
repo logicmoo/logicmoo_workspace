@@ -1,0 +1,53 @@
+;--------------------------------------------------------------------------
+; File     : LCL114-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Logic Calculi (Many valued sentential)
+; Problem  : MV-36 depnds on the Merideth system
+; Version  : [McC92] axioms.
+; English  : An axiomatisation of the many valued sentential calculus 
+;            is {MV-1,MV-2,MV-3,MV-5} by Meredith. Show that 36 depends 
+;            on the Meredith system.
+
+; Refs     : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [MW92]  McCune & Wos (1992), Experiments in Automated Deductio
+;          : [McC92] McCune (1992), Email to G. Sutcliffe
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+; Source   : [McC92]
+; Names    : CADE-11 Competition 7 [Ove90]
+;          : MV-60 [MW92]
+;          : THEOREM 7 [LM93]
+
+; Status   : unsatisfiable
+; Rating   : 0.89 v2.1.0, 0.88 v2.0.0
+; Syntax   : Number of clauses    :    6 (   0 non-Horn;   5 unit;   2 RR)
+;            Number of literals   :    8 (   0 equality)
+;            Maximal clause size  :    3 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 1-1 arity)
+;            Number of functors   :    4 (   2 constant; 0-2 arity)
+;            Number of variables  :   11 (   1 singleton)
+;            Maximal term depth   :    4 (   2 average)
+
+; Comments : 
+;          : tptp2X -f kif -t rm_equality:rstfp LCL114-1.p 
+;--------------------------------------------------------------------------
+; condensed_detachment, axiom.
+(or (not (is_a_theorem (implies ?A ?B)))
+    (not (is_a_theorem ?A))
+    (is_a_theorem ?B))
+
+; mv_1, axiom.
+(or (is_a_theorem (implies ?A (implies ?B ?A))))
+
+; mv_2, axiom.
+(or (is_a_theorem (implies (implies ?A ?B) (implies (implies ?B ?C) (implies ?A ?C)))))
+
+; mv_3, axiom.
+(or (is_a_theorem (implies (implies (implies ?A ?B) ?B) (implies (implies ?B ?A) ?A))))
+
+; mv_5, axiom.
+(or (is_a_theorem (implies (implies (not ?A) (not ?B)) (implies ?B ?A))))
+
+; prove_mv_36, conjecture.
+(or (not (is_a_theorem (implies (implies a b) (implies (not b) (not a))))))
+
+;--------------------------------------------------------------------------

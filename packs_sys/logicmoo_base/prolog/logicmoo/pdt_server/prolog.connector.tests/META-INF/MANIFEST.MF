@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Prolog Connector Tests
+Bundle-SymbolicName: org.cs3.prolog.connector.tests;singleton:=true
+Bundle-Version: 3.0.1.qualifier
+Require-Bundle: org.cs3.prolog.connector, org.junit
+Export-Package: org.cs3.prolog.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -1,0 +1,24 @@
+(note TQC24-b)
+
+(importFromAmountDuring Italy Petroleum-CrudeOil Libya 
+ (YearFn 1996) 
+ (BarrelsPerDay 580000)) 
+
+
+
+(query (findall ( ?HIGHEST-AMOUNT ?WHEN ?COUNTRY  )
+
+ (and 
+ (nthLargestElement ?COUNTRY 1 WesternEuropeanCountry 
+ (FunctionToArg 2 
+ (Kappa 
+ (?IMPORTER ?AMOUNT) 
+ (thereExists ?TIME 
+ (and 
+ (instance ?AMOUNT FlowRate) 
+ (importFromAmountDuring ?IMPORTER Petroleum-CrudeOil Libya ?TIME ?AMOUNT)))))) 
+ (importFromAmountDuring ?COUNTRY Petroleum-CrudeOil Libya ?WHEN ?HIGHEST-AMOUNT))))
+
+(answer 580000 1996 Italy)  
+
+(end_of_file)

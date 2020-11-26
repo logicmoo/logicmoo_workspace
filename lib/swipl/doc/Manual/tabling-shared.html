@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.9</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-monotonic.html">
+<link rel="next" href="tabling-restraints.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-monotonic.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling-restraints.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-shared"><a id="sec:7.9"><span class="sec-nr">7.9</span> <span class="sec-title">Shared 
+tabling</span></a></h2>
+
+<a id="sec:tabling-shared"></a>
+
+<p>Tables can both be <em>private</em> to a thread or <em>shared</em> 
+between all threads. Private tables are used only by the calling threads 
+and are discarded as the thread terminates. Shared tables are used by 
+all threads and can only be discarded explicitly. Tables are declared as 
+shared using, e.g.,
+
+<pre class="code">
+:- table (p/1, q/2) as shared.
+</pre>
+
+<p>A thread may find a table for a particular variant of a shared tabled 
+predicate in any of the following states:
+
+<dl class="latex">
+<dt><b>Complete</b></dt>
+<dd>
+If the table is complete we can simply use its answers.
+</dd>
+<dt><b>Fresh/non-existent</b></dt>
+<dd>
+If the table is still fresh, claim ownership for it and start filling 
+the table. When completed, the ownership relation is terminated.
+</dd>
+<dt><b>Incomplete</b></dt>
+<dd>
+If the table is incomplete and owned by the calling thread, simply 
+continue. If it is owned by another thread we <em>wait</em> for the 
+table
+<em>unless there is a cycle of threads waiting for each others table</em>. 
+The latter situation would cause a deadlock and therefore we raise a
+<code>deadlock</code> exception. This exception causes the current SCC 
+to be abandoned and gives other threads the opportunity to claim 
+ownership of the tables that were owned by this thread. The thread that 
+raised the exception and abandoned the SCC simply restarts the leader 
+goal of the SCC. As other threads now have claimed more variants of the 
+SCC it will, in most cases, wait for these threads instead of creating a 
+new deadlock.
+</dd>
+</dl>
+
+<p>A thread that waits for a table may be faced with three results. If 
+the table is complete it can use the answers. It is also possible that 
+the thread that was filling the table raised an exception (either a
+<code>deadlock</code> or any other exception), in which case we find a
+<em>fresh</em> table for which we will try to claim ownership. Finally, 
+some thread may have abolished the table. This situation is the same as 
+when the owning thread raised an exception.
+
+<p><h3 id="sec:tabling-shared-abolish"><a id="sec:7.9.1"><span class="sec-nr">7.9.1</span> <span class="sec-title">Abolishing 
+shared tables</span></a></h3>
+
+<a id="sec:tabling-shared-abolish"></a>
+
+<p>This section briefly explains the interaction between deleting shared 
+tables and running threads. The core rule is that <em>abolishing a 
+shared table has no effect on the semantics of the tabled predicates.</em> 
+An attempt to abolish an incomplete table results in the table to be 
+marked for destruction on completion. The thread that is completing the 
+table continues to do so and continues execution with the computed table 
+answers. Any other thread blocks, waiting for the table to complete. 
+Once completed, the table is destroyed and the waiting threads see a
+<em>fresh</em> table<sup class="fn">168<span class="fn-text">Future 
+versions may avoid waiting by converting the abolished shared table to a 
+private table.</span></sup>.
+
+<p>The current implementation never reclaims shared tables. Instead, 
+they remain part of the global variant table and only the answers of the 
+shared table are reclaimed. Future versions may garbage collect such 
+tables. See also <a id="idx:abolishsharedtables0:2019"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>.
+
+<p><h3 id="sec:tabling-shared-status"><a id="sec:7.9.2"><span class="sec-nr">7.9.2</span> <span class="sec-title">Status 
+and future of shared tabling</span></a></h3>
+
+<a id="sec:tabling-shared-status"></a>
+
+<p>Currently, shared tabling has many restrictions. The implementation 
+does not verify that the limitations are met and violating these 
+restrictions may cause incorrect results or crashes. Future versions are 
+expected to resolve these issues.
+
+<p>
+<ul class="latex">
+<li>Shared tabling currently only handles the basic scenario and cannot 
+yet deal with well formed semantics or incremental tabling.
+<li>As described in <a class="sec" href="tabling-shared.html#sec:7.9.1">section 
+7.9.1</a>, abolishing shared tables may cause unnecessary waiting for 
+threads to complete the table.
+<li>Only the answers of shared tables can be reclaimed, not the answer 
+table itself.
+</ul>
+
+<p>SWI-Prolog's <em>continuation based</em> tabling offers the 
+opportunity to perform <em>completion</em> using multiple threads.
+
+<p></body></html>

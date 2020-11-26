@@ -1,0 +1,31 @@
+(note TQD76)
+
+(officialArmedForces Iran RevolutionaryGuard-Iran) 
+
+(agent HYP-NavalAttack-106 RevolutionaryGuard-Iran) 
+
+(instance HYP-NavalAttack-106 MilitaryOperation) 
+
+(thereExists ?X (and 
+(instrument-Generic #$HYP-NavalAttack-106 
+ ?X ) 
+
+(instance 
+ ?X Mine-Weapon) )) 
+
+(query (findall ?SPEC-FORCE
+ (and 
+   (instance ?SPEC-FORCE MilitarySpecialForce) 
+   (officialArmedForces Iran ?SPEC-FORCE) 
+   (thereExists ?OBJ 
+       (thereExists ?ACT 
+           (and 
+               (instance ?ACT MilitaryOperation) 
+               (instrument-Generic ?ACT ?OBJ) 
+               (instance ?OBJ Mine-Weapon) 
+               (agent ?ACT ?SPEC-FORCE)))))))
+
+(answer RevolutionaryGuard-Iran)
+
+(end_of_file)
+

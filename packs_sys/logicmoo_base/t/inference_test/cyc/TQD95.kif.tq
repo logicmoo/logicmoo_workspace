@@ -1,0 +1,193 @@
+(note TQD95)
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+ (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0)) 
+
+(relationInstanceExistsCount possesses Kuwait WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance Kuwait IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Kuwait) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(instance Iran IntelligentAgent) 
+
+(implies 
+  (and 
+    (subclass ?TYPE1 ?TYPE2) 
+    (relationInstanceExistsMany possesses ?AGT ?TYPE1)) 
+  (relationInstanceExistsMany possesses ?AGT ?TYPE2)) 
+
+(not 
+ (relationInstanceExistsMany possesses Kuwait WeaponOfMassDestruction)) 
+
+(not 
+  (relationInstanceExistsMany possesses Kuwait 
+    (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(minimizeExtent relationInstanceExistsMany) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+ (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0)) 
+
+(relationInstanceExistsCount possesses Qatar WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance Qatar IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Qatar) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(implies 
+  (and 
+    (instance ?AGT1 IntelligentAgent) 
+    (instance ?AGT2 IntelligentAgent) 
+    (instance ?TYPE MilitaryWeaponTypeByFunction) 
+    (relationInstanceExistsMany possesses ?AGT1 ?TYPE)) 
+  (or 
+    (subclass ?TYPE ProjectileWeapon) 
+    (asymmetricMenaceWRT ?AGT1 ?AGT2 ?TYPE) 
+    (relationInstanceExistsMany possesses ?AGT2 ?TYPE) 
+    (relationInstanceExistsMany possesses ?AGT2 (AntiWeaponTypeFn ?TYPE))))
+
+(not 
+ (relationInstanceExistsMany possesses Qatar WeaponOfMassDestruction)) 
+
+(not 
+  (relationInstanceExistsMany possesses Qatar 
+    (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(minimizeExtent relationInstanceExistsMany) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+ (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0)) 
+
+
+(relationInstanceExistsCount possesses UnitedArabEmirates WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance UnitedArabEmirates IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil UnitedArabEmirates) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(not 
+ (relationInstanceExistsMany possesses UnitedArabEmirates WeaponOfMassDestruction)) 
+
+(not 
+  (relationInstanceExistsMany possesses UnitedArabEmirates 
+    (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(not 
+ (subclass WeaponOfMassDestruction ProjectileWeapon)) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+ (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0)) 
+
+(not 
+  (and 
+    (relationInstanceExistsMany ?SLOT ?INST ?COL) 
+    (relationInstanceExistsCount ?SLOT ?INST ?COL 0))) 
+
+(relationInstanceExistsCount possesses Oman WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance Oman IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Oman) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(not 
+ (relationInstanceExistsMany possesses Oman WeaponOfMassDestruction)) 
+
+(not 
+ (relationInstanceExistsMany possesses Oman 
+ (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(implies 
+  (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+  (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0))
+
+
+(relationInstanceExistsCount possesses Bahrain WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance Bahrain IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(not 
+ (relationInstanceExistsMany possesses Bahrain WeaponOfMassDestruction)) 
+
+(not 
+ (relationInstanceExistsMany possesses Bahrain 
+ (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(minimizeExtent relationInstanceExistsMany) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY) 
+ (relationInstanceExistsCount possesses ?COUNTRY WeaponOfMassDestruction 0)) 
+
+
+(relationInstanceExistsCount possesses SaudiArabia WeaponOfMassDestruction 0) 
+
+(relationInstanceExistsMany possesses Iran ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+(instance SaudiArabia IntelligentAgent) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil SaudiArabia) 
+
+(instance WeaponOfMassDestruction MilitaryWeaponTypeByFunction) 
+
+(not 
+ (relationInstanceExistsMany possesses SaudiArabia WeaponOfMassDestruction)) 
+
+(not 
+ (relationInstanceExistsMany possesses SaudiArabia 
+ (AntiWeaponTypeFn WeaponOfMassDestruction))) 
+
+(not 
+ (subclass WeaponOfMassDestruction ProjectileWeapon)) 
+
+(query (findall ?COUNTRY
+ (and 
+   (asymmetricMenaceWRT Iran ?COUNTRY WeaponOfMassDestruction) 
+   (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY))))
+
+(answer Kuwait)
+(answer Qatar)
+(answer UnitedArabEmirates)
+(answer Oman)
+(answer Bahrain)
+(answer SaudiArabia)
+(end_of_file)
+

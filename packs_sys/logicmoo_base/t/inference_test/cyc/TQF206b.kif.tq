@@ -1,0 +1,84 @@
+(note TQF206b)
+
+(subProcess CPCNegotiationsForOilPipeline CPCMembersReachFinalAgreement) 
+
+(instance CPCNegotiationsForOilPipeline Process) 
+
+(subProcess CPCNegotiationsForOilPipeline CPCAndChevronReachAnAgreement) 
+
+(ist CPCFinalAgreement 
+ (thereExists ?CONSTRUCTION 
+ (instance ?CONSTRUCTION 
+ (MakingFn OilPipeline)))) 
+
+(agent CPCAndChevronReachAnAgreement ChevronCorporation) 
+(postEvents CPCAndChevronReachAnAgreement CPCMembersReachFinalAgreement) 
+(instance CPCAndChevronReachAnAgreement MakingAnAgreement) 
+(instance CPCFinalAgreement Agreement) 
+(outputsCreated CPCMembersReachFinalAgreement CPCFinalAgreement) 
+(affectedAgent-Direct CPCMembersReachFinalAgreement Kazakhstan) 
+(instance CPCMembersReachFinalAgreement MakingAnAgreement) 
+(subProcess CPCNegotiationsForOilPipeline CPCMembersReachFinalAgreement) 
+(instance CPCNegotiationsForOilPipeline Process) 
+(subProcess CPCNegotiationsForOilPipeline CPCAndChevronReachAnAgreement) 
+
+(ist CPCFinalAgreement 
+ (thereExists ?CONSTRUCTION 
+ (instance ?CONSTRUCTION 
+ (MakingFn OilPipeline)))) 
+
+(agent CPCAndChevronReachAnAgreement ChevronCorporation) 
+(postEvents CPCAndChevronReachAnAgreement CPCMembersReachFinalAgreement) 
+(instance CPCAndChevronReachAnAgreement MakingAnAgreement) 
+(instance CPCFinalAgreement Agreement) 
+(outputsCreated CPCMembersReachFinalAgreement CPCFinalAgreement) 
+(affectedAgent-Direct CPCMembersReachFinalAgreement Russia) 
+(instance CPCMembersReachFinalAgreement MakingAnAgreement) 
+(subProcess CPCNegotiationsForOilPipeline CPCMembersReachFinalAgreement) 
+(instance CPCNegotiationsForOilPipeline Process) 
+(subProcess CPCNegotiationsForOilPipeline CPCAndChevronReachAnAgreement) 
+
+(ist CPCFinalAgreement 
+ (thereExists ?CONSTRUCTION 
+ (instance ?CONSTRUCTION 
+ (MakingFn OilPipeline)))) 
+
+(affectedAgent-Direct CPCMembersReachFinalAgreement Oman) 
+(affectedAgent-Direct CPCMembersReachFinalAgreement CaspianPipelineConsortium) 
+(lastSubEvents CPCNegotiationsForOilPipeline CPCMembersReachFinalAgreement) 
+(agent CPCMembersReachFinalAgreement Kazakhstan) 
+(agent CPCMembersReachFinalAgreement CaspianPipelineConsortium) 
+(agent CPCMembersReachFinalAgreement Oman) 
+(agent CPCMembersReachFinalAgreement Russia) 
+(agent CPCMembersReachFinalAgreement Kazakhstan) 
+
+(query  (findall ?BENEFICIARY (ist CaspianPipelineConsortiumMt 
+   (thereExists ?EVENT 
+       (thereExists ?AGREEING 
+           (thereExists ?POST-AGREEING 
+               (thereExists ?AGREEMENT 
+                   (and 
+                       (instance ?EVENT Process) 
+                       (instance ?AGREEING MakingAnAgreement) 
+                       (instance ?POST-AGREEING MakingAnAgreement) 
+                       (instance ?AGREEMENT Agreement) 
+                       (subProcess ?EVENT ?AGREEING) 
+                       (subProcess ?EVENT ?POST-AGREEING) 
+                       (postEvents ?AGREEING ?POST-AGREEING) 
+                       (agent ?AGREEING ChevronCorporation) 
+                       (outputsCreated ?POST-AGREEING ?AGREEMENT) 
+                       (ist ?AGREEMENT 
+                           (thereExists ?CONSTRUCTION 
+                               (instance ?CONSTRUCTION 
+                                   (MakingFn OilPipeline)))) 
+                       (affectedAgent-Direct ?POST-AGREEING ?BENEFICIARY)))))))))
+
+
+(answer Kazakhstan)
+(answer Oman)
+(answer Russia)
+(answer CaspianPipelineConsortium)
+
+(end_of_file)
+
+

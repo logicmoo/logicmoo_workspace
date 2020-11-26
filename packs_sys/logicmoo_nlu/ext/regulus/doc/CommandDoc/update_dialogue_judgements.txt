@@ -1,0 +1,7 @@
+Update the dialogue judgements file, defined by the
+dialogue\_\-corpus\_\-judgements config file entry, from the output of the
+default text dialogue corpus output file, defined by the
+dialogue\_\-corpus\_\-results config file entry. This command should be used
+after editing the output file produced by the BATCH\_\-DIALOGUE
+command. Editing should replace question marks by valid judgements,
+currently 'good', or 'bad'.

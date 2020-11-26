@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 5.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="string.html">
+<link rel="next" href="bidicts.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="string.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="bidicts.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:ext-syntax"><a id="sec:5.3"><span class="sec-nr">5.3</span> <span class="sec-title">Syntax 
+changes</span></a></h2>
+
+<a id="sec:ext-syntax"></a>
+
+<p><h3 id="sec:ext-syntax-op"><a id="sec:5.3.1"><span class="sec-nr">5.3.1</span> <span class="sec-title">Operators 
+and quoted atoms</span></a></h3>
+
+<a id="sec:ext-syntax-op"></a>
+
+<p>As of SWI-Prolog version&nbsp;7, quoted atoms lose their operator 
+property. This means that expressions such as <code>A = 'dynamic'/1</code> 
+are valid syntax, regardless of the operator definitions. From questions 
+on the mailinglist this is what people expect.<sup class="fn">156<span class="fn-text">We 
+believe that most users expect an operator declaration to define a new 
+token, which would explain why the operator name is often quoted in the 
+declaration, but not while the operator is used. We are afraid that 
+allowing for this easily creates ambiguous syntax. Also, many 
+development environments are based on tokenization. Having dynamic 
+tokenization due to operator declarations would make it hard to support 
+Prolog in such editors.</span></sup> To accommodate for real quoted 
+operators, a quoted atom that <em>needs</em> quotes can still act as an 
+operator.<sup class="fn">157<span class="fn-text">Suggested by Joachim 
+Schimpf.</span></sup> A good use-case for this is a unit library<sup class="fn">158<span class="fn-text"><a class="url" href="https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ">https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ</a></span></sup>, 
+which allows for expressions such as below.
+
+<pre class="code">
+?- Y isu 600kcal - 1h*200'W'.
+Y = 1790400.0'J'.
+</pre>
+
+<p><h3 id="sec:ext-compound-zero"><a id="sec:5.3.2"><span class="sec-nr">5.3.2</span> <span class="sec-title">Compound 
+terms with zero arguments</span></a></h3>
+
+<a id="sec:ext-compound-zero"></a>
+
+<p>As of SWI-Prolog version&nbsp;7, the system supports compound terms 
+that have no arguments. This implies that e.g., <code>name()</code> is 
+valid syntax. This extension aims at functions on dicts (see <a class="sec" href="bidicts.html#sec:5.4">section 
+5.4</a>) as well as the implementation of domain specific languages 
+(DSLs). To minimise the consequences, the classic predicates <a id="idx:functor3:1832"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+and <a class="pred" href="manipterm.html#=../2">=../2</a> have not been 
+modified. The predicates <a id="idx:compoundnamearity3:1833"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+and
+<a id="idx:compoundnamearguments3:1834"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+have been added. These predicates operate only on compound terms and 
+behave consistently for compounds with zero arguments. Code that <em>generalises</em> 
+a term using the sequence below should generally be changed to use <a id="idx:compoundnamearity3:1835"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.
+
+<pre class="code">
+    ...,
+    functor(Specific, Name, Arity),
+    functor(General, Name, Arity),
+    ...,
+</pre>
+
+<p>Replacement of <a class="pred" href="manipterm.html#=../2">=../2</a> 
+by <a id="idx:compoundnamearguments3:1836"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+is typically needed to deal with code that follow the skeleton below.
+
+<pre class="code">
+    ...,
+    Term0 =.. [Name|Args0],
+    maplist(convert, Args0, Args),
+    Term =.. [Name|Args],
+    ...,
+</pre>
+
+<p>For predicates, goals and arithmetic functions (evaluable terms), &lt;<var>name</var>&gt; 
+and &lt;<var>name</var>&gt;() are <em>equivalent</em>. Below are some 
+examples that illustrate this behaviour.
+
+<pre class="code">
+go() :- format('Hello world~n').
+
+?- go().
+Hello world
+
+?- go.
+Hello world
+
+?- Pi is pi().
+Pi = 3.141592653589793.
+
+?- Pi is pi.
+Pi = 3.141592653589793.
+</pre>
+
+<p>Note that the <em>canonical</em> representation of predicate heads 
+and functions without arguments is an atom. Thus, <code>clause(go(), 
+Body)</code> returns the clauses for go/0 , but <code>clause(-Head, 
+-Body, +Ref)</code> unifies <var>Head</var> with an atom if the clause 
+specified by
+<var>Ref</var> is part of a predicate with zero arguments.
+
+<p><h3 id="sec:ext-blockop"><a id="sec:5.3.3"><span class="sec-nr">5.3.3</span> <span class="sec-title">Block 
+operators</span></a></h3>
+
+<a id="sec:ext-blockop"></a>
+
+<p>Introducing curly bracket and array subscripting.<sup class="fn">159<span class="fn-text">Introducing 
+block operators was proposed by Jose Morales. It was discussed in the 
+Prolog standardization mailing list, but there were too many conflicts 
+with existing extensions (ECLiPSe and B-Prolog) and doubt about their 
+need to reach an agreement. Increasing need to get to some solution 
+resulted in what is documented in this section. These extensions are 
+also implemented in recent versions of YAP.</span></sup> The symbols <code>[]</code> 
+and
+<code>{}</code> may be declared as an operator, which has the following 
+effect:
+
+<dl class="latex">
+<dt><strong>[&nbsp;]</strong></dt>
+<dd class="defbody">
+This operator is typically declared as a low-priority <code>yf</code> 
+postfix operator, which allows for <code>array[index]</code> notation. 
+This syntax produces a term <code>[]([index],array)</code>.</dd>
+<dt><strong>{&nbsp;}</strong></dt>
+<dd class="defbody">
+This operator is typically declared as a low-priority <code>xf</code> 
+postfix operator, which allows for <code>head(arg) { body }</code> 
+notation. This syntax produces a term <code>{}({body},head(arg))</code>.
+</dd>
+</dl>
+
+<p>Below is an example that illustrates the representation of a typical&lsquo;curly 
+bracket language' in Prolog.
+
+<pre class="code">
+?- op(100, xf, {}).
+?- op(100, yf, []).
+?- op(1100, yf, ;).
+
+?- displayq(func(arg)
+            { a[10] = 5;
+              update();
+            }).
+{}({;(=([]([10],a),5),;(update()))},func(arg))
+</pre>
+
+<p></body></html>

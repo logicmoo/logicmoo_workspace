@@ -1,0 +1,23 @@
+(note TQC124)
+(abort)
+
+(instance OrganizationForTheProhibitionOfChemicalWeapons InternationalOrganizationOfCountries) 
+(instance OrganizationForTheProhibitionOfChemicalWeapons InternationalOrganizationOfCountries) 
+(comment OrganizationForTheProhibitionOfChemicalWeapons "An instance of InternationalOrganization. It is the executive body of the Conventional Weapons Convention that is responsible for achieving the object and purpose of the Convention, ensuring the implementation of its  provisions, and providing a forum for consultation and       cooperation among States Parties. See their web page at http://www.opcw.nl/.") 
+(not (quotedCollection InternationalOrganizationOfCountries)) 
+(completeExtentKnown quotedCollection) 
+(instance OrganizationForTheProhibitionOfChemicalWeapons InternationalOrganization) 
+(instance OrganizationForTheProhibitionOfChemicalWeapons InternationalOrganization) 
+(not (quotedCollection InternationalOrganization)) 
+(completeExtentKnown quotedCollection) 
+
+(query (findall (?CLASS ?COMMENT)
+  (and 
+    (instance OrganizationForTheProhibitionOfChemicalWeapons ?CLASS) 
+    (not (quotedCollection ?CLASS)) 
+    (assertedFormula (instance OrganizationForTheProhibitionOfChemicalWeapons ?CLASS)) 
+  (comment OrganizationForTheProhibitionOfChemicalWeapons ?COMMENT))))
+
+(answer InternationalOrganizationOfCountries "An instance of InternationalOrganization. It is the executive body of the Conventional Weapons Convention that is responsible for achieving the object and purpose of the Convention, ensuring the implementation of its  provisions, and providing a forum for consultation and cooperation among States Parties. See their web page at http://www.opcw.nl/.") 
+
+(end_of_file)

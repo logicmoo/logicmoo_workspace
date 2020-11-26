@@ -1,0 +1,9 @@
+10,-,LOG,STATUS,0,2003/08/13 19:08:18.109,Cantor,recserver,952,RS,AppOutput,32,Loading recognition packages...
+10,-,LOG,STATUS,0,2003/08/13 19:08:26.541,Cantor,recserver,952,RS,AppOutput,33,All recognition packages loaded.
+10,-,LOG,STATUS,0,2003/08/13 19:08:26.541,Cantor,recserver,952,RS,AppOutput,52,Recserver ready to accept connections on port 8200
+
+10,-,LOG,STATUS,0,2003/08/13 19:08:26.571,Cantor,recserver,952,RS,AppOutput,19,Client 0 connected
+10,82f13599_00000768_3f3a7088_0001_0000,LOG,ERROR,0,2003/08/13 19:08:26.571,Cantor,recserver,1936,RS,ClientDesc,20,0: Version Mismatch
+10,82f13599_00000768_3f3a7088_0001_0000,LOG,ERROR,0,2003/08/13 19:08:26.642,Cantor,recserver,952,RS,ClientDesc,35,0: Error Occurred, Shutting Down
+
+

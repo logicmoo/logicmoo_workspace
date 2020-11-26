@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.21</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="termrw.html">
+<link rel="next" href="manipatom.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="termrw.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="manipatom.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:manipterm"><a id="sec:4.21"><span class="sec-nr">4.21</span> <span class="sec-title">Analysing 
+and Constructing Terms</span></a></h2>
+
+<a id="sec:manipterm"></a>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="functor/3"><strong>functor</strong>(<var>?Term, 
+?Name, ?Arity</var>)</a></dt>
+<dd class="defbody">
+True when <var>Term</var> is a term with functor <var>Name</var>/<var>Arity</var>. 
+If
+<var>Term</var> is a variable it is unified with a new term whose 
+arguments are all different variables (such a term is called a 
+skeleton). If <var>Term</var> is atomic, <var>Arity</var> will be 
+unified with the integer 0, and <var>Name</var> will be unified with <var>Term</var>. 
+Raises <code>instantiation_error()</code> if <var>Term</var> is unbound 
+and <var>Name</var>/<var>Arity</var> is insufficiently instantiated.
+
+<p>SWI-Prolog also supports terms with arity 0, as in <code>a()</code> 
+(see
+<a class="sec" href="extensions.html#sec:5">section 5</a>). Such terms 
+must be processed using
+<a id="idx:compoundnamearity3:1377"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>. 
+The predicate <a id="idx:functor3:1378"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+and <a class="pred" href="manipterm.html#=../2">=../2</a> raise a <code>domain_error</code> 
+when faced with these terms. Without this precaution a <em>round trip</em> 
+of a term with arity 0 over <a id="idx:functor3:1379"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+would create an atom.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="arg/3"><strong>arg</strong>(<var>?Arg, 
++Term, ?Value</var>)</a></dt>
+<dd class="defbody">
+<var>Term</var> should be instantiated to a term, <var>Arg</var> to an 
+integer between 1 and the arity of <var>Term</var>. <var>Value</var> is 
+unified with the
+<var>Arg</var>-th argument of <var>Term</var>. <var>Arg</var> may also 
+be unbound. In this case <var>Value</var> will be unified with the 
+successive arguments of the term. On successful unification, <var>Arg</var> 
+is unified with the argument number. Backtracking yields alternative 
+solutions.<sup class="fn">105<span class="fn-text">The instantiation 
+pattern (-, +, ?) is an extension to&lsquo;standard' Prolog. Some 
+systems provide genarg/3 that covers this pattern.</span></sup> The 
+predicate <a id="idx:arg3:1380"></a><a class="pred" href="manipterm.html#arg/3">arg/3</a> 
+fails silently if <var><var>Arg</var> = 0</var> or
+<var><var>Arg</var> &gt; <em>arity</em></var> and raises the exception
+<code>domain_error(not_less_than_zero, <var>Arg</var>)</code> if <var><var>Arg</var> 
+&lt; 0</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="=../2"><var>?Term</var> <strong>=..</strong> <var>?List</var></a></dt>
+<dd class="defbody">
+<var>List</var> is a list whose head is the functor of <var>Term</var> 
+and the remaining arguments are the arguments of the term. Either side 
+of the predicate may be a variable, but not both. This predicate is 
+called&lsquo;Univ'.
+
+<pre class="code">
+?- foo(hello, X) =.. List.
+List = [foo, hello, X]
+
+?- Term =.. [baz, foo(1)].
+Term = baz(foo(1))
+</pre>
+
+<p>SWI-Prolog also supports terms with arity 0, as in <code>a()</code> 
+(see
+<a class="sec" href="extensions.html#sec:5">section 5</a>). Such terms 
+must be processed using
+<a id="idx:compoundnamearguments3:1381"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>. 
+This predicate raises a domain error as shown below. See also <a id="idx:functor3:1382"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>.
+
+<pre class="code">
+?- a() =.. L.
+ERROR: Domain error: `compound_non_zero_arity' expected, found `a()'
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="compound_name_arity/3"><strong>compound_name_arity</strong>(<var>?Compound, 
+?Name, ?Arity</var>)</a></dt>
+<dd class="defbody">
+Rationalized version of <a id="idx:functor3:1383"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+that only works for compound terms and can examine and create compound 
+terms with zero arguments (e.g,
+<code>name()</code>). See also <a id="idx:compoundnamearguments3:1384"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.</dd>
+<dt class="pubdef"><a id="compound_name_arguments/3"><strong>compound_name_arguments</strong>(<var>?Compound, 
+?Name, ?Arguments</var>)</a></dt>
+<dd class="defbody">
+Rationalized version of <a class="pred" href="manipterm.html#=../2">=../2</a> 
+that can compose and decompose compound terms with zero arguments. See 
+also <a id="idx:compoundnamearity3:1385"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.</dd>
+<dt class="pubdef"><a id="numbervars/3"><strong>numbervars</strong>(<var>+Term, 
++Start, -End</var>)</a></dt>
+<dd class="defbody">
+Unify the free variables in <var>Term</var> with a term <code>$VAR(N)</code>, 
+where <var>N</var> is the number of the variable. Counting starts at
+<var>Start</var>. <var>End</var> is unified with the number that should 
+be given to the next variable.<sup class="fn">bug<span class="fn-text">Only <em>tagged 
+integers</em> are supported (see the Prolog flag <a class="flag" href="flags.html#flag:max_tagged_integer">max_tagged_integer</a>). 
+This suffices to count all variables that can appear in the largest term 
+that can be represented, but does not support arbitrary large integer 
+values for <var>Start</var>. On overflow, a <code>representation_error(tagged_integer)</code> 
+exception is raised.</span></sup> The example below illustrates this. 
+Note that the toplevel prints <code>'$VAR'(0)</code> as <var>A</var> due 
+to the
+<code>numbervars(true)</code> option used to print answers.
+
+<pre class="code">
+?- Term = f(X,Y,X),
+   numbervars(Term, 0, End),
+   write_canonical(Term), nl.
+f('$VAR'(0),'$VAR'(1),'$VAR'(0))
+Term = f(A, B, A),
+X = A,
+Y = B,
+End = 2.
+</pre>
+
+<p>See also the <code>numbervars</code> option to <a id="idx:writeterm3:1386"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a> 
+and <a id="idx:numbervars4:1387"></a><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a>.</dd>
+<dt class="pubdef"><a id="numbervars/4"><strong>numbervars</strong>(<var>+Term, 
++Start, -End, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:numbervars3:1388"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a>, 
+providing the following options:
+
+<dl class="latex">
+<dt><strong>functor_name</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Name of the functor to use instead of <code>$VAR</code>.</dd>
+<dt><strong>attvar</strong>(<var>+Action</var>)</dt>
+<dd class="defbody">
+What to do if an attributed variable is encountered. Options are
+<code>skip</code>, which causes <a id="idx:numbervars3:1389"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a> 
+to ignore the attributed variable, <code>bind</code> which causes it to 
+treat it as a normal variable and assign the next <code>'$VAR'</code>(N) 
+term to it, or (default)
+<code>error</code> which raises a <code>type_error</code> exception.<sup class="fn">106<span class="fn-text">This 
+behaviour was decided after a long discussion between David Reitter, 
+Richard O'Keefe, Bart Demoen and Tom Schrijvers.</span></sup></dd>
+<dt><strong>singletons</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), <a id="idx:numbervars4:1390"></a><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a> 
+does singleton detection. Singleton variables are unified with <code>'$VAR'('_')</code>, 
+causing them to be printed as <code>_</code> by <a id="idx:writeterm2:1391"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+using the numbervars option. This option is exploited by <a id="idx:portrayclause2:1392"></a><a class="pred" href="listing.html#portray_clause/2">portray_clause/2</a> 
+and <a id="idx:writecanonical2:1393"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a>.<sup class="fn">bug<span class="fn-text">Currently 
+this option is ignored for cyclic terms.</span></sup>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="var_number/2"><strong>var_number</strong>(<var>@Term, 
+-VarNumber</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is numbered by <a id="idx:numbervars3:1394"></a><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a> 
+and <var>VarNumber</var> is the number given to this variable. This 
+predicate avoids the need for unification with <code>'$VAR'(X)</code> 
+and opens the path for replacing this valid Prolog term by an internal 
+representation that has no textual equivalent.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="term_variables/2"><strong>term_variables</strong>(<var>+Term, 
+-List</var>)</a></dt>
+<dd class="defbody">
+Unify <var>List</var> with a list of variables, each sharing with a 
+unique variable of <var>Term</var>.<sup class="fn">107<span class="fn-text">This 
+predicate used to be called free_variables/2 . The name <a id="idx:termvariables2:1395"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a> 
+is more widely used. The old predicate is still available from the 
+library <code>library(backcomp)</code>.</span></sup> The variables in <var>List</var> 
+are ordered in order of appearance traversing <var>Term</var> 
+depth-first and left-to-right. See also
+<a id="idx:termvariables3:1396"></a><a class="pred" href="manipterm.html#term_variables/3">term_variables/3</a> 
+and <a id="idx:nonground2:1397"></a><a class="pred" href="manipterm.html#nonground/2">nonground/2</a>. 
+For example:
+
+<pre class="code">
+?- term_variables(a(X, b(Y, X), Z), L).
+L = [X, Y, Z].
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="nonground/2"><strong>nonground</strong>(<var>+Term, 
+-Var</var>)</a></dt>
+<dd class="defbody">
+True when <var>Var</var> is a variable in <var>Term</var>. Fails if <var>Term</var> 
+is <em>ground</em> (see <a id="idx:ground1:1398"></a><a class="pred" href="typetest.html#ground/1">ground/1</a>). 
+This predicate is intended for coroutining to trigger a wakeup if <var>Term</var> 
+becomes ground, e.g., using <a id="idx:when2:1399"></a><a class="pred" href="coroutining.html#when/2">when/2</a>. 
+The current implementation always returns the first variable in 
+depth-first left-right search. Ideally it should return a random member 
+of the set of variables (see <a id="idx:termvariables2:1400"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a>) 
+to realise logarithmic complexity for the ground trigger. Compatible 
+with ECLiPSe and hProlog.</dd>
+<dt class="pubdef"><a id="term_variables/3"><strong>term_variables</strong>(<var>+Term, 
+-List, ?Tail</var>)</a></dt>
+<dd class="defbody">
+Difference list version of <a id="idx:termvariables2:1401"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a>. 
+That is, <var>Tail</var> is the tail of the variable list <var>List</var>.</dd>
+<dt class="pubdef"><a id="term_singletons/2"><strong>term_singletons</strong>(<var>+Term, 
+-List</var>)</a></dt>
+<dd class="defbody">
+Unify <var>List</var> with a list of variables, each sharing with a 
+variable that appears only once in <var>Term</var>.<sup class="fn">bug<span class="fn-text">In 
+the current implementation <var>Term</var> must be acyclic. If not, a <code>representation_error</code> 
+is raised.</span></sup> Note that, if a variable appears in a shared 
+subterm, it is <em>not</em> considered singleton. Thus,
+<var>A</var> is <em>not</em> a singleton in the example below. See also 
+the <code>singleton</code> option of <a id="idx:numbervars4:1402"></a><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a>.
+
+<pre class="code">
+
+?- S = a(A), term_singletons(t(S,S), L).
+L = [].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="is_most_general_term/1"><strong>is_most_general_term</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a callable term where all arguments are 
+non-sharing variables or <var>Term</var> is a list whose members are all 
+non-sharing variables. This predicate is used to reason about call 
+subsumption for tabling and is compatible with XSB. See also <a id="idx:subsumesterm2:1403"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>. 
+Examples:
+<blockquote>
+<table class="latex frame-void">
+<tr><td align=right>1</td><td><code>is_most_general_term(1)</code></td><td align=center>false </td></tr>
+<tr><td align=right>2</td><td><code>is_most_general_term(p)</code></td><td align=center>true </td></tr>
+<tr><td align=right>3</td><td><code>is_most_general_term(p(_))</code></td><td align=center>true </td></tr>
+<tr><td align=right>4</td><td><code>is_most_general_term(p(_,a))</code></td><td align=center>false </td></tr>
+<tr><td align=right>5</td><td><code>is_most_general_term(p(X,X))</code></td><td align=center>false </td></tr>
+<tr><td align=right>6</td><td><code>is_most_general_term([])</code></td><td align=center>true </td></tr>
+<tr><td align=right>7</td><td><code>is_most_general_term([_|_])</code></td><td align=center>false </td></tr>
+<tr><td align=right>8</td><td><code>is_most_general_term([_,_])</code></td><td align=center>true </td></tr>
+<tr><td align=right>9</td><td><code>is_most_general_term([X,X])</code></td><td align=center>false </td></tr>
+</table>
+</blockquote>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="copy_term/2"><strong>copy_term</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Create a version of <var>In</var> with renamed (fresh) variables and 
+unify it to <var>Out</var>. Attributed variables (see <a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>) have their attributes copied. The implementation of <a id="idx:copyterm2:1404"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
+can deal with infinite trees (cyclic terms). As pure Prolog cannot 
+distinguish a ground term from another ground term with exactly the same 
+structure, ground sub-terms are <em>shared</em> between <var>In</var> 
+and <var>Out</var>. Sharing ground terms does affect <a id="idx:setarg3:1405"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>. 
+SWI-Prolog provides
+<a id="idx:duplicateterm2:1406"></a><a class="pred" href="manipterm.html#duplicate_term/2">duplicate_term/2</a> 
+to create a true copy of a term.
+</dd>
+</dl>
+
+<p><h3 id="sec:setarg"><a id="sec:4.21.1"><span class="sec-nr">4.21.1</span> <span class="sec-title">Non-logical 
+operations on terms</span></a></h3>
+
+<a id="sec:setarg"></a>
+
+<p>Prolog is not able to <em>modify</em> instantiated parts of a term. 
+Lacking that capability makes the language much safer, but unfortunately 
+there are problems that suffer severely in terms of time and/or memory 
+usage. Always try hard to avoid the use of these primitives, but they 
+can be a good alternative to using dynamic predicates. See also <a class="sec" href="gvar.html#sec:4.33">section 
+4.33</a>, discussing the use of global variables.
+
+<dl class="latex">
+<dt class="pubdef"><a id="setarg/3"><strong>setarg</strong>(<var>+Arg, 
++Term, +Value</var>)</a></dt>
+<dd class="defbody">
+Extra-logical predicate. Assigns the <var>Arg</var>-th argument of the 
+compound term <var>Term</var> with the given <var>Value</var>. The 
+assignment is undone if backtracking brings the state back into a 
+position before the <a id="idx:setarg3:1407"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+call. See also <a id="idx:nbsetarg3:1408"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>.
+
+<p>This predicate may be used for destructive assignment to terms, using 
+them as an extra-logical storage bin. Always try hard to avoid the use 
+of <a id="idx:setarg3:1409"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+as it is not supported by many Prolog systems and one has to be very 
+careful about unexpected copying as well as unexpected noncopying of 
+terms. A good practice to improve somewhat on this situation is to make 
+sure that terms whose arguments are subject to <a id="idx:setarg3:1410"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+have one unused and unshared variable in addition to the used arguments. 
+This variable avoids unwanted sharing in, e.g., <a id="idx:copyterm2:1411"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, 
+and causes the term to be considered as non-ground. An alternative is to 
+use <a id="idx:putattr3:1412"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a> 
+to attach information to attributed variables (see&nbsp;<a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>).</dd>
+<dt class="pubdef"><a id="nb_setarg/3"><strong>nb_setarg</strong>(<var>+Arg, 
++Term, +Value</var>)</a></dt>
+<dd class="defbody">
+Assigns the <var>Arg</var>-th argument of the compound term <var>Term</var> 
+with the given <var>Value</var> as <a id="idx:setarg3:1413"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>, 
+but on backtracking the assignment is <em>not</em> reversed. If <var>Value</var> 
+is not atomic, it is duplicated using <a id="idx:duplicateterm2:1414"></a><a class="pred" href="manipterm.html#duplicate_term/2">duplicate_term/2</a>. 
+This predicate uses the same technique as
+<a id="idx:nbsetval2:1415"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>. 
+We therefore refer to the description of <a id="idx:nbsetval2:1416"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
+for details on non-backtrackable assignment of terms. This predicate is 
+compatible with GNU-Prolog <code>setarg(A,T,V,false)</code>, removing 
+the type restriction on <var>Value</var>. See also <a id="idx:nblinkarg3:1417"></a><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a>. 
+Below is an example for counting the number of solutions of a goal. Note 
+that this implementation is thread-safe, reentrant and capable of 
+handling exceptions. Realising these features with a traditional 
+implementation based on assert/retract or <a id="idx:flag3:1418"></a><a class="pred" href="db.html#flag/3">flag/3</a> 
+is much more complicated.
+
+<pre class="code">
+:- meta_predicate
+        succeeds_n_times(0, -).
+
+succeeds_n_times(Goal, Times) :-
+        Counter = counter(0),
+        (   Goal,
+            arg(1, Counter, N0),
+            N is N0 + 1,
+            nb_setarg(1, Counter, N),
+            fail
+        ;   arg(1, Counter, Times)
+        ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="nb_linkarg/3"><strong>nb_linkarg</strong>(<var>+Arg, 
++Term, +Value</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:nbsetarg3:1419"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>, 
+but like <a id="idx:nblinkval2:1420"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a> 
+it does <em>not</em> duplicate
+<var>Value</var>. Use with extreme care and consult the documentation of <a id="idx:nblinkval2:1421"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a> 
+before use.</dd>
+<dt class="pubdef"><a id="duplicate_term/2"><strong>duplicate_term</strong>(<var>+In, 
+-Out</var>)</a></dt>
+<dd class="defbody">
+Version of <a id="idx:copyterm2:1422"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
+that also copies ground terms and therefore ensures that destructive 
+modification using <a id="idx:setarg3:1423"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+does not affect the copy. See also <a id="idx:nbsetval2:1424"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>, <a id="idx:nblinkval2:1425"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a>, <a id="idx:nbsetarg3:1426"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a> 
+and <a id="idx:nblinkarg3:1427"></a><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="same_term/2"><strong>same_term</strong>(<var>@T1, 
+@T2</var>)</a></dt>
+<dd class="defbody">
+True if <var>T1</var> and <var>T2</var> are equivalent and will remain 
+equivalent, even if <a id="idx:setarg3:1428"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+is used on either of them. This means
+<var>T1</var> and <var>T2</var> are the same variable, equivalent atomic 
+data or a compound term allocated at the same address.
+</dd>
+</dl>
+
+<p></body></html>

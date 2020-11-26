@@ -1,0 +1,5 @@
+[SPOON]-
+	(INST)<-[EAT]-
+		(OBJ)->[WALNUT]->(PART)->[SHELL:*y]
+		(AGNT)->[MONKEY],
+	(MATR)->[SHELL:*y],.

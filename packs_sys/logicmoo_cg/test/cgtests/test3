@@ -1,0 +1,74 @@
+;;Date: Thu, 28 May 92 08:44:44 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST3, extended forms
+
+;;The following is used for regression testing of CONSTRUCT.
+
+;;It contains examples of types and canonical graphs form Conceptual Structures
+;;pages 110 and 260 &261.
+
+;;CANON TRANSACTIONS .
+
+TYPE ANIMATE(a) IS [UNIV:*a].
+
+TYPE BUY(x) IS
+[TRANSACTION:*x]-
+  ->(INIT)->[CUSTOMER:*v0218]-
+              <-(RCPT)<-[GIVE:*v1]->(AGNT)->[SELLER:*v0206]<-(RCPT)<-[GIVE:*v2]-
+                                                                       ->(OBJ)->[MONEY:*v0212]
+                                                                       ->(OBJ)->[ENTITY:*v0210],
+              <-(AGNT)<-[GIVE:*v2],
+  ->(SRCE)->[SELLER:*v0206]
+  ->(PART)->[GIVE:*v2]
+  ->(PART)->[GIVE:*v2]
+  ->(INST)->[MONEY:*v0212]
+  ->(OBJ)->[ENTITY:*v0210],.
+
+TYPE CUSTOMER(c) IS [UNIV:*c].
+
+TYPE ENTITY(e) IS [UNIV:*e].
+
+TYPE GIVE(g) IS [UNIV:*g].
+
+TYPE MONEY(m) IS [UNIV:*m].
+
+TYPE NECKTIE(n) IS [UNIV:*n].
+
+TYPE OCCUPY(o) IS [UNIV:*o].
+
+TYPE OCCUPY-ACT(x) IS
+[TRANSACTION:*x]-
+  ->(LOC)->[PLACE:*v0212]-
+             <-(LOC)<-[OCCUPY:*v0213]<-(STAT)<-[ENTITY:*v0214]
+             <-(OBJ)<-[TAKE:*v0223]->(AGNT)->[ANIMATE:*v0215],
+  ->(PART)->[OCCUPY:*v0213]
+  ->(INST)->[ENTITY:*v0214]
+  ->(OBJ)->[ANIMATE:*v0215]
+  ->(PART)->[TAKE:*v0223],.
+
+TYPE PERSON(p) IS [UNIV:*p].
+
+TYPE PLACE(p) IS [UNIV:*p].
+
+TYPE PROPOSITION(p) IS [UNIV:*p].
+
+TYPE SELLER(s) IS [UNIV:*s].
+
+TYPE TAKE(t) IS [UNIV:*t].
+
+TYPE TRANSACTION(t) IS [UNIV:*t].
+
+SELECTING-GRAPH TRANSACTION IS
+[TRANSACTION]-
+  ->(AGNT)->[ANIMATE]
+  ->(INST)->[ENTITY:*E1]
+  ->(OBJ)->[ENTITY:*E2]
+  ->(OBJ)->[ENTITY:*E3],.
+
+CANONICAL-GRAPH IS
+[BUY]-
+  ->(AGNT)->[PERSON:Joe]
+  ->(SRCE)->[PERSON:Hal]
+  ->(OBJ)->[NECKTIE]
+  ->(INST)->[MONEY:@ 10 Dollars],.

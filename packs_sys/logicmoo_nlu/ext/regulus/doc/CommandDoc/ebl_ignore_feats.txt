@@ -1,0 +1,5 @@
+Relevant to applications using grammar specialisation. The value
+should be a list of unification grammar features: these features will
+be ignored in the specialised grammar. A suitable choice of value can
+greatly speed up Regulus to Nuance compilation for the specialised
+grammar.

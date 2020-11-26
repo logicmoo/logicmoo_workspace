@@ -1,0 +1,1842 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section F.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="summary.html">
+<link rel="next" href="library.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="summary.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="library.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:predsummary"><a id="sec:F.1"><span class="sec-nr">F.1</span> <span class="sec-title">Predicates</span></a></h2>
+
+<a id="sec:predsummary"></a>
+
+<p>The predicate summary is used by the Prolog predicate <a id="idx:apropos1:2725"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
+to suggest predicates from a keyword.
+<table>
+<tr><td><a class="pred" href="overrule.html#@/2">@/2</a></td><td>Call 
+using calling context</td></tr>
+<tr><td><a class="pred" href="control.html#!/0">!/0</a></td><td>Cut 
+(discard choicepoints)</td></tr>
+<tr><td><a class="pred" href="control.html#,/2">,/2</a></td><td>Conjunction 
+of goals</td></tr>
+<tr><td><a class="pred" href="control.html#->/2">-&gt;/2</a></td><td>If-then-else</td></tr>
+<tr><td><a class="pred" href="control.html#*->/2">*-&gt;/2</a></td><td>Soft-cut</td></tr>
+<tr><td><span class="pred-ext">./2</span></td><td>Consult. Also 
+functional notation</td></tr>
+<tr><td><a class="pred" href="bidicts.html#:</2">:&lt;/2</a></td><td>Select 
+keys from a dict</td></tr>
+<tr><td><a class="pred" href="control.html#;/2">;/2</a></td><td>Disjunction 
+of two goals</td></tr>
+<tr><td><a class="pred" href="arith.html#</2">&lt;/2</a></td><td>Arithmetic 
+smaller</td></tr>
+<tr><td><a class="pred" href="compare.html#=/2">=/2</a></td><td>True 
+when arguments are unified</td></tr>
+<tr><td><a class="pred" href="manipterm.html#=../2">=../2</a></td><td> &ldquo;Univ.'' 
+Term to list conversion</td></tr>
+<tr><td><a class="pred" href="arith.html#=:=/2">=:=/2</a></td><td>Arithmetic 
+equality</td></tr>
+<tr><td><a class="pred" href="arith.html#=</2">=&lt;/2</a></td><td>Arithmetic 
+smaller or equal</td></tr>
+<tr><td><a class="pred" href="compare.html#==/2">==/2</a></td><td>Test 
+for strict equality</td></tr>
+<tr><td><a class="pred" href="compare.html#=@=/2">=@=/2</a></td><td>Test 
+for structural equality (variant)</td></tr>
+<tr><td><a class="pred" href="arith.html#=\=/2">=\=/2</a></td><td>Arithmetic 
+not equal</td></tr>
+<tr><td><a class="pred" href="arith.html#>/2">&gt;/2</a></td><td>Arithmetic 
+larger</td></tr>
+<tr><td><a class="pred" href="arith.html#>=/2">&gt;=/2</a></td><td>Arithmetic 
+larger or equal</td></tr>
+<tr><td><a class="pred" href="bidicts.html#>:</2">&gt;:&lt;/2</a></td><td>Partial 
+dict unification</td></tr>
+<tr><td><a class="pred" href="compare.html#?=/2">?=/2</a></td><td>Test 
+of terms can be compared now</td></tr>
+<tr><td><a class="pred" href="compare.html#@</2">@&lt;/2</a></td><td>Standard 
+order smaller</td></tr>
+<tr><td><a class="pred" href="compare.html#@=</2">@=&lt;/2</a></td><td>Standard 
+order smaller or equal</td></tr>
+<tr><td><a class="pred" href="compare.html#@>/2">@&gt;/2</a></td><td>Standard 
+order larger</td></tr>
+<tr><td><a class="pred" href="compare.html#@>=/2">@&gt;=/2</a></td><td>Standard 
+order larger or equal</td></tr>
+<tr><td><a class="pred" href="control.html#\+/1">\+/1</a></td><td>Negation 
+by failure. Same as <a id="idx:not1:2726"></a><a class="pred" href="metacall.html#not/1">not/1</a></td></tr>
+<tr><td><a class="pred" href="compare.html#\=/2">\=/2</a></td><td>True 
+if arguments cannot be unified</td></tr>
+<tr><td><a class="pred" href="compare.html#\==/2">\==/2</a></td><td>True 
+if arguments are not strictly equal</td></tr>
+<tr><td><a class="pred" href="compare.html#\=@=/2">\=@=/2</a></td><td>Not 
+structural identical</td></tr>
+<tr><td><span class="pred-ext">^/2</span></td><td>Existential 
+quantification (<a id="idx:bagof3:2727"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, <a id="idx:setof3:2728"></a><a class="pred" href="allsolutions.html#setof/3">setof/3</a>)</td></tr>
+<tr><td><a class="pred" href="control.html#|/2">|/2</a></td><td>Disjunction 
+in DCGs. Same as <a class="pred" href="control.html#;/2">;/2</a></td></tr>
+<tr><td><span class="pred-ext">/1</span></td><td>DCG escape; constraints</td></tr>
+<tr><td><a class="pred" href="db.html#abolish/1">abolish/1</a></td><td>Remove 
+predicate definition from the database</td></tr>
+<tr><td><a class="pred" href="db.html#abolish/2">abolish/2</a></td><td>Remove 
+predicate definition from the database</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a></td><td>Abolish 
+computed tables</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_module_tables/1">abolish_module_tables/1</a></td><td>Abolish 
+all tables in a module</td></tr>
+<tr><td><a class="pred" href="tabling-monotonic.html#abolish_monotonic_tables/0">abolish_monotonic_tables/0</a></td><td>Abolish 
+all monotonic tables</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_nonincremental_tables/0">abolish_nonincremental_tables/0</a></td><td>Abolish 
+non-auttomatic tables</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_nonincremental_tables/1">abolish_nonincremental_tables/1</a></td><td>Abolish 
+non-auttomatic tables</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_private_tables/0">abolish_private_tables/0</a></td><td>Abolish 
+tables of this thread</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a></td><td>Abolish 
+tables shared between threads</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a></td><td>Abolish 
+tables for a goal</td></tr>
+<tr><td><a class="pred" href="toplevel.html#abort/0">abort/0</a></td><td>Abort 
+execution, return to top level</td></tr>
+<tr><td><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a></td><td>Get 
+absolute path name</td></tr>
+<tr><td><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a></td><td>Get 
+absolute path name with options</td></tr>
+<tr><td><a class="pred" href="tabling-restraints.html#answer_count_restraint/0">answer_count_restraint/0</a></td><td>Undefined 
+answer due to <code>max_answers</code></td></tr>
+<tr><td><a class="pred" href="files.html#access_file/2">access_file/2</a></td><td>Check 
+access permissions of a file</td></tr>
+<tr><td><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a></td><td>Test 
+term for cycles</td></tr>
+<tr><td><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a></td><td>Add 
+module to the auto-import list</td></tr>
+<tr><td><a class="pred" href="nb_set.html#add_nb_set/2">add_nb_set/2</a></td><td>Add 
+term to a non-backtrackable set</td></tr>
+<tr><td><a class="pred" href="nb_set.html#add_nb_set/3">add_nb_set/3</a></td><td>Add 
+term to a non-backtrackable set</td></tr>
+<tr><td><a class="pred" href="IO.html#append/1">append/1</a></td><td>Append 
+to a file</td></tr>
+<tr><td><a class="pred" href="metacall.html#apply/2">apply/2</a></td><td>Call 
+goal with additional arguments</td></tr>
+<tr><td><a class="pred" href="online-help.html#apropos/1">apropos/1</a></td><td><code>library(online_help)</code> 
+Search manual</td></tr>
+<tr><td><a class="pred" href="manipterm.html#arg/3">arg/3</a></td><td>Access 
+argument of a term</td></tr>
+<tr><td><a class="pred" href="assoc.html#assoc_to_list/2">assoc_to_list/2</a></td><td>Convert 
+association tree to list</td></tr>
+<tr><td><a class="pred" href="db.html#assert/1">assert/1</a></td><td>Add 
+a clause to the database</td></tr>
+<tr><td><a class="pred" href="db.html#assert/2">assert/2</a></td><td>Add 
+a clause to the database, give reference</td></tr>
+<tr><td><a class="pred" href="db.html#asserta/1">asserta/1</a></td><td>Add 
+a clause to the database (first)</td></tr>
+<tr><td><a class="pred" href="db.html#asserta/2">asserta/2</a></td><td>Add 
+a clause to the database (first)</td></tr>
+<tr><td><a class="pred" href="debug.html#assertion/1">assertion/1</a></td><td>Make 
+assertions about your program</td></tr>
+<tr><td><a class="pred" href="db.html#assertz/1">assertz/1</a></td><td>Add 
+a clause to the database (last)</td></tr>
+<tr><td><a class="pred" href="db.html#assertz/2">assertz/2</a></td><td>Add 
+a clause to the database (last)</td></tr>
+<tr><td><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a></td><td>Attach 
+I/O console to thread</td></tr>
+<tr><td><a class="pred" href="packs.html#attach_packs/0">attach_packs/0</a></td><td>Attach 
+add-ons</td></tr>
+<tr><td><a class="pred" href="packs.html#attach_packs/1">attach_packs/1</a></td><td>Attach 
+add-ons from directory</td></tr>
+<tr><td><a class="pred" href="packs.html#attach_packs/2">attach_packs/2</a></td><td>Attach 
+add-ons from directory</td></tr>
+<tr><td><span class="pred-ext">attribute_goals/3</span></td><td>Project 
+attributes to goals</td></tr>
+<tr><td><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a></td><td>Attributed 
+variable unification hook</td></tr>
+<tr><td><a class="pred" href="attvar.html#attr_portray_hook/2">attr_portray_hook/2</a></td><td>Attributed 
+variable print hook</td></tr>
+<tr><td><a class="pred" href="attvar.html#attvar/1">attvar/1</a></td><td>Type 
+test for attributed variable</td></tr>
+<tr><td><a class="pred" href="chario.html#at_end_of_stream/0">at_end_of_stream/0</a></td><td>Test 
+for end of file on input</td></tr>
+<tr><td><a class="pred" href="chario.html#at_end_of_stream/1">at_end_of_stream/1</a></td><td>Test 
+for end of file on stream</td></tr>
+<tr><td><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a></td><td>Register 
+goal to run at <a id="idx:halt1:2729"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a></td></tr>
+<tr><td><a class="pred" href="typetest.html#atom/1">atom/1</a></td><td>Type 
+check for an atom</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a></td><td>Convert 
+between atom and list of characters</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a></td><td>Convert 
+between atom and list of characters codes</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_concat/3">atom_concat/3</a></td><td>Contatenate 
+two atoms</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_length/2">atom_length/2</a></td><td>Determine 
+length of an atom</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_number/2">atom_number/2</a></td><td>Convert 
+between atom and number</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_prefix/2">atom_prefix/2</a></td><td>Test 
+for start of atom</td></tr>
+<tr><td><a class="pred" href="string.html#atom_string/2">atom_string/2</a></td><td>Conversion 
+between atom and string</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atom_to_term/3">atom_to_term/3</a></td><td>Convert 
+between atom and term</td></tr>
+<tr><td><a class="pred" href="typetest.html#atomic/1">atomic/1</a></td><td>Type 
+check for primitive</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atomic_concat/3">atomic_concat/3</a></td><td>Concatenate 
+two atomic values to an atom</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atomic_list_concat/2">atomic_list_concat/2</a></td><td>Append 
+a list of atomics</td></tr>
+<tr><td><a class="pred" href="manipatom.html#atomic_list_concat/3">atomic_list_concat/3</a></td><td>Append 
+a list of atomics with separator</td></tr>
+<tr><td><a class="pred" href="string.html#atomics_to_string/2">atomics_to_string/2</a></td><td>Concatenate 
+list of inputs to a string</td></tr>
+<tr><td><a class="pred" href="string.html#atomics_to_string/3">atomics_to_string/3</a></td><td>Concatenate 
+list of inputs to a string</td></tr>
+<tr><td><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a></td><td>Declare 
+a file for autoloading</td></tr>
+<tr><td><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a></td><td>Declare 
+a file for autoloading specific predicates</td></tr>
+<tr><td><a class="pred" href="saved-states.html#autoload_all/0">autoload_all/0</a></td><td>Autoload 
+all predicates now</td></tr>
+<tr><td><a class="pred" href="autoload.html#autoload_path/1">autoload_path/1</a></td><td>Add 
+directories for autoloading</td></tr>
+<tr><td><a class="pred" href="gvar.html#b_getval/2">b_getval/2</a></td><td>Fetch 
+backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="bidicts.html#b_set_dict/3">b_set_dict/3</a></td><td>Destructive 
+assignment on a dict</td></tr>
+<tr><td><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a></td><td>Assign 
+backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a></td><td>Find 
+all solutions to a goal</td></tr>
+<tr><td><a class="pred" href="arith.html#between/3">between/3</a></td><td>Integer 
+range checking/generating</td></tr>
+<tr><td><a class="pred" href="typetest.html#blob/2">blob/2</a></td><td>Type 
+check for a blob</td></tr>
+<tr><td><a class="pred" href="arith.html#bounded_number/3">bounded_number/3</a></td><td>Number 
+between bounds</td></tr>
+<tr><td><a class="pred" href="toplevel.html#break/0">break/0</a></td><td>Start 
+interactive top level</td></tr>
+<tr><td><span class="pred-ext">break_hook/6</span></td><td><i>(hook)</i> 
+Debugger hook</td></tr>
+<tr><td><a class="pred" href="streamstat.html#byte_count/2">byte_count/2</a></td><td>Byte-position 
+in a stream</td></tr>
+<tr><td><a class="pred" href="metacall.html#call/1">call/1</a></td><td>Call 
+a goal</td></tr>
+<tr><td><a class="pred" href="metacall.html#call/2">call/[2..]</a></td><td>Call 
+with additional arguments</td></tr>
+<tr><td><a class="pred" href="metacall.html#call_cleanup/3">call_cleanup/3</a></td><td>Guard 
+a goal with a cleaup-handler</td></tr>
+<tr><td><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a></td><td>Guard 
+a goal with a cleaup-handler</td></tr>
+<tr><td><a class="pred" href="DCG.html#call_dcg/3">call_dcg/3</a></td><td>As <a id="idx:phrase3:2730"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a> 
+without type checking</td></tr>
+<tr><td><a class="pred" href="WFS.html#call_delays/2">call_delays/2</a></td><td>Get 
+the condition associated with an answer</td></tr>
+<tr><td><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a></td><td>Find 
+residual attributed variables</td></tr>
+<tr><td><a class="pred" href="WFS.html#call_residual_program/2">call_residual_program/2</a></td><td>Get 
+residual program associated with an answer</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#call_shared_object_function/2">call_shared_object_function/2</a></td><td>UNIX: 
+Call C-function in shared (.so) file</td></tr>
+<tr><td><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a></td><td>Prove 
+goal with bounded depth</td></tr>
+<tr><td><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a></td><td>Prove 
+goal in limited inferences</td></tr>
+<tr><td><a class="pred" href="typetest.html#callable/1">callable/1</a></td><td>Test 
+for atom or compound term</td></tr>
+<tr><td><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a></td><td>Cancel <a id="idx:halt0:2731"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a> 
+from an <a id="idx:athalt1:2732"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a> 
+hook</td></tr>
+<tr><td><a class="pred" href="exception.html#catch/3">catch/3</a></td><td>Call 
+goal, watching for exceptions</td></tr>
+<tr><td><a class="pred" href="manipatom.html#char_code/2">char_code/2</a></td><td>Convert 
+between character and character code</td></tr>
+<tr><td><a class="pred" href="charconv.html#char_conversion/2">char_conversion/2</a></td><td>Provide 
+mapping of input characters</td></tr>
+<tr><td><a class="pred" href="chartype.html#char_type/2">char_type/2</a></td><td>Classify 
+characters</td></tr>
+<tr><td><a class="pred" href="streamstat.html#character_count/2">character_count/2</a></td><td>Get 
+character index on a stream</td></tr>
+<tr><td><a class="pred" href="files.html#chdir/1">chdir/1</a></td><td>Compatibility: 
+change working directory</td></tr>
+<tr><td><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a></td><td>CHR 
+Constraint declaration</td></tr>
+<tr><td><a class="pred" href="debugging.html#chr_show_store/1">chr_show_store/1</a></td><td>List 
+suspended CHR constraints</td></tr>
+<tr><td><a class="pred" href="debugging.html#chr_trace/0">chr_trace/0</a></td><td>Start 
+CHR tracer</td></tr>
+<tr><td><a class="pred" href="practical.html#chr_type/1">chr_type/1</a></td><td>CHR 
+Type declaration</td></tr>
+<tr><td><a class="pred" href="debugging.html#chr_notrace/0">chr_notrace/0</a></td><td>Stop 
+CHR tracer</td></tr>
+<tr><td><a class="pred" href="debugging.html#chr_leash/1">chr_leash/1</a></td><td>Define 
+CHR leashed ports</td></tr>
+<tr><td><a class="pred" href="SyntaxAndSemantics.html#chr_option/2">chr_option/2</a></td><td>Specify 
+CHR compilation options</td></tr>
+<tr><td><a class="pred" href="examineprog.html#clause/2">clause/2</a></td><td>Get 
+clauses of a predicate</td></tr>
+<tr><td><a class="pred" href="examineprog.html#clause/3">clause/3</a></td><td>Get 
+clauses of a predicate</td></tr>
+<tr><td><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a></td><td>Get 
+properties of a clause</td></tr>
+<tr><td><a class="pred" href="IO.html#close/1">close/1</a></td><td>Close 
+stream</td></tr>
+<tr><td><a class="pred" href="IO.html#close/2">close/2</a></td><td>Close 
+stream (forced)</td></tr>
+<tr><td><a class="pred" href="DDE.html#close_dde_conversation/1">close_dde_conversation/1</a></td><td>Win32: 
+Close DDE channel</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#close_shared_object/1">close_shared_object/1</a></td><td>UNIX: 
+Close shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a></td><td>Sort 
+key for locale dependent ordering</td></tr>
+<tr><td><span class="pred-ext">comment_hook/3</span></td><td><i>(hook)</i> 
+handle comments in sources</td></tr>
+<tr><td><a class="pred" href="compare.html#compare/3">compare/3</a></td><td>Compare, 
+using a predicate to determine the order</td></tr>
+<tr><td><a class="pred" href="consulting.html#compile_aux_clauses/1">compile_aux_clauses/1</a></td><td>Compile 
+predicates for <a id="idx:goalexpansion2:2733"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a></td></tr>
+<tr><td><a class="pred" href="dynamic.html#compile_predicates/1">compile_predicates/1</a></td><td>Compile 
+dynamic code to static</td></tr>
+<tr><td><a class="pred" href="consulting.html#compiling/0">compiling/0</a></td><td>Is 
+this a compilation run?</td></tr>
+<tr><td><a class="pred" href="typetest.html#compound/1">compound/1</a></td><td>Test 
+for compound term</td></tr>
+<tr><td><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a></td><td>Name 
+and arity of a compound term</td></tr>
+<tr><td><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a></td><td>Name 
+and arguments of a compound term</td></tr>
+<tr><td><a class="pred" href="chartype.html#code_type/2">code_type/2</a></td><td>Classify 
+a character-code</td></tr>
+<tr><td><a class="pred" href="consulting.html#consult/1">consult/1</a></td><td>Read 
+(compile) a Prolog source file</td></tr>
+<tr><td><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a></td><td>Get 
+context module of current goal</td></tr>
+<tr><td><span class="pred-ext">convert_time/8</span></td><td>Break time 
+stamp into fields</td></tr>
+<tr><td><span class="pred-ext">convert_time/2</span></td><td>Convert 
+time stamp to string</td></tr>
+<tr><td><a class="pred" href="chario.html#copy_stream_data/2">copy_stream_data/2</a></td><td>Copy 
+all data from stream to stream</td></tr>
+<tr><td><a class="pred" href="chario.html#copy_stream_data/3">copy_stream_data/3</a></td><td>Copy 
+n bytes from stream to stream</td></tr>
+<tr><td><a class="pred" href="db.html#copy_predicate_clauses/2">copy_predicate_clauses/2</a></td><td>Copy 
+clauses between predicates</td></tr>
+<tr><td><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a></td><td>Make 
+a copy of a term</td></tr>
+<tr><td><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a></td><td>Copy 
+a term and obtain attribute-goals</td></tr>
+<tr><td><a class="pred" href="attvar.html#copy_term_nat/2">copy_term_nat/2</a></td><td>Make 
+a copy of a term without attributes</td></tr>
+<tr><td><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a></td><td>Create 
+a new Prolog flag</td></tr>
+<tr><td><a class="pred" href="miscarith.html#current_arithmetic_function/1">current_arithmetic_function/1</a></td><td>Examine 
+evaluable functions</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_atom/1">current_atom/1</a></td><td>Examine 
+existing atoms</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_blob/2">current_blob/2</a></td><td>Examine 
+typed blobs</td></tr>
+<tr><td><a class="pred" href="charconv.html#current_char_conversion/2">current_char_conversion/2</a></td><td>Query 
+input character mapping</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#current_engine/1">current_engine/1</a></td><td>Enumerate 
+known engines</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_flag/1">current_flag/1</a></td><td>Examine 
+existing flags</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#current_foreign_library/2">current_foreign_library/2</a></td><td><code>library(shlib)</code> 
+Examine loaded shared libraries (.so files)</td></tr>
+<tr><td><a class="pred" href="format.html#current_format_predicate/2">current_format_predicate/2</a></td><td>Enumerate 
+user-defined format codes</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_functor/2">current_functor/2</a></td><td>Examine 
+existing name/arity pairs</td></tr>
+<tr><td><a class="pred" href="IO.html#current_input/1">current_input/1</a></td><td>Get 
+current input stream</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_key/1">current_key/1</a></td><td>Examine 
+existing database keys</td></tr>
+<tr><td><a class="pred" href="locale.html#current_locale/1">current_locale/1</a></td><td>Get 
+the current locale</td></tr>
+<tr><td><a class="pred" href="manipmodule.html#current_module/1">current_module/1</a></td><td>Examine 
+existing modules</td></tr>
+<tr><td><a class="pred" href="operators.html#current_op/3">current_op/3</a></td><td>Examine 
+current operator declarations</td></tr>
+<tr><td><a class="pred" href="IO.html#current_output/1">current_output/1</a></td><td>Get 
+the current output stream</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a></td><td>Examine 
+existing predicates (ISO)</td></tr>
+<tr><td><a class="pred" href="examineprog.html#current_predicate/2">current_predicate/2</a></td><td>Examine 
+existing predicates</td></tr>
+<tr><td><a class="pred" href="signal.html#current_signal/3">current_signal/3</a></td><td>Current 
+software signal mapping</td></tr>
+<tr><td><a class="pred" href="IO.html#current_stream/3">current_stream/3</a></td><td>Examine 
+open streams</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#current_table/2">current_table/2</a></td><td>Find 
+answer table for a variant</td></tr>
+<tr><td><a class="pred" href="db.html#current_transaction/1">current_transaction/1</a></td><td>Detect 
+encapsulating transactions</td></tr>
+<tr><td><a class="pred" href="db.html#current_trie/1">current_trie/1</a></td><td>Enumerate 
+known tries</td></tr>
+<tr><td><a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a></td><td>Test 
+term for cycles</td></tr>
+<tr><td><a class="pred" href="system.html#day_of_the_week/2">day_of_the_week/2</a></td><td>Determine 
+ordinal-day from date</td></tr>
+<tr><td><a class="pred" href="system.html#date_time_stamp/2">date_time_stamp/2</a></td><td>Convert 
+date structure to time-stamp</td></tr>
+<tr><td><a class="pred" href="system.html#date_time_value/3">date_time_value/3</a></td><td>Extract 
+info from a date structure</td></tr>
+<tr><td><a class="pred" href="consulting.html#dcg_translate_rule/2">dcg_translate_rule/2</a></td><td>Source 
+translation of DCG rules</td></tr>
+<tr><td><a class="pred" href="consulting.html#dcg_translate_rule/4">dcg_translate_rule/4</a></td><td>Source 
+translation of DCG rules</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_current_connection/2">dde_current_connection/2</a></td><td>Win32: 
+Examine open DDE connections</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_current_service/2">dde_current_service/2</a></td><td>Win32: 
+Examine DDE services provided</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_execute/2">dde_execute/2</a></td><td>Win32: 
+Execute command on DDE server</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_register_service/2">dde_register_service/2</a></td><td>Win32: 
+Become a DDE server</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_request/3">dde_request/3</a></td><td>Win32: 
+Make a DDE request</td></tr>
+<tr><td><span class="pred-ext">dde_poke/3</span></td><td>Win32: POKE 
+operation on DDE server</td></tr>
+<tr><td><a class="pred" href="DDE.html#dde_unregister_service/1">dde_unregister_service/1</a></td><td>Win32: 
+Terminate a DDE service</td></tr>
+<tr><td><a class="pred" href="debugger.html#debug/0">debug/0</a></td><td>Test 
+for debugging mode</td></tr>
+<tr><td><a class="pred" href="debug.html#debug/1">debug/1</a></td><td>Select 
+topic for debugging</td></tr>
+<tr><td><a class="pred" href="debug.html#debug/3">debug/3</a></td><td>Print 
+debugging message on topic</td></tr>
+<tr><td><span class="pred-ext">debug_control_hook/1</span></td><td><i>(hook)</i> 
+Extend <a id="idx:spy1:2734"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, 
+etc.</td></tr>
+<tr><td><a class="pred" href="debugger.html#debugging/0">debugging/0</a></td><td>Show 
+debugger status</td></tr>
+<tr><td><a class="pred" href="debug.html#debugging/1">debugging/1</a></td><td>Test 
+where we are debugging topic</td></tr>
+<tr><td><a class="pred" href="importmodule.html#default_module/2">default_module/2</a></td><td>Query 
+module inheritance</td></tr>
+<tr><td><a class="pred" href="attvar.html#del_attr/2">del_attr/2</a></td><td>Delete 
+attribute from variable</td></tr>
+<tr><td><a class="pred" href="attvar.html#del_attrs/1">del_attrs/1</a></td><td>Delete 
+all attributes from variable</td></tr>
+<tr><td><a class="pred" href="bidicts.html#del_dict/4">del_dict/4</a></td><td>Delete 
+Key-Value pair from a dict</td></tr>
+<tr><td><a class="pred" href="WFS.html#delays_residual_program/2">delays_residual_program/2</a></td><td>Get 
+the residual program for an answer</td></tr>
+<tr><td><a class="pred" href="files.html#delete_directory/1">delete_directory/1</a></td><td>Remove 
+a folder from the file system</td></tr>
+<tr><td><a class="pred" href="files.html#delete_file/1">delete_file/1</a></td><td>Remove 
+a file from the file system</td></tr>
+<tr><td><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a></td><td>Remove 
+module from import list</td></tr>
+<tr><td><a class="pred" href="manipstack.html#deterministic/1">deterministic/1</a></td><td>Test 
+deterministicy of current clause</td></tr>
+<tr><td><a class="pred" href="coroutining.html#dif/2">dif/2</a></td><td>Constrain 
+two terms to be different</td></tr>
+<tr><td><a class="pred" href="files.html#directory_files/2">directory_files/2</a></td><td>Get 
+entries of a directory/folder</td></tr>
+<tr><td><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a></td><td>Indicate 
+distributed definition of a predicate</td></tr>
+<tr><td><a class="pred" href="arith.html#divmod/4">divmod/4</a></td><td>Compute 
+quotient and remainder of two integers</td></tr>
+<tr><td><a class="pred" href="chartype.html#downcase_atom/2">downcase_atom/2</a></td><td>Convert 
+atom to lower-case</td></tr>
+<tr><td><a class="pred" href="manipterm.html#duplicate_term/2">duplicate_term/2</a></td><td>Create 
+a copy of a term</td></tr>
+<tr><td><a class="pred" href="miscpreds.html#dwim_match/2">dwim_match/2</a></td><td>Atoms 
+match in &ldquo;Do What I Mean'' sense</td></tr>
+<tr><td><a class="pred" href="miscpreds.html#dwim_match/3">dwim_match/3</a></td><td>Atoms 
+match in &ldquo;Do What I Mean'' sense</td></tr>
+<tr><td><a class="pred" href="examineprog.html#dwim_predicate/2">dwim_predicate/2</a></td><td>Find 
+predicate in &ldquo;Do What I Mean'' sense</td></tr>
+<tr><td><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a></td><td>Indicate 
+predicate definition may change</td></tr>
+<tr><td><a class="pred" href="dynamic.html#dynamic/2">dynamic/2</a></td><td>Indicate 
+predicate definition may change</td></tr>
+<tr><td><a class="pred" href="edit.html#edit/0">edit/0</a></td><td>Edit 
+current script- or associated file</td></tr>
+<tr><td><a class="pred" href="edit.html#edit/1">edit/1</a></td><td>Edit 
+a file, predicate, module (extensible)</td></tr>
+<tr><td><a class="pred" href="consulting.html#elif/1">elif/1</a></td><td>Part 
+of conditional compilation (directive)</td></tr>
+<tr><td><a class="pred" href="consulting.html#else/0">else/0</a></td><td>Part 
+of conditional compilation (directive)</td></tr>
+<tr><td><a class="pred" href="assoc.html#empty_assoc/1">empty_assoc/1</a></td><td>Create/test 
+empty association tree</td></tr>
+<tr><td><a class="pred" href="nb_set.html#empty_nb_set/1">empty_nb_set/1</a></td><td>Test/create 
+an empty non-backtrackable set</td></tr>
+<tr><td><a class="pred" href="consulting.html#encoding/1">encoding/1</a></td><td>Define 
+encoding inside a source file</td></tr>
+<tr><td><a class="pred" href="consulting.html#endif/0">endif/0</a></td><td>End 
+of conditional compilation (directive)</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_create/3">engine_create/3</a></td><td>Create 
+an interactor</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_create/4">engine_create/4</a></td><td>Create 
+an interactor</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_destroy/1">engine_destroy/1</a></td><td>Destroy 
+an interactor</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a></td><td>Get 
+term from caller</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a></td><td>Ask 
+interactor for next term</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_next_reified/2">engine_next_reified/2</a></td><td>Ask 
+interactor for next term</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a></td><td>Send 
+term to an interactor</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_post/3">engine_post/3</a></td><td>Send 
+term to an interactor and wait for reply</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_self/1">engine_self/1</a></td><td>Get 
+handle to running interactor</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a></td><td>Make 
+term available to caller</td></tr>
+<tr><td><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a></td><td>Consult 
+a file if that has not yet been done</td></tr>
+<tr><td><a class="pred" href="db.html#erase/1">erase/1</a></td><td>Erase 
+a database record or clause</td></tr>
+<tr><td><a class="pred" href="exception3.html#exception/3">exception/3</a></td><td><i>(hook)</i> 
+Handle runtime exceptions</td></tr>
+<tr><td><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a></td><td>Check 
+existence of directory</td></tr>
+<tr><td><a class="pred" href="files.html#exists_file/1">exists_file/1</a></td><td>Check 
+existence of file</td></tr>
+<tr><td><a class="pred" href="consulting.html#exists_source/1">exists_source/1</a></td><td>Check 
+existence of a Prolog source</td></tr>
+<tr><td><a class="pred" href="consulting.html#exists_source/2">exists_source/2</a></td><td>Check 
+existence of a Prolog source</td></tr>
+<tr><td><a class="pred" href="toplevel.html#expand_answer/2">expand_answer/2</a></td><td>Expand 
+answer of query</td></tr>
+<tr><td><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a></td><td>Wildcard 
+expansion of file names</td></tr>
+<tr><td><a class="pred" href="consulting.html#expand_file_search_path/2">expand_file_search_path/2</a></td><td>Wildcard 
+expansion of file paths</td></tr>
+<tr><td><a class="pred" href="consulting.html#expand_goal/2">expand_goal/2</a></td><td>Compiler: 
+expand goal in clause-body</td></tr>
+<tr><td><a class="pred" href="consulting.html#expand_goal/4">expand_goal/4</a></td><td>Compiler: 
+expand goal in clause-body</td></tr>
+<tr><td><a class="pred" href="toplevel.html#expand_query/4">expand_query/4</a></td><td>Expanded 
+entered query</td></tr>
+<tr><td><a class="pred" href="consulting.html#expand_term/2">expand_term/2</a></td><td>Compiler: 
+expand read term into clause(s)</td></tr>
+<tr><td><a class="pred" href="consulting.html#expand_term/4">expand_term/4</a></td><td>Compiler: 
+expand read term into clause(s)</td></tr>
+<tr><td><a class="pred" href="dialect.html#expects_dialect/1">expects_dialect/1</a></td><td>For 
+which Prolog dialect is this code written?</td></tr>
+<tr><td><a class="pred" href="online-help.html#explain/1">explain/1</a></td><td><code>library(explain)</code> 
+Explain argument</td></tr>
+<tr><td><a class="pred" href="online-help.html#explain/2">explain/2</a></td><td><code>library(explain)</code> 
+2nd argument is explanation of first</td></tr>
+<tr><td><a class="pred" href="altmoduleapi.html#export/1">export/1</a></td><td>Export 
+a predicate from a module</td></tr>
+<tr><td><a class="pred" href="control.html#fail/0">fail/0</a></td><td>Always 
+false</td></tr>
+<tr><td><a class="pred" href="control.html#false/0">false/0</a></td><td>Always 
+false</td></tr>
+<tr><td><a class="pred" href="IO.html#fast_term_serialized/2">fast_term_serialized/2</a></td><td>Fast 
+term (de-)serialization</td></tr>
+<tr><td><a class="pred" href="IO.html#fast_read/2">fast_read/2</a></td><td>Read 
+binary term serialization</td></tr>
+<tr><td><a class="pred" href="IO.html#fast_write/2">fast_write/2</a></td><td>Write 
+binary term serialization</td></tr>
+<tr><td><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a></td><td>Get 
+system configuration parameters</td></tr>
+<tr><td><a class="pred" href="files.html#file_base_name/2">file_base_name/2</a></td><td>Get 
+file part of path</td></tr>
+<tr><td><a class="pred" href="files.html#file_directory_name/2">file_directory_name/2</a></td><td>Get 
+directory part of path</td></tr>
+<tr><td><a class="pred" href="files.html#file_name_extension/3">file_name_extension/3</a></td><td>Add, 
+remove or test file extensions</td></tr>
+<tr><td><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a></td><td>Define 
+path-aliases for locating files</td></tr>
+<tr><td><a class="pred" href="debugging.html#find_chr_constraint/1">find_chr_constraint/1</a></td><td>Returns 
+a constraint from the store</td></tr>
+<tr><td><a class="pred" href="allsolutions.html#findall/3">findall/3</a></td><td>Find 
+all solutions to a goal</td></tr>
+<tr><td><a class="pred" href="allsolutions.html#findall/4">findall/4</a></td><td>Difference 
+list version of <a id="idx:findall3:2735"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a></td></tr>
+<tr><td><a class="pred" href="allsolutions.html#findnsols/4">findnsols/4</a></td><td>Find 
+first <var>N</var> solutions</td></tr>
+<tr><td><a class="pred" href="allsolutions.html#findnsols/5">findnsols/5</a></td><td>Difference 
+list version of <a id="idx:findnsols4:2736"></a><a class="pred" href="allsolutions.html#findnsols/4">findnsols/4</a></td></tr>
+<tr><td><a class="pred" href="chario.html#fill_buffer/1">fill_buffer/1</a></td><td>Fill 
+the input buffer of a stream</td></tr>
+<tr><td><a class="pred" href="db.html#flag/3">flag/3</a></td><td>Simple 
+global variable system</td></tr>
+<tr><td><a class="pred" href="typetest.html#float/1">float/1</a></td><td>Type 
+check for a floating point number</td></tr>
+<tr><td><a class="pred" href="arith.html#float_class/2">float_class/2</a></td><td>Classify 
+(special) floats</td></tr>
+<tr><td><a class="pred" href="arith.html#float_parts/4">float_parts/4</a></td><td>Get 
+mantissa and exponent of a float</td></tr>
+<tr><td><a class="pred" href="chario.html#flush_output/0">flush_output/0</a></td><td>Output 
+pending characters on current stream</td></tr>
+<tr><td><a class="pred" href="chario.html#flush_output/1">flush_output/1</a></td><td>Output 
+pending characters on specified stream</td></tr>
+<tr><td><a class="pred" href="forall2.html#forall/2">forall/2</a></td><td>Prove 
+goal for all solutions of another goal</td></tr>
+<tr><td><a class="pred" href="format.html#format/1">format/1</a></td><td>Formatted 
+output</td></tr>
+<tr><td><a class="pred" href="format.html#format/2">format/2</a></td><td>Formatted 
+output with arguments</td></tr>
+<tr><td><a class="pred" href="format.html#format/3">format/3</a></td><td>Formatted 
+output on a stream</td></tr>
+<tr><td><a class="pred" href="system.html#format_time/3">format_time/3</a></td><td>C 
+strftime() like date/time formatter</td></tr>
+<tr><td><a class="pred" href="system.html#format_time/4">format_time/4</a></td><td>date/time 
+formatter with explicit locale</td></tr>
+<tr><td><a class="pred" href="format.html#format_predicate/2">format_predicate/2</a></td><td>Program <a id="idx:format12:2737"></a><a class="pred" href="format.html#format/1">format/[1,2]</a></td></tr>
+<tr><td><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a></td><td>Find 
+attributed variables in a term</td></tr>
+<tr><td><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a></td><td>Find 
+unbound variables in a term</td></tr>
+<tr><td><a class="pred" href="manipterm.html#term_variables/3">term_variables/3</a></td><td>Find 
+unbound variables in a term</td></tr>
+<tr><td><a class="pred" href="string.html#text_to_string/2">text_to_string/2</a></td><td>Convert 
+arbitrary text to a string</td></tr>
+<tr><td><a class="pred" href="coroutining.html#freeze/2">freeze/2</a></td><td>Delay 
+execution until variable is bound</td></tr>
+<tr><td><a class="pred" href="coroutining.html#frozen/2">frozen/2</a></td><td>Query 
+delayed goals on var</td></tr>
+<tr><td><a class="pred" href="manipterm.html#functor/3">functor/3</a></td><td>Get 
+name and arity of a term or construct a term</td></tr>
+<tr><td><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a></td><td>Invoke 
+the garbage collector</td></tr>
+<tr><td><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a></td><td>Invoke 
+the atom garbage collector</td></tr>
+<tr><td><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a></td><td>Invoke 
+clause garbage collector</td></tr>
+<tr><td><a class="pred" href="assoc.html#gen_assoc/3">gen_assoc/3</a></td><td>Enumerate 
+members of association tree</td></tr>
+<tr><td><a class="pred" href="nb_set.html#gen_nb_set/2">gen_nb_set/2</a></td><td>Generate 
+members of non-backtrackable set</td></tr>
+<tr><td><a class="pred" href="gensym.html#gensym/2">gensym/2</a></td><td>Generate 
+unique atoms from a base</td></tr>
+<tr><td><a class="pred" href="chario.html#get/1">get/1</a></td><td>Read 
+first non-blank character</td></tr>
+<tr><td><a class="pred" href="chario.html#get/2">get/2</a></td><td>Read 
+first non-blank character from a stream</td></tr>
+<tr><td><a class="pred" href="assoc.html#get_assoc/3">get_assoc/3</a></td><td>Fetch 
+key from association tree</td></tr>
+<tr><td><a class="pred" href="assoc.html#get_assoc/5">get_assoc/5</a></td><td>Fetch 
+key from association tree</td></tr>
+<tr><td><a class="pred" href="attvar.html#get_attr/3">get_attr/3</a></td><td>Fetch 
+named attribute from a variable</td></tr>
+<tr><td><a class="pred" href="attvar.html#get_attrs/2">get_attrs/2</a></td><td>Fetch 
+all attributes of a variable</td></tr>
+<tr><td><a class="pred" href="chario.html#get_byte/1">get_byte/1</a></td><td>Read 
+next byte (ISO)</td></tr>
+<tr><td><a class="pred" href="chario.html#get_byte/2">get_byte/2</a></td><td>Read 
+next byte from a stream (ISO)</td></tr>
+<tr><td><a class="pred" href="chario.html#get_char/1">get_char/1</a></td><td>Read 
+next character as an atom (ISO)</td></tr>
+<tr><td><a class="pred" href="chario.html#get_char/2">get_char/2</a></td><td>Read 
+next character from a stream (ISO)</td></tr>
+<tr><td><a class="pred" href="chario.html#get_code/1">get_code/1</a></td><td>Read 
+next character (ISO)</td></tr>
+<tr><td><a class="pred" href="chario.html#get_code/2">get_code/2</a></td><td>Read 
+next character from a stream (ISO)</td></tr>
+<tr><td><a class="pred" href="bidicts.html#get_dict/3">get_dict/3</a></td><td>Get 
+the value associated to a key from a dict</td></tr>
+<tr><td><a class="pred" href="bidicts.html#get_dict/5">get_dict/5</a></td><td>Replace 
+existing value in a dict</td></tr>
+<tr><td><a class="pred" href="db.html#get_flag/2">get_flag/2</a></td><td>Get 
+value of a flag</td></tr>
+<tr><td><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a></td><td>Read 
+next character from the terminal</td></tr>
+<tr><td><a class="pred" href="string.html#get_string_code/3">get_string_code/3</a></td><td>Get 
+character code at index in string</td></tr>
+<tr><td><a class="pred" href="system.html#get_time/1">get_time/1</a></td><td>Get 
+current time</td></tr>
+<tr><td><a class="pred" href="chario.html#get0/1">get0/1</a></td><td>Read 
+next character</td></tr>
+<tr><td><a class="pred" href="chario.html#get0/2">get0/2</a></td><td>Read 
+next character from a stream</td></tr>
+<tr><td><a class="pred" href="system.html#getenv/2">getenv/2</a></td><td>Get 
+shell environment variable</td></tr>
+<tr><td><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a></td><td>Hook 
+for macro-expanding goals</td></tr>
+<tr><td><a class="pred" href="consulting.html#goal_expansion/4">goal_expansion/4</a></td><td>Hook 
+for macro-expanding goals</td></tr>
+<tr><td><a class="pred" href="typetest.html#ground/1">ground/1</a></td><td>Verify 
+term holds no unbound variables</td></tr>
+<tr><td><a class="pred" href="guitracer.html#gdebug/0">gdebug/0</a></td><td>Debug 
+using graphical tracer</td></tr>
+<tr><td><a class="pred" href="guitracer.html#gspy/1">gspy/1</a></td><td>Spy 
+using graphical tracer</td></tr>
+<tr><td><a class="pred" href="guitracer.html#gtrace/0">gtrace/0</a></td><td>Trace 
+using graphical tracer</td></tr>
+<tr><td><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a></td><td>Install 
+hooks for the graphical debugger</td></tr>
+<tr><td><a class="pred" href="xref.html#gxref/0">gxref/0</a></td><td>Cross-reference 
+loaded program</td></tr>
+<tr><td><a class="pred" href="toplevel.html#halt/0">halt/0</a></td><td>Exit 
+from Prolog</td></tr>
+<tr><td><a class="pred" href="toplevel.html#halt/1">halt/1</a></td><td>Exit 
+from Prolog with status</td></tr>
+<tr><td><a class="pred" href="db.html#term_hash/2">term_hash/2</a></td><td>Hash-value 
+of ground term</td></tr>
+<tr><td><a class="pred" href="db.html#term_hash/4">term_hash/4</a></td><td>Hash-value 
+of term with depth limit</td></tr>
+<tr><td><a class="pred" href="online-help.html#help/0">help/0</a></td><td>Give 
+help on help</td></tr>
+<tr><td><a class="pred" href="online-help.html#help/1">help/1</a></td><td>Give 
+help on predicates and show parts of manual</td></tr>
+<tr><td><span class="pred-ext">help_hook/1</span></td><td><i>(hook)</i> 
+User-hook in the help-system</td></tr>
+<tr><td><a class="pred" href="consulting.html#if/1">if/1</a></td><td>Start 
+conditional compilation (directive)</td></tr>
+<tr><td><a class="pred" href="metacall.html#ignore/1">ignore/1</a></td><td>Call 
+the argument, but always succeed</td></tr>
+<tr><td><a class="pred" href="altmoduleapi.html#import/1">import/1</a></td><td>Import 
+a predicate from a module</td></tr>
+<tr><td><a class="pred" href="importmodule.html#import_module/2">import_module/2</a></td><td>Query 
+import modules</td></tr>
+<tr><td><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a></td><td>Run 
+goal in XPCE thread</td></tr>
+<tr><td><a class="pred" href="mt-xpce.html#in_pce_thread_sync/1">in_pce_thread_sync/1</a></td><td>Run 
+goal in XPCE thread</td></tr>
+<tr><td><a class="pred" href="consulting.html#include/1">include/1</a></td><td>Include 
+a file with declarations</td></tr>
+<tr><td><a class="pred" href="consulting.html#initialization/1">initialization/1</a></td><td>Initialization 
+directive</td></tr>
+<tr><td><a class="pred" href="consulting.html#initialization/2">initialization/2</a></td><td>Initialization 
+directive</td></tr>
+<tr><td><a class="pred" href="consulting.html#initialize/0">initialize/0</a></td><td>Run 
+program initialization</td></tr>
+<tr><td><a class="pred" href="db.html#instance/2">instance/2</a></td><td>Fetch 
+clause or record from reference</td></tr>
+<tr><td><a class="pred" href="typetest.html#integer/1">integer/1</a></td><td>Type 
+check for integer</td></tr>
+<tr><td><a class="pred" href="thutil.html#interactor/0">interactor/0</a></td><td>Start 
+new thread with console and top level</td></tr>
+<tr><td><a class="pred" href="arith.html#is/2">is/2</a></td><td>Evaluate 
+arithmetic expression</td></tr>
+<tr><td><a class="pred" href="files.html#is_absolute_file_name/1">is_absolute_file_name/1</a></td><td>True 
+if arg defines an absolute path</td></tr>
+<tr><td><a class="pred" href="assoc.html#is_assoc/1">is_assoc/1</a></td><td>Verify 
+association list</td></tr>
+<tr><td><a class="pred" href="bidicts.html#is_dict/1">is_dict/1</a></td><td>Type 
+check for a dict</td></tr>
+<tr><td><a class="pred" href="bidicts.html#is_dict/2">is_dict/2</a></td><td>Type 
+check for a dict in a class</td></tr>
+<tr><td><a class="pred" href="engine-predicates.html#is_engine/1">is_engine/1</a></td><td>Type 
+check for an engine handle</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#is_list/1">is_list/1</a></td><td>Type 
+check for a list</td></tr>
+<tr><td><a class="pred" href="manipterm.html#is_most_general_term/1">is_most_general_term/1</a></td><td>Type 
+check for general term</td></tr>
+<tr><td><a class="pred" href="IO.html#is_stream/1">is_stream/1</a></td><td>Type 
+check for a stream handle</td></tr>
+<tr><td><a class="pred" href="db.html#is_trie/1">is_trie/1</a></td><td>Type 
+check for a trie handle</td></tr>
+<tr><td><a class="pred" href="thmonitor.html#is_thread/1">is_thread/1</a></td><td>Type 
+check for an thread handle</td></tr>
+<tr><td><a class="pred" href="thutil.html#join_threads/0">join_threads/0</a></td><td>Join 
+all terminated threads interactively</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#keysort/2">keysort/2</a></td><td>Sort, 
+using a key</td></tr>
+<tr><td><a class="pred" href="softlicense.html#known_licenses/0">known_licenses/0</a></td><td>Print 
+known licenses</td></tr>
+<tr><td><a class="pred" href="lists.html#last/2">last/2</a></td><td>Last 
+element of a list</td></tr>
+<tr><td><a class="pred" href="debugger.html#leash/1">leash/1</a></td><td>Change 
+ports visited by the tracer</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#length/2">length/2</a></td><td>Length 
+of a list</td></tr>
+<tr><td><a class="pred" href="consulting.html#library_directory/1">library_directory/1</a></td><td><i>(hook)</i> 
+Directories holding Prolog libraries</td></tr>
+<tr><td><a class="pred" href="softlicense.html#license/0">license/0</a></td><td>Evaluate 
+licenses of loaded modules</td></tr>
+<tr><td><a class="pred" href="softlicense.html#license/1">license/1</a></td><td>Define 
+license for current file</td></tr>
+<tr><td><a class="pred" href="softlicense.html#license/2">license/2</a></td><td>Define 
+license for named module</td></tr>
+<tr><td><a class="pred" href="streamstat.html#line_count/2">line_count/2</a></td><td>Line 
+number on stream</td></tr>
+<tr><td><a class="pred" href="streamstat.html#line_position/2">line_position/2</a></td><td>Character 
+position in line on stream</td></tr>
+<tr><td><a class="pred" href="debug.html#list_debug_topics/0">list_debug_topics/0</a></td><td>List 
+registered topics for debugging</td></tr>
+<tr><td><a class="pred" href="assoc.html#list_to_assoc/2">list_to_assoc/2</a></td><td>Create 
+association tree from list</td></tr>
+<tr><td><a class="pred" href="lists.html#list_to_set/2">list_to_set/2</a></td><td>Remove 
+duplicates from a list</td></tr>
+<tr><td><a class="pred" href="string.html#list_strings/0">list_strings/0</a></td><td>Help 
+porting to version 7</td></tr>
+<tr><td><a class="pred" href="consulting.html#load_files/1">load_files/1</a></td><td>Load 
+source files</td></tr>
+<tr><td><a class="pred" href="consulting.html#load_files/2">load_files/2</a></td><td>Load 
+source files with options</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a></td><td><code>library(shlib)</code> 
+Load shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#load_foreign_library/2">load_foreign_library/2</a></td><td><code>library(shlib)</code> 
+Load shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="locale.html#locale_create/3">locale_create/3</a></td><td>Create 
+a new locale object</td></tr>
+<tr><td><a class="pred" href="locale.html#locale_destroy/1">locale_destroy/1</a></td><td>Destroy 
+a locale object</td></tr>
+<tr><td><a class="pred" href="locale.html#locale_property/2">locale_property/2</a></td><td>Query 
+properties of locale objects</td></tr>
+<tr><td><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a></td><td>Language 
+dependent sort of atoms</td></tr>
+<tr><td><a class="pred" href="consulting.html#make/0">make/0</a></td><td>Reconsult 
+all changed source files</td></tr>
+<tr><td><a class="pred" href="files.html#make_directory/1">make_directory/1</a></td><td>Create 
+a folder on the file system</td></tr>
+<tr><td><a class="pred" href="autoload.html#make_library_index/1">make_library_index/1</a></td><td>Create 
+autoload file INDEX.pl</td></tr>
+<tr><td><a class="pred" href="memory.html#malloc_property/1">malloc_property/1</a></td><td>Property 
+of the allocator</td></tr>
+<tr><td><a class="pred" href="autoload.html#make_library_index/2">make_library_index/2</a></td><td>Create 
+selective autoload file INDEX.pl</td></tr>
+<tr><td><a class="pred" href="assoc.html#map_assoc/2">map_assoc/2</a></td><td>Map 
+association tree</td></tr>
+<tr><td><a class="pred" href="assoc.html#map_assoc/3">map_assoc/3</a></td><td>Map 
+association tree</td></tr>
+<tr><td><a class="pred" href="bidicts.html#dict_create/3">dict_create/3</a></td><td>Create 
+a dict from data</td></tr>
+<tr><td><a class="pred" href="bidicts.html#dict_pairs/3">dict_pairs/3</a></td><td>Convert 
+between dict and list of pairs</td></tr>
+<tr><td><a class="pred" href="assoc.html#max_assoc/3">max_assoc/3</a></td><td>Highest 
+key in association tree</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a></td><td>Deterministic <a id="idx:member2:2738"></a><a class="pred" href="lists.html#member/2">member/2</a></td></tr>
+<tr><td><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a></td><td>Intercept <a id="idx:printmessage2:2739"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a></td></tr>
+<tr><td><span class="pred-ext">message_line_element/2</span></td><td><i>(hook)</i> 
+Intercept <a id="idx:printmessagelines3:2740"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a></td></tr>
+<tr><td><a class="pred" href="printmsg.html#message_property/2">message_property/2</a></td><td><i>(hook)</i> 
+Define display of a message</td></tr>
+<tr><td><a class="pred" href="threadcom.html#message_queue_create/1">message_queue_create/1</a></td><td>Create 
+queue for thread communication</td></tr>
+<tr><td><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a></td><td>Create 
+queue for thread communication</td></tr>
+<tr><td><a class="pred" href="threadcom.html#message_queue_destroy/1">message_queue_destroy/1</a></td><td>Destroy 
+queue for thread communication</td></tr>
+<tr><td><a class="pred" href="threadcom.html#message_queue_property/2">message_queue_property/2</a></td><td>Query 
+message queue properties</td></tr>
+<tr><td><a class="pred" href="threadcom.html#message_queue_set/2">message_queue_set/2</a></td><td>Set 
+a message queue property</td></tr>
+<tr><td><a class="pred" href="printmsg.html#message_to_string/2">message_to_string/2</a></td><td>Translate 
+message-term to string</td></tr>
+<tr><td><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a></td><td>Declare 
+access to other predicates</td></tr>
+<tr><td><a class="pred" href="assoc.html#min_assoc/3">min_assoc/3</a></td><td>Lowest 
+key in association tree</td></tr>
+<tr><td><a class="pred" href="mtoplevel.html#module/1">module/1</a></td><td>Query/set 
+current type-in module</td></tr>
+<tr><td><a class="pred" href="defmodule.html#module/2">module/2</a></td><td>Declare 
+a module</td></tr>
+<tr><td><a class="pred" href="defmodule.html#module/3">module/3</a></td><td>Declare 
+a module with language options</td></tr>
+<tr><td><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a></td><td>Find 
+properties of a module</td></tr>
+<tr><td><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a></td><td>Indicate 
+module based meta-predicate</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#msort/2">msort/2</a></td><td>Sort, 
+do not remove duplicates</td></tr>
+<tr><td><a class="pred" href="dynamic.html#multifile/1">multifile/1</a></td><td>Indicate 
+distributed definition of predicate</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a></td><td>Create 
+a thread-synchronisation device</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_create/2">mutex_create/2</a></td><td>Create 
+a thread-synchronisation device</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_destroy/1">mutex_destroy/1</a></td><td>Destroy 
+a mutex</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_lock/1">mutex_lock/1</a></td><td>Become 
+owner of a mutex</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_property/2">mutex_property/2</a></td><td>Query 
+mutex properties</td></tr>
+<tr><td><a class="pred" href="thmonitor.html#mutex_statistics/0">mutex_statistics/0</a></td><td>Print 
+statistics on mutex usage</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_trylock/1">mutex_trylock/1</a></td><td>Become 
+owner of a mutex (non-blocking)</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_unlock/1">mutex_unlock/1</a></td><td>Release 
+ownership of mutex</td></tr>
+<tr><td><a class="pred" href="threadsync.html#mutex_unlock_all/0">mutex_unlock_all/0</a></td><td>Release 
+ownership of all mutexes</td></tr>
+<tr><td><a class="pred" href="manipatom.html#name/2">name/2</a></td><td>Convert 
+between atom and list of character codes</td></tr>
+<tr><td><a class="pred" href="gvar.html#nb_current/2">nb_current/2</a></td><td>Enumerate 
+non-backtrackable global variables</td></tr>
+<tr><td><a class="pred" href="gvar.html#nb_delete/1">nb_delete/1</a></td><td>Delete 
+a non-backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="gvar.html#nb_getval/2">nb_getval/2</a></td><td>Fetch 
+non-backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="bidicts.html#nb_link_dict/3">nb_link_dict/3</a></td><td>Non-backtrackable 
+assignment to dict</td></tr>
+<tr><td><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a></td><td>Non-backtrackable 
+assignment to term</td></tr>
+<tr><td><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a></td><td>Assign 
+non-backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="nb_set.html#nb_set_to_list/2">nb_set_to_list/2</a></td><td>Convert 
+non-backtrackable set to list</td></tr>
+<tr><td><a class="pred" href="bidicts.html#nb_set_dict/3">nb_set_dict/3</a></td><td>Non-backtrackable 
+assignment to dict</td></tr>
+<tr><td><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a></td><td>Non-backtrackable 
+assignment to term</td></tr>
+<tr><td><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a></td><td>Assign 
+non-backtrackable global variable</td></tr>
+<tr><td><a class="pred" href="chario.html#nl/0">nl/0</a></td><td>Generate 
+a newline</td></tr>
+<tr><td><a class="pred" href="chario.html#nl/1">nl/1</a></td><td>Generate 
+a newline on a stream</td></tr>
+<tr><td><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a></td><td>Disable 
+debugging</td></tr>
+<tr><td><a class="pred" href="debug.html#nodebug/1">nodebug/1</a></td><td>Disable 
+debug-topic</td></tr>
+<tr><td><a class="pred" href="guitracer.html#noguitracer/0">noguitracer/0</a></td><td>Disable 
+the graphical debugger</td></tr>
+<tr><td><a class="pred" href="manipterm.html#nonground/2">nonground/2</a></td><td>Term 
+is not ground due to witness</td></tr>
+<tr><td><a class="pred" href="typetest.html#nonvar/1">nonvar/1</a></td><td>Type 
+check for bound term</td></tr>
+<tr><td><span class="pred-ext">nonterminal/1</span></td><td>Set 
+predicate property</td></tr>
+<tr><td><a class="pred" href="profile.html#noprofile/1">noprofile/1</a></td><td>Hide 
+(meta-) predicate for the profiler</td></tr>
+<tr><td><a class="pred" href="protocol.html#noprotocol/0">noprotocol/0</a></td><td>Disable 
+logging of user interaction</td></tr>
+<tr><td><a class="pred" href="chartype.html#normalize_space/2">normalize_space/2</a></td><td>Normalize 
+white space</td></tr>
+<tr><td><a class="pred" href="debugger.html#nospy/1">nospy/1</a></td><td>Remove 
+spy point</td></tr>
+<tr><td><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a></td><td>Remove 
+all spy points</td></tr>
+<tr><td><a class="pred" href="metacall.html#not/1">not/1</a></td><td>Negation 
+by failure (argument not provable). Same as <a class="pred" href="control.html#\+/1">\+/1</a></td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a></td><td>Tabled 
+negation for non-ground or non-tabled goals</td></tr>
+<tr><td><a class="pred" href="debugger.html#notrace/0">notrace/0</a></td><td>Stop 
+tracing</td></tr>
+<tr><td><a class="pred" href="debugger.html#notrace/1">notrace/1</a></td><td>Do 
+not debug argument goal</td></tr>
+<tr><td><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a></td><td>N-th 
+clause of a predicate</td></tr>
+<tr><td><a class="pred" href="arith.html#nth_integer_root_and_remainder/4">nth_integer_root_and_remainder/4</a></td><td>Integer 
+root and remainder</td></tr>
+<tr><td><a class="pred" href="typetest.html#number/1">number/1</a></td><td>Type 
+check for integer or float</td></tr>
+<tr><td><a class="pred" href="manipatom.html#number_chars/2">number_chars/2</a></td><td>Convert 
+between number and one-char atoms</td></tr>
+<tr><td><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a></td><td>Convert 
+between number and character codes</td></tr>
+<tr><td><a class="pred" href="string.html#number_string/2">number_string/2</a></td><td>Convert 
+between number and string</td></tr>
+<tr><td><a class="pred" href="manipterm.html#numbervars/3">numbervars/3</a></td><td>Number 
+unbound variables of a term</td></tr>
+<tr><td><a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a></td><td>Number 
+unbound variables of a term</td></tr>
+<tr><td><a class="pred" href="signal.html#on_signal/3">on_signal/3</a></td><td>Handle 
+a software signal</td></tr>
+<tr><td><a class="pred" href="metacall.html#once/1">once/1</a></td><td>Call 
+a goal deterministically</td></tr>
+<tr><td><a class="pred" href="operators.html#op/3">op/3</a></td><td>Declare 
+an operator</td></tr>
+<tr><td><a class="pred" href="IO.html#open/3">open/3</a></td><td>Open a 
+file (creating a stream)</td></tr>
+<tr><td><a class="pred" href="IO.html#open/4">open/4</a></td><td>Open a 
+file (creating a stream)</td></tr>
+<tr><td><a class="pred" href="DDE.html#open_dde_conversation/3">open_dde_conversation/3</a></td><td>Win32: 
+Open DDE channel</td></tr>
+<tr><td><a class="pred" href="IO.html#open_null_stream/1">open_null_stream/1</a></td><td>Open 
+a stream to discard output</td></tr>
+<tr><td><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a></td><td>Open 
+a program resource as a stream</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a></td><td>UNIX: 
+Open shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a></td><td>UNIX: 
+Open shared library (.so file)</td></tr>
+<tr><td><span class="pred-ext">open_source_hook/3</span></td><td><i>(hook)</i> 
+Open a source file</td></tr>
+<tr><td><a class="pred" href="string.html#open_string/2">open_string/2</a></td><td>Open 
+a string as a stream</td></tr>
+<tr><td><a class="pred" href="assoc.html#ord_list_to_assoc/2">ord_list_to_assoc/2</a></td><td>Convert 
+ordered list to assoc</td></tr>
+<tr><td><a class="pred" href="system.html#parse_time/2">parse_time/2</a></td><td>Parse 
+text to a time-stamp</td></tr>
+<tr><td><a class="pred" href="system.html#parse_time/3">parse_time/3</a></td><td>Parse 
+text to a time-stamp</td></tr>
+<tr><td><a class="pred" href="mt-xpce.html#pce_dispatch/1">pce_dispatch/1</a></td><td>Run 
+XPCE GUI in separate thread</td></tr>
+<tr><td><span class="pred-ext">pce_call/1</span></td><td>Run goal in 
+XPCE GUI thread</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_byte/1">peek_byte/1</a></td><td>Read 
+byte without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_byte/2">peek_byte/2</a></td><td>Read 
+byte without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_char/1">peek_char/1</a></td><td>Read 
+character without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_char/2">peek_char/2</a></td><td>Read 
+character without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_code/1">peek_code/1</a></td><td>Read 
+character-code without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_code/2">peek_code/2</a></td><td>Read 
+character-code without removing</td></tr>
+<tr><td><a class="pred" href="chario.html#peek_string/3">peek_string/3</a></td><td>Read 
+a string without removing</td></tr>
+<tr><td><a class="pred" href="DCG.html#phrase/2">phrase/2</a></td><td>Activate 
+grammar-rule set</td></tr>
+<tr><td><a class="pred" href="DCG.html#phrase/3">phrase/3</a></td><td>Activate 
+grammar-rule set (returning rest)</td></tr>
+<tr><td><a class="pred" href="quasiquotations.html#phrase_from_quasi_quotation/2">phrase_from_quasi_quotation/2</a></td><td>Parse 
+quasi quotation with DCG</td></tr>
+<tr><td><span class="pred-ext">please/3</span></td><td>Query/change 
+environment parameters</td></tr>
+<tr><td><a class="pred" href="arith.html#plus/3">plus/3</a></td><td>Logical 
+integer addition</td></tr>
+<tr><td><a class="pred" href="termrw.html#portray/1">portray/1</a></td><td><i>(hook)</i> 
+Modify behaviour of <a id="idx:print1:2741"></a><a class="pred" href="termrw.html#print/1">print/1</a></td></tr>
+<tr><td><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a></td><td>Query 
+predicate attributes</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#predsort/3">predsort/3</a></td><td>Sort, 
+using a predicate to determine the order</td></tr>
+<tr><td><a class="pred" href="termrw.html#print/1">print/1</a></td><td>Print 
+a term</td></tr>
+<tr><td><a class="pred" href="termrw.html#print/2">print/2</a></td><td>Print 
+a term on a stream</td></tr>
+<tr><td><a class="pred" href="printmsg.html#print_message/2">print_message/2</a></td><td>Print 
+message from (exception) term</td></tr>
+<tr><td><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a></td><td>Print 
+message to stream</td></tr>
+<tr><td><a class="pred" href="profile.html#profile/1">profile/1</a></td><td>Obtain 
+execution statistics</td></tr>
+<tr><td><a class="pred" href="profile.html#profile/2">profile/2</a></td><td>Obtain 
+execution statistics</td></tr>
+<tr><td><span class="pred-ext">profile_count/3</span></td><td>Obtain 
+profile results on a predicate</td></tr>
+<tr><td><a class="pred" href="profile.html#profiler/2">profiler/2</a></td><td>Obtain/change 
+status of the profiler</td></tr>
+<tr><td><a class="pred" href="toplevel.html#prolog/0">prolog/0</a></td><td>Run 
+interactive top level</td></tr>
+<tr><td><a class="pred" href="signal.html#prolog_alert_signal/2">prolog_alert_signal/2</a></td><td>Query/set 
+unblock signal</td></tr>
+<tr><td><a class="pred" href="manipstack.html#prolog_choice_attribute/3">prolog_choice_attribute/3</a></td><td>Examine 
+the choice point stack</td></tr>
+<tr><td><a class="pred" href="manipstack.html#prolog_current_choice/1">prolog_current_choice/1</a></td><td>Reference 
+to most recent choice point</td></tr>
+<tr><td><a class="pred" href="manipstack.html#prolog_current_frame/1">prolog_current_frame/1</a></td><td>Reference 
+to goal's environment stack</td></tr>
+<tr><td><a class="pred" href="ancestral-cut.html#prolog_cut_to/1">prolog_cut_to/1</a></td><td>Realise 
+global cuts</td></tr>
+<tr><td><a class="pred" href="edit.html#prolog_edit:locate/2">prolog_edit:locate/2</a></td><td>Locate 
+targets for <a id="idx:edit1:2742"></a><a class="pred" href="edit.html#edit/1">edit/1</a></td></tr>
+<tr><td><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a></td><td>Locate 
+targets for <a id="idx:edit1:2743"></a><a class="pred" href="edit.html#edit/1">edit/1</a></td></tr>
+<tr><td><a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a></td><td>Call 
+editor for <a id="idx:edit1:2744"></a><a class="pred" href="edit.html#edit/1">edit/1</a></td></tr>
+<tr><td><a class="pred" href="edit.html#prolog_edit:edit_command/2">prolog_edit:edit_command/2</a></td><td>Specify 
+editor activation</td></tr>
+<tr><td><a class="pred" href="edit.html#prolog_edit:load/0">prolog_edit:load/0</a></td><td>Load <a id="idx:edit1:2745"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+extensions</td></tr>
+<tr><td><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a></td><td>Rewrite 
+exceptions</td></tr>
+<tr><td><a class="pred" href="consulting.html#prolog_file_type/2">prolog_file_type/2</a></td><td>Define 
+meaning of file extension</td></tr>
+<tr><td><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a></td><td>Obtain 
+information on a goal environment</td></tr>
+<tr><td><a class="pred" href="idepreds.html#prolog_ide/1">prolog_ide/1</a></td><td>Program 
+access to the development environment</td></tr>
+<tr><td><a class="pred" href="intlibs.html#prolog_list_goal/1">prolog_list_goal/1</a></td><td><i>(hook)</i> 
+Intercept tracer&rsquo;L' command</td></tr>
+<tr><td><a class="pred" href="prolog-event.html#prolog_listen/2">prolog_listen/2</a></td><td>Listen 
+to Prolog events</td></tr>
+<tr><td><a class="pred" href="prolog-event.html#prolog_listen/3">prolog_listen/3</a></td><td>Listen 
+to Prolog events</td></tr>
+<tr><td><a class="pred" href="consulting.html#prolog_load_context/2">prolog_load_context/2</a></td><td>Context 
+information for directives</td></tr>
+<tr><td><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a></td><td><i>(hook)</i> 
+Program <a id="idx:loadfiles2:2746"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a></td></tr>
+<tr><td><a class="pred" href="tracehook.html#prolog_skip_level/2">prolog_skip_level/2</a></td><td>Indicate 
+deepest recursion to trace</td></tr>
+<tr><td><a class="pred" href="tracehook.html#prolog_skip_frame/1">prolog_skip_frame/1</a></td><td>Perform&lsquo;skip' 
+on a frame</td></tr>
+<tr><td><a class="pred" href="memory.html#prolog_stack_property/2">prolog_stack_property/2</a></td><td>Query 
+properties of the stacks</td></tr>
+<tr><td><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a></td><td>Convert 
+between Prolog and OS filenames</td></tr>
+<tr><td><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a></td><td><code>library(user)</code> 
+Intercept the Prolog tracer</td></tr>
+<tr><td><a class="pred" href="prolog-event.html#prolog_unlisten/2">prolog_unlisten/2</a></td><td>Stop 
+listening to Prolog events</td></tr>
+<tr><td><a class="pred" href="attvar.html#project_attributes/2">project_attributes/2</a></td><td>Project 
+constraints to query variables</td></tr>
+<tr><td><a class="pred" href="termrw.html#prompt1/1">prompt1/1</a></td><td>Change 
+prompt for 1 line</td></tr>
+<tr><td><a class="pred" href="termrw.html#prompt/2">prompt/2</a></td><td>Change 
+the prompt used by <a id="idx:read1:2747"></a><a class="pred" href="termrw.html#read/1">read/1</a></td></tr>
+<tr><td><a class="pred" href="protocol.html#protocol/1">protocol/1</a></td><td>Make 
+a log of the user interaction</td></tr>
+<tr><td><a class="pred" href="protocol.html#protocola/1">protocola/1</a></td><td>Append 
+log of the user interaction to file</td></tr>
+<tr><td><a class="pred" href="protocol.html#protocolling/1">protocolling/1</a></td><td>On 
+what file is user interaction logged</td></tr>
+<tr><td><a class="pred" href="dynamic.html#public/1">public/1</a></td><td>Declaration 
+that a predicate may be called</td></tr>
+<tr><td><a class="pred" href="chario.html#put/1">put/1</a></td><td>Write 
+a character</td></tr>
+<tr><td><a class="pred" href="chario.html#put/2">put/2</a></td><td>Write 
+a character on a stream</td></tr>
+<tr><td><a class="pred" href="assoc.html#put_assoc/4">put_assoc/4</a></td><td>Add 
+Key-Value to association tree</td></tr>
+<tr><td><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a></td><td>Put 
+attribute on a variable</td></tr>
+<tr><td><a class="pred" href="attvar.html#put_attrs/2">put_attrs/2</a></td><td>Set/replace 
+all attributes on a variable</td></tr>
+<tr><td><a class="pred" href="chario.html#put_byte/1">put_byte/1</a></td><td>Write 
+a byte</td></tr>
+<tr><td><a class="pred" href="chario.html#put_byte/2">put_byte/2</a></td><td>Write 
+a byte on a stream</td></tr>
+<tr><td><a class="pred" href="chario.html#put_char/1">put_char/1</a></td><td>Write 
+a character</td></tr>
+<tr><td><a class="pred" href="chario.html#put_char/2">put_char/2</a></td><td>Write 
+a character on a stream</td></tr>
+<tr><td><a class="pred" href="chario.html#put_code/1">put_code/1</a></td><td>Write 
+a character-code</td></tr>
+<tr><td><a class="pred" href="chario.html#put_code/2">put_code/2</a></td><td>Write 
+a character-code on a stream</td></tr>
+<tr><td><a class="pred" href="bidicts.html#put_dict/3">put_dict/3</a></td><td>Add/replace 
+multiple keys in a dict</td></tr>
+<tr><td><a class="pred" href="bidicts.html#put_dict/4">put_dict/4</a></td><td>Add/replace 
+a single key in a dict</td></tr>
+<tr><td><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a></td><td>Compile 
+source to Quick Load File</td></tr>
+<tr><td><a class="pred" href="consulting.html#qcompile/2">qcompile/2</a></td><td>Compile 
+source to Quick Load File</td></tr>
+<tr><td><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/1</a></td><td>Create 
+runtime application</td></tr>
+<tr><td><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a></td><td>Create 
+runtime application</td></tr>
+<tr><td><a class="pred" href="quasiquotations.html#quasi_quotation_syntax/1">quasi_quotation_syntax/1</a></td><td>Declare 
+quasi quotation syntax</td></tr>
+<tr><td><a class="pred" href="quasiquotations.html#quasi_quotation_syntax_error/1">quasi_quotation_syntax_error/1</a></td><td>Raise 
+syntax error</td></tr>
+<tr><td><a class="pred" href="tabling-restraints.html#radial_restraint/0">radial_restraint/0</a></td><td>Tabbling 
+radial restraint was violated</td></tr>
+<tr><td><a class="pred" href="miscarith.html#random_property/1">random_property/1</a></td><td>Query 
+properties of random generation</td></tr>
+<tr><td><a class="pred" href="typetest.html#rational/1">rational/1</a></td><td>Type 
+check for a rational number</td></tr>
+<tr><td><a class="pred" href="typetest.html#rational/3">rational/3</a></td><td>Decompose 
+a rational</td></tr>
+<tr><td><a class="pred" href="termrw.html#read/1">read/1</a></td><td>Read 
+Prolog term</td></tr>
+<tr><td><a class="pred" href="termrw.html#read/2">read/2</a></td><td>Read 
+Prolog term from stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#read_clause/3">read_clause/3</a></td><td>Read 
+clause from stream</td></tr>
+<tr><td><a class="pred" href="files.html#read_link/3">read_link/3</a></td><td>Read 
+a symbolic link</td></tr>
+<tr><td><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a></td><td>Fetch 
+buffered input from a stream</td></tr>
+<tr><td><a class="pred" href="chario.html#read_pending_chars/3">read_pending_chars/3</a></td><td>Fetch 
+buffered input from a stream</td></tr>
+<tr><td><a class="pred" href="string.html#read_string/3">read_string/3</a></td><td>Read 
+a number of characters into a string</td></tr>
+<tr><td><a class="pred" href="string.html#read_string/5">read_string/5</a></td><td>Read 
+string upto a delimiter</td></tr>
+<tr><td><a class="pred" href="termrw.html#read_term/2">read_term/2</a></td><td>Read 
+term with options</td></tr>
+<tr><td><a class="pred" href="termrw.html#read_term/3">read_term/3</a></td><td>Read 
+term with options from stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#read_term_from_atom/3">read_term_from_atom/3</a></td><td>Read 
+term with options from atom</td></tr>
+<tr><td><a class="pred" href="termrw.html#read_term_with_history/2">read_term_with_history/2</a></td><td>Read 
+term with command line history</td></tr>
+<tr><td><a class="pred" href="db.html#recorda/2">recorda/2</a></td><td>Record 
+term in the database (first)</td></tr>
+<tr><td><a class="pred" href="db.html#recorda/3">recorda/3</a></td><td>Record 
+term in the database (first)</td></tr>
+<tr><td><a class="pred" href="db.html#recorded/2">recorded/2</a></td><td>Obtain 
+term from the database</td></tr>
+<tr><td><a class="pred" href="db.html#recorded/3">recorded/3</a></td><td>Obtain 
+term from the database</td></tr>
+<tr><td><a class="pred" href="db.html#recordz/2">recordz/2</a></td><td>Record 
+term in the database (last)</td></tr>
+<tr><td><a class="pred" href="db.html#recordz/3">recordz/3</a></td><td>Record 
+term in the database (last)</td></tr>
+<tr><td><a class="pred" href="db.html#redefine_system_predicate/1">redefine_system_predicate/1</a></td><td>Abolish 
+system definition</td></tr>
+<tr><td><a class="pred" href="reexport.html#reexport/1">reexport/1</a></td><td>Load 
+files and re-export the imported predicates</td></tr>
+<tr><td><a class="pred" href="reexport.html#reexport/2">reexport/2</a></td><td>Load 
+predicates from a file and re-export it</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#reload_foreign_libraries/0">reload_foreign_libraries/0</a></td><td>Reload 
+DLLs/shared objects</td></tr>
+<tr><td><a class="pred" href="autoload.html#reload_library_index/0">reload_library_index/0</a></td><td>Force 
+reloading the autoload index</td></tr>
+<tr><td><a class="pred" href="files.html#rename_file/2">rename_file/2</a></td><td>Change 
+name of file</td></tr>
+<tr><td><a class="pred" href="control.html#repeat/0">repeat/0</a></td><td>Succeed, 
+leaving infinite backtrack points</td></tr>
+<tr><td><a class="pred" href="consulting.html#require/1">require/1</a></td><td>This 
+file requires these predicates</td></tr>
+<tr><td><a class="pred" href="delcont.html#reset/3">reset/3</a></td><td>Wrapper 
+for delimited continuations</td></tr>
+<tr><td><a class="pred" href="gensym.html#reset_gensym/1">reset_gensym/1</a></td><td>Reset 
+a gensym key</td></tr>
+<tr><td><a class="pred" href="gensym.html#reset_gensym/0">reset_gensym/0</a></td><td>Reset 
+all gensym keys</td></tr>
+<tr><td><a class="pred" href="profile.html#reset_profiler/0">reset_profiler/0</a></td><td>Clear 
+statistics obtained by the profiler</td></tr>
+<tr><td><a class="pred" href="program-resources.html#resource/2">resource/2</a></td><td>Declare 
+a program resource</td></tr>
+<tr><td><a class="pred" href="program-resources.html#resource/3">resource/3</a></td><td>Declare 
+a program resource</td></tr>
+<tr><td><a class="pred" href="db.html#retract/1">retract/1</a></td><td>Remove 
+clause from the database</td></tr>
+<tr><td><a class="pred" href="db.html#retractall/1">retractall/1</a></td><td>Remove 
+unifying clauses from the database</td></tr>
+<tr><td><a class="pred" href="files.html#same_file/2">same_file/2</a></td><td>Succeeds 
+if arguments refer to same file</td></tr>
+<tr><td><a class="pred" href="manipterm.html#same_term/2">same_term/2</a></td><td>Test 
+terms to be at the same address</td></tr>
+<tr><td><a class="pred" href="IO.html#see/1">see/1</a></td><td>Change 
+the current input stream</td></tr>
+<tr><td><a class="pred" href="IO.html#seeing/1">seeing/1</a></td><td>Query 
+the current input stream</td></tr>
+<tr><td><a class="pred" href="IO.html#seek/4">seek/4</a></td><td>Modify 
+the current position in a stream</td></tr>
+<tr><td><a class="pred" href="IO.html#seen/0">seen/0</a></td><td>Close 
+the current input stream</td></tr>
+<tr><td><span class="pred-ext">select_dict/2</span></td><td>Select 
+matching attributes from a dict</td></tr>
+<tr><td><a class="pred" href="bidicts.html#select_dict/3">select_dict/3</a></td><td>Select 
+matching attributes from a dict</td></tr>
+<tr><td><a class="pred" href="chario.html#set_end_of_stream/1">set_end_of_stream/1</a></td><td>Set 
+physical end of an open file</td></tr>
+<tr><td><a class="pred" href="db.html#set_flag/2">set_flag/2</a></td><td>Set 
+value of a flag</td></tr>
+<tr><td><a class="pred" href="IO.html#set_input/1">set_input/1</a></td><td>Set 
+current input stream from a stream</td></tr>
+<tr><td><a class="pred" href="locale.html#set_locale/1">set_locale/1</a></td><td>Set 
+the default local</td></tr>
+<tr><td><a class="pred" href="memory.html#set_malloc/1">set_malloc/1</a></td><td>Set 
+memory allocator property</td></tr>
+<tr><td><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a></td><td>Set 
+properties of a module</td></tr>
+<tr><td><a class="pred" href="IO.html#set_output/1">set_output/1</a></td><td>Set 
+current output stream from a stream</td></tr>
+<tr><td><a class="pred" href="IO.html#set_prolog_IO/3">set_prolog_IO/3</a></td><td>Prepare 
+streams for interactive session</td></tr>
+<tr><td><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a></td><td>Define 
+a system feature</td></tr>
+<tr><td><a class="pred" href="memory.html#set_prolog_gc_thread/1">set_prolog_gc_thread/1</a></td><td>Control 
+the gc thread</td></tr>
+<tr><td><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a></td><td>Modify 
+stack characteristics</td></tr>
+<tr><td><a class="pred" href="miscarith.html#set_random/1">set_random/1</a></td><td>Control 
+random number generation</td></tr>
+<tr><td><a class="pred" href="IO.html#set_stream/2">set_stream/2</a></td><td>Set 
+stream attribute</td></tr>
+<tr><td><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a></td><td>Seek 
+stream to position</td></tr>
+<tr><td><a class="pred" href="IO.html#set_system_IO/3">set_system_IO/3</a></td><td>Rebind 
+stdin/stderr/stdout</td></tr>
+<tr><td><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a></td><td>Undo 
+side-effects safely</td></tr>
+<tr><td><a class="pred" href="metacall.html#setup_call_catcher_cleanup/4">setup_call_catcher_cleanup/4</a></td><td>Undo 
+side-effects safely</td></tr>
+<tr><td><a class="pred" href="manipterm.html#setarg/3">setarg/3</a></td><td>Destructive 
+assignment on term</td></tr>
+<tr><td><a class="pred" href="system.html#setenv/2">setenv/2</a></td><td>Set 
+shell environment variable</td></tr>
+<tr><td><a class="pred" href="system.html#setlocale/3">setlocale/3</a></td><td>Set/query 
+C-library regional information</td></tr>
+<tr><td><a class="pred" href="allsolutions.html#setof/3">setof/3</a></td><td>Find 
+all unique solutions to a goal</td></tr>
+<tr><td><a class="pred" href="system.html#shell/1">shell/1</a></td><td>Execute 
+OS command</td></tr>
+<tr><td><a class="pred" href="system.html#shell/2">shell/2</a></td><td>Execute 
+OS command</td></tr>
+<tr><td><a class="pred" href="delcont.html#shift/1">shift/1</a></td><td>Shift 
+control to the closest <a id="idx:reset3:2748"></a><a class="pred" href="delcont.html#reset/3">reset/3</a></td></tr>
+<tr><td><a class="pred" href="profile.html#show_profile/1">show_profile/1</a></td><td>Show 
+results of the profiler</td></tr>
+<tr><td><a class="pred" href="tabling-restraints.html#size_abstract_term/3">size_abstract_term/3</a></td><td>Abstract 
+a term (tabling support)</td></tr>
+<tr><td><a class="pred" href="files.html#size_file/2">size_file/2</a></td><td>Get 
+size of a file in characters</td></tr>
+<tr><td><a class="pred" href="nb_set.html#size_nb_set/2">size_nb_set/2</a></td><td>Determine 
+size of non-backtrackable set</td></tr>
+<tr><td><a class="pred" href="chario.html#skip/1">skip/1</a></td><td>Skip 
+to character in current input</td></tr>
+<tr><td><a class="pred" href="chario.html#skip/2">skip/2</a></td><td>Skip 
+to character on stream</td></tr>
+<tr><td><a class="pred" href="miscpreds.html#sleep/1">sleep/1</a></td><td>Suspend 
+execution for specified time</td></tr>
+<tr><td><a class="pred" href="db.html#snapshot/1">snapshot/1</a></td><td>Run 
+goal in isolation</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#sort/2">sort/2</a></td><td>Sort 
+elements in a list</td></tr>
+<tr><td><a class="pred" href="builtinlist.html#sort/4">sort/4</a></td><td>Sort 
+elements in a list</td></tr>
+<tr><td><a class="pred" href="dialect.html#source_exports/2">source_exports/2</a></td><td>Check 
+whether source exports a predicate</td></tr>
+<tr><td><a class="pred" href="consulting.html#source_file/1">source_file/1</a></td><td>Examine 
+currently loaded source files</td></tr>
+<tr><td><a class="pred" href="consulting.html#source_file/2">source_file/2</a></td><td>Obtain 
+source file of predicate</td></tr>
+<tr><td><a class="pred" href="consulting.html#source_file_property/2">source_file_property/2</a></td><td>Information 
+about loaded files</td></tr>
+<tr><td><a class="pred" href="consulting.html#source_location/2">source_location/2</a></td><td>Location 
+of last read term</td></tr>
+<tr><td><a class="pred" href="string.html#split_string/4">split_string/4</a></td><td>Break 
+a string into substrings</td></tr>
+<tr><td><a class="pred" href="debugger.html#spy/1">spy/1</a></td><td>Force 
+tracer on specified predicate</td></tr>
+<tr><td><a class="pred" href="system.html#stamp_date_time/3">stamp_date_time/3</a></td><td>Convert 
+time-stamp to date structure</td></tr>
+<tr><td><a class="pred" href="statistics.html#statistics/0">statistics/0</a></td><td>Show 
+execution statistics</td></tr>
+<tr><td><a class="pred" href="statistics.html#statistics/2">statistics/2</a></td><td>Obtain 
+collected statistics</td></tr>
+<tr><td><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a></td><td>Create/examine 
+a bi-directional stream</td></tr>
+<tr><td><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a></td><td>Access 
+fields from stream position</td></tr>
+<tr><td><a class="pred" href="IO.html#stream_property/2">stream_property/2</a></td><td>Get 
+stream properties</td></tr>
+<tr><td><a class="pred" href="typetest.html#string/1">string/1</a></td><td>Type 
+check for string</td></tr>
+<tr><td><a class="pred" href="string.html#string_concat/3">string_concat/3</a></td><td><a id="idx:atomconcat3:2749"></a><a class="pred" href="manipatom.html#atom_concat/3">atom_concat/3</a> 
+for strings</td></tr>
+<tr><td><a class="pred" href="string.html#string_length/2">string_length/2</a></td><td>Determine 
+length of a string</td></tr>
+<tr><td><a class="pred" href="string.html#string_chars/2">string_chars/2</a></td><td>Conversion 
+between string and list of characters</td></tr>
+<tr><td><a class="pred" href="string.html#string_codes/2">string_codes/2</a></td><td>Conversion 
+between string and list of character codes</td></tr>
+<tr><td><a class="pred" href="string.html#string_code/3">string_code/3</a></td><td>Get 
+or find a character code in a string</td></tr>
+<tr><td><a class="pred" href="string.html#string_lower/2">string_lower/2</a></td><td>Case 
+conversion to lower case</td></tr>
+<tr><td><a class="pred" href="string.html#string_upper/2">string_upper/2</a></td><td>Case 
+conversion to upper case</td></tr>
+<tr><td><a class="pred" href="check.html#string_predicate/1">string_predicate/1</a></td><td><i>(hook)</i> 
+Predicate contains strings</td></tr>
+<tr><td><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a></td><td>Extract 
+context module and term</td></tr>
+<tr><td><a class="pred" href="debugger.html#style_check/1">style_check/1</a></td><td>Change 
+level of warnings</td></tr>
+<tr><td><a class="pred" href="manipatom.html#sub_atom/5">sub_atom/5</a></td><td>Take 
+a substring from an atom</td></tr>
+<tr><td><a class="pred" href="manipatom.html#sub_atom_icasechk/3">sub_atom_icasechk/3</a></td><td>Case 
+insensitive substring match</td></tr>
+<tr><td><a class="pred" href="string.html#sub_string/5">sub_string/5</a></td><td>Take 
+a substring from a string</td></tr>
+<tr><td><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a></td><td>One-sided 
+unification test</td></tr>
+<tr><td><a class="pred" href="arith.html#succ/2">succ/2</a></td><td>Logical 
+integer successor relation</td></tr>
+<tr><td><a class="pred" href="format.html#swritef/2">swritef/2</a></td><td>Formatted 
+write on a string</td></tr>
+<tr><td><a class="pred" href="format.html#swritef/3">swritef/3</a></td><td>Formatted 
+write on a string</td></tr>
+<tr><td><a class="pred" href="chario.html#tab/1">tab/1</a></td><td>Output 
+number of spaces</td></tr>
+<tr><td><a class="pred" href="chario.html#tab/2">tab/2</a></td><td>Output 
+number of spaces on a stream</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#table/1">table/1</a></td><td>Declare 
+predicate to be tabled</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#tabled_call/1">tabled_call/1</a></td><td>Helper 
+for <a id="idx:notexists1:2750"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a></td></tr>
+<tr><td><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a></td><td>Switch 
+all threads into debug mode</td></tr>
+<tr><td><a class="pred" href="thutil.html#tdebug/1">tdebug/1</a></td><td>Switch 
+a thread into debug mode</td></tr>
+<tr><td><a class="pred" href="IO.html#tell/1">tell/1</a></td><td>Change 
+current output stream</td></tr>
+<tr><td><a class="pred" href="IO.html#telling/1">telling/1</a></td><td>Query 
+current output stream</td></tr>
+<tr><td><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a></td><td><i>(hook)</i> 
+Convert term before compilation</td></tr>
+<tr><td><a class="pred" href="consulting.html#term_expansion/4">term_expansion/4</a></td><td><i>(hook)</i> 
+Convert term before compilation</td></tr>
+<tr><td><a class="pred" href="manipterm.html#term_singletons/2">term_singletons/2</a></td><td>Find 
+singleton variables in a term</td></tr>
+<tr><td><a class="pred" href="string.html#term_string/2">term_string/2</a></td><td>Read/write 
+a term from/to a string</td></tr>
+<tr><td><a class="pred" href="string.html#term_string/3">term_string/3</a></td><td>Read/write 
+a term from/to a string</td></tr>
+<tr><td><a class="pred" href="compare.html#term_subsumer/3">term_subsumer/3</a></td><td>Most 
+specific generalization of two terms</td></tr>
+<tr><td><a class="pred" href="manipatom.html#term_to_atom/2">term_to_atom/2</a></td><td>Convert 
+between term and atom</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_affinity/3">thread_affinity/3</a></td><td>Query 
+and control the <em>affinity</em> mask</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_alias/1">thread_alias/1</a></td><td>Set 
+the alias name of a thread</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a></td><td>Register 
+goal to be called at exit</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_create/2">thread_create/2</a></td><td>Create 
+a new Prolog task</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a></td><td>Create 
+a new Prolog task</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a></td><td>Make 
+thread cleanup after completion</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a></td><td>Terminate 
+Prolog task with value</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_get_message/1">thread_get_message/1</a></td><td>Wait 
+for message</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_get_message/2">thread_get_message/2</a></td><td>Wait 
+for message in a queue</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a></td><td>Wait 
+for message in a queue</td></tr>
+<tr><td><a class="pred" href="memory.html#thread_idle/2">thread_idle/2</a></td><td>Reduce 
+footprint while waiting</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_initialization/1">thread_initialization/1</a></td><td>Run 
+action at start of thread</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_join/1">thread_join/1</a></td><td>Wait 
+for Prolog task-completion</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a></td><td>Wait 
+for Prolog task-completion</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a></td><td>Declare 
+thread-specific clauses for a predicate</td></tr>
+<tr><td><a class="pred" href="printmsg.html#thread_message_hook/3">thread_message_hook/3</a></td><td>Thread 
+local <a id="idx:messagehook3:2751"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a></td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_peek_message/1">thread_peek_message/1</a></td><td>Test 
+for message</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_peek_message/2">thread_peek_message/2</a></td><td>Test 
+for message in a queue</td></tr>
+<tr><td><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a></td><td>Examine 
+Prolog threads</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a></td><td>Get 
+identifier of current thread</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a></td><td>Send 
+message to another thread</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_send_message/3">thread_send_message/3</a></td><td>Send 
+message to another thread</td></tr>
+<tr><td><a class="pred" href="threadcreate.html#thread_setconcurrency/2">thread_setconcurrency/2</a></td><td>Number 
+of active threads</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a></td><td>Execute 
+goal in another thread</td></tr>
+<tr><td><a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a></td><td>Get 
+statistics of another thread</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_update/2">thread_update/2</a></td><td>Update 
+a module and signal waiters</td></tr>
+<tr><td><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a></td><td>Wait 
+for a goal to become true</td></tr>
+<tr><td><a class="pred" href="thutil.html#threads/0">threads/0</a></td><td>List 
+running threads</td></tr>
+<tr><td><a class="pred" href="exception.html#throw/1">throw/1</a></td><td>Raise 
+an exception (see <a id="idx:catch3:2752"></a><a class="pred" href="exception.html#catch/3">catch/3</a>)</td></tr>
+<tr><td><a class="pred" href="statistics.html#time/1">time/1</a></td><td>Determine 
+time needed to execute goal</td></tr>
+<tr><td><a class="pred" href="files.html#time_file/2">time_file/2</a></td><td>Get 
+last modification time of file</td></tr>
+<tr><td><a class="pred" href="files.html#tmp_file/2">tmp_file/2</a></td><td>Create 
+a temporary filename</td></tr>
+<tr><td><a class="pred" href="files.html#tmp_file_stream/3">tmp_file_stream/3</a></td><td>Create 
+a temporary file and open it</td></tr>
+<tr><td><a class="pred" href="thutil.html#tnodebug/0">tnodebug/0</a></td><td>Switch 
+off debug mode in all threads</td></tr>
+<tr><td><a class="pred" href="thutil.html#tnodebug/1">tnodebug/1</a></td><td>Switch 
+off debug mode in a thread</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a></td><td>Tabled 
+negation</td></tr>
+<tr><td><a class="pred" href="IO.html#told/0">told/0</a></td><td>Close 
+current output</td></tr>
+<tr><td><a class="pred" href="thutil.html#tprofile/1">tprofile/1</a></td><td>Profile 
+a thread for some period</td></tr>
+<tr><td><a class="pred" href="debugger.html#trace/0">trace/0</a></td><td>Start 
+the tracer</td></tr>
+<tr><td><a class="pred" href="debugger.html#trace/1">trace/1</a></td><td>Set 
+trace point on predicate</td></tr>
+<tr><td><a class="pred" href="debugger.html#trace/2">trace/2</a></td><td>Set/Clear 
+trace point on ports</td></tr>
+<tr><td><a class="pred" href="debugger.html#tracing/0">tracing/0</a></td><td>Query 
+status of the tracer</td></tr>
+<tr><td><a class="pred" href="db.html#transaction/1">transaction/1</a></td><td>Run 
+goal in a transaction</td></tr>
+<tr><td><a class="pred" href="db.html#transaction/2">transaction/2</a></td><td>Run 
+goal in a transaction</td></tr>
+<tr><td><a class="pred" href="db.html#transaction/3">transaction/3</a></td><td>Run 
+goal in a transaction</td></tr>
+<tr><td><a class="pred" href="db.html#transaction_updates/1">transaction_updates/1</a></td><td>Updates 
+to be committed in a transaction</td></tr>
+<tr><td><a class="pred" href="db.html#trie_delete/3">trie_delete/3</a></td><td>Remove 
+term from trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_destroy/1">trie_destroy/1</a></td><td>Destroy 
+a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_gen/3">trie_gen/3</a></td><td>Get 
+all terms from a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_gen_compiled/2">trie_gen_compiled/2</a></td><td>Get 
+all terms from a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_gen_compiled/3">trie_gen_compiled/3</a></td><td>Get 
+all terms from a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_insert/2">trie_insert/2</a></td><td>Insert 
+term into a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_insert/3">trie_insert/3</a></td><td>Insert 
+term into a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_insert/4">trie_insert/4</a></td><td>Insert 
+term into a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_lookup/3">trie_lookup/3</a></td><td>Lookup 
+a term in a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_new/1">trie_new/1</a></td><td>Create 
+a trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_property/2">trie_property/2</a></td><td>Examine 
+a trie's properties</td></tr>
+<tr><td><a class="pred" href="db.html#trie_update/3">trie_update/3</a></td><td>Update 
+associated value in trie</td></tr>
+<tr><td><a class="pred" href="db.html#trie_term/2">trie_term/2</a></td><td>Get 
+term from a trie by handle</td></tr>
+<tr><td><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a></td><td>Release 
+unused memory resources</td></tr>
+<tr><td><span class="pred-ext">tripwire/2</span></td><td><i>(hook)</i> 
+Handle a tabling tripwire event</td></tr>
+<tr><td><a class="pred" href="control.html#true/0">true/0</a></td><td>Succeed</td></tr>
+<tr><td><a class="pred" href="thutil.html#tspy/1">tspy/1</a></td><td>Set 
+spy point and enable debugging in all threads</td></tr>
+<tr><td><a class="pred" href="thutil.html#tspy/2">tspy/2</a></td><td>Set 
+spy point and enable debugging in a thread</td></tr>
+<tr><td><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a></td><td>Get 
+terminal parameter</td></tr>
+<tr><td><a class="pred" href="tty.html#tty_goto/2">tty_goto/2</a></td><td>Goto 
+position on screen</td></tr>
+<tr><td><a class="pred" href="tty.html#tty_put/2">tty_put/2</a></td><td>Write 
+control string to terminal</td></tr>
+<tr><td><a class="pred" href="tty.html#tty_size/2">tty_size/2</a></td><td>Get 
+row/column size of the terminal</td></tr>
+<tr><td><a class="pred" href="chario.html#ttyflush/0">ttyflush/0</a></td><td>Flush 
+output on terminal</td></tr>
+<tr><td><a class="pred" href="WFS.html#undefined/0">undefined/0</a></td><td>Well 
+Founded Semantics: true nor false</td></tr>
+<tr><td><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a></td><td>Logically 
+sound unification</td></tr>
+<tr><td><a class="pred" href="compare.html#unifiable/3">unifiable/3</a></td><td>Determining 
+binding required for unification</td></tr>
+<tr><td><a class="pred" href="debugger.html#unknown/2">unknown/2</a></td><td>Trap 
+undefined predicates</td></tr>
+<tr><td><a class="pred" href="consulting.html#unload_file/1">unload_file/1</a></td><td>Unload 
+a source file</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#unload_foreign_library/1">unload_foreign_library/1</a></td><td><code>library(shlib)</code> 
+Detach shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#unload_foreign_library/2">unload_foreign_library/2</a></td><td><code>library(shlib)</code> 
+Detach shared library (.so file)</td></tr>
+<tr><td><a class="pred" href="system.html#unsetenv/1">unsetenv/1</a></td><td>Delete 
+shell environment variable</td></tr>
+<tr><td><a class="pred" href="tabling-preds.html#untable/1">untable/1</a></td><td>Remove 
+tabling instrumentation</td></tr>
+<tr><td><a class="pred" href="chartype.html#upcase_atom/2">upcase_atom/2</a></td><td>Convert 
+atom to upper-case</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a></td><td>Load 
+DLL/shared object (directive)</td></tr>
+<tr><td><a class="pred" href="foreignlink.html#use_foreign_library/2">use_foreign_library/2</a></td><td>Load 
+DLL/shared object (directive)</td></tr>
+<tr><td><a class="pred" href="import.html#use_module/1">use_module/1</a></td><td>Import 
+a module</td></tr>
+<tr><td><a class="pred" href="import.html#use_module/2">use_module/2</a></td><td>Import 
+predicates from a module</td></tr>
+<tr><td><a class="pred" href="check.html#valid_string_goal/1">valid_string_goal/1</a></td><td><i>(hook)</i> 
+Goal handles strings</td></tr>
+<tr><td><a class="pred" href="typetest.html#var/1">var/1</a></td><td>Type 
+check for unbound variable</td></tr>
+<tr><td><a class="pred" href="manipterm.html#var_number/2">var_number/2</a></td><td>Check 
+that var is numbered by numbervars</td></tr>
+<tr><td><a class="pred" href="consulting.html#var_property/2">var_property/2</a></td><td>Variable 
+properties during macro expansion</td></tr>
+<tr><td><a class="pred" href="db.html#variant_sha1/2">variant_sha1/2</a></td><td>Term-hash 
+for term-variants</td></tr>
+<tr><td><a class="pred" href="db.html#variant_hash/2">variant_hash/2</a></td><td>Term-hash 
+for term-variants</td></tr>
+<tr><td><a class="pred" href="printmsg.html#version/0">version/0</a></td><td>Print 
+system banner message</td></tr>
+<tr><td><a class="pred" href="printmsg.html#version/1">version/1</a></td><td>Add 
+messages to the system banner</td></tr>
+<tr><td><a class="pred" href="debugger.html#visible/1">visible/1</a></td><td>Ports 
+that are visible in the tracer</td></tr>
+<tr><td><a class="pred" href="saved-states.html#volatile/1">volatile/1</a></td><td>Predicates 
+that are not saved</td></tr>
+<tr><td><a class="pred" href="streamstat.html#wait_for_input/3">wait_for_input/3</a></td><td>Wait 
+for input with optional timeout</td></tr>
+<tr><td><a class="pred" href="coroutining.html#when/2">when/2</a></td><td>Execute 
+goal when condition becomes true</td></tr>
+<tr><td><a class="pred" href="miscpreds.html#wildcard_match/2">wildcard_match/2</a></td><td>POSIX 
+style glob pattern matching</td></tr>
+<tr><td><a class="pred" href="miscpreds.html#wildcard_match/3">wildcard_match/3</a></td><td>POSIX 
+style glob pattern matching</td></tr>
+<tr><td><a class="pred" href="system.html#win_add_dll_directory/1">win_add_dll_directory/1</a></td><td>Add 
+directory to DLL search path</td></tr>
+<tr><td><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a></td><td>Add 
+directory to DLL search path</td></tr>
+<tr><td><a class="pred" href="system.html#win_remove_dll_directory/1">win_remove_dll_directory/1</a></td><td>Remove 
+directory from DLL search path</td></tr>
+<tr><td><a class="pred" href="system.html#win_exec/2">win_exec/2</a></td><td>Win32: 
+spawn Windows task</td></tr>
+<tr><td><a class="pred" href="system.html#win_has_menu/0">win_has_menu/0</a></td><td>Win32: 
+true if console menu is available</td></tr>
+<tr><td><a class="pred" href="system.html#win_folder/2">win_folder/2</a></td><td>Win32: 
+get special folder by CSIDL</td></tr>
+<tr><td><a class="pred" href="system.html#win_insert_menu/2">win_insert_menu/2</a></td><td>swipl-win.exe: 
+add menu</td></tr>
+<tr><td><a class="pred" href="system.html#win_insert_menu_item/4">win_insert_menu_item/4</a></td><td>swipl-win.exe: 
+add item to menu</td></tr>
+<tr><td><a class="pred" href="system.html#win_shell/2">win_shell/2</a></td><td>Win32: 
+open document through Shell</td></tr>
+<tr><td><a class="pred" href="system.html#win_shell/3">win_shell/3</a></td><td>Win32: 
+open document through Shell</td></tr>
+<tr><td><a class="pred" href="system.html#win_registry_get_value/3">win_registry_get_value/3</a></td><td>Win32: 
+get registry value</td></tr>
+<tr><td><a class="pred" href="system.html#win_window_color/2">win_window_color/2</a></td><td>Win32: 
+change colors of console window</td></tr>
+<tr><td><a class="pred" href="system.html#win_window_pos/1">win_window_pos/1</a></td><td>Win32: 
+change size and position of window</td></tr>
+<tr><td><a class="pred" href="system.html#window_title/2">window_title/2</a></td><td>Win32: 
+change title of window</td></tr>
+<tr><td><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a></td><td>Run 
+goal while holding mutex</td></tr>
+<tr><td><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a></td><td>Write 
+to strings and more</td></tr>
+<tr><td><a class="pred" href="quasiquotations.html#with_quasi_quotation_input/3">with_quasi_quotation_input/3</a></td><td>Parse 
+quasi quotation from stream</td></tr>
+<tr><td><a class="pred" href="chario.html#with_tty_raw/1">with_tty_raw/1</a></td><td>Run 
+goal with terminal in raw mode</td></tr>
+<tr><td><a class="pred" href="files.html#working_directory/2">working_directory/2</a></td><td>Query/change 
+CWD</td></tr>
+<tr><td><a class="pred" href="termrw.html#write/1">write/1</a></td><td>Write 
+term</td></tr>
+<tr><td><a class="pred" href="termrw.html#write/2">write/2</a></td><td>Write 
+term to stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#writeln/1">writeln/1</a></td><td>Write 
+term, followed by a newline</td></tr>
+<tr><td><a class="pred" href="termrw.html#writeln/2">writeln/2</a></td><td>Write 
+term, followed by a newline to a stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a></td><td>Write 
+a term with quotes, ignore operators</td></tr>
+<tr><td><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a></td><td>Write 
+a term with quotes, ignore operators on a stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#write_length/3">write_length/3</a></td><td>Dermine #characters 
+to output a term</td></tr>
+<tr><td><a class="pred" href="termrw.html#write_term/2">write_term/2</a></td><td>Write 
+term with options</td></tr>
+<tr><td><a class="pred" href="termrw.html#write_term/3">write_term/3</a></td><td>Write 
+term with options to stream</td></tr>
+<tr><td><a class="pred" href="format.html#writef/1">writef/1</a></td><td>Formatted 
+write</td></tr>
+<tr><td><a class="pred" href="format.html#writef/2">writef/2</a></td><td>Formatted 
+write on stream</td></tr>
+<tr><td><a class="pred" href="termrw.html#writeq/1">writeq/1</a></td><td>Write 
+term, insert quotes</td></tr>
+<tr><td><a class="pred" href="termrw.html#writeq/2">writeq/2</a></td><td>Write 
+term, insert quotes on stream</td></tr>
+</table>
+
+<p></body></html>

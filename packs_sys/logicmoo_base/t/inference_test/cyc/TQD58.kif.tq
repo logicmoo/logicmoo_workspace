@@ -1,0 +1,236 @@
+(note TQD58)
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (deviceUsed ?ATTACK ?WEAPON) 
+    (instance ?WEAPON BiologicalWeapon) 
+    (agent ?ATTACK ?ATTACKING-AGENT)) 
+  (increasesImmediatelyCausally ?ATTACK 
+    (failureForAgents ?ATTACK ?ATTACKING-AGENT) likelihood))
+
+(instance HYP-BiologicalWeapon-50479585 BiologicalWeapon) 
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-6396502 HYP-BiologicalWeapon-50479585) 
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-50479585 BiologicalWeapon) 
+
+(increasesImmediatelyCausally #$HYP-AttackOnTangible-6396502 
+ (failureForAgents HYP-AttackOnTangible-6396502 KuwaitiHizballah) likelihood)
+
+(subrelation increasesImmediatelyCausally increasesCausally) 
+
+(subrelation agent agent) 
+
+(implies 
+  (agent ?ACT ?AGT) 
+    (desires ?AGT 
+      (not 
+        (failureForAgents ?ACT ?AGT))))
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(increasesCausally #$HYP-AttackOnTangible-6396502 
+ (failureForAgents HYP-AttackOnTangible-6396502 KuwaitiHizballah) likelihood) 
+
+(desires KuwaitiHizballah 
+  (not 
+    (failureForAgents HYP-AttackOnTangible-6396502 KuwaitiHizballah))) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (deviceUsed ?ATTACK ?WEAPON)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?DESTROY 
+      (inputsDestroyed ?DESTROY ?WEAPON)) likelihood))
+
+(instance HYP-AttackOnTangible-6396502 MilitaryAttack) 
+
+(deviceUsed HYP-AttackOnTangible-6396502 HYP-BiologicalWeapon-50479585) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (deviceUsed ?ATTACK ?DEVICE)) 
+  (possesses ?AGT ?DEVICE))
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(implies 
+  (possesses ?AGT ?THING) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?EVT 
+        (inputsDestroyed ?EVT ?THING)))))
+
+(possesses KuwaitiHizballah HYP-BiologicalWeapon-50479585) 
+
+(increasesCausally #$HYP-AttackOnTangible-6396502 
+  (thereExists ?DESTROY 
+    (inputsDestroyed ?DESTROY HYP-BiologicalWeapon-50479585)) likelihood)
+
+(desires KuwaitiHizballah 
+  (not 
+    (thereExists ?EVT 
+      (inputsDestroyed ?EVT HYP-BiologicalWeapon-50479585))))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (deviceUsed ?ATTACK ?DEVICE)) 
+  (possesses ?AGT ?DEVICE))
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(implies 
+  (possesses ?AGT ?THING) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?EVT 
+        (inputsDestroyed ?EVT ?THING)))))
+
+(possesses KuwaitiHizballah HYP-BiologicalWeapon-50479585) 
+
+(deviceUsed HYP-AttackOnTangible-6396502 HYP-BiologicalWeapon-50479585) 
+
+(desires KuwaitiHizballah 
+  (not 
+    (thereExists ?EVT 
+      (inputsDestroyed ?EVT HYP-BiologicalWeapon-50479585))))
+
+(instance HYP-AttackOnTangible-6396502 MilitaryAttack) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (deviceUsed ?ATTACK ?WEAPON)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?DESTROY 
+      (inputsDestroyed ?DESTROY ?WEAPON)) likelihood))
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT))))))
+
+(instance KuwaitiHizballah Agent) 
+
+(instance CityOfKuwaitCity Agent) 
+
+(maleficiary HYP-AttackOnTangible-6396502 CityOfKuwaitCity) 
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(desires KuwaitiHizballah 
+  (not 
+    (thereExists ?ATTACK 
+      (and 
+      (instance ?ATTACK AttackOnTangible) 
+      (maleficiary ?ATTACK KuwaitiHizballah)))))
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?AGT2) 
+    (instance ?AGT2 Agent) 
+    (agent ?ATTACK ?AGT1)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?RETALIATION 
+      (and 
+        (instance ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION ?AGT1))) likelihood))
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?AGT2) 
+    (instance ?AGT2 Agent) 
+    (agent ?ATTACK ?AGT1)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?RETALIATION 
+    (and 
+      (instance ?RETALIATION AttackOnTangible) 
+      (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(maleficiary HYP-AttackOnTangible-6396502 CityOfKuwaitCity) 
+
+(agent HYP-AttackOnTangible-6396502 KuwaitiHizballah) 
+
+(instance CityOfKuwaitCity Agent) 
+
+(instance HYP-AttackOnTangible-6396502 AttackOnTangible) 
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT))))))
+
+(instance KuwaitiHizballah Agent) 
+
+(increasesCausally #$HYP-AttackOnTangible-6396502 
+  (thereExists ?RETALIATION 
+    (and 
+      (instance ?RETALIATION AttackOnTangible) 
+      (maleficiary ?RETALIATION KuwaitiHizballah))) likelihood)
+
+(desires KuwaitiHizballah 
+  (not 
+    (thereExists ?ATTACK 
+      (and 
+        (instance ?ATTACK AttackOnTangible) 
+        (maleficiary ?ATTACK KuwaitiHizballah)))))
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (agent ?ACT KuwaitiHizballah) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET CityOfKuwaitCity) 
+       (deviceUsed ?ACT ?FORCE) 
+       (instance ?FORCE BiologicalWeapon)) 
+   (or 
+       (and 
+           (desires KuwaitiHizballah ?PROP) 
+           (decreasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires KuwaitiHizballah 
+               (not ?PROP)) 
+           (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list (failureForAgents HYP-BiologicalWeapon-50479585 
+KuwaitiHizballah)))
+
+(answer (list (thereExists ?DESTROY 
+ (inputsDestroyed ?DESTROY HYP-BiologicalWeapon-50479585))))
+ 
+(answer (list  (thereExists ?RETALIATION 
+  (and 
+    (instance ?RETALIATION AttackOnTangible) 
+    (maleficiary ?RETALIATION KuwaitiHizballah)))))
+
+(end_of_file)
+

@@ -1,0 +1,182 @@
+Story Pizza-1: Karen asks her father, Mike, for a slice of pizza and her father
+		gives it to her.
+	Paraphrase: Karen has a goal of possessing a slice of pizza. Her plan is to
+		ask Mike for a slice of pizza. Her goal succeeds.
+
+
+[Human :Karen ?k_karen = [Human: Karen]-
+				-Age->[Age:Kid],
+				-Hair->[Hair]-Color->[Color:Blond],
+				-Eyes->[Eyes]-Color->[Color:Blue]   
+    ]<-actor-[Goal = [Goal]-
+	     		-actor->[Human :Karen *k_karen],
+	     		-goal->[Poss_By *s_state],
+	     		-plan->[Plan *p_plan],
+	     		-outcome->[Success_Goal_Outcome]
+   		   ]-
+		-outcome->[Poss_By #2 ?s_state = [Poss_By]-
+				    	-actor->[Human: Karen *k_karen],
+				    	-object->[Pizza: pizza001],
+				    	-State_Value->[State_Value:Yes_State_Value]
+		    	  ],
+		-achievedBy->[ATrans #1 ?a_atrans = [ATrans]-
+						-actor->[Human:Mike *m_mike],
+						-object->[Pizza:Pizza001],
+						-to->[Human:Karen *k_karen]
+			     ],
+		-intendedBy->[Plan ?p_plan = [Plan]-
+				   		-actor->[Human: Karen *k_karen],
+				   		-RealizedBy->[MTrans *m_trans]   
+				]-realizedBy->[MTrans ?m_trans = [MTrans]-
+							-actor->[Human: Karen *k_karen],
+							-to->[Human : Mike *m_mike]<-Father-[Human: Karen *k_karen],
+							-object->[ATrans *a_atrans]
+				     		]-motivates->
+	     						[Goal = [Goal]-
+	     							-actor->[Human :Mike *m_mike],
+	     							-goal->[ATrans *a_atrans],
+	     							-plan->[Plan *p2_plan],
+	     							-outcome->[Success_Goal_Outcome]
+   	     						     ]-
+							   -actor->[Human : Mike ?m_mike = [Human:Mike]-
+										-Age->[Age: Grown_Up],
+										-Hair->[Hair]-Color->[Color:Brown],
+										-Eyes->[Eyes]-Color->[Color:Green]
+								   ],
+							   -achievedBy->[ATrans #1],
+						  	   -intendedBy->[Plan ?p2_plan = [Plan]-
+				   						-actor->[Human: Mike *m_mike],
+				   						-RealizedBy->[ATrans *a_atrans]
+									    ]-realizedBy->[ATrans #1],
+							   -outcome->[Poss_By #2]
+
+	
+
+
+
+Story Zoo-1: Karen wants to go to the zoo. She asks Mike to take her to the zoo. Her goal succeeds.
+
+[Human :Karen ?k_karen = [Human: Karen]-
+				-Age->[Age:Kid],
+				-Hair->[Hair]-Color->[Color:Blond],
+				-Eyes->[Eyes]-Color->[Color:Blue]   
+    ]<-actor-[Goal = [Goal]-
+	     		-actor->[Human :Karen *k_karen],
+	     		-goal->[Location *s_state],
+	     		-plan->[Plan *p_plan],
+	     		-outcome->[Success_Goal_Outcome]
+   		   ]-
+		-outcome->[Location #2 ?s_state = [Location]-
+						-actor->[Human: Karen *k_karen],
+						-object->[Zoo :Zoo001],
+						-State_Value->[State_Value:Yes_State_Value]
+		    	  ],
+		-achievedBy->[PTrans #1 ?p_ptrans = [PTrans]-
+							-actor->[Human:Mike *m_mike],
+							-object->[Human:Karen *k_karen],
+							-to->[Zoo:Zoo001]
+			     ],
+		-intendedBy->[Plan ?p_plan = [Plan]-
+				   		-actor->[Human: Karen *k_karen],
+				   		-RealizedBy->[MTrans *m_trans]   
+				]-realizedBy->[MTrans ?m_trans = [MTrans]-
+							-actor->[Human: Karen *k_karen],
+							-to->[Human : Mike *m_mike]<-Father-[Human: Karen *k_karen],
+							-object->[PTrans *p_ptrans]
+				     		]-motivates->
+	     						[Goal = [Goal]-
+	     							-actor->[Human :Mike *m_mike],
+	     							-goal->[PTrans *p_ptrans],
+	     							-plan->[Plan *p2_plan],
+	     							-outcome->[Success_Goal_Outcome]
+   	     						     ]-
+							   -actor->[Human : Mike ?m_mike = [Human:Mike]-
+										-Age->[Age: Grown_Up],
+										-Hair->[Hair]-Color->[Color:Brown],
+										-Eyes->[Eyes]-Color->[Color:Green]
+								   ],
+							   -achievedBy->[PTrans #1],
+						  	   -intendedBy->[Plan ?p2_plan = [Plan]-
+				   						-actor->[Human: Mike *m_mike],
+				   						-RealizedBy->[PTrans *p_ptrans]
+									    ]-realizedBy->[PTrans #1],
+							   -outcome->[Location #2]
+
+
+Story Refrigerator-1: Karen wants to open the refrigerator. She pulls on the door, but it doesn't open.
+
+[Human :Karen ?k_karen = [Human: Karen]-
+				-Age->[Age:Kid],
+				-Hair->[Hair]-Color->[Color:Blond],
+				-Eyes->[Eyes]-Color->[Color:Blue]   
+    ]<-actor-[Goal = [Goal]-
+	     		-actor->[Human :Karen *k_karen],
+	     		-goal->[Open = [Open]-
+					-object->[Refrigerator: Refrigerator001 =
+							[Refrigerator: Refrigerator001]-Color->[Color:White]
+					 	 ],
+					-State_Value->[State_Value:Yes_State_Value]
+				],
+	     		-plan->[Plan *p_plan],
+	     		-outcome->[Failure_Goal_Outcome]
+   		   ]-
+		-outcome->[Failure_Goal_Outcome],
+		-intendedBy->[Plan ?p_plan = [Plan]-
+				   		-actor->[Human: Karen *k_karen],
+				   		-RealizedBy->[Propel *p_propel]   
+				]-realizedBy->[Propel ?p_propel = [Propel]-
+							-actor->[Human: Karen *k_karen],
+							-object->[Door]<-Door-[Refrigerator: Refrigerator001]
+				     		]
+
+
+
+Story play-doh-1: Lynn wants some Play Doh. She asks Mike to give her some, and her goal succeeds.
+
+[Human :Lynn ?L_Lynn = [Human: Lynn]-
+				-Age->[Age:Kid],
+				-Hair->[Hair]-Color->[Color:Blond],
+				-Eyes->[Eyes]-Color->[Color:Blue]   
+    ]<-actor-[Goal = [Goal]-
+	     		-actor->[Human :Lynn *L_Lynn],
+	     		-goal->[Poss_By *s_state],
+	     		-plan->[Plan *p_plan],
+	     		-outcome->[Success_Goal_Outcome]
+   		   ]-
+		-outcome->[Poss_By #2 ?s_state = [Poss_By]-
+				    		-actor->[Human: Lynn *L_Lynn],
+				    		-object->[Play_Doh: Play_Doh001],
+				    		-State_Value->[State_Value:Yes_State_Value]
+		    	  ],
+		-achievedBy->[ATrans #1 ?a_atrans = [ATrans]-
+							-actor->[Human:Mike *m_mike],
+							-object->[Play_Doh: Play_Doh001],
+							-to->[Human:Lynn *L_Lynn]
+			     ],
+		-intendedBy->[Plan ?p_plan = [Plan]-
+				   		-actor->[Human: Lynn *L_Lynn],
+				   		-RealizedBy->[MTrans *m_trans]   
+				]-realizedBy->[MTrans ?m_trans = [MTrans]-
+							-actor->[Human: Lynn *L_Lynn],
+							-to->[Human : Mike *m_mike]<-Father-[Human: Lynn *L_Lynn],
+							-object->[ATrans *a_atrans]
+				     		]-motivates->
+	     						[Goal = [Goal]-
+	     							-actor->[Human :Mike *m_mike],
+	     							-goal->[ATrans *a_atrans],
+	     							-plan->[Plan *p2_plan],
+	     							-outcome->[Success_Goal_Outcome]
+   	     						     ]-
+							   -actor->[Human : Mike ?m_mike = [Human:Mike]-
+										-Age->[Age: Grown_Up],
+										-Hair->[Hair]-Color->[Color:Brown],
+										-Eyes->[Eyes]-Color->[Color:Green]
+								   ],
+							   -achievedBy->[ATrans #1],
+						  	   -intendedBy->[Plan ?p2_plan = [Plan]-
+				   						-actor->[Human: Mike *m_mike],
+				   						-RealizedBy->[ATrans *a_atrans]
+									    ]-realizedBy->[ATrans #1],
+							   -outcome->[Poss_By #2]
+
+

@@ -1,0 +1,14 @@
+(note TQA35)
+
+(queryyn 
+  (consistent 
+    (thereExists ?ACT 
+      (and 
+        (instance ?ACT TerroristAct) 
+        (eventOccursAt ?ACT Bahrain) 
+        (directingAgent ?ACT Iran)))))
+
+(answer Yes)
+
+(end_of_file)
+

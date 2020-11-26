@@ -1,0 +1,5 @@
+Relevant to applications that use targeted help; a grammar must be
+loaded, and the parameters {\tt targeted\_\-help\_\-classes\_\-file} and {\tt
+missing\_\-help\_\-class\_\-decls} need to be defined. The help classes file is
+searched, and all lexical items in the grammar that are not defined
+are listed in the missing decls file.

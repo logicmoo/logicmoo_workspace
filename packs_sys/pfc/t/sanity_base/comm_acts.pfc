@@ -1,0 +1,663 @@
+3 .1----AcceptProposal
+3 .2----Agree
+3 .3----Cancel
+3 .4----CallforProposal
+3 .5----Confirm
+3 .6----Disconfirm
+3 .7----Failure
+3 .8----Inform
+3 .9----InformIf
+3 .10----InformRef
+3 .11----NotUnderstood
+3 .12----Propagate
+3 .13----Propose
+3 .14----Proxy
+3 .15----QueryIf
+3 .16----QueryRef
+3 .17----Refuse
+3 .18----RejectProposal
+3 .19----Request
+3 .20----RequestWhen
+3 .21----RequestWhenever
+3 .22----Subscribe
+
+
+
+Discourse graphs, describing the overall structure of the discourse . Main objects are entities, speech acts and instrumental acts, activities, and various components of and relations between these .
+Conversation graphs, describing the dynamic discourse features . Main elements are stages of conversations, speakers and hearers, and various predicates controlling the conversation .
+In addition to the two types of graphs, there are a number of tables describing purposes, effects, media, etc . of discourses and individual speech acts . The modeling process of SAMPO is not discussed in a structured way in (Auramäki et al ., 1988), but the following activities can be identified (and iteration is stressed):
+Characterization of discourse:
+Initial interviews with users in order to define discourse type .
+Identification of main speech acts of the discourse .
+Naming of discourse entities, e .g ., agents .
+Further clarification of speech acts and instrumental acts in tables (purpose, frequency, timing, etc .) .
+Construction of activity tables (functional units of the organization) .
+Construction of predicate tables to control the flow of the discourse .
+Analysis of discourse:
+Analyze coherency of discourse by creating a conversation graph .
+Analyze the completeness of discourse (finding conditions for termination of processes through transformation of conversation graph into reachability tree) .
+Describe coordination of commitments (modeling how speech acts influence each other) .
+Analyze discourse ambiguity (concerning performance, commitments, and roles) .
+
+actCommunicationActSingle
+[Indices]	 	
+[Hier]
+ 	[Facets]	 	[Alpha]	 
+isa:	(tColOfConceptNodesForTaskTypeFn cwIntelligenceAnalysisTaskAllotment), iUI_InformationAndCWsTopic, ttTypicalHumanActivityTypeAtLeastOnce, vEventOrRoleConcept
+genls:	actCommunicating, eventInformationTransferEvent
+Context:	Union of all contexts
+Predicate:	genls
+Index:	2
+Parameters updated at 02:41:08 on 08/30/2013
+[Help] Change Hierarchy Browser Settings
+
+ . . . *tIndividual
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn tSpatialThing vtVectorInterval)) [iUniversalVocabularyMt]
+                  *tSpatialThing [iBaseKB]
+                        *tSpatialThingLocalized [iUniversalVocabularyMt]
+                              *stateSituationLocalized [iUniversalVocabularyMt]
+                                    *eventEventLocalized [iUniversalVocabularyMt]
+                                          *eventPhysicalEvent [iUniversalVocabularyMt]
+                                                *actCommunicating [(mtContextOfPCWFn iTheAURABiologyOntology)]
+                                    *statePhysicalSituation [iUniversalVocabularyMt]
+                                          *eventPhysicalEvent [iUniversalVocabularyMt] . . . *see above*
+-> *tThing
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn tSpatialThing vtVectorInterval)) [iUniversalVocabularyMt] . . . *see above*
+ . . . *tIndividual
+            *tSpatialThing [iUniversalVocabularyMt] . . . *see above*
+ . . . *tLandmarkUnderspecified
+            *tBoundaryUnderspecified [iUniversalVocabularyMt]
+                  *tSpatialThingLocalized [iUniversalVocabularyMt] . . . *see above*
+ . . . *tRegionUnderspecified
+            *tBoundaryUnderspecified [iUniversalVocabularyMt] . . . *see above*
+-> *tThing
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn tTemporalThing tCol)) [iUniversalVocabularyMt]
+                  *tTemporalThing [iBaseKB]
+                        *(tColOfCollectionUnionFn (tSetOfTheSetFn eventEvent timeOfTimeInterval)) [iUniversalVocabularyMt]
+                              *eventEvent [iBaseKB]
+                                    *eventGeneralizedTransfer [iUniversalVocabularyMt]
+                                          *eventInformationTransferEvent [iUniversalVocabularyMt]
+                        *(tColOfCollectionUnionFn (tSetOfTheSetFn timeOfTimeInterval stateSituation)) [iBaseKB]
+                              *stateSituation [iBaseKB]
+                                    *eventPhysicalEvent [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+                        *tTemporallyExistingThing [iUniversalVocabularyMt]
+                              *stateSituation [iUniversalVocabularyMt] . . . *see above*
+                        *tTemporallyExtendedThing [iBaseKB, iUniversalVocabularyMt]
+                              *stateSituation [iUniversalVocabularyMt] . . . *see above*
+ . . . *stateSituation
+            *stateMentalSituation [iUniversalVocabularyMt]
+                  *eventAtLeastPartiallyMentalEvent [iUniversalVocabularyMt]
+                        *eventCompositePhysicalAndMentalEvent [iUniversalVocabularyMt]
+                              *actPurposefulPhysicalAction [iUniversalVocabularyMt]
+                                    *actCommunicating [iUniversalVocabularyMt]
+                              *eventSocialOccurrence [iUniversalVocabularyMt]
+                                    *actCommunicating [iUniversalVocabularyMt]
+ . . . *tAura_Thing
+            *tAura_KMClass [(mtContextOfPCWFn iTheAURABiologyOntology)]
+                  *tAura_Cliche [(mtContextOfPCWFn iTheAURABiologyOntology)]
+                        *actPurposefulAction [(mtContextOfPCWFn iTheAURABiologyOntology)]
+                              *actPurposefulPhysicalAction [iBaseKB, iUniversalVocabularyMt] . . . *see above*
+            *tTemporalThing [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+ . . . *tExpressionUnderspecified
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction (tColOfCollectionUnionFn (tSetOfTheSetFn mobPerson tGroupedMultiPersonAgent)))) [iBaseKB]
+                  *actAction [iBaseKB]
+                        *actPurposefulAction [iUniversalVocabularyMt] . . . *see above*
+ . . . *tIndividual
+            *(iConceptOfExternalOntologyWithNameFn iTheAURABiologyOntology "KM_Class") [iUniversalVocabularyMt]
+                  *(iConceptOfExternalOntologyWithNameFn iTheAURABiologyOntology "Cliche") [(mtContextOfPCWFn iTheAURABiologyOntology)]
+                        *actPurposefulAction [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+            *tTemporalThing [iUniversalVocabularyMt] . . . *see above*
+ . . . *tLandmarkUnderspecified
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction (tColOfCollectionUnionFn (tSetOfTheSetFn mobPerson tGroupedMultiPersonAgent)))) [iBaseKB] . . . *see above*
+ . . . *tLocationUnderspecified
+            *tTrajectorUnderspecified [iUniversalVocabularyMt]
+                  *tIndividual [iUniversalVocabularyMt]
+                        *stateSituation [iUniversalVocabularyMt] . . . *see above*
+                        *tIntangibleIndividual [iUniversalVocabularyMt]
+                              *(iMeaningInSystemFn iCW_SENSUSInformation1997 "INTERPERSONAL-THING") [iUniversalVocabularyMt]
+                                    *actCommunicating [iUniversalVocabularyMt]
+ . . . *tPartiallyIntangibleIndividual
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction (tColOfCollectionUnionFn (tSetOfTheSetFn mobPerson tGroupedMultiPersonAgent)))) [iBaseKB] . . . *see above*
+ . . . *tTemporallyExistingThing
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction (tColOfCollectionUnionFn (tSetOfTheSetFn mobPerson tGroupedMultiPersonAgent)))) [iBaseKB] . . . *see above*
+            *tSpatialThingLocalized [iUniversalVocabularyMt] . . . *see above*
+-> *tThing
+            *(tColOfCollectionDifferenceFn tThing mobPerson) [iUniversalVocabularyMt]
+                  *tIntangible [iUniversalVocabularyMt]
+                        *tIntangibleIndividual [iBaseKB, iUniversalVocabularyMt] . . . *see above*
+            *(tColOfCollectionDifferenceFn tThing tPotentiallyExtrinsicallyValuable) [iUniversalVocabularyMt]
+                  *tTemporallyExtendedThing [iUniversalVocabularyMt] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction tArtifactGeneric cwPropositionalConceptualWork)) [iUniversalVocabularyMt]
+                  *actAction [iBaseKB] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn actAction (tColOfCollectionUnionFn (tSetOfTheSetFn mobPerson tGroupedMultiPersonAgent)))) [iUniversalVocabularyMt] . . . *see above*
+            *tAura_KMClass [iUniversalVocabularyMt] . . . *see above*
+            *tPartiallyIntangible [iUniversalVocabularyMt]
+                  *tIntangible [iUniversalVocabularyMt] . . . *see above*
+                  *tPartiallyIntangibleIndividual [iBaseKB, iUniversalVocabularyMt]
+                        *tIntangibleIndividual [iUniversalVocabularyMt] . . . *see above*
+            *tRdfs_Resource [iUniversalVocabularyMt]
+                  *tOwl_Thing [iUniversalVocabularyMt]
+                        *eventEvent [iDBPediaOntologyMappingMt] . . . *see above*
+ . . . *eventAtLeastPartiallyMentalEvent
+            *eventConsciousActivity [iUniversalVocabularyMt]
+                  *actPurposefulAction [iUniversalVocabularyMt] . . . *see above*
+ . . . *eventEvent
+            *actAction [iUniversalVocabularyMt] . . . *see above*
+            *eventAtLeastPartiallyMentalEvent [iUniversalVocabularyMt] . . . *see above*
+ . . . *stateSituation
+            *stateSituationLocalized [iUniversalVocabularyMt] . . . *see above*
+ . . . *tAura_Thing
+            *tIndividual [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+ . . . *tContainerUnderspecified
+            *tPathUnderspecified [iUniversalVocabularyMt]
+                  *tPathGeneric [iUniversalVocabularyMt]
+                        *eventGeneralizedTransfer [iY2CrisisMt] . . . *see above*
+ . . . *tExpressionUnderspecified
+            *actAction [iUniversalVocabularyMt] . . . *see above*
+ . . . *tIndividual
+            *(iConceptOfExternalOntologyWithNameFn iTheAURABiologyOntology "Cliche") [iUniversalVocabularyMt] . . . *see above*
+            *tLandmarkUnderspecified [iUniversalVocabularyMt]
+                  *eventEvent [iUniversalVocabularyMt] . . . *see above*
+            *tPartiallyIntangibleIndividual [iUniversalVocabularyMt] . . . *see above*
+ . . . *tIntangibleIndividual
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn eventEvent timeOfTimeInterval)) [iUniversalVocabularyMt] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn mtPropositionalInformationThing stateSituation)) [iBaseKB]
+                  *stateSituation [iBaseKB] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn timeOfTimeInterval stateSituation)) [iBaseKB] . . . *see above*
+            *tTemporallyExtendedThing [iBaseKB] . . . *see above*
+ . . . *tLandmarkUnderspecified
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn eventEvent tObjectArtifact)) [iBaseKB]
+                  *eventEvent [iBaseKB] . . . *see above*
+ . . . *tLocationUnderspecified
+            *tLandmarkUnderspecified [iUniversalVocabularyMt] . . . *see above*
+            *tRegionUnderspecified [iUniversalVocabularyMt]
+                  *tContainerUnderspecified [iUniversalVocabularyMt]
+                        *eventSocialOccurrence [iUniversalVocabularyMt] . . . *see above*
+                        *tExpressionUnderspecified [iUniversalVocabularyMt]
+                              *eventInformationTransferEvent [iUniversalVocabularyMt]
+ . . . *tTemporallyExistingThing
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn eventEvent tObjectArtifact)) [iBaseKB] . . . *see above*
+-> *tThing
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn eventEvent tObjectArtifact)) [iUniversalVocabularyMt] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn mtPropositionalInformationThing stateSituation)) [iUniversalVocabularyMt] . . . *see above*
+            *(tColOfCollectionUnionFn (tSetOfTheSetFn timeOfTimeInterval stateSituation)) [iUniversalVocabularyMt] . . . *see above*
+            *tAura_Cliche [iUniversalVocabularyMt] . . . *see above*
+            *tAura_Thing [iUniversalVocabularyMt]
+                  *stateSituation [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+            *tIndividual [iLogicalTruthMt] . . . *see above*
+            *tIntangible [iUniversalVocabularyMt] . . . *see above*
+            *tLocationUnderspecified [iUniversalVocabularyMt]
+                  *tAgentUnderspecified [iUniversalVocabularyMt]
+                        *tExpressionUnderspecified [iUniversalVocabularyMt] . . . *see above*
+            *tOwl_Thing [iUniversalVocabularyMt] . . . *see above*
+            *tTemporallyExtendedThing [iUniversalVocabularyMt] . . . *see above*
+ . . . *eventEvent
+            *eventEventLocalized [iUniversalVocabularyMt] . . . *see above*
+ . . . *stateSituation
+            *eventEvent [iUniversalVocabularyMt] . . . *see above*
+-> *tAnonymousOWLTerm_522
+            *eventEvent [iDBPediaOntologyMappingMt] . . . *see above*
+-> *tAnonymousOWLTerm_61
+            *eventEvent [iDBPediaOntologyMappingMt] . . . *see above*
+ . . . *tIntangibleIndividual
+            *stateSituation [iUniversalVocabularyMt] . . . *see above*
+ . . . *eventPhysicalEvent
+            *actPurposefulPhysicalAction [iUniversalVocabularyMt] . . . *see above*
+            *eventGeneralizedTransfer [(mtContextOfPCWFn iTheAURABiologyOntology)] . . . *see above*
+            *eventSocialOccurrence [iUniversalVocabularyMt] . . . *see above*
+                                                      *actCommunicationActSingle
+                                                      [iUniversalVocabularyMt -> (*actCommunicating, *eventInformationTransferEvent)]
+                                                            *(tColOfCollectionUnionFn (tSetOfTheSetFn actIssuingAWritOfCertiori actDenyingAPetitionOfCertiori)) [iBaseKB]
+                                                                  *actDenyingAPetitionOfCertiori [iBaseKB] <-
+                                                                  *actIssuingAWritOfCertiori [iBaseKB] <-
+                                                            *(tColOfSubcollectionOfWithRelationToFn actCommunicationActSingle senderOfInfo iUdaiHusseinAlTakriti) [iBaseKB] <-
+                                                            *actAcknowledgingCommunicationAct [iUniversalVocabularyMt]
+                                                                  *actAcceptingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actAcceptingCommissiveCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actAcceptingCommissiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actAcceptingConstativeCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actAcceptingConstativeSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actAcceptingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                              *actAcceptingCommissiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                              *actAcceptingConstativeSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actApprovalCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actApprovingARequest [iUniversalVocabularyMt]
+                                                                                    *actAcceptingAnApology [iUniversalVocabularyMt] <-
+                                                                                    *actAcceptingAnInsuranceClaim [iUniversalVocabularyMt] <-
+                                                                                    *actAcceptingAnInvitation [iUniversalVocabularyMt] <-
+                                                                                    *actApprovalOfLoan [iUniversalVocabularyMt]
+                                                                                          *actAutomaticApprovalOfLoan [iUniversalVocabularyMt] <-
+                                                                                    *actApprovalOfTreaty [iUniversalVocabularyMt] <-
+                                                                                    *actApprovingARequestSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                                    *actPresidentSigningBillIntoLawUSLegislativeProcess [iUniversalVocabularyMt] <-
+                                                                                    *actProposalAcceptance [iUniversalVocabularyMt]
+                                                                                          *actApprovingProposedBill [iUniversalVocabularyMt]
+                                                                                                *actPassingALaw [iUniversalVocabularyMt] <-
+                                                                                    *actSigningALegislativeActIntoLaw [iComputerGMt, iUniversalVocabularyMt]
+                                                                                          *actPresidentSigningBillIntoLawUSLegislativeProcess [iComputerGMt] <-
+                                                                              *actApprovingProposedBill [iUniversalVocabularyMt]
+                                                                                    *actPassingALaw [iUniversalVocabularyMt] <-
+                                                                              *actEndorsingCommunicationAct [iUniversalVocabularyMt]
+                                                                                    *actEndorsingAPoliticalCandidate [iUniversalVocabularyMt] <-
+                                                                                    *actEndorsingAProduct [iUniversalVocabularyMt] <-
+                                                                              *actPassingALaw [iUniversalVocabularyMt] <-
+                                                                              *actPointingThumbsUp [iUniversalVocabularyMt] <-
+                                                                        *eventTakingABribe [iHPKBVocabMt] <-
+                                                                  *actAcknowledgingAnEstimationDemonstration [iUniversalVocabularyMt]
+                                                                        *actAcknowledgingAnEstimationDemonstrationFractionOfANumber [iUniversalVocabularyMt] <-
+                                                                  *actAcknowledgingPlantingOfRedFlagUserAction [iUniversalVocabularyMt] <-
+                                                                  *actAcknowledgingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                        *actAcceptingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                              *actAcceptingCommissiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                              *actAcceptingConstativeSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actRejectingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                              *actRejectingCommissiveSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                                    *actRejectingCommissivePartialSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                                    *actRejectingCommissiveTotalSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                              *actRejectingDirectiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                  *actAcknowledgingUserInput [iUniversalVocabularyMt]
+                                                                        *actAcknowledgingTheUserInput [iUniversalVocabularyMt] <-
+                                                                  *actApologizing [iCycNounLearnerMt]
+                                                                        *actFormalApology [iUniversalVocabularyMt] <-
+                                                                  *actBELLAEstimatorToolMenuSelectionEstimateAFractionOfANumber [iBELLAUniverseMt] <-
+                                                                  *actDecliningCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actDecliningAnInvitation [iUniversalVocabularyMt] <-
+                                                                        *actDecliningARequest [iUniversalVocabularyMt] <-
+                                                                        *actRefusingCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actDenyingAPetitionOfCertiori [iUniversalVocabularyMt] <-
+                                                                              *actRejectingAnInsuranceClaim [iUniversalVocabularyMt] <-
+                                                                  *actNoddingGesture [iUniversalVocabularyMt] <-
+                                                                  *actNotUnderstandingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actNotUnderstandingSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                  *actRejectingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actDenyingAccessToArea [iUniversalVocabularyMt] <-
+                                                                        *actDenyingReplying [iUniversalVocabularyMt] <-
+                                                                        *actOverridingACautionFlagNotice [iUniversalVocabularyMt] <-
+                                                                        *actProposalRejection [iUniversalVocabularyMt]
+                                                                              *actRejectingProposedBill [iUniversalVocabularyMt] <-
+                                                                        *actRejectingCommissiveCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actRejectingCommissivePartial [iUniversalVocabularyMt]
+                                                                                    *actRejectingCommissivePartialSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                              *actRejectingCommissiveSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                                    *actRejectingCommissivePartialSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                                    *actRejectingCommissiveTotalSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                              *actRejectingCommissiveTotal [iUniversalVocabularyMt]
+                                                                                    *actRejectingCommissiveTotalSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                        *actRejectingConstativePartial [iUniversalVocabularyMt] <-
+                                                                        *actRejectingConstativeTotal [iUniversalVocabularyMt] <-
+                                                                        *actRejectingDiplomaticAssistance [iUniversalVocabularyMt] <-
+                                                                        *actRejectingDirectiveCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actRejectingDirectivePartial [iUniversalVocabularyMt] <-
+                                                                              *actRejectingDirectiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                              *actRejectingDirectiveTotal [iUniversalVocabularyMt] <-
+                                                                        *actRejectingProposedBill [iUniversalVocabularyMt] <-
+                                                                        *actRejectingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                              *actRejectingCommissiveSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                                    *actRejectingCommissivePartialSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                                    *actRejectingCommissiveTotalSoftwareAgent [iUniversalVocabularyMt] <-
+                                                                              *actRejectingDirectiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actVetoingSomething [iUniversalVocabularyMt]
+                                                                              *actLineItemVeto [iUniversalVocabularyMt]
+                                                                                    *actPresidentialLineItemVetoUSLegislativeProcess [iUniversalVocabularyMt] <-
+                                                                              *actPresidentialVetoUSLegislativeProcess [iUniversalVocabularyMt]
+                                                                                    *actPocketVetoUSLegislativeProcess [iUniversalVocabularyMt] <-
+                                                                                    *actPresidentialLineItemVetoUSLegislativeProcess [iUniversalVocabularyMt] <-
+                                                                  *actReplying [iUniversalVocabularyMt]
+                                                                        *actReplyingNoncommittal [iUniversalVocabularyMt] <-
+                                                                        *actRespondingToAQuestion [iUniversalVocabularyMt]
+                                                                              *actReplyingToAQuestion [iUniversalVocabularyMt]
+                                                                                    *actPleaLegal [iUniversalVocabularyMt]
+                                                                                          *actGuiltyPlea [iUniversalVocabularyMt] <-
+                                                                                          *actNoContestPlea [iUniversalVocabularyMt] <-
+                                                                                          *actNotGuiltyPlea [iUniversalVocabularyMt] <-
+                                                                                    *actProvidingRequestedInformationToComputerProcess [iUniversalVocabularyMt] <-
+                                                                                    *actProvidingTheSolutionToAProblem [iUniversalVocabularyMt]
+                                                                                          *actProvidingTheAnswerToAMathProblem [iUniversalVocabularyMt]
+                                                                                                *(actProvidingTheAnswerToMathProblemOfTypeFn cwDeterminePropertyOfASampleProblem) [iBaseKB] <-
+                                                                                                *(actProvidingTheAnswerToMathProblemOfTypeFn cwExpressionComparisonProblem) [iBaseKB] <-
+                                                                                                *(actProvidingTheAnswerToMathProblemOfTypeFn cwQuantitativeRelationshipMathProblem) [iBaseKB] <-
+                                                                                                *(actProvidingTheAnswerToMathProblemOfTypeFn cwSolveLinearEquationOfOneVariableProblem) [iBaseKB] <-
+                                                                                    *actReplyingToAYesOrNoQuestion [iUniversalVocabularyMt]
+                                                                                          *actAffirmingReplying [iUniversalVocabularyMt] <-
+                                                                                          *actAnsweringABooleanWindow [iUniversalVocabularyMt] <-
+                                                                                          *actDenyingReplying [iUniversalVocabularyMt] <-
+                                                                              *actRespondingToARequestForClarification [iUniversalVocabularyMt] <-
+                                                                  *actRequestingClarification [iUniversalVocabularyMt]
+                                                                        *actRequestingClarificationOfVaguePlantingOfRedFlagUserAction [iUniversalVocabularyMt] <-
+                                                            *actAdvertising [iUniversalVocabularyMt]
+                                                                  *(actAdvertisingViaMediumFn tBannerAdvertisementOnWebPage) [iBaseKB] <-
+                                                                  *(actAdvertisingViaMediumFn tBillboard) [iBaseKB] <-
+                                                                  *(actAdvertisingViaMediumFn tObjectStationarySign) [iBaseKB]
+                                                                        *(actAdvertisingViaMediumFn tBillboard) [iUnitedStatesSocialLifeMt] <-
+                                                                  *actAdvertisingBusiness [iUniversalVocabularyMt] <-
+                                                                  *actAdvertisingPolitical [iUniversalVocabularyMt] <-
+                                                                  *actCircularizationAdvertising [iUniversalVocabularyMt]
+                                                                        *actCircularizingSomeone [iUniversalVocabularyMt] <-
+                                                                  *actEndorsingAProduct [iUniversalVocabularyMt] <-
+                                                                  *actFashionShow [iUniversalVocabularyMt] <-
+                                                                  *actMarketingBlitz [iUniversalVocabularyMt] <-
+                                                                  *actRadioCommercialIBT [iUniversalVocabularyMt] <-
+                                                                  *actTVCommercialIBT [iUniversalVocabularyMt] <-
+                                                            *actApologizing [iUniversalVocabularyMt]
+                                                                  *actFormalApology [iUniversalVocabularyMt] <-
+                                                            *actChallengingSomeone [iUniversalVocabularyMt] <-
+                                                            *actCongratulating [iUniversalVocabularyMt] <-
+                                                            *actConsoling [iUniversalVocabularyMt] <-
+                                                            *actCycInterlocutorUtterance [iUniversalVocabularyMt] <-
+                                                            *actEncryptedCommunication [iUniversalVocabularyMt]
+                                                                  *(actOnlineActivityTypeFn actEncryptedCommunication) [iBaseKB, iTheMotleyFoolUKCorpusMt] <-
+                                                                  *(stateNthSubSituationTypeOfTypeFn actProtectionOfOnlineBanking actEncryptedCommunication 1) [iBaseKB] <-
+                                                            *actForbiddingSomething [iUniversalVocabularyMt] <-
+                                                            *actGrantingPermission [iUniversalVocabularyMt]
+                                                                  *(actIssuingCredentialTypeFn (cwPermitForSitTypeFn actDeepSeaOilDrilling)) [iBaseKB] <-
+                                                                  *actAdmitToMembership [iUniversalVocabularyMt]
+                                                                        *actInitiationCeremony [iUniversalVocabularyMt]
+                                                                              *actBaptism [iUniversalVocabularyMt] <-
+                                                                              *actCoronation [iUniversalVocabularyMt] <-
+                                                                              *actInauguration [iUniversalVocabularyMt, iWebSearchEnhancementMt]
+                                                                                    *actUSPresidentialInauguration [iUniversalVocabularyMt] <-
+                                                                        *actReadmitingSomeone [iUniversalVocabularyMt] <-
+                                                                  *actDeallocationOfResources [iUniversalVocabularyMt]
+                                                                        *actDeallocationOfComputerMemory [iUniversalVocabularyMt]
+                                                                              *(tColOfSubcollectionOfWithRelationToTypeFn actDeallocationOfComputerMemory memoryDeallocatedFrom vtStackBasedMemoryEntire) [iBaseKB] <-
+                                                                              *actDeallocationOfComputerStorage [iUniversalVocabularyMt] <-
+                                                                              *actStackDeallocation [iUniversalVocabularyMt] <-
+                                                                  *actIssuingAPermit [iUniversalVocabularyMt]
+                                                                        *actIssuingALicense [iUniversalVocabularyMt]
+                                                                              *(actIssuingLicenseTypeFn cwDriversLicenseLicenseAgreement) [iBaseKB] <-
+                                                                              *(actIssuingLicenseTypeFn cwMarriageLicense) [iBaseKB] <-
+                                                                  *actIssuingAPrescription [iUniversalVocabularyMt]
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actIssuingAPrescription cWInstantiated cwDrugPrescription) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actIssuingAPrescription cWInstantiated (tColOfSubcollectionOfWithRelationToTypeFn cwMedicalPrescription prescriptionForPatient mobNonPersonAnimal)) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actIssuingAPrescription ibtGenerated tObjectDevicePrescriptionDocument) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actIssuingAPrescription ibtGenerated tObjectDrugPrescriptionDocument) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actIssuingAPrescription products tObjectCorrectiveLensPrescription) [iBaseKB] <-
+                                                                  *actLegalizingSomethingPreviouslyIllegal [iUniversalVocabularyMt]
+                                                                        *actMonetizingSomething [iUniversalVocabularyMt] <-
+                                                                  *actPermittingEntrance [iUniversalVocabularyMt]
+                                                                        *actCommittingSomeoneToAnInstitution [iUniversalVocabularyMt]
+                                                                              *actHospitalizingSomeone [iUniversalVocabularyMt] <-
+                                                                        *actReadmitingPermittingEntrance [iUniversalVocabularyMt] <-
+                                                                        *actRepatriatingSomeone [iUniversalVocabularyMt] <-
+                                                                  *actPrivilegingSomeone [iUniversalVocabularyMt] <-
+                                                                  *actRightToBuy [iUniversalVocabularyMt] <-
+                                                                  *actTrustingGrantingPermission [iUniversalVocabularyMt] <-
+                                                            *actGreetingSomeone [iUniversalVocabularyMt]
+                                                                  *(stateSitTypeSpecWithTypeRestrictionOnRolePlayerFn actGreetingSomeone doneBy tClazzHomoSapiens) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                  *actAddressingGreetingSomeone [iUniversalVocabularyMt] <-
+                                                                  *actGreetingSomeoneByFirstName [iUniversalVocabularyMt] <-
+                                                                  *actWishingGreetingSomeone [iUniversalVocabularyMt] <-
+                                                            *actInforming [iUniversalVocabularyMt]
+                                                                  *(stateNthSubSituationTypeOfTypeFn actCancellingAStandingOrder actInforming 1) [iBaseKB] <-
+                                                                  *(stateNthSubSituationTypeOfTypeFn actSettingUpADirectDebit actInforming 1) [iBaseKB] <-
+                                                                  *(stateNthSubSituationTypeOfTypeFn actSettingUpADirectDebit actInforming 2) [iBaseKB] <-
+                                                                  *(stateNthSubSituationTypeOfTypeFn actSettingUpAStandingOrder actInforming 1) [iBaseKB] <-
+                                                                  *(stateNthSubSituationTypeOfTypeFn (actReactionToSituationTypeFn (tColOfSubcollectionOfWithRelationToTypeFn eventFlooding eventOccursAt tPartTypeBasementRoom)) actInforming 1) [iBaseKB] <-
+                                                                  *actAdvising [iUniversalVocabularyMt]
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actAdvising containsInformationAbout actInvesting) [iBaseKB] <-
+                                                                        *actAdvisingProfessional [iUniversalVocabularyMt]
+                                                                              *actFinancialAdvising [iUniversalVocabularyMt] <-
+                                                                              *actPrescribingMedical [iUniversalVocabularyMt]
+                                                                                    *actPrescribingADevice [iUniversalVocabularyMt] <-
+                                                                                    *actPrescribingMedication [iUniversalVocabularyMt] <-
+                                                                                    *actPrescribingTreatment [iUniversalVocabularyMt] <-
+                                                                  *actAnnouncingSomething [iUniversalVocabularyMt]
+                                                                        *actCallingForProposalsCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actCallingForProposalsSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                                    *actSolicitationOfCandidateBidsCoABS [iUniversalVocabularyMt] <-
+                                                                        *actDeclaringWar [iUniversalVocabularyMt]
+                                                                              *(tColOfSubcollectionOfWithRelationToFn actDeclaringWar performedBy tGroupedUSFederalGovernmentOrganization) [iBaseKB] <-
+                                                                        *actGivingAnAlarmSignal [iUniversalVocabularyMt]
+                                                                              *actSmokeAlarmBeepingEvent [iUniversalVocabularyMt] <-
+                                                                        *actHype [iUniversalVocabularyMt] <-
+                                                                        *actIssuingAReligiousEdict [iUniversalVocabularyMt] <-
+                                                                        *actSoundingAnnouncingSomething [iUniversalVocabularyMt] <-
+                                                                  *actAttributingResponsibility [iUniversalVocabularyMt]
+                                                                        *actAccusing [iUniversalVocabularyMt]
+                                                                              *actMakingACriminalCharge [iUniversalVocabularyMt]
+                                                                                    *actBookingSomeoneMakingACriminalCharge [iUniversalVocabularyMt]
+                                                                                          *actTicketingMakingACriminalCharge [iUniversalVocabularyMt]
+                                                                                                *actAmercingMakingACriminalCharge [iUniversalVocabularyMt] <-
+                                                                                    *actImpeachment [iUniversalVocabularyMt] <-
+                                                                              *tBlame [iCycNounLearnerMt] <-
+                                                                        *actChargingDocumentingResponsibilityForPayment [iUniversalVocabularyMt]
+                                                                              *actLevyCharging [iUniversalVocabularyMt] <-
+                                                                        *actClaimingResponsibility [iUniversalVocabularyMt] <-
+                                                                  *actDisapprovingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actDebunking [iUniversalVocabularyMt] <-
+                                                                        *actObjectingCommunicationAct [iUniversalVocabularyMt]
+                                                                              *(stateSitTypeSpecWithTypeRestrictionOnRolePlayerFn actObjectingCommunicationAct doneBy mobPerson) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                              *actCensuringCommunicationAct [iUniversalVocabularyMt] <-
+                                                                              *actComplaining [iUniversalVocabularyMt]
+                                                                                    *actRegisteringAComplaint [iUniversalVocabularyMt] <-
+                                                                              *tCondemnation [iCycNounLearnerMt]
+                                                                                    *actCensuringCommunicationAct [iUniversalVocabularyMt] <-
+                                                                        *actRidiculing [iUniversalVocabularyMt] <-
+                                                                  *actEndorsingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actEndorsingAPoliticalCandidate [iUniversalVocabularyMt] <-
+                                                                        *actEndorsingAProduct [iUniversalVocabularyMt] <-
+                                                                  *actExplainingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actElucidatingSomething [iUniversalVocabularyMt]
+                                                                              *actElaboratingSomething [iUniversalVocabularyMt]
+                                                                                    *actExpoundingSomething [iUniversalVocabularyMt]
+                                                                                          *actDescribingSomething [iUniversalVocabularyMt]
+                                                                                                *actDescribingAnObject [iUniversalVocabularyMt]
+                                                                                                      *(tColOfSubcollectionOfWithRelationToTypeFn actDescribingAnObject describedObject tGroupedModelingAndSimulationSystem) [iBaseKB] <-
+                                                                                                *actDescriptionSpeechAct [iUniversalVocabularyMt] <-
+                                                                                                *actEyeWitnessTestimony [iUniversalVocabularyMt] <-
+                                                                                                *actReporting [iUniversalVocabularyMt]
+                                                                                                      *(tColOfCollectionSubsetFn actReporting (tSetOfTheSetOfFn ?REPORTING (and (isa ?REPORTING actReporting) (topicOfInfoTransfer ?REPORTING actPiracyAtSea)))) [iBaseKB] <-
+                                                                                                      *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole cwBankAccount) [iBaseKB] <-
+                                                                                                      *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole cwCreditCardAccount) [iBaseKB] <-
+                                                                                                      *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole (tColOfSubcollectionOfWithRelationFromTypeFn tObjectCreditCard itemsStolen actStealing)) [iBaseKB]
+                                                                                                            *(stateNthSubSituationTypeOfTypeFn (tColOfSubcollectionOfWithRelationToTypeFn actProtectingSomething objectProtected cwCreditCardAccount) (tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole (tColOfSubcollectionOfWithRelationFromTypeFn tObjectCreditCard itemsStolen actStealing)) 1) [iBaseKB] <-
+                                                                                                      *actBasicTaskSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actDeliveringTheNews [iUniversalVocabularyMt]
+                                                                                                            *(tColOfSubcollectionOfWithRelationToTypeFn actDeliveringTheNews topicOfIndividual eventWeatherEvent) [iBaseKB] <-
+                                                                                                      *actFilingAnInsuranceClaim [iUniversalVocabularyMt]
+                                                                                                            *actFilingAHealthInsuranceClaim [iUniversalVocabularyMt]
+                                                                                                                  *actFilingAClaimForAPrescription [iUniversalVocabularyMt]
+                                                                                                                        *actFilingAClaimForAPrescriptionMedication [iUniversalVocabularyMt]
+                                                                                                                              *actFilingAClaimForAControlledSubstance [iUniversalVocabularyMt] <-
+                                                                                                                              *actFilingAClaimForANarcotic [iUniversalVocabularyMt] <-
+                                                                                                                              *actFilingAClaimForAnExtendedReleaseNarcotic [iUniversalVocabularyMt] <-
+                                                                                                                              *actFilingAClaimForAThreeDrugComboDrug [iUniversalVocabularyMt] <-
+                                                                                                      *actFilingTaxes [iUniversalVocabularyMt] <-
+                                                                                                      *actFireSupportSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actMainAttackSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actMiscellaneousTaskSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actMissionSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actQuarterlyReporting [iUniversalVocabularyMt] <-
+                                                                                                      *actReserveUnitSpecification [iUniversalVocabularyMt] <-
+                                                                                                      *actSupportingAttackSpecification [iUniversalVocabularyMt] <-
+                                                                                                *actSettingADeadline [iUniversalVocabularyMt] <-
+                                                                        *actExplainingSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                  *actGivingSomeoneDirections [iUniversalVocabularyMt]
+                                                                        *actGivingDirectionsOverThePhone [iUniversalVocabularyMt] <-
+                                                                        *actGivingSomeoneDirectionsForRoadwayTravel [iUniversalVocabularyMt] <-
+                                                                        *actGivingSomeoneDirectionsToARestroom [iUniversalVocabularyMt]
+                                                                              *(tColOfCollectionIntersection2Fn actGivingSomeoneDirectionsToARestroom actGivingSomeoneDirectionsWithinAStructureToALocationWithinThatStructure) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                        *actGivingSomeoneDirectionsWithinAStructureToALocationWithinThatStructure [iUniversalVocabularyMt]
+                                                                              *(stateSitTypeSpecWithTypeRestrictionOnRolePlayerFn actGivingSomeoneDirectionsWithinAStructureToALocationWithinThatStructure eventOccursWithin (tPlaceFacilityTypeOfOrganizationTypeFn tGroupedGroceryStore)) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                              *(tColOfCollectionIntersection2Fn actGivingSomeoneDirectionsToARestroom actGivingSomeoneDirectionsWithinAStructureToALocationWithinThatStructure) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                  *actInformingProgramUser [iUniversalVocabularyMt]
+                                                                        *actAcknowledgingUserInput [iUniversalVocabularyMt]
+                                                                              *actAcknowledgingTheUserInput [iUniversalVocabularyMt] <-
+                                                                        *actAlertingUserToOperationalFault [iUniversalVocabularyMt] <-
+                                                                        *actInformingTheUser [iUniversalVocabularyMt]
+                                                                              *actAcknowledgingTheUserInput [iUniversalVocabularyMt] <-
+                                                                        *actNotifiyingTheUserOfAStateChange [iUniversalVocabularyMt]
+                                                                              *(tColOfSubcollectionOfWithRelationToTypeFn actNotifiyingTheUserOfAStateChange deviceUsed tObjectVoicemailIndicatorLight) [iBaseKB] <-
+                                                                              *(tColOfSubcollectionOfWithRelationToTypeFn actNotifiyingTheUserOfAStateChange programUsed cwVoiceMailProgram) [iBaseKB]
+                                                                                    *(tColOfSubcollectionOfWithRelationToTypeFn actNotifiyingTheUserOfAStateChange deviceUsed tObjectVoicemailIndicatorLight) [iBaseKB] <-
+                                                                  *actInformingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                        *actExplainingSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actTestResultNotification [iUniversalVocabularyMt]
+                                                                              *actTestResultNotificationEmailBrief [iUniversalVocabularyMt] <-
+                                                                              *actTestResultNotificationEmailVerbose [iUniversalVocabularyMt] <-
+                                                                  *actIssuingAFatwa [iUniversalVocabularyMt] <-
+                                                                  *actIssuingAReportAboutASituation [iUniversalVocabularyMt] <-
+                                                                  *actIssuingAWrit [iUniversalVocabularyMt]
+                                                                        *actIssuingAnArrestWarrant [iUniversalVocabularyMt] <-
+                                                                        *actIssuingAWritOfCertiori [iUniversalVocabularyMt] <-
+                                                                  *actLecturing [iUniversalVocabularyMt]
+                                                                        *actFormalLectureIBT [iUniversalVocabularyMt]
+                                                                              *actScientificLecturing [iUniversalVocabularyMt] <-
+                                                                        *actFormalLectureSeriesIBT [iUniversalVocabularyMt]
+                                                                              *actTeachingACourse [iUniversalVocabularyMt]
+                                                                                    *actTeachingAScientificCourse [iUniversalVocabularyMt] <-
+                                                                  *actLying [iUniversalVocabularyMt]
+                                                                        *actDisseminatingDisinformation [iUniversalVocabularyMt] <-
+                                                                        *actRomancingLying [iUniversalVocabularyMt] <-
+                                                                        *tAura_Deceive [(mtContextOfPCWFn iTheAURABiologyOntology)] <-
+                                                                  *actMakingAPromise [iUniversalVocabularyMt] <-
+                                                                  *actPresentingTheResultsOfAProgramAction [iUniversalVocabularyMt] <-
+                                                                  *actProvidingInformationToComputerProcess [iUniversalVocabularyMt]
+                                                                        *actBasicTaskSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actFireSupportSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actMainAttackSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actMiscellaneousTaskSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actMissionSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actProvidingRequestedInformationToComputerProcess [iUniversalVocabularyMt] <-
+                                                                        *actReserveUnitSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                        *actSupportingAttackSpecification [iUIAGeneralMilitaryDemoEnvironmentMt] <-
+                                                                  *actReplyingToAQuestion [iUniversalVocabularyMt]
+                                                                        *actPleaLegal [iUniversalVocabularyMt]
+                                                                              *actGuiltyPlea [iUniversalVocabularyMt] <-
+                                                                              *actNoContestPlea [iUniversalVocabularyMt] <-
+                                                                              *actNotGuiltyPlea [iUniversalVocabularyMt] <-
+                                                                        *actProvidingRequestedInformationToComputerProcess [iUniversalVocabularyMt] <-
+                                                                        *actProvidingTheSolutionToAProblem [iUniversalVocabularyMt]
+                                                                              *actProvidingTheAnswerToAMathProblem [iUniversalVocabularyMt]
+                                                                                    *(actProvidingTheAnswerToMathProblemOfTypeFn cwDeterminePropertyOfASampleProblem) [iBaseKB] <-
+                                                                                    *(actProvidingTheAnswerToMathProblemOfTypeFn cwExpressionComparisonProblem) [iBaseKB] <-
+                                                                                    *(actProvidingTheAnswerToMathProblemOfTypeFn cwQuantitativeRelationshipMathProblem) [iBaseKB] <-
+                                                                                    *(actProvidingTheAnswerToMathProblemOfTypeFn cwSolveLinearEquationOfOneVariableProblem) [iBaseKB] <-
+                                                                        *actReplyingToAYesOrNoQuestion [iUniversalVocabularyMt]
+                                                                              *actAffirmingReplying [iUniversalVocabularyMt] <-
+                                                                              *actAnsweringABooleanWindow [iUniversalVocabularyMt] <-
+                                                                              *actDenyingReplying [iUniversalVocabularyMt] <-
+                                                                  *actReporting [iUniversalVocabularyMt]
+                                                                        *(tColOfCollectionSubsetFn actReporting (tSetOfTheSetOfFn ?REPORTING (and (isa ?REPORTING actReporting) (topicOfInfoTransfer ?REPORTING actPiracyAtSea)))) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole cwBankAccount) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole cwCreditCardAccount) [iBaseKB] <-
+                                                                        *(tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole (tColOfSubcollectionOfWithRelationFromTypeFn tObjectCreditCard itemsStolen actStealing)) [iBaseKB]
+                                                                              *(stateNthSubSituationTypeOfTypeFn (tColOfSubcollectionOfWithRelationToTypeFn actProtectingSomething objectProtected cwCreditCardAccount) (tColOfSubcollectionOfWithRelationToTypeFn actReporting topicRole (tColOfSubcollectionOfWithRelationFromTypeFn tObjectCreditCard itemsStolen actStealing)) 1) [iBaseKB] <-
+                                                                        *actBasicTaskSpecification [iUniversalVocabularyMt] <-
+                                                                        *actDeliveringTheNews [iUniversalVocabularyMt]
+                                                                              *(tColOfSubcollectionOfWithRelationToTypeFn actDeliveringTheNews topicOfIndividual eventWeatherEvent) [iBaseKB] <-
+                                                                        *actFilingAnInsuranceClaim [iUniversalVocabularyMt]
+                                                                              *actFilingAHealthInsuranceClaim [iUniversalVocabularyMt]
+                                                                                    *actFilingAClaimForAPrescription [iUniversalVocabularyMt]
+                                                                                          *actFilingAClaimForAPrescriptionMedication [iUniversalVocabularyMt]
+                                                                                                *actFilingAClaimForAControlledSubstance [iUniversalVocabularyMt] <-
+                                                                                                *actFilingAClaimForANarcotic [iUniversalVocabularyMt] <-
+                                                                                                *actFilingAClaimForAnExtendedReleaseNarcotic [iUniversalVocabularyMt] <-
+                                                                                                *actFilingAClaimForAThreeDrugComboDrug [iUniversalVocabularyMt] <-
+                                                                        *actFilingTaxes [iUniversalVocabularyMt] <-
+                                                                        *actFireSupportSpecification [iUniversalVocabularyMt] <-
+                                                                        *actMainAttackSpecification [iUniversalVocabularyMt] <-
+                                                                        *actMiscellaneousTaskSpecification [iUniversalVocabularyMt] <-
+                                                                        *actMissionSpecification [iUniversalVocabularyMt] <-
+                                                                        *actQuarterlyReporting [iUniversalVocabularyMt] <-
+                                                                        *actReserveUnitSpecification [iUniversalVocabularyMt] <-
+                                                                        *actSupportingAttackSpecification [iUniversalVocabularyMt] <-
+                                                                  *actRetractingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actRetractingCommissivePartial [iUniversalVocabularyMt] <-
+                                                                        *actRetractingCommissiveTotal [iUniversalVocabularyMt] <-
+                                                                        *actRetractingConstativePartial [iUniversalVocabularyMt] <-
+                                                                        *actRetractingConstativeTotal [iUniversalVocabularyMt] <-
+                                                                        *actRetractingDirectiveCommunicationAct [iUniversalVocabularyMt]
+                                                                              *actRetractingDirectiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                        *actRetractingSoftwareAgentCom [iUniversalVocabularyMt]
+                                                                              *actRetractingDirectiveSoftwareAgentCom [iUniversalVocabularyMt] <-
+                                                                  *actRevealingTrueInformation [iUniversalVocabularyMt] <-
+                                                                  *actRevokingASignalThatKAObjectIsReadyForNextAction [iUniversalVocabularyMt] <-
+                                                                  *actScientificPresentation [iUniversalVocabularyMt]
+                                                                        *actScientificLecturing [iUniversalVocabularyMt] <-
+                                                                  *actSignalingAKAObjectReadyForNextAction [iUniversalVocabularyMt] <-
+                                                                  *actSignalingKEReadyForReviewOnPCW [iUniversalVocabularyMt] <-
+                                                                  *actSignalingPresenceAtDoor [iUniversalVocabularyMt] <-
+                                                                  *actStatingSomething [iUniversalVocabularyMt]
+                                                                        *actBoasting [iUniversalVocabularyMt] <-
+                                                                        *actMakingAPrediction [iUniversalVocabularyMt]
+                                                                              *(actPredictingWhetherFn (xQuoteFn (genls (iArbitraryInstanceFn (tColOfSpecsFn eventPhysicalEvent)) eventProcessRequiringNoEnergyInput))) [iBaseKB]
+                                                                                    *(tColOfCollectionIntersection2Fn actSuccessfulAction (actPredictingWhetherFn (xQuoteFn (genls (iArbitraryInstanceFn (tColOfSpecsFn eventPhysicalEvent)) eventProcessRequiringNoEnergyInput)))) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                              *(actPredictingWhetherFn (xQuoteFn (isa (iArbitraryInstanceFn eventPhysicalEvent) eventProcessRequiringNoEnergyInput))) [iBaseKB]
+                                                                                    *(tColOfCollectionIntersection2Fn actSuccessfulAction (actPredictingWhetherFn (xQuoteFn (isa (iArbitraryInstanceFn eventPhysicalEvent) eventProcessRequiringNoEnergyInput)))) [iBaseKB, iUniversalVocabularyMt] <-
+                                                                        *actReportingACrimeToALawEnforcementAgent [iUniversalVocabularyMt] <-
+                                                                        *actStatingWhatOtherIsDoing [iUniversalVocabularyMt] <-
+                                                                        *tCommunicatingSpecification [iKEIOUMt]
+                                                                              *actIssuingAWritOfCertiori [iUniversalVocabularyMt] <-
+                                                                              *actSoftwareDevelopmentRequirementsSpecificationStage [iUniversalVocabularyMt] <-
+                                                                  *actTestifying [iUniversalVocabularyMt] <-
+                                                                  *tConfession [iCycNounLearnerMt] <-
+                                                                  *tDeclaration [iCycNounLearnerMt] <-
+                                                                  *tReassurance [iCycNounLearnerMt] <-
+                                                                  *tUnderstatement [iCycNounLearnerMt] <-
+                                                            *actInsistingCommunicationAct [iUniversalVocabularyMt]
+                                                                  *actRefusingCommunicationAct [iUniversalVocabularyMt]
+                                                                        *actDenyingAPetitionOfCertiori [iUniversalVocabularyMt] <-
+                                                                        *actRejectingAnInsuranceClaim [iUniversalVocabularyMt] <-
+                                                            *actInsultingSomeone [iUniversalVocabularyMt]
+                                                                  *actInsultingAnOfficial [iUniversalVocabularyMt] <-
+                                                            *actIntimidationCommunicationAct [iUniversalVocabularyMt]
+                                                                  *actBrandishingAWeapon [iUniversalVocabularyMt] <-
+                                                                  *actMakingAThreat [iUniversalVocabularyMt]
+                                                                        *(actThreateningToDoFn actArson) [iBaseKB]
+                                                                              *(actThreateningToDoFn actArson) [iHumanSocialLifeMt]
+
+
+
+rdfs:subClassOf
+
+
+rdfs:subClassOf
+
+
+
+
+Given:
+
+fact1-  i:myCar rdf:type c:HondaCivic .
+fact2-  c:HondaCivic rdfs:subClassOf c:PassengerVehicle .
+fact3-  c:PassengerVehicle rdfs:subClassOf c:ThingThatCanBeInsured .
+
+From fact1 + fact2 + fact3  may i conclude?
+
+result1-   i:myCar rdf:type  c:PassengerVehicle .
+result2-   i:myCar rdf:type  c:ThingThatCanBeInsured .
+
+No, because FOL doesnt give me this transitive closure .
+
+So, Lets make it by adding a rule:
+
+rule1 - { ?c rdfs:subClassOf ?sc.  ?i rdf:type ?c . } ->  { ?i rdf:type ?sc }
+
+
+
+ASK> i:myCar rdf:type ?WHAT
+
+
+result1> ?WHAT = c:PassengerVehicle
+   proof>
+      rule1-             { ?c rdfs:subClassOf ?sc.  ?i rdf:type ?c . } ->  { ?i rdf:type ?sc }
+      fact1-              i:myCar rdf:type c:HondaCivic .
+      fact2-              c:HondaCivic rdfs:subClassOf c:PassengerVehicle .
+      rule1+fact2+fact1   c:HondaCivic rdfs:subClassOf c:PassengerVehicle .  i:myCar rdf:type c:HondaCivic . 
+      ded1-            ->  i:myCar rdf:type c:PassengerVehicle 
+
+result2> ?WHAT = c:ThingThatCanBeInsured
+   proof>
+      rule1-               { ?c rdfs:subClassOf ?sc.  ?i rdf:type ?c . } ->  { ?i rdf:type ?sc }
+      fact1-               i:myCar rdf:type c:HondaCivic .
+      fact2-               c:HondaCivic rdfs:subClassOf c:PassengerVehicle .
+      rule1+fact2+fact1:   c:HondaCivic rdfs:subClassOf c:PassengerVehicle . i:myCar rdf:type c:HondaCivic .
+      ded1-                i:myCar rdf:type c:PassengerVehicle .
+      fact3-               c:PassengerVehicle rdfs:subClassOf c:ThingThatCanBeInsured .
+      rule1+ded1+fact3     c:HondaCivic rdfs:subClassOf c:ThingThatCanBeInsured .  i:myCar rdf:type c:PassengerVehicle .
+      ded2-                i:myCar rdf:type c:ThingThatCanBeInsured 
+
+
+Oh, still no TC? Perhaps.  Since TC would have meant that the proofs would have been the same lengths?
+

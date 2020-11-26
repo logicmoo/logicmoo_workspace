@@ -1,0 +1,1017 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter10/MovingNewspaperAndBox.e
+loading foundations/Root.e
+loading foundations/EC.e
+1436 variables and 6067 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+IN(Box, LivingRoom).
+IN(Lisa, LivingRoom).
+IN(Newspaper, LivingRoom).
+INROOM(Box, LivingRoom).
+INROOM(Lisa, LivingRoom).
+INROOM(Newspaper, LivingRoom).
+Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 0).
+1
+-IN(Newspaper, LivingRoom).
++IN(Newspaper, Box).
+Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 1).
+2
+-IN(Box, LivingRoom).
++IN(Box, Lisa).
+Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 2).
+3
+-IN(Lisa, LivingRoom).
+-INROOM(Box, LivingRoom).
+-INROOM(Lisa, LivingRoom).
+-INROOM(Newspaper, LivingRoom).
++IN(Lisa, Kitchen).
++INROOM(Box, Kitchen).
++INROOM(Lisa, Kitchen).
++INROOM(Newspaper, Kitchen).
+Happens(MOVE(Lisa, Box, Lisa, Kitchen), 3).
+4
+-IN(Box, Lisa).
++IN(Box, Kitchen).
+Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 4).
+5
+-IN(Lisa, Kitchen).
+-INROOM(Lisa, Kitchen).
++IN(Lisa, LivingRoom).
++INROOM(Lisa, LivingRoom).
+P
+ReleasedAt(INROOM(Box, Kitchen), 0).
+ReleasedAt(INROOM(Box, Kitchen), 1).
+ReleasedAt(INROOM(Box, Kitchen), 2).
+ReleasedAt(INROOM(Box, Kitchen), 3).
+ReleasedAt(INROOM(Box, Kitchen), 4).
+ReleasedAt(INROOM(Box, Kitchen), 5).
+ReleasedAt(INROOM(Box, LivingRoom), 0).
+ReleasedAt(INROOM(Box, LivingRoom), 1).
+ReleasedAt(INROOM(Box, LivingRoom), 2).
+ReleasedAt(INROOM(Box, LivingRoom), 3).
+ReleasedAt(INROOM(Box, LivingRoom), 4).
+ReleasedAt(INROOM(Box, LivingRoom), 5).
+ReleasedAt(INROOM(Kitchen, Kitchen), 0).
+ReleasedAt(INROOM(Kitchen, Kitchen), 1).
+ReleasedAt(INROOM(Kitchen, Kitchen), 2).
+ReleasedAt(INROOM(Kitchen, Kitchen), 3).
+ReleasedAt(INROOM(Kitchen, Kitchen), 4).
+ReleasedAt(INROOM(Kitchen, Kitchen), 5).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 0).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 1).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 2).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 3).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 4).
+ReleasedAt(INROOM(Kitchen, LivingRoom), 5).
+ReleasedAt(INROOM(Lisa, Kitchen), 0).
+ReleasedAt(INROOM(Lisa, Kitchen), 1).
+ReleasedAt(INROOM(Lisa, Kitchen), 2).
+ReleasedAt(INROOM(Lisa, Kitchen), 3).
+ReleasedAt(INROOM(Lisa, Kitchen), 4).
+ReleasedAt(INROOM(Lisa, Kitchen), 5).
+ReleasedAt(INROOM(Lisa, LivingRoom), 0).
+ReleasedAt(INROOM(Lisa, LivingRoom), 1).
+ReleasedAt(INROOM(Lisa, LivingRoom), 2).
+ReleasedAt(INROOM(Lisa, LivingRoom), 3).
+ReleasedAt(INROOM(Lisa, LivingRoom), 4).
+ReleasedAt(INROOM(Lisa, LivingRoom), 5).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 0).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 1).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 2).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 3).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 4).
+ReleasedAt(INROOM(LivingRoom, Kitchen), 5).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 0).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 1).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 2).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 3).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 4).
+ReleasedAt(INROOM(LivingRoom, LivingRoom), 5).
+ReleasedAt(INROOM(Newspaper, Kitchen), 0).
+ReleasedAt(INROOM(Newspaper, Kitchen), 1).
+ReleasedAt(INROOM(Newspaper, Kitchen), 2).
+ReleasedAt(INROOM(Newspaper, Kitchen), 3).
+ReleasedAt(INROOM(Newspaper, Kitchen), 4).
+ReleasedAt(INROOM(Newspaper, Kitchen), 5).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 0).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 1).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 2).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 3).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 4).
+ReleasedAt(INROOM(Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, Box, Box), 0).
+!Happens(MOVE(Lisa, Box, Box, Box), 1).
+!Happens(MOVE(Lisa, Box, Box, Box), 2).
+!Happens(MOVE(Lisa, Box, Box, Box), 3).
+!Happens(MOVE(Lisa, Box, Box, Box), 4).
+!Happens(MOVE(Lisa, Box, Box, Box), 5).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 0).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 1).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 2).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 3).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 4).
+!Happens(MOVE(Lisa, Box, Box, Kitchen), 5).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 0).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 1).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 2).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 3).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 4).
+!Happens(MOVE(Lisa, Box, Box, Lisa), 5).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 0).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 1).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 2).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 3).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 4).
+!Happens(MOVE(Lisa, Box, Box, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 0).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 1).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 2).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 3).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 4).
+!Happens(MOVE(Lisa, Box, Box, Newspaper), 5).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 0).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 1).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 2).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 3).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 4).
+!Happens(MOVE(Lisa, Box, Kitchen, Box), 5).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 0).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 1).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 2).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 3).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 4).
+!Happens(MOVE(Lisa, Box, Kitchen, Kitchen), 5).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 0).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 1).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 2).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 3).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 4).
+!Happens(MOVE(Lisa, Box, Kitchen, Lisa), 5).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 0).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 1).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 2).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 3).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 4).
+!Happens(MOVE(Lisa, Box, Kitchen, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 0).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 1).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 2).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 3).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 4).
+!Happens(MOVE(Lisa, Box, Kitchen, Newspaper), 5).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 0).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 1).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 2).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 3).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 4).
+!Happens(MOVE(Lisa, Box, Lisa, Box), 5).
+!Happens(MOVE(Lisa, Box, Lisa, Kitchen), 0).
+!Happens(MOVE(Lisa, Box, Lisa, Kitchen), 1).
+!Happens(MOVE(Lisa, Box, Lisa, Kitchen), 2).
+!Happens(MOVE(Lisa, Box, Lisa, Kitchen), 4).
+!Happens(MOVE(Lisa, Box, Lisa, Kitchen), 5).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 0).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 1).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 2).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 3).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 4).
+!Happens(MOVE(Lisa, Box, Lisa, Lisa), 5).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 0).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 1).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 2).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 3).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 4).
+!Happens(MOVE(Lisa, Box, Lisa, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 0).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 1).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 2).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 3).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 4).
+!Happens(MOVE(Lisa, Box, Lisa, Newspaper), 5).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 0).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 1).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 2).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 3).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 4).
+!Happens(MOVE(Lisa, Box, LivingRoom, Box), 5).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 0).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 1).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 2).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 3).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 4).
+!Happens(MOVE(Lisa, Box, LivingRoom, Kitchen), 5).
+!Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 0).
+!Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 2).
+!Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 3).
+!Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 4).
+!Happens(MOVE(Lisa, Box, LivingRoom, Lisa), 5).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 0).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 1).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 2).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 3).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 4).
+!Happens(MOVE(Lisa, Box, LivingRoom, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 0).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 1).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 2).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 3).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 4).
+!Happens(MOVE(Lisa, Box, LivingRoom, Newspaper), 5).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 0).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 1).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 2).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 3).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 4).
+!Happens(MOVE(Lisa, Box, Newspaper, Box), 5).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 0).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 1).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 2).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 3).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 4).
+!Happens(MOVE(Lisa, Box, Newspaper, Kitchen), 5).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 0).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 1).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 2).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 3).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 4).
+!Happens(MOVE(Lisa, Box, Newspaper, Lisa), 5).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 0).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 1).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 2).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 3).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 4).
+!Happens(MOVE(Lisa, Box, Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 0).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 1).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 2).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 3).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 4).
+!Happens(MOVE(Lisa, Box, Newspaper, Newspaper), 5).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 0).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 1).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 2).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 3).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 4).
+!Happens(MOVE(Lisa, Kitchen, Box, Box), 5).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 0).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 1).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 2).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 3).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 4).
+!Happens(MOVE(Lisa, Kitchen, Box, Kitchen), 5).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 0).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 1).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 2).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 3).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 4).
+!Happens(MOVE(Lisa, Kitchen, Box, Lisa), 5).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 0).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 1).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 2).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 3).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 4).
+!Happens(MOVE(Lisa, Kitchen, Box, LivingRoom), 5).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 0).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 1).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 2).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 3).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 4).
+!Happens(MOVE(Lisa, Kitchen, Box, Newspaper), 5).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 0).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 1).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 2).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 3).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 4).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Box), 5).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 0).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 1).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 2).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 3).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 4).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Kitchen), 5).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 0).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 1).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 2).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 3).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 4).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Lisa), 5).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 0).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 1).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 2).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 3).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 4).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, LivingRoom), 5).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 0).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 1).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 2).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 3).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 4).
+!Happens(MOVE(Lisa, Kitchen, Kitchen, Newspaper), 5).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 0).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 1).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 2).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 3).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 4).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Box), 5).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 0).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 1).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 2).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 3).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 4).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Kitchen), 5).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 0).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 1).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 2).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 3).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 4).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Lisa), 5).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 0).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 1).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 2).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 3).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 4).
+!Happens(MOVE(Lisa, Kitchen, Lisa, LivingRoom), 5).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 0).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 1).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 2).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 3).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 4).
+!Happens(MOVE(Lisa, Kitchen, Lisa, Newspaper), 5).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 0).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 1).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 2).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 3).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 4).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Box), 5).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 0).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 1).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 2).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 3).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 4).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Kitchen), 5).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 0).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 1).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 2).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 3).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 4).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Lisa), 5).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 0).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 1).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 2).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 3).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 4).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, LivingRoom), 5).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 0).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 1).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 2).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 3).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 4).
+!Happens(MOVE(Lisa, Kitchen, LivingRoom, Newspaper), 5).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 0).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 1).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 2).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 3).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 4).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Box), 5).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 0).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 1).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 2).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 3).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 4).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Kitchen), 5).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 0).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 1).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 2).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 3).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 4).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Lisa), 5).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 0).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 1).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 2).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 3).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 4).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 0).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 1).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 2).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 3).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 4).
+!Happens(MOVE(Lisa, Kitchen, Newspaper, Newspaper), 5).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 0).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 1).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 2).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 3).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 4).
+!Happens(MOVE(Lisa, Lisa, Box, Box), 5).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 0).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 1).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 2).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 3).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 4).
+!Happens(MOVE(Lisa, Lisa, Box, Kitchen), 5).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 0).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 1).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 2).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 3).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 4).
+!Happens(MOVE(Lisa, Lisa, Box, Lisa), 5).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 0).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 1).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 2).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 3).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 4).
+!Happens(MOVE(Lisa, Lisa, Box, LivingRoom), 5).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 0).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 1).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 2).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 3).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 4).
+!Happens(MOVE(Lisa, Lisa, Box, Newspaper), 5).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 0).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 1).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 2).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 3).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 4).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Box), 5).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 0).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 1).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 2).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 3).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 4).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Kitchen), 5).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 0).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 1).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 2).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 3).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 4).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Lisa), 5).
+!Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 0).
+!Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 1).
+!Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 2).
+!Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 3).
+!Happens(MOVE(Lisa, Lisa, Kitchen, LivingRoom), 5).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 0).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 1).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 2).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 3).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 4).
+!Happens(MOVE(Lisa, Lisa, Kitchen, Newspaper), 5).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 0).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 1).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 2).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 3).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 4).
+!Happens(MOVE(Lisa, Lisa, Lisa, Box), 5).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 0).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 1).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 2).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 3).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 4).
+!Happens(MOVE(Lisa, Lisa, Lisa, Kitchen), 5).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 0).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 1).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 2).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 3).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 4).
+!Happens(MOVE(Lisa, Lisa, Lisa, Lisa), 5).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 0).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 1).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 2).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 3).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 4).
+!Happens(MOVE(Lisa, Lisa, Lisa, LivingRoom), 5).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 0).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 1).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 2).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 3).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 4).
+!Happens(MOVE(Lisa, Lisa, Lisa, Newspaper), 5).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 0).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 1).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 2).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 3).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 4).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Box), 5).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 0).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 1).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 3).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 4).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Kitchen), 5).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 0).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 1).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 2).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 3).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 4).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Lisa), 5).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 0).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 1).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 2).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 3).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 4).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, LivingRoom), 5).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 0).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 1).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 2).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 3).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 4).
+!Happens(MOVE(Lisa, Lisa, LivingRoom, Newspaper), 5).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 0).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 1).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 2).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 3).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 4).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Box), 5).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 0).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 1).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 2).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 3).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 4).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Kitchen), 5).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 0).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 1).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 2).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 3).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 4).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Lisa), 5).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 0).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 1).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 2).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 3).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 4).
+!Happens(MOVE(Lisa, Lisa, Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 0).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 1).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 2).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 3).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 4).
+!Happens(MOVE(Lisa, Lisa, Newspaper, Newspaper), 5).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 0).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 1).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 2).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 3).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 4).
+!Happens(MOVE(Lisa, LivingRoom, Box, Box), 5).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 0).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 1).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 2).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 3).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 4).
+!Happens(MOVE(Lisa, LivingRoom, Box, Kitchen), 5).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 0).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 1).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 2).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 3).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 4).
+!Happens(MOVE(Lisa, LivingRoom, Box, Lisa), 5).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 0).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 1).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 2).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 3).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 4).
+!Happens(MOVE(Lisa, LivingRoom, Box, LivingRoom), 5).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 0).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 1).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 2).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 3).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 4).
+!Happens(MOVE(Lisa, LivingRoom, Box, Newspaper), 5).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 0).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 1).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 2).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 3).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 4).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Box), 5).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 0).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 1).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 2).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 3).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 4).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Kitchen), 5).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 0).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 1).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 2).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 3).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 4).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Lisa), 5).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 0).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 1).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 2).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 3).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 4).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, LivingRoom), 5).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 0).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 1).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 2).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 3).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 4).
+!Happens(MOVE(Lisa, LivingRoom, Kitchen, Newspaper), 5).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 0).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 1).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 2).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 3).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 4).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Box), 5).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 0).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 1).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 2).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 3).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 4).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Kitchen), 5).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 0).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 1).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 2).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 3).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 4).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Lisa), 5).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 0).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 1).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 2).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 3).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 4).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, LivingRoom), 5).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 0).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 1).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 2).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 3).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 4).
+!Happens(MOVE(Lisa, LivingRoom, Lisa, Newspaper), 5).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 0).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 1).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 2).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 3).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 4).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Box), 5).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 0).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 1).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 2).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 3).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 4).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Kitchen), 5).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 0).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 1).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 2).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 3).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 4).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Lisa), 5).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 0).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 1).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 2).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 3).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 4).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, LivingRoom), 5).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 0).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 1).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 2).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 3).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 4).
+!Happens(MOVE(Lisa, LivingRoom, LivingRoom, Newspaper), 5).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 0).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 1).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 2).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 3).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 4).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Box), 5).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 0).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 1).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 2).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 3).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 4).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Kitchen), 5).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 0).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 1).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 2).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 3).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 4).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Lisa), 5).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 0).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 1).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 2).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 3).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 4).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 0).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 1).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 2).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 3).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 4).
+!Happens(MOVE(Lisa, LivingRoom, Newspaper, Newspaper), 5).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 0).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 1).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 2).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 3).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 4).
+!Happens(MOVE(Lisa, Newspaper, Box, Box), 5).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 0).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 1).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 2).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 3).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 4).
+!Happens(MOVE(Lisa, Newspaper, Box, Kitchen), 5).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 0).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 1).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 2).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 3).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 4).
+!Happens(MOVE(Lisa, Newspaper, Box, Lisa), 5).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 0).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 1).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 2).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 3).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 4).
+!Happens(MOVE(Lisa, Newspaper, Box, LivingRoom), 5).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 0).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 1).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 2).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 3).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 4).
+!Happens(MOVE(Lisa, Newspaper, Box, Newspaper), 5).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 0).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 1).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 2).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 3).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 4).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Box), 5).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 0).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 1).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 2).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 3).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 4).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Kitchen), 5).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 0).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 1).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 2).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 3).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 4).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Lisa), 5).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 0).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 1).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 2).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 3).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 4).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, LivingRoom), 5).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 0).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 1).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 2).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 3).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 4).
+!Happens(MOVE(Lisa, Newspaper, Kitchen, Newspaper), 5).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 0).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 1).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 2).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 3).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 4).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Box), 5).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 0).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 1).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 2).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 3).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 4).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Kitchen), 5).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 0).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 1).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 2).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 3).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 4).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Lisa), 5).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 0).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 1).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 2).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 3).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 4).
+!Happens(MOVE(Lisa, Newspaper, Lisa, LivingRoom), 5).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 0).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 1).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 2).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 3).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 4).
+!Happens(MOVE(Lisa, Newspaper, Lisa, Newspaper), 5).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 1).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 2).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 3).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 4).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Box), 5).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 0).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 1).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 2).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 3).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 4).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Kitchen), 5).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 0).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 1).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 2).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 3).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 4).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Lisa), 5).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 0).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 1).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 2).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 3).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 4).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, LivingRoom), 5).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 0).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 1).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 2).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 3).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 4).
+!Happens(MOVE(Lisa, Newspaper, LivingRoom, Newspaper), 5).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 0).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 1).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 2).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 3).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 4).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Box), 5).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 0).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 1).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 2).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 3).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 4).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Kitchen), 5).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 0).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 1).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 2).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 3).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 4).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Lisa), 5).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 0).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 1).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 2).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 3).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 4).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, LivingRoom), 5).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 0).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 1).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 2).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 3).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 4).
+!Happens(MOVE(Lisa, Newspaper, Newspaper, Newspaper), 5).
+!ReleasedAt(IN(Box, Box), 0).
+!ReleasedAt(IN(Box, Box), 1).
+!ReleasedAt(IN(Box, Box), 2).
+!ReleasedAt(IN(Box, Box), 3).
+!ReleasedAt(IN(Box, Box), 4).
+!ReleasedAt(IN(Box, Box), 5).
+!ReleasedAt(IN(Box, Kitchen), 0).
+!ReleasedAt(IN(Box, Kitchen), 1).
+!ReleasedAt(IN(Box, Kitchen), 2).
+!ReleasedAt(IN(Box, Kitchen), 3).
+!ReleasedAt(IN(Box, Kitchen), 4).
+!ReleasedAt(IN(Box, Kitchen), 5).
+!ReleasedAt(IN(Box, Lisa), 0).
+!ReleasedAt(IN(Box, Lisa), 1).
+!ReleasedAt(IN(Box, Lisa), 2).
+!ReleasedAt(IN(Box, Lisa), 3).
+!ReleasedAt(IN(Box, Lisa), 4).
+!ReleasedAt(IN(Box, Lisa), 5).
+!ReleasedAt(IN(Box, LivingRoom), 0).
+!ReleasedAt(IN(Box, LivingRoom), 1).
+!ReleasedAt(IN(Box, LivingRoom), 2).
+!ReleasedAt(IN(Box, LivingRoom), 3).
+!ReleasedAt(IN(Box, LivingRoom), 4).
+!ReleasedAt(IN(Box, LivingRoom), 5).
+!ReleasedAt(IN(Box, Newspaper), 0).
+!ReleasedAt(IN(Box, Newspaper), 1).
+!ReleasedAt(IN(Box, Newspaper), 2).
+!ReleasedAt(IN(Box, Newspaper), 3).
+!ReleasedAt(IN(Box, Newspaper), 4).
+!ReleasedAt(IN(Box, Newspaper), 5).
+!ReleasedAt(IN(Kitchen, Box), 0).
+!ReleasedAt(IN(Kitchen, Box), 1).
+!ReleasedAt(IN(Kitchen, Box), 2).
+!ReleasedAt(IN(Kitchen, Box), 3).
+!ReleasedAt(IN(Kitchen, Box), 4).
+!ReleasedAt(IN(Kitchen, Box), 5).
+!ReleasedAt(IN(Kitchen, Kitchen), 0).
+!ReleasedAt(IN(Kitchen, Kitchen), 1).
+!ReleasedAt(IN(Kitchen, Kitchen), 2).
+!ReleasedAt(IN(Kitchen, Kitchen), 3).
+!ReleasedAt(IN(Kitchen, Kitchen), 4).
+!ReleasedAt(IN(Kitchen, Kitchen), 5).
+!ReleasedAt(IN(Kitchen, Lisa), 0).
+!ReleasedAt(IN(Kitchen, Lisa), 1).
+!ReleasedAt(IN(Kitchen, Lisa), 2).
+!ReleasedAt(IN(Kitchen, Lisa), 3).
+!ReleasedAt(IN(Kitchen, Lisa), 4).
+!ReleasedAt(IN(Kitchen, Lisa), 5).
+!ReleasedAt(IN(Kitchen, LivingRoom), 0).
+!ReleasedAt(IN(Kitchen, LivingRoom), 1).
+!ReleasedAt(IN(Kitchen, LivingRoom), 2).
+!ReleasedAt(IN(Kitchen, LivingRoom), 3).
+!ReleasedAt(IN(Kitchen, LivingRoom), 4).
+!ReleasedAt(IN(Kitchen, LivingRoom), 5).
+!ReleasedAt(IN(Kitchen, Newspaper), 0).
+!ReleasedAt(IN(Kitchen, Newspaper), 1).
+!ReleasedAt(IN(Kitchen, Newspaper), 2).
+!ReleasedAt(IN(Kitchen, Newspaper), 3).
+!ReleasedAt(IN(Kitchen, Newspaper), 4).
+!ReleasedAt(IN(Kitchen, Newspaper), 5).
+!ReleasedAt(IN(Lisa, Box), 0).
+!ReleasedAt(IN(Lisa, Box), 1).
+!ReleasedAt(IN(Lisa, Box), 2).
+!ReleasedAt(IN(Lisa, Box), 3).
+!ReleasedAt(IN(Lisa, Box), 4).
+!ReleasedAt(IN(Lisa, Box), 5).
+!ReleasedAt(IN(Lisa, Kitchen), 0).
+!ReleasedAt(IN(Lisa, Kitchen), 1).
+!ReleasedAt(IN(Lisa, Kitchen), 2).
+!ReleasedAt(IN(Lisa, Kitchen), 3).
+!ReleasedAt(IN(Lisa, Kitchen), 4).
+!ReleasedAt(IN(Lisa, Kitchen), 5).
+!ReleasedAt(IN(Lisa, Lisa), 0).
+!ReleasedAt(IN(Lisa, Lisa), 1).
+!ReleasedAt(IN(Lisa, Lisa), 2).
+!ReleasedAt(IN(Lisa, Lisa), 3).
+!ReleasedAt(IN(Lisa, Lisa), 4).
+!ReleasedAt(IN(Lisa, Lisa), 5).
+!ReleasedAt(IN(Lisa, LivingRoom), 0).
+!ReleasedAt(IN(Lisa, LivingRoom), 1).
+!ReleasedAt(IN(Lisa, LivingRoom), 2).
+!ReleasedAt(IN(Lisa, LivingRoom), 3).
+!ReleasedAt(IN(Lisa, LivingRoom), 4).
+!ReleasedAt(IN(Lisa, LivingRoom), 5).
+!ReleasedAt(IN(Lisa, Newspaper), 0).
+!ReleasedAt(IN(Lisa, Newspaper), 1).
+!ReleasedAt(IN(Lisa, Newspaper), 2).
+!ReleasedAt(IN(Lisa, Newspaper), 3).
+!ReleasedAt(IN(Lisa, Newspaper), 4).
+!ReleasedAt(IN(Lisa, Newspaper), 5).
+!ReleasedAt(IN(LivingRoom, Box), 0).
+!ReleasedAt(IN(LivingRoom, Box), 1).
+!ReleasedAt(IN(LivingRoom, Box), 2).
+!ReleasedAt(IN(LivingRoom, Box), 3).
+!ReleasedAt(IN(LivingRoom, Box), 4).
+!ReleasedAt(IN(LivingRoom, Box), 5).
+!ReleasedAt(IN(LivingRoom, Kitchen), 0).
+!ReleasedAt(IN(LivingRoom, Kitchen), 1).
+!ReleasedAt(IN(LivingRoom, Kitchen), 2).
+!ReleasedAt(IN(LivingRoom, Kitchen), 3).
+!ReleasedAt(IN(LivingRoom, Kitchen), 4).
+!ReleasedAt(IN(LivingRoom, Kitchen), 5).
+!ReleasedAt(IN(LivingRoom, Lisa), 0).
+!ReleasedAt(IN(LivingRoom, Lisa), 1).
+!ReleasedAt(IN(LivingRoom, Lisa), 2).
+!ReleasedAt(IN(LivingRoom, Lisa), 3).
+!ReleasedAt(IN(LivingRoom, Lisa), 4).
+!ReleasedAt(IN(LivingRoom, Lisa), 5).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 0).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 1).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 2).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 3).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 4).
+!ReleasedAt(IN(LivingRoom, LivingRoom), 5).
+!ReleasedAt(IN(LivingRoom, Newspaper), 0).
+!ReleasedAt(IN(LivingRoom, Newspaper), 1).
+!ReleasedAt(IN(LivingRoom, Newspaper), 2).
+!ReleasedAt(IN(LivingRoom, Newspaper), 3).
+!ReleasedAt(IN(LivingRoom, Newspaper), 4).
+!ReleasedAt(IN(LivingRoom, Newspaper), 5).
+!ReleasedAt(IN(Newspaper, Box), 0).
+!ReleasedAt(IN(Newspaper, Box), 1).
+!ReleasedAt(IN(Newspaper, Box), 2).
+!ReleasedAt(IN(Newspaper, Box), 3).
+!ReleasedAt(IN(Newspaper, Box), 4).
+!ReleasedAt(IN(Newspaper, Box), 5).
+!ReleasedAt(IN(Newspaper, Kitchen), 0).
+!ReleasedAt(IN(Newspaper, Kitchen), 1).
+!ReleasedAt(IN(Newspaper, Kitchen), 2).
+!ReleasedAt(IN(Newspaper, Kitchen), 3).
+!ReleasedAt(IN(Newspaper, Kitchen), 4).
+!ReleasedAt(IN(Newspaper, Kitchen), 5).
+!ReleasedAt(IN(Newspaper, Lisa), 0).
+!ReleasedAt(IN(Newspaper, Lisa), 1).
+!ReleasedAt(IN(Newspaper, Lisa), 2).
+!ReleasedAt(IN(Newspaper, Lisa), 3).
+!ReleasedAt(IN(Newspaper, Lisa), 4).
+!ReleasedAt(IN(Newspaper, Lisa), 5).
+!ReleasedAt(IN(Newspaper, LivingRoom), 0).
+!ReleasedAt(IN(Newspaper, LivingRoom), 1).
+!ReleasedAt(IN(Newspaper, LivingRoom), 2).
+!ReleasedAt(IN(Newspaper, LivingRoom), 3).
+!ReleasedAt(IN(Newspaper, LivingRoom), 4).
+!ReleasedAt(IN(Newspaper, LivingRoom), 5).
+!ReleasedAt(IN(Newspaper, Newspaper), 0).
+!ReleasedAt(IN(Newspaper, Newspaper), 1).
+!ReleasedAt(IN(Newspaper, Newspaper), 2).
+!ReleasedAt(IN(Newspaper, Newspaper), 3).
+!ReleasedAt(IN(Newspaper, Newspaper), 4).
+!ReleasedAt(IN(Newspaper, Newspaper), 5).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+MovingNewspaperAndBox: 0 predicates, 0 functions, 2 fluents, 1 events, 27 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 2.7s
+solution 0.1s
+total 4.0s
+Discrete Event Calculus Reasoner 1.0

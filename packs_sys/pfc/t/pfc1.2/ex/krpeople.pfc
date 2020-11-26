@@ -1,0 +1,22 @@
+% -*-Prolog-*-
+
+
+
+=> [role(person,gender),
+    type(person,gender,gender_type),
+    role(person,age),
+    type(person,age,number)].
+
+=> [subclass(person,man),
+    type(man,gender,male_gender)].
+
+=> [subclass(person,woman),
+    type(woman,gender,female_gender)].
+
+=> [disjoint(male_gender,female_gender),
+    subclass(gender_type,male_gender),
+    subclass(gender_type,female_gender)].
+
+
+=> [subclass(person,foo),
+    type(foo,gender,female_gender)].

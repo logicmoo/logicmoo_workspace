@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YASR</title>
+	<link rel="icon"  type="image/png" href="imgs/favicon.png">
+  <link href="doc.min.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body data-spy="scroll" data-target="#sidebarmenu">
+
+  <a href="https://github.com/YASGUI/YASR" target="_blank"><img style="z-index: 11111; position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container">
+      <a class="navbar-brand" href="/">YASR</a>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../">About</a></li>
+            <li class="active"><a href="#l">Documentation</a></li>
+            <li><a target="_blank" href="http://laurensrietveld.nl">About me</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container" role="main">
+		<div class="row">
+		<div class="col-md-9">
+			<h1>Documentation</h1>
+			YASR is an extendable library which helps you present SPARQL results. The main class of YASR is responsible for gluing the different output plugins together, and providing utilities such as SPARQL results parsers.
+			<h2 id="gettingStarted">Getting Started</h2>
+			<p>Initialize YASQE via its constructor, which returns an instance (from now on referred to as <code>yasr</code> (lowercase).
+
+			<div class="doc">
+				<code>YASR(parent: DOM-Element, settings: object, queryResponse: string|object) → YASR document: yasr</code>
+				<p>Main YASR constructor. The first argument, the DOM element to which to append YASR, is required.
+				Optional values are a settings object (see the <a href="#config">defaults</a> section for more information), and/or the query response you'd like to show directly on initialization (or alternatively, set this via the <code>doc.setResponse</code> function</code>)
+				</p>
+			</div>
+	     	<h3 id="gists">Examples</h3>
+		   	<div id="gistContainer">
+
+		   	</div>
+
+			<h2 id="api">API</h2>
+			<div class="doc">
+			<code>yasr.setresponse(response: string|object)</code>
+			<p>
+			Set and draw a SPARQL response.
+			The parameter is either a plain response string, a jQuery response object, or it is an object with the following keys:
+			</p>
+				<ul>
+					<li><code>response: string|object</code> (optional): the response string (or SPARQL XML/JSON object of the response)
+					<li><code>contentType: string</code> (optional)
+					<li><code>exception: string</code> (optional): YASR can display SPARQL errors as well
+				</ul>
+			</div>
+      <div class="doc">
+        <code>yasr.draw()</code>
+        <p>
+          If there are any results already stored in YASR, draw them according to the currently selected visualization plugin
+        </p>
+			</div>
+      <div class="doc">
+        <code>yasr.draw()</code>
+        <p>
+          If there are any results already stored in YASR, draw them according to the currently selected visualization plugin
+        </p>
+			</div>
+      <div class="doc">
+        <code>yasr.warn(warningMsg: string|object)</code>
+        <p>
+          Show a warning message to the user. Input can either be an html string, or a jQuery object
+        </p>
+			</div>
+			<div class="doc">
+        <code>yasr.somethingDrawn() → boolean</code>
+        <p>
+        Check whether a result has been drawn
+        </p>
+			</div>
+		<div class="doc" >
+			<code>store: function()</code>
+			<p>
+			Store persistent settings in local storage (if enabled via persistency setting in configuration)
+			</p>
+		</div>
+		<div class="doc" >
+			<code>load: function()</code>
+			<p>
+			Load persistent settings from local storage
+			</p>
+		</div>
+
+		<h2 id="events">Events</h2>
+		YASR emits several events. For information on the possibilities of our event handler, see the <a href="https://nodejs.org/api/events.html" target="_blank">EventEmitter implementation documentation</a> of NodeJS
+		<div class="doc">
+			<code>draw (instance: yasr, outputPlugin: outputPlugin)</code>
+			<p>Fires just before a plugins draws the results</p>
+		</div>
+		<div class="doc">
+			<code>draw (instance: yasr, outputPlugin: outputPlugin)</code>
+			<p>Fires when a plugin finished drawing the results</p>
+		</div>
+
+
+		<h2 id="config">Configuration</h2>
+			<p>
+			This configuration object is accessible/changeable via <code>YASR.defaults</code> and <code>yasr.options</code>, and you can pass these along when initializing YASR as well.
+			Output visualizations are <a href="#outputPlugins">defined separately</a>.
+			</p>
+			<div class="doc" >
+				<code>outputPlugins: array (default: ["error", "boolean", "rawResponse", "table", "pivot"])</code>
+				<p>List of enabled output plugins. The order of these plugins specifies the order of the output buttons as well</p>
+			</div>
+			<div class="doc" >
+				<code>output: string (default: "table")</code>
+				<p>key of default plugin</p>
+			</div>
+			<div class="doc">
+				<code>useGoogleCharts: true</code>
+				<p>Enable the use of Google Charts output. Google Charts is used in the Pivot plugin, as well as the Google Charts plugin.
+				As Google Charts cannot be packaged fully in YASR, it poses an external dependency.
+				<small>(in case the Google API is not accessible, the Google Charts visualizations are disabled automatically)</small>
+			</div>
+			<div class="doc" >
+				<code>drawOutputSelector: boolean (default: true)</code>
+				<p>Draw the output selector widget</p>
+			</div>
+			<div class="doc" >
+				<code>drawDownloadIcon: boolean (default: true)</code>
+				<p>Draw download icon. Enabled HTML5 download functionality of query results, all on the client-side (i.e. without re-executing the query).
+					This allows the
+					user to download results already queried for, such as a CSV when a
+					table is shown, or the original response when the raw response
+					output is selected</p>
+			</div>
+			<div class="doc" >
+				<code>getUsedPrefixes: function() → object (default: null)</code>
+				<p>
+				Get the used prefixes. Plugins may use this to create more human-readable URIs. Return object should be in the form <code>{"rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#"}</code>
+				</p>
+			</div>
+
+			<div class="doc" >
+				<code>persistency: object</code>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>prefix</code>
+				<p>
+					YASR is able to store settings between browser sessions, using LocalStorage (or, if this is not available, regular cookies or session storage).
+					The persistent settings of YASR are prefixed, to avoid collisions with other applications or instances of YASR (running on the same domain).
+					By default, key of the persistent settings are prefixed using the ID of the nearest parent (containing an ID, that is).
+					To disable persistency alltogether, set this value to false.
+				</p>
+			</div>
+			<div class="doc" style="margin-left: 30px;">
+				<code>results: object</code>
+<!-- 				<p>Persistency setting for query results.</p> -->
+			</div>
+			<div class="doc" style="margin-left: 60px;">
+				<code>key: string|function (default: 'results')</code>
+				<p>Make the query results persistent (set to null or false to disable)</p>
+			</div>
+			<div class="doc" style="margin-left: 60px;">
+				<code>maxSize: int (default: 100000)</code>
+				<p>The result set might too large to fit in local storage. It is
+					impossible to detect the free space in the client-side storage. Therefore, we
+					do not store all results in local storage, depending on a max
+					number of characters in the SPARQL result serialization. Set this
+					function conservatively. (especially when using multiple YASR
+					instances on one page)</p>
+			</div>
+
+
+		<h2 id="outputPlugins"> Plugins</h2>
+		<h3 id="outputTable">Table</h3>
+		This plugin shows SPARQL results as a table, using the <a href="http://datatables.net" target="_blank">DataTables jQuery plugin</a>.
+		This plugin is defined at YASR.plugins.table. To configure this plugin, change the following settings:
+			<div class="doc">
+				<code>YASR.plugins.table.defaults: object</code>
+				<p>Defaults for table plugin</p>
+			</div>
+			<div class="doc" style="margin-left: 30px;">
+				<code>fetchTitlesFromPreflabel: boolean (default: true)</code>
+				<p>Try to fetch the label representation for each URI, using the
+					preflabel.org services. (fetching occurs when hovering over the
+					cell)</p>
+			</div>
+			<div class="doc" style="margin-left: 30px;">
+				<code>mergeLabelsWithUris: boolean|string (default: false)</code>
+				<p>Merge bindings together, by using one value as the label, and the other as the hyperlink. When setting this to <code>true</code>, every projection variable ending with 'Label' will be used as text for the corresponding projection variable without that label. I.e., <code>?carLabel</code> is used as text for the <code>?car</code> projection variable (as long as <code>?car</code> is a URI).
+				If you'd like to specify your own postfix to trigger this behaviour, set your postfix as value, instead true.
+				</p>.
+
+			</div>
+			<div class="doc" style="margin-left: 30px;">yasr, plugin, binding, sparqlVar, {'rowId': rowId, 'colId': colId, 'usedPrefixes': usedPrefixes})
+				<code style="display: inline-block; white-space:normal;">getCellContent: function (yasr: doc, plugin: doc, bindings: object, var: string, context:object) → string </code>
+				<p>Draw the cell content, for a given binding</p>
+			</div>
+
+
+			<div class="doc" style="margin-left: 30px;">
+				<code >getColumns: function(yasr: doc, plugin: doc) → array</code>
+				<p>Return the columns you'd like to draw. The output array should be in a format supports by DataTables (for more info see <a href="https://datatables.net/reference/option/columns.data" target="_blank">this</a>)</p>
+			</div>
+			<div class="doc" style="margin-left: 30px;">
+				<code>callbacks: object</code>
+				<p>Set a number of handlers for the table</p>
+			</div>
+			<div class="doc" style="margin-left: 60px;">
+				<code>onCellMouseEnter: function (default: null)</code>
+				<p>Mouse-enter-cell event. Params that are passed to this function are <code>td: domElement, event: event</code></p>
+			</div>
+			<div class="doc" style="margin-left: 60px;">
+				<code>onCellMouseLeave: function (default: null)</code>
+				<p>Mouse-leave-cell event. Params that are passed to this function are <code>td: domElement, event: event</code></p>
+			</div>
+			<div class="doc" style="margin-left: 60px;">
+				<code>onCellClick: function (default: null)</code>
+				<p>Cell clicked event. Params that are passed to this function are <code>td: domElement, event: event</code></p>
+			</div>
+			<div class="doc" style="margin-left: 30px;">
+				<code>datatable: object</code>
+				<p>Any additional DataTables-related settings. See the <a href="http://datatables.net/reference/option/">DataTables manual</a> for more information</p>
+			</div>
+
+
+			<h3 id="outputRawResponse">Raw Response</h3>
+			A plugin which uses <a href="http://codemirror.net/" target="_blank">CodeMirror</a> to present the SPARQL results as-is.
+			<div class="doc">
+				<code>YASR.plugins.rawResponse(yasr: Object) → yasr-rawResponse (doc): </code>
+				<p>Constructor of plugin which the query response as-is (highlighted using CodeMirror)</p>
+			</div>
+			<div class="doc">
+			<code>YASR.plugins.rawResponse.defaults</code>
+			<p>Settings object</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+			<code>CodeMirror: object</code>
+			<p>Any additional CodeMirror related settings. See the <a href="http://codemirror.net/doc/manual.html" target="_blank">CodeMirror manual</a> for more information.</p>
+			</div>
+
+			<h3 id="outputPivot">Pivot Table</h3>
+			A plugin which uses the <a href="https://github.com/nicolaskruchten/pivottable" target="_blank">Pivot Table plugin</a>.
+			<div class="doc">
+				<code>YASR.plugins.pivot(yasr: Object) → yasr-pivot (doc): </code>
+				<p>Constructor of plugin</p>
+			</div>
+			<div class="doc">
+			<code>YASR.plugins.pivot.defaults</code>
+			<p>Settings object</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+			<code>pivottable: object</code>
+			<p>Any additional PivotTable related settings. See the <a href="https://github.com/nicolaskruchten/pivottable/wiki/Parameters" target="_blank">PivotTable manual</a> for more information.</p>
+			</div>
+<!-- 			<div class="doc" style="margin-left: 30px"> -->
+<!-- 			<code>YASR.plugins.pivot.persistency: string|function(yasr:doc) → string (default: 'pivot')</code> -->
+<!-- 			<p>Make certain settings and values of the pivot table persistent. Setting -->
+<!-- 					a key to null, will disable persistancy: nothing is stored between -->
+<!-- 					browser sessions. Setting the values to a string (or a function -->
+<!-- 					which returns a string), will store the values in localstorage using -->
+<!-- 					the specified string. </p> -->
+<!-- 			</div> -->
+			<div class="doc" style="margin-left: 30px">
+			<code>useGoogleCharts: boolean (default: true)</code>
+			<p>Enable the use of <a href="https://developers.google.com/chart/" target="_blank">google charts</a> for visualizing the pivot data</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+			<code>useD3Chart: boolean (default: true)</code>
+			<p>Enable the use of <a href="http://d3js.org/" target="_blank">D3Js</a> for visualizing the pivot data. At this moment, the TreeMap is the only visualization for which the D3 library is used</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>mergeLabelsWithUris: boolean|string (default: false)</code>
+				<p>Merge bindings together, by using one value as the label. When setting this to <code>true</code>, every projection variable ending with 'Label' will be used as text for the corresponding projection variable without that label. I.e., <code>?carLabel</code> is used as text for the <code>?car</code> projection variable (as long as <code>?car</code> is a URI).
+				If you'd like to specify your own postfix to trigger this behaviour, set your postfix as value, instead of true.
+				</p>.
+			</div>
+
+			<h3 id="outputGchart">Google Charts</h3>
+			A plugin which uses the <a href="https://developers.google.com/chart/interactive/docs/reference" target="_blank">Google Visualizations API</a>. See <a href="http://yasgui.org/short/NkSKlgw-x" target="_blank">this query</a> for the capabilities of the chart output <small>(example by <a href="https://github.com/jiemakel/visu" target="_blank">Eetu Mäkelä</a>)</small>.
+			<div class="doc">
+				<code>YASR.plugins.gchart(yasr: Object) → yasr-pivot (doc): </code>
+				<p>Constructor of plugin</p>
+			</div>
+			<div class="doc">
+			<code>YASR.plugins.gchart.defaults</code>
+			<p>Settings object</p>
+			</div>
+
+
+			<h3 id="outputBoolean">Boolean results</h3>
+			<div class="doc">
+				<code>YASR.plugins.boolean(yasr: Object) → yasr-boolean (doc): </code>
+				<p>Constructor of plugin which displays boolean info (i.e., the result of ASK queries)</p>
+			</div>
+			<h3 id="outputException">Exceptions</h3>
+			<div class="doc">
+				<code>YASR.plugins.error(yasr: Object) → yasr-error (doc): </code>
+				<p>Constructor of plugin which displays query response errors</p>
+			</div>
+      <div class="doc">
+			<code>YASR.plugins.error.defaults</code>
+			<p>Settings object</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+			<code>corsMessage: string (default: 'Unable to get response from endpoint')</code>
+			<p>The message to show when no response was returned. I.e., a DNS or TCP error.
+      Depending on how you use YASR, there might be several reasons for this missing response, such as
+      a CORS-disabled endpoint, the user being offline (where the endpoint is online), an endpoint under maintenance, or simply a wrong URL.</p>
+
+			</div>
+      <div class="doc" style="margin-left: 30px">
+			<code>tryQueryLink: function → string  (default: null)</code>
+			<p>Set this function to present the user with a button to try the same query via a regular browser window.
+      This function simply returns the http link to open the browser window for.</p>
+			</div>
+
+
+		<h2 id="addingPlugin">Writing a plugin</h2>
+		<p>
+		To register an autocompletion, one needs to execute the YASQE.registerAutocompleter function.
+			To register a plugin, add it to YASR by running <code>YASR.registerOutput(pluginName: string, plugin: constructor)</code>.
+			Below, we describe the autocompletion function in more detail, and the object it should return.
+			</p>
+			<div class="doc">
+				<code>constructor(doc: yasr) → configurationObject: Object</code>
+				<p>
+			The constructor should return an object with the following keys:</p>
+			</div>
+
+			<div class="doc" style="margin-left: 30px">
+				<code>draw: function()</code><span class="label label-primary">Required</span>
+				<p>Draw the results. Use the <code>yasr</code> object to retrieve the SPARQL response</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>canHandleResults: function() → boolean</code><span class="label label-primary">Required</span>
+				<p>Return whether this plugin is able to draw the current results</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>getPriority: int|function</code><span class="label label-primary">Required</span>
+				<p>The priority of a plugin is used to select the output plugin when the currently selected plugin is not able to draw the results.</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>hideFromSelection: boolean</code><span class="label label-default">Optional</span>
+				<p>Whether to show this plugin in the output selector.</p>
+			</div>
+			<div class="doc" style="margin-left: 30px">
+				<code>name: string</code><span class="label label-default">Optional</span>
+				<p>The human-readable name of the plugin, shown in the output selector.</p>
+			</div>
+      <div class="doc" style="margin-left: 30px">
+				<code>getDownloadInfo: function() → object</code><span class="label label-default">Optional</span>
+				<p>Enables the download button. Returns a an object with the keys <code>getContent: function() → response: string</code>,
+        <code>filename: string</code>, <code>contentType: string</code>, <code>buttonTitle: string</code> (the title attribute of the download button).
+        Returning <code>null</code> will disable the download button for the current result.
+        </p>
+			</div>
+		      <div class="doc" style="margin-left: 30px">
+				<code>getEmbedHtml: function() → string</code><span class="label label-default">Optional</span>
+				<p>Enables the embed button. Function should return an html string usable to embed the current output in other web pages.
+          Returning <code>null</code> will disable the embed button for the current result. </p>
+			</div>
+      <div class="doc" style="margin-left: 30px">
+				<code>getPersistentSettings: function() → object</code><span class="label label-default">Optional</span>
+				<p>If persistency is enabled, use this function to return those settings that you'd like to be persistent.
+				Use to <code>yasr.store()</code> function to actually save these settings</p>
+			</div>
+      <div class="doc" style="margin-left: 30px">
+				<code>setPersistentSettings: function(settings: object)</code><span class="label label-default">Optional</span>
+				<p>If persistency is enabled, use this function to modify the plugin based on its previous state.</p>
+			</div>
+	</div><!-- col -->
+	<div class="col-md-3" id="sidebarmenu">
+		<div class="bs-docs-sidebar hidden-xs hidden-sm" data-spy="affix" data-offset-top="60">
+			<ul class="nav bs-docs-sidenav">
+				<li><a href="#gettingStarted">Getting Started</a>
+					<ul class="nav">
+						<li><a href="#gists">Examples</a>
+					</ul>
+				</li>
+				<li><a href="#api">API</a></li>
+				<li><a href="#config">Configuration</a></li>
+				<li><a href="#outputPlugins">Output Plugins</a>
+					<ul class="nav">
+						<li><a href="#outputTable">Table</a></li>
+						<li><a href="#outputRawResponse">Raw Response</a></li>
+						<li><a href="#outputPivot">Pivot Table</a></li>
+						<li><a href="#outputGchart">Google Charts</a></li>
+						<li><a href="#outputBoolean">Boolean</a></li>
+						<li><a href="#outputException">Exception</a></li>
+					</ul>
+
+				</li>
+				<li><a href="#addingPlugin">Writing a plugin</a></li>
+			</ul>
+		</div>
+	</div>
+	</div><!-- row -->
+	</div> <!-- /container -->
+
+
+
+
+<script src="doc.min.js"></script>
+  </body>
+</html>

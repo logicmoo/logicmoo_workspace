@@ -1,0 +1,148 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCl Domain from  GIPO Version 1.0
+ *
+ *  Author: Doris Liu
+ *  Institution: University of Huddersfield
+ *  Date created: June 1999
+ *  Date last modified: 2001/10/24 at 03:42:15 PM BST
+ *  Description:
+ *    Simple rocket world - Goal to transport cargo from one location
+ *    to another. Multiple rockets but each one can only be used for one
+ *    journey as there no way of refueling the rockets
+ */
+
+domain_name(rocket).
+
+% Sorts
+sorts(primitive_sorts,[rocket,location,cargo]).
+
+% Objects
+objects(rocket,[r1,r2]).
+objects(cargo,[c1,c2,c3,c4]).
+objects(location,[london,paris,jfk]).
+
+% Predicates
+predicates([
+    at(cargo,location),
+    position(rocket,location),
+    fuel_empty(rocket),
+    fuel_full(rocket),
+    in(cargo,rocket)]).
+
+% Object Class Definitions
+substate_classes(cargo,Cargo,[
+    [at(Cargo,Loc)],
+    [in(Cargo,Roc)]]).
+substate_classes(rocket,R,[
+    [position(R,Loc),fuel_empty(R)],
+    [position(R,Loc),fuel_full(R)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+inconsistent_constraint([at(X,P),at(X,R),ne(P,R)]).
+inconsistent_constraint([position(X,P),position(X,R),ne(P,R)]).
+inconsistent_constraint([at(C,L1),at(C,L2),ne(L1,L2)]).
+inconsistent_constraint([in(C,R),in(C,R1),ne(R,R1)]).
+inconsistent_constraint([fuel_empty(R),fuel_full(R)]).
+
+% Operators
+operator(move(R,A,B),
+    % prevail
+    [],
+    % necessary
+    [     sc(rocket,R,[position(R,A),fuel_full(R),ne(A,B)]=>[position(R,B),fuel_empty(R)])],
+    % conditional
+    []).
+operator(load(R,A,C),
+    % prevail
+    [     se(rocket,R,[position(R,A)])],
+    % necessary
+    [     sc(cargo,C,[at(C,A)]=>[in(C,R)])],
+    % conditional
+    []).
+operator(unload(R,A,C),
+    % prevail
+    [     se(rocket,R,[position(R,A)])],
+    % necessary
+    [     sc(cargo,C,[in(C,R)]=>[at(C,A)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(rocket,r2,[position(r2,paris)]),
+     se(cargo,c2,[at(c2,london)])],
+    % INIT States
+    [
+     ss(cargo,c1,[at(c1,london)]),
+     ss(cargo,c2,[at(c2,paris)]),
+     ss(cargo,c3,[at(c3,london)]),
+     ss(cargo,c4,[at(c4,paris)]),
+     ss(rocket,r1,[position(r1,paris),fuel_full(r1)]),
+     ss(rocket,r2,[position(r2,london),fuel_full(r2)])]).
+planner_task(2,
+    % Goals
+    [
+     se(cargo,c2,[at(c2,paris)])],
+    % INIT States
+    [
+     ss(cargo,c1,[at(c1,jfk)]),
+     ss(cargo,c2,[at(c2,london)]),
+     ss(cargo,c3,[at(c3,paris)]),
+     ss(cargo,c4,[at(c4,london)]),
+     ss(rocket,r1,[position(r1,paris),fuel_full(r1)]),
+     ss(rocket,r2,[position(r2,london),fuel_full(r2)])]).
+planner_task(3,
+    % Goals
+    [
+     se(cargo,c1,[at(c1,jfk)]),
+     se(cargo,c3,[at(c3,jfk)])],
+    % INIT States
+    [
+     ss(cargo,c1,[at(c1,paris)]),
+     ss(cargo,c2,[at(c2,london)]),
+     ss(cargo,c3,[at(c3,london)]),
+     ss(cargo,c4,[at(c4,jfk)]),
+     ss(rocket,r1,[position(r1,paris),fuel_full(r1)]),
+     ss(rocket,r2,[position(r2,london),fuel_full(r2)])]).
+planner_task(4,
+    % Goals
+    [
+     se(cargo,c1,[at(c1,jfk)]),
+     se(cargo,c2,[at(c2,paris)])],
+    % INIT States
+    [
+     ss(cargo,c1,[at(c1,london)]),
+     ss(cargo,c2,[at(c2,london)]),
+     ss(cargo,c3,[at(c3,london)]),
+     ss(cargo,c4,[at(c4,jfk)]),
+     ss(rocket,r1,[position(r1,london),fuel_full(r1)]),
+     ss(rocket,r2,[position(r2,london),fuel_full(r2)])]).
+planner_task(5,
+    % Goals
+    [
+     se(cargo,c1,[at(c1,jfk)]),
+     se(cargo,c2,[at(c2,paris)]),
+     se(cargo,c3,[at(c3,jfk)]),
+     se(cargo,c4,[at(c4,paris)])],
+    % INIT States
+    [
+     ss(cargo,c1,[at(c1,london)]),
+     ss(cargo,c2,[at(c2,london)]),
+     ss(cargo,c3,[at(c3,london)]),
+     ss(cargo,c4,[at(c4,london)]),
+     ss(rocket,r1,[position(r1,london),fuel_full(r1)]),
+     ss(rocket,r2,[position(r2,london),fuel_full(r2)])]).

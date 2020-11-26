@@ -1,0 +1,529 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.6</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="typetest.html">
+<link rel="next" href="control.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="typetest.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="control.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:compare"><a id="sec:4.6"><span class="sec-nr">4.6</span> <span class="sec-title">Comparison 
+and Unification of Terms</span></a></h2>
+
+<a id="sec:compare"></a>
+
+<p>Although unification is mostly done implicitly while matching the 
+head of a predicate, it is also provided by the predicate =/2.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="=/2"><var>?Term1</var> <strong>=</strong> <var>?Term2</var></a></dt>
+<dd class="defbody">
+Unify <var>Term1</var> with <var>Term2</var>. True if the unification 
+succeeds. For behaviour on cyclic terms see the Prolog flag
+<a class="flag" href="flags.html#flag:occurs_check">occurs_check</a>. It 
+acts as if defined by the following fact:
+
+<pre class="code">
+=(Term, Term).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="\=/2"><var>@Term1</var> <strong>\=</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+Equivalent to <code><code>\+</code>Term1 = Term2</code>.
+
+<p>This predicate is logically sound if its arguments are sufficiently 
+instantiated. In other cases, such as <code>?- X <code>\=</code> Y.</code>, 
+the predicate fails although there are solutions. This is due to the 
+incomplete nature of&nbsp;<a class="pred" href="control.html#\+/1">\+/1</a>.
+
+<p>To make your programs work correctly also in situations where the 
+arguments are not yet sufficiently instantiated, use <a id="idx:dif2:701"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+instead.
+</dd>
+</dl>
+
+<p><h3 id="sec:standardorder"><a id="sec:4.6.1"><span class="sec-nr">4.6.1</span> <span class="sec-title">Standard 
+Order of Terms</span></a></h3>
+
+<a id="sec:standardorder"></a>
+
+<p>Comparison and unification of arbitrary terms. Terms are ordered in 
+the so-called &ldquo;standard order''. This order is defined as follows:
+
+<p>
+<ol class="latex">
+<li><var><var>Variables</var> &lt; <var>Numbers</var> &lt; <var>Strings</var> 
+&lt; <var>Atoms</var> &lt; <var>Compound Terms</var></var>
+<li>Variables are sorted by address.
+<li><var>Numbers</var> are compared by value. Mixed integer/float are 
+compared as floats. If the comparison is equal, the float is considered 
+the smaller value. If the Prolog flag <a class="flag" href="flags.html#flag:iso">iso</a> 
+is defined, all floating point numbers precede all integers.
+<li><var>Strings</var> are compared alphabetically.
+<li><var>Atoms</var> are compared alphabetically.
+<li><var>Compound</var> terms are first checked on their arity, then on 
+their functor name (alphabetically) and finally recursively on their 
+arguments, leftmost argument first.
+</ol>
+
+<p>Although variables are ordered, there are some unexpected properties 
+one should keep in mind when relying on variable ordering. This applies 
+to the predicates below as to predicate such as <a id="idx:sort2:702"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+as well as libraries that reply on ordering such as library <code>library(assoc)</code> 
+and library
+<code>library(ordsets)</code>. Obviously, an established relation <var>A</var> <code><code>@&lt;</code></code> <var>B</var> 
+no longer holds if <var>A</var> is unified with e.g., a number. Also 
+unifying <var>A</var> with <var>B</var> invalidates the relation because 
+they become equivalent (==/2) after unification.
+
+<p>As stated above, variables are sorted by address, which implies that 
+they are sorted by&lsquo;age', where&lsquo;older' variables are ordered 
+before&lsquo;newer' variables. If two variables are unified their&lsquo;shared' 
+age is the age of oldest variable. This implies we can examine a list of 
+sorted variables with&lsquo;newer' (fresh) variables without 
+invalidating the order. Attaching an <em>attribute</em>, see <a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>, turns an&lsquo;old' variable into a&lsquo;new' one as 
+illustrated below. Note that the first always succeeds as the first 
+argument of a term is always the oldest. This only applies for the <em>first</em> 
+attribute, i.e., further manipulation of the attribute list does <em>not</em> 
+change the&lsquo;age'.
+
+<pre class="code">
+?- T = f(A,B), A @&lt; B.
+T = f(A, B).
+
+?- T = f(A,B), put_attr(A, name, value), A @&lt; B.
+false.
+</pre>
+
+<p>The above implies you <em>can</em> use e.g., an assoc (from library
+<code>library(assoc)</code>, implemented as an AVL tree) to maintain 
+information about a set of variables. You must be careful about what you 
+do with the attributes though. In many cases it is more robust to use 
+attributes to register information about variables.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="==/2"><var>@Term1</var> <strong>==</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+True if <var>Term1</var> is equivalent to <var>Term2</var>. A variable 
+is only identical to a sharing variable.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="\==/2"><var>@Term1</var> <strong>\==</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+Equivalent to <code><code>\+</code>Term1 == Term2</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="@</2"><var>@Term1</var> <strong>@&lt;</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+True if <var>Term1</var> is before <var>Term2</var> in the standard 
+order of terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="@=</2"><var>@Term1</var> <strong>@=&lt;</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+True if both terms are equal (<a class="pred" href="compare.html#==/2">==/2</a>) 
+or <var>Term1</var> is before <var>Term2</var> in the standard order of 
+terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="@>/2"><var>@Term1</var> <strong>@&gt;</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+True if <var>Term1</var> is after <var>Term2</var> in the standard order 
+of terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="@>=/2"><var>@Term1</var> <strong>@&gt;=</strong> <var>@Term2</var></a></dt>
+<dd class="defbody">
+True if both terms are equal (<a class="pred" href="compare.html#==/2">==/2</a>) 
+or <var>Term1</var> is after <var>Term2</var> in the standard order of 
+terms.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="compare/3"><strong>compare</strong>(<var>?Order, 
+@Term1, @Term2</var>)</a></dt>
+<dd class="defbody">
+Determine or test the <var>Order</var> between two terms in the standard 
+order of terms. <var>Order</var> is one of <code><code>&lt;</code></code>, <code><code>&gt;</code></code> 
+or <code><code>=</code></code>, with the obvious meaning.
+</dd>
+</dl>
+
+<p><h3 id="sec:unifyspecial"><a id="sec:4.6.2"><span class="sec-nr">4.6.2</span> <span class="sec-title">Special 
+unification and comparison predicates</span></a></h3>
+
+<a id="sec:unifyspecial"></a>
+
+<p>This section describes special purpose variations on Prolog 
+unification. The predicate <a id="idx:unifywithoccurscheck2:703"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+provides sound unification and is part of the ISO standard. The 
+predicate <a id="idx:subsumesterm2:704"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
+defines&lsquo;one-sided unification' and is part of the ISO proposal 
+established in Edinburgh (2010). Finally, <a id="idx:unifiable3:705"></a><a class="pred" href="compare.html#unifiable/3">unifiable/3</a> 
+is a&lsquo;what-if' version of unification that is often used as a 
+building block in constraint reasoners.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="unify_with_occurs_check/2"><strong>unify_with_occurs_check</strong>(<var>+Term1, 
++Term2</var>)</a></dt>
+<dd class="defbody">
+As <a class="pred" href="compare.html#=/2">=/2</a>, but using <em>sound 
+unification</em>. That is, a variable only unifies to a term if this 
+term does not contain the variable itself. To illustrate this, consider 
+the two queries below.
+
+<pre class="code">
+1 ?- A = f(A).
+A = f(A).
+2 ?- unify_with_occurs_check(A, f(A)).
+false.
+</pre>
+
+<p><a id="idx:occurscheck:706"></a>The first statement creates a <em>cyclic 
+term</em>, also called a
+<em>rational tree</em>. The second executes logically sound unification 
+and thus fails. Note that the behaviour of unification through
+<a class="pred" href="compare.html#=/2">=/2</a> as well as implicit 
+unification in the head can be changed using the Prolog flag <a class="flag" href="flags.html#flag:occurs_check">occurs_check</a>.
+
+<p>The SWI-Prolog implementation of <a id="idx:unifywithoccurscheck2:707"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+is cycle-safe and only guards against <em>creating</em> cycles, not 
+against cycles that may already be present in one of the arguments. This 
+is illustrated in the following two queries:
+
+<pre class="code">
+?- X = f(X), Y = X, unify_with_occurs_check(X, Y).
+X = Y, Y = f(Y).
+?- X = f(X), Y = f(Y), unify_with_occurs_check(X, Y).
+X = Y, Y = f(Y).
+</pre>
+
+<p>Some other Prolog systems interpret <a id="idx:unifywithoccurscheck2:708"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+as if defined by the clause below, causing failure on the above two 
+queries. Direct use of <a id="idx:acyclicterm1:709"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
+is portable and more appropriate for such applications.
+
+<pre class="code">
+unify_with_occurs_check(X,X) :- acyclic_term(X).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="=@=/2"><var>+Term1</var> <strong>=@=</strong> <var>+Term2</var></a></dt>
+<dd class="defbody">
+<a id="idx:variant:710"></a>True if <var>Term1</var> is a <em>variant</em> 
+of (or <em>structurally equivalent</em> to) <var>Term2</var>. Testing 
+for a variant is weaker than equivalence (<a class="pred" href="compare.html#==/2">==/2</a>), 
+but stronger than unification (<a class="pred" href="compare.html#=/2">=/2</a>). 
+Two terms <var>A</var> and <var>B</var> are variants iff there exists a 
+renaming of the variables in <var>A</var> that makes <var>A</var> 
+equivalent (==) to <var>B</var> and vice versa.<sup class="fn">64<span class="fn-text">Row&nbsp;7 
+and 8 of this table may come as a surprise, but row&nbsp;8 is satisfied 
+by (left-to-right) <var>A -&gt; C</var>, <var>B -&gt; A</var> and 
+(right-to-left) <var>C -&gt; A</var>, <var>A -&gt; B</var>. If the same 
+variable appears in different locations in the left and right term, the 
+variant relation can be broken by consistent binding of both terms. 
+E.g., after binding the first argument in row&nbsp;8 to a value, both 
+terms are no longer variant.</span></sup> Examples:
+<blockquote>
+<table class="latex frame-void">
+<tr><td align=right>1</td><td align=center><code>a =@= A</code></td><td align=center>false </td></tr>
+<tr><td align=right>2</td><td align=center><code>A =@= B</code></td><td align=center>true </td></tr>
+<tr><td align=right>3</td><td align=center><code>x(A,A) =@= x(B,C)</code></td><td align=center>false </td></tr>
+<tr><td align=right>4</td><td align=center><code>x(A,A) =@= x(B,B)</code></td><td align=center>true </td></tr>
+<tr><td align=right>5</td><td align=center><code>x(A,A) =@= x(A,B)</code></td><td align=center>false </td></tr>
+<tr><td align=right>6</td><td align=center><code>x(A,B) =@= x(C,D)</code></td><td align=center>true </td></tr>
+<tr><td align=right>7</td><td align=center><code>x(A,B) =@= x(B,A)</code></td><td align=center>true </td></tr>
+<tr><td align=right>8</td><td align=center><code>x(A,B) =@= x(C,A)</code></td><td align=center>true </td></tr>
+</table>
+</blockquote>
+
+<p>A term is always a variant of a copy of itself. Term copying takes 
+place in, e.g., <a id="idx:copyterm2:711"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, <a id="idx:findall3:712"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+or proving a clause added with
+<a id="idx:asserta1:713"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>. 
+In the pure Prolog world (i.e., without attributed variables), <a class="pred" href="compare.html#=@=/2">=@=/2</a> 
+behaves as if defined below. With attributed variables, variant of the 
+attributes is tested rather than trying to satisfy the constraints.
+
+<pre class="code">
+A =@= B :-
+        copy_term(A, Ac),
+        copy_term(B, Bc),
+        numbervars(Ac, 0, N),
+        numbervars(Bc, 0, N),
+        Ac == Bc.
+</pre>
+
+<p>The SWI-Prolog implementation is cycle-safe and can deal with 
+variables that are shared between the left and right argument. Its 
+performance is comparable to <a class="pred" href="compare.html#==/2">==/2</a>, 
+both on success and (early) failure.
+<sup class="fn">65<span class="fn-text">The current implementation is 
+contributed by Kuniaki Mukai.</span></sup>
+
+<p>This predicate is known by the name <span class="pred-ext">variant/2</span> 
+in some other Prolog systems. Be aware of possible differences in 
+semantics if the arguments contain attributed variables or share 
+variables.<sup class="fn">66<span class="fn-text">In many systems 
+variant is implemented using two calls to <a id="idx:subsumesterm2:714"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>.</span></sup></dd>
+<dt class="pubdef"><a id="\=@=/2"><var>+Term1</var> <strong>\=@=</strong> <var>+Term2</var></a></dt>
+<dd class="defbody">
+Equivalent to <code>&lsquo;<code>\+</code>Term1 =@= Term2'</code>. See <a class="pred" href="compare.html#=@=/2">=@=/2</a> 
+for details.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="subsumes_term/2"><strong>subsumes_term</strong>(<var>@Generic, @Specific</var>)</a></dt>
+<dd class="defbody">
+True if <var>Generic</var> can be made equivalent to <var>Specific</var> 
+by only binding variables in <var>Generic</var>. The current 
+implementation performs the unification and ensures that the variable 
+set of <var>Specific</var> is not changed by the unification. On 
+success, the bindings are undone.<sup class="fn">67<span class="fn-text">This 
+predicate is often named <a id="idx:subsumeschk2:715"></a><span class="pred-ext">subsumes_chk/2</span> 
+in older Prolog dialects. The current name was established in the ISO 
+WG17 meeting in Edinburgh (2010). The <code>chk</code> postfix was 
+considered to refer to determinism as in e.g., <a id="idx:memberchk2:716"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a>.</span></sup> 
+This predicate respects constraints.</dd>
+<dt class="pubdef"><a id="term_subsumer/3"><strong>term_subsumer</strong>(<var>+Special1, 
++Special2, -General</var>)</a></dt>
+<dd class="defbody">
+<var>General</var> is the most specific term that is a generalisation of
+<var>Special1</var> and <var>Special2</var>. The implementation can 
+handle cyclic terms.</dd>
+<dt class="pubdef"><a id="unifiable/3"><strong>unifiable</strong>(<var>@X, @Y, 
+-Unifier</var>)</a></dt>
+<dd class="defbody">
+If <var>X</var> and <var>Y</var> can unify, unify <var>Unifier</var> 
+with a list of
+<var>Var</var> = <var>Value</var>, representing the bindings required to 
+make <var>X</var> and <var>Y</var> equivalent.<sup class="fn">68<span class="fn-text">This 
+predicate was introduced for the implementation of <a id="idx:dif2:717"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+and <a id="idx:when2:718"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
+after discussion with Tom Schrijvers and Bart Demoen. None of us is 
+really happy with the name and therefore suggestions for a new name are 
+welcome.</span></sup> This predicate can handle cyclic terms. Attributed 
+variables are handled as normal variables. Associated hooks are <em>not</em> 
+executed.</dd>
+<dt class="pubdef"><a id="?=/2"><strong>?=</strong>(<var>@Term1, @Term2</var>)</a></dt>
+<dd class="defbody">
+Succeeds if the syntactic equality of <var>Term1</var> and <var>Term2</var> 
+can be decided safely, i.e. if the result of <code>Term1 == Term2</code> 
+will not change due to further instantiation of either term. It behaves 
+as if defined by <code>?=(X,Y) :- \+ unifiable(X,Y,[_|_]).</code>
+</dd>
+</dl>
+
+<p></body></html>

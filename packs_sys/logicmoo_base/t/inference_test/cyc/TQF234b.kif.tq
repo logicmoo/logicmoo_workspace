@@ -1,0 +1,49 @@
+(note TQF234b)
+
+(subOrganizations 
+  (GovernmentFn ?COUNTRY) 
+  (ArmyFn ?COUNTRY)) 
+
+(implies 
+  (and 
+    (agent ?ACT ?AGENT) 
+    (subOrganizations 
+      (GovernmentFn ?COUNTRY) ?AGENT)) 
+  (agent ?ACT ?COUNTRY))
+
+(agent IranConductsMilitaryExercise (ArmyFn Iran)) 
+
+(implies 
+  (and 
+    (instance ?EARLIER Process) 
+    (inReactionTo ?LATER ?EARLIER) 
+    (startsAfterEndingOf ?LATER ?EARLIER)) 
+  (postEvents ?EARLIER ?LATER))
+
+(implies
+  (subProcess ?SUPER ?SUB)
+  (temporallySubsumes ?SUPER ?SUB))
+  
+(inverse postEvents startsAfterEndingOf) 
+(adversarialResponseTo IranConductsMilitaryExercise TalibanTakeHostages) 
+(instance TalibanTakeHostages Process) 
+(startsAfterEndingOf IranConductsMilitaryExercise TalibanTakeHostages) 
+(subProcess Iranian-TalibanConflict-1998 IranConductsMilitaryExercise) 
+(agent IranConductsMilitaryExercise Iran) 
+(eventOutcomes TalibanTakeHostages IranConductsMilitaryExercise) 
+(instance IranConductsMilitaryExercise MilitaryExercise) 
+
+(query (findall (?RELEVANT-EVENT)
+  (exists 
+    (?EXERCISE) 
+    (and 
+      (instance ?EXERCISE MilitaryExercise) 
+      (agent ?EXERCISE Iran) 
+      (temporallySubsumes Iranian-TalibanConflict-1998 ?EXERCISE) 
+      (or 
+        (eventOutcomes ?RELEVANT-EVENT ?EXERCISE) 
+        (reasonForAction ?EXERCISE ?COGNITIVE-RELATION ?AGENT ?REASON))))))
+
+(answer TalibanTakeHostages )
+
+(end_of_file)

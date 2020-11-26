@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="builtin.html">
+<link rel="next" href="chars.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="builtin.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="chars.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:preddesc"><a id="sec:4.1"><span class="sec-nr">4.1</span> <span class="sec-title">Notation 
+of Predicate Descriptions</span></a></h2>
+
+<a id="sec:preddesc"></a>
+
+<p>We have tried to keep the predicate descriptions clear and concise. 
+First, the predicate name is printed in <b>bold face</b>, followed by 
+the arguments in <i>italics</i>. Arguments are preceded by a
+<em>mode indicator</em>.
+
+<p><h3 id="sec:argmode"><a id="sec:4.1.1"><span class="sec-nr">4.1.1</span> <span class="sec-title">The 
+argument mode indicator</span></a></h3>
+
+<a id="sec:argmode"></a>
+
+<p><a id="idx:argumentmodeindicator:401"></a>An <em>argument mode 
+indicator</em> gives information about the intended direction in which 
+information carried by a predicate argument is supposed to flow. Mode 
+indicators (and types) are not a formal part of the Prolog language but 
+help in explaining intended semantics to the programmer. There is no 
+complete agreement on argument mode indicators in the Prolog community. 
+We use the following definitions:<sup class="fn">46<span class="fn-text">These 
+definitions are taken from the <em>PlDoc</em> markup language 
+description. <em>PldDoc</em> markup is used for source code markup (as 
+well as for the commenting tool). The current manual has only one mode 
+declaration per predicate and therefore predicates with mode (<code><code>+</code></code>,<code><code>-</code></code>) 
+and (<code><code>-</code></code>,<code><code>+</code></code>) are 
+described as (<code><code>?</code></code>,<code><code>?</code></code>). 
+The <code>@</code>-mode is often replaced by <br>
+chr<code>+</code>.</span></sup>
+
+<p><table class="latex frame-hsides center">
+<tr><td>++</td><td>At call time, the argument must be <em>ground</em>, 
+i.e., the argument may not contain any variables that are still unbound. </td></tr>
+<tr><td>+</td><td>At call time, the argument must be instantiated to a 
+term satisfying some (informal) type specification. The argument need 
+not necessarily be ground. For example, the term <code>[_]</code> is a 
+list, although its only member is the anonymous variable, which is 
+always unbound (and thus nonground). </td></tr>
+<tr><td>-</td><td>Argument is an <em>output</em> argument. It may or may 
+not be bound at call-time. If the argument is bound at call time, the 
+goal behaves as if the argument were unbound, and then unified with that 
+term after the goal succeeds. This is what is called being <em>steadfast</em>: 
+instantiation of output arguments at call-time does not change the 
+semantics of the predicate, although optimizations may be performed. For 
+example, the goal <code>findall(X, Goal, [T])</code> is good style and 
+equivalent to <code>findall(X, Goal, Xs), Xs = [T]</code><sup class="fn">47<span class="fn-text">The 
+ISO standard dictates that <code>findall(X, Goal, 1)</code> raise a <code>type_error</code> 
+exception, breaking steadfastness. SWI-Prolog does not follow the 
+standard here.</span></sup> Note that any <em>determinism</em> 
+specification, e.g., <code>det</code>, only applies if the argument is 
+unbound. For the case where the argument is bound or involved in 
+constraints, <code>det</code> effectively becomes
+<code>semidet</code>, and <code>multi</code> effectively becomes
+<code>nondet</code>. </td></tr>
+<tr><td>--</td><td>At call time, the argument must be unbound. This is 
+typically used by predicates that create&lsquo;something' and return a 
+handle to the created object, such as <a id="idx:open3:402"></a><a class="pred" href="IO.html#open/3">open/3</a>, 
+which creates a <em>stream</em>. </td></tr>
+<tr><td>?</td><td>At call time, the argument must be bound to a <em>partial 
+term</em> (a term which may or may not be ground) satisfying some 
+(informal) type specification. Note that an unbound variable <em>is</em> 
+a partial term. Think of the argument as either providing input or 
+accepting output or being used for both input and output. For example, 
+in <code>stream_property(S, reposition(Bool))</code>, the
+<code>reposition</code> part of the term provides input and the 
+unbound-at-call-time <var>Bool</var> variable accepts output. </td></tr>
+<tr><td>:</td><td>Argument is a <em>meta-argument</em>, for example a 
+term that can be called as goal. The predicate is thus a <em>meta-predicate</em>. 
+This flag implies <code><code>+</code></code>. </td></tr>
+<tr><td>@</td><td>Argument will not be further instantiated than it is 
+at call-time. Typically used for type tests. </td></tr>
+<tr><td>!</td><td>Argument contains a mutable structure that may be 
+modified using
+<a id="idx:setarg3:403"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+or <a id="idx:nbsetarg3:404"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. </td></tr>
+</table>
+
+<p>See also <a class="sec" href="metacall.html#sec:4.8">section 4.8</a> 
+for examples of meta-predicates, and
+<a class="sec" href="metapred.html#sec:6.5">section 6.5</a> for mode 
+flags to label meta-predicate arguments in module export declarations.
+
+<p><h3 id="sec:predicate-indic"><a id="sec:4.1.2"><span class="sec-nr">4.1.2</span> <span class="sec-title">Predicate 
+indicators</span></a></h3>
+
+<a id="sec:predicate-indic"></a>
+
+<p><a id="idx:predicateindicator:405"></a>Referring to a predicate in 
+running text is done using a
+<em>predicate indicator</em>. The canonical and most generic form of a 
+predicate indicator is a term <code>[&lt;<var>module</var>&gt;:]&lt;<var>name</var>&gt;/&lt;<var>arity</var>&gt;</code>. 
+The module is generally omitted if it is irrelevant (case of a built-in 
+predicate) or if it can be inferred from context.
+
+<p><h4 id="sec:nonterminal-indic"><a id="sec:4.1.2.1"><span class="sec-nr">4.1.2.1</span> <span class="sec-title">Non-terminal 
+indicators</span></a></h4>
+
+<a id="sec:nonterminal-indic"></a>
+
+<p><a id="idx:nonterminalindicator:406"></a>Compliant to the ISO 
+standard draft on Definite Clause Grammars (see
+<a class="sec" href="DCG.html#sec:4.13">section 4.13</a>), SWI-Prolog 
+also allows for the <em>non-terminal indicator</em> to refer to a <em>DCG 
+grammar rule</em>. The non-terminal indicator is written as <code>[&lt;<var>module</var>&gt;]:&lt;<var>name</var>&gt;//&lt;<var>arity</var>&gt;</code>.
+
+<p>A non-terminal indicator <code>&lt;<var>name</var>&gt;//&lt;<var>arity</var>&gt;</code> 
+is understood to be equivalent to <code>&lt;<var>name</var>&gt;/&lt;<var>arity</var>&gt;+2</code>, 
+regardless of whether or not the referenced predicate is defined or can 
+be used as a grammar rule.<sup class="fn">48<span class="fn-text">This, 
+however, makes a specific assumption about the implementation of DCG 
+rules, namely that DCG rules are preprocessed into standard Prolog rules 
+taking two additional arguments, the input list and the output list, in 
+accumulator style. This <em>need</em> not be true in all 
+implementations.</span></sup> The <code><code>//</code></code>-notation 
+can be used in all places that traditionally allow for a predicate 
+indicator, e.g., the module declaration, <a id="idx:spy1:407"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, 
+and <a id="idx:dynamic1:408"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.
+
+<p><h3 id="sec:determinism"><a id="sec:4.1.3"><span class="sec-nr">4.1.3</span> <span class="sec-title">Predicate 
+behaviour and determinism</span></a></h3>
+
+<a id="sec:determinism"></a>
+
+<p><a id="idx:predicatebehaviouranddeterminism:409"></a>To describe the 
+general behaviour of a predicate, the following vocabulary is employed. 
+In source code, structured comments contain the corresponding keywords:
+
+<p><table class="latex frame-hsides center">
+<tr><td><code>det</code> </td><td>A <em>deterministic</em> predicate 
+always succeeds exactly once and does not leave a choicepoint. </td></tr>
+<tr><td><code>semidet</code> </td><td>A <em>semi-deterministic</em> 
+predicate succeeds at most once. If it succeeds it does not leave a 
+choicepoint. </td></tr>
+<tr><td><code>nondet</code> </td><td>A <em>non-deterministic</em> 
+predicate is the most general case and no claims are made on the number 
+of solutions (which may be zero, i.e., the predicate may <em>fail</em>) 
+and whether or not the predicate leaves an choicepoint on the last 
+solution. </td></tr>
+<tr><td><code>nondet</code> </td><td>As <code>nondet</code>, but 
+succeeds at least once. </td></tr>
+</table>
+
+<p></body></html>

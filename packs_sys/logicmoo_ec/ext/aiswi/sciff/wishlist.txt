@@ -1,0 +1,8 @@
+24 Jan 2008: in the r_solver, the impose_neg_constraints opens a choice point, while in the fd_solver it uses constraints. Request: improve the r_solver version.
+
+9 jun 2008:
+Implications with false in the head could be implemented more efficiently.
+E.g.: a(1) -> false
+abducing a(X) opens a choice point (case analysis), in which one branh fails.
+One could directly impose non_unify(X,1).
+ 

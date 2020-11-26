@@ -1,0 +1,23 @@
+Command used for regression testing in speech translation
+applications, when employing a paraphrase file
+(cf. Section~\ref{Section:TranslationRegressionParaphrases}). 
+There will typically be some out-of-coverage utterances which are
+still close enough that they will successfully go through speech
+understanding. However, since the transcription is out-of-coverage,
+the scoring routines will have no way to know that the result
+is incorrect, since the transcription produces no reference 
+output to compare with.
+
+Under these circumstances, it is possible to declare a {\em paraphrase
+file}, which associates in-coverage sentences with out-of-coverage
+transcriptions. A paraphrase file record has the following format:
+\begin{verbatim}
+paraphrase(<TranscriptAtom>, <ParaphraseAtom>)
+\end{verbatim}
+where \verb!<TranscriptAtom>! is the transcription and \verb!<ParaphraseAtom>!
+is the paraphrase.
+
+The command {\tt CHECK\_\-PARAPHRASES} assumes that a grammar is loaded.
+It parses the \verb!<ParaphraseAtom>! fields in the paraphrase file, and
+checks that they are all in coverage, issuing warnings for the ones that are not.
+

@@ -1,0 +1,670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.8</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="check.html">
+<link rel="next" href="clpfd.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="check.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="clpfd.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:clpb"><a id="sec:A.8"><span class="sec-nr">A.8</span> <span class="sec-title">library(clpb): 
+CLP(B): Constraint Logic Programming over Boolean Variables</span></a></h2>
+
+<a id="sec:clpb"></a>
+
+<p><a id="sec:clpb"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+<a class="url" href="https://www.metalevel.at">Markus Triska</a>
+</dd>
+</dl>
+
+<p><h3 id="sec:clpb-intro"><a id="sec:A.8.1"><span class="sec-nr">A.8.1</span> <span class="sec-title">Introduction</span></a></h3>
+
+<p><a id="sec:clpb-intro"></a>
+
+<p>This library provides CLP(B), Constraint Logic Programming over 
+Boolean variables. It can be used to model and solve combinatorial 
+problems such as verification, allocation and covering tasks.
+
+<p>CLP(B) is an instance of the general CLP(<i>X</i>) scheme (<a class="sec" href="clp.html#sec:8">section 
+8</a>), extending logic programming with reasoning over specialised 
+domains.
+
+<p>The implementation is based on reduced and ordered Binary Decision 
+Diagrams (BDDs).
+
+<p>Benchmarks and usage examples of this library are available from:
+<a class="url" href="https://www.metalevel.at/clpb/"><b>https:<code>//</code>www.metalevel.at/clpb/</b></a>
+
+<p>We recommend the following references for citing this library in 
+scientific publications:
+
+<pre class="code">
+@inproceedings{Triska2016,
+  author    = "Markus Triska",
+  title     = "The {Boolean} Constraint Solver of {SWI-Prolog}:
+               System Description",
+  booktitle = "FLOPS",
+  series    = "LNCS",
+  volume    = 9613,
+  year      = 2016,
+  pages     = "45--61"
+}
+
+@article{Triska2018,
+  title = "Boolean constraints in {SWI-Prolog}:
+           A comprehensive system description",
+  journal = "Science of Computer Programming",
+  volume = "164",
+  pages = "98 - 115",
+  year = "2018",
+  note = "Special issue of selected papers from FLOPS 2016",
+  issn = "0167-6423",
+  doi = "https://doi.org/10.1016/j.scico.2018.02.001",
+  url = "http://www.sciencedirect.com/science/article/pii/S0167642318300273",
+  author = "Markus Triska",
+  keywords = "CLP(B), Boolean unification, Decision diagrams, BDD"
+}
+</pre>
+
+<p>These papers are available from
+<a class="url" href="https://www.metalevel.at/swiclpb.pdf">https:<code>//</code>www.metalevel.at/swiclpb.pdf</a> 
+and
+<a class="url" href="https://www.metalevel.at/boolean.pdf">https:<code>//</code>www.metalevel.at/boolean.pdf</a> 
+respectively.
+
+<p><h3 id="sec:clpb-exprs"><a id="sec:A.8.2"><span class="sec-nr">A.8.2</span> <span class="sec-title">Boolean 
+expressions</span></a></h3>
+
+<p><a id="sec:clpb-exprs"></a>
+
+<p>A <i>Boolean expression</i> is one of:
+<blockquote>
+<table class="latex frame-box">
+<tr><td><code>0</code> </td><td>false </td></tr>
+<tr><td><code>1</code> </td><td>true </td></tr>
+<tr><td><i>variable</i> </td><td>unknown truth value </td></tr>
+<tr><td><i>atom</i> </td><td>universally quantified variable </td></tr>
+<tr><td><code>~</code> <i>Expr</i> </td><td>logical NOT </td></tr>
+<tr><td><i>Expr</i> + <i>Expr</i> </td><td>logical OR </td></tr>
+<tr><td><i>Expr</i> * <i>Expr</i> </td><td>logical AND </td></tr>
+<tr><td><i>Expr</i> # <i>Expr</i> </td><td>exclusive OR </td></tr>
+<tr><td><i>Var</i> <code>^</code> <i>Expr</i> </td><td>existential 
+quantification </td></tr>
+<tr><td><i>Expr</i> <code>=:=</code> <i>Expr</i> </td><td>equality </td></tr>
+<tr><td><i>Expr</i> <code>=\=</code> <i>Expr</i> </td><td>disequality 
+(same as #) </td></tr>
+<tr><td><i>Expr</i> <code>=&lt;</code> <i>Expr</i> </td><td>less or 
+equal (implication) </td></tr>
+<tr><td><i>Expr</i> <code>&gt;=</code> <i>Expr</i> </td><td>greater or 
+equal </td></tr>
+<tr><td><i>Expr</i> <var>&lt;</var> <i>Expr</i> </td><td>less than </td></tr>
+<tr><td><i>Expr</i> <var>&gt;</var> <i>Expr</i> </td><td>greater than </td></tr>
+<tr><td><code>card(Is,Exprs)</code> </td><td>cardinality constraint (<i>see 
+below</i>) </td></tr>
+<tr><td><code>+(Exprs)</code> </td><td>n-fold disjunction (<i>see below</i>) </td></tr>
+<tr><td><code>*(Exprs)</code> </td><td>n-fold conjunction (<i>see below</i>) </td></tr>
+</table>
+</blockquote>
+
+<p>where <i>Expr</i> again denotes a Boolean expression.
+
+<p>The Boolean expression <code>card(Is,Exprs)</code> is true iff the 
+number of true expressions in the list <var>Exprs</var> is a member of 
+the list <var>Is</var> of integers and integer ranges of the form <code>From-To</code>. 
+For example, to state that precisely two of the three variables <var>X</var>, <var>Y</var> 
+and <var>Z</var> are
+<code>true</code>, you can use <code>sat(card([2],[X,Y,Z]))</code>.
+
+<p><code>+(Exprs)</code> and <code>*(Exprs)</code> denote, respectively, 
+the disjunction and conjunction of all elements in the list <var>Exprs</var> 
+of Boolean expressions.
+
+<p>Atoms denote parametric values that are universally quantified. All 
+universal quantifiers appear implicitly in front of the entire 
+expression. In residual goals, universally quantified variables always 
+appear on the right-hand side of equations. Therefore, they can be used 
+to express functional dependencies on input variables.
+
+<p><h3 id="sec:clpb-interface"><a id="sec:A.8.3"><span class="sec-nr">A.8.3</span> <span class="sec-title">Interface 
+predicates</span></a></h3>
+
+<p><a id="sec:clpb-interface"></a>
+
+<p>The most frequently used CLP(B) predicates are:
+
+<dl class="latex">
+<dt><strong>sat</strong>(<var>+Expr</var>)</dt>
+<dd class="defbody">
+True iff the Boolean expression <var>Expr</var> is satisfiable.
+</dd>
+<dt><strong>taut</strong>(<var>+Expr, -T</var>)</dt>
+<dd class="defbody">
+If <var>Expr</var> is a tautology with respect to the posted 
+constraints, succeeds with <b><var>T</var> = 1</b>. If <var>Expr</var> 
+cannot be satisfied, succeeds with <b><var>T</var> = 0</b>. Otherwise, 
+it fails.
+</dd>
+<dt><strong>labeling</strong>(<var>+Vs</var>)</dt>
+<dd class="defbody">
+Assigns truth values to the variables <var>Vs</var> such that all 
+constraints are satisfied.
+</dd>
+</dl>
+
+<p>The unification of a CLP(B) variable <i>X</i> with a term <i>T</i> is 
+equivalent to posting the constraint <code>sat(X=:=T)</code>.
+
+<p><h3 id="sec:clpb-examples"><a id="sec:A.8.4"><span class="sec-nr">A.8.4</span> <span class="sec-title">Examples</span></a></h3>
+
+<p><a id="sec:clpb-examples"></a>
+
+<p>Here is an example session with a few queries and their answers:
+
+<pre class="code">
+?- use_module(library(clpb)).
+true.
+
+?- sat(X*Y).
+X = Y, Y = 1.
+
+?- sat(X * ~X).
+false.
+
+?- taut(X * ~X, T).
+T = 0,
+sat(X=:=X).
+
+?- sat(X^Y^(X+Y)).
+sat(X=:=X),
+sat(Y=:=Y).
+
+?- sat(X*Y + X*Z), labeling([X,Y,Z]).
+X = Z, Z = 1, Y = 0 ;
+X = Y, Y = 1, Z = 0 ;
+X = Y, Y = Z, Z = 1.
+
+?- sat(X =&lt; Y), sat(Y =&lt; Z), taut(X =&lt; Z, T).
+T = 1,
+sat(X=:=X*Y),
+sat(Y=:=Y*Z).
+
+?- sat(1#X#a#b).
+sat(X=:=a#b).
+</pre>
+
+<p>The pending residual goals constrain remaining variables to Boolean 
+expressions and are declaratively equivalent to the original query. The 
+last example illustrates that when applicable, remaining variables are 
+expressed as functions of universally quantified variables.
+
+<p><h3 id="sec:clpb-residual-goals"><a id="sec:A.8.5"><span class="sec-nr">A.8.5</span> <span class="sec-title">Obtaining 
+BDDs</span></a></h3>
+
+<p><a id="sec:clpb-residual-goals"></a>
+
+<p>By default, CLP(B) residual goals appear in (approximately) algebraic 
+normal form (ANF). This projection is often computationally expensive. 
+We can set the Prolog flag <code>clpb_residuals</code> to the value <code>bdd</code> 
+to see the BDD representation of all constraints. This results in faster 
+projection to residual goals, and is also useful for learning more about 
+BDDs. For example:
+
+<pre class="code">
+?- set_prolog_flag(clpb_residuals, bdd).
+true.
+
+?- sat(X#Y).
+node(3)- (v(X, 0)-&gt;node(2);node(1)),
+node(1)- (v(Y, 1)-&gt;true;false),
+node(2)- (v(Y, 1)-&gt;false;true).
+</pre>
+
+<p>Note that this representation cannot be pasted back on the toplevel, 
+and its details are subject to change. Use <a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+to obtain such answers as Prolog terms.
+
+<p>The variable order of the BDD is determined by the order in which the 
+variables first appear in constraints. To obtain different orders, we 
+can for example use:
+
+<pre class="code">
+?- sat(+[1,Y,X]), sat(X#Y).
+node(3)- (v(Y, 0)-&gt;node(2);node(1)),
+node(1)- (v(X, 1)-&gt;true;false),
+node(2)- (v(X, 1)-&gt;false;true).
+</pre>
+
+<p><h3 id="sec:clpb-monotonic"><a id="sec:A.8.6"><span class="sec-nr">A.8.6</span> <span class="sec-title">Enabling 
+monotonic CLP(B)</span></a></h3>
+
+<p><a id="sec:clpb-monotonic"></a>
+
+<p>In the default execution mode, CLP(B) constraints are <i>not</i> 
+monotonic. This means that <i>adding</i> constraints can yield new 
+solutions. For example:
+
+<pre class="code">
+?-          sat(X=:=1), X = 1+0.
+false.
+
+?- X = 1+0, sat(X=:=1), X = 1+0.
+X = 1+0.
+</pre>
+
+<p>This behaviour is highly problematic from a logical point of view, 
+and it may render <a class="url" href="https://www.metalevel.at/prolog/debugging"><b>declarative 
+debugging</b></a> techniques inapplicable.
+
+<p>Set the flag <code>clpb_monotonic</code> to <code>true</code> to make 
+CLP(B) <b>monotonic</b>. If this mode is enabled, then you must wrap 
+CLP(B) variables with the functor <code>v/1</code>. For example:
+
+<pre class="code">
+?- set_prolog_flag(clpb_monotonic, true).
+true.
+
+?- sat(v(X)=:=1#1).
+X = 0.
+</pre>
+
+<p><h3 id="sec:clpb-pigeons"><a id="sec:A.8.7"><span class="sec-nr">A.8.7</span> <span class="sec-title">Example: 
+Pigeons</span></a></h3>
+
+<p><a id="sec:clpb-pigeons"></a>
+
+<p>In this example, we are attempting to place <i>I</i> pigeons into <i>J</i> 
+holes in such a way that each hole contains at most one pigeon. One 
+interesting property of this task is that it can be formulated using 
+only <i>cardinality constraints</i> (<code>card/2</code>). Another 
+interesting aspect is that this task has no short resolution refutations 
+in general.
+
+<p>In the following, we use <a class="url" href="https://www.metalevel.at/prolog/dcg"><b>Prolog 
+DCG notation</b></a> to describe a list <var>Cs</var> of CLP(B) 
+constraints that must all be satisfied.
+
+<pre class="code">
+:- use_module(library(clpb)).
+:- use_module(library(clpfd)).
+
+pigeon(I, J, Rows, Cs) :-
+        length(Rows, I), length(Row, J),
+        maplist(same_length(Row), Rows),
+        transpose(Rows, TRows),
+        phrase((all_cards(Rows,[1]),all_cards(TRows,[0,1])), Cs).
+
+all_cards([], _) --&gt; [].
+all_cards([Ls|Lss], Cs) --&gt; [card(Cs,Ls)], all_cards(Lss, Cs).
+</pre>
+
+<p>Example queries:
+
+<pre class="code">
+?- pigeon(9, 8, Rows, Cs), sat(*(Cs)).
+false.
+
+?- pigeon(2, 3, Rows, Cs), sat(*(Cs)),
+   append(Rows, Vs), labeling(Vs),
+   maplist(portray_clause, Rows).
+[0, 0, 1].
+[0, 1, 0].
+etc.
+</pre>
+
+<p><h3 id="sec:clpb-circuit"><a id="sec:A.8.8"><span class="sec-nr">A.8.8</span> <span class="sec-title">Example: 
+Boolean circuit</span></a></h3>
+
+<p><a id="sec:clpb-circuit"></a>
+
+<p>Consider a Boolean circuit that express the Boolean function <code>XOR</code> 
+with 4 <code>NAND</code> gates. We can model such a circuit with CLP(B) 
+constraints as follows:
+
+<pre class="code">
+:- use_module(library(clpb)).
+
+nand_gate(X, Y, Z) :- sat(Z =:= ~(X*Y)).
+
+xor(X, Y, Z) :-
+        nand_gate(X, Y, T1),
+        nand_gate(X, T1, T2),
+        nand_gate(Y, T1, T3),
+        nand_gate(T2, T3, Z).
+</pre>
+
+<p>Using universally quantified variables, we can show that the circuit 
+does compute <code>XOR</code> as intended:
+
+<pre class="code">
+?- xor(x, y, Z).
+sat(Z=:=x#y).
+</pre>
+
+<p><h3 id="sec:clpb-acknowledgments"><a id="sec:A.8.9"><span class="sec-nr">A.8.9</span> <span class="sec-title">Acknowledgments</span></a></h3>
+
+<p><a id="sec:clpb-acknowledgments"></a>
+
+<p>The interface predicates of this library follow the example of
+<a class="url" href="https://sicstus.sics.se"><b>SICStus Prolog</b></a>.
+
+<p>Use SICStus Prolog for higher performance in many cases.
+
+<p><h3 id="sec:clpb-predicates"><a id="sec:A.8.10"><span class="sec-nr">A.8.10</span> <span class="sec-title">CLP(B) 
+predicate index</span></a></h3>
+
+<p><a id="sec:clpb-predicates"></a>
+
+<p>In the following, each CLP(B) predicate is described in more detail.
+
+<p>We recommend the following link to refer to this manual:
+
+<p><a class="url" href="http://eu.swi-prolog.org/man/clpb.html">http://eu.swi-prolog.org/man/clpb.html</a>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="sat/1"><strong>sat</strong>(<var>+Expr</var>)</a></dt>
+<dd class="defbody">
+True iff <var>Expr</var> is a satisfiable Boolean expression.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="taut/2"><strong>taut</strong>(<var>+Expr, 
+-T</var>)</a></dt>
+<dd class="defbody">
+Tautology check. Succeeds with <var>T</var> = 0 if the Boolean 
+expression <var>Expr</var> cannot be satisfied, and with <var>T</var> = 
+1 if <var>Expr</var> is always true with respect to the current 
+constraints. Fails otherwise.</dd>
+<dt class="pubdef"><span class="pred-tag">[multi]</span><a id="labeling/1"><strong>labeling</strong>(<var>+Vs</var>)</a></dt>
+<dd class="defbody">
+Enumerate concrete solutions. Assigns truth values to the Boolean 
+variables <var>Vs</var> such that all stated constraints are satisfied.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sat_count/2"><strong>sat_count</strong>(<var>+Expr, 
+-Count</var>)</a></dt>
+<dd class="defbody">
+<var>Count</var> the number of admissible assignments. <var>Count</var> 
+is the number of different assignments of truth values to the variables 
+in the Boolean expression <var>Expr</var>, such that <var>Expr</var> is 
+true and all posted constraints are satisfiable.
+
+<p>A common form of invocation is <code>sat_count(+[1|Vs], Count)</code>: 
+This counts the number of admissible assignments to <var>Vs</var> 
+without imposing any further constraints.
+
+<p>Examples:
+
+<pre class="code">
+?- sat(A =&lt; B), Vs = [A,B], sat_count(+[1|Vs], Count).
+Vs = [A, B],
+Count = 3,
+sat(A=:=A*B).
+
+?- length(Vs, 120),
+   sat_count(+Vs, CountOr),
+   sat_count(*(Vs), CountAnd).
+Vs = [...],
+CountOr = 1329227995784915872903807060280344575,
+CountAnd = 1.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[multi]</span><a id="weighted_maximum/3"><strong>weighted_maximum</strong>(<var>+Weights, 
++Vs, -Maximum</var>)</a></dt>
+<dd class="defbody">
+Enumerate weighted optima over admissible assignments. Maximize a linear 
+objective function over Boolean variables <var>Vs</var> with integer 
+coefficients <var>Weights</var>. This predicate assigns 0 and 1 to the 
+variables in <var>Vs</var> such that all stated constraints are 
+satisfied, and
+<var>Maximum</var> is the maximum of <code>sum(Weight_i*V_i)</code> over 
+all admissible assignments. On backtracking, all admissible assignments 
+that attain the optimum are generated.
+
+<p>This predicate can also be used to <i>minimize</i> a linear Boolean 
+program, since negative integers can appear in <var>Weights</var>.
+
+<p>Example:
+
+<pre class="code">
+?- sat(A#B), weighted_maximum([1,2,1], [A,B,C], Maximum).
+A = 0, B = 1, C = 1, Maximum = 3.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="random_labeling/2"><strong>random_labeling</strong>(<var>+Seed, 
++Vs</var>)</a></dt>
+<dd class="defbody">
+Select a single random solution. An admissible assignment of truth 
+values to the Boolean variables in <var>Vs</var> is chosen in such a way 
+that each admissible assignment is equally likely. <var>Seed</var> is an 
+integer, used as the initial seed for the random number generator.
+</dd>
+</dl>
+
+<p></body></html>

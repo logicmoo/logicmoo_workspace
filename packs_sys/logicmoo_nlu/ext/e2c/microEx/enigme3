@@ -1,0 +1,58 @@
+% Inspire de L'Hospitalier et Friand pour l'enigme, 
+% et de Giannesini et al pour l'idee de solution.
+
+% Qui a gagne la medaille d'or : camille
+
+$ ques_enigme :-
+   ldif(Ent),
+   ldif(Han),
+   ldif(Boi),
+   ldif(Spe),
+   ldif(Med),
+   eq(Nom,[jean,pierre,camille,roland]), 
+   contr(Nom,Ent,Han,Boi,Spe,Med),
+   idem(or,Med,X,Nom), !,
+   sol_enigme(X,Ent,Han,Boi,Spe,Nom,Med).
+
+$ sol_enigme(_1,E,H,B,S,N,M) :- write(E), nl,
+   write(H), nl,
+   write(B), nl,
+   write(S), nl,
+   write(N), nl,
+   write(M), nl.
+$ sol_enigme(X,_1,_2,_3,_4,_5,_6) :-
+   write(X), write(' a gagne la medaille d or'), nl.
+
+$ ldif([X,Y,Z,T]) :- sont_dif([X,Y,Z,T]).
+$ sont_dif([]).
+$ sont_dif([T|Q]) :- hd(T,Q), sont_dif(Q).
+$ hd(X,[]).
+$ hd(X,[T|Q]) :- dif(X,T), hd(X,Q).
+$ idem(X,[X|U],Y,[Y|V]).
+$ idem(X,[N|U],Y,[M|V]) :- dif(X,N), dif(Y,M), idem(X,U,Y,V).
+
+$ contr(N,E,H,B,S,M) :-    
+   idem(pierre,N,porto,B), 
+   idem(jean,N,maryvonne,E),
+   idem(boxeur,S,cocard,H), 
+   idem(argent,M,champagne,B), 
+   idem(rhume,H,pastis,B),
+   idem(roland,N,insolation,H),
+   idem(entorse,H,therese,E),
+   idem(triple,S,chocolat,M), idem(triple,S,X,H), dif(X,rhume),
+   idem(centm,S,corinne,E),
+   idem(decathlon,S,perrier,B),
+   idem(maryse,E,bronze,M).
+
+ %pierre boit du porto
+ %jean est entraine par maryvonne
+ %le boxeur a un cocard
+ %celui qui a gagne l'argent l'a arrose au champagne
+ %le sportif au pastis s'est enrhume
+ %roland a attrape une insolation
+ %theresne soignel'entorse de son athlete
+ %le specialiste du triple saut, quoique non enrhume, n'a pu obtenir
+ %          qu'une medaille en chocolat
+ %corinne entraine le coureur de 100 metres
+ %l'athlete de decathlon est au perrier
+ %le sportif entraine par maryse a remporte la medaille de bronze

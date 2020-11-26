@@ -1,0 +1,393 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ANL Otter system.
+%----
+%----Written by Geoff Sutcliffe, July, 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+output_otter_options([]):-
+    !.
+
+output_otter_options([FirstOption|RestOfOptions]):-
+    display(FirstOption),
+    write('.'),
+    nl,
+    output_otter_options(RestOfOptions).
+%------------------------------------------------------------------------------
+%----Output a header specifying the resolution type and Prolog style
+output_otter_header(none):-
+    !.
+
+%----Special case for Otter 3.0.4
+output_otter_header(OtterOptions):-
+    tptp2X_select(clear(tptp_eq),OtterOptions,OtherOptions),
+    !,
+    write('set(prolog_style_variables).'),
+    nl,
+    output_otter_options(OtherOptions),
+    nl.
+
+output_otter_header(OtterOptions):-
+    write('set(prolog_style_variables).'),
+    nl,
+    write('set(tptp_eq).'),
+    nl,
+    output_otter_options(OtterOptions),
+    nl.
+%------------------------------------------------------------------------------
+%----Output variables
+otter_output_variable(Variable):-
+    write(Variable).
+%------------------------------------------------------------------------------
+translate_otter_defined(Variable,Variable):-
+    var(Variable),
+    !.
+
+translate_otter_defined([],[]):-
+    !.
+
+translate_otter_defined([First|Rest],[TranslatedFirst|TranslatedRest]):-
+    !,
+    translate_otter_defined(First,TranslatedFirst),
+    translate_otter_defined(Rest,TranslatedRest).
+
+translate_otter_defined(DefinedAtom,OtterDefinedAtom):-
+    tptp2X_member(DefinedAtom-OtterDefinedAtom,[
+'$less'-'$LT',
+'$lesseq'-'$LE',
+'$greater'-'$GT',
+'$greatereq'-'$GE',
+'$sum'-'$SUM',
+'$difference'-'$DIFF',
+'$product'-'$PROD',
+'$is_int'-'$INT'
+]),
+    !.
+
+translate_otter_defined(Atom,Atom):-
+    atomic(Atom),
+    !.
+
+translate_otter_defined('$uminus'(X),- TranslatedX):-
+    !,
+    translate_otter_defined(X,TranslatedX).
+
+translate_otter_defined(Function,TranslatedFunction):-
+    Function =.. FunctionList,
+    translate_otter_defined(FunctionList,TranslatedFunctionList),
+    TranslatedFunction =.. TranslatedFunctionList.
+%------------------------------------------------------------------------------
+%----Generic output of atoms
+otter_output_atom(_,'$true'):-
+    !,
+    write('$T').
+
+otter_output_atom(_,'$false'):-
+    !,
+    write('$F').
+
+otter_output_atom(Language,'$tptp_equal'(X,Y)):-
+    !,
+    otter_output_atom(Language,equal(X,Y)).
+
+otter_output_atom(Language,'$tptp_not_equal'(X,Y)):-
+    !,
+    write('- '),
+    otter_output_atom(Language,equal(X,Y)).
+
+otter_output_atom(_,Atom):-
+    translate_otter_defined(Atom,TranslatedAtom),
+    write(TranslatedAtom).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Output of FOF
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+otter_quantified_formula(QuantifiedFormula,OtterQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member((Quantifier)-(OtterQuantifier),[('!')-(all),('?')-(exists)]).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+otter_binary_formula(BinaryFormula,OtterConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(OtterConnective),
+[('<=>')-('<->'),('=>')-('->'),('&')-('&'),(';')-('|'),('|')-('|')]).
+%----It needs both for some reason after shorten - need to investigate
+%----|;BUG
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+otter_unary_formula(UnaryFormula,OtterConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(OtterConnective),[('~')-('-')]).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in otter format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+otter_quantified_format('( ',' ',' ',' ',' )').
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+otter_binary_format('( ',' ',' ',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+otter_unary_format('','(',')').
+%------------------------------------------------------------------------------
+%----Write a otter formula in fof form
+output_otter_fof(fof(Name,Status,Formula)):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_generic_formula(otter,fof,Formula),
+    write('.'),
+    nl.
+%------------------------------------------------------------------------------
+%----Write out each formula in TPTP format
+output_otter_formulae([OneFormula]):-
+    !,
+    output_otter_fof(OneFormula).
+
+output_otter_formulae([FirstFormula|RestOfFormulae]):-
+    output_otter_fof(FirstFormula),
+    nl,
+    output_otter_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Output of CNF
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive
+output_otter_signed_literal(--Atom):-
+    !,
+    write('-'),
+    otter_output_atom(cnf,Atom).
+
+output_otter_signed_literal(++Atom):-
+    write(' '),
+    otter_output_atom(cnf,Atom).
+%------------------------------------------------------------------------------
+%----Output the literals of the clause in Otter format
+%----Special case of an empty clause
+output_otter_clause([]):-
+    !,
+    write('$F.'),
+    nl,
+    nl.
+
+output_otter_clause([OneLiteral]):-
+    !,
+    output_otter_signed_literal(OneLiteral),
+    write('.'),
+    nl,
+    nl.
+
+output_otter_clause([FirstLiteral|RestOfLiterals]):-
+    output_otter_signed_literal(FirstLiteral),
+    write(' |'),
+    nl,
+    output_otter_clause(RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_otter_clauses([]):-
+    !.
+
+%----Ignore a single true clause (also if it's the last oe :-()
+output_otter_clauses([input_clause(_Name,_Status,['$true'])]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_otter_clauses([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_otter_clause(Literals),
+    output_otter_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+%======================================================================
+%----Output of Otter lists
+%======================================================================
+%------------------------------------------------------------------------------
+output_otter_list([],_):-
+    !.
+
+%----Output the clauses for the given list, selected by status
+output_otter_list(Clauses,List):-
+    tptp_clauses(Clauses),
+    write('list('),
+    write(List),
+    write(').'),
+    nl,
+    nl,
+    output_otter_clauses(Clauses),
+    write('end_of_list.'),
+    nl,
+    nl.
+
+%----Output the formulae for the given list, selected by status
+output_otter_list(Formulae,List):-
+    tptp_formulae(Formulae),
+    write('formula_list('),
+    write(List),
+    write(').'),
+    nl,
+    nl,
+    output_otter_formulae(Formulae),
+    write('end_of_list.'),
+    nl,
+    nl.
+%------------------------------------------------------------------------------
+output_otter_lists([]).
+
+output_otter_lists([ListName-Formulae|RestOfNameListPairs]):-
+    output_otter_list(Formulae,ListName),
+    output_otter_lists(RestOfNameListPairs).
+%------------------------------------------------------------------------------
+%-----Check all the literals have this sign
+check_sign_of_literals(_,[]):-
+    !.
+
+check_sign_of_literals(Sign,[FirstLiteral|RestOfLiterals]):-
+    FirstLiteral =.. [Sign,_],
+    check_sign_of_literals(Sign,RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Decide if a formula or clause is in the SoS
+in_SoS(fof(_,negated_conjecture,_),conjecture).
+
+%----Shouldn't need this, but while changing ...
+in_SoS(fof(_,conjecture,_),conjecture).
+
+in_SoS(input_clause(_,negated_conjecture,_),conjecture).
+
+in_SoS(input_clause(_,Status,_),hypothesis):-
+    tptp2X_member(Status,[hypothesis,negated_conjecture]).
+
+in_SoS(fof(_,Status,_),hypothesis):-
+    tptp2X_member(Status,[hypothesis,conjecture,negated_conjecture]).
+
+in_SoS(fof(_,Status,_),not_conjecture):-
+    \+ (Status = conjecture),
+    \+ (Status = negated_conjecture).
+
+in_SoS(input_clause(_,Status,_),not_conjecture):-
+    \+ (Status = negated_conjecture).
+
+in_SoS(fof(_,axiom,_),axioms).
+
+in_SoS(input_clause(_,axiom,_),axioms).
+
+in_SoS(input_clause(_,_,Literals),positive):-
+    check_sign_of_literals(++,Literals).
+
+in_SoS(input_clause(_,_,Literals),negative):-
+    check_sign_of_literals(--,Literals).
+
+in_SoS(input_clause(_,_,[_]),unit).
+
+in_SoS(_,all).
+%------------------------------------------------------------------------------
+%----Extract the clauses for the SoS, based on the specifier
+extract_otter_sos([],_,[],[]):-
+    !.
+
+%----In the SoS
+extract_otter_sos([FirstInputFormula|RestOfInputFormulae],
+SoSSpecifiers,[FirstInputFormula|RestOfSoS],Usable):-
+    tptp2X_member(SoSSpecifier,SoSSpecifiers),
+    in_SoS(FirstInputFormula,SoSSpecifier),
+    !,
+    extract_otter_sos(RestOfInputFormulae,SoSSpecifiers,RestOfSoS,Usable).
+
+%----Not in the SoS
+extract_otter_sos([FirstInputFormula|RestOfInputFormulae],
+SoSSpecifiers,SoS,[FirstInputFormula|RestOfUsable]):-
+    extract_otter_sos(RestOfInputFormulae,SoSSpecifiers,SoS,RestOfUsable).
+%------------------------------------------------------------------------------
+extract_otter_list([],_,[],[]).
+
+extract_otter_list([FirstFormula|RestOfFormulae],ListName,[FirstFormula|
+RestOfSelectedFormulae],OtherFormulae):-
+    FirstFormula =.. [_,_,ListName|_],
+    !,
+    extract_otter_list(RestOfFormulae,ListName,RestOfSelectedFormulae,
+OtherFormulae).
+
+extract_otter_list([FirstFormula|RestOfFormulae],ListName,SelectedFormulae,
+[FirstFormula|RestOfOtherFormulae]):-
+    extract_otter_list(RestOfFormulae,ListName,SelectedFormulae,
+RestOfOtherFormulae).
+%------------------------------------------------------------------------------
+extract_otter_lists(Formulae,[],[],Formulae).
+
+extract_otter_lists(Formulae,[ListName|RestOfListNames],
+[ListName-SelectedFormulae|RestOfNameListPairs],NormalFormulae):-
+    extract_otter_list(Formulae,ListName,SelectedFormulae,OtherFormulae),
+    extract_otter_lists(OtherFormulae,RestOfListNames,RestOfNameListPairs,
+NormalFormulae).
+%------------------------------------------------------------------------------
+%----Negate the conjecture formula (only one)
+negate_otter_conjecture(Formulae,_):-
+    tptp2X_select(fof(_,conjecture,_),Formulae,OtherFormulae),
+    tptp2X_member(fof(_,conjecture,_),OtherFormulae),
+    !,
+    write('%----ERROR : More than one conjecture'),nl,
+    fail.
+
+negate_otter_conjecture(Formulae,ProofFormulae):-
+    tptp2X_select(fof(Name,conjecture,Formula),Formulae,OtherFormulae),
+    !,
+%----Need this for dodgy processing in Ratify
+    write('%----This is the conjecture with negated conjecture'),nl,
+    tptp2X_append(OtherFormulae,[fof(Name,negated_conjecture,~(Formula))],
+ProofFormulae).
+
+%----If not there it's clauses or no conjecture (satisfiable FOF)
+negate_otter_conjecture(Formulae,Formulae).
+%------------------------------------------------------------------------------
+%----Output all the clauses in Otter format
+otter(otter:SoSSpecifier:OtterOptions,Formulae,_):-
+    tptp_formulae_language(Formulae,[fof,cnf,input_clause]),
+    !,
+    tptp_ensure_short_form(Formulae,ShortFormulae),
+%----Negate conjecture if FOF
+    negate_otter_conjecture(ShortFormulae,ProofFormulae),
+    tptp2X_member(SoSSpecifier,[conjecture,hypothesis,positive,negative,
+unit,none,all]),
+    extract_otter_lists(ProofFormulae,[hints2,passive],NameListPairs,
+NormalFormulae),
+    extract_otter_sos(NormalFormulae,[SoSSpecifier],SoS,Usable),
+    output_otter_header(OtterOptions),
+    output_otter_lists([sos-SoS,usable-Usable|NameListPairs]).
+
+otter(otter:_:_,_,_):-
+    write('ERROR: Only FOF and CNF format for Otter'),
+    nl.
+
+%----Short cut for default to auto mode
+otter(otter,Formulae,FileHeader):-
+    otter(otter:none:[set(auto)],Formulae,FileHeader).
+
+%----For backwards compatibility
+otter(otter(SoSSpecifier,OtterOptions),Formulae,FileHeader):-
+    otter(otter:SoSSpecifier:OtterOptions,Formulae,FileHeader).
+%------------------------------------------------------------------------------
+%----Provide information about the Otter format
+otter_format_information('%','.in').
+%------------------------------------------------------------------------------
+%----Provide information about the Otter file
+otter_file_information(format,otter:conjecture:'clear(print_given),set(auto)',
+'SoS is any of conjecture, hypothesis, not_conjecture, axioms, positive, negative, unit, none, all.  Flags can be added').
+%------------------------------------------------------------------------------

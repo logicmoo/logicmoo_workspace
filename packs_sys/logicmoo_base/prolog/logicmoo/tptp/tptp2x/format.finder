@@ -1,0 +1,534 @@
+%=======================================================================%
+%----This outputs TPTP Problem Set clauses accompanied by function -----%
+%----declarations in a format acceptable to the ANU FINDER system.------%
+%-----------------------------------------------------------------------%
+%----Written by Kahlil Hodgson and Geoff Sutcliffe, May,1997.
+%----Last update 24.11.99
+%=======================================================================%
+%=======================================================================%
+%----Module to output TPTP Problem Set CLAUSES in a FINDER format .-----%
+%----Main entry point :-output_finder_clauses/1.------------------------%
+%=======================================================================%
+%----------------------------------------------------------------------
+%----Output the atoms, separated and terminated as indicated.
+
+% If you want the equal/2 predicate to be translated to the build-in
+% equality =/2 in FINDER then uncomment the following clause
+% (In this case you should also use the option -t rm_equality:rstfp
+%  when transforming the problems)
+%
+%output_finder_atom('$tptp_equal'(X,Y)):-
+%    !,
+%    write(X),
+%    write('='),
+%    write(Y).
+
+output_finder_atom(Atom):-
+    write(Atom).
+
+%----First case, there never were any of this sign.
+output_finder_atoms([],_,_,_,Terminator,no,Assertion):-
+    !,
+    write(Assertion),
+    write(Terminator).
+
+%----The last one, if there ever were any
+output_finder_atoms([OneAtom],NL,Prefix,_,Terminator,yes,_):-
+    !,
+    (NL == yes ->
+        (   nl,
+            write(Prefix))
+    ;   true),
+    output_finder_atom(OneAtom),
+    write(Terminator).
+
+%----More than one, write separated
+output_finder_atoms([OneAtom,TwoAtoms|RestOfAtoms],
+                    NL,Prefix,Separator,Terminator,yes,_):-
+    (NL == yes ->
+        (   nl,
+            write(Prefix))
+    ;   true),
+    output_finder_atom(OneAtom),
+    write(Separator),
+    output_finder_atoms([TwoAtoms|RestOfAtoms],
+                    yes,Prefix,Separator,Terminator,_,_).
+%----------------------------------------------------------------------
+%----Output the clauses in FINDER format.
+output_finder_clause(Literals):-
+    tptp2X_bagof1(Atom,tptp2X_member(--Atom,Literals),NegativeAtoms),
+    output_finder_atoms(NegativeAtoms,no,'',',',' -> ',NextNL,'$true'),
+    tptp2X_bagof1(Atom,tptp2X_member(++Atom,Literals),PositiveAtoms),
+    output_finder_atoms(PositiveAtoms,NextNL,'    ',',','.',_,'$false'),
+    nl,
+    nl.
+%----------------------------------------------------------------------
+output_finder_clause_list([]).
+
+output_finder_clause_list([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    !,
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_finder_clause(Literals),
+    output_finder_clause_list(RestOfClauses).
+%----------------------------------------------------------------------
+%----Output clauses as a FINDER clause list.
+%----Skip empty list and FOL formulae.
+output_finder_clauses([]):-
+    !,
+    write('
+%---No clauses to output---------------------------------------------------
+'), nl.
+
+output_finder_clauses(ClauseList):-
+    !,
+    write('
+%---Clauses to model-------------------------------------------------------
+clause {
+
+'),
+    output_finder_clause_list(ClauseList),
+    write('}'), nl.
+
+%=====================================================================%
+%----Module to output FUNCTION DECLARATIONS for functions occurring --%
+%----in TPTP Problem Set clauses in FINDER format.--------------------%
+%----Main entry point: output_finder_function_declarations/1.---------%
+%=====================================================================%
+%----------------------------------------------------------------------
+%----For each parameter in ParameterList write the default sort 
+%----declaration.
+output_finder_argument_sorts(1):-
+    !,
+    write('default'). % leave off final ','.
+
+output_finder_argument_sorts(Arity):-
+    write('default, '),
+    Arity1 is Arity - 1,
+    output_finder_argument_sorts(Arity1).
+
+%----------------------------------------------------------------------
+%----Output an appropriate constant declaration for each constant symbol.
+
+declare_finder_constant(Name/0):-
+    !,
+    write(Name),
+    write(' default.'),
+    nl.
+
+declare_finder_constant(_/_):-
+    !.
+
+declare_finder_prop_constant(Name/0):-
+    !,
+    write(Name),
+    write(' bool. {}'), % finder "feature" -- prop constants need a spec
+    nl.
+
+declare_finder_prop_constant(_/_):-
+    !.
+
+%----------------------------------------------------------------------
+%----Output an appropriate function declaration for each function symbol.
+
+%----Define constants first!!
+declare_finder_function(_/0):-
+    !.
+
+declare_finder_function(Name/Arity):-
+    !,
+    write(Name),
+    write(' '),
+    output_finder_argument_sorts(Arity),
+    write(' -> default {no_priority}'),
+    nl.
+%----------------------------------------------------------------------
+%----Output an appropriate function declaration for each predicate.
+%-----Constants first!!
+declare_finder_predicate(_/0):-
+    !.
+
+declare_finder_predicate(Name/Arity):-
+    !,
+    write(Name),
+    write(' '),
+    output_finder_argument_sorts(Arity),
+    write(' -> bool.'),
+    nl.
+
+%----------------------------------------------------------------------
+declare_finder_constant_list([]).
+
+declare_finder_constant_list([Functor/0|RestOfFunctions]):-
+    name(Functor,[36|_]),
+    !,
+    declare_finder_constant_list(RestOfFunctions).
+
+declare_finder_constant_list([FirstFunction|RestOfFunctions]):-
+    declare_finder_constant(FirstFunction),
+    declare_finder_constant_list(RestOfFunctions).
+
+declare_finder_constants([]):- 
+    !.
+
+declare_finder_constants([Functor/0]):- 
+    name(Functor,[36|_]),
+    !.
+
+declare_finder_constants(FunctorStructures) :-
+    !,
+    write('
+%---Constant declarations--------------------------------------------------
+constant {
+
+'),
+    declare_finder_constant_list(FunctorStructures),
+    nl, write('}'), nl.
+
+%----------------------------------------------------------------------
+declare_finder_function_list([]).
+
+declare_finder_function_list([Functor/_|RestOfFunctions]):-
+    name(Functor,[36|_]),
+    !,
+    declare_finder_function_list(RestOfFunctions).
+
+declare_finder_function_list([FirstFunction|RestOfFunctions]):-
+    declare_finder_function(FirstFunction),
+    declare_finder_function_list(RestOfFunctions).
+
+declare_finder_functions([]) :- 
+    !.
+
+declare_finder_functions([Functor/_]) :- 
+    name(Functor,[36|_]),
+    !.
+
+declare_finder_functions(FunctorStructures):-
+    !,
+    write('
+%---Function declarations--------------------------------------------------
+function {
+
+'),
+    declare_finder_function_list(FunctorStructures),
+    nl, write('}'), nl.
+
+%----------------------------------------------------------------------
+declare_finder_prop_constant_list([]).
+
+declare_finder_prop_constant_list([FirstFunction|RestOfFunctions]):-
+    declare_finder_prop_constant(FirstFunction),
+    declare_finder_prop_constant_list(RestOfFunctions).
+
+declare_finder_predicate_list([]).
+
+%----Ignore defined
+declare_finder_predicate_list([Predicate/_|RestOfPredicates]):-
+    name(Predicate,[36|_]),
+    !,
+    declare_finder_predicate_list(RestOfPredicates).
+
+declare_finder_predicate_list([FirstPredicate|RestOfPredicates]):-
+    declare_finder_predicate(FirstPredicate),
+    declare_finder_predicate_list(RestOfPredicates).
+
+declare_finder_predicates([]):- 
+    !.
+
+%----If defined is the only thing, then no list
+declare_finder_predicates([Predicate/_]):- 
+    name(Predicate,[36|_]),
+    !.
+
+declare_finder_predicates(UnsignedPredicateStructures):-
+    !,
+    write('
+%---Predicate declarations-------------------------------------------------
+function {
+
+'),
+    %---- prop constants have to come first
+    declare_finder_prop_constant_list(UnsignedPredicateStructures),
+    declare_finder_predicate_list(UnsignedPredicateStructures),
+    nl, write('}'), nl.
+
+%----------------------------------------------------------------------
+%----Output function declarations for each function occurring in the
+%----clause/formula list.
+output_finder_declarations([]):-
+    !,
+    write('
+%---No functions to declare------------------------------------------------
+').
+
+%----If the clause list is not empty then there should be at least one
+%----functor other than equality.
+output_finder_declarations(Formulae):-
+%----Do basic syntactic examination
+    examine_formulae_for_predicates(Formulae,_,UnsignedPredicateStructures,_),
+    examine_formulae_for_functors(Formulae,FunctorStructures,_),
+    declare_finder_constants(FunctorStructures), 
+    declare_finder_predicates(UnsignedPredicateStructures), 
+    declare_finder_functions(FunctorStructures).
+
+%=====================================================================%
+%----Module to output the HEADER for a generic FINDER input file.-----%
+%----Main entry point: output_finder_header/1.------------------------%
+%=====================================================================%
+%----------------------------------------------------------------------
+%----Output finder settings. For each clause in the Settings list, 
+%----this will output the name of the main functor followed by a space 
+%----separated list of it's arguments (if any).
+
+%----First, there's only one option like this
+output_finder_setting(verbosity(Models,Job,Stats)):-
+    !,
+    nl,
+    write('verbosity {'),
+    nl,
+    write('                      models: '),
+    write(Models),
+    nl,
+    write('                      job: '),
+    write(Job),
+    nl,
+    write('                      stats: '),
+    write(Stats),
+    nl,
+    write('                     }'),
+    nl.
+    
+output_finder_setting(Setting):-
+    Setting =.. [Name,Parameter],
+    !,
+    write(Name),
+    write(' '),
+    write(Parameter),
+    nl.
+
+output_finder_setting(Setting):-
+     !,
+     write(Setting),
+     nl.
+
+%----------------------------------------------------------------------
+output_finder_setting_list([]) :-
+    !.
+
+output_finder_setting_list([FirstSetting|RestOfSettings]):-
+    !,
+    output_finder_setting(FirstSetting),
+    output_finder_setting_list(RestOfSettings).
+
+output_finder_settings([]):-
+    !,
+    write('
+%---No Settings to make----------------------------------------------------
+    ').
+
+output_finder_settings([none]):-
+    !,
+    write('
+%---No Settings to make----------------------------------------------------
+    '). 
+
+output_finder_settings(Settings):-
+    !,
+    write('
+%---Settings---------------------------------------------------------------
+setting {
+
+'),
+    output_finder_setting_list(Settings),
+    nl,
+    write('}'), 
+    nl.
+
+%---------------------------------------------------------------------------
+%----Kludge to extract equality clauses from the input clauses
+
+list_difference([],[],[]).
+
+list_difference([input_clause(Name,_,_)|RestOfClauses],
+       [input_clause(Name,_,_)|RestOfClausesWithoutEquality],EqualityClauses):-
+    !,
+    list_difference(RestOfClauses,RestOfClausesWithoutEquality,EqualityClauses).
+
+list_difference([EqualityClause|RestOfClauses],ClausesWithoutEquality,
+       [EqualityClause|RestOfEqualityClauses]):-
+    list_difference(RestOfClauses,ClausesWithoutEquality,RestOfEqualityClauses).
+
+
+extract_equality_clauses(AllClauses,EqualityClauses):-
+    reload_formulae(AllClauses,[],CopyOfClauses,CopyDictionary),
+    rm_equality(CopyOfClauses,CopyDictionary,rm_equality:rtfp,
+    ClausesWithoutEquality,DictionaryWithoutEquality,_),
+    list_difference(AllClauses,ClausesWithoutEquality,EqualityClauses),
+    instantiate_variables_from_dictionary(DictionaryWithoutEquality).
+
+%---------------------------------------------------------------------------
+%----If equality is present, then generate clauses that define it.
+
+define_finder_normal_equality([]):- !. %---- no equality to define
+
+define_finder_normal_equality(_):-
+    %-----Note: Prolog variables won't be used as function names
+    write('
+%---Equality definition----------------------------------------------------
+function equal default, default -> bool.
+clause  A equal B  = ( A = B ).
+    ').
+
+define_finder_special_equality([]):- !. %---- no equality to define
+
+define_finder_special_equality(EqualityClauses):-
+    write('
+%---Special equality definition--------------------------------------------
+function equal default, default -> bool.
+
+clause {'),nl,
+    output_finder_clause_list(EqualityClauses),
+    write('}'), 
+    nl.
+
+%--------------------------------------------------------------------------
+%----Output a default sort declaration
+output_finder_default_sort(Cardinality):-
+    write('
+%---Default sort-----------------------------------------------------------
+sort default cardinality < '), 
+    write(Cardinality),
+    nl.
+%=====================================================================%
+%----Main Program Code.-----------------------------------------------%
+%----Calls each of the above modules in succession, and performs some-%
+%----appropriate error checking.--------------------------------------%
+%=====================================================================%
+%----------------------------------------------------------------------
+%----Check the name and arity of each possible setting.
+check_finder_settings([]):-
+    !.
+
+check_finder_settings([FirstSetting|RestOfSettings]):-
+    tptp2X_member(FirstSetting,
+    [
+        none,
+        solutions(_),pre_test(_),backtracks(_),current_priority(_),
+        ref_length(_),ref_length(_),stack(_),stack_margin(_),
+        verbosity(_,_,_),time_limit(_),
+        min_prob_ext(_),max_fails(_),max_theories(_),
+        test_by_vars,test_by_weight,time_stamp,no_time_stamp,noisy,quiet,
+        pretty,ugly,primary,secondary,silent_breaks,report_breaks
+       ]),
+    !,
+    check_finder_settings(RestOfSettings).
+
+check_finder_settings([Setting|_]):-
+    write('Setting "'),
+    write(Setting),
+    write('" unknown.'),
+    nl,
+    fail.
+%----------------------------------------------------------------------
+%----Check that each member of the list is a TPTP clause type.
+check_finder_type_list([]).
+
+check_finder_type_list([Head|Tail]):-
+    tptp2X_member(Head,
+[special_equality,none,all,conjecture,not_conjecture,theorem,axiom,
+hypothesis,positive,negative,unit]),
+    !,
+    check_finder_type_list(Tail).
+
+check_finder_type_list([Head|_]):-
+    write('Clause type "'),
+    write(Head),
+    write('" unknown.'),
+    nl,
+    fail.
+%----------------------------------------------------------------------
+%----Output all the clauses in FINDER format with appropriate function
+%----declarations. We can pick which clauses to declare or convert by 
+%----setting *ToDeclare* and *ToModel* parameters lists.
+%----(note that empty lists default to 'none'.)
+
+finder(finder:ToDeclare:ToModel:Settings:Cardinality,InputFormulae,_):-
+    tptp_clauses(InputFormulae),
+    check_finder_type_list(ToDeclare),
+    check_finder_type_list(ToModel),
+    check_finder_settings(Settings),
+    !, 
+%----Otherwise backtrack and output the error message below
+    output_finder_settings(Settings),
+    output_finder_default_sort(Cardinality),
+%----Use code from format.otter for this ...
+    extract_otter_sos(InputFormulae,ToDeclare,FormulaeToDeclare,_),
+    output_finder_declarations(FormulaeToDeclare),
+    extract_equality_clauses(InputFormulae,EqualityClauses),
+    (tptp2X_member(special_equality,ToModel) ->
+        define_finder_special_equality(EqualityClauses);
+        define_finder_normal_equality(EqualityClauses)
+    ),
+    extract_otter_sos(InputFormulae,ToModel,FormulaeToModel,_),
+    output_finder_clauses(FormulaeToModel),
+    nl, write('end'), nl.
+
+finder(_,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in FINDER'),
+    nl, write('end'), nl.
+
+%finder(_,_,_):-
+%    name(ErrorMessage,"
+%ERROR in the finder format string.  The correct form is ...
+%
+%   finder:ToDeclare:ToModel:Settings:Cardinality
+%
+%Where...
+%
+%*ToDeclare* and *ToModel* are comma separated lists that may contain
+%the constants 'none', 'all', 'conjecture', 'axiom', 'hypothesis',
+%'positive', 'negative', or 'unit'.
+%
+%The list *ToDeclare* specifies which clauses are to have their
+%functions declared.
+%
+%The list *ToModel* specifies which clauses are to be modelled.  This
+%list may also include the constant 'special_equality' which removes
+%the restriction that all models of the equality relation be symmetric.
+%
+%*Settings* is a comma separated list of FINDER settings expressed as
+%terms e.g. backtracks(1000).  The Prolog code will convert this to the
+%correct FINDER expression.  
+%
+%Note that these lists may need to be enclosed in single quotes to
+%protect them from the shell.
+%
+%*Cardinality* is a positive integer less than 32 that restricts the
+%size of the default sort.
+%
+%Example:
+%
+%    -f finder:all:conjecture:'backtracks(1000),time_limit(10)':5"),
+%    write(ErrorMessage),
+%    nl.
+%----------------------------------------------------------------------
+%----Provide information about the FINDER format.
+finder_format_information('%','.fin').
+%----------------------------------------------------------------------
+%----Provide information about the FINDER file.
+finder_file_information(format,finder:toDeclare:toModel:settings:cardinality,'Man this need fixing').
+%[[none,all,conjecture,not_conjecture,axiom,hypothesis,positive,negative,unit,_]]:[[special_equality,none,all,conjecture,not_conjecture,axiom,hypothesis,positive,negative,unit,_]]:[[yes,no,_]]:[[solutions(_),pre_test(_),backtracks(_),current_priority(_),
+%    ref_length(_),ref_length(_),stack(_),stack_margin(_),
+%    verbosity(_,_,_),test_after(_),time_limit(_),
+%    min_prob_ext(_),min_lowest_LOD(_),max_fails(_),max_theories(_),
+%    test_by_vars,test_by_weight,time_stamp,no_time_stamp,noisy,quiet,
+%    pretty,ugly,primary,secondary,silent_breaks,report_breaks]]:_).
+%----------------------------------------------------------------------

@@ -1,0 +1,22 @@
+
+(note "TQA51 - info missing")
+
+(abort)
+
+(not 
+ (instance HYP-PayingCasualUseFee-18391510 ServiceEvent)) 
+
+(subrelation seller providerOfService) 
+(arg1Isa providerOfService ServiceEvent) 
+
+(query (findall ?ACTION
+  (implies 
+    (and 
+      (instance ?ACTION PayingCasualUseFee) 
+      (objectPaidFor ?ACTION SuMedPipeline)) 
+    (consistent 
+      (seller ?ACTION Egypt))))) 
+ 
+(end_of_file)
+
+

@@ -1,0 +1,21 @@
+Universal > Entity, Action.
+Entity > Image, HTMLDocument, JavaClasses, CGTool.
+
+CGTool = PrologPlusCG.
+
+
+
+[CGTool : PrologPlusCG]-
+                -iconOf->[Image = "ImgPrlg.gif"],
+                -manualOf->[HTMLDocument = "PrologCGManual.htm"],
+                -codeOf->[JavaClasses = "DocTest.txt"].
+
+
+MMCGExample :-
+  [JavaClasses = y]<-codeOf-[CGTool: PrologPlusCG]-iconOf->[Image = x],
+  show(wnd1, x),
+  show(wnd2, y),
+  read(a),
+  close(wnd1),
+  close(wnd2),
+  write("The two windows have been closed."), /.

@@ -1,0 +1,89 @@
+(note TQF125)
+
+
+(physicalPartTypes ChemicalWeapon ChemicalAgent) 
+
+
+
+(not 
+ (physicalPartTypes BiologicalWeapon ChemicalAgent)) 
+
+
+
+
+(physicalPartTypes BiologicalWeapon BiologicalAgent) 
+
+(subrelation physicalPartTypes parts) 
+
+(not 
+ (physicalPartTypes ChemicalWeapon BiologicalAgent)) 
+
+
+
+
+
+(completeExtentKnown physicalPartTypes) 
+
+
+
+
+
+
+
+
+
+
+( query  (findall (?PRED ?WHAT) (or 
+ (and 
+ (subrelation ?PRED hasAttributes) 
+ (or 
+ (and 
+ (?PRED BiologicalWeapon ?WHAT) 
+ (not 
+ (?PRED ChemicalWeapon ?WHAT))) 
+ (and 
+ (not 
+ (?PRED BiologicalWeapon ?WHAT)) 
+ (?PRED ChemicalWeapon ?WHAT)))) 
+ (and 
+ (subrelation ?PRED parts) 
+ (or 
+ (and 
+ (?PRED BiologicalWeapon ?WHAT) 
+ (not 
+ (?PRED ChemicalWeapon ?WHAT))) 
+ (and 
+ (not 
+ (?PRED BiologicalWeapon ?WHAT)) 
+ (?PRED ChemicalWeapon ?WHAT)))) 
+ (and 
+ (or 
+ (and 
+ (instance BiologicalWeapon ?WHAT) 
+ (not 
+ (instance ChemicalWeapon ?WHAT)) 
+ (or 
+ (assertedFormula 
+ (instance BiologicalWeapon ?WHAT)) 
+ (assertedFormula 
+ (not 
+ (instance ChemicalWeapon ?WHAT))))) 
+ (and 
+ (not 
+ (instance BiologicalWeapon ?WHAT)) 
+ (instance ChemicalWeapon ?WHAT) 
+ (or 
+ (assertedFormula 
+ (not 
+ (instance BiologicalWeapon ?WHAT))) 
+ (assertedFormula 
+ (instance ChemicalWeapon ?WHAT))))) 
+ (not 
+ (quotedCollection ?WHAT))))  
+))
+
+(answer physicalPartTypes ChemicalAgent)
+(answer physicalPartTypes BiologicalAgent)
+
+(end_of_file)
+

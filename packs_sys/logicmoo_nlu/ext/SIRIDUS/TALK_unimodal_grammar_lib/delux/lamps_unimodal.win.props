@@ -1,0 +1,4 @@
+TRINDIKIT=../trindikit4
+GODIS=../godis
+FAC=win32/fac.exe
+SEP=;

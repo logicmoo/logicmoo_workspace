@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.34</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="prologjiti.html">
+<link rel="next" href="prologxref.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="prologjiti.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="prologxref.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:prologpack"><a id="sec:A.34"><span class="sec-nr">A.34</span> <span class="sec-title">library(prolog_pack): 
+A package manager for Prolog</span></a></h2>
+
+<p><a id="sec:prologpack"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Installed packages can be inspected using <code>?- doc_browser.</code></dd>
+<dt class="mtag">To be done</dt>
+<dd>
+- Version logic <br>
+- Find and resolve conflicts <br>
+- Upgrade git packages <br>
+- Validate git packages <br>
+- Test packages: run tests from directory&lsquo;test'.
+</dd>
+</dl>
+
+<p>The <code>library(prolog_pack)</code> provides the SWI-Prolog package 
+manager. This library lets you inspect installed packages, install 
+packages, remove packages, etc. It is complemented by the built-in <a class="pred" href="packs.html#attach_packs/0">attach_packs/0</a> 
+that makes installed packages available as libaries.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_list_installed/0"><strong>pack_list_installed</strong></a></dt>
+<dd class="defbody">
+List currently installed packages. Unlike <a class="pred" href="prologpack.html#pack_list/1">pack_list/1</a>, 
+only locally installed packages are displayed and no connection is made 
+to the internet.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Use <a class="pred" href="prologpack.html#pack_list/1">pack_list/1</a> 
+to find packages.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="pack_info/1"><strong>pack_info</strong>(<var>+Pack</var>)</a></dt>
+<dd class="defbody">
+Print more detailed information about <var>Pack</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_search/1"><strong>pack_search</strong>(<var>+Query</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_list/1"><strong>pack_list</strong>(<var>+Query</var>)</a></dt>
+<dd class="defbody">
+<var>Query</var> package server and installed packages and display 
+results.
+<var>Query</var> is matches case-insensitively against the name and 
+title of known and installed packages. For each matching package, a 
+single line is displayed that provides:
+
+<p>
+<ul class="latex">
+<li>Installation status
+
+<p>
+<ul class="latex">
+<li><b>p</b>: package, not installed
+<li><b>i</b>: installed package; up-to-date with public version
+<li><b>U</b>: installed package; can be upgraded
+<li><b>A</b>: installed package; newer than publically available
+<li><b>l</b>: installed package; not on server
+</ul>
+
+<p>
+<li>Name@Version
+<li>Name@Version(ServerVersion)
+<li>Title
+</ul>
+
+<p>Hint: <code>?- pack_list('').</code> lists all packages.
+
+<p>The predicates <a class="pred" href="prologpack.html#pack_list/1">pack_list/1</a> 
+and <a class="pred" href="prologpack.html#pack_search/1">pack_search/1</a> 
+are synonyms. Both contact the package server at <a class="url" href="http://www.swi-prolog.org">http://www.swi-prolog.org</a> 
+to find available packages.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="prologpack.html#pack_list_installed/0">pack_list_installed/0</a> 
+to list installed packages without contacting the server.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_install/1"><strong>pack_install</strong>(<var>+Spec:atom</var>)</a></dt>
+<dd class="defbody">
+Install a package. <var>Spec</var> is one of
+
+<p>
+<ul class="latex">
+<li>Archive file name
+<li>HTTP URL of an archive file name. This URL may contain a star (*) 
+for the version. In this case pack_install asks for the directory 
+content and selects the latest version.
+<li>GIT URL (not well supported yet)
+<li>A local directory name given as <code>file://</code> URL.
+<li>A package name. This queries the package repository at <a class="url" href="http://www.swi-prolog.org">http://www.swi-prolog.org</a>
+</ul>
+
+<p>After resolving the type of package, <a class="pred" href="prologpack.html#pack_install/2">pack_install/2</a> 
+is used to do the actual installation.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_install/2"><strong>pack_install</strong>(<var>+Name, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Install package <var>Name</var>. Processes the options below. Default 
+options as would be used by <a class="pred" href="prologpack.html#pack_install/1">pack_install/1</a> 
+are used to complete the provided <var>Options</var>.
+
+<dl class="latex">
+<dt><strong>url</strong>(<var>+URL</var>)</dt>
+<dd class="defbody">
+Source for downloading the package
+</dd>
+<dt><strong>package_directory</strong>(<var>+Dir</var>)</dt>
+<dd class="defbody">
+Directory into which to install the package
+</dd>
+<dt><strong>interactive</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Use default answer without asking the user if there is a default action.
+</dd>
+<dt><strong>silent</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default false), suppress informational progress 
+messages.
+</dd>
+<dt><strong>upgrade</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), upgrade package if it 
+is already installed.
+</dd>
+<dt><strong>git</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code> unless <var>URL</var> 
+ends with =.git=), assume the URL is a GIT repository.
+</dd>
+</dl>
+
+<p>Non-interactive installation can be established using the option
+<code>interactive(false)</code>. It is adviced to install from a 
+particular
+<i>trusted</i> URL instead of the plain pack name for unattented 
+operation.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_url_file/2"><strong>pack_url_file</strong>(<var>+URL, 
+-File</var>)</a></dt>
+<dd class="defbody">
+True if <var>File</var> is a unique id for the referenced pack and 
+version. Normally, that is simply the base name, but GitHub archives 
+destroy this picture. Needed by the pack manager.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_rebuild/1"><strong>pack_rebuild</strong>(<var>+Pack</var>)</a></dt>
+<dd class="defbody">
+Rebuilt possible foreign components of <var>Pack</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_rebuild/0"><strong>pack_rebuild</strong></a></dt>
+<dd class="defbody">
+Rebuild foreign components of all packages.</dd>
+<dt class="multidef"><span class="pred-tag">[nondet,multifile]</span><a id="environment/2"><strong>environment</strong>(<var>-Name, 
+-Value</var>)</a></dt>
+<dd class="defbody">
+Hook to define the environment for building packs. This Multifile hook 
+extends the process environment for building foreign extensions. A value 
+provided by this hook overrules defaults provided by <span class="pred-ext">def_environment/2</span>. 
+In addition to changing the environment, this may be used to pass 
+additional values to the environment, as in:
+
+<pre class="code">
+prolog_pack:environment('USER', User) :-
+    getenv('USER', User).
+</pre>
+
+<table class="arglist">
+<tr><td><var>Name</var> </td><td>is an atom denoting a valid variable 
+name </td></tr>
+<tr><td><var>Value</var> </td><td>is either an atom or number 
+representing the value of the variable. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="pack_upgrade/1"><strong>pack_upgrade</strong>(<var>+Pack</var>)</a></dt>
+<dd class="defbody">
+Try to upgrade the package <var>Pack</var>.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Update dependencies when updating a pack from git?
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="pack_remove/1"><strong>pack_remove</strong>(<var>+Name</var>)</a></dt>
+<dd class="defbody">
+Remove the indicated package.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="pack_property/2"><strong>pack_property</strong>(<var>?Pack, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of an installed <var>Pack</var>. 
+This interface is intended for programs that wish to interact with the 
+package manager. Defined properties are:
+
+<dl class="latex">
+<dt><strong>directory</strong>(<var>Directory</var>)</dt>
+<dd class="defbody">
+<var>Directory</var> into which the package is installed
+</dd>
+<dt><strong>version</strong>(<var>Version</var>)</dt>
+<dd class="defbody">
+Installed version
+</dd>
+<dt><strong>title</strong>(<var>Title</var>)</dt>
+<dd class="defbody">
+Full title of the package
+</dd>
+<dt><strong>author</strong>(<var>Author</var>)</dt>
+<dd class="defbody">
+Registered author
+</dd>
+<dt><strong>download</strong>(<var>URL</var>)</dt>
+<dd class="defbody">
+Official download <var>URL</var>
+</dd>
+<dt><strong>readme</strong>(<var>File</var>)</dt>
+<dd class="defbody">
+Package <code>README</code> file (if present)
+</dd>
+<dt><strong>todo</strong>(<var>File</var>)</dt>
+<dd class="defbody">
+Package <code>TODO</code> file (if present)
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

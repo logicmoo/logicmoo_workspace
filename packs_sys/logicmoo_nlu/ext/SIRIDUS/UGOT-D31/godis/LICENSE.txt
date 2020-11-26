@@ -1,0 +1,5 @@
+GoDiS is not yet distributed under any specific license.
+
+Standard copyright applies to all files in this directory....
+
+GoDiS is based on the IBiS system described in Staffan Larsson's PhD thesis "Issue-based Dialogue Management" (2002). Since then modifications of the code have been made by Staffan Larsson and David Hjelm (and possibly someone else as well).

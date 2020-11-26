@@ -1,0 +1,2 @@
+[Place *x]
+(Betw [Rock] ?x [Person]) (Attr ?x [Hard])

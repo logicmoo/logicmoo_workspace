@@ -1,0 +1,89 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_if_missong_01a,[]).
+
+:- include(test_header).
+
+:- dynamic(foob/1).
+:- dynamic(good/0).
+
+
+:- debug_logicmoo(logicmoo(_)).
+ % :- mpred_trace_exec.
+
+:- begin_pfc.
+
+% this should have been ok
+% (if_missing(Missing,Create) ==> ((\+ Missing/(Missing\==Create), \+ Create , \+ ~(Create)) ==> Create)).
+
+if_missing(Missing,Create) ==>  
+   ( ( \+ Missing/(nonvar(Missing),nonvar(Create),
+  Missing\=@=Create)) 
+ ==> Create).
+
+(good ==> if_missing(foob(_),foob(a))).
+
+(good ==> aa).
+
+:- mpred_test(\+ foob(a)).
+
+good.
+
+
+:- mpred_test(foob(a)).
+
+
+:- ain(foob(b)).
+
+:- mpred_test(\+foob(a)).
+
+:- mpred_test(foob(b)).
+
+:- ain(~foob(b)).
+
+:- mpred_test(\+foob(b)).
+
+:- mpred_test(foob(a)).
+
+
+(\+ good).
+
+:- mpred_test(\+ ~good).
+
+:- mpred_test(\+ good).
+
+:- mpred_test(\+ foob(a)).
+
+~good.
+
+:- mpred_test( ~ good).
+
+:- mpred_test( \+ good).
+
+:- mpred_test(\+ foob(a)).
+
+
+:- ain(foob(b)).
+
+
+:- mpred_test(\+foob(a)).
+
+
+:- mpred_test(foob(b)).
+
+:- ain(~foob(b)).
+
+
+:- mpred_test(\+foob(b)).
+:- mpred_test(\+foob(a)).
+
+
+
+
+
+

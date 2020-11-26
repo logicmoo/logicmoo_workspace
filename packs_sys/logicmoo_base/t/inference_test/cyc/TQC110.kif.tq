@@ -1,0 +1,72 @@
+(note TQC110)
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) Stage1-IranianStudentsAttackSAEmbassy) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) Stage1-SARequestsSecurityGuarantee) 
+
+(agent Stage1-IranianStudentsAttackSAEmbassy Iran) 
+
+(maleficiary Stage1-IranianStudentsAttackSAEmbassy SaudiArabia) 
+
+(subProcess HPKBScenarioConflict Stage1-IranianStudentsAttackSAEmbassy) 
+
+(agent Stage1-SARequestsSecurityGuarantee SaudiArabia) 
+
+(instance Stage1-IranianStudentsAttackSAEmbassy Action) 
+
+(inReactionTo Stage1-SARequestsSecurityGuarantee Stage1-IranianStudentsAttackSAEmbassy) 
+
+
+
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) Stage1-IranianStudentsAttackSAEmbassy) 
+
+(temporallySubsumes 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) Stage1-SADemandsApology) 
+
+(agent Stage1-SADemandsApology SaudiArabia) 
+
+(inReactionTo Stage1-SADemandsApology Stage1-IranianStudentsAttackSAEmbassy) 
+
+
+
+
+(existant Stage1-IranianStudentsAttackSAEmbassy 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+
+(existant Stage1-SARequestsSecurityGuarantee 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict)) 
+
+
+
+
+(existant Stage1-SADemandsApology 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict)) 
+
+
+
+
+(query (findall ?RESP
+
+ (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT Action) 
+ (maleficiary ?ACT SaudiArabia) 
+ (inReactionTo ?RESP ?ACT) 
+ (agent ?ACT Iran) 
+ (agent ?RESP SaudiArabia) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 17 HPKBScenarioConflict) ?RESP) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 16 HPKBScenarioConflict) ?ACT)))))
+
+(answer Stage1-SARequestsSecurityGuarantee)
+(answer Stage1-SADemandsApology)  
+
+(end_of_file)

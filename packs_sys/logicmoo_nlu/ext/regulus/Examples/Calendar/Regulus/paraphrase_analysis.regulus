@@ -1,0 +1,78 @@
+% Analysis-specific stuff
+
+aggregate_question_body:[sem=Body] -->
+	question_body:[sem=Body, may_include_tense=no].
+
+%mon -> monday etc
+
+day_of_week:[sem=monday] --> monday.
+day_of_week:[sem=tuesday] --> tuesday.
+day_of_week:[sem=wednesday] --> wednesday.
+day_of_week:[sem=thursday] --> thursday.
+day_of_week:[sem=friday] --> friday.
+day_of_week:[sem=saturday] --> saturday.
+day_of_week:[sem=sunday] --> sunday.
+
+%dec one -> december first 
+%dec one -> december one
+
+month:[sem=1] --> january.
+month:[sem=2] --> february.
+month:[sem=3] --> march.
+month:[sem=4] --> april.
+month:[sem=5] --> may.
+month:[sem=6] --> june.
+month:[sem=7] --> july.
+month:[sem=8] --> august.
+month:[sem=9] --> september.
+month:[sem=10] --> october.
+month:[sem=11] --> november.
+month:[sem=12] --> december.
+
+number:[sem=1, numtype=dayofmonth] --> first.
+number:[sem=2, numtype=dayofmonth] --> second.
+number:[sem=3, numtype=dayofmonth] --> third.
+number:[sem=4, numtype=dayofmonth] --> fourth.
+number:[sem=5, numtype=dayofmonth] --> fifth.
+number:[sem=6, numtype=dayofmonth] --> sixth.
+number:[sem=7, numtype=dayofmonth] --> seventh.
+number:[sem=8, numtype=dayofmonth] --> eighth.
+number:[sem=9, numtype=dayofmonth] --> ninth.
+number:[sem=10, numtype=dayofmonth] --> tenth.
+number:[sem=11, numtype=dayofmonth] --> eleventh.
+number:[sem=12, numtype=dayofmonth] --> twelfth.
+number:[sem=13, numtype=dayofmonth] --> thirteenth.
+number:[sem=14, numtype=dayofmonth] --> fourteenth.
+number:[sem=15, numtype=dayofmonth] --> fifteenth.
+number:[sem=16, numtype=dayofmonth] --> sixteenth.
+number:[sem=17, numtype=dayofmonth] --> seventeenth.
+number:[sem=18, numtype=dayofmonth] --> eighteenth.
+number:[sem=19, numtype=dayofmonth] --> nineteenth.
+number:[sem=20, numtype=dayofmonth] --> twentieth.
+number:[sem=21, numtype=dayofmonth] --> (twenty, first).
+number:[sem=22, numtype=dayofmonth] --> (twenty, second).
+number:[sem=23, numtype=dayofmonth] --> (twenty, third).
+number:[sem=24, numtype=dayofmonth] --> (twenty, fourth).
+number:[sem=25, numtype=dayofmonth] --> (twenty, fifth).
+number:[sem=26, numtype=dayofmonth] --> (twenty, sixth).
+number:[sem=27, numtype=dayofmonth] --> (twenty, seventh).
+number:[sem=28, numtype=dayofmonth] --> (twenty, eighth).
+number:[sem=29, numtype=dayofmonth] --> (twenty, ninth).
+number:[sem=30, numtype=dayofmonth] --> thirtieth.
+number:[sem=31, numtype=dayofmonth] --> (thirty, first).
+
+%06:00 -> six etc
+
+number:[sem=1, numtype=hour] --> one.
+number:[sem=2, numtype=hour] --> two.
+number:[sem=3, numtype=hour] --> three.
+number:[sem=4, numtype=hour] --> four.
+number:[sem=5, numtype=hour] --> five.
+number:[sem=6, numtype=hour] --> six.
+number:[sem=7, numtype=hour] --> seven.
+number:[sem=8, numtype=hour] --> eight.
+number:[sem=9, numtype=hour] --> nine.
+
+number:[sem=0, numtype=minute_or_second] --> [].
+
+%00:00 -> zero zero zero zero

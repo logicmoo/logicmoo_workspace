@@ -1,0 +1,9 @@
+% -----------------------------------------------------------------------------
+% Name: QUOTED TERMS DIFFERENT
+%
+% The quoted constant name '1' is not the same as the constant name 1.
+% -----------------------------------------------------------------------------
+
+fof(a, axiom, p('1')).
+
+fof(b, conjecture, p(1)).

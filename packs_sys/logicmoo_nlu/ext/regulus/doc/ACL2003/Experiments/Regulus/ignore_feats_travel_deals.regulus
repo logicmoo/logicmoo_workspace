@@ -1,0 +1,11 @@
+
+ignore_feature(takes_from_pp).
+ignore_feature(takes_with_pp).
+ignore_feature(takes_date_pp).
+ignore_feature(takes_about_pp).
+ignore_feature(takes_cost_pp).
+ignore_feature(indobj_sem_n_type).
+ignore_feature(politeness_pos).
+ignore_feature(indobj_def).
+ignore_feature(post_mod_type).
+ignore_feature(can_be_premod).

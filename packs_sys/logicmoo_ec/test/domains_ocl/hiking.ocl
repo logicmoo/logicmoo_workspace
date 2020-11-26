@@ -1,0 +1,166 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCl Domain from  GIPO Version 1.0
+ *
+ *  Author: Lee McCluskey
+ *  Institution: University of Huddersfield
+ *  Date created: September 2001
+ *  Date last modified: 2001/10/24 at 12:03:30 PM BST
+ *  Description:
+ *    Over the summer with thoughts on a walking holiday
+ *    I tried to work out the logistics of doing a more or
+ *    less circular route over several days.
+ *    Using the real experience I've come up with a nice new problem
+ *    domain. Its fairly easy and natural to explain, but leads to
+ *    planning problems that seem hard for some goal-directed
+ *    planners to solve, although the goal space is not very large.
+ *    
+ *    Imagine you want to walk
+ *    with your partner a long clockwise circular route
+ *    over several days (e.g. in the "Lake District" in NW England),
+ *    and you do one "leg" each day. You want to start at a certain
+ *    point and do the walk in one direction, without ever
+ *    walking backwards. You have two cars which you must use
+ *    to carry your tent & luggage and to carry you and your partner
+ *    to the start and end of a leg, if necessary. Driving a car
+ *    between any two points is allowed, but walking must
+ *    be done with your partner and must start from the
+ *    place where you left off. As you will be tired when
+ *    you've walked to the end of a leg, you must have
+ *    your tent up ready there so you can sleep the
+ *    night before you set off to do the next leg
+ *    the morning.
+ *    
+ *    The domain can has some interesting extensions if you
+ *    add more couples, cars or if you introduce duration etc
+ *    
+ *    This version does not use conditional transitions
+ */
+
+domain_name(hiking).
+
+% Sorts
+sorts(primitive_sorts,[car,person,tent,place,couple]).
+
+% Objects
+objects(car,[car1,car2]).
+objects(tent,[tent1]).
+objects(person,[sue,fred]).
+objects(couple,[couple1]).
+objects(place,[keswick,helvelyn,fairfield,honister,derwent]).
+
+% Predicates
+predicates([
+    at_tent(tent,place),
+    at_person(person,place),
+    at_car(car,place),
+    partners(couple,person,person),
+    up(tent),
+    down(tent),
+    walked(couple,place),
+    next(place,place)]).
+
+% Object Class Definitions
+substate_classes(person,Person,[
+    [at_person(Person,Place)]]).
+substate_classes(couple,Couple,[
+    [walked(Couple,Place),partners(Couple,Person1,Person2)]]).
+substate_classes(tent,Tent,[
+    [at_tent(Tent,Place),up(Tent)],
+    [at_tent(Tent,Place),down(Tent)]]).
+substate_classes(car,Car,[
+    [at_car(Car,Place)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    partners(couple1,sue,fred),
+    next(keswick,helvelyn),
+    next(helvelyn,fairfield),
+    next(fairfield,honister),
+    next(honister,derwent)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(put_down(Person,Place,Tent),
+    % prevail
+    [     se(person,Person,[at_person(Person,Place)])],
+    % necessary
+    [     sc(tent,Tent,[at_tent(Tent,Place),up(Tent)]=>[at_tent(Tent,Place),down(Tent)])],
+    % conditional
+    []).
+operator(put_up(Person,Place,Tent),
+    % prevail
+    [     se(person,Person,[at_person(Person,Place)])],
+    % necessary
+    [     sc(tent,Tent,[at_tent(Tent,Place),down(Tent)]=>[at_tent(Tent,Place),up(Tent)])],
+    % conditional
+    []).
+operator(drive_passenger(Person,Place,Place2,Car,Person2),
+    % prevail
+    [],
+    % necessary
+    [     sc(person,Person,[at_person(Person,Place)]=>[at_person(Person,Place2)]),
+     sc(car,Car,[at_car(Car,Place)]=>[at_car(Car,Place2)]),
+     sc(person,Person2,[at_person(Person2,Place),ne(Person,Person2)]=>[at_person(Person2,Place2)])],
+    % conditional
+    []).
+operator(drive(Person,Place,Place2,Car),
+    % prevail
+    [],
+    % necessary
+    [     sc(person,Person,[at_person(Person,Place)]=>[at_person(Person,Place2)]),
+     sc(car,Car,[at_car(Car,Place)]=>[at_car(Car,Place2)])],
+    % conditional
+    []).
+operator(drive_tent(Person,Place,Place2,Car,Tent),
+    % prevail
+    [],
+    % necessary
+    [     sc(person,Person,[at_person(Person,Place)]=>[at_person(Person,Place2)]),
+     sc(car,Car,[at_car(Car,Place)]=>[at_car(Car,Place2)]),
+     sc(tent,Tent,[at_tent(Tent,Place),down(Tent)]=>[at_tent(Tent,Place2),down(Tent)])],
+    % conditional
+    []).
+operator(drive_tent_passenger(Person,Place,Place2,Car,Tent,Person2),
+    % prevail
+    [],
+    % necessary
+    [     sc(person,Person,[at_person(Person,Place)]=>[at_person(Person,Place2)]),
+     sc(car,Car,[at_car(Car,Place)]=>[at_car(Car,Place2)]),
+     sc(tent,Tent,[at_tent(Tent,Place),down(Tent)]=>[at_tent(Tent,Place2),down(Tent)]),
+     sc(person,Person2,[at_person(Person2,Place),ne(Person,Person2)]=>[at_person(Person2,Place2)])],
+    % conditional
+    []).
+operator(walk_together(Tent,Place2,Person1,Place1,Person2,Couple),
+    % prevail
+    [     se(tent,Tent,[at_tent(Tent,Place2),up(Tent)])],
+    % necessary
+    [     sc(person,Person1,[at_person(Person1,Place1),next(Place1,Place2)]=>[at_person(Person1,Place2)]),
+     sc(person,Person2,[at_person(Person2,Place1),ne(Person1,Person2)]=>[at_person(Person2,Place2)]),
+     sc(couple,Couple,[walked(Couple,Place1),partners(Couple,Person1,Person2)]=>[walked(Couple,Place2)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(10,
+    % Goals
+    [
+     se(couple,couple1,[walked(couple1,derwent)])],
+    % INIT States
+    [
+     ss(car,car1,[at_car(car1,keswick)]),
+     ss(car,car2,[at_car(car2,keswick)]),
+     ss(couple,couple1,[walked(couple1,keswick)]),
+     ss(person,sue,[at_person(sue,keswick)]),
+     ss(person,fred,[at_person(fred,keswick)]),
+     ss(tent,tent1,[at_tent(tent1,keswick),up(tent1)])]).

@@ -1,0 +1,19 @@
+Mary asks Mary .
+Mary is a friend of at least 2 women . Mary asks Mary .
+this sentence should fail to parse
+everybody asks somebody .
+Mary does not ask Mary .
+Mary doesn't ask Mary .
+Mary isn't Mary .
+exactly 2 women don't ask Mary .
+exactly 2 women aren't mad-about John .
+for every man X there is somebody Y .
+a friend is a man of Mary .
+Mary asks nothing but women .
+there are  less than  4  2  men  .
+there are less than 0 men .
+there is less than 1 man .
+there are less than 1 0 men .
+there are less than 1 1 men .
+it is false that there are at least 2 women .
+if John is everybody then for every woman of nobody Y is everything Y .

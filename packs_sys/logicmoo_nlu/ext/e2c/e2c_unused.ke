@@ -1,0 +1,72 @@
+#|
+
+f: (ist GeneralLexiconMt (backchainForbidden denotationAndString)).
+f: (ist SPRLAnnotationGenerationMt (backchainForbidden denotationAndString)).
+f: (ist SPRLLexicalMt (backchainForbidden denotationAndString)).
+
+
+
+constant: lexicalString.
+
+In Mt: BaseKB.
+f: (ist UniversalVocabularyMt 
+     (isa lexicalString NLMorphologyPredicate)).
+f: (ist UniversalVocabularyMt 
+     (isa lexicalString NLSyntacticPredicate)).
+f: (ist UniversalVocabularyMt 
+     (isa lexicalString UnaryPredicate)).
+f: (ist UniversalVocabularyMt 
+     (isa lexicalString NLMorphologyPredicate)).
+f: (ist UniversalVocabularyMt 
+     (isa lexicalString NLSyntacticPredicate)).
+f: (ist GeneralLexiconMt 
+     (arg1Isa lexicalString CharacterString)).
+f: (ist UniversalVocabularyMt 
+     (omitFromILP lexicalString)).
+
+In Mt: GeneralLexiconMt.
+f: (implies 
+     (lexicalItemStrings ??LEX ?B) 
+     (lexicalString ?B)).
+
+;; The following assertion simulates an fi-reassert. (two of these simulate a repropagate)
+Direction: :backward.
+f: (ist GeneralLexiconMt 
+     (implies 
+       (lexicalItemStrings ??LEX ?B) 
+       (lexicalString ?B))).
+
+;; The following assertion simulates an fi-reassert. (two of these simulate a repropagate)
+Direction: :forward.
+f: (ist GeneralLexiconMt 
+     (implies 
+       (lexicalItemStrings ??LEX ?B) 
+       (lexicalString ?B))).
+
+;; The following assertion simulates an fi-reassert. (two of these simulate a repropagate)
+Direction: :forward.
+f: (ist GeneralLexiconMt 
+     (implies 
+       (lexicalItemStrings ??LEX ?B) 
+       (lexicalString ?B))).
+
+Delete.
+f: (ist GeneralLexiconMt 
+     (implies 
+       (lexicalItemStrings ??LEX ?B) 
+       (lexicalString ?B))).
+
+Enter.
+
+
+Truth Value: :default.
+Direction: :forward.
+f: (implies 
+     (lexicalItemStrings ??LEX ?B) 
+     (lexicalString ?B)).
+
+(posForms 
+    (CompoundWordFn-HeadInitial ?TheWord 
+      (WordSequenceFn "of" "expertise")) Verb) 
+
+|#

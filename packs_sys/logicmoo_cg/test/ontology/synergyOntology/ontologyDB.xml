@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Ontology>
+  <Name>D:\aminePlatform6\aminePlatform\classes\aminePlatform\samples\ontology\synergyOntology\ontologyDB.xml</Name>
+  <MixedLanguage>True</MixedLanguage>
+  <Languages>
+    <Language>English</Language>
+  </Languages>
+  <MainLanguage>English</MainLanguage>
+  <RelationRoot>Relation</RelationRoot>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <Type>
+      <Key>Universal</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Universal</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Relation</Key>
+        </Child>
+        <Child>
+          <Key>IterativeFactorial</Key>
+        </Child>
+        <Child>
+          <Key>RecursiveFactorial</Key>
+        </Child>
+        <Child>
+          <Key>Average</Key>
+        </Child>
+        <Child>
+          <Key>Age</Key>
+        </Child>
+        <Child>
+          <Key>Hire</Key>
+        </Child>
+        <Child>
+          <Key>Person</Key>
+        </Child>
+        <Child>
+          <Key>State</Key>
+        </Child>
+        <Child>
+          <Key>Time</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </Type>
+    <Type>
+      <Key>Time</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Time</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Date</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Date</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Date</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Time</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>State</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>State</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Birth</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Birth</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Birth</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>State</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Person</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Person</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Manager</Key>
+        </Child>
+        <Child>
+          <Key>Employee</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Employee</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Employee</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>Lee</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Person</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Individual>
+      <Key>Lee</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Lee</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Type>Employee</Type>
+        <Description />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Employee</Key>
+        </Father>
+      </Fathers>
+    </Individual>
+    <Type>
+      <Key>Manager</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Manager</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Person</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>Hire</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Hire</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@14ce5eb</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@14ce5eb</Key>
+      <Content>
+        <Description>[Employee : *p1 ] -
+               -In-&gt;["aminePlatform.applications.synergy_dynamic_programming.DBMethods".MgrHire : *p6 ]-Out-&gt;[Manager : *p5 ]&lt;-agnt-[Hire : *p4 ] -
+                                                                                                                                               -obj-&gt;[Employee : ?p1 ],
+                                                                                                                                               -ptim-&gt;[Date : *p3 ]&lt;-Out-["aminePlatform.applications.synergy_dynamic_programming.DBMethods".DtHire : *p2 ]&lt;-In-[Employee : ?p1 ]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Hire</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>Age</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Age</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@122dad5</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@122dad5</Key>
+      <Content>
+        <Description>[Age : *p1  ;  &amp; 21 127] -
+                      -ptim(24 75)(34 127)(34 23)-&gt;[Date : *p2  ;  &amp; 14 6]-In1(211 39)(50 23)(386 55)-&gt;["aminePlatform.applications.synergy_dynamic_programming.DBMethods".DiffDt : *p3  ;  &amp; 176 55] -
+                                                                                                                                                     -Out(208 99)(384 72)(47 127)-&gt;[Age : ?p1  ;  &amp; 21 127],
+                                                                                                                                                     &lt;-In2(399 122)(406 172)(406 72)-[Date : *p4  ;  &amp; 386 172] -
+                                                                                                                                                                                  &lt;-ptim(224 282)(69 375)(400 189)-[Birth : *p5  ;  &amp; 37 375]&lt;-pat(42 311)(49 248)(49 375)-[Person : *p6  ;  &amp; 20 231] -
+                                                                                                                                                                                                                                                  -chrc(30 187)(40 231)(40 144)-&gt;[Age : ?p1  ;  &amp; 21 127],
+                                                                                                                                                                                                                                                  -In(224 302)(70 239)(388 366)-&gt;["aminePlatform.applications.synergy_dynamic_programming.DBMethods".DtBirth : *p7  ;  &amp; 188 366]-Out(403 277)(410 366)(410 189)-&gt;[Date : ?p4  ;  &amp; 386 172]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Age</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <Type>
+      <Key>Average</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Average</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[plus : *p1  ;  &amp; 148 120] -
+                        -In1(117 183)(155 137)(79 229)-&gt;[divide : *p2  ;  &amp; 60 229] -
+                                                      -Out(52 285)(69 246)(36 325)-&gt;[Int ;  out &amp; 12 325],
+                                                      &lt;-In2(47 216)(32 204)(63 229)-[Int : 2  ;  &amp; 0 187];
+                        &lt;-In1(158 76)(154 32)(162 120)-[Int ;  in1 &amp; 133 16],
+                        &lt;-In2(206 132)(233 135)(179 129)-[Int ;  in2 &amp; 233 130]
+[Operation :super  ;  &amp; 487 195]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>RecursiveFactorial</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>RecursiveFactorial</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[multiply : *p1  ;  &amp; 411 145] -
+                            -Out,|&lt;(469 152)(438 152)(530 152)-&gt;[Int : *p2  ;  Out &amp; 530 140]&lt;-Out(534 102)(541 64)(541 140)-[Assign : *p3  ;  &amp; 508 47] -
+                                                                                              &lt;-Grd(411 54)(328 54)(508 55)-[Equal : *p5  ;  &amp; 288 50] -
+                                                                                                                            -In(365 73)(328 60)(412 87)-&gt;[Not : *p6  ;  &amp; 409 87]-Grd(417 124)(418 104)(430 145)-&gt;[multiply : ?p1  ;  &amp; 411 145],
+                                                                                                                            &lt;-In2(229 102)(184 144)(288 61)-[Int : *p7  ;  In &amp; 165 144] -
+                                                                                                                                                           -In1,&gt;|(290 151)(199 151)(411 151)-&gt;[multiply : ?p1  ;  &amp; 411 145],
+                                                                                                                                                           -In1,&gt;|(174 201)(189 161)(189 242)-&gt;[minus : *p8  ;  &amp; 178 242] -
+                                                                                                                                                                                         -In(230 248)(208 248)(262 248)-&gt;[RecursiveFactorial : *p9  ;  &amp; 262 242]-Out(394 248)(372 245)(430 252)-&gt;[Int : *p10  ;  &amp; 430 241]-In2(425 201)(438 241)(426 162)-&gt;[multiply : ?p1  ;  &amp; 411 145],
+                                                                                                                                                                                         &lt;-In2(225 217)(272 192)(193 242)-[Int : *p4  1  ;  &amp; 253 175] -
+                                                                                                                                                                                                                        -In1(302 95)(309 105)(309 67)-&gt;[Equal : ?p5  ;  &amp; 288 50],
+                                                                                                                                                                                                                        -In(499 91)(497 102)(517 64)-&gt;[Assign : ?p3  ;  &amp; 508 47]
+[Operation :super  ;  &amp; 471 197]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <Type>
+      <Key>IterativeFactorial</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>IterativeFactorial</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition>[plus : *p1  ;  &amp; 46 239] -
+                       -Next(150 178)(67 239)(254 118)-&gt;[multiply : *p2  ;  &amp; 235 101] -
+                                                          -Out(300 73)(271 101)(344 46)-&gt;[Int :y  1  ;  &amp; 331 29] -
+                                                                                      -In2,&gt;|(292 73)(344 46)(271 101)-&gt;[multiply : ?p2  ;  &amp; 235 101],
+                                                                                      -In(389 22)(381 35)(407 9)-&gt;[Assign : *p7  ;  &amp; 407 0] -
+                                                                                                                   -Out(490 8)(455 8)(526 8)-&gt;[Int ;  Out &amp; 526 0],
+                                                                                                                   &lt;-Grd(434 53)(437 90)(431 17)-[Boolean : *p6  ;  &amp; 410 90]&lt;-Out(396 138)(364 170)(428 107)-[Not : *p5  ;  &amp; 342 170]&lt;-In(343 261)(355 336)(342 187)-[Boolean : *p4  ;  &amp; 300 336] -
+                                                                                                                                                                                                                    -Grd,f(178 294)(300 338)(80 250)-&gt;[plus : ?p1  ;  &amp; 46 239],
+                                                                                                                                                                                                                    &lt;-Out(243 348)(200 352)(300 344)-[lessthan : *p3  ;  &amp; 142 346] -
+                                                                                                                                                                                                                                                      -Next(107 301)(159 346)(75 256)-&gt;[plus : ?p1  ;  &amp; 46 239],
+                                                                                                                                                                                                                                                      &lt;-In1,&gt;|(129 233)(125 120)(164 346)-[Int :x  1  ;  &amp; 93 103] -
+                                                                                                                                                                                                                                                                                 -In1,&gt;|(174 110)(143 104)(235 116)-&gt;[multiply : ?p2  ;  &amp; 235 101],
+                                                                                                                                                                                                                                                                                 -In1,&gt;|(75 179)(121 120)(59 239)-&gt;[plus : ?p1  ;  &amp; 46 239],
+                                                                                                                                                                                                                                                                                 &lt;-Out(83 179)(59 239)(121 120)-[plus : ?p1  ;  &amp; 46 239];
+                                                                                                                                                                                                                                                      &lt;-In2(145 415)(136 468)(169 363)-[Int ;  In1 &amp; 110 468],
+                                                                                                                                                                                                                                                      &lt;-Next(205 232)(260 118)(171 346)-[multiply : ?p2  ;  &amp; 235 101];
+;
+;
+;
+;
+                       &lt;-In2(34 271)(24 287)(59 256)-[Int : 1  ;  &amp; 0 287]
+[Operation :super  ;  &amp; 875 948]</Definition>
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </Type>
+    <RelationType>
+      <Key>Relation</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>Relation</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children>
+        <Child>
+          <Key>obj</Key>
+        </Child>
+        <Child>
+          <Key>agnt</Key>
+        </Child>
+        <Child>
+          <Key>ptim</Key>
+        </Child>
+        <Child>
+          <Key>chrc</Key>
+        </Child>
+        <Child>
+          <Key>at</Key>
+        </Child>
+        <Child>
+          <Key>pat</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>pat</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>pat</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>at</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>at</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>chrc</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>chrc</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>ptim</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>ptim</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>agnt</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>agnt</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+    <RelationType>
+      <Key>obj</Key>
+      <Lexicons>
+        <Lexicon>
+          <Language>English</Language>
+          <Synonyms>
+            <Synonym>obj</Synonym>
+          </Synonyms>
+        </Lexicon>
+      </Lexicons>
+      <Content>
+        <Definition />
+        <Canon />
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Relation</Key>
+        </Father>
+      </Fathers>
+    </RelationType>
+  </CSs>
+</Ontology>
+

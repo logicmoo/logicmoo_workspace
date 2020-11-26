@@ -1,0 +1,57 @@
+********** structural transformation : product to intensional image
+  IN: <(*,acid,base) --> reaction>. %1.00;0.90% {0 : 1} 
+2
+ OUT: <acid --> (/,reaction,_,base)>. %1.00;0.90% {2 : 1} 
+ OUT: <base --> (/,reaction,acid,_)>. %1.00;0.90% {2 : 1} 
+********** structural transformation : intensional image to product
+  IN: <acid --> (/,reaction,_,base)>. %1.00;0.90% {0 : 1} 
+3
+ OUT: <(*,acid,base) --> reaction>. %1.00;0.90% {3 : 1} 
+ OUT: <base --> (/,reaction,acid,_)>. %1.00;0.90% {3 : 1} 
+********** structural transformation : intensional image to product
+  IN: <base --> (/,reaction,acid,_)>. %1.00;0.90% {0 : 1} 
+3
+ OUT: <acid --> (/,reaction,_,base)>. %1.00;0.90% {3 : 1} 
+ OUT: <(*,acid,base) --> reaction>. %1.00;0.90% {3 : 1} 
+********** structural transformation : extensional image to product
+  IN: <neutralization --> (*,acid,base)>. %0.80;0.90% {0 : 1} 
+3
+ OUT: <(\,neutralization,_,base) --> acid>. %0.80;0.90% {3 : 1} 
+ OUT: <(\,neutralization,acid,_) --> base>. %0.80;0.90% {3 : 1} 
+********** structural transformation : extensional image to product
+  IN: <(\,neutralization,_,base) --> acid>. %0.80;0.90% {0 : 1} 
+2
+ OUT: <neutralization --> (*,acid,base)>. %0.80;0.90% {2 : 1} 
+ OUT: <(\,neutralization,acid,_) --> base>. %0.80;0.90% {2 : 1} 
+********** structural transformation  : extensional image to product
+  IN: <(\,neutralization,acid,_) --> base>. %1.00;0.90% {0 : 1} 
+2
+ OUT: <(\,neutralization,_,base) --> acid>. %1.00;0.90% {2 : 1} 
+ OUT: <neutralization --> (*,acid,base)>. %1.00;0.90% {2 : 1} 
+********** composition on both sides of a statement : product
+  IN: <bird --> animal>. %0.90;0.90% {0 : 1} 
+  IN: <(*,bird,plant) --> ?1>?  {0 : 2} 
+2
+ OUT: <bird --> (/,?1,_,plant)>?  {2 : 2} 
+ OUT: <plant --> (/,?1,bird,_)>?  {2 : 2} 
+2
+ OUT: <bird --> (/,?1,_,plant)>?  {4 : 2} 
+ OUT: <plant --> (/,?1,bird,_)>?  {4 : 2} 
+4
+ OUT: <(*,bird,plant) --> (*,animal,plant)>. %0.90;0.81% {8 : 1} 
+********** composition on both sides of a statement : extensional image
+  IN: <neutralization --> reaction>. %0.90;0.90% {0 : 1} 
+  IN: <(\,neutralization,acid,_) --> ?1>?  {0 : 2} 
+2
+ OUT: <(\,neutralization,_,?1) --> acid>?  {2 : 2} 
+ OUT: <neutralization --> (*,acid,?1)>?  {2 : 2} 
+2
+ OUT: <(\,neutralization,_,?1) --> acid>?  {4 : 2} 
+ OUT: <neutralization --> (*,acid,?1)>?  {4 : 2} 
+4
+ OUT: <(\,neutralization,acid,_) --> (\,reaction,acid,_)>. %0.90;0.81% {8 : 1} 
+********** composition on both sides of a statement : intensional image
+  IN: <soda --> base>. %0.90;0.90% {0 : 1} 
+  IN: <(/,neutralization,_,base) --> ?1>?  {0 : 2} 
+8
+ OUT: <(/,neutralization,_,base) --> (/,neutralization,_,soda)>. %0.90;0.81% {8 : 1} 

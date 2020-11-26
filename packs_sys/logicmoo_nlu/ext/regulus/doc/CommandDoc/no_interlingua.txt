@@ -1,0 +1,11 @@
+Applies to translation applications: converse of the command {\tt
+INTERLINGUA}, it sets the translation processing mode to perform
+direct translation from source to target, i.e.\ not through the
+interlingua. It follows that the current config file must define a
+value for the parameter {\tt transfer\_\-rules}, which should point to
+a file of direct translation rules.
+
+This applies both to interactive processing when the TRANSLATE command
+is in effect, and to batch processing using commands like
+{\tt TRANSLATE\_\-CORPUS}, {\tt TRANSLATE\_\-SPEECH\_\-CORPUS} and
+{\tt TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN}.

@@ -1,0 +1,250 @@
+%==============================================================================
+%----This outputs in CLIF format 
+%----
+%----Written by Geoff Sutcliffe, March 2008
+%----This mistreats constants that look like variables.
+%----DANGER - CONSTANTS THAT LOOK LIKE VARIABLES GET TREATED AS VARIABLES
+%==============================================================================
+%==============================================================================
+%----Generic output
+%==============================================================================
+%----Translate symbols if necessary. Only equal right now
+output_clif_symbol('$tptp_equal'):-
+    !,
+    write('=').
+
+output_clif_symbol('$tptp_not_equal'):-
+    !,
+    write('ERROR - SHOULD NOT GET HERE - PLEASE TELL GEOFF').
+
+output_clif_symbol(Reserved):-
+    tptp2X_member(Reserved,[forall,exists,iff,implies,if,and,or,not]),
+    !,
+    write(Reserved),
+    write('__clif').
+
+%---All others do as is
+output_clif_symbol(Symbol):-
+    write(Symbol).
+%------------------------------------------------------------------------------
+%----Output an atom with variables in CLIF format
+output_clif_term([OneTerm]):-
+    !,
+    output_clif_term(OneTerm).
+
+output_clif_term([FirstTerm|RestOfTerms]):-
+    !,
+    output_clif_term(FirstTerm),
+    write(' '),
+    output_clif_term(RestOfTerms).
+
+%----Normal atomic things
+output_clif_term(Term):-
+    atomic(Term),
+    !,
+    write(Term).
+
+%----Complex terms
+output_clif_term(Complex):-
+    Complex =.. [Symbol|Arguments],
+    write('('),
+    output_clif_symbol(Symbol),
+    write(' '),
+    output_clif_term(Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%----Output an atom
+clif_output_variable(Variable):-
+    write(Variable).
+%------------------------------------------------------------------------------
+%----Output an atom
+%----Constants
+clif_output_atom(_,'$true'):-
+    !,
+    write('(or)').
+
+clif_output_atom(_,'$false'):-
+    !,
+    write('(and)').
+
+%----Propositions get ()ed
+clif_output_atom(_,Atom):-
+    atomic(Atom),
+    !,
+    write('('),
+    writeq(Atom),
+    write(')').
+
+clif_output_atom(_,Atom):-
+    output_clif_term(Atom).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF output
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+clif_quantified_formula(QuantifiedFormula,CLIFQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member(ct(Quantifier,CLIFQuantifier),[ct('!',forall),ct('?',exists)]).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+clif_binary_formula(BinaryFormula,CLIFConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(CLIFConnective),
+[('<=>')-('iff'),('<~>')-('xor'),('<=')-('then'),('=>')-('if'),('&')-('and'),
+(';')-('or'),('|')-('or')]).
+%----Both needed after shorten which sets '|' somewhere - need to check
+%----|;BUG
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+clif_unary_formula(UnaryFormula,CLIFConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(CLIFConnective),[('~')-('not')]).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in oscar format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+clif_quantified_format('(',' (',' ',')',' )').
+
+%----PrefixBracket,ConnectivePrefix,ConnectiveSuffix,SuffixBracket
+clif_binary_format('(','','',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+clif_unary_format('(',' ',' )').
+%------------------------------------------------------------------------------
+%----If the formulae has an acceptable status then output
+output_clif_formulae([]).
+
+output_clif_formulae([fof(Name,Role,Formula)|RestOfFormulae]):-
+    write('(cl:comment '),
+    write('\''),
+    write(Name),
+    write(', '),
+    write(Role),
+    write('\''),
+    nl,
+%----To do by negating conjecture
+%    (Role==conjecture -> 
+%        (   write('//----This is the conjecture with negated conjecture'),
+%            nl,
+%            output_generic_prefix_formula(clif,~Formula)
+%        )
+%    ;   output_generic_prefix_formula(clif,Formula)),
+    output_generic_prefix_formula(clif,Formula),
+    write(' )'),
+    nl,
+    nl,
+    output_clif_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+output_clif_formulae_by_roles(Formulae):-
+    tptp2X_findall_setof1(Role,tptp2X_member(fof(_,Role,_),Formulae),Roles),
+    tptp2X_member(Role,Roles),
+    findall(fof(Name,Role,Formula),tptp2X_member(fof(Name,Role,Formula),
+Formulae),FormulaeWithRole),
+    write('(cl:text '),
+    write(Role),
+    nl,
+    nl,
+    output_clif_formulae(FormulaeWithRole),
+    write(')'),
+    nl,
+    nl,
+    fail.
+
+output_clif_formulae_by_roles(_).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----CNF output
+%==============================================================================
+%------------------------------------------------------------------------------
+output_clif_signed_literal(++'$tptp_not_equal'(LHS,RHS)):-
+    !,
+    output_clif_signed_literal(--'$tptp_equal'(LHS,RHS)).
+
+output_clif_signed_literal(--Atom):-
+    !,
+    write('(not '),
+    clif_output_atom(cnf,Atom),
+    write(')').
+
+output_clif_signed_literal(++Atom):-
+    clif_output_atom(cnf,Atom).
+%------------------------------------------------------------------------------
+%----Output the literals of the clause in CLIF format
+%----Special case of an empty clause
+output_clif_clause([]):-
+    !.
+
+output_clif_clause([OneLiteral]):-
+    !,
+    output_clif_signed_literal(OneLiteral).
+
+output_clif_clause([FirstLiteral|RestOfLiterals]):-
+    output_clif_signed_literal(FirstLiteral),
+    nl,
+    write('        '),
+    output_clif_clause(RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_clif_clauses([]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_clif_clauses([input_clause(Name,Role,Literals)|RestOfClauses]):-
+    write('(cl:comment '),
+    write('\''),
+    write(Name),
+    write(', '),
+    write(Role),
+    write('\''),
+    nl,
+    % write('    (or '),
+%----DANGER - CONSTANTS THAT LOOK LIKE VARIABLES GET TREATED AS VARIABLES
+    fofify_literals(Literals,Disjunction),
+    universally_quantify(Disjunction,QuantifiedDisjunction),
+    output_generic_prefix_formula(clif,QuantifiedDisjunction),
+    % output_clif_clause(Literals),
+    % write(' ) )'),
+    write(' )'),
+    nl,
+    nl,
+    output_clif_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+output_clif_clauses_by_roles(Clauses):-
+    tptp2X_findall_setof1(Role,tptp2X_member(input_clause(_,Role,_),Clauses),
+Roles),
+    tptp2X_member(Role,Roles),
+    findall(input_clause(Name,Role,Clause),tptp2X_member(input_clause(Name,
+Role,Clause),Clauses),ClausesWithRole),
+    write('(cl:text '),
+    write(Role),
+    nl,
+    nl,
+    output_clif_clauses(ClausesWithRole),
+    write(')'),
+    nl,
+    nl,
+    fail.
+
+output_clif_clauses_by_roles(_).
+%------------------------------------------------------------------------------
+%----Output all the clauses in clif format
+clif(clif,Clauses,_):-
+    tptp_clauses(Clauses),
+    output_clif_clauses_by_roles(Clauses).
+
+%----Output all the formulae in clif format
+clif(clif,Formulae,_):-
+    tptp_formulae(Formulae),
+    output_clif_formulae_by_roles(Formulae).
+%------------------------------------------------------------------------------
+%----Provide information about the clif format
+clif_format_information('//','.clif').
+%------------------------------------------------------------------------------
+%----Provide information about the clif file
+clif_file_information(format,clif,'CLIF format').
+%------------------------------------------------------------------------------

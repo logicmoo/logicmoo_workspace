@@ -1,0 +1,579 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 12.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="foreignoverview.html">
+<link rel="next" href="foreigntypes.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="foreignoverview.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="foreigntypes.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:foreignlink"><a id="sec:12.2"><span class="sec-nr">12.2</span> <span class="sec-title">Linking 
+Foreign Modules</span></a></h2>
+
+<a id="sec:foreignlink"></a>
+
+<p>Foreign modules may be linked to Prolog in two ways. Using
+<em>static linking</em>, the extensions, a (short) file defining main() 
+which attaches the extension calls to Prolog, and the SWI-Prolog kernel 
+distributed as a C library, are linked together to form a new 
+executable. Using <em>dynamic linking</em>, the extensions are linked to 
+a shared library (<code>.so</code> file on most Unix systems) or dynamic 
+link library (<code>.DLL</code> file on Microsoft platforms) and loaded 
+into the running Prolog process.<sup class="fn">189<span class="fn-text">The 
+system also contains code to load <code>.o</code> files directly for 
+some operating systems, notably Unix systems using the BSD <code>a.out</code> 
+executable format. As the number of Unix platforms supporting this 
+quickly gets smaller and this interface is difficult to port and slow, 
+it is no longer described in this manual. The best alternative would be 
+to use the <a id="idx:dld:2323">dld</a> package on machines that do not 
+have shared libraries.</span></sup>
+
+<p><h3 id="sec:foreign-linking"><a id="sec:12.2.1"><span class="sec-nr">12.2.1</span> <span class="sec-title">What 
+linking is provided?</span></a></h3>
+
+<a id="sec:foreign-linking"></a>
+
+<p>The <em>static linking</em> schema can be used on all versions of 
+SWI-Prolog. Whether or not dynamic linking is supported can be deduced 
+from the Prolog flag <a class="flag" href="flags.html#flag:open_shared_object">open_shared_object</a> 
+(see
+<a id="idx:currentprologflag2:2324"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>). 
+If this Prolog flag yields <code>true</code>,
+<a id="idx:opensharedobject2:2325"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
+and related predicates are defined. See
+<a class="sec" href="foreignlink.html#sec:12.2.3">section 12.2.3</a> for 
+a suitable high-level interface to these predicates.
+
+<p><h3 id="sec:foreign-linking-options"><a id="sec:12.2.2"><span class="sec-nr">12.2.2</span> <span class="sec-title">What 
+kind of loading should I be using?</span></a></h3>
+
+<a id="sec:foreign-linking-options"></a>
+
+<p>All described approaches have their advantages and disadvantages. 
+Static linking is portable and allows for debugging on all platforms. It 
+is relatively cumbersome and the libraries you need to pass to the 
+linker may vary from system to system, though the utility program
+<b>swipl-ld</b> described in <a class="sec" href="plld.html#sec:12.5">section 
+12.5</a> often hides these problems from the user.
+
+<p>Loading shared objects (DLL files on Windows) provides sharing and 
+protection and is generally the best choice. If a saved state is created 
+using <a id="idx:qsaveprogram12:2326"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>, 
+an <a id="idx:initialization1:2327"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+directive may be used to load the appropriate library at startup.
+
+<p>Note that the definition of the foreign predicates is the same, 
+regardless of the linking type used.
+
+<p><h3 id="sec:shlib"><a id="sec:12.2.3"><span class="sec-nr">12.2.3</span> <span class="sec-title">library(shlib): 
+Utility library for loading foreign objects (DLLs, shared objects)</span></a></h3>
+
+<p><a id="sec:shlib"></a>
+
+<p>This section discusses the functionality of the (autoload)
+<code>library(shlib)</code>, providing an interface to manage shared 
+libraries. We describe the procedure for using a foreign resource (DLL 
+in Windows and shared object in Unix) called <code>mylib</code>.
+
+<p>First, one must assemble the resource and make it compatible to 
+SWI-Prolog. The details for this vary between platforms. The swipl-<code>ld(1)</code> 
+utility can be used to deal with this in a portable manner. The typical 
+commandline is:
+
+<pre class="code">
+swipl-ld -o mylib file.{c,o,cc,C} ...
+</pre>
+
+<p>Make sure that one of the files provides a global function
+<code>install_mylib()</code> that initialises the module using calls to 
+PL_register_foreign(). Here is a simple example file mylib.c, which 
+creates a Windows MessageBox:
+
+<pre class="code">
+#include &lt;windows.h&gt;
+#include &lt;SWI-Prolog.h&gt;
+
+static foreign_t
+pl_say_hello(term_t to)
+{ char *a;
+
+  if ( PL_get_atom_chars(to, &amp;a) )
+  { MessageBox(NULL, a, "DLL test", MB_OK|MB_TASKMODAL);
+
+    PL_succeed;
+  }
+
+  PL_fail;
+}
+
+install_t
+install_mylib()
+{ PL_register_foreign("say_hello", 1, pl_say_hello, 0);
+}
+</pre>
+
+<p>Now write a file <code>mylib.pl</code>:
+
+<pre class="code">
+:- module(mylib, [ say_hello/1 ]).
+:- use_foreign_library(foreign(mylib)).
+</pre>
+
+<p>The file <code>mylib.pl</code> can be loaded as a normal Prolog file 
+and provides the predicate defined in C.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="use_foreign_library/1"><strong>use_foreign_library</strong>(<var>+FileSpec</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="use_foreign_library/2"><strong>use_foreign_library</strong>(<var>+FileSpec, 
++Entry:atom</var>)</a></dt>
+<dd class="defbody">
+Load and install a foreign library as <a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a>,2 
+and register the installation using <a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+with the option
+<code>now</code>. This is similar to using:
+
+<pre class="code">
+:- initialization(load_foreign_library(foreign(mylib))).
+</pre>
+
+<p>but using the <a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+wrapper causes the library to be loaded <i>after</i> loading of the file 
+in which it appears is completed, while <a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+loads the library <i>immediately</i>. I.e. the difference is only 
+relevant if the remainder of the file uses functionality of the 
+C-library.
+
+<p>As of SWI-Prolog 8.1.22, <a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a>,2 
+is in provided as a built-in predicate that, if necessary, loads <code>library(shlib)</code>. 
+This implies that these directives can be used without explicitly 
+loading
+<code>library(shlib)</code> or relying on demand loading.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="qsave:compat_arch/2"><span class="module">qsave</span>:<strong>compat_arch</strong>(<var>Arch1, 
+Arch2</var>)</a></dt>
+<dd class="defbody">
+User definable hook to establish if <var>Arch1</var> is compatible with <var>Arch2</var> 
+when running a shared object. It is used in saved states produced by
+<a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+to determine which shared object to load at runtime.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>foreign</code> option in <a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+for more information.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="load_foreign_library/1"><strong>load_foreign_library</strong>(<var>:FileSpec</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="load_foreign_library/2"><strong>load_foreign_library</strong>(<var>:FileSpec, 
++Entry:atom</var>)</a></dt>
+<dd class="defbody">
+Load a <i>shared object</i> or <i>DLL</i>. After loading the <var>Entry</var> 
+function is called without arguments. The default entry function is 
+composed from =install_=, followed by the file base-name. E.g., the 
+load-call below calls the function
+<code>install_mylib()</code>. If the platform prefixes extern functions 
+with =_=, this prefix is added before calling.
+
+<pre class="code">
+      ...
+      load_foreign_library(foreign(mylib)),
+      ...
+</pre>
+
+<table class="arglist">
+<tr><td><var>FileSpec</var> </td><td>is a specification for <a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>. 
+If searching the file fails, the plain name is passed to the OS to try 
+the default method of the OS for locating foreign objects. The default 
+definition of <a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+searches <var>&lt;</var>prolog home<var>&gt;</var>/lib/<var>&lt;</var>arch<var>&gt;</var> 
+on Unix and
+<var>&lt;</var>prolog home<var>&gt;</var>/bin on Windows. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a>,2 
+are intended for use in directives.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unload_foreign_library/1"><strong>unload_foreign_library</strong>(<var>+FileSpec</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="unload_foreign_library/2"><strong>unload_foreign_library</strong>(<var>+FileSpec, 
++Exit:atom</var>)</a></dt>
+<dd class="defbody">
+Unload a <i>shared object</i> or <i>DLL</i>. After calling the <var>Exit</var> 
+function, the shared object is removed from the process. The default 
+exit function is composed from =uninstall_=, followed by the file 
+base-name.</dd>
+<dt class="pubdef"><a id="current_foreign_library/2"><strong>current_foreign_library</strong>(<var>?File, 
+?Public</var>)</a></dt>
+<dd class="defbody">
+Query currently loaded shared libraries.</dd>
+<dt class="pubdef"><a id="reload_foreign_libraries/0"><strong>reload_foreign_libraries</strong></a></dt>
+<dd class="defbody">
+Reload all foreign libraries loaded (after restore of a state created 
+using <a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="win_add_dll_directory/1"><strong>win_add_dll_directory</strong>(<var>+AbsDir</var>)</a></dt>
+<dd class="defbody">
+Add <var>AbsDir</var> to the directories where dependent DLLs are 
+searched on Windows systems.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>domain_error(operating_system, windows)</code> if the current OS 
+is not Windows.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:sharedobj"><a id="sec:12.2.4"><span class="sec-nr">12.2.4</span> <span class="sec-title">Low-level 
+operations on shared libraries</span></a></h3>
+
+<a id="sec:sharedobj"></a>
+
+<p>The interface defined in this section allows the user to load shared 
+libraries (<code>.so</code> files on most Unix systems, <code>.dll</code> 
+files on Windows). This interface is portable to Windows as well as to 
+Unix machines providing <strong>dlopen</strong>(2) (Solaris, Linux, 
+FreeBSD, Irix and many more) or <strong>shl_open</strong>(2) (HP/UX). It 
+is advised to use the predicates from <a class="sec" href="foreignlink.html#sec:12.2.3">section 
+12.2.3</a> in your application.
+
+<dl class="latex">
+<dt class="pubdef"><a id="open_shared_object/2"><strong>open_shared_object</strong>(<var>+File, 
+-Handle</var>)</a></dt>
+<dd class="defbody">
+<var>File</var> is the name of a shared object file (DLL in MS-Windows). 
+This file is attached to the current process, and
+<var>Handle</var> is unified with a handle to the library. Equivalent to
+<code>open_shared_object(File, Handle, [])</code>. See also
+<a id="idx:opensharedobject3:2328"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a> 
+and <a id="idx:loadforeignlibrary1:2329"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a>.
+
+<p>On errors, an exception <code>shared_object(Action, Message)</code> 
+is raised. <var>Message</var> is the return value from dlerror().</dd>
+<dt class="pubdef"><a id="open_shared_object/3"><strong>open_shared_object</strong>(<var>+File, 
+-Handle, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:opensharedobject2:2330"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a>, 
+but allows for additional flags to be passed.
+<var>Options</var> is a list of atoms. <code>now</code> implies the 
+symbols are resolved immediately rather than lazy (default). <code>global</code> 
+implies symbols of the loaded object are visible while loading other 
+shared objects (by default they are local). Note that these flags may 
+not be supported by your operating system. Check the documentation of 
+dlopen() or equivalent on your operating system. Unsupported flags are 
+silently ignored.</dd>
+<dt class="pubdef"><a id="close_shared_object/1"><strong>close_shared_object</strong>(<var>+Handle</var>)</a></dt>
+<dd class="defbody">
+Detach the shared object identified by <var>Handle</var>.</dd>
+<dt class="pubdef"><a id="call_shared_object_function/2"><strong>call_shared_object_function</strong>(<var>+Handle, 
++Function</var>)</a></dt>
+<dd class="defbody">
+Call the named function in the loaded shared library. The function is 
+called without arguments and the return value is ignored. Normally this 
+function installs foreign language predicates using calls to
+<a class="func" href="foreigninclude.html#PL_register_foreign()">PL_register_foreign()</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:staticl"><a id="sec:12.2.5"><span class="sec-nr">12.2.5</span> <span class="sec-title">Static 
+Linking</span></a></h3>
+
+<a id="sec:staticl"></a>
+
+<p>Below is an outline of the file structure required for statically 
+linking SWI-Prolog with foreign extensions. <code>.../swipl</code> 
+refers to the SWI-Prolog home directory (see the Prolog flag <a class="flag" href="flags.html#flag:home">home</a>).
+<code>&lt;<var>arch</var>&gt;</code> refers to the architecture 
+identifier that may be obtained using the Prolog flag <a class="flag" href="flags.html#flag:arch">arch</a>.
+
+<p><table class="latex frame-void center">
+<tr><td><code>.../swipl/runtime/&lt;<var>arch</var>&gt;/libswipl.a</code> </td><td>SWI-Library </td></tr>
+<tr><td><code>.../swipl/include/SWI-Prolog.h</code> </td><td>Include 
+file </td></tr>
+<tr><td><code>.../swipl/include/SWI-Stream.h</code> </td><td>Stream I/O 
+include file </td></tr>
+<tr><td><code>.../swipl/include/SWI-Exports</code> </td><td>Export 
+declarations (AIX only) </td></tr>
+<tr><td><code>.../swipl/include/stub.c</code> </td><td>Extension stub</td></tr>
+</table>
+
+<p>The definition of the foreign predicates is the same as for dynamic 
+linking. Unlike with dynamic linking, however, there is no 
+initialisation function. Instead, the file <code>.../swipl/include/stub.c</code> 
+may be copied to your project and modified to define the foreign 
+extensions. Below is <code>stub.c</code>, modified to link the lowercase 
+example described later in this chapter:
+
+<pre class="code">
+#include &lt;stdio.h&gt;
+#include &lt;SWI-Prolog.h&gt;
+
+extern foreign_t pl_lowercase(term, term);
+
+PL_extension predicates[] =
+{
+/*{ "name",      arity,  function,      PL_FA_&lt;flags&gt; },*/
+
+  { "lowercase", 2       pl_lowercase,  0 },
+  { NULL,        0,      NULL,          0 } /* terminating line */
+};
+
+
+int
+main(int argc, char **argv)
+{ PL_register_extensions(predicates);
+
+  if ( !PL_initialise(argc, argv) )
+    PL_halt(1);
+
+  PL_halt(PL_toplevel() ? 0 : 1);
+}
+</pre>
+
+<p>Now, a new executable may be created by compiling this file and 
+linking it to <code>libpl.a</code> from the runtime directory and the 
+libraries required by both the extensions and the SWI-Prolog kernel. 
+This may be done by hand, or by using the <b>swipl-ld</b> utility 
+described in
+<a class="sec" href="plld.html#sec:12.5">section 12.5</a>. If the 
+linking is performed by hand, the command line option <strong>--dump-runtime-variables</strong> 
+(see <a class="sec" href="cmdline.html#sec:2.4">section 2.4</a>) can be 
+used to obtain the required paths, libraries and linking options to link 
+the new executable.
+
+<p></body></html>

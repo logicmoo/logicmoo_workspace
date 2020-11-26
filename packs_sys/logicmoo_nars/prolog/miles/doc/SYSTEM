@@ -1,0 +1,1346 @@
+**************************************************************************************
+**************************************************************************************
+*                          
+*                            M I L E S
+*
+*       Modular Inductive Logic programming Experimentation System
+*       
+*             Overview of modules and exported predicates
+*
+**************************************************************************************
+**************************************************************************************
+
+
+
+**************************************************************************************
+*******************MODULE argument_types**********************************************
+**************************************************************************************
+
+-  argument_types:
+   toplevel predicate for determining argument types 
+   results for each predicate p within the pos examples in a kb entry 
+   type_restriction(p(V1,..,Vn),[type1(V1),...,typen(Vn)]) 
+
+-  type_equal(+Type_name1,+Type_name2):
+   Tests whether the types Type_name1 and Type_name2 are defined identically
+   (up to different type names)
+
+-  type_sub(+Gen,+Spec):
+   Gen, Spec: type names or intermediate type definitions t_int(H):- B (cf. type_of).
+   succeeds if the type Gen is more general than the type Spec. 
+
+-  type_of(+Var,+C,-Type):
+   Returns the most specific type of Var within clause C. 
+   If Var does not occur in C or if it occurs at positions with incompatible 
+   types, type_of returns fail. If Var is a term that only partially matches 
+   the body of a type definition, a intermediate type definition 
+   t_int(Var):- B is returned
+
+-  types_of(+Varlist,+C,-Typelist):
+   like type_of for each Var in Varlist.
+   Varlist = [V1,..,Vn] => Typelist = [V1:T1,..,Vn:Tn]
+
+-  compare_types(+Type1,+Type2,-Type):
+   Type1,Type2: types to be compared
+   Type: the most specific type among type1 and typ2
+
+-  define_type: allows to define a type restriction for a predicate
+
+-  verify_types: checks for the type restrictions in the kb whether 
+   they contain only defined or built-in types. If not,
+   the user is asked for replacing or defining the unknown types.
+
+
+
+**************************************************************************************
+**********************MODULE bu_basics************************************************
+**************************************************************************************
+
+-  process_new_literals(+[H:Proof|_],-Flag):
+   H = Lit/M where M is in {new_head,new_body}, or H = []
+   Proof = [[Lit,N],..,[],...] where N in {head,body} 	
+   asserts all new heads and bodies of matched clauses via head/3 and body/3
+   Flag = 1 if at least one existed
+
+-  abs_process_proofs(+Proofs,-Head):
+   Proofs = [CL1,..,CLn] where CLi is a clause in list notation
+   Head: a head literal								
+   returns a head literal from one of the CLi, and retracts
+   the according body literals body(L,_,_) of CLi (destructive absorption)
+
+-  ident_process_proofs(+[[H:Proof]|_],-Head):
+   H = Lit/M where M is in {new_head,new_body}, or H = []
+   Proof = [[Lit,N],..,[],...] where N in {head,body}
+   Head: a literal
+   returns a head literal from one of the H:Proof, and retracts  the according literals 
+   from Proof from the kb
+
+-  g1_process_proofs(+[[H:Proof]|_],-Lit):
+   H = Lit/M where M is in {new_head,new_body}, or H = []
+   Proof = [[Lit,N],..,[],...] where N in {head,body}
+   Lit:  a literal and its sign
+   returns the resolution literal from one of the H:Proof, and retracts 
+   the according literals from Proof from the kb
+
+-  assert_assorptions(+[CL|_],-Flag):
+   CL: clause in list notation
+   asserts heads H of all absorbed clauses, if new, as  body(H,_,_). Flag=1 if at 
+   least one existed	
+
+-  annotate_redundancy(+Proof):
+   Proof: clause in list notation
+   increments counter for each body literal in Proof
+
+-  assert_body_randomly(+Clause_list):
+   +Clause_list ... Clause in list notation
+   assert body literals in random order
+
+-  addtolist(+ToAdd):								
+   ToAdd .. Id or list of Id''s
+   asserts list of Id''s	
+
+-  getlist(-ID_list):								
+   retracts the list of id''s that has been asserted by addtolist/1	
+
+-  cover_assert_assumptions(+Clause_list):
+   Clause_list .. clause in list representation
+   asserts for each literal L in Clause_list assumption(L,_,_) in the kb	
+
+-  clear_mngr:								
+   retracts all head/3 and body/3 within the knowledge base
+
+-  retract_body_literals(+CL):
+   CL: clause in list notation
+   retracts body(L,_,_) for each L:_ in CL
+
+-  retract_literals(+[[Lit,N]|_]):
+   N in {head,body}								
+   retracts head(Lit,_,_)/body(Lit,_,_) for each [Lit,head]/ [Lit,body] in the input
+
+-  assert_literals(+[[Lit,N]|_]):
+   N in {head,body}							
+   asserts each Lit with [Lit,N] in the input as N(Lit,_,_)
+
+-  assert_clause(+CL):								
+   CL .. clause in list representation
+   asserts positive literals L in CL as head(L,old,0),
+   negative and redundant literals as body(L,old,0).
+
+-  assert_body(+CL):								
+   CL ... clause body in list representation (only negative and redundant literals)
+   asserts each literal L in CL as body(L,old,0)
+
+-  assert_body_unique(+CL)
+   CL ... clause body in list representation (only negative and redundant literals)
+   as assert_body/1, but tests whether body(L,_,_) is already in the kb
+
+-  reset_counts:						
+   for each kb-entry head(Lit,_,Count) and body(Lit,_,Count), Count is set to 0
+
+-  subs_build_clause(-CL):
+   CL ... Horn clause in list representation
+   retracts one entry head(H,_,_) and all entries  body(L,_,_) and builds clause 
+   [H:p,..,L:p,...]
+
+-  sat_build_clause(+H,+B,-CL):
+   H ... head
+   B ... list of body literals
+   CL ... Horn clause in list representation
+   build clause CL = [H:p,...,L:M,....] for each L in B, M is n, if body(L,_,_) is 
+   true, else M is r
+
+-  msg_build_long_clause(-CL):
+   CL ... a general clause in list representation
+
+-  msg_build_heads(-CL):								
+   CL ... clause in list representation, consisting only of positive literals
+   collects all Literals L such that head(L,_,_) is in kb, and returns
+   CL = [...,L:p,....]
+
+-  msg_build_body(-CL):								
+   CL ... clause in list representation, consisting only of negative and 
+   redundant literals
+   collects all Literals L such that body(L,_,_) is in kb, and returns 
+   CL = [...,L:M,....], M in {n,r}
+
+-  idev_build_clause1(-CL):
+   CL .. Horn clause in list representation
+
+-  idev_build_body(-CL):								
+   CL ... clause in list represenation, only negative and redundant literals
+   collects all L such that body(L,_,_) is in kb
+ 
+-  idev_build_clause(+H,-CL):
+   CL .. clause in list representation
+   H ... preferred head of CL
+   as idev_build_clause1/1, but with preferred head in CL
+
+-  idev_build_head(+PrefH,-H):
+   PrefH, H .. clause heads
+   returns H such that head(H,_,_) in kb and PrefH and H
+   unifiable. If none exists, the first H with head(H,_,_) in kb is returned.
+
+-  ident_build_body(-CL):
+   CL ... clause in list notation, contains only negative literals
+   CL = [...,L:n,...] for each L such that body(L,_,0) in kb
+
+-  g1_build_clause(+ResLit,-CL):
+   CL ... Horn clause in list notation
+   ResLit ... the resolution literal
+   CL is the second parent clause for the g1-operator
+
+-  abs_build_body(-CL):							
+   CL .. clause in list representation, contains only negative literals
+   CL = [...,L:n,....] for each L such that body(L,_,_) in kb
+
+
+
+**************************************************************************************
+************************MODULE clause_heads*******************************************
+**************************************************************************************
+
+-  clause_heads:
+   algorithm for determining clause heads covering all positive examples in
+   the kb; generates database entrys of the form known(ID,Head,true,CList,head,_)
+
+-  heads(-HL):
+   returns list of heads covering all positive examples in the kb
+
+-  heads(+Pred,+Arity)
+   determines clause heads covering all positive examples for Pred/Arity and asserts
+   them in the kb
+
+-   heads(+Pred,+Arity,-HL)
+    returns list of heads covering all positive examples for Pred/Arity
+
+
+
+
+**************************************************************************************
+************************MODULE div_utils**********************************************
+**************************************************************************************
+
+-  remove(+I,+L,-L):								
+   I .. number, L ... list of numbers
+   removes I from L (I occurs at most once in L)
+
+-  sort_by_length(+L,+Accu,-Accu):
+   L ... list of lists
+   Accu ... L sorted increasingly according to the length of sublists
+   sorts a list of lists increasingly according to the length of sublists		
+
+-  mysetof(+Template,+Generator,-Set):
+   as setof/3, but succeeds with Set = [], if Generator fails	
+
+-  sum(+LN,-S):								
+   LN .. list of numbers, S number
+   if LN = [I1,..,In], then S = I1 + ... + In
+
+-  efface(+E,+L,-L):								
+   E .. element of list L								
+   removes the first element of L that is unifiable with E from L.	
+
+-  effaceall(+E,+L,-L):								
+   E .. element of list L								
+   as efface, but allows backtracking
+
+-  best(+List,-Elem):								
+   returns the first element of List, on backtracking the second etc.
+
+-  buildpar2(+Lit:M,+CL,-CL1):
+   Lit .. literal, M in {p,n,r}, CL and CL1 clauses in list representation
+   if M = p then CL1 = [Lit:p|CL]  else CL1 results from CL by adding Lit:M at the end
+
+-  neg(+Lit:M,-Lit:M1):
+   Lit .... literal, M in {p,n,r}
+   switches the mark of the literal, i.e. if M = p then M1 = n and vice versa
+
+-  contains_duplicates(+L):
+   succeeds if L contains two unifiable elements
+
+-  identical_member(+Elem,+List):   
+   succeeds if Elem is identically (==) contained  in List	
+
+-  convert_to_horn_clause(+PHead,+CL,-HCL)
+   PHead ... preferred head
+   CL ... general clause in list representation
+   HCL ... horn clause in list representation
+   if CL = [H1:p,..,Hn:p,L1:M1,..,Lm:Mm] where Mi in {p,r}
+   then HCL = [Hj:p,L1:M1,...,Lm:Mm], where Hj is the first
+   head in CL unifiable with PHead (if one exists), else the first head in CL
+
+-  extract_body(+CL,-CL1):
+   CL .. clause in list representation
+   CL1 = [...,L:M,...] where M in {p,n} and L in CL
+
+-  list_to_struct(+L,-C):
+   L ... list, C ... conjunction of elements of L
+   if L = [E1,...,En] then C = (E1,..,En)
+
+-  clist_to_prolog(+CL,-C)
+   CL .. Horn clause in list representation
+   C ... Horn clause in prolog format
+   convert list format to clause format and vice versa (should use body2list!!)
+
+-  append_all(+LL,-L):								
+   LL .. list of lists, L .. list
+   appends all lists in LL -> L
+
+-  maximum(+L,-M):								
+   L .. list of numbers, M number
+   M is the maximum element of L
+
+-  myforall(+E,+Pred):								
+   E ... argument terms, Pred .. type predicate
+   calls Pred(e) for each e in E, and succeeds only if every call succeeds
+
+-  identical_make_unique(+L,-L1):
+   removes all identical duplicates (==) from L
+
+-  remove_v(+L0,+L,-L1):
+   removes each E in L0  from L if E is identically (==) contained  in  L	
+
+-  make_unique(+L,-L1):							
+   removes all duplicates (variant) from L
+
+-  variant_mem(+Elem,+List):
+   succeeds if an alphabetical variant of Elem is contained in List
+
+-  different_predicates(+L,-LL):
+   L .. list of terms, LL list of lists of terms
+   for each functor f/n occuring in L, LL contains a list Lf 
+   consisting of all terms in L with principal functor f/n	
+
+-  nth_arg(+E,+N,-Args):								
+   E ... list of terms with principal functor p/n
+   N =< n argument position
+   Args ... list of argument terms
+   Args = {A | arg(N,P,A) and P in E}
+
+-  split_examples(+E,+Term,-P,-N):
+   P = {e in E | Term, e unifiable}
+   N = E - P	
+
+-  shares_var(+T,+Ts):						
+   T: a term or a clause,Ts: a list of terms or clauses
+   tests if T shares at least one variable with the terms in t	
+
+-  body2list(?B,?BList):
+   B: Body of a clause (L1,...,Ln)	
+   BList: [L1:x,...,Ln:x] where x is in {r,n}
+   transforms a clause body to a list of its literals
+   where each literal is augmented by :n (i.e. negative clause literal)
+   or :r (i.e. recursive goal in the clause body). works in both directions
+
+-  insert_unique(+N,+L,-L1):
+   N .. number, L,L1 sorted lists of numbers
+   inserts N uniquely in the ascendingly sorted list L
+
+-  insert_unique(+ID,+A,+L,-L1):
+   ID,A .. numbers, L,L1 = [...,ID:List,...]
+   inserts A in the sublist identified by ID in L
+
+-  genterm_test(+X/T,+Subst):
+   X/T element of a substitution, Subst substitution
+   succeeds if Subst contains a tuple Y/T1 such that T1 == T. In that case, X and Y 
+   are unified.
+
+-  subset_chk(+L,+L1):	
+   succeeds, if L is a subset of L1 (without unification)
+
+-  subterm_at_position(+Term,-Sub,+Pos,-Pos):
+   Term, Sub: Prolog terms
+   Pos: position of Sub within Term (a list of numbers)
+   returns a subterm of Term and its position, on backtracking further subterms
+
+-  part_of_clause(+Term,+Clause):						
+   Term: a prolog term, Clause: a prolog clause
+   succeeds if Term is a literal within clause, a part of the clause body or the 
+   clause itself
+
+
+
+**************************************************************************************
+************************MODULE environment********************************************
+**************************************************************************************
+
+-  oracle( + Literal):
+   membership queries "Is the following literal always true?" 
+   -> succeeds iff oracle answers yes
+
+-  oracle( + List_of_Clause_Ids, - Example_Id):
+   subset queries "Are the following clauses always true?"
+   If not, the user might supply a counter example.
+   Fails only if the oracle answers "no" AND does not supply a counter example
+
+-  oracle( + PnameAtom, - NewNameAtom):
+   name queries "How would you like to call predicate pXYZ", where pXYZ is a 
+   new predicate. The oracle may use every atom as answer. However, the atom 
+   "list" causes the system to show every known predicate symbol within 
+   the knowledge base
+   The predicate returns the new predicate name, but does not replace the old 
+   name by the new one within the kb.  
+
+-  oracle(+Lit, -InstLit):							
+   existential queries "Is there a correct instance of the following literal?"
+   If yes, the oracle supplies an instance -> InstLit. Else, the predicate fails
+
+-  oracle( + QuestionAtom, ? DefaultAtom, - AnswerAtom):
+   general questions with default answers. If no default is necessary, 
+   use ''_'' as second argument
+
+-  satisfiable(+SG_list):
+   SG_list ... list of subgoals [...,[ID,Subgoal,Proof],...]
+   each Subgoal in SG_list is tested on satisfiability. The oracle is used 
+   if the satisfiability of Subgoal can not be decided on the available knowledge
+
+-  ask_for(+Goal):								
+   succeds if the ground atom Goal is valid in the kb, or declared to be
+   valid by the oracle
+
+-  confirm(+Clause_IDs,+Oldterm):	
+   Clause_IDs .. list of clauseIDs, 
+   Oldterm.. term of the predicate to be replaced	
+   confirm new clauses and rename the new predicate (using the oracle)
+   if oracle refuses the new clauses, delete them; if they are accepted, 
+   delete the old ones (see g2_op).
+
+-  get_ci(+L,-L)
+   reads the IDs of the Ci used for the g2-operator one by one
+
+
+
+**************************************************************************************
+**********************MODULE evaluation***********************************************
+**************************************************************************************
+
+-  covered_examples(-CE):
+   returns IDs of all covered positive examples
+
+-  complexity(+ClauseID,-Size):
+   for kb references:complexity/2 calculates the size of a clause,		
+   defined to be the number of constant and function symbol occurences 
+   in the literals of the clause.	
+
+-  complexity(+CL,-Size):
+   for clauses in list representation
+
+-  complexity(List_of_ClauseIDs,-Size):
+   for a list of kb references
+
+-  complexity(+Term,-Size):
+   for arbitrary prolog terms ( but not integers)
+
+-  complexity(+usr,-Size):
+   for all clauses with label usr
+
+-  complexity(+examples,-Size):
+   for all examples
+
+-  eval_examples:
+   One should use this to compute the evaluation for kb clauses!
+    o  asserts for each example ID prooftrees(ID,Mark,Proofs), where
+       Mark in {success,fail} and Proofs are the successful/failing
+       proofs accordingly
+    o  determines the evaluation of each rule in the kb according to
+       the current examples
+
+-  eval_pos_examples ( - List_of_Exs ):	
+   Evaluate (= try to prove) all positive examples, return a list of the
+   ones which *cannot* be proved (empty list if successful).	
+   Output-argument looks like [exID1:Fact1, exID2:Fact2, ...].		
+      !!!Procedure does not compute evaluation for clauses!!
+
+-  complete_chk: 								
+   fails if not all *positive* examples covered
+   Does not compute evaluation for clauses!!
+
+-  correct_chk: 								
+   fails when first *negative* example covered	
+   Does not compute evaluation for clauses!!
+
+-  fp(-OR):						
+   a kind of shapiro''s contradiction backtracing that aims to detect possibly 
+   overgeneral clauses. As it does not use an oracle, all possibly overgeneral
+   clauses are considered and a minimal combination such that all negative 
+   examples become uncovered is returned.
+   Allows backtracking to an alternative set of possibly overgeneral clauses
+   OR is a list [I:E,...], where I is the index of a possibly overgeneral clause 
+   and E is the set of wrong (head-)instantiations of clause I that should be 
+   excluded by specializing I. OR is a minimal selection of possibly overgeneral 
+   clauses such that by specialising them all negative examples become uncovered.
+   On backtracking, the second selection is returned, and so on.
+
+-  fpo(-OR):						
+   as fp/1, but uses oracle
+   Allows backtracking to an alternative set of possibly overgeneral clauses
+
+-  ip(-UA_List)							
+   UA_List ... list of ground atoms
+   Shapiro''s algorithm for diagnosing finite failure ip in our framework. Returns 
+   a set of ground atoms that has to be covered to make all uncovered positive        
+   examples succeed. Allows backtracking on alternative sets of ground atoms
+   that make all examples succeed. 
+
+
+
+
+**************************************************************************************
+*************************MODULE filter************************************************
+**************************************************************************************
+
+-  connected_vars(+ClauseIn,-ClauseOut,-Connected,-Unconnected): 
+   ClauseIn,ClauseOut: clauses in list notation		
+   Connected,Unconnected: list of variables          		
+   returns connected & unconnected vars 			
+   A variable is connected ( to the head literal ) iff   
+	  - it appears in the head, or	
+	  - it appears in a literal with  a connected variable
+    A literal is connected iff it''s vars are.	
+
+-  is_connected(+Clause):	
+    a clause is connected if every variable is connected to the head.  
+
+-  is_flat(+Clause), is_unflat(Clause):			
+   succeeds/fails if Clause contains no function symbols	
+
+-  truncate(+Strategy,+ClauseIn,-ClauseOut):			
+   Strategy: one of { r, unconnected, unconnecting,strongly_generative}       
+   ClauseIn,ClauseOut: integers	(kb references)			
+   performs truncation operator on ClauseIn using Strategy
+   The list of possible strategies is to be completed.	
+
+-  truncate_r(ClauseIn,ClauseOut), truncate_r(ID):
+   drop all literals with label '':r'', i.e. drop all literals that were used 
+   in saturation.
+
+-  truncate_flat_r(ClauseIn,ClauseOut), truncate_flat_r(ID):
+   drop all true literals with label '':r'', i.e. drop all literals that were 
+   used in saturation, but no literals with type information ( suffix ''_p'').
+
+-  truncate_unconnected(+ClauseIn, -ClauseOut):			
+   truncate unconnected body literals (see above)		
+
+-  truncate_unconnecting(ClauseIn,ClauseOut):			
+   connectivity heuristics for truncation: Drop a body literal if all 
+   other literals remain connected. We added another constraint: the resulting 
+   clause must be weakly generative.  		
+   Do not confuse the connectivity with the connectedness heuristics !!	
+
+-  truncate_strongly_generative(+ClauseIn,-ClauseOut):		
+   drop one body literal from a strongly generative clause s.t. the resulting 
+   clause is also strongly generative.						
+
+-  truncate_neg_based(+ClauseID)                        		
+   truncate as many literals as possible, s.t. the resulting clause covers no  
+   negative examples. This only works on unflat clauses; i.e. it only accounts 
+   for dropping condition.           
+
+-  truncate_flat_neg_based(+ClauseID)                        		
+   truncate as many literals as possible, s.t. the resulting clause covers no 
+   negative examples. As initial condition, the kb must be unflat. The truncation is 
+   done on the flattened clause, so that this accounts for the dropping rule & 
+   inverse subst. On exiting, the kb is unflat.
+
+-  truncate_j(+ClauseID,J)			
+   J : integer = number of allowed new variables per literal	
+   truncate all literals containing more than J variables not appearing in the head 
+   of kb clause ClauseID.             	
+   truncate_j is remotely related to Muggleton''s ij-determination. We take i = 1. 
+   More importantly, we cannot tell in our system, if a	literal is determinate or not,
+   since we have no model.     
+
+-  truncate_facts(+ClauseID)                            		
+   truncate all body literals unifying with a kb fact labeled ''usr''.	
+
+-  is_weakly_generative(+Clause)	
+   a clause is weakly generative if all vars of its head appear also in another 
+   literal
+
+-  is_strongly_generative(+Clause)	
+   a clause is strongly generative if every variable appears in at least 2 literals
+
+-  noduplicate_atoms(+Clause) 
+   tests whether the prolog clauseClause  contains duplicate literals 
+
+-  noduplicate_atom(+P,+B) 
+   P: literal  
+   B: clause body 
+   tests if P already occurs(==) in B 
+
+-  select_var_sharing_lits(+List_of_Clauses,-List_of_Clauses)
+   removes all clauses from List_of_Clauses the last literal of which does not 
+   share a variable with the rest of the clause -> to be used during td-refinement
+   (not to add unconnected body literals)
+
+-  already_in(+N,+P,+Y)                     					
+   N: arity of a literal P 
+   P: literal
+   Y: term
+   succeeds if Y is(==) already an argument of P  
+
+
+
+**************************************************************************************
+***************************MODULE flatten*********************************************
+**************************************************************************************
+
+  Rouveirol''s representation change to  function free Horn clauses. Shared variables 
+  are deteced. Following the later versions of flattening(''90,''91) identical terms are 
+  only represented once thru a new body literal. The older version (1989) introduced	
+  for each occurence of a term a unique new body literal. 
+
+  In the process of flattening all literals that are introduced for functions end 
+  with the suffix "_p".	In return, when unflattening a clause it is assumed that every 
+  predicate symbol ending in "_p" stems from a function. This assumption is made 
+  because the names for functions and predicates need to be distinct.	
+
+    DON''T FLATTEN ANY CLAUSE CONTAINING LITERALS ENDING IN "_p" !!! 
+
+-  flatten_term(+Term, -Literals):			
+   Term: term to be replace by a variable, e.g. [a,b]        
+   Literals: list of literals to replace Term		
+
+-  flatten_literal(+Lit,-Lit_list):
+   returns the list of literals Lit has to be replaced with
+
+-  flatten_clause(+ClauseIn,-ClauseOut)  			
+   works on clauses in prolog notation, i.e. ( head :- body ) or list notation, 
+   i.e. [ head:p , b1:n, b2:n, ... ]		
+
+-  unflatten_clause(+FlatClause,-UnFlatClause)
+   FlatClause : flattened clause (either in list or prolog notation) 
+   UnFlatClause : unflattened clause                                      
+   Algorithm for unflattening: (Rouveirol,91.p131)                               
+     for each flattened predicate f_p(t1,..,tn,X) in the body of clause C 
+        substitute all occurences of X by the functional term f(t1,..tn)     
+        & drop f_p(t1,...,tn,X)
+
+
+
+
+**************************************************************************************
+************************MODULE g1_ops*************************************************
+**************************************************************************************
+
+-  apply_g1( + NewClauseId, - List_of_ResultIds ):
+   Implementation of Ruediger Wirth''s G1-operator for inverse resolution corresponding 
+   to his 1989 PhD thesis.
+   One might want to use apply_g1/2 if a new clause of background
+   knowledge is added to the kb and the G1-operator is to be applied.
+   If there already is a suitable "V", it will be extended and the
+   lgg of two A''s will be built.
+
+                        A
+                Bi     / \     Bj
+                  \   Ai  Aj  /
+                   \ /     \ /
+                    Ci      Cj
+             
+   If a clause A can be built as lgg of Ai and Aj (extend_g1/2), Ai and Aj will
+   be deleted. 
+
+-  g1_op ( +ResolventID, +Parent1ID, -Parent2ID ), 
+   g1_op ( +ResolventID, +Parent1ID, -Parent2ID, + Label ):
+   given a resolvent and one parent clause, the second parent clause is constructed
+
+-  absorb(+ExID, ?Parent1ID, -NewID):			
+   apply one absorption step on input clause ExID; if Parent1ID is given, it 
+   is tried to perform the absorption step with it as known parent. The resulting
+   clause is stored under NewID               
+   Otherwise absorption will be performed with the first applicable background clause.
+   It is made sure that no 2 literals of a parent clause abs_match the same 
+   literal in the resolvent.	
+
+-  identify(+ExID, ?Parent1ID, -NewID):				
+   apply one identification step on input clause ExID; if Parent1ID is given, it is 
+   tried to perform the identification step with it as known parent. The resulting
+   clause is stored under NewID                           
+   Otherwise identification will be performed with the first  applicable background
+   clause. It is made sure that no 2 literals of a parent clause ident_match the 
+   same literal in the resolvent.
+
+-  inv_derivate(+ExID,-NewID),                                   
+   inv_derivate(+ExID,+PrefHead,-NewID):                                    
+   Muggleton''s inverse linear derivation; But: while in intermediate stages 
+   several head literals might appear simultanously, the result will always      
+   be a Horn clause. As head literal we choose the latest one derived in 
+   inv_derivate/2. inv_derivate/3 takes as additional argument a literal, which is 
+   interpreted as a preferred head. If it is possible, inv_derivate/3 results         
+   in a Horn clause where the head matches this literal. The operator is restricted 
+   to finding clauses at most 100 inverse resolution steps away.                      
+
+-  most_spec_v(+ExID, ?PID, -NewID):                             
+   Apply one most-spec-v operation to example with parent PID;    
+   If PID is not given, take the first applicable clause          
+   of bg as parent.                                               
+   The most specific v comprises the most specific absorption     
+   and the most specific identification.                          
+   Since we always want Horn clauses as a result, this operator   
+   does not implement the most specific identification as         
+   described by Muggleton: Instead of adding a second head        
+   literal to the old clause, we replace the original head.       
+   I.e. our most specific identification operator is destructive. 
+   The most specific absorption remains nondestructive            
+
+-  saturate(+ExID, -NewID), saturate(+ExID,-NewID,+Bound):
+   apply elementary saturation w.r.t. background clauses. It is bounded by at most 
+   100 iterations, if bound is not given. When checking the preconditions for 
+   firing one absorption step, it is made sure that no 2 literals of a parent 	        
+   clause subsume the same literal in the resolvent.
+									
+-  elem_saturate( +ExID, ?PID, -NewID):				
+   Add head of parent from bg to body of resolvent. The Operator is identical to 
+   Muggleton''s most-specific-absorption. When checking the preconditions for 
+   firing one absorption step, it is made sure that no 2 literals of a parent 	        
+   clause subsume the same literal in the resolvent.					
+
+
+
+
+**************************************************************************************
+*************************MODULE g2_ops************************************************
+**************************************************************************************
+
+-  intra_construct1(+C1,+C2,-A,-B1,-B2),	           		
+   intra_construct1(+C1,+C2,-A,-B1,-B2,PName),			
+   intra_construct1(+C1,+C2,-A,-B1,-B2,PName,Bound):			
+   C1,C2,A,B1,B2: references to clauses in kb			
+   PName:  atom - name of invented predicate
+   Bound: integer		
+   intra-construction where C1,C2 are at bottom of W, A at the center top, B1,B2 
+   at outside top positions. S1(A) in C1, S2(A) in C2; the substitutions 		
+   between Bi & Ci are empty. Uses an ITOU-like heursitics for determining relevant
+   variables for the new predicate.
+   Our intra-construction will only work, if the two input clauses require the 
+   same number of arguments for the newly invented predicate. This restriction is 
+   not part of the original definition of intra-construction, but its at least	
+   a very useful heuristics. 
+
+-  intra_construct2(+C1,+C2,-A,-B1,-B2),	           		
+   intra_construct2(+C1,+C2,-A,-B1,-B2,PName),			
+   intra_construct2(+C1,+C2,-A,-B1,-B2,PName,Bound):			
+   Uses a CIGOL-like heursitics for determining relevant variables for the new 
+   predicate
+                                                                     
+-  g2_op ( + C1_ID, + C2_ID, - A_ID, - B1_ID, - B2_ID)
+   Implementation of Ruediger Wirth''s G2-operator for inverse resolution corresponding 
+   to his 1989 PhD thesis.     
+   We generalize the Ci using Plotkin''s LGG, then build a new predicate as resolution 
+   literal, find the argument terms for the new predicate (in a heuristic manner) and 
+   finally build the Bi using our G1-operator.
+   The compression achieved is evaluated thru a simple, though quite sophisticated 
+   complexity heuristic. If the resulting clauses show some compression, the are passed 
+   to the oracle for confirmation and the user gets a chance to rename the new predicate.
+   Clauses which become obsolete during the process will be deleted.
+                                                                     
+-  apply_g2( + CC, - A, -BB):
+   tries to apply the G2-operator to a set of clauses Ci.
+   The output will be a kb reference of the common parent clause A and a list of id''s 
+   for parent clauses Bi.
+
+                             Bi     A     Bj
+                               \   / \   /
+                                \ /   \ /
+                                Ci    Cj
+
+-  apply_g2( - A, -BB):
+   ORACLE is asked to enter the Id''s of resolvent clauses Ci one by one. 
+   This continues until oracle says ''stop''. Doubles and answers which are not a number 
+   are ignored. Finally apply_g2/3 is called.
+
+-  apply_g2 ( + C1_ID, + C2_ID, - A_ID, - B1_ID, - B2_ID):
+   simply calls g2_op/5
+
+
+
+
+**************************************************************************************
+*************************MODULE interpreter*******************************************
+**************************************************************************************
+
+-  ip_part1(+Goal,-Proof):
+   Goal: an uncovered positive example
+   Proof: a failing proof for the positive example
+   works exactly as the general interpreter solve0/2. The only difference is that
+   instead of failing when a system goal is failing or a proof is looping or rules 
+   are missing, the interpreter continues, assuming that the failing goals should 
+   be correct
+									
+-  ip_part2(+Proofs,+Goal,-Uncovered_Atoms):
+   Proofs: failing proofs determined by ip_part1,
+   Goal: uncovered positive example 
+   Uncovered_Atoms: Atoms that make Goal succeed, if they were covered by the kb
+   the satisfiability of each subgoal within failing proof is determined. For that, 
+   the oracle might be necessary.
+
+-  proof_path(+Ex,+Pred,+Type,-ClauseIDs):
+   Ex: example for p/n
+   Pred = p(X1,..,Xn): most general term of p/n 
+   Type = typei(Xi) for an argument of p/n
+   ClauseIDs: list of clauseIDs that have beed used for proving
+              typei(ei) for the ith argument of Ex
+   simulates the proof of typei(ei) for the ith argument of Ex and collects the indices
+    of all used clauses
+
+-  t_interpreter(+Goal,+ClauseList):
+   Goal: goal type(Arg), Arg ground
+   ClauseList: List of clauses defining different types
+   proves type(Arg) from ClauseList as kb
+
+-  solve(+Goal,-Mark,-Proofs):
+   Goal: ground atom or rule with ground head
+   Mark: success or fail
+   Proofs: all succeeding/failing proofs according to Mark
+   format for Proofs: [P1,..,Pn]
+              where Pi = [ID,Head,PBody] where ID is the ID of the
+              applied rule (sys for system predicates, -1 if no rule 
+              is applicable), Head is the instantiation of the rule head,
+              and PBody is the proof of the rule body. PBody is of the form
+               - [], if Head is true
+               - fail, if Head is a failing syspred
+               - looping if the proof is looping on Head
+               - no_rules if no rules match Head
+               - recursively of the form [B1,..,Bm]
+
+-  solve_once(+Goal,-Mark,-Proof):
+   as solve/3, but proves Goal only once
+
+-  prove1(+Clause, -Proof):                                      
+   Clause: clause in list form ( [H:p,L1:n,L2:n,..])          
+   Proof:  list of all literals used to prove clause 
+   prove1 tries to match Clause against literals in this kb, used for clause
+   reduction wrt theta-subsumption (Plotkin). 
+   This is a more efficient version for embedding Clause in the kb: (IRENE)
+   a list CL1 = [Lit:Sign:Litlist|_] is constructed from Clause where Litlist is 
+   the list of literals in the kb (if Sign = p, literals head(L,_,_), else body(L,_,_)) 
+   unifiable with Lit. CL1 is sorted ascendingly according to the length of Litlist. 
+   If there is an empty Litlist in CL1, prove1a fails and backtracking occurs.
+   Else Lit is unified with a literal in Litlist (backtrack point), and the remaining 
+   list CL1 is updated.
+
+-  prove3(+CL,-CL):								
+   CL: clause body in list notation
+   embedd CL in skolemized body of an example clause (body/3 entries in the kb)
+   used for absorption, saturation
+
+-  prove4(+CL,-Uncovered,-Proof):
+   CL: clause in list notation
+   Uncovered = H/M, where M in {new_head,new_body}
+                or Uncovered = [] if all literals are covered
+   Proof = [[Lit,N],...] where N in {head,body}
+   embeds CL in skolemized example clause (head/3,body/3 entries)
+   allows 1 uncovered literal (= the resolution literal) & returns it
+
+-  prove5(+HS,+RuleIDs):								
+   HS: skolemized clause head, RuleIDs: list of ruleIDs
+   tries to infer HS from assumptions and the rules in RuleIDs
+
+
+
+**************************************************************************************
+****************************MODULE kb*************************************************
+**************************************************************************************
+
+-  gen_id(-New)							
+   generates a new kb id	
+
+-  init_kb (+Filename), init_kb (+Filename, +Label):
+   the file Filename may contain Horn clauses "H:-B." and "H.", examples 
+   "ex(Fact,Class)" and comments "% blabla". Examples are stored in the kb 
+   as "ex(ID, Fact, Class)", clauses as
+   "known(ID,Head,Body,Clist,Label,evaluation(1,2,3,4,5,6,7,8,9))".
+   where ID ... unique kb identifier (a natural number)
+         Class ... +,-,?
+         Clist ... clause in list representation
+                   [head:p, body1:n, body2:n, body3:r, ...]. Each literal is
+                   marked p(positiv), n(negativ) or r(negativ + redundant)
+         Label ... e.g. the generating operator
+                   default used for init_kb/1: usr
+         evaluation ... of the clauses w.r.t. the examples:
+               1... #applications of the clause
+               2... #definitively positive examples covered by the clause
+               3... list of definitively positive examples covered by the clause
+                    of the form [...exID:Fact........]
+               4... #definitively negative  examples covered by the clause
+               5... list of definitively negative  examples covered by the clause
+                    of the form [...exID:Fact........]
+               6... #probably positive examples covered by the clause
+                    i.e. instantiations of the clause used in successful 
+                    proofs of positive examples
+               7... list of probably positive examples covered by the clause
+                    [...exID:Fact........] where exID is the example of which the 
+                    proof uses fact as subgoal
+               8... #probably negative  examples covered by the clause
+                    i.e. instantiations of the clause used in successful
+                     proofs of negative examples
+               9... list of probably negative examples covered by the clause
+                    [...exID:Fact........] where exID is the example of which the 
+                    proof uses fact as subgoal
+
+   For each example, all possible prooftrees are stored in the kb:
+   "prooftrees(ID,M,Trees)" where M is success or fail and Trees contains
+   all successful or failing proofs of example ID.
+   init_kb can be used successively for different files
+
+-  consult_kb(+ Filename):							
+   Restore knowledge base from qof-file which was produced by save_kb/1.
+
+-  save_kb(+ Filename):						
+   Save snapshot of current knowledge base as compiled file
+
+-  clear_kb:						
+   deletes all rules and examples from the kb
+
+-  store_clause (?prolog-clause,?clause-list,+label,-ID):	
+   Store new clause in knowledge base (provide either horn-clause	
+   or clause-list), label it and receive the unique clause-ID.	
+   If store_clause is called with ID instantiated, it will fail if ID is 
+   already in use in the knowledge-base. If not, ID will be used.
+
+-  store_clauses(+List_of_Clauses,+Label):
+   List_of_Clauses ... list of prolog clauses
+   Same as store_clause/4 for a list of clauses
+
+-  store_ex(?fact,?classification,-ID):
+   Store new example in knowledge base and receive the unique identification number.
+   If it is called with ID already instantiated: see above.	
+
+-  get_example (? ID, ? Example, ? Classification),
+   get_clause (? ID, ? Head, ? Body, ? Clist, ? Label),
+   get_fact (? ID, ? Fact, ? Clist, ? Label),
+   get_evaluation (+ ID, - Evaluation):
+   read example/clause/fact or clause evaluation from the kb
+
+-  delete_clause(+ ID) , 
+   delete_example(+ ID), 
+   delete_all(+list_of_clauseIDs):
+   delete clause(s)/example(s) with identifier(s) ID(list_of_clauseIDs)
+
+-  interpretable_predicate(-Term):
+   Term .. prolog term with principal funtor P/N
+   succeeds if rules or examples for P/N are in the kb
+
+-  assertallz(+List):
+   asserts all elements of List at the end of the kb
+
+-  rename (+ ID_list,+ Old_name,+ New_name ):
+   rename every occurence of predicate ''Old_name'' to ''New_name'' in a set of clauses 
+   given as a list of kb-references (Id-list). ''New_name'' should be atomic.
+
+-  random_ex(-ID):								
+   chooses randomly an example from the kb
+
+-  two_random_ex(-ID1,-ID2):
+   chooses randomly two examples from the kb
+
+-  i_random_ex(+I,-ExIDs):
+   selects randomly I examples from the kb
+
+-  shortest_clause(-ID:C):
+   ID .. clauseID, C ... complexity of the corresponding clause
+   selects the shortest clause from the kb
+
+-  two_shortest_clauses(-ID1:CL1,-ID2:CL2):
+   selects two shortest clauses from kb
+
+-  shortest_ex(-ID:C):								
+   selects the shortest example from kb
+
+-  two_shortest_ex(-ID1:C1,-ID2:C2):
+   selects two shortest example from kb
+
+-  shortest_uncovered_ex(-ExID):
+   selects the shortest example that is not covered by the kb
+
+-  shortest_uncovered_ex(+ExIds,-ExId):
+   selects the shortest example among ExIds
+
+-  two_shortest_uncovered_ex(-ExID1,-ExID2):
+   selects two shortest examples that are not covered by the kb
+
+-  all_shortest_ex(-ExIds):
+   selects all shortest examples from kb
+
+-  all_shortest_uncovered_ex(-ExIds):
+   selects all shortest uncovered examples from kb
+
+-  no_rules, no_pos_examples, no_neg_examples, no_examples:
+   tests kb on the different properties
+
+-  delete_covered_examples:
+   deletes examples explained by the kb
+
+-  flatten_rules:								
+   flattens all rules in the kb
+
+-  flatten_kb:								
+   flattens kb (rules and examples)
+
+-  unflatten_kb:								
+   unflattens a flat kb
+
+-  get_predlist(-Predlist):  
+   Predlist =  [P:PVars|_] 
+   selects all predicates with a type restriction from kb & adapts type restrictions
+   by transfomation in a list [X:Tx,...] of variables X and types Tx
+
+
+
+
+**************************************************************************************
+**************************MODULE lgg**************************************************
+**************************************************************************************
+
+-  reduce_complete(+Clause,-ReducedClause):  
+   reduce clause with no repect to background knowledge (Plotkin,1970)
+   i.e. reduction wrt theta subsumption. Works on clauses in list form.
+									
+-  reduce_approx(+Clause,-ReducedClause):                      
+   as reduce_complete except that the number of single reduction steps is bound
+   Works on clauses in list form. 
+                                                              
+-  covered_clause(+RULES, +ID):                          
+   RULES: list of kb references (integers)               
+   ID:    id of clause to be tested                      
+   Test, if a clause is a specialization of RULES.
+                                                             
+-  covered_clauses(+RULES,+ToTest,-Covered,-Uncovered):
+   RULES: list of kb references (integers)               
+   ToTest: either label of kb entries (lgg, sat, ex ..) or a list of kb references 
+   test if RULES explain all example clauses denoted by ToTest.                             
+   Or: RULES |= clauses(ToTest)                   
+                                                              
+-  gen_msg(+ID1,+ID2,-ID), gen_msg(+ID1,+ID2,-ID,+Bound):                        
+   Approximation of Buntine''s most specific generalization. We saturate the 2 
+   input clauses & build the lgg over them. Our procedure differs from Buntine''s 
+   in that saturation does not construct all generalizing clauses under generalized 
+   subsumption: if some head literal entailed by the body contains      
+   unbound variables, saturation adds it to the body as it is, whereas Buntine 
+   instead adds all of its ground instances. No reduction yet.
+
+-  rllg(+ID1,+ID2,-ID), rllg(+ID1,+ID2,+PrefHead,-ID):                        
+   Plotkin''s relative leat general generalization. Implementation thru Muggleton''s 
+   alg.: Construct 2 inverse linear derivations, then build lgg over them.
+   If PrefHead is given & it is possible to find  a rllg who''s head matches PrefHead, 
+   rllg will construct this clause. No reduction yet.
+
+-  subsumes_list(+General,+Specific):
+   checks for theta subsumption by list matching. No proofs, no substitutions
+   are returned. General will not be instantiated. Works on clauses in list form.
+                                                                       
+-  lgg_terms( + Term1, + Term2, - GenTerm ),                  
+   lgg_terms( + Term1, + Term2, - GenTerm,                   
+              - Subst_Term1, - Subst_Term2 ),
+   lgg_terms( + Term1, + Term2, - GenTerm,                   
+              - Subst1, - Subst2,                         
+              + Init_Subst1, + Init_Subst2 ):                                   
+   Term1,Term2,GenTerm: prolog terms
+   Subst_termi: [Var/Fi,..] substitution such that Termi = GenTerm Subst_termi
+   Plotkins least general generalisation wrt theta-subsumption on terms
+
+-  set_lgg(+List_of_Terms,-GenTerm)   
+   lgg of a list of terms
+
+-  headed_lgg(+ID1,+ID2,-IDG), headed_lgg(+ID1,_ID2,-IDG,?Label):
+   returns lgg of clauses ID1 ID2 in IDG, if both clauses have a compatible head 
+   literal (i.e. same pred, same arity). Fails else. Default label is hlgg
+
+-  hnr_lgg(+ID1,+ID2,-IDG), hnr_lgg(+ID1,_ID2,-IDG,?Label):
+   same as headed_lgg, except that the resulting generalised clause is NOT reduced. 
+   Default label is hnrlgg
+
+-  lgg(+ID1,+ID2,-IDG), lgg(+ID1,_ID2,-IDG,?Label):
+   returns lgg of clauses ID1 ID2 in IDG. If both clauses have no compatible head 
+   literal, the head literal of IDG is set to ''true''. Default label is lgg
+
+-  nr_lgg(+ID1,+ID2,-IDG), nr_lgg(+ID1,_ID2,-IDG,?Label):
+   same as lgg, except that the resulting generalised  clause is NOT reduced. 
+   Default label is nrlgg
+
+
+-  build_lgg(+IDs,+IID,-GID,+Label):
+   returns in GID the ID of the lgg of all clauses in IDs. IID is the ID of the 
+   intermediate result
+
+-  lgg(+CL1,+CL2,-CLG,-Subst1,-Subst2), nr_lgg(+CL1,+CL2,-CLG,-Subst1,-Subst2):
+   CL1,CL2,CLG: clauses in list notation
+   Substi: Substitutions such that CLG Substi \subseteq CLi
+   CLG is (non-reduced) lgg of clauses CL1 and CL2
+
+-  headed_lgg(+CL1,+CL2,-CLG,-Subst1,-Subst2), hnr_lgg(+CL1,+CL2,-CLG,-Subst1,-Subst2):
+   CL1,CL2,CLG: clauses in list notation
+   Substi: Substitutions such that CLG Substi \subseteq CLi
+   CLG is (non-reduced) headed lgg of clauses CL1 and CL2
+                                                                     
+-  gti(+C1,+C2,-C), gti(+C1,+C2,-C,-S1,-S2):                    
+   C1,C2,C: clauses in list notation                             
+   S1,S2:   substitutions  [ V1/Term1 , .... ]                 
+   generalization thru intersection, least general intersection                       
+
+-  lgti(+C1,+C2,-C,-S1,-S2),lgti(+C1,+C2,-C,-S1,-S2,+Bound):    
+   apply gti-operator Bound times ( default: Bound = 10 ).
+   Return the longest resulting clause & substitutions.   
+
+
+
+
+**************************************************************************************
+***********************MODULE newpred*************************************************
+**************************************************************************************
+
+
+-  specialize_with_newpred(+ID,-Newclause,-Pos,-Neg)
+   where ID .. Clause ID, Newclause.. specialized clause
+         Pos.. positive examples for the new predicate
+         Neg.. negative examples for the new predicate
+   Specializes an overgeneral clause with a new predicate. 
+   Returns the smallest number of arguments for the new predicate
+   such that Pos and Neg are disjunct (i.e. the new predicate really
+   makes the clause correct). 
+   This is an implementation of CHAM/DBC''s method for argument search.
+
+
+
+
+
+
+**************************************************************************************
+***********************MODULE show_utils**********************************************
+**************************************************************************************
+
+-  show_kb:						
+   displays all clauses in kb asserted by known
+
+-  show_ex:
+   displays all examples in kb
+
+-  show_clause(+ ID):							
+   displays the clause stored with ID
+
+-  show_clauses(+List_of_clauseIDs):
+   displays each clause with ID in List_of_clauseIDs
+-  show_kb_part(+From,+To) 
+   From: the min ID of KB entries to be shown
+   To:   the max ID of KB entries to  be shown
+   shows all clauses with From <= ID <= To
+
+-  show_names:							
+   lists all predicate names available in the kb
+
+-  print_kb(+ File):						
+   prints kb to a file	
+
+-  show_kb_types: displays definitions of all types in the kb
+
+-  show_type_restrictions: displays all type restrictions in the kb
+
+-  show_heads, show_bodies:					
+   displays all intermediate heads/bodies stored by absorption, saturation,... in 
+   the kb
+
+-  pp_clause(+CL):								
+   CL .. clause in list notation
+   displays clause in list notation
+
+-  write_list(+List)							
+   displays copy of a  list after instantiating all terms within the copy by $Var(N)
+
+
+
+
+**************************************************************************************
+***********************MODULE td_basic************************************************
+**************************************************************************************
+
+-  append_body(+Clause,+Literal,-Clause1):
+   Clause,Clause1.. Prolog clauses
+   adds Literal to the end of the body of Clause
+
+-  distribute_vars(+PVars,+Terms,-DVars): 
+   PVars = [X:Tx|R]: terms X with types Tx in the new literal P    
+   Terms: all terms with their types in the clause C to be refined 
+   DVars = [X:Vx,...]: for each X in PVars a list of all type-matching
+                       variables Vx in Terms + an additional new variable    
+   computes DVars 
+
+-  vars_of_type(+Terms,+Ty,-R2):
+   Terms= [X:Tx|_]: terms X with types Tx in the clause C to be refined
+   Ty: type Ty of an argument of the new literal  
+   R2: a list of all terms in C matching  type Ty         
+   adds a term X of Terms to R2 if type Ty subsumes type of X or vice versa
+   and one new term (last element in R2)
+
+-  enumerate_t(+DVars,+PL,-PL2):
+   DVars = [X:Vx,...]: all variables X in the new literal    
+                       with their type-matching variables in C 
+   PL:  initial predicate list 
+
+   PL2:  predicate list 
+   computes predicates P where variables in Vx are unified to X in P 
+
+
+
+
+**************************************************************************************
+***********************MODULE tdref_it************************************************
+**************************************************************************************
+
+top-down refinement operators for Horn clauses (work iteratively)
+
+-  refinement_unify_variables(+Clause,+Terms,-CL):
+   Clause ... the clause to be specialized		
+   Terms ... the terms that shall be used in refinement  of the form [T:Type,...]
+   CL .... list of specialisations of Clause 
+   refines clause by unifying variables. Returns list of specialised clauses
+
+-  refinement_instantiate_variables(+Clause,+Terms,-CL):
+   Clause ... the clause to be specialized		
+   Terms ... the terms that shall be used in refinement  of the form [T:Type,...]
+   CL .... list of specialisations of Clause 
+   refines clause by instantiating variables with terms. Returns list of specialised 
+   clauses
+
+-  refinement_add_body_literal(+Clause,+Terms,-CL):
+   Clause ... the clause to be specialized		
+   Terms ... the terms that shall be used in refinement  of the form [T:Type,...]
+   CL .... list of specialisations of Clause 
+   refines clause by adding a body literal. Returns list of specialised clauses
+
+-  refinement(+ID,-CL):
+   ID: ID of a clause to be refined 
+   CL: a list with refinements of the clause with ID 
+   shapiro''s general refinement operator for a clause with ID (all terms are eligible 
+   for refinement):  
+   if there are covered positive examples:            
+      - prepare for refinement:
+        a list of all terms and subterms augmented by their types and a list of all
+        variables in the clause with types
+      - refine clause by
+          - unifying variables within the clause
+          - instantiating variables within the clause to terms  
+          - adding body literals. Only literals sharing at least a
+            variable with clause ID are allowed.   
+
+
+
+**************************************************************************************
+********************************MODULE var_utils**************************************
+**************************************************************************************
+  
+-  vars(+Term,-Vars):	
+   Term: any prolog term					
+   Vars: list of variables in Term	
+
+-  clause_terms(+Clause,-Termlist):
+   returns list of all non-ground terms in Clause
+
+-  terms(+Term,+Accu,-Accu), terms(+Count,+Term,+Accu,-Accu):
+   returns all non-ground subterms within Term
+
+-  only_vars(+Term,-Varlist):
+   returns all variables within Term
+
+-  typed_only_vars1(+TypedTermlist,-TypedVarlist):
+   TypedTermlist: [T:typeT,...]
+   Vars: [Var:typeVar,...]
+   extracts each term T that is a variable from a list TypedTermlist of terms with 
+   type definition typeT.
+
+-  replace_t(+CL,List_of_typenames,Typename_new,-CL1):	
+   CL,CL1 .. lists of Horn clauses
+   replaces in CL each occurrence of a typename in List_of_typenames by Typename	
+
+-  replace(+C1,+S1,-C2,-S2):   					
+   C1, C2: clauses in list notation				
+   S1, S2: replacements [ X / Term, .. ] 
+   If all X''s are variables, this is actually a substitution, but we also allow 
+   other terms. C2 is a copy of C1 with S1 applied. S2 is a copy of S1.  
+
+-  inv_replace(+C1,+S1,-C2,-S2):			        
+   C1, C2: clauses in list notation				
+   S1, S2: replacements [ X / Term, .. ] 		                
+   C2 is a copy of C1 with term of S1 replaced by ass. vars 
+   S2 is a copy of S1,s.t. vars(S2) in vars(C2).
+   this is not the inverse operation for replacement :  We don''t distinguish  
+   between the places of terms.	
+
+-  term_size(+Term,-Size)
+   the code is a debugged copy from the Quintus library ''termdepth''
+   term_size(+Term, ?Size) calculates the Size of a Term, defined to be the number 
+   of constant and function symbol occurrences in it.
+
+-  contains_vars(+Term,+Terms):				
+   Term: any prolog term					
+   Vars: list of prolog terms (also variables)		
+   succeeds if all terms in Terms occur in Term 
+
+-  flagged_contains_vars(+Term,+Terms,-Flag):				
+   Term: any prolog term, Flag in {true,false}
+   Vars: list of prolog terms (also variables)		
+   returns true  if all terms in Terms occur in Term, else false
+
+-  inverse_substitute(+ClauseIn,-ClauseOut):                     
+   clauses in list notation, i.e. [ head(A):p, b1(A):n, .. ]      
+   replace one term in ClauseIn by a variable. Thru  backtracking all solutions can 
+   be obtained. Implementation: flatten Clause, truncate one literal, truncate 
+   unconnected literals, unflatten Clause.                       
+   Since identical terms are represented only once in our flattening, we cannot tell 
+   between different places the terms appear at.                           
+
+-  inverse_substitute1(+CL,-CL):
+   CL,CL1: clauses in list notation
+   this is an alternative approach without flattening, it replaces terms by variables.
+
+-  skolemize(+Term1,-Subst,-Term2): 				
+   Term1,Term2: arbiraty prolog terms				
+   Subst : substitution  [ V1/t1, V2/t2, .. ]			
+           where Vi are variables, ti skolem atoms		
+   skolemization is a special substitution: all variables of Term1 are substituted by
+   atoms. One keeps track of the substitution thru Subst.
+
+-  deskolemize(+Term1,+Subst,-Term2): 				
+   Term1,Term2: arbiraty prolog terms				
+   Subst : substitution  [ V1/t1, V2/t2, .. ]			
+           where Vi are variables, ti skolem atoms		
+   Deskolemization reverses skolemization, if the skolem substitution is given 
+   as input.	
+
+-  skolems(+Term,-Skolems):
+   Term: skolemized term, Skolems: all skolem atoms in Term
+							
+-  relevant_vars2(+C1,+C2,+Gen,+S1,+S2,-RelVars):		
+   C1,C2,Gen: clauses in list notation. C1,C2 at bottom of W.     
+   S1,S2: substitutions [V1=T1, .. ].				
+   RelVars: list of vars [ V1, V2, .. ]				
+   determine relevant vars with CIGOL heuristics. A variable V in Gen is relevant 
+   if one of the terms T1, T2 it is substituted by in S1, S2 contains a variable that 
+   also appears elsewhere in S1 or S2.       					
+				
+-  relevant_vars3(+C1,+C2,+Gen,+S1,+S2,-RelVars):		
+   C1,C2,Gen: clauses in list notation			        
+   S1,S2: substititions					
+   RelVars : set of relevant vars			        
+   Gen is a common generaliztion of C1,C2 , s.t. S1(Gen) is a subsetof C1, and 
+   analogously for C2. A variable is relevant if it appears in both Gen and 
+   ( C1 - Gen ) or Gen and ( C2 - Gen ).   
+
+-  findargs(+CL,+Accu,-Accu):
+   CL: clause in list notation, Accu: arguments of the literals in CL
+   find all arguments of the literals of a given clause
+
+-  buildrelterms(+CL1,+CL2,+Clgg,+Subst1,+Subst2,-TermList): 
+   CL1, CL2, Clgg .. clauses in list representation
+   Subst1,Subst2 ... substitutions such that Clgg Subst1 = CL1 and Clgg Subst2 = CL2
+   TermList ... list of relevant terms for the new predicate
+   determines the relevant terms for the new predicate as described in R. Wirth''s 1989 
+   PhD thesis
+
+-  exists_intersect(+L1,+L2,-L):
+   L1,L2,L: lists
+   if nonempty intersection exists, succeeds and returns intersection, fails else
+
+-  clean_subst(+CL,+Subst,-Subst)
+   CL: clause in list notation, Subst: a substitution [X/Term,...]
+   removes all X/T from Subst such that X does not occur in CL
+

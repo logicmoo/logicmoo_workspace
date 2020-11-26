@@ -1,0 +1,45 @@
+// Example of a call to a member method: the size of the list L (the value associated to the variable L)
+length(L, s) :- s is L:size().
+
+compute(x, y, z, w) :-
+    w is x + y * z,
+    result is w - 34.
+
+useGlobal(x, r) :-
+   r is result + x.
+
+createAStack(r) :-
+   v is "java.util.Stack":new(),
+   v:push(one),
+   v:push(two),
+   r is v:peek().
+
+
+eq(x, x).
+
+dif(x, y) :- eq(x, y), !, fail.
+dif(x, y).
+
+sup(x, y) :- x > y.
+
+inf(x, y) :- x < y.
+
+or(p, q) :- p, !.
+or(p, q) :- q.
+
+car(1, "bmw").
+car(2, "gfdgfd").
+
+assertMetaPredicates :-
+   	assertz(car(3, "peugeot"), []),
+	asserta(car(0, "honda"), []).
+
+removeMetaPredicates :-
+	car(x,y), 
+	check(x), 
+	retract(car(x,y)),
+	fail.
+removeMetaPredicates.
+
+check(1).
+check(2).

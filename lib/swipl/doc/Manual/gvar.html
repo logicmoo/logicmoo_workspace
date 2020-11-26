@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.33</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="format.html">
+<link rel="next" href="tty.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="format.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tty.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:gvar"><a id="sec:4.33"><span class="sec-nr">4.33</span> <span class="sec-title">Global 
+variables</span></a></h2>
+
+<a id="sec:gvar"></a>
+
+<p>Global variables are associations between names (atoms) and terms. 
+They differ in various ways from storing information using <a id="idx:assert1:1609"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+or <a id="idx:recorda3:1610"></a><a class="pred" href="db.html#recorda/3">recorda/3</a>.
+
+<p>
+<ul class="latex">
+<li>The value lives on the Prolog (global) stack. This implies that 
+lookup time is independent of the size of the term. This is particularly 
+interesting for large data structures such as parsed XML documents or 
+the CHR global constraint store.
+
+<p>
+<li>They support both global assignment using <a id="idx:nbsetval2:1611"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
+and backtrackable assignment using <a id="idx:bsetval2:1612"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>.
+
+<p>
+<li>Only one value (which can be an arbitrary complex Prolog term) can 
+be associated to a variable at a time.
+
+<p>
+<li>Their value cannot be shared among threads. Each thread has its own 
+namespace and values for global variables.
+
+<p>
+<li>Currently global variables are scoped globally. We may consider 
+module scoping in future versions.
+</ul>
+
+<p>Both <a id="idx:bsetval2:1613"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
+and <a id="idx:nbsetval2:1614"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
+implicitly create a variable if the referenced name does not already 
+refer to a variable.
+
+<p>Global variables may be initialised from directives to make them 
+available during the program lifetime, but some considerations are 
+necessary for saved states and threads. Saved states do not store global 
+variables, which implies they have to be declared with <a id="idx:initialization1:1615"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+to recreate them after loading the saved state. Each thread has its own 
+set of global variables, starting with an empty set. Using
+<a id="idx:threadinitialization1:1616"></a><a class="pred" href="threadcreate.html#thread_initialization/1">thread_initialization/1</a> 
+to define a global variable it will be defined, restored after reloading 
+a saved state and created in all threads that are created <em>after</em> 
+the registration. Finally, global variables can be initialised using the 
+exception hook
+<a id="idx:exception3:1617"></a><a class="pred" href="exception3.html#exception/3">exception/3</a>. 
+The latter technique is used by CHR (see <a class="sec" href="chr.html#sec:9">chapter 
+9</a>).
+
+<dl class="latex">
+<dt class="pubdef"><a id="b_setval/2"><strong>b_setval</strong>(<var>+Name, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Associate the term <var>Value</var> with the atom <var>Name</var> or 
+replace the currently associated value with <var>Value</var>. If <var>Name</var> 
+does not refer to an existing global variable, a variable with initial 
+value
+<code><code>[]</code></code> is created (the empty list). On 
+backtracking the assignment is reversed.</dd>
+<dt class="pubdef"><a id="b_getval/2"><strong>b_getval</strong>(<var>+Name, 
+-Value</var>)</a></dt>
+<dd class="defbody">
+Get the value associated with the global variable <var>Name</var> and 
+unify it with <var>Value</var>. Note that this unification may further 
+instantiate the value of the global variable. If this is undesirable the 
+normal precautions (double negation or <a id="idx:copyterm2:1618"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>) 
+must be taken. The
+<a id="idx:bgetval2:1619"></a><a class="pred" href="gvar.html#b_getval/2">b_getval/2</a> 
+predicate generates errors if <var>Name</var> is not an atom or the 
+requested variable does not exist.
+</dd>
+</dl>
+
+<dl class="latex">
+<dt class="pubdef"><a id="nb_setval/2"><strong>nb_setval</strong>(<var>+Name, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Associates a copy of <var>Value</var> created with <a id="idx:duplicateterm2:1620"></a><a class="pred" href="manipterm.html#duplicate_term/2">duplicate_term/2</a> 
+with the atom <var>Name</var>. Note that this can be used to set an 
+initial value other than <code><code>[]</code></code> prior to 
+backtrackable assignment.</dd>
+<dt class="pubdef"><a id="nb_getval/2"><strong>nb_getval</strong>(<var>+Name, 
+-Value</var>)</a></dt>
+<dd class="defbody">
+The <a id="idx:nbgetval2:1621"></a><a class="pred" href="gvar.html#nb_getval/2">nb_getval/2</a> 
+predicate is a synonym for <a id="idx:bgetval2:1622"></a><a class="pred" href="gvar.html#b_getval/2">b_getval/2</a>, 
+introduced for compatibility and symmetry. As most scenarios will use a 
+particular global variable using either non-backtrackable or 
+backtrackable assignment, using <a id="idx:nbgetval2:1623"></a><a class="pred" href="gvar.html#nb_getval/2">nb_getval/2</a> 
+can be used to document that the variable is non-backtrackable. Raises <code>existence_error(variable, 
+Name)</code> if the variable does not exist. Alternatively, <a id="idx:nbcurrent2:1624"></a><a class="pred" href="gvar.html#nb_current/2">nb_current/2</a> 
+can used to query a global variable. This version <em>fails</em> if the 
+variable does not exist rather than raising an exception.</dd>
+<dt class="pubdef"><a id="nb_linkval/2"><strong>nb_linkval</strong>(<var>+Name, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Associates the term <var>Value</var> with the atom <var>Name</var> 
+without copying it. This is a fast special-purpose variation of <a id="idx:nbsetval2:1625"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a> 
+intended for expert users only because the semantics on backtracking to 
+a point before creating the link are poorly defined for compound terms. 
+The principal term is always left untouched, but backtracking behaviour 
+on arguments is undone if the original assignment was <em>trailed</em> 
+and left alone otherwise, which implies that the history that created 
+the term affects the behaviour on backtracking. Consider the following 
+example:
+
+<pre class="code">
+demo_nb_linkval :-
+        T = nice(N),
+        (   N = world,
+            nb_linkval(myvar, T),
+            fail
+        ;   nb_getval(myvar, V),
+            writeln(V)
+        ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="nb_current/2"><strong>nb_current</strong>(<var>?Name, 
+?Value</var>)</a></dt>
+<dd class="defbody">
+Enumerate all defined variables with their value. The order of 
+enumeration is undefined. Note that <a id="idx:nbcurrent2:1626"></a><a class="pred" href="gvar.html#nb_current/2">nb_current/2</a> 
+can be used as an alternative for <a id="idx:nbgetval2:1627"></a><a class="pred" href="gvar.html#nb_getval/2">nb_getval/2</a> 
+to request the value of a variable and fail silently if the variable 
+does not exists.</dd>
+<dt class="pubdef"><a id="nb_delete/1"><strong>nb_delete</strong>(<var>+Name</var>)</a></dt>
+<dd class="defbody">
+Delete the named global variable. Succeeds also if the named variable 
+does not exist.
+</dd>
+</dl>
+
+<p><h3 id="sec:gvars-compat"><a id="sec:4.33.1"><span class="sec-nr">4.33.1</span> <span class="sec-title">Compatibility 
+of SWI-Prolog Global Variables</span></a></h3>
+
+<a id="sec:gvars-compat"></a>
+
+<p>Global variables have been introduced by various Prolog 
+implementations recently. The implementation of them in SWI-Prolog is 
+based on hProlog by Bart Demoen. In discussion with Bart it was decided 
+that the semantics of hProlog <a id="idx:nbsetval2:1628"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>, 
+which is equivalent to <a id="idx:nblinkval2:1629"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a>, 
+is not acceptable for normal Prolog users as the behaviour is influenced 
+by how built-in predicates that construct terms (<a id="idx:read1:1630"></a><a class="pred" href="termrw.html#read/1">read/1</a>, 
+=../2, etc.) are implemented.
+
+<p>GNU-Prolog provides a rich set of global variables, including arrays. 
+Arrays can be implemented easily in SWI-Prolog using <a id="idx:functor3:1631"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+and
+<a id="idx:setarg3:1632"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+due to the unrestricted arity of compound terms.
+
+<p></body></html>

@@ -1,0 +1,28 @@
+(note TQA81-b)
+(abort)
+(thereExists ?X (instance ?X BallisticMissile)) 
+
+(inRegion 
+ (InteriorFn ?ANYOBJECT) ?ANYOBJECT) 
+
+
+(queryyn
+ (thereExists ?FORCE 
+ (thereExists ?TARGET 
+ (and 
+ (instance ?FORCE BallisticMissile) 
+ (inRegion ?TARGET 
+ (NorthernRegionFn PersianGulfRegion)) 
+ (consistent 
+ (thereExists ?ACT 
+ (and 
+ (instance ?ACT AttackOnTangible) 
+ (agent ?ACT Bahrain) 
+ (deviceUsed ?ACT ?FORCE) 
+ (damages ?ACT ?TARGET)))))))  )
+
+(answer No)
+
+
+(end_of_file)
+

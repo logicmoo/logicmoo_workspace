@@ -1,0 +1,7 @@
+["aminePlatform.applications.synergy_dynamic_programming.DBMethods".connect2DB : *p1  ;  $1 & 365 180] -
+                                                                                                    -Next(518 152)(591 180)(465 125)->[Age : *p2  ;  $1 & 434 110] -
+                                                                                                                                     -ptim(351 118)(434 118)(289 118)->[Time : *p3  ;  & 251 112]<-ptim(254 85)(264 59)(264 112)-[Hire : *p4  ;  & 245 42]-obj(325 46)(278 46)(386 46)->[Person : *p5  "Lee"  ;  & 386 30]-chrc(430 78)(440 47)(440 110)->[Age : ?p2  ;  $1 & 434 110];
+                                                                                                    <-In3(576 228)(566 259)(601 197)-[String : ""  ;  & 532 259],
+                                                                                                    <-In1(671 130)(738 80)(619 180)-[String : "sun.jdbc.odbc.JdbcOdbcDriver"  ;  & 638 63],
+                                                                                                    <-In2(661 226)(719 256)(617 197)-[String : "jdbc:odbc:db_employe"  ;  & 635 256],
+                                                                                                    <-In4(503 229)(459 261)(564 197)-[String : ""  ;  & 421 261]

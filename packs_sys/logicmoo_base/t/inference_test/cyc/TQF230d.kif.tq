@@ -1,0 +1,171 @@
+(note TQF230d)
+
+(directingAgent HYP-MilitaryAttack-37235719 Iran) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY2) 
+    (instance ?COUNTRY2 Country) 
+    (eventOccursAt ?ATTACK ?AREA) 
+    (different ?COUNTRY1 ?COUNTRY2) 
+    (contains ?COUNTRY1 ?AREA) 
+    (instance ?COUNTRY1 Country)) 
+  (maleficiary ?ATTACK ?COUNTRY1)) 
+
+(instance HYP-MilitaryAttack-37235719 AttackOnTangible) 
+(eventOccursAt HYP-MilitaryAttack-37235719 UnitedArabEmirates) 
+(contains UnitedArabEmirates UnitedArabEmirates) 
+(instance UnitedArabEmirates Country) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?COUNTRY-2) 
+    (instance ?COUNTRY-2 Country) 
+    (maleficiary ?ATTACK ?COUNTRY-1) 
+    (instance ?COUNTRY-1 Country)) 
+  (increases-Generic ?ATTACK ?COUNTRY-2 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+      (statusWithAgent-Gradient ?AGENT ?COUNTRY-1 StateOfDiplomaticTension ?TENSION-LEVEL))))
+
+(agent HYP-MilitaryAttack-37235719 Iran) 
+(instance Iran Country) 
+(maleficiary HYP-MilitaryAttack-37235719 UnitedArabEmirates) 
+
+(increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+  (Kappa 
+    (?AGENT ?TENSION-LEVEL) 
+    (statusWithAgent-Gradient ?AGENT UnitedArabEmirates StateOfDiplomaticTension ?TENSION-LEVEL)))
+
+(instance Iran-UAEGulfIslandsDispute ConflictEvent) 
+(subProcess Iran-UAEGulfIslandsDispute HYP-MilitaryAttack-37235719) 
+(instance HYP-MilitaryAttack-37235719 MilitaryAttack) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (subProcess ?CONFLICT ?ATTACK) 
+    (instance ?CONFLICT ConflictEvent)) 
+  (increases-Generic ?ATTACK ?CONFLICT conflictLevel)) 
+
+(implies 
+  (and 
+    (instance ?ACTION HostileSocialAction) 
+    (agent ?ACTION ?COUNTRY) 
+    (instance ?COUNTRY Country) 
+    (maleficiary ?ACTION ?MEMBER) 
+    (internationalOrg-MemberCountry ?ALLIANCE ?MEMBER) 
+    (instance ?ALLIANCE InternationalAlliance)) 
+  (increases-Generic ?ACTION ?COUNTRY 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+      (statusWithAgent-Gradient ?AGENT ?ALLIANCE StateOfDiplomaticTension ?TENSION-LEVEL))))
+
+(instance HYP-MilitaryAttack-37235719 HostileSocialAction) 
+(internationalOrg-MemberCountry DesertShieldCoalition UnitedArabEmirates) 
+(instance DesertShieldCoalition InternationalAlliance) 
+
+(increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+  (Kappa 
+    (?AGENT ?TENSION-LEVEL) 
+    (statusWithAgent-Gradient ?AGENT DesertShieldCoalition StateOfDiplomaticTension ?TENSION-LEVEL)))
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (agent ?ATTACK ?COUNTRY-1) 
+    (instance ?COUNTRY-1 Country) 
+    (maleficiary ?ATTACK ?COUNTRY-2) 
+    (different ?COUNTRY-1 ?COUNTRY-2) 
+    (instance ?COUNTRY-2 Country)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?CTR-ATTACK 
+      (and 
+        (instance ?CTR-ATTACK MilitaryAttack) 
+        (maleficiary ?CTR-ATTACK ?COUNTRY-1) 
+        (inReactionTo ?CTR-ATTACK ?ATTACK) 
+        (agent ?CTR-ATTACK ?COUNTRY-2))) likelihood)) 
+
+(instance HYP-MilitaryAttack-37235719 MilitaryAttack) 
+(agent HYP-MilitaryAttack-37235719 Iran) 
+(instance Iran Country) 
+(maleficiary HYP-MilitaryAttack-37235719 UnitedArabEmirates) 
+
+(increasesCausally #$HYP-MilitaryAttack-37235719 
+  (thereExists ?CTR-ATTACK 
+    (and 
+      (instance ?CTR-ATTACK MilitaryAttack) 
+      (maleficiary ?CTR-ATTACK Iran) 
+      (inReactionTo ?CTR-ATTACK #$HYP-MilitaryAttack-37235719) 
+      (agent ?CTR-ATTACK UnitedArabEmirates))) likelihood) 
+
+(directingAgent HYP-MilitaryAttack-37235719 Iran) 
+(instance HYP-MilitaryAttack-37235719 HostileSocialAction) 
+(agent HYP-MilitaryAttack-37235719 Iran) 
+(instance Iran Country) 
+(maleficiary HYP-MilitaryAttack-37235719 UnitedArabEmirates) 
+(internationalOrg-MemberCountry GulfCooperationCouncil UnitedArabEmirates) 
+(instance GulfCooperationCouncil InternationalAlliance) 
+
+(increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+ (Kappa 
+ (?AGENT ?TENSION-LEVEL) 
+ (statusWithAgent-Gradient ?AGENT GulfCooperationCouncil StateOfDiplomaticTension ?TENSION-LEVEL))) 
+
+(instance AbuMusaConflict-1992 ConflictEvent) 
+
+(subProcess AbuMusaConflict-1992 HYP-MilitaryAttack-37235719) 
+
+(instance HYP-MilitaryAttack-37235719 MilitaryAttack) 
+
+(implies 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (subProcess ?CONFLICT ?ATTACK) 
+ (instance ?CONFLICT ConflictEvent)) 
+ (increases-Generic ?ATTACK ?CONFLICT conflictLevel)) 
+
+(query (findall (?AFFECTED-BY-INCREASING ?PROPERTY  ) 
+  (implies
+    (and 
+      (instance ?ATTACK MilitaryAttack) 
+      (subProcess AbuMusaConflict-1992 ?ATTACK) 
+      (directingAgent ?ATTACK Iran) 
+      (eventOccursAt ?ATTACK UnitedArabEmirates)) 
+    (or 
+      (increases-Generic ?ATTACK ?AFFECTED-BY-INCREASING ?PROPERTY) 
+      (decreases-Generic ?ATTACK ?AFFECTED-BY-DECREASING ?PROPERTY)))))
+
+(answer Iran (list 
+  (increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+      (statusWithAgent-Gradient ?AGENT DesertShieldCoalition StateOfDiplomaticTension ?TENSION-LEVEL)))))
+
+(answer Iran-UAEGulfIslandsDispute conflictLevel))
+
+(answer Iran (list 
+  (increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+      (statusWithAgent-Gradient ?AGENT UnitedArabEmirates StateOfDiplomaticTension ?TENSION-LEVEL)))))
+
+(answer Iran (list 
+  (increases-Generic #$HYP-MilitaryAttack-37235719 Iran 
+    (Kappa 
+      (?AGENT ?TENSION-LEVEL) 
+      (statusWithAgent-Gradient ?AGENT GulfCooperationCouncil StateOfDiplomaticTension ?TENSION-LEVEL)))))
+
+(answer AbuMusaConflict-1992  conflictLevel)
+
+(answer (list
+  (thereExists ?CTR-ATTACK 
+    (and 
+      (instance ?CTR-ATTACK MilitaryAttack) 
+      (maleficiary ?CTR-ATTACK Iran) 
+      (inReactionTo ?CTR-ATTACK #$HYP-MilitaryAttack-37235719) 
+      (agent ?CTR-ATTACK UnitedArabEmirates)))) likelihood)
+
+(end_of_file)

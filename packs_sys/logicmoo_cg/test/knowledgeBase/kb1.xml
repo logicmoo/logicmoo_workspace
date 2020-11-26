@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeBase>
+  <Name>D:\aminePlatform7\aminePlatform\classes\aminePlatform\samples\knowledgeBase\kb1.xml</Name>
+  <KBOntology>D:\aminePlatform7\aminePlatform\classes\aminePlatform\samples\ontology\ManOntology2.xml</KBOntology>
+  <Root>
+    <Key>Universal</Key>
+  </Root>
+  <CSs>
+    <IndexedType>
+      <Key>Universal</Key>
+      <Content>
+        <IndexedType>Universal</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>Man</Key>
+        </Child>
+        <Child>
+          <Key>Eat</Key>
+        </Child>
+      </Children>
+      <Fathers />
+    </IndexedType>
+    <IndexedType>
+      <Key>Eat</Key>
+      <Content>
+        <IndexedType>Eat</IndexedType>
+      </Content>
+      <Children>
+        <Child>
+          <Key>aminePlatform.kernel.ontology.Situation@109dcbb</Key>
+        </Child>
+      </Children>
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+    <Situation>
+      <Key>aminePlatform.kernel.ontology.Situation@109dcbb</Key>
+      <Content>
+        <Description>[Eat #0] -
+      -obj-&gt;[Apple],
+      -agnt-&gt;[Man]</Description>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Eat</Key>
+        </Father>
+      </Fathers>
+    </Situation>
+    <IndexedType>
+      <Key>Man</Key>
+      <Content>
+        <IndexedType>Man</IndexedType>
+      </Content>
+      <Children />
+      <Fathers>
+        <Father>
+          <Key>Universal</Key>
+        </Father>
+      </Fathers>
+    </IndexedType>
+  </CSs>
+</KnowledgeBase>
+

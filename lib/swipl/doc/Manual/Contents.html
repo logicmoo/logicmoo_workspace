@@ -1,0 +1,1343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="index.html">
+<link rel="next" href="intro.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="index.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="intro.html"><img src="next.gif" alt="Next"></a>
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h1"><a class="sec" href="intro.html"><span class="sec-nr">1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="swiprolog.html"><span class="sec-nr">1.1</span> <span class="sec-title">Positioning 
+SWI-Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="status.html"><span class="sec-nr">1.2</span> <span class="sec-title">Status 
+and releases</span></a></div>
+<div class="toc-h2"><a class="sec" href="swiorother.html"><span class="sec-nr">1.3</span> <span class="sec-title">Should 
+I be using SWI-Prolog?</span></a></div>
+<div class="toc-h2"><a class="sec" href="sponsor.html"><span class="sec-nr">1.4</span> <span class="sec-title">Support 
+the SWI-Prolog project</span></a></div>
+<div class="toc-h2"><a class="sec" href="implhistory.html"><span class="sec-nr">1.5</span> <span class="sec-title">Implementation 
+history</span></a></div>
+<div class="toc-h2"><a class="sec" href="acknowledge.html"><span class="sec-nr">1.6</span> <span class="sec-title">Acknowledgements</span></a></div>
+<div class="toc-h1"><a class="sec" href="overview.html"><span class="sec-nr">2</span> <span class="sec-title">Overview</span></a></div>
+<div class="toc-h2"><a class="sec" href="quickstart.html"><span class="sec-nr">2.1</span> <span class="sec-title">Getting 
+started quickly</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.1"><span class="sec-nr">2.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog</span></a></div>
+<div class="toc-h4"><a class="sec" href="quickstart.html#sec:2.1.1.1"><span class="sec-nr">2.1.1.1</span> <span class="sec-title">Starting 
+SWI-Prolog on Unix</span></a></div>
+<div class="toc-h4"><a class="sec" href="quickstart.html#sec:2.1.1.2"><span class="sec-nr">2.1.1.2</span> <span class="sec-title">Starting 
+SWI-Prolog on Windows</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.2"><span class="sec-nr">2.1.2</span> <span class="sec-title">Adding 
+rules from the console</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.3"><span class="sec-nr">2.1.3</span> <span class="sec-title">Executing 
+a query</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.4"><span class="sec-nr">2.1.4</span> <span class="sec-title">Examining 
+and modifying your program</span></a></div>
+<div class="toc-h3"><a class="sec" href="quickstart.html#sec:2.1.5"><span class="sec-nr">2.1.5</span> <span class="sec-title">Stopping 
+Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="initfile.html"><span class="sec-nr">2.2</span> <span class="sec-title">The 
+user's initialisation file</span></a></div>
+<div class="toc-h2"><a class="sec" href="initgoal.html"><span class="sec-nr">2.3</span> <span class="sec-title">Initialisation 
+files and goals</span></a></div>
+<div class="toc-h2"><a class="sec" href="cmdline.html"><span class="sec-nr">2.4</span> <span class="sec-title">Command 
+line options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.1"><span class="sec-nr">2.4.1</span> <span class="sec-title">Informational 
+command line options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.2"><span class="sec-nr">2.4.2</span> <span class="sec-title">Command 
+line options for running Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.3"><span class="sec-nr">2.4.3</span> <span class="sec-title">Controlling 
+the stack sizes</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.4"><span class="sec-nr">2.4.4</span> <span class="sec-title">Running 
+goals from the command line</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.5"><span class="sec-nr">2.4.5</span> <span class="sec-title">Compilation 
+options</span></a></div>
+<div class="toc-h3"><a class="sec" href="cmdline.html#sec:2.4.6"><span class="sec-nr">2.4.6</span> <span class="sec-title">Maintenance 
+options</span></a></div>
+<div class="toc-h2"><a class="sec" href="theme.html"><span class="sec-nr">2.5</span> <span class="sec-title">UI 
+Themes</span></a></div>
+<div class="toc-h3"><a class="sec" href="theme.html#sec:2.5.1"><span class="sec-nr">2.5.1</span> <span class="sec-title">Status 
+of theme support</span></a></div>
+<div class="toc-h2"><a class="sec" href="gemacs.html"><span class="sec-nr">2.6</span> <span class="sec-title">GNU 
+Emacs Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="online-help.html"><span class="sec-nr">2.7</span> <span class="sec-title">Online 
+Help</span></a></div>
+<div class="toc-h3"><a class="sec" href="online-help.html#sec:2.7.1"><span class="sec-nr">2.7.1</span> <span class="sec-title">library(help): 
+Text based manual</span></a></div>
+<div class="toc-h3"><a class="sec" href="online-help.html#sec:2.7.2"><span class="sec-nr">2.7.2</span> <span class="sec-title">library(explain): 
+Describe Prolog Terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="history.html"><span class="sec-nr">2.8</span> <span class="sec-title">Command 
+line history</span></a></div>
+<div class="toc-h2"><a class="sec" href="topvars.html"><span class="sec-nr">2.9</span> <span class="sec-title">Reuse 
+of top-level bindings</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugoverview.html"><span class="sec-nr">2.10</span> <span class="sec-title">Overview 
+of the Debugger</span></a></div>
+<div class="toc-h2"><a class="sec" href="compilation.html"><span class="sec-nr">2.11</span> <span class="sec-title">Compilation</span></a></div>
+<div class="toc-h3"><a class="sec" href="compilation.html#sec:2.11.1"><span class="sec-nr">2.11.1</span> <span class="sec-title">During 
+program development</span></a></div>
+<div class="toc-h3"><a class="sec" href="compilation.html#sec:2.11.2"><span class="sec-nr">2.11.2</span> <span class="sec-title">For 
+running the result</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.1"><span class="sec-nr">2.11.2.1</span> <span class="sec-title">Using 
+PrologScript</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.2"><span class="sec-nr">2.11.2.2</span> <span class="sec-title">Creating 
+a shell script</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.3"><span class="sec-nr">2.11.2.3</span> <span class="sec-title">Creating 
+a saved state</span></a></div>
+<div class="toc-h4"><a class="sec" href="compilation.html#sec:2.11.2.4"><span class="sec-nr">2.11.2.4</span> <span class="sec-title">Compilation 
+using the -c command line option</span></a></div>
+<div class="toc-h2"><a class="sec" href="flags.html"><span class="sec-nr">2.12</span> <span class="sec-title">Environment 
+Control (Prolog flags)</span></a></div>
+<div class="toc-h2"><a class="sec" href="hooks.html"><span class="sec-nr">2.13</span> <span class="sec-title">An 
+overview of hook predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="autoload.html"><span class="sec-nr">2.14</span> <span class="sec-title">Automatic 
+loading of libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="packs.html"><span class="sec-nr">2.15</span> <span class="sec-title">Packs: 
+community add-ons</span></a></div>
+<div class="toc-h2"><a class="sec" href="syntax.html"><span class="sec-nr">2.16</span> <span class="sec-title">The 
+SWI-Prolog syntax</span></a></div>
+<div class="toc-h3"><a class="sec" href="syntax.html#sec:2.16.1"><span class="sec-nr">2.16.1</span> <span class="sec-title">ISO 
+Syntax Support</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.1"><span class="sec-nr">2.16.1.1</span> <span class="sec-title">Processor 
+Character Set</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.2"><span class="sec-nr">2.16.1.2</span> <span class="sec-title">Nested 
+comments</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.3"><span class="sec-nr">2.16.1.3</span> <span class="sec-title">Character 
+Escape Syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.4"><span class="sec-nr">2.16.1.4</span> <span class="sec-title">Syntax 
+for non-decimal numbers</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.5"><span class="sec-nr">2.16.1.5</span> <span class="sec-title">Using 
+digit groups in large integers</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.6"><span class="sec-nr">2.16.1.6</span> <span class="sec-title">Rational 
+number syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.7"><span class="sec-nr">2.16.1.7</span> <span class="sec-title">NaN 
+and Infinity floats and their syntax</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.8"><span class="sec-nr">2.16.1.8</span> <span class="sec-title">Force 
+only underscore to introduce a variable</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.9"><span class="sec-nr">2.16.1.9</span> <span class="sec-title">Unicode 
+Prolog source</span></a></div>
+<div class="toc-h4"><a class="sec" href="syntax.html#sec:2.16.1.10"><span class="sec-nr">2.16.1.10</span> <span class="sec-title">Singleton 
+variable checking</span></a></div>
+<div class="toc-h2"><a class="sec" href="cyclic.html"><span class="sec-nr">2.17</span> <span class="sec-title">Rational 
+trees (cyclic terms)</span></a></div>
+<div class="toc-h2"><a class="sec" href="jitindex.html"><span class="sec-nr">2.18</span> <span class="sec-title">Just-in-time 
+clause indexing</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.1"><span class="sec-nr">2.18.1</span> <span class="sec-title">Deep 
+indexing</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.2"><span class="sec-nr">2.18.2</span> <span class="sec-title">Future 
+directions</span></a></div>
+<div class="toc-h3"><a class="sec" href="jitindex.html#sec:2.18.3"><span class="sec-nr">2.18.3</span> <span class="sec-title">Indexing 
+and portability</span></a></div>
+<div class="toc-h2"><a class="sec" href="widechars.html"><span class="sec-nr">2.19</span> <span class="sec-title">Wide 
+character support</span></a></div>
+<div class="toc-h3"><a class="sec" href="widechars.html#sec:2.19.1"><span class="sec-nr">2.19.1</span> <span class="sec-title">Wide 
+character encodings on streams</span></a></div>
+<div class="toc-h4"><a class="sec" href="widechars.html#sec:2.19.1.1"><span class="sec-nr">2.19.1.1</span> <span class="sec-title">BOM: 
+Byte Order Mark</span></a></div>
+<div class="toc-h2"><a class="sec" href="limits.html"><span class="sec-nr">2.20</span> <span class="sec-title">System 
+limits</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.1"><span class="sec-nr">2.20.1</span> <span class="sec-title">Limits 
+on memory areas</span></a></div>
+<div class="toc-h4"><a class="sec" href="limits.html#sec:2.20.1.1"><span class="sec-nr">2.20.1.1</span> <span class="sec-title">The 
+heap</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.2"><span class="sec-nr">2.20.2</span> <span class="sec-title">Other 
+Limits</span></a></div>
+<div class="toc-h3"><a class="sec" href="limits.html#sec:2.20.3"><span class="sec-nr">2.20.3</span> <span class="sec-title">Reserved 
+Names</span></a></div>
+<div class="toc-h2"><a class="sec" href="64bits.html"><span class="sec-nr">2.21</span> <span class="sec-title">SWI-Prolog 
+and 64-bit machines</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.1"><span class="sec-nr">2.21.1</span> <span class="sec-title">Supported 
+platforms</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.2"><span class="sec-nr">2.21.2</span> <span class="sec-title">Comparing 
+32- and 64-bits Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="64bits.html#sec:2.21.3"><span class="sec-nr">2.21.3</span> <span class="sec-title">Choosing 
+between 32- and 64-bit Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="abi-versions.html"><span class="sec-nr">2.22</span> <span class="sec-title">Binary 
+compatibility</span></a></div>
+<div class="toc-h1"><a class="sec" href="IDE.html"><span class="sec-nr">3</span> <span class="sec-title">Initialising 
+and Managing a Prolog Project</span></a></div>
+<div class="toc-h2"><a class="sec" href="projectfiles.html"><span class="sec-nr">3.1</span> <span class="sec-title">The 
+project source files</span></a></div>
+<div class="toc-h3"><a class="sec" href="projectfiles.html#sec:3.1.1"><span class="sec-nr">3.1.1</span> <span class="sec-title">File 
+Names and Locations</span></a></div>
+<div class="toc-h4"><a class="sec" href="projectfiles.html#sec:3.1.1.1"><span class="sec-nr">3.1.1.1</span> <span class="sec-title">File 
+Name Extensions</span></a></div>
+<div class="toc-h4"><a class="sec" href="projectfiles.html#sec:3.1.1.2"><span class="sec-nr">3.1.1.2</span> <span class="sec-title">Project 
+Directories</span></a></div>
+<div class="toc-h4"><a class="sec" href="projectfiles.html#sec:3.1.1.3"><span class="sec-nr">3.1.1.3</span> <span class="sec-title">Sub-projects 
+using search paths</span></a></div>
+<div class="toc-h3"><a class="sec" href="projectfiles.html#sec:3.1.2"><span class="sec-nr">3.1.2</span> <span class="sec-title">Project 
+Special Files</span></a></div>
+<div class="toc-h3"><a class="sec" href="projectfiles.html#sec:3.1.3"><span class="sec-nr">3.1.3</span> <span class="sec-title">International 
+source files</span></a></div>
+<div class="toc-h2"><a class="sec" href="usingmodules.html"><span class="sec-nr">3.2</span> <span class="sec-title">Using 
+modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="editreload.html"><span class="sec-nr">3.3</span> <span class="sec-title">The 
+test-edit-reload cycle</span></a></div>
+<div class="toc-h3"><a class="sec" href="editreload.html#sec:3.3.1"><span class="sec-nr">3.3.1</span> <span class="sec-title">Locating 
+things to edit</span></a></div>
+<div class="toc-h3"><a class="sec" href="editreload.html#sec:3.3.2"><span class="sec-nr">3.3.2</span> <span class="sec-title">Editing 
+and incremental compilation</span></a></div>
+<div class="toc-h2"><a class="sec" href="pceemacs.html"><span class="sec-nr">3.4</span> <span class="sec-title">Using 
+the PceEmacs built-in editor</span></a></div>
+<div class="toc-h3"><a class="sec" href="pceemacs.html#sec:3.4.1"><span class="sec-nr">3.4.1</span> <span class="sec-title">Activating 
+PceEmacs</span></a></div>
+<div class="toc-h3"><a class="sec" href="pceemacs.html#sec:3.4.2"><span class="sec-nr">3.4.2</span> <span class="sec-title">Bluffing 
+through PceEmacs</span></a></div>
+<div class="toc-h4"><a class="sec" href="pceemacs.html#sec:3.4.2.1"><span class="sec-nr">3.4.2.1</span> <span class="sec-title">Edit 
+modes</span></a></div>
+<div class="toc-h4"><a class="sec" href="pceemacs.html#sec:3.4.2.2"><span class="sec-nr">3.4.2.2</span> <span class="sec-title">Frequently 
+used editor commands</span></a></div>
+<div class="toc-h3"><a class="sec" href="pceemacs.html#sec:3.4.3"><span class="sec-nr">3.4.3</span> <span class="sec-title">Prolog 
+Mode</span></a></div>
+<div class="toc-h4"><a class="sec" href="pceemacs.html#sec:3.4.3.1"><span class="sec-nr">3.4.3.1</span> <span class="sec-title">Finding 
+your way around</span></a></div>
+<div class="toc-h2"><a class="sec" href="guitracer.html"><span class="sec-nr">3.5</span> <span class="sec-title">The 
+Graphical Debugger</span></a></div>
+<div class="toc-h3"><a class="sec" href="guitracer.html#sec:3.5.1"><span class="sec-nr">3.5.1</span> <span class="sec-title">Invoking 
+the window-based debugger</span></a></div>
+<div class="toc-h2"><a class="sec" href="navigator.html"><span class="sec-nr">3.6</span> <span class="sec-title">The 
+Prolog Navigator</span></a></div>
+<div class="toc-h2"><a class="sec" href="xref.html"><span class="sec-nr">3.7</span> <span class="sec-title">Cross-referencer</span></a></div>
+<div class="toc-h2"><a class="sec" href="idepreds.html"><span class="sec-nr">3.8</span> <span class="sec-title">Accessing 
+the IDE from your program</span></a></div>
+<div class="toc-h2"><a class="sec" href="idesummary.html"><span class="sec-nr">3.9</span> <span class="sec-title">Summary 
+of the IDE</span></a></div>
+<div class="toc-h1"><a class="sec" href="builtin.html"><span class="sec-nr">4</span> <span class="sec-title">Built-in 
+Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="preddesc.html"><span class="sec-nr">4.1</span> <span class="sec-title">Notation 
+of Predicate Descriptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.1"><span class="sec-nr">4.1.1</span> <span class="sec-title">The 
+argument mode indicator</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.2"><span class="sec-nr">4.1.2</span> <span class="sec-title">Predicate 
+indicators</span></a></div>
+<div class="toc-h4"><a class="sec" href="preddesc.html#sec:4.1.2.1"><span class="sec-nr">4.1.2.1</span> <span class="sec-title">Non-terminal 
+indicators</span></a></div>
+<div class="toc-h3"><a class="sec" href="preddesc.html#sec:4.1.3"><span class="sec-nr">4.1.3</span> <span class="sec-title">Predicate 
+behaviour and determinism</span></a></div>
+<div class="toc-h2"><a class="sec" href="chars.html"><span class="sec-nr">4.2</span> <span class="sec-title">Character 
+representation</span></a></div>
+<div class="toc-h2"><a class="sec" href="consulting.html"><span class="sec-nr">4.3</span> <span class="sec-title">Loading 
+Prolog source files</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.1"><span class="sec-nr">4.3.1</span> <span class="sec-title">Conditional 
+compilation and program transformation</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.1.1"><span class="sec-nr">4.3.1.1</span> <span class="sec-title">Program 
+transformation with source layout info</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.1.2"><span class="sec-nr">4.3.1.2</span> <span class="sec-title">Conditional 
+compilation</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.2"><span class="sec-nr">4.3.2</span> <span class="sec-title">Reloading 
+files, active code and threads</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.2.1"><span class="sec-nr">4.3.2.1</span> <span class="sec-title">Compilation 
+of mutually dependent code</span></a></div>
+<div class="toc-h4"><a class="sec" href="consulting.html#sec:4.3.2.2"><span class="sec-nr">4.3.2.2</span> <span class="sec-title">Compilation 
+with multiple threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="consulting.html#sec:4.3.3"><span class="sec-nr">4.3.3</span> <span class="sec-title">Quick 
+load files</span></a></div>
+<div class="toc-h2"><a class="sec" href="edit.html"><span class="sec-nr">4.4</span> <span class="sec-title">Editor 
+Interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="edit.html#sec:4.4.1"><span class="sec-nr">4.4.1</span> <span class="sec-title">Customizing 
+the editor interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="typetest.html"><span class="sec-nr">4.5</span> <span class="sec-title">Verify 
+Type of a Term</span></a></div>
+<div class="toc-h2"><a class="sec" href="compare.html"><span class="sec-nr">4.6</span> <span class="sec-title">Comparison 
+and Unification of Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="compare.html#sec:4.6.1"><span class="sec-nr">4.6.1</span> <span class="sec-title">Standard 
+Order of Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="compare.html#sec:4.6.2"><span class="sec-nr">4.6.2</span> <span class="sec-title">Special 
+unification and comparison predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="control.html"><span class="sec-nr">4.7</span> <span class="sec-title">Control 
+Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="metacall.html"><span class="sec-nr">4.8</span> <span class="sec-title">Meta-Call 
+Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="delcont.html"><span class="sec-nr">4.9</span> <span class="sec-title">Delimited 
+continuations</span></a></div>
+<div class="toc-h2"><a class="sec" href="exception.html"><span class="sec-nr">4.10</span> <span class="sec-title">Exception 
+handling</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.1"><span class="sec-nr">4.10.1</span> <span class="sec-title">Urgency 
+of exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.2"><span class="sec-nr">4.10.2</span> <span class="sec-title">Debugging 
+and exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="exception.html#sec:4.10.3"><span class="sec-nr">4.10.3</span> <span class="sec-title">The 
+exception term</span></a></div>
+<div class="toc-h4"><a class="sec" href="exception.html#sec:4.10.3.1"><span class="sec-nr">4.10.3.1</span> <span class="sec-title">General 
+form of the ISO standard exception term</span></a></div>
+<div class="toc-h4"><a class="sec" href="exception.html#sec:4.10.3.2"><span class="sec-nr">4.10.3.2</span> <span class="sec-title">Throwing 
+exceptions from applications and libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="printmsg.html"><span class="sec-nr">4.11</span> <span class="sec-title">Printing 
+messages</span></a></div>
+<div class="toc-h3"><a class="sec" href="printmsg.html#sec:4.11.1"><span class="sec-nr">4.11.1</span> <span class="sec-title">Printing 
+from libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="signal.html"><span class="sec-nr">4.12</span> <span class="sec-title">Handling 
+signals</span></a></div>
+<div class="toc-h3"><a class="sec" href="signal.html#sec:4.12.1"><span class="sec-nr">4.12.1</span> <span class="sec-title">Notes 
+on signal handling</span></a></div>
+<div class="toc-h2"><a class="sec" href="DCG.html"><span class="sec-nr">4.13</span> <span class="sec-title">DCG 
+Grammar rules</span></a></div>
+<div class="toc-h2"><a class="sec" href="db.html"><span class="sec-nr">4.14</span> <span class="sec-title">Database</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.1"><span class="sec-nr">4.14.1</span> <span class="sec-title">Managing 
+(dynamic) predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="db.html#sec:4.14.1.1"><span class="sec-nr">4.14.1.1</span> <span class="sec-title">Transactions</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.2"><span class="sec-nr">4.14.2</span> <span class="sec-title">The 
+recorded database</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.3"><span class="sec-nr">4.14.3</span> <span class="sec-title">Flags</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.4"><span class="sec-nr">4.14.4</span> <span class="sec-title">Tries</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.5"><span class="sec-nr">4.14.5</span> <span class="sec-title">Update 
+view</span></a></div>
+<div class="toc-h3"><a class="sec" href="db.html#sec:4.14.6"><span class="sec-nr">4.14.6</span> <span class="sec-title">Indexing 
+databases</span></a></div>
+<div class="toc-h2"><a class="sec" href="dynamic.html"><span class="sec-nr">4.15</span> <span class="sec-title">Declaring 
+predicate properties</span></a></div>
+<div class="toc-h2"><a class="sec" href="examineprog.html"><span class="sec-nr">4.16</span> <span class="sec-title">Examining 
+the program</span></a></div>
+<div class="toc-h2"><a class="sec" href="IO.html"><span class="sec-nr">4.17</span> <span class="sec-title">Input 
+and output</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.1"><span class="sec-nr">4.17.1</span> <span class="sec-title">Predefined 
+stream aliases</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.2"><span class="sec-nr">4.17.2</span> <span class="sec-title">ISO 
+Input and Output Streams</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.3"><span class="sec-nr">4.17.3</span> <span class="sec-title">Edinburgh-style 
+I/O</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.4"><span class="sec-nr">4.17.4</span> <span class="sec-title">Switching 
+between Edinburgh and ISO I/O</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.5"><span class="sec-nr">4.17.5</span> <span class="sec-title">Adding 
+IRI schemas</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.6"><span class="sec-nr">4.17.6</span> <span class="sec-title">Write 
+onto atoms, code-lists, etc.</span></a></div>
+<div class="toc-h3"><a class="sec" href="IO.html#sec:4.17.7"><span class="sec-nr">4.17.7</span> <span class="sec-title">Fast 
+binary term I/O</span></a></div>
+<div class="toc-h2"><a class="sec" href="streamstat.html"><span class="sec-nr">4.18</span> <span class="sec-title">Status 
+of streams</span></a></div>
+<div class="toc-h2"><a class="sec" href="chario.html"><span class="sec-nr">4.19</span> <span class="sec-title">Primitive 
+character I/O</span></a></div>
+<div class="toc-h2"><a class="sec" href="termrw.html"><span class="sec-nr">4.20</span> <span class="sec-title">Term 
+reading and writing</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipterm.html"><span class="sec-nr">4.21</span> <span class="sec-title">Analysing 
+and Constructing Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="manipterm.html#sec:4.21.1"><span class="sec-nr">4.21.1</span> <span class="sec-title">Non-logical 
+operations on terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipatom.html"><span class="sec-nr">4.22</span> <span class="sec-title">Analysing 
+and Constructing Atoms</span></a></div>
+<div class="toc-h2"><a class="sec" href="locale.html"><span class="sec-nr">4.23</span> <span class="sec-title">Localization 
+(locale) support</span></a></div>
+<div class="toc-h2"><a class="sec" href="chartype.html"><span class="sec-nr">4.24</span> <span class="sec-title">Character 
+properties</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.1"><span class="sec-nr">4.24.1</span> <span class="sec-title">Case 
+conversion</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.2"><span class="sec-nr">4.24.2</span> <span class="sec-title">White 
+space normalization</span></a></div>
+<div class="toc-h3"><a class="sec" href="chartype.html#sec:4.24.3"><span class="sec-nr">4.24.3</span> <span class="sec-title">Language-specific 
+comparison</span></a></div>
+<div class="toc-h2"><a class="sec" href="operators.html"><span class="sec-nr">4.25</span> <span class="sec-title">Operators</span></a></div>
+<div class="toc-h2"><a class="sec" href="charconv.html"><span class="sec-nr">4.26</span> <span class="sec-title">Character 
+Conversion</span></a></div>
+<div class="toc-h2"><a class="sec" href="arith.html"><span class="sec-nr">4.27</span> <span class="sec-title">Arithmetic</span></a></div>
+<div class="toc-h3"><a class="sec" href="arith.html#sec:4.27.1"><span class="sec-nr">4.27.1</span> <span class="sec-title">Special 
+purpose integer arithmetic</span></a></div>
+<div class="toc-h3"><a class="sec" href="arith.html#sec:4.27.2"><span class="sec-nr">4.27.2</span> <span class="sec-title">General 
+purpose arithmetic</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.1"><span class="sec-nr">4.27.2.1</span> <span class="sec-title">Arithmetic 
+types</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.2"><span class="sec-nr">4.27.2.2</span> <span class="sec-title">Rational 
+number examples</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.3"><span class="sec-nr">4.27.2.3</span> <span class="sec-title">Rational 
+numbers or floats</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.4"><span class="sec-nr">4.27.2.4</span> <span class="sec-title">IEEE 
+754 floating point arithmetic</span></a></div>
+<div class="toc-h4"><a class="sec" href="arith.html#sec:4.27.2.5"><span class="sec-nr">4.27.2.5</span> <span class="sec-title">Arithmetic 
+Functions</span></a></div>
+<div class="toc-h2"><a class="sec" href="miscarith.html"><span class="sec-nr">4.28</span> <span class="sec-title">Misc 
+arithmetic support predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="builtinlist.html"><span class="sec-nr">4.29</span> <span class="sec-title">Built-in 
+list operations</span></a></div>
+<div class="toc-h2"><a class="sec" href="allsolutions.html"><span class="sec-nr">4.30</span> <span class="sec-title">Finding 
+all Solutions to a Goal</span></a></div>
+<div class="toc-h2"><a class="sec" href="forall2.html"><span class="sec-nr">4.31</span> <span class="sec-title">Forall</span></a></div>
+<div class="toc-h2"><a class="sec" href="format.html"><span class="sec-nr">4.32</span> <span class="sec-title">Formatted 
+Write</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.1"><span class="sec-nr">4.32.1</span> <span class="sec-title">Writef</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.2"><span class="sec-nr">4.32.2</span> <span class="sec-title">Format</span></a></div>
+<div class="toc-h3"><a class="sec" href="format.html#sec:4.32.3"><span class="sec-nr">4.32.3</span> <span class="sec-title">Programming 
+Format</span></a></div>
+<div class="toc-h2"><a class="sec" href="gvar.html"><span class="sec-nr">4.33</span> <span class="sec-title">Global 
+variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="gvar.html#sec:4.33.1"><span class="sec-nr">4.33.1</span> <span class="sec-title">Compatibility 
+of SWI-Prolog Global Variables</span></a></div>
+<div class="toc-h2"><a class="sec" href="tty.html"><span class="sec-nr">4.34</span> <span class="sec-title">Terminal 
+Control</span></a></div>
+<div class="toc-h2"><a class="sec" href="system.html"><span class="sec-nr">4.35</span> <span class="sec-title">Operating 
+System Interaction</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.1"><span class="sec-nr">4.35.1</span> <span class="sec-title">Windows-specific 
+Operating System Interaction</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.2"><span class="sec-nr">4.35.2</span> <span class="sec-title">Dealing 
+with time and date</span></a></div>
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.1"><span class="sec-nr">4.35.2.1</span> <span class="sec-title">Time 
+and date data structures</span></a></div>
+<div class="toc-h4"><a class="sec" href="system.html#sec:4.35.2.2"><span class="sec-nr">4.35.2.2</span> <span class="sec-title">Time 
+and date predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="system.html#sec:4.35.3"><span class="sec-nr">4.35.3</span> <span class="sec-title">Controlling 
+the <b>swipl-win.exe</b> console window</span></a></div>
+<div class="toc-h2"><a class="sec" href="files.html"><span class="sec-nr">4.36</span> <span class="sec-title">File 
+System Interaction</span></a></div>
+<div class="toc-h2"><a class="sec" href="toplevel.html"><span class="sec-nr">4.37</span> <span class="sec-title">User 
+Top-level Manipulation</span></a></div>
+<div class="toc-h2"><a class="sec" href="protocol.html"><span class="sec-nr">4.38</span> <span class="sec-title">Creating 
+a Protocol of the User Interaction</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugger.html"><span class="sec-nr">4.39</span> <span class="sec-title">Debugging 
+and Tracing Programs</span></a></div>
+<div class="toc-h2"><a class="sec" href="statistics.html"><span class="sec-nr">4.40</span> <span class="sec-title">Obtaining 
+Runtime Statistics</span></a></div>
+<div class="toc-h2"><a class="sec" href="profile.html"><span class="sec-nr">4.41</span> <span class="sec-title">Execution 
+profiling</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.1"><span class="sec-nr">4.41.1</span> <span class="sec-title">Profiling 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.2"><span class="sec-nr">4.41.2</span> <span class="sec-title">Visualizing 
+profiling data</span></a></div>
+<div class="toc-h3"><a class="sec" href="profile.html#sec:4.41.3"><span class="sec-nr">4.41.3</span> <span class="sec-title">Information 
+gathering</span></a></div>
+<div class="toc-h4"><a class="sec" href="profile.html#sec:4.41.3.1"><span class="sec-nr">4.41.3.1</span> <span class="sec-title">Profiling 
+in the Windows Implementation</span></a></div>
+<div class="toc-h2"><a class="sec" href="memory.html"><span class="sec-nr">4.42</span> <span class="sec-title">Memory 
+Management</span></a></div>
+<div class="toc-h3"><a class="sec" href="memory.html#sec:4.42.1"><span class="sec-nr">4.42.1</span> <span class="sec-title">Garbage 
+collection</span></a></div>
+<div class="toc-h3"><a class="sec" href="memory.html#sec:4.42.2"><span class="sec-nr">4.42.2</span> <span class="sec-title">Heap 
+memory (malloc)</span></a></div>
+<div class="toc-h2"><a class="sec" href="DDE.html"><span class="sec-nr">4.43</span> <span class="sec-title">Windows 
+DDE interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="DDE.html#sec:4.43.1"><span class="sec-nr">4.43.1</span> <span class="sec-title">DDE 
+client interface</span></a></div>
+<div class="toc-h3"><a class="sec" href="DDE.html#sec:4.43.2"><span class="sec-nr">4.43.2</span> <span class="sec-title">DDE 
+server mode</span></a></div>
+<div class="toc-h2"><a class="sec" href="miscpreds.html"><span class="sec-nr">4.44</span> <span class="sec-title">Miscellaneous</span></a></div>
+<div class="toc-h1"><a class="sec" href="extensions.html"><span class="sec-nr">5</span> <span class="sec-title">SWI-Prolog 
+extensions</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-lists.html"><span class="sec-nr">5.1</span> <span class="sec-title">Lists 
+are special</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-lists.html#sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&rsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
+for lists</span></a></div>
+<div class="toc-h2"><a class="sec" href="string.html"><span class="sec-nr">5.2</span> <span class="sec-title">The 
+string type and its double quoted syntax</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Predicates 
+that operate on strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Representing 
+text: strings, atoms and code lists</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Adapting 
+code for double quoted strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Why 
+has the representation of double quoted text changed?</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-syntax.html"><span class="sec-nr">5.3</span> <span class="sec-title">Syntax 
+changes</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.1"><span class="sec-nr">5.3.1</span> <span class="sec-title">Operators 
+and quoted atoms</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.2"><span class="sec-nr">5.3.2</span> <span class="sec-title">Compound 
+terms with zero arguments</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.3"><span class="sec-nr">5.3.3</span> <span class="sec-title">Block 
+operators</span></a></div>
+<div class="toc-h2"><a class="sec" href="bidicts.html"><span class="sec-nr">5.4</span> <span class="sec-title">Dicts: 
+structures with named arguments</span></a></div>
+<div class="toc-h3"><a class="sec" href="bidicts.html#sec:5.4.1"><span class="sec-nr">5.4.1</span> <span class="sec-title">Functions 
+on dicts</span></a></div>
+<div class="toc-h4"><a class="sec" href="bidicts.html#sec:5.4.1.1"><span class="sec-nr">5.4.1.1</span> <span class="sec-title">User 
+defined functions on dicts</span></a></div>
+<div class="toc-h4"><a class="sec" href="bidicts.html#sec:5.4.1.2"><span class="sec-nr">5.4.1.2</span> <span class="sec-title">Predefined 
+functions on dicts</span></a></div>
+<div class="toc-h3"><a class="sec" href="bidicts.html#sec:5.4.2"><span class="sec-nr">5.4.2</span> <span class="sec-title">Predicates 
+for managing dicts</span></a></div>
+<div class="toc-h4"><a class="sec" href="bidicts.html#sec:5.4.2.1"><span class="sec-nr">5.4.2.1</span> <span class="sec-title">Destructive 
+assignment in dicts</span></a></div>
+<div class="toc-h3"><a class="sec" href="bidicts.html#sec:5.4.3"><span class="sec-nr">5.4.3</span> <span class="sec-title">When 
+to use dicts?</span></a></div>
+<div class="toc-h3"><a class="sec" href="bidicts.html#sec:5.4.4"><span class="sec-nr">5.4.4</span> <span class="sec-title">A 
+motivation for dicts as primary citizens</span></a></div>
+<div class="toc-h3"><a class="sec" href="bidicts.html#sec:5.4.5"><span class="sec-nr">5.4.5</span> <span class="sec-title">Implementation 
+notes about dicts</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-integration.html"><span class="sec-nr">5.5</span> <span class="sec-title">Integration 
+of strings and dicts in the libraries</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.1"><span class="sec-nr">5.5.1</span> <span class="sec-title">Dicts 
+and option processing</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.2"><span class="sec-nr">5.5.2</span> <span class="sec-title">Dicts 
+in core data structures</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.3"><span class="sec-nr">5.5.3</span> <span class="sec-title">Dicts, 
+strings and XML</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.4"><span class="sec-nr">5.5.4</span> <span class="sec-title">Dicts, 
+strings and JSON</span></a></div>
+<div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.5"><span class="sec-nr">5.5.5</span> <span class="sec-title">Dicts, 
+strings and HTTP</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-issues.html"><span class="sec-nr">5.6</span> <span class="sec-title">Remaining 
+issues</span></a></div>
+<div class="toc-h1"><a class="sec" href="modules.html"><span class="sec-nr">6</span> <span class="sec-title">Modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="whymodules.html"><span class="sec-nr">6.1</span> <span class="sec-title">Why 
+Use Modules?</span></a></div>
+<div class="toc-h2"><a class="sec" href="defmodule.html"><span class="sec-nr">6.2</span> <span class="sec-title">Defining 
+a Module</span></a></div>
+<div class="toc-h2"><a class="sec" href="import.html"><span class="sec-nr">6.3</span> <span class="sec-title">Importing 
+Predicates into a Module</span></a></div>
+<div class="toc-h2"><a class="sec" href="module-autoload.html"><span class="sec-nr">6.4</span> <span class="sec-title">Controlled 
+autoloading for modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="metapred.html"><span class="sec-nr">6.5</span> <span class="sec-title">Defining 
+a meta-predicate</span></a></div>
+<div class="toc-h2"><a class="sec" href="overrule.html"><span class="sec-nr">6.6</span> <span class="sec-title">Overruling 
+Module Boundaries</span></a></div>
+<div class="toc-h3"><a class="sec" href="overrule.html#sec:6.6.1"><span class="sec-nr">6.6.1</span> <span class="sec-title">Explicit 
+manipulation of the calling context</span></a></div>
+<div class="toc-h2"><a class="sec" href="mtoplevel.html"><span class="sec-nr">6.7</span> <span class="sec-title">Interacting 
+with modules from the top level</span></a></div>
+<div class="toc-h2"><a class="sec" href="reexport.html"><span class="sec-nr">6.8</span> <span class="sec-title">Composing 
+modules from other modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="moduleop.html"><span class="sec-nr">6.9</span> <span class="sec-title">Operators 
+and modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="importmodule.html"><span class="sec-nr">6.10</span> <span class="sec-title">Dynamic 
+importing using import modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="resmodules.html"><span class="sec-nr">6.11</span> <span class="sec-title">Reserved 
+Modules and using the&lsquo;user' module</span></a></div>
+<div class="toc-h2"><a class="sec" href="altmoduleapi.html"><span class="sec-nr">6.12</span> <span class="sec-title">An 
+alternative import/export interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="dynamic-modules.html"><span class="sec-nr">6.13</span> <span class="sec-title">Dynamic 
+Modules</span></a></div>
+<div class="toc-h2"><a class="sec" href="ctxmodule.html"><span class="sec-nr">6.14</span> <span class="sec-title">Transparent 
+predicates: definition and context module</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipmodule.html"><span class="sec-nr">6.15</span> <span class="sec-title">Module 
+properties</span></a></div>
+<div class="toc-h2"><a class="sec" href="modulecompat.html"><span class="sec-nr">6.16</span> <span class="sec-title">Compatibility 
+of the Module System</span></a></div>
+<div class="toc-h1"><a class="sec" href="tabling.html"><span class="sec-nr">7</span> <span class="sec-title">Tabled 
+execution (SLG resolution)</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-memoize.html"><span class="sec-nr">7.1</span> <span class="sec-title">Example 
+1: using tabling for memoizing</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-non-termination.html"><span class="sec-nr">7.2</span> <span class="sec-title">Example 
+2: avoiding non-termination</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-mode-directed.html"><span class="sec-nr">7.3</span> <span class="sec-title">Answer 
+subsumption or mode directed tabling</span></a></div>
+<div class="toc-h2"><a class="sec" href="tnotpure.html"><span class="sec-nr">7.4</span> <span class="sec-title">Tabling 
+for impure programs</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-subsumptive.html"><span class="sec-nr">7.5</span> <span class="sec-title">Variant 
+and subsumptive tabling</span></a></div>
+<div class="toc-h2"><a class="sec" href="WFS.html"><span class="sec-nr">7.6</span> <span class="sec-title">Well 
+Founded Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="WFS.html#sec:7.6.1"><span class="sec-nr">7.6.1</span> <span class="sec-title">Well 
+founded semantics and the toplevel</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-incremental.html"><span class="sec-nr">7.7</span> <span class="sec-title">Incremental 
+tabling</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-monotonic.html"><span class="sec-nr">7.8</span> <span class="sec-title">Monotonic 
+tabling</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-shared.html"><span class="sec-nr">7.9</span> <span class="sec-title">Shared 
+tabling</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-shared.html#sec:7.9.1"><span class="sec-nr">7.9.1</span> <span class="sec-title">Abolishing 
+shared tables</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-shared.html#sec:7.9.2"><span class="sec-nr">7.9.2</span> <span class="sec-title">Status 
+and future of shared tabling</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-restraints.html"><span class="sec-nr">7.10</span> <span class="sec-title">Tabling 
+restraints: bounded rationality and tripwires</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-restraints.html#sec:7.10.1"><span class="sec-nr">7.10.1</span> <span class="sec-title">Restraint 
+subgoal size</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-restraints.html#sec:7.10.2"><span class="sec-nr">7.10.2</span> <span class="sec-title">Restraint 
+answer size</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-restraints.html#sec:7.10.3"><span class="sec-nr">7.10.3</span> <span class="sec-title">Restraint 
+answer count</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-preds.html"><span class="sec-nr">7.11</span> <span class="sec-title">Tabling 
+predicate reference</span></a></div>
+<div class="toc-h2"><a class="sec" href="tabling-about.html"><span class="sec-nr">7.12</span> <span class="sec-title">About 
+the tabling implementation</span></a></div>
+<div class="toc-h4"><a class="sec" href="tabling-about.html#sec:7.12.1"><span class="sec-nr">7.12.1</span> <span class="sec-title">Status 
+of tabling</span></a></div>
+<div class="toc-h1"><a class="sec" href="clp.html"><span class="sec-nr">8</span> <span class="sec-title">Constraint 
+Logic Programming</span></a></div>
+<div class="toc-h2"><a class="sec" href="attvar.html"><span class="sec-nr">8.1</span> <span class="sec-title">Attributed 
+variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.1"><span class="sec-nr">8.1.1</span> <span class="sec-title">Attribute 
+manipulation predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.2"><span class="sec-nr">8.1.2</span> <span class="sec-title">Attributed 
+variable hooks</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.3"><span class="sec-nr">8.1.3</span> <span class="sec-title">Operations 
+on terms with attributed variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="attvar.html#sec:8.1.4"><span class="sec-nr">8.1.4</span> <span class="sec-title">Special 
+purpose predicates for attributes</span></a></div>
+<div class="toc-h2"><a class="sec" href="coroutining.html"><span class="sec-nr">8.2</span> <span class="sec-title">Coroutining</span></a></div>
+<div class="toc-h1"><a class="sec" href="chr.html"><span class="sec-nr">9</span> <span class="sec-title">CHR: 
+Constraint Handling Rules</span></a></div>
+<div class="toc-h2"><a class="sec" href="chrintro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="SyntaxAndSemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">Syntax 
+and Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
+of CHR rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics</span></a></div>
+<div class="toc-h2"><a class="sec" href="practical.html"><span class="sec-nr">9.3</span> <span class="sec-title">CHR 
+in SWI-Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.1"><span class="sec-nr">9.3.1</span> <span class="sec-title">Embedding 
+in Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">Constraint 
+declaration</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">Compilation</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">Ports</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
+Debugging Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">Examples</span></a></div>
+<div class="toc-h2"><a class="sec" href="sicstus-chr.html"><span class="sec-nr">9.6</span> <span class="sec-title">Backwards 
+Compatibility</span></a></div>
+<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
+Old SICStus CHR implementation</span></a></div>
+<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
+Old ECLiPSe CHR implementation</span></a></div>
+<div class="toc-h2"><a class="sec" href="guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">Programming 
+Tips and Tricks</span></a></div>
+<div class="toc-h2"><a class="sec" href="errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">Compiler 
+Errors and Warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
+Compiler Errors</span></a></div>
+<div class="toc-h1"><a class="sec" href="threads.html"><span class="sec-nr">10</span> <span class="sec-title">Multithreaded 
+applications</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadcreate.html"><span class="sec-nr">10.1</span> <span class="sec-title">Creating 
+and destroying Prolog threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="thmonitor.html"><span class="sec-nr">10.2</span> <span class="sec-title">Monitoring 
+threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadcom.html"><span class="sec-nr">10.3</span> <span class="sec-title">Thread 
+communication</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.1"><span class="sec-nr">10.3.1</span> <span class="sec-title">Message 
+queues</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.2"><span class="sec-nr">10.3.2</span> <span class="sec-title">Waiting 
+for events</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.3"><span class="sec-nr">10.3.3</span> <span class="sec-title">Signalling 
+threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.4"><span class="sec-nr">10.3.4</span> <span class="sec-title">Threads 
+and dynamic predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadsync.html"><span class="sec-nr">10.4</span> <span class="sec-title">Thread 
+synchronisation</span></a></div>
+<div class="toc-h2"><a class="sec" href="thutil.html"><span class="sec-nr">10.5</span> <span class="sec-title">Thread 
+support library(threadutil)</span></a></div>
+<div class="toc-h3"><a class="sec" href="thutil.html#sec:10.5.1"><span class="sec-nr">10.5.1</span> <span class="sec-title">Debugging 
+threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="thutil.html#sec:10.5.2"><span class="sec-nr">10.5.2</span> <span class="sec-title">Profiling 
+threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignthread.html"><span class="sec-nr">10.6</span> <span class="sec-title">Multithreaded 
+mixed C and Prolog applications</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignthread.html#sec:10.6.1"><span class="sec-nr">10.6.1</span> <span class="sec-title">A 
+Prolog thread for each native thread (one-to-one)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignthread.html#sec:10.6.2"><span class="sec-nr">10.6.2</span> <span class="sec-title">Pooling 
+Prolog engines (many-to-many)</span></a></div>
+<div class="toc-h2"><a class="sec" href="mt-xpce.html"><span class="sec-nr">10.7</span> <span class="sec-title">Multithreading 
+and the XPCE graphics system</span></a></div>
+<div class="toc-h1"><a class="sec" href="engines.html"><span class="sec-nr">11</span> <span class="sec-title">Coroutining 
+using Prolog engines</span></a></div>
+<div class="toc-h2"><a class="sec" href="engine-examples.html"><span class="sec-nr">11.1</span> <span class="sec-title">Examples 
+using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.1"><span class="sec-nr">11.1.1</span> <span class="sec-title">Aggregation 
+using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.2"><span class="sec-nr">11.1.2</span> <span class="sec-title">State 
+accumulation using engines</span></a></div>
+<div class="toc-h3"><a class="sec" href="engine-examples.html#sec:11.1.3"><span class="sec-nr">11.1.3</span> <span class="sec-title">Scalable 
+many-agent applications</span></a></div>
+<div class="toc-h2"><a class="sec" href="engine-resources.html"><span class="sec-nr">11.2</span> <span class="sec-title">Engine 
+resource usage</span></a></div>
+<div class="toc-h2"><a class="sec" href="engine-predicates.html"><span class="sec-nr">11.3</span> <span class="sec-title">Engine 
+predicate reference</span></a></div>
+<div class="toc-h1"><a class="sec" href="foreign.html"><span class="sec-nr">12</span> <span class="sec-title">Foreign 
+Language Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignoverview.html"><span class="sec-nr">12.1</span> <span class="sec-title">Overview 
+of the Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignlink.html"><span class="sec-nr">12.2</span> <span class="sec-title">Linking 
+Foreign Modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.1"><span class="sec-nr">12.2.1</span> <span class="sec-title">What 
+linking is provided?</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.2"><span class="sec-nr">12.2.2</span> <span class="sec-title">What 
+kind of loading should I be using?</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.3"><span class="sec-nr">12.2.3</span> <span class="sec-title">library(shlib): 
+Utility library for loading foreign objects (DLLs, shared objects)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.4"><span class="sec-nr">12.2.4</span> <span class="sec-title">Low-level 
+operations on shared libraries</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.5"><span class="sec-nr">12.2.5</span> <span class="sec-title">Static 
+Linking</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreigntypes.html"><span class="sec-nr">12.3</span> <span class="sec-title">Interface 
+Data Types</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigntypes.html#sec:12.3.1"><span class="sec-nr">12.3.1</span> <span class="sec-title">Type <code>term_t</code>: 
+a reference to a Prolog term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigntypes.html#sec:12.3.1.1"><span class="sec-nr">12.3.1.1</span> <span class="sec-title">Interaction 
+with the garbage collector and stack-shifter</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigntypes.html#sec:12.3.2"><span class="sec-nr">12.3.2</span> <span class="sec-title">Other 
+foreign interface types</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigntypes.html#sec:12.3.2.1"><span class="sec-nr">12.3.2.1</span> <span class="sec-title">PL_ARITY_AS_SIZE</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreigninclude.html"><span class="sec-nr">12.4</span> <span class="sec-title">The 
+Foreign Include File</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.1"><span class="sec-nr">12.4.1</span> <span class="sec-title">Argument 
+Passing and Control</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.1.1"><span class="sec-nr">12.4.1.1</span> <span class="sec-title">Non-deterministic 
+Foreign Predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.2"><span class="sec-nr">12.4.2</span> <span class="sec-title">Atoms 
+and functors</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.2.1"><span class="sec-nr">12.4.2.1</span> <span class="sec-title">Atoms 
+and atom garbage collection</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.3"><span class="sec-nr">12.4.3</span> <span class="sec-title">Analysing 
+Terms via the Foreign Interface</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.1"><span class="sec-nr">12.4.3.1</span> <span class="sec-title">Testing 
+the type of a term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.2"><span class="sec-nr">12.4.3.2</span> <span class="sec-title">Reading 
+data from a term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.3"><span class="sec-nr">12.4.3.3</span> <span class="sec-title">Exchanging 
+text using length and string</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.4"><span class="sec-nr">12.4.3.4</span> <span class="sec-title">Wide-character 
+versions</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.5"><span class="sec-nr">12.4.3.5</span> <span class="sec-title">Reading 
+a list</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.6"><span class="sec-nr">12.4.3.6</span> <span class="sec-title">An 
+example: defining write/1 in C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.4"><span class="sec-nr">12.4.4</span> <span class="sec-title">Constructing 
+Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.5"><span class="sec-nr">12.4.5</span> <span class="sec-title">Unifying 
+data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.6"><span class="sec-nr">12.4.6</span> <span class="sec-title">Convenient 
+functions to generate Prolog exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.7"><span class="sec-nr">12.4.7</span> <span class="sec-title">Serializing 
+and deserializing Prolog terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.8"><span class="sec-nr">12.4.8</span> <span class="sec-title">BLOBS: 
+Using atoms to store arbitrary binary data</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.8.1"><span class="sec-nr">12.4.8.1</span> <span class="sec-title">Defining 
+a BLOB type</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.8.2"><span class="sec-nr">12.4.8.2</span> <span class="sec-title">Accessing 
+blobs</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.9"><span class="sec-nr">12.4.9</span> <span class="sec-title">Exchanging 
+GMP numbers</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.10"><span class="sec-nr">12.4.10</span> <span class="sec-title">Calling 
+Prolog from C</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.10.1"><span class="sec-nr">12.4.10.1</span> <span class="sec-title">Predicate 
+references</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.10.2"><span class="sec-nr">12.4.10.2</span> <span class="sec-title">Initiating 
+a query from C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.11"><span class="sec-nr">12.4.11</span> <span class="sec-title">Discarding 
+Data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.12"><span class="sec-nr">12.4.12</span> <span class="sec-title">String 
+buffering</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.13"><span class="sec-nr">12.4.13</span> <span class="sec-title">Foreign 
+Code and Modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.14"><span class="sec-nr">12.4.14</span> <span class="sec-title">Prolog 
+exceptions in foreign code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.15"><span class="sec-nr">12.4.15</span> <span class="sec-title">Catching 
+Signals (Software Interrupts)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.16"><span class="sec-nr">12.4.16</span> <span class="sec-title">Miscellaneous</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.1"><span class="sec-nr">12.4.16.1</span> <span class="sec-title">Term 
+Comparison</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.2"><span class="sec-nr">12.4.16.2</span> <span class="sec-title">Recorded 
+database</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.3"><span class="sec-nr">12.4.16.3</span> <span class="sec-title">Database</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.4"><span class="sec-nr">12.4.16.4</span> <span class="sec-title">Getting 
+file names</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.5"><span class="sec-nr">12.4.16.5</span> <span class="sec-title">Dealing 
+with Prolog flags from C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.17"><span class="sec-nr">12.4.17</span> <span class="sec-title">Errors 
+and warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.18"><span class="sec-nr">12.4.18</span> <span class="sec-title">Environment 
+Control from Foreign Code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.19"><span class="sec-nr">12.4.19</span> <span class="sec-title">Querying 
+Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.20"><span class="sec-nr">12.4.20</span> <span class="sec-title">Registering 
+Foreign Predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.21"><span class="sec-nr">12.4.21</span> <span class="sec-title">Foreign 
+Code Hooks</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.22"><span class="sec-nr">12.4.22</span> <span class="sec-title">Storing 
+foreign data</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.22.1"><span class="sec-nr">12.4.22.1</span> <span class="sec-title">Examples 
+for storing foreign data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.23"><span class="sec-nr">12.4.23</span> <span class="sec-title">Embedding 
+SWI-Prolog in other applications</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.23.1"><span class="sec-nr">12.4.23.1</span> <span class="sec-title">Threading, 
+Signals and embedded Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="plld.html"><span class="sec-nr">12.5</span> <span class="sec-title">Linking 
+embedded applications using swipl-ld</span></a></div>
+<div class="toc-h3"><a class="sec" href="plld.html#sec:12.5.1"><span class="sec-nr">12.5.1</span> <span class="sec-title">A 
+simple example</span></a></div>
+<div class="toc-h2"><a class="sec" href="findhome.html"><span class="sec-nr">12.6</span> <span class="sec-title">The 
+Prolog&lsquo;home' directory</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignxmp.html"><span class="sec-nr">12.7</span> <span class="sec-title">Example 
+of Using the Foreign Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignnotes.html"><span class="sec-nr">12.8</span> <span class="sec-title">Notes 
+on Using Foreign Code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.1"><span class="sec-nr">12.8.1</span> <span class="sec-title">Foreign 
+debugging functions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.2"><span class="sec-nr">12.8.2</span> <span class="sec-title">Memory 
+Allocation</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.3"><span class="sec-nr">12.8.3</span> <span class="sec-title">Compatibility 
+between Prolog versions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.4"><span class="sec-nr">12.8.4</span> <span class="sec-title">Foreign 
+hash tables</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.5"><span class="sec-nr">12.8.5</span> <span class="sec-title">Debugging 
+and profiling foreign code (valgrind)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.6"><span class="sec-nr">12.8.6</span> <span class="sec-title">Name 
+Conflicts in C modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.7"><span class="sec-nr">12.8.7</span> <span class="sec-title">Compatibility 
+of the Foreign Interface</span></a></div>
+<div class="toc-h1"><a class="sec" href="runtime.html"><span class="sec-nr">13</span> <span class="sec-title">Deploying 
+applications</span></a></div>
+<div class="toc-h2"><a class="sec" href="deployment-options.html"><span class="sec-nr">13.1</span> <span class="sec-title">Deployment 
+options</span></a></div>
+<div class="toc-h2"><a class="sec" href="saved-states.html"><span class="sec-nr">13.2</span> <span class="sec-title">Understanding 
+saved states</span></a></div>
+<div class="toc-h3"><a class="sec" href="saved-states.html#sec:13.2.1"><span class="sec-nr">13.2.1</span> <span class="sec-title">Creating 
+a saved state</span></a></div>
+<div class="toc-h3"><a class="sec" href="saved-states.html#sec:13.2.2"><span class="sec-nr">13.2.2</span> <span class="sec-title">Limitations 
+of qsave_program</span></a></div>
+<div class="toc-h3"><a class="sec" href="saved-states.html#sec:13.2.3"><span class="sec-nr">13.2.3</span> <span class="sec-title">Runtimes 
+and Foreign Code</span></a></div>
+<div class="toc-h2"><a class="sec" href="state-initialization.html"><span class="sec-nr">13.3</span> <span class="sec-title">State 
+initialization</span></a></div>
+<div class="toc-h2"><a class="sec" href="program-resources.html"><span class="sec-nr">13.4</span> <span class="sec-title">Using 
+program resources</span></a></div>
+<div class="toc-h3"><a class="sec" href="program-resources.html#sec:13.4.1"><span class="sec-nr">13.4.1</span> <span class="sec-title">Resources 
+as files</span></a></div>
+<div class="toc-h3"><a class="sec" href="program-resources.html#sec:13.4.2"><span class="sec-nr">13.4.2</span> <span class="sec-title">Access 
+resources using open_resource</span></a></div>
+<div class="toc-h3"><a class="sec" href="program-resources.html#sec:13.4.3"><span class="sec-nr">13.4.3</span> <span class="sec-title">Declaring 
+resources</span></a></div>
+<div class="toc-h3"><a class="sec" href="program-resources.html#sec:13.4.4"><span class="sec-nr">13.4.4</span> <span class="sec-title">Managing 
+resource files</span></a></div>
+<div class="toc-h2"><a class="sec" href="debug-deployed-systems.html"><span class="sec-nr">13.5</span> <span class="sec-title">Debugging 
+and updating deployed systems</span></a></div>
+<div class="toc-h2"><a class="sec" href="protect-code.html"><span class="sec-nr">13.6</span> <span class="sec-title">Protecting 
+your code</span></a></div>
+<div class="toc-h3"><a class="sec" href="protect-code.html#sec:13.6.1"><span class="sec-nr">13.6.1</span> <span class="sec-title">Obfuscating 
+code in saved states</span></a></div>
+<div class="toc-h2"><a class="sec" href="findappfile.html"><span class="sec-nr">13.7</span> <span class="sec-title">Finding 
+Application files</span></a></div>
+<div class="toc-h1"><a class="sec" href="libpl.html"><span class="sec-nr">A</span> <span class="sec-title">The 
+SWI-Prolog library</span></a></div>
+<div class="toc-h2"><a class="sec" href="aggregate.html"><span class="sec-nr">A.1</span> <span class="sec-title">library(aggregate): 
+Aggregation operators on backtrackable predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="ansiterm.html"><span class="sec-nr">A.2</span> <span class="sec-title">library(ansi_term): 
+Print decorated text to ANSI consoles</span></a></div>
+<div class="toc-h2"><a class="sec" href="apply.html"><span class="sec-nr">A.3</span> <span class="sec-title">library(apply): 
+Apply predicates on a list</span></a></div>
+<div class="toc-h2"><a class="sec" href="assoc.html"><span class="sec-nr">A.4</span> <span class="sec-title">library(assoc): 
+Association lists</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.1"><span class="sec-nr">A.4.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.2"><span class="sec-nr">A.4.2</span> <span class="sec-title">Creating 
+association lists</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.3"><span class="sec-nr">A.4.3</span> <span class="sec-title">Querying 
+association lists</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.4"><span class="sec-nr">A.4.4</span> <span class="sec-title">Modifying 
+association lists</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.5"><span class="sec-nr">A.4.5</span> <span class="sec-title">Conversion 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="assoc.html#sec:A.4.6"><span class="sec-nr">A.4.6</span> <span class="sec-title">Reasoning 
+about association lists and their elements</span></a></div>
+<div class="toc-h2"><a class="sec" href="broadcast.html"><span class="sec-nr">A.5</span> <span class="sec-title">library(broadcast): 
+Broadcast and receive event notifications</span></a></div>
+<div class="toc-h2"><a class="sec" href="charsio.html"><span class="sec-nr">A.6</span> <span class="sec-title">library(charsio): 
+I/O on Lists of Character Codes</span></a></div>
+<div class="toc-h2"><a class="sec" href="check.html"><span class="sec-nr">A.7</span> <span class="sec-title">library(check): 
+Consistency checking</span></a></div>
+<div class="toc-h2"><a class="sec" href="clpb.html"><span class="sec-nr">A.8</span> <span class="sec-title">library(clpb): 
+CLP(B): Constraint Logic Programming over Boolean Variables</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.1"><span class="sec-nr">A.8.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.2"><span class="sec-nr">A.8.2</span> <span class="sec-title">Boolean 
+expressions</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.3"><span class="sec-nr">A.8.3</span> <span class="sec-title">Interface 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.4"><span class="sec-nr">A.8.4</span> <span class="sec-title">Examples</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.5"><span class="sec-nr">A.8.5</span> <span class="sec-title">Obtaining 
+BDDs</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.6"><span class="sec-nr">A.8.6</span> <span class="sec-title">Enabling 
+monotonic CLP(B)</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.7"><span class="sec-nr">A.8.7</span> <span class="sec-title">Example: 
+Pigeons</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.8"><span class="sec-nr">A.8.8</span> <span class="sec-title">Example: 
+Boolean circuit</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.9"><span class="sec-nr">A.8.9</span> <span class="sec-title">Acknowledgments</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpb.html#sec:A.8.10"><span class="sec-nr">A.8.10</span> <span class="sec-title">CLP(B) 
+predicate index</span></a></div>
+<div class="toc-h2"><a class="sec" href="clpfd.html"><span class="sec-nr">A.9</span> <span class="sec-title">library(clpfd): 
+CLP(FD): Constraint Logic Programming over Finite Domains</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.1"><span class="sec-nr">A.9.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.2"><span class="sec-nr">A.9.2</span> <span class="sec-title">Arithmetic 
+constraints</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.3"><span class="sec-nr">A.9.3</span> <span class="sec-title">Declarative 
+integer arithmetic</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.4"><span class="sec-nr">A.9.4</span> <span class="sec-title">Example: 
+Factorial relation</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.5"><span class="sec-nr">A.9.5</span> <span class="sec-title">Combinatorial 
+constraints</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.6"><span class="sec-nr">A.9.6</span> <span class="sec-title">Domains</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.7"><span class="sec-nr">A.9.7</span> <span class="sec-title">Example: 
+Sudoku</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.8"><span class="sec-nr">A.9.8</span> <span class="sec-title">Residual 
+goals</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.9"><span class="sec-nr">A.9.9</span> <span class="sec-title">Core 
+relations and search</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.10"><span class="sec-nr">A.9.10</span> <span class="sec-title">Example: 
+Eight queens puzzle</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.11"><span class="sec-nr">A.9.11</span> <span class="sec-title">Optimisation</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.12"><span class="sec-nr">A.9.12</span> <span class="sec-title">Reification</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.13"><span class="sec-nr">A.9.13</span> <span class="sec-title">Enabling 
+monotonic CLP(FD)</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.14"><span class="sec-nr">A.9.14</span> <span class="sec-title">Custom 
+constraints</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.15"><span class="sec-nr">A.9.15</span> <span class="sec-title">Applications</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.16"><span class="sec-nr">A.9.16</span> <span class="sec-title">Acknowledgments</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.17"><span class="sec-nr">A.9.17</span> <span class="sec-title">CLP(FD) 
+predicate index</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.1"><span class="sec-nr">A.9.17.1</span> <span class="sec-title">Arithmetic 
+constraints</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.2"><span class="sec-nr">A.9.17.2</span> <span class="sec-title">Membership 
+constraints</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.3"><span class="sec-nr">A.9.17.3</span> <span class="sec-title">Enumeration 
+predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.4"><span class="sec-nr">A.9.17.4</span> <span class="sec-title">Global 
+constraints</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.5"><span class="sec-nr">A.9.17.5</span> <span class="sec-title">Reification 
+predicates</span></a></div>
+<div class="toc-h4"><a class="sec" href="clpfd.html#sec:A.9.17.6"><span class="sec-nr">A.9.17.6</span> <span class="sec-title">Reflection 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpfd.html#sec:A.9.18"><span class="sec-nr">A.9.18</span> <span class="sec-title">Closing 
+and opening words about CLP(FD)</span></a></div>
+<div class="toc-h2"><a class="sec" href="clpqr.html"><span class="sec-nr">A.10</span> <span class="sec-title">library(clpqr): 
+Constraint Logic Programming over Rationals and Reals</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpqr.html#sec:A.10.1"><span class="sec-nr">A.10.1</span> <span class="sec-title">Solver 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpqr.html#sec:A.10.2"><span class="sec-nr">A.10.2</span> <span class="sec-title">Syntax 
+of the predicate arguments</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpqr.html#sec:A.10.3"><span class="sec-nr">A.10.3</span> <span class="sec-title">Use 
+of unification</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpqr.html#sec:A.10.4"><span class="sec-nr">A.10.4</span> <span class="sec-title">Non-linear 
+constraints</span></a></div>
+<div class="toc-h3"><a class="sec" href="clpqr.html#sec:A.10.5"><span class="sec-nr">A.10.5</span> <span class="sec-title">Status 
+and known problems</span></a></div>
+<div class="toc-h2"><a class="sec" href="csv.html"><span class="sec-nr">A.11</span> <span class="sec-title">library(csv): 
+Process CSV (Comma-Separated Values) data</span></a></div>
+<div class="toc-h2"><a class="sec" href="basics.html"><span class="sec-nr">A.12</span> <span class="sec-title">library(dcg/basics): 
+Various general DCG utilities</span></a></div>
+<div class="toc-h2"><a class="sec" href="highorder.html"><span class="sec-nr">A.13</span> <span class="sec-title">library(dcg/high_order): 
+High order grammar operations</span></a></div>
+<div class="toc-h2"><a class="sec" href="debug.html"><span class="sec-nr">A.14</span> <span class="sec-title">library(debug): 
+Print debug messages and test assertions</span></a></div>
+<div class="toc-h2"><a class="sec" href="dicts.html"><span class="sec-nr">A.15</span> <span class="sec-title">library(dicts): 
+Dict utilities</span></a></div>
+<div class="toc-h2"><a class="sec" href="error.html"><span class="sec-nr">A.16</span> <span class="sec-title">library(error): 
+Error generating support</span></a></div>
+<div class="toc-h2"><a class="sec" href="gensym.html"><span class="sec-nr">A.17</span> <span class="sec-title">library(gensym): 
+Generate unique identifiers</span></a></div>
+<div class="toc-h2"><a class="sec" href="intercept.html"><span class="sec-nr">A.18</span> <span class="sec-title">library(intercept): 
+Intercept and signal interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="iostream.html"><span class="sec-nr">A.19</span> <span class="sec-title">library(iostream): 
+Utilities to deal with streams</span></a></div>
+<div class="toc-h2"><a class="sec" href="listing.html"><span class="sec-nr">A.20</span> <span class="sec-title">library(listing): 
+List programs and pretty print clauses</span></a></div>
+<div class="toc-h2"><a class="sec" href="lists.html"><span class="sec-nr">A.21</span> <span class="sec-title">library(lists): 
+List Manipulation</span></a></div>
+<div class="toc-h2"><a class="sec" href="main.html"><span class="sec-nr">A.22</span> <span class="sec-title">library(main): 
+Provide entry point for scripts</span></a></div>
+<div class="toc-h2"><a class="sec" href="nb_set.html"><span class="sec-nr">A.23</span> <span class="sec-title">library(nb_set): 
+Non-backtrackable set</span></a></div>
+<div class="toc-h2"><a class="sec" href="www_browser.html"><span class="sec-nr">A.24</span> <span class="sec-title">library(www_browser): 
+Activating your Web-browser</span></a></div>
+<div class="toc-h2"><a class="sec" href="occurs.html"><span class="sec-nr">A.25</span> <span class="sec-title">library(occurs): 
+Finding and counting sub-terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="option.html"><span class="sec-nr">A.26</span> <span class="sec-title">library(option): 
+Option list processing</span></a></div>
+<div class="toc-h2"><a class="sec" href="optparse.html"><span class="sec-nr">A.27</span> <span class="sec-title">library(optparse): 
+command line parsing</span></a></div>
+<div class="toc-h3"><a class="sec" href="optparse.html#sec:A.27.1"><span class="sec-nr">A.27.1</span> <span class="sec-title">Notes 
+and tips</span></a></div>
+<div class="toc-h2"><a class="sec" href="ordsets.html"><span class="sec-nr">A.28</span> <span class="sec-title">library(ordsets): 
+Ordered set manipulation</span></a></div>
+<div class="toc-h2"><a class="sec" href="pairs.html"><span class="sec-nr">A.29</span> <span class="sec-title">library(pairs): 
+Operations on key-value lists</span></a></div>
+<div class="toc-h2"><a class="sec" href="persistency.html"><span class="sec-nr">A.30</span> <span class="sec-title">library(persistency): 
+Provide persistent dynamic predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="pio.html"><span class="sec-nr">A.31</span> <span class="sec-title">library(pio): 
+Pure I/O</span></a></div>
+<div class="toc-h3"><a class="sec" href="pio.html#sec:A.31.1"><span class="sec-nr">A.31.1</span> <span class="sec-title">library(pure_input): 
+Pure Input from files and streams</span></a></div>
+<div class="toc-h2"><a class="sec" href="predicate_options.html"><span class="sec-nr">A.32</span> <span class="sec-title">library(predicate_options): 
+Declare option-processing of predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="predicate_options.html#sec:A.32.1"><span class="sec-nr">A.32.1</span> <span class="sec-title">The 
+strength and weakness of predicate options</span></a></div>
+<div class="toc-h3"><a class="sec" href="predicate_options.html#sec:A.32.2"><span class="sec-nr">A.32.2</span> <span class="sec-title">Options 
+as arguments or environment?</span></a></div>
+<div class="toc-h3"><a class="sec" href="predicate_options.html#sec:A.32.3"><span class="sec-nr">A.32.3</span> <span class="sec-title">Improving 
+on the current situation</span></a></div>
+<div class="toc-h4"><a class="sec" href="predicate_options.html#sec:A.32.3.1"><span class="sec-nr">A.32.3.1</span> <span class="sec-title">Options 
+as types</span></a></div>
+<div class="toc-h4"><a class="sec" href="predicate_options.html#sec:A.32.3.2"><span class="sec-nr">A.32.3.2</span> <span class="sec-title">Reflective 
+access to options</span></a></div>
+<div class="toc-h2"><a class="sec" href="prologjiti.html"><span class="sec-nr">A.33</span> <span class="sec-title">library(prolog_jiti): 
+Just In Time Indexing (JITI) utilities</span></a></div>
+<div class="toc-h2"><a class="sec" href="prologpack.html"><span class="sec-nr">A.34</span> <span class="sec-title">library(prolog_pack): 
+A package manager for Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="prologxref.html"><span class="sec-nr">A.35</span> <span class="sec-title">library(prolog_xref): 
+Prolog cross-referencer data collection</span></a></div>
+<div class="toc-h2"><a class="sec" href="quasiquotations.html"><span class="sec-nr">A.36</span> <span class="sec-title">library(quasi_quotations): 
+Define Quasi Quotation syntax</span></a></div>
+<div class="toc-h2"><a class="sec" href="random.html"><span class="sec-nr">A.37</span> <span class="sec-title">library(random): 
+Random numbers</span></a></div>
+<div class="toc-h2"><a class="sec" href="readutil.html"><span class="sec-nr">A.38</span> <span class="sec-title">library(readutil): 
+Read utilities</span></a></div>
+<div class="toc-h2"><a class="sec" href="record.html"><span class="sec-nr">A.39</span> <span class="sec-title">library(record): 
+Access named fields in a term</span></a></div>
+<div class="toc-h2"><a class="sec" href="registry.html"><span class="sec-nr">A.40</span> <span class="sec-title">library(registry): 
+Manipulating the Windows registry</span></a></div>
+<div class="toc-h2"><a class="sec" href="settings.html"><span class="sec-nr">A.41</span> <span class="sec-title">library(settings): 
+Setting management</span></a></div>
+<div class="toc-h2"><a class="sec" href="strings.html"><span class="sec-nr">A.42</span> <span class="sec-title">library(strings): 
+String utilities</span></a></div>
+<div class="toc-h2"><a class="sec" href="simplex.html"><span class="sec-nr">A.43</span> <span class="sec-title">library(simplex): 
+Solve linear programming problems</span></a></div>
+<div class="toc-h3"><a class="sec" href="simplex.html#sec:A.43.1"><span class="sec-nr">A.43.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h3"><a class="sec" href="simplex.html#sec:A.43.2"><span class="sec-nr">A.43.2</span> <span class="sec-title">Delayed 
+column generation</span></a></div>
+<div class="toc-h3"><a class="sec" href="simplex.html#sec:A.43.3"><span class="sec-nr">A.43.3</span> <span class="sec-title">Solving 
+LPs with special structure</span></a></div>
+<div class="toc-h3"><a class="sec" href="simplex.html#sec:A.43.4"><span class="sec-nr">A.43.4</span> <span class="sec-title">Examples</span></a></div>
+<div class="toc-h4"><a class="sec" href="simplex.html#sec:A.43.4.1"><span class="sec-nr">A.43.4.1</span> <span class="sec-title">Example 
+1</span></a></div>
+<div class="toc-h4"><a class="sec" href="simplex.html#sec:A.43.4.2"><span class="sec-nr">A.43.4.2</span> <span class="sec-title">Example 
+2</span></a></div>
+<div class="toc-h4"><a class="sec" href="simplex.html#sec:A.43.4.3"><span class="sec-nr">A.43.4.3</span> <span class="sec-title">Example 
+3</span></a></div>
+<div class="toc-h2"><a class="sec" href="solutionsequences.html"><span class="sec-nr">A.44</span> <span class="sec-title">library(solution_sequences): 
+Modify solution sequences</span></a></div>
+<div class="toc-h2"><a class="sec" href="tables.html"><span class="sec-nr">A.45</span> <span class="sec-title">library(tables): 
+XSB interface to tables</span></a></div>
+<div class="toc-h2"><a class="sec" href="thread.html"><span class="sec-nr">A.46</span> <span class="sec-title">library(thread): 
+High level thread primitives</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadpool.html"><span class="sec-nr">A.47</span> <span class="sec-title">library(thread_pool): 
+Resource bounded thread management</span></a></div>
+<div class="toc-h2"><a class="sec" href="ugraphs.html"><span class="sec-nr">A.48</span> <span class="sec-title">library(ugraphs): 
+Unweighted Graphs</span></a></div>
+<div class="toc-h2"><a class="sec" href="url.html"><span class="sec-nr">A.49</span> <span class="sec-title">library(url): 
+Analysing and constructing URL</span></a></div>
+<div class="toc-h2"><a class="sec" href="varnumbers.html"><span class="sec-nr">A.50</span> <span class="sec-title">library(varnumbers): 
+Utilities for numbered terms</span></a></div>
+<div class="toc-h2"><a class="sec" href="yall.html"><span class="sec-nr">A.51</span> <span class="sec-title">library(yall): 
+Lambda expressions</span></a></div>
+<div class="toc-h1"><a class="sec" href="hack.html"><span class="sec-nr">B</span> <span class="sec-title">Hackers 
+corner</span></a></div>
+<div class="toc-h2"><a class="sec" href="manipstack.html"><span class="sec-nr">B.1</span> <span class="sec-title">Examining 
+the Environment Stack</span></a></div>
+<div class="toc-h2"><a class="sec" href="ancestral-cut.html"><span class="sec-nr">B.2</span> <span class="sec-title">Ancestral 
+cuts</span></a></div>
+<div class="toc-h2"><a class="sec" href="tracehook.html"><span class="sec-nr">B.3</span> <span class="sec-title">Intercepting 
+the Tracer</span></a></div>
+<div class="toc-h2"><a class="sec" href="breakpoint.html"><span class="sec-nr">B.4</span> <span class="sec-title">Breakpoint 
+and watchpoint handling</span></a></div>
+<div class="toc-h2"><a class="sec" href="excepthook.html"><span class="sec-nr">B.5</span> <span class="sec-title">Adding 
+context to errors: prolog_exception_hook</span></a></div>
+<div class="toc-h2"><a class="sec" href="exception3.html"><span class="sec-nr">B.6</span> <span class="sec-title">Hooks 
+using the exception predicate</span></a></div>
+<div class="toc-h2"><a class="sec" href="prolog-event.html"><span class="sec-nr">B.7</span> <span class="sec-title">Prolog 
+events</span></a></div>
+<div class="toc-h2"><a class="sec" href="intlibs.html"><span class="sec-nr">B.8</span> <span class="sec-title">Hooks 
+for integrating libraries</span></a></div>
+<div class="toc-h2"><a class="sec" href="loadfilehook.html"><span class="sec-nr">B.9</span> <span class="sec-title">Hooks 
+for loading files</span></a></div>
+<div class="toc-h1"><a class="sec" href="dialect.html"><span class="sec-nr">C</span> <span class="sec-title">Compatibility 
+with other Prolog dialects</span></a></div>
+<div class="toc-h2"><a class="sec" href="portabilitystrategies.html"><span class="sec-nr">C.1</span> <span class="sec-title">Some 
+considerations for writing portable code</span></a></div>
+<div class="toc-h2"><a class="sec" href="dialect-notes.html"><span class="sec-nr">C.2</span> <span class="sec-title">Notes 
+on specific dialects</span></a></div>
+<div class="toc-h3"><a class="sec" href="dialect-notes.html#sec:C.2.1"><span class="sec-nr">C.2.1</span> <span class="sec-title">Notes 
+on specific dialects</span></a></div>
+<div class="toc-h4"><a class="sec" href="dialect-notes.html#sec:C.2.1.1"><span class="sec-nr">C.2.1.1</span> <span class="sec-title">Loading 
+XSB source files</span></a></div>
+<div class="toc-h3"><a class="sec" href="dialect-notes.html#sec:C.2.2"><span class="sec-nr">C.2.2</span> <span class="sec-title">The 
+XSB import directive</span></a></div>
+<div class="toc-h1"><a class="sec" href="glossary.html"><span class="sec-nr">D</span> <span class="sec-title">Glossary 
+of Terms</span></a></div>
+<div class="toc-h1"><a class="sec" href="license.html"><span class="sec-nr">E</span> <span class="sec-title">SWI-Prolog 
+License Conditions and Tools</span></a></div>
+<div class="toc-h2"><a class="sec" href="contrib.html"><span class="sec-nr">E.1</span> <span class="sec-title">Contributing 
+to the SWI-Prolog project</span></a></div>
+<div class="toc-h2"><a class="sec" href="softlicense.html"><span class="sec-nr">E.2</span> <span class="sec-title">Software 
+support to keep track of license conditions</span></a></div>
+<div class="toc-h2"><a class="sec" href="otherlicenses.html"><span class="sec-nr">E.3</span> <span class="sec-title">License 
+conditions inherited from used code</span></a></div>
+<div class="toc-h3"><a class="sec" href="otherlicenses.html#sec:E.3.1"><span class="sec-nr">E.3.1</span> <span class="sec-title">Cryptographic 
+routines</span></a></div>
+<div class="toc-h1"><a class="sec" href="summary.html"><span class="sec-nr">F</span> <span class="sec-title">Summary</span></a></div>
+<div class="toc-h2"><a class="sec" href="predsummary.html"><span class="sec-nr">F.1</span> <span class="sec-title">Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="library.html"><span class="sec-nr">F.2</span> <span class="sec-title">Library 
+predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.1"><span class="sec-nr">F.2.1</span> <span class="sec-title">library(aggregate)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.2"><span class="sec-nr">F.2.2</span> <span class="sec-title">library(ansi_term)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.3"><span class="sec-nr">F.2.3</span> <span class="sec-title">library(apply)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.4"><span class="sec-nr">F.2.4</span> <span class="sec-title">library(assoc)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.5"><span class="sec-nr">F.2.5</span> <span class="sec-title">library(broadcast)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.6"><span class="sec-nr">F.2.6</span> <span class="sec-title">library(charsio)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.7"><span class="sec-nr">F.2.7</span> <span class="sec-title">library(check)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.8"><span class="sec-nr">F.2.8</span> <span class="sec-title">library(clpb)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.9"><span class="sec-nr">F.2.9</span> <span class="sec-title">library(clpfd)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.10"><span class="sec-nr">F.2.10</span> <span class="sec-title">library(clpqr)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.11"><span class="sec-nr">F.2.11</span> <span class="sec-title">library(csv)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.12"><span class="sec-nr">F.2.12</span> <span class="sec-title">library(dcgbasics)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.13"><span class="sec-nr">F.2.13</span> <span class="sec-title">library(dcghighorder)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.14"><span class="sec-nr">F.2.14</span> <span class="sec-title">library(debug)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.15"><span class="sec-nr">F.2.15</span> <span class="sec-title">library(dicts)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.16"><span class="sec-nr">F.2.16</span> <span class="sec-title">library(error)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.17"><span class="sec-nr">F.2.17</span> <span class="sec-title">library(explain)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.18"><span class="sec-nr">F.2.18</span> <span class="sec-title">library(help)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.19"><span class="sec-nr">F.2.19</span> <span class="sec-title">library(intercept)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.20"><span class="sec-nr">F.2.20</span> <span class="sec-title">library(summaries.d/intercept.tex)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.21"><span class="sec-nr">F.2.21</span> <span class="sec-title">library(iostream)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.22"><span class="sec-nr">F.2.22</span> <span class="sec-title">library(summaries.d/iostream.tex)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.23"><span class="sec-nr">F.2.23</span> <span class="sec-title">library(listing)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.24"><span class="sec-nr">F.2.24</span> <span class="sec-title">library(lists)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.25"><span class="sec-nr">F.2.25</span> <span class="sec-title">library(main)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.26"><span class="sec-nr">F.2.26</span> <span class="sec-title">library(occurs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.27"><span class="sec-nr">F.2.27</span> <span class="sec-title">library(option)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.28"><span class="sec-nr">F.2.28</span> <span class="sec-title">library(optparse)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.29"><span class="sec-nr">F.2.29</span> <span class="sec-title">library(ordsets)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.30"><span class="sec-nr">F.2.30</span> <span class="sec-title">library(persistency)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.31"><span class="sec-nr">F.2.31</span> <span class="sec-title">library(predicate_options)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.32"><span class="sec-nr">F.2.32</span> <span class="sec-title">library(prologjiti)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.33"><span class="sec-nr">F.2.33</span> <span class="sec-title">library(prologpack)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.34"><span class="sec-nr">F.2.34</span> <span class="sec-title">library(prologxref)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.35"><span class="sec-nr">F.2.35</span> <span class="sec-title">library(pairs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.36"><span class="sec-nr">F.2.36</span> <span class="sec-title">library(pio)</span></a></div>
+<div class="toc-h4"><a class="sec" href="library.html#sec:F.2.36.1"><span class="sec-nr">F.2.36.1</span> <span class="sec-title">library(pure_input)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.37"><span class="sec-nr">F.2.37</span> <span class="sec-title">library(random)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.38"><span class="sec-nr">F.2.38</span> <span class="sec-title">library(readutil)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.39"><span class="sec-nr">F.2.39</span> <span class="sec-title">library(record)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(registry)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(settings)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(simplex)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(ugraphs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(url)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(www_browser)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(solution_sequences)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(thread)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(thread_pool)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(varnumbers)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(yall)</span></a></div>
+<div class="toc-h2"><a class="sec" href="funcsummary.html"><span class="sec-nr">F.3</span> <span class="sec-title">Arithmetic 
+Functions</span></a></div>
+<div class="toc-h2"><a class="sec" href="opsummary.html"><span class="sec-nr">F.4</span> <span class="sec-title">Operators</span></a></div>
+<div class="toc-h1"><a class="sec" href="Bibliography.html"><span class="sec-nr">G</span> <span class="sec-title">Bibliography</span></a></div>
+</div>
+</body></html>

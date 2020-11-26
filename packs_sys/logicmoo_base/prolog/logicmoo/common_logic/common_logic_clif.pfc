@@ -1,0 +1,170 @@
+/* 
+-*- mode: md;-*- 
+vim: set filetype=md:
+%
+%   special module hooks into the logicmoo engine allow
+%   clif syntax to be recocogized via our CycL/KIF handlers 
+% 
+% Logicmoo Project: A LarKC Server written in Prolog
+% Maintainer: Douglas Miles
+% Dec 13, 2035
+%
+% If you've come here looking for the clif examples please follow this link
+%
+%  https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md
+%
+%  <a href="https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md">https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md</a>
+*/
+
+% Term expansion was suppored to make this ok
+% :- module(baseKB,[]).
+
+:- set_fileAssertMt(baseKB).
+
+% :- set_defaultAssertMt(baseKB).
+
+:- kb_shared((if/2,iif/2)).
+
+:- set_how_virtualize_file(bodies).
+
+% we ensure we are in "pfc" consultation mode (so the syntax rules will define correctly)
+:- file_begin(pfc).
+
+:- kb_shared(baseKB:wid/3).
+
+
+% whenever we know about clif we''ll use the prolog forward chainging system
+% this is broken down to the next 6 clauses
+/*
+(clif(CLIF) ==> 
+   ({ kif_to_pfc(CLIF,PROLOG)},
+      % this consequent asserts the new rules
+      PROLOG,{slow_sanity(is_entailed_u(CLIF))})).
+*/
+
+workflow_holder_queue(clif).
+workflow_holder_queue(boxlog).
+workflow_holder_queue(pfclog).
+
+workflow_holder_queue(Atom) ==>
+  ~tCol(Atom),
+  {dynamic(Atom/1),
+   kb_shared(Atom/1)},
+  rtArgsVerbatum(Atom),
+  {mpred_trace(Atom)},
+  arity(Atom,1).
+
+  % (t(Atom,Arg) ==> {write('%             ='),write(Atom),write(=),nl,flush_output,wdmsg((Arg))}).
+
+
+%:- rtrace.
+
+% we create code syntax listeners for [if,iff,clif_forall,all,exists]/2s
+% {kif_hook_skel(CLIF),functor(CLIF,F,A),kb_shared(F/A)} ==> 
+(CLIF/is_kif_clause(CLIF) ==> clif( CLIF)).
+
+% compile_clif ==> 
+(clif(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
+% %% compile_clif ==> 
+%(clif(CLIF)/ (\+ is_kif_clause(CLIF)) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
+% %% compile_clif==> 
+%(clif(CLIF)/is_kif_clause(CLIF) ==> ({delistify_last_arg(CLIF,kif_to_boxlog,BOXLOG)},boxlog(BOXLOG))).
+% %% compile_clif==> 
+% Remove negations probably
+(clif(~CLIF)/is_kif_clause(CLIF) ==> (\+ clif(CLIF))).
+% {sanity(is_entailed_u(CLIF))}
+
+compile_boxlog ==> 
+% (boxlog(BOXLOG),{delistify_last_arg(BOXLOG,boxlog_to_pfc,PROLOG),must_be_unqualified(PROLOG)} ==> pfclog(PROLOG)).
+% (boxlog(BOXLOG),{delistify_last_arg(BOXLOG,boxlog_to_prolog,PROLOG),must_be_unqualified(PROLOG)} ==> PROLOG).
+(boxlog(BOXLOG)  ==> BOXLOG).
+% {sanity(are_clauses_entailed(BOXLOG))}
+
+%compilerDirective(compile_pfclog).
+% :- listing(compile_pfclog/0).
+%:- break.
+compile_pfclog ==> 
+(pfclog(PROLOG) ==> PROLOG).
+% {(sanity(is_pfc_entailed(PROLOG)))}
+% or maybe
+% pfclog(PROLOG) ==> {without_running(ain(PROLOG,(pfclog(PROLOG),ax)))}.
+% {all_different_head_vals(PROLOG)},
+
+% LATER maybe case
+% P/(mpred_non_neg_literal(P),\+ contains_modal(P)) ==> poss(P).
+
+% when sometnhing begins to be possible remove the negation and remove the impossibility
+poss(P) ==>     \+ ~ P, \+ ~poss(P).
+
+% when something begins to be impossibile, make sure it is false, remove it and remove the possibility of it 
+~poss(P) ==> (~P, \+ P, \+ poss(P)).
+
+:- kb_shared(((<-)/2)).
+
+% something is possible when is already true or if it is not false and not impossible
+% "uses exists"
+%:- ain(poss(G) :- (non_modal_positive(G), no_repeats(loop_check(G) ; (\+ loop_check(~G) , \+ loop_check(~poss(G)))),groundoid(G))).
+:- ain(poss(G) :- (strip_module(G,M,P),call_tru(M,poss(P)))).
+
+% something is impossible when it is false
+:- ain(~poss(G) :-  (non_modal_positive(G), loop_check(~G))).
+
+% when something begins to be definately false, remove it.
+% ((~P)/(nonvar(P),mpred_positive_literal(P))) ==>  \+ P.
+
+% also when something begins to be definately false remove it and remove the possibility of it
+% feature_setting(delete_neg_poss,true)==> (((~P)/(nonvar(P),mpred_positive_literal(P),\+ contains_modal(P))) ==> \+ poss(P),  {mpred_fwc(~poss(P))}).
+
+isa_poss_t(I, C):- cwc, fail, \+ call_u(~isa(I,C)).
+poss_t(P,A,B):- cwc, \+ call_u(~t(P,A,B)).
+
+
+
+
+:- kb_shared(baseKB:proven_not_nesc/1).
+proven_not_nesc(H):- \+ call_u( H).
+% proven_not_nesc(man(A)):- trace,dmsg(proven_not_nesc(man(A))).
+% :- '$set_source_module'(user).
+% :- kbi:tbl.
+
+%:- mpred_trace_exec.
+
+%:- kb_shared(baseKB:duce_tru/1).
+:- kb_shared(baseKB:producing/1).
+
+% proven_helper ?
+:- mpred_ain(((((proven_tru(H):- _ ),{non_modal_positive(H),functor(H,F,A),functor(HH,F,A)}) ==> producing(HH)))).
+:- mpred_ain(((((proven_poss(H):- _ ),{non_modal_positive(H),functor(H,F,A),functor(HH,F,A)}) ==> producing(HH)))).
+:- mpred_ain(((((proven_neg(H):- _ ),{non_modal_positive(H),functor(H,F,A),functor(HH,F,A)}) ==> producing(HH)))).
+:- mpred_ain(((((deduce_tru(H):- _ ),{non_modal_positive(H),functor(H,F,A),functor(HH,F,A)}) ==> producing(HH)))).
+:- mpred_ain(((((deduce_neg(H):- _ ),{non_modal_positive(H),functor(H,F,A),functor(HH,F,A)}) ==> producing(HH)))).
+
+:- mpred_ain((producing(H)==>{kbi_define(H)})).
+
+
+:- meta_predicate proven_holds_t(*,?,?).
+proven_holds_t(F, A, B):- nonvar(F),current_predicate(F/2),call(F,A,B).
+:- meta_predicate proven_holds_t(*,?,?,?).
+proven_holds_t(F, A, B, C):- nonvar(F),current_predicate(F/3),call(F,A,B,C).
+/*
+:- multifile(proven_not_neg/1).
+:- dynamic(proven_not_neg/1).
+*/
+:- kb_shared(baseKB:proven_not_neg/1).
+proven_not_neg(H):- compound(H), H=..[F,A,B], proven_tru(poss_t(F,A,B)),!.
+proven_not_neg(H):- \+ proven_neg(H), \+ call_u(~ H).
+
+:- kb_shared(baseKB:proven_not_poss/1).
+proven_not_poss(H):- proven_not_nesc(H).
+
+
+%:- kb_shared(baseKB:proven_tru/1).
+%proven_tru(H):- loop_check(call_u(H)), show_failure(\+ proven_neg(H)).
+%proven_tru(H):- \+ ground(H),nrlc((duce_tru(H))).
+%proven_tru(H):- cwc, (nonvar(H),loop_check(proven_neg(H)),!,fail) ; (fail,call_u(H)).
+
+% :- kb_shared(baseKB:proven_neg/1).
+
+% proven_neg(_):- fail.
+
+% :- rtrace.

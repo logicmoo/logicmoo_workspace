@@ -1,0 +1,523 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="threads.html">
+<link rel="next" href="thmonitor.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="threads.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="thmonitor.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:threadcreate"><a id="sec:10.1"><span class="sec-nr">10.1</span> <span class="sec-title">Creating 
+and destroying Prolog threads</span></a></h2>
+
+<a id="sec:threadcreate"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="thread_create/2"><strong>thread_create</strong>(<var>:Goal, 
+-Id</var>)</a></dt>
+<dd class="defbody">
+Shorthand for <code>thread_create(Goal, Id, [])</code>. See <a id="idx:threadcreate3:2115"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.</dd>
+<dt class="pubdef"><a id="thread_create/3"><strong>thread_create</strong>(<var>:Goal, 
+-Id, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new Prolog thread (and underlying operating system thread) and 
+start it by executing <var>Goal</var>. If the thread is created 
+successfully, the thread identifier of the created thread is unified to <var>Id</var>.
+
+<p><var>Id</var> is the <em>alias</em> name if the option <code>alias(name)</code> 
+is given. Otherwise it is a <em>blob</em> of type <code>thread</code>. 
+The anonymous blobs are subject to atom garbage collection. If a thread 
+handle is garbage collected and the thread is not <em>detached</em>, it 
+is <em>joined</em> if it has already terminated (see <a id="idx:threadjoin2:2116"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>) 
+and detached otherwise (see <a id="idx:threaddetach1:2117"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>).<sup class="fn">174<span class="fn-text">Up 
+to version 7.3.23, anonymous thread handles were integers. Using 
+integers did not allow for safe checking of the thread's status as the 
+thread may have died and the handle may have been reused and did not 
+allow for garbage collection to take care of forgotten threads.</span></sup> 
+The thread identifier blobs are printed as <code>&lt;thread&gt;(</code><var>I</var>,<var>Ptr</var><code>)</code>, 
+where <var>I</var> is the internal thread identifier and <var>Ptr</var> 
+is the unique address of the identifier. The <var>I</var> is accepted as 
+input argument for all thread APIs that accept a thread identifier for 
+convenient interaction from the toplevel. See also <a id="idx:threadproperty2:2118"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>.
+
+<p><var>Options</var> is a list of options. The currently defined 
+options are below. Stack size options can also take the value <code>inf</code> 
+or
+<code>infinite</code>, which is mapped to the maximum stack size 
+supported by the platform.
+
+<dl class="latex">
+<dt><strong>affinity</strong>(<var>+CpuSet</var>)</dt>
+<dd class="defbody">
+Specify that the thread should only run on the specified CPUs (cores).
+<var>CpuSet</var> is a list of integers between 0 (zero) and the known 
+number of CPUs (see <a class="flag" href="flags.html#flag:cpu_count">cpu_count</a>). 
+If <var>CpuSet</var> is empty a
+<code>domain_error</code> is raised. Referring to CPUs equal to or 
+higher than the known number of CPUs returns an <code>existence_error</code>.
+
+<p>This option is currently implemented for systems that provide 
+pthread_attr_setaffinity_np(). The option is silently ignored on other 
+systems.<sup class="fn">bug<span class="fn-text">There is currently no 
+way to discover whether this option is supported.</span></sup></dd>
+<dt><strong>alias</strong>(<var>AliasName</var>)</dt>
+<dd class="defbody">
+Associate an&lsquo;alias name' with the thread. This name may be used to 
+refer to the thread and remains valid until the thread is joined (see
+<a id="idx:threadjoin2:2119"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>). 
+If the OS supports it (e.g., Linux), the operating system thread is 
+named as well.</dd>
+<dt><strong>at_exit</strong>(<var>:AtExit</var>)</dt>
+<dd class="defbody">
+Register <var>AtExit</var> as using <a id="idx:threadatexit1:2120"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+before entering the thread goal. Unlike calling <a id="idx:threadatexit1:2121"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+as part of the normal
+<var>Goal</var>, this <em>ensures</em> the <var>AtExit</var> is called. 
+Using
+<a id="idx:threadatexit1:2122"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a>, 
+the thread may be signalled or run out of resources before <a id="idx:threadatexit1:2123"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+is reached. See <a id="idx:threadatexit1:2124"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+for details.</dd>
+<dt><strong>debug</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+Enable/disable debugging the new thread. If <code>false</code> (default
+<code>true</code>), the new thread is created with the property
+<code>debug(false)</code> and debugging is disabled before the new 
+thread is started. The thread debugging predicates such as <a id="idx:tspy1:2125"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
+and <a id="idx:tdebug0:2126"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a> 
+do not signal threads with the debug property set to
+<code>false</code>.<sup class="fn">175<span class="fn-text">Currently, 
+the flag is only used as a hint for the various debugging primitives, 
+i.e., the system does not really enforce that the target thread stays in <em>nodebug</em> 
+mode.</span></sup></dd>
+<dt><strong>detached</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If <code>false</code> (default), the thread can be waited for using
+<a id="idx:threadjoin2:2127"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. <a id="idx:threadjoin2:2128"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+must be called on this thread to reclaim all resources associated with 
+the thread. If <code>true</code>, the system will reclaim all associated 
+resources automatically after the thread finishes. Please note that 
+thread identifiers are freed for reuse after a detached thread finishes 
+or a normal thread has been joined. See also <a id="idx:threadjoin2:2129"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+and <a id="idx:threaddetach1:2130"></a><a class="pred" href="threadcreate.html#thread_detach/1">thread_detach/1</a>.
+
+<p>If a detached thread dies due to failure or exception of the initial 
+goal, the thread prints a message using <a id="idx:printmessage2:2131"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+If such termination is considered normal, the code must be wrapped using
+<a id="idx:ignore1:2132"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+and/or <a id="idx:catch3:2133"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+to ensure successful completion.</dd>
+<dt><strong>inherit_from</strong>(<var>+ThreadId</var>)</dt>
+<dd class="defbody">
+Inherit defaults from the given <var>ThreadId</var> instead of the 
+calling thread. This option was added to ensure that the
+<code>__thread_pool_manager</code> (see <a id="idx:threadcreateinpool4:2134"></a><a class="pred" href="threadpool.html#thread_create_in_pool/4">thread_create_in_pool/4</a>), 
+which is created lazily, has a predictable state. The following 
+properties are inherited:
+
+<p>
+<ul class="latex">
+<li>The prompt (see <a id="idx:prompt2:2135"></a><a class="pred" href="termrw.html#prompt/2">prompt/2</a>)
+<li>The <em>typein</em> module (see <a id="idx:module1:2136"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>)
+<li>The standard streams (<code>user_input</code>, etc.)
+<li>The default encoding (see <a class="flag" href="flags.html#flag:encoding">encoding</a>)
+<li>The default locale (see <a id="idx:setlocale1:2137"></a><a class="pred" href="locale.html#set_locale/1">set_locale/1</a>)
+<li>All prolog flags
+<li>The stack limit (see Prolog flag <a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>).
+</ul>
+</dd>
+<dt><strong>queue_max_size</strong>(<var>Size</var>)</dt>
+<dd class="defbody">
+Enforces a maximum to the number of terms in the input queue. See
+<a id="idx:messagequeuecreate2:2138"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a> 
+with the <code>max_size(o)</code>ption for details.</dd>
+<dt><strong>stack_limit</strong>(<var>Bytes</var>)</dt>
+<dd class="defbody">
+Set the size limit for the Prolog stacks. See the Prolog flag
+<a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>. The 
+default is inherited from the calling thread or the thread specified 
+using <code>inherit_from(ThreadId)</code>.</dd>
+<dt><strong>c_stack</strong>(<var>K-Bytes</var>)</dt>
+<dd class="defbody">
+Set the limit to which the C&nbsp;stack of this thread may grow. The 
+default, minimum and maximum values are system-dependent.
+</dd>
+</dl>
+
+<p>The <var>Goal</var> argument is <em>copied</em> to the new Prolog 
+engine. This implies that further instantiation of this term in either 
+thread does not have consequences for the other thread: Prolog threads 
+do not share data from their stacks.</dd>
+<dt class="pubdef"><a id="thread_self/1"><strong>thread_self</strong>(<var>-Id</var>)</a></dt>
+<dd class="defbody">
+Get the Prolog thread identifier of the running thread. If the thread 
+has an alias, the alias name is returned.</dd>
+<dt class="pubdef"><a id="thread_join/1"><strong>thread_join</strong>(<var>+Id</var>)</a></dt>
+<dd class="defbody">
+Calls <a id="idx:threadjoin2:2139"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+and succeeds if thread <var>Id</var> terminated with success. Otherwise 
+the exception
+<code>error(<code>thread_error(Id, Status)</code>, _)</code> is raised, 
+where
+<var>Status</var> is the status as returned by <a id="idx:threadjoin2:2140"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>.</dd>
+<dt class="pubdef"><a id="thread_join/2"><strong>thread_join</strong>(<var>+Id, 
+-Status</var>)</a></dt>
+<dd class="defbody">
+Wait for the termination of the thread with the given <var>Id</var>. 
+Then unify the result status of the thread with <var>Status</var>. After 
+this call, <var>Id</var> becomes invalid and all resources associated 
+with the thread are reclaimed. Note that threads with the attribute
+<code>detached(true)</code> cannot be joined. See also <a id="idx:threadproperty2:2141"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>.
+
+<p>A thread that has been completed without <a id="idx:threadjoin2:2142"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+being called on it is partly reclaimed: the Prolog stacks are released 
+and the C thread is destroyed. A small data structure representing the 
+exit status of the thread is retained until <a id="idx:threadjoin2:2143"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+is called on the thread. Defined values for <var>Status</var> are:
+
+<dl class="latex">
+<dt><strong>true</strong></dt>
+<dd class="defbody">
+The goal has been proven successfully.</dd>
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+The goal has failed.</dd>
+<dt><strong>exception</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+The thread is terminated on an exception. See <a id="idx:printmessage2:2144"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+to turn system exceptions into readable messages.</dd>
+<dt><strong>exited</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+The thread is terminated on <a id="idx:threadexit1:2145"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+using the argument <var>Term</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="thread_alias/1"><strong>thread_alias</strong>(<var>+Alias</var>)</a></dt>
+<dd class="defbody">
+Set the alias name of the calling thread to <var>Alias</var>. An error 
+is raised if the calling thread already has an alias or <var>Alias</var> 
+is in use for a thread or message queue.</dd>
+<dt class="pubdef"><a id="thread_detach/1"><strong>thread_detach</strong>(<var>+Id</var>)</a></dt>
+<dd class="defbody">
+Switch thread into detached state (see <code>detached(Bool)</code> 
+option at
+<a id="idx:threadcreate3:2146"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>) 
+at runtime. <var>Id</var> is the identifier of the thread placed in 
+detached state. This may be the result of <a id="idx:threadself1:2147"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>.
+
+<p>One of the possible applications is to simplify debugging. Threads 
+that are created as <em>detached</em> leave no traces if they crash. For 
+non-detached threads the status can be inspected using
+<a id="idx:threadproperty2:2148"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a>. 
+Threads nobody is waiting for may be created normally and detach 
+themselves just before completion. This way they leave no traces on 
+normal completion and their reason for failure can be inspected.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="thread_exit/1"><strong>thread_exit</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Terminates the thread immediately, leaving <code>exited(Term)</code> as 
+result state for <a id="idx:threadjoin2:2149"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
+If the thread has the attribute
+<code>detached(true)</code> it terminates, but its exit status cannot be 
+retrieved using <a id="idx:threadjoin2:2150"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>, 
+making the value of <var>Term</var> irrelevant. The Prolog stacks and C 
+thread are reclaimed.
+
+<p>The current implementation does not guarantee proper releasing of all 
+mutexes and proper cleanup in <a id="idx:setupcallcleanup3:2151"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
+etc. Please use the exception mechanism (<a id="idx:throw1:2152"></a><a class="pred" href="exception.html#throw/1">throw/1</a>) 
+to abort execution using non-standard control.<sup class="fn">bug<span class="fn-text">The 
+Windows port does not properly cleanup for <em>detached</em> threads 
+while the cleanup for other threads is executed by the thread running <a id="idx:threadjoin2:2153"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a> 
+using the exited thread as <em>engine</em>. This is due to a bug in the <a class="url" href="https://sourceforge.net/p/mingw-w64/bugs/469/">MinGW 
+pthread implementation</a>.</span></sup></dd>
+<dt class="pubdef"><a id="thread_initialization/1"><strong>thread_initialization</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> when thread is started. This predicate is similar to
+<a id="idx:initialization1:2154"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>, 
+but is intended for initialization operations of the runtime stacks, 
+such as setting global variables as described in
+<a class="sec" href="gvar.html#sec:4.33">section 4.33</a>. <var>Goal</var> 
+is run on four occasions: at the call to this predicate, after loading a 
+saved state, on starting a new thread and on creating a Prolog engine 
+through the C interface. On loading a saved state, <var>Goal</var> is 
+executed <em>after</em> running the
+<a id="idx:initialization1:2155"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+hooks.</dd>
+<dt class="pubdef"><a id="thread_at_exit/1"><strong>thread_at_exit</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Run <var>Goal</var> just before releasing the thread resources. This is 
+to be compared to <a id="idx:athalt1:2156"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>, 
+but only for the current thread. These hooks are run regardless of why 
+the execution of the thread has been completed. When these hooks are 
+run, the return code is already available through
+<a id="idx:threadproperty2:2157"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
+using the result of <a id="idx:threadself1:2158"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a> 
+as thread identifier. Note that there are two scenarios for using exit 
+hooks. Using <a id="idx:threadatexit1:2159"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+is typically used if the thread creates a side-effect that must be 
+reverted if the thread dies. Another scenario is where the creator of 
+the thread wants to be informed when the thread ends. That cannot be 
+guaranteed by means of <a id="idx:threadatexit1:2160"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+because it is possible that the thread cannot be created or dies almost 
+instantly due to a signal or resource error. The <code>at_exit(Goal)</code> 
+option of
+<a id="idx:threadcreate3:2161"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+is designed to deal with this scenario.
+
+<p>The <var>Goal</var> is executed with signal processing disabled. This 
+avoids that e.g., <code>thread_signal(Thread, abort)</code> kills the 
+exit handler rather than the thread in the case the body of <var>Thread</var> 
+has just finished when the signal arrives.</dd>
+<dt class="pubdef"><a id="thread_setconcurrency/2"><strong>thread_setconcurrency</strong>(<var>-Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+<a id="idx:Solaris:2162"></a>Determine the concurrency of the process, 
+which is defined as the maximum number of concurrently active threads.&lsquo;Active' 
+here means they are using CPU time. This option is provided if the 
+thread implementation provides pthread_setconcurrency(). Solaris is a 
+typical example of this family. On other systems this predicate unifies <var>Old</var> 
+to 0 (zero) and succeeds silently.</dd>
+<dt class="pubdef"><a id="thread_affinity/3"><strong>thread_affinity</strong>(<var>+ThreadID, 
+-Current, +New</var>)</a></dt>
+<dd class="defbody">
+True when <var>Current</var> is unified with the current thread affinity 
+and the thread affinity is successfully set to <var>New</var>. The <em>thread 
+affinity</em> specifies the set of CPUs on which this thread is allowed 
+to run. The affinity is represented as a list of non-negative integers. 
+See also the option <code>affinity(+Affinity)</code> of <a id="idx:threadcreate3:2163"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.
+
+<p>This predicate is only present if this functionality can be supported 
+and has been ported to the target operating system. Currently, only 
+Linux support is provided.
+</dd>
+</dl>
+
+<p></body></html>

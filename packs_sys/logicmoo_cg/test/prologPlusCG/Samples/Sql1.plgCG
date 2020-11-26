@@ -1,0 +1,20 @@
+voiture(4, Renault).
+voiture(8, Honda).
+voiture(12, Bmw).
+voiture(16, Mercedes).
+
+bonneVoiture :-
+  voiture(v, n),
+  verifieConds(v, (inf(x, 16), sup(x, 4))),
+  write(n),
+  fail.
+bonneVoiture.
+
+
+verifieConds(v, ()).
+verifieConds(v, (c|L)) :-
+  term_list(c, T),
+  eq(T, (p, v, y)),
+  term_list(c2, (p, v, y)),  
+  c2,
+  verifieConds(v, L), /.

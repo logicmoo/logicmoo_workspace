@@ -1,0 +1,607 @@
+//JEU DE TEST :
+//Le programme se lance par la commande "analyse."
+//On entre ensuite la phrase directement.
+//Test qui fonctionne :
+//"the blue dog which owns the red cats eats some green mouse"
+//Au niveau sémantique, l'aspect suivant a été implémenté :
+//- "the cat eats some mice" est correct, mais
+//- "the cat eats some salad" n'est pas correct.
+
+
+analyse:-
+read_sentence(T_ext),
+not(eq(T_ext,("quit"))),
+analyse1(T_ext).
+
+analyse1(T_ext):-
+ss(S,C_G,T_ext,(".")),
+write(C_G), /,
+analyse.
+
+analyse1(T_ext):-write("Pas de réponse syntaxiquement et sémantiquement correcte"),
+analyse.
+
+convertTerm(T_1,T_2):-convertTerm(T_1,(),T_2).
+convertTerm(("."),T,R_esult):-reverse(T,R_esult).
+convertTerm((H_ead|T_ail),T,S):-identToLetters(H_ead,X),
+identToLetters(Y,X),
+convertTerm(T_ail,(Y|T),S).
+
+reverse(X,Y):-reverse(X,(),Y).
+reverse((),S,S).
+reverse((X|R_estX),H_ead,S):-reverse(R_estX,(X|H_ead),S).
+
+//****************************************************
+//****************************************************
+// 0-Concepts definition
+//****************************************************
+//****************************************************
+
+univ > universalSem,universalGram.
+
+//*************************************
+//*************************************
+// Concepts for the Semantic
+//*************************************
+//*************************************
+
+universalSem > animate, inanimate, character, edible, liquid, profession, activity.
+animate > human, animal.
+inanimate > object, plant.
+character > size, color, otherChar.
+human > man, woman, boy, girl, person, student.
+edible > plant, animal, meat, otherfood.
+plant > mushroom, tree, vegetable.
+animal > carnivorous,vegetarian,omnivorous, meatanimal,pet.
+carnivorous > cat, cats, dog, dogs, lion, lions.
+vegetarian > beef, beefs, cow, cows, horse, horses.
+omnivorous > human, monkey, monkeys, porc, porcs, chicken, chickens, mouse, mice.
+meatanimal > beef, beefs, cow, cows, porc, porcs, chicken, chickens, fish, fishes.
+pet > cat, cats, dog, dogs, fish, fishes.
+
+profession > shopkeeper, teacher, chef, professor, waiter, musician, policeman, businessman.
+
+activity > put, eat, buy, drink, have, like, visit, see, own, sleep, die, be. 
+
+object > pyramid, pyramids, cube, cubes, car, cars, book, books.
+
+color > blue, red, green, white, black, pink, yellow.
+
+size > small, big.
+
+liquid > water, rhum.
+
+vegetable > salad, salads, tomato, tomatoes.
+
+otherfood > cake, cakes.
+
+fish > sole, soles, tuna, tunas, salmon, salmons.
+
+tree > oak, oaks.
+
+//Instances :
+
+man = John, Hamish.
+[man = John].
+[man = Hamish].
+
+woman = Mary, Susan.
+[woman = Mary].
+[woman = Susan].
+
+cat = Pussy.
+[cat = Pussy].
+
+dog = Rex.
+[dog = Rex].
+
+
+//*************************************
+//*************************************
+// Concepts for the Grammar
+//*************************************
+//*************************************
+
+universalGram > verb, noun, adjective, determiner.
+
+verb > transitive, intransitive, copular, usualForm, thirdPersonForm, pastForm.
+
+determiner > detSing, detPlur.
+
+adjective > size, color, delicious, fat, greedy.
+
+subject > noun, proNoun.
+
+noun > commonNoun,properNoun.
+
+commonNoun > singularNoun, pluralNoun.
+
+singularNoun > man, woman, boy, girl, person, student, child, mouse, sheep, fish, shopkeeper, teacher, chef, professor, waiter, musician, policeman, businessman, pyramid, cube, car, book, water, rhum, salad, tomato, dog, cow, cat, sole, tuna, salmon, beef, porc, chicken, cake, oak, meat.
+
+pluralNoun > men, women, boys, girls, people, students, children, mice, sheep, fish, fishes, shopkeepers, teachers, chefs, professors, waiters, musicians, policemen, businessmen, pyramids, cubes, cars, books, waters, rhums, salads, tomatoes, dogs, cows, cats, soles, tunas, salmons, beefs, porcs, chickens, cakes, oaks, meats.
+
+detSing > the_sing, the, some, every, any, null.
+
+detPlur > the_plur, the, some, all, several, null.
+
+transitive > play, plays, played, put, puts, eat, eats, ate, buy, buys, bought, drink, drinks, drank, have, has, had, like, likes, liked, visit, visits, visited, see, sees, saw, own, owns, owned.
+
+intransitive > play, plays, played, eat, eats, ate, sleep, sleeps, slept, drink, drinks, drank, die, dies, died, go, goes, went.
+
+usualForm > play, go, put, eat, buy, drink, have, like, visit, see, own, sleep, die.
+
+thirdPersonForm > plays, goes, puts, buys, has, likes, visits, sees, owns, eats, sleeps, drinks, dies.
+
+pastForm > played, went, put, bought, had, liked, visited, saw, owned, ate, slept, drank, died, was, were.
+
+copular > be.
+
+proNoun > who, which, that.
+
+properNoun = Rex,Pussy,John,Mary,Hamish,Susan.
+[properNoun = Rex].
+[properNoun = Pussy].
+[properNoun = John].
+[properNoun = Mary].
+[properNoun = Hamish].
+[properNoun = Susan].
+
+
+//*************************************
+//*************************************
+//SEMANTIC RULES :
+//*************************************
+//*************************************
+
+//What eat carnivorous,vegetarian and omnivorous animals
+sem([eat]-
+ -agnt->[carnivorous],
+ -obj->[animal]).
+
+sem([sleep]-agnt->[animate]).
+
+sem([own]-
+ -agnt->[animate],
+ -obj->[inanimate]).
+
+sem([eat]-
+ -agnt->[vegetarian],
+ -obj->[plant]).
+
+sem([eat]-
+ -agnt->[omnivorous],
+ -obj->[edible]).
+
+//Humans may only visit humans
+sem([visit]-
+ -agnt->[human],
+ -obj->[human]).
+
+sem([inanimate]-attr->[character]).
+sem([animate]-attr->[character]).
+sem([edible]-attr->[character]).
+sem([liquid]-attr->[character]).
+
+sem([have]-
+  -agnt->[universalSem],
+  -obj->[universalSem]).
+
+sem([own]-
+  -agnt->[animate],
+  -obj->[universalSem]).
+
+sem([play]-agnt->[animate]).
+
+sem([own]-
+  -agnt->[human],
+  -obj->[inanimate]).
+
+sem([own]-
+  -agnt->[human],
+  -obj->[animate]).
+
+sem([see]-
+  -agnt->[animate],
+  -obj->[animate]).
+
+sem([see]-
+  -agnt->[animate],
+  -obj->[inanimate]).
+
+sem([like]-
+  -agnt->[animate],
+  -obj->[universalSem]).
+
+sem([drink]-
+  -agnt->[animate],
+  -obj->[liquid]).
+
+//****************************************************
+//****************************************************
+// 1 - synt	ax
+//****************************************************
+//****************************************************
+
+//Phrases générales
+
+ss(ss(N_P,V_P),F_inalGraph,I_nput,R_est):-
+np(N_P,C_GNounPhrase,I_nput,P_art),
+vp(V_P,C_GNounPhrase,C_GVerbPhrase,F_inalGraph,subj(N_P),nil,_,P_art,R_est).
+
+
+// GROUPES NOMINAUX
+
+//Cas ou le sujet est un nom propre
+np(np(N),C_GNounPhrase,I_nput,R_est):-
+proper_n(N,N_Clear,I_nput,R_est),
+[X = N_Clear],
+eq(C_GNounPhrase,[X = N_Clear]).
+
+//Un adjectif sur le nom, puis une relative
+np(np(D_et,A_dj,N,R_el),C_GNounPhrase,I_nput,R_est):-
+det(D_et,N_um,I_nput,P_art),
+adj(A_dj,A_Clear,P_art,R_est1),
+nn(N,N_Clear,N_um,R_est1,R_est2),
+eq(C_GNoun,[N_Clear]-attr->[A_Clear]),
+rel(R_el,C_GNoun,G,copy(np(D_et,A_dj,N)),R_est2,R_est),
+details(np(D_et,A_dj,N,R_el),_,L_ex),
+eq(C_G1,[N_Clear]-attr->[A_Clear]),
+form1(C_G2),
+maximalJoin(C_G1,C_G2,C_G3),
+maximalJoin(C_G3,G,C_GNounPhrase),
+sem(C_G1).
+
+form1([verb]-agnt->[noun]-
+  -attr->[adjective],
+	  -rel->[proNoun]<-agnt-[verb]).
+
+form1([verb]-obj->[noun]-
+  -attr->[adjective],
+	  -rel->[proNoun]<-agnt-[verb]).
+
+//Cas où il y a une relative
+np(np(D_et,N,R_el),C_GNounPhrase,I_nput,R_est):-
+det(D_et,N_um,I_nput,P_art),
+nn(N,N_Clear,N_um,P_art,R_est1),
+eq(C_GNoun,[N_Clear]),
+rel(R_el,C_GNoun,G,copy(np(D_et,N)),R_est1,R_est),
+details(np(D_et,N,R_el),_,L_ex),
+eq(C_G1,[N_Clear]),
+form2(C_G2),
+maximalJoin(C_G1,C_G2,C_G3),
+maximalJoin(C_G3,G,C_GNounPhrase).
+
+form2([verb]-agnt->[noun]-rel->[proNoun]<-agnt-[verb]).
+form2([verb]-obj->[noun]-rel->[proNoun]<-agnt-[verb]).
+
+//Cas où il y a un adjectif
+np(np(D_et,A_dj,N),C_GNounPhrase,I_nput,R_est):-
+det(D_et,N_um,I_nput,P_art),
+adj(A_dj,A_Clear,P_art,R_est1),
+nn(N,N_Clear,N_um,R_est1,R_est),
+details(np(D_et,N),_,L_ex),
+eq(C_G1,[N_Clear]-attr->[A_Clear]),
+form3(C_G2),
+eq(C_G1bis,[N_Clear]-attr->[A_Clear]),
+maximalJoin(C_G1bis,C_G2,C_GNounPhrase),
+sem(C_G1).
+
+form3([verb]-agnt->[noun]-attr->[adjective]).
+form3([verb]-obj->[noun]-attr->[adjective]).
+
+//Cas le plus simple
+np(np(D_et,N),C_GNounPhrase,I_nput,R_est):-
+det(D_et,N_um,I_nput,P_art),
+nn(N,N_Clear,N_um,P_art,R_est),
+eq(C_GNounPhrase,[N_Clear]).
+
+//Relative clause
+//subject relative : relpron must be appropriate for its antecedent which will also be subject of V_P
+rel(rel(R_elpron,V_P),C_GNounPhrase,C_G,copy(N_P),I_nput,R_est):-
+relpron(R_elpron,P_ronoun,trace(N_P),I_nput,P_art),
+vp(V_P,C_GNounPhrase,C_GVerbPhrase,C_G,subj(N_P),nil,P_ronoun,P_art,R_est).
+
+
+//VERB PHRASE
+
+//intransitive
+vp(vp(V),C_GNounPhrase,C_GVerbPhrase,C_G,subj(N_P),nil,R_elativePronoun,I_nput,R_est):-
+vv(V,V_lex,V_Clear,N_um,I_nput,R_est),
+details(N_P,N_um,L_ex),
+features(V_lex,intransitive,_,_),
+decideSubj(C_GNounPhrase,R_elativePronoun,N_ewSubj),
+eq(C_GVerbPhrase,[V_Clear]-agnt->[subject]),
+maximalJoin(C_GVerbPhrase,N_ewSubj,C_G),
+checkSemAg(C_GNounPhrase,C_GNounPhrase,C_GVerbPhrase), /.
+
+//transitive without object gap
+vp(vp(V,N_P),C_GNounPhrase,C_GVerbPhrase,C_G,subj(S_ubj),nil,R_elativePronoun,I_nput,R_est):-
+vv(V,V_lex,V_Clear,N_um,I_nput,P_art),
+np(N_P,C_GSubord,P_art,R_est),
+details(S_ubj,N_um,S_ubjlex),
+features(V_lex,transitive(_),_,_),
+details(N_P,_,O_bjlex),
+eq(C_G1,[V_Clear]-obj->[noun]),
+eq(C_G3,[V_Clear]-agnt->[subject]),
+eq(W_ishedStruct,[verb]-
+ -agnt->[subject],
+ -obj->[noun]),
+decideSubj(C_GNounPhrase,R_elativePronoun,N_ewSubj),
+maximalJoin(C_G1,C_GSubord,C_G2),
+maximalJoin(C_G2,W_ishedStruct,C_GVerbPhrase),
+maximalJoin(C_G3,N_ewSubj,C_G4),
+maximalJoin(C_GVerbPhrase,C_G4,C_G),
+checkSemAgObj(C_G3,C_GNounPhrase,C_GVerbPhrase),/.
+
+checkSemAgObj(C_G3,X,Y):-
+maximalJoin(C_G3,X,C_G5),
+maximalJoin(C_G5,Y,C_G6),
+subsume([univ]-
+  -agnt->[univ],
+  -obj->[univ],C_G6,C_GTest),
+sem(C_GTest).
+
+checkSemAg(C_G3,X,Y):-maximalJoin(C_G3,X,C_G5),
+maximalJoin(C_G5,Y,C_G6),
+subsume([univ]-agnt->[univ],C_G6,C_GTest),
+sem(C_GTest).
+
+checkSemObj(C_G3,X,Y):-maximalJoin(C_G3,X,C_G5),
+maximalJoin(C_G5,Y,C_G6),
+subsume([univ]-obj->[univ],C_G6,C_GTest),
+sem(C_GTest).
+
+//intransitive structure with transitive verb : missing object
+vp(vp(V,np(gap)),C_GNounPhrase,C_GVerbPhrase,C_G,subj(N_P),nil,R_elativePronoun,I_nput,R_est):-
+vv(V,V_lex,V_Clear,N_um,I_nput,R_est),
+details(N_P,N_um,L_ex),
+features(V_lex,transitive(opt),_,_),
+decideSubj(C_GNounPhrase,R_elativePronoun,N_ewSubj),
+eq(C_GVerbPhrase,[V_Clear]-agnt->[subject]),
+maximalJoin(C_GVerbPhrase,N_ewSubj,C_G),
+checkSemAg(C_GNounPhrase,C_GNounPhrase,C_GVerbPhrase), /.
+
+//"details" extracts relevant information from N_P
+
+//proper noun
+details(np(P_rop_n),singular,P_rop_n).
+
+//not including rel clause
+details(np(det(D_et),nn(N)),N_um,L_ex):-lex(nn,N,L_ex,N_um),
+lex(det,D_et,N_um).
+
+//including rel clause
+details(np(det(D_et),nn(N),_),N_um,L_ex):-lex(nn,N,L_ex,N_um),
+lex(det,D_et,N_um).
+
+//same with adjectives
+details(np(det(D_et),adj(_),nn(N)),N_um,L_ex):-lex(nn,N,L_ex,N_um),
+lex(det,D_et,N_um).
+
+details(np(det(D_et),adj(_),nn(N),_),N_um,L_ex):-lex(nn,N,L_ex,N_um),
+lex(det,D_et,N_um).
+
+decideSubj(X,Y,X):-free(Y),/.
+decideSubj(X,Y,Z):-not(free(Y)),
+eq(Z,[Y]).
+
+//****************************************************
+//****************************************************
+// 2-rules for terminal symbol
+//****************************************************
+//****************************************************
+
+det(det(the_sing),singular,I_nput,R_est):-terminal(the,I_nput,R_est).
+
+det(det(the_plur),plural,I_nput,R_est):-terminal(the,I_nput,R_est).
+
+det(det(X),N_um,I_nput,R_est):-terminal(X,I_nput,R_est),
+not(dic(X,prop_n)),
+lex(det,X,N_um).
+
+det(det(null),singular,I_nput,R_est):-terminal(nil,I_nput,R_est).
+
+det(det(null),plural,I_nput,R_est):-terminal(nil,I_nput,R_est).
+
+nn(nn(X),X,N_um,I_nput,R_est):-terminal(X,I_nput,R_est),
+not(dic(X,prop_n)),
+lex(nn,X,_,N_um).
+
+proper_n(X,X,I_nput,R_est):-terminal(X,I_nput,R_est),
+dic(X,prop_n).
+
+vv(vv(X),X,V_lex,N_um,I_nput,R_est):-terminal(X,I_nput,R_est),
+lex(vv,X,V_lex,N_um).
+
+adj(adj(X),X,I_nput,R_est):-terminal(X,I_nput,R_est),
+dic(X,adj,_).
+
+relpron(relpron(who),who,trace(N_P),I_nput,R_est):-terminal(who,I_nput,R_est),
+details(N_P,_,L_ex).
+
+relpron(relpron(which),which,_,I_nput,R_est):-terminal(which,I_nput,R_est).
+relpron(relpron(that),that,_,I_nput,R_est):-terminal(that,I_nput,R_est).
+
+//Regle finale du "terminal" :
+terminal(W_ord,(W_ord|R_est),R_est).
+
+noconstraint(_).
+
+//****************************************************
+//****************************************************
+// 3-morphology
+//****************************************************
+//****************************************************
+
+
+//PLURAL VERB MANAGEMENT
+plur([eat]-plural->[eats]).
+plur([have]-plural->[has]).
+plur([sleep]-plural->[sleeps]).
+plur([put]-plural->[puts]).
+plur([buy]-plural->[buys]).
+plur([drink]-plural->[drinks]).
+plur([like]-plural->[likes]).
+plur([see]-plural->[sees]).
+plur([own]-plural->[owns]).
+plur([die]-plural->[dies]).
+plur([go]-plural->[goes]).
+plur([play]-plural->[plays]).
+
+//PAST VERB MANAGEMENT
+past([ate]-past->[eat]).
+past([had]-past->[have]).
+past([slept]-past->[sleep]).
+past([put]-past->[put]).
+past([bought]-past->[buy]).
+past([drank]-past->[drink]).
+past([liked]-past->[like]).
+past([saw]-past->[see]).
+past([owned]-past->[own]).
+past([died]-past->[die]).
+past([went]-past->[go]).
+past([played]-past->[play]).
+
+past(B_asic,P_ast):-past([P_ast]-past->[B_asic]).
+
+//PLURAL NOUN MANAGEMENT
+plur([children]-plural->[child]).
+plur([mice]-plural->[mouse]).
+plur([sheep]-plural->[sheep]).
+plur([people]-plural->[person]).
+plur([fish]-plural->[fish]).
+plur([cats]-plural->[cat]).
+plur([dogs]-plural->[dog]).
+plur([men]-plural->[man]).
+plur([women]-plural->[woman]).
+plur([boys]-plural->[boy]).
+plur([girls]-plural->[girl]).
+plur([shopkeepers]-plural->[shopkeeper]).
+plur([teachers]-plural->[teacher]).
+plur([chefs]-plural->[chef]).
+plur([professors]-plural->[professor]).
+plur([waiters]-plural->[waiter]).
+plur([musicians]-plural->[musician]).
+plur([policemen]-plural->[policeman]).
+plur([businessmen]-plural->[businessman]).
+plur([pyramids]-plural->[pyramid]).
+plur([cubes]-plural->[cube]).
+plur([cars]-plural->[car]).
+plur([waters]-plural->[water]).
+plur([rhums]-plural->[rhum]).
+plur([salads]-plural->[salad]).
+plur([tomatoes]-plural->[tomato]).
+plur([soles]-plural->[sole]).
+plur([salmons]-plural->[salmon]).
+plur([chickens]-plural->[chicken]).
+plur([cows]-plural->[cow]).
+plur([porcs]-plural->[porc]).
+plur([cakes]-plural->[cake]).
+plur([oaks]-plural->[oak]).
+plur([meats]-plural->[meat]).
+
+//PLURAL CHECKING RULE
+plural(S_ing,P_lur):-plur([P_lur]-plural->[S_ing]).
+
+//PLURAL GENERATION
+writeAllPluralCG:-children(singularNoun,Y),
+writeAllPluralCG(Y).
+
+writeAllPluralCG(()).
+
+writeAllPluralCG((X|Y)):-writePluralCG(X),
+writeAllPluralCG(Y).
+
+writePluralCG(S_ing):-not(free(S_ing)),
+identToLetters(S_ing,T),
+reverse(T,U),
+checkEndSing(U,S),
+identToLetters(P_lur,S),
+write([P_lur]-plur->[S_ing]).
+
+concatenate(L_ist1,L_ist2,R):-
+reverse(L_ist1,A),
+concaten(A,L_ist2,R).
+
+concaten((),R,R).
+concaten((X|R_est),Y,R):-concaten(R_est,(X|Y),R).
+
+//PLURAL RULES, DEPENDING ON THE ENDING PART OF THE SINGULAR NOUN
+checkEndSing(("y"|W),P_lur):-
+concatenate(("s","e","i"),W,Z),
+reverse(Z,P_lur),
+/.
+
+checkEndSing(("n"|W),P_lur):-
+eq(W,("a"|W_1)),
+eq(W_1,("m"|W_2)),
+concatenate(("n","e"),W_1,Z),
+reverse(Z,P_lur),
+/.
+
+checkEndSing(S,P_lur):-
+eq(S,(Y|W)),
+member(Y,("o","s","x","z")),
+concatenate(("s","e"),S,Z),
+reverse(Z,P_lur),
+/.
+
+checkEndSing(S,P_lur):-
+eq(D,(Y_1|W)),
+eq(S,("h"|D)),
+member(Y_1,("s","c")),
+concatenate(("s","e"),S,Z),
+reverse(Z,P_lur),
+/.
+
+checkEndSing(X,P_lur):-
+concatenate(("s"),X,Z),
+reverse(Z,P_lur).
+
+//****************************************************
+//****************************************************
+// 4-lexicon
+//****************************************************
+//****************************************************
+
+//Lex sur noms
+lex(nn,S_ing,S_ing,singular):-plural(S_ing,P_lur),
+dic(S_ing,nn).
+
+lex(nn,P_lur,S_ing,plural):-plural(S_ing,P_lur),
+dic(S_ing,nn).
+
+//Lex sur verbes
+lex(vv,S_ing,B_asic,singular):-plural(S_ing,B_asic),
+dic(B_asic,vv).
+
+lex(vv,B_asic,B_asic,plural):-plural(S_ing,B_asic),
+dic(B_asic,vv).
+
+lex(vv,P_ast,B_asic,_):-past(B_asic,P_ast),
+dic(B_asic,vv).
+
+lex(det,X,singular):-isSubType(X,detSing).
+lex(det,X,plural):-isSubType(X,detPlur).
+
+dic(X,nn):-isSubType(X,noun).
+
+dic(X,adj,_):-isSubType(X,adjective).
+
+dic(X,vv):-isSubType(X,verb).
+
+dic(X,prop_n):-[properNoun=X].
+
+//intransitive
+features(X,intransitive,_,_):-isSubType(X,intransitive),
+not(isSubType(X,transitive)).
+
+//transitive oblig
+features(X,transitive(oblig),_,_):-isSubType(X,transitive),
+not(isSubType(X,intransitive)).
+
+//transitive optional
+features(X,transitive(opt),_,_):-isSubType(X,transitive),
+isSubType(X,intransitive).
+
+features(be,copular).

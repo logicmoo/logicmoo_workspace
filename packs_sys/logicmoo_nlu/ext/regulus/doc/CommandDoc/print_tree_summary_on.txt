@@ -1,0 +1,54 @@
+When processing input sentences from the Regulus top-level, print a
+summary of each parse tree. This is primarily useful if you need to
+add {\tt tree\_\-includes\_\-structure} or {\tt tree\_\-doesnt\_\-include\_\-structure}
+constraints in an EBL training corpus. \ref{Figure:PRINT-TREE-SUMMARY-example} shows an
+example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> PRINT_TREE_SUMMARY_ON
+(Print summary versions of parse trees)
+
+--- Performed command PRINT_TREE_SUMMARY_ON, time = 0.00 seconds
+
+>> switch on the light
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[action,switch],[device,light],
+               [onoff,on],[utterance_type,command]]
+
+Global value: []
+
+Syn features: []
+
+Parse tree:
+
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+
+Summary:
+
+('.MAIN' < 
+ [(utterance < 
+   [command<[verb<lex(switch),
+                  onoff<lex(on),
+                  np<[lex(the),
+                      noun<lex(light),
+                      empty_constituent]]])])
+\end{verbatim} 
+\caption{Example showing use of {\tt PRINT\_TREE\_SUMMARY\_ON}}
+\label{Figure:PRINT-TREE-SUMMARY-example}
+\end{figure}

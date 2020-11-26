@@ -1,0 +1,24 @@
+% Generation sous contraintes
+% Colmerauer et al
+
+   
+  $ perm3c :- permut3(X), wf(X).
+  $ permut3(P) :- eq(P,[X,Y,Z]), differents(P), l_chif(P).
+  $ l_chif([]).
+  $ l_chif([T|Q]) :- chif(T), l_chif(Q).
+  $ chif(1).
+  $ chif(2).
+  $ chif(3).
+
+
+  $ comb :- combin(X), wf(X).
+  $ combin(P) :- eq(P,[X,Y,Z,T]), differents(P), l_at(P).
+  $ l_at([]).
+  $ l_at([T|Q]) :- at(T), l_at(Q).
+  $ at(1).
+  $ at(2).
+  $ at(3).
+  $ at(4).
+  $ at(5).
+
+

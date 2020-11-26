@@ -1,0 +1,59 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% eng_syn.ptr [Chapter  7] A Prolog PATR grammar for an English fragment
+
+R ule S ---> [NP, VP] :-           %  S --> NP VP
+      S  : cat   === s,
+      S  : slash === VP : slash,
+      NP : cat   === np,
+      VP : cat   === vp.
+
+R ule VP ---> [V, XP] :-           %  VP --> V XP
+      VP : cat   === vp,
+      VP : slash === XP : slash,
+      V  : cat   === v,
+      XP : cat   === V  : arg1.
+
+R ule VP ---> [V] :-               %  VP/XP --> V
+      VP : cat   === vp,
+      VP : slash === V  : arg1,
+      V  : cat   === v.
+
+R ule PP ---> [P, NP] :-           %  PP --> P NP
+      PP : cat   === pp,
+      PP : slash === NP : slash,
+      P  : cat   === p,
+      NP : cat   === P  : arg1.
+
+R ule X0 ---> [X1, C, X2] :-       %  X --> X {and,or} X
+      X0 : cat   === X1 : cat,
+      X0 : cat   === X2 : cat,
+      C  : cat   === c,
+      X0 : slash === X1 : slash,
+      X0 : slash === X2 : slash,
+      X0 : arg1  === X1 : arg1,
+      X0 : arg1  === X2 : arg1.
+
+R ule S1 ---> [XP, S2] :-          %  S --> XP S/XP
+      S1 : cat   === s,
+      S1 : slash === XP : slash,
+      XP : cat   === S2 : slash,
+      S2 : cat   === s.
+
+test1  :- test([patients,died]).
+test2  :- test(['MediCenter',employed,nurses]).
+test3  :- test(['Dr. Chan',seemed,competent]).
+test4  :- test([patients,approved,of,'Dr. Chan']).
+test5  :- test(['Dr. Chan',thought,patients,died]).
+test6  :- test([nurses,had,believed,patients,paid,'MediCenter']).
+test7  :- test([nurses,or,patients,approved,of,'Dr. Chan',and,'MediCenter']).
+test8  :- test(['MediCenter',employed,and,paid,nurses]).
+test9  :- test([nurses,'Dr. Chan',paid]).
+test10 :- test([competent,nurses,seemed]).
+test11 :- test([nurses,patients,approved,of]).
+test12 :- test([of,patients,nurses,approved]).
+test13 :- test(['MediCenter',nurses,had,believed,patients,paid]).

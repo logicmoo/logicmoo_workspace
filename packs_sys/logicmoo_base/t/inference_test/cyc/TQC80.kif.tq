@@ -1,0 +1,21 @@
+(note TQC80)
+
+(believes InternationalCommunity 
+ (relationInstanceExists possesses Libya ChemicalWeapon)) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+
+
+
+(query (findall (?WHOM ?KIND) 
+
+ (and 
+ (believes ?WHOM 
+ (relationInstanceExists possesses Libya ?KIND)) 
+ (subclass ?KIND WeaponOfMassDestruction))))
+
+(answer InternationalCommunity ChemicalWeapon)  
+
+(end_of_file)
+

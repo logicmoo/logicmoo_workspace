@@ -1,0 +1,283 @@
+macro(masu, @j('ます', masu, 'POLITE-PRESENT')).
+macro(mashita, @j('ました', mashita, 'POLITE-PAST')).
+
+wa_or_ga:[] --> @j('は', wa, 'TOPIC').
+wa_or_ga:[] --> @j('が', ga, 'SUBJECT').
+wa_or_ga:[] --> @j('も', mo, 'SUBJECT').
+
+softener:[] --> kurai.
+
+conditional:[sem=[[conditional, dousureba]]] --> dousureba.
+
+macro(copula(SubjType, ComplementType),
+      ( copula:[sem=[[tense, present], [verb, desu]], politeness=polite, 
+		sem_subj_type=SubjType, sem_obj_type=ComplementType] --> @j('です', desu, 'BE-V_POLITE-PRESENT'))).
+macro(copula(SubjType, ComplementType),
+      ( copula:[sem=[[tense, past], [verb, desu]], politeness=polite, 
+		sem_subj_type=SubjType, sem_obj_type=ComplementType] --> @j('でした', deshita, 'BE-V_POLITE-PAST'))).
+
+aux_v:[sem=[[tense, continuous_present]], politeness=polite] --> @j('います',imasu, 'be_ing_POLITE').
+aux_v:[sem=[[tense, continuous_past]], politeness=polite] --> @j('いました',imashita, 'be_PAST_ing_POLITE').
+
+aux_v:[sem=[[tense, continuous_present]], politeness=base] --> @j('いる',iru, 'be_ing-V-PLAIN').
+aux_v:[sem=[[tense, continuous_past]], politeness=base] --> @j('いた',ita, 'be_PAST_ing-V-PLAIN').
+
+aux_v:[sem=[[tense, no_tense]], politeness=polite, vform=polite_imperative] --> @j('下さい', kudasai, 'please').   
+aux_v:[sem=[[tense, no_tense]], politeness=polite, vform=polite_question_imperative] --> ( @j('くれ', kure, 'please'), @masu ). 
+
+% Version with three verb forms: Present, Past, Continuous
+macro(verb([Pres, Past, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], Sem] | Feats] --> Pres )).
+macro(verb([Pres, Past, Contin], Sem, Feats),
+      ( v:[sem=[[tense, past], Sem] | Feats] --> Past )).
+macro(verb([Pres, Past, Contin], Sem, Feats),
+      ( v:[sem=[Sem] | Feats] --> Contin )).
+
+% Version with five verb forms: BasePresent, PolitePresent, BasePast, PolitePast, Continuous
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, politeness=base | Feats] --> BasePres )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)], vform=finite, politeness=polite | Feats] --> PolitePres )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)], vform=finite, politeness=base | Feats] --> BasePast )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)], vform=finite, politeness=polite | Feats] --> PolitePast )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin], Sem, Feats),
+      ( v:[sem=[ @verb_sem(Sem)], vform=continuous | Feats] --> Contin )).
+
+% Version with ten verb forms: BasePresent, PolitePresent, BasePast, PolitePast, Continuous
+% + passive versions of these
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass],
+	   Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)],
+	   vform=finite, politeness=base, voice=active | Feats] --> BasePres )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass],
+	   Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)],
+	   vform=finite, politeness=polite, voice=active | Feats] --> PolitePres )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)],
+	   vform=finite, politeness=base, voice=active | Feats] --> BasePast )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)],
+	   vform=finite, politeness=polite, voice=active | Feats] --> PolitePast )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[ @verb_sem(Sem)],
+	   vform=continuous, voice=active | Feats] --> Contin )).
+
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass],
+	   Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)],
+	   vform=finite, politeness=base, voice=passive | Feats] --> BasePresPass )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass],
+	   Sem, Feats),
+      ( v:[sem=[[tense, present], @verb_sem(Sem)],
+	   vform=finite, politeness=polite, voice=passive | Feats] --> PolitePresPass )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)],
+	   vform=finite, politeness=base, voice=passive | Feats] --> BasePastPass )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[[tense, past], @verb_sem(Sem)],
+	   vform=finite, politeness=polite, voice=passive | Feats] --> PolitePastPass )).
+macro(verb([BasePres, PolitePres, BasePast, PolitePast, Contin,
+	    BasePresPass, PolitePresPass, BasePastPass, PolitePastPass, ContinPass], Sem, Feats),
+      ( v:[sem=[ @verb_sem(Sem)],
+	   vform=continuous, voice=passive | Feats] --> ContinPass )).
+
+macro(lexical_np(Surface, Sem, Type),
+      ( n:[sem= @n_sem(Sem), sem_np_type=Type, sem_no_type=none] --> Surface )).
+
+macro(lexical_np(Surface, Sem, Type, Counter),
+      ( n:[sem= @n_sem(Sem), sem_np_type=Type, sem_no_type=none, counter_type=Counter] --> Surface )).
+
+macro(np_with_no(Surface, Sem, Type1, Type2),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_no_type=Type2] --> Surface ) ).
+
+macro(np_with_no(Surface, Sem, Type1, Type2, Counter),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_no_type=Type2, counter_type=Counter] --> Surface ) ).
+
+macro(np_with_premod(Surface, Sem, Type1, Type2),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_premod_type=Type2] --> Surface ) ).
+
+macro(np_with_no_or_premod(Surface, Sem, Type1, Type2, Type3),
+      (n:[sem= @n_sem(Sem), sem_np_type=Type1, sem_no_type=Type2, sem_premod_type=Type3] --> Surface ) ).
+
+macro(prep(Surface, Sem, PPType, NPType),
+     (p:[sem=Sem, sem_pp_type=PPType, sem_np_type=NPType, pre_wa=n] --> Surface )).
+
+macro(optionally_pre_wa_prep(Surface, Sem, PPType, NPType),
+     (p:[sem=Sem, sem_pp_type=PPType, sem_np_type=NPType, pre_wa=y] --> Surface )).
+
+macro(sc(Surface, Sem, PPType, NPType),
+     ( sc:[sem=Sem, sem_pp_type=PPType, sem_np_type=NPType] --> Surface )).
+
+macro(pp(Surface, Sem, Type),
+      ( pp:[sem=[Sem], sem_pp_type=Type, sc=n] --> Surface )).
+
+macro(advp(Surface, Sem, Type),
+      (advp:[sem=[Sem], sem_advp_type=Type] --> Surface )).
+
+macro(adjp(Surface, Sem, Type, Na),
+      (adjp:[sem=[Sem], sem_subj_type=Type, na=Na] --> Surface )).
+
+macro(number(Surface, Value),
+      ( number:[sem=Value] --> Surface ) ).
+
+@number(@j('一', ichi, 'one-N'), 1).
+@number(@j('二', ni, 'two-N'), 2).
+@number(@j('三', san, 'three-N'), 3).
+@number(@j('四', yon, 'four-N'), 4).
+@number(@j('五', go, 'five-N'), 5).
+@number(@j('六', roku, 'six-N'), 6).
+@number(@j('七', shichi, 'seven-N'), 7).
+@number(@j('七', nana, 'seven-N'), 7).
+@number(@j('八', hachi,'eight-N'), 8).
+@number(@j('九', ku, 'nine-N'), 9).
+@number(@j('十', juu, 'ten-N'), 10).
+@number((@j('十', juu, 'ten-N'), @j('一', ichi, 'one-N')), 11).
+@number((@j('十', juu, 'ten-N'), @j('二', ni, 'two-N')), 12).
+@number((@j('十', juu, 'ten-N'), @j('三', san, 'three-N')), 13).
+@number((@j('十', juu, 'ten-N'), @j('四', yon, 'four-N')), 14).
+@number((@j('十', juu, 'ten-N'), @j('五', go, 'five-N')), 15).
+@number((@j('十', juu, 'ten-N'), @j('六', roku, 'six-N')), 16).
+@number((@j('十', juu, 'ten-N'), @j('七', nana, 'seven-N')), 17).
+@number((@j('十', juu, 'ten-N'), @j('八', hachi,'eight-N')), 18).
+@number((@j('十', juu, 'ten-N'), @j('九', ku, 'nine-N')), 19).
+@number(@j('二十', nijuu, 'twenty-N'), 20).
+@number((@j('二十', nijuu, 'twenty-N'), @j('一', ichi, 'one-N')), 21).
+@number((@j('二十', nijuu, 'twenty-N'), @j('二', ni, 'two-N')), 22).
+@number((@j('二十', nijuu, 'twenty-N'), @j('三', san, 'three-N')), 23).
+@number((@j('二十', nijuu, 'twenty-N'), @j('四', yon, 'four-N')), 24).
+@number((@j('二十', nijuu, 'twenty-N'), @j('五', go, 'five-N')), 25).
+@number((@j('二十', nijuu, 'twenty-N'), @j('六', roku, 'six-N')), 26).
+@number((@j('二十', nijuu, 'twenty-N'), @j('七', nana, 'seven-N')), 27).
+@number((@j('二十', nijuu, 'twenty-N'), @j('八', hachi,'eight-N')), 28).
+@number((@j('二十', nijuu, 'twenty-N'), @j('九', ku, 'nine-N')), 29).
+@number(@j('三十', sanjuu, 'thirty-N'), 30).
+@number(@j('数', su, 'a_few-N'), su).
+
+macro(counter(Surface, Counter, Value),
+      ( counter:[sem=Value, counter_type=Counter] --> Surface ) ).
+
+@counter(@j('一つ', hitotsu, 'one-thing'), default, 1).
+@counter(@j('二つ', futatsu, 'two-things'), default, 2).
+@counter(@j('三つ', mittsu, 'three-things'), default, 3).
+@counter(@j('四つ', yottsu, 'four-things'), default, 4).
+@counter(@j('五つ', itsutsu, 'five-things'), default, 5).
+@counter(@j('六つ', muttsu, 'six-things'), default, 6).
+@counter(@j('七つ', nanatsu, 'seven-things'), default, 7).
+@counter(@j('八つ', yattsu, 'eight-things'), default, 8).
+@counter(@j('九つ', kokonotsu, 'nine-things'), default, 9).
+
+
+@counter(@j('一杯', ippai, 'one-drink'), drinks, 1).
+@counter(@j('二杯', nihai, 'two-drinks'), drinks, 2).
+@counter(@j('三杯', sanbai, 'three-drinks'), drinks, 3).
+@counter(@j('四杯', yonhai, 'four-drinks'), drinks, 4).
+@counter(@j('五杯', gohai, 'five-drinks'), drinks, 5).
+@counter(@j('六杯', roppai, 'six-drinks'), drinks, 6).
+@counter(@j('七杯', nanahai, 'seven-drinks'), drinks, 7).
+@counter(@j('八杯', hachihai, 'eight-drinks'), drinks, 8).
+@counter(@j('九杯', kyuuhai, 'nine-drinks'), drinks, 9).
+@counter(@j('十杯', juppai, 'ten-drinks'), drinks, 10).
+
+macro(year(Surface, Value),
+      ( year:[sem=Value] --> Surface ) ).
+
+@year((@j('二千', nisen, 'two-thousand-N'), @j('七年', nananen, 'seven-year-N')),  2007).
+@year((@j('二千', nisen, 'two-thousand-N'), @j('八年', hachinen, 'eight-year-N')),  2008).
+
+macro(month(Surface, Value),
+      ( month:[sem=Value] --> Surface ) ).
+
+@month((@j('一', ichi, 'one-N'), @j('月', gatsu, 'month-N')),  1).
+@month((@j('二', ni, 'two-N'), @j('月', gatsu, 'month-N')), 2).
+@month((@j('三', san, 'three-N'), @j('月', gatsu, 'month-N')), 3).
+@month((@j('四', shi, 'four-N'), @j('月', gatsu, 'month-N')), 4).
+@month((@j('五', go, 'five-N'), @j('月', gatsu, 'month-N')), 5).
+@month((@j('六', roku, 'six-N'), @j('月', gatsu, 'month-N')), 6).
+@month((@j('七', shichi, 'seven-N'), @j('月', gatsu, 'month-N')), 7).
+@month((@j('八', hachi,'eight-N'), @j('月', gatsu, 'month-N')), 8).
+@month((@j('九', ku, 'nine-N'), @j('月', gatsu, 'month-N')), 9).
+@month((@j('十', juu, 'ten-N'), @j('月', gatsu, 'month-N')), 10).
+@month((@j('十', juu, 'ten-N'), @j('一', ichi, 'one-N'), @j('月', gatsu, 'month-N')), 11).
+@month((@j('十', juu, 'ten-N'), @j('二', ni, 'two-N'), @j('月', gatsu, 'month-N')), 12).
+
+macro(day(Surface, Value),
+      ( day:[sem=Value] --> Surface ) ).
+
+% Add entries for days of the month, 1-31.
+@day((@j('一日', tsuitachi, 'one-day-N')), 1).
+@day((@j('二日', futsuka, 'two-day-N')), 2).
+@day((@j('三日', mikka, 'three-day-N')), 3).
+@day((@j('四日', yokka, 'four-day-N')), 4).
+@day((@j('五日', itsuka, 'five-day-N')), 5).
+@day((@j('六日', muika, 'six-day-N')), 6).
+@day((@j('七日', nanoka, 'seven-day-N')), 7).
+@day((@j('八日', youka, 'eight-day-N')), 8).
+@day((@j('九日', kokonoka, 'nine-day-N')), 9).
+@day((@j('十日', touka, 'ten-day-N')), 10).
+@day((@j('十', juu, 'ten-N'), @j('一日', ichinichi, 'one-day-N')), 11).
+@day((@j('十', juu, 'ten-N'), @j('二日', ninichi, 'two-day-N')), 12).
+@day((@j('十', juu, 'ten-N'), @j('三日', sannichi, 'three-day-N')), 13).
+@day((@j('十', juu, 'ten-N'), @j('四日', yokka, 'four-day-N')), 14).
+@day((@j('十', juu, 'ten-N'), @j('五日', gonichi, 'five-day-N')), 15).
+@day((@j('十', juu, 'ten-N'), @j('六日', rokunichi, 'six-day-N')), 16).
+@day((@j('十', juu, 'ten-N'), @j('七日', shichinichi, 'seven-day-N')), 17).
+@day((@j('十', juu, 'ten-N'), @j('八日', hachinichi, 'eight-day-N')), 18).
+@day((@j('十', juu, 'ten-N'), @j('九日', kunichi, 'nine-day-N')), 19).
+@day((@j('二十日', hatsuka, 'twenty-day-N')), 20).
+@day((@j('二十', nijuu, 'twenty-N'), @j('一日', ichinichi, 'one-day-N')), 21).
+@day((@j('二十', nijuu, 'twenty-N'), @j('二日', ninichi, 'two-day-N')), 22).
+@day((@j('二十', nijuu, 'twenty-N'), @j('三日', sannichi, 'three-day-N')), 23).
+@day((@j('二十', nijuu, 'twenty-N'), @j('四日', yokka, 'four-day-N')), 24).
+@day((@j('二十', nijuu, 'ten-N'), @j('五日', gonichi, 'five-day-N')), 25).
+@day((@j('二十', nijuu, 'ten-N'), @j('六日', rokunichi, 'six-day-N')), 26).
+@day((@j('二十', nijuu, 'ten-N'), @j('七日', shichinichi, 'seven-day-N')), 27).
+@day((@j('二十', nijuu, 'ten-N'), @j('八日', hachinichi, 'eight-day-N')), 28).
+@day((@j('二十', nijuu, 'ten-N'), @j('九日', kunichi, 'nine-day-N')), 29).
+@day((@j('三十日', sanjuunichi, 'thirty-day-N')), 30).
+@day((@j('三十', sanjuu, 'thirty-N'), @j('一日', ichinichi, 'one-day-N')), 31).
+
+minute:[sem=15] --> @j('十五分', juugofun, 'fifteen-minute-N').  
+minute:[sem=30] --> @j('半', han, 'half-N'). 
+minute:[sem=45] --> @j('四十五分', yonjuugofun, 'forty-five-minute-N'). 
+
+numerical_comparative:[sem=[[numerical_comparative, ijou]]] --> @j('以上',ijou, 'more-N').
+numerical_comparative:[sem=[[numerical_comparative, jaku]]] --> @j('弱',jaku, 'less-N').
+numerical_comparative:[sem=[[numerical_comparative, chikaku]]] --> @j('近く',chikaku, 'less-N').
+numerical_comparative:[sem=[[numerical_comparative, sukunakutomo]]] --> @j('少なくとも',sukunakutomo, 'at_least-N').
+
+macro(interjection(Surface, Value),
+      ( interjection:[sem=[[interjection, Value]]] --> Surface ) ).
+
+@interjection(@j('こんにちは', konnichiwa, 'hello-N'), konnichiwa).
+@interjection(@j('いらっしゃいませ', irasshaimase, 'welcome-N'), irasshaimase).
+@interjection(@j('さようなら', sayounara, 'goodbye-N'), sayounara).
+@interjection((@j('おはよう',ohayo, 'morning-N'), @j('ございます', gozaimasu, 'be-V-POLITE')), ohayo_gozaimasu).
+@interjection((@j('お加減', okagen, 'condition-N'), @j('いかが', ikaga, 'how-N-POLITE'), @j('です', desu, 'be-V-POLITE'), @j('か', ka, 'Q-PARTICLE')),okagen_ikaga_desu_ka).
+
+macro(spec(Surface, Spec),
+      ( spec:[sem=Spec] --> Surface ) ).
+
+@spec(@j('どの', dono, 'what-Q'), dono).
+@spec(@j('この', kono, 'this-Q'), kono).
+@spec(@j('あの', ano, 'that-Q'), ano).
+
+@lexical_np(@j('何', nani, 'what-Q'), [abstract, nani], abstract).
+@lexical_np(@j('何', nan, 'what-Q'), [abstract, nani], abstract).
+@lexical_np(@j(('どんな','の'), (donna, no), ('what-kind-Q', 'of-Q')), [abstract, donna_no], abstract).
+
+@adjp(@j('どんな', donna, 'what-Q'), [none, donna], _Any, na).
+
+@advp(@j('すべて', subete, 'all-ADV'), [none, subete], manner).
+

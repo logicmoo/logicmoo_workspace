@@ -1,0 +1,52 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests if Finin Backchaining memo idea is working
+
+
+%  was_module(bc_01,[]).
+
+:- include(test_header).
+
+
+:- dynamic(bc_q/1).
+:- dynamic(bc_p/1).
+
+:- (ain((bc_q(N) <- bc_p(N)))).
+:- listing(bc_q/1).
+
+bc_p(a).
+bc_p(b).
+:- listing(bc_p/1).
+
+:- mpred_test(call_u(bc_p(b))).
+
+%= nothing cached ?
+:- listing(bc_q/1).
+
+:- mpred_test(\+ clause_u(bc_q(_),true)).
+
+:- mpred_test((call_u(bc_q(b)))).
+
+%= something cached
+:- listing(bc_q/1).
+:- mpred_test( clause_u(bc_q(_),true)).
+
+
+end_of_file.
+
+:- listing(bc_q/1).
+:- ain(bc_p(a)).
+:- \+ is_asserted(bc_q(a)).
+?- mpred_test(bc_p(a)).
+:- is_asserted(bc_q(a)).
+
+:- pp_DB.
+
+
+
+

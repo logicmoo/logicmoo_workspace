@@ -1,0 +1,11 @@
+% (provide[money_market][situation:(convert_into[money_market_investment][cash])])
+cgc(191,simple,'money_market',[fs(num,sing)],[]).
+cgc(193,simple,'money_market_investment',[fs(num,sing)],[]).
+cgc(194,simple,'cash',[fs(num,sing)],[]).
+cg(195,[cgr(convert_into, [193, 194], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(192,complex,situation,[195],[]).
+cg(196,[cgr(provide, [191, 192], _)], 
+        [],
+        [fs(kind,normal)]).

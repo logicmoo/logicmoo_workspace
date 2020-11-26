@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="import.html">
+<link rel="next" href="metapred.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="import.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="metapred.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:module-autoload"><a id="sec:6.4"><span class="sec-nr">6.4</span> <span class="sec-title">Controlled 
+autoloading for modules</span></a></h2>
+
+<a id="sec:module-autoload"></a>
+
+<p>SWI-Prolog by default support <em>autoloading</em> from its standard 
+library. Autoloading implies that when a predicate is found missing 
+during execution the library is searched and the predicate is imported 
+lazily using <a id="idx:usemodule2:1892"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
+See <a class="sec" href="autoload.html#sec:2.14">section 2.14</a> for 
+details.
+
+<p>The advantage of autoloading is that it requires less typing while it 
+reduces the startup time and reduces the memory footprint of an 
+application. It also allows moving old predicates or emulation thereof 
+the module <code>library(backcomp)</code> without affecting existing 
+code. This procedure keeps the libraries and system clean. We make sure 
+that there are not two modules that provide the same predicate as 
+autoload predicate.
+
+<p>Nevertheless, a disadvantage of this autoloader is that the 
+dependencies of a module on the libraries are not explicit and tooling 
+such as PceEmacs or <a id="idx:gxref0:1893"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
+are required to find these dependencies. Some users want explicit 
+control over which library predicates are accessed from where, 
+preferably by using <a id="idx:usemodule2:1894"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+which explicitly states which predicates are imported from which 
+library.<sup class="fn">165<span class="fn-text">Note that built-in 
+predicates still add predicates for general use to all name spaces.</span></sup>
+
+<p>Large applications typically contain source files that are not 
+immediately needed and often are not needed at all in many runs of the 
+program. This can be solved by creating an application-specific autoload 
+library, but with multiple parties providing autoloadable predicates the 
+maintenance becomes fragile. For these two reasons we added <a id="idx:autoload1:1895"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
+and <a id="idx:autoload2:1896"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+that behave similar to <a id="idx:usemodule12:1897"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>, 
+but do not perform the actual loading. The generic autoloader now 
+proceeds as follows if a missing predicate is encountered:
+
+<p>
+<ol class="latex">
+<li>Check <a id="idx:autoload2:1898"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+declarations. If one specifies the predicate, import it using <a id="idx:usemodule2:1899"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
+<li>Check <a id="idx:autoload1:1900"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a> 
+declarations. If the specified file is loaded, check its export list. 
+Otherwise read the module declaration of the target file to find the 
+exports. If the target predicate is found, import it using <a id="idx:usemodule2:1901"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>.
+<li>Perform autoloading from the library if the <a class="flag" href="flags.html#flag:autoload">autoload</a> 
+is <code>true</code>.
+</ol>
+
+<dl class="latex">
+<dt class="pubdef"><a id="autoload/1"><strong>autoload</strong>(<var>:File</var>)</a></dt>
+<dt class="pubdef"><a id="autoload/2"><strong>autoload</strong>(<var>:File, 
++Imports</var>)</a></dt>
+<dd class="defbody">
+Declare that possibly missing predicates in the module in which this 
+declaration occurs are to be resolved by using <a id="idx:usemodule2:1902"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+on
+<var>File</var> to (possibly) load the file and make the target 
+predicate available. The <a id="idx:autoload2:1903"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+variant is tried before <a id="idx:autoload1:1904"></a><a class="pred" href="module-autoload.html#autoload/1">autoload/1</a>. 
+It is not allowed for two <a id="idx:autoload2:1905"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+declarations to provide the same predicate and it is not allowed to 
+define a predicate provided in this way locally. See also <a id="idx:require1:1906"></a><a class="pred" href="consulting.html#require/1">require/1</a>, 
+which allows specifying predicates for autoloading from their default 
+location.
+
+<p>Predicates made available using <a id="idx:autoload2:1907"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a> 
+behave as defined predicates, which implies that any operation on them 
+will perform autoloading if necessary. Notably <a id="idx:predicateproperty2:1908"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, <a id="idx:currentpredicate1:1909"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
+and
+<a id="idx:clause2:1910"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+are supported.
+
+<p>Currently, neither the existence of <var>File</var>, nor whether it 
+actually exports the given predicates (<a id="idx:autoload2:1911"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>) 
+is verified when the file is loaded. Instead, the declarations are 
+verified when searching for a missing predicate.
+
+<p>If the Prolog flag <a class="flag" href="flags.html#flag:autoload">autoload</a> 
+is set to <code>false</code>, these declarations are interpreted as <a id="idx:usemodule12:1912"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
+</dd>
+</dl>
+
+<p></body></html>

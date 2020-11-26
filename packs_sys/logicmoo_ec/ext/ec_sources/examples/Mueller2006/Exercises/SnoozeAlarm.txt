@@ -1,0 +1,660 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Exercises/SnoozeAlarm.e
+loading foundations/Root.e
+loading foundations/EC.e
+5331 variables and 46656 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+AlarmTime(Clock, 3).
+Happens(SetAlarmTime(Nathan, Clock, 2), 0).
+1
+-AlarmTime(Clock, 3).
++AlarmTime(Clock, 2).
+Happens(TurnOnAlarm(Nathan, Clock), 1).
+2
++AlarmOn(Clock).
+Happens(StartBeeping(Clock), 2).
+3
++Beeping(Clock).
+4
+Happens(PressSnooze(Nathan, Clock), 4).
+5
+-AlarmTime(Clock, 2).
+-Beeping(Clock).
++AlarmTime(Clock, 13).
+6
+7
+8
+9
+10
+11
+12
+13
+Happens(StartBeeping(Clock), 13).
+14
++Beeping(Clock).
+15
+P
+!Happens(PressSnooze(Nathan, Clock), 0).
+!Happens(PressSnooze(Nathan, Clock), 1).
+!Happens(PressSnooze(Nathan, Clock), 10).
+!Happens(PressSnooze(Nathan, Clock), 11).
+!Happens(PressSnooze(Nathan, Clock), 12).
+!Happens(PressSnooze(Nathan, Clock), 13).
+!Happens(PressSnooze(Nathan, Clock), 14).
+!Happens(PressSnooze(Nathan, Clock), 15).
+!Happens(PressSnooze(Nathan, Clock), 2).
+!Happens(PressSnooze(Nathan, Clock), 3).
+!Happens(PressSnooze(Nathan, Clock), 5).
+!Happens(PressSnooze(Nathan, Clock), 6).
+!Happens(PressSnooze(Nathan, Clock), 7).
+!Happens(PressSnooze(Nathan, Clock), 8).
+!Happens(PressSnooze(Nathan, Clock), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 0), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 1), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 10), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 11), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 12), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 13), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 14), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 15), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 2), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 3), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 4), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 5), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 6), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 7), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 8), 9).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 0).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 1).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 10).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 11).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 12).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 13).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 14).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 15).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 2).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 3).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 4).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 5).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 6).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 7).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 8).
+!Happens(SetAlarmTime(Nathan, Clock, 9), 9).
+!Happens(StartBeeping(Clock), 0).
+!Happens(StartBeeping(Clock), 1).
+!Happens(StartBeeping(Clock), 10).
+!Happens(StartBeeping(Clock), 11).
+!Happens(StartBeeping(Clock), 12).
+!Happens(StartBeeping(Clock), 14).
+!Happens(StartBeeping(Clock), 15).
+!Happens(StartBeeping(Clock), 3).
+!Happens(StartBeeping(Clock), 4).
+!Happens(StartBeeping(Clock), 5).
+!Happens(StartBeeping(Clock), 6).
+!Happens(StartBeeping(Clock), 7).
+!Happens(StartBeeping(Clock), 8).
+!Happens(StartBeeping(Clock), 9).
+!Happens(TurnOffAlarm(Nathan, Clock), 0).
+!Happens(TurnOffAlarm(Nathan, Clock), 1).
+!Happens(TurnOffAlarm(Nathan, Clock), 10).
+!Happens(TurnOffAlarm(Nathan, Clock), 11).
+!Happens(TurnOffAlarm(Nathan, Clock), 12).
+!Happens(TurnOffAlarm(Nathan, Clock), 13).
+!Happens(TurnOffAlarm(Nathan, Clock), 14).
+!Happens(TurnOffAlarm(Nathan, Clock), 15).
+!Happens(TurnOffAlarm(Nathan, Clock), 2).
+!Happens(TurnOffAlarm(Nathan, Clock), 3).
+!Happens(TurnOffAlarm(Nathan, Clock), 4).
+!Happens(TurnOffAlarm(Nathan, Clock), 5).
+!Happens(TurnOffAlarm(Nathan, Clock), 6).
+!Happens(TurnOffAlarm(Nathan, Clock), 7).
+!Happens(TurnOffAlarm(Nathan, Clock), 8).
+!Happens(TurnOffAlarm(Nathan, Clock), 9).
+!Happens(TurnOnAlarm(Nathan, Clock), 0).
+!Happens(TurnOnAlarm(Nathan, Clock), 10).
+!Happens(TurnOnAlarm(Nathan, Clock), 11).
+!Happens(TurnOnAlarm(Nathan, Clock), 12).
+!Happens(TurnOnAlarm(Nathan, Clock), 13).
+!Happens(TurnOnAlarm(Nathan, Clock), 14).
+!Happens(TurnOnAlarm(Nathan, Clock), 15).
+!Happens(TurnOnAlarm(Nathan, Clock), 2).
+!Happens(TurnOnAlarm(Nathan, Clock), 3).
+!Happens(TurnOnAlarm(Nathan, Clock), 4).
+!Happens(TurnOnAlarm(Nathan, Clock), 5).
+!Happens(TurnOnAlarm(Nathan, Clock), 6).
+!Happens(TurnOnAlarm(Nathan, Clock), 7).
+!Happens(TurnOnAlarm(Nathan, Clock), 8).
+!Happens(TurnOnAlarm(Nathan, Clock), 9).
+!ReleasedAt(AlarmOn(Clock), 0).
+!ReleasedAt(AlarmOn(Clock), 1).
+!ReleasedAt(AlarmOn(Clock), 10).
+!ReleasedAt(AlarmOn(Clock), 11).
+!ReleasedAt(AlarmOn(Clock), 12).
+!ReleasedAt(AlarmOn(Clock), 13).
+!ReleasedAt(AlarmOn(Clock), 14).
+!ReleasedAt(AlarmOn(Clock), 15).
+!ReleasedAt(AlarmOn(Clock), 2).
+!ReleasedAt(AlarmOn(Clock), 3).
+!ReleasedAt(AlarmOn(Clock), 4).
+!ReleasedAt(AlarmOn(Clock), 5).
+!ReleasedAt(AlarmOn(Clock), 6).
+!ReleasedAt(AlarmOn(Clock), 7).
+!ReleasedAt(AlarmOn(Clock), 8).
+!ReleasedAt(AlarmOn(Clock), 9).
+!ReleasedAt(AlarmTime(Clock, 0), 0).
+!ReleasedAt(AlarmTime(Clock, 0), 1).
+!ReleasedAt(AlarmTime(Clock, 0), 10).
+!ReleasedAt(AlarmTime(Clock, 0), 11).
+!ReleasedAt(AlarmTime(Clock, 0), 12).
+!ReleasedAt(AlarmTime(Clock, 0), 13).
+!ReleasedAt(AlarmTime(Clock, 0), 14).
+!ReleasedAt(AlarmTime(Clock, 0), 15).
+!ReleasedAt(AlarmTime(Clock, 0), 2).
+!ReleasedAt(AlarmTime(Clock, 0), 3).
+!ReleasedAt(AlarmTime(Clock, 0), 4).
+!ReleasedAt(AlarmTime(Clock, 0), 5).
+!ReleasedAt(AlarmTime(Clock, 0), 6).
+!ReleasedAt(AlarmTime(Clock, 0), 7).
+!ReleasedAt(AlarmTime(Clock, 0), 8).
+!ReleasedAt(AlarmTime(Clock, 0), 9).
+!ReleasedAt(AlarmTime(Clock, 1), 0).
+!ReleasedAt(AlarmTime(Clock, 1), 1).
+!ReleasedAt(AlarmTime(Clock, 1), 10).
+!ReleasedAt(AlarmTime(Clock, 1), 11).
+!ReleasedAt(AlarmTime(Clock, 1), 12).
+!ReleasedAt(AlarmTime(Clock, 1), 13).
+!ReleasedAt(AlarmTime(Clock, 1), 14).
+!ReleasedAt(AlarmTime(Clock, 1), 15).
+!ReleasedAt(AlarmTime(Clock, 1), 2).
+!ReleasedAt(AlarmTime(Clock, 1), 3).
+!ReleasedAt(AlarmTime(Clock, 1), 4).
+!ReleasedAt(AlarmTime(Clock, 1), 5).
+!ReleasedAt(AlarmTime(Clock, 1), 6).
+!ReleasedAt(AlarmTime(Clock, 1), 7).
+!ReleasedAt(AlarmTime(Clock, 1), 8).
+!ReleasedAt(AlarmTime(Clock, 1), 9).
+!ReleasedAt(AlarmTime(Clock, 10), 0).
+!ReleasedAt(AlarmTime(Clock, 10), 1).
+!ReleasedAt(AlarmTime(Clock, 10), 10).
+!ReleasedAt(AlarmTime(Clock, 10), 11).
+!ReleasedAt(AlarmTime(Clock, 10), 12).
+!ReleasedAt(AlarmTime(Clock, 10), 13).
+!ReleasedAt(AlarmTime(Clock, 10), 14).
+!ReleasedAt(AlarmTime(Clock, 10), 15).
+!ReleasedAt(AlarmTime(Clock, 10), 2).
+!ReleasedAt(AlarmTime(Clock, 10), 3).
+!ReleasedAt(AlarmTime(Clock, 10), 4).
+!ReleasedAt(AlarmTime(Clock, 10), 5).
+!ReleasedAt(AlarmTime(Clock, 10), 6).
+!ReleasedAt(AlarmTime(Clock, 10), 7).
+!ReleasedAt(AlarmTime(Clock, 10), 8).
+!ReleasedAt(AlarmTime(Clock, 10), 9).
+!ReleasedAt(AlarmTime(Clock, 11), 0).
+!ReleasedAt(AlarmTime(Clock, 11), 1).
+!ReleasedAt(AlarmTime(Clock, 11), 10).
+!ReleasedAt(AlarmTime(Clock, 11), 11).
+!ReleasedAt(AlarmTime(Clock, 11), 12).
+!ReleasedAt(AlarmTime(Clock, 11), 13).
+!ReleasedAt(AlarmTime(Clock, 11), 14).
+!ReleasedAt(AlarmTime(Clock, 11), 15).
+!ReleasedAt(AlarmTime(Clock, 11), 2).
+!ReleasedAt(AlarmTime(Clock, 11), 3).
+!ReleasedAt(AlarmTime(Clock, 11), 4).
+!ReleasedAt(AlarmTime(Clock, 11), 5).
+!ReleasedAt(AlarmTime(Clock, 11), 6).
+!ReleasedAt(AlarmTime(Clock, 11), 7).
+!ReleasedAt(AlarmTime(Clock, 11), 8).
+!ReleasedAt(AlarmTime(Clock, 11), 9).
+!ReleasedAt(AlarmTime(Clock, 12), 0).
+!ReleasedAt(AlarmTime(Clock, 12), 1).
+!ReleasedAt(AlarmTime(Clock, 12), 10).
+!ReleasedAt(AlarmTime(Clock, 12), 11).
+!ReleasedAt(AlarmTime(Clock, 12), 12).
+!ReleasedAt(AlarmTime(Clock, 12), 13).
+!ReleasedAt(AlarmTime(Clock, 12), 14).
+!ReleasedAt(AlarmTime(Clock, 12), 15).
+!ReleasedAt(AlarmTime(Clock, 12), 2).
+!ReleasedAt(AlarmTime(Clock, 12), 3).
+!ReleasedAt(AlarmTime(Clock, 12), 4).
+!ReleasedAt(AlarmTime(Clock, 12), 5).
+!ReleasedAt(AlarmTime(Clock, 12), 6).
+!ReleasedAt(AlarmTime(Clock, 12), 7).
+!ReleasedAt(AlarmTime(Clock, 12), 8).
+!ReleasedAt(AlarmTime(Clock, 12), 9).
+!ReleasedAt(AlarmTime(Clock, 13), 0).
+!ReleasedAt(AlarmTime(Clock, 13), 1).
+!ReleasedAt(AlarmTime(Clock, 13), 10).
+!ReleasedAt(AlarmTime(Clock, 13), 11).
+!ReleasedAt(AlarmTime(Clock, 13), 12).
+!ReleasedAt(AlarmTime(Clock, 13), 13).
+!ReleasedAt(AlarmTime(Clock, 13), 14).
+!ReleasedAt(AlarmTime(Clock, 13), 15).
+!ReleasedAt(AlarmTime(Clock, 13), 2).
+!ReleasedAt(AlarmTime(Clock, 13), 3).
+!ReleasedAt(AlarmTime(Clock, 13), 4).
+!ReleasedAt(AlarmTime(Clock, 13), 5).
+!ReleasedAt(AlarmTime(Clock, 13), 6).
+!ReleasedAt(AlarmTime(Clock, 13), 7).
+!ReleasedAt(AlarmTime(Clock, 13), 8).
+!ReleasedAt(AlarmTime(Clock, 13), 9).
+!ReleasedAt(AlarmTime(Clock, 14), 0).
+!ReleasedAt(AlarmTime(Clock, 14), 1).
+!ReleasedAt(AlarmTime(Clock, 14), 10).
+!ReleasedAt(AlarmTime(Clock, 14), 11).
+!ReleasedAt(AlarmTime(Clock, 14), 12).
+!ReleasedAt(AlarmTime(Clock, 14), 13).
+!ReleasedAt(AlarmTime(Clock, 14), 14).
+!ReleasedAt(AlarmTime(Clock, 14), 15).
+!ReleasedAt(AlarmTime(Clock, 14), 2).
+!ReleasedAt(AlarmTime(Clock, 14), 3).
+!ReleasedAt(AlarmTime(Clock, 14), 4).
+!ReleasedAt(AlarmTime(Clock, 14), 5).
+!ReleasedAt(AlarmTime(Clock, 14), 6).
+!ReleasedAt(AlarmTime(Clock, 14), 7).
+!ReleasedAt(AlarmTime(Clock, 14), 8).
+!ReleasedAt(AlarmTime(Clock, 14), 9).
+!ReleasedAt(AlarmTime(Clock, 15), 0).
+!ReleasedAt(AlarmTime(Clock, 15), 1).
+!ReleasedAt(AlarmTime(Clock, 15), 10).
+!ReleasedAt(AlarmTime(Clock, 15), 11).
+!ReleasedAt(AlarmTime(Clock, 15), 12).
+!ReleasedAt(AlarmTime(Clock, 15), 13).
+!ReleasedAt(AlarmTime(Clock, 15), 14).
+!ReleasedAt(AlarmTime(Clock, 15), 15).
+!ReleasedAt(AlarmTime(Clock, 15), 2).
+!ReleasedAt(AlarmTime(Clock, 15), 3).
+!ReleasedAt(AlarmTime(Clock, 15), 4).
+!ReleasedAt(AlarmTime(Clock, 15), 5).
+!ReleasedAt(AlarmTime(Clock, 15), 6).
+!ReleasedAt(AlarmTime(Clock, 15), 7).
+!ReleasedAt(AlarmTime(Clock, 15), 8).
+!ReleasedAt(AlarmTime(Clock, 15), 9).
+!ReleasedAt(AlarmTime(Clock, 2), 0).
+!ReleasedAt(AlarmTime(Clock, 2), 1).
+!ReleasedAt(AlarmTime(Clock, 2), 10).
+!ReleasedAt(AlarmTime(Clock, 2), 11).
+!ReleasedAt(AlarmTime(Clock, 2), 12).
+!ReleasedAt(AlarmTime(Clock, 2), 13).
+!ReleasedAt(AlarmTime(Clock, 2), 14).
+!ReleasedAt(AlarmTime(Clock, 2), 15).
+!ReleasedAt(AlarmTime(Clock, 2), 2).
+!ReleasedAt(AlarmTime(Clock, 2), 3).
+!ReleasedAt(AlarmTime(Clock, 2), 4).
+!ReleasedAt(AlarmTime(Clock, 2), 5).
+!ReleasedAt(AlarmTime(Clock, 2), 6).
+!ReleasedAt(AlarmTime(Clock, 2), 7).
+!ReleasedAt(AlarmTime(Clock, 2), 8).
+!ReleasedAt(AlarmTime(Clock, 2), 9).
+!ReleasedAt(AlarmTime(Clock, 3), 0).
+!ReleasedAt(AlarmTime(Clock, 3), 1).
+!ReleasedAt(AlarmTime(Clock, 3), 10).
+!ReleasedAt(AlarmTime(Clock, 3), 11).
+!ReleasedAt(AlarmTime(Clock, 3), 12).
+!ReleasedAt(AlarmTime(Clock, 3), 13).
+!ReleasedAt(AlarmTime(Clock, 3), 14).
+!ReleasedAt(AlarmTime(Clock, 3), 15).
+!ReleasedAt(AlarmTime(Clock, 3), 2).
+!ReleasedAt(AlarmTime(Clock, 3), 3).
+!ReleasedAt(AlarmTime(Clock, 3), 4).
+!ReleasedAt(AlarmTime(Clock, 3), 5).
+!ReleasedAt(AlarmTime(Clock, 3), 6).
+!ReleasedAt(AlarmTime(Clock, 3), 7).
+!ReleasedAt(AlarmTime(Clock, 3), 8).
+!ReleasedAt(AlarmTime(Clock, 3), 9).
+!ReleasedAt(AlarmTime(Clock, 4), 0).
+!ReleasedAt(AlarmTime(Clock, 4), 1).
+!ReleasedAt(AlarmTime(Clock, 4), 10).
+!ReleasedAt(AlarmTime(Clock, 4), 11).
+!ReleasedAt(AlarmTime(Clock, 4), 12).
+!ReleasedAt(AlarmTime(Clock, 4), 13).
+!ReleasedAt(AlarmTime(Clock, 4), 14).
+!ReleasedAt(AlarmTime(Clock, 4), 15).
+!ReleasedAt(AlarmTime(Clock, 4), 2).
+!ReleasedAt(AlarmTime(Clock, 4), 3).
+!ReleasedAt(AlarmTime(Clock, 4), 4).
+!ReleasedAt(AlarmTime(Clock, 4), 5).
+!ReleasedAt(AlarmTime(Clock, 4), 6).
+!ReleasedAt(AlarmTime(Clock, 4), 7).
+!ReleasedAt(AlarmTime(Clock, 4), 8).
+!ReleasedAt(AlarmTime(Clock, 4), 9).
+!ReleasedAt(AlarmTime(Clock, 5), 0).
+!ReleasedAt(AlarmTime(Clock, 5), 1).
+!ReleasedAt(AlarmTime(Clock, 5), 10).
+!ReleasedAt(AlarmTime(Clock, 5), 11).
+!ReleasedAt(AlarmTime(Clock, 5), 12).
+!ReleasedAt(AlarmTime(Clock, 5), 13).
+!ReleasedAt(AlarmTime(Clock, 5), 14).
+!ReleasedAt(AlarmTime(Clock, 5), 15).
+!ReleasedAt(AlarmTime(Clock, 5), 2).
+!ReleasedAt(AlarmTime(Clock, 5), 3).
+!ReleasedAt(AlarmTime(Clock, 5), 4).
+!ReleasedAt(AlarmTime(Clock, 5), 5).
+!ReleasedAt(AlarmTime(Clock, 5), 6).
+!ReleasedAt(AlarmTime(Clock, 5), 7).
+!ReleasedAt(AlarmTime(Clock, 5), 8).
+!ReleasedAt(AlarmTime(Clock, 5), 9).
+!ReleasedAt(AlarmTime(Clock, 6), 0).
+!ReleasedAt(AlarmTime(Clock, 6), 1).
+!ReleasedAt(AlarmTime(Clock, 6), 10).
+!ReleasedAt(AlarmTime(Clock, 6), 11).
+!ReleasedAt(AlarmTime(Clock, 6), 12).
+!ReleasedAt(AlarmTime(Clock, 6), 13).
+!ReleasedAt(AlarmTime(Clock, 6), 14).
+!ReleasedAt(AlarmTime(Clock, 6), 15).
+!ReleasedAt(AlarmTime(Clock, 6), 2).
+!ReleasedAt(AlarmTime(Clock, 6), 3).
+!ReleasedAt(AlarmTime(Clock, 6), 4).
+!ReleasedAt(AlarmTime(Clock, 6), 5).
+!ReleasedAt(AlarmTime(Clock, 6), 6).
+!ReleasedAt(AlarmTime(Clock, 6), 7).
+!ReleasedAt(AlarmTime(Clock, 6), 8).
+!ReleasedAt(AlarmTime(Clock, 6), 9).
+!ReleasedAt(AlarmTime(Clock, 7), 0).
+!ReleasedAt(AlarmTime(Clock, 7), 1).
+!ReleasedAt(AlarmTime(Clock, 7), 10).
+!ReleasedAt(AlarmTime(Clock, 7), 11).
+!ReleasedAt(AlarmTime(Clock, 7), 12).
+!ReleasedAt(AlarmTime(Clock, 7), 13).
+!ReleasedAt(AlarmTime(Clock, 7), 14).
+!ReleasedAt(AlarmTime(Clock, 7), 15).
+!ReleasedAt(AlarmTime(Clock, 7), 2).
+!ReleasedAt(AlarmTime(Clock, 7), 3).
+!ReleasedAt(AlarmTime(Clock, 7), 4).
+!ReleasedAt(AlarmTime(Clock, 7), 5).
+!ReleasedAt(AlarmTime(Clock, 7), 6).
+!ReleasedAt(AlarmTime(Clock, 7), 7).
+!ReleasedAt(AlarmTime(Clock, 7), 8).
+!ReleasedAt(AlarmTime(Clock, 7), 9).
+!ReleasedAt(AlarmTime(Clock, 8), 0).
+!ReleasedAt(AlarmTime(Clock, 8), 1).
+!ReleasedAt(AlarmTime(Clock, 8), 10).
+!ReleasedAt(AlarmTime(Clock, 8), 11).
+!ReleasedAt(AlarmTime(Clock, 8), 12).
+!ReleasedAt(AlarmTime(Clock, 8), 13).
+!ReleasedAt(AlarmTime(Clock, 8), 14).
+!ReleasedAt(AlarmTime(Clock, 8), 15).
+!ReleasedAt(AlarmTime(Clock, 8), 2).
+!ReleasedAt(AlarmTime(Clock, 8), 3).
+!ReleasedAt(AlarmTime(Clock, 8), 4).
+!ReleasedAt(AlarmTime(Clock, 8), 5).
+!ReleasedAt(AlarmTime(Clock, 8), 6).
+!ReleasedAt(AlarmTime(Clock, 8), 7).
+!ReleasedAt(AlarmTime(Clock, 8), 8).
+!ReleasedAt(AlarmTime(Clock, 8), 9).
+!ReleasedAt(AlarmTime(Clock, 9), 0).
+!ReleasedAt(AlarmTime(Clock, 9), 1).
+!ReleasedAt(AlarmTime(Clock, 9), 10).
+!ReleasedAt(AlarmTime(Clock, 9), 11).
+!ReleasedAt(AlarmTime(Clock, 9), 12).
+!ReleasedAt(AlarmTime(Clock, 9), 13).
+!ReleasedAt(AlarmTime(Clock, 9), 14).
+!ReleasedAt(AlarmTime(Clock, 9), 15).
+!ReleasedAt(AlarmTime(Clock, 9), 2).
+!ReleasedAt(AlarmTime(Clock, 9), 3).
+!ReleasedAt(AlarmTime(Clock, 9), 4).
+!ReleasedAt(AlarmTime(Clock, 9), 5).
+!ReleasedAt(AlarmTime(Clock, 9), 6).
+!ReleasedAt(AlarmTime(Clock, 9), 7).
+!ReleasedAt(AlarmTime(Clock, 9), 8).
+!ReleasedAt(AlarmTime(Clock, 9), 9).
+!ReleasedAt(Beeping(Clock), 0).
+!ReleasedAt(Beeping(Clock), 1).
+!ReleasedAt(Beeping(Clock), 10).
+!ReleasedAt(Beeping(Clock), 11).
+!ReleasedAt(Beeping(Clock), 12).
+!ReleasedAt(Beeping(Clock), 13).
+!ReleasedAt(Beeping(Clock), 14).
+!ReleasedAt(Beeping(Clock), 15).
+!ReleasedAt(Beeping(Clock), 2).
+!ReleasedAt(Beeping(Clock), 3).
+!ReleasedAt(Beeping(Clock), 4).
+!ReleasedAt(Beeping(Clock), 5).
+!ReleasedAt(Beeping(Clock), 6).
+!ReleasedAt(Beeping(Clock), 7).
+!ReleasedAt(Beeping(Clock), 8).
+!ReleasedAt(Beeping(Clock), 9).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+SnoozeAlarm: 0 predicates, 0 functions, 3 fluents, 5 events, 17 axioms
+encoding 88.6s/1.5m
+solution 1.3s
+total 98.5s/1.6m
+Discrete Event Calculus Reasoner 1.0

@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.28</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="arith.html">
+<link rel="next" href="builtinlist.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="arith.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="builtinlist.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:miscarith"><a id="sec:4.28"><span class="sec-nr">4.28</span> <span class="sec-title">Misc 
+arithmetic support predicates</span></a></h2>
+
+<a id="sec:miscarith"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="set_random/1"><strong>set_random</strong>(<var>+Option</var>)</a></dt>
+<dd class="defbody">
+Controls the random number generator accessible through the
+<em>functions</em> <a class="function" href="arith.html#f-random/1">random/1</a> 
+and <a class="function" href="arith.html#f-random_float/0">random_float/0</a>. 
+Note that the library <code>library(random)</code> provides an 
+alternative API to the same random primitives.
+
+<dl class="latex">
+<dt><strong>seed</strong>(<var>+Seed</var>)</dt>
+<dd class="defbody">
+Set the seed of the random generator for this thread. <var>Seed</var> is 
+an integer or the atom <code>random</code>. If <code>random</code>, 
+repeat the initialization procedure described with the function
+<a class="function" href="arith.html#f-random/1">random/1</a>. Here is 
+an example:
+
+<pre class="code">
+?- set_random(seed(111)), A is random(6).
+A = 5.
+?- set_random(seed(111)), A is random(6).
+A = 5.
+</pre>
+
+</dd>
+<dt><strong>state</strong>(<var>+State</var>)</dt>
+<dd class="defbody">
+Set the generator to a state fetched using the state property of <a id="idx:randomproperty1:1538"></a><a class="pred" href="miscarith.html#random_property/1">random_property/1</a>. 
+Using other values may lead to undefined behaviour.<sup class="fn">123<span class="fn-text">The 
+limitations of the underlying (GMP) library are unknown, which makes it 
+impossible to validate the <var>State</var>.</span></sup>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="random_property/1"><strong>random_property</strong>(<var>?Option</var>)</a></dt>
+<dd class="defbody">
+True when <var>Option</var> is a current property of the random 
+generator. Currently, this predicate provides access to the state. This 
+predicate is not present on systems where the state is inaccessible.
+
+<dl class="latex">
+<dt><strong>state</strong>(<var>-State</var>)</dt>
+<dd class="defbody">
+Describes the current state of the random generator. State is a normal 
+Prolog term that can be asserted or written to a file. Applications 
+should make no other assumptions about its representation. The only 
+meaningful operation is to use as argument to <a id="idx:setrandom1:1539"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
+using the
+<code>state(State)</code> option.<sup class="fn">bug<span class="fn-text">GMP 
+provides no portable mechanism to fetch and restore the state. The 
+current implementation works, but the state depends on the platform. 
+I.e., it is generally not possible to reuse the state with another 
+version of GMP or on a CPU with different datasizes or endian-ness.</span></sup>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="current_arithmetic_function/1"><strong>current_arithmetic_function</strong>(<var>?Head</var>)</a></dt>
+<dd class="defbody">
+True when <var>Head</var> is an evaluable function. For example:
+
+<pre class="code">
+?- current_arithmetic_function(sin(_)).
+true.
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

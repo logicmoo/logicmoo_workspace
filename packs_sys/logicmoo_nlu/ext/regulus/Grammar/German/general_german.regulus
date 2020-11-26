@@ -1,0 +1,1295 @@
+% Declarations for Regulus course toy 1 grammar
+
+feature_value_space(adjfkt_types, [[attrTypI, attrTypII, attrTypIII, pred]]).
+feature_value_space(agr_vals, [[1, 2, pol, 3, not_person], [sing, plur]]).
+feature_value_space(u_agr_vals, [[1, 2, pol, 3, not_person], [sing, plur]]).
+feature_value_space(gaps_value, [[null, de_pp_gap, pp_gap, np_gap]]).
+feature_value_space(gender_vals, [[masc, fem, ntr]]).
+feature_value_space(aux_v_vals,[[haben, sein, werden, none]]).
+feature_value_space(det_types, [[numeric, countable, def, def_this, indef, quant, ordinal, none]]).
+feature_value_space(interj_value, [[ja, bitte, none]]).
+feature_value_space(kasus_vals, [[nom, gen, dat, akk, none]]).
+feature_value_space(n_type, [[none, loc, agent, dativagent_ist, action, numeric, date, time, month, unit, timeunit, frequency, degree, symptom, body_part, substance, cause, wh, diagn, payment, recipient, cutlery, uhr, object, sound, person, game, event, dummy]]).
+feature_value_space(num_type_value, [[det, minute, stunde_am, stunde_pm]]).
+feature_value_space(part_types, [[auf, aus, ein, vor, vorbei, zu, ab, an, in, hin, fern, zurück, liegen, still, mit, nach, frei, none]]).
+feature_value_space(post_mod_types, [[nominal, verbal, ellipsis]]).
+feature_value_space(pp_type, [[passive_by, loc, to, from, side, of, with, duration, frequency, frequency_unit, date, time, compare, cost, symptom, cause, hour, for, means, none, object, negation, about]]).
+feature_value_space(sc_s_types, [[s, vp]]).
+feature_value_space(subcat_type, 
+                    [[nx0v,                   % Intransitive, e.g. "John sleeps"
+		      nx0vnx1,                % Transitives Verb mit Akkusativobjekt, e.g. "Ich trinke ein Bier"
+		      nx0vnx1_nom,             % Verb mit pädikativen Nominativ (nominativ "objekt"), e.g. "Dieses Modell war ein Erfolg" (nur sein, werden, bleiben, scheinen heissen) . Siehe Duden 1236
+		      nx0vnx1_dat,             % Verb mit Dativobjekt, "Das Buch gefällt dem Schüler" (Dativobjekte sind wahrnehmende Personen, Benefizienten, Rezipienten oder Possessoren). Siehe Duden 1249
+		      %nx0vnx1_no_passive,     % Transitive not allowing passive, e.g. "John has fever"
+		      nx0vnx1_passivised,     % Passivised version of simple transitive, e.g. "Mary is _loved_ by John"
+		     % nx0vnx1_be,             % "be" taking NP, e.g. "John is a man"
+		     % nx0vnx1_there_is,       % "be" taking dummy "there" subject, e.g. "There is a man"
+		     nx0vnx1x2,              % Verb mit Akkusativ- und Dativobjetk, "Er gab dem Schüler das Buch"
+		     % nx0vnx1x2_passivised,   % Passivised version of ditransitive verb, e.g. "The book was given John"
+         nx0vpnx1,               % Verb taking PP complement, e.g. "John agreed with Mary"
+		     nx0vnx1pnx2,            % Verb taking NP and PP, e.g. "John put the book on the table"
+		     % nx0vnx1pnx2_passivised, % Passivised version of verb taking NP and PP, e.g. "The book was put on the table"
+		     % nx0vnx1pl,              % Verb taking NP and P, e.g. "John switched it off"
+		     % nx0vplnx1,              % Verb taking P and NP, e.g. "John switched off the light"
+         modal,          % Modal verb, e.g. "John must sleep"
+		     % nx0vvx1_nonmodal,       % Nonmodal verb taking VP complement, e.g. "John stopped running"
+		     % nx0vvx1_passive,        % Passive auxiliary verb, e.g. "Mary _is_ loved by John"
+		     % nx0vvx1_to,             % Verb taking to-VP complement, e.g. "John wants to sleep"
+         % nx0vs1,                 % Verb taking declarative clausal complement, e.g. "John says he loves Mary"
+		     % nx0vsq1,                % Verb taking embedded question, e.g. "John wonders if Mary loves him"
+		     % nx0vnx1sq1,             % Verb taking NP and embedded question, e.g. "John asked Mary if she loved him"
+		      nx0va1,                 % Verb taking ADJ complement, e.g. "John became angry"
+		      nx0vnx1a1,               % Verb taking NP and ADJ complement, e.g. "John made Mary angry"
+		     % nx0vx1a1_passivised,    % Passivised version of verb taking NP and ADJ complement, e.g. "Mary was made angry by John"
+		     % nx0vnx1_measure,        % Verb taking NP acting as measure phrase, e.g. "John ran 1000 metres"
+		     % nx0x1vx2_to,            % Verb taking NP and to-VP, e.g. "John allowed Mary to sleep"  
+		     % nx0x1vx2_to_passivised,  % Passivised version of verb taking NP and to-VP, e.g. "Mary was allowed to sleep" 
+		      inf_to_np,               %%NEW%% infintive can be np
+		      aux,                     %%NEW%% aux
+		      nx0vnx1_dat,              %%NEW%% verb taking a "direct" object in dativ, e.g. "Das Buch gefällt mir"
+          aux_w                    %% werde, würde, Hilfsverb zur Bildung von FuturI und KonjunktivII
+		     ]]).
+feature_value_space(syn_types, [[/*conj_np, */np_with_noun, name, pronoun/*, number, plain_det, ordinal_det, special*/, none]]).
+feature_value_space(vforms, [[praesens, vf_praesens, imperativ, infinitiv, partizip, perfekt, plusquamperfekt, praeteritum, vf_praeteritum, konjII, futurI]]).                    % the vf_forms are only different for particle verbs (präsens: komme / vf_präsens: ankomme)
+feature_value_space(utterance_type_vals, [[statement, question, request]]).
+feature_value_space(voice_value, [[passive, active]]).
+feature_value_space(wh_vals, [[y, n, rel]]).
+feature_value_space(yes_no, [[y, n]]).
+
+%for simplified german
+feature_value_space(sing_plur,[[sing,plur]]).
+
+
+
+
+feature(adjfkt, adjfkt_types). %%NEW%%
+feature(adv_type, pp_type).
+feature(agr, agr_vals).
+%lexical_feature_default(agr, (3/\sing)).
+feature(aux_v, aux_v_vals). %%NEW%%
+feature(det_type, det_types). % Categorises types of det - PSA feature
+feature(gapsin, gaps_value).
+feature(gapsout, gaps_value).
+feature(gender, gender_vals).
+feature(has_spec, yes_no).
+feature(i_type, interj_value).
+feature(inv, yes_no).
+feature(is_aux_v, aux_v_vals). %%NEW%%
+lexical_feature_default(is_aux_v, none).
+feature(is_refl, yes_no). %%NEW%%
+lexical_feature_default(is_refl, n).
+feature(kasus, kasus_vals). %%NEW%%
+feature(np_has_spec, yes_no).
+feature(num_type, num_type_value).
+%feature(obj_def, yes_no). % Definiteness of object NP 
+feature(obj_sem_n_type, n_type).
+lexical_feature_default(obj_sem_n_type, none).
+%feature(obj_syn_type, syn_types). % "Syntactic type" of object NP
+%lexical_feature_default(obj_syn_type, none).
+feature(part_type,part_types). %%NEW%%
+lexical_feature_default(part_type, none).
+
+
+feature(post_mod_type, post_mod_types). % Whether post-mods attach to NP, VP, or appear free
+feature(pp_sem_pp_type, pp_type).
+lexical_feature_default(pp_sem_pp_type, none).
+feature(prenumber, yes_no). % Det can/cannot combine with number, e.g. "all three"
+feature(recursive, yes_no).
+feature(sc, yes_no). %Categorises PP as being subordinate clause or not
+feature(sc_s_type, sc_s_types). % Whether a subordinating conjunction can take an S, a VP, or either
+lexical_feature_default(sc_s_type, s).
+feature(sem_n_type, n_type).
+lexical_feature_default(sem_n_type, none).
+feature(sem_pp_type, pp_type).
+lexical_feature_default(sem_pp_type, none).
+
+feature(subcat, subcat_type).
+%feature(subj_def, yes_no). % Definiteness of subject NP
+feature(subj_sem_n_type, n_type).
+%feature(subj_syn_type, syn_types). % "Syntactic type" of subject NP 
+feature(syn_type, syn_types).
+feature(takes_det_type, det_types).
+feature(takes_post_mods, yes_no).
+feature(v_final, yes_no).       % for VPs in SC, e.g. "weil [ich gearbeitet habe]"
+feature(vform, vforms).
+feature(voice, voice_value).
+feature(wh, wh_vals).
+
+% for Simplified German
+feature(sg_sing_plur, sing_plur).
+feature(sg_utterance_agr, agr_vals).
+feature(sg_vform, vforms).
+feature(sg_utterance_type, utterance_type_vals).
+
+
+feature_instantiation_schedule(
+	 [[voice],
+	 [wh],
+	 [i_type],
+	 [prenumber],
+	 [v_final],
+	 [sc_s_type],
+	 [inv],
+	 [is_refl],
+	 [has_spec],
+	 [np_has_spec],
+	 [sc],
+	 [recursive],
+	 [num_type],
+	 [sg_sing_plur],
+	 [sg_utterance_type],
+	 
+   [takes_post_mods], 
+	 [post_mod_type],
+   
+  
+	 [aux_v], %4
+	 [gapsin],
+	 [gapsout],
+	 [is_aux_v],
+	 
+	 [adjfkt],
+	 
+	 [vform], %7
+	 [sg_vform],
+%	 [subj_def], 
+%	 [obj_def], 
+	 [det_type],	 
+	 [takes_det_type],
+ 
+
+	 [part_type], %9
+	 
+    %17
+	 [pp_sem_pp_type],
+	 [adv_type],
+	 
+    
+	 
+	 [syn_type],
+   
+   [obj_sem_n_type],
+	 [subcat],
+	 
+	 [kasus],
+	 [subj_sem_n_type],
+	 [sem_pp_type],
+	 [gender],
+	 [sem_n_type],
+   [agr],
+   [sg_utterance_agr]]
+     ).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(med_utterance, [sem]).
+category(clausal_utterance, [sem, sg_utterance_agr, sg_vform, sg_utterance_type]).
+category(yn_question, [sem, sg_utterance_agr, sg_vform]).
+category(wh_question, [sem, sg_utterance_agr, sg_vform]).
+category(s,[sem, inv, vform, v_final, sg_utterance_agr]).
+
+
+category(adj, [sem, agr, gender, adjfkt, subj_sem_n_type, kasus]).
+category(adjp, [sem, agr, gender,  adjfkt, subj_sem_n_type, kasus, gapsin, gapsout]).
+category(adv, [sem, adv_type, recursive]).
+category(advp, [sem, wh]).
+category(comparative, [sem]).
+category(counter, [sem, agr, gender, kasus]).
+category(d, [sem, agr, gender, det_type, prenumber, kasus]).
+category(interj, [sem, i_type]).
+category(mod_time_et, [sem,agr]).
+category(mod_time_moins, [sem]).
+category(n, [sem, agr, sg_utterance_agr, gender, sem_n_type, takes_det_type, kasus, sg_sing_plur]).
+category(n_proper, [sem, sem_n_type]).
+category(nbar, [sem, agr, sg_utterance_agr, gender, sem_n_type, takes_det_type, kasus, sg_sing_plur]).
+category(np, [sem, agr, gender, sem_n_type, takes_post_mods, syn_type, kasus, has_spec, gapsin, gapsout, sg_utterance_agr]).
+category(number,[sem, agr, kasus, gender, num_type]).
+category(num_heure, [sem, agr]).
+category(of_pp, [sem, sem_n_type, kasus, gapsin, gapsout]).
+category(optional_adverb, [sem, adv_type]).
+category(optional_interj, [sem, i_type]).
+category(optional_pp, [sem, sem_pp_type, sc, gapsin, gapsout]).
+category(p, [sem, part_type]).
+category(politeness, [sem]).
+category(pp, [sem, sem_pp_type, /*wh,*/ sc, gapsin, gapsout, recursive]).
+category(possessive, [sem, agr, gender, kasus]).
+category(post_mod, [sem, post_mod_type, /*sem_n_type, @pp_feats,*/ kasus]).
+category(pronoun, [sem, agr, sg_utterance_agr, gender, sem_n_type, kasus]).
+category(prep, [sem, agr, gender, sem_pp_type, sem_n_type, kasus, np_has_spec]).
+category(reflexive_pronoun, [agr]).
+category(sc, [sem, sem_pp_type, sc_s_type]).
+category(v, [sem, agr, subcat, vform, subj_sem_n_type, obj_sem_n_type, pp_sem_pp_type,/*@pp_feats,*/ part_type, aux_v, is_aux_v, is_refl,  voice]).
+%category(v, [sem, agr, subcat, inv, vform, passive, vp_vform, subj_nform, subj_sem_n_type, obj_sem_n_type, indobj_sem_n_type, pp_sem_pp_type, sem_p_type, @pp_feats, subj_def, subj_syn_type, obj_def, obj_syn_type, indobj_def, indobj_syn_type, takes_advp, takes_adv_type, elliptical_v, can_be_gerund, can_be_postmod]).
+category(vbar, [sem, agr, sg_utterance_agr, subcat, inv, vform, subj_sem_n_type, obj_sem_n_type, pp_sem_pp_type, part_type, aux_v, is_aux_v,  is_refl, voice, gapsin, gapsout]).
+category(vp, [sem, agr, inv, vform, subj_sem_n_type, /*takes_post_mods, */part_type, aux_v, v_final, voice, gapsin, gapsout, sg_utterance_agr]).
+category(wh_pp, [sem]).
+category(wh_np, [sem, agr, sem_n_type, kasus]).
+category(wh_pron, [sem, agr, gender, kasus]).
+
+category(question_mark, []).
+category(utterance_desc, [sg_utterance_agr, sg_vform, sg_utterance_type]).
+
+      
+% Grammar
+
+'.MAIN':[gsem=[value=S]] -->
+  med_utterance:[sem=S].
+
+med_utterance:[sem=Sem] -->
+	utterance_desc:[sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=UttType],
+	clausal_utterance:[sem=Sem, sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=UttType].
+
+med_utterance:[sem=Sem] -->
+	politeness:[sem=Sem].
+           
+med_utterance:[sem=@utt_min_sem(Np,Pp,Interj)] -->
+	np:[sem=Np, sem_n_type=(substance\/recipient\/cutlery\/loc), kasus=akk, has_spec=y, gapsin=null, gapsout=null],
+	optional_pp:[sem=Pp, sc=n, sem_pp_type=PPSem2, sem_pp_type=(\(passive_by\/frequency\/date)), gapsin=null, gapsout=null], 
+	optional_interj:[sem=Interj, i_type=bitte].
+
+
+
+clausal_utterance:[sem= @utt_ynq_sem(Sem), sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=question] -->  
+	yn_question:[sem=Sem, sg_utterance_agr=UAgr, sg_vform=Uvform],
+	optional_interj:[sem=Interj2, i_type=bitte],
+	question_mark:[].
+	
+clausal_utterance:[sem= @utt_whq_sem(Sem), sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=question] -->
+	wh_question:[sem=Sem, sg_utterance_agr=UAgr, sg_vform=Uvform],
+	question_mark:[].
+
+clausal_utterance:[sem=@utt_dcl_sem(Interj1,Interj2, Sem), sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=statement] -->
+	optional_interj:[sem=Interj1, i_type=ja],
+	s:[sem=Sem, inv=n, sg_utterance_agr=UAgr, vform=(praesens\/vf_praesens\/praeteritum\/vf_praeteritum\/perfekt\/plusquamperfekt\/konjII\/futurI), vform=Uvform],
+	optional_interj:[sem=Interj2, i_type=bitte].
+  
+clausal_utterance:[sem=@utt_dcl_sem2(Interj1, Sem), sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=statement] -->
+	optional_interj:[sem=Interj1, i_type=ja],
+	s:[sem=Sem, inv=y, sg_utterance_agr=UAgr, vform=(praesens\/praeteritum\/perfekt\/plusquamperfekt\/konjII\/futurI), vform=Uvform].
+  
+clausal_utterance:[sem=Sem, sg_utterance_agr=UAgr, sg_vform=Uvform, sg_utterance_type=request] -->
+	s:[sem=Sem, inv=I, sg_utterance_agr=UAgr, vform=imperativ, vform=Uvform].    
+
+
+
+%yes/no question
+% copy of : s_vp_YNQ - PSA rule, Basic inversion rule, not passivised
+% did the pressure increase?
+%% [nimmt die frequenz zu]
+%% [könnten wir zahlen]
+yn_question:[sem=VP, sg_utterance_agr=UAgr, sg_vform=Uvform] -->
+	vp:[sem=VP, inv=y, agr=Agr, sg_utterance_agr=UAgr, vform=(\(imperativ)), vform=Uvform, voice=Voice, part_type=none, gapsin=null, gapsout=null].
+	
+%wh questions
+%% object
+%% [was haben sie gegessen], [welche medikamente nehmen sie ein] 
+wh_question:[sem=@fronting_sem(WhNp, Vp), sg_utterance_agr=UAgr, sg_vform=Uvform] -->
+	wh_np:[sem=WhNp, kasus=akk],
+	vp:[sem=Vp, inv=y, agr=Agr, sg_utterance_agr=UAgr, vform=Uvform, voice=Voice, part_type=none, gapsin=np_gap, gapsout=null].
+
+%% subject
+%% [wer hat die medikamente eingenommen!
+wh_question:[sem= @np_vp_subject_wh_sem(WhPP, Vp), sg_utterance_agr=UAgr, sg_vform=Uvform] -->
+  wh_np:[sem=WhPP, agr=A],
+	vp:[sem=Vp, inv=n, agr=A, sg_utterance_agr=UAgr, vform=Uvform, voice=Voice, part_type=none, gapsin=null, gapsout=null].
+	
+%%pp	
+%% wo ist der schmerz
+wh_question:[sem= @fronting_sem(WhPP, Vp), sg_utterance_agr=Agr, sg_vform=Uvform] -->
+  wh_pp:[sem=WhPP],
+  vp:[sem=Vp, inv=y, agr=Agr, vform=Uvform, voice=Voice, part_type=none, gapsin=pp_gap, gapsout=null].
+	
+%déclarative
+%% [der schmerz ist frontal], [ich nehme medikamente ein], [ich habe starke schmerzen gehabt]
+%% also for intransitive sc [sie schlafen]
+%% for sc [sie rotwein trinken]
+s:[sem= @np_vp_subject_dcl_sem(NP, Vp),inv=n, sg_utterance_agr=UAgr, vform=VForm, v_final=VF] -->
+	np:[sem=NP, agr=Agr, sg_utterance_agr=UAgr,
+      sem_n_type=SubjType, 
+      kasus=nom, gapsin=null, gapsout=null],
+	vp:[sem=Vp, agr=Agr, vform=(praesens\/perfekt\/praeteritum\/plusquamperfekt\/konjII\/futurI\/vf_praesens\/vf_praeteritum), vform=VForm,
+      subj_sem_n_type=SubjType, 
+      part_type=none, inv=n, v_final=VF, voice=Voice, gapsin=null, gapsout=null].
+      
+%imperativ: bring mir ein bier
+s:[sem=@s_vp_dcl_sem(Vp), inv=I, sg_utterance_agr=UAgr, vform=VForm] -->
+  vp:[sem=Vp, agr=Agr, sg_utterance_agr=UAgr, vform=imperativ, vform=VForm, 
+    subj_sem_n_type=SubjSem, 
+    inv=I, part_type=Part, aux_v=AuxV, voice=Voice, v_final=n, gapsin=null, gapsout=null].
+
+%inverted: in den ferien gehe ich ins kino
+s:[sem=@s_pp_vp(Pp, Vp), inv=y, sg_utterance_agr=UAgr
+, vform=Vform, v_final=n] -->
+  pp:[sem=Pp, sem_pp_type=loc, sc=n, gapsin=null, gapsout=null],
+  vp:[sem=Vp, inv=y, agr=Agr, sg_utterance_agr=UAgr, vform=(\(infinitiv\/imperativ)), vform=Vform, part_type=none, voice=Voice,
+      subj_sem_n_type=agent,
+      v_final=n, gapsin=null, gapsout=null].
+
+
+%%% SIMPLE VPs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%INTRANSITIVE
+
+% intransitive 1 : for verbs without part,  [verbessert sich der schmerz], [verschwindet der schmerz wenn sie schlafen]
+% inv or not-inv, refl or not-refl
+vp:[sem= @vp_v(V, Adv, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjType, 
+    part_type=Part,  aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GIn] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0v, vform=(praesens\/praeteritum\/imperativ), vform=VF, inv=I,
+        subj_sem_n_type=SubjType, 
+        part_type=none, part_type=Part, is_aux_v=IsAux, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GIn],
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  optional_pp:[sem=OptPp, sc=y, sem_pp_type=(\(negation)), gapsin=null, gapsout=null].
+
+% intransitive 2 : for verbs with part [nimmt die frequenz] zu
+% inv or not-inv, refl or not-refl
+% (pas la même règle que 1, car on ne veut pas de sc qui s'insère entre vp et part : FAUX: [nehmen die schmerzen wenn sie sich hinlegen zu])
+vp:[sem= @vp_v_part(V), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjType, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GIn] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0v, vform=(praesens\/praeteritum\/imperativ), vform=VF, inv=I,
+        subj_sem_n_type=SubjType,
+        part_type=(\(none)), part_type=Part, is_aux_v=IsAux, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GIn].
+
+% Verb with adj complement
+% Der Schmerz [ist frontal], [werden die schmerzen besser], der schmerz [ist seit letzter woche pochend]
+vp:[sem= concat(V, Adv, Adjp, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part,  aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0va1, vform=(praesens\/praeteritum\/imperativ), vform=VF, inv=I, 
+    subj_sem_n_type=SubjSem, 
+    is_aux_v=IsAux, aux_v=Aux, voice=Voice, part_type=Part, gapsin=GIn, gapsout=GOut],
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  adjp:[sem=Adjp, agr=Agr, adjfkt=pred, 
+        subj_sem_n_type=SubjSem, 
+        gapsin=null, gapsout=null],
+  optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+        
+% Verb with pp complement  
+% Der Schmerz [ist auf der Seite], [ist der Schmerz auf der seite]
+vp:[sem= @vp_v_pp_sem(V, Adv, Pp, OptPp), agr=Agr, sg_utterance_agr=UAgr, sg_utterance_agr=UAgr, vform=VForm, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    aux_v=AuxV, part_type=Part, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, sg_utterance_agr=UAgr, subcat=nx0vpnx1, vform=(praesens\/praeteritum\/imperativ), vform=VForm, inv=I, 
+        subj_sem_n_type=SubjSem, pp_sem_pp_type=PPSem, 
+        aux_v=AuxV, is_aux_v=IsAux, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],
+	pp:[sem=Pp, sc=n, sem_pp_type=PPSem, gapsin=GIn, gapsout=GOut],
+  optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+
+
+%%% TRANSITIVE VPs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% Verb with akkusativ np
+% ich [möchte einen tisch], [haben sie einen tisch]
+% ich mache heute abend eine party
+vp:[sem= @vp_v_np_sc_sem(V, Adv, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],    
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null].
+  
+% ich mache eine party heute abend
+labelled_item(verb_word_order_rule, (
+vp:[sem= @vp_v_np_sc_sem(V, Adv, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],  
+  optional_adverb:[sem=Adv, adv_type=AdvType],  
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null]
+  )). 
+  
+% heute abend mache ich eine party
+labelled_item(verb_word_order_rule, (
+vp:[sem= @vp_v_np_sc_sem(V, Adv, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	optional_adverb:[sem=Adv, adv_type=AdvType],
+  vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],   
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null]
+  )).   
+
+% Verb with akkusativ np and pp(s)
+% ich [möchte um sieben uhr einen tisch], ich [möchte einen tisch auf der terrasse], ich [möchte für morgen einen tisch für drei personen]
+vp:[sem= @vp_v_np_pp_sc_sem(V, Adv, Pp, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1pnx2, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GNext],
+  pp:[sem=Pp, sc=n, sem_pp_type=PPSem, sem_pp_type=(\(passive_by\/frequency\/date)), gapsin=GNext, gapsout=GOut],      
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null].
+
+% même chose avec pp avant le np
+labelled_item(complex_verb_rule, (
+vp:[sem= @vp_v_np_pp_sc_sem(V, Adv, Pp, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=Gin, gapsout=Gin] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1pnx2, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],  
+  pp:[sem=Pp, sc=n, sem_pp_type=PPSem, sem_pp_type=(date\/time\/hour\/loc\/for\/compare\/to), gapsin=Gin, gapsout=Gin], 
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=Gin, gapsout=Gin],    
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null]
+  )).
+  
+% même chose avec pp avant le vp et np
+labelled_item(complex_verb_rule, (
+vp:[sem= @vp_v_np_pp_sc_sem(Pp,V, Adv, Np, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=Gin, gapsout=Gin] -->
+	pp:[sem=Pp, sc=n, sem_pp_type=PPSem, sem_pp_type=(date\/time\/hour\/loc\/for\/compare\/to), gapsin=Gin, gapsout=Gin], 
+  vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1pnx2, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],  
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=Gin, gapsout=Gin],    
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null]
+  )).  
+  
+
+% même chose avec deux pp
+labelled_item(complex_verb_rule, (
+vp:[sem= @vp_v_pp_np_pp_sc_sem(V, Adv, Pp1, Np, Pp2, Sc), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1pnx2, vform=(praesens\/praeteritum\/imperativ\/konjII), vform=VF, inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  optional_adverb:[sem=Adv, adv_type=AdvType],
+  pp:[sem=Pp1, sc=n, sem_pp_type=PPSem1, sem_pp_type=(date\/time\/hour\/loc\/for\/compare), gapsin=null, gapsout=null],   
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],
+  pp:[sem=Pp2, sc=n, sem_pp_type=PPSem2, sem_pp_type=(\(passive_by\/frequency\/date)), gapsin=null, gapsout=null],      
+  optional_pp:[sem=Sc, sc=y, gapsin=null, gapsout=null]
+  )).
+
+% Verb with akkusativ np and adj
+% ich [finde das buch interessant], [findest du das buch interessant]
+vp:[sem= @vp_v_np_adjp_sem(V, Np, Adjp, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1a1, vform=(praesens\/praeteritum\/imperativ), vform=VF, inv=I, 
+    subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=SemPP, 
+    is_aux_v=IsAux, aux_v=Aux, voice=Voice, part_type=Part],
+	np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],
+  adjp:[sem=Adjp, agr=Agr, adjfkt=pred, 
+        subj_sem_n_type=ObjSem, 
+        gapsin=null, gapsout=null],
+  optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+   
+%% Verb with dativ np (indirect object)
+% ich [lese ihm] vor , [schreibst du ihm]
+vp:[sem= @vp_datnp_sem(V, NpI, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1_dat, vform=(praesens\/praeteritum\/imperativ), vform=VF, inv=I, 
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  np:[sem=NpI, sem_n_type=agent, kasus=dat, gapsin=GIn, gapsout=GOut],
+  optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+  
+%% Verb with dativ np (indirect object) + akkusativ np (direct object)
+% [geben sie *mir* ein bier]
+% ich [gebe dem schüler das buch]
+vp:[sem= @vp_datnp_np_sem(V, NpI, NpD, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1x2, vform=(praesens\/praeteritum\/imperativ), vform=VF,  inv=I,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+  np:[sem=NpI, sem_n_type=agent, kasus=dat, gapsin=GIn, gapsout=GNext],
+  np:[sem=NpD, sem_n_type=ObjSem, kasus=akk, gapsin=GNext, gapsout=GOut],
+  optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+  
+  
+                  % Variante pour CALL_SLT avec imperatif et "bitte"
+                  vp:[sem= @vp_datnp_np_sem(V, NpI, NpD, OptPp), agr=Agr, sg_utterance_agr=UAgr, vform=VF, inv=I, v_final=n,  
+                      subj_sem_n_type=SubjSem, 
+                      part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+                  	vbar:[sem=V, agr=Agr, sg_utterance_agr=UAgr, subcat=nx0vnx1x2, vform=imperativ, vform=VF,  inv=I,
+                          subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+                          aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice, gapsin=Gin, gapsout=Gin],
+                    np:[sem=NpI, sem_n_type=agent, kasus=dat, gapsin=GIn, gapsout=GNext],
+                    interj:[sem=Interj2, i_type=bitte],
+                    np:[sem=NpD, sem_n_type=ObjSem, kasus=akk, gapsin=GNext, gapsout=GOut],
+                    optional_pp:[sem=OptPp, sc=y, gapsin=null, gapsout=null].
+  
+%%% VP to add part %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% inv or not-inv: Die Frequenz [nimmt zu], [nimmt der schmerz zu wenn sie sich hinlegen], der schmerz [dehnt sich aus], 
+labelled_item(particle_verb_rule,(
+vp:[sem=@vp_vp_p(V, Adv, OptPp), agr=Agr, vform=VForm, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem, 
+    part_type=none, aux_v=Aux, gapsin=GIn, gapsout=GOut, voice=Voice] -->
+	vp:[sem=V, agr=Agr, vform=(praesens\/praeteritum\/imperativ), vform=VForm, inv=I, v_final=VF,
+      subj_sem_n_type=SubjSem,
+      part_type=(\(none)), part_type=Part, aux_v=Aux, gapsin=GIn, gapsout=GOut, voice=Voice],
+  optional_adverb:[sem=Adv, adv_type=AdvType], 
+	p:[sem=P, part_type=Part],
+  optional_pp:[sem=OptPp, /*sc=y,*/ gapsin=null, gapsout=null]
+  )).
+  
+%% COMPOSED VERBS
+%% NEW VP RULES SUMMARY
+
+%%% aux + partizip
+%Perfekt/Plusquamperfekt & Interrogativ Perfek/Plusquamperfektt: vp -> vbar(präs/prät,aux,inv_y/n), vp(partizip,v_final) 
+        %e.g. ich [habe] [ein bier getrunken] / [hast du] [dich warm angezogen]
+        %e.g. ich [hatte] [ein bier getrunken] / [hatten wir] [nach der weinkarte gefragt]
+
+%%% aux werden + partizip 
+%Passiv :%vp -> vbar(aux,werden,präs/prät,inv_y/n), vp(partizip,v_final)
+        %e.g. der wein [wird][aufgeräumt] / [wird dass zimmer] [aufgeräumt]
+        %e.g. ich [wurde][im herbst geboren] / [wurdest du][im herbst geboren]
+
+%%% partizip + aux        
+%Perfect/Plusquamperfekt subclause: vp -> vp(partizip, v_final), vbar(präs/prät,aux,inv_n)
+        %e.g. weil ich [ein bier getrunken] [habe] / [mich warm angezogen] [habe]
+        %e.g. weil ich [ein bier getrunken] [hatte] / [nach der weinkarte gefragt] [hatte]
+
+%%% aux/modal + infinitiv
+%Modal präsens & Modal konjunktivII: vp -> vbar(modal,inv_y/n, präs/konj), vp(infinitiv,v_final)
+        %e.g. ich [soll] [dem lehrer zuhören]/[muss ich] [mich auf die prüfungen vorbereiten]
+        %e.g. ich [sollte] [dem lehrer zuhören]/[müsste ich] [mich auf die prüfungen vorbereiten]
+        
+%FuturI/KonjII & Interrogativ FuturI/KonjII: vp -> vbar(aux,werden,futur/konj,inv_y/n), vp(inf,v_final)
+        %e.g. du [wirst] [dein zimmer aufräumen] / [wirst du] [dich warm anziehen]
+        %e.g. ich [würde] [mich auf das wochenende freuen] / [würdest du] [den fisch bestellen]
+        
+%Imperativ ??? [geh] [dein zimmer aufräumen] ??? 
+
+%Futur & Konj subclauses!!!!   à faire
+
+
+     
+%präs/prät v_final
+%Präsens subclause: vp(präs,v_final) 
+        %e.g. weil ich [ein bier trinke]/[mich warm anziehe]
+%Präteritum subclause: vp(prät,v_final)
+        %e.g. weil ich [ein bier trank]/[mich warm anzog]
+
+
+
+%%% aux + partizip
+
+%Perfekt & Interrogativ Perfekt: vp -> vbar(präs,aux,inv_y/n), vp(partizip,v_final) 
+        %e.g. ich [habe] [ein bier getrunken] / [hast du] [dich warm angezogen]
+vp:[sem=@vp_praes_aux_partizip_vp_sem(AuxV, V), agr=Agr, vform=perfekt, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux, vform=praesens, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=Aux, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=Agr, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].
+
+%Plusquamperfekt & Interrogativ Plusquamperfekt: vp -> vbar(prät,aux,inv_y/n), vp(partizip,v_final) 
+        %e.g. ich [hatte] [ein bier getrunken] / [hatten wir] [nach der weinkarte gefragt]
+vp:[sem=@vp_praet_aux_partizip_vp_sem(AuxV, V), agr=Agr, vform=plusquamperfekt, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux, vform=praeteritum, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=Aux, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=Agr, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].
+
+%%% aux werden + partizip
+%%% commented (10.02.12) because not used for Claudia's lessons
+
+%Praesens passiv & interrogativer praesens passiv: vp -> vbar(präs,aux, werden, inv_y/n), vp(partizip,v_final) 
+        %e.g. das zimmer [wird][aufgeräumt] / [wird dass zimmer] [aufgeräumt]
+/*vp:[sem=@vp_praes_aux_passiv_partizip_vp_sem(AuxV, V), agr=Agr, vform=praesens, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=passive, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux_w, vform=praesens, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=werden, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem,
+        part_type=Part, aux_v=Aux, voice=passive, gapsin=GIn, gapsout=GOut].    */
+
+%Praeteritum passiv & interrogativer praeteritum passiv: vp -> vbar(prät,aux,inv_y/n), vp(partizip,v_final) 
+        %e.g. ich [wurde][im herbst geboren] / [wurdest du][im herbst geboren]
+/*vp:[sem=@vp_praet_aux_passiv_partizip_vp_sem(AuxV, V), agr=Agr, vform=praeteritum, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=passive, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux_w, vform=praeteritum, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=werden, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=passive, gapsin=GIn, gapsout=GOut].   */
+
+%%% partizip + aux  
+  
+%Perfect subclause: vp -> vp(partizip, v_final), vbar(präs,aux,inv_n)
+        %e.g. weil ich [ein bier getrunken] [habe] / [mich warm angezogen] [habe]
+vp:[sem=@vp_partizip_vp_praes_aux_sem(AuxV, V), agr=Agr, vform=perfekt, inv=I, v_final=y,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vp:[sem=V, agr=A, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut],
+    vbar:[sem=AuxV, agr=Agr, subcat=aux, vform=praesens, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=Aux, voice=active, gapsin=Gin, gapsout=Gin].
+
+%Plusquamperfekt subclause: vp -> vp(partizip, v_final), vbar(prät,aux,inv_n)
+        %e.g. weil ich [ein bier getrunken] [hatte] / [nach der weinkarte gefragt] [hatte]
+vp:[sem=@vp_partizip_vp_praet_aux_sem(AuxV, V), agr=Agr, vform=plusquamperfekt, inv=I, v_final=y,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vp:[sem=V, agr=A, vform=partizip, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut],
+    vbar:[sem=AuxV, agr=Agr, subcat=aux, vform=praeteritum, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=Aux, voice=active, gapsin=Gin, gapsout=Gin].    
+
+
+%%% aux/modal + infinitiv
+%Modal präsens: vp -> vbar(modal,inv_y/n, präs), vp(infinitiv,v_final)
+        %e.g. ich [soll] [dem lehrer zuhören]/[muss ich] [mich auf die prüfungen vorbereiten]
+vp:[sem=@vp_praes_modal_infintiv_vp_sem(AuxV, V), agr=Agr, vform=praesens, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=modal, vform=praesens, inv=I,
+        subj_sem_n_type=ModSubj,
+        aux_v=AAux, is_aux_v=none, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=A, vform=infinitiv, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].
+        
+%Modal konjunktivII: vp -> vbar(modal,inv_y/n, konj), vp(infinitiv,v_final)
+        %e.g. ich [sollte] [dem lehrer zuhören]/[müsste ich] [mich auf die prüfungen vorbereiten]
+vp:[sem=@vp_konj_modal_infintiv_vp_sem(AuxV, V), agr=Agr, vform=konjII, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=modal, vform=konjII, inv=I,
+        subj_sem_n_type=ModSubj,
+        aux_v=AAux, is_aux_v=none, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=A, vform=infinitiv, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].
+        
+              %Variante pour callslt
+              %e.g. [könnte ich][bitte][ein bier haben]
+              vp:[sem=@vp_konj_modal_infintiv_vp_sem(AuxV, V), agr=Agr, vform=konjII, inv=I, v_final=n,
+                  subj_sem_n_type=SubjSem,
+                  part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+                  vbar:[sem=AuxV, agr=Agr, subcat=modal, vform=konjII, inv=y,
+                      subj_sem_n_type=ModSubj,
+                      aux_v=AAux, is_aux_v=none, voice=active, gapsin=Gin, gapsout=Gin],
+                  interj:[sem=Interj2, i_type=bitte],
+                  vp:[sem=V, agr=A, vform=infinitiv, inv=n, v_final=y, 
+                      subj_sem_n_type=SubjSem, subj_sem_n_type=agent,
+                      part_type=Part, aux_v=Aux, voice=active, gapsin=null, gapsout=null].
+        
+%FuturI & Interrogativ FuturI: vp -> vbar(aux,werden,futurI,inv_y/n), vp(inf,v_final)
+        %e.g. du [wirst] [dein zimmer aufräumen] / [wirst du] [dich warm anziehen]
+vp:[sem=@vp_futur_werden_infintiv_vp_sem(AuxV, V), agr=Agr, vform=futurI, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux_w, vform=praesens, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=werden, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=Agr, vform=infinitiv, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].
+ 
+%KonjII & Interrogativ KonjII: vp -> vbar(aux,werden,konj,inv_y/n), vp(inf,v_final)
+        %e.g. ich [würde] [mich auf das wochenende freuen] / [würdest du] [den fisch bestellen]
+vp:[sem=@vp_konj_werden_infintiv_vp_sem(AuxV, V), agr=Agr, vform=konjII, inv=I, v_final=n,
+    subj_sem_n_type=SubjSem,
+    part_type=Part, aux_v=none, voice=active, gapsin=GIn, gapsout=GOut] -->
+    vbar:[sem=AuxV, agr=Agr, subcat=aux_w, vform=konjII, inv=I,
+        subj_sem_n_type=AuxSubj,
+        aux_v=AAux, is_aux_v=werden, voice=active, gapsin=Gin, gapsout=Gin],
+    vp:[sem=V, agr=Agr, vform=infinitiv, inv=n, v_final=y, 
+        subj_sem_n_type=SubjSem, 
+        part_type=Part, aux_v=Aux, voice=active, gapsin=GIn, gapsout=GOut].       
+
+
+
+%%% vps with v_final
+
+%%% INTRANSITIVE V_FINAL VPs   (esach double: once for simple verbs, once for refl verbs)
+
+% [getrunken], [zuhören], [trinke], [ankomme]
+vp:[sem= concat(Adv, V), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=SubjType, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  optional_adverb:[sem=Adv, adv_type=Atype],
+	v:[sem=V, agr=Agr, subcat=nx0v, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF,
+        subj_sem_n_type=SubjType, 
+        part_type=none, part_type=Part, is_aux_v=IsAux, aux_v=Aux, is_refl=n, voice=Voice].
+% [mich gefreut/freuen/freue]
+labelled_item(refl_verb_rule,(
+vp:[sem= concat(Adv,V), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=SubjType, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  reflexive_pronoun:[agr=Agr],
+  optional_adverb:[sem=Adv, adv_type=Atype],
+	v:[sem=V, agr=Agr, subcat=nx0v, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF,
+        subj_sem_n_type=SubjType, 
+        part_type=none, part_type=Part, is_aux_v=IsAux, aux_v=Aux, is_refl=y, voice=Voice]
+        )). 
+        
+% Verb with adj complement
+% [schlecht geschlafen], [gut zuhören], [zügig bestelle]
+vp:[sem= concat(V, Adjp), agr=Agr, vform=VF, inv=n, v_final=y,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  adjp:[sem=Adjp, agr=Agr, adjfkt=pred, 
+        subj_sem_n_type=SubjSem, 
+        gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0va1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF, 
+    subj_sem_n_type=SubjSem, 
+    is_aux_v=IsAux, aux_v=Aux, is_refl=n, voice=Voice, part_type=Part].
+% [mich warm angezogen/anziehen/anziehe]
+labelled_item(refl_verb_rule,(
+vp:[sem= concat(V, Adjp), agr=Agr, vform=VF, inv=n, v_final=y,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  reflexive_pronoun:[agr=Agr],
+  adjp:[sem=Adjp, agr=Agr, adjfkt=pred, 
+        subj_sem_n_type=SubjSem, 
+        gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0va1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF, 
+    subj_sem_n_type=SubjSem, 
+    is_aux_v=IsAux, aux_v=Aux, is_refl=y, voice=Voice, part_type=Part]
+    )).
+        
+% Verb with pp complement  
+% [im buch nachgeschlagen], [zur schule gehen], [mich auf die prüfung vorbereite]
+vp:[sem= concat(Adv, V, Pp), agr=Agr, vform=VForm, inv=n, v_final=y, 
+    subj_sem_n_type=SubjSem, 
+    aux_v=AuxV, part_type=Part, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  pp:[sem=Pp, sc=n, sem_pp_type=PPSem, gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0vpnx1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VForm, 
+        subj_sem_n_type=SubjSem, pp_sem_pp_type=PPSem, 
+        aux_v=AuxV, is_aux_v=IsAux, is_refl=n, part_type=Part, voice=Voice].
+% [im buch nachgeschlagen], [zur schule gehen], [mich auf die prüfung vorbereite]
+labelled_item(refl_verb_rule,(
+vp:[sem= concat(Adv, V, Pp), agr=Agr, vform=VForm, inv=n, v_final=y, 
+    subj_sem_n_type=SubjSem, 
+    aux_v=AuxV, part_type=Part, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  reflexive_pronoun:[agr=Agr],
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  pp:[sem=Pp, sc=n, sem_pp_type=PPSem, gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0vpnx1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VForm, 
+        subj_sem_n_type=SubjSem, pp_sem_pp_type=PPSem, 
+        aux_v=AuxV, is_aux_v=IsAux, is_refl=y, part_type=Part, voice=Voice]
+        )).
+
+%%% TRANSITIVE V_FINAL VPs
+
+% Verb with akkusativ np
+% [ein bier bestellt], [ein buch lesen], [die prüfung vorbereite]
+vp:[sem=@vp_np_v_sem(Adv, V, Np), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->  
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut], 
+	v:[sem=V, agr=Agr, subcat=nx0vnx1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, is_refl=n, part_type=Part, voice=Voice].
+% no rule for reflexive verbs, no example found...
+
+% Verb with akkusativ np and pp(s)
+% [einen tisch auf der terrasse reserviert], [am vormittag ein buch für die prüfung vorbereiten] 
+vp:[sem=@vp_pp_np_pp_v_sem(Adv, V, /*Pp1,*/ Np, Pp2), agr=Agr, vform=VF, inv=n, v_final=y,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  % optional_pp:[sem=Pp1, sc=n, sem_pp_type=PPSem1, sem_pp_type=(date\/time\/hour\/loc\/for\/compare), gapsin=null, gapsout=null],   
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],
+  pp:[sem=Pp2, sc=n, sem_pp_type=PPSem2, sem_pp_type=(\(passive_by\/frequency\/date)), gapsin=Gin, gapsout=Gin], 
+	v:[sem=V, agr=Agr, subcat=nx0vnx1pnx2, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+        aux_v=AuxV, is_aux_v=none, is_refl=n, part_type=Part, voice=Voice].
+% no rule for reflexive verbs, no example found...
+
+% Verb with akkusativ np and adj
+% weil ich [das buch interessant gefunden/finden/finde]
+vp:[sem= concat(V, Np, Adjp), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=Aux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  np:[sem=Np, sem_n_type=ObjSem, kasus=akk, gapsin=GIn, gapsout=GOut],
+  adjp:[sem=Adjp, agr=Agr, adjfkt=pred, 
+        subj_sem_n_type=ObjSem, 
+        gapsin=null, gapsout=null],
+	v:[sem=V, agr=Agr, subcat=nx0vnx1a1, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF, 
+    subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=SemPP, 
+    is_aux_v=IsAux, aux_v=Aux, voice=Voice, part_type=Part].
+% no rule for reflexive verbs, no example found...
+   
+%% Verb with dativ np (indirect object)
+% das buch das ich [dem schüler gegeben] habe, weil ich [dem lehrer zuhöre]
+vp:[sem=concat(Adv, V, NpI), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  optional_adverb:[sem=Adv, adv_type=Atype],
+  np:[sem=NpI, sem_n_type=agent, kasus=dat, gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0vnx1_dat, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF, 
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice].
+% no rule for reflexive verbs, no example found...
+ 
+%% Verb with dativ np (indirect object) + akkusativ np (direct object)
+% ich habe [dem schüler ein buch gegeben]
+vp:[sem=@vp_datnp_nomnp_sem(V, NpI, NpD), agr=Agr, vform=VF, inv=n, v_final=y,  
+    subj_sem_n_type=SubjSem, 
+    part_type=Part, aux_v=AuxV, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+  np:[sem=NpI, sem_n_type=agent, kasus=dat, gapsin=GIn, gapsout=GNext],
+  np:[sem=NpD, sem_n_type=ObjSem, kasus=akk, gapsin=GNext, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0vnx1x2, vform=(partizip\/infinitiv\/vf_praesens\/vf_praeteritum), vform=VF,
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem,
+        aux_v=AuxV, is_aux_v=none, part_type=Part, voice=Voice].
+% no rule for reflexive verbs, no example found...
+
+%%% Passive partizip vp (only transitive verbs, obj<->subj inversion)
+% wird der schmerz durch X [verursacht] 
+% ich wurde [im april geboren]
+vp:[sem=concat(Pp,V), agr=Agr, vform=VF, inv=n, v_final=y, 
+    subj_sem_n_type=ObjType, 
+    part_type=Part, aux_v=AuxV, voice=passive, gapsin=GIn, gapsout=GOut] -->
+  optional_pp:[sem=Pp, sc=n, sem_pp_type=PPSem, gapsin=GIn, gapsout=GOut],
+	v:[sem=V, agr=Agr, subcat=nx0vnx1, vform=partizip,
+	      subj_sem_n_type=SubjType, obj_sem_n_type=ObjType, pp_sem_pp_type=PPSem].
+           
+%%% VBAR Rules (for simple verbs and aux/modal ; with inverted subject or not)
+
+%% Simple vbar
+%% [beginnt], [hat]
+vbar:[sem=V, agr=Agr, subcat=SC, vform=VF, 
+    subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+      inv=n, part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=Refl, voice=Voice] -->
+	v:[sem=V, agr=Agr, subcat=SC, vform=(praesens\/vf_praesens\/praeteritum\/vf_praeteritum\/konjII\/imperativ\/futurI), vform=VF,  
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+	      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=n, is_refl=Refl, voice=Voice].
+   
+%% même chose pour les verbes réflexifs
+%% ich [bücke mich], ich [freue mich]
+labelled_item(refl_verb_rule,(
+vbar:[sem=V, agr=Agr, subcat=SC, vform=VF, inv=n, 
+    subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=Refl, voice=Voice] -->
+	v:[sem=V, agr=Agr, subcat=SC, vform=(praesens\/vf_praesens\/praeteritum\/vf_praeteritum\/imperativ), vform=VF, 
+        subj_sem_n_type=SubjSem, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+	      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=y, is_refl=Refl, voice=Voice],
+  reflexive_pronoun:[agr=Agr]
+  )).
+  	      
+%% vbar avec inverted subject
+% [sind die Schmerzen] auf einer Seite / [ist der schmerz immer] auf einer seite / hätten sie eine serviette
+% pour l'impératif, seul la personne pol prend un sujet inversé [bringen sie mir ein bier] vs. [bring mir ein bier]
+macro(var_agr_vform, [agr=((1\/2\/3)/\(sing\/plur)),
+                      vform=(praesens\/praeteritum\/konjII\/futurI)]).
+macro(var_agr_vform, [agr=(pol/\(sing\/plur)), 
+                      vform=(praesens\/praeteritum\/konjII\/futurI\/imperativ)]).
+
+vbar:[sem=@vbar_v_np(V,Np), agr=Agr, sg_utterance_agr=UAgr, subcat=SC, vform=VF, inv=y,
+      subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem, 
+      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	v:[sem=V, subcat=(\(aux\/modal)), subcat=SC, @var_agr_vform, agr=Agr, vform=VF,
+	      subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+	      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=n, voice=Voice],
+	np:[sem=Np, agr=Agr, sg_utterance_agr=UAgr, sem_n_type=Type, kasus=nom, gapsin=GIn, gapsout=GOut].
+
+%% même chose pour les auxiliaires et modal - sans restriction sur subj_sem_n_type
+% [hat die frequenz] zugenommen, 
+vbar:[sem=@vbar_v_np(V,Np), agr=Agr, sg_utterance_agr=UAgr, subcat=SC, vform=VF, inv=y,
+      subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	v:[sem=V, agr=Agr, subcat=SC, subcat=(aux\/modal\/aux_w), vform=VF, @var_agr_vform, 
+	     subj_sem_n_type=SemType, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+       part_type=Part, aux_v=AuxV, is_aux_v=IsAux, voice=Voice, is_refl=n],
+	np:[sem=Np, agr=Agr, sg_utterance_agr=UAgr, sem_n_type=Type, kasus=nom, gapsin=GIn, gapsout=GOut].
+  
+%% même chose pour les verbe reflexifs
+% [fühlen sie sich] schläfrig , [freut der schüler sich]
+labelled_item(refl_verb_rule,(
+vbar:[sem=@vbar_v_np(V,Np), agr=Agr, subcat=SC, vform=VF, inv=y,
+      subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem, 
+      part_type=Part, aux_v=AuxV, is_aux_v=IsAux, voice=Voice, gapsin=null, gapsout=null] -->
+	v:[sem=V, agr=Agr, subcat=SC, vform=(praesens\/praeteritum), vform=VF,
+	     subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+	     part_type=Part, aux_v=AuxV, is_aux_v=IsAux, is_refl=y, voice=Voice],
+	np:[sem=Np, agr=Agr, kasus=nom,
+       sem_n_type=Type, syn_type=Syn, 
+       gapsin=Gin, gapsout=Gin],
+	reflexive_pronoun:[agr=Agr]
+  )).
+  
+%% même chose avec np et pronoun inversés - que lorsque le sujet du verbe reflexif est un np nominal
+% [dehnt sich der schmerz] aus
+labelled_item(refl_verb_rule,(
+vbar:[sem=@vbar_v_np(V,Np), agr=Agr, subcat=SC, vform=VF, inv=y,
+      subj_sem_n_type=SemType, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+      part_type=PT, aux_v=none, is_aux_v=IsAux, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	v:[sem=V, agr=Agr, subcat=(\(aux)), subcat=SC, vform=VF, 
+	     subj_sem_n_type=SemType, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+       part_type=PT, is_aux_v=IsAux, voice=Voice, is_refl=y],
+  reflexive_pronoun:[agr=Agr],
+	np:[sem=Np, agr=Agr, sem_n_type=SemType, syn_type=(\(pronoun)), kasus=nom, 
+  gapsin=GIn, gapsout=GOut]
+  )).
+
+
+%% cas particuliers, à vérifier
+
+
+%% sujet est un pronom au datif; ne prend que certains adj en complément
+% present : [ist ihnen] übel, 
+vbar:[sem=@vbar_v_np_advp_sem(V, Np, Advp), agr=Agr, subcat=nx0va1, vform=VF, inv=y,
+      subj_sem_n_type=dativagent_ist, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem, 
+      part_type=Part, aux_v=none, is_aux_v=none, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	v:[sem=V, agr=(3/\sing), subcat=(\(aux)), vform=VF, vform=praesens,
+	      subj_sem_n_type=Type, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem,
+	      part_type=Part, aux_v=AuxV, is_aux_v=none, is_refl=n, voice=Voice],
+	np:[sem=Np, agr=Agr, sem_n_type=Type, syn_type=pronoun, kasus=dat, gapsin=GIn, gapsout=GOut],
+  optional_adverb:[sem=Advp, adv_type=(time\/frequency)].
+  
+% past :[ist ihnen] übel gewesen
+vbar:[sem=V/*@vbar_sein_pron_advp_past_sem(Np, Advp)*/, subcat=aux, vform=VF, inv=y,
+      subj_sem_n_type=dativagent_ist, obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem, 
+      part_type=Part, aux_v=none, is_aux_v=sein, voice=Voice, gapsin=GIn, gapsout=GOut] -->
+	v:[sem=V, agr=(3/\sing), subcat=aux, vform=VF, vform=praesens,
+	      obj_sem_n_type=ObjSem, pp_sem_pp_type=none,
+	      part_type=none, aux_v=none, is_aux_v=sein, is_refl=n, voice=Voice],
+	np:[sem=Np, sem_n_type=dativagent_ist, syn_type=pronoun, kasus=dat, gapsin=GIn, gapsout=GOut],
+  optional_adverb:[sem=Advp, adv_type=(time\/frequency)].
+
+
+
+
+
+
+
+%%% NP Rules
+	
+
+%% np with det [der schmerz]
+np:[sem=concat(Det,N), agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=y, syn_type=np_with_noun, kasus=K, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+	d:[sem=Det, agr=Agr, gender=Gender, det_type=DetType, kasus=K],
+	nbar:[sem=N, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=DetType, kasus=K].
+
+% np with Genitivattribut [die Frequenz der Schmerzen]
+np:[sem= @np_np_mod_sem(Np, Mod), agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, syn_type=np_with_noun, takes_post_mods=n, kasus=K, gapsin=Gin, gapsout=Gin] -->
+	np:[sem=Np, agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=y, kasus=K, gapsin=Gin, gapsout=Gin], 
+	post_mod:[sem=Mod, post_mod_type=nominal, kasus=gen].
+
+%% np with det+counter [das zwanzigste bier]
+np:[sem=concat(Det,Counter,N), agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=y, syn_type=np_with_noun, kasus=K, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+	d:[sem=Det, agr=Agr, gender=Gender, det_type=(def\/indef), kasus=K],
+	counter:[sem=Counter, agr=Agr, gender=Gender, kasus=K],
+	nbar:[sem=N, agr=Agr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=countable, kasus=K].	
+	
+%% np only det [das]
+np:[sem=Det, agr=Agr, gender=Gender, sem_n_type=Type, takes_post_mods=y, kasus=K, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+	d:[sem=Det, agr=Agr, gender=Gender, det_type=def, kasus=K, kasus=nom].
+
+%np only det+counter  [der zwanzigste]
+np:[sem=concat(Det, Counter), agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=time, takes_post_mods=y, kasus=K, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+	d:[sem=Det, agr=Agr, gender=Gender, det_type=def, kasus=K],
+  counter:[sem=Counter, agr=Agr, gender=Gender, kasus=K]. 
+  
+%np only counter  
+np:[sem=Counter, agr=Agr, gender=masc, sem_n_type=time, takes_post_mods=n, kasus=K, has_spec=n, gapsin=Gin, gapsout=Gin] -->
+  counter:[sem=Counter, agr=Agr, gender=masc, kasus=K].    	
+
+%np without det [euros]
+np:[sem=N, agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=n, syn_type=np_with_noun, kasus=K, has_spec=n, gapsin=Gin, gapsout=Gin] -->
+	nbar:[sem=N, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=none, kasus=K/*, num_type=none*/].
+	
+%np without det [indef plural --> ich lese bücher]
+np:[sem=@np_nbar_indef_plur_sem(N), agr=plur, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=y, syn_type=np_with_noun, kasus=K, has_spec=n, gapsin=Gin, gapsout=Gin] -->
+	nbar:[sem=N, agr=plur, sg_utterance_agr=UAgr, sg_sing_plur=plur,gender=Gender, sem_n_type=Type, takes_det_type=indef, kasus=K].	
+	
+	
+% np with possessive [ihr schmerz]	
+np:[sem=concat(Poss,N),agr=3, agr=Agr, sg_utterance_agr=UAgr, gender=Gender, kasus=K, sem_n_type=Type, takes_post_mods=n, syn_type=np_with_noun, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+	possessive:[sem=Poss, agr=Agr, gender=Gender, kasus=K],
+	nbar:[sem=N, agr=Agr, sg_sing_plur=SP, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_det_type=DetType, kasus=K].
+
+%% np without det; plural indefinite -> no det; [nehmen sie _Medikamente_ ein]
+%% feature has_spec=y, as this should not be combined with a prep ???
+%%np:[sem=N, agr=Agr, agr=(3/\plur/\Gen), sem_n_type=Type, takes_post_mods=y, syn_type=np_with_noun, kasus=K, has_spec=y] -->
+%%	nbar:[sem=N, agr=Agr, agr=(3/\plur/\Gen), sem_n_type=Type, takes_det_type=null, kasus=K].
+	
+%% pronoun as np [sie]
+np:[sem=Pro, agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, takes_post_mods=n, syn_type=pronoun, kasus=K, gapsin=Gin, gapsout=Gin] -->
+	pronoun:[sem=Pro, agr=Agr, sg_utterance_agr=UAgr, gender=Gender, sem_n_type=Type, kasus=K].
+	
+%%proper noun as np
+np:[sem=[NProper], agr=(3/\sing), sg_utterance_agr=(3/\sing), gender=ntr, sem_n_type=Type, takes_post_mods=n, /*syn_type=pronoun,*/ gapsin=Gin, gapsout=Gin] -->
+	n_proper:[sem=NProper, sem_n_type=Type].	
+
+%% dativpronomen, für [wenn ihnen übel ist]
+np:[sem=Pro, agr=Agr, gender=Gender, sem_n_type=dativagent_ist, takes_post_mods=n, syn_type=pronoun, kasus=dat, gapsin=Gin, gapsout=Gin] -->
+	pronoun:[sem=Pro, agr=Agr, gender=Gender, sem_n_type=Type, kasus=dat].
+
+%%np is number
+%% ich hätte gerne einen tisch für [vier]
+np:[sem=@np_number_sem(N), agr=Agr, gender=Gender, sem_n_type=agent, takes_post_mods=n, syn_type=np_with_noun, kasus=akk, has_spec=y, gapsin=Gin, gapsout=Gin] -->
+  number:[sem=N, agr=Agr, kasus=none, num_type=minute].
+  
+  
+
+
+% zwei (gender and kasus are only necessary for ein, eine, einen, etc; not ideal...)
+d:[sem= @spec_number_sem(N), agr=Agr, det_type=numeric, prenumber=n, gender=Gender, kasus=Kasus] -->
+	number:[sem=N, agr=Agr, gender=Gender, kasus=Kasus, num_type=det].
+
+% [zwei bis drei]
+d:[sem= @spec_number_range_sem(N1, N2), agr=Agr, det_type=numeric, prenumber=n, gender=Gender, kasus=Kasus] -->
+	number:[sem=N1, agr=Agr, gender=Gender, kasus=Kasus, num_type=det],
+  bis,
+  number:[sem=N2, agr=Agr, num_type=det].
+
+% [mehr als zwei] stunden, [mehr als zwei] mal
+d:[sem= @spec_comparative_n_sem(Comparative, N), agr=Agr, det_type=numeric, prenumber=n, gender=Gender, kasus=Kasus] -->
+	comparative:[sem=Comparative],
+	number:[sem=N, agr=Agr, gender=Gender, kasus=Kasus, num_type=det].	
+
+
+% ?essen von schokolade, trinken von rotwein, rauchen von zigarretten
+
+%%% NBAR Rules
+
+%% nbar mit substantivierten infinitiv [treten die schmerzen beim _erwachen_ auf]
+%%% vérifier quels traits sont nécessaires
+nbar:[sem=V, agr=(3/\sing), sg_utterance_agr=(3/\sing), sg_sing_plur=sing, gender=ntr, sem_n_type=action, takes_det_type=def, kasus=(nom\/akk\/dat)] -->
+  v:[sem=V, subcat=inf_to_np, vform=infinitiv, subj_sem_n_type=agent, obj_sem_n_type=none, is_refl=n, voice=active].
+
+% essen von schokolade, trinken von rotwein, rauchen von zigarretten 
+nbar:[sem=concat(V,N), agr=Agr, sg_utterance_agr=(3/\sing), sg_sing_plur=sing, gender=ntr, kasus=dat, sem_n_type=action] -->
+  v:[sem=V, subcat=inf_to_np, vform=infinitiv, agr=(3/\sing), subj_sem_n_type=agent, obj_sem_n_type=ObjSem],
+  von,
+  nbar:[sem=N, sg_sing_plur=SP, kasus=dat, sem_n_type=ObjSem].
+
+% Prenominal adj modifier
+% With def det, e.g. "der [starke Schmerz]"
+nbar:[sem= @nbar_n_adjp_sem(N, Adjp), agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP,  gender=Gender, sem_n_type=Type, takes_det_type=def, kasus=K] -->
+	adjp:[sem=Adjp, agr=Agr, gender=Gender, adjfkt=attrTypII, subj_sem_n_type=Type, kasus=K, gapsin=null, gapsout=null],
+	n:[sem=N, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=def, kasus=K].
+
+% With indef det, sing, e.g. "ein [starker Schmerz]"
+nbar:[sem= @nbar_n_adjp_sem(N, Adjp), agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=indef, kasus=K] -->
+	adjp:[sem=Adjp, agr=Agr, gender=Gender, adjfkt=attrTypIII, subj_sem_n_type=Type, kasus=K, gapsin=null, gapsout=null],
+	n:[sem=N, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=indef, kasus=K].		
+
+%without det "starken Schmerz" 
+nbar:[sem= @nbar_n_adjp_sem(N, Adjp), agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=none, kasus=K] -->
+	adjp:[sem=Adjp, agr=Agr, gender=Gender, adjfkt=attrTypI, subj_sem_n_type=Type, kasus=K, gapsin=null, gapsout=null],
+  n:[sem=N, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=Type, takes_det_type=none, kasus=K].
+
+
+nbar:[sem=@nbar_n_sem(Sem), agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=NType, takes_det_type=DetType, kasus=K/*, num_type=none*/] -->
+	n:[sem=Sem, agr=Agr, sg_utterance_agr=UAgr, sg_sing_plur=SP, gender=Gender, sem_n_type=NType, takes_det_type=DetType, kasus=K].
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%modified for CALL 
+% eine [Flasche Wein]	
+nbar:[sem=@nbar_n_n_sem(N1,N2), agr=Agr, sg_sing_plur=SP, gender=Gender, sem_n_type=NType, takes_det_type=DetType, kasus=K] -->
+	n:[sem=N1, agr=Agr, sg_sing_plur=SP, gender=Gender, sem_n_type=recipient, sem_n_type=NType, takes_det_type=DetType, kasus=K],
+  n:[sem=N2, agr=(3/\sing), sg_sing_plur=sing, sem_n_type=substance, kasus=nom].	
+
+
+adjp:[sem=Adj, agr=Agr, gender=Gender, kasus=K, adjfkt=AF, subj_sem_n_type=SType, gapsin=null, gapsout=null] -->
+	adj:[sem=Adj, agr=Agr, gender=Gender, kasus=K, adjfkt=AF, subj_sem_n_type=SType].
+
+
+
+	
+%%% PP Rules
+% [auf der Seite]
+pp:[sem= @pp_p_np_with_det_sem(P, Np), sem_pp_type=PPType, sc=n, gapsin=Gin, gapsout=Gin] -->
+	prep:[sem=P, agr=Agr, gender=Gender, sem_pp_type=PPType, sem_pp_type=(\(passive_by)), sem_n_type=NPType, kasus=K, np_has_spec=y], 
+	np:[sem=Np, agr=Agr, gender=Gender, sem_n_type=NPType, kasus=K, has_spec=y, gapsin=null, gapsout=null].
+	
+% am kopf, beim essen
+% for contracted pred-det
+labelled_item(prep_det_combo, (pp:[sem= @pp_p_np_sem(P, Np), sem_pp_type=PPType, sc=n, gapsin=Gin, gapsout=Gin] -->
+	prep:[sem=P, agr=Agr, gender=Gender, sem_pp_type=PPType, sem_pp_type=(\(passive_by)), sem_n_type=NPType, kasus=K, np_has_spec=n], 
+	nbar:[sem=Np, agr=Agr, sg_sing_plur=sing, gender=Gender, sem_n_type=NPType, kasus=K, takes_det_type=Det])).
+
+
+%am zwanzigsten januar
+labelled_item(prep_det_combo, (pp:[sem= @pp_p_counter_np_sem(P, Counter, Np), sem_pp_type=PPType, sc=n, gapsin=Gin, gapsout=Gin] -->
+	prep:[sem=P, agr=Agr, gender=Gender, sem_pp_type=PPType, sem_pp_type=(\(passive_by)), sem_n_type=NPType, kasus=K, np_has_spec=n],
+  counter:[sem=Counter, agr=Agr, gender=Gender, kasus=K], 
+	nbar:[sem=Np, agr=Agr, sg_sing_plur=sing, gender=Gender, sem_n_type=NPType, kasus=K, takes_det_type=Det])).	
+	
+% for passive [durch helles licht] verursacht, [von anderen symptomen] begleitet
+pp:[sem= @comps_passivise_pp_sem(P,Np), sem_pp_type=passive_by, sc=n, gapsin=Gin, gapsout=Gin] -->
+	prep:[sem=P, agr=Agr, sem_pp_type=passive_by, sem_n_type=NPType, kasus=K, np_has_spec=SP], 
+	np:[sem=Np, agr=Agr, sem_n_type=NPType, kasus=K, has_spec=SP, gapsin=null, gapsout=null].
+	
+% Genitivattribut : die Frequenz [der Schmerzen]
+of_pp:[sem= @of_pp_np_sem(Np), sem_n_type=NPType, kasus=gen, gapsin=Gin, gapsout=Gin] -->
+	np:[sem=Np, agr=(3/\(sing\/plur)), sem_n_type=NPType, kasus=gen, has_spec=y, gapsin=null, gapsout=null].
+
+%% pp with adv instead of np
+%% [nach vorne], [für morgen]
+pp: [sem= @pp_p_adv(P, Adv), sem_pp_type=Type, sc=n, gapsin=GIn, gapsout=GIn] -->
+  prep:[sem=P, sem_pp_type=Type, np_has_spec=y],
+  adv:[sem=Adv, adv_type=Type].
+    
+% [ein mal pro woche], [mindestens zwei mal pro jahr]
+pp:[sem= @pp_np_pp_frequency_sem(Np, Freq), sem_pp_type=frequency, sc=n, gapsin=GIn, gapsout=GIn] -->
+	np:[sem=Np, sem_n_type=frequency, gender=ntr, gapsin=GIn, gapsout=GIn],
+	pp:[sem=Freq, sem_pp_type=frequency_unit, gapsin=GIn, gapsout=GIn].
+
+% [dieses jahr]
+pp:[sem=@pp_this_nbar(Det,N), sem_pp_type=time, sc=n, gapsin=null, gapsout=null] -->
+	d:[sem=Det, agr=Agr, det_type=def_this, prenumber=n, gender=Gender, kasus=akk],
+	nbar:[sem=N, agr=Agr, sg_sing_plur=SP, gender=Gender, kasus=Kasus, sem_n_type=timeunit].
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  --HEURES--  %%%%%%%%%%%%%%%%%%%%%
+% um 1 -> 24 uhr 
+pp:[sem=@pp_p_np_sem_number(P, Num, Np), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null/*, recursive=n*/] -->
+	prep:[sem=P, sem_pp_type=(time\/hour), sem_n_type=uhr, np_has_spec=n],
+  number:[sem=Num, agr=Agr, num_type=stunde_am\/stunde_pm],
+	nbar:[sem=Np, agr=(3/\sing), sg_sing_plur=SP, kasus=nom, sem_n_type=uhr, gender=fem].  %funktioniert
+
+% um 1 -> 24
+pp:[sem=@pp_p_sem_number(P, Num), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null/*, recursive=n*/] -->
+	prep:[sem=P, sem_pp_type=(time\/hour), sem_n_type=uhr, np_has_spec=n],
+  number:[sem=Num, agr=Agr, num_type=stunde_am\/stunde_pm]. 
+
+	
+% von 1 -> 24   bis  1 -> 24 uhr
+pp:[sem=@pp_von_bis_sem_number(N1, N2, Np), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null/*, recursive=n*/] -->
+	von,
+  number:[sem=N1, agr=Agr, num_type=stunde_am\/stunde_pm],
+  bis,
+  number:[sem=N2, agr=Agr, num_type=stunde_am\/stunde_pm],
+	nbar:[sem=Np, agr=(3/\sing), sg_sing_plur=SP, kasus=nom, sem_n_type=uhr, gender=fem]. 
+	
+% um 1 -> 24 uhr 1 -> 60
+pp:[sem= @pp_p_np_sem_number_et(P, N1,Np,N2), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null] -->
+	prep:[sem=P, sem_pp_type=(time\/hour), sem_n_type=uhr, np_has_spec=n],
+  number:[sem=N1, agr=Agr, num_type=stunde_am\/stunde_pm],
+  nbar:[sem=Np, agr=(3/\sing), sg_sing_plur=SP, kasus=nom, sem_n_type=uhr, gender=fem],
+	       /*n:[sem=Np, sem_n_type=uhr, agr=Agr],*/
+  number:[sem=N2, num_type=minute].       %funktioniert
+
+% um viertel/5/10/15/20/25 nach 1 -> 12 uhr
+pp:[sem= @pp_p_np_sem_number_et(P, N, MT), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null] -->
+	prep:[sem=P, sem_pp_type=(time\/hour), sem_n_type=uhr, np_has_spec=n],
+	mod_time_et:[sem=MT],
+  number:[sem=N, agr=Agr, num_type=stunde_am].      %funktioniert
+
+% um viertel/5/10/15/20/25 vor 1 -> 12 uhr     --und--   um fünf vor/nach halb 1-12 uhr     --und--   um halb 1-12 uhr
+pp:[sem= @pp_p_np_sem_number_moins(P, N,MT), sem_pp_type=hour, sc=n, gapsin=null, gapsout=null] -->
+	prep:[sem=P, sem_pp_type=(time\/hour), sem_n_type=uhr, np_has_spec=n],
+	mod_time_moins:[sem=MT],
+  number:[sem=N, agr=Agr,num_type=stunde_am].          %funktioniert   
+	
+% [haben sie schmerzen auf der seite beim essen], ich möchte einen tisch [für vier personen auf der terrasse]
+pp: [sem= @pp_pp_pp_sem(PP1, PP2), sem_pp_type=B, sc=n, gapsin=GIn, gapsout=GOut, recursive=y] -->
+	pp:[sem=PP1, sem_pp_type=A, gapsin=GIn, gapsout=GOut, recursive=n],
+	pp:[sem=PP2, sem_pp_type=B, gapsin=Gin, gapsout=Gin, recursive=_].		
+	
+% subclause pp
+pp:[sem= @pp_sc_s_sem(SC, S), sc=y, sem_pp_type=PPType, gapsin=GIn, gapsout=GIn] -->
+	sc:[sem=SC, sem_pp_type=PPType, sc_s_type=s], 
+  s:[sem=S, v_final=y].
+  
+
+optional_pp:[sem=Sem, sem_pp_type=SemPp, sc=SC, gapsin=GIn, gapsout=GOut] -->
+	pp:[sem=Sem, sem_pp_type=SemPp, sc=SC, gapsin=GIn, gapsout=GOut].
+
+optional_pp:[sem=[]] -->
+	[].
+
+%%% Adverben
+%
+adv:[sem=concat(Sem1, Sem2), adv_type=Adv, recursive=y] -->
+	adv:[sem=Sem1, adv_type=negation, recursive=n],
+  adv:[sem=Sem2, adv_type=Adv, recursive=_].
+  
+adv:[sem=concat(Sem1, Sem2), adv_type=Adv, recursive=y] -->
+	adv:[sem=Sem1, adv_type=Adv, recursive=n],
+  adv:[sem=Sem2, adv_type=negation, recursive=_].
+  
+optional_adverb:[sem=Sem1, adv_type=AdvT] -->
+	adv:[sem=Sem1, adv_type=AdvT].
+
+optional_adverb:[sem=[]] -->
+	[].
+
+
+%%% Genitivattribut
+% die Frequenz [der Schmerzen]
+post_mod:[sem=PP, post_mod_type=nominal, kasus=gen] -->
+	of_pp:[sem=PP, sem_n_type=(agent\/symptom), kasus=gen].
+%  post_mods:[sem=Mods, post_mod_type=nominal, sem_n_type=SemType, takes_adv_type=AdvpType].
+
+
+
+%%% Interjections
+% [ja], [nein], [bitte]
+optional_interj:[sem=Sem] -->
+	interj:[sem=Sem].
+
+optional_interj:[sem=[]] -->
+	[].
+/* inutilisé
+advp:[sem= Adv, wh=y] -->
+	wie,
+	adv:[sem=Adv].
+*/
+% gap rule
+pp:[sem= @pp_gap,
+    gapsin=pp_gap, gapsout=null] -->
+	[].
+
+% gap rule
+np:[sem= @np_gap,
+    gapsin=np_gap, gapsout=null] -->
+	[].
+	
+
+% wh_nps with noun
+% [welchen wein], [welche medikamente]
+wh_np:[sem=@wh_pron_n(Wh, N), agr=Agr, kasus=K, sem_n_type=NType] -->
+  wh_pron:[sem=Wh, agr=Agr, gender=Gen, kasus=K],
+  n:[sem=N, agr=Agr, sg_sing_plur=SP, gender=Gen, kasus=K, sem_n_type=NType].
+	
+/*pp:[sem= @pp_p_np_sem_number_et(P, N1,Np,N2), sem_pp_type=temporal, gapsin=GIn, gapsout=GIn, recursive=no] -->
+	prep:[sem=P, sem_pp_type=temporal, sem_np_type=heure, np_agr=Agr, np_has_spec=HasSpec,elision=Elision],
+        number:[sem=N1, agr=Agr,elision=Elision,type_num=heure_v\/heure_d],
+	n:[sem=Np, sem_np_type=heure, agr=Agr],
+        number:[sem=N2, elision=Elision,type_num=minute\/heure_d\/heure_v].*/
+
+
+
+
+
+
+
+

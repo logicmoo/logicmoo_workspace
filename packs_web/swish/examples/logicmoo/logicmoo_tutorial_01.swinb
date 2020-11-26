@@ -1,0 +1,57 @@
+<div class="notebook">
+
+<div class="nb-cell program" data-background="true" data-singleline="false">
+
+%= save compiled clauses using forward chaining storage (by default)
+%= we are using forward chaining just so any logical errors, performance and program bugs manefest
+%= immediately
+:- use_module(library(pfc)).		
+:- set_clause_compile(fwc).
+%=  Dont Trace execution
+:- no_mpred_trace_exec.
+
+
+:- op(900,xfx,&).
+:- op(1150,xfx,'<=>').
+:- use_module(library(logicmoo_clif)).		
+
+
+male(P) <=> ~female(P).
+
+bio_mother(C,P) <=> (bio_parent(C,P) & female(P)).
+
+bio_father(C,P) <=> (bio_parent(C,P) & male(P)).
+
+bio_mother(eileen,douglas).
+
+pos_neg_proofs(P) :- mpred_why(P), mpred_why(~P).
+
+% all(P, person(P) => existsExactly(2, B, bio_parent(B,P))).
+person(C) => exists(P,bio_father(C,P)).
+
+person(C) => exists(P,bio_mother(C,P)).
+
+person(joe).
+person(douglas).
+
+</div>
+
+<div class="nb-cell query">
+
+ pos_neg_proofs(bio_mother(eileen, douglas)),
+ pos_neg_proofs(bio_parent(eileen, douglas)),
+ pos_neg_proofs(bio_father(eileen, douglas)),
+
+ pos_neg_proofs(bio_mother(_, douglas)),
+ pos_neg_proofs(bio_parent(_, douglas)),
+ pos_neg_proofs(bio_father(_, douglas)),
+
+ pos_neg_proofs(bio_parent(_, joe)),
+ pos_neg_proofs(bio_father(_, joe)),
+ pos_neg_proofs(bio_mother(_, joe)).
+ 
+</div>
+
+</div>
+
+

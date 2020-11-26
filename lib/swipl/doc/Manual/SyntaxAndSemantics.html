@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 9.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="chrintro.html">
+<link rel="next" href="practical.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="chrintro.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="practical.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:SyntaxAndSemantics"><a id="sec:9.2"><span class="sec-nr">9.2</span> <span class="sec-title">Syntax 
+and Semantics</span></a></h2>
+
+<a id="sec:SyntaxAndSemantics"></a>
+<h3 id="sec:chr-syntax"><a id="sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
+of CHR rules</span></a></h3>
+
+<a id="sec:chr-syntax"></a>
+
+<pre class="code">
+rules --&gt; rule, rules ; [].
+
+rule --&gt; name, actual_rule, pragma, [atom('.')].
+
+name --&gt; atom, [atom('@')] ; [].
+
+actual_rule --&gt; simplification_rule.
+actual_rule --&gt; propagation_rule.
+actual_rule --&gt; simpagation_rule.
+
+simplification_rule --&gt; head, [atom('&lt;=&gt;')], guard, body.
+propagation_rule --&gt; head, [atom('==&gt;')], guard, body.
+simpagation_rule --&gt; head, [atom('\')], head, [atom('&lt;=&gt;')],
+                     guard, body.
+
+head --&gt; constraints.
+
+constraints --&gt; constraint, constraint_id.
+constraints --&gt; constraint, constraint_id,
+                [atom(',')], constraints.
+
+constraint --&gt; compound_term.
+
+constraint_id --&gt; [].
+constraint_id --&gt; [atom('#')], variable.
+constraint_id --&gt; [atom('#')], [atom('passive')] .
+
+guard --&gt; [] ; goal, [atom('|')].
+
+body --&gt; goal.
+
+pragma --&gt; [].
+pragma --&gt; [atom('pragma')], actual_pragmas.
+
+actual_pragmas --&gt; actual_pragma.
+actual_pragmas --&gt; actual_pragma, [atom(',')], actual_pragmas.
+
+actual_pragma --&gt; [atom('passive(')], variable, [atom(')')].
+</pre>
+
+<p>Note that the guard of a rule may not contain any goal that binds a 
+variable in the head of the rule with a non-variable or with another 
+variable in the head of the rule. It may, however, bind variables that 
+do not appear in the head of the rule, e.g. an auxiliary variable 
+introduced in the guard.
+
+<p><h3 id="sec:chr-semantics"><a id="sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics</span></a></h3>
+
+<a id="sec:chr-semantics"></a> In this subsection the operational 
+semantics of CHR in Prolog are presented informally. They do not differ 
+essentially from other CHR systems.
+
+<p>When a constraint is called, it is considered an active constraint 
+and the system will try to apply the rules to it. Rules are tried and 
+executed sequentially in the order they are written.
+
+<p>A rule is conceptually tried for an active constraint in the 
+following way. The active constraint is matched with a constraint in the 
+head of the rule. If more constraints appear in the head, they are 
+looked for among the suspended constraints, which are called passive 
+constraints in this context. If the necessary passive constraints can be 
+found and all match with the head of the rule and the guard of the rule 
+succeeds, then the rule is committed and the body of the rule executed. 
+If not all the necessary passive constraints can be found, or the 
+matching or the guard fails, then the body is not executed and the 
+process of trying and executing simply continues with the following 
+rules. If for a rule there are multiple constraints in the head, the 
+active constraint will try the rule sequentially multiple times, each 
+time trying to match with another constraint.
+
+<p>This process ends either when the active constraint disappears, i.e. it 
+is removed by some rule, or after the last rule has been processed. In 
+the latter case the active constraint becomes suspended.
+
+<p>A suspended constraint is eligible as a passive constraint for an 
+active constraint. The other way it may interact again with the rules is 
+when a variable appearing in the constraint becomes bound to either a 
+non-variable or another variable involved in one or more constraints. In 
+that case the constraint is triggered, i.e. it becomes an active 
+constraint and all the rules are tried.
+
+<p><b>Rule Types</b> There are three different kinds of rules, each with 
+its specific semantics:
+
+<p>
+<ul class="latex">
+<li><i>simplification</i><br>
+The simplification rule removes the constraints in its head and calls 
+its body.
+
+<p>
+<li><i>propagation</i><br>
+The propagation rule calls its body exactly once for the constraints in 
+its head.
+
+<p>
+<li><i>simpagation</i><br>
+The simpagation rule removes the constraints in its head after the
+<var><code>\</code></var> and then calls its body. It is an optimization 
+of simplification rules of the form: [constraints_1, constraints_2 &lt;=&gt; 
+constraints_1, body ] Namely, in the simpagation form: [ constraints_1
+<code>\</code>constraints_2 &lt;=&gt; body ] The <var><i>constraints</i>_1</var> 
+constraints are not called in the body.
+</ul>
+
+<p><b>Rule Names</b> Naming a rule is optional and has no semantic 
+meaning. It only functions as documentation for the programmer.
+
+<p><b>Pragmas</b> The semantics of the pragmas are:
+
+<dl class="latex">
+<dt><strong>passive</strong>(<var>Identifier</var>)</dt>
+<dd class="defbody">
+The constraint in the head of a rule <var>Identifier</var> can only 
+match a passive constraint in that rule. There is an abbreviated syntax 
+for this pragma. Instead of:
+
+<pre class="code">
+                ..., c # Id, ... &lt;=&gt; ... pragma passive(Id)
+</pre>
+
+<p>you can also write
+
+<pre class="code">
+                ..., c # passive, ... &lt;=&gt; ...
+</pre>
+
+<p></dd>
+</dl>
+
+<p>Additional pragmas may be released in the future.
+
+<dl class="latex">
+<dt class="pubdef"><a id="chr_option/2">:- <strong>chr_option</strong>(<var>+Option, 
++Value</var>)</a></dt>
+<dd class="defbody">
+It is possible to specify options that apply to all the CHR rules in the 
+module. Options are specified with the <code><a id="idx:chroption2:2098"></a><a class="pred" href="SyntaxAndSemantics.html#chr_option/2">chr_option/2</a></code> 
+declaration:
+
+<pre class="code">
+:- chr_option(Option,Value).
+</pre>
+
+<p>and may appear in the file anywhere after the first constraints 
+declaration.
+
+<p>Available options are:
+
+<dl class="latex">
+<dt><strong>check_guard_bindings</strong></dt>
+<dd class="defbody">
+This option controls whether guards should be checked for (illegal) 
+variable bindings or not. Possible values for this option are <code>on</code> 
+to enable the checks, and <code>off</code> to disable the checks. If 
+this option is on, any guard fails when it binds a variable that appears 
+in the head of the rule. When the option is off (default), the behaviour 
+of a binding in the guard is undefined.</dd>
+<dt><strong>optimize</strong></dt>
+<dd class="defbody">
+This option controls the degree of optimization. Possible values are <code>full</code> 
+to enable all available optimizations, and <code>off</code> (default) to 
+disable all optimizations. The default is derived from the SWI-Prolog 
+flag <a class="flag" href="flags.html#flag:optimise">optimise</a>, where
+<code>true</code> is mapped to <code>full</code>. Therefore the command 
+line option <strong>-O</strong> provides full CHR optimization. If 
+optimization is enabled, debugging must be disabled.</dd>
+<dt><strong>debug</strong></dt>
+<dd class="defbody">
+This option enables or disables the possibility to debug the CHR code. 
+Possible values are <code>on</code> (default) and <code>off</code>. See
+<a class="sec" href="debugging.html#sec:9.4">section 9.4</a> for more 
+details on debugging. The default is derived from the Prolog flag <a class="flag" href="flags.html#flag:generate_debug_info">generate_debug_info</a>, 
+which is <code>true</code> by default. See <strong>--no-debug</strong>. 
+If debugging is enabled, optimization must be disabled.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

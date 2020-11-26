@@ -1,0 +1,14 @@
+test(X) :- concat("ss", "yy", X).
+test2(X) :- concat("ss", X, "ssyz").
+test1(X) :- concat(X, "syz", "xsyz").
+testBig(X, Y, Z) :- 
+  concat(X, "yy", "ssyy"),
+  concat("xx", Y, "xxyyy"),
+  concat("xx", "yyysssyyy", Z),
+  not(testno1), not(testno2), not(testno3).
+testno1 :- concat("x", "y", "zas").
+testno2 :- concat(X, "y", "zas").
+testno3 :- concat("y", X, "zas").
+
+
+             

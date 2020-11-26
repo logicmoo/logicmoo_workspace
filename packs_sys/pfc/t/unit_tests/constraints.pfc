@@ -1,0 +1,7 @@
+% is this how to define constraints?
+
+:- use_module(library(pfc)).
+
+either(P,Q) ==> (~P ==> Q), (~Q ==> P).
+
+(P,Q ==> false) ==> (P ==> ~Q), (Q ==> ~P).

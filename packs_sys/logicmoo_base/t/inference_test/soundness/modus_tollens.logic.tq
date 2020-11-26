@@ -1,0 +1,19 @@
+(note modus tollens)
+
+; Required for universal implications
+
+(thereExists ?X (instance ?X Object))
+
+(forall (?X ?Y) (=> (f ?X ?Y) (g ?X ?Y)))
+
+(not (exists (?X ?Y) (g ?X ?Y)))
+
+(queryyn (not (exists (?X ?Y) (f ?X ?Y))) )
+
+(answer Yes)
+
+(end_of_file)
+
+
+
+

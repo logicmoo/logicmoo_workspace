@@ -1,0 +1,93 @@
+Universal > Personne, Objet, Action, Attribut.
+Personne > Homme.
+Objet > PYRAMIDE, CUBE.
+Action > METTRE.
+Attribut > TAILLE, COULEUR.
+
+
+COULEUR = bleu, rouge.
+TAILLE = petite, grand.
+Homme = john.
+
+dictionnaire("mets", verbe, METTRE).
+dictionnaire("pyramide", nom, PYRAMIDE).
+dictionnaire("cube", nom, CUBE).
+
+dictionnaire("petite", adj, tailleDe, TAILLE, petite).
+dictionnaire("petit", adj, tailleDe, TAILLE, petite).
+dictionnaire("rouge", adj, couleurDe, COULEUR, rouge).
+dictionnaire("grande", adj, tailleDe, TAILLE, grand).
+dictionnaire("grand", adj, tailleDe, TAILLE, grand).
+dictionnaire("bleu", adj, couleurDe, COULEUR, bleu).
+
+dictionnaire("sur", prep, sur).
+dictionnaire("la", art, x).
+dictionnaire("le", art, x).
+Verbe((v|P), P, V) :- dictionnaire(v, verbe, V).
+
+Prep((v|P), P, V) :- dictionnaire(v, prep, V).
+
+Art((v|P), P, V) :- dictionnaire(v, art, V), /.
+Art(P, P, undefined).
+
+Nom((v|P), P, V) :- dictionnaire(v, nom, V).
+
+Adj(A, R, T, V) :- dictionnaire(A, adj, R, T, V).
+
+semantic_analyzer :-
+   read_sentence(P),
+   phrase_imperative(P, G),
+   write(G), /.
+
+phrase_imperative(P, G) :- 
+   Verbe(P, P1, V),
+   GN(P1, P2, N1, E_GN1, S1),
+   eq(G1, [V]-obj->[N1]),
+   eq(G1, [V]-obj->E_N_G1),
+   maximalJoin(G1, E_N_G1, S1, E_GN1, G1_S1, _),
+   Prep(P2, P3, s_prep),
+   GN(P3, L_rest, N2, E_GN2, S2),
+   checkFin(L_rest),
+   eq(G2, [V]-s_prep->[N2]),
+   eq(G2, [V]-s_prep->E_N_G2),
+   maximalJoin(G2, E_N_G2, S2, E_GN2, G2_S2, _),
+   eq(E_V_GS1-obj->x, G1_S1),
+   eq(E_V_GS2-s_prep->y, G2_S2),
+   maximalJoin(G1_S1, E_V_GS1, G2_S2, E_V_GS2, G, _), /.
+
+checkFin(()).
+checkFin((".")).
+checkFin(("!")).
+
+ GN(P, P1, N, E, G) :-
+   Art(P, P2, A1),
+   AdjsSynt(P2, P3, L_Adjs),
+   Nom(P3, P4, N),
+   SemAdjs(L_Adjs, N, A1, S, E1),
+   AdjsSynt(P4, P1, L_Adjs2),
+   SemAdjs(L_Adjs2, N, A1, S1, E11),
+   maximalJoin(S, E1, S1, E11, G, E).
+
+AdjsSynt((A|P), P1, (A|L_Adjs)) :-
+  dictionnaire(A, adj, _, _, _),
+  AdjsSynt(P, P1, L_Adjs), /.
+AdjsSynt(P, P, ()).
+
+SemAdjs((A|P), N, A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   eq(G, E_N-R1->x),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), /.
+SemAdjs((), N, A1, G, E) :-
+   eq(G, [N : A1]),
+   eq(G, E-rel->[Universal]), /.
+
+SemAdjs2((A|P), G, E_N, N, A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   eq(G1, E_N1-R->x),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), /.
+SemAdjs2((), G, E, _, _, G, E).
+
+ 

@@ -1,0 +1,365 @@
+%  File:  ==> birdsfly <==
+dyn flies(X).
+dyn bird(X).
+default birdsfly(X): flies(X) <- bird(X).
+constraint ~ birdsfly(X) <- ~ flies(X).
+default emusdontfly(X): ~ flies(X) <- emu(X) .
+constraint ~ emusdontfly(X) <- flies(X).
+constraint ~ birdsfly(X) <- emu(X).
+fact bird(X) <- emu(X).
+fact bird(X) <- robin(X).
+fact bird(tweety).
+fact emu(polly).
+fact robin(cohen).
+
+end_of_file.
+
+%  File:  ==> bats <==
+dyn flies(X).
+default mammals_dont_fly(X): ~ flies(X) <- mammal(X).
+constraint ~ mammals_dont_fly(X) <- flies(X).
+default bats_fly(X): flies(X) <- bat(X).
+constraint ~ bats_fly(X) <- ~ flies(X).
+constraint ~ mammals_dont_fly(X) <- bat(X).
+default dead_things_dont_fly(X): ~ flies(X) <- dead(X).
+constraint ~ dead_things_dont_fly(X) <- flies(X).
+constraint ~ bats_fly(X) <- dead(X).
+fact mammal(X) <- bat(X).
+fact mammal(bruce).
+fact bat(paul).
+fact bat(dracula).
+fact dead(dracula).
+
+%  File:  ==> emu <==
+dyn runs(X).
+fact emu(polly) or ostrich(polly).
+default emus_run(X) : runs(X) <- emu(X).
+default ostrich_runs(X) : runs(X) <- ostrich(X).
+
+
+%  File:  ==> lookslike <==
+drule must_be_emu(X): lle(X) => emu(X).
+drule must_be_ostrich(X): llo(X) => ostrich(X).
+fact ~ ( emu(X) and ostrich(X)).
+fact emu(X) => bird(X).
+fact ostrich(X) => bird(X).
+drule birdsfly(X): bird(X) => flies(X).
+drule birdsfeathered(X): bird(X) => feathered(X).
+drule emusdontfly(X): emu(X) => ~ flies(X).
+drule ostrichesdontfly(X): ostrich(X) => ~ flies(X).
+drule fliesoairborn(X): flies(X) => airborn(X).
+
+
+%  File:  ==> nixon2 <==
+default quaker_so_dove(X): quaker(X) => dove(X).
+default republican_so_hawk(X): republican(X) => hawk(X).
+default hawk_so_motivated(X): hawk(X) => motivated(X).
+default dove_so_motivated(X): dove(X) => motivated(X).
+default dove_so_peaceful(X): dove(X) => peaceful(X).
+fact ~ (hawk(X) and dove(X)).
+fact republican(ron).
+fact quaker(george).
+fact republican(dick).
+fact quaker(dick).
+
+%  File:  ==> nrev <==
+explainable nrev(X,Y).
+fact app([],X,X).
+fact app([A|X],Y,[A|Z]) <-
+   app(X,Y,Z).
+
+fact nrev([],[]).
+fact nrev([H|T],R) <-
+   nrev(T,NT),
+   app(NT,[H],R).
+
+%  File:  ==> cir2 <==
+% a circuit diagnosis program for a full adder
+dyn diag(X,Y).
+dyn val(X,Y).
+% to use add in facts about the input of the circuit, such as
+% fact val(in(1, f1), off).
+% fact val(in(2, f1), off).
+% fact val(in(3, f1), off).
+% to get it to explain the output of the circuit do something lik
+%	diag(on, on).
+
+fact gate(x1, xor).
+fact gate(x2, xor).
+fact gate(a1, and).
+fact gate(a2, and).
+fact gate(o1, or).
+
+fact conn(in(1, f1), in(1, x1)).
+fact conn(in(1, f1), in(1, a1)).
+fact conn(in(2, f1), in(2, x1)).
+fact conn(in(2, f1), in(2, a1)).
+fact conn(in(3, f1), in(2, x2)).
+fact conn(in(3, f1), in(1, a2)).
+fact conn(out(1, x1), in(1, x2)).
+fact conn(out(1, x1), in(2, a2)).
+fact conn(out(1, a1), in(2, o1)).
+fact conn(out(1, a2), in(1, o1)).
+fact conn(out(1, x2), out(1, f1)).
+fact conn(out(1, o1), out(2, f1)).
+
+fact val(in(N, Device), anything).
+
+default ok(Device).
+
+fact val(out(1, Device), Out1) <-
+		ok(Device),
+		gate(Device, Type),
+		ttable(Type, In1, In2, Out1),
+		val(in(1, Device), In1),
+		val(in(2, Device), In2).
+
+default faulty(Device).
+
+fact val(out(1, Device), Out1) <-
+		faulty(Device),
+		gate(Device, Type),
+		ttable(Type, In1, In2, Eout),
+		opp(Eout, Out1),
+		val(in(1, Device), In1),
+		val(in(2, Device), In2).
+
+fact n(ok(Device)) <- faulty(Device).
+
+fact opp(on, off).
+fact opp(off, on).
+
+fact ttable(and, on, on, on).
+fact ttable(and, off, anything, off).
+fact ttable(and, anything, off, off).
+fact ttable(or, off, off, off).
+fact ttable(or, on, anything, on).
+fact ttable(or, anything, on, on).
+fact ttable(xor, off, on, on).
+fact ttable(xor, off, off, off).
+fact ttable(xor, on, X, Y) <- opp(X, Y).
+
+fact val(Y, Z) <-
+		ne(Z, anything),
+		conn(X, Y),
+		val(X, Z).
+
+prolog ne(X, Y).
+
+assertz(( ne(X,Y) :- \+ X=Y)).
+
+fact n(val(X, off)) <- val(X, on).
+
+fact diag(Out1, Out2) <-
+	val(out(1, f1), Out1 ),
+	val(out(2, f1), Out2 ).
+
+
+%  File:  ==> depiction <==
+dyn chain(X).
+dyn region(X).
+dyn tee(X,Y,Z).
+dyn bounds(X,Y).
+dyn interior(X,Y).
+dyn exterior(X,Y).
+dyn chi(X,Y).
+dyn open(X,N).
+dyn closed(X).
+
+% we first allow one to write the building blocks of explanations
+% land(X) means that the object X in the image depicts land in scene, etc
+default land(X).
+default water(X).
+default road(X).
+default river(X).
+default shore(X).
+
+default joins(X,Y,E).
+default cross(X,Y).
+default beside(X,Y).
+default mouth(L,R,E).
+default source(R,X).
+default loop(X).
+default inside(X,Y).
+default outside(X,Y).
+
+% the following give the mappings between image and scene
+fact beside(X,Y) => bounds(X,Y).
+fact joins(X,Y,E) => tee(X,Y,E).
+fact mouth(X,Y,E) => tee(X,Y,E).
+fact cross(X,Y) => chi(X,Y).
+fact source(X,N) => open(X,N).
+fact loop(X) => closed(X).
+fact inside(X,Y) => interior(X,Y).
+fact outside(X,Y) => exterior(X,Y).
+
+fact land(X) or water(X) => area(X).
+fact river(X) or road(X) or shore(X) => linear(X).
+
+fact area(X) => region(X).
+fact linear(X) => chain(X).
+
+% the following gives domain constraints
+
+fact (river(X) and river(Y) => ~ cross(X,Y)).
+fact shore(X) or shore(Y) => ~ cross(X,Y).
+fact river(R) and mouth(L,R,0) => ~ mouth(L2,R,1).
+fact river(R) and road(Y) and joins(R,Y,N) => start(R,N).
+fact source(X,Y) => start(X,Y).
+fact river(R) and start(R,0) => ~ start(R,1).
+fact river(R) and (river(L) or shore(L)) => ~ joins(R,L,N).
+fact road(X) or road(Y) => ~ mouth(X,Y,N).
+fact shore(X) => ~ source(X,N) and ~ joins(X,A,N).
+fact shore(X) and river(A) => ~ joins(A,X,N).
+fact river(X) => ~ loop(X).
+fact shore(X) and inside(X,Y) and outside(X,Z) =>
+   (land(Y) => ~ land(Z)) and (water(Z) => ~ water(Y)).
+fact beside(X,Y) and (road(X) or river(X)) => ~ water(Y).
+
+% an example query is
+/*  explain chain(c1),chain(c2),region(r1),region(r2),tee(c2,c1,1),
+   bounds(c2,r2), bounds(c1,r1), bounds(c1,r2), interior(c1,r1),
+   exterior(c1,r2) ,open(c2,0),closed(c1).
+*/
+/* expl((  chain(c1), open(c1,0), open(c1,1), region(r1), bounds(c1,r1),
+        chain(c2), tee(c2,c1,0), bounds(c2,r1),
+        chain(c3), open(c3,1), tee(c2,c3,1), bounds(c3,r1),
+        region(r2), bounds(c3,r2),
+        chain(c4), open(c4,0), chi(c3,c4), chi(c4,c3),
+        bounds(c4,r1), bounds(c4,r2),
+        chain(c5), closed(c5), tee(c4,c5,1), tee(c3,c5,0), bounds(c5,r1),
+        bounds(c5,r2), exterior(c5,r1), exterior(c5,r2),
+        region(r3), bounds(c5,r3), interior(c5,r3),
+        chain(c6), closed(c6), bounds(c6,r3), exterior(c6,r3),
+        region(r4), bounds(c6,r4), interior(c6,r4)),[],D,A).
+*/
+
+%  File:  ==> hunt <==
+fact machine_gun(X) => gun(X).
+fact hunting_activity(E) => physical_activity(E).
+fact forest(P) => wild(P).
+default machine_gun(X).
+default hunting_activity(E).
+default forest(P).
+default dotoexercise(P,E): physical_activity(E) 
+   and wants_exercise(P,E) => do(P,E).
+default wants_exercise(P,E).
+default huntframe(A,W,P): hunting_activity(h(W,P)) and gun(W) and wild(P)
+   and do(A,h(W,P)) => get(A,W) and goto(A,P).
+
+
+
+%  File:  ==> nixon <==
+dyn pacifist(X).
+default quakers_are_pacifists(X): pacifist(X) <- quaker(X).
+default pro_defense_people_are_not_pacifists(X) : n(pacifist(X)) <- pro_def(X).
+default rupublicans_are_pro_defence(X): pro_def(X) <- republican(X).
+constraint ~ quakers_are_pacifists(X) <- republican(X).
+constraint ~ rupublicans_are_pro_defence(X) <- quaker(X).
+fact quaker(dick).
+fact republican(dick).
+fact republican(ron).
+fact quaker(george).
+
+end_of_file.
+
+%  File:  ==> nqueens <==
+dyn goal.
+fact p(1) and p(2) and p(3) and p(4) and p(5) and p(6) and p(7) and p(8) 
+% and p(9) and p(11) and p(12) and p(13) and p(14) and p(15) and p(16) 
+% and p(17) and p(18) and p(19) and p(20) 
+         => goal.
+fact q(X,Y) => p(Y).
+default q(1,X).
+default q(2,X).
+default q(3,X).
+default q(4,X).
+default q(5,X).
+default q(6,X).
+default q(7,X).
+default q(8,X).
+%default q(9,X).
+%default q(10,X).
+%default q(11,X).
+%default q(12,X).
+%default q(13,X).
+%default q(14,X).
+%default q(15,X).
+%default q(16,X).
+%default q(17,X).
+%default q(18,X).
+%default q(19,X).
+%default q(20,X).
+fact ~ q(X,Y) <- q(X,Z), lt(Z,Y).
+fact ~ q(X,Y) <- q(W,Z) , (pplus(X,D,W),(pplus(Y,D,Z); pplus(Z,D,Y));
+   pplus(W,D,X),pplus(Y,D,Z)).
+fact lt(X,Y) <- pplus(X,Z,Y).
+fact pplus(8,8,16).
+fact pplus(8,7,15).
+fact pplus(8,6,14).
+fact pplus(8,5,13).
+fact pplus(8,4,12).
+fact pplus(8,3,11).
+fact pplus(8,2,10).
+fact pplus(8,1,9).
+fact pplus(7,8,15).
+fact pplus(7,7,14).
+fact pplus(7,6,13).
+fact pplus(7,5,12).
+fact pplus(7,4,11).
+fact pplus(7,3,10).
+fact pplus(7,2,9).
+fact pplus(7,1,8).
+fact pplus(6,8,14).
+fact pplus(6,7,13).
+fact pplus(6,6,12).
+fact pplus(6,5,11).
+fact pplus(6,4,10).
+fact pplus(6,3,9).
+fact pplus(6,2,8).
+fact pplus(6,1,7).
+fact pplus(5,8,13).
+fact pplus(5,7,12).
+fact pplus(5,6,11).
+fact pplus(5,5,10).
+fact pplus(5,4,9).
+fact pplus(5,3,8).
+fact pplus(5,2,7).
+fact pplus(5,1,6).
+fact pplus(4,8,12).
+fact pplus(4,7,11).
+fact pplus(4,6,10).
+fact pplus(4,5,9).
+fact pplus(4,4,8).
+fact pplus(4,3,7).
+fact pplus(4,2,6).
+fact pplus(4,1,5).
+fact pplus(3,8,11).
+fact pplus(3,7,10).
+fact pplus(3,6,9).
+fact pplus(3,5,8).
+fact pplus(3,4,7).
+fact pplus(3,3,6).
+fact pplus(3,2,5).
+fact pplus(3,1,4).
+fact pplus(2,8,10).
+fact pplus(2,7,9).
+fact pplus(2,6,8).
+fact pplus(2,5,7).
+fact pplus(2,4,6).
+fact pplus(2,3,5).
+fact pplus(2,2,4).
+fact pplus(2,1,3).
+fact pplus(1,8,9).
+fact pplus(1,7,8).
+fact pplus(1,6,7).
+fact pplus(1,5,6).
+fact pplus(1,4,5).
+fact pplus(1,3,4).
+fact pplus(1,2,3).
+fact pplus(1,1,2).
+
+prolog pc(X,Y).
+fact pc(1,2).
+fact pc(3,4).
+

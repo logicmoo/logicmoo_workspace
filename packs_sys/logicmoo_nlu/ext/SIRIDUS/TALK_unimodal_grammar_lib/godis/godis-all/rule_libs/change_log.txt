@@ -1,0 +1,84 @@
+
+*** GoDiS update rule change log, started 030727 ***
+
+Staffan Larsson
+sl@ling.gu.se
+
+-----------------------------------------------------------------------------
+
+After my thesis was done, I went back to "quick bugfix" mode which resulted
+in lots of unnecessary hacks. Some of these bugs fixed were bugs in trindikit
+rather than in godis. This is an attempt at keeping track of changes
+to the GoDiS update rules.
+
+Several changes relate to added features rather than bug fixes;
+for example, several plan constructs have been added.
+
+Some comments have been added after the changes were made, these are
+marked "retroactive".
+
+-----------------------------------------------------------------------------
+
+021125 (retroactive) (SL)
+- added/modified rule exec_change_domain
+
+030131 (retroactive) (DH)
+- added rules exec_if_then, exec_if_then_else for dealing with if_then and if_then_else plan constructs; conditions are propositions in shared/com
+- added rules exec_forget and exec_forget_except for plan constructs: forget(P) and forget_except(P) for removing propositions from shared commitments
+- added rules exec_protect for plan construct protect(Q) for plan constructs that should not be accommodates
+
+030520 (retroactive) (SL)
+- added rules for plan construct: bind(Q), for questions that can be accommodated but will not be asked.
+
+030727
+- simplified integration rules for ask, answer, request; they are now more
+  similar to the description in IBDM thesis.
+- removed a hack rule for integrating requests for "up" and "top" actions
+- fixed the goUp rule; this did not work properly
+
+030822
+- fixed rejectProp so it does not produce pos*und feedback; the system
+could not handle non-positive response to this.
+
+031014 (retroactive)
+- added rule exec_assume, for plan construct assume(P) which adds P to shared commitments
+
+031016
+- added exec_assume(P) which adds P to private/bel
+
+031022
+- modified integrateUsrAccNegICM so that rejected(Q) is added to shared/com;
+this can be used to prevent the question being asked again
+- modifed integrateUsrAnswer so that multiple answers to the same question can be given in one turn; this was previously prohibited to avoid problems when recognition goes badly wrong; a new solution is needed which distinguishes self-corrections, and the recognition problem should be solved by the recognition grammar.
+
+031024
+- added exec_assume_issue, similar to exec_assume but for questions
+- commented out clearing of shared/actions in exec_forget - it didn't make any sense
+
+031124
+- fixed exec_sequence so that sequences can be empty lists
+- fixed downdateIssues2 - now only triggers when ISSUES has > 1 elements
+
+031125
+- exec_forget_except now puts top plan on actions, like exec_forget_all
+
+040108
+- added condition to integrateUsrAnswer: in( $latest_moves, answer(A) ).
+  If the answer was not performed in latest utterance, the score is not valid and selectUndIntAnswer should trigger instead.
+- changed selectIcmUndIntAnswer so it does not require matching Q on QUD, only on ISSUES; previously it did not work.
+- NOTE: these changes fixed a bug that arose from separating out selection of und-int ICM from the integrateUsrAnswer rule. In IOD, the old solution is still used.
+
+040115
+- added rule downdateActions2 to remove menu-chioce altQ in case the altQ was answered "no"; see rule for additional comments 
+
+040209
+- moved removeFindout and removeRaise so that they are tried after exec_forget. This way
+  removeFindout/Raise will not remove the actions findout(X^p(X)) and raise(X^p(X)) if forget(p(X))
+  is first in the plan sequence. If implementation of removeFindout/Raise is changed so that
+  they only look at first element of plan, forget actions can occur anywhere,
+  yielding the same result.
+  This will probably will make update algorithm (slightly) more efficient too,
+  since removeFindout/Raise do not check all elems in plan.
+  
+040213 (SL)
+- modified noFollowup so it takes care of actions properly; before, they were added to COM instead of ACTIONS in tmp/usr.

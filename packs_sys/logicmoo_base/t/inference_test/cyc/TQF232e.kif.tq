@@ -1,0 +1,44 @@
+(note TQF232e)
+
+(subclass HYP-Collection-55963640 CriminalAct) 
+(relationAllExists perpetrator CriminalOrganization CriminalAct) 
+(instance HYP-MafiyaGroup-Russian-33319827 CriminalOrganization) 
+
+(implies 
+  (and 
+    (instance ?AGENT ?AGENTTYPE) 
+    (relationAllExists ?PRED ?AGENTTYPE ?EVENTTYPE)) 
+  (behaviorCapable ?AGENT ?EVENTTYPE ?PRED)) 
+
+(implies 
+  (and 
+    (subrelation ?PRED ?GENL) 
+    (behaviorCapable ?OBJ ?ACT ?PRED)) 
+  (behaviorCapable ?OBJ ?ACT ?GENL))
+
+(implies 
+  (and 
+    (subclass ?SPEC ?GEN) 
+    (behaviorCapable ?OBJ ?GEN ?ROLE)) 
+  (behaviorCapable ?OBJ ?SPEC ?ROLE)) 
+
+(subrelation perpetrator agent)
+
+(queryyn
+  (implies 
+    (and 
+      (instance ?GROUP MafiyaGroup-Russian) 
+      (instance ?ANTHRAX Anthrax-DryForm) 
+      (instance ?ATTACK AttackOnTangible) 
+      (subclass ?EVENTTYPE 
+        (CollectionSubsetFn CriminalAct 
+          (TheSetOf ?OBJ 
+            (and 
+              (= ?OBJ ?ATTACK) 
+              (instrument-Generic ?OBJ ?ANTHRAX)))))) 
+  (behaviorCapable ?GROUP ?EVENTTYPE agent)))
+
+(answer Yes)
+
+(end_of_file)
+

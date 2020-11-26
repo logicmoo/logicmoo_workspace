@@ -1,0 +1,8 @@
+//Bear's diet 
+Bear( x, Food ):: [Bear : x] <-actor- [Eat] -obj-> [Food = ["fish", "honey", "Baies_Sauvages"]].
+
+// the shelter of the agent John
+Bear( x, State ):: [Bear : x] <-actor- [Live] -livesIn-> [Shelter = "hole"] -locatedIn-> [Location].
+
+// inheritence predicat
+Bear(x,y)::B:-Animal(x,y)::B.

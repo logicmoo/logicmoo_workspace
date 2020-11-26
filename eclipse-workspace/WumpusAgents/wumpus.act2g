@@ -1,0 +1,9 @@
+use facts as knowledge.
+
+define forward with
+	pre{ true }
+	post{ true }
+
+define turn(X) with
+	pre{ (X==left; X==right) }
+	post{ true }

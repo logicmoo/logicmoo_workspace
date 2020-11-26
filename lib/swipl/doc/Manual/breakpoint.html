@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section B.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tracehook.html">
+<link rel="next" href="excepthook.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tracehook.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="excepthook.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:breakpoint"><a id="sec:B.4"><span class="sec-nr">B.4</span> <span class="sec-title">Breakpoint 
+and watchpoint handling</span></a></h2>
+
+<a id="sec:breakpoint"></a>
+
+<p>SWI-Prolog support <em>breakpoints</em>. Breakpoints can be 
+manipulated with the library <code>library(prolog_breakpoints)</code>. 
+Setting a breakpoint replaces a virtual machine instruction with the <code>D_BREAK</code> 
+instruction. If the virtual machine executes a <code>D_BREAK</code>, it 
+performs a callback to decide on the action to perform. This section 
+describes this callback, called <a id="idx:prologbreakhook6:2552"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a>.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[hook,semidet]</span><a id="prolog:break_hook/6"><strong>prolog:break_hook</strong>(<var>+Clause, 
++PC, +FR, +BFR, +Expression, -Action</var>)</a></dt>
+<dd class="defbody">
+<em>Experimental</em> This hook is called if the virtual machine 
+executes a <code>D_BREAK</code>, set using <a id="idx:setbreakpoint4:2553"></a><span class="pred-ext">set_breakpoint/4</span>. <var>Clause</var> 
+and <var>PC</var> identify the breakpoint. <var>FR</var> and <var>BFR</var> 
+provide the environment frame and current choicepoint. <var>Expression</var> 
+identifies the action that is interrupted, and is one of the following:
+
+<dl class="latex">
+<dt><strong>call</strong>(<var>Goal</var>)</dt>
+<dd class="defbody">
+The instruction will call <var>Goal</var>. This is generated for nearly 
+all instructions. Note that <var>Goal</var> is semantically equivalent 
+to the compiled body term, but might differ syntactically. This is 
+notably the case when arithmetic expressions are compiled in optimized 
+mode (see <a class="flag" href="flags.html#flag:optimise">optimise</a>). 
+In particular, the arguments of arithmetic expressions have already been 
+evaluated. Thus, <var>A</var> is 3*<var>B</var>, where <var>B</var> 
+equals 3 results in a term <code>call(A is 9)</code> if the clause was 
+compiled with optimization enabled.</dd>
+<dt><strong><code>!</code></strong></dt>
+<dd class="defbody">
+The instruction will call the cut. Because the semantics of metacalling 
+the cut differs from executing the cut in its original context we do not 
+wrap the cut in <code>call/1</code>.</dd>
+<dt><strong><code>:-</code></strong></dt>
+<dd class="defbody">
+The breakpoint is on the <em>neck</em> instruction, i.e., after 
+performing the head unifications.</dd>
+<dt><strong>exit</strong></dt>
+<dd class="defbody">
+The breakpoint is on the <em>exit</em> instruction, i.e., at the end of 
+the clause. Note that the exit instruction may not be reached due to 
+last-call optimisation.</dd>
+<dt><strong>unify_exit</strong></dt>
+<dd class="defbody">
+The breakpoint is on the completion of an in-lined unification while the 
+system is not in debug mode. If the system is in debug mode, inlined 
+unification is returned as call(Var=Term).<sup class="fn">208<span class="fn-text">This 
+hack will disappear if we find a good solution for applying D_BREAK to 
+inlined unification. Only option might be to place the break on both the 
+unification start and end instructions.</span></sup>
+</dd>
+</dl>
+
+<p>If <a id="idx:prologbreakhook6:2554"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a> 
+succeeds, it must unify <var>Action</var> with a value that describes 
+how execution must continue. Possible values for
+<var>Action</var> are:
+
+<dl class="latex">
+<dt><strong>continue</strong></dt>
+<dd class="defbody">
+Just continue as if no breakpoint was present.</dd>
+<dt><strong>debug</strong></dt>
+<dd class="defbody">
+Continue in <em>debug mode</em>. See <a id="idx:debug0:2555"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+<dt><strong>trace</strong></dt>
+<dd class="defbody">
+Continue in <em>trace mode</em>. See <a id="idx:trace0:2556"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>.</dd>
+<dt><strong>call</strong>(<var>Goal</var>)</dt>
+<dd class="defbody">
+Execute <var>Goal</var> instead of the goal that would be executed.
+<var>Goal</var> is executed as <a id="idx:call1:2557"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+preserving (non-)determinism and exceptions.
+</dd>
+</dl>
+
+<p>If this hook throws an exception, the exception is propagated 
+normally. If this hook is not defined or fails, the default action is 
+executed. This implies that, if the thread is in debug mode, the tracer 
+will be enabled (<code>trace</code>) and otherwise the breakpoint is 
+ignored (<code>continue</code>).
+
+<p>This hook allows for injecting various debugging scenarios into the 
+executable without recompiling. The hook can access variables of the 
+calling context using the frame inspection predicates. Here are some 
+examples.
+
+<p>
+<ul class="latex">
+<li>Create <em>conditional</em> breakpoints by imposing conditions 
+before deciding the return <code>trace</code>.
+<li>Watch variables at a specific point in the execution. Note that 
+binding of these variables can be monitored using <em>attributed 
+variables</em>, see <a class="sec" href="attvar.html#sec:8.1">section 
+8.1</a>.
+<li>Dynamically add <em>assertions</em> on variables using <a id="idx:assertion1:2558"></a><a class="pred" href="debug.html#assertion/1">assertion/1</a>.
+<li>Wrap the <var>Goal</var> into a meta-call that traces progress of 
+the <var>Goal</var>.
+</ul>
+</dd>
+</dl>
+
+<p></body></html>

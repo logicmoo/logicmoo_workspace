@@ -1,0 +1,98 @@
+<rdf:RDF
+    xmlns:amine="http://www.amine.org/ontologies/amine#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://www.amine.org/ontologies/amine">
+  <owl:Ontology rdf:about="">
+    <amine:Root>universal</amine:Root>
+    <amine:RelationRoot>relation</amine:RelationRoot>
+    <amine:MainLanguage>english</amine:MainLanguage>
+    <amine:Languages>english</amine:Languages>
+    <amine:MixedLanguage>True</amine:MixedLanguage>
+    <amine:Name>C:\Samples of Amine Ontologies\owl\CatMouseFromAmine.owl</amine:Name>
+    <rdfs:comment>Owl Ontology Generate by Amine Platform</rdfs:comment>
+  </owl:Ontology>
+  <owl:Class rdf:ID="Mouse">
+    <amine:LexiconsOfMouse>Language:english;Synonym(s):Mouse</amine:LexiconsOfMouse>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Mammal"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Hunt">
+    <amine:LexiconsOfHunt>Language:english;Synonym(s):Hunt</amine:LexiconsOfHunt>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Action"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="DisneyMouse">
+    <amine:LexiconsOfDisneyMouse>Language:english;Synonym(s):DisneyMouse</amine:LexiconsOfDisneyMouse>
+    <rdfs:subClassOf rdf:resource="#Mouse"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Action">
+    <amine:LexiconsOfAction>Language:english;Synonym(s):Action</amine:LexiconsOfAction>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="universal"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Eat">
+    <amine:LexiconsOfEat>Language:english;Synonym(s):Eat</amine:LexiconsOfEat>
+    <rdfs:subClassOf rdf:resource="#Action"/>
+  </owl:Class>
+  <owl:Class rdf:about="#universal">
+    <amine:LexiconsOfuniversal>Language:english;Synonym(s):universal</amine:LexiconsOfuniversal>
+  </owl:Class>
+  <owl:Class rdf:about="#Mammal">
+    <amine:LexiconsOfMammal>Language:english;Synonym(s):Mammal</amine:LexiconsOfMammal>
+    <rdfs:subClassOf rdf:resource="#universal"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Cat">
+    <amine:LexiconsOfCat>Language:english;Synonym(s):Cat</amine:LexiconsOfCat>
+    <rdfs:subClassOf rdf:resource="#Mammal"/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:ID="relation">
+    <amine:LexiconsOfrelation>Language:english;Synonym(s):relation</amine:LexiconsOfrelation>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="agnt">
+    <amine:LexiconsOfagnt>Language:english;Synonym(s):agnt</amine:LexiconsOfagnt>
+    <rdfs:subPropertyOf rdf:resource="#relation"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="obj">
+    <amine:LexiconsOfobj>Language:english;Synonym(s):obj</amine:LexiconsOfobj>
+    <rdfs:subPropertyOf rdf:resource="#relation"/>
+  </owl:ObjectProperty>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfDisneyMouse"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfagnt"/>
+  <owl:AnnotationProperty rdf:ID="Name"/>
+  <amine:Mouse rdf:ID="mouse2">
+    <amine:LexiconsOfmouse2>Language:english;Synonym(s):mouse2</amine:LexiconsOfmouse2>
+  </amine:Mouse>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfAction"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfrelation"/>
+  <owl:AnnotationProperty rdf:ID="Languages"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat1"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfMammal"/>
+  <amine:Cat rdf:ID="cat1">
+    <amine:LexiconsOfcat1>Language:english;Synonym(s):cat1</amine:LexiconsOfcat1>
+  </amine:Cat>
+  <amine:Mouse rdf:ID="mouse1">
+    <amine:LexiconsOfmouse1>Language:english;Synonym(s):mouse1</amine:LexiconsOfmouse1>
+  </amine:Mouse>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfHunt"/>
+  <owl:AnnotationProperty rdf:ID="Root"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfmouse1"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfmouse2"/>
+  <owl:AnnotationProperty rdf:ID="RelationRoot"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfMouse"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfcat2"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfuniversal"/>
+  <owl:AnnotationProperty rdf:ID="MainLanguage"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfEat"/>
+  <amine:Cat rdf:ID="cat2">
+    <amine:LexiconsOfcat2>Language:english;Synonym(s):cat2</amine:LexiconsOfcat2>
+  </amine:Cat>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfobj"/>
+  <owl:AnnotationProperty rdf:ID="MixedLanguage"/>
+  <owl:AnnotationProperty rdf:ID="LexiconsOfCat"/>
+</rdf:RDF>

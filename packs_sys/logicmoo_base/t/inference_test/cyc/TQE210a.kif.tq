@@ -1,0 +1,64 @@
+(note TQE210a)
+
+(contains PersianGulfRegion StraitOfHormuz) 
+(eventOccursAt USStrikesOnOilPlatforms StraitOfHormuz) 
+(groupMembers GroupOfReflaggedTankers SeaIslandCity) 
+(hasOwnershipIn Iran IranianOilPlatforms) 
+(damages USStrikesOnOilPlatforms IranianOilPlatforms) 
+(damages IranianAttackOnTanker-1987 SeaIslandCity) 
+(directingAgent IranianAttackOnTanker-1987 Iran) 
+(directingAgent USStrikesOnOilPlatforms UnitedStatesOfAmerica) 
+(instance SeaIslandCity OilTanker) 
+
+(instance IranianOilPlatforms 
+ (GroupFn OffshoreOilPlatform)) 
+
+(instance IranianAttackOnTanker-1987 MilitaryAttack) 
+
+(existant IranianAttackOnTanker-1987 
+ (MonthFn October (YearFn 1987))) 
+
+(instance USStrikesOnOilPlatforms MilitaryAttack) 
+(adversarialResponseTo USStrikesOnOilPlatforms IranianAttackOnTanker-1987) 
+
+(implies 
+  (groupMembers GroupOfReflaggedTankers ?TANKER) 
+  (owns Kuwait ?TANKER)) 
+
+(implies 
+  (and 
+    (eventOccursAt ?ACT ?SUB) 
+    (contains ?REG ?SUB)) 
+  (eventOccursAt ?ACT ?REG)) 
+
+(queryyn
+  (exists 
+    (?IRAN-ATTACK) 
+    (exists 
+      (?TANKER) 
+      (exists 
+        (?US-ATTACK) 
+        (exists 
+          (?PLATFORMS) 
+          (and 
+            (instance ?IRAN-ATTACK MilitaryAttack) 
+            (directingAgent ?IRAN-ATTACK Iran) 
+            (damages ?IRAN-ATTACK ?TANKER) 
+            (instance ?TANKER OilTanker) 
+            (owns Kuwait ?TANKER) 
+            (existant?IRAN-ATTACK 
+              (MonthFn October (YearFn 1987))) 
+            (instance ?US-ATTACK MilitaryAttack) 
+            (directingAgent ?US-ATTACK UnitedStatesOfAmerica) 
+            (damages ?US-ATTACK ?PLATFORMS) 
+            (instance ?PLATFORMS 
+              (GroupFn OffshoreOilPlatform)) 
+            (hasOwnershipIn Iran ?PLATFORMS) 
+            (eventOccursAt ?US-ATTACK PersianGulfRegion) 
+            (adversarialResponseTo ?US-ATTACK ?IRAN-ATTACK)))))))
+ 
+(answer Yes)
+
+(end_of_file)
+
+

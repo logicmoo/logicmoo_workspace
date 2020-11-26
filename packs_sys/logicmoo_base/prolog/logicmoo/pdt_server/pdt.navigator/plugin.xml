@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension
+         point="org.eclipse.ui.popupMenus">      
+       <objectContribution
+            adaptable="false"
+            id="pdt.popupMenu.contribution.pl"
+            nameFilter="*.pl"
+            objectClass="org.eclipse.core.resources.IFile">
+           <menu
+	           id="org.cs3.pdt.menu"
+	           label="Prolog Development Tools">
+	        <separator
+	              name="group0">
+	        </separator>
+	        <separator
+	              name="group1">
+	        </separator>
+	     </menu>
+            
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ReloadAction"
+               icon="icons/prolog_file_consulted.png"
+               id="org.cs3.pdt.internal.actions.reload"
+               label="(Re)consult"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="push">
+         </action>
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ToggleEntryPointAction"
+               icon="icons/entry_point.gif"
+               id="pdt.actions.toggle_entry_point"
+               label="Mark as Entry Point"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="toggle"
+               tooltip="If checked, the file is considered as a &quot;main&quot; file.">
+         </action>
+      </objectContribution>
+       <objectContribution
+             adaptable="false"
+             id="pdt.popupMenu.contribution.pro"
+             nameFilter="*.pro"
+             objectClass="org.eclipse.core.resources.IFile">
+          <menu
+                id="org.cs3.pdt.menu"
+                label="Prolog Development Tools">
+             <separator
+                   name="group0">
+             </separator>
+             <separator
+                   name="group1">
+             </separator>
+          </menu>
+          <action
+                class="org.cs3.pdt.navigator.internal.actions.ReloadAction"
+                icon="icons/prolog_file_consulted.png"
+                id="org.cs3.pdt.internal.actions.reload"
+                label="(Re)consult"
+                menubarPath="org.cs3.pdt.menu/group0"
+                style="push">
+          </action>
+          <action
+                class="org.cs3.pdt.navigator.internal.actions.ToggleEntryPointAction"
+                icon="icons/entry_point.gif"
+                id="pdt.actions.toggle_entry_point"
+                label="Mark as Entry Point"
+                menubarPath="org.cs3.pdt.menu/group0"
+                style="toggle"
+                tooltip="If checked, the file is considered as a &quot;main&quot; file.">
+          </action>
+       </objectContribution>
+      
+       <objectContribution
+            adaptable="false"
+            id="pdt.popupMenu.contribution.qlf"
+            nameFilter="*.qlf"
+            objectClass="org.eclipse.core.resources.IFile">
+           <menu
+	           id="org.cs3.pdt.menu"
+	           label="Prolog Development Tools">
+	        <separator
+	              name="group0">
+	        </separator>
+	        <separator
+	              name="group1">
+	        </separator>
+	     </menu>
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ReloadAction"
+               icon="icons/qlf_file_consulted.png"
+               id="org.cs3.pdt.internal.actions.reload"
+               label="(Re)consult"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="push">
+         </action>
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ToggleEntryPointAction"
+               icon="icons/entry_point.gif"
+               id="pdt.actions.toggle_entry_point"
+               label="Mark as Entry Point"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="toggle"
+               tooltip="If checked, the file is considered as a &quot;main&quot; file.">
+         </action>
+      </objectContribution>
+      
+       <objectContribution
+            adaptable="false"
+            id="pdt.popupMenu.contribution.lgt"
+            nameFilter="*.lgt"
+            objectClass="org.eclipse.core.resources.IFile">
+           <menu
+	           id="org.cs3.pdt.menu"
+	           label="Prolog Development Tools">
+	        <separator
+	              name="group0">
+	        </separator>
+	        <separator
+	              name="group1">
+	        </separator>
+	     </menu>
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ReloadAction"
+               icon="icons/prolog_file_consulted.png"
+               id="org.cs3.pdt.internal.actions.reload"
+               label="(Re)consult"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="push">
+         </action>
+         <action
+               class="org.cs3.pdt.navigator.internal.actions.ToggleEntryPointAction"
+               icon="icons/entry_point.gif"
+               id="pdt.actions.toggle_entry_point"
+               label="Mark as Entry Point"
+               menubarPath="org.cs3.pdt.menu/group0"
+               style="toggle"
+               tooltip="If checked, the file is considered as a &quot;main&quot; file.">
+         </action>
+      </objectContribution>
+ </extension>
+ 
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="org.cs3.pdt.navigator.internal.decorators.PDTConsultDecoratorContributor"
+            icon="icons/prolog_file_consulted.png"
+            id="org.cs3.pdt.consult.decorator"
+            label="PDT Consult Decorator"
+            lightweight="true"
+            location="TOP_RIGHT"
+            state="true">
+         <enablement>
+            <objectClass
+                  name="org.eclipse.core.resources.IResource">
+            </objectClass>
+         </enablement>
+      </decorator>
+      <decorator
+            adaptable="true"
+            class="org.cs3.pdt.navigator.internal.decorators.EntryPointDecoratorContributor"
+            icon="icons/entry_point.gif"
+            id="org.cs3.pdt.entry.point.decorator"
+            label="PDT Entry Point Decorator"
+            lightweight="true"
+            location="TOP_LEFT"
+            state="true">
+         <enablement>
+            <objectClass
+                  name="org.eclipse.core.resources.IFile">
+            </objectClass>
+         </enablement>
+      </decorator>
+   </extension>
+</plugin>

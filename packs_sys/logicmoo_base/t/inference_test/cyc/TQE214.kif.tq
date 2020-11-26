@@ -1,0 +1,67 @@
+(note TQE214)
+
+(agent IranianEmplacementOfNavalMine RevolutionaryGuard-Iran) 
+
+(eventOccursAt IranianEmplacementOfNavalMine StraitOfHormuz) 
+
+(officialArmedForces 
+ (GovernmentFn Iran) RevolutionaryGuard-Iran) 
+
+(instance IranianEmplacementOfNavalMine LayingMines) 
+
+(inputsDestroyed HYP-DestructionEvent-40659228 RevolutionaryGuard-Iran) 
+
+(implies 
+  (and 
+    (typedGenlPreds ?SPECPRED ?GENLPRED) 
+    (admittedArgument ?A 1 ?SPECPRED) 
+    (admittedArgument ?B 2 ?SPECPRED) 
+    (?GENLPRED ?A ?B)) 
+  (?SPECPRED ?A ?B)) 
+
+(admittedArgument RevolutionaryGuard-Iran 2 inputsDestroyed) 
+
+(admittedArgument HYP-DestructionEvent-40659228 1 inputsDestroyed) 
+
+(typedGenlPreds inputsDestroyed inputsDestroyed) 
+
+(implies 
+  (and 
+    (subProcess ?EVENT ?SUB) 
+    (inputsDestroyed ?SUB ?OBJ)) 
+  (inputsDestroyed ?EVENT ?OBJ)) 
+
+(subProcess HYP-DestructionEvent-40659228 HYP-DestructionEvent-40659228) 
+
+(implies 
+  (and 
+    (instance ?MINE_LAYING LayingMines) 
+    (agent ?MINE_LAYING ?MINE_LAYOR) 
+    (eventOccursAt ?MINE_LAYING ?MINE_LOCATION)) 
+  (controls ?MINE_LAYOR ?MINE_LOCATION)) 
+
+(implies 
+  (and 
+    (inputsDestroyed ?EVENT ?CONTROLLER) 
+    (controls ?CONTROLLER ?REGION) 
+    (officialArmedForces 
+      (GovernmentFn ?COUNTRY) ?CONTROLLER))
+  (decreasesCausally ?EVENT ?COUNTRY 
+    (Kappa 
+      (?AGENT ?AMOUNT) 
+      (powerInRegion-Geopolitical ?AGENT ?REGION ?AMOUNT))))
+
+(queryyn
+(implies 
+  (and 
+    (subProcess Iran-IraqTankerWar ?EVENT) 
+    (inputsDestroyed ?EVENT RevolutionaryGuard-Iran)) 
+  (decreasesCausally ?EVENT Iran 
+    (Kappa 
+      (?AGENT ?AMOUNT) 
+      (powerInRegion-Geopolitical ?AGENT StraitOfHormuz ?AMOUNT)))))
+
+(answer yes)
+
+(end_of_file)
+

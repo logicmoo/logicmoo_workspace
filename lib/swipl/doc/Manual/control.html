@@ -1,0 +1,407 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.7</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="compare.html">
+<link rel="next" href="metacall.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="compare.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="metacall.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:control"><a id="sec:4.7"><span class="sec-nr">4.7</span> <span class="sec-title">Control 
+Predicates</span></a></h2>
+
+<a id="sec:control"></a>
+
+<p>The predicates of this section implement control structures. Normally 
+the constructs in this section, except for <a id="idx:repeat0:719"></a><a class="pred" href="control.html#repeat/0">repeat/0</a>, 
+are translated by the compiler. Please note that complex goals passed as 
+arguments to meta-predicates such as <a id="idx:findall3:720"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+below cause the goal to be compiled to a temporary location before 
+execution. It is faster to define a sub-predicate (i.e. one_character_atoms/1 
+in the example below) and make a call to this simple predicate.
+
+<pre class="code">
+one_character_atoms(As) :-
+        findall(A, (current_atom(A), atom_length(A, 1)), As).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="fail/0"><strong>fail</strong></a></dt>
+<dd class="defbody">
+Always fail. The predicate <a id="idx:fail0:721"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+is translated into a single virtual machine instruction.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="false/0"><strong>false</strong></a></dt>
+<dd class="defbody">
+Same as fail, but the name has a more declarative connotation.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="true/0"><strong>true</strong></a></dt>
+<dd class="defbody">
+Always succeed. The predicate <a id="idx:true0:722"></a><a class="pred" href="control.html#true/0">true/0</a> 
+is translated into a single virtual machine instruction.
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="repeat/0"><strong>repeat</strong></a></dt>
+<dd class="defbody">
+Always succeed, provide an infinite number of choice points.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="!/0"><strong>!</strong></a></dt>
+<dd class="defbody">
+Cut. Discard all choice points created since entering the predicate in 
+which the cut appears. In other words, <em>commit</em> to the clause in 
+which the cut appears <em>and</em> discard choice points that have been 
+created by goals to the left of the cut in the current clause. Meta 
+calling is opaque to the cut. This implies that cuts that appear in a 
+term that is subject to meta-calling (<a id="idx:call1:723"></a><a class="pred" href="metacall.html#call/1">call/1</a>) 
+only affect choice points created by the meta-called term. The following 
+control structures are transparent to the cut: <a class="pred" href="control.html#;/2">;/2</a>, <a class="pred" href="control.html#->/2">-&gt;/2</a> 
+and
+<a class="pred" href="control.html#*->/2">*-&gt;/2</a>. Cuts appearing 
+in the <em>condition</em> part of
+<a class="pred" href="control.html#->/2">-&gt;/2</a> and <a class="pred" href="control.html#*->/2">*-&gt;/2</a> 
+are opaque to the cut. The table below explains the scope of the cut 
+with examples. <i>Prunes</i> here means &ldquo;prunes <var>X</var> 
+choice point created by <var>X</var>&rdquo; .
+
+<p><table class="latex frame-void center">
+<tr><td><code>t0 :- (a, !, b).</code> </td><td>% prunes a/0 and t0/0 </td></tr>
+<tr><td><code>t1 :- (a, !, fail ; b).</code> </td><td>% prunes a/0 and t1/0 </td></tr>
+<tr><td><code>t2 :- (a -&gt; b, ! ; c).</code> </td><td>% prunes b/0 and t2/0 </td></tr>
+<tr><td><code>t3 :- call((a, !, fail ; b)).</code> </td><td>% prunes a/0 </td></tr>
+<tr><td><code>t4 :- <code>\+</code>(a, !, fail).</code> </td><td>% 
+prunes a/0 </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=",/2"><var>:Goal1</var> <strong>,</strong> <var>:Goal2</var></a></dt>
+<dd class="defbody">
+Conjunction. True if both&lsquo;Goal1' and&lsquo;Goal2' can be proved. 
+It is defined as follows (this definition does not lead to a loop as the 
+second comma is handled by the compiler):
+
+<pre class="code">
+Goal1, Goal2 :- Goal1, Goal2.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id=";/2"><var>:Goal1</var> <strong>;</strong> <var>:Goal2</var></a></dt>
+<dd class="defbody">
+The&lsquo;or' predicate is defined as:
+
+<pre class="code">
+Goal1 ; _Goal2 :- Goal1.
+_Goal1 ; Goal2 :- Goal2.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="|/2"><var>:Goal1</var> <strong>|</strong> <var>:Goal2</var></a></dt>
+<dd class="defbody">
+Equivalent to <a class="pred" href="control.html#;/2">;/2</a>. Retained 
+for compatibility only. New code should use <a class="pred" href="control.html#;/2">;/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="->/2"><var>:Condition</var> <strong>-&gt;</strong> <var>:Action</var></a></dt>
+<dd class="defbody">
+If-then and If-Then-Else. The <a class="pred" href="control.html#->/2">-&gt;/2</a> 
+construct commits to the choices made at its left-hand side, destroying 
+choice points created inside the clause (by <a class="pred" href="control.html#;/2">;/2</a>), 
+or by goals called by this clause. Unlike <a class="pred" href="control.html#!/0">!/0</a>, 
+the choice point of the predicate as a whole (due to multiple clauses) 
+is <strong>not</strong> destroyed. The combination <a class="pred" href="control.html#;/2">;/2</a> 
+and <a class="pred" href="control.html#->/2">-&gt;/2</a> acts as if 
+defined as:
+
+<pre class="code">
+If -&gt; Then; _Else :- If, !, Then.
+If -&gt; _Then; Else :- !, Else.
+If -&gt; Then :- If, !, Then.
+</pre>
+
+<p>Please note that (If <code>-&gt;</code> Then) acts as (If <code>-&gt;</code> 
+Then ;
+<b>fail</b>), making the construct <em>fail</em> if the condition fails. 
+This unusual semantics is part of the ISO and all de-facto Prolog 
+standards.
+
+<p>Please note that (if<code>-&gt;</code>then;else) is read as ((if<code>-&gt;</code>then);else) 
+and that the <em>combined</em> semantics of this syntactic construct as 
+defined above is <em>different</em> from the simple nesting of the two 
+individual constructs, i.e., the semantics of
+<a class="pred" href="control.html#->/2">-&gt;/2</a> <em>changes</em> 
+when embedded in <a class="pred" href="control.html#;/2">;/2</a>. See 
+also
+<a id="idx:once1:724"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
+<dt class="pubdef"><a id="*->/2"><var>:Condition</var> <strong>*-&gt;</strong> <var>:Action 
+; :Else</var></a></dt>
+<dd class="defbody">
+This construct implements the so-called&lsquo;soft-cut'. The control is 
+defined as follows: If <var>Condition</var> succeeds at least once, the 
+semantics is the same as (<code>call(Condition)</code>,
+<var>Action</var>).<sup class="fn">69<span class="fn-text">Note that the <var>Condition</var> 
+is wrapped in <a id="idx:call1:725"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+limiting the scope of the cut (<a class="pred" href="control.html#!/0">!/0</a></span></sup> 
+If
+<var>Condition</var> does not succeed, the semantics is that of (<code>\+</code>
+<var>Condition</var>, <var>Else</var>). In other words, if <var>Condition</var> 
+succeeds at least once, simply behave as the conjunction of
+<code>call(Condition)</code> and <var>Action</var>, otherwise execute <var>Else</var>. 
+The construct is known under the name if/3 in some other Prolog 
+implementations.
+
+<p>The construct <var>A</var> <code>*-&gt;</code> <var>B</var>, i.e., 
+without an <var>Else</var> branch, the semantics is the same as (<code>call(A)</code>, <var>B</var>).
+
+<p>This construct is rarely used. An example use case is the 
+implementation of <span style="font-variant:small-caps">optional</span> 
+in <span style="font-variant:small-caps">sparql</span>. The optional 
+construct should preserve all solutions if the argument succeeds as 
+least once but still succeed otherwise. This is implemented as below.
+
+<pre class="code">
+optional(Goal) :-
+    (   Goal
+    *-&gt; true
+    ;   true
+    ).
+</pre>
+
+<p>Now calling e.g., <code>optional(member(X, [a,b]))</code> has the 
+solutions
+<var>X=a</var> and <var>X=b</var>, while <code>optional(member(X,[]))</code> 
+succeeds without binding <var>X</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="\+/1"><strong>\+</strong> <var>:Goal</var></a></dt>
+<dd class="defbody">
+True if&lsquo;Goal' cannot be proven (mnemonic: <code><code>+</code></code> 
+refers to <em>provable</em> and the backslash (<code><code>\</code></code>) 
+is normally used to indicate negation in Prolog).
+
+<p>Many Prolog implementations (including SWI-Prolog) provide <a id="idx:not1:726"></a><a class="pred" href="metacall.html#not/1">not/1</a>. 
+The
+<a id="idx:not1:727"></a><a class="pred" href="metacall.html#not/1">not/1</a> 
+alternative is deprecated due to its strong link to logical negation.
+
+<p></dd>
+</dl>
+
+<p></body></html>

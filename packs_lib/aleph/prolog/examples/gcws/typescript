@@ -1,0 +1,160 @@
+Script started on Fri 15 Nov 2002 12:49:57 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/gcws
+[1m~/aleph/test/examples/gcws[42]>[m	yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1160136 bytes in 0.47 seconds ]
+
+yes
+   ?- read_all(cal).
+ [ reconsulting cal.b... ]
+ [ cal.b reconsulted 326504 bytes in 0.17 seconds ]
+[consulting pos examples] [cal.f]
+[consulting neg examples] [cal.n]
+
+yes
+   ?- rdhyp.
+   |: normal(A).
+
+[hypothesis]
+normal(A).
+
+yes
+   ?- sphyp.
+ [ consulting .alephtmp.f... ]
+ [ .alephtmp.f consulted 38752 bytes in 0.02 seconds ]
+ [ consulting .alephtmp.n... ]
+ [ .alephtmp.n consulted 262004 bytes in 0.11 seconds ]
+[sat] [1213]
+[ab0(4)]
+
+[bottom clause]
+ab0(A) :-
+   div4(A).
+[literals] [2]
+[saturation time] [0.01]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+ab0(A).
+[388/1212]
+ab0(A) :-
+   div4(A).
+[388/12]
+[-------------------------------------]
+[found clause]
+ab0(A) :-
+   div4(A).
+[pos-neg] [376]
+[clause label] [[388,12,2,376]]
+[clauses constructed] [2]
+[-------------------------------------]
+[clauses constructed] [2]
+[search time] [0.03]
+[best clause]
+ab0(A) :-
+   div4(A).
+[pos-neg] [376]
+ [ consulting .alephtmp.f... ]
+ [ .alephtmp.f consulted -81224 bytes in 0.01 seconds ]
+ [ consulting .alephtmp.n... ]
+ [ .alephtmp.n consulted 84016 bytes in 0.03 seconds ]
+[sat] [1601]
+[ab1(100)]
+
+[bottom clause]
+ab1(A) :-
+   div4(A), div100(A).
+[literals] [3]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+ab1(A).
+[12/388]
+ab1(A) :-
+   div4(A).
+[12/388]
+ab1(A) :-
+   div100(A).
+[12/4]
+[-------------------------------------]
+[found clause]
+ab1(A) :-
+   div100(A).
+[pos-neg] [8]
+[clause label] [[12,4,2,8]]
+[clauses constructed] [3]
+[-------------------------------------]
+[clauses constructed] [3]
+[search time] [0.01]
+[best clause]
+ab1(A) :-
+   div100(A).
+[pos-neg] [8]
+ [ consulting .alephtmp.f... ]
+ [ .alephtmp.f consulted -83320 bytes in 0.0 seconds ]
+ [ consulting .alephtmp.n... ]
+ [ .alephtmp.n consulted 2828 bytes in 0.01 seconds ]
+[sat] [1613]
+[ab2(400)]
+
+[bottom clause]
+ab2(A) :-
+   div4(A), div100(A), div400(A).
+[literals] [4]
+[saturation time] [0.0]
+[reduce]
+[best label so far] [[1,0,2,1]/0]
+ab2(A).
+[4/12]
+ab2(A) :-
+   div4(A).
+[4/12]
+ab2(A) :-
+   div100(A).
+[4/12]
+ab2(A) :-
+   div400(A).
+[4/0]
+[-------------------------------------]
+[found clause]
+ab2(A) :-
+   div400(A).
+[pos-neg] [4]
+[clause label] [[4,0,2,4]]
+[clauses constructed] [4]
+[-------------------------------------]
+[clauses constructed] [4]
+[search time] [0.0]
+[best clause]
+ab2(A) :-
+   div400(A).
+[pos-neg] [4]
+
+yes
+   ?- show(gcws).
+
+[gcws hypothesis]
+normal(A) :-
+   not ab0(A).
+ab0(A) :-
+   div4(A), not ab1(A).
+ab1(A) :-
+   div100(A), not ab2(A).
+ab2(A) :-
+   div400(A).
+
+yes
+   ?- [1m~/aleph/test/examples/gcws[43]>[m	exit
+exit
+
+script done on Fri 15 Nov 2002 12:50:33 GMT

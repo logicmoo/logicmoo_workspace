@@ -1,0 +1,68 @@
+(note TQD66a)
+
+(implies 
+ (and 
+ (startsAfterEndingOf ?EVENT ?DATE) 
+ (endingDate ?EVENT1 ?DATE1) 
+ (laterThan ?DATE ?DATE1)) 
+ (startsAfterEndingOf ?EVENT ?EVENT1)) 
+
+(startsAfterEndingOf 
+ (#$SKF-41953321) 
+ (MonthFn November 
+ (YearFn 1997))) 
+
+(endingDate PersianGulfWar 
+ (MonthFn February 
+ (YearFn 1991))) 
+
+(laterThan 
+ (MonthFn November 
+ (YearFn 1997)) 
+ (MonthFn February 
+ (YearFn 1991))) 
+
+(implies 
+ (and 
+ (subProcess ?AFTER ?SUB) 
+ (startsAfterEndingOf ?AFTER ?BEFORE)) 
+ (startsAfterEndingOf ?SUB ?BEFORE)) 
+
+(subProcess 
+ (#$SKF-41953321) 
+ (SKF-36972154)) 
+
+(startsAfterEndingOf 
+ (SKF-41953321) PersianGulfWar) 
+
+(startsAfterEndingOf 
+ (SKF-36972154) PersianGulfWar) 
+
+(maleficiary 
+ (SKF-36972154) UnitedArabEmirates) 
+
+(instance Iran Country) 
+
+(directingAgent 
+ (SKF-36972154) Iran) 
+
+(subrelation directingAgent agent) 
+
+(instance 
+ (SKF-36972154) DiplomaticAction) 
+
+(query (findall ?COUNTRY
+(thereExists ?ACTION 
+   (and 
+       (instance ?ACTION DiplomaticAction) 
+       (agent ?ACTION ?COUNTRY) 
+       (maleficiary ?ACTION UnitedArabEmirates) 
+       (instance ?COUNTRY Country) 
+       (startsAfterEndingOf ?ACTION PersianGulfWar)))
+))
+
+(answer Iran
+)
+
+(end_of_file)
+

@@ -1,0 +1,1 @@
+sicstus -l Agents/single_agent.pl --goal run.

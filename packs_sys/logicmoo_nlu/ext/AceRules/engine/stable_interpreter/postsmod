@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+
+# This perl script does some transformations on the output of Smodels in order
+# read it from Prolog. You have to make sure that this file is executable.
+
+while (<>) {
+	$t = $_;
+	if ($t =~ /^Stable Model/) {
+		$t =~ s/^Stable Model: //;
+		$t =~ s/\s*$//;
+		$t =~ s/ /,/g;
+		print "model([$t]).\n";
+	}
+}

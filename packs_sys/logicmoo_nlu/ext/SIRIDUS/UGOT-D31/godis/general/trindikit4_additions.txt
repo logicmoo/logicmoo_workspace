@@ -1,0 +1,5 @@
+In trindikit4 resource interfaces are kept as separate files instead of in a file called resource_interfaces.
+I put the godis resource interfaces here together with the default trindikit modules (input,interpret etcetera) which have not dfound a place yet.
+
+/David
+

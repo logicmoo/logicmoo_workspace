@@ -1,0 +1,30 @@
+; =================================================
+; Test #4
+; feature tested - existential quantification
+; test KB:
+(note "existential quantification (HeartOf Bob)")
+
+
+
+(instance Bob Human)
+(instance physicalParts BinaryRelation)
+(arg1isa physicalParts Physical)
+(arg2isa physicalParts Physical)
+
+(implies
+   (instance ?X Human)
+   (thereExists ?Y
+     (and
+       (instance ?Y Heart)
+       (physicalParts ?X ?Y)
+     )
+   )
+)
+
+
+(query (and (physicalParts Bob ?S) (instance ?S ?What) ) )
+
+(answer Heart)
+
+(end_of_file)
+

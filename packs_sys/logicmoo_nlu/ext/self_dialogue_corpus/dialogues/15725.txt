@@ -1,0 +1,20 @@
+Well you just multiplied 4 by 4 and said 16. Wrong.
+Yes. That's what I did. And it sounds good to me. I'm happy with it.
+it really depends on how you approach this. It's a permutations problem
+Yeah, permute this. I say 16.
+Now we started this because we wanted to understand how to construct an atonal music piece.
+Yes. There are 16. I took the 4 and mutliplied it it. Looks good to me.
+That's... just wrong. Let's try this. is the music only going to be 2 rows?
+Oh. wait...
+Yeah. you get it now.
+I see. So it combinatorailly explodes as the number or the rosw increase.
+it's not without a reason all these atonal music sound so different from each other and yet still sound the same
+because there are so many possibilities.
+All of them following the same rule of having no keys
+how do you have no keys?
+Um... we just talked about it.
+yes, but summarize it.
+No.
+Yes. one was what? Don;t use the same notes?
+Sigh... No.. use all 12 notes of the chrimatic scale. Rule 2 is do not use the same notes in a row. (which is kinda breakble)
+Oh yeah... And rule 3 is the tranformation stuff and the 4 is start the row with any note you want.

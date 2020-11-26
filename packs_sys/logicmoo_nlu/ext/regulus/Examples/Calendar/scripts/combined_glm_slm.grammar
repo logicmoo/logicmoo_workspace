@@ -1,0 +1,13 @@
+#include "../Generated/pcfg_trained/recogniser.grammar"
+
+#include "../SLM/generated_tagging.grammar"
+
+.MAIN_SLM SLMRule
+
+SLMRule:slm "../SLM/slm.pfsg" = DummyInterpretationGrammar
+
+DummyInterpretationGrammar
+        [ dummy ]
+
+UNK [ @reject@ ]
+

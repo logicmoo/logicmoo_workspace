@@ -1,0 +1,386 @@
+feature_value_space(yesno, [[y, n]]).
+feature_value_space(sem_np_type_value, [[agent, body_part, body_part_location, unspecified, symptom, cause, degree, temporal, frequency, frequency_time_unit, substance, time_unit, duration, symptom_class, activity, substance, other, none, loc]]).
+
+feature_value_space(vform_value, [[finite, continuous, adjectival, polite_imperative]]).
+feature_value_space(v_type_value, [[trans, intrans, pp, adjp, advp]]).
+feature_value_space(politeness_value, [[polite, base]]).
+feature_value_space(na_value, [[na, non_na]]).
+feature_value_space(voice_value, [[active, passive]]).
+feature_value_space(numtype_value, [[base, prenom]]).
+feature_value_space(wa_or_ga_type_value, [[wa, ga]]).
+feature_value_space(vowel_or_consonant_value, [[vowel, consonant]]).
+feature_value_space(sino_or_native_value, [[sino, native]]).
+
+feature(politeness, politeness_value).
+feature(sem_np_type, sem_np_type_value).
+feature(sem_subj_type, sem_np_type_value).
+
+feature(sem_obj_type, sem_np_type_value).
+lexical_feature_default(sem_obj_type, none).
+
+feature(sem_no_type, sem_np_type_value).
+lexical_feature_default(sem_no_type, none).
+
+feature(sem_premod_type, sem_np_type_value).
+lexical_feature_default(sem_premod_type, none).
+
+feature(vform, vform_value).
+lexical_feature_default(vform, finite).
+
+feature(v_type, v_type_value).
+feature(lexical, yesno).
+feature(na, na_value).
+
+feature(sc, yesno).
+feature(voice, voice_value).
+
+feature(numtype, numtype_value).
+feature(wa_or_ga_type, wa_or_ga_type_value).
+feature(final_sound, vowel_or_consonant_value).
+feature(preceding_sound, vowel_or_consonant_value).
+feature(sino_or_native, sino_or_native_value).
+
+top_level_category('.MAIN').
+
+category('.MAIN', [gsem]).
+category(top, [sem]).
+category(utterance, [sem]).
+category(interjection, [sem]).
+category(main_clause, [sem, vform]).
+category(subordinate_clause, [sem, vform]).
+category(s, [sem, politeness, vform]).
+category(np, [sem, sem_np_type, sem_no_type, sem_premod_type, lexical, final_sound]).
+category(n, [sem, sem_np_type, sem_no_type, sem_premod_type, final_sound, sino_or_native]).
+category(name, [sem, sem_np_type, final_sound]).
+category(spec, [sem]).
+category(pp, [sem, sc]).
+category(adjp, [sem, sem_subj_type, na]).
+category(conditional, [sem]).
+category(advp, [sem]).
+category(aux_v, [sem, politeness, vform]).
+category(v, [sem, politeness, voice, v_type, vform, sem_subj_type, sem_obj_type]).
+category(vbar, [sem, politeness, voice, v_type, vform, sem_subj_type, sem_obj_type]).
+category(comps, [sem, voice, sem_subj_type, sem_obj_type]).
+category(copula, [sem, politeness, vform, sem_subj_type, sem_obj_type]).
+category(numerical_comparative, [sem, final_sound]).
+category(p, [sem, sem_np_type]).
+category(sc, [sem]).
+category(number, [sem, numtype, sino_or_native]).
+category(time, [sem, final_sound]).
+category(date, [sem, final_sound]).
+category(month, [sem, final_sound]).
+category(year, [sem, final_sound]).
+category(day, [sem, final_sound]).
+category(minute, [sem, final_sound]).
+category(wa_or_ga, [wa_or_ga_type, preceding_sound]).
+category(wo, [preceding_sound]).
+category(softener, []).
+category(koto_ga_aru, [sem]).
+
+%--------------------------grammar rules------------------------------------
+
+'.MAIN':[gsem=[value=Sem]] -->
+	top:[sem=Sem].
+
+top:[sem=Sem] -->
+	utterance:[sem=Sem].
+
+utterance:[sem= @question_s_sem(S)] -->
+	main_clause:[sem=S, vform=finite],
+	@k('까', gga, 'Q').
+
+utterance:[sem= @dcl_s_sem_main(S)] -->
+	main_clause:[sem=S, vform=finite].
+
+utterance:[sem= @imp_s_sem_main(S)] -->
+	main_clause:[sem=S, vform=polite_imperative].
+
+utterance:[sem= @utterance_interjection_sem(Sem)] -->
+	interjection:[sem=Sem].
+
+utterance:[sem= @utterance_np_sem(Np)]-->
+	np:[sem=Np, sem_np_type=(\(frequency_time_unit))],
+	?wa.
+
+utterance:[sem= @utterance_pp_sem(Pp)] -->
+	pp:[sem=Pp],
+	?wa.
+
+%----------------------------------------------------------------------
+
+main_clause:[sem=S, vform=VForm] -->
+	s:[sem=S, politeness=polite, vform=VForm, vform=(finite\/polite_imperative)].
+
+subordinate_clause:[sem= @dcl_s_sem(S), vform=VForm] -->
+	s:[sem=S, politeness=base, vform=VForm].
+
+%----------------------------------------------------------------------
+
+s:[sem= @s_comps_vbar_sem(Comps, Vbar), politeness=Polite, vform=VForm] -->
+	comps:[sem=Comps, voice=Voice,
+	       sem_subj_type=SubjType, sem_obj_type=ObjType],
+	vbar:[sem=Vbar, politeness=Polite, vform=VForm, voice=Voice,
+	      sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+%----------------------------------------------------------------------
+
+comps:[sem= @null_comps_sem] --> [].
+
+% itami wa zentobu desu ka
+% [zutsu ga okoru] to
+comps:[sem= @comps_subj_comps_sem(Np, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=SubjType, final_sound=COrV],
+	wa_or_ga:[preceding_sound=COrV],
+	comps:[sem=Comps, voice=Voice, voice=active, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% domna kaigi ga yotei sarete imasu ka
+comps:[sem= @comps_subj_comps_sem(Np, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=ObjType, final_sound=COrV],
+	wa_or_ga:[preceding_sound=COrV],
+	comps:[sem=Comps, voice=Voice, voice=passive, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% Verb taking transitive object
+% zutsu wo waruku shimasu
+comps:[sem= @comps_obj_comps_sem(Np, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=ObjType, final_sound=COrV],
+	wo:[preceding_sound=COrV],
+	comps:[sem=Comps, voice=Voice, voice=active, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% tsukare de hidoku narimasu
+comps:[sem= @comps_pp_comps(Pp, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	pp:[sem=Pp],
+	comps:[sem=Comps, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% dousureba itami masu ka
+comps:[sem= @comps_cond_comps(Cond, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	conditional:[sem=Cond],
+	comps:[sem=Comps, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% totsuzen hajimarimaru
+comps:[sem= @comps_advp_comps(Advp, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	advp:[sem=Advp],
+	comps:[sem=Comps, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+% suujikan tsuzukimasu ka
+comps:[sem= @comps_temporal_np_comps(Np, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np, sem_np_type=temporal],
+	comps:[sem=Comps, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+%----------------------------------------------------------------------
+
+% Copula rules. We say that the combination "COMPLEMENT + COPULA" is a VBAR
+
+% NP + desu
+% itami wa [atama no mae no hou desu] ka
+vbar:[sem= @vbar_np_copula_sem(Np, Copula), politeness=Politeness, voice=active, vform=VForm,
+      sem_subj_type=SubjType, sem_obj_type=none] -->
+      np:[sem=Np, sem_np_type=ComplementType],
+      copula:[sem=Copula, politeness=Politeness, vform=VForm,
+	      sem_subj_type=SubjType, sem_obj_type=ComplementType].
+
+% ADJP + desu
+% itami wa [hageshii desu] ka
+vbar:[sem= @vbar_adjp_copula_sem(Adjp, Copula), politeness=Politeness, voice=active, vform=VForm,
+      sem_subj_type=SubjType, sem_obj_type=none] -->
+	adjp:[sem=Adjp, sem_subj_type=SubjType, na=non_na],
+	copula:[sem=Copula, politeness=Politeness, vform=VForm, sem_subj_type=SubjType].
+
+% PP + desu
+% asa desu ka?
+% kubi made desu ka?
+vbar:[sem= @vbar_pp_copula_sem(Pp, Copula), politeness=Politeness, voice=active, vform=VForm,
+      sem_subj_type=SubjType, sem_obj_type=none] -->
+      pp:[sem=Pp, sc=n],
+      copula:[sem=Copula, politeness=Politeness, sem_subj_type=SubjType, sem_obj_type=none].
+
+% Verb with tense auxiliary
+% hirogatte imasu
+vbar:[sem= @vbar_v_aux_sem(V, Aux), politeness=Politeness, voice=Voice, vform=VForm,
+      v_type=Subcat, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	v:[sem=V, v_type=Subcat, vform=continuous, sem_subj_type=SubjType, 
+	   voice=Voice, sem_obj_type=ObjType],
+	aux_v:[sem=Aux, politeness=Politeness, vform=VForm].
+
+vbar:[sem=Sem, politeness=Politeness, v_type=Subcat, vform=VForm,
+      voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	v:[sem=Sem, politeness=Politeness, v_type=Subcat, vform=VForm, vform=(\(continuous)), 
+	   voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+%----------------------------------------------------------------------
+
+% For now, say that "V + koto ga aru" is a VBAR
+% ekkususen satsuei wo [uketa koto ga ari masu] ka
+
+vbar:[sem= @vbar_koto_ga_aru_sem(V, KotoGaAru), politeness=polite, voice=Voice, vform=finite,
+      sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	v:[sem=V, politeness=base, voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType],
+	koto_ga_aru:[sem=KotoGaAru].
+
+koto_ga_aru:[sem=[[tense, present], [verb, koto_ga_aru]]] --> koto, (wa ; ga), ari, masu.
+koto_ga_aru:[sem=[[tense, past], [verb, koto_ga_aru]]] --> koto, (wa ; ga), ari, mashita.
+
+%----------------------------------------------------------
+
+% Lexical NP
+% atama
+np:[sem= @np_n_sem(Np), sem_np_type=Type, sem_no_type=NoType, sem_premod_type=PreModType,
+    lexical=y, final_sound=COrV] -->
+	n:[sem=Np, sem_np_type=Type, sem_no_type=NoType, sem_premod_type=PreModType, final_sound=COrV].
+
+% NP with SPEC
+% dono kaigi
+np:[sem= @np_spec_n_sem(Spec, Np), sem_np_type=Type, sem_no_type=NoType, sem_premod_type=PreModType,
+    lexical=n, final_sound=COrV] -->
+	spec:[sem=Spec],
+	n:[sem=Np, sem_np_type=Type, sem_no_type=NoType, sem_premod_type=PreModType, final_sound=COrV].
+
+% Name NP
+% kyoto
+np:[sem= @np_name_sem(Name), sem_np_type=Type, sem_no_type=none, sem_premod_type=none,
+    lexical=y, final_sound=COrV] -->
+	name:[sem=Name, sem_np_type=Type, final_sound=COrV].
+
+% NP1 eui NP2
+% meori eui oen jjok
+np:[sem= @np_np_no_np_sem(Np1, Np2),
+    sem_np_type=Type, sem_premod_type=PreModType, lexical=n, final_sound=COrV] -->
+	np:[sem=Np1, sem_np_type=Type1, lexical=y],
+	@k('의', eui, 'GEN'),
+	np:[sem=Np2, sem_np_type=Type, sem_premod_type=PreModType, sem_no_type=Type1, final_sound=COrV].
+
+% PP no NP
+% juneevu de no kaigi
+np:[sem= @np_pp_no_np_sem(Pp, Np),
+    sem_np_type=Type, sem_premod_type=PreModType, lexical=n, final_sound=COrV] -->
+	pp:[sem=Pp, sc=n],
+	@k('의', eui, 'GEN'),
+	np:[sem=Np, sem_np_type=Type, sem_premod_type=PreModType, final_sound=COrV].
+
+% NP1 NP2
+% mukou ni kagetsukan
+np:[sem= @np_np_np_sem(Np1, Np2),
+    sem_np_type=Type, sem_premod_type=none, sem_no_type=none, lexical=Lex, final_sound=COrV] -->
+	np:[sem=Np1, sem_np_type=PreModType, lexical=y],
+	np:[sem=Np2, sem_np_type=Type, sem_premod_type=PreModType, lexical=Lex, final_sound=COrV].
+
+
+% modification by subordinate clause
+% gangan suru itami
+np:[sem= @np_clause_np_sem(Clause, Np),
+    sem_np_type=Type, sem_no_type=none, sem_premod_type=PreModType, lexical=n, final_sound=COrV] -->
+	subordinate_clause:[sem=Clause, vform=adjectival],
+	np:[sem=Np, sem_np_type=Type, sem_premod_type=PreModType, final_sound=COrV].
+
+% adjectival modification
+% surudoi itami
+np:[sem= @np_adjp_np_sem(Adjp, Np), sem_np_type=Type, sem_premod_type=PreModType,
+    lexical=n, final_sound=COrV] -->
+	adjp:[sem=Adjp, sem_subj_type=Type],
+	np:[sem=Np, sem_np_type=Type, sem_premod_type=PreModType, final_sound=COrV].
+
+% Number of time units
+% ichi jikan 
+np:[sem= @np_number_unit_sem(Number, Unit),
+    sem_np_type=time_unit, sem_premod_type=PreModType, lexical=y, final_sound=COrV] -->
+	number:[sem=Number, numtype=prenom, sino_or_native=SinoOrNative],
+	n:[sem=Unit, sem_np_type=time_unit, sem_premod_type=PreModType, final_sound=COrV, sino_or_native=SinoOrNative].
+
+% Special rule for days, since they are pronounced irregularly
+% There is in fact no such word as 'nichikan', but the kanji would be read
+% that way if the construction were regular
+%np:[sem= @np_number_unit_sem(Number, @n_sem([unit, nichikan])),
+%    sem_np_type=time_unit, sem_premod_type=PreModType, lexical=y] -->
+%	day:[sem=Number],
+%	kan.
+
+
+% Time expression with number of time units and possible comparative
+% Comparative time expression
+% han shigan isang
+np:[sem= @np_np_comparative_sem(Np, Comparative),
+    sem_np_type=temporal, sem_premod_type=PreModType, lexical=n, final_sound=COrV] -->
+	np:[sem=Np, sem_np_type=time_unit\/frequency_time_unit, sem_premod_type=PreModType],
+	numerical_comparative:[sem=Comparative, final_sound=COrV].
+
+np:[sem= @np_temporal_np_sem(Np), sem_np_type=temporal, sem_premod_type=PreModType,
+    lexical=Lex, final_sound=COrV] -->
+	np:[sem=Np, sem_np_type=time_unit\/frequency_time_unit, sem_premod_type=PreModType,
+	    lexical=Lex, final_sound=COrV].
+
+np:[sem= @np_time_sem(Time),
+    sem_np_type=temporal, sem_no_type=none, sem_premod_type=none, lexical=y, final_sound=COrV] -->
+	time:[sem=Time, final_sound=COrV].
+
+np:[sem= @np_time_goro_sem(Time),
+    sem_np_type=temporal, sem_no_type=temporal, sem_premod_type=none, lexical=y] -->
+	time:[sem=Time],
+	goro.
+
+np:[sem= @np_date_sem(Date),
+    sem_np_type=temporal, sem_no_type=none, sem_premod_type=none, lexical=y, final_sound=COrV] -->
+	date:[sem=Date, final_sound=COrV].
+
+% Frequency expression
+% ichinichi ni ikkai
+np:[sem= @np_frequency_np_sem(Np1, Np2),
+    sem_np_type=temporal, sem_no_type=none, sem_premod_type=none, lexical=n, final_sound=COrV] -->
+	np:[sem=Np1, sem_np_type=frequency_time_unit],
+	@k('에', e, 'TEMPORAL-PARTICLE'),
+	np:[sem=Np2, sem_np_type=frequency, final_sound=COrV].
+
+% Comparative frequency expression
+% sukunakutomo ichinichi ni ikkai
+np:[sem= @np_comparative_frequency_np_sem(Comparative, Np1, Np2),
+    sem_np_type=temporal, sem_no_type=none, sem_premod_type=none, lexical=n, final_sound=COrV] -->
+	numerical_comparative:[sem=Comparative],
+	np:[sem=Np1, sem_np_type=frequency_time_unit],
+	@k('에', e,'TEMPORAL-PARTICLE'),
+	np:[sem=Np2, sem_np_type=frequency, final_sound=COrV].
+
+%----------------------------------------------------------------------
+
+% Simple PP with postposition
+% kao made
+pp:[sem= @pp_np_p_sem(P, Np), sc=n] -->
+	np:[sem=Np, sem_np_type=NPType],
+	p:[sem=P,
+	   sem_np_type=NPType].
+
+% Subordinating-conjunction-type PP
+
+% terebi wo miru to
+pp:[sem= @pp_clause_sc_sem(Clause, SC), sc=y] -->
+	subordinate_clause:[sem=Clause, vform=finite],
+	sc:[sem=SC].
+
+%----------------------------------------------------------------------
+
+time:[sem= @time_hour_sem(H), final_sound=vowel] -->
+	number:[sem=H, sino_or_native=native],
+	@k('시', shi, 'hour').
+
+time:[sem= @time_hour_minute_sem(H, M), final_sound=COrV] -->
+	number:[sem=H, sino_or_native=native],
+	@k('시', shi, 'hour'),
+	minute:[sem=M, final_sound=COrV].
+
+date:[sem= @date_year_month_sem(Year, Month), final_sound=COrV] -->
+	year:[sem=Year],
+	month:[sem=Month, final_sound=COrV].
+
+date:[sem= @date_month_sem(Month), final_sound=COrV] -->
+	month:[sem=Month, final_sound=COrV].
+
+date:[sem= @date_day_month_sem(Day, Month), final_sound=COrV] -->
+	month:[sem=Month],
+	day:[sem=Day, final_sound=COrV].
+
+
+

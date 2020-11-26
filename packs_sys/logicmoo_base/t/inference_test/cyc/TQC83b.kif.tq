@@ -1,0 +1,50 @@
+(note TQC83)
+
+(relationAllInstance weaponEffectiveRange-Max BallisticMissile-ProjectT 
+ (Kilometer 450)) 
+
+(subclass BallisticMissile-ProjectT MilitaryHardware) 
+
+(relationInstanceExistsMany possesses Egypt BallisticMissile-ProjectT) 
+
+(distanceBetween Egypt SuezCanal 
+ (Kilometer 0)) 
+
+
+(relationAllInstance weaponEffectiveRange-Max BallisticMissile-SCUDB 
+ (Kilometer 320)) 
+
+(relationInstanceExistsMany possesses Egypt BallisticMissile-SCUDB) 
+
+
+
+(implies 
+ (meetsSpatially ?X ?Y) 
+ (distanceBetween ?X ?Y 
+ (Kilometer 0))) 
+
+(meetsSpatially SuezCanal Egypt) 
+
+
+(query (findall (?DISTANCE ?RANGE ?WEAPON)
+ (or 
+ (and 
+ (subclass ?WEAPON MilitaryHardware) 
+ (relationAllInstance weaponEffectiveRange-Max ?WEAPON ?RANGE) 
+ (distanceBetween Egypt SuezCanal ?DISTANCE) 
+ (not 
+ (lessThan ?RANGE ?DISTANCE)) 
+ (relationInstanceExistsMany possesses Egypt ?WEAPON)) 
+ (and 
+ (subclass ?WEAPON MilitaryHardware) 
+ (relationAllInstance vehicleRange ?WEAPON ?RANGE) 
+ (distanceBetween Egypt SuezCanal ?DISTANCE) 
+ (not 
+ (lessThan ?RANGE ?DISTANCE)) 
+ (relationInstanceExistsMany possesses Egypt ?WEAPON)))))
+
+(answer 0 450 BallisticMissile-ProjectT)
+(answer 0 320 BallisticMissile-SCUDB)  
+
+(end_of_file)
+

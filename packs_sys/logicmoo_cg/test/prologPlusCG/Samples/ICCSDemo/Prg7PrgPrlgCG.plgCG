@@ -1,0 +1,32 @@
+Man = Jo, Mark.
+Woman = Mary, Jane.
+
+papa(titi).
+
+employee(Mary).
+employee(Jane).
+
+goodSister(x) :- employee(x), [Woman : x]-attr->[Classical].
+
+sense("extract", [Search] -
+                           -agnt->[Person],
+                           -from->[Book],
+                           -obj->[Information]).
+sense("classical woman", [Woman]-attr->[Classical]).
+
+Universal > Person, Action, Object, Attribute.
+Object > House, Restaurant.
+Attribute > Classical, Age.
+Person > Man, Woman.
+Action > Go, Work, Buy, Search.
+
+[Work]-agnt->[Person : Fred].
+[Woman : w]-attr->[Classical] :- [Work] -
+                                         -near->[House]-poss->[Woman : w]-ageOf->[Age = a],
+                                         -agnt->[Woman : w], inf(a, 40).
+[Work] -
+        -agnt->[Person : Jane] -
+                                -ageOf->[Age = 30],
+                                <-poss-[House : *1]<-nearOf-[Restaurant];,
+        -near->[House : *1].
+

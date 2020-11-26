@@ -1,0 +1,63 @@
+%==============================================================================
+%----Expand multiple conjectures
+%----
+%----Written by Geoff Sutcliffe, September 2008
+%==============================================================================
+%------------------------------------------------------------------------------
+extract_conjecture_dictionary_pairs([],[],[],[],[]).
+
+extract_conjecture_dictionary_pairs([Conjecture|RestOfRawFormulae],
+[ConjectureDictionary|RestOfRawDictionary],NonConjectureFormulae,
+NonConjectureDictionary,[Conjecture-ConjectureDictionary|
+RestOfConjectureDictionaryPairs]):-
+    Conjecture =.. [_,_,conjecture|_],
+    !,
+    extract_conjecture_dictionary_pairs(RestOfRawFormulae,RestOfRawDictionary,
+NonConjectureFormulae,NonConjectureDictionary,RestOfConjectureDictionaryPairs).
+
+extract_conjecture_dictionary_pairs([FirstFormula|RestOfRawFormulae],
+[FirstDictionary|RestOfRawDictionary],[FirstFormula|
+RestOfNonConjectureFormulae],[FirstDictionary|RestfNonConjectureDictionary],
+ConjectureDictionaryPairs):-
+    extract_conjecture_dictionary_pairs(RestOfRawFormulae,RestOfRawDictionary,
+RestOfNonConjectureFormulae,RestfNonConjectureDictionary,
+ConjectureDictionaryPairs).
+%------------------------------------------------------------------------------
+add_a_conjecture(NonConjectureFormulae,NonConjectureDictionary,
+[Conjecture-ConjectureDictionary|_],Index,
+ExpandedFormulae,ExpandedDictionary,TransformExtension):-
+    tptp2X_append(NonConjectureFormulae,[Conjecture],ExpandedFormulae),
+    tptp2X_append(NonConjectureDictionary,[ConjectureDictionary],
+ExpandedDictionary),
+    Conjecture =.. [_,Name|_],
+    concatenate_atoms(['+xc_',Index,'_',Name],TransformExtension).
+
+%----Need an uniquifying index in case of conjectures with the same name
+add_a_conjecture(NonConjectureFormulae,NonConjectureDictionary,
+[_|RestOfConjectureDictionaryPairs],Index,ExpandedFormulae,ExpandedDictionary,
+TransformExtension):-
+    NextIndex is Index + 1,
+    add_a_conjecture(NonConjectureFormulae,NonConjectureDictionary,
+RestOfConjectureDictionaryPairs,NextIndex,ExpandedFormulae,ExpandedDictionary,
+TransformExtension).
+%------------------------------------------------------------------------------
+expand(Formulae,Dictionary,expand:conjectures,ExpandedFormulae,
+ExpandedDictionary,TransformExtension):-
+%----Tolerate CNF conjectures
+%    tptp_formulae(Formulae),
+    tptp2X_select(Conjecture1,Formulae,_OtherFormulae),
+    Conjecture1 =.. [_,_,conjecture|_],
+%----Allow only one conjecture
+%    tptp2X_member(Conjecture2,OtherFormulae),
+%    Conjecture2 =.. [_,_,conjecture|_],
+    !,
+    extract_conjecture_dictionary_pairs(Formulae,Dictionary,
+NonConjectureFormulae,NonConjectureDictionary,ConjectureDictionaryPairs),
+    add_a_conjecture(NonConjectureFormulae,NonConjectureDictionary,
+ConjectureDictionaryPairs,1,ExpandedFormulae,ExpandedDictionary,
+TransformExtension).
+
+expand(Formulae,Dictionary,expand:conjectures,Formulae,Dictionary,none).
+%------------------------------------------------------------------------------
+expand_file_information(transform,expand:what,'Expand multiple conjectures').
+%------------------------------------------------------------------------------

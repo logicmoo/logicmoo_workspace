@@ -1,0 +1,374 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.20</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="widechars.html">
+<link rel="next" href="64bits.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="widechars.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="64bits.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:limits"><a id="sec:2.20"><span class="sec-nr">2.20</span> <span class="sec-title">System 
+limits</span></a></h2>
+
+<a id="sec:limits"></a>
+
+<p><h3 id="sec:memlimit"><a id="sec:2.20.1"><span class="sec-nr">2.20.1</span> <span class="sec-title">Limits 
+on memory areas</span></a></h3>
+
+<a id="sec:memlimit"></a>
+
+<p>The SWI-Prolog engine uses three <em>stacks</em> the <em>local stack</em> 
+(also called <em>environment stack</em>) stores the environment frames 
+used to call predicates as well as choice points. The
+<em>global stack</em> (also called <em>heap</em>) contains terms, 
+floats, strings and large integers. Finally, the <em>trail stack</em> 
+records variable bindings and assignments to support
+<em>backtracking</em>. The internal data representation limits these 
+stacks to 128&nbsp;MB (each) on 32-bit processors. More generally to
+<var>2 ** bits-per-pointer - 5</var> bytes, which implies they are 
+virtually unlimited on 64-bit machines.
+
+<p>As of version 7.7.14, the stacks are restricted by the writeable flag
+<a class="flag" href="flags.html#flag:stack_limit">stack_limit</a> or 
+the command line option
+<strong>--stack-limit</strong>. This flag limits the combined size of 
+the three stacks per thread. The default limit is currently 512&nbsp;Mbytes 
+on 32-bit machines, which imposes no additional limit considering the 
+128&nbsp;Mbytes hard limit on 32-bit and 1&nbsp;Gbytes on 64-bit 
+machines.
+
+<p>Considering portability, applications that need to modify the default 
+limits are advised to do so using the Prolog flag
+<a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>.
+
+<p><table class="latex frame-box center">
+<tr><td align=center>Option</td><td>Area name</td><td>Description </td></tr>
+<tr class="hline"><td align=center><strong>-L</strong> </td><td><b>local 
+stack</b></td><td>The local stack is used to store the execution 
+environments of procedure invocations. The space for an environment is 
+reclaimed when it fails, exits without leaving choice points, the 
+alternatives are cut off with the !/0 predicate or no choice points have 
+been created since the invocation and the last subclause is started 
+(last call optimisation). </td></tr>
+<tr><td align=center><strong>-G</strong> </td><td><b>global stack</b></td><td>The 
+global stack is used to store terms created during Prolog's execution. 
+Terms on this stack will be reclaimed by backtracking to a point before 
+the term was created or by garbage collection (provided the term is no 
+longer referenced). </td></tr>
+<tr><td align=center><strong>-T</strong> </td><td><b>trail stack</b></td><td>The 
+trail stack is used to store assignments during execution. Entries on 
+this stack remain alive until backtracking before the point of creation 
+or the garbage collector determines they are no longer needed.
+
+<p>As the trail and global stacks are garbage collected together, a 
+small trail can cause an excessive amount of garbage collections. To 
+avoid this, the trail is automatically resized to be at least 1/6th of 
+the size of the global stack. </td></tr>
+</table>
+<div class="caption"><b>Table 2 : </b>Memory areas</div>
+<a id="tab:areas"></a>
+
+<p><h4 id="sec:heap"><a id="sec:2.20.1.1"><span class="sec-nr">2.20.1.1</span> <span class="sec-title">The 
+heap</span></a></h4>
+
+<a id="sec:heap"></a>
+
+<p><a id="idx:stackmemorymanagement:341"></a><a id="idx:memorylayout:342"></a>With 
+the heap, we refer to the memory area used by malloc() and friends. 
+SWI-Prolog uses the area to store atoms, functors, predicates and their 
+clauses, records and other dynamic data. No limits are imposed on the 
+addresses returned by malloc() and friends.
+
+<p><h3 id="sec:morelimits"><a id="sec:2.20.2"><span class="sec-nr">2.20.2</span> <span class="sec-title">Other 
+Limits</span></a></h3>
+
+<a id="sec:morelimits"></a>
+
+<dl class="latex">
+<dt><b>Clauses</b></dt>
+<dd>
+The only limit on clauses is their arity (the number of arguments to the 
+head), which is limited to 1024. Raising this limit is easy and 
+relatively cheap; removing it is harder.</dd>
+<dt><b>Atoms and Strings</b></dt>
+<dd>
+SWI-Prolog has no limits on the length of atoms and strings. The number 
+of atoms is limited to 16777216 (16M) on 32-bit machines. On 64-bit 
+machines this is virtually unlimited. See also <a class="sec" href="foreigninclude.html#sec:12.4.2.1">section 
+12.4.2.1</a>.</dd>
+<dt><b>Memory areas</b></dt>
+<dd>
+On 32-bit hardware, SWI-Prolog data is packed in a 32-bit word, which 
+contains both type and value information. The size of the various memory 
+areas is limited to 128&nbsp;MB for each of the areas, except for the 
+program heap, which is not limited. On 64-bit hardware there are no 
+meaningful limits.</dd>
+<dt><b>Nesting of terms</b></dt>
+<dd>
+Most built-in predicates that process Prolog terms create an explicitly 
+managed stack and perform optimization for processing the last argument 
+of a term. This implies they can process deeply nested terms at constant 
+and low usage of the C stack, and the system raises a resource error if 
+no more stack can be allocated. Currently only <a id="idx:read1:343"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and <a id="idx:write1:344"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+(and all variations thereof) still use the C stack and may cause the 
+system to crash in an uncontrolled way (i.e., not mapped to a Prolog 
+exception that can be caught).</dd>
+<dt><b>Integers</b></dt>
+<dd>
+On most systems SWI-Prolog is compiled with support for unbounded 
+integers by means of the GNU GMP library. In practice this means that 
+integers are bound by the global stack size. Too large integers cause a
+<code>resource_error</code>. On systems that lack GMP, integers are 
+64-bit on 32- as well as 64-bit machines.
+
+<p>Integers up to the value of the <a class="flag" href="flags.html#flag:max_tagged_integer">max_tagged_integer</a> 
+Prolog flag are represented more efficiently on the stack. For integers 
+that appear in clauses, the value (below <a class="flag" href="flags.html#flag:max_tagged_integer">max_tagged_integer</a> 
+or not) has little impact on the size of the clause.</dd>
+<dt><b>Floating point numbers</b></dt>
+<dd>
+Floating point numbers are represented as C-native double precision 
+floats, 64-bit IEEE on most machines.
+</dd>
+</dl>
+
+<p><h3 id="sec:resnames"><a id="sec:2.20.3"><span class="sec-nr">2.20.3</span> <span class="sec-title">Reserved 
+Names</span></a></h3>
+
+<a id="sec:resnames"></a>
+
+<p>The boot compiler (see <strong>-b</strong> option) does not support 
+the module system. As large parts of the system are written in Prolog 
+itself we need some way to avoid name clashes with the user's 
+predicates, database keys, etc. Like Edinburgh C-Prolog <cite><a class="cite" href="Bibliography.html#CPROLOG:manual">Pereira, 
+1986</a></cite> all predicates, database keys, etc., that should be 
+hidden from the user start with a dollar (<code>$</code>) sign.
+
+<p></body></html>

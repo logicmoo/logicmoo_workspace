@@ -1,0 +1,8 @@
+Parameterised version of UPDATE\_\-DIALOGUE\_\-JUDGEMENTS. Update the
+dialogue judgements file, defined by the dialogue\_\-corpus\_\-judgements
+config file entry, from the output of the dialogue corpus output file
+with ID $\langle$Arg$\rangle$, defined by the parameterised config file entry
+dialogue\_\-corpus\_\-results($\langle$Arg$\rangle$). This command should be used after
+editing the output file produced by the parameterised command
+BATCH\_\-DIALOGUE $\langle$Arg$\rangle$. Editing should replace question marks by valid
+judgements, currently 'good' or 'bad'.

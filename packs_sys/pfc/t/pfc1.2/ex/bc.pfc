@@ -1,0 +1,15 @@
+% -*-Prolog-*-
+  
+=> fact(0,1).
+=> fact(1,1).
+=> fact(2,2).
+fact(N,M) <= {N>0,N1 is N-1}, fact(N1,M1), {M is N*M1}.
+
+ 
+=> fib(1,1).
+=> fib(2,1).
+fib(N,M) <= 
+  {N>2,N1 is N-1,N2 is N-2},
+  fib(N1,M1),
+  fib(N2,M2),
+  {M is M1+M2}.

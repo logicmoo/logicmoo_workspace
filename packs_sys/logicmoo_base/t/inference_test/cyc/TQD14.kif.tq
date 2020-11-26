@@ -1,0 +1,188 @@
+(note TQD14)
+
+
+
+(chiefPorts Kuwait CityOfAshShuaybahKuwait) 
+
+
+(chiefPorts Kuwait CityOfMinaAbdAllahKuwait) 
+
+
+
+(chiefPorts Kuwait CityOfShuaibaKuwait) 
+
+
+
+(chiefPorts Kuwait CityOfMinaAl-AhmadiKuwait) 
+
+
+
+(chiefPorts Kuwait CityOfMinaSaudKuwait) 
+
+
+(chiefPorts Kuwait CityOfShuaibaKuwait) 
+
+
+
+(chiefPorts SaudiArabia CityOfRasAl-KhafjiSaudiArabia) 
+
+
+(chiefPorts SaudiArabia CityOfYanbuSaudiArabia) 
+
+
+
+(chiefPorts Oman CityOfMinaAlFahlOman) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Oman) 
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfZulufSaudiArabia) 
+
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfJeddahSaudiArabia) 
+
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfRabighSaudiArabia) 
+
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfJuaymahSaudiArabia) 
+
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfRasTannurahSaudiArabia) 
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfDubaSaudiArabia) 
+
+
+
+
+
+
+
+
+(chiefPorts Bahrain CityOfSitraBahrain) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfAd-DammamSaudiArabia) 
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfJizanSaudiArabia) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil SaudiArabia) 
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfAlJubaylSaudiArabia) 
+
+
+
+
+
+
+
+(chiefPorts SaudiArabia CityOfYanbuAlBahrSaudiArabia) 
+
+
+
+
+
+
+
+(chiefPorts UnitedArabEmirates CityOfDubaiUAE) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil UnitedArabEmirates) 
+
+
+
+
+
+
+(chiefPorts Qatar CityOfDohaQatar) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Qatar) 
+
+
+
+
+(implies 
+ (chiefPorts ?COUNTRY ?PORT) 
+ (importsThrough ?COUNTRY AgriculturalProduct ?PORT)) 
+
+
+( query  (findall ( ?COUNTRY ?CONDUIT ) (and 
+ (importsThrough ?COUNTRY AgriculturalProduct ?CONDUIT) 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?COUNTRY))  
+))
+
+
+(answer  Kuwait CityOfAshShuaybahKuwait  )
+(answer  Kuwait CityOfMinaAbdAllahKuwait  )
+(answer  Kuwait CityOfShuaibaKuwait )
+(answer  Kuwait CityOfMinaAl-AhmadiKuwait )
+(answer  Kuwait CityOfMinaSaudKuwait)
+(answer SaudiArabia CityOfRasAl-KhafjiSaudiArabia)
+(answer SaudiArabia CityOfYanbuSaudiArabia)
+(answer Oman CityOfMinaAlFahlOman)
+(answer SaudiArabia CityOfZulufSaudiArabia)
+(answer SaudiArabia CityOfJeddahSaudiArabia)
+(answer SaudiArabia CityOfRabighSaudiArabia)
+(answer SaudiArabia CityOfJuaymahSaudiArabia)
+(answer SaudiArabia CityOfRasTannurahSaudiArabia)
+(answer SaudiArabia CityOfDubaSaudiArabia)
+(answer Bahrain CityOfSitraBahrain)
+(answer SaudiArabia CityOfAd-DammamSaudiArabia)
+(answer SaudiArabia CityOfJizanSaudiArabia)
+(answer SaudiArabia CityOfAlJubaylSaudiArabia)
+(answer SaudiArabia CityOfYanbuAlBahrSaudiArabia)
+(answer UnitedArabEmirates CityOfDubaiUAE)
+(answer Qatar CityOfDohaQatar)
+(answer Kuwait CityOfShuaibaKuwait )
+
+
+(end_of_file)
+

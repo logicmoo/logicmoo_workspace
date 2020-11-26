@@ -1,0 +1,11 @@
+libONA.a
+libONA.so
+3.exe
+ANSA.exe
+a.out
+NAR
+src/RuleTable.c
+*.qlf
+unused/RuleTable.c
+*~
+*~/

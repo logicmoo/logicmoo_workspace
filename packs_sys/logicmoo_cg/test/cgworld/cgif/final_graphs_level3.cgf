@@ -1,0 +1,88 @@
+[KnowledgeBase:
+  [TypeHierarchy:
+    (GT [TypeLabel: "Entity"] [TypeLabel: "Block"] )
+    (GT [TypeLabel: "Entity"] [TypeLabel: "Hand"] )
+    (GT [TypeLabel: "Entity"] [TypeLabel: "Location"] )
+    (GT [TypeLabel: "Act"] [TypeLabel: "Pickup"] )
+    (GT [TypeLabel: "Act"] [TypeLabel: "Putdown"] )
+    (GT [TypeLabel: "Act"] [TypeLabel: "Move"] )
+    (Def [TypeLabel: "Block"]
+         [LambdaExpression:
+            "(lambda (Entity*b)
+                   (ATTR ?b [Color])
+                   (CHRC ?b [Shape]))" ] )
+    (Def [TypeLabel: "Pickup"]
+         [LambdaExpression:
+            "(lambda (Act*p)
+                   (PTNT ?p [Block*b])
+                   (INST ?p [Hand*h])
+                   (RSLT ?p [Situation: (GRASP ?h ?b)]) )" ] )
+    (Def [TypeLabel: "Putdown"]
+         [LambdaExpression:
+            "(lambda (Act*p)
+                   (PTNT ?p [Block*b])
+                   (DEST ?p [Location*l])
+                   (INST ?p [Hand])
+                   (RSLT ?p [Situation: (Top ?b ?l)]) )" ] )
+    (Def [TypeLabel: "MoveHand"]
+         [LambdaExpression:
+            "(lambda (Act*m)
+                   (DEST ?m [Location*l])
+                   (INST ?m [Hand*h])
+                   (RSLT ?m [Situation: (At ?h ?l)]) )" ] )
+    (Def [TypeLabel: "MoveBlock"]
+         [LambdaExpression:
+            "(lambda (Act*m)
+                   (DEST ?m [Location*l])
+                   (PTNT ?m [Block*b])
+                   (INST ?m [Hand])
+                   (RSLT ?m [Situation: (At ?b ?l)]) )" ] )
+  ]
+  [RelationHierarchy:
+    (GT [RelationLabel: "Relation"] [RelationLabel: "At"] )
+    (GT [RelationLabel: "Relation"] [RelationLabel: "Above"] )
+    (GT [RelationLabel: "Relation"] [RelationLabel: "OnTable"] )
+    (GT [RelationLabel: "Relation"] [RelationLabel: "Top"] )
+    (GT [RelationLabel: "Relation"] [RelationLabel: "EmptyHand"] )
+    (Def [RelationLabel: "At"]
+         [LambdaExpression:
+            "(lambda (Entity*e1, Location*l)
+                   (POS ?e1 ?l))" ] )
+    (Def [RelationLabel: "Top"]
+         [LambdaExpression:
+            "(lambda (Block*b1,Location*l)
+                   (At ?b1 ?l)
+                   ~[(Above [Block*b2] ?b1)])" ] )
+    (Def [RelationLabel: "EmptyHand"]
+         [LambdaExpression:
+            "(lambda (Hand*h)
+                   ~[(GRASP ?h [Block])])" ] )
+    (Def [RelationLabel: "OnTable"]
+         [LambdaExpression:
+            "(lambda (Block*b,Location*l)
+                   (At ?b ?l)
+                   ~[(GRASP [Hand] ?b)])" ] )
+    (Def [RelationLabel: "Above"]
+         [LambdaExpression:
+            "(lambda (Block*b1,Block*b2)
+                   (OnTable ?b1 [Location*l])
+                   (OnTable ?b2 ?l))" ] )
+  ]
+  [CatalogOfIndividuals:
+    [Block:#1] [Block:#2] [Block:#3] [Hand:#4] [Location:#5] [Location:#6]
+  ]
+  [Assertion:
+    [Block:@3]
+    (ATTR [Block:#1] [Color:'Red'])
+    (ATTR [Block:#2] [Color:'Blue'])
+    (ATTR [Block:#3] [Color:'Green'])
+    (OnTable [Block:#1] [Location:#5])
+    (OnTable [Block:#2] [Location:#6])
+    (OnTable [Block:#3] [Location:#5])
+    (Above [Block:#1] [Block:#3])
+    (Emptyhand [Hand:#4])
+    [Either: [Or: (ATTR [Block:#1] [Color:'Blue'])]
+             [Or: (ATTR [Block:#2] [Color:'Blue'])]]
+    (CHRC [Block:@every] [Shape:'Cubical']) 
+  ]
+]

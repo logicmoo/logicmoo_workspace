@@ -1,0 +1,21 @@
+
+macro(generation_only(Body), Body).
+macro(recognition_only(Body), (dummy_cat:[] --> dummy)).
+
+hyphen:[] --> '--'.
+
+macro(de_or_d, de).
+
+macro(passive_pp_prep, par).
+
+macro(se_or_s, se).
+
+macro(que_or_qu, que).
+
+macro(agreement_for_vous, (pol/\masc/\sg)).
+macro(agreement_for_vous, (2/\masc/\pl)).
+%%macro(agreement_for_vous, (2/\masc)).
+
+
+% Hack ((c) David Carter, 1994) to let us deal with the fact that "huit" is an exception to the elision rules
+%@number('#huit', 8, pl).

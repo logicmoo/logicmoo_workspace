@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+# EASY-INSTALL-DEV-SCRIPT: 'butterfly==3.2.5','b'
+__requires__ = 'butterfly==3.2.5'
+__import__('pkg_resources').require('butterfly==3.2.5')
+__file__ = '/opt/logicmoo_workspace/packs_web/butterfly/scripts/b'
+with open(__file__) as f:
+    exec(compile(f.read(), __file__, 'exec'))

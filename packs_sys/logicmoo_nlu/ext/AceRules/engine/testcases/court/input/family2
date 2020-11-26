@@ -1,0 +1,29 @@
+If someone X is a relative of someone Y then Y is a relative of X.
+If someone X is the husband of someone Y then Y is the wife of X.
+If someone X is the wife of someone Y then Y is the husband of X.
+If someone X is the husband of someone then X is male.
+If someone X is the wife of someone then X is female.
+If someone X is the husband of someone Y then X is a relative of X.
+If someone X is a parent of someone Y then Y is a child of X.
+If someone X is a child of someone Y then Y is a parent of X.
+If someone X is a son of someone Y then X is a child of Y.
+If someone X is a daughter of someone Y then X is a child of Y.
+If someone X is a son of someone then X is male.
+If someone X is a daughter of someone then X is female.
+If someone X is male and is a child of someone Y then X is a son of Y.
+If someone X is female and is a child of someone Y then X is a daughter of Y.
+If someone X is a father of someone Y then X is a parent of Y.
+If someone X is a mother of someone Y then X is a parent of Y.
+If someone X is a father of someone then X is male.
+If someone X is a mother of someone then X is female.
+If someone X is male and is a parent of someone Y then X is the father of Y.
+If someone X is female and is a parent of someone Y then X is the mother of Y.
+If someone X is a child of someone Y then X is a relative of Y.
+
+John is the husband of Mary.
+Mary is a parent of Bob.
+Mary is female.
+Bob is male.
+Bob is a child of John.
+Sue is a daughter of Bob.
+Bob is a father of Bill.

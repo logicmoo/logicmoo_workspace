@@ -1,0 +1,37 @@
+% /*
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% props(Obj,[height(ObjHt)]) == t(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == t(height(Obj,ObjHt)).
+% padd(Obj,[height(ObjHt)]) == prop_set(height,Obj,ObjHt,...) == ain(height(Obj,ObjHt))
+% [pdel/pclr](Obj,[height(ObjHt)]) == [del/clr](height,Obj,ObjHt) == [del/clr]svo(Obj,height,ObjHt) == [del/clr](height(Obj,ObjHt))
+% keraseall(AnyTerm).
+%
+%                      ANTECEEDANT                                   CONSEQUENT
+%
+%        P =         test nesc true                         assert(P),retract(~P) , enable(P).
+%       ~P =         test nesc false                        assert(~P),retract(P), disable(P).
+%
+%   ~ ~(P) =        rewrite_to \+ ~(P)                      rewrite_to \+ ~(P) 
+%  ~ \+(P) =        rewrite_to     (P)                      rewrite_to     (P) 
+%  \+ ~(P) =        test impossiblity is unknown            retract(~P).
+%    \+(P) =        test P is unknown                       retract(P)
+%
+% Dec 13, 2035
+% Douglas Miles
+% */
+%# Tests retraction of ain/1
+:- include(test_header).
+
+:- set_fileAssertMt(header_sane).
+
+:- file_begin(pfc).
+
+dmilesWorld.
+dmilesWorld ==> inChair(a).
+
+:- ain(\+ dmilesWorld).
+
+:- listing_u(inChair).
+
+:- mpred_test(\+ inChair(a)).
+

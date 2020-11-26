@@ -1,0 +1,605 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.35</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="prologpack.html">
+<link rel="next" href="quasiquotations.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="prologpack.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="quasiquotations.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:prologxref"><a id="sec:A.35"><span class="sec-nr">A.35</span> <span class="sec-title">library(prolog_xref): 
+Prolog cross-referencer data collection</span></a></h2>
+
+<p><a id="sec:prologxref"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Where this library analyses <i>source text</i>, <code>library(prolog_codewalk)</code> 
+may be used to analyse <i>loaded code</i>. The <code>library(check)</code> 
+exploits
+<code>library(prolog_codewalk)</code> to report on e.g., undefined 
+predicates.
+</dd>
+<dt class="tag">bug</dt>
+<dd>
+<a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+declarations take the module into consideration. Predicates that are 
+both available as meta-predicate and normal (in different modules) are 
+handled as meta-predicate in all places.
+</dd>
+</dl>
+
+<p>This library collects information on defined and used objects in 
+Prolog source files. Typically these are predicates, but we expect the 
+library to deal with other types of objects in the future. The library 
+is a building block for tools doing dependency tracking in applications. 
+Dependency tracking is useful to reveal the structure of an unknown 
+program or detect missing components at compile time, but also for 
+program transformation or minimising a program saved state by only 
+saving the reachable objects.
+
+<p>The library is exploited by two graphical tools in the SWI-Prolog 
+environment: the XPCE front-end started by <a class="pred" href="xref.html#gxref/0">gxref/0</a>, 
+and
+<code>library(prolog_colour)</code>, which exploits this library for its 
+syntax highlighting.
+
+<p>For all predicates described below, <var>Source</var> is the source 
+that is processed. This is normally a filename in any notation 
+acceptable to the file loading predicates (see <a class="pred" href="consulting.html#load_files/2">load_files/2</a>). 
+Input handling is done by the <code>library(prolog_source)</code>, which 
+may be hooked to process any source that can be translated into a Prolog 
+stream holding Prolog source text.
+<var>Callable</var> is a callable term (see <a class="pred" href="typetest.html#callable/1">callable/1</a>). 
+Callables do not carry a module qualifier unless the referred predicate 
+is not in the module defined by <var>Source</var>.
+
+<dl class="latex">
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:called_by/4"><span class="module">prolog</span>:<strong>called_by</strong>(<var>+Goal, 
++Module, +Context, -Called</var>)</a></dt>
+<dd class="defbody">
+True when <var>Called</var> is a list of callable terms called from <var>Goal</var>, 
+handled by the predicate <var>Module</var>:<var>Goal</var> and executed 
+in the context of the module <var>Context</var>. Elements of <var>Called</var> 
+may be qualified. If not, they are called in the context of the module <var>Context</var>.</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="prolog:called_by/2"><span class="module">prolog</span>:<strong>called_by</strong>(<var>+Goal, 
+-ListOfCalled</var>)</a></dt>
+<dd class="defbody">
+If this succeeds, the cross-referencer assumes <var>Goal</var> may call 
+any of the goals in <var>ListOfCalled</var>. If this call fails, default 
+meta-goal analysis is used to determine additional called goals.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <a class="pred" href="prologxref.html#prolog:called_by/4">prolog:called_by/4</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="prolog:meta_goal/2"><span class="module">prolog</span>:<strong>meta_goal</strong>(<var>+Goal, 
+-Pattern</var>)</a></dt>
+<dd class="defbody">
+Define meta-predicates. See the examples in this file for details.</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="prolog:hook/1"><span class="module">prolog</span>:<strong>hook</strong>(<var>Goal</var>)</a></dt>
+<dd class="defbody">
+True if <var>Goal</var> is a hook that is called spontaneously (e.g., 
+from foreign code).</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xref_source/1"><strong>xref_source</strong>(<var>+Source</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xref_source/2"><strong>xref_source</strong>(<var>+Source, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Generate the cross-reference data for <var>Source</var> if not already 
+done and the source is not modified. Checking for modifications is only 
+done for files. <var>Options</var> processed:
+
+<dl class="latex">
+<dt><strong>silent</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), emit warning 
+messages.
+</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Define the initial context module to work in.
+</dd>
+<dt><strong>register_called</strong>(<var>+Which</var>)</dt>
+<dd class="defbody">
+Determines which calls are registerd. <var>Which</var> is one of
+<code>all</code>, <code>non_iso</code> or <code>non_built_in</code>.
+</dd>
+<dt><strong>comments</strong>(<var>+CommentHandling</var>)</dt>
+<dd class="defbody">
+How to handle comments. If <code>store</code>, comments are stored into 
+the database as if the file was compiled. If <code>collect</code>, 
+comments are entered to the xref database and made available through <span class="pred-ext">xref_mode/2</span> 
+and <a class="pred" href="prologxref.html#xref_comment/4">xref_comment/4</a>. 
+If <code>ignore</code>, comments are simply ignored. Default is to <code>collect</code> 
+comments.
+</dd>
+<dt><strong>process_include</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Process the content of included files (default is <code>true</code>).
+</dd>
+</dl>
+
+<table class="arglist">
+<tr><td><var>Source</var> </td><td>File specification or XPCE buffer </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xref_clean/1"><strong>xref_clean</strong>(<var>+Source</var>)</a></dt>
+<dd class="defbody">
+Reset the database for the given source.</dd>
+<dt class="pubdef"><a id="xref_current_source/1"><strong>xref_current_source</strong>(<var>?Source</var>)</a></dt>
+<dd class="defbody">
+Check what sources have been analysed.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="xref_done/2"><strong>xref_done</strong>(<var>+Source, 
+-Time</var>)</a></dt>
+<dd class="defbody">
+Cross-reference executed at <var>Time</var></dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_called/3"><strong>xref_called</strong>(<var>?Source, 
+?Called, ?By</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_called/4"><strong>xref_called</strong>(<var>?Source, 
+?Called, ?By, ?Cond</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_called/5"><strong>xref_called</strong>(<var>?Source, 
+?Called, ?By, ?Cond, ?Line</var>)</a></dt>
+<dd class="defbody">
+True when <var>By</var> is called from <var>Called</var> in <var>Source</var>. 
+Note that
+<a class="pred" href="prologxref.html#xref_called/3">xref_called/3</a> 
+and <a class="pred" href="prologxref.html#xref_called/4">xref_called/4</a> 
+use <a class="pred" href="solutionsequences.html#distinct/2">distinct/2</a> 
+to return only distinct <code>Called-By</code> pairs. The <a class="pred" href="prologxref.html#xref_called/5">xref_called/5</a> 
+version may return duplicate <code>Called-By</code> if <var>Called</var> 
+is called from multiple clauses in
+<var>By</var>, but at most one call per clause.
+<table class="arglist">
+<tr><td><var>By</var> </td><td>is a head term or one of the reserved 
+terms
+<code>'&lt;directive&gt;'(Line)</code> or <code>'&lt;public&gt;'(Line)</code>, 
+indicating the call is from an (often <a class="pred" href="consulting.html#initialization/1">initialization/1</a>) 
+directive or there is a <a class="pred" href="dynamic.html#public/1">public/1</a> 
+directive that claims the predicate is called from in some untractable 
+way. </td></tr>
+<tr><td><var>Cond</var> </td><td>is the (accumulated) condition as 
+defined by
+<code>:- if(Cond)</code> under which the calling code is compiled. </td></tr>
+<tr><td><var>Line</var> </td><td>is the <i>start line</i> of the calling 
+clause. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_defined/3"><strong>xref_defined</strong>(<var>?Source, 
++Goal, ?How</var>)</a></dt>
+<dd class="defbody">
+Test if <var>Goal</var> is accessible in <var>Source</var>. If this is 
+the case, <var>How</var> specifies the reason why the predicate is 
+accessible. Note that this predicate does not deal with built-in or 
+global predicates, just locally defined and imported ones. <var>How</var> 
+is one of of the terms below. Location is one of Line (an integer) or 
+File:Line if the definition comes from an included (using <code>:-</code>
+<code>include(File)</code>) directive.
+
+<p>
+<ul class="compact">
+<li><code>dynamic(Location)</code>
+<li><code>thread_local(Location)</code>
+<li><code>multifile(Location)</code>
+<li><code>public(Location)</code>
+<li><code>local(Location)</code>
+<li><code>foreign(Location)</code>
+<li><code>constraint(Location)</code>
+<li><code>imported(From)</code>
+</ul>
+</dd>
+<dt class="pubdef"><a id="xref_definition_line/2"><strong>xref_definition_line</strong>(<var>+How, 
+-Line</var>)</a></dt>
+<dd class="defbody">
+If the 3th argument of xref_defined contains line info, return this in <var>Line</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_exported/2"><strong>xref_exported</strong>(<var>?Source, 
+?Head</var>)</a></dt>
+<dd class="defbody">
+True when <var>Source</var> exports <var>Head</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_module/2"><strong>xref_module</strong>(<var>?Source, 
+?Module</var>)</a></dt>
+<dd class="defbody">
+True if <var>Module</var> is defined in <var>Source</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_uses_file/3"><strong>xref_uses_file</strong>(<var>?Source, 
+?Spec, ?Path</var>)</a></dt>
+<dd class="defbody">
+True when <var>Source</var> tries to load a file using <var>Spec</var>.
+<table class="arglist">
+<tr><td><var>Spec</var> </td><td>is a specification for <a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> </td></tr>
+<tr><td><var>Path</var> </td><td>is either an absolute file name of the 
+target file or the atom <code>&lt;not_found&gt;</code>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_op/2"><strong>xref_op</strong>(<var>?Source, 
+Op</var>)</a></dt>
+<dd class="defbody">
+Give the operators active inside the module. This is intended to setup 
+the environment for incremental parsing of a term from the source-file.
+<table class="arglist">
+<tr><td><var>Op</var> </td><td>Term of the form <code>op(Priority, Type, Name)</code> </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_prolog_flag/4"><strong>xref_prolog_flag</strong>(<var>?Source, 
+?Flag, ?Value, ?Line</var>)</a></dt>
+<dd class="defbody">
+True when <var>Flag</var> is set to <var>Value</var> at <var>Line</var> 
+in <var>Source</var>. This is intended to support incremental parsing of 
+a term from the source-file.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_comment/3"><strong>xref_comment</strong>(<var>?Source, 
+?Title, ?Comment</var>)</a></dt>
+<dd class="defbody">
+Is true when <var>Source</var> has a section comment with <var>Title</var> 
+and <var>Comment</var></dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_comment/4"><strong>xref_comment</strong>(<var>?Source, 
+?Head, ?Summary, ?Comment</var>)</a></dt>
+<dd class="defbody">
+Is true when <var>Head</var> in <var>Source</var> has the given PlDoc 
+comment.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_mode/3"><strong>xref_mode</strong>(<var>?Source, 
+?Mode, ?Det</var>)</a></dt>
+<dd class="defbody">
+Is true when <var>Source</var> provides a predicate with <var>Mode</var> 
+and determinism.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="xref_option/2"><strong>xref_option</strong>(<var>?Source, 
+?Option</var>)</a></dt>
+<dd class="defbody">
+True when <var>Source</var> was processed using <var>Option</var>. 
+Options are defined with <a class="pred" href="prologxref.html#xref_source/2">xref_source/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_meta/3"><strong>xref_meta</strong>(<var>+Source, 
++Head, -Called</var>)</a></dt>
+<dd class="defbody">
+True when <var>Head</var> calls <var>Called</var> in <var>Source</var>.
+<table class="arglist">
+<tr><td><var>Called</var> </td><td>is a list of called terms, terms of 
+the form Term+Extra or terms of the form <code>//</code>(Term). </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_meta/2"><strong>xref_meta</strong>(<var>+Head, 
+-Called</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_meta_src/3"><strong>xref_meta_src</strong>(<var>+Head, 
+-Called, +Src</var>)</a></dt>
+<dd class="defbody">
+True when <var>Called</var> is a list of terms called from <var>Head</var>. 
+Each element in <var>Called</var> can be of the form Term+Int, which 
+means that Term must be extended with Int additional arguments. The 
+variant
+<a class="pred" href="prologxref.html#xref_meta/3">xref_meta/3</a> first 
+queries the local context.
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <a class="pred" href="prologxref.html#xref_meta/3">xref_meta/3</a>.</dd>
+<dt class="mtag">To be done</dt>
+<dd>
+- Split predifined in several categories. E.g., the ISO predicates 
+cannot be redefined. <br>
+- Rely on the meta_predicate property for many predicates.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="xref_hook/1"><strong>xref_hook</strong>(<var>?Callable</var>)</a></dt>
+<dd class="defbody">
+Definition of known hooks. Hooks that can be called in any module are 
+unqualified. Other hooks are qualified with the module where they are 
+called.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_public_list/3"><strong>xref_public_list</strong>(<var>+Spec, 
++Source, +Options</var>)</a></dt>
+<dd class="defbody">
+Find meta-information about File. This predicate reads all terms upto 
+the first term that is not a directive. It uses the module and 
+meta_predicate directives to assemble the information in <var>Options</var>. <var>Options</var> 
+processed:
+
+<dl class="latex">
+<dt><strong>path</strong>(<var>-Path</var>)</dt>
+<dd class="defbody">
+<var>Path</var> is the full path name of the referenced file.
+</dd>
+<dt><strong>module</strong>(<var>-Module</var>)</dt>
+<dd class="defbody">
+<var>Module</var> is the module defines in <var>Spec</var>.
+</dd>
+<dt><strong>exports</strong>(<var>-Exports</var>)</dt>
+<dd class="defbody">
+<var>Exports</var> is a list of predicate indicators and operators 
+collected from the <a class="pred" href="defmodule.html#module/2">module/2</a> 
+term and reexport declarations.
+</dd>
+<dt><strong>public</strong> <var><code><var>Public</var>-</code></var></dt>
+<dd class="defbody">
+<var>Public</var> declarations of the file.
+</dd>
+<dt><strong>meta</strong>(<var>-Meta</var>)</dt>
+<dd class="defbody">
+<var>Meta</var> is a list of heads as they appear in <a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+declarations.
+</dd>
+<dt><strong>silent</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Do not print any messages or raise exceptions on errors.
+</dd>
+</dl>
+
+<p>The information collected by this predicate is cached. The cached 
+data is considered valid as long as the modification time of the file 
+does not change.
+<table class="arglist">
+<tr><td><var>Source</var> </td><td>is the file from which <var>Spec</var> 
+is referenced. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_public_list/4"><strong>xref_public_list</strong>(<var>+File, 
+-Path, -Export, +Src</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_public_list/6"><strong>xref_public_list</strong>(<var>+File, 
+-Path, -Module, -Export, -Meta, +Src</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_public_list/7"><strong>xref_public_list</strong>(<var>+File, 
+-Path, -Module, -Export, -Public, -Meta, +Src</var>)</a></dt>
+<dd class="defbody">
+Find meta-information about <var>File</var>. This predicate reads all 
+terms upto the first term that is not a directive. It uses the module 
+and meta_predicate directives to assemble the information described 
+below.
+
+<p>These predicates fail if <var>File</var> is not a module-file.
+<table class="arglist">
+<tr><td><var>Path</var> </td><td>is the canonical path to <var>File</var> </td></tr>
+<tr><td><var>Module</var> </td><td>is the module defined in <var>Path</var> </td></tr>
+<tr><td><var>Export</var> </td><td>is a list of predicate indicators. </td></tr>
+<tr><td><var>Meta</var> </td><td>is a list of heads as they appear in
+<a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+declarations. </td></tr>
+<tr><td><var>Src</var> </td><td>is the place from which <var>File</var> 
+is referenced. </td></tr>
+</table>
+
+<dl class="tags">
+<dt class="tag">deprecated</dt>
+<dd>
+New code should use <a class="pred" href="prologxref.html#xref_public_list/3">xref_public_list/3</a>, 
+which unifies all variations using an option list.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_source_file/3"><strong>xref_source_file</strong>(<var>+Spec, 
+-File, +Src</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="xref_source_file/4"><strong>xref_source_file</strong>(<var>+Spec, 
+-File, +Src, +Options</var>)</a></dt>
+<dd class="defbody">
+Find named source file from <var>Spec</var>, relative to <var>Src</var>.
+</dd>
+</dl>
+
+<p></body></html>

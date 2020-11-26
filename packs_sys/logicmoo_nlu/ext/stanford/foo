@@ -1,0 +1,2 @@
+(ROOT (S (NP (PRP I)) (VP (MD can) (ADVP (RB almost) (RB always)) (VP (VB tell) (SBAR (WHADVP (WRB when)) (S (NP (NNS movies)) (VP (VBP use) (NP (JJ fake) (NNS dinosaurs))))))) (. .)))
+(ROOT (S (NP (PRP it)) (VP (VBZ is) (NP (NP (DT all)) (PP (IN about) (NP (NP (DT the) (NN quality)) (PP (IN of) (NP (DT the) (NN grammar)))))))))

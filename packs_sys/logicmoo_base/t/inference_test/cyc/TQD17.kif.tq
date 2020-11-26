@@ -1,0 +1,159 @@
+(note TQD17)
+(abort)
+
+(instance 
+ (MillionBarrelsPerDay 29.9000) Rate) 
+
+(productionAmountDuring OPEC PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 29.9000)) 
+
+(instance 
+ (MillionBarrelsPerDay 74.1000) Rate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 74.1000)) 
+
+(nthLargestElement 
+ (YearFn 1997) 1 
+ (TheSetOf ?TIME-1 
+ (thereExists ?A1 
+ (and 
+ (instance ?A1 Rate) 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME-1 ?A1)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING-1 ?RESULT-1) 
+ (equals ?RESULT-1 ?THING-1)))) 
+
+(nthLargestElement 
+ (YearFn 1997) 1 
+ (TheSetOf ?TIME-2 
+ (thereExists ?A2 
+ (and 
+ (instance ?A2 Rate) 
+ (productionAmountDuring OPEC PetroleumProduct ?TIME-2 ?A2)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING-2 ?RESULT-2) 
+ (equals ?RESULT-2 ?THING-2)))) 
+
+
+
+
+(instance 
+ (MillionBarrelsPerDay 74.1000) Rate) 
+
+(evaluate 
+ (Percent 1.34480) 
+ (QuantityConversionFn Percent 
+ (QuotientFn 
+ (MillionBarrelsPerDay 0.996500) 
+ (MillionBarrelsPerDay 74.1000)))) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1997) 
+ (MillionBarrelsPerDay 74.1000)) 
+
+(evaluate 
+ (MillionBarrelsPerDay 0.996500) 
+ (TimesFn 
+ (MillionBarrelsPerDay 19.9300) 0.0500000)) 
+
+(instance 
+ (MillionBarrelsPerDay 19.9300) Rate) 
+
+(evaluate 
+ (MillionBarrelsPerDay 19.9300) 
+ (PlusAll 
+ (TheSetOf ?COUNTRY 
+ (internationalOrg-MemberCountry OPEC ?COUNTRY)) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?C ?A) 
+ (productionAmountDuring ?C PetroleumProduct 
+ (YearFn 1997) ?A))))) 
+
+(instance OPEC InternationalOrganizationOfCountries) 
+
+(nthLargestElement 
+ (YearFn 1997) 1 
+ (TheSetOf ?TIME-1 
+ (thereExists ?A1 
+ (and 
+ (instance ?A1 Rate) 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME-1 ?A1)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING-1 ?RESULT-1) 
+ (equals ?RESULT-1 ?THING-1)))) 
+
+(nthLargestElement 
+ (YearFn 1997) 1 
+ (TheSetOf ?TIME-2 
+ (thereExists ?A2 
+ (and 
+ (instance ?A2 Rate) 
+ (productionAmountDuring OPEC PetroleumProduct ?TIME-2 ?A2)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING-2 ?RESULT-2) 
+ (equals ?RESULT-2 ?THING-2)))) 
+
+(implies 
+ (instance ?ORG InternationalOrganizationOfCountries) 
+ (productionAmountDuring ?ORG ?PRODUCT-TYPE ?TIME 
+ (PlusAll 
+ (TheSetOf ?COUNTRY 
+ (internationalOrg-MemberCountry ?ORG ?COUNTRY)) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?C ?A) 
+ (productionAmountDuring ?C ?PRODUCT-TYPE ?TIME ?A)))))) 
+
+
+
+
+
+
+( query (findall (?FRACTION ?INCREASE ?LATEST-DATE-FOR-1 ?LATEST-DATE-FOR-2  ) (thereExists ?AMOUNT-2 
+ (thereExists ?AMOUNT-1 
+ (and 
+ (nthLargestElement ?LATEST-DATE-FOR-1 1 
+ (TheSetOf ?TIME 
+ (thereExists ?A1 
+ (and 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?TIME ?A1) 
+ (instance ?A1 Rate)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING ?RESULT) 
+ (equals ?RESULT ?THING)))) 
+ (productionAmountDuring PlanetEarth PetroleumProduct ?LATEST-DATE-FOR-1 ?AMOUNT-1) 
+ (instance ?AMOUNT-1 Rate) 
+ (nthLargestElement ?LATEST-DATE-FOR-2 1 
+ (TheSetOf ?TIME 
+ (thereExists ?A2 
+ (and 
+ (productionAmountDuring OPEC PetroleumProduct ?TIME ?A2) 
+ (instance ?A2 Rate)))) 
+ (FunctionToArg 2 
+ (Kappa 
+ (?THING ?RESULT) 
+ (equals ?RESULT ?THING)))) 
+ (productionAmountDuring OPEC PetroleumProduct ?LATEST-DATE-FOR-2 ?AMOUNT-2) 
+ (instance ?AMOUNT-2 Rate) 
+ (evaluate ?INCREASE 
+ (TimesFn 0.0500000 ?AMOUNT-2)) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent 
+ (QuotientFn ?INCREASE ?AMOUNT-1))))))  
+)
+
+(answer 2.01754  1.49500 1997 1997)
+(answer 1.34480 0.996500 1997 1997)
+
+(end_of_file)
+
+

@@ -1,0 +1,606 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.36</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="system.html">
+<link rel="next" href="toplevel.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="system.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="toplevel.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:files"><a id="sec:4.36"><span class="sec-nr">4.36</span> <span class="sec-title">File 
+System Interaction</span></a></h2>
+
+<a id="sec:files"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="access_file/2"><strong>access_file</strong>(<var>+File, 
++Mode</var>)</a></dt>
+<dd class="defbody">
+True if <var>File</var> exists and can be accessed by this Prolog 
+process under mode <var>Mode</var>. <var>Mode</var> is one of the atoms
+<code>read</code>, <code>write</code>, <code>append</code>, <code>exist</code>, <code>none</code> 
+or
+<code>execute</code>. <var>File</var> may also be the name of a 
+directory. Fails silently otherwise. <code>access_file(File, none)</code> 
+simply succeeds without testing anything.
+
+<p>If <var>Mode</var> is <code>write</code> or <code>append</code>, this 
+predicate also succeeds if the file does not exist and the user has 
+write access to the directory of the specified location.
+
+<p>The behaviour is backed up by the POSIX access() API. The Windows 
+replacement (_waccess()) returns incorrect results because it does not 
+consider ACLs (Access Control Lists). The Prolog flag
+<a class="flag" href="flags.html#flag:win_file_access_check">win_file_access_check</a> 
+may be used to control the level of checking performed by Prolog. Please 
+note that checking access never provides a guarantee that a subsequent 
+open succeeds without errors due to inherent concurrency in file 
+operations. It is generally more robust to try and open the file and 
+handle possible exceptions. See <a id="idx:open4:1684"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+and
+<a id="idx:catch3:1685"></a><a class="pred" href="exception.html#catch/3">catch/3</a>.</dd>
+<dt class="pubdef"><a id="exists_file/1"><strong>exists_file</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+True if <var>File</var> exists and is a <em>regular</em> file. This does 
+not imply the user has read or write access to the file. See also
+<a id="idx:existsdirectory1:1686"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a> 
+and <a id="idx:accessfile2:1687"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>.</dd>
+<dt class="pubdef"><a id="file_directory_name/2"><strong>file_directory_name</strong>(<var>+File, 
+-Directory</var>)</a></dt>
+<dd class="defbody">
+Extracts the directory part of <var>File</var>. This predicate removes 
+the longest match for the regular expression <code>/*[^/]*/*$</code>. If 
+the result is empty it binds <var>Directory</var> to <code><code>/</code></code> 
+if the first character of <var>File</var> is <code><code>/</code></code> 
+and <code><code>.</code></code> otherwise. The behaviour is consistent 
+with the POSIX <b>dirname</b> program.<sup class="fn">140<span class="fn-text">Before 
+SWI-Prolog 7.7.13 trailing <code><code>/</code></code> where <em>not</em> 
+removed, translation <code>/a/b/</code> into <code>/a/b</code>. Volker 
+Wysk pointed at this incorrect behaviour.</span></sup>
+
+<p>See also <a id="idx:directoryfilepath3:1688"></a><span class="pred-ext">directory_file_path/3</span> 
+from <code>library(filesex)</code>. The system ensures that for every 
+valid <var>Path</var> using the Prolog (POSIX) directory separators, 
+following is true on systems with a sound implementation of
+<a id="idx:samefile2:1689"></a><a class="pred" href="files.html#same_file/2">same_file/2</a>.<sup class="fn">141<span class="fn-text">On 
+some systems, <var>Path</var> and <var>Path2</var> refer to the same 
+entry in the file system, but <a id="idx:samefile2:1690"></a><a class="pred" href="files.html#same_file/2">same_file/2</a> 
+may fail.</span></sup> See also <a id="idx:prologtoosfilename2:1691"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a>.
+
+<pre class="code">
+        ...,
+        file_directory_name(Path, Dir),
+        file_base_name(Path, File),
+        directory_file_path(Dir, File, Path2),
+        same_file(Path, Path2).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="file_base_name/2"><strong>file_base_name</strong>(<var>+Path, 
+-File</var>)</a></dt>
+<dd class="defbody">
+Extracts the file name part from a path. Similar to
+<a id="idx:filedirectoryname2:1692"></a><a class="pred" href="files.html#file_directory_name/2">file_directory_name/2</a> 
+the extraction is based on the regex
+<code>/*([^/]*)/*$</code>, now capturing the non-<code><code>/</code></code> 
+segment. If the segment is empty it unifies <var>File</var> with <code><code>/</code></code> 
+if <var>Path</var> starts with <code><code>/</code></code> and the empty 
+atom (<code>''</code>) otherwise. The behaviour is consistent with the 
+POSIX <b>basename</b> program.<sup class="fn">142<span class="fn-text">Before 
+SWI-Prolog 7.7.13, if argPath ended with a <code><code>/</code></code> <var>File</var> 
+was unified with the empty atom.</span></sup></dd>
+<dt class="pubdef"><a id="same_file/2"><strong>same_file</strong>(<var>+File1, 
++File2</var>)</a></dt>
+<dd class="defbody">
+True if both filenames refer to the same physical file. That is, if
+<var>File1</var> and <var>File2</var> are the same string or both names 
+exist and point to the same file (due to hard or symbolic links and/or 
+relative vs. absolute paths). On systems that provide stat() with 
+meaningful values for <code>st_dev</code> and <code>st_inode</code>, <a id="idx:samefile2:1693"></a><a class="pred" href="files.html#same_file/2">same_file/2</a> 
+is implemented by comparing the device and inode identifiers. On 
+Windows,
+<a id="idx:samefile2:1694"></a><a class="pred" href="files.html#same_file/2">same_file/2</a> 
+compares the strings returned by the GetFullPathName() system call.</dd>
+<dt class="pubdef"><a id="exists_directory/1"><strong>exists_directory</strong>(<var>+Directory</var>)</a></dt>
+<dd class="defbody">
+True if <var>Directory</var> exists and is a directory. This does not 
+imply the user has read, search or write permission for the directory.</dd>
+<dt class="pubdef"><a id="delete_file/1"><strong>delete_file</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+Remove <var>File</var> from the file system.</dd>
+<dt class="pubdef"><a id="rename_file/2"><strong>rename_file</strong>(<var>+File1, 
++File2</var>)</a></dt>
+<dd class="defbody">
+Rename <var>File1</var> as <var>File2</var>. The semantics is compatible 
+to the POSIX semantics of the rename() system call as far as the 
+operating system allows. Notably, if <var>File2</var> exists, the 
+operation succeeds (except for possible permission errors) and is <em>atomic</em> 
+(meaning there is no window where <var>File2</var> does not exist).</dd>
+<dt class="pubdef"><a id="size_file/2"><strong>size_file</strong>(<var>+File, 
+-Size</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Size</var> with the size of <var>File</var> in bytes.</dd>
+<dt class="pubdef"><a id="time_file/2"><strong>time_file</strong>(<var>+File, 
+-Time</var>)</a></dt>
+<dd class="defbody">
+Unify the last modification time of <var>File</var> with <var>Time</var>.
+<var>Time</var> is a floating point number expressing the seconds 
+elapsed since Jan&nbsp;1, 1970. See also <a id="idx:converttime28:1695"></a><span class="pred-ext">convert_time/[2,8]</span> 
+and <a id="idx:gettime1:1696"></a><a class="pred" href="system.html#get_time/1">get_time/1</a>.</dd>
+<dt class="pubdef"><a id="absolute_file_name/2"><strong>absolute_file_name</strong>(<var>+File, 
+-Absolute</var>)</a></dt>
+<dd class="defbody">
+Expand a local filename into an absolute path. The absolute path is 
+canonicalised: references to <code>.</code> and <code>..</code> are 
+deleted. This predicate ensures that expanding a filename returns the 
+same absolute path regardless of how the file is addressed. SWI-Prolog 
+uses absolute filenames to register source files independent of the 
+current working directory. See also <a id="idx:absolutefilename3:1697"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+and <a id="idx:expandfilename2:1698"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a>.</dd>
+<dt class="pubdef"><a id="absolute_file_name/3"><strong>absolute_file_name</strong>(<var>+Spec, 
+-Absolute, +Options</var>)</a></dt>
+<dd class="defbody">
+
+<p>Convert the given file specification into an absolute path. <var>Spec</var> 
+is a term Alias(Relative) (e.g., <code>(library(lists)</code>), a 
+relative filename or an absolute filename. The primary intention of this 
+predicate is to resolve files specified as Alias(Relative). This 
+predicate <em>only returns non-directories</em>, unless the option
+<code>file_type(directory)</code> is specified. <var>Option</var> is a 
+list of options to guide the conversion:
+
+<dl class="latex">
+<dt><strong>extensions</strong>(<var>ListOfExtensions</var>)</dt>
+<dd class="defbody">
+List of file extensions to try. Default is <code>&rsquo;&rsquo;</code>. 
+For each extension, <a id="idx:absolutefilename3:1699"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+will first add the extension and then verify the conditions imposed by 
+the other options. If the condition fails, the next extension on the 
+list is tried. Extensions may be specified both as <code>.ext</code> or 
+plain <code>ext</code>.</dd>
+<dt><strong>relative_to</strong>(<var>+FileOrDir</var>)</dt>
+<dd class="defbody">
+Resolve the path relative to the given directory or the directory 
+holding the given file. Without this option, paths are resolved relative 
+to the working directory (see <a id="idx:workingdirectory2:1700"></a><a class="pred" href="files.html#working_directory/2">working_directory/2</a>) 
+or, if <var>Spec</var> is atomic and <a id="idx:absolutefilename23:1701"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/[2,3]</a> 
+is executed in a directive, it uses the current source file as 
+reference.</dd>
+<dt><strong>access</strong>(<var>Mode</var>)</dt>
+<dd class="defbody">
+Imposes the condition access_file(<var>File</var>, <var>Mode</var>). <var>Mode</var> 
+is one of <code>read</code>, <code>write</code>, <code>append</code>,
+<code>execute</code>, <code>exist</code> or <code>none</code>. See also <a id="idx:accessfile2:1702"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>.</dd>
+<dt><strong>file_type</strong>(<var>Type</var>)</dt>
+<dd class="defbody">
+Defines extensions. Current mapping: <code>txt</code> implies <code>['']</code>,
+<code>prolog</code> implies <code>['.pl',&rsquo;&rsquo;]</code>, <code>executable</code> 
+implies
+<code>['.so',&rsquo;&rsquo;]</code> and <code>qlf</code> implies <code>['.qlf',&rsquo;&rsquo;]</code>. 
+The
+<var>Type</var> <code>directory</code> implies <code>['']</code> and 
+causes this predicate to generate (only) directories. The file type <code>source</code> 
+is an alias for <code>prolog</code> for compatibility with SICStus 
+Prolog. See also <a id="idx:prologfiletype2:1703"></a><a class="pred" href="consulting.html#prolog_file_type/2">prolog_file_type/2</a>.</dd>
+<dt><strong>file_errors</strong>(<var>fail/error</var>)</dt>
+<dd class="defbody">
+If <code>error</code> (default), throw an <code>existence_error</code> 
+exception if the file cannot be found. If <code>fail</code>, stay 
+silent.<sup class="fn">143<span class="fn-text">Silent operation was the 
+default up to version 3.2.6.</span></sup></dd>
+<dt><strong>solutions</strong>(<var>first/all</var>)</dt>
+<dd class="defbody">
+If <code>first</code> (default), the predicate leaves no choice point. 
+Otherwise a choice point will be left and backtracking may yield more 
+solutions.</dd>
+<dt><strong>expand</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default is <code>false</code>) and <var>Spec</var> 
+is atomic, call <a id="idx:expandfilename2:1704"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a> 
+followed by <a id="idx:member2:1705"></a><a class="pred" href="lists.html#member/2">member/2</a> 
+on <var>Spec</var> before proceeding. This is a SWI-Prolog extension 
+intended to minimise porting effort after SWI-Prolog stopped expanding 
+environment variables and the <code><code>~</code></code> by default. 
+This option should be considered deprecated. In particular the use of <em>wildcard</em> 
+patterns such as <code><code>*</code></code> should be avoided.
+</dd>
+</dl>
+
+<p>The Prolog flag <a class="flag" href="flags.html#flag:verbose_file_search">verbose_file_search</a> 
+can be set to <code>true</code> to help debugging Prolog's search for 
+files.
+
+<p>This predicate is derived from Quintus Prolog. In Quintus Prolog, the 
+argument order was <code>absolute_file_name(+Spec, +Options, -Path)</code>. 
+The argument order has been changed for compatibility with ISO and 
+SICStus. The Quintus argument order is still accepted.</dd>
+<dt class="pubdef"><a id="is_absolute_file_name/1"><strong>is_absolute_file_name</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+True if <var>File</var> specifies an absolute path name. On Unix 
+systems, this implies the path starts with a&lsquo;/'. For 
+Microsoft-based systems this implies the path starts with <code>&lt;<var>letter</var>&gt;:</code>. 
+This predicate is intended to provide platform-independent checking for 
+absolute paths. See also <a id="idx:absolutefilename2:1706"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a> 
+and <a id="idx:prologtoosfilename2:1707"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a>.</dd>
+<dt class="pubdef"><a id="file_name_extension/3"><strong>file_name_extension</strong>(<var>?Base, 
+?Extension, ?Name</var>)</a></dt>
+<dd class="defbody">
+This predicate is used to add, remove or test filename extensions. The 
+main reason for its introduction is to deal with different filename 
+properties in a portable manner. If the file system is case-insensitive, 
+testing for an extension will also be done case-insensitive. <var>Extension</var> 
+may be specified with or without a leading dot (<code><code>.</code></code>). 
+If an <var>Extension</var> is generated, it will not have a leading dot.</dd>
+<dt class="pubdef"><a id="directory_files/2"><strong>directory_files</strong>(<var>+Directory, 
+-Entries</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Entries</var> with a list of entries in <var>Directory</var>. 
+Each member of <var>Entries</var> is an atom denoting an entry relative 
+to <var>Directory</var>. <var>Entries</var> contains all entries, 
+including hidden files and, if supplied by the OS, the special entries <code><code>.</code></code> 
+and
+<code>..</code>. See also <a id="idx:expandfilename2:1708"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a>.<sup class="fn">144<span class="fn-text">This 
+predicate should be considered a misnomer because it returns entries 
+rather than files. We stick to this name for compatibility with, e.g., 
+SICStus, Ciao and YAP.</span></sup></dd>
+<dt class="pubdef"><a id="expand_file_name/2"><strong>expand_file_name</strong>(<var>+WildCard, 
+-List</var>)</a></dt>
+<dd class="defbody">
+Unify <var>List</var> with a sorted list of files or directories 
+matching
+<var>WildCard</var>. The normal Unix wildcard constructs&lsquo;<code><code>?</code></code>&rsquo;,&lsquo;<code><code>*</code></code>&rsquo;,&lsquo;<code>[ 
+... ]</code>&rsquo;and&lsquo;<code>{...}</code>&rsquo;are recognised. 
+The interpretation of&lsquo;<code>{...}</code>&rsquo;is slightly 
+different from the C shell (csh(1)). The comma-separated argument can be 
+arbitrary patterns, including&lsquo;<code>{...}</code>&rsquo;patterns. 
+The empty pattern is legal as well:&lsquo;<code>{.pl,}</code>&rsquo;matches 
+either&lsquo;<code>.pl</code>&rsquo;or the empty string.
+
+<p>If the pattern contains wildcard characters, only existing files and 
+directories are returned. Expanding a&lsquo;pattern' without wildcard 
+characters returns the argument, regardless of whether or not it exists.
+
+<p>Before expanding wildcards, the construct <code>$\arg{var}</code> is 
+expanded to the value of the environment variable <var>var</var>, and a 
+possible leading <code>~</code> character is expanded to the user's home 
+directory.<sup class="fn">145<span class="fn-text">On Windows, the home 
+directory is determined as follows: if the environment variable <code>HOME</code> 
+exists, this is used. If the variables <code>HOMEDRIVE</code> and <code>HOMEPATH</code> 
+exist (Windows-NT), these are used. At initialisation, the system will 
+set the environment variable <code>HOME</code> to point to the 
+SWI-Prolog home directory if neither <code>HOME</code> nor <code>HOMEPATH</code> 
+and <code>HOMEDRIVE</code> are defined.</span></sup></dd>
+<dt class="pubdef"><a id="prolog_to_os_filename/2"><strong>prolog_to_os_filename</strong>(<var>?PrologPath, 
+?OsPath</var>)</a></dt>
+<dd class="defbody">
+Convert between the internal Prolog path name conventions and the 
+operating system path name conventions. The internal conventions follow 
+the POSIX standard, which implies that this predicate is equivalent to 
+=/2 (unify) on POSIX (e.g., Unix) systems. On Windows systems it changes 
+the directory separator from <code><code>\</code></code> into <code><code>/</code></code>.</dd>
+<dt class="pubdef"><a id="read_link/3"><strong>read_link</strong>(<var>+File, 
+-Link, -Target</var>)</a></dt>
+<dd class="defbody">
+If <var>File</var> points to a symbolic link, unify <var>Link</var> with 
+the value of the link and <var>Target</var> to the file the link is 
+pointing to.
+<var>Target</var> points to a file, directory or non-existing entry in 
+the file system, but never to a link. Fails if <var>File</var> is not a 
+link. Fails always on systems that do not support symbolic links.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="tmp_file/2"><strong>tmp_file</strong>(<var>+Base, 
+-TmpName</var>)</a></dt>
+<dd class="defbody">
+Create a name for a temporary file. <var>Base</var> is an identifier for 
+the category of file. The <var>TmpName</var> is guaranteed to be unique. 
+If the system halts, it will automatically remove all created temporary 
+files.
+<var>Base</var> is used as part of the final filename. Portable 
+applications should limit themselves to alphanumeric characters.
+
+<p>Because it is possible to guess the generated filename, attackers may 
+create the filesystem entry as a link and possibly create a security 
+issue. New code should use <a id="idx:tmpfilestream3:1709"></a><a class="pred" href="files.html#tmp_file_stream/3">tmp_file_stream/3</a>.</dd>
+<dt class="pubdef"><a id="tmp_file_stream/3"><strong>tmp_file_stream</strong>(<var>+Encoding, 
+-FileName, -Stream</var>)</a></dt>
+<dt class="pubdef"><a id="tmp_file_stream/3"><strong>tmp_file_stream</strong>(<var>-FileName, 
+-Stream, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a temporary filename <var>FileName</var>, open it for writing and 
+unify <var>Stream</var> with the output stream. If the OS supports it, 
+the created file is only accessible to the current user and the file is 
+created using the open()-flag <code>O_EXCL</code>, which guarantees that 
+the file did not exist before this call. The following options are 
+processed:
+
+<dl class="latex">
+<dt><strong>encoding</strong>(<var>+Encoding</var>)</dt>
+<dd class="defbody">
+Encoding of <var>Stream</var>. Default is the value of the Prolog flag
+<a class="flag" href="flags.html#flag:encoding">encoding</a>. The value <code>binary</code> 
+opens the file in binary mode.
+</dd>
+<dt><strong>extension</strong>(<var>+Ext</var>)</dt>
+<dd class="defbody">
+Ensure the created file has the given extension. Default is no 
+extension. Using an extension may be necessary to run external programs 
+on the file.
+</dd>
+</dl>
+
+<p>This predicate is a safe replacement of <a id="idx:tmpfile2:1710"></a><a class="pred" href="files.html#tmp_file/2">tmp_file/2</a>. 
+Note that in those cases where the temporary file is needed to store 
+output from an external command, the file must be closed first. E.g., 
+the following downloads a file from a URL to a temporary file and opens 
+the file for reading (on Unix systems you can delete the file for 
+cleanup after opening it for reading):
+
+<pre class="code">
+open_url(URL, In) :-
+        tmp_file_stream(text, File, Stream),
+        close(Stream),
+        process_create(curl, ['-o', File, URL], []),
+        open(File, read, In),
+        delete_file(File).              % Unix-only
+</pre>
+
+<p>Temporary files created using this call are removed if the Prolog 
+process terminates <em>gracefully</em>. Calling <a id="idx:deletefile1:1711"></a><a class="pred" href="files.html#delete_file/1">delete_file/1</a> 
+using
+<var>FileName</var> removes the file and removes the entry from the 
+administration of files-to-be-deleted.</dd>
+<dt class="pubdef"><a id="make_directory/1"><strong>make_directory</strong>(<var>+Directory</var>)</a></dt>
+<dd class="defbody">
+Create a new directory (folder) on the filesystem. Raises an exception 
+on failure. On Unix systems, the directory is created with default 
+permissions (defined by the process <em>umask</em> setting).</dd>
+<dt class="pubdef"><a id="delete_directory/1"><strong>delete_directory</strong>(<var>+Directory</var>)</a></dt>
+<dd class="defbody">
+Delete directory (folder) from the filesystem. Raises an exception on 
+failure. Please note that in general it will not be possible to delete a 
+non-empty directory.</dd>
+<dt class="pubdef"><a id="working_directory/2"><strong>working_directory</strong>(<var>-Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Old</var> with an absolute path to the current working 
+directory and change working directory to <var>New</var>. Use the 
+pattern
+<code>working_directory(CWD, CWD)</code> to get the current directory. 
+See also <a id="idx:absolutefilename2:1712"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a> 
+and <a id="idx:chdir1:1713"></a><a class="pred" href="files.html#chdir/1">chdir/1</a>.<sup class="fn">bug<span class="fn-text">Some 
+of the file I/O predicates use local filenames. Changing directory while 
+file-bound streams are open causes wrong results on <a id="idx:telling1:1714"></a><a class="pred" href="IO.html#telling/1">telling/1</a>, <a id="idx:seeing1:1715"></a><a class="pred" href="IO.html#seeing/1">seeing/1</a> 
+and <a id="idx:currentstream3:1716"></a><a class="pred" href="IO.html#current_stream/3">current_stream/3</a>.</span></sup> 
+Note that the working directory is shared between all threads.</dd>
+<dt class="pubdef"><a id="chdir/1"><strong>chdir</strong>(<var>+Path</var>)</a></dt>
+<dd class="defbody">
+Compatibility predicate. New code should use <a id="idx:workingdirectory2:1717"></a><a class="pred" href="files.html#working_directory/2">working_directory/2</a>.
+</dd>
+</dl>
+
+<p></body></html>

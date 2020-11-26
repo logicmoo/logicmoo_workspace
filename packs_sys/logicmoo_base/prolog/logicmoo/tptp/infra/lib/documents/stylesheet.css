@@ -1,0 +1,268 @@
+/*
+Notes
+=====
+
+Padding seems not processed correctly by Netscape 4. So in general
+cellpadding=5 is used as attribute to <table> in the documents. Here
+only small fixes to that are given.
+
+Standard Colors (Netscape, Mozilla):
+link:     #0000EE
+visited:  #551A8B
+
+Darkened Background:
+Background: FFEEDD, 
+Darkened: #DDCFC1 [gimp 87%] 
+          #E5D6C7 [gimp 90%]
+[DDCCBB was used in old Tests]
+
+*/
+
+body.browserPage { 
+	color:#000000;
+	background-color:#FFEEDD;
+	font-family:sans-serif
+	}
+
+a:link {
+	color:#0000EE
+	}
+
+a:visited {
+	color:#551A8B
+	}
+
+tr.browserEvenRow {
+	background-color:#DDCFC1
+	}	
+
+tr.browserOddRow {
+	background-color:#FFEEDD
+	}	
+
+tr.browserCommandRow {
+	background-color:#FF0000
+	}	
+
+input.browserCommandSubmit {
+	/* Hints needed for Netscape 4 */
+	background-color:#DDDDDD;
+	font-family:sans-serif
+	}	
+
+td.browserPermTable {
+	font-family:sans-serif
+	}
+
+.browserHeaderClass {
+	background-color:#880000;
+	padding:5px
+	}
+
+.browserFooterClass {
+	background-color:#880000;
+	color:#880000;
+	font-size:xx-small;
+	}
+
+.browserHeaderProperty {
+	background-color:#000088;
+	padding:5px
+	}
+
+.browserFooterProperty {
+	background-color:#000088;
+	color:#000088;
+	font-size:xx-small;
+	}
+
+.browserHeaderObject {
+	background-color:#008800;
+	padding:5px
+	}
+
+.browserFooterObject {
+	background-color:#008800;
+	color:#008800;
+	font-size:xx-small;
+	}
+
+.browserHeaderKB {
+	background-color:#880088;
+	padding:5px
+	}
+
+.browserFooterKB {
+	background-color:#880088;
+	color:#880088;
+	font-size:xx-small;
+	}
+
+.browserHeaderCommand {
+	background-color:#888888;
+	padding:5px
+	}
+
+.browserFooterCommand {
+	background-color:#888888;
+	color:#888888;
+	font-size:xx-small;
+	}
+
+.browserHeaderNamespace {
+	background-color:#008888;
+	padding:5px
+	}
+
+.browserFooterNamespace {
+	background-color:#008888;
+	color:#008888;
+	font-size:xx-small;
+	}
+
+.browserHeaderMain {
+	background-color:#444444;
+	padding:5px
+	}
+
+.browserFooterMain {
+	background-color:#444444;
+	color:#444444;
+	font-size:xx-small;
+	}
+
+.browserHeaderQuery {
+	background-color:#AA4444;
+	padding:5px
+	}
+
+.browserFooterQuery {
+	background-color:#AA4444;
+	color:#AA4444;
+	font-size:xx-small;
+	}
+
+.browserHeading {
+	color:#FFFFFF;
+	font-size:larger;
+	font-weight:bold;
+	font-family:sans-serif
+	}
+
+a.browserHeadingLink:link {
+	color:#FFFFFF;
+	}
+
+a.browserHeadingLink:visited {
+	color:#FFFFFF;
+	}
+
+.browserTypeSpec {
+	color:#FFFFFF;
+	font-family:sans-serif;
+	font-style:italic;
+	text-align:right;
+	alignment:right
+	}
+
+a.browserCommandRef:link {
+	color:#DD0000
+	}	
+
+a.browserCommandRef:visited {
+	color:#DD0000
+	}	
+
+a.browserNaviRef:link  {
+	color:#0000EE
+       }
+
+a.browserNaviRef:visited {
+	color:#0000EE
+	}	
+
+td.browserNaviCell  {
+	vertical-align:bottom;
+       }
+
+td.browserLogoCell  {
+	padding-right:10px;
+	vertical-align:bottom;
+	text-align:right;
+	alignment:right
+       }
+
+.browserNaviButton  {
+	font-family:sans-serif;
+	font-size:small;
+	vertical-align:bottom;
+	text-align:center
+       }
+
+.browserAttVal {
+	}	
+
+.browserAtt {
+	font-family:sans-serif;
+	font-weight:bold
+	}	
+
+.browserVal {
+	font-family:sans-serif
+	}	
+
+.browserResultMessage {
+	font-family:sans-serif
+	}	
+
+.browserStd {
+	font-family:sans-serif
+	}	
+
+.browserComment {
+	font-family:sans-serif;
+	font-style:italic
+	}	
+
+/**************************************************************************/
+
+.proxyTable {
+	background-color:#FFEEDD
+	}
+
+.proxyStd {
+	font-family:sans-serif
+	}
+
+.browserHeadingMini {
+	color:#FFFFFF;
+	font-weight:bold;
+	font-family:sans-serif
+	}
+
+.browserTypeSpecMini {
+	color:#FFFFFF;
+	font-family:sans-serif;
+	font-style:italic;
+	text-align:right;
+	alignment:right;
+	font-size:small;
+	}
+
+/**************************************************************************/
+
+.browserDotgraphImage {
+	margin:10px
+}
+
+/**************************************************************************/
+
+pre.browserLiteral {
+	font-family:monospace;
+	font-size:medium
+}
+
+pre.browserXMLLiteral {
+	font-family:monospace;
+	font-size:small
+}

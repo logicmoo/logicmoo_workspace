@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.37</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="files.html">
+<link rel="next" href="protocol.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="files.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="protocol.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:toplevel"><a id="sec:4.37"><span class="sec-nr">4.37</span> <span class="sec-title">User 
+Top-level Manipulation</span></a></h2>
+
+<a id="sec:toplevel"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="break/0"><strong>break</strong></a></dt>
+<dd class="defbody">
+Recursively start a new Prolog top level. This Prolog top level shares 
+everything from the environment it was started in. Debugging is switched 
+off on entering a break and restored on leaving one. The break 
+environment is terminated by typing the system's end-of-file character 
+(control-D). If that is somehow not functional, the term
+<code>end_of_file.</code> can be entered to return from the break 
+environment. If the <strong>-t</strong> <var>toplevel</var> command line 
+option is given, this goal is started instead of entering the default 
+interactive top level (<a id="idx:prolog0:1718"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>).
+
+<p>Notably the gui based versions (<b>swipl-win</b> on Windows and 
+MacOS) provide the menu <b>Run/New thread</b> that opens a new toplevel 
+that runs concurrently with the initial toplevel. The concurrent 
+toplevel can be used to examine the program, in particular global 
+dynamic predicates. It can not access <em>global variables</em> or 
+thread-local dynamic predicates (see <a id="idx:threadlocal1:1719"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
+of the main thread.</dd>
+<dt class="pubdef"><a id="abort/0"><strong>abort</strong></a></dt>
+<dd class="defbody">
+Abort the Prolog execution and restart the top level. If the
+<strong>-t</strong> <var>toplevel</var> command line option is given, 
+this goal is restarted instead of entering the default interactive top 
+level.
+
+<p>Aborting is implemented by throwing the reserved exception
+<code>'$aborted'</code>. This exception can be caught using <a id="idx:catch3:1720"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, 
+but the recovery goal is wrapped with a predicate that prunes the choice 
+points of the recovery goal (i.e., as <a id="idx:once1:1721"></a><a class="pred" href="metacall.html#once/1">once/1</a>) 
+and re-throws the exception. This is illustrated in the example below, 
+where we press control-C and&lsquo;a'. See also <a class="sec" href="exception.html#sec:4.10.1">section 
+4.10.1</a>.
+
+<pre class="code">
+?- catch((repeat,fail), E, true).
+^CAction (h for help) ? abort
+% Execution Aborted
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="halt/0"><strong>halt</strong></a></dt>
+<dd class="defbody">
+Terminate Prolog execution. This is the same as <code>halt(0)</code>. 
+See
+<a id="idx:halt1:1722"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+for details.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="halt/1"><strong>halt</strong>(<var>+Status</var>)</a></dt>
+<dd class="defbody">
+Terminate Prolog execution with <var>Status</var>. This predicate calls
+<a class="func" href="foreigninclude.html#PL_halt()">PL_halt()</a> which 
+preforms the following steps:
+
+<p>
+<ol class="latex">
+<li>Set the Prolog flag <a class="flag" href="flags.html#flag:exit_status">exit_status</a> 
+to <var>Status</var>.
+
+<p>
+<li>Call all hooks registered using <a id="idx:athalt1:1723"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>. 
+If <var>Status</var> equals 0 (zero), any of these hooks calls <a id="idx:cancelhalt1:1724"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>, 
+termination is cancelled.
+
+<p>
+<li>Call all hooks registered using <b>PL_at_halt()</b>. In the future, 
+if any of these hooks returns non-zero, termination will be cancelled. 
+Currently, this only prints a warning.
+
+<p>
+<li>Perform the following system cleanup actions:
+
+<p>
+<ul class="latex">
+<li>Cancel all threads, calling <a id="idx:threadatexit1:1725"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+registered termination hooks. Threads not responding within 1 second are 
+cancelled forcefully.
+<li>Flush I/O and close all streams except for standard I/O.
+<li>Reset the terminal if its properties were changed.
+<li>Remove temporary files and incomplete compilation output.
+<li>Reclaim memory.
+</ul>
+
+<p>
+<li>Call exit(Status) to terminate the process
+</ol>
+
+<p><a id="idx:halt1:1726"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+has been extended in SWI-Prolog to accept the arg <code>abort</code>. 
+This performs as <a id="idx:halt1:1727"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+above except that:
+
+<p>
+<ul class="latex">
+<li>Termination cannot be cancelled with <a id="idx:cancelhalt1:1728"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>.
+<li>abort() is called instead of exit(Status).
+</ul>
+</dd>
+<dt class="pubdef"><a id="prolog/0"><strong>prolog</strong></a></dt>
+<dd class="defbody">
+This goal starts the default interactive top level. Queries are read 
+from the stream <code>user_input</code>. See also the Prolog flag
+<a class="flag" href="flags.html#flag:history">history</a>. The <a id="idx:prolog0:1729"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
+predicate is terminated (succeeds) by typing the end-of-file character 
+(typically control-D).
+</dd>
+</dl>
+
+<p>The following two hooks allow for expanding queries and handling the 
+result of a query. These hooks are used by the top level variable 
+expansion mechanism described in <a class="sec" href="topvars.html#sec:2.9">section 
+2.9</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="expand_query/4"><strong>expand_query</strong>(<var>+Query, 
+-Expanded, +Bindings, -ExpandedBindings</var>)</a></dt>
+<dd class="defbody">
+Hook in module <code>user</code>, normally not defined. <var>Query</var> 
+and
+<var>Bindings</var> represents the query read from the user and the 
+names of the free variables as obtained using <a id="idx:readterm3:1730"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>. 
+If this predicate succeeds, it should bind <var>Expanded</var> and <var>ExpandedBindings</var> 
+to the query and bindings to be executed by the top level. This 
+predicate is used by the top level (<a id="idx:prolog0:1731"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>). 
+See also <a id="idx:expandanswer2:1732"></a><a class="pred" href="toplevel.html#expand_answer/2">expand_answer/2</a> 
+and
+<a id="idx:termexpansion2:1733"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>.</dd>
+<dt class="pubdef"><a id="expand_answer/2"><strong>expand_answer</strong>(<var>+Bindings, 
+-ExpandedBindings</var>)</a></dt>
+<dd class="defbody">
+Hook in module <code>user</code>, normally not defined. Expand the 
+result of a successfully executed top-level query. <var>Bindings</var> 
+is the query
+<var>&lt;<var>Name</var>&gt;=&lt;<var>Value</var>&gt;</var> binding list 
+from the query. <var>ExpandedBindings</var> must be unified with the 
+bindings the top level should print.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,58 @@
+% -*-Prolog-*-
+
+:- include(test_header).
+
+% this Pfc example shows how to maintain a sum_01a.	
+% Given a set of asssertions matching value_01a(N), this rule
+% will maintain an assertion sum_01a(S) where S is the sum_01a of all of the values.
+
+
+:- dynamic(sum_01a/1).
+
+
+% RULES
+
+value_01a(X) ==> {addToSum(X)}.
+
+do_and_undo(addToSum(X), subFromSum(X)).
+
+% prologBuiltin(addToSum/1).
+
+addToSum(X) :-
+  retract(sum_01a(S)),
+  !,
+  NewS is X+S,
+  assert(sum_01a(NewS)).
+addToSum(X) :- assert(sum_01a(X)).
+  
+subFromSum(X) :-
+  retract(sum_01a(S)),
+  NewS is S-X,
+  assert(sum_01a(NewS)),
+  !.
+subFromSum(X) :- 
+  format('~n I can''t find a sum to subtract ~w from.',[X]),
+   listing(sum_01a/1).
+
+
+% FACTS
+
+value_01a(1).
+value_01a(2).
+value_01a(3).
+
+
+% TEST RESULTS
+:- mpred_test(sum_01a(6)).
+
+% TEST REMOVAL HIT
+\+ value_01a(2).
+% :- mpred_why(value_01a(2)).
+
+:- mpred_test(sum_01a(4)).
+
+% TEST REMOVAL MISS
+\+ value_01a(2).
+:- mpred_test(sum_01a(4)).
+
+

@@ -1,0 +1,6 @@
+[Man:karim]<-agnt-[Cut]-
+	             -obj->[Apple]-
+		        -colorOf->[Color: yellow],
+		        -attr->[Good];
+	             -instr->[Knife],
+	             -manr->[Strong]

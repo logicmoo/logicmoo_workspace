@@ -1,0 +1,329 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2004b/PickUp.e
+loading foundations/Root.e
+loading foundations/EC.e
+360 variables and 1720 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+At(Coin, L4).
+At(James, L1).
+Happens(Move(James, L1, L2), 0).
+1
+-At(James, L1).
++At(James, L2).
+Happens(Move(James, L2, L3), 1).
+2
+-At(James, L2).
++At(James, L3).
+Happens(Move(James, L3, L4), 2).
+3
+-At(James, L3).
++At(James, L4).
+Happens(PickUp(James, Coin), 3).
+4
++Holding(James, Coin).
+Happens(Move(James, L4, L3), 4).
+5
+-At(Coin, L4).
+-At(James, L4).
++At(Coin, L3).
++At(James, L3).
+Happens(Move(James, L3, L2), 5).
+6
+-At(Coin, L3).
+-At(James, L3).
++At(Coin, L2).
++At(James, L2).
+Happens(SetDown(James, Coin), 6).
+7
+-Holding(James, Coin).
+Happens(Move(James, L2, L3), 7).
+8
+-At(James, L2).
++At(James, L3).
+Happens(Move(James, L3, L4), 8).
+9
+-At(James, L3).
++At(James, L4).
+P
+ReleasedAt(At(Coin, L1), 4).
+ReleasedAt(At(Coin, L1), 5).
+ReleasedAt(At(Coin, L1), 6).
+ReleasedAt(At(Coin, L1), 7).
+ReleasedAt(At(Coin, L1), 8).
+ReleasedAt(At(Coin, L1), 9).
+ReleasedAt(At(Coin, L2), 4).
+ReleasedAt(At(Coin, L2), 5).
+ReleasedAt(At(Coin, L2), 6).
+ReleasedAt(At(Coin, L3), 4).
+ReleasedAt(At(Coin, L3), 5).
+ReleasedAt(At(Coin, L3), 6).
+ReleasedAt(At(Coin, L3), 7).
+ReleasedAt(At(Coin, L3), 8).
+ReleasedAt(At(Coin, L3), 9).
+ReleasedAt(At(Coin, L4), 4).
+ReleasedAt(At(Coin, L4), 5).
+ReleasedAt(At(Coin, L4), 6).
+ReleasedAt(At(Coin, L4), 7).
+ReleasedAt(At(Coin, L4), 8).
+ReleasedAt(At(Coin, L4), 9).
+!Happens(Move(James, L1, L1), 0).
+!Happens(Move(James, L1, L1), 1).
+!Happens(Move(James, L1, L1), 2).
+!Happens(Move(James, L1, L1), 3).
+!Happens(Move(James, L1, L1), 4).
+!Happens(Move(James, L1, L1), 5).
+!Happens(Move(James, L1, L1), 6).
+!Happens(Move(James, L1, L1), 7).
+!Happens(Move(James, L1, L1), 8).
+!Happens(Move(James, L1, L1), 9).
+!Happens(Move(James, L1, L2), 1).
+!Happens(Move(James, L1, L2), 2).
+!Happens(Move(James, L1, L2), 3).
+!Happens(Move(James, L1, L2), 4).
+!Happens(Move(James, L1, L2), 5).
+!Happens(Move(James, L1, L2), 6).
+!Happens(Move(James, L1, L2), 7).
+!Happens(Move(James, L1, L2), 8).
+!Happens(Move(James, L1, L2), 9).
+!Happens(Move(James, L1, L3), 0).
+!Happens(Move(James, L1, L3), 1).
+!Happens(Move(James, L1, L3), 2).
+!Happens(Move(James, L1, L3), 3).
+!Happens(Move(James, L1, L3), 4).
+!Happens(Move(James, L1, L3), 5).
+!Happens(Move(James, L1, L3), 6).
+!Happens(Move(James, L1, L3), 7).
+!Happens(Move(James, L1, L3), 8).
+!Happens(Move(James, L1, L3), 9).
+!Happens(Move(James, L1, L4), 0).
+!Happens(Move(James, L1, L4), 1).
+!Happens(Move(James, L1, L4), 2).
+!Happens(Move(James, L1, L4), 3).
+!Happens(Move(James, L1, L4), 4).
+!Happens(Move(James, L1, L4), 5).
+!Happens(Move(James, L1, L4), 6).
+!Happens(Move(James, L1, L4), 7).
+!Happens(Move(James, L1, L4), 8).
+!Happens(Move(James, L1, L4), 9).
+!Happens(Move(James, L2, L1), 0).
+!Happens(Move(James, L2, L1), 1).
+!Happens(Move(James, L2, L1), 2).
+!Happens(Move(James, L2, L1), 3).
+!Happens(Move(James, L2, L1), 4).
+!Happens(Move(James, L2, L1), 5).
+!Happens(Move(James, L2, L1), 6).
+!Happens(Move(James, L2, L1), 7).
+!Happens(Move(James, L2, L1), 8).
+!Happens(Move(James, L2, L1), 9).
+!Happens(Move(James, L2, L2), 0).
+!Happens(Move(James, L2, L2), 1).
+!Happens(Move(James, L2, L2), 2).
+!Happens(Move(James, L2, L2), 3).
+!Happens(Move(James, L2, L2), 4).
+!Happens(Move(James, L2, L2), 5).
+!Happens(Move(James, L2, L2), 6).
+!Happens(Move(James, L2, L2), 7).
+!Happens(Move(James, L2, L2), 8).
+!Happens(Move(James, L2, L2), 9).
+!Happens(Move(James, L2, L3), 0).
+!Happens(Move(James, L2, L3), 2).
+!Happens(Move(James, L2, L3), 3).
+!Happens(Move(James, L2, L3), 4).
+!Happens(Move(James, L2, L3), 5).
+!Happens(Move(James, L2, L3), 6).
+!Happens(Move(James, L2, L3), 8).
+!Happens(Move(James, L2, L3), 9).
+!Happens(Move(James, L2, L4), 0).
+!Happens(Move(James, L2, L4), 1).
+!Happens(Move(James, L2, L4), 2).
+!Happens(Move(James, L2, L4), 3).
+!Happens(Move(James, L2, L4), 4).
+!Happens(Move(James, L2, L4), 5).
+!Happens(Move(James, L2, L4), 6).
+!Happens(Move(James, L2, L4), 7).
+!Happens(Move(James, L2, L4), 8).
+!Happens(Move(James, L2, L4), 9).
+!Happens(Move(James, L3, L1), 0).
+!Happens(Move(James, L3, L1), 1).
+!Happens(Move(James, L3, L1), 2).
+!Happens(Move(James, L3, L1), 3).
+!Happens(Move(James, L3, L1), 4).
+!Happens(Move(James, L3, L1), 5).
+!Happens(Move(James, L3, L1), 6).
+!Happens(Move(James, L3, L1), 7).
+!Happens(Move(James, L3, L1), 8).
+!Happens(Move(James, L3, L1), 9).
+!Happens(Move(James, L3, L2), 0).
+!Happens(Move(James, L3, L2), 1).
+!Happens(Move(James, L3, L2), 2).
+!Happens(Move(James, L3, L2), 3).
+!Happens(Move(James, L3, L2), 4).
+!Happens(Move(James, L3, L2), 6).
+!Happens(Move(James, L3, L2), 7).
+!Happens(Move(James, L3, L2), 8).
+!Happens(Move(James, L3, L2), 9).
+!Happens(Move(James, L3, L3), 0).
+!Happens(Move(James, L3, L3), 1).
+!Happens(Move(James, L3, L3), 2).
+!Happens(Move(James, L3, L3), 3).
+!Happens(Move(James, L3, L3), 4).
+!Happens(Move(James, L3, L3), 5).
+!Happens(Move(James, L3, L3), 6).
+!Happens(Move(James, L3, L3), 7).
+!Happens(Move(James, L3, L3), 8).
+!Happens(Move(James, L3, L3), 9).
+!Happens(Move(James, L3, L4), 0).
+!Happens(Move(James, L3, L4), 1).
+!Happens(Move(James, L3, L4), 3).
+!Happens(Move(James, L3, L4), 4).
+!Happens(Move(James, L3, L4), 5).
+!Happens(Move(James, L3, L4), 6).
+!Happens(Move(James, L3, L4), 7).
+!Happens(Move(James, L3, L4), 9).
+!Happens(Move(James, L4, L1), 0).
+!Happens(Move(James, L4, L1), 1).
+!Happens(Move(James, L4, L1), 2).
+!Happens(Move(James, L4, L1), 3).
+!Happens(Move(James, L4, L1), 4).
+!Happens(Move(James, L4, L1), 5).
+!Happens(Move(James, L4, L1), 6).
+!Happens(Move(James, L4, L1), 7).
+!Happens(Move(James, L4, L1), 8).
+!Happens(Move(James, L4, L1), 9).
+!Happens(Move(James, L4, L2), 0).
+!Happens(Move(James, L4, L2), 1).
+!Happens(Move(James, L4, L2), 2).
+!Happens(Move(James, L4, L2), 3).
+!Happens(Move(James, L4, L2), 4).
+!Happens(Move(James, L4, L2), 5).
+!Happens(Move(James, L4, L2), 6).
+!Happens(Move(James, L4, L2), 7).
+!Happens(Move(James, L4, L2), 8).
+!Happens(Move(James, L4, L2), 9).
+!Happens(Move(James, L4, L3), 0).
+!Happens(Move(James, L4, L3), 1).
+!Happens(Move(James, L4, L3), 2).
+!Happens(Move(James, L4, L3), 3).
+!Happens(Move(James, L4, L3), 5).
+!Happens(Move(James, L4, L3), 6).
+!Happens(Move(James, L4, L3), 7).
+!Happens(Move(James, L4, L3), 8).
+!Happens(Move(James, L4, L3), 9).
+!Happens(Move(James, L4, L4), 0).
+!Happens(Move(James, L4, L4), 1).
+!Happens(Move(James, L4, L4), 2).
+!Happens(Move(James, L4, L4), 3).
+!Happens(Move(James, L4, L4), 4).
+!Happens(Move(James, L4, L4), 5).
+!Happens(Move(James, L4, L4), 6).
+!Happens(Move(James, L4, L4), 7).
+!Happens(Move(James, L4, L4), 8).
+!Happens(Move(James, L4, L4), 9).
+!Happens(PickUp(James, Coin), 0).
+!Happens(PickUp(James, Coin), 1).
+!Happens(PickUp(James, Coin), 2).
+!Happens(PickUp(James, Coin), 4).
+!Happens(PickUp(James, Coin), 5).
+!Happens(PickUp(James, Coin), 6).
+!Happens(PickUp(James, Coin), 7).
+!Happens(PickUp(James, Coin), 8).
+!Happens(PickUp(James, Coin), 9).
+!Happens(SetDown(James, Coin), 0).
+!Happens(SetDown(James, Coin), 1).
+!Happens(SetDown(James, Coin), 2).
+!Happens(SetDown(James, Coin), 3).
+!Happens(SetDown(James, Coin), 4).
+!Happens(SetDown(James, Coin), 5).
+!Happens(SetDown(James, Coin), 7).
+!Happens(SetDown(James, Coin), 8).
+!Happens(SetDown(James, Coin), 9).
+!ReleasedAt(At(Coin, L1), 0).
+!ReleasedAt(At(Coin, L1), 1).
+!ReleasedAt(At(Coin, L1), 2).
+!ReleasedAt(At(Coin, L1), 3).
+!ReleasedAt(At(Coin, L2), 0).
+!ReleasedAt(At(Coin, L2), 1).
+!ReleasedAt(At(Coin, L2), 2).
+!ReleasedAt(At(Coin, L2), 3).
+!ReleasedAt(At(Coin, L2), 7).
+!ReleasedAt(At(Coin, L2), 8).
+!ReleasedAt(At(Coin, L2), 9).
+!ReleasedAt(At(Coin, L3), 0).
+!ReleasedAt(At(Coin, L3), 1).
+!ReleasedAt(At(Coin, L3), 2).
+!ReleasedAt(At(Coin, L3), 3).
+!ReleasedAt(At(Coin, L4), 0).
+!ReleasedAt(At(Coin, L4), 1).
+!ReleasedAt(At(Coin, L4), 2).
+!ReleasedAt(At(Coin, L4), 3).
+!ReleasedAt(At(James, L1), 0).
+!ReleasedAt(At(James, L1), 1).
+!ReleasedAt(At(James, L1), 2).
+!ReleasedAt(At(James, L1), 3).
+!ReleasedAt(At(James, L1), 4).
+!ReleasedAt(At(James, L1), 5).
+!ReleasedAt(At(James, L1), 6).
+!ReleasedAt(At(James, L1), 7).
+!ReleasedAt(At(James, L1), 8).
+!ReleasedAt(At(James, L1), 9).
+!ReleasedAt(At(James, L2), 0).
+!ReleasedAt(At(James, L2), 1).
+!ReleasedAt(At(James, L2), 2).
+!ReleasedAt(At(James, L2), 3).
+!ReleasedAt(At(James, L2), 4).
+!ReleasedAt(At(James, L2), 5).
+!ReleasedAt(At(James, L2), 6).
+!ReleasedAt(At(James, L2), 7).
+!ReleasedAt(At(James, L2), 8).
+!ReleasedAt(At(James, L2), 9).
+!ReleasedAt(At(James, L3), 0).
+!ReleasedAt(At(James, L3), 1).
+!ReleasedAt(At(James, L3), 2).
+!ReleasedAt(At(James, L3), 3).
+!ReleasedAt(At(James, L3), 4).
+!ReleasedAt(At(James, L3), 5).
+!ReleasedAt(At(James, L3), 6).
+!ReleasedAt(At(James, L3), 7).
+!ReleasedAt(At(James, L3), 8).
+!ReleasedAt(At(James, L3), 9).
+!ReleasedAt(At(James, L4), 0).
+!ReleasedAt(At(James, L4), 1).
+!ReleasedAt(At(James, L4), 2).
+!ReleasedAt(At(James, L4), 3).
+!ReleasedAt(At(James, L4), 4).
+!ReleasedAt(At(James, L4), 5).
+!ReleasedAt(At(James, L4), 6).
+!ReleasedAt(At(James, L4), 7).
+!ReleasedAt(At(James, L4), 8).
+!ReleasedAt(At(James, L4), 9).
+!ReleasedAt(Holding(James, Coin), 0).
+!ReleasedAt(Holding(James, Coin), 1).
+!ReleasedAt(Holding(James, Coin), 2).
+!ReleasedAt(Holding(James, Coin), 3).
+!ReleasedAt(Holding(James, Coin), 4).
+!ReleasedAt(Holding(James, Coin), 5).
+!ReleasedAt(Holding(James, Coin), 6).
+!ReleasedAt(Holding(James, Coin), 7).
+!ReleasedAt(Holding(James, Coin), 8).
+!ReleasedAt(Holding(James, Coin), 9).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+PickUp: 0 predicates, 0 functions, 2 fluents, 3 events, 22 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.4s
+solution 0.0s
+total 0.8s
+Discrete Event Calculus Reasoner 1.0

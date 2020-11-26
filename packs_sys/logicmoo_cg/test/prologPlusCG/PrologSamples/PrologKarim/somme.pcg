@@ -1,0 +1,5 @@
+ somme([],0).
+
+ somme([_X|_Q],_S) :- 
+	somme(_Q,_Y),
+ 	_S is _Y+_X .

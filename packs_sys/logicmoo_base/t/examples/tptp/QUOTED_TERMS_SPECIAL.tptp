@@ -1,0 +1,9 @@
+% -----------------------------------------------------------------------------
+% Name: QUOTED TERMS SPECIAL
+%
+% Quoted special terms are not special.
+% -----------------------------------------------------------------------------
+
+fof(a, axiom, $times_int(2,3) = 6).
+
+fof(b, conjecture, '$times_int'(2,3) = 6).

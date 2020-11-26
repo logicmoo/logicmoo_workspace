@@ -1,0 +1,23 @@
+father_of(ml(kristian,1940),ml(anders,1965)).
+father_of(ml(kristian,1940),ml(frank,1967)).
+father_of(ml(anders,1965),fm(lise,1990)).
+father_of(ml(anders,1965),fm(inga,1992)).
+father_of(ml(anders,1965),ml(preben,1994)).
+father_of(ml(anders,1965),fm(ann,1996)). 
+father_of(ml(frank,1967),ml(troels,1991)).
+mother_of(fm(maren,1941),ml(anders,1965)).
+mother_of(fm(maren,1941),ml(frank,1967)).
+mother_of(fm(tove,1966),fm(lise,1990)).
+mother_of(fm(tove,1966),fm(inga,1992)).
+mother_of(fm(tove,1996),fm(preben,1994)).
+mother_of(fm(tove,1996),fm(ann,1996)).
+person(_P):- mother_of(_P,_).
+person(_P):- mother_of(_,_P).
+person(_P):- father_of(_P,_).
+person(_P):- father_of(_,_P).
+male(ml(_Mand,_Aar)):- person(ml(_Mand,_Aar)).
+brother_of(_Person,_Bror):- 
+	male(_Bror),
+	mother_of(_Mor,_Person), mother_of(_Mor,_Bror),
+	mother_of(_Far,_Person), mother_of(_Far,_Bror),
+	dif(_Person,_Bror).

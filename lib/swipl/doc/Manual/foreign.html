@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="engine-predicates.html">
+<link rel="next" href="foreignoverview.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="engine-predicates.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="foreignoverview.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:foreign"><a id="sec:12"><span class="sec-nr">12</span> <span class="sec-title">Foreign 
+Language Interface</span></a></h1>
+
+<a id="sec:foreign"></a>
+
+<p>SWI-Prolog offers a powerful interface to C <cite><a class="cite" href="Bibliography.html#Kernighan:78">Kernighan &amp; 
+Ritchie, 1978</a></cite>. The main design objectives of the foreign 
+language interface are flexibility and performance. A foreign predicate 
+is a C function that has the same number of arguments as the predicate 
+represented. C functions are provided to analyse the passed terms, 
+convert them to basic C types as well as to instantiate arguments using 
+unification. Non-deterministic foreign predicates are supported, 
+providing the foreign function with a handle to control backtracking.
+
+<p>C can call Prolog predicates, providing both a query interface and an 
+interface to extract multiple solutions from a non-deterministic Prolog 
+predicate. There is no limit to the nesting of Prolog calling C, calling 
+Prolog, etc. It is also possible to write the&lsquo;main' in C and use 
+Prolog as an embedded logical engine.
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="foreignoverview.html"><span class="sec-nr">12.1</span> <span class="sec-title">Overview 
+of the Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignlink.html"><span class="sec-nr">12.2</span> <span class="sec-title">Linking 
+Foreign Modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.1"><span class="sec-nr">12.2.1</span> <span class="sec-title">What 
+linking is provided?</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.2"><span class="sec-nr">12.2.2</span> <span class="sec-title">What 
+kind of loading should I be using?</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.3"><span class="sec-nr">12.2.3</span> <span class="sec-title">library(shlib): 
+Utility library for loading foreign objects (DLLs, shared objects)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.4"><span class="sec-nr">12.2.4</span> <span class="sec-title">Low-level 
+operations on shared libraries</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignlink.html#sec:12.2.5"><span class="sec-nr">12.2.5</span> <span class="sec-title">Static 
+Linking</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreigntypes.html"><span class="sec-nr">12.3</span> <span class="sec-title">Interface 
+Data Types</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigntypes.html#sec:12.3.1"><span class="sec-nr">12.3.1</span> <span class="sec-title">Type <code>term_t</code>: 
+a reference to a Prolog term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigntypes.html#sec:12.3.1.1"><span class="sec-nr">12.3.1.1</span> <span class="sec-title">Interaction 
+with the garbage collector and stack-shifter</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigntypes.html#sec:12.3.2"><span class="sec-nr">12.3.2</span> <span class="sec-title">Other 
+foreign interface types</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigntypes.html#sec:12.3.2.1"><span class="sec-nr">12.3.2.1</span> <span class="sec-title">PL_ARITY_AS_SIZE</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreigninclude.html"><span class="sec-nr">12.4</span> <span class="sec-title">The 
+Foreign Include File</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.1"><span class="sec-nr">12.4.1</span> <span class="sec-title">Argument 
+Passing and Control</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.1.1"><span class="sec-nr">12.4.1.1</span> <span class="sec-title">Non-deterministic 
+Foreign Predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.2"><span class="sec-nr">12.4.2</span> <span class="sec-title">Atoms 
+and functors</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.2.1"><span class="sec-nr">12.4.2.1</span> <span class="sec-title">Atoms 
+and atom garbage collection</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.3"><span class="sec-nr">12.4.3</span> <span class="sec-title">Analysing 
+Terms via the Foreign Interface</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.1"><span class="sec-nr">12.4.3.1</span> <span class="sec-title">Testing 
+the type of a term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.2"><span class="sec-nr">12.4.3.2</span> <span class="sec-title">Reading 
+data from a term</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.3"><span class="sec-nr">12.4.3.3</span> <span class="sec-title">Exchanging 
+text using length and string</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.4"><span class="sec-nr">12.4.3.4</span> <span class="sec-title">Wide-character 
+versions</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.5"><span class="sec-nr">12.4.3.5</span> <span class="sec-title">Reading 
+a list</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.3.6"><span class="sec-nr">12.4.3.6</span> <span class="sec-title">An 
+example: defining write/1 in C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.4"><span class="sec-nr">12.4.4</span> <span class="sec-title">Constructing 
+Terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.5"><span class="sec-nr">12.4.5</span> <span class="sec-title">Unifying 
+data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.6"><span class="sec-nr">12.4.6</span> <span class="sec-title">Convenient 
+functions to generate Prolog exceptions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.7"><span class="sec-nr">12.4.7</span> <span class="sec-title">Serializing 
+and deserializing Prolog terms</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.8"><span class="sec-nr">12.4.8</span> <span class="sec-title">BLOBS: 
+Using atoms to store arbitrary binary data</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.8.1"><span class="sec-nr">12.4.8.1</span> <span class="sec-title">Defining 
+a BLOB type</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.8.2"><span class="sec-nr">12.4.8.2</span> <span class="sec-title">Accessing 
+blobs</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.9"><span class="sec-nr">12.4.9</span> <span class="sec-title">Exchanging 
+GMP numbers</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.10"><span class="sec-nr">12.4.10</span> <span class="sec-title">Calling 
+Prolog from C</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.10.1"><span class="sec-nr">12.4.10.1</span> <span class="sec-title">Predicate 
+references</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.10.2"><span class="sec-nr">12.4.10.2</span> <span class="sec-title">Initiating 
+a query from C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.11"><span class="sec-nr">12.4.11</span> <span class="sec-title">Discarding 
+Data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.12"><span class="sec-nr">12.4.12</span> <span class="sec-title">String 
+buffering</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.13"><span class="sec-nr">12.4.13</span> <span class="sec-title">Foreign 
+Code and Modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.14"><span class="sec-nr">12.4.14</span> <span class="sec-title">Prolog 
+exceptions in foreign code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.15"><span class="sec-nr">12.4.15</span> <span class="sec-title">Catching 
+Signals (Software Interrupts)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.16"><span class="sec-nr">12.4.16</span> <span class="sec-title">Miscellaneous</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.1"><span class="sec-nr">12.4.16.1</span> <span class="sec-title">Term 
+Comparison</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.2"><span class="sec-nr">12.4.16.2</span> <span class="sec-title">Recorded 
+database</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.3"><span class="sec-nr">12.4.16.3</span> <span class="sec-title">Database</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.4"><span class="sec-nr">12.4.16.4</span> <span class="sec-title">Getting 
+file names</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.16.5"><span class="sec-nr">12.4.16.5</span> <span class="sec-title">Dealing 
+with Prolog flags from C</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.17"><span class="sec-nr">12.4.17</span> <span class="sec-title">Errors 
+and warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.18"><span class="sec-nr">12.4.18</span> <span class="sec-title">Environment 
+Control from Foreign Code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.19"><span class="sec-nr">12.4.19</span> <span class="sec-title">Querying 
+Prolog</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.20"><span class="sec-nr">12.4.20</span> <span class="sec-title">Registering 
+Foreign Predicates</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.21"><span class="sec-nr">12.4.21</span> <span class="sec-title">Foreign 
+Code Hooks</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.22"><span class="sec-nr">12.4.22</span> <span class="sec-title">Storing 
+foreign data</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.22.1"><span class="sec-nr">12.4.22.1</span> <span class="sec-title">Examples 
+for storing foreign data</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreigninclude.html#sec:12.4.23"><span class="sec-nr">12.4.23</span> <span class="sec-title">Embedding 
+SWI-Prolog in other applications</span></a></div>
+<div class="toc-h4"><a class="sec" href="foreigninclude.html#sec:12.4.23.1"><span class="sec-nr">12.4.23.1</span> <span class="sec-title">Threading, 
+Signals and embedded Prolog</span></a></div>
+<div class="toc-h2"><a class="sec" href="plld.html"><span class="sec-nr">12.5</span> <span class="sec-title">Linking 
+embedded applications using swipl-ld</span></a></div>
+<div class="toc-h3"><a class="sec" href="plld.html#sec:12.5.1"><span class="sec-nr">12.5.1</span> <span class="sec-title">A 
+simple example</span></a></div>
+<div class="toc-h2"><a class="sec" href="findhome.html"><span class="sec-nr">12.6</span> <span class="sec-title">The 
+Prolog&lsquo;home' directory</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignxmp.html"><span class="sec-nr">12.7</span> <span class="sec-title">Example 
+of Using the Foreign Interface</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignnotes.html"><span class="sec-nr">12.8</span> <span class="sec-title">Notes 
+on Using Foreign Code</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.1"><span class="sec-nr">12.8.1</span> <span class="sec-title">Foreign 
+debugging functions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.2"><span class="sec-nr">12.8.2</span> <span class="sec-title">Memory 
+Allocation</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.3"><span class="sec-nr">12.8.3</span> <span class="sec-title">Compatibility 
+between Prolog versions</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.4"><span class="sec-nr">12.8.4</span> <span class="sec-title">Foreign 
+hash tables</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.5"><span class="sec-nr">12.8.5</span> <span class="sec-title">Debugging 
+and profiling foreign code (valgrind)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.6"><span class="sec-nr">12.8.6</span> <span class="sec-title">Name 
+Conflicts in C modules</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignnotes.html#sec:12.8.7"><span class="sec-nr">12.8.7</span> <span class="sec-title">Compatibility 
+of the Foreign Interface</span></a></div>
+</div>
+</body></html>

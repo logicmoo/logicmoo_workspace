@@ -1,0 +1,22 @@
+- [X] Go To Line dialog: Text field should receive focus.
+
+- [X] Go To Line dialog: Process Enter Key.
+
+- [X] Remove Save-button in Deploy Applet dialog.
+
+- [X] Rename 'OK' button to 'Deploy' in Deploy Applet Dialog.
+
+- [X] Clear debug console at new error/compile.
+
+- [X] Enter-key in prompt window must execute query if there is only
+      whitespace after the period.
+
+- [X] Do not show message about saving when starting Deploy Applet.
+
+- [ ] Deploy Applet must warn if special characters
+      ([^A-Za-z_0-9./\\]) are used in the file name.
+
+- [ ] Document prompt window.
+
+- [ ] Maintain history in prompt window.
+

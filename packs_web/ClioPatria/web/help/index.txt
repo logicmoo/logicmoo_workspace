@@ -1,0 +1,41 @@
+---+ ClioPatria: the SWI-Prolog Semantic Web Server
+
+SWI-Prolog offers an extensive library for loading, saving and querying
+Semantic Web documents called the
+[[semweb][http://www.swi-prolog.org/pldoc/package/semweb.html]] package.
+Internally, the query language is `Prolog', building on top of an
+efficient implementation of a predicate rdf/3 expressing the content of
+the triple store.
+
+ClioPatria provides a ready-ro-run web-server on top of this
+infrastructure. The web-server contains a SPARQL endpoint, user
+management and web-based tools to help the developer analysing the
+loaded RDF.
+
+  * *|About ClioPatria|*
+    * An overview of the functionality.txt provided by ClioPatria
+    * A whitepaper.txt that explains why you need ClioPatria
+    * The role of RDF [[query languages][QueryLanguages.txt]] (e.g.,
+      *SPARQL*) in ClioPatria.
+
+  * *|Getting ClioPatria|*
+    * Download.txt ClioPatria
+    * Add [[packages][cpack/Finding.txt]] to ClioPatria
+    * Install.txt or restart.txt ClioPatria
+    * Run ClioPatria as a (Unix daemon) service.txt
+    * About ClioPatria versions.txt.
+
+  * *|Using ClioPatria|*
+    * Howto [[load RDF][howto/LoadRDF.txt]] into ClioPatria
+    * [[Exploring RDF][howto/ExploreRDF.txt]] with ClioPatria
+    * Howto perform [full-text search](howto/fulltext.txt) with ClioPatria
+    * [[Supported browsers][Browsers.txt]]
+    * Provide howto/LOD.txt (Linked Open Data) services from ClioPatria
+    * [[Client authentication][howto/ClientAuth.txt]] to access
+    restricted services
+
+  * *|Development with ClioPatria|*
+    * The ClioPatria [[plugin architecture][Plugin.txt]]
+    * The ClioPatria package manager [[CPACK][cpack/index.txt]]
+    * Developing.txt applications with ClioPatria
+

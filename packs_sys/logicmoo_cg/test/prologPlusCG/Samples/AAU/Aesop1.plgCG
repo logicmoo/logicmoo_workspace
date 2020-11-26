@@ -1,0 +1,8 @@
+Entity > Animal, Act.
+Animal = Wolf, Lamb.
+Act = Persuade, Eat.
+
+Act([Animal : Wolf]<-AGNT-[Act : Persuade]-RCPT->[Animal : Lamb]).
+Act([Animal : Wolf]<-AGNT-[Act : Eat]-PTNT->[Animal : Lamb]).
+
+WolfDoesToLamb(A,R) :- Act([Animal : Wolf]<-AGNT-[Act : A]-R->[Animal : Lamb]).

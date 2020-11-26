@@ -1,0 +1,13 @@
+
+Compile and load the Regulus grammar defined by the {\tt
+regulus\_\-grammar} config file entry in DCG and left-corner form. If
+the grammar files and the config file have not been modified since the
+last invocation of the {\tt LOAD} command, left-corner compilation is
+not performed, and the stored version of the compiled grammar is used.
+
+If parse preferences and/or nbest preference files are defined, these
+are also loaded. These files are specified by the parameters {\tt
+parse\_\-preferences} and {\tt nbest\_\-preferences} respectively, and
+can be also loaded using the {\tt LOAD\_\-PREFERENCES} command.
+
+

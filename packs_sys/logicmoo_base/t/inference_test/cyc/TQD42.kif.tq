@@ -1,0 +1,213 @@
+(note TQD42)
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?NATION) 
+ (opponents Iran ?NATION)) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+
+(opponents Bahrain Iran) 
+
+(instance opponents SymmetricRelation) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIOCHEM) 
+ (instance ?BIOCHEM BiologicalWeapon) 
+ (eventOccursAt ?ATTACK ?REGION) 
+ (inRegion ?REGION ?COUNTRY) 
+ (instance ?COUNTRY GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (economicStability 
+ (EconomicSystemFn ?COUNTRY) Low) likelihood)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(instance Bahrain GeographicalAgent) 
+
+(inRegion HYP-SomethingExisting-12134345 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-58360641 HYP-SomethingExisting-12134345) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(opponents Bahrain Iran) 
+
+(inverse opponents negativeVestedInterest) 
+
+(instance Bahrain GeographicalAgent) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (economicStability 
+ (EconomicSystemFn Bahrain) Low) likelihood) 
+
+(implies 
+ (and 
+ (instance ?AGT2 GeographicalAgent) 
+ (negativeVestedInterest ?AGT1 ?AGT2)) 
+ (desires ?AGT1 
+ (economicStability 
+ (EconomicSystemFn ?AGT2) Low))) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?NATION) 
+ (opponents Iran ?NATION)) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+
+(opponents Bahrain Iran) 
+
+(instance opponents SymmetricRelation) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIOCHEM) 
+ (instance ?BIOCHEM BiologicalWeapon) 
+ (eventOccursAt ?ATTACK ?REGION) 
+ (inRegion ?REGION ?COUNTRY) 
+ (instance ?COUNTRY GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (politicalStability ?COUNTRY Low) likelihood)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(instance Bahrain GeographicalAgent) 
+
+(inRegion HYP-SomethingExisting-12134345 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-58360641 HYP-SomethingExisting-12134345) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(opponents Bahrain Iran) 
+
+(inverse opponents negativeVestedInterest) 
+
+(instance Bahrain GeographicalAgent) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (politicalStability Bahrain Low) likelihood) 
+
+(implies 
+ (and 
+ (instance ?AGT2 GeographicalAgent) 
+ (negativeVestedInterest ?AGT1 ?AGT2)) 
+ (desires ?AGT1 
+ (politicalStability ?AGT2 Low))) 
+
+(contains MiddleEast-Region Bahrain) 
+
+(inverse contains inRegion) 
+
+(implies 
+ (internationalOrg-MemberCountry GulfCooperationCouncil ?NATION) 
+ (opponents Iran ?NATION)) 
+
+(internationalOrg-MemberCountry GulfCooperationCouncil Bahrain) 
+
+(opponents Bahrain Iran) 
+
+(instance opponents SymmetricRelation) 
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (deviceUsed ?ATTACK ?BIOCHEM) 
+ (instance ?BIOCHEM BiologicalWeapon) 
+ (eventOccursAt ?ATTACK ?REGION) 
+ (inRegion ?REGION ?COUNTRY) 
+ (instance ?COUNTRY GeographicalAgent)) 
+ (decreasesCausally ?ATTACK ?COUNTRY politicalStability)) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(instance Bahrain GeographicalAgent) 
+
+(inRegion HYP-SomethingExisting-12134345 Bahrain) 
+
+(eventOccursAt HYP-AttackOnTangible-58360641 HYP-SomethingExisting-12134345) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(deviceUsed HYP-AttackOnTangible-58360641 HYP-BiologicalWeapon-624717) 
+
+(instance HYP-AttackOnTangible-58360641 AttackOnTangible) 
+
+(instance HYP-BiologicalWeapon-624717 BiologicalWeapon) 
+
+(implies 
+ (and 
+ (instance ?COUNTRY2 Country) 
+ (inRegion ?COUNTRY2 ?REGION) 
+ (instance ?REGION GeoculturalRegion) 
+ (opponents ?COUNTRY1 ?COUNTRY2) 
+ (instance ?COUNTRY1 Country) 
+ (agent ?ACT ?COUNTRY1) 
+ (decreasesCausally ?ACT ?COUNTRY2 politicalStability)) 
+ (increasesCausally ?ACT 
+ (powerInRegion-Geopolitical ?COUNTRY1 ?REGION HighToVeryHigh) likelihood)) 
+
+(instance Bahrain Country) 
+
+(inRegion Bahrain MiddleEast-Region) 
+
+(instance MiddleEast-Region GeoculturalRegion) 
+
+(opponents Bahrain Iran) 
+
+(instance Iran Country) 
+
+(agent HYP-AttackOnTangible-58360641 Iran) 
+
+(decreasesCausally HYP-AttackOnTangible-58360641 Bahrain politicalStability) 
+
+(desires Iran 
+ (powerInRegion-Geopolitical Iran MiddleEast-Region HighToVeryHigh)) 
+
+(increasesCausally #$HYP-AttackOnTangible-58360641 
+ (powerInRegion-Geopolitical Iran MiddleEast-Region HighToVeryHigh) likelihood) 
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (agent ?ACT Iran) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET Bahrain) 
+       (deviceUsed ?ACT ?FORCE) 
+       (instance ?FORCE BiologicalWeapon)) 
+   (or 
+       (and 
+           (desires Iran ?PROP) 
+           (increasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires Iran 
+               (not ?PROP)) 
+           (decreasesCausally ?ACT ?PROP likelihood)))) 
+))
+
+(answer (list (economicStability 
+ (EconomicSystemFn Bahrain) Low))
+)
+
+(answer (list  (politicalStability Bahrain Low)  )
+)
+(answer (list 
+ (powerInRegion-Geopolitical Iran MiddleEast-Region HighToVeryHigh) )
+)
+(end_of_file)
+

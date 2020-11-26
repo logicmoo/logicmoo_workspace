@@ -1,0 +1,57 @@
+(note TQF211a)
+
+(subProcess Iranian-TalibanConflict-1998 TalibanTakeHostages) 
+(objectActedOn TalibanTakeHostages GroupOfIranianHostages-DiplomatsAndCitizens) 
+(directingAgent TalibanTakeHostages Taliban) 
+(instance TalibanTakeHostages TakingSomeoneHostage) 
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+(affectedAgent-Indirect Iranian-TalibanConflict-1998 SixPlusTwo-InternationalOrganization) 
+
+(instance GroupOfIranianHostages-DiplomatsAndCitizens 
+ (GroupFn 
+ (CitizensFn Iran))) 
+
+(mediators Iranian-TalibanConflict-1998 UnitedNationsOrganization) 
+(instance UnitedNationsOrganization Agent) 
+
+(implies 
+ (and 
+ (instance ?CONFLICT ConflictEvent) 
+ (subProcess ?CONFLICT ?EVENT) 
+ (mediators ?EVENT ?MEDIATOR) 
+ (instance ?MEDIATOR Agent) 
+ (opponentsInConflict ?AGENT-ONE ?AGENT-TWO ?CONFLICT)) 
+ (affectedAgent-Indirect ?CONFLICT ?MEDIATOR)) 
+
+(instance Iranian-TalibanConflict-1998 ConflictEvent) 
+(subProcess Iranian-TalibanConflict-1998 Iranian-TalibanConflict-1998) 
+(mediators Iranian-TalibanConflict-1998 SixPlusTwo-InternationalOrganization) 
+(instance SixPlusTwo-InternationalOrganization Agent) 
+(opponentsInConflict Taliban Iran Iranian-TalibanConflict-1998) 
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+(query (findall  ?AGENTS-WHO-ARE-INDIRECTLY-AFFECTED 
+   (thereExists ?EVENT 
+       (thereExists ?HOSTAGES 
+           (and 
+               (instance ?EVENT TakingSomeoneHostage) 
+               (directingAgent ?EVENT Taliban) 
+               (instance ?HOSTAGES 
+                   (GroupFn 
+                       (CitizensFn Iran))) 
+               (objectActedOn ?EVENT ?HOSTAGES) 
+               (thereExists ?CONFLICT 
+                   (and 
+                       (subProcess ?CONFLICT ?EVENT) 
+                       (opponentsInConflict Iran Taliban ?CONFLICT) 
+                       (affectedAgent-Indirect ?CONFLICT ?AGENTS-WHO-ARE-INDIRECTLY-AFFECTED))))))))
+
+(answer UnitedNationsOrganization)
+(answer SixPlusTwo-InternationalOrganization)
+
+(end_of_file)
+
+

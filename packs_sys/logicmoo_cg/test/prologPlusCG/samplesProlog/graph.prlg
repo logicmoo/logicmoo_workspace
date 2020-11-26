@@ -1,0 +1,16 @@
+// graph
+edge(na,nb).
+edge(na,ne).
+edge(nb,nd).
+edge(nb,nc).
+edge(nc,na).
+edge(ne,nb).
+tedge(N1,N2) :-
+	edge(N1,S),
+	edge(S,N2).
+
+path(N1,N2) :-
+	edge(N1,N2).
+path(N1,N2) :-
+	edge(N1,S),
+	path(S,N2).

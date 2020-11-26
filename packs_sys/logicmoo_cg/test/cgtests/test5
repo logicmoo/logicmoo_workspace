@@ -1,0 +1,117 @@
+;;Date: Thu, 28 May 92 08:45:59 -0500
+;;From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+;;To: cg@cs.umn.edu
+;;Subject: CG TEST5, actors
+
+;;The following is used for regression testing of CONSTRUCT.
+
+;;This file contains examples of actor graphs and actor statements.
+
+;;Divide from page 188.
+;;Two versions FACTORIAL differentia from page 191.
+;;Conceptual schema for the HIRE relation from page 307.
+;;Schema for AGE from page 308.
+
+[CAT]<-<AGNT>.
+
+<AGNT>->[CAT].
+
+[CAT:*v0017]-><AGNT>->[CAT:*v0017].
+
+<AGNT>-
+  <-[CAT:*v0019]
+  ->[CAT:*v0019],.
+
+[CAT:*v0021]1-><AGNT>-
+                 2<-[CAT:*v0021]
+                 3->[CAT:*v0021],.
+
+<AGNT>-
+  1<-[CAT:*v0023]
+  2<-[CAT:*v0023]
+  3->[CAT:*v0023],.
+
+[C:1]-><A><-[C:2].
+
+[C:3]<-<A>->[C:4].
+
+[C:5]1-><A>-
+          2<-[C:6]
+          3<-[C:7],.
+
+[C:8]1<-<A>-
+          2->[C:9]
+          3->[C:10],.
+
+<A>-
+  1->[C:11]
+  2->[C:12]
+  3->[C:13],.
+
+<A>-
+  1<-[C:14]
+  2<-[C:15]
+  3<-[C:16],.
+
+[C:17]-
+  -><A1>
+  -><A2>,.
+
+[C:18]-
+  <-<A1>
+  -><A2>,.
+
+[C:19]-
+  <-<A1>
+  <-<A2>,.
+
+[C:20]-
+  3<-<A2>-
+       1<-[C:21]
+       2<-[C:22],
+  1-><A1>-
+       2->[C:23]
+       3->[C:24],,.
+
+<DIVIDE>-
+  1<-[DIVIDEND:*a]
+  2<-[DIVISOR:*b]
+  3->[REMAINDER:*e]
+  4->[QUOTIENT:*d]1-><PLUS>-
+                       2<-[SQUARE-ROOT:*f]<-<SQRT><-[NUMBER:*c]
+                       3->[SUM:*g],,.
+
+[NUMBER:*x]-
+  <-<ADD1><-[NUMBER=0]<-<IDENT><-[NUMBER:*n]-><IDENT>->[POSITIVE:*y]-><SUB1>->[NUMBER:*z]-><FACTORIAL>->[NUMBER:*y]
+  3<-<MULTIPLY>-
+       1<-[NUMBER:*y]
+       2<-[POSITIVE:*y],,.
+
+<MULTIPLY>-
+  1<-[NUMBER:*a]<-<FACTORIAL><-[NUMBER:*b]<-<SUB1><-[POSITIVE:*a]<-<IDENT><-[NUMBER:*n]-><IDENT>->[NUMBER=0]-><ADD1>->[NUMBER:*x]
+  2<-[POSITIVE:*a]
+  3->[NUMBER:*x],.
+
+ACTOR FACTORIAL(n,x) IS
+[NUMBER:*n]-
+  -><IDENT>->[NUMBER=0]-><ADD1>->[NUMBER:*x]3<-<MULTIPLY>-
+                                                 1<-[NUMBER:*a]<-<FACTORIAL><-[NUMBER:*b]<-<SUB1><-[POSITIVE:*c]
+                                                 2<-[POSITIVE:*c],
+  -><IDENT>->[POSITIVE:*c],.
+
+[HIRE:*x]-
+  ->(AGNT)->[MANAGER:E1]<-<MGR-HIRE><-[EMPLOYEE:^U]-><DT-HIRE>->[DATE:E1]
+  ->(OBJ)->[EMPLOYEE:^U]
+  ->(PTIM)->[DATE:E1],.
+
+[PERSON:^U]-
+  ->(CHAR)->[BIRTH]->(PTIM)->[DATE:E1]1-><DIFF-DT>-
+                                           2<-[DATE:^U]<-(PTIM)<-[AGE:E1*x]
+                                           3->[AGE:E1*x],
+  ->(CHAR)->[AGE:E1*x]
+  -><DT-BIRTH>->[DATE:E1],.
+
+ACTOR ROOT-OF-SUM-OF-SQUARES(i1,i2,o) IS
+[NUMBER:*o]<-<SQUARE-ROOT><-[NUMBER:*v1]3<-<SUM>-
+                                             1<-[NUMBER:*v2]<-<SQUARE><-[NUMBER:*i1]
+                                             2<-[NUMBER:*v3]<-<SQUARE><-[NUMBER:*i2],.

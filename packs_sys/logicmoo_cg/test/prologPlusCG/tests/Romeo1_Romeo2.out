@@ -1,0 +1,26 @@
+{I=gr1, C=[Utterance]}
+{I=gr1, C=[Person : Romeo]}
+{I=gr1, C=[Person : Romeo]}
+{I=gr1, C=[Person : FriarLawrence]}
+{I=gr1, C=[Loud]}
+{I=gr1, C=[Proposition = [Act : Insist] -
+                              -Agnt->[Person : I],
+                              -Thme->[Situation = [Haste]-Attr->[Sudden]]]}
+{I=gr2, C=[Utterance]}
+{I=gr2, C=[Person : FriarLawrence]}
+{I=gr2, C=[Quiet]}
+{I=gr2, C=[Proposition = [Proposition = [Act : Walk] -
+                                           -Manr->[Wisely],
+                                           -Manr->[Slow]]-Reas->[Proposition = [Act : Stumble]-Agnt->[Person = [Act : Run] -
+                                                                                                                           -Manr->[fast],
+                                                                                                                           -Agnt->[Person]]]]}
+{I=gr1, C=[Act : Insist]}
+{I=gr1, C=[Person : Romeo]}
+{I=gr1, C=[Person : I]}
+{I=gr1, C=[Situation = [Haste]-Attr->[Sudden]]}
+{I=gr2, C=[Proposition = [Act : Walk] -
+                            -Manr->[Wisely],
+                            -Manr->[Slow]]}
+{I=gr2, C=[Proposition = [Act : Stumble]-Agnt->[Person = [Act : Run] -
+                                                           -Manr->[fast],
+                                                           -Agnt->[Person]]]}

@@ -1,0 +1,4 @@
+[Drive]-
+      -obj->[Truck],
+      -manr->[Fast],
+      -agnt->[Girl : Sue]

@@ -1,0 +1,408 @@
+                                            [15:40] <dmiles> i might finnaly have a way to explain Stickel's 1982 conflict driven clause learning hack
+[15:41] <dmiles> hwere he adds non horn clauses to proog
+[15:42] <dmiles> where he adds non Horne clauses to prolog code.. the problem is you do it the new way post 1982 .. you end up with mostly working code but you cant reproduce the input layer
+[15:43] <dmiles> do it stickel's way and you can reproduce the input layer
+[15:45] <jbalint> non-horn in what sense
+[15:46] <jbalint> afair there's a transformation from arbitrary first-order formulas to clause form
+[15:48] * RLa (~RL@82.131.127.254.cable.starman.ee) Quit (Quit: Leaving)
+[15:48] <dmiles> A Horn clause with exactly one positive literal is a definite clause; a definite clause with no negative literals is sometimes called a fact; and a Horn clause without a positive literal is sometimes called a goal clause (note that the empty clause consisting of no literals is a goal clause). These three kinds of Horn clauses are illustrated in the following propositional example:
+[15:48] <dmiles> interesting that defination has changed sinc ei last saw it
+[15:49] <dmiles> going to find the defination that normally i seen used
+[15:49] <dmiles> that defination there permits negated froms
+[15:50] <dmiles> "A clause (i.e., a disjunction of literals) is called a Horn clause if it contains at most one positive literal."
+[15:50] <dmiles> ok that defination says muct contain exaclty 1 positive literal
+[15:51] <dmiles> erm "at most"
+[15:51] <dmiles> so taking the transformation of "there's a transformation from arbitrary first-order formulas to clause form"   
+[15:52] <dmiles> the resulting clause form usualy does not contain a negation on the head
+[15:52] <ConceptThoughts> hi dmiles hi jbalint
+[15:53] <dmiles> that means not(foo(X)):- not(bar(X)).  is normaly elimninated 
+[15:54] <dmiles> stickle rewrote these  to  not_foo(X):- not_bar(X).   whereas other theorem proving systems elim9inated them
+[15:54] <dmiles> so to say   bar(X)=>foo(X).  
+[15:55] <dmiles> most "there's a transformation from arbitrary first-order formulas to clause form"      say the result should only be   foo(X):-bar(X).
+[15:55] <dmiles> i mean most versiuons of such a transformation
+[15:56] <dmiles> stiuckel adds the "not_foo(X):- not_bar(X). "  as also part of the output
+[15:57] <dmiles> additionally   one has to transform  "foo(X):-bar(X)."   to  "foo(X):- \+ not_foo(X), bar(X)."
+[15:57] <dmiles> (if they are trying to make this prolog)
+[15:59] <dmiles> so uness the "not_foo(X):- not_bar(X).  is present in the output transformation i not sure the original logical form can be recovered
+[16:00] <dmiles> if that form cannot be recovered after the transformation then the tranformation should be consered a lossy transform
+[16:00] <dmiles> that for =  bar(X)=>foo(X). 
+[16:00] <dmiles> that form=  bar(X)=>foo(X). 
+[16:01] <dmiles> since "foo(X):-bar(X)"   only means   "~foo(X)=>~bar(X)"  logicallyt
+[16:04] <dmiles> foo(X):-bar(X) + not_foo(X):- not_bar(X) =  bar(X)=>foo(X).
+[16:04] <ski> itym `not_bar(X) :- not_foo(X).', not `not_foo(X):- not_bar(X).', yes ?
+[16:04] <ski> (since otherwise you get `bar(X) <=> foo(X)')
+[16:04] <dmiles> oops thank you
+[16:05] <dmiles> not_bar(X) :- not_foo(X).  % we can prove bar(X) is false be proving foo(X) is false"
+[16:08] <dmiles> if i can not re-switch them :)  it is possbile i might finally win this argument with myself
+[16:08] * daFonseca (~daFonseca@p200300728D06FF11AD3890ED5F59D158.dip0.t-ipconnect.de) has joined ##prolog
+[16:09] <dmiles> and at least finnaly show the hole in most  FOL to clausual form conversions
+[16:10] * mikeyhc (~mikeyhc@atmosia.net) Quit (Quit: Coyote finally caught me)
+[16:13] <ski> "re-switch" ?
+[16:13] <dmiles> the lexical mistake i made just now
+[16:13] <dmiles> ski: that you noticed :)
+[16:14] <ski> mhm
+[16:14] <jbalint> yeah i guess negation is a different story
+[16:14] <dmiles> annother wild assertion i hope to make is that doubnle negative elimination is almost always an error
+[16:15] * ski smiles
+[16:15] <ski> are you starting to accept constructive logic, then ? ;)
+[16:16] <dmiles> i've assumed most of constructive logic has certain problems 
+[16:17] <dmiles> for excmaple in constructive logic it is assumed double negation elination is legal
+[16:18] <ski> no
+[16:18] <dmiles> ah.. tell me more
+[16:18] <ski> double negation elimination is not included in constructive logic
+[16:18] <ski> nor "the law/principle of excluded middle"
+[16:19] <ski> nor "proof-by-contradiction" (iow concluding that `A' holds because assuming `not A' would lead to a contradiction)
+[16:19] <ski> (which is not to be confused with "negation-introduction" : concluding that `not A' holds because assuming `A' would lead to a contradiction. big difference)
+[16:20] <dmiles> so far i stand with  constructive logic 
+[16:20] <ski> (the former three priciples, not included, are all equivalent anyway)
+[16:21] <ski> the traditional explanation of how to solve a goal/query is by means of using headless Horn clauses, iow something like `:- Query.', which logically means just `not Query'
+[16:22] <ski> and then managing to derive the empty clause, `:-', iow `:- true', iow `not true', iow `false' (a contradiction), from the extra assumption of `not Query'
+[16:22] <dmiles> yeah i havent been able to find "proof-by-contradiction" to be usable 
+[16:22] <ski> and thereby, using proof-by-contradiction, concluding that `Query' holds (and also getting some instantiations for variables in the query)
+[16:23] <ski> .. however, this *non*-constructive explanation of it is roundabout, and needless
+[16:23] <ski> instead of thinking of it as adding `:- Query.' and attempting to derive the empty clause (a contradiction), you can think of it as directly attempting to prove `Query'
+[16:24] <ski> if `Query' is of the shape `Conjunct0,Conjunct1', then to prove it directly, you need to prove `Conjunct0' directly, and also to prove `Conjunct1' directly
+[16:24] <ski> if `Query' is of the shape `( Disjunct0 ; Disjunct1 )', then to prove it directly, there's two alternate approaches
+[16:24] <ski> you can try to prove `Disjunct0' directly, which would suffice
+[16:25] <ski> or, in case that fails (or in case you want to see another solution/instantiation of variables), you can try to prove `Disjunct1' directly
+[16:25] <dmiles> nice this this is most like prolog to
+[16:26] <ski> if `Query' is `true', then that is trivially true/proved, so `Query' is already proved (and in the case this was a subgoal/subquery of a larger one (a conjunction, say), you then go on with the next conjunct)
+[16:26] * iki_ (889f317a@gateway/web/freenode/ip.136.159.49.122) has joined ##prolog
+[16:26] <ski> if `Query' is `false', then there is no proof, so you fail. if you had a disjunct you hadn'tr tried yet, you can go back there and try that instead
+[16:27] * iki_ (889f317a@gateway/web/freenode/ip.136.159.49.122) Quit (Client Quit)
+[16:28] <ski> if `Query' is `pred(Actual,...)', and there's a clause `all [X,Y,...] ( pred(Formal,...) :- Body )' assumed (from the program), then you can try to match `pred(Actual,...)' with `pred(Formal,...)', by replacing the variables `X',`Y',... in `Formal,...' (and also `Body') by appropriate terms
+[16:29] <ski> let's say the substituted version of `Formal' is `Formal2', and the corresponding version of `Body' is `Body2'
+[16:30] <ski> then what you've done first is to deduce `pred(Formal2,...) :- Body2' from `all [X,Y,...] ( pred(Formal,...) :- Body )', removing/eliminating the universal quantifier, by instantiating/specializing on the variables `X',`Y',...
+[16:31] <ski> well, actually, the point of `pred(Formal2,...)' was that it should be identical to `pred(Actual,...)', that's why we replaced the variables `X',`Y',... (if possible) with things
+[16:31] <ski> so, we really have gone from `all [X,Y,...] ( pred(Formal,...) :- Body )' to `pred(Actual,...) :- Body2'
+[16:31] <ski> so, we haven't yet made any progress with our goal `pred(Actual,...)'
+[16:32] <ski> but now, `pred(Actual,...) :- Body2' means `Body2 => pred(Actual,...)', and so if we only could prove `Body2', then by implication-elimination / modus ponens, we'd get to the goal `pred(Actual,...)'
+[16:32] <ski> iow, we *reduce* the goal `pred(Actual,...)' to the goal `Body2'
+[16:33] <ski> of course, there could be several clauses which could be of help in reducing the goal `pred(Actual,...)'
+[16:33] <ski> .. so, just as for disjunction, there's several potential choices here
+[16:33] <ski> commonly implemented as backtracking with choice-points
+[16:34] <ski> hm, and one more thing
+[16:35] <ski> when matching `pred(Actual,...)' with `pred(Formal,...)' (which may contain `X',`Y',...), it may also be necessary, in order to make a match, to instantiate some variables in the *goal* `pred(Actual,...)', not just in the clause that we're considering to use for reducing the goal
+[16:35] <ski> and those variable instantiations needs to be propagated to other "sibling" goals of this current (sub)goal
+[16:36] <ski> the exact details of how to phrase it depends on how explicit you want to be
+[16:37] <ski> the simplest version would be to take all the variables `A',`B',... in the original `Query', and *existentially* quantify over them, so that we really start with the initial goal `some [A,B,...] Query'
+[16:37] <ski> oh, and the rule for how to directly prove an existential, you ask ?
+[16:37] <dmiles> go on
+[16:38] <ski> well, it's simple, if `Query' is of the shape `some [A,B,...] Abstract', then "simply" pick the right terms to replace `A',`B',... with, in `Abstract', and then continue with that instantiated (even ground) formula as the new goal
+[16:39] <ski> this is a "trick" a bit like the description of what an algorithm with time-complexity NP is
+[16:40] <ski> iow, if you could (somehow) guess the answer of the algorithm, then *checking* that it's indeed a correct answer would be a polynomial time operation
+[16:41] <ski> an algorithm with this property is then NP (nondeterministically polynomial)
+[16:41] <ski> the crux is in how to actually guess right. the description gives no help for how to do this, it merely says that *if* you can do that, then the complexity is reduced to polynomial
+[16:42] <ski> anyway, going back to direct proof of existential
+[16:42] <ski> the above description only says that you, somehow, guess the correct values for the existentially quantified variables
+[16:42] <ski> it doesn't give a procedure for doing this
+[16:43] <ski> in case you have types, and furthermore, the type of your existentially quantified variable is *finite*, *then* you could try one after the other (with backtracking) and see if one fits ..
+[16:43] <ski> so, this is what i meant by
+[16:43] <ski> <ski> the exact details of how to phrase it depends on how explicit you want to be
+[16:43] <dmiles> one thing i dont know yet if if we must also test  not_pred(Actual,...)
+[16:43] <ski> this "simple" description doesn't bother to tell you *how* to actually find the value/term to use for the variable
+[16:44] <ski> (and for some purposes, that's ok, isn't needed)
+[16:44] <ski> if you want an algorithm, well then comes the invention of the Logic Variable as a rescue :)
+[16:45] <ski> iow, to *delay* the actual choice of value for the variable, until it's obvious what to choose for it (and then to propagate that choice everywhere the variable has been distributed)
+[16:47] <ski> this is a bit similar to solving an equation like `14*x - 11 = 2*x + 7', not by guessing `x', but by, step by step, rewriting it into `14*x - 2*x = 11 + 7', then `12*x = 18' then `x = 18/12', then `x = 3/2', at which point it's now easy to "guess" that `x' should be `3/2'
+[16:48] <ski> the actual mechanics of the above direct proof search sketch is more or less the same as usual
+[16:48] <ski> the main difference is to realize that we don't have to phrase it in terms of proof-by-contradiction
+[16:49] <ski> it should be simple to prove that the procedure is sound (iow computes correct solutions)
+[16:50] <ski> proving it is complete would require showing that it tries all avenues of search, that there isn't some way of proving the query that the procedure doesn't, essentially, find
+[16:51] <ski> ("essentially" here means : there are many ways to prove anything, but some proofs are "equivalent", basically the same. it is possible to make this notion formal. the important part here is that equivalent proofs always compute the same solution, and so if we have found one proof, then we don't care about other proofs equivalent to this one, we only care about inequivalent proofs)
+[16:52] <ski> (since they could give different solutions)
+[16:53] <ski> as soon as you start adding `not' to the mix (which, you'll note, i conveniently "forgot" above), you'll *have* to think more about completeness
+[16:54] <ski> since in case the search for `NegatedGoal' isn't complete, then the search for `not NegatedGoal' won't be *sound*
+[16:54] * ski is probably repeating stuff that dmiles knows well, at this point ..
+[16:54] * dmiles is still trapnsposing this to a text documenbt
+[16:55] <dmiles> since it is well said and
+[16:56] <dmiles> and useable 
+[16:56] <ski> there's possible better sources of this direct proof search explanation of logic programming
+[16:57] <ski> but i think i probably read about it, in this way (roughly), in the papers about lambdaProlog
+[16:57] <dmiles> i thing also when we add not we also have to add box and diamond operators
+[16:57] <ski> well, modal logic is another matter
+[16:57] <ski> (also, which flavour ?)
+[16:58] <dmiles> i thing also when we add `not` we also have to add `box` and `diamond` operators  or if we don't we have to decside what we are neagting.. are we negating existense of experssibilty or what
+[16:58] <ski> lambdaProlog extends the subset of predicate logic (Horn clauses) that (pure) Prolog uses, into Hereditary Harrop formulae
+[16:58] <dmiles> decide what we are neagting.. are we negating existense or experssibilty or what
+[16:59] <ski> basically, they add the possibility of using implication and universal quantification, in goals
+[16:59] * _daFonseca_ (~daFonseca@p200300728D06FF40AD3890ED5F59D158.dip0.t-ipconnect.de) has joined ##prolog
+[17:00] <ski> (but still no disjunction nor existentials, in *clauses* (per se, as opposed to in their goal bodies))
+[17:00] <ski> (oh, and still no negation :)
+
+
+isa(vtHairStyle,tCol).
+genls(vtHairStyle,tCol).
+
+isa(vHairStyleBald,vtHairStyle). isa(vHairStyleLongHair,vtHairStyle).
+disjoint(vHairStyleBald,vHairStyleLongHair).
+
+
+
+:- if(false).
+
+% ================================================
+% add_from_file/2
+% ================================================
+add_from_file(B,_):- contains_singletons(B),trace_or_throw(dtrace),dmsg(todo(add_from_file_contains_singletons(B))),!,fail.
+add_from_file(B,B):- mpred_add(B). % db_op(change(assert,_OldV),B),!.
+
+
+univ_left(Comp,[M:P|List]):- is_ftNonvar(M),univ_left0(M, Comp, [P|List]),!.
+univ_left(Comp,[H,M:P|List]):- is_ftNonvar(M),univ_left0(M,Comp,[H,P|List]),!.
+univ_left(Comp,[P|List]):-lmconf:mpred_user_kb(DBASE), univ_left0(DBASE,Comp,[P|List]),!.
+univ_left0(M,M:Comp,List):- Comp=..List,!.
+
+
+mpred_term_expansion_file.
+
+
+
+:- module_transparent( xfile_module_term_expansion_pass_3/7).
+
+
+
+%% xfile_module_term_expansion_pass_3( ?How, ?INFO, ?F, ?M, ?AA, ?O, ?OO) is semidet.
+%
+% Xfile Module Term Expansion Pass Helper Number 3..
+%
+xfile_module_term_expansion_pass_3(How,INFO,_F,_M,AA,O,OO):- 
+   (O = (:- _) -> OO = O ;
+      (How == pl -> OO = O ;
+        (add_from_file(O), OO = '$si$':'$was_imported_kb_content$'(AA,INFO)))),!.      
+
+:- thread_local((t_l:use_side_effect_buffer , t_l:verify_side_effect_buffer)).
+
+
+
+
+%% mpred_expander_now( +I, -O) is semidet.
+%
+% Managed Predicate Expander Now.
+%
+mpred_expander_now(I,O):- 
+ '$set_source_module'(M,M),
+  current_source_file(F),
+  get_source_ref1(Ref),
+   locally(t_l:current_why_source(Ref), 
+     mpred_expander_now_one(F,M,I,O)).
+
+
+
+:-export((force_expand_head/2,force_head_expansion/2)).
+:-export((force_expand_goal/2)).
+force_expand_head(G,GH) :- force_head_expansion(G,GH),!.
+force_expand_goal(A, B) :- force_expand(expand_goal(A, B)).
+
+:-thread_local inside_clause_expansion/1.
+   
+set_list_len(List,A,NewList):-length(List,LL),A=LL,!,NewList=List.
+set_list_len(List,A,NewList):-length(List,LL),A>LL,length(NewList,A),append(List,_,NewList),!.
+set_list_len(List,A,NewList):-length(NewList,A),append(NewList,_,List),!.
+
+
+is_mpred_prolog(F,_):-get_mpred_prop(F,prologDynamic).
+
+declare_as_code(F,A):-findall(n(File,Line),source_location(File,Line),SL),ignore(inside_clause_expansion(CE)),decl_mpred(F,prologDynamic),decl_mpred(F,info(discoveredInCode(F/A,SL,CE))),!.
+if_mud_asserted(F,A2,_,_Why):-is_mpred_prolog(F,A2),!,fail.
+if_mud_asserted(F,A2,A,Why):-using_holds_db(F,A2,A,Why).
+
+
+is_kb_module(Moo):-atom(Moo),member(Moo,[add,dyn,abox,tbox,kb,opencyc]).
+is_kb_mt_module(Moo):-atom(Moo),member(Moo,[moomt,kbmt,mt]).
+
+:-export(if_use_holds_db/4).
+if_use_holds_db(F,A2,_,_):- is_mpred_prolog(F,A2),!,fail.
+if_use_holds_db(F,A,_,_):-  never_use_holds_db(F,A,_Why),!,fail.
+if_use_holds_db(F,A2,A,Why):- using_holds_db(F,A2,A,Why),!.
+if_use_holds_db(F,A,_,_):- declare_as_code(F,A),fail.
+
+never_use_holds_db(F,N,Why):-trace_or_throw(todo(find_impl,never_use_holds_db(F,N,Why))).
+
+isCycPredArity_Check(F,A):-get_mpred_prop(F,cycPred(A)).
+
+using_holds_db(F,A,_,_):- never_use_holds_db(F,A,_),!,fail.
+using_holds_db(F,A2,A,m2(F,A2,isCycPredArity_Check)):- integer(A2), A is A2-2, A>0, isCycPredArity_Check(F,A),!.
+using_holds_db(F,A,A,tCol(F/A)):- integer(A), tCol(F),!, must(A>0).
+using_holds_db(F,A,A,isCycPredArity_Check):- isCycPredArity_Check(F,A).
+using_holds_db(F,A,A,W):-integer(A),!,fail,trace_or_throw(wont(using_holds_db(F,A,A,W))).
+
+ensure_moo_pred(F,A,_,_):- never_use_holds_db(F,A,Why),!,trace_or_throw(never_use_holds_db(F,A,Why)).
+ensure_moo_pred(F,A,A,is_mpred_prolog):- is_mpred_prolog(F,A),!.
+ensure_moo_pred(F,A,NewA,Why):- using_holds_db(F,A,NewA,Why),!.
+ensure_moo_pred(F,A,A,Why):- dmsg(once(ensure(Why):decl_mpred(F,A))),decl_mpred(F,A).
+
+prepend_module(_:C,M,M:C):-!.
+prepend_module(C,M,M:C).
+
+negate_wrapper(P,N):-is_ftVar(P),trace_or_throw(call(negate_wrapper(P,N))).
+negate_wrapper(Dbase_t,Dbase_f):-negate_wrapper0(Dbase_t,Dbase_f).
+negate_wrapper(Dbase_f,Dbase_t):-negate_wrapper0(Dbase_t,Dbase_f).
+negate_wrapper(P,N):-trace_or_throw(unkown(negate_wrapper(P,N))).
+
+negate_wrapper0(holds_t,holds_f).
+negate_wrapper0(t,dbase_f).
+negate_wrapper0(int_firstOrder,int_not_firstOrder).
+negate_wrapper0(firstOrder,not_firstOrder).
+negate_wrapper0(asserted_dbase_t,asserted_dbase_f).
+negate_wrapper0(Dbase_t,Dbase_f):- atom_concat(Dbase,'_t',Dbase_t),atom_concat(Dbase,'_f',Dbase_f).
+
+:-thread_local hga_wrapper/3.
+hga_wrapper(t,holds_t,t).
+
+get_goal_wrappers(if_use_holds_db, Holds_t , N):- hga_wrapper(_,Holds_t,_),!,negate_wrapper(Holds_t,N),!.
+get_goal_wrappers(if_use_holds_db, holds_t , holds_f).
+
+get_head_wrappers(if_mud_asserted, Holds_t , N):- hga_wrapper(Holds_t,_,_),!,negate_wrapper(Holds_t,N),!.
+get_head_wrappers(if_mud_asserted, t , dbase_f).
+
+get_asserted_wrappers(if_mud_asserted, Holds_t , N):-  hga_wrapper(_,_,Holds_t),!,negate_wrapper(Holds_t,N),!.
+get_asserted_wrappers(if_mud_asserted, t , t).
+
+try_mud_body_expansion(G0,G2):- ((mud_goal_expansion_0(G0,G1),!,expanded_different(G0, G1),!,lmconf:mpred_user_kb(DBASE))),prepend_module(G1,DBASE,G2).
+mud_goal_expansion_0(G1,G2):- ((get_goal_wrappers(If_use_holds_db, Holds_t , Holds_f),!,Holds_t\=nil ,  mud_pred_expansion(If_use_holds_db, Holds_t - Holds_f,G1,G2))).
+
+try_mud_head_expansion(G0,G2):- ((mud_head_expansion_0(G0,G1),!,expanded_different(G0, G1),!,lmconf:mpred_user_kb(DBASE))),prepend_module(G1,DBASE,G2).
+mud_head_expansion_0(G1,G2):- ((get_head_wrappers(If_mud_asserted, Dbase_t , Dbase_f),!,Dbase_t\=nil, mud_pred_expansion(If_mud_asserted, Dbase_t - Dbase_f,G1,G2))),!.
+
+try_mud_asserted_expansion(G0,G2):-  must(is_compiling_sourcecode),    
+  mud_asserted_expansion_0(G0,G1),!,
+   expanded_different(G0, G1),
+   while_capturing_changes(add_from_file(G1,G2),Changes),!,ignore((Changes\==[],dmsg(add(todo(Changes-G2))))).
+mud_asserted_expansion_0(G1,G2):- ((get_asserted_wrappers(If_mud_asserted, Asserted_dbase_t , Asserted_dbase_f),!,Asserted_dbase_t\=nil,mud_pred_expansion(If_mud_asserted, Asserted_dbase_t - Asserted_dbase_f,G1,G2))),!.
+
+:-export(force_clause_expansion/2).
+
+attempt_clause_expansion(B,BR):- is_ftCompound(B), copy_term(B,BC),snumbervars(BC),!, attempt_clause_expansion(B,BC,BR).
+attempt_clause_expansion(_,BC,_):-inside_clause_expansion(BC),!,fail.
+attempt_clause_expansion(B,BC,BR):- 
+    setup_call_cleanup_each(asserta(inside_clause_expansion(BC)),
+    force_clause_expansion(B,BR),
+    ignore(retract(inside_clause_expansion(BC)))).
+
+force_clause_expansion(':-'(B),':-'(BR)):- !, locally(is_compiling_clause,lmconf:expand_goal(B,BR)).
+force_clause_expansion(B,BR):- locally(is_compiling_clause,force_expand(force_clause_expansion0(B,BR))).
+
+force_clause_expansion0(M:((H:-B)),R):- !, mud_rule_expansion(M:H,M:B,R),!.
+force_clause_expansion0(((M:H:-B)),R):- !, mud_rule_expansion(M:H,B,R),!.
+force_clause_expansion0(((H:-B)),R):- mud_rule_expansion(H,B,R),!.
+force_clause_expansion0(H,HR):- try_mud_asserted_expansion(H,HR),!.
+force_clause_expansion0(B,BR):- force_head_expansion(B,BR).
+
+force_expand(Goal):-thread_self(ID),locally(lmconf:always_expand_on_thread(ID),Goal),!.
+
+
+force_head_expansion(H,HR):- try_mud_head_expansion(H,HR),!.
+force_head_expansion(H,HR):- force_expand(expand_term(H,HR)).
+
+mud_rule_expansion(H,True,HR):-is_true(True),!,force_clause_expansion(H,HR).  
+% mud_rule_expansion(H,B,HB):- pttp_expansions(H,B),pttp_term_expansion((H:-B),HB).
+mud_rule_expansion(H,B,((HR:-BR))):-force_head_expansion(H,HR),force_expand_goal(B,BR),!.
+
+is_term_head(H):- (( \+ \+ (inside_clause_expansion(H0),!,H=H0))),!.
+%is_term_head(_):- inside_clause_expansion(_),!,fail.
+%is_term_head(H):-H=_, is_our_sources(H).
+
+
+is_our_dir(LM):- user:file_search_path(logicmoo,LM0),absolute_file_name(LM0,LM).
+current_loading_file_path(Path):- prolog_load_context(module,M),!,module_property(M,file(Path)).
+current_loading_file_path(Dir):- prolog_load_context(directory,Dir0),!,absolute_file_name(Dir0,Dir).
+
+is_our_sources(_):- current_loading_file_path(Dir),is_our_dir(LM),atom_concat(LM,_,Dir),!.
+is_our_sources(_):- prolog_load_context(module,user),!,not(prolog_load_context(directory,_)).
+
+
+holds_form(G1,HOLDS,G2):-
+      functor_check_univ(G1,F,List),
+      must_det(holds_form0(F,List,HOLDS,G2L)),
+      univ_left(G2,G2L).
+
+holds_form0(F,[P|List],HOLDS,G2L):-
+      (is_holds_true(F) -> (correct_args_length([P|List],NEWARGS),G2L = [HOLDS|NEWARGS]) ;
+      (is_holds_false(F) -> (correct_args_length([P|List],NEWARGS),negate_wrapper(HOLDS,NHOLDS),G2L = [NHOLDS|NEWARGS]) ;
+      correct_args_length([F,P|List],NEWARGS), G2L= [HOLDS|NEWARGS])).
+
+correct_args_length([F|List],[F|NewList]):-
+   length(List,A),
+   must_det(ensure_moo_pred(F,A,NewA,_)),!,            
+      set_list_len(List,NewA,NewList).
+
+
+xcall_form(G1,G2):-must_det(xcall_form0(G1,G2)).
+xcall_form0(G1,G2):-
+      functor_check_univ(G1,F,List),
+      correct_args_length([F|List],NewList),
+      univ_left(G2,NewList),!.
+
+:- meta_predicate mud_pred_expansion(-,-,-,+).
+
+
+mud_pred_expansion(_Prd,_HNH,G1,_):- \+ (is_ftCompound(G1)),!,fail.
+mud_pred_expansion(_Prd,_HNH,_:G1,_):-is_ftVar(G1),!,fail.
+mud_pred_expansion(_Prd,_HNH,_/_,_):-!,fail.
+mud_pred_expansion(_Prd,_HNH,(_,_),_):-!,fail.
+mud_pred_expansion(_Prd,_HNH,_:_/_,_):-!,fail.
+mud_pred_expansion(Prd,HNH,_:M:G1,G2):- atom(M),!,mud_pred_expansion(Prd,HNH,M:G1,G2).
+mud_pred_expansion(_Prd,_HNH,G1,G2):- functor_safe(G1,F,_),xcall_t==F,!,G2 = (G1),!.
+mud_pred_expansion(Pred,NHOLDS - HOLDS, not(G1) ,G2):-!,mud_pred_expansion(Pred,HOLDS - NHOLDS,G1,G2).
+mud_pred_expansion(Pred,NHOLDS - HOLDS, \+(G1) ,G2):-!,mud_pred_expansion(Pred,HOLDS - NHOLDS,G1,G2).
+
+mud_pred_expansion(Pred, HNH, G0 ,G2):-
+ functor_safe(G0,F,1),G1=..[F,MP],
+ predicate_property(G0, meta_predicate(G1)),
+ member(MP,[:,0,1,2,3,4,5,6,7,8,9]),!,
+ G0=..[F,Term],
+ mud_pred_expansion(Pred, HNH, Term ,Term2),
+  G2=..[F,Term2],!.
+
+
+mud_pred_expansion(Pred,HNH, Moo:G0,G3):- is_ftNonvar(Moo),is_kb_module(Moo),
+   xcall_form(G0,G1),
+   functor_safe(G1,F,A),
+   ensure_moo_pred(F,A,_,_Why),
+   mud_pred_expansion_0(Pred,HNH,G1,G2),!,G2=G3.
+
+mud_pred_expansion(Pred,HNH, Moo:G1,G3):-  is_ftNonvar(Moo),!, mud_pred_expansion_0(Pred,HNH,Moo:G1,G2),!,G2=G3.
+mud_pred_expansion(Pred,HNH,G1,G3):- mud_pred_expansion_0(Pred,HNH,G1,G2),!,G2=G3.
+
+mud_pred_expansion_0(Pred,HNH,_:G1,G2):-!,is_ftCompound(G1),
+   mud_pred_expansion_1(Pred,HNH,G1,G2),!.
+mud_pred_expansion_0(Pred,HNH,G1,G2):-!,is_ftCompound(G1),
+   mud_pred_expansion_1(Pred,HNH,G1,G2),!.
+
+mud_pred_expansion_1(Pred,HNH,G1,G2):-G1=..[F|ArgList],functor_safe(G1,F,A),mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2).
+
+mud_pred_expansion_2(_,Holds,_,HoldsT-HoldsF,_,_):-member(Holds,[HoldsT,HoldsF]),!,fail.
+mud_pred_expansion_2(_,Holds,_,_,_,_):-member(Holds,[',',';']),!,fail.
+
+mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2):-member(F,[':','.']),!,trace_or_throw(mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2)).
+mud_pred_expansion_2(Pred,F,_,HNH,ArgList,G2):- is_holds_true(F),holds_form_l(Pred,ArgList,HNH,G2).
+mud_pred_expansion_2(Pred,F,_,HOLDS - NHOLDS,ArgList,G2):- is_holds_false(F),holds_form_l(Pred,ArgList,NHOLDS - HOLDS,G2).
+% mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2):-is_2nd_order_holds(F),!,trace_or_throw(mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2)).
+mud_pred_expansion_2(Pred,F,A,HNH,ArgList,G2):- call(Pred,F,A,_,_),holds_form_l(Pred,[F|ArgList],HNH,G2).
+
+holds_form_l(Pred,[G1],HNH,G2):-
+   is_ftCompound(G1),not(is_list(G1)),!,
+   mud_pred_expansion(Pred,HNH,G1,G2).
+
+holds_form_l(_,G1,HNH,G2):-do_holds_form(G1,HNH,G2).
+
+do_holds_form([F|List],HOLDS - _NHOLDS,G2):-
+   atom(F),
+   G1=..[F|List],
+   holds_form(G1,HOLDS,G2).
+
+do_holds_form([F|List],HOLDS - _NHOLDS,G2):- G2=..[HOLDS,F|List].
+
+
+
+differnt_assert(G1,G2):- /*quietly */ (differnt_assert1(G1,G2)),dmsg(differnt_assert(G1,G2)),dtrace.
+
+differnt_assert1(M:G1,G2):-atom(M),!, differnt_assert1(G1,G2).
+differnt_assert1(G1,M:G2):-atom(M),!, differnt_assert1(G1,G2).
+differnt_assert1(G1,G2):- once(into_mpred_form(G1,M1)),G1\=M1,!, differnt_assert1(M1,G2).
+differnt_assert1(G1,G2):- once(into_mpred_form(G2,M2)),G2\=M2,!, differnt_assert1(G1,M2).
+differnt_assert1(G1,G2):- not((G1 =@= G2)).
+
+
+:- endif.

@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog binding to BSD libedit</title>
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white"> 
+<div class="title">SWI-Prolog binding to BSD libedit</div>
+<div class="author">Jan Wielemaker <br>
+VU University Amsterdam <br>
+CWI, Amsterdam <br>
+The Netherlands <br>
+E-mail: <a class="url" href="mailto:J.Wielemaker@vu.nl">J.Wielemaker@vu.nl</a></div>
+<div class="abstract">
+<div class="abstract-title">Abstract</div> This package enables editing 
+commands in the Prolog toplevel using the BSD libedit library.
+</div>
+
+<h1><a id="document-contents">Table of Contents</a></h1>
+
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(editline): 
+BSD libedit based command line editing</span></a></div>
+</div>
+
+<p><h2 id="sec:editline"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(editline): 
+BSD libedit based command line editing</span></a></h2>
+
+<p><a id="sec:editline"></a>
+
+<p>This library wraps the BSD libedit command line editor. The binding 
+provides a high level API to enable command line editing on the Prolog 
+user streams and low level predicates to apply the library on other 
+streams and program the library.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_wrap/0"><strong>el_wrap</strong></a></dt>
+<dd class="defbody">
+Enable using editline on the standard user streams if <code>user_input</code> 
+is connected to a terminal. This is the high level predicate used for 
+most purposes. The remainder of the library interface deals with low 
+level predicates that allows for applying and programming libedit in 
+non-standard situations.
+
+<p>The library is registered with <i>ProgName</i> set to <code>swipl</code> 
+(see
+<a class="pred" href="#el_wrap/4">el_wrap/4</a>).</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_wrap/4"><strong>el_wrap</strong>(<var>+ProgName:atom, 
++In:stream, +Out:stream, +Error:stream</var>)</a></dt>
+<dd class="defbody">
+Enable editline on the stream-triple <var>&lt;</var><var>In</var>,<var>Out</var>,<var>Error</var><var>&gt;</var>. 
+From this moment on <var>In</var> is a handle to the command line 
+editor.
+<table class="arglist">
+<tr><td><var>ProgName</var> </td><td>is the name of the invoking 
+program, used when reading the <code>editrc(5)</code> file to determine 
+which settings to use. </td></tr>
+</table>
+</dd>
+<dt class="multidef"><span class="pred-tag">[nondet,multifile]</span><a id="el_setup/1"><strong>el_setup</strong>(<var>+In:stream</var>)</a></dt>
+<dd class="defbody">
+This hooks is called as <code>forall(el_setup(Input), true)</code> <i>after</i> 
+the input stream has been wrapped, the default Prolog commands have been 
+added and the default user setup file has been sourced using
+<a class="pred" href="#el_source/2">el_source/2</a>. It can be used to 
+define and bind additional commands.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="el_wrapped/1"><strong>el_wrapped</strong>(<var>+In:stream</var>)</a></dt>
+<dd class="defbody">
+True if <var>In</var> is a stream wrapped by <span class="pred-ext">el_wrap/3</span>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_unwrap/1"><strong>el_unwrap</strong>(<var>+In:stream</var>)</a></dt>
+<dd class="defbody">
+Remove the libedit wrapper for <var>In</var> and the related output and 
+error streams.
+
+<dl class="tags">
+<dt class="tag">bug</dt>
+<dd>
+The wrapper creates <code>FILE*</code> handles that cannot be closed and 
+thus wrapping and unwrapping implies a (modest) memory leak.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_source/2"><strong>el_source</strong>(<var>+In:stream, 
++File</var>)</a></dt>
+<dd class="defbody">
+Initialise editline by reading the contents of <var>File</var>. If <var>File</var> 
+is unbound try <code>$HOME/.editrc</code></dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_bind/2"><strong>el_bind</strong>(<var>+In:stream, 
++Args</var>)</a></dt>
+<dd class="defbody">
+Invoke the libedit <code>bind</code> command with the given arguments. 
+The example below lists the current key bindings.
+
+<pre class="code">
+?- el_bind(user_input, ['-a']).
+</pre>
+
+<p>The predicate <a class="pred" href="#el_bind/2">el_bind/2</a> is 
+typically used to bind commands defined using <a class="pred" href="#el_addfn/4">el_addfn/4</a>. 
+Note that the C proxy function has only the last character of the 
+command as context to find the Prolog binding. This implies we cannot 
+both bind e.g., "<code>^</code>[?" *and "?" to a Prolog function.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>editrc(5)</code> for more information.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_addfn/4"><strong>el_addfn</strong>(<var>+Input:stream, 
++Command, +Help, :Goal</var>)</a></dt>
+<dd class="defbody">
+Add a new command to the command line editor associated with <var>Input</var>.
+<var>Command</var> is the name of the command, <var>Help</var> is the 
+help string printed with e.g. <code>bind -a</code> (see <a class="pred" href="#el_bind/2">el_bind/2</a>) 
+and <var>Goal</var> is called of the associated key-binding is 
+activated. <var>Goal</var> is called as
+
+<pre class="code">
+call(:Goal, +Input, +Char, -Continue)
+</pre>
+
+<p>where <var>Input</var> is the input stream providing access to the 
+editor, Char the activating character and Continue must be instantated 
+with one of the known continuation codes as defined by libedit: <code>norm</code>,
+<code>newline</code>, <code>eof</code>, <code>arghack</code>, <code>refresh</code>, <code>refresh_beep</code>, <code>cursor</code>,
+<code>redisplay</code>, <code>error</code> or <code>fatal</code>. In 
+addition, the following Continue code is provided.
+
+<dl class="latex">
+<dt><strong>electric</strong>(<var>Move, TimeOut, Continue</var>)</dt>
+<dd class="defbody">
+Show <i>electric caret</i> at <var>Move</var> positions to the left of 
+the normal cursor positions for the given <var>TimeOut</var>. <var>Continue</var> 
+as defined by the <var>Continue</var> value.
+</dd>
+</dl>
+
+<p>The registered <var>Goal</var> typically used <a class="pred" href="#el_line/2">el_line/2</a> 
+to fetch the input line and <a class="pred" href="#el_cursor/2">el_cursor/2</a>, <a class="pred" href="#el_insertstr/2">el_insertstr/2</a> 
+and/or <a class="pred" href="#el_deletestr/2">el_deletestr/2</a> to 
+manipulate the input line.
+
+<p>Normally <a class="pred" href="#el_bind/2">el_bind/2</a> is used to 
+associate the defined command with a keyboard sequence.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>el_set(3)</code> <code>EL_ADDFN</code> for details.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_line/2"><strong>el_line</strong>(<var>+Input:stream, 
+-Line</var>)</a></dt>
+<dd class="defbody">
+Fetch the currently buffered input line. <var>Line</var> is a term <code>line(Before, After)</code>, 
+where <var>Before</var> is a string holding the text before the cursor 
+and <var>After</var> is a string holding the text after the cursor.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_cursor/2"><strong>el_cursor</strong>(<var>+Input:stream, 
++Move:integer</var>)</a></dt>
+<dd class="defbody">
+<var>Move</var> the cursor <var>Move</var> character forwards (positive) 
+or backwards (negative).</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_insertstr/2"><strong>el_insertstr</strong>(<var>+Input:stream, 
++Text</var>)</a></dt>
+<dd class="defbody">
+Insert <var>Text</var> at the cursor.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_deletestr/2"><strong>el_deletestr</strong>(<var>+Input:stream, 
++Count</var>)</a></dt>
+<dd class="defbody">
+Delete <var>Count</var> characters before the cursor.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_history/2"><strong>el_history</strong>(<var>+In:stream, 
+?Action</var>)</a></dt>
+<dd class="defbody">
+Perform a generic action on the history. This provides an incomplete 
+interface to <code>history()</code> from libedit. Supported actions are:
+
+<dl class="latex">
+<dt><strong>clear</strong></dt>
+<dd class="defbody">
+Clear the history.
+</dd>
+<dt><strong>setsize</strong>(<var>+Integer</var>)</dt>
+<dd class="defbody">
+Set size of history to size elements.
+</dd>
+<dt><strong>setunique</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Set flag that adjacent identical event strings should not be entered 
+into the history.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_history_events/2"><strong>el_history_events</strong>(<var>+In:stream, 
+-Events:list(pair)</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Events</var> with a list of pairs of the form <code>Num-String</code>, 
+where
+<var>Num</var> is the event number and <var>String</var> is the 
+associated string without terminating newline.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_add_history/2"><strong>el_add_history</strong>(<var>+In:stream, 
++Line:text</var>)</a></dt>
+<dd class="defbody">
+Add a line to the command line history.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_read_history/2"><strong>el_read_history</strong>(<var>+In:stream, 
++File:file</var>)</a></dt>
+<dd class="defbody">
+Read the history saved using <a class="pred" href="#el_write_history/2">el_write_history/2</a>.
+<table class="arglist">
+<tr><td><var>File</var> </td><td>is a file specification for <span class="pred-ext">absolute_file_name/3</span>. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="el_write_history/2"><strong>el_write_history</strong>(<var>+In:stream, 
++File:file</var>)</a></dt>
+<dd class="defbody">
+Save editline history to <var>File</var>. The history may be reloaded 
+using
+<a class="pred" href="#el_read_history/2">el_read_history/2</a>.
+<table class="arglist">
+<tr><td><var>File</var> </td><td>is a file specification for <span class="pred-ext">absolute_file_name/3</span>. </td></tr>
+</table>
+</dd>
+</dl>
+
+<h1><a id="document-index">Index</a></h1>
+
+<dl>
+<dt class="index-sep">?</dt>
+<dt><a class="idx" href="#el_add_history/2">el_add_history/2</a></dt>
+<dt><a class="idx" href="#el_addfn/4">el_addfn/4</a></dt>
+<dt><a class="idx" href="#el_bind/2">el_bind/2</a></dt>
+<dt><a class="idx" href="#el_cursor/2">el_cursor/2</a></dt>
+<dt><a class="idx" href="#el_deletestr/2">el_deletestr/2</a></dt>
+<dt><a class="idx" href="#el_history/2">el_history/2</a></dt>
+<dt><a class="idx" href="#el_history_events/2">el_history_events/2</a></dt>
+<dt><a class="idx" href="#el_insertstr/2">el_insertstr/2</a></dt>
+<dt><a class="idx" href="#el_line/2">el_line/2</a></dt>
+<dt><a class="idx" href="#el_read_history/2">el_read_history/2</a></dt>
+<dt><a class="idx" href="#el_setup/1">el_setup/1</a></dt>
+<dt><a class="idx" href="#el_source/2">el_source/2</a></dt>
+<dt><a class="idx" href="#el_unwrap/1">el_unwrap/1</a></dt>
+<dt><a class="idx" href="#el_wrap/0">el_wrap/0</a></dt>
+<dt><a class="idx" href="#el_wrap/4">el_wrap/4</a></dt>
+<dt><a class="idx" href="#el_wrapped/1">el_wrapped/1</a></dt>
+<dt><a class="idx" href="#el_write_history/2">el_write_history/2</a></dt>
+<dd>
+</dd>
+</dl>
+
+</body></html>

@@ -1,0 +1,23 @@
+(note TQD80)
+
+(relationInstanceExistsMany possesses Egypt ChemicalWeapon) 
+
+(subrelation relationInstanceExistsMany relationInstanceExists) 
+
+(different WeaponOfMassDestruction ChemicalWeapon) 
+
+(subclass ChemicalWeapon WeaponOfMassDestruction) 
+
+
+
+(query (findall ?WEAPONTYPE 
+(and 
+   (subclass ?WEAPONTYPE WeaponOfMassDestruction) 
+   (different WeaponOfMassDestruction ?WEAPONTYPE) 
+   (relationInstanceExists possesses Egypt ?WEAPONTYPE))
+))
+
+(answer ChemicalWeapon
+)
+
+(end_of_file)

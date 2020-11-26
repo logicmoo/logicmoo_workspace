@@ -1,0 +1,86 @@
+(note TQC102)
+
+(temporallySubsumes (TimeIntervalInclusiveFn (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+(DateInSituationFn CalendarDay 15 HPKBScenarioConflict)) 
+ (givesSupportToAgent Iran Stage1-LibyanScientist1 
+ (HighAmountFn EconomicSupport))) 
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(expertRegarding Stage1-LibyanScientist1 BiologicalWeapon) 
+
+
+(implies 
+ (and 
+ (temporallySubsumes ?BIG-T ?SMALL-T) 
+ (temporallySubsumes ?BIG-T ?PROP)) 
+ (temporallySubsumes ?SMALL-T ?PROP)) 
+
+(temporallySubsumes HPKBScenarioConflict 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 15 HPKBScenarioConflict))) 
+
+(temporallySubsumes HPKBScenarioConflict 
+ (givesSupportToAgent Iran Stage1-LibyanScientist1 
+ (HighAmountFn EconomicSupport))) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?SIT Situation-Temporal) 
+ (instance ?N PositiveInteger) 
+ (greaterThanOrEqualTo ?N ?M) 
+ (instance ?M PositiveInteger) 
+ (instance ?TYPE CalendarCoveringType) 
+ (subclass ?TYPE Date) 
+ (endingDate ?SIT 
+ (DateInSituationFn ?TYPE ?END ?SIT)) 
+ (greaterThanOrEqualTo ?END ?N)) 
+ (temporallySubsumes ?SIT 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn ?TYPE ?M ?SIT) 
+ (DateInSituationFn ?TYPE ?N ?SIT)))) 
+
+(endingDate HPKBScenarioConflict 
+ (DateInSituationFn CalendarDay 36 HPKBScenarioConflict)) 
+
+
+
+
+(instance CalendarDay CalendarCoveringType) 
+
+(instance HPKBScenarioConflict Situation-Temporal) 
+
+(subclass CalendarDay Date) 
+
+
+
+
+
+
+(queryyn
+ (thereExists ?DEVELOPER 
+ (thereExists ?WEAPON-TYPE 
+ (thereExists ?BUYING 
+ (or 
+ (and 
+ (expertRegarding ?DEVELOPER ?WEAPON-TYPE) 
+ (subclass ?WEAPON-TYPE WeaponOfMassDestruction) 
+ (temporallySubsumes (TimeIntervalInclusiveFn (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) (DateInSituationFn CalendarDay 15 HPKBScenarioConflict)) 
+ (givesSupportToAgent Iran ?DEVELOPER 
+ (HighAmountFn EconomicSupport)))) 
+ (and 
+ (instance ?BUYING 
+ (BuyingFn WeaponOfMassDestruction)) 
+ (buyer ?BUYING Iran) 
+ (temporallySubsumes 
+ (TimeIntervalInclusiveFn 
+ (DateInSituationFn CalendarDay 1 HPKBScenarioConflict) 
+ (DateInSituationFn CalendarDay 15 HPKBScenarioConflict)) ?BUYING)))))))
+
+(answer Yes)
+
+(end_of_file)

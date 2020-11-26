@@ -1,0 +1,8 @@
+When incremental treebanking is on (default), the {\tt
+EBL\_\-TREEBANK} command attempts to reuse stored analyses of corpus
+examples rather than parsing them again. It considers an analysis of a
+sentence S safe a) if the only grammar rules that have changed since the
+stored parse was created are lexical ones involving words not occuring
+in S, b) the config file and the files it includes have not changed,
+c) the analysis preferences have not changed.
+ 

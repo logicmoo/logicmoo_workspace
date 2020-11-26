@@ -1,0 +1,53 @@
+;--------------------------------------------------------------------------
+; File     : ROB005-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Robbins Algebra
+; Problem  : c + c=c => Boolean
+; Version  : [Win90] (equality) axioms.
+; English  : If there is an element c such that c+c=c, then the algebra 
+;            is Boolean.
+
+; Refs     : [HMT71] Henkin et al. (1971), Cylindrical Algebras
+;          : [Win90] Winker (1990), Robbins Algebra: Conditions that make a
+;          : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [LW92]  Lusk & Wos (1992), Benchmark Problems in Which Equalit
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+;          : [Zha93] Zhang (1993), Automated Proofs of Equality Problems in
+; Source   : [Ove90]
+; Names    : CADE-11 Competition Eq-2 [Ove90]
+;          : Lemma 2.4 [Win90]
+;          : RA3 [LW92]
+;          : THEOREM EQ-2 [LM93]
+;          : PROBLEM 2 [Zha93]
+;          : robbins.occ.in [OTTER]
+
+; Status   : unsatisfiable
+; Rating   : 0.67 v2.2.0, 0.71 v2.1.0, 0.88 v2.0.0
+; Syntax   : Number of clauses    :    5 (   0 non-Horn;   5 unit;   2 RR)
+;            Number of literals   :    5 (   5 equality)
+;            Maximal clause size  :    1 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 2-2 arity)
+;            Number of functors   :    5 (   3 constant; 0-2 arity)
+;            Number of variables  :    7 (   0 singleton)
+;            Maximal term depth   :    6 (   2 average)
+
+; Comments : Commutativity, associativity, and Huntington's axiom 
+;            axiomatize Boolean algebra.
+;          : tptp2X -f kif -t rm_equality:rstfp ROB005-1.p 
+;--------------------------------------------------------------------------
+; commutativity_of_add, axiom.
+(or (= (add ?A ?B) (add ?B ?A)))
+
+; associativity_of_add, axiom.
+(or (= (add (add ?A ?B) ?C) (add ?A (add ?B ?C))))
+
+; robbins_axiom, axiom.
+(or (= (negate (add (negate (add ?A ?B)) (negate (add ?A (negate ?B))))) ?A))
+
+; idempotence, hypothesis.
+(or (= (add c c) c))
+
+; prove_huntingtons_axiom, conjecture.
+(or (/= (add (negate (add a (negate b))) (negate (add (negate a) (negate b)))) b))
+
+;--------------------------------------------------------------------------

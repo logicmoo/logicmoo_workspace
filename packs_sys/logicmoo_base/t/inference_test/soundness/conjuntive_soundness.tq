@@ -1,0 +1,9 @@
+(note "Conjuntive Inference/Soundness 1  Exists x [ p(x) ^ q(x) ] ")
+
+(thereExists ?X (and (doesBreath ?X) (behavourCapableOf ?X Breathing)))
+
+(queryyn (and (doesBreath ?X) (not (behavourCapableOf ?X Breathing))))
+
+(answer Unproven)
+
+

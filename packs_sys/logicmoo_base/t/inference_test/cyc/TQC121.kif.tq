@@ -1,0 +1,38 @@
+(note TQC121)
+
+(capableOfDoing UnitedNationsOrganization HYP-TerritorialDispute-28532600 mediators) 
+
+(implies 
+ (and 
+ (instance ?CONFLICT InternationalConflict) 
+ (instance ?COUNTRY-A Country) 
+ (instance ?COUNTRY-B Country) 
+ (opponentsInConflict ?COUNTRY-A ?COUNTRY-B ?CONFLICT)) 
+ (capableOfDoing UnitedNationsOrganization ?CONFLICT mediators)) 
+
+(instance HYP-TerritorialDispute-28532600 TerritorialDispute) 
+
+(subclass TerritorialDispute InternationalConflict) 
+
+(instance Iraq Country) 
+ 
+
+(opponentsInConflict Iran Iraq HYP-TerritorialDispute-28532600) 
+
+
+
+(implies 
+ (opponentsInConflict ?X ?Y ?EVENT) 
+ (opponentsInConflict ?Y ?X ?EVENT)) 
+
+
+(query (findall (?CONFLICT ?WHO)
+ (implies 
+ (and 
+ (instance ?CONFLICT TerritorialDispute) 
+ (opponentsInConflict Iran Iraq ?CONFLICT)) 
+ (capableOfDoing ?WHO ?CONFLICT mediators))))
+
+(answer UnitedNationsOrganization)  
+
+(end_of_file)

@@ -1,0 +1,59 @@
+;~X;
+.
+[if: [Foo] ;iff;]
+.
+(Eq [Foo:*pqr] [?pqr])
+.
+(val [Integer:+7.0][Variable:#n])
+.
+[Integer*a:+7.0][Variable*b:#n](val?a?b)
+.
+[Integer:+7.0 *a][Variable: #n *b](val?a?b)
+.
+[Flintstones: @Col{"1", "2"}]
+.
+[X:'Y' ~[[R]] [if: (eq [foo] [bar])] [Z:*a] (Attr [Foo] ?a) ;yeah;]
+.
+;(sqr [In:+12] [Out:'*x']);
+.
+~[<sqr [In*a:+12]|?a>]
+.
+[Blah:-2.3e4?a?b]
+.
+;[Blah?p?q:'say'] -- what does this even mean?;
+.
+[Blah:"what?"]
+.
+[Blah:*x]
+[Blah:*x]
+.
+[Blah:]
+.
+[Blah:#THIS *x]
+.
+[Blah:#123 *x]
+.
+[Blah:# *x]
+.
+[Blah:@every *x]
+.
+[Blah:@10 *x]
+.
+(Attr [Foo*a] [Bar*b])
+(Attr [Foo*a] ?b)
+.
+[Bar]
+.
+;[Bar comment];
+.
+;( Comment [Foo] [Bar]);
+.
+;+44.e+45;
+.
+;+2.;
+.
+;-2.45;
+.
+;-.24;
+.
+;+4e-67;

@@ -1,0 +1,158 @@
+(note TQC79)
+
+(believes InternationalCommunity 
+ (agent HYP-HelpingAnAgent-53412750 Libya)) 
+
+(instance Libya Country) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-53412750 DontSupportTerrorism) 
+
+(instance Libya GeopoliticalEntity) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT DontSupportTerrorism) 
+ (instance ?AGT Country) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (maleficiary ?MIL-OP ?AGT))) likelihood)) 
+
+(implies 
+ (instance ?AGT GeopoliticalEntity) 
+ (desires ?AGT 
+ (not 
+ (thereExists ?MIL-OP 
+ (and 
+ (instance ?MIL-OP MilitaryOperation) 
+ (maleficiary ?MIL-OP ?AGT)))))) 
+
+
+
+
+(believes InternationalCommunity 
+ (agent HYP-HelpingAnAgent-23949751 Libya)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-23949751 DontSupportTerrorism) 
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ModernInternationalRelationsCOC) 
+ (believes InternationalCommunity 
+ (agent ?ACT ?AGT))) 
+ (increasesCausally ?ACT 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?AGT))) likelihood)) 
+
+(implies 
+ (instance ?COUNTRY Country) 
+ (desires ?COUNTRY 
+ (not 
+ (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?COUNTRY)))))) 
+
+
+
+
+(implies 
+ (and 
+ (actionViolatesObligation ?ACT ?OB) 
+ (obligationParts ?WIDE ?OB)) 
+ (actionViolatesObligation ?ACT ?WIDE)) 
+
+(actionViolatesObligation HYP-HelpingAnAgent-23949751 DontSupportTerrorism) 
+
+(obligationParts ModernInternationalRelationsCOC DontSupportTerrorism) 
+
+
+
+(implies 
+ (and 
+ (instance ?SUPPORT HelpingAnAgent) 
+ (beneficiary ?SUPPORT ?TERR-GR) 
+ (instance ?TERR-GR TerroristGroup) 
+ (agent ?SUPPORT ?COUNTRY) 
+ (instance ?COUNTRY Country)) 
+ (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-60245734 TerroristGroup) 
+
+(agent HYP-HelpingAnAgent-53412750 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-53412750 HYP-TerroristGroup-60245734) 
+
+(instance HYP-HelpingAnAgent-53412750 HelpingAnAgent) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?SUPPORT HelpingAnAgent) 
+ (beneficiary ?SUPPORT ?TERR-GR) 
+ (instance ?TERR-GR TerroristGroup) 
+ (agent ?SUPPORT ?COUNTRY) 
+ (instance ?COUNTRY Country)) 
+ (actionViolatesObligation ?SUPPORT DontSupportTerrorism)) 
+
+(instance HYP-TerroristGroup-38036545 TerroristGroup) 
+
+(agent HYP-HelpingAnAgent-23949751 Libya) 
+
+(beneficiary HYP-HelpingAnAgent-23949751 HYP-TerroristGroup-38036545) 
+
+(instance HYP-HelpingAnAgent-23949751 HelpingAnAgent) 
+
+
+
+
+(query (findall ?PROP
+ (implies 
+ (and 
+ (instance ?GROUP TerroristGroup) 
+ (instance ?REVEAL InformationTransferEvent) 
+ (recipientOfInfo ?REVEAL InternationalCommunity) 
+ (instance ?ACT HelpingAnAgent) 
+ (beneficiary ?ACT ?GROUP) 
+ (agent ?ACT Libya) 
+ (performsInsAtLocation ?GROUP TerroristAct SaudiArabia) 
+ (infoTransferred ?REVEAL 
+ (agent ?ACT Libya)) 
+ (believes InternationalCommunity 
+ (agent ?ACT Libya)) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 15 HPKBScenarioConflict) ?REVEAL)) 
+ (or 
+ (and 
+ (desires Libya ?PROP) 
+ (decreasesCausally ?ACT ?PROP likelihood)) 
+ (and 
+ (desires Libya 
+ (not ?PROP)) 
+ (increasesCausally ?ACT ?PROP likelihood))))))
+
+
+
+(answer (list (thereExists ?MIL-OP 
+           (and 
+               (instance ?MIL-OP MilitaryOperation) 
+               (maleficiary ?MIL-OP ?AGT)))
+))
+
+(answer (list  (thereExists ?BLAME 
+ (and 
+ (instance ?BLAME Censuring-CommunicationAct) 
+ (senderOfInfo ?BLAME InternationalCommunity) 
+ (maleficiary ?BLAME ?AGT))) ))  
+
+(end_of_file)
+

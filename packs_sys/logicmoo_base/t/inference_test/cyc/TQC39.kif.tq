@@ -1,0 +1,99 @@
+(note TQC39)
+(instance SaudiArabia Agent) 
+(subclass MilitaryAttack AttackOnTangible) 
+(subrelation increasesImmediatelyCausally increasesCausally) 
+(subrelation agent agent)
+(instance Iran Agent) 
+
+(implies 
+  (possesses ?AGT ?THING) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?EVT 
+        (inputsDestroyed ?EVT ?THING))))) 
+
+(implies 
+  (instance ?AGT Agent) 
+  (desires ?AGT 
+    (not 
+      (thereExists ?ATTACK 
+        (and 
+          (instance ?ATTACK AttackOnTangible) 
+          (maleficiary ?ATTACK ?AGT)))))) 
+
+(implies 
+  (agent ?ACT ?AGT) 
+  (desires ?AGT 
+    (not 
+      (failureForAgents ?ACT ?AGT)))) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (agent ?ATTACK ?AGT) 
+    (deviceUsed ?ATTACK ?DEVICE)) 
+  (possesses ?AGT ?DEVICE)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (maleficiary ?ATTACK ?AGT2) 
+    (instance ?AGT2 Agent) 
+    (agent ?ATTACK ?AGT1)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?RETALIATION 
+      (and 
+        (instance ?RETALIATION AttackOnTangible) 
+        (maleficiary ?RETALIATION ?AGT1))) likelihood)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK MilitaryAttack) 
+    (deviceUsed ?ATTACK ?WEAPON)) 
+  (increasesCausally ?ATTACK 
+    (thereExists ?DESTROY 
+      (inputsDestroyed ?DESTROY ?WEAPON)) likelihood)) 
+
+(implies 
+  (and 
+    (instance ?ATTACK AttackOnTangible) 
+    (deviceUsed ?ATTACK ?WEAPON) 
+    (instance ?WEAPON BiologicalWeapon) 
+    (agent ?ATTACK ?ATTACKING-AGENT)) 
+  (increasesImmediatelyCausally ?ATTACK 
+    (failureForAgents ?ATTACK ?ATTACKING-AGENT) likelihood)) 
+
+(query (findall ?PROP
+  (implies 
+    (and 
+      (agent ?ACT Iran) 
+      (instance ?ACT MilitaryAttack) 
+      (eventOccursAt ?ACT ?TARGET) 
+      (inRegion ?TARGET SaudiArabia) 
+      (deviceUsed ?ACT ?FORCE) 
+      (instance ?FORCE BiologicalWeapon)) 
+    (or 
+      (and 
+        (desires Iran ?PROP) 
+        (decreasesCausally ?ACT ?PROP likelihood)) 
+      (and 
+        (desires Iran (not ?PROP)) 
+        (increasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list 
+  (thereExists ?DESTROY 
+    (inputsDestroyed ?DESTROY ??))))
+
+(anwer (list  
+  (thereExists ?RETALIATION 
+    (and 
+      (instance ?RETALIATION AttackOnTangible) 
+      (maleficiary ?RETALIATION Iran)))))
+
+(answer ((failureForAgents ?? Iran)))
+
+(end_of_file)
+
+
+
+  

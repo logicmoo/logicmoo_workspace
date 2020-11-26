@@ -1,0 +1,55 @@
+TestProfondeur(_probleme,_mouvements) :-
+        EtatInitial(_probleme,_etat),
+        ResoudreProfondeur(_etat,(_etat),_mouvements).
+
+ResoudreProfondeur(_etat,_historique,()) :-
+        EtatFinal(_etat).
+
+ResoudreProfondeur(_etat,_historique,(_mouvement|_mouvements)) :-
+        AppliquerOperateur(_etat,_mouvement),
+        MettreAJour(_etat,_mouvement,_etat1),
+        EtatLegal(_etat1),
+        not(member(_etat1,_historique)),
+        ResoudreProfondeur(_etat1,(_etat1|_historique),_mouvements).
+
+AppliquerOperateur((_avant,_apres),vertadroite) :-
+        Dernier(_avant,"V").
+AppliquerOperateur((_avant,_apres),rougeagauche) :-
+        Premier(_apres,"R").
+AppliquerOperateur((_avant,_apres),vertchevaucherouge) :-
+        AvantDernier(_avant,"V"),
+        Dernier(_avant,"R").
+AppliquerOperateur((_avant,_apres),rougechevauchevert) :-
+        Premier(_apres,"V"),
+        Second(_apres,"R").
+
+MettreAJour((_avant,_apres),vertadroite,(_avant1,_apres)) :-
+        Conc(_avant1,("V"),_avant),
+        Conc(("V"),_apres,_apres1).
+MettreAJour((_avant,_apres),rougeagauche,(_avant1,_apres)) :-
+        Conc(_avant,("R"),_avant1),
+        Conc(("R"),_apres1,_apres).
+MettreAJour((_avant,_apres),vertchevaucherouge,(_avant1,_apres)) :-
+        Conc(_avant1,("V","R"),_avant),
+        Conc(("R","V"),_apres,_apres1).
+MettreAJour((_avant,_apres),rougechevauchevert,(_avant1,_apres)) :-
+        Conc(_avant,("R","V"),_avant1),
+        Conc(("V","R"),_apres1,_apres).
+
+EtatLegal((_g,_d)).
+
+EtatInitial(sept_billes,(("V","V","V"),("R","R","R"))).
+EtatFinal((("V","V","V"),("R","R","R"))).
+
+Conc((),_L,_L).
+Conc((_x|_L1),_L2,(_x|_L3)) :- Conc(_L1,_L2,_L3).
+
+Premier((_x|_L),_x).
+
+Second((_x,_y|_R),_y).
+
+Dernier((_x),_x).
+Dernier((_x|_R),_y) :- Dernier(_R,_y).
+
+AvantDernier((_x,_y),_x).
+AvantDernier((_x,_y|_R),_z) :- AvantDernier((_y|_R),_z).

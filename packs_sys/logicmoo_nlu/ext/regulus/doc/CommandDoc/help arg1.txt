@@ -1,0 +1,17 @@
+The argument is matched against all commands and their short descriptions, and 
+matching examples are displayed. Matching is not case-sensitive.
+
+Example:
+\begin{verbatim}
+>> HELP trace
+(Print help for commands whose name or description match the string)
+
+6 commands matching "trace":
+
+GENERATE_TRACE_OFF (Switch off generation tracing (default))
+GENERATE_TRACE_ON (Switch on generation tracing)
+INTERLINGUA_TRACE_OFF (Switch off interlingua tracing (default))
+INTERLINGUA_TRACE_ON (Switch on interlingua tracing)
+TRANSLATE_TRACE_OFF (Switch off translation tracing (default))
+TRANSLATE_TRACE_ON (Switch on translation tracing)
+\end{verbatim}

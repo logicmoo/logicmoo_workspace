@@ -1,0 +1,22 @@
+This command compiles run-time targeted help resources for a specific
+language pair in a speech translation application. It expects the
+following config file parameters to be defined:
+
+\begin{itemize}
+
+\item {\tt targeted\_\-help\_\-source\_\-files} A list of the form
+\begin{verbatim}
+[use_combined_interlingua_corpus(<SourceLang>, <TargetLang>),
+ <CombinedInterlinguaCorpus>]
+\end{verbatim}
+
+where {\tt $langle$CombinedInterlinguaCorpus$\rangle$} is a combined interlingua
+corpus (cf.~\ref{Section:InterlinguaCentredDevelopment}) and
+{\tt $langle$SourceLang$\rangle$}, {\tt $langle$TargetLang$\rangle$} are identifiers for the
+source and target languages. The combined interlingua corpus must be
+created first, and contain the relevant languages.
+
+\item {\tt targeted\_\-help\_\-classes\_\-file} A file of targeted
+help class declarations for the source language.
+
+\end{itemize}

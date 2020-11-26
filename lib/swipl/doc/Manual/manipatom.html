@@ -1,0 +1,541 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.22</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="manipterm.html">
+<link rel="next" href="locale.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="manipterm.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="locale.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:manipatom"><a id="sec:4.22"><span class="sec-nr">4.22</span> <span class="sec-title">Analysing 
+and Constructing Atoms</span></a></h2>
+
+<a id="sec:manipatom"></a>
+
+<p>These predicates convert between certain Prolog atomic values on one 
+hand and lists of <em>character codes</em> (or, for <a id="idx:atomchars2:1429"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>,
+<em>characters</em>) on the other. The Prolog atomic values can be 
+atoms, <em>character</em>s (which are atoms of length 1), SWI-Prolog 
+strings, as well as numbers (integers, floats and non-integer 
+rationals).
+
+<p>The <em>character codes</em>, also known as <em>code values</em>, are 
+integers. In SWI-Prolog, these integers are Unicode code points.<sup class="fn">bug<span class="fn-text">On 
+Windows the range is limited to UCS-2, 0..65535.</span></sup>
+
+<p>To ease the pain of all text representation variations in the Prolog 
+community, all SWI-Prolog predicates behave as <em>flexible as possible</em>. 
+This implies the&lsquo;list-side' accepts both a character-code-list and 
+a character-list and the&lsquo;atom-side' accepts all atomic types 
+(atom, number and string). For example, the predicates
+<a id="idx:atomcodes2:1430"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>, <a id="idx:numbercodes2:1431"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a> 
+and <a id="idx:name2:1432"></a><a class="pred" href="manipatom.html#name/2">name/2</a> 
+behave the same in mode (+,-), i.e.,&lsquo;listwards', from a constant 
+to a list of character codes. When converting the other way around:
+
+<p>
+<ul class="latex">
+<li><a id="idx:atomcodes2:1433"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a> 
+will generate an atom;
+<li><a id="idx:numbercodes2:1434"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a> 
+will generate a number or throw an exception;
+<li><a id="idx:name2:1435"></a><a class="pred" href="manipatom.html#name/2">name/2</a> 
+will generate a number if possible and an atom otherwise.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="atom_codes/2"><strong>atom_codes</strong>(<var>?Atom, 
+?CodeList</var>)</a></dt>
+<dd class="defbody">
+Convert between an atom and a list of <em>character codes</em> (integers 
+denoting characters).
+
+<p>
+<ul class="latex">
+<li>If <var>Atom</var> is instantiated, it will be translated into a 
+list of character codes, which are unified with <var>CodeList</var>.
+<li>If <var>Atom</var> is uninstantiated and <var>CodeList</var> is a 
+list of character codes, then <var>Atom</var> will be unified with an 
+atom constructed from this list.
+</ul>
+
+<pre class="code">
+?- atom_codes(hello, X).
+X = [104, 101, 108, 108, 111].
+</pre>
+
+<p>The&lsquo;listwards' call to <a id="idx:atomcodes2:1436"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a> 
+can also be written (functionally) using backquotes instead:
+
+<pre class="code">
+?- Cs = `hello`.
+Cs = [104, 101, 108, 108, 111].
+</pre>
+
+<p>Backquoted strings can be mostly found in the body of DCG rules that 
+process lists of character codes.
+
+<p>Note that this is the default interpretation for backquotes. It can 
+be changed on a per-module basis by setting the value of the Prolog flag
+<a class="flag" href="flags.html#flag:back_quotes">back_quotes</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="atom_chars/2"><strong>atom_chars</strong>(<var>?Atom, 
+?CharList</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:atomcodes2:1437"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>, 
+but <var>CharList</var> is a list of <em>character</em>s (atoms of 
+length 1) rather than a list of <em>character codes</em> (integers 
+denoting characters).
+
+<pre class="code">
+?- atom_chars(hello, X).
+X = [h, e, l, l, o]
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="char_code/2"><strong>char_code</strong>(<var>?Atom, 
+?Code</var>)</a></dt>
+<dd class="defbody">
+Convert between a single <em>character</em> (an atom of length 1), and 
+its
+<em>character code</em> (an integer denoting the corresponding 
+character). The predicate alternatively accepts an SWI-Prolog string of 
+length 1 at <var>Atom</var> place.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="number_chars/2"><strong>number_chars</strong>(<var>?Number, 
+?CharList</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:atomchars2:1438"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>, 
+but converts between a number and its representation as a list of <em>characters</em> 
+(atoms of length 1).
+
+<p>
+<ul class="latex">
+<li>If <var>CharList</var> is a
+<em>proper list</em>, i.e., not unbound or a <em>partial list</em>,
+<var>CharList</var> is parsed according to the Prolog syntax for numbers 
+and the resulting number is unified with <var>Number</var>. A <code>syntax_error</code> 
+exception is raised if <var>CharList</var> is instantiated to a ground, 
+proper list but does not represent a valid Prolog number.
+<li>Otherwise, if <var>Number</var> is indeed a number, <var>Number</var> 
+is serialized and the result is unified with <var>CharList</var>.
+</ul>
+
+<p>Following the ISO standard, the Prolog syntax for number allows for
+<em>leading</em> white space (including newlines) and does not allow for
+<em>trailing</em> white space.<sup class="fn">108<span class="fn-text">ISO 
+also allows for Prolog comments in leading white space. We--and most 
+other implementations--believe this is incorrect. We also believe it 
+would have been better not to allow for white space, or to allow for 
+both leading and trailing white space.</span></sup>
+
+<p>Prolog syntax-based conversion can also be achieved using <a id="idx:format3:1439"></a><a class="pred" href="format.html#format/3">format/3</a> 
+and
+<a id="idx:readfromchars2:1440"></a><a class="pred" href="charsio.html#read_from_chars/2">read_from_chars/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="number_codes/2"><strong>number_codes</strong>(<var>?Number, 
+?CodeList</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:numberchars2:1441"></a><a class="pred" href="manipatom.html#number_chars/2">number_chars/2</a>, 
+but converts to a list of character codes rather than characters. In the 
+mode (-,+), both predicates behave identically to improve handling of 
+non-ISO source.</dd>
+<dt class="pubdef"><a id="atom_number/2"><strong>atom_number</strong>(<var>?Atom, 
+?Number</var>)</a></dt>
+<dd class="defbody">
+Realises the popular combination of <a id="idx:atomcodes2:1442"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a> 
+and <a id="idx:numbercodes2:1443"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a> 
+to convert between atom and number (integer, float or non-integer 
+rational) in one predicate, avoiding the intermediate list. Unlike the 
+ISO standard <a id="idx:numbercodes2:1444"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a> 
+predicates, <a id="idx:atomnumber2:1445"></a><a class="pred" href="manipatom.html#atom_number/2">atom_number/2</a> 
+fails silently in mode (+,-) if <var>Atom</var> does not represent a 
+number.</dd>
+<dt class="pubdef"><a id="name/2"><strong>name</strong>(<var>?Atomic, 
+?CodeList</var>)</a></dt>
+<dd class="defbody">
+<var>CodeList</var> is a list of character codes representing the same 
+text as <var>Atomic</var>. Each of the arguments may be a variable, but 
+not both.
+
+<p>
+<ul class="latex">
+<li>When <var>CodeList</var> describes an integer or floating point 
+number and
+<var>Atomic</var> is a variable, <var>Atomic</var> will be unified with 
+the numeric value described by <var>CodeList</var> (e.g., <code>name(N, 
+"300"), 400 is N + 100</code> succeeds).
+<li>If <var>CodeList</var> is not a representation of a number,
+<var>Atomic</var> will be unified with the atom with the name given by 
+the character code list.
+<li>If <var>Atomic</var> is an atom or number, the unquoted print 
+representation of it as a character code list is unified with <var>CodeList</var>.
+</ul>
+
+<p>This predicate is part of the Edinburgh tradition. It should be 
+considered <em>deprecated</em> although, given its long tradition, it is 
+unlikely to be removed from the system. It still has some value for 
+converting input to a number or an atom (depending on the syntax). New 
+code should consider the ISO predicates <a id="idx:atomcodes2:1446"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>, <a id="idx:numbercodes2:1447"></a><a class="pred" href="manipatom.html#number_codes/2">number_codes/2</a> 
+or the SWI-Prolog predicate <a id="idx:atomnumber2:1448"></a><a class="pred" href="manipatom.html#atom_number/2">atom_number/2</a>.</dd>
+<dt class="pubdef"><a id="term_to_atom/2"><strong>term_to_atom</strong>(<var>?Term, 
+?Atom</var>)</a></dt>
+<dd class="defbody">
+True if <var>Atom</var> describes a term that unifies with <var>Term</var>. 
+When
+<var>Atom</var> is instantiated, <var>Atom</var> is parsed and the 
+result unified with <var>Term</var>. If <var>Atom</var> has no valid 
+syntax, a
+<code>syntax_error</code> exception is raised. Otherwise <var>Term</var> 
+is &ldquo;written'' on <var>Atom</var> using <a id="idx:writeterm2:1449"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+with the option
+<code>quoted(true)</code>. See also <a id="idx:format3:1450"></a><a class="pred" href="format.html#format/3">format/3</a>, <a id="idx:withoutputto2:1451"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
+and
+<a id="idx:termstring2:1452"></a><a class="pred" href="string.html#term_string/2">term_string/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="atom_to_term/3"><strong>atom_to_term</strong>(<var>+Atom, 
+-Term, -Bindings</var>)</a></dt>
+<dd class="defbody">
+Use <var>Atom</var> as input to <a id="idx:readterm2:1453"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+using the option
+<code>variable_names</code> and return the read term in <var>Term</var> 
+and the variable bindings in <var>Bindings</var>. <var>Bindings</var> is 
+a list of
+<var><var>Name</var> = <var>Var</var></var> couples, thus providing 
+access to the actual variable names. See also <a id="idx:readterm2:1454"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a>. 
+If <var>Atom</var> has no valid syntax, a <code>syntax_error</code> 
+exception is raised. New code should use
+<a id="idx:readtermfromatom3:1455"></a><a class="pred" href="termrw.html#read_term_from_atom/3">read_term_from_atom/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="atom_concat/3"><strong>atom_concat</strong>(<var>?Atom1, 
+?Atom2, ?Atom3</var>)</a></dt>
+<dd class="defbody">
+<var>Atom3</var> forms the concatenation of <var>Atom1</var> and <var>Atom2</var>. 
+At least two of the arguments must be instantiated to atoms. This 
+predicate also allows for the mode (-,-,+), non-deterministically 
+splitting the 3rd argument into two parts (as <a id="idx:append3:1456"></a><a class="pred" href="lists.html#append/3">append/3</a> 
+does for lists). SWI-Prolog allows for atomic arguments. Portable code 
+must use <a id="idx:atomicconcat3:1457"></a><a class="pred" href="manipatom.html#atomic_concat/3">atomic_concat/3</a> 
+if non-atom arguments are involved.</dd>
+<dt class="pubdef"><a id="atomic_concat/3"><strong>atomic_concat</strong>(<var>+Atomic1, 
++Atomic2, -Atom</var>)</a></dt>
+<dd class="defbody">
+<var>Atom</var> represents the text after converting <var>Atomic1</var> 
+and
+<var>Atomic2</var> to text and concatenating the result:
+
+<pre class="code">
+?- atomic_concat(name, 42, X).
+X = name42.
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[commons]</span><a id="atomic_list_concat/2"><strong>atomic_list_concat</strong>(<var>+List, 
+-Atom</var>)</a></dt>
+<dd class="defbody">
+<var>List</var> is a list of strings, atoms, integers, floating point 
+numbers or non-integer rationals. Succeeds if <var>Atom</var> can be 
+unified with the concatenated elements of <var>List</var>. Equivalent to
+<code>atomic_list_concat(List,&rsquo;&rsquo;, Atom)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[commons]</span><a id="atomic_list_concat/3"><strong>atomic_list_concat</strong>(<var>+List, 
++Separator, -Atom</var>)</a></dt>
+<dd class="defbody">
+Creates an atom just like <a id="idx:atomiclistconcat2:1458"></a><a class="pred" href="manipatom.html#atomic_list_concat/2">atomic_list_concat/2</a>, 
+but inserts <var>Separator</var> between each pair of inputs. For 
+example:
+
+<pre class="code">
+?- atomic_list_concat([gnu, gnat], ', ', A).
+
+A = 'gnu, gnat'
+</pre>
+
+<p>The&lsquo;atomwards` transformation is usually called a <em>string 
+join</em> operation in other programming languages.
+
+<p>The SWI-Prolog version of this predicate can also be used to split 
+atoms by instantiating <var>Separator</var> and <var>Atom</var> as shown 
+below. We kept this functionality to simplify porting old SWI-Prolog 
+code where this predicate was called <a id="idx:concatatom3:1459"></a><span class="pred-ext">concat_atom/3</span>. 
+When used in mode (-,+,+),
+<var>Separator</var> must be a non-empty atom. See also <a id="idx:splitstring4:1460"></a><a class="pred" href="string.html#split_string/4">split_string/4</a>.
+
+<pre class="code">
+?- atomic_list_concat(L, -, 'gnu-gnat').
+
+L = [gnu, gnat]
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="atom_length/2"><strong>atom_length</strong>(<var>+Atom, 
+-Length</var>)</a></dt>
+<dd class="defbody">
+True if <var>Atom</var> is an atom of <var>Length</var> characters. The 
+SWI-Prolog version accepts all atomic types, as well as code-lists and 
+character-lists. New code should avoid this feature and use
+<a id="idx:writelength3:1461"></a><a class="pred" href="termrw.html#write_length/3">write_length/3</a> 
+to get the number of characters that would be written if the argument 
+was handed to <a id="idx:writeterm3:1462"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="atom_prefix/2"><strong>atom_prefix</strong>(<var>+Atom, 
++Prefix</var>)</a></dt>
+<dd class="defbody">
+True if <var>Atom</var> starts with the characters from <var>Prefix</var>. 
+Its behaviour is equivalent to
+<code>?- sub_atom(<var>Atom</var>, 0, _, _, <var>Prefix</var>)</code>. 
+Deprecated.</dd>
+<dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="sub_atom/5"><strong>sub_atom</strong>(<var>+Atom, 
+?Before, ?Len, ?After, ?Sub</var>)</a></dt>
+<dd class="defbody">
+ISO predicate for breaking atoms. It maintains the following relation:
+<var>Sub</var> is a sub-atom of <var>Atom</var> that starts at <var>Before</var>, 
+has
+<var>Len</var> characters, and <var>Atom</var> contains <var>After</var> 
+characters after the match.
+
+<pre class="code">
+?- sub_atom(abc, 1, 1, A, S).
+
+A = 1, S = b
+</pre>
+
+<p>The implementation minimises non-determinism and creation of atoms. 
+This is a flexible predicate that can do search, prefix- and 
+suffix-matching, etc.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="sub_atom_icasechk/3"><strong>sub_atom_icasechk</strong>(<var>+Haystack, 
+?Start, +Needle</var>)</a></dt>
+<dd class="defbody">
+True when <var>Needle</var> is a sub atom of <var>Haystack</var> 
+starting at
+<var>Start</var>. The match is&lsquo;half case insensitive', i.e., 
+uppercase letters in <var>Needle</var> only match themselves, while 
+lowercase letters in <var>Needle</var> match case insensitively. <var>Start</var> 
+is the first 0-based offset inside <var>Haystack</var> where <var>Needle</var> 
+matches.<sup class="fn">109<span class="fn-text">This predicate replaces $<a id="idx:aproposmatch2:1463"></a><span class="pred-ext">apropos_match/2</span>, 
+used by the help system, while extending it with locating the (first) 
+match and performing case insensitive prefix matching. We are still not 
+happy with the name and interface.</span></sup>
+</dd>
+</dl>
+
+<p></body></html>

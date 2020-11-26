@@ -1,0 +1,42 @@
+(note "TQA2")	    
+(abort)
+
+(startsDuring 
+ (YearFn 1996) 
+ (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998))) 
+
+(startsDuring 
+ (YearFn 1990) 
+ (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998))) 
+
+(startsDuring 
+ (YearFn 1994) 
+ (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998))) 
+
+(startsDuring 
+ (YearFn 1995) 
+ (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998))) 
+
+(query (findall ?COUNTRY (findall  ?TIME
+  (and 
+    (startsDuring ?TIME 
+      (TimeIntervalInclusiveFn (YearFn 1980) (YearFn 1998)))
+    (nthLargestElement ?COUNTRY 1 
+      (TheSetOf ?IA-COUNTRY 
+        (and 
+          (instance ?IA-COUNTRY IndependentCountry) 
+          (internationalOrg-MemberCountry GulfCooperationCouncil ?IA-COUNTRY))) 
+          (FunctionToArg 2 
+            (Kappa 
+              (?C ?A) 
+              (grossDomesticProduct ?C ?TIME ?A))))))))
+
+(answer SaudiArabia 1996)
+(answer Qatar 1990)
+(answer SaudiArabia 1994)
+(answer SaudiArabia 1995)
+
+
+(end_of_file)	    
+
+

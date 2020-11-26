@@ -1,0 +1,29 @@
+# Google App Engine generated folder
+appengine-generated/
+*.tar
+*.tar.*
+*.jar
+*.exe
+*.msi
+*.zip
+*.tgz
+*.log
+*~
+~*
+*.bak
+*.qlf
+INDEX.pl
+*.o
+data/
+ext/d3wa-xaip/
+prolog - Best/
+prolog - Copy/
+prolog/data/
+prolog/hyhtn_pddl/hyhtn.new
+prolog/hyhtn_pddl/hyhtn_lm.out
+prolog/hyhtn_pddl/hyhtn_new.out
+test/domains_ocl/freds.out
+test/domains_ocl/index.html
+test/pddl_reader/ipc2008-no-cybersec/seq-opt/openstacks-strips/data/
+test/pddl_tests/hsp-planners-master/
+

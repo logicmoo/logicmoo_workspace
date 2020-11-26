@@ -1,0 +1,17 @@
+(note TQB63)
+
+(statementOfPurpose OAPEC "The OAPEC pursues the following courses of action to achieve the shared desires of its members: (1) coordinating the petroleum economic policies of its members (2) harmonizing the legal systems in the member countries to the extent necessary for the Organization to carry out its activity (3) exchanging information and expertise, and providing training and employment opportunities for citizens of member countries where such possibilities exist (4) promoting cooperation among members in solving problems in the petroleum industry (5) utilizing the member countries? resources and common potentials in joint projects in the petroleum industry." )
+
+(query (findall ?PURPOSE 
+
+ (or 
+ (agent ?ACT OAPEC) 
+ (performedByPart ?ACT OAPEC) 
+ (statementOfPurpose OAPEC ?PURPOSE))  ))
+
+(answer "The OAPEC pursues the following courses of action to achieve the shared desires of its members: (1) coordinating the petroleum economic policies of its members (2) harmonizing the legal systems in the member countries to the extent necessary for the Organization to carry out its activity (3) exchanging information and expertise, and providing training and employment opportunities for citizens of member countries where such possibilities exist (4) promoting cooperation among members in solving problems in the petroleum industry (5) utilizing the member countries? resources and common potentials in joint projects in the petroleum industry." )
+
+
+(end_of_file)
+
+

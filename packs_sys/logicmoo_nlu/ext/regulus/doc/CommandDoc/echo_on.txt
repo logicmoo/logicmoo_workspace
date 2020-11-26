@@ -1,0 +1,3 @@
+Switch on echoing of input text. In this mode, each input text string 
+(as opposed to Regulus command) is printed out before being processed.
+This is normally only useful when running in batch mode.

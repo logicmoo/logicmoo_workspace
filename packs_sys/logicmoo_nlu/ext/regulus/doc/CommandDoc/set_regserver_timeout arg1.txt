@@ -1,0 +1,5 @@
+When recognition resources are started by the {\tt
+LOAD\_\-RECOGNITION} command, specify the number of
+seconds to wait before starting the Regserver process.
+The default value is 60.
+

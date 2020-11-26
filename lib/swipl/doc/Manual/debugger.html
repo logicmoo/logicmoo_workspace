@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.39</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="protocol.html">
+<link rel="next" href="statistics.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="protocol.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="statistics.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:debugger"><a id="sec:4.39"><span class="sec-nr">4.39</span> <span class="sec-title">Debugging 
+and Tracing Programs</span></a></h2>
+
+<a id="sec:debugger"></a>
+
+<p>This section is a reference to the debugger interaction predicates. A 
+more use-oriented overview of the debugger is in <a class="sec" href="debugoverview.html#sec:2.10">section 
+2.10</a>.
+
+<p>If you have installed XPCE, you can use the graphical front-end of 
+the tracer. This front-end is installed using the predicate <a id="idx:guitracer0:1737"></a><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="trace/0"><strong>trace</strong></a></dt>
+<dd class="defbody">
+Start the tracer. <a id="idx:trace0:1738"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+itself cannot be seen in the tracer. Note that the Prolog top level 
+treats <a id="idx:trace0:1739"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+special; it means&lsquo;trace the next goal'.
+</dd>
+<dt class="pubdef"><a id="tracing/0"><strong>tracing</strong></a></dt>
+<dd class="defbody">
+True if the tracer is currently switched on. <a id="idx:tracing0:1740"></a><a class="pred" href="debugger.html#tracing/0">tracing/0</a> 
+itself cannot be seen in the tracer.
+</dd>
+<dt class="pubdef"><a id="notrace/0"><strong>notrace</strong></a></dt>
+<dd class="defbody">
+Stop the tracer. <a id="idx:notrace0:1741"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a> 
+itself cannot be seen in the tracer.
+</dd>
+<dt class="pubdef"><a id="trace/1"><strong>trace</strong>(<var>+Pred</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>trace(<var>Pred</var>, +all)</code>.
+</dd>
+<dt class="pubdef"><a id="trace/2"><strong>trace</strong>(<var>+Pred, 
++Ports</var>)</a></dt>
+<dd class="defbody">
+Put a trace point on all predicates satisfying the predicate 
+specification
+<var>Pred</var>. <var>Ports</var> is a list of port names (<code>call</code>,
+<code>redo</code>, <code>exit</code>, <code>fail</code>). The atom <code>all</code> 
+refers to all ports. If the port is preceded by a <code><code>-</code></code> 
+sign, the trace point is cleared for the port. If it is preceded by a <code><code>+</code></code>, 
+the trace point is set. Tracing a predicate is achieved by
+<em>wrapping</em> the predicate using <a id="idx:wrappredicate4:1742"></a><span class="pred-ext">wrap_predicate/4</span>.
+
+<p>Each time a port (of the 4-port model) is passed that has a trace 
+point set, the goal is printed. Unlike <a id="idx:trace0:1743"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>, 
+however, the execution is continued without asking for further 
+information. Examples:
+
+<p><table class="latex frame-void center">
+<tr><td><code>?- trace(hello).</code> </td><td>Trace all ports of hello 
+with any arity in any module. </td></tr>
+<tr><td><code>?- trace(foo/2, +fail).</code> </td><td>Trace failures of foo/2 
+in any module. </td></tr>
+<tr><td><code>?- trace(bar/1, -all).</code> </td><td>Stop tracing bar/1.</td></tr>
+</table>
+</dd>
+<dt class="pubdef"><a id="notrace/1"><strong>notrace</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Call <var>Goal</var>, but suspend the debugger while <var>Goal</var> is 
+executing. The current implementation cuts the choice points of <var>Goal</var> 
+after successful completion. See <a id="idx:once1:1744"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+Later implementations may have the same semantics as <a id="idx:call1:1745"></a><a class="pred" href="metacall.html#call/1">call/1</a>.</dd>
+<dt class="pubdef"><a id="debug/0"><strong>debug</strong></a></dt>
+<dd class="defbody">
+Start debugger. In debug mode, Prolog stops at spy and break points, 
+disables last-call optimisation and aggressive destruction of choice 
+points to make debugging information accessible. Implemented by the 
+Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>.
+
+<p>Note that the <code>min_free</code> parameter of all stacks is 
+enlarged to 8&nbsp;K cells if debugging is switched off in order to 
+avoid excessive GC. GC complicates tracing because it renames the <i>_&lt;<var>NNN</var>&gt;</i> 
+variables and replaces unreachable variables with the atom
+<code>&lt;garbage_collected&gt;</code>. Calling <a id="idx:nodebug0:1746"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
+does <em>not</em> reset the initial free-margin because several parts of 
+the top level and debugger disable debugging of system code regions. See 
+also <a id="idx:setprologstack2:1747"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a>.</dd>
+<dt class="pubdef"><a id="nodebug/0"><strong>nodebug</strong></a></dt>
+<dd class="defbody">
+Stop debugger. Implemented by the Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>. 
+See also <a id="idx:debug0:1748"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+<dt class="pubdef"><a id="debugging/0"><strong>debugging</strong></a></dt>
+<dd class="defbody">
+Print debug status and spy points on current output stream. See also the 
+Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>.
+</dd>
+<dt class="pubdef"><a id="spy/1"><strong>spy</strong>(<var>+Pred</var>)</a></dt>
+<dd class="defbody">
+Put a spy point on all predicates meeting the predicate specification
+<var>Pred</var>. See <a class="sec" href="listing.html#sec:A.20">section 
+A.20</a>.
+</dd>
+<dt class="pubdef"><a id="nospy/1"><strong>nospy</strong>(<var>+Pred</var>)</a></dt>
+<dd class="defbody">
+Remove spy point from all predicates meeting the predicate specification
+<var>Pred</var>.
+</dd>
+<dt class="pubdef"><a id="nospyall/0"><strong>nospyall</strong></a></dt>
+<dd class="defbody">
+Remove all spy points from the entire program.
+</dd>
+<dt class="pubdef"><a id="leash/1"><strong>leash</strong>(<var>?Ports</var>)</a></dt>
+<dd class="defbody">
+Set/query leashing (ports which allow for user interaction). <var>Ports</var> 
+is one of <var>+Name</var>, <var>-Name</var>, <var>?Name</var> or a list 
+of these.
+<var>+Name</var> enables leashing on that port, <var>-Name</var> 
+disables it and
+<var>?Name</var> succeeds or fails according to the current setting. 
+Recognised ports are <code>call</code>, <code>redo</code>, <code>exit</code>, <code>fail</code> 
+and
+<code>unify</code>. The special shorthand <code>all</code> refers to all 
+ports,
+<code>full</code> refers to all ports except for the unify port 
+(default).
+<code>half</code> refers to the <code>call</code>, <code>redo</code> and <code>fail</code> 
+port.</dd>
+<dt class="pubdef"><a id="visible/1"><strong>visible</strong>(<var>+Ports</var>)</a></dt>
+<dd class="defbody">
+Set the ports shown by the debugger. See <a id="idx:leash1:1749"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
+for a description of the <var>Ports</var> specification. Default is <code>full</code>.</dd>
+<dt class="pubdef"><a id="unknown/2"><strong>unknown</strong>(<var>-Old, 
++New</var>)</a></dt>
+<dd class="defbody">
+Edinburgh-Prolog compatibility predicate, interfacing to the ISO Prolog 
+flag <a class="flag" href="flags.html#flag:unknown">unknown</a>. Values 
+are <code>trace</code> (meaning <code>error</code>) and <code>fail</code>. 
+If the <a class="flag" href="flags.html#flag:unknown">unknown</a> flag 
+is set to
+<code>warning</code>, <a id="idx:unknown2:1750"></a><a class="pred" href="debugger.html#unknown/2">unknown/2</a> 
+reports the value as <code>trace</code>.</dd>
+<dt class="pubdef"><a id="style_check/1"><strong>style_check</strong>(<var>+Spec</var>)</a></dt>
+<dd class="defbody">
+Modify/query style checking options. <var>Spec</var> is one of the terms 
+below or a list of these.
+
+<p>
+<ul class="latex">
+<li>+<var>Style</var> enables a style check
+<li>-<var>Style</var> disables a style check
+<li>?(<var>Style</var>) queries a style check (note the brackets). If <var>Style</var> 
+is unbound, all active style check options are returned on backtracking.
+</ul>
+
+<p>Loading a file using <a id="idx:loadfiles2:1751"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+or one of its derived predicates reset the style checking options to 
+their value before loading the file, scoping the option to the remainder 
+of the file and all files loaded
+<em>after</em> changing the style checking.
+
+<dl class="latex">
+<dt><strong>singleton</strong>(<var>true</var>)</dt>
+<dd class="defbody">
+The predicate <a id="idx:readclause3:1752"></a><a class="pred" href="termrw.html#read_clause/3">read_clause/3</a> 
+(used by the compiler to read source code) warns on variables appearing 
+only once in a term (clause) which have a name not starting with an 
+underscore. See <a class="sec" href="syntax.html#sec:2.16.1.10">section 
+2.16.1.10</a> for details on variable handling and warnings.</dd>
+<dt><strong>no_effect</strong>(<var>true</var>)</dt>
+<dd class="defbody">
+This warning is generated by the compiler for BIPs (built-in predicates) 
+that are inlined by the compiler and for which the compiler can prove 
+that they are meaningless. An example is using <a class="pred" href="compare.html#==/2">==/2</a> 
+against a not-yet-initialised variable as illustrated in the example 
+below. This comparison is always <code>false</code>.
+
+<pre class="code">
+always_false(X) :-
+        X == Y,
+        write(Y).
+</pre>
+
+</dd>
+<dt><strong>var_branches</strong>(<var>false</var>)</dt>
+<dd class="defbody">
+Verifies that if a variable is introduced in a branch and used
+<em>after</em> the branch, it is introduced in all branches. This code 
+aims at bugs following the skeleton below, where <code>p(Next)</code> 
+may be called with <var>Next</var> unbound.
+
+<pre class="code">
+p(Arg) :-
+        (  Cond
+        -&gt; Next = value1
+        ;  true
+        ),
+        p(Next).
+</pre>
+
+<p>If a variable <var>V</var> is intended to be left unbound, one can 
+use
+<code>V=_</code>. This construct is removed by the compiler and thus has 
+no implications for the performance of your program.
+
+<p>This check was suggested together with <em>semantic</em> singleton 
+checking. The SWI-Prolog libraries contain about a hundred clauses that 
+are triggered by this style check. Unlike semantic singleton analysis, 
+only a tiny fraction of these clauses proofed faulty. In most cases, the 
+branches failing to bind the variable fail or raise an exception or the 
+caller handles the case where the variable is unbound. The status of 
+this style check is unclear. It might be removed in the future or it 
+might be enhanced with a deeper analysis to be more precise.</dd>
+<dt><strong>discontiguous</strong>(<var>true</var>)</dt>
+<dd class="defbody">
+Warn if the clauses for a predicate are not together in the same source 
+file. It is advised to disable the warning for discontiguous predicates 
+using the <a id="idx:discontiguous1:1753"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+directive.</dd>
+<dt><strong>charset</strong>(<var>false</var>)</dt>
+<dd class="defbody">
+Warn on atoms and variable names holding non-ASCII characters that are 
+not quoted. See also <a class="sec" href="syntax.html#sec:2.16.1.1">section 
+2.16.1.1</a>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

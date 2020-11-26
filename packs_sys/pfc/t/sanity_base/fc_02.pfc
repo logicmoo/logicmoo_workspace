@@ -1,0 +1,108 @@
+#!/usr/bin/env swipl
+%
+%  PFC is aaa language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+
+%  was_module(header_sane,[]).
+:- include(test_header).
+/*
+:- rtrace.
+:- set_prolog_flag(retry_undefined, none).
+:- set_prolog_flag(gc,true),garbage_collect.
+
+% :- make.
+:- set_prolog_flag(retry_undefined, kb_shared).
+*/
+
+
+
+%:- dmsg(begin_abc123).
+              
+%:- dynamic(tCol/1).
+%:- dynamic(singleValuedInArg/2).
+%:- dynamic(baseKB:ptReformulatorDirectivePredicate/1).
+
+ % :- mpred_trace_exec.
+
+
+:- abolish(c,0).
+:- abolish(aaa,1).
+:- abolish(zzz,1).
+:- abolish(b,1).
+:- dynamic((aaa/1,b/1,c/0,f/1,zzz/1)).
+
+:- file_begin(pfc).
+
+
+
+:- mpred_test(ain(aaa(zzz))).
+
+:- mpred_test(ain(==> aaa(zzz))).
+:- mpred_test(aaa(zzz)).
+
+:- mpred_test(ain(aaa(zzz) ==> zzz(aaa))).
+:- mpred_test(zzz(aaa)).
+
+:- mpred_test(aaa(_)).
+
+
+
+:- ain(~ aaa(zzz)).
+
+:- mpred_test(  ~(aaa(zzz))).
+:- mpred_test(  ~(aaa(_))).
+:- mpred_test(\+ aaa(_)).
+
+~(~(aaa(zzz))).
+
+:- dmsg('Ž'(aaa)).
+
+'Ž'(aaa).
+
+:- op(666,fx,('¯\\_(?)_/¯')).
+
+
+% :- xlisting(aaa).
+
+% :-mpred_test(\+  ~(aaa(_))).
+% :-mpred_test(\+ aaa(_)).
+
+% U=nt(A,B,C),spft(X,Y,Z),\+ \+
+
+(aaa(B),d(B),f(B)) ==> b(B).
+(aaa(B),d(B),e(B)) ==> b(B).
+(aaa(B),e(B),d(B)) ==> b(B).
+
+d(q).
+% ?- nl,ZU=nt(_,_,_),ZU,spft(UMT,X,Y),\+ \+ ZU=Z,nl.
+
+(b(_),e(q)) ==> c.
+(~aaa(B),~e(B)) ==> q.
+
+aaa(B)==>d(B).
+
+:- mpred_test(\+c).
+
+==> e(q).
+==> b(q).
+==> aaa(q).
+
+:- mpred_test(c).
+
+:- /*rtrace*/(mpred_why(c)).
+
+% Looking for answer like: (b(_),e(q))
+%       Supported By: e(q),pt(e(q),rhs([c]))
+%       Found positive trigger: aaa(q)
+%               body: rhs([d(q)])
+%
+%  =pred_eval_rhs1=
+%       Post1: d(q)
+%       Support: aaa(q),pt(aaa(q),rhs([d(q)]))
+
+
+
+

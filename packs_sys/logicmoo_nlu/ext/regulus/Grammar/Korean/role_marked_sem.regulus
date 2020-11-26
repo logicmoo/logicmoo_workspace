@@ -1,0 +1,147 @@
+
+macro(question_s_sem(S),
+      concat([[utterance_type, question]], S)).
+
+macro(dcl_s_sem_main(S),
+      concat([[utterance_type, dcl]], S)).
+
+macro(imp_s_sem_main(S),
+      concat([[utterance_type, polite_imperative]], S)).
+
+macro(utterance_interjection_sem(Sem),
+      Sem).
+
+macro(utterance_np_sem(Sem),
+      Sem).
+
+macro(utterance_pp_sem(Sem),
+      Sem).
+
+macro(dcl_s_sem(S),
+      concat(S, [[utterance_type, dcl]])).
+
+macro(null_comps_sem,
+      []).
+
+macro(s_comps_vbar_sem(Comps, Vbar),
+      concat(Comps, Vbar)).
+
+macro(comps_topic_comps_sem(Np, Comps),
+      concat([[role, topic, Np]], Comps)).
+
+macro(comps_subj_comps_sem(Np, Comps),
+      concat([[role, subject, Np]], Comps)).
+
+macro(comps_obj_comps_sem(Np, Comps),
+      concat([[role, object, Np]], Comps)).
+
+macro(comps_pp_comps(Pp, Comps),
+      concat(Pp, Comps)).
+
+macro(comps_cond_comps(Cond, Comps),
+      concat(Cond, Comps)).
+
+macro(comps_advp_comps(Advp, Comps),
+      concat(Advp, Comps)).
+
+macro(comps_temporal_np_comps(Np, Comps),
+      concat([[role, temporal, Np]], Comps)).
+
+macro(vbar_np_copula_sem(Np, Copula),
+      concat([[role, subject, Np]], Copula)).
+
+macro(vbar_adjp_copula_sem(Adjp, Copula),
+      concat([[role, subject, Adjp]], Copula)).
+
+macro(vbar_pp_copula_sem(Pp, Copula),
+      concat(Pp, Copula)).
+
+macro(vbar_v_aux_sem(V, Aux),
+      concat(Aux, V)).
+
+macro(vbar_koto_ga_aru_sem(V, KotoGaAru),
+      concat(V, KotoGaAru)).
+
+macro(np_np_no_np_sem(Np1, Np2),
+      concat([[role, gen, Np1]], Np2)).
+
+macro(np_pp_no_np_sem(Pp, Np),
+      concat(Pp, Np)).
+
+macro(np_np_np_sem(Np1, Np2),
+      concat([[role, nn, Np1]], Np2)).
+
+macro(np_clause_np_sem(Clause, Np),
+      concat([[clause, Clause]], Np)).
+
+macro(np_n_sem(Np),
+      Np).
+
+macro(np_spec_n_sem(Spec, Np),
+      concat([[spec, Spec]], Np)).
+
+macro(np_name_sem(Name),
+      [[name, Name]]).
+
+macro(np_temporal_np_sem(Np),
+      Np).
+
+macro(np_time_sem(Time),
+      Time).
+
+macro(np_time_goro_sem(Time),
+      concat(Time, [[time_qualifier, goro]])).
+
+macro(np_date_sem(Date),
+      Date).
+
+macro(time_hour_sem(H),
+      [[time, @multiply(H, 100)]]).
+
+macro(time_hour_minute_sem(H, M),
+      [[time, @plus( @multiply(H, 100), M)]]).
+
+macro(date_year_month_sem(Year, Month),
+      [[year, Year], [month, Month]]).      
+
+macro(date_month_sem(Month),
+      [[month, Month]]).      
+
+macro(date_day_month_sem(Day, Month),
+      [[month, Month], [day, Day]]). 
+
+macro(np_adjp_np_sem(Adjp, Np),
+      concat(Adjp, Np)).
+
+macro(np_number_unit_sem(Number, Unit),
+      concat([[number, Number]], Unit)).
+
+macro(np_np_comparative_sem(Np, Comparative),
+      concat(Np, Comparative)).
+
+macro(np_frequency_np_sem(Np1, Np2),
+      concat([[role, frequency, Np1]], Np2)).
+
+macro(np_comparative_frequency_np_sem(Comparative, Np1, Np2),
+      concat([[role, frequency, concat(Comparative, Np1)]], Np2)).
+
+macro(pp_np_p_sem(P, Np),
+      [[role, P, Np]]).
+
+macro(pp_clause_sc_sem(Clause, SC),
+      [[role, SC, [[clause, Clause]]]]).
+
+macro(n_sem(Sem),
+      [Sem]).
+
+macro(verb_sem(Sem),
+      Sem).
+      
+
+macro(plus(X, Y), add(X, Y)).
+
+macro(multiply(X, Y), mul(X, Y)).
+
+macro(subtract(X, Y), sub(X, Y)).
+
+macro(divide(X, Y), div(X, Y)).

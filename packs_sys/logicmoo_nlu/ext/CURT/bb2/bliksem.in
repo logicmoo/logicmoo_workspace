@@ -1,0 +1,25 @@
+
+Auto.
+
+!!((([ A ](event(A) -> thing(A))) & 
+     (([ B ](entity(B) -> thing(B))) & 
+          (([ C ](object(C) -> entity(C))) & 
+               (([ D ](organism(D) -> entity(D))) & 
+                    (([ E ](animal(E) -> organism(E))) & 
+                         (([ F ](person(F) -> organism(F))) & 
+                              (([ G ](man(G) -> person(G))) & 
+                                   (([ H ](woman(H) -> person(H))) & 
+                                        (([ I ](entity(I) -> !event(I))) & 
+                                             (([ J ](organism(J) -> !object(J))) & 
+                                                  (([ K ](person(K) -> !animal(K))) & 
+                                                       (([ L ](woman(L) -> !man(L))) & 
+                                                            (([ M ](man(M) -> male(M))) & 
+                                                                 (([ N ](object(N) -> neuter(N))) & 
+                                                                      (([ O ](event(O) -> neuter(O))) & 
+                                                                           (([ P ](woman(P) -> female(P))) & 
+                                                                                (([ Q ](male(Q) -> !female(Q))) & 
+                                                                                     (([ R ](neuter(R) -> !male(R))) & 
+                                                                                          (([ S ](female(S) -> !neuter(S))) & 
+                                                                                               ([ T ](( T = mia ) -> woman(T)))))))))))))))))))))) & 
+     !(< U >(( U = mia ) & 
+          walk(U)))).

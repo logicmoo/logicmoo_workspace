@@ -1,0 +1,67 @@
+// Type-hierarchy
+entity > Person, Act, Haste, Utterance, Proposition, Situation, Manner.
+Manner > Loud, Quiet, Wisely, Slow, Fast, Sudden.
+
+// Type-instances
+Person = Romeo, FriarLawrence.
+Act = Insist, Walk, Run, Stumble.
+
+// CG 1:
+// Romeo cries to Friar Lawrence: "I stand on sudden haste."
+graph(gr1, [Utterance]-
+         -Agnt->[Person: Romeo],
+         -Rcpt->[Person: FriarLawrence],
+         -Manr->[Loud],
+         -Thme->[Proposition =
+                     [Act: Insist]-
+                       -Agnt->[Person: I],
+                       -Thme->[Situation =
+                                  [Haste]-Attr->[Sudden]
+                                ]
+                  ]).
+
+//
+// CG 2:
+// Friar Lawrence says to Romeo: "Wisely and slow,
+// they stumble that run fast."
+graph(gr2, [Utterance]-
+         -Agnt->[Person: FriarLawrence],
+         -Rcpt->[Person: Romeo],
+         -Manr->[Quiet],
+         -Thme->[Proposition =
+                         [Proposition =
+                                 [Act: Walk]-
+                                   -Manr->[Wisely],
+                                   -Manr->[Slow]
+                         ]-Reas->[Proposition =
+                                     [Act: Stumble]-Agnt->[Person=  
+                                         [Person]<-Agnt-[Act: Run]-Manr->[fast]
+                                                    ]
+                                 ]
+                         ]).
+
+//
+// Who (A) says something in which graph (I)?
+talk(I,A) :- 
+    graph(I, G),
+    branchOfCG([r:A]<-Agnt-[Utterance], G).
+
+// Who listens (R) in which graph (I)?
+listen(I, R) :-
+    graph(I, G),
+    branchOfCG([Utterance]-Rcpt->[s:R], G).
+
+// Who talks (A) and listens (R) in the same graph (I)?
+talk_listen(I, A, R) :-
+   talk(I, A),
+   listen(I, R).
+
+// Who (A) says what (P) in which graph(I)?
+say_what(I, A, P) :-
+    talk(I, A),
+    graph(I, G),
+    branchOfCG([Utterance]-Thme->[Proposition = P], G).
+
+
+
+

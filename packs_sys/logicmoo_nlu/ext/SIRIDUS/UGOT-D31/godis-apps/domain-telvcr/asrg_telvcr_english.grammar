@@ -1,0 +1,4 @@
+; nuance grammar for tvGoDiS telvcr domain/lexicon
+;english - purely for testing purposes
+
+.Asrg_telvcr_english [hello bye quit yes no]

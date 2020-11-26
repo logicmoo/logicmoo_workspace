@@ -1,0 +1,24 @@
+(note TQA77-b)
+(abort)
+(inRegion Iran Iran) 
+(thereExists ?X (instance ?X BallisticMissile)) 
+
+(queryyn
+  (thereExists ?FORCE 
+    (thereExists ?TARGET 
+      (and 
+        (instance ?FORCE BallisticMissile) 
+        (inRegion ?TARGET Iran) 
+        (consistent 
+          (thereExists ?ACT 
+            (and 
+              (instance ?ACT AttackOnTangible) 
+              (agent ?ACT Kuwait) 
+              (deviceUsed ?ACT ?FORCE) 
+              (damages ?ACT ?TARGET))))))))
+
+(answer  No)
+
+(end_of_file)
+
+

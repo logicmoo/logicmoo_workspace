@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="aggregate.html">
+<link rel="next" href="apply.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="aggregate.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="apply.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:ansiterm"><a id="sec:A.2"><span class="sec-nr">A.2</span> <span class="sec-title">library(ansi_term): 
+Print decorated text to ANSI consoles</span></a></h2>
+
+<p><a id="sec:ansiterm"></a>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="url" href="http://en.wikipedia.org/wiki/ANSI_escape_code">http://en.wikipedia.org/wiki/ANSI_escape_code</a>
+</dd>
+</dl>
+
+<p>This library allows for exploiting the color and attribute facilities 
+of most modern terminals using ANSI escape sequences. This library 
+provides the following:
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
+allows writing messages to the terminal with ansi attributes.
+<li>It defines the hook <a class="pred" href="printmsg.html#prolog:message_line_element/2">prolog:message_line_element/2</a>, 
+which provides ansi attributes for <a class="pred" href="printmsg.html#print_message/2">print_message/2</a>.
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="ansi_format/3"><strong>ansi_format</strong>(<var>+ClassOrAttributes, 
++Format, +Args</var>)</a></dt>
+<dd class="defbody">
+<var>Format</var> text with ANSI attributes. This predicate behaves as
+<a class="pred" href="format.html#format/2">format/2</a> using <var>Format</var> 
+and <var>Args</var>, but if the <code>current_output</code> is a 
+terminal, it adds ANSI escape sequences according to Attributes. For 
+example, to print a text in bold cyan, do
+
+<pre class="code">
+?- ansi_format([bold,fg(cyan)], 'Hello ~w', [world]).
+</pre>
+
+<p>Attributes is either a single attribute, a list thereof or a term 
+that is mapped to concrete attributes based on the current theme (see <a class="pred" href="ansiterm.html#prolog:console_color/2">prolog:console_color/2</a>). 
+The attribute names are derived from the ANSI specification. See the 
+source for <span class="pred-ext">sgr_code/2</span> for details. Some 
+commonly used attributes are:
+
+<dl class="latex">
+<dt><strong>bold</strong></dt>
+<dt><strong>underline</strong></dt>
+<dt><var><code>fg(Color)</code></var> <strong><code>,</code></strong> <var><code><code>bg(Color)</code>,<code><code>hfg(Color)</code>,<code>hbg(Color)</code></code></code></var></dt>
+<dd class="defbody">
+For <code>fg(Color)</code> and <code>bg(Color)</code>, the colour name 
+can be&rsquo;#RGB' or&rsquo;#RRGGBB'
+</dd>
+<dt><var><code>fg8(Spec)</code></var> <strong><code>,</code></strong> <var><code>bg8(Spec)</code></var></dt>
+<dd class="defbody">
+8-bit color specification. <var>Spec</var> is a colour name, <code>h(Color)</code> 
+or an integer 0..255.
+</dd>
+<dt><var><code>fg(R, G, B)</code></var> <strong><code>,</code></strong> <var><code>bg(R, 
+G, B)</code></var></dt>
+<dd class="defbody">
+24-bit (direct color) specification. The components are integers in the 
+range 0..255.
+</dd>
+</dl>
+
+<p>Defined color constants are below. <code>default</code> can be used 
+to access the default color of the terminal.
+
+<p>
+<ul class="latex">
+<li>black, red, green, yellow, blue, magenta, cyan, white
+</ul>
+
+<p>ANSI sequences are sent if and only if
+
+<p>
+<ul class="compact">
+<li>The <code>current_output</code> has the property <code>tty(true)</code> 
+(see
+<a class="pred" href="IO.html#stream_property/2">stream_property/2</a>).
+<li>The Prolog flag <code>color_term</code> is <code>true</code>.
+</ul>
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:console_color/2"><span class="module">prolog</span>:<strong>console_color</strong>(<var>+Term, 
+-AnsiAttributes</var>)</a></dt>
+<dd class="defbody">
+Hook that allows for mapping abstract terms to concrete ANSI attributes. 
+This hook is used by <i>theme</i> files to adjust the rendering based on 
+user preferences and context. Defaults are defined in the file <code>boot/messages.pl</code>.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<code>library(theme/dark)</code> for an example implementation and the <var>Term</var> 
+values used by the system messages.
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="prolog:message_line_element/2"><span class="module">prolog</span>:<strong>message_line_element</strong>(<var>+Stream, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Hook implementation that deals with <code>ansi(+Attr, +Fmt, +Args)</code> 
+in message specifications.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="ansi_get_color/2"><strong>ansi_get_color</strong>(<var>+Which, 
+-RGB</var>)</a></dt>
+<dd class="defbody">
+Obtain the <var>RGB</var> color for an ANSI color parameter. <var>Which</var> 
+is either a color alias or an integer ANSI color id. Defined aliases are
+<code>foreground</code> and <code>background</code>. This predicate 
+sends a request to the console (<code>user_output</code>) and reads the 
+reply. This assumes an <code>xterm</code> compatible terminal.
+<table class="arglist">
+<tr><td><var>RGB</var> </td><td>is a term <code>rgb(Red,Green,Blue)</code>. 
+The color components are integers in the range 0..65535. </td></tr>
+</table>
+</dd>
+</dl>
+
+<p></body></html>

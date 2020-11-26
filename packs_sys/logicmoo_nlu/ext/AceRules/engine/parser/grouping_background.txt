@@ -1,0 +1,121 @@
+---+ Intelligent Grouping: Background
+
+_|
+See the paper "AceRules: Executing Rules in Controlled Natural Language" by Tobias Kuhn.
+|_
+
+Rules expressed in ACE are potentially more complex than the rules allowed in a certain rule theory.
+Thus, some rules have to be rejected by AceRules because they can not be handled by the respective
+interpreter. Nevertheless, there are situations where the logical representation (that is generated
+by the ACE parser) is not compliant with the rule theory, but can be translated in a consistent way
+into a correct rule representation. This translation we call "intelligent grouping".
+
+To make this point clear, we present some examples using stable model semantics with strong negation.
+The described procedure can be used in the same way for the other semantics. Rules of the stable model
+semantics with strong negation have the form
+
+==
+L0 <- L1, ... Lm, ~Lm+1, ... ~Ln
+==
+
+with 0 =< m =< n and each Li being a literal. A literal is an atomic proposition (Ai) or its strong
+negation (-Ai). Negations are allowed to be applied only to atomic propositions or --- in the case of
+negation as failure (~) --- to literals. Furthermore the heads of rules must contain nothing but a
+single literal. These restrictions we have to keep in mind when we translate an ACE text into a rule
+representation. As a first example, let us consider the following AceRules program:
+
+==
+John owns a car.
+Bill does not own a car.
+If someone does not own a car then he/she owns a house.
+==
+
+The ACE parser transforms this text into its logical representation (simplified):
+
+==
+owns(john, X)
+car(X)
+- ( owns(bill, Y), car(Y) )
+- ( owns(A, B), car(B) ) -> ( owns(A, C), house(C) )
+==
+
+which is not yet compliant with the rule theory. It contains complex terms inside of a negation and
+in the head of a rule. But considering the initial text, we would expect this example to work. In fact,
+it was just formalized in an inappropriate way. This is the point where the intelligent grouping is
+applied. If we aggregate some of the predicates then we end up with a simpler representation that has
+a correct rule structure:
+
+==
+owns_car(john)
+- owns_car(bill)
+- owns_car(X) -> owns_house(X)
+==
+
+This transformation is based on a set of group patterns that are collected in a first step, and then
+these patterns are used to perform the actual grouping. For our example, the following two patterns
+have been used:
+
+==
+owns(X1, I1), car(I1)   ==> owns_car(X1)
+owns(X2, I2), house(I2) ==> owns_house(X2)
+==
+
+In such patterns, there can be two kinds of placeholders: Each Xi stands for any variable or atom, and
+each Ii stands for a variable that does not occur outside of the group. This allows us to omit the
+variables Ii after the transformation. From a more intuitive point of view, we can say that the phrases
+"owns a car" and "owns a house" are considered atomic. This means that the car and the house do not have
+an independent existence, and thus references to these objects are not allowed. If this restriction is
+violated then a consistent transformation into a valid rule structure is not possible. For example, the
+program
+
+==
+Bill does not own a car.
+John owns a car X.
+Mary sees the car X.
+==
+
+that leads to the logical representation
+
+==
+- (owns(bill, A), car(A))
+owns(john, B)
+car(B)
+sees(mary,B)
+==
+
+cannot be translated into a valid rule structure. An error message has to be raised in such cases
+informing the user that the program has an invalid structure. It has still to be evaluated how hard it
+is for normal users to follow this restriction and how often such situations actually occur.
+
+Concerning the grouping step, one might think that the text was just translated into a too complex
+representation in the first place and that the parser should directly create a grouped representation.
+The following program shows that this is not the case:
+
+==
+John owns a car.
+The car contains a suitcase.
+If someone owns something that contains something X then he/she owns X.
+==
+
+It is transformed by the ACE parser into:
+
+==
+owns(john,H)
+car(H)
+contains(H,S)
+suitcase(S)
+owns(Z,X), contains(X,Y) -> owns(Z,Y)
+==
+
+In this case, we need the more fine-grained representation and no grouping has to be done. In other words,
+the pattern collection step returns an empty set of patterns because the program is already in a compliant
+form. This and the first example start both with the sentence "John owns a car", but in the end
+it has to be represented differently. Thus, the grouping is _intelligent_ in the sense that it must
+consider the whole program to find out which predicates have to be grouped.
+
+Another important property of the grouping step is that the transformation has to be reversible. Before
+verbalizing an answer set, we need to ungroup the predicates that have been grouped.
+
+Altogether, the intelligent grouping gives us much flexibility. A sentence like "John owns a car" is treated
+as an atomic property of an object (John) or as relation between two objects (John and a car), whichever makes
+sense in the respective context.

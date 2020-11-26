@@ -1,0 +1,11 @@
+% -----------------------------------------------------------------------------
+% Name: CNF_BOOLEAN
+%
+% Should be able to use boolean constants in CNF formulas.
+% -----------------------------------------------------------------------------
+
+cnf(useless, axiom, p | $true).
+
+cnf(simplifiable, axiom, $false | p).
+
+cnf(goal, negated_conjecture, ~ p).

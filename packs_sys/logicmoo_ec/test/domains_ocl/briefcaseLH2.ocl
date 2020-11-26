@@ -1,0 +1,91 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: ron
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Jul 05 11:32:28 BST 2005
+ *  Date last modified: 2013/03/25 at 04:22:57 PM PDT
+ *  Description:
+ *    This is a version of the briefcase domain constructed with the
+ *    Life History editor. Note the static predicate fitsIn must be defined
+ *    in the Predicate Editor and instances supplied in the Atomic Invarients
+ *    Editor
+ * Object Life History : briefCaseLH.gfx
+ */
+
+domain_name(briefcaseLH).
+
+% Sorts
+sorts(primitive_sorts,[thing,loc,bag]).
+
+% Objects
+objects(thing,[cheque,dictionary,suit]).
+objects(bag,[briefcase,suitcase]).
+objects(loc,[home,office]).
+
+% Predicates
+predicates([
+    outAt(thing),
+    thingLocation(thing,loc),
+    inBag(thing,bag),
+    atPlace(bag),
+    location(bag,loc)]).
+
+% Object Class Definitions
+substate_classes(thing,Thing,[
+    [outAt(Thing),thingLocation(Thing,Loc)],
+    [inBag(Thing,Bag),thingLocation(Thing,Loc)]]).
+substate_classes(bag,Bag,[
+    [atPlace(Bag),location(Bag,Loc)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(takeOut(Bag,Loc,Thing),
+    % prevail
+    [     se(bag,Bag,[atPlace(Bag),location(Bag,Loc)])],
+    % necessary
+    [     sc(thing,Thing,[inBag(Thing,Bag),thingLocation(Thing,Loc)]=>[outAt(Thing),thingLocation(Thing,Loc)])],
+    % conditional
+    []).
+operator(putIn(Bag,Loc,Thing),
+    % prevail
+    [     se(bag,Bag,[atPlace(Bag),location(Bag,Loc)])],
+    % necessary
+    [     sc(thing,Thing,[outAt(Thing),thingLocation(Thing,Loc)]=>[inBag(Thing,Bag),thingLocation(Thing,Loc)])],
+    % conditional
+    []).
+operator(move(Bag,LocA,LocB),
+    % prevail
+    [],
+    % necessary
+    [     sc(bag,Bag,[atPlace(Bag),location(Bag,LocA)]=>[atPlace(Bag),location(Bag,LocB)])],
+    % conditional
+    [     sc(thing,Thing,[inBag(Thing,Bag),thingLocation(Thing,LocA)]=>[inBag(Thing,Bag),thingLocation(Thing,LocB)])]).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(thing,cheque,[outAt(cheque),thingLocation(cheque,home)]),
+     se(thing,dictionary,[outAt(dictionary),thingLocation(dictionary,office)]),
+     se(thing,suit,[outAt(suit),thingLocation(suit,office)])],
+    % INIT States
+    [
+     ss(thing,cheque,[outAt(cheque),thingLocation(cheque,office)]),
+     ss(thing,dictionary,[outAt(dictionary),thingLocation(dictionary,home)]),
+     ss(thing,suit,[outAt(suit),thingLocation(suit,home)]),
+     ss(bag,briefcase,[atPlace(briefcase),location(briefcase,office)]),
+     ss(bag,suitcase,[atPlace(suitcase),location(suitcase,home)])]).

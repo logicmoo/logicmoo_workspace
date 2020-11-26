@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 9.6</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="examples.html">
+<link rel="next" href="guidelines.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="examples.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="guidelines.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:sicstus-chr"><a id="sec:9.6"><span class="sec-nr">9.6</span> <span class="sec-title">Backwards 
+Compatibility</span></a></h2>
+
+<a id="sec:sicstus-chr"></a>
+<h3 id="sec:chr-sicstus"><a id="sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
+Old SICStus CHR implementation</span></a></h3>
+
+<a id="sec:chr-sicstus"></a>
+
+<p>There are small differences between the current K.U.Leuven CHR system 
+in SWI-Prolog, older versions of the same system, and SICStus' CHR 
+system.
+
+<p>The current system maps old syntactic elements onto new ones and 
+ignores a number of no longer required elements. However, for each a <em>deprecated</em> 
+warning is issued. You are strongly urged to replace or remove 
+deprecated features.
+
+<p>Besides differences in available options and pragmas, the following 
+differences should be noted:
+
+<p>
+<ul class="latex">
+<li><i>The constraints/1 declaration</i><br>
+This declaration is deprecated. It has been replaced with the
+<a id="idx:chrconstraint1:2111"></a><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
+declaration.
+
+<p>
+<li><i>The option/2 declaration</i><br>
+This declaration is deprecated. It has been replaced with the
+<a id="idx:chroption2:2112"></a><a class="pred" href="SyntaxAndSemantics.html#chr_option/2">chr_option/2</a> 
+declaration.
+
+<p>
+<li><i>The handler/1 declaration</i><br>
+In SICStus every CHR module requires a handler/1 declaration declaring a 
+unique handler name. This declaration is valid syntax in SWI-Prolog, but 
+will have no effect. A warning will be given during compilation.
+
+<p>
+<li><i>The rules/1 declaration</i><br>
+In SICStus, for every CHR module it is possible to only enable a subset 
+of the available rules through the rules/1 declaration. The declaration 
+is valid syntax in SWI-Prolog, but has no effect. A warning is given 
+during compilation.
+
+<p>
+<li><i>Guard bindings</i><br>
+The <code>check_guard_bindings</code> option only turns invalid calls to 
+unification into failure. In SICStus this option does more: it 
+intercepts instantiation errors from Prolog built-ins such as <a id="idx:is2:2113"></a><a class="pred" href="arith.html#is/2">is/2</a> 
+and turns them into failure. In SWI-Prolog, we do not go this far, as we 
+like to separate concerns more. The CHR compiler is aware of the CHR 
+code, the Prolog system, and the programmer should be aware of the 
+appropriate meaning of the Prolog goals used in guards and bodies of CHR 
+rules.
+</ul>
+
+<p><h3 id="sec:chr-eclipse"><a id="sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
+Old ECLiPSe CHR implementation</span></a></h3>
+
+<a id="sec:chr-eclipse"></a>
+
+<p>The old ECLiPSe CHR implementation features a label_with/1 construct 
+for labeling variables in CHR constraints. This feature has long since 
+been abandoned. However, a simple transformation is all that is required 
+to port the functionality.
+
+<pre class="code">
+label_with Constraint1 if Condition1.
+...
+label_with ConstraintN if ConditionN.
+Constraint1 :- Body1.
+...
+ConstraintN :- BodyN.
+</pre>
+
+<p>is transformed into
+
+<pre class="code">
+:- chr_constraint my_labeling/0.
+
+my_labeling \ Constraint1 &lt;=&gt; Condition1 | Body1.
+...
+my_labeling \ ConstraintN &lt;=&gt; ConditionN | BodyN.
+my_labeling &lt;=&gt; true.
+</pre>
+
+<p>Be sure to put this code after all other rules in your program! With 
+my_labeling/0 (or another predicate name of your choosing) the labeling 
+is initiated, rather than ECLiPSe's chr_labeling/0 .
+
+<p></body></html>

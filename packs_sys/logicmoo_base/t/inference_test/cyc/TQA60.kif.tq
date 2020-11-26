@@ -1,0 +1,50 @@
+(note TQA60)
+
+(desires Iran 
+ (powerInRegion-Geopolitical Iran UnitedStatesOfAmerica MediumToVeryHigh)) 
+
+
+(implies 
+ (and 
+ (instance ?HOST TakingSomeoneHostage) 
+ (agent ?HOST ?GEOPOL1) 
+ (instance ?GEOPOL1 GeopoliticalEntity) 
+ (objectActedOn ?HOST ?PERSON) 
+ (citizens ?GEOPOL2 ?PERSON) 
+ (instance ?GEOPOL2 GeographicalAgent)) 
+ (increasesCausally ?HOST 
+ (powerInRegion-Geopolitical ?GEOPOL1 ?GEOPOL2 MediumToVeryHigh) likelihood)) 
+ 
+
+(subrelation agent agent) 
+
+(instance UnitedStatesOfAmerica GeographicalAgent) 
+
+ 
+
+(instance Iran GeopoliticalEntity) 
+
+
+
+
+
+(query (findall ?PROP (implies 
+   (and 
+       (agent ?ACT Iran) 
+       (instance ?ACT TakingSomeoneHostage) 
+       (objectActedOn ?ACT ?HOSTAGE) 
+       (citizens UnitedStatesOfAmerica ?HOSTAGE)) 
+   (or 
+       (and 
+           (desires Iran ?PROP) 
+           (increasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires Iran 
+               (not ?PROP)) 
+           (decreasesCausally ?ACT ?PROP likelihood)))) ))
+
+(answer (list (powerInRegion-Geopolitical Iran UnitedStatesOfAmerica MediumToVeryHigh) likelihood ))
+
+(end_of_file)
+
+

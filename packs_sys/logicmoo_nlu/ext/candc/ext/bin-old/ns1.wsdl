@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="%{Service}%"
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="%{URL}%/%{Service}%.wsdl"
+ xmlns:tns="%{URL}%/%{Service}%.wsdl"
+ xmlns:ns1="%{URL}%/ns1.xsd">
+
+<types>
+ <schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  targetNamespace="%{URL}%/ns1.xsd"
+  xmlns:ns1="%{URL}%/ns1.xsd">
+
+  <complexType name="ArrayOfint">
+   <complexContent>
+    <restriction base="SOAP-ENC:Array">
+     <element name="item" type="xsd:int" maxOccurs="unbounded"/>
+     <attribute ref="SOAP-ENC:arrayType" WSDL:arrayType="xsd:int[]"/>
+    </restriction>
+   </complexContent>
+  </complexType>
+
+  <complexType name="ArrayOfArrayOfint">
+   <complexContent>
+    <restriction base="SOAP-ENC:Array">
+     <element name="item" type="ns1:ArrayOfint" maxOccurs="unbounded"/>
+     <attribute ref="SOAP-ENC:arrayType" WSDL:arrayType="ns1:ArrayOfint[]"/>
+    </restriction>
+   </complexContent>
+  </complexType>
+
+  <complexType name="magicResponse">
+   <all>
+    <element name="result" type="ns1:ArrayOfArrayOfint" minOccurs="1" maxOccurs="1" nillable="true"/>
+   </all>
+  </complexType>
+
+ </schema>
+</types>
+
+<message name="magicRequest">
+ <part name="rank" type="xsd:int"/>
+</message>
+
+<message name="magicResponse">
+ <part name="result" type="ns1:ArrayOfArrayOfint"/>
+</message>
+
+<portType name="%{Service}%PortType">
+ <operation name="magic">
+  <documentation>Service definition of function ns1__magic</documentation>
+  <input message="tns:magicRequest"/>
+  <output message="tns:magicResponse"/>
+ </operation>
+</portType>
+
+<binding name="%{Service}%Binding" type="tns:%{Service}%PortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="magic">
+  <SOAP:operation soapAction="%{URI}%#magic"/>
+  <input>
+   <SOAP:body use="encoded" namespace="%{URI}%" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+   <SOAP:body use="encoded" namespace="%{URI}%" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="%{Service}%">
+ <documentation>gSOAP 2.1.6b generated service definition</documentation>
+ <port name="%{Service}%Port" binding="tns:%{Service}%Binding">
+  <SOAP:address location="%{URL}%/%{Service}%.cgi"/>
+ </port>
+</service>
+
+</definitions>

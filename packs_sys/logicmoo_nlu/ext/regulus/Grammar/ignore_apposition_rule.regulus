@@ -1,0 +1,12 @@
+/* 
+
+The apposition construction often makes grammar compilation explode. (Maybe the rule is badly implemented). 
+The following declarations remove both the rule and the associated features.
+
+*/
+
+% Rule
+ignore_item(apposition_rule).
+
+% Feature
+ignore_feature(n_appositive_mod_type).

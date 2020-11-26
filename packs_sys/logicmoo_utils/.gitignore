@@ -1,0 +1,14 @@
+*.tar
+*.tar.*
+*.jar
+*.bak
+*.exe
+*.msi
+*.zip
+*.tgz
+*.log
+*~
+~*
+*.qlf
+INDEX.pl
+*.o

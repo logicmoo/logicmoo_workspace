@@ -1,0 +1,37 @@
+(note TQF210d)
+
+(subProcess Iranian-TalibanConflict-1998 SpecialEnvoyMeetsWithIran) 
+(decreases-Generic SpecialEnvoyMeetsWithIran Iranian-TalibanConflict-1998 conflictLevel) 
+(instance Iranian-TalibanConflict-1998 ConflictEvent) 
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(existant SpecialEnvoyMeetsWithIran 
+ (MonthFn October 
+ (YearFn 1998))) 
+
+(instance SpecialEnvoyMeetsWithIran CooperationEvent) 
+(partnersInCooperation LakhdarBrahimi Iran SpecialEnvoyMeetsWithIran) 
+
+(implies 
+ (partnersInCooperation ?AGT-1 ?AGT-2 ?COOP) 
+ (partnersInCooperation ?AGT-2 ?AGT-1 ?COOP)) 
+
+(queryyn  
+   (thereExists ?CONFLICT 
+       (thereExists ?COOPERATE 
+           (thereExists ?SOMEONE 
+               (and 
+                   (instance ?CONFLICT ConflictEvent) 
+                   (opponentsInConflict ?SOMEONE Taliban ?CONFLICT) 
+                   (instance ?COOPERATE CooperationEvent) 
+                   (subProcess ?CONFLICT ?COOPERATE) 
+                   (partnersInCooperation Iran LakhdarBrahimi ?COOPERATE) 
+                   (existant?COOPERATE 
+                       (MonthFn October 
+                           (YearFn 1998))) 
+                   (decreases-Generic ?COOPERATE ?CONFLICT conflictLevel))))))
+ 
+(answer Yes)
+
+(end_of_file)
+

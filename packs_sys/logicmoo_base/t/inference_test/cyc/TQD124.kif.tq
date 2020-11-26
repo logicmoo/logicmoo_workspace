@@ -1,0 +1,245 @@
+(note TQD124)
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent) ) 
+
+(implies 
+ (groupMemberType ?PAIR ?TYPE) 
+ (instance ?PAIR 
+ (GroupFn ?TYPE))) 
+
+(groupMemberType 
+ (GovernmentFn Iran) IntelligentAgent) 
+
+(governmentType Iran IslamicRepublic) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent)) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent)) 
+
+(not 
+ (quotedCollection 
+ (GroupFn IntelligentAgent))) 
+
+(completeExtentKnown quotedCollection) 
+
+(implies 
+ (and 
+ (groupMembers ?GROUP ?MEMBER) 
+ (groupMemberType ?GROUP ?TYPE)) 
+ (instance ?MEMBER ?TYPE)) 
+
+(groupMemberType OPEC IndustrializedCountry) 
+
+(internationalOrg-MemberCountry OPEC Iran) 
+
+(instance Iran IndustrializedCountry) 
+
+(instance Iran IndustrializedCountry) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection IndustrializedCountry)) 
+
+(completeExtentKnown quotedCollection) 
+
+(implies 
+ (range ?F ?COL) 
+ (instance 
+ (?F ?ARG1) ?COL)) 
+
+(range GovernmentFn RegionalGovernment) 
+
+(governmentType Iran IslamicRepublic) 
+
+(instance 
+ (GovernmentFn Iran) RegionalGovernment) 
+
+(instance 
+ (GovernmentFn Iran) RegionalGovernment) 
+
+(not 
+ (quotedCollection RegionalGovernment)) 
+
+(completeExtentKnown quotedCollection) 
+
+(implies 
+ (range ?F ?COL) 
+ (instance 
+ (?F ?ARG1) ?COL)) 
+
+(range GovernmentFn RegionalGovernment) 
+
+(governmentType Iran TheocraticRepublic) 
+
+(instance 
+ (GovernmentFn Iran) RegionalGovernment) 
+
+(instance 
+ (GovernmentFn Iran) RegionalGovernment) 
+
+(not 
+ (quotedCollection RegionalGovernment)) 
+
+(completeExtentKnown quotedCollection) 
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent)) 
+
+(implies 
+ (groupMemberType ?PAIR ?TYPE) 
+ (instance ?PAIR 
+ (GroupFn ?TYPE))) 
+
+(groupMemberType 
+ (GovernmentFn Iran) IntelligentAgent) 
+
+(governmentType Iran TheocraticRepublic) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent)) 
+
+(instance 
+ (GovernmentFn Iran) 
+ (GroupFn IntelligentAgent)) 
+
+(not 
+ (quotedCollection 
+ (GroupFn IntelligentAgent))) 
+
+(completeExtentKnown quotedCollection) 
+
+(instance Iran Entity) 
+
+(instance Iran Entity) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection Entity)) 
+
+(completeExtentKnown quotedCollection) 
+
+(instance Iran IndependentCountry) 
+
+(instance Iran IndependentCountry) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection IndependentCountry)) 
+
+(completeExtentKnown quotedCollection) 
+
+(instance Iran GeographicalArea) 
+
+(instance Iran GeographicalArea) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection GeographicalArea)) 
+
+(completeExtentKnown quotedCollection) 
+
+(instance Iran PersianGulfCountry) 
+
+(instance Iran PersianGulfCountry) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection PersianGulfCountry)) 
+
+(completeExtentKnown quotedCollection) 
+
+(implies 
+ (groupMemberType ?PAIR ?TYPE) 
+ (instance ?PAIR 
+ (GroupFn ?TYPE))) 
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance OPEC 
+ (GroupFn IntelligentAgent)) 
+
+(instance OPEC 
+ (GroupFn IntelligentAgent)) 
+
+(instance UnitedNationsOrganization 
+ (GroupFn IntelligentAgent)) 
+
+(instance UnitedNationsOrganization 
+ (GroupFn IntelligentAgent)) 
+
+(implies 
+ (and 
+ (groupMembers ?GROUP ?MEMBER) 
+ (groupMemberType ?GROUP ?TYPE)) 
+ (instance ?MEMBER ?TYPE)) 
+
+(internationalOrg-MemberCountry OPEC Iran) 
+
+(subrelation internationalOrg-MemberCountry groupMembers) 
+
+(groupMemberType OPEC IntelligentAgent) 
+
+(internationalOrg-MemberCountry UnitedNationsOrganization Iran) 
+
+(groupMemberType UnitedNationsOrganization IntelligentAgent) 
+
+(instance Iran IntelligentAgent) 
+
+(instance Iran IntelligentAgent) 
+
+(comment Iran "Iran a medium-sized IndependentCountry in the southwest of the ContinentOfAsia; Iran is northwest of Iraq and the PersianGulf, east of eastern Turkey, south of Armenia, Azerbaijan, the CaspianSea, and Turkmenistan, and west of Afghanistan and Pakistan. Iran claims AbuMusaIsland and the TheTumbsIslands in the PersianGulf, and claims territory controlled by Iraq. This constant includes the country of Iran, both physical and political. Iran is adajacent to the PersianGulf and the StraitOfHormuz..") 
+
+(not 
+ (quotedCollection IntelligentAgent)) 
+
+(completeExtentKnown quotedCollection) 
+
+(query (findall (?CLASS ?TYPE)
+ (and 
+   (instance 
+       (GovernmentFn Iran) ?CLASS) 
+   (not 
+       (quotedCollection ?CLASS)) 
+   (assertedFormula 
+       (instance 
+           (GovernmentFn Iran) ?CLASS)) 
+   (governmentType Iran ?TYPE)) 
+))
+
+(answer (list  (GroupFn IntelligentAgent)) IslamicRepublic
+)
+(answer RegionalGovernment IslamicRepublic
+
+)
+(answer RegionalGovernment TheocraticRepublic
+)
+(answer (list  (GroupFn IntelligentAgent)) TheocraticRepublic
+)
+(end_of_file)
+

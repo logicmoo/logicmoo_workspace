@@ -1,0 +1,27 @@
+use robot as knowledge.
+
+define goTo(X, Y) with
+	pre { true }
+	post { true }
+		
+% after goto we change state to unknown so that we 
+	% must receive a state update before proceeding.
+define goTo(NavPoint) with
+	pre { true }
+	post { true }
+		
+define goToBlock(Block) with
+	pre { true }
+	post { true }
+		
+define pickUp(Block) with
+	pre { true }
+	post { true }
+		
+define putDown with
+	pre { true }
+	post { true }
+		
+define sendToGUI(Sender,Message) with
+	pre { true }
+	post { true }

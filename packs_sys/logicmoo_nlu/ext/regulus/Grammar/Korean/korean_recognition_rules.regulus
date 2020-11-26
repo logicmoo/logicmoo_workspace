@@ -1,0 +1,35 @@
+
+%----------------------------------------------------------------------
+
+% Order for expanding features when compiling to recognition grammar.
+% Order chosen here is based on that for the English grammar.
+ 
+ignore_feature(v_type).
+
+feature_instantiation_schedule(
+	[[vform, lexical, v_type, voice],
+	 [numtype, wa_or_ga_type, na],
+	 [sc],
+	 [politeness],
+	 [sem_np_type],
+	 [sem_subj_type],
+	 [sem_obj_type],
+	 [sem_no_type],
+	 [sem_premod_type],
+	 [final_sound],
+	 [preceding_sound],
+	 [sino_or_native]]
+			      ).
+
+%----------------------------------------------------------------------
+
+% These rules are currently only used in recognition
+
+% ku gatsu wa domna kaigi ga ari masu ka
+comps:[sem= @comps_topic_comps_sem(Np, Comps),
+       voice=Voice, sem_subj_type=SubjType, sem_obj_type=ObjType] -->
+	np:[sem=Np],
+	wa_or_ga:[wa_or_ga_type=wa],
+	comps:[sem=Comps, voice=Voice, voice=active, sem_subj_type=SubjType, sem_obj_type=ObjType].
+
+

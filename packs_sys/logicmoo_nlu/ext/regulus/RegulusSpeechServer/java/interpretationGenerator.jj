@@ -1,0 +1,298 @@
+/* adder.jj Adding up numbers */
+
+options {
+	STATIC = false ;
+	LOOKAHEAD = 5;
+	FORCE_LA_CHECK = true;
+}
+
+PARSER_BEGIN(InterpretationParser)
+package net.sf.regulus.interpretation;
+
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.io.PrintStream;
+
+
+	public class InterpretationParser {
+	
+		public class KVPair{
+			String key;
+			Object val;
+			
+			KVPair(String key, Object val){
+				this.key = key;
+				this.val = val;
+			}
+			
+			String getKey(){
+				return key;
+			}
+
+			Object getVal(){
+				return val;
+			}
+
+
+		}
+	
+		static PrintStream outStream = null;
+		
+	
+		public static void main( String[] args ) throws ParseException, TokenMgrError {
+			outStream = System.out;
+			InterpretationParser parser = new InterpretationParser( System.in ) ;
+			parser.enable_tracing();
+			parser.start() ;
+		}
+	}
+PARSER_END(InterpretationParser)
+
+SKIP :
+{
+	   " "
+	| "\t"
+	| "\n"
+	| "\r"
+}
+
+TOKEN :
+{
+	< ID: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+}
+
+TOKEN :
+{
+	< INT:  (["0"-"9"])+ >
+}
+
+TOKEN :
+{
+	< NUMBER: (<INT>)+ ( "." (<INT>)+ )? >
+}
+
+TOKEN :
+{
+	< SEP: "=">
+}
+
+TOKEN :
+{
+
+	< L_BRACKET: "[" >
+}
+
+TOKEN :
+{
+
+	< R_BRACKET: "]" >
+}
+
+TOKEN :
+{
+
+	< SINGLE_QUOTE: "'" >
+}
+
+TOKEN :
+{
+
+	< COMMA: "," >
+}
+
+String identifier():
+{
+	Token t;
+}
+{
+	t=<ID> {return t.image;}
+	|
+	<SINGLE_QUOTE>t=<ID><SINGLE_QUOTE> {return t.image;}
+	|
+	t=<INT> {return t.image;}
+}
+
+KVPair keyValuePair():
+{
+	String key = null;
+	String value = null;
+	Object objectVal = null;
+	Token num = null;
+}
+{
+	(
+		key=identifier() <SEP> (LOOKAHEAD(5) (value=identifier()) | (num=<INT>)  | (objectVal=array()) | (objectVal=keyValuePairs()) )
+	)
+	{
+		Object retValue;
+		if ( value != null ) {
+			retValue = value;
+		}
+		else if(num != null) {
+			retValue = num.image;
+		}
+		else if(objectVal != null){
+			retValue = objectVal;
+		}
+		else {
+			retValue = null;
+		}
+		
+		debug("adding " + key);
+		
+		KVPair result = new KVPair(key, retValue);
+		return result;
+	}
+}
+
+//
+// 'spec', =, 2, 'noun', =, 'cat'
+//
+
+Hashtable keyValuePairList():
+{
+	Hashtable result = null;
+	Object o;
+	KVPair kv;
+}
+{
+	{
+		result = new Hashtable();
+	}
+
+	(kv=keyValuePair() ) 	{ result.put(kv.getKey(), kv.getVal()); } 
+	
+	(
+		LOOKAHEAD(5)
+		<COMMA> kv=keyValuePair()   {
+			result.put(kv.getKey(), kv.getVal());
+		}
+	)*
+	
+	{
+		return result;
+	}
+}
+
+
+//
+// '[ 'spec', =, 2, 'noun', =, 'cat' ]'
+//
+
+Hashtable keyValuePairs():
+{
+	Hashtable result = null;
+}
+{
+//	(
+//	 <L_BRACKET> result=keyValuePairList() <R_BRACKET>
+//	 | result=keyValuePairList()
+//	)
+	result=keyValuePairList()
+	{
+		return result;
+	}
+}
+
+// '[ 'value', =, [ [ 'type', 'command' ], [ 'action', 'switch' ], [ 'onoff', 'off' ], [ 'device', 'light' ] ] ]'
+// '[ 'value', =, [ 'spec', =, 2, 'noun', =, 'cat', 'toys', =,  ['a', 'b', 'c', 'd', 'e'] ] ]'
+
+Object arrayElement():
+{
+	Object newObject;
+}
+{
+	
+	(
+		LOOKAHEAD(5) newObject=keyValuePairs()
+		| newObject=array()
+		| LOOKAHEAD(5) newObject=identifier()
+	)
+	{
+		{debug(" adding " + newObject); }
+		return newObject;
+	}
+}
+
+ArrayList arrayElementList():
+{
+	ArrayList result = new ArrayList();
+	Object newVal = null;
+}
+{
+	 (newVal = arrayElement() ) {result.add(newVal);} ( <COMMA> newVal=arrayElement() { result.add(newVal); } )* 
+	{
+		return(result);
+	}
+}
+
+//
+//  [ [ 'type', 'command' ], [ 'action', 'switch' ], [ 'onoff', 'off' ], 'toys', =,  ['a', 'b', 'c', 'd', 'e'] ]
+//
+ArrayList array():
+{
+	ArrayList result = null;
+}
+{
+	<L_BRACKET> result=arrayElementList() <R_BRACKET> 
+	{
+		return result;
+	}
+}
+
+ArrayList createInterpretation():
+{
+	ArrayList result = null;
+}
+{
+	(
+	<SINGLE_QUOTE> result=array() <SINGLE_QUOTE>
+	|
+	result=array()
+	)
+	{
+		return result;
+	}
+}
+
+void start() :
+{
+	ArrayList result;
+}
+{
+	{
+		result = array();
+	}
+
+}
+
+
+void xstart() :
+{
+	Hashtable result;
+}
+{
+	{
+		result=keyValuePairs();
+		Enumeration enumeration = result.keys();
+		
+		debug(result.size() + " ");
+		
+		for (; enumeration.hasMoreElements() ;) {
+			debug((String)enumeration.nextElement());
+		}
+	}
+}
+
+
+void debug(String message):
+{
+}
+{
+	{
+		if ( outStream != null){
+			outStream.println(message );
+		}
+	}
+}

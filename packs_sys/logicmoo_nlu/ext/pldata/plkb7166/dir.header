@@ -1,0 +1,122 @@
+
+:- if( \+ current_predicate(set_skip_file_expansion/2)).
+
+:- dynamic(lmcache:skip_file_expansion/2).
+set_skip_file_expansion(File,TF):-   
+   retractall(lmcache:skip_file_expansion(File,_)),
+   asserta(lmcache:skip_file_expansion(File,TF)),
+   SKIP = (notrace((prolog_load_context(file,S),lmcache:skip_file_expansion(S,true))),!),
+   HEAD1 = term_expansion(X,P,X,P),
+   HEAD2 = term_expansion(X,X),
+   forall(member(M,[file_scope,baseKB,user,system]),
+    (((system:clause(M:HEAD1,WAS),WAS=@=SKIP) -> true ; system:asserta(M:HEAD1:-SKIP)),
+     ((system:clause(M:HEAD2,WAS),WAS=@=SKIP) -> true ; system:asserta(M:HEAD2:-SKIP)))),
+   !.
+:- endif.
+
+:- prolog_load_context(source,S),set_skip_file_expansion(S,true). 
+
+
+
+:- if( \+ current_predicate(mdep/1)).
+mdep(FA):-
+  '$current_source_module'(M),
+  '$current_typein_module'(CM),
+  M:multifile(FA),
+  M:dynamic(FA),
+  M:export(FA),
+  CM:import(M:FA),
+  CM:export(CM:FA),
+  M:public(FA).
+:- endif.
+
+:-mdep(assertion_abbreviation/1).
+:-mdep(assertion_abnormal/1).
+:-mdep(assertion_asserted/1).
+:-mdep(assertion_asserted_by/2).
+:-mdep(assertion_asserted_when/2).
+:-mdep(assertion_assertion_has_meta_assertion/1).
+:-mdep(assertion_assertive_wff/1).
+:-mdep(assertion_atomic/1).
+:-mdep(assertion_backward/1).
+:-mdep(assertion_backward_rule_required_for/1).
+:-mdep(assertion_bookkeeping/1).
+:-mdep(assertion_code/1).
+:-mdep(assertion_computed_skolem/1).
+:-mdep(assertion_considered_but_not_successful/1).
+:-mdep(assertion_constraint/1).
+:-mdep(assertion_content/3).
+:-mdep(assertion_content/4).
+:-mdep(assertion_content/5).
+:-mdep(assertion_content/6).
+:-mdep(assertion_content/7).
+:-mdep(assertion_content/8).
+:-mdep(assertion_content/9).
+:-mdep(assertion_content/10).
+:-mdep(assertion_content/11).
+:-mdep(assertion_content/12).
+:-mdep(assertion_content/13).
+:-mdep(assertion_contextually_dependent_lexical/1).
+:-mdep(assertion_cva/1).
+:-mdep(assertion_deduced/1).
+:-mdep(assertion_default/1).
+:-mdep(assertion_dependants/1).
+:-mdep(assertion_documentation/1).
+:-mdep(assertion_fact/1).
+:-mdep(assertion_false/1).
+:-mdep(assertion_fast_documentation/1).
+:-mdep(assertion_forward/1).
+:-mdep(assertion_forward_tms/1).
+:-mdep(assertion_gen_template_query_sentence/1).
+:-mdep(assertion_ground/1).
+:-mdep(assertion_gtqs/1).
+:-mdep(assertion_has_dependents/1).
+:-mdep(assertion_has_genstring/1).
+:-mdep(assertion_has_meta/1).
+:-mdep(assertion_has_smeta/1).
+:-mdep(assertion_higher_order/1).
+:-mdep(assertion_implementation/1).
+:-mdep(assertion_indirect_lexical/1).
+:-mdep(assertion_inert/1).
+:-mdep(assertion_inference_relevant/1).
+:-mdep(assertion_lifting/1).
+:-mdep(assertion_lifting/2).
+:-mdep(assertion_lifting_consequent/2).
+:-mdep(assertion_looks_like_kappa_rephrase/1).
+:-mdep(assertion_meta/1).
+:-mdep(assertion_monotonic/1).
+:-mdep(assertion_mt/2).
+:-mdep(assertion_needs_review/1).
+:-mdep(assertion_nl_trie_syntactic/1).
+:-mdep(assertion_non_abducible/1).
+:-mdep(assertion_not_assertible/1).
+:-mdep(assertion_not_exportable/1).
+:-mdep(assertion_not_first_order/1).
+:-mdep(assertion_not_non_tva_gaf/1).
+:-mdep(assertion_not_true/1).
+:-mdep(assertion_pph_required/1).
+:-mdep(assertion_reformulator_relevant/1).
+:-mdep(assertion_relevant/1).
+:-mdep(assertion_rule/1).
+:-mdep(assertion_rule_meta/1).
+:-mdep(assertion_self_expanding/1).
+:-mdep(assertion_self_looping/1).
+:-mdep(assertion_single_literal/1).
+:-mdep(assertion_single_literal_antecedent/1).
+:-mdep(assertion_skolem/1).
+:-mdep(assertion_some_suggested_pragma_sentences_for/1).
+:-mdep(assertion_syntactically_ill_formed/1).
+:-mdep(assertion_syntactically_illformed/2).
+:-mdep(assertion_tva/1).
+:-mdep(assertion_two_literal_antecedent/1).
+:-mdep(assertion_unbound/1).
+:-mdep(assertion_universal_lifting/1).
+:-mdep(assertion_uses_non_extensional_set/1).
+:-mdep(assertion_variable_guard/2).
+:-mdep(assertion_varnames/2).
+:-mdep(assertion_vars/2).
+:-mdep(assertion_wrapper/3).
+
+:- style_check(-discontiguous).
+:- style_check(-singleton).
+

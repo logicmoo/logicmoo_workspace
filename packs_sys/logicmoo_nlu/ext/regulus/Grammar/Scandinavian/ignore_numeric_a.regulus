@@ -1,0 +1,10 @@
+/* 
+
+The numeric reading of "a" is often not needed, but can add a lot of analyses
+
+*/
+
+% Rule
+ignore_item(numeric_a).
+ignore_item(a_as_number).
+ignore_item(an_as_number).

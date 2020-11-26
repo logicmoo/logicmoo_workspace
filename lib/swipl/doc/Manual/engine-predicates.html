@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 11.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="engine-resources.html">
+<link rel="next" href="foreign.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="engine-resources.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="foreign.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:engine-predicates"><a id="sec:11.3"><span class="sec-nr">11.3</span> <span class="sec-title">Engine 
+predicate reference</span></a></h2>
+
+<a id="sec:engine-predicates"></a>
+
+<p>This section documents the built-in predicates that deal with 
+engines. In addition to these, most predicates dealing with threads and 
+message queue can be used to access engines.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_create/3"><strong>engine_create</strong>(<var>+Template, 
+:Goal, ?Engine</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_create/4"><strong>engine_create</strong>(<var>+Template, 
+:Goal, -Engine, +Options</var>)</a></dt>
+<dd class="defbody">
+Create a new engine and unify <var>Engine</var> with a handle to it.
+<var>Template</var> and <var>Goal</var> form a pair similar to <a id="idx:findall3:2306"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>: 
+the instantiation of <var>Template</var> becomes available through <a id="idx:enginenext2:2307"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+after <var>Goal</var> succeeds. <var>Options</var> is a list of the 
+following options. See <a id="idx:threadcreate3:2308"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a> 
+for details.
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>+Name</var>)</dt>
+<dd class="defbody">
+Give the engine a name. <var>Name</var> must be an atom. If this option 
+is provided, <var>Engine</var> is unified with <var>Name</var>. The name 
+space for engines is shared with threads and mutexes.
+</dd>
+<dt><strong>stack</strong>(<var>+Bytes</var>)</dt>
+<dd class="defbody">
+Set the stack limit for the engine. The default is inherited from the 
+calling thread.
+</dd>
+</dl>
+
+The <var>Engine</var> argument of <a id="idx:enginecreate3:2309"></a><a class="pred" href="engine-predicates.html#engine_create/3">engine_create/3</a> 
+may be instantiated to an atom, creating an engine with the given alias.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_destroy/1"><strong>engine_destroy</strong>(<var>+Engine</var>)</a></dt>
+<dd class="defbody">
+Destroy <var>Engine</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="engine_next/2"><strong>engine_next</strong>(<var>+Engine, 
+-Term</var>)</a></dt>
+<dd class="defbody">
+Ask the engine <var>Engine</var> to produce a next answer. On this first 
+call on a specific engine, the <var>Goal</var> of the engine is started. 
+If a previous call returned an answer through completion, this causes 
+the engine to backtrack and finally, if the engine produces a previous 
+result using <a id="idx:engineyield1:2310"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a>, 
+execution proceeds after the <a id="idx:engineyield1:2311"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+call.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_next_reified/2"><strong>engine_next_reified</strong>(<var>+Engine, 
+-Term</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:enginenext2:2312"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>, 
+but instead of success, failure or or raising an exception, <var>Term</var> 
+is unified with one of terms below. This predicate is provided primarily 
+for compatibility with Lean&nbsp;Prolog.
+
+<dl class="latex">
+<dt><strong>the</strong>(<var>Answer</var>)</dt>
+<dd class="defbody">
+Goal succeeded with <var>Template</var> bound to <var>Answer</var> or 
+Goal yielded with a term <var>Answer</var>.
+</dd>
+<dt><strong>no</strong></dt>
+<dd class="defbody">
+Goal failed.
+</dd>
+<dt><strong>exception</strong>(<var>Exception</var>)</dt>
+<dd class="defbody">
+Goal raises the error <var>Exception</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_post/2"><strong>engine_post</strong>(<var>+Engine, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Make <var>Term</var> available to <a id="idx:enginefetch1:2313"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
+inside the <var>Engine</var>. This call must be followed by a call to <a id="idx:enginenext2:2314"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+and the engine must call <a id="idx:enginefetch1:2315"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_post/3"><strong>engine_post</strong>(<var>+Engine, 
++Term, -Reply</var>)</a></dt>
+<dd class="defbody">
+Combines <a id="idx:enginepost2:2316"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
+and <a id="idx:enginenext2:2317"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_yield/1"><strong>engine_yield</strong>(<var>+Term</var>)</a></dt>
+<dd class="defbody">
+Called from within the engine, causing <a id="idx:enginenext2:2318"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+in the caller to return with <var>Term</var>. A subsequent call to <a id="idx:enginenext2:2319"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a> 
+causes
+<a id="idx:engineyield1:2320"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+to&lsquo;return'. This predicate can only be called if the engine is not 
+involved in a callback from C, i.e., when the engine calls a predicate 
+defined in C that calls back Prolog it is not possible to use this 
+predicate. Trying to do so results in a
+<code>permission_error</code> exception.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_fetch/1"><strong>engine_fetch</strong>(<var>-Term</var>)</a></dt>
+<dd class="defbody">
+Called from within the engine to fetch the term made available through
+<a id="idx:enginepost2:2321"></a><a class="pred" href="engine-predicates.html#engine_post/2">engine_post/2</a> 
+or <a id="idx:enginepost3:2322"></a><a class="pred" href="engine-predicates.html#engine_post/3">engine_post/3</a>. 
+If no term is available an existence_error exception is raised.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="engine_self/1"><strong>engine_self</strong>(<var>-Engine</var>)</a></dt>
+<dd class="defbody">
+Called from within the engine to get access to the handle to the engine 
+itself.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="is_engine/1"><strong>is_engine</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a reference to or the alias name of an 
+existing engine.</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_engine/1"><strong>current_engine</strong>(<var>-Engine</var>)</a></dt>
+<dd class="defbody">
+True when <var>Engine</var> is an existing engine.
+</dd>
+</dl>
+
+</body></html>

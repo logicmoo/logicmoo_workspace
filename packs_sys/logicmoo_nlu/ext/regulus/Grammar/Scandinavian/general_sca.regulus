@@ -1,0 +1,3078 @@
+
+%--------------------------------------------------------------------------------------------------
+
+feature_value_space(yes_no, [[y, n]]).
+feature_value_space(wh_vals, [[y, n, rel]]).
+feature_value_space(agr_vals, @agr_vals).
+feature_value_space(vforms, @vform_vals).
+feature_value_space(nforms, [[normal, there, it]]).
+feature_value_space(toptypes, [[user_command, system_response]]).
+feature_value_space(stypes, [[imp, dcl, ynq, whq, embedded_dcl, embedded_q, ellipsis, none]]).
+feature_value_space(subcat_type, 
+                    [[nx0v,                   % Intransitive, e.g. "John sleeps"
+		      nx0vpl,                 % Particle and no other complements, e.g. "John gave up"
+		      nx0vnx1,                % Simple transitive, e.g. "John loves Mary"
+		      nx0vnx1_no_passive,     % Transitive not allowing passive, e.g. "John has fever"
+		      nx0vnx1_passivised,     % Passivised version of simple transitive, e.g. "Mary is _loved_ by John"
+		      nx0vnx1_be,             % "be" taking NP, e.g. "John is a man"
+		      nx0vnx1_there_is,       % "be" taking dummy "there" subject, e.g. "There is a man"
+		      nx0vnx1x2,              % Ditransitive verb, e.g. "John gave Mary a book"
+		      nx0vnx1x2_passivised,   % Passivised version of ditransitive verb, e.g. "The book was given John"
+                      nx0vpnx1,               % Verb taking PP complement, e.g. "John agreed with Mary"
+		      nx0vnx1pnx2,            % Verb taking NP and PP, e.g. "John put the book on the table"
+		      nx0vnx1pnx2_passivised, % Passivised version of verb taking NP and PP, e.g. "The book was put on the table"
+		      nx0vnx1pl,              % Verb taking NP and P, e.g. "John switched it off"
+		      nx0vplnx1,              % Verb taking P and NP, e.g. "John switched off the light"
+                      nx0vvx1_modal,          % Modal verb, e.g. "John must sleep"
+		      nx0vvx1_nonmodal,       % Nonmodal verb taking VP complement, e.g. "John stopped running"
+		      nx0vvx1_passive,        % Passive auxiliary verb, e.g. "Mary _is_ loved by John"
+		      nx0vvx1_to,             % Verb taking to-VP complement, e.g. "John wants to sleep"
+                      nx0vs1,                 % Verb taking declarative clausal complement, e.g. "John says he loves Mary"
+		      nx0vsq1,                % Verb taking embedded question, e.g. "John wonders if Mary loves him"
+		      nx0vnx1sq1,             % Verb taking NP and embedded question, e.g. "John asked Mary if she loved him"
+		      nx0va1,                 % Verb taking ADJ complement, e.g. "John became angry"
+		      nx0vx1a1,               % Verb taking NP and ADJ complement, e.g. "John made Mary angry"
+		      nx0vx1a1_passivised,    % Passivised version of verb taking NP and ADJ complement, e.g. "Mary was made angry by John"
+		      nx0vnx1_measure,        % Verb taking NP acting as measure phrase, e.g. "John ran 1000 metres"
+		      nx0x1vx2_to,            % Verb taking NP and to-VP, e.g. "John allowed Mary to sleep"  
+		      nx0x1vx2_to_passivised  % Passivised version of verb taking NP and to-VP, e.g. "Mary was allowed to sleep" 
+		     ]]).
+feature_value_space(adj_subcat_type, [[a, anx1]]).
+feature_value_space(n_type, [[loc, agent, action, numeric, date, time, unit, timeunit, frequency, none]]).
+%feature_value_space(num_type, [[digit, twoplace, threeplace, fourplace, none]]).
+feature_value_space(pp_type, [[passive_by, loc, to, from, attribution, side, about, with, duration, frequency, date, time, compare, cost, none]]).
+feature_value_space(p_type, [[onoff, updown, normal, none]]).
+feature_value_space(pre_post_types, @pre_post_type_vals).
+feature_value_space(times, [[hour, hour_up_to_twelve, minute, second, dayofmonth, year, none]]).
+feature_value_space(number_types, [[a, zero, digit, oh_digit, ten, teen, '20_to_99', hundred, three_figure, thousand, four_plus_figure, decimal, size, none]]).
+feature_value_space(det_types, [[numeric, def, indef, quant, ordinal, null, none]]).
+feature_value_space(interjection_type, [[yn, stop_continue, whatever, correction]]).
+feature_value_space(adj_types, [[undefined, purpose, material, nationality, colour, shape, age, size, judgement_specific, judgement_general]]).
+feature_value_space(adjpos_types, [[prenom, postnom, pred]]).
+feature_value_space(advpos_types, [[prev, postv, postvp, fronted, preadj]]).
+feature_value_space(adv_types, [[temporal, loc, manner, politeness, degree, none]]).
+feature_value_space(politeness_pos_types, [[pre, post]]).
+feature_value_space(post_mod_types, [[nominal, verbal, ellipsis]]).
+feature_value_space(case_types, [[subj, nonsubj]]).
+feature_value_space(sc_s_types, [[s, vp]]).
+feature_value_space(minute_types, [[to_or_past, military]]).
+
+% Simple treatment of gaps
+feature_value_space(gap_types, [[null, np_gap, pp_gap, adjp_gap, advp_gap]]).
+
+% More or less useless legacy feature left over from Gemini - PSA feature
+feature(toptype, toptypes).
+
+% Categorises utterances as declarative, imperative, whq, ynq, ellipsis etc - PSA feature
+feature(stype, stypes).
+
+% The usual WH feature - PSA feature
+feature(wh, wh_vals).
+
+% Categorises verbs (and projections) as finite, imperative, ing, etc. Similar to corresponding CLE feature - PSA feature
+feature(vform, vforms).
+
+% Categorises NPs as impersonal "it", impersonal "there" or normal. Similar to corresponding CLE feature - PSA feature
+feature(nform, nforms).
+lexical_feature_default(nform, normal).
+
+% Categorises subject NP as impersonal "it", impersonal "there" or normal. Similar to corresponding CLE feature - PSA feature
+feature(subj_nform, nforms).
+lexical_feature_default(subj_nform, normal).
+
+% Categorises verb as inverted or uninverted - PSA feature
+feature(inv, yes_no).
+
+% Categorises clause as using/not using WH movement - PSA feature
+feature(whmoved, yes_no).
+
+% Mediates agreement between relative clause and NP it attaches to. Similar to corresponding CLE feature - PSA feature
+feature(relagr, agr_vals).
+
+% Mediates sortal agreement between relative clause and NP it attaches to - PSA feature
+feature(rel_sem_n_type, n_type).
+lexical_feature_default(rel_sem_n_type, none).
+
+% Categorises clauses as wrapped/not wrapped in sentence-level operator, e.g. dcl, whq etc - PSA feature
+feature(operator_wrapped, yes_no).
+
+% Next two features do gap-threading - PSA features
+feature(gapsin, gap_types).
+feature(gapsout, gap_types).
+
+% Different kinds of interjections. We particularly want to distinguish yes/no and corrections - PSA feature
+feature(interjection_type, interjection_type).
+
+% Agreement - PSA feature
+feature(agr, agr_vals).
+
+% Sortal type of subject - PSA feature
+feature(subj_sem_n_type, n_type).
+
+% We only want gap modifiers to attach in one place, otherwise we get spurious ambiguity - PSA feature
+feature(takes_gap_mod, yes_no).
+
+% Loc PP mod allowed or not - PSA feature
+feature(takes_loc_pp, yes_no).
+lexical_feature_default(takes_loc_pp, n).
+
+% From PP mod allowed or not - TravelDeals feature
+feature(takes_from_pp, yes_no).
+lexical_feature_default(takes_from_pp, n).
+
+% To PP mod allowed or not - PSA feature
+feature(takes_to_pp, yes_no).
+lexical_feature_default(takes_to_pp, n).
+
+% With PP mod allowed or not - TravelDeals feature
+feature(takes_with_pp, yes_no).
+lexical_feature_default(takes_with_pp, n).
+
+% Duration PP mod allowed or not - Med feature
+feature(takes_duration_pp, yes_no).
+lexical_feature_default(takes_duration_pp, n).
+
+% Frequency PP mod allowed or not - Med feature
+feature(takes_frequency_pp, yes_no).
+lexical_feature_default(takes_frequency_pp, n).
+
+% Date PP mod allowed or not - TravelDeals feature
+feature(takes_date_pp, yes_no).
+lexical_feature_default(takes_date_pp, n).
+
+% Time PP mod allowed or not - PSA feature
+feature(takes_time_pp, yes_no).
+lexical_feature_default(takes_time_pp, n).
+
+% Attribution PP mod allowed or not - PSA feature
+feature(takes_attrib_pp, yes_no).
+lexical_feature_default(takes_attrib_pp, n).
+
+% "Side" PP mod allowed or not - IM2/Archivus feature
+feature(takes_side_pp, yes_no).
+lexical_feature_default(takes_side_pp, n).
+
+% About PP mod allowed or not - TravelDeals feature
+feature(takes_about_pp, yes_no).
+lexical_feature_default(takes_about_pp, n).
+
+% Cost PP mod allowed or not - TravelDeals feature
+feature(takes_cost_pp, yes_no).
+lexical_feature_default(takes_cost_pp, n).
+
+% Sortal type of passive by PP mod, if permitted - Med feature
+feature(takes_passive_by_pp, n_type).
+lexical_feature_default(takes_passive_by_pp, none).
+
+% Subcategorization type of verb - PSA feature
+feature(subcat, subcat_type).
+
+% Subcategorization type of adj - CALL-SLT feature
+feature(adj_subcat, adj_subcat_type).
+lexical_feature_default(adj_subcat, a).
+
+% Vform of subcategoried VP, for higher verb - PSA feature
+feature(vp_vform, vforms).
+lexical_feature_default(vp_vform, none).
+
+% Sortal type of direct object - PSA feature
+feature(obj_sem_n_type, n_type).
+lexical_feature_default(obj_sem_n_type, none).
+
+% Sortal type of indirect object - TravelDeals feature
+feature(indobj_sem_n_type, n_type).
+lexical_feature_default(indobj_sem_n_type, none).
+
+% Sortal type of relative clause - MedSLT feature
+feature(post_mods_sem_n_type, n_type).
+
+% Sortal type of subcategorised PP - PSA feature
+feature(pp_sem_pp_type, pp_type).
+lexical_feature_default(pp_sem_pp_type, none).
+
+% Sortal type of subcategorised P - PSA feature
+feature(sem_p_type, p_type).
+lexical_feature_default(sem_p_type, none).
+
+% Sortal type of noun - PSA feature
+feature(sem_n_type, n_type).
+lexical_feature_default(sem_n_type, none).
+
+% Sortal type of PP - PSA feature
+feature(sem_pp_type, pp_type).
+lexical_feature_default(sem_pp_type, none).
+
+% Categorises constituent as gap or non-gap - PSA feature
+feature(gap, yes_no).
+
+% Categories P as preposition or postposition - PSA feature
+feature(postposition, yes_no).
+lexical_feature_default(postposition, n).
+
+% Categories P as being part of a pre-/postposition pair, as in "för NP sen" - Swedish MedSLT feature
+feature(pre_post_type, pre_post_types).
+lexical_feature_default(pre_post_type, none).
+
+% Categorises constituent as conjoined or not - PSA feature
+feature(conj, yes_no).
+lexical_feature_default(conj, n).
+
+% Categorises adjp constituent as list or not
+feature(list, yes_no).
+
+% Sortal type of pre-nominal N mod - House feature
+feature(n_pre_mod_type, n_type).
+lexical_feature_default(n_pre_mod_type, none).
+
+% Sortal type of post-nominal N mod, e.g. "scenario two", "location okra" - PSA feature
+feature(n_post_mod_type, n_type).
+lexical_feature_default(n_post_mod_type, none).
+
+% Sortal type of "of" PP mod - Med feature
+feature(n_of_mod_type, n_type).
+lexical_feature_default(n_of_mod_type, none).
+
+% Sortal type of possessive - Calendar feature
+feature(n_poss_type, n_type).
+lexical_feature_default(n_poss_type, agent).
+
+% Types of det that can combine with N - PSA feature
+feature(takes_det_type, det_types).
+
+% Categorises types of det - PSA feature
+feature(det_type, det_types).
+
+% Det can/cannot combine with number, e.g. "all three" - PSA feature
+feature(prenumber, yes_no).
+
+% Categorises types of number - PSA feature
+feature(num_type, number_types).
+
+% Categorises numbers as being either spelled out (e.g. "one three five") or not (e.g. "one hundred thirty five" - Checklist feature
+feature(spelled_out_number, yes_no).
+lexical_feature_default(spelled_out_number, n).
+
+% Categorises types of time - PSA feature
+feature(time_type, times).
+
+% Categorises types of ADJP
+feature(adjtype, adj_types).
+lexical_feature_default(adjtype, undefined).
+
+feature(adjpremodified, yes_no).
+
+% Possible positions for ADJP, e.g. pre-nominal, predicative - PSA feature
+feature(adjpos, adjpos_types).
+
+% Possible positions for ADVP, e.g. initial, post-verbal - Med feature
+feature(advpos, advpos_types).
+
+% Possible positions for politenss word, e.g. initial or final - TravelDeals feature
+feature(politeness_pos, politeness_pos_types).
+
+% Whether or not constituent may take post-mods - TravelDeals feature
+feature(takes_post_mods, yes_no).
+lexical_feature_default(takes_post_mods, y).
+
+% Categorises NP (etc) as definite/indefinite - House feature
+feature(def, yes_no).
+
+% Whether post-mods attach to NP, VP, or appear free - TravelDeals feature
+feature(post_mod_type, post_mod_types).
+
+% Whether or not name can be used as a nominal pre-mod - TravelDeals feature
+feature(can_be_premod, yes_no).
+lexical_feature_default(can_be_premod, y).
+
+% Whether or not V can take advp postmod - Med feature
+feature(takes_advp, yes_no).
+lexical_feature_default(takes_advp, y).
+
+% Whether or not main verb in VP is passivised - Med feature
+feature(passive, yes_no).
+lexical_feature_default(passive, n).
+
+% Whether or not verb can be lexically passivised - Med feature
+feature(lexically_passivisable, yes_no).
+lexical_feature_default(lexically_passivisable, n).
+
+% Whether or not det can be used as NP - Checklist feature
+feature(can_be_np, yes_no).
+lexical_feature_default(can_be_np, n).
+
+% Whether or not adj can be used as NBAR - Med feature
+feature(can_be_nbar, yes_no).
+lexical_feature_default(can_be_nbar, n).
+
+% Case of NP - Checklist feature 
+feature(case, case_types).
+
+% Sortal type of ADVP - Checklist feature 
+feature(adv_type, adv_types).
+
+% Sortal type of modifying ADVP - Checklist feature 
+feature(takes_adv_type, adv_types).
+%lexical_feature_default(takes_adv_type, (temporal\/politeness)).
+
+% Categorises NP as pronoun/not pronoun - Checklist feature 
+feature(pronoun, yes_no).
+
+% Categorises V and projections as elliptical or not - Checklist feature 
+feature(elliptical_v, yes_no).
+lexical_feature_default(elliptical_v, n).
+
+% Sortal type of appositive modifier - Checklist feature
+feature(n_appositive_mod_type, n_type).
+lexical_feature_default(n_appositive_mod_type, none).
+
+% Whether a subordinating conjunction can take an S, a VP, or either - Med feature
+feature(sc_s_type, sc_s_types).
+lexical_feature_default(sc_s_type, s).
+
+% Categorises V and projections as possibly being a gerund - Med feature 
+feature(can_be_gerund, yes_no).
+lexical_feature_default(can_be_gerund, y).
+
+% Categorises V and projections as possibly being a post_mod - Med feature 
+feature(can_be_postmod, yes_no).
+lexical_feature_default(can_be_postmod, y).
+
+% Categorises DET as being article or not - Med feature 
+feature(article, yes_no).
+lexical_feature_default(article, n).
+
+% Categorises PP as being subordinate clause or not - Med feature 
+feature(sc, yes_no).
+lexical_feature_default(sc, n).
+
+% Partitive required or not - Med feature
+feature(takes_partitive, yes_no).
+lexical_feature_default(takes_partitive, n).
+
+feature(allows_minutes, yes_no).
+
+feature(minute_type, minute_types).
+
+% Categorises reflexive pronouns as being lexically reflexive or not.
+feature(lexically_reflexive, yes_no).
+lexical_feature_default(lexically_reflexive, n).
+
+% Categorises Vs and VBARs as requiring a lexical reflexive or not.
+feature(takes_lexical_reflexive, yes_no).
+lexical_feature_default(takes_lexical_reflexive, n).
+
+% Categorises V projections as being in a main clause or not.
+feature(main_clause, yes_no).
+
+feature_instantiation_schedule(
+	[[toptype, stype, politeness_pos, interjection_type], 
+         [wh, vform, inv], 
+	 [whmoved, operator_wrapped], 
+	 [gap], 
+	 [subcat, adj_subcat], 
+	 [vp_vform],
+	 [main_clause],
+	 [passive, lexically_passivisable],
+	 [postposition, pre_post_type], 
+	 [conj],
+	 [list], 
+	 [prenumber], 
+	 [adjpos, advpos],
+	 [adjtype, adjpremodified], 
+	 [case],
+	 [sc_s_type],
+	 [sc],
+	 [elliptical_v],
+	 [can_be_gerund],
+	 [can_be_postmod],
+         [takes_post_mods], 
+	 [post_mod_type], 
+	 [can_be_premod], 
+	 [takes_advp],
+	 [gapsin], 
+	 [gapsout], 
+	 [nform], 
+	 [subj_nform],
+	 [pronoun, lexically_reflexive],
+	 [takes_lexical_reflexive],
+	 [num_type],
+	 [spelled_out_number], 
+	 [time_type, allows_minutes, minute_type],
+	 [can_be_np], 
+	 [can_be_nbar],
+	 [article],
+	 [sem_pp_type],
+	 [pp_sem_pp_type], 
+	 [sem_p_type], 
+	 [takes_gap_mod],
+	 [takes_loc_pp], 
+	 [takes_from_pp], 
+	 [takes_to_pp], 
+	 [takes_with_pp], 
+	 [takes_duration_pp], 
+	 [takes_frequency_pp], 
+	 [takes_date_pp], 
+	 [takes_time_pp], 
+	 [takes_attrib_pp], 
+	 [takes_side_pp], 
+	 [takes_about_pp], 
+	 [takes_cost_pp],
+	 [takes_partitive],
+	 [def], 
+	 [adv_type],
+	 [takes_adv_type],
+	 [det_type],
+	 [takes_det_type],
+	 [sem_n_type], 
+	 [subj_sem_n_type], 
+	 [obj_sem_n_type], 
+	 [indobj_sem_n_type],
+	 [post_mods_sem_n_type],
+	 [n_appositive_mod_type],
+	 [rel_sem_n_type], 
+	 [n_pre_mod_type],
+	 [n_post_mod_type],
+	 [n_of_mod_type],
+	 [n_poss_type],
+	 [takes_passive_by_pp],
+	 [agr],
+         [relagr]
+     ]).
+
+category('.MAIN', [gsem]).
+category(top, [sem, toptype]).
+category(politeness, [sem, politeness_pos, stype]).
+category(utterance, [sem, stype, elliptical_v]).
+category(s, [sem, stype, wh, vform, inv, whmoved, relagr, rel_sem_n_type, takes_adv_type,
+	     operator_wrapped, gapsin, gapsout, elliptical_v, main_clause]).
+category(interjection, [sem, interjection_type, stype]).
+category(utterance_intro, [sem, stype]).
+category(utterance_coda, [sem, stype]).
+category(vp, [sem, agr, inv, vform, passive, subj_nform, subj_sem_n_type, 
+              takes_post_mods, takes_adv_type, @pp_feats, gapsin, gapsout, elliptical_v,
+	      can_be_gerund, can_be_postmod, main_clause]).
+category(post_mods, [sem, post_mod_type, post_mods_sem_n_type, takes_gap_mod, n_of_mod_type, takes_partitive, n_appositive_mod_type, takes_adv_type, gap, @pp_feats, gapsin, gapsout, relagr]).
+category(vbar, [sem, agr, subcat, inv, vform, passive, vp_vform, subj_nform,
+		subj_sem_n_type, obj_sem_n_type, indobj_sem_n_type,
+		pp_sem_pp_type, sem_p_type, @pp_feats, takes_advp, takes_adv_type,
+		elliptical_v, can_be_gerund, can_be_postmod, takes_lexical_reflexive, main_clause]).
+category(v, [sem, agr, subcat, inv, vform, passive, lexically_passivisable, vp_vform,
+	     subj_nform, subj_sem_n_type, obj_sem_n_type, indobj_sem_n_type,
+	     pp_sem_pp_type, sem_p_type, @pp_feats,
+	     takes_advp, takes_adv_type,
+	     elliptical_v, can_be_gerund, can_be_postmod, takes_lexical_reflexive, main_clause]).
+%category(rel, [sem, agr, sem_n_type]).
+% It would be more natural to call the feature 'agr', but we want to be able to switch it off if necessary
+% without also switching off agr.
+category(rel, [sem, relagr, sem_n_type]).
+category(pp, [sem, wh, sc, sem_pp_type, gap, gapsin, gapsout, conj]).
+category(ppconj, [sem, wh, sem_pp_type]).
+category(of_pp, [sem, wh, sem_n_type]).
+category(passive_by_pp, [sem, wh, sem_n_type, gapsin, gapsout]).
+category(p, [sem, postposition, pre_post_type, sem_pp_type, obj_sem_n_type, sem_p_type, def]).
+category(p_with_agr, [sem, agr, postposition, sem_pp_type, obj_sem_n_type, def]).
+category(sc, [sem, sem_pp_type, sc_s_type]).
+category(location, []).
+category(np, [sem, agr, wh, nform, sem_n_type, conj, gapsin, gapsout, takes_post_mods, n_of_mod_type, takes_partitive, n_appositive_mod_type, @pp_feats, def, case, pronoun]).
+category(npconj, [sem, sem_n_type, def, case]).
+category(measure_phrase, [sem, sem_n_type]).
+category(np_after, []).
+category(n, [sem, agr, def, sem_n_type, conj, n_pre_mod_type, n_post_mod_type, n_of_mod_type, n_poss_type, takes_partitive, n_appositive_mod_type, @pp_feats, takes_det_type]).
+category(nconj, [sem, sem_n_type, n_pre_mod_type, n_post_mod_type, n_of_mod_type, takes_partitive, n_appositive_mod_type, @pp_feats, takes_det_type]).
+category(nbar, [sem, agr, def, adjpremodified, sem_n_type, n_pre_mod_type, n_post_mod_type, n_of_mod_type, n_poss_type, takes_partitive, n_appositive_mod_type, @pp_feats, takes_det_type, conj, def, def]).
+category(name, [sem, agr, can_be_premod, sem_n_type]).
+category(pronoun, [sem, agr, wh, sem_n_type, case]).
+category(reflexive_pronoun, [sem, lexically_reflexive, agr, sem_n_type, case]).
+category(d, [sem, agr, wh, det_type, prenumber, def, can_be_np, article]).
+category(conj, []).
+category(np_gap, []).
+category(pp_gap, []).
+category(number, [sem, num_type, spelled_out_number, time_type, agr]).
+category(ordinal, [sem, num_type, time_type]).
+category(time, [sem]).
+category(date, [sem]).
+category(month, [sem]).
+category(comp, [stype]).
+category(adjp, [sem, agr, def, wh, adjtype, adjpos, can_be_nbar, subj_sem_n_type, @pp_feats, conj, list, gap, gapsin, gapsout]).
+category(adjp_list, [sem, agr, def, adjtype, can_be_nbar, subj_sem_n_type, @pp_feats, list]).
+category(adj, [sem, agr, def, adjtype, adjpos, adj_subcat, can_be_nbar, subj_sem_n_type, pp_sem_pp_type, @pp_feats]).
+category(advp, [sem, wh, advpos, adv_type, conj, gap, gapsin, gapsout, main_clause]).
+category(adv, [sem, advpos, adv_type, main_clause]).
+category(numcompare, [sem]).
+category(possessive, [sem, agr, sem_n_type]).
+category(decimal_point, []).
+category(timesuffix, [sem, allows_minutes]).
+category(timeprefix, [sem, allows_minutes]).
+category(minute, [sem, minute_type, num_type]).
+category(you_intro, [agr]).
+category(you_np_intro, [sem, case]).
+
+top_level_category('.MAIN').
+
+%--------------------------------------------------------------------------------------------------
+
+% General grammar macros
+
+macro(subj_feats_for_vp([SubjType, NForm]),
+      [subj_nform=NForm, subj_sem_n_type=SubjType]).
+
+macro(subj_feats_for_np([SubjType, NForm]),
+      [nform=NForm, sem_n_type=SubjType]).
+
+macro(v_feats_for_vp([Agr, Inv, VForm, CanBeGerund, CanBePostMod, MainClause]),
+      [agr=Agr, inv=Inv, vform=VForm, can_be_gerund=CanBeGerund, can_be_postmod=CanBePostMod, main_clause=MainClause]).
+
+macro(v_feats_for_vp_no_vform([Agr, Inv, CanBeGerund, CanBePostMod, MainClause]),
+      [agr=Agr, inv=Inv, can_be_gerund=CanBeGerund, can_be_postmod=CanBePostMod, main_clause=MainClause]).
+
+macro(vbar_feats_for_vp([Subj, V, PPs, AdvpType, Passive, MainClause]),
+      [@subj_feats_for_vp(Subj), @v_feats_for_vp(V), @takes_pps(PPs), takes_adv_type=AdvpType, 
+       passive=Passive, main_clause=MainClause]).
+
+macro(pp_feats, [takes_loc_pp, takes_from_pp, takes_to_pp, takes_with_pp, takes_duration_pp, takes_frequency_pp, takes_date_pp, takes_time_pp, takes_attrib_pp, takes_side_pp, takes_about_pp, takes_cost_pp, takes_passive_by_pp]).
+
+macro(takes_pps_except_passive_by([Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost]), 
+      [takes_loc_pp=Loc, takes_from_pp=From, takes_to_pp=To, takes_with_pp=With, takes_duration_pp=Duration, takes_frequency_pp=Frequency, takes_date_pp=Date, takes_time_pp=Time, takes_attrib_pp=Attrib, takes_side_pp=Side, takes_about_pp=About, takes_cost_pp=Cost]).
+
+macro(takes_pps([Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]), 
+      [takes_loc_pp=Loc, takes_from_pp=From, takes_to_pp=To, takes_with_pp=With, takes_duration_pp=Duration, takes_frequency_pp=Frequency, takes_date_pp=Date, takes_time_pp=Time, takes_attrib_pp=Attrib, takes_side_pp=Side, takes_about_pp=About, takes_cost_pp=Cost, takes_passive_by_pp=PassiveBy]).
+
+macro(takes_no_pps, 
+      [takes_loc_pp=n, takes_from_pp=n, takes_to_pp=n, takes_with_pp=n, takes_duration_pp=n, takes_frequency_pp=n, takes_date_pp=n, takes_time_pp=n, takes_attrib_pp=n, takes_side_pp=n, takes_about_pp=n, takes_cost_pp=n, takes_passive_by_pp=none]).
+
+macro(takes_all_pps, 
+      [takes_loc_pp=y, takes_from_pp=y, takes_to_pp=y, takes_with_pp=y, takes_duration_pp=y, takes_frequency_pp=y, takes_date_pp=y, takes_time_pp=y, takes_attrib_pp=y, takes_side_pp=y, takes_about_pp=y, takes_cost_pp=y, takes_passive_by_pp=_]).
+
+%--------------------------------------------------------------------------------------------------
+
+% Default macros
+
+default_macro(numeric_np_type, @thing_type).
+
+%--------------------------------------------------------------------------------------------------
+
+% Formal top rule, needed to define top-level Nuance rule
+'.MAIN':[gsem=[value=Sem]] -->
+           top:[sem=Sem, toptype=user_command].
+
+% Utterance consisting of lone intro - PSA rule
+% [yes], [please], [yes please]
+top:[sem= Intro, toptype=user_command] -->
+           utterance_intro:[sem=Intro, stype=none].
+
+% top_utterance_UserCommand
+% Top-level rule that allows optional intro and coda to be added to other constituents - TravelDeals rule
+top:[sem= @intro_and_coda_sem(Intro, Utt, Coda), toptype=user_command] -->
+           utterance_intro:[sem=Intro, stype=SType],
+           utterance:[sem=Utt, stype=SType, stype=dcl\/imp\/ynq\/whq\/ellipsis, elliptical_v=n],
+           utterance_coda:[sem=Coda, stype=SType].
+
+% Allow a correction phrase to combine with an elliptical imperative
+% [no i said go to], [i meant increase]
+top:[sem= @intro_and_coda_sem(Correction, Utt, Coda), toptype=user_command] -->
+           interjection:[sem=Correction, interjection_type=correction],
+           utterance:[sem=Utt, stype=SType, stype=imp, elliptical_v=y],
+           utterance_coda:[sem=Coda, stype=imp].
+
+% Null intro - TravelDeals rule
+utterance_intro:[sem= @null_sem] --> [].
+
+% Intro consisting of lone interjection - TravelDeals rule
+% [yes], [no]
+utterance_intro:[sem=Sem, stype=SType] -->
+           interjection:[sem=Sem, stype=SType].   
+
+% Intro consisting of lone politeness word - TravelDeals rule
+% [please] give me flights
+utterance_intro:[sem=Sem, stype=SType] -->
+           politeness:[sem=Sem, politeness_pos=pre, stype=SType].
+
+% Intro consisting of interjection + politeness word - TravelDeals rule
+% [no thanks] i want a flight
+utterance_intro:[sem= @yesno_and_politeness_sem(YesNo, Politeness), stype=SType] -->
+           interjection:[sem=YesNo, interjection_type=yn, stype=SType],
+           politeness:[sem=Politeness, politeness_pos=pre, stype=SType].
+
+% Intro consisting of two politeness expessions - Minions rule
+% [hi how are you] 
+utterance_intro:[sem= @yesno_and_politeness_sem(Politeness1, Politeness2), stype=SType] -->
+           politeness:[sem=Politeness1, stype=SType],
+           politeness:[sem=Politeness2, stype=SType].
+
+% Intro consisting of y/n interjection + non-y/n interjection - TravelDeals rule
+% [yes back]
+utterance_intro:[sem= @yesno_and_interjection_sem(YesNo, Interjection), stype=SType] -->
+           interjection:[sem=YesNo, interjection_type=yn, stype=SType],
+           interjection:[sem=Interjection, interjection_type=(\(yn)), stype=SType].
+
+% Intro consisting of correction + non-correction interjection - Checklist rule
+% [i meant no]
+utterance_intro:[sem= @correction_and_interjection_sem(Correction, Interjection), stype=none] -->
+           interjection:[sem=Correction, interjection_type=correction],
+           interjection:[sem=Interjection, interjection_type=(\(correction)), stype=none].
+
+% Null coda - TravelDeals rule
+utterance_coda:[sem= @null_sem] --> [].
+
+% Politeness coda - TravelDeals rule
+% i want a flight [please]
+utterance_coda:[sem=Sem, stype=SType] -->
+           politeness:[sem=Sem, politeness_pos=post, stype=SType].
+
+%--------------------------------------------------------------------------------------------------
+
+% utterance_s_and_s
+% Conjoined s as utterance - PSA rule
+% [go to flight deck and measure pressure]
+utterance:[sem= @conj_list_sem(s_and, [S1, S2]), stype=SType, elliptical_v=n] -->
+           s:[sem=S1, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=n, main_clause=y],
+           conj:[],
+           s:[sem=S2, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=n, main_clause=y].
+
+% utterance_s
+% S as utterance - PSA rule
+% [go to flight deck]
+utterance:[sem=Sem, stype=imp\/dcl\/ynq\/whq, stype=SType, elliptical_v=Elliptical] -->
+           s:[sem=Sem, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=y].
+
+% utterance_np_adjp
+% Short S without copula as top-level utterance - Checklist rule
+% [step five point one complete]
+utterance:[sem= @dcl_sem( @np_vp_sem(Np, @vp_v_adj_sem([[tense, present],@verb_sem(verb, implicit_be)], Adj))),
+	   stype=dcl, elliptical_v=n] -->
+           np:[sem=Np, nform=normal,
+	       agr=3, wh=n, sem_n_type=SubjType, takes_post_mods=n,
+	       @takes_no_pps, gapsin=null, gapsout=null, case=subj],
+           adjp:[sem=Adj, adjpos=pred, subj_sem_n_type=SubjType, gapsin=null, gapsout=null].
+
+% S introduced by adv - Checklist rule
+% [next] go to step three
+utterance:[sem= @s_advp_s_sem(Advp, S), stype=imp\/dcl\/ynq\/whq, stype=SType, elliptical_v=Elliptical] -->
+	advp:[sem=Advp, wh=n, advpos=fronted, gapsin=null, gapsout=null, main_clause=y],
+	s:[sem=S, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=y].
+
+% S introduced by PP - Bridge rule
+% [now] play the queen
+utterance:[sem= @s_pp_s_sem(Pp, S), stype=imp\/dcl\/ynq\/whq, stype=SType, elliptical_v=Elliptical] -->
+	pp:[sem=Pp, wh=n, gapsin=null, gapsout=null],
+	s:[sem=S, stype=SType, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=y].
+
+% utterance_np
+% NP as utterance - PSA rule
+% [flight deck]
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis, elliptical_v=n] -->
+	   np:[sem=Sem, nform=normal, takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj].
+
+% utterance_np_np_after
+% NP + post-NP phrase as utterance - PSA rule
+% [flight deck too]
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis, elliptical_v=n] -->
+           np:[sem=Sem, nform=normal, takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj], 
+           np_after:[].
+
+% Lone list of post-mods as utterance - TravelDeals rule
+% [to barbados before may tenth]
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis, elliptical_v=n] -->
+           post_mods:[sem=Sem, post_mod_type=ellipsis, takes_gap_mod=n, n_of_mod_type=none, gap=n, @takes_all_pps, gapsin=null, gapsout=null].
+
+% We get lone wh- PPs through the post_mods rule above, but we need another rule for lone wh+ - Checklist rule
+% [how]
+utterance:[sem= @elliptical_utt_sem(PP), stype=ellipsis, elliptical_v=n] -->
+           pp:[sem=PP, wh=y, gapsin=null, gapsout=null].
+
+% Lone advp as utterance - Checklist rule
+% [louder] 
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis, elliptical_v=n] -->
+           advp:[sem=Sem, gap=n, gapsin=null, gapsout=null].
+
+% Lone adjp as utterance - Med rule
+% [severe] 
+utterance:[sem= @elliptical_utt_sem(Sem), stype=ellipsis, elliptical_v=n] -->
+           adjp:[sem=Sem, can_be_nbar=n, gap=n, gapsin=null, gapsout=null].
+
+% you NBAR - DeMe rule
+% [you fucking retard]
+% [din jävla idiot/ditt jävla får] 
+%utterance:[sem= @elliptical_utt_sem( @you_nbar_sem(Nbar) ), stype=ellipsis, elliptical_v=n] -->
+%	you_intro:[agr=Agr],
+%	nbar:[sem=Nbar, agr=Agr].
+
+%-----------------------------------------------------------------------------------------------------
+
+% S rules 1 - wrapping operators
+
+% "i measured the pressure", "i said [i measured the pressure]"
+%
+% Thread gaps to get "when did you say [you measured the pressure _]?"
+
+% s_s_Declarative - PSA rule
+s:[sem= @dcl_sem(Sem), stype=dcl\/embedded_dcl, wh=n, vform=finite, inv=n, operator_wrapped=y,
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	s:[sem=Sem, wh=n, vform=finite, inv=n, operator_wrapped=n,
+	   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% "i said [that i measured the pressure]"
+
+% s_comp_s_EmbeddedDeclarative - PSA rule
+s:[sem= @embedded_dcl_sem(Sem), stype=embedded_dcl, wh=n, vform=finite, inv=n, operator_wrapped=y,
+   gapsin=GIn, gapsout=GOut, elliptical_v=n, main_clause=MainClause] -->
+	comp:[stype=embedded_dcl], 
+	s:[sem=Sem, wh=n, vform=finite, inv=n, operator_wrapped=n,
+	   gapsin=GIn, gapsout=GOut, elliptical_v=n, main_clause=MainClause].
+
+% "who measured the pressure", "tell me [who measured the pressure]"
+
+% s_s_WhSubjQ - PSA rule
+s:[sem= @whq_sem(Sem), stype=whq\/embedded_q, wh=y, vform=finite, inv=n, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	s:[sem=Sem, wh=y, vform=finite, inv=n, whmoved=n, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause].
+
+% "where are you"
+
+% s_s_WhNonSubjQ - PSA rule
+s:[sem= @whq_sem(Sem), stype=whq, wh=y, vform=finite, inv=y, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	s:[sem=Sem, wh=y, vform=finite, inv=y, whmoved=y, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% "tell me [where you are]"
+
+% s_s_EmbeddedWhNonSubjQ - PSA rule
+s:[sem= @embedded_whq_sem(Sem), stype=embedded_q, wh=y, vform=finite, inv=n, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	s:[sem=Sem, wh=y, vform=finite, inv=n, whmoved=y, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% "are you measuring the pressure?"
+
+% s_s_YNQ - PSA rule
+s:[sem= @ynq_sem(Sem), stype=ynq, wh=n, vform=finite, inv=y, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	s:[sem=Sem, wh=n, vform=finite, inv=y, whmoved=n, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause].
+
+% "tell me [if you are measuring the pressure]"
+
+% s_comp_s_EmbeddedYNQ - PSA rule
+s:[sem= @embedded_ynq_sem(Sem), stype=embedded_q, wh=n, vform=finite, inv=n, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	comp:[stype=embedded_q], 
+	s:[sem=Sem, wh=n, vform=finite, inv=n, whmoved=n, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% "measure the pressure!" - PSA rule
+
+% s_s_Imperative
+s:[sem= @imperative_sem(Sem), stype=imp, wh=n, vform=imperative, inv=n, operator_wrapped=y,
+   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=y] -->
+	s:[sem=Sem, wh=n, vform=imperative, inv=n, whmoved=n, operator_wrapped=n,
+	   gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=y].
+
+%----------------------------------------------------------------------
+
+% S rules 2 - fronting rules
+
+% s_np_s_WhMovement - PSA rule
+% what pressure did you measure?
+s:[sem= @fronting_sem(NP, S), wh=y\/rel, wh=Wh, vform=VForm, inv=Inv, whmoved=y, relagr=Agr, 
+   rel_sem_n_type=ObjSemType, operator_wrapped=n, takes_adv_type=none, 
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	np:[sem=NP, nform=normal, agr=Agr, wh=Wh, sem_n_type=SubjSemType, takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n,
+	   gapsin=np_gap, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% s_pp_s_WhMovement - PSA rule
+% when did the pressure start increasing?
+s:[sem= @fronting_sem(PP, S), wh=y\/rel, wh=Wh, vform=VForm, inv=Inv, whmoved=y, operator_wrapped=n, takes_adv_type=none,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	pp:[sem=PP, wh=Wh, gapsin=null, gapsout=null], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n,
+	   gapsin=pp_gap, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% s_adjp_s_WhMovement - Med rule
+% how frequent are your headaches?
+s:[sem= @fronting_sem(Adj, S), wh=y\/rel, wh=Wh, vform=VForm, inv=Inv, whmoved=y, operator_wrapped=n, takes_adv_type=none,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	adjp:[sem=Adj, wh=Wh, adjpos=pred, gapsin=null, gapsout=null], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n,
+	   gapsin=adjp_gap, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+% Similar for fronting advp - Med rule
+% how often do you have headaches?
+s:[sem= @fronting_sem(Adv, S), wh=y, vform=VForm, inv=Inv, whmoved=y, operator_wrapped=n, takes_adv_type=none,
+   gapsin=null, gapsout=null, elliptical_v=n, main_clause=MainClause] -->
+	advp:[sem=Adv, wh=y, advpos=fronted, adv_type= AdvpType, gapsin=null, gapsout=null, main_clause=MainClause], 
+	s:[sem=S, wh=n, vform=VForm, inv=Inv, whmoved=n, operator_wrapped=n, takes_adv_type=AdvpType,
+	   gapsin=advp_gap, gapsout=null, elliptical_v=n, main_clause=MainClause].
+
+%----------------------------------------------------------------------
+
+% S rules 3 - formation of S from VP
+
+% s_np_vp - PSA rule
+% basic S -> NP VP rule
+s:[sem= @np_vp_sem(Np, Vp), 
+   wh=Wh, vform=finite, inv=n, whmoved=n, relagr=Agr,
+   rel_sem_n_type=SubjType, operator_wrapped=n, takes_adv_type=AdvpType, 
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	np:[sem=Np, nform=normal,
+	    agr=Agr, wh=Wh, sem_n_type=SubjType, @subj_feats_for_np(Subj), 
+	    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj], 
+	vp:[sem=Vp, agr=Agr, inv=n, vform=finite, @subj_feats_for_vp(Subj), 
+	    takes_post_mods=n, passive=n, takes_adv_type=AdvpType, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% Version for impersonal subject - House rule
+% there is a light
+s:[sem= @np_vp_sem_impersonal_subj(Np, Vp), 
+   wh=Wh, vform=finite, inv=n, whmoved=n, relagr=Agr, rel_sem_n_type=SubjType, operator_wrapped=n, takes_adv_type=AdvpType, 
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	np:[sem=Np, nform=(\(normal)),
+	    agr=Agr, wh=Wh, sem_n_type=SubjType, @subj_feats_for_np(Subj), 
+	    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj], 
+	vp:[sem=Vp, agr=Agr, inv=n, vform=finite, @subj_feats_for_vp(Subj), 
+	    takes_post_mods=n, passive=n, takes_adv_type=AdvpType, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% Version with passive VP - Med rule
+% my headaches are alleviated by stress removal
+s:[sem= @np_vp_sem_passive(Np, Vp), 
+   wh=Wh, vform=finite, inv=n, whmoved=n, relagr=Agr, rel_sem_n_type=SubjType, operator_wrapped=n, takes_adv_type=AdvpType, 
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	np:[sem=Np, nform=normal,
+	    agr=Agr, wh=Wh, sem_n_type=SubjType, @subj_feats_for_np(Subj), 
+	    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj], 
+	vp:[sem=Vp, 
+	    passive=y,
+	    agr=Agr, inv=n, vform=finite, @subj_feats_for_vp(Subj), 
+	    takes_post_mods=n, takes_adv_type=AdvpType, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% s_np_vp_Imperative - PSA rule
+% Imperative with explicit subject
+% p s a go to flight deck
+s:[sem= @np_vp_imperative_sem(Np, Vp), wh=n, vform=imperative, inv=n, whmoved=n, operator_wrapped=n, 
+   takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	np:[sem=Np, agr=(\(1)), wh=n, sem_n_type=agent, nform=normal, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj], 
+	vp:[sem=Vp, agr=2, inv=n, vform= @imperative, subj_nform=normal, subj_sem_n_type=agent, 
+	    takes_post_mods=n, 
+	    passive=n, takes_adv_type=AdvpType, 
+	    gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause].
+
+% s_vp_np_Imperative - PSA rule
+% Version of previous rule with explicit subject after VP - DeMe rule
+% listen up bitch
+s:[sem= @np_vp_imperative_sem(Np, Vp), wh=n, vform=imperative, inv=n, whmoved=n, operator_wrapped=n, 
+   takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	vp:[sem=Vp, agr=2, inv=n, vform= @imperative, subj_nform=normal, subj_sem_n_type=agent, 
+	    takes_post_mods=n, 
+	    passive=n, takes_adv_type=AdvpType, 
+	    gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause],
+	np:[sem=Np, agr=(\(1)), pronoun=n, wh=n, sem_n_type=agent, nform=normal, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=subj].
+
+% s_vp_YNQ - PSA rule
+% Basic inversion rule, not passivised
+% did the pressure increase?
+s:[sem= @s_vp_sem_inverted(Sem),
+   wh=n, vform=finite, inv=y, whmoved=n, operator_wrapped=n, takes_adv_type=AdvpType,
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	vp:[sem=Sem, inv=y, vform=finite, passive=n,
+	    takes_post_mods=n, takes_adv_type=AdvpType,
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% Inversion rule, passivised
+% has the pressure been measured?
+s:[sem= @s_vp_sem_inverted_passivised(Sem),
+   wh=n, vform=finite, inv=y, whmoved=n, operator_wrapped=n, takes_adv_type=AdvpType,
+   gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	vp:[sem=Sem, inv=y, vform=finite, passive=y,
+	    takes_post_mods=n, takes_adv_type=AdvpType,
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause].
+
+% s_vp_Imperative - PSA rule
+% Basic imperative rule
+% go to flight deck
+s:[sem= @s_vp_imperative_sem(Vp), wh=n, vform=imperative, inv=n, whmoved=n, operator_wrapped=n, 
+   takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	vp:[sem=Vp, inv=n, agr=2, subj_nform=normal, vform= @imperative, takes_post_mods=n, 
+            takes_adv_type=AdvpType, gapsin=null, gapsout=null, 
+            elliptical_v=Elliptical, main_clause=MainClause].
+
+% imperative with "let's" - Checklist rule
+% let's continue
+s:[sem= @s_lets_vp_imperative_sem(Vp), wh=n, vform=imperative, inv=n, whmoved=n, 
+   operator_wrapped=n, takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause] -->
+	let, '\'s',
+	vp:[sem=Vp, inv=n, agr=(1/\plur), subj_nform=normal, vform= @imperative, takes_post_mods=n, 
+	    takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=Elliptical, main_clause=MainClause].
+
+%-----------------------------------------------------------------------------------------------------
+
+% VBAR as requested by P. Sells...
+
+% vbar_v - PSA rule
+% Simple VBAR rule
+vbar:[sem=Sem, 
+      agr=Agr, subcat=Sub, inv=n, takes_lexical_reflexive=Reflexive,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs), 
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=TakesAdvp, takes_adv_type=AdvpType, passive=Passive, 
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=CanBeGerund, can_be_postmod=CanBePostMod] -->
+	v:[sem=Sem, agr=Agr, subcat=Sub,
+	   inv=n, takes_lexical_reflexive=Reflexive,
+	   vform=VForm, vp_vform=VPVform, 
+	   @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem,
+	   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	   takes_advp=TakesAdvp, takes_adv_type=AdvpType, 
+	   passive=Passive, 
+	   elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=CanBeGerund, can_be_postmod=CanBePostMod].
+
+% vbar_v_np_InvertedSubject - PSA rule
+% VBAR consisting of V and inverted subject. 
+% [did the pressure] increase
+% If the inverted verb takes a subsequent lexical reflexive, then the inverted subject must be a pronoun - need to add this constraint
+vbar:[sem= @inverted_subj_sem(V, Np), passive=n, 
+      agr=Agr, subcat=Sub, 
+      inv=y, takes_lexical_reflexive=Reflexive,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=n] -->
+	v:[sem=V, passive=n, 
+	   agr=Agr, subcat=Sub, inv=y, takes_lexical_reflexive=Reflexive,
+	   vform=VForm, vp_vform=VPVform, 
+	   @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	   takes_advp=TakesAdvp, takes_adv_type=AdvpType, elliptical_v=Elliptical, main_clause=MainClause], 
+	np:[sem=Np, nform=normal,
+	    agr=Agr, wh=n, @subj_feats_for_np(Subj), takes_post_mods=n, @takes_no_pps,
+	    gapsin=null, gapsout=null, case=subj].
+
+% Like vbar_v_np_InvertedSubject, but for passive verb
+% VBAR consisting of V and inverted subject. 
+% [was the pressure] measured
+% [can the pressure] be measured
+vbar:[sem= @inverted_subj_sem_passive(V, Np), passive=y, 
+      agr=Agr, subcat=Sub, 
+      inv=y, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=n] -->
+	v:[sem=V, passive=y, 
+	   agr=Agr, subcat=Sub,
+	   inv=y, takes_lexical_reflexive=n,
+	   vform=VForm, vp_vform=VPVform, 
+	   @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	   takes_advp=TakesAdvp, takes_adv_type=AdvpType, elliptical_v=Elliptical, main_clause=MainClause], 
+	np:[sem=Np, nform=normal,
+	    agr=Agr, wh=n, @subj_feats_for_np(Subj), takes_post_mods=n, @takes_no_pps,
+	    gapsin=null, gapsout=null, case=subj].
+
+% Like vbar_v_np_InvertedSubject, but with an impersonal subject - House rule
+% [is there] a light in the kitchen
+vbar:[sem= @inverted_subj_sem_impersonal_subj(V, Np),
+      agr=Agr, subcat=Sub, inv=y, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, passive=n,
+      @subj_feats_for_vp(Subj), 
+      @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=n] -->
+	v:[sem=V,
+	   agr=Agr, subcat=Sub,
+	   inv=y, takes_lexical_reflexive=n,
+	   vform=VForm, vp_vform=VPVform, passive=n,
+	   @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	   obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	   pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	   elliptical_v=Elliptical, main_clause=MainClause], 
+	np:[sem=Np, nform=(\(normal)),
+	    agr=Agr, wh=n, @subj_feats_for_np(Subj), takes_post_mods=n, @takes_no_pps,
+	    gapsin=null, gapsout=null, case=subj].
+
+% VBAR postmodified by ADVP - Med rule
+% [do you often] have headaches
+vbar:[sem= @vbar_vbar_advp_sem(V, Advp),
+      agr=Agr, subcat=Sub,
+      inv=y, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=n, passive=Passive,
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=n] -->
+	vbar:[sem=V,
+	      agr=Agr, subcat=Sub,
+	      inv=y, takes_lexical_reflexive=n,
+	      vform=VForm, vp_vform=VPVform, 
+	      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	      takes_advp=y, takes_adv_type=AdvpType,
+	      passive=Passive, elliptical_v=Elliptical, main_clause=MainClause],
+	advp:[sem=Advp, advpos=postv, adv_type=AdvpType, main_clause=MainClause].
+
+% VBAR premodified by ADVP - Med rule
+% what [usually gives] you headaches
+vbar:[sem= @vbar_vbar_advp_sem(V, Advp),
+      agr=Agr, subcat=Sub,
+      inv=n, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=n,
+      passive=Passive, 
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+	advp:[sem=Advp, advpos=prev, adv_type=AdvpType, main_clause=MainClause],
+	vbar:[sem=V,
+	      agr=Agr, subcat=Sub,
+	      inv=n, takes_lexical_reflexive=n,
+	      vform=VForm, vp_vform=VPVform, 
+	      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	      takes_advp=_, takes_adv_type=AdvpType,
+	      passive=Passive, 
+	      elliptical_v=Elliptical, main_clause=MainClause, can_be_postmod=CanBePostMod].
+
+% VBAR postmodified by ADVP - Doris rule
+% it [is probably] on the desk
+vbar:[sem= @vbar_vbar_advp_sem(V, Advp),
+      agr=Agr, subcat=Sub,
+      inv=n, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=n,
+      passive=Passive, 
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+	vbar:[sem=V,
+	      agr=Agr, subcat=Sub,
+	      inv=n, takes_lexical_reflexive=n,
+	      vform=VForm, vp_vform=VPVform, 
+	      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	      takes_advp=_, takes_adv_type=AdvpType,
+	      passive=Passive, 
+	      elliptical_v=Elliptical, main_clause=MainClause, can_be_postmod=CanBePostMod],
+	advp:[sem=Advp, advpos=postv, adv_type=AdvpType, main_clause=MainClause].
+
+% VBAR postmodified by lexical reflexive - Med rule
+% när du [lägger dig]
+% [lägger du dig] när du har ont
+vbar:[sem=V,
+      agr=Agr, subcat=Sub,
+      inv=Inv, takes_lexical_reflexive=n,
+      vform=VForm, vp_vform=VPVform, 
+      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+      takes_advp=TakesAdvp, passive=Passive,
+      elliptical_v=Elliptical, main_clause=MainClause, can_be_gerund=n, can_be_postmod=n] -->
+	vbar:[sem=V,
+	      agr=Agr, subcat=Sub,
+	      inv=Inv, takes_lexical_reflexive=y,
+	      vform=VForm, vp_vform=VPVform, 
+	      @subj_feats_for_vp(Subj), @takes_pps(PPs),
+	      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem, 
+	      pp_sem_pp_type=PPSem, sem_p_type=PSem, 
+	      takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	      passive=Passive, elliptical_v=Elliptical, main_clause=MainClause],
+	reflexive_pronoun:[lexically_reflexive=y, agr=Agr].
+
+%-----------------------------------------------------------------------------------------------------
+
+% VP rules
+
+% vp_v - PSA rule
+% intransitive
+% increase
+vp:[sem= @vp_v_sem(Verb), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn, elliptical_v=Elliptical] -->
+	vbar:[sem=Verb, subcat=nx0v, takes_lexical_reflexive=n,
+	      @vbar_feats_for_vp(Feats), elliptical_v=Elliptical].
+
+% passivised transitive - Med rule
+% are your headaches [relieved] by stress removal
+vp:[sem= @vp_v_sem_passivised(Verb), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1_passivised, passive=y, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n].
+
+% vp_v_pp
+% verb taking PP complement - PSA rule
+% go to flight deck 
+vp:[sem= @vp_v_pp_sem(Verb, PP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vpnx1, takes_lexical_reflexive=n,
+	      @vbar_feats_for_vp(Feats), pp_sem_pp_type=PPSem, elliptical_v=n], 
+	pp:[sem=PP, wh=n, sem_pp_type=PPSem, 
+	    gapsin=GIn, gapsout=GOut].
+
+% passivised verb taking NP and PP - MobileAgents rule
+% the voice note associated with okra
+vp:[sem= @vp_v_pp_sem_passivised(Verb, PP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1pnx2_passivised, passive=y, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), pp_sem_pp_type=PPSem, elliptical_v=n], 
+	pp:[sem=PP, wh=n, sem_pp_type=PPSem, 
+	    gapsin=GIn, gapsout=GOut].
+
+% vp_v_np - PSA rule
+% transitive vps
+% measure pressure
+vp:[sem= @vp_v_np_sem(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1\/nx0vnx1_no_passive, takes_lexical_reflexive=n,
+	      @vbar_feats_for_vp(Feats),
+	      @link_transitive_verb_object_sort_to_object(ObjSem),
+	      %obj_sem_n_type=ObjSem,
+	      elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% This is weird. The link between the transitive verb and the object sort got broken by accident.
+% Then we discovered that the DeMe application's grammar didn't compile in Nuance 9 when we
+% fixed it. So we need to be able to keep it broken when required, at least until further
+% notice. Groan.
+
+default_macro(link_transitive_verb_object_sort_to_object(ObjSem),
+	      [obj_sem_n_type=ObjSem]).
+
+% vp_v_np - Mobile Agents
+% passivized ditransitive
+% (is) called okra
+vp:[sem= @vp_v_np_sem_passivised(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1x2_passivised, passive=y, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), 
+	      obj_sem_n_type=ObjSem, elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% vp_v_np(be) - PSA rule
+% equative & predicative be
+% is the pressure
+vp:[sem= @vp_v_np_sem(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1_be, @vbar_feats_for_vp(Feats), takes_lexical_reflexive=n, 
+	      obj_sem_n_type=ObjSem, elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut].
+
+% vp_v_np_measure - Checklist rule
+% intransive with measure phrase
+% move three steps
+vp:[sem= @vp_v_np_sem(Verb, NP), @vbar_feats_for_vp(Feats), takes_post_mods=y,
+    gapsin=GIn, gapsout=GIn, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1_measure, takes_lexical_reflexive=n,
+	      @vbar_feats_for_vp(Feats), obj_sem_n_type=ObjSem, elliptical_v=n], 
+	measure_phrase:[sem=NP, sem_n_type=ObjSem].
+
+% vp_v_np_pp - Checklist rule
+% vp with np and pp arguements
+% put it on step five
+vp:[sem= @vp_v_np_pp_sem(Verb, NP, PP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1pnx2, takes_lexical_reflexive=n,
+	      @vbar_feats_for_vp(Feats), 
+	      obj_sem_n_type=ObjSem, pp_sem_pp_type=PPSem, elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+	pp:[sem=PP, wh=n, sem_pp_type=PPSem, 
+	    gapsin=GNext, gapsout=GOut].
+
+% vp_v_np_np - TravelDeals rule
+% ditransitive alternation
+% give it to me
+vp:[sem= @vp_v_np_np_sem(Verb, NP1, NP2),
+    @vbar_feats_for_vp(Feats), 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb,
+	      subcat=nx0vnx1x2, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats),
+	      obj_sem_n_type=ObjSem, indobj_sem_n_type=IndObjSem,
+	      elliptical_v=n], 
+	np:[sem=NP1, wh=n, nform=normal, sem_n_type=IndObjSem,
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+	np:[sem=NP2, wh=n, nform=normal, sem_n_type=ObjSem,
+	    takes_post_mods=n, @takes_no_pps, gapsin=GNext, gapsout=GOut, case=nonsubj].
+
+% vp_v_np_ThereIs - House rule
+% (there) is a door 
+% Note that verb agrees with complement
+vp:[sem= @vp_v_np_there_is_sem(Verb, NP),
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb,
+	      subcat=nx0vnx1_there_is, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), agr=Agr, 
+	      obj_sem_n_type=ObjSem, elliptical_v=n], 
+	np:[sem=NP, agr=Agr, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% vp_v_vp_Modal - PSA rules
+% vps with modal verbs
+% can measure pressure
+vp:[sem= @vp_v_vp_modal_sem(Verb, VP), agr=Agr,
+    @v_feats_for_vp(Feats), @subj_feats_for_vp(Subj), passive=Passive, 
+    takes_post_mods=n, @takes_no_pps, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, @v_feats_for_vp(Feats), @subj_feats_for_vp(Subj), agr=Agr,
+	      passive=Passive, 
+	      subcat=nx0vvx1_modal, takes_lexical_reflexive=n,
+	      vp_vform=VForm,
+	      @takes_no_pps, elliptical_v=n],
+	vp:[sem=VP, agr=Agr,
+	    inv=n, vform=VForm, passive=Passive, 
+	    @subj_feats_for_vp(Subj), takes_post_mods=n, 
+	    gapsin=GIn, gapsout=GOut].
+
+% vp_v_vp_NonModal - PSA rule
+% non-modals that take vp complements
+% stop increasing
+vp:[sem= @vp_v_vp_nonmodal_sem(Verb, VP), 
+    @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj), 
+	      subcat=nx0vvx1_nonmodal, takes_lexical_reflexive=n,
+	      vp_vform=V1, elliptical_v=n], 
+	vp:[sem=VP, inv=n, vform=V1, @subj_feats_for_vp(Subj), takes_post_mods=n, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=n].
+
+% vp_v_vp_passive - Med rules
+%passive vps
+% was measured
+vp:[sem= @vp_v_vp_passive_sem(Verb, VP),
+    passive=y, takes_post_mods=n, @takes_no_pps, 
+    @subj_feats_for_vp(Subj), @v_feats_for_vp(V),
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vvx1_passive, passive=y, takes_lexical_reflexive=n, 
+	      @v_feats_for_vp(V), agr=Agr,
+	      subj_sem_n_type=SubjType, @takes_no_pps, elliptical_v=n],
+	vp:[sem=VP, inv=n, vform=(en_passive\/ing), passive=y, 
+	    takes_post_mods=n, 
+	    @subj_feats_for_vp(Subj), agr=Agr,
+	    subj_sem_n_type=SubjType, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=n].
+
+% vp_v_to_vp - TravelDeals rule
+% verbs that take embedded infinitives
+% want to go to flight deck
+%
+% Don't allow post-mods here -
+% if we do, we get bad problems with ambiguity and UG -> CFG compilation
+% Not completely correct to block it, but cases where you require the post-mod
+% to attach to the higher verb are rare, and usually it makes no difference anyway.
+vp:[sem= @vp_v_to_vp_sem(Verb, VP), @vbar_feats_for_vp(Feats),
+    %takes_post_mods=y,
+    takes_post_mods=n,
+    %@takes_no_pps,
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj),
+	      %@takes_no_pps,
+	      subcat=nx0vvx1_to, takes_lexical_reflexive=n,
+	      elliptical_v=n], 
+	@to,
+	vp:[sem=VP, inv=n, vform= @imperative, passive=n, @subj_feats_for_vp(Subj), takes_post_mods=n, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=n].
+
+% passivised verb that takes NP + infinitive - DSTO/Franco rule
+% authorised to use force
+vp:[sem= @vp_v_to_vp_sem_passivised(Verb, VP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj), 
+	      subcat=nx0x1vx2_to_passivised, takes_lexical_reflexive=n,
+	      passive=y, elliptical_v=n], 
+	@to,
+	vp:[sem=VP, inv=n, vform= @imperative, passive=n, @subj_feats_for_vp(Subj), takes_post_mods=n, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=n].
+
+% vp_v_np_to_vp - DSTO/Franco rule
+% verbs that take NP + infinitives
+% authorise the government to use force
+vp:[sem= @vp_v_np_to_vp_sem(Verb, NP, VP), @vbar_feats_for_vp(Feats), takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, @vbar_feats_for_vp(Feats), @subj_feats_for_vp(Subj),
+	      obj_sem_n_type=ObjSem, 
+	      subcat=nx0x1vx2_to, takes_lexical_reflexive=n,
+	      passive=n, elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal,
+	    sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+	@to,
+	vp:[sem=VP, inv=n, vform= @imperative, @subj_feats_for_vp(Subj), takes_post_mods=n, 
+	    gapsin=GNext, gapsout=GOut, elliptical_v=n, main_clause=n].
+
+% vp_v_s_Prop  - PSA rule
+% verbs that take clausal complements
+% say that the pressure is increasing
+vp:[sem= @vp_v_s_prop_sem(Verb, S),
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, 
+	      subcat=nx0vs1, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	s:[sem=S, 
+	   stype=embedded_dcl, operator_wrapped=y, gapsin=GIn, gapsout=GOut, elliptical_v=n, main_clause=n].
+
+% vp_v_s_EmbeddedQ - PSA rule
+% say what the pressure is
+vp:[sem= @vp_v_s_embedded_q_sem(Verb, S),
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vsq1, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	s:[sem=S, stype=embedded_q, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+
+% tell me what is switched on - House rule
+vp:[sem= @vp_v_np_s_embedded_q_sem(Verb, NP, S),
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vnx1sq1, takes_lexical_reflexive=n, 
+	      obj_sem_n_type=ObjSem, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal,
+	    sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj],
+	s:[sem=S, stype=embedded_q, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+
+% is hot - PSA rule
+vp:[sem= @vp_v_adj_sem(Verb, Adj),
+    agr=Agr,
+    @vbar_feats_for_vp(Feats), subj_sem_n_type=SubjSem, 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb,
+	      subcat=nx0va1, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	adjp:[sem=Adj,
+	      agr=Agr, def=n,
+	      adjpos=pred, subj_sem_n_type=SubjSem, gapsin=GIn, gapsout=GOut].
+
+% vp_v_np_adj- Med rule
+% make you worse 
+% NOTE this subcat for this has a typo that should be fixed 
+% it should be nx0vnx1a1
+vp:[sem= @vp_v_np_adj_sem(Verb, NP, Adj),
+    agr=Agr,
+    @vbar_feats_for_vp(Feats), subj_sem_n_type=SubjSem, 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb,
+	      subcat=nx0vx1a1, takes_lexical_reflexive=n, 
+	      obj_sem_n_type=ObjType, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjType, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GNext, case=nonsubj],
+	adjp:[sem=Adj,
+	      agr=Agr, def=n,
+	      adjpos=pred, subj_sem_n_type=ObjType, gapsin=GNext, gapsout=GOut].
+
+% is made better - MedSLT rule
+vp:[sem= @vp_v_adj_sem(Verb, Adj),
+    agr=Agr,
+    @vbar_feats_for_vp(Feats), subj_sem_n_type=SubjSem, 
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb,
+	      subcat=nx0vx1a1_passivised, passive=y, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), elliptical_v=n], 
+	adjp:[sem=Adj,
+	      agr=Agr,
+	      adjpos=pred, subj_sem_n_type=SubjSem, gapsin=GIn, gapsout=GOut].
+
+% vp_v_np_p - PSA rule
+% particle verb with particle movement
+% switch it off
+% Block extraction from NP in this rule. The motivation is that we always seem to get nx0vnx1pl and nx0vplnx1
+% entries together (maybe they should be one value?), and if we allow an extraction from both we get
+% a spurious ambiguity in sentences like "what can i switch off?"
+vp:[sem= @vp_v_np_p_sem(Verb, NP, P), 
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn, elliptical_v=n] -->
+	vbar:[sem=Verb, 
+	      subcat=nx0vnx1pl, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats),
+	      obj_sem_n_type=ObjSem, 
+	      sem_p_type=PSem, elliptical_v=n], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, takes_post_mods=n,
+	    @takes_no_pps, gapsin=GIn, gapsout=GIn, case=nonsubj], 
+	p:[sem=P, sem_p_type=PSem].
+
+% vp_v_p_np - PSA rule
+% particle verb no particle movement
+% switch off the light
+vp:[sem= @vp_v_np_p_sem(Verb, NP, P), 
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vplnx1, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats),
+	      obj_sem_n_type=ObjSem, 
+	      sem_p_type=PSem, elliptical_v=n], 
+	p:[sem=P, sem_p_type=PSem], 
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=ObjSem, 
+	    takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj, pronoun= @pronoun_value_in_unmoved_particle_verb_object].
+
+% vp_v_p - Swedish MedSLT rule
+% verb taking particle and no other complements
+% John [gave up]
+vp:[sem= @vp_v_p_sem(Verb, P), 
+    @vbar_feats_for_vp(Feats),
+    takes_post_mods=y, 
+    gapsin=GIn, gapsout=GIn, elliptical_v=n] -->
+	vbar:[sem=Verb, subcat=nx0vpl, takes_lexical_reflexive=n, 
+	      @vbar_feats_for_vp(Feats), 
+	      sem_p_type=PSem, elliptical_v=n], 
+	p:[sem=P, sem_p_type=PSem].
+
+%----------------------------------------------------------------------
+
+% vp_to_vp - Swedish MedSLT rule
+% [to drink coffee] is unhealthy
+% får du huvudvärk av [att dricka kaffe]
+
+vp:[sem=VP,
+    vform=to,
+    @subj_feats_for_vp(Subj), @v_feats_for_vp_no_vform(VFeats), passive=Passive, 
+    takes_post_mods=n, @takes_no_pps, takes_adv_type=AdvpType, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=n] -->
+	@to,
+	vp:[sem=VP,
+	    vform= @infinitive,
+	    @subj_feats_for_vp(Subj), @v_feats_for_vp_no_vform(VFeats), passive=Passive, 
+	    @takes_pps(PPs), 
+	    takes_post_mods=n, takes_adv_type=AdvpType, 
+	    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=n].
+
+%----------------------------------------------------------------------
+
+% vp_vp_postmod - PSA rule
+% zero or more post-modifiers after a vp
+vp:[sem= @vp_vp_mods_sem(VP, Mods), 
+    @subj_feats_for_vp(Subj), @v_feats_for_vp(VFeats), passive=Passive, 
+    takes_post_mods=n, @takes_no_pps, takes_adv_type=AdvpType, 
+    gapsin=GIn, gapsout=GOut, elliptical_v=Elliptical, main_clause=MainClause] -->
+	vp:[sem=VP, 
+	    @subj_feats_for_vp(Subj), @v_feats_for_vp(VFeats), passive=Passive, 
+	    @takes_pps(PPs), 
+	    takes_post_mods=y, takes_adv_type=AdvpType, 
+	    gapsin=GIn, gapsout=GNext, elliptical_v=Elliptical, main_clause=MainClause],
+	post_mods:[sem=Mods, 
+		   post_mod_type=verbal,
+		   %post_mods_sem_n_type=none,
+		   post_mods_sem_n_type=Any,
+		   takes_gap_mod=y, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, 
+		   gapsin=GNext, gapsout=GOut].
+
+%----------------------------------------------------------------------
+
+% Passivization
+
+% Passivised transitive - Med rule
+% are your headaches [relieved] by massage
+macro(passivisation_rule(MSem, DSem, MVForm, DVForm, MSubcat, DSubcat),
+      (  v:[sem=MSem,
+	    subcat=MSubcat, passive=y, 
+	    agr=Agr, inv=n, vform=MVForm, vp_vform=none, 
+	    subj_nform=normal, subj_sem_n_type=ObjType, 
+	    @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+	    obj_sem_n_type=none, indobj_sem_n_type=IndObjSemNType, 
+	    pp_sem_pp_type=PPSemPPType, sem_p_type=SemType, 
+	    takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	    elliptical_v=n, main_clause=MainClause, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+	  v:[sem=DSem,
+	     subcat=DSubcat, passive=n, 
+	     agr=Agr, inv=n, vform=DVForm, vp_vform=none, 
+	     subj_nform=normal, subj_sem_n_type=SubjType, 
+	     @takes_pps_except_passive_by(PPs),
+	     obj_sem_n_type=ObjType, obj_sem_n_type=(\(none)), indobj_sem_n_type=IndObjSemNType,
+	     pp_sem_pp_type=PPSemPPType, sem_p_type=SemType, 
+	     takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	     elliptical_v=n, main_clause=MainClause, can_be_postmod=CanBePostMod]
+      )).
+macro(passivisation_rule(MSem, DSem, MVForm, DVForm, MSubcat, DSubcat),
+      (  v:[sem=MSem,
+	    subcat=MSubcat, passive=y, 
+	    agr=Agr, inv=n, vform=MVForm, vp_vform=none, 
+	    subj_nform=normal, main_clause=MainClause, subj_sem_n_type=IndObjType, 
+	    @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+	    obj_sem_n_type=ObjType, 
+	    pp_sem_pp_type=none, sem_p_type=none, 
+	    indobj_sem_n_type=none, 
+	    takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	    elliptical_v=n, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+	  v:[sem=DSem,
+	     subcat=DSubcat, passive=n, 
+	     agr=Agr, inv=n, vform=DVForm, vp_vform=none, 
+	     subj_nform=normal, subj_sem_n_type=SubjType, 
+	     @takes_pps_except_passive_by(PPs),
+	     obj_sem_n_type=ObjType, 
+	     pp_sem_pp_type=none, sem_p_type=none, 
+	     indobj_sem_n_type=IndObjType, indobj_sem_n_type=(\(none)),
+	     takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	     elliptical_v=n, main_clause=MainClause, can_be_postmod=CanBePostMod]
+      )).
+
+macro(passivisation_rule_s(MSem, DSem, MVForm, DVForm, MVForm1, DVForm1, MSubcat, DSubcat),
+      (  v:[sem=MSem,
+	    subcat=MSubcat, passive=y, lexically_passivisable=n,
+	    agr=Agr, inv=Inv, vform=MVForm, vform=MVForm1, vp_vform=none, 
+	    subj_nform=normal, subj_sem_n_type=ObjType, 
+	    @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+	    obj_sem_n_type=none, indobj_sem_n_type=IndObjSemNType, 
+	    pp_sem_pp_type=PPSemPPType, sem_p_type=SemType, 
+	    takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	    elliptical_v=n, main_clause=MainClause, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+	  v:[sem=DSem,
+	     subcat=DSubcat, passive=n, lexically_passivisable=y,
+	     agr=Agr, inv=Inv, vform=DVForm, vform=DVForm1, vp_vform=none, 
+	     subj_nform=normal, subj_sem_n_type=SubjType, 
+	     @takes_pps_except_passive_by(PPs),
+	     obj_sem_n_type=ObjType, indobj_sem_n_type=IndObjSemNType,
+	     pp_sem_pp_type=PPSemPPType, sem_p_type=SemType, 
+	     takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+	     elliptical_v=n, main_clause=MainClause, can_be_postmod=CanBePostMod],
+	  s
+      )).
+
+% Past participles (all languages): treat a past participle as a passive participle
+macro(passivisation_rules(MSubcat, DSubcat),
+      @passivisation_rule(V, V, en_passive, en, MSubcat, DSubcat)).
+% Present passive (Swedish): form from imperative, and add present tense in semantics
+macro(passivisation_rules(MSubcat, DSubcat),
+      @passivisation_rule_s( @present_passive_v_from_imperative(V), V, finite, @imperative, finite, @imperative, MSubcat, DSubcat)).
+% Infinitive, imperfect and supine passive (Swedish): add 's' affix and keep semantics 
+macro(passivisation_rules(MSubcat, DSubcat),
+      @passivisation_rule_s(V, V, (@infinitive)\/finite\/(@perfect_vform), (@infinitive)\/finite\/(@perfect_vform), VForm, VForm, MSubcat, DSubcat)).
+
+@passivisation_rules(nx0vnx1_passivised, nx0vnx1).     
+@passivisation_rules(nx0vnx1x2_passivised, nx0vnx1x2).     
+@passivisation_rules(nx0vnx1pnx2_passivised, nx0vnx1pnx2).     
+@passivisation_rules(nx0x1vx2_to_passivised, nx0x1vx2_to).     
+@passivisation_rules(nx0vx1a1_passivised, nx0vx1a1).     
+
+% Passivised ditransitive - Mobile Agents rule
+% the location [named] broccoli
+%v:[sem=V,
+%   subcat=nx0vnx1x2_passivised, passive=y, 
+%   agr=Agr, inv=n, vform=en_passive, vp_vform=none, 
+%   subj_nform=normal, subj_sem_n_type=IndObjType, 
+%   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+%   obj_sem_n_type=ObjType, 
+%   pp_sem_pp_type=none, sem_p_type=none, 
+%   indobj_sem_n_type=none, 
+%   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%   elliptical_v=n, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+%	v:[sem=V,
+%	   subcat=nx0vnx1x2, passive=n, 
+%	   agr=Agr, inv=n, vform=en, vp_vform=none, 
+%	   subj_nform=normal, subj_sem_n_type=SubjType, 
+%	   @takes_pps_except_passive_by(PPs),
+%	   obj_sem_n_type=ObjType, 
+%	   pp_sem_pp_type=none, sem_p_type=none, 
+%	   indobj_sem_n_type=IndObjType, 
+%	   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%	   elliptical_v=n, can_be_postmod=CanBePostMod].
+
+% Passivised verb that takes NP + PP - Mobile Agents rule
+% the voice note [associated] with broccoli
+%v:[sem=V,
+%   subcat=nx0vnx1pnx2_passivised, passive=y, 
+%   agr=Agr, inv=n, vform=en_passive, vp_vform=none, 
+%   subj_nform=normal, subj_sem_n_type=ObjType, 
+%   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+%   obj_sem_n_type=none, 
+%   pp_sem_pp_type=PPType, sem_p_type=none, 
+%   indobj_sem_n_type=none, 
+%   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%   elliptical_v=n, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+%	v:[sem=V,
+%	   subcat=nx0vnx1pnx2, passive=n, 
+%	   agr=Agr, inv=n, vform=en, vp_vform=none, 
+%	   subj_nform=normal, subj_sem_n_type=SubjType, 
+%	   @takes_pps_except_passive_by(PPs),
+%	   obj_sem_n_type=ObjType, 
+%	   pp_sem_pp_type=PPType, sem_p_type=none, 
+%	   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%	   elliptical_v=n, can_be_postmod=CanBePostMod].
+%
+% Passivised verb taking NP + infinitive - DSTO/Franco rule 
+% who is [authorised] to use force
+%v:[sem=V,
+%   subcat=nx0x1vx2_to_passivised, passive=y, 
+%   agr=Agr, inv=n, vform=en_passive, vp_vform=V1, 
+%   subj_nform=normal, subj_sem_n_type=ObjType, 
+%   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+%   obj_sem_n_type=none, indobj_sem_n_type=none, 
+%   pp_sem_pp_type=none, sem_p_type=none, 
+%   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%   elliptical_v=n, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+%	v:[sem=V,
+%	   subcat=nx0x1vx2_to, passive=n, 
+%	   agr=Agr, inv=n, vform=en, vp_vform=V1, 
+%	   subj_nform=normal, subj_sem_n_type=SubjType, 
+%	   @takes_pps_except_passive_by(PPs),
+%	   obj_sem_n_type=ObjType, 
+%	   pp_sem_pp_type=none, sem_p_type=none, 
+%	   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%	   elliptical_v=n, can_be_postmod=CanBePostMod].
+%
+% Passivised verb that takes NP + ADJP - MedSLT rule
+% are your headaches [made] better by massage
+%v:[sem=V,
+%   subcat=nx0vx1a1_passivised, passive=y, 
+%   agr=Agr, inv=n, vform=en_passive, vp_vform=none, 
+%   subj_nform=normal, subj_sem_n_type=ObjType, 
+%   @takes_pps_except_passive_by(PPs), takes_passive_by_pp=SubjType,
+%   obj_sem_n_type=none, 
+%   pp_sem_pp_type=none, sem_p_type=none, 
+%   indobj_sem_n_type=none, 
+%   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%   elliptical_v=n, can_be_gerund=n, can_be_postmod=CanBePostMod] -->
+%	v:[sem=V,
+%	   subcat=nx0vx1a1, passive=n, 
+%	   agr=Agr, inv=n, vform=en, vp_vform=none, 
+%	   subj_nform=normal, subj_sem_n_type=SubjType, 
+%	   @takes_pps_except_passive_by(PPs),
+%	   obj_sem_n_type=ObjType, 
+%	   pp_sem_pp_type=none, sem_p_type=none, 
+%	   takes_advp=TakesAdvp, takes_adv_type=AdvpType,
+%	   elliptical_v=n, can_be_postmod=CanBePostMod].
+
+%----------------------------------------------------------------------
+
+% no post modifier - PSA rule
+post_mods:[sem= @null_sem, gap=y, 
+           takes_gap_mod=Gap, @takes_pps(PPs),
+           gapsin=GIn, gapsout=GIn] --> [].
+
+% gapped PP post mods - PSA rule
+post_mods:[sem= @mods_mod_mods_sem(PP, Mods), gap=n, post_mod_type=NominalOrVerbal, post_mods_sem_n_type=SemType,
+           takes_gap_mod=y, n_of_mod_type=OfType, takes_partitive=n, 
+	   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	pp:[sem=PP, wh=n, sem_pp_type=Type, gap=y, gapsin=GIn, gapsout=GNext],
+	post_mods:[sem=Mods, post_mod_type=NominalOrVerbal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=OfType, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GNext, gapsout=GOut]. 
+
+% gapped adverb post modifier - Med rule
+% e.g. How often do you have headaches
+post_mods:[sem= @mods_mod_mods_sem(Advp, Mods), gap=n, post_mod_type=verbal, post_mods_sem_n_type=SemType,
+           takes_gap_mod=y, n_of_mod_type=none, takes_partitive=n,
+	   n_appositive_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	advp:[sem=Advp, wh=n, gap=y, gapsin=GIn, gapsout=GNext],
+	post_mods:[sem=Mods, post_mod_type=verbal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GNext, gapsout=GOut]. 
+
+% adjective post modifier - TravelDeals rule
+post_mods:[sem= @mods_adjp_mods_sem(Adj, Mods), gap=n, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+           takes_gap_mod=Gap, n_of_mod_type=OfType, takes_partitive=n,
+	   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	adjp:[sem=Adj,
+	      agr=Agr,
+	      adjpos=postnom, wh=n, subj_sem_n_type=SemType, gap=n, gapsin=null, gapsout=null],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=OfType, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% of-PP postmodifier (non-partitive) - Med rule
+% e.g. is the frequency of your headaches increasing
+post_mods:[sem= @mods_mod_mods_sem(PP, Mods), gap=n, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+           n_of_mod_type=OfModType, takes_partitive=n,
+	   n_appositive_mod_type=ApposType, n_of_mod_type=(\(none)),
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	of_pp:[sem=PP, wh=n, sem_n_type=OfModType],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% of-PP postmodifier (partitive) - Med rule
+% e.g. i have a bit [of a headache]
+% The mother NP gets its sem_type from the partitive PP
+post_mods:[sem= @partitive_sem( @of_pp_sem(NP)), gap=n, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+           n_of_mod_type=none, takes_partitive=y, 
+	   n_appositive_mod_type=none, 
+           takes_gap_mod=n, @takes_no_pps, takes_adv_type=none, 
+           gapsin=GIn, gapsout=GIn] -->
+	@partitive_marker,
+	np:[sem=NP, nform=normal, wh=n, sem_n_type=SemType, 
+            takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj].
+
+% Passive by-PP postmodifier - Med rule
+% e.g. are your headaches caused by stress
+post_mods:[sem= @mods_mod_mods_sem(PP, Mods), gap=n,
+	   post_mod_type=(verbal\/ellipsis), post_mod_type=PostModType,
+	   post_mods_sem_n_type=none,
+           n_of_mod_type=none, takes_partitive=n,
+	   n_appositive_mod_type=none,
+	   takes_passive_by_pp=PassiveByPPType, takes_passive_by_pp=(\(none)),
+           takes_gap_mod=Gap, @takes_pps_except_passive_by(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	passive_by_pp:[sem=PP, wh=n, sem_n_type=PassiveByPPType, gapsin=GIn, gapsout=GNext],
+	post_mods:[sem=Mods, post_mod_type=PostModType, post_mods_sem_n_type=none,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=none,
+		   takes_passive_by_pp=none, 
+		   @takes_pps_except_passive_by(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GNext, gapsout=GOut]. 
+
+% non-gapped adverb post mod  - Med rule
+% e.g. do you have headaches frequently
+post_mods:[sem= @mods_mod_mods_sem(Advp, Mods), gap=n, post_mod_type=(verbal\/ellipsis), post_mods_sem_n_type=SemType,
+           takes_gap_mod=Gap, n_of_mod_type=none, takes_partitive=n,
+	   n_appositive_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	advp:[sem=Advp, advpos=postvp, adv_type=AdvpType, wh=n, gap=n, gapsin=null, gapsout=null],
+	post_mods:[sem=Mods, post_mod_type=verbal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=none, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% v+ing vp post modifiers - TravelDeals rule
+% e.g. flights leaving from London
+post_mods:[sem= @mods_mod_mods_sem( @rel_s_sem( @np_vp_sem( @rel_pron_sem, @unspecified_tense_sem(VP))), Mods), 
+           gap=n, post_mod_type=nominal\/ellipsis, post_mods_sem_n_type=SemType,
+	   n_appositive_mod_type=ApposType, 
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	vp:[sem=VP, inv=n, can_be_postmod=y, subj_nform=normal, vform=ing, agr=Agr,
+	    subj_sem_n_type=SemType, takes_post_mods=n, gapsin=null, gapsout=null, elliptical_v=n],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% passive vp post mods - Mobile Agents
+% e.g. location named broccoli
+post_mods:[sem= @mods_mod_mods_sem( @rel_s_sem( @np_vp_sem_passive( @rel_pron_sem, @unspecified_tense_sem(VP))), Mods), 
+           gap=n, post_mod_type=nominal, post_mods_sem_n_type=SemType, n_appositive_mod_type=ApposType, 
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	vp:[sem=VP, inv=n, passive=y, vform=en_passive,
+	    subj_sem_n_type=SemType, takes_post_mods=n, gapsin=null, gapsout=null, elliptical_v=n, main_clause=n],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% to-vp post modifiers - DSTO/Franco rule
+% e.g. permission to authorise use of force
+post_mods:[sem= @mods_mod_mods_sem( @rel_s_sem( @np_vp_sem( @rel_pron_sem, @unspecified_tense_sem(VP))), Mods), 
+           gap=n, post_mod_type=nominal\/ellipsis, post_mods_sem_n_type=SemType, n_appositive_mod_type=ApposType, 
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	@to,
+	vp:[sem=VP, inv=n, subj_nform=normal, vform= @imperative, takes_post_mods=n,
+	    gapsin=null, gapsout=null, elliptical_v=n, main_clause=n],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut]. 
+
+% relative clauses - PSA rule
+% e.g. the door that is open
+
+% Allow rel modifiers to verbs too, to permit dislocated relatives. This isn't quite right, perhaps,
+% but any other solution is really challenging.
+post_mods:[sem= @mods_mod_mods_sem(Rel, Mods), gap=n,
+	   %post_mod_type=nominal,
+	   post_mod_type=nominal\/verbal,
+	   post_mod_type=PostModType,
+	   post_mods_sem_n_type=SemType, n_appositive_mod_type=ApposType, 
+           takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+           gapsin=GIn, gapsout=GOut] -->
+	rel:[sem=Rel, sem_n_type=SemType, relagr=Agr],
+	post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		   n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+		   gapsin=GIn, gapsout=GOut].
+
+% Appositive modifier - Checklist rule
+% e.g. row one column two
+labelled_item(apposition_rule,(
+post_mods:[sem= @mods_mod_mods_sem( @pp_p_np_sem( @prep_sem(appositive), NP), Mods), 
+	   gap=n, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   n_appositive_mod_type=ApposType, 
+                   takes_gap_mod=Gap, @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+                   gapsin=GIn, gapsout=GOut] -->
+        np:[sem=NP, wh=n, sem_n_type=ApposType, takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GIn],
+        post_mods:[sem=Mods, post_mod_type=nominal, post_mods_sem_n_type=SemType,
+		   n_appositive_mod_type=ApposType, 
+                   takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+	           @takes_pps(PPs), takes_adv_type=AdvpType, relagr=Agr,
+                   gapsin=GIn, gapsout=GOut]
+)).
+
+macro(post_mods_pp_rule(PPType, PPsIn, PPsOut),
+      ( post_mods:[sem= @mods_mod_mods_sem(PP, Mods), gap=n, post_mod_type=NominalOrVerbal, post_mods_sem_n_type=SemType,
+		   n_appositive_mod_type=ApposType, 
+                   takes_gap_mod=Gap, @takes_pps(PPsIn), takes_adv_type=AdvpType, relagr=Agr,
+                   gapsin=GIn, gapsout=GOut] -->
+	  pp:[sem=PP, wh=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GNext],
+	  post_mods:[sem=Mods, post_mod_type=NominalOrVerbal, post_mods_sem_n_type=SemType,
+		     n_appositive_mod_type=ApposType, 
+		     takes_gap_mod=n, n_of_mod_type=none, takes_partitive=n,
+		     @takes_pps(PPsOut), takes_adv_type=AdvpType, relagr=Agr,
+		     gapsin=GNext, gapsout=GOut]
+      )).
+/*
+% The following version of the post_mods_pp rules allow at most one PP of each type to occur in the post_mods.
+
+% loc PP mod - PSA rule
+% e.g. measure the pressure [at flight deck]
+@post_mods_pp_rule(loc, 
+                   [y, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [n, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% from PP mod - TravelDeals rule
+% e.g. flights [from Stansted]
+@post_mods_pp_rule(from, 
+                   [Loc, y, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, n, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% to PP mod - PSA rule
+% e.g. go [to flight deck]
+@post_mods_pp_rule(to, 
+                   [Loc, From, y, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, n, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% with PP mod - TravelDeals rule
+% e.g. trips [with three star accommodation]
+@post_mods_pp_rule(with, 
+                   [Loc, From, To, y, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, n, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% duration PP mod - Med rule
+% e.g. have you had headaches [for more than a week]
+@post_mods_pp_rule(duration, 
+                   [Loc, From, To, With, y, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, n, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% frequency PP mod - Med rule
+% e.g. do you have headaches [once] a week
+@post_mods_pp_rule(frequency, 
+                   [Loc, From, To, With, Duration, y, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, n, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% date PP mod - TravelDeals rule
+% e.g. flights [in june]
+@post_mods_pp_rule(date, 
+                   [Loc, From, To, With, Duration, Frequency, y, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, n, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% time PP mod - PSA rule
+% e.g. what was the pressure [at fifteen oh three]
+@post_mods_pp_rule(time, 
+                   [Loc, From, To, With, Duration, Frequency, Date, y, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, n, Attrib, Side, About, Cost, PassiveBy]).
+
+% side PP mod - PSA rule
+% e.g. who spoken [in favour of the proposal]
+@post_mods_pp_rule(attribution, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, y, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, n, Side, About, Cost, PassiveBy]).
+
+% attribution PP mod - PSA rule
+% e.g. what is the pressure [according to the fixed sensors]
+@post_mods_pp_rule(side, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, y, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, n, About, Cost, PassiveBy]).
+
+% about PP mod - TravelDeals rule
+% e.g. tell me [about trips to barbados]
+@post_mods_pp_rule(about, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, y, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, n, Cost, PassiveBy]).
+
+% cost PP mod - TravelDeals rule
+% e.g. give me trips [under five hundred pounds]
+@post_mods_pp_rule(cost, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, y, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, n, PassiveBy]).
+
+% Following now treated using special rule for passive by-PP, which passes the sortal type of the NP
+% passive by PP mod - Med rule
+% e.g. are your headaches relieved [by stress removal]
+%@post_mods_pp_rule(passive_by, 
+%                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, y], 
+%                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, n]).
+*/
+
+% The following version of the post_mods_pp rules allow any number of PPs of each type to occur in the post_mods.
+
+% loc PP mod - PSA rule
+% e.g. measure the pressure [at flight deck]
+@post_mods_pp_rule(loc, 
+                   [y, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [y, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% from PP mod - TravelDeals rule
+% e.g. flights [from Stansted]
+@post_mods_pp_rule(from, 
+                   [Loc, y, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, y, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% to PP mod - PSA rule
+% e.g. go [to flight deck]
+@post_mods_pp_rule(to, 
+                   [Loc, From, y, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, y, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% with PP mod - TravelDeals rule
+% e.g. trips [with three star accommodation]
+@post_mods_pp_rule(with, 
+                   [Loc, From, To, y, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, y, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% duration PP mod - Med rule
+% e.g. have you had headaches [for more than a week]
+@post_mods_pp_rule(duration, 
+                   [Loc, From, To, With, y, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, y, Frequency, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% frequency PP mod - Med rule
+% e.g. do you have headaches [once] a week
+@post_mods_pp_rule(frequency, 
+                   [Loc, From, To, With, Duration, y, Date, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, y, Date, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% date PP mod - TravelDeals rule
+% e.g. flights [in june]
+@post_mods_pp_rule(date, 
+                   [Loc, From, To, With, Duration, Frequency, y, Time, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, y, Time, Attrib, Side, About, Cost, PassiveBy]).
+
+% time PP mod - PSA rule
+% e.g. what was the pressure [at fifteen oh three]
+@post_mods_pp_rule(time, 
+                   [Loc, From, To, With, Duration, Frequency, Date, y, Attrib, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, y, Attrib, Side, About, Cost, PassiveBy]).
+
+% attribution PP mod - PSA rule
+% e.g. what is the pressure [according to the fixed sensors]
+@post_mods_pp_rule(attribution, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, y, Side, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, y, Side, About, Cost, PassiveBy]).
+
+% side PP mod - IM2/Archivus rule
+% e.g. who spoke [in favour of the proposal]
+@post_mods_pp_rule(side, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, y, About, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, y, About, Cost, PassiveBy]).
+
+% about PP mod - TravelDeals rule
+% e.g. tell me [about trips to barbados]
+@post_mods_pp_rule(about, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, y, Cost, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, y, Cost, PassiveBy]).
+
+% cost PP mod - TravelDeals rule
+% e.g. give me trips [under five hundred pounds]
+@post_mods_pp_rule(cost, 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, y, PassiveBy], 
+                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, y, PassiveBy]).
+
+% Following now treated using special rule for passive by-PP, which passes the sortal type of the NP
+% passive by PP mod - Med rule
+% e.g. are your headaches relieved [by stress removal]
+%@post_mods_pp_rule(passive_by, 
+%                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, y], 
+%                   [Loc, From, To, With, Duration, Frequency, Date, Time, Attrib, Side, About, Cost, y]).
+
+%----------------------------------------------------------------------
+
+% PP rules
+
+% pp_p_np
+% Basic PP - PSA rule
+% e.g. at flight deck
+pp:[sem= @pp_p_np_sem(P, NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GOut, conj=n] -->
+	p:[sem=P, postposition=n, pre_post_type=none, sem_pp_type=PPType, def=Def, obj_sem_n_type=NPType], 
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, def=Def, 
+            takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% Special version for the case of "between", which requires a plural NP - TravelDeals rule
+% e.g. flights [between june ten and july ten]
+pp:[sem= @pp_p_np_sem(P, NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GOut, conj=n] -->
+	p_with_agr:[sem=P, postposition=n, sem_pp_type=PPType, def=Def, agr=Agr, obj_sem_n_type=NPType], 
+	np:[sem=NP, agr=Agr, nform=normal, wh=Wh, sem_n_type=NPType, def=Def, 
+            takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% Special version for the case of "of", where we want the sortal information on the NP - Med rule
+% e.g. the severity [of the headaches]
+of_pp:[sem= @of_pp_sem(NP), wh=Wh, sem_n_type=NPType] -->
+	@of_prep,
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, 
+            takes_post_mods=n, @takes_no_pps, gapsin=null, gapsout=null, case=nonsubj].
+
+% Special version for the case of passive "by", where we want the sortal information on the NP - Med rule
+% e.g. are your headaches caused [by stress]
+passive_by_pp:[sem= @pp_p_np_sem( @passive_by_prep_sem, NP), wh=Wh, sem_n_type=NPType, gapsin=GIn, gapsout=GOut] -->
+	@passive_by_prep,
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, 
+            takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj].
+
+% pp_np_p
+% PP with postposition - PSA rule
+% e.g. the pressure [five minutes ago]
+pp:[sem= @pp_p_np_sem(P, NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GOut, conj=n] -->
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, %sem_n_type=timeunit,
+            def=Def, takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj], 
+	p:[sem=P, postposition=y, pre_post_type=none, sem_pp_type=PPType, obj_sem_n_type=NPType, def=Def].
+
+% pp_np_p
+% PP with preposition and postposition - Swedish MedSLT rule
+% e.g. gjorde den ont [för en vecka sen]
+pp:[sem= @pp_p_np_sem(P, NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GOut, conj=n] -->
+	p:[sem=P, postposition=n, pre_post_type=PrePostType, sem_pp_type=PPType, obj_sem_n_type=NPType, def=Def],
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=NPType, %sem_n_type=timeunit,
+            def=Def, takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GOut, case=nonsubj], 
+	p:[postposition=y, pre_post_type=PrePostType].
+
+% pp_np_Temporal - PSA rule
+% e.g. the pressure [now]
+pp:[sem= @pp_np_date_sem(NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=date, gap=n, gapsin=GIn, gapsout=GIn, conj=Conj] -->
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=date, takes_post_mods=n, @takes_no_pps, 
+            gapsin=GIn, gapsout=GIn, pronoun=n, conj=Conj].
+
+% date NP as PP - TravelDeals rule
+% e.g. flights [this week]
+pp:[sem= @pp_np_duration_sem(NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=duration, gap=n, gapsin=GIn, gapsout=GIn, conj=Conj] -->
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=timeunit, takes_post_mods=n, @takes_no_pps, 
+            gapsin=GIn, gapsout=GIn, pronoun=n, conj=Conj].
+
+% time NP as PP - Med rule
+% e.g. have a headache [this morning/three times]
+pp:[sem= @pp_np_duration_sem(NP), wh=y\/n, wh=Wh, sc=n, sem_pp_type=time, gap=n, gapsin=GIn, gapsout=GIn, conj=Conj] -->
+	np:[sem=NP, nform=normal, wh=Wh, sem_n_type=time, takes_post_mods=n, @takes_no_pps, 
+            gapsin=GIn, gapsout=GIn, pronoun=n, conj=Conj].
+
+% frequency NP as PP - Med rule
+% e.g. have headaches [more than three times]
+pp:[sem= @pp_np_frequency_sem(NP), wh=n, sc=n, sem_pp_type=frequency, gap=n, gapsin=GIn, gapsout=GIn, conj=Conj] -->
+	np:[sem=NP, nform=normal, wh=n, sem_n_type=frequency, takes_post_mods=n, @takes_no_pps, 
+            gapsin=GIn, gapsout=GIn, pronoun=n, conj=Conj].
+
+% pp_sc_s
+% Basic subordinating conjunction rule - Med rule
+% e.g. when you sleep
+pp:[sem= @pp_sc_s_sem(SC, S), wh=n, sc=y, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GIn, conj=n] -->
+	sc:[sem=SC, sem_pp_type=PPType, sc_s_type=s], 
+	s:[sem=S, stype=dcl, operator_wrapped=y, gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+
+% pp_sc_vp
+% Subordinating conjunction with active VP - Med rule
+% e.g. when sitting down
+pp:[sem= @pp_sc_vp_sem(SC, VP), wh=n, sc=y, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GIn, conj=n] -->
+	sc:[sem=SC, sem_pp_type=PPType, sc_s_type=vp], 
+	vp:[sem=VP, inv=n, subj_nform=normal, vform=ing, takes_post_mods=n, 
+	    takes_adv_type=AdvpType, gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+
+% Conjoined PPs - TravelDeals rules
+% e.g. flights [from Heathrow and from Stansted]
+
+pp:[sem= @conj_list_sem(and, Sem), wh=Wh, sc=n, sem_pp_type=PPType, gap=n, gapsin=GIn, gapsout=GIn, conj=y] -->
+	ppconj:[sem=Sem, wh=Wh, sem_pp_type=PPType].
+
+ppconj:[sem= @conjlist_item_item_sem(PP1, PP2), wh=Wh, sem_pp_type=PPType] -->
+	pp:[sem=PP1, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n],
+	conj:[], 
+	pp:[sem=PP2, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n].
+
+ppconj:[sem= @conjlist_item_conjlist_sem(PP, Conj), wh=Wh, sem_pp_type=PPType] -->
+	pp:[sem=PP, wh=Wh, sem_pp_type=PPType, gap=n, gapsin=null, gapsout=null, conj=n],
+	ppconj:[sem=Conj, wh=Wh, sem_pp_type=PPType].
+
+%----------------------------------------------------------------------
+
+% NP rules
+
+% np_d_n
+% Basic NP with non-article det - PSA rule
+% e.g. all the doors
+np:[sem= @np_d_nbar_sem(Det, N), agr=3, agr=Agr, wh=Wh, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive, n_appositive_mod_type=ApposType,
+    @takes_pps(PPs)] -->
+	d:[sem=Det, article=n, agr=Agr, wh=Wh, def=Def, det_type=DetType], 
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, takes_partitive=Partitive, n_appositive_mod_type=ApposType,
+	      @takes_pps(PPs), takes_det_type=DetType].
+
+% Basic NP with article det - PSA rule
+% e.g. the pressure
+np:[sem= @np_article_nbar_sem(Det, N), agr=3, agr=Agr, wh=Wh, nform=normal, %sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs)] -->
+	d:[sem=Det, article=y, agr=Agr, wh=Wh, def=Def, det_type=DetType], 
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType,
+	      @takes_pps(PPs), takes_det_type=DetType].
+
+% NP with possessive - Med rule
+% e.g. your headaches
+np:[sem= @np_possessive_nbar_sem(Poss, N), agr=3, agr=Agr, wh=n, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs)] -->
+	possessive:[sem=Poss, agr=Agr, sem_n_type=PossType],
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType,
+	      @takes_pps(PPs), takes_det_type=DetType].
+
+% NP formed of "you" + NBAR
+% e.g. you guys, ni grabbar
+np:[sem= @np_you_nbar_sem(Pron, N), agr=3, agr=Agr, case=Case,
+    wh=n, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs)] -->
+	you_np_intro:[sem=Pron, case=Case],
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType,
+	      @takes_pps(PPs), takes_det_type=DetType].
+
+% NP with possessive and det - Calendar
+% e.g. my next three meetings
+np:[sem= @np_possessive_d_nbar_sem(Poss, Det, N), agr=3, agr=Agr, wh=n, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, def=Def, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, n_appositive_mod_type=ApposType, takes_partitive=Partitive,
+    @takes_pps(PPs)] -->
+	possessive:[sem=Poss, sem_n_type=PossType],
+	d:[sem=Det, article=n, agr=Agr, wh=Wh, def=Def, det_type=DetType, det_type=(ordinal\/numeric)], 
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType,
+	      @takes_pps(PPs), takes_det_type=DetType].
+
+% np_n
+% Basic NP without det - PSA rule
+% e.g. pressure
+np:[sem= @np_nbar_sem(N), agr=(3/\sing), agr=Agr, wh=n, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs)] -->
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, 
+	      n_of_mod_type=OfMod, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_det_type=null].
+
+np:[sem= @np_nbar_sem(N), agr=(3/\plur), agr=Agr, wh=n, nform=normal, sem_n_type=(\(numeric)),
+    sem_n_type=Type, conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs)] -->
+	nbar:[sem=N, agr=Agr, sem_n_type=Type, 
+	      n_of_mod_type=OfMod, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, @takes_pps(PPs)].
+
+% np_pronoun
+% Pronoun as NP - PSA rule
+% close [it]
+np:[sem= @np_pronoun_sem(Pro), agr=Agr, wh=Wh, nform=normal, sem_n_type=Type, def=y, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=y, 
+    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=none, @takes_no_pps, case=Case] -->
+	pronoun:[sem=Pro, agr=Agr, wh=Wh, sem_n_type=Type, case=Case].
+
+% np_reflexive_pronoun
+% Reflexive pronoun as NP - Med rule
+% e.g. when you exert [yourself]
+np:[sem= @np_reflexive_pronoun_sem(Pro), agr=Agr, wh=n, nform=normal, sem_n_type=Type, def=y, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=y, 
+    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=none, @takes_no_pps, case=Case] -->
+	reflexive_pronoun:[sem=Pro, lexically_reflexive=n, agr=Agr, sem_n_type=Type, case=Case].
+
+% np_d (non-numeric)
+% Det as NP - Checklist rule
+% e.g. tell me [more]
+np:[sem= @np_d_sem(D), agr=Agr, agr=3, wh=Wh, nform=normal, sem_n_type= @thing_type, def=Def, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    %takes_post_mods=n,
+    n_of_mod_type=none, 
+    takes_post_mods=y, takes_partitive= @det_nps_take_partitives,
+    n_appositive_mod_type=none, @takes_no_pps] -->
+	d:[sem=D, can_be_np=y, agr=Agr, det_type=(\(numeric)), wh=Wh, def=Def].
+
+% np_d (numeric)
+% Det as NP - Checklist rule
+% e.g. three point seven
+np:[sem= @np_d_sem(D), agr=Agr, agr=3, wh=Wh, nform=normal, sem_n_type= @numeric_np_type, 
+    def=Def, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    %takes_post_mods=n,
+    n_of_mod_type=none, 
+    takes_post_mods=y, takes_partitive= @det_nps_take_partitives,
+    n_appositive_mod_type=none, @takes_no_pps] -->
+	d:[sem=D, can_be_np=y, agr=Agr, det_type=numeric, wh=n, def=Def].
+
+% Gerund as NP - Med rule
+% e.g. does [drinking red wine] give you headaches
+% In Swedish, use this rule for NPs formed using 'att' VPs
+% e.g. får du huvudvärk av [att dricka rödvin]
+np:[sem= @np_vp_gerund_sem(VP), agr=(3/\sing), wh=n, nform=normal, sem_n_type=action, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=n, n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=none, @takes_no_pps] -->
+	vp:[sem=VP, can_be_gerund=y, vform= @gerund_or_pseudo_gerund_vform,
+	    inv=n, subj_nform=normal, takes_post_mods=n, 
+	    gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+ 
+% np_name
+% Name as NP - TravelDeals rule
+% e.g. flights to [barbados]
+np:[sem= @np_name_sem(Name), agr=Agr, agr=3, wh=n, nform=normal, sem_n_type=Type, def=y, conj=n, 
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=Type, @takes_no_pps] -->
+	name:[sem=Name, agr=Agr, sem_n_type=Type].
+
+% Name + 's as possessive - DSTO/Franco rule
+% e.g. illyria 's belligerent acts
+% Only implement this simple version of the general possessive rule for now,
+% to avoid making the grammar left-recursive.
+%possessive:[sem= [[possessive, @np_name_sem(Name)]], sem_n_type=Type] -->
+%	name:[sem=Name, sem_n_type=Type],
+%	'\'s'.
+
+possessive:[sem= [[possessive, Np]], sem_n_type=Type] -->
+	np:[sem=Np, pronoun=n, takes_post_mods=n, @takes_no_pps, gapsin=GIn, gapsout=GIn],
+	'\'s'.
+
+% np_time
+% Time as NP - PSA rule
+% e.g. the pressure at [fifteen oh three]
+np:[sem= @np_time_sem(Time), agr=3/\sing, wh=n, nform=normal, sem_n_type=time, def=y,
+    conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    %takes_post_mods=n,
+    takes_post_mods=y,  %For technical reasons, so that we get a non-recursive grammar
+    n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=none, @takes_no_pps] -->
+	time:[sem=Time].
+
+% np_date
+% Date as NP - TravelDeals rule
+% e.g. flights after [june ten]
+np:[sem= @np_date_sem(Date), agr=3/\sing, wh=n, nform=normal, sem_n_type=date, def=y,
+    conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    %takes_post_mods=n,
+    takes_post_mods=y,  %For technical reasons, so that we get a non-recursive grammar
+    n_of_mod_type=none, takes_partitive=n, 
+    n_appositive_mod_type=none, @takes_no_pps] -->
+	date:[sem=Date].
+
+% Hours and minutes expression as NP - Checklist rule
+% e.g. set alarm for [two minutes thirty seconds]
+np:[sem= @np_d_nbar_sem( @det_number_sem( @number_minutes_seconds_sem(Minutes, Seconds)),
+			 @nbar_n_sem( @noun_sem(timeunit, second))),
+    agr=3/\sing, wh=n, nform=normal, sem_n_type=timeunit, def=y,
+    conj=n, gapsin=GIn, gapsout=GIn, pronoun=n, 
+    %takes_post_mods=n,
+    takes_post_mods=y,  %For technical reasons, so that we get a non-recursive grammar
+    n_of_mod_type=none, n_appositive_mod_type=none, takes_partitive=n,
+    @takes_no_pps] -->
+	number:[sem=Minutes, num_type=(\(oh_digit\/a\/decimal)), spelled_out_number=n],
+	( minute ; minutes ),
+	?and,
+	number:[sem=Seconds, num_type=(\(oh_digit\/a\/decimal)), time_type=second, spelled_out_number=n], 
+	( second ; seconds ).
+
+%Noun-noun modifiers 
+
+% Postmodifying number - PSA rule
+% np_n_n_postmod
+% e.g. scenario two
+% Now redone as nbar -> nbar nbar rule
+
+%np:[sem= @np_nbar_nbar_postmod_sem(N1, N2), nform=normal, sem_n_type=Type, gapsin=GIn, gapsout=GIn, pronoun=n, 
+%    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+%    n_appositive_mod_type=ApposType, @takes_pps(PPs), agr=Agr] -->
+%	nbar:[sem=N1, sem_n_type=Type, n_post_mod_type=ModType, n_appositive_mod_type=ApposType, @takes_pps(PPs), agr=Agr], 
+%	nbar:[sem=N2, sem_n_type=ModType, agr=Agr].
+
+% Postmodifying name - MobileAgents rule
+% np_n_name_postmod
+% e.g. location okra
+np:[sem= @np_nbar_name_postmod_sem(N1, N2), nform=normal, sem_n_type=Type, n_appositive_mod_type=ApposType,
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=y, n_of_mod_type=none, takes_partitive=n,
+    @takes_pps(PPs), agr=(3/\sing)] -->
+	nbar:[sem=N1, sem_n_type=Type, n_appositive_mod_type=ApposType, n_post_mod_type=ModType,
+	      @takes_pps(PPs), agr=(3/\sing)], 
+	name:[sem=N2, sem_n_type=ModType].
+
+% Nominal PP modifiers - TravelDeals rule
+% e.g. flights [to barbados leaving from Stansted]
+np:[sem= @np_np_postmods_sem(NP, Mods), agr=Agr, wh=Wh, nform=normal, sem_n_type=Type, def=Def, conj=n,
+    gapsin=GIn, gapsout=GOut, pronoun=Pronoun,
+    takes_post_mods=n, n_of_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=none, @takes_no_pps, case=Case] -->
+	np:[sem=NP, agr=Agr, wh=Wh, nform=normal, sem_n_type=Type, def=Def, conj=n,
+	    gapsin=GIn, gapsout=GOut, pronoun=Pronoun, 
+	    takes_post_mods=y, n_of_mod_type=OfMod, takes_partitive=Partitive, 
+	    n_appositive_mod_type=ApposType,
+	    @takes_pps(PPs), case=Case], 
+	post_mods:[sem=Mods, 
+		   post_mod_type=nominal, post_mods_sem_n_type=Type,
+		   takes_gap_mod=n, n_of_mod_type=OfMod, takes_partitive=Partitive,
+		   n_appositive_mod_type=ApposType,
+		   @takes_pps(PPs), takes_passive_by_pp=none,
+		   takes_adv_type=none, relagr=Agr,
+		   gapsin=null, gapsout=null].
+
+%----------------------------------------------------------------------
+
+% Measure phrase (should be specialised NP?) - Checklist rule
+% e.g. go back [three steps]
+measure_phrase:[sem= @measure_phrase_det_unit(Det, Unit), sem_n_type=UnitType] -->
+	d:[sem=Det, agr=Agr, wh=n, det_type=numeric, prenumber=n],
+	n:[sem=Unit, sem_n_type=UnitType, agr=Agr].
+
+%----------------------------------------------------------------------
+
+% NBAR rules
+
+% Prenominal adj modifier - TravelDeals rule
+% e.g. [cheap flights]
+nbar:[sem= @nbar_adj_nbar_sem(Adj, N), agr=Agr, sem_n_type=Type, adjpremodified=y,
+      @takes_pps(PPs), 
+      n_pre_mod_type=none, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType, conj=Conj] -->
+	adjp:[sem=Adj,
+	      agr=Agr, def=Def,
+	      gap=n, adjpos=prenom, subj_sem_n_type=Type, gapsin=null, gapsout=null],
+	nbar:[sem=N,
+	      agr=Agr, def=Def,
+	      sem_n_type=Type, adjpremodified=n,
+	      @takes_pps(PPs), 
+	      n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, 
+	      takes_det_type=DetType, conj=Conj].
+
+% N as NBAR - TravelDeals rule
+% e.g. Stansted [flights]
+nbar:[sem= @nbar_n_sem(N), agr=Agr, def=Def,
+      sem_n_type=Type, adjpremodified=n,
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType, conj=n] -->
+	n:[sem=N, agr=Agr, def=Def,
+	   sem_n_type=Type, 
+	   @takes_pps(PPs), 
+	   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	   n_appositive_mod_type=ApposType, 
+	   takes_det_type=DetType].
+
+% kind of N as NBAR - MedSLT rule
+% e.g. what [kind of pain]
+nbar:[sem= @nbar_kind_of_n_sem(N), agr=Agr, sem_n_type=Type, adjpremodified=n,
+      @takes_pps(PPs), 
+      n_pre_mod_type=none, n_post_mod_type=none, n_of_mod_type=none, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=(quant\/def\/indef), conj=n] -->
+	@kind_of(Agr, Agr1),
+	n:[sem=N, agr=Agr1, sem_n_type=Type, 
+	   @takes_pps(PPs), 
+	   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	   n_appositive_mod_type=ApposType, 
+	   takes_det_type=DetType].
+
+% Compound formed of N followed by postmodifying number - PSA/English course rule
+% Note that here the first NBAR is the head.
+% np_n_n_postmod
+% e.g. scenario two, a size thirty eight 
+nbar:[sem= @nbar_nbar_nbar_postmod_sem(N1, N2), sem_n_type=Type, adjpremodified=n,
+    n_of_mod_type=none, n_post_mod_type=none, takes_partitive=n,
+    n_appositive_mod_type=ApposType, @takes_pps(PPs), takes_det_type=DetType, agr=Agr] -->
+	nbar:[sem=N1, sem_n_type=Type, n_post_mod_type=ModType, n_appositive_mod_type=ApposType, @takes_pps(PPs), agr=Agr, takes_det_type=DetType, agr=Agr], 
+	nbar:[sem=N2, sem_n_type=ModType, sem_n_type=numeric].
+
+% Compound formed of N followed by NBAR - House rule
+% e.g. the [kitchen light]
+nbar:[sem= @nbar_n_nbar_sem(N1, N2), agr=Agr, sem_n_type=Type, adjpremodified=n,
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType, conj=Conj] -->
+	n:[sem=N1, sem_n_type=PreModType],
+	nbar:[sem=N2, agr=Agr, sem_n_type=Type, adjpremodified=n,
+	      @takes_pps(PPs), 
+	      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, 
+	      takes_det_type=DetType, conj=Conj].
+
+% Compound formed of NUMBER, N and NBAR - CALL-SLT rule
+% e.g. the [forty euro menu], a [ten foot wall]
+nbar:[sem= @nbar_number_n_nbar_sem(Number, N1, N2), agr=Agr, sem_n_type=Type, adjpremodified=n,
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType, conj=Conj] -->
+	number:[sem=Number, num_type=(\(oh_digit\/a)), time_type=none, spelled_out_number=n],
+	n:[sem=N1, sem_n_type=unit, agr=sing],
+	nbar:[sem=N2, agr=Agr, sem_n_type=Type, adjpremodified=n,
+	      @takes_pps(PPs), 
+	      n_pre_mod_type=unit, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, 
+	      takes_det_type=DetType, conj=Conj].
+
+% Compound formed of name followed by NBAR - TravelDeals rule
+% e.g. [barbados holidays]
+nbar:[sem= @nbar_name_nbar_sem(N1, N2), agr=Agr, sem_n_type=Type, adjpremodified=n,
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+      n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType, conj=Conj] -->
+	name:[sem=N1, can_be_premod=y, sem_n_type=PreModType],
+	nbar:[sem=N2, agr=Agr, sem_n_type=Type, adjpremodified=n,
+	      @takes_pps(PPs), 
+	      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfMod, n_poss_type=PossType, takes_partitive=Partitive,
+	      n_appositive_mod_type=ApposType, 
+	      takes_det_type=DetType, conj=Conj].
+
+% ADJP as NBAR - TravelDeals rule
+% e.g. I want [three star]
+nbar:[sem= @nbar_adjp_sem(Adj),
+      agr=Agr,
+      sem_n_type=SubjType, @takes_pps(PPs), adjpremodified=y,
+      n_pre_mod_type=none, n_post_mod_type=none, n_of_mod_type=none, takes_partitive=n, takes_partitive=n,
+      n_appositive_mod_type=none, conj=n] -->
+	adjp:[sem=Adj,
+	      agr=Agr,
+	      can_be_nbar=y, wh=n, conj=n, adjpos=prenom, subj_sem_n_type=SubjType, @takes_pps(PPs), 
+	      gap=n, gapsin=null, gapsout=null].
+
+% nbar_number - PSA rule
+% e.g. scenario [two]
+nbar:[sem= @nbar_number_sem(N), sem_n_type=numeric, agr=(3/\sing), adjpremodified=n,
+      n_pre_mod_type=none, n_post_mod_type=none, n_of_mod_type=none, n_poss_type=none, takes_partitive=n,
+      n_appositive_mod_type=none, conj=n] -->
+	number:[sem=N, num_type=(\(a)), time_type=none, agr=3].
+
+% nbar_number_and_number - Checklist rule
+% e.g. steps [three and four]
+nbar:[sem= @nbar_number_and_number_sem(N1, N2), sem_n_type=numeric, agr=(3/\plur),
+      n_poss_type=none, adjpremodified=n, conj=n] -->
+	number:[sem=N1, num_type=(\(a)), time_type=none, agr=3],
+	conj:[],
+	number:[sem=N2, num_type=(\(a)), time_type=none, agr=3].
+
+% nbar_number_through_number - Checklist rule
+% e.g. steps [three through five point two]
+nbar:[sem= @nbar_number_through_number_sem(N1, N2), sem_n_type=numeric, agr=(3/\plur),
+      n_poss_type=none, adjpremodified=n, conj=n] -->
+	number:[sem=N1, num_type=(\(a)), time_type=none, agr=3],
+	through,
+	number:[sem=N2, num_type=(\(a)), time_type=none, agr=3].
+
+% Conjunction of Ns (part 1) - House rule
+% It is not clear what to do about the sortal and PP features. This perhaps exposes a weakness in the general approach.
+% The rule currently implements a minimal solution, which makes the features on the conjoined NBAR the same as those on each conjunct.
+n:[sem= @n_conjlist_sem(and, Sem), agr=plur, sem_n_type=Type, 
+   @takes_pps(PPs), 
+   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+   n_appositive_mod_type=ApposType, 
+   takes_det_type=DetType, conj=y] -->
+	nconj:[sem=Sem, sem_n_type=Type, 
+	       @takes_pps(PPs), 
+	       n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+	       n_appositive_mod_type=ApposType, 
+	       takes_det_type=DetType].	
+
+% Conjunction of Ns (part 2) - House rule
+nconj:[sem= @conjlist_item_item_sem(N1, N2), sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+       n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType] -->
+	n:[sem=N1, conj=n, sem_n_type=Type, @takes_pps(PPs), takes_det_type=DetType,
+	   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+	   n_appositive_mod_type=ApposType],
+	conj:[],
+	n:[sem=N2, conj=n, sem_n_type=Type, @takes_pps(PPs), takes_det_type=DetType,
+	   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+	   n_appositive_mod_type=ApposType].
+
+% Conjunction of Ns (part 3) - House rule
+nconj:[sem= @conjlist_item_conjlist_sem(N1, N2), sem_n_type=Type, 
+      @takes_pps(PPs), 
+      n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+       n_appositive_mod_type=ApposType, 
+      takes_det_type=DetType] -->
+	n:[sem=N1, conj=n, sem_n_type=Type, @takes_pps(PPs), takes_det_type=DetType,
+	   n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+	   n_appositive_mod_type=ApposType],
+	nconj:[sem=N2, sem_n_type=Type, 
+	       @takes_pps(PPs), 
+	       n_pre_mod_type=PreModType, n_post_mod_type=PostModType, n_of_mod_type=OfModType, takes_partitive=Partitive,
+	       n_appositive_mod_type=ApposType, 
+	       takes_det_type=DetType].
+
+%----------------------------------------------------------------------
+
+% ADJP rules
+
+% ADJ as ADJP - Med rule
+adjp:[sem=Adj,
+      agr=Agr, def=Def,
+      can_be_nbar=CanBeNbar, wh=n, conj=n, list=n, adjpos=AdjPos, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	adj:[sem=Adj, adj_subcat=a,
+	     agr=Agr, def=Def,
+	     can_be_nbar=CanBeNbar, adjpos=AdjPos, adjtype=AdjType,
+	     subj_sem_n_type=SubjType, pp_sem_pp_type=none, @takes_pps(PPs)].
+
+% ADJP -> ADVP ADJ - Med rule
+adjp:[sem= @adjp_advp_adj_sem(Adv, Adj),
+      agr=Agr, def=Def,
+      can_be_nbar=CanBeNbar, wh=n, conj=n, list=n,
+      adjpos=AdjPos, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	adv:[sem=Adv, advpos=preadj, adv_type=degree],
+	adj:[sem=Adj, adj_subcat=a,
+	     agr=Agr, def=Def,
+	     can_be_nbar=CanBeNbar, adjpos=AdjPos, adjtype=AdjType,
+	     subj_sem_n_type=SubjType, pp_sem_pp_type=none, @takes_pps(PPs)].
+
+% ADJP -> ADJ PP - Med rule
+adjp:[sem= @adj_pp_sem(Adj, PP),
+      agr=Agr, def=Def,
+      can_be_nbar=CanBeNbar, wh=n, conj=n, list=n, adjpos=AdjPos, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_no_pps, 
+      gap=n, gapsin=GIn, gapsout=GOut] -->
+	adj:[sem=Adj,
+	     agr=Agr, def=Def,
+	     can_be_nbar=CanBeNbar, adjpos=AdjPos, adjtype=AdjType,
+	     subj_sem_n_type=SubjType, pp_sem_pp_type=PPType, @takes_no_pps],
+	pp:[sem=PP, sem_pp_type=PPType, wh=n, sc=n, gapsin=GIn, gapsout=GOut].
+
+% ADJP -> ADJ NP - Med rule
+adjp:[sem= @adj_np_sem(Adj, NP),
+      agr=Agr, def=Def,
+      can_be_nbar=CanBeNbar, wh=n, conj=n, list=n, adjpos=AdjPos, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_no_pps, 
+      gap=n, gapsin=GIn, gapsout=GOut] -->
+	adj:[sem=Adj, adj_subcat=anx1,
+	     agr=Agr, def=Def,
+	     can_be_nbar=CanBeNbar, adjpos=AdjPos, adjtype=AdjType,
+	     subj_sem_n_type=SubjType, pp_sem_pp_type=PPType, @takes_no_pps],
+	np:[sem=NP, wh=n, nform=normal, @takes_no_pps, gapsin=GIn, gapsout=GOut].
+
+% wh+ ADJP - Med rule
+% e.g. [how severe] are the headaches
+adjp:[sem= @adjp_how_adj_sem(Adj),
+      agr=Agr, def=n,
+      can_be_nbar=n, wh=y, conj=n, list=n,
+      adjpos=pred, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	@how_adj_premod,
+	adj:[sem=Adj,
+	     agr=Agr, def=n,
+	     adjpos=pred, adjtype=AdjType, subj_sem_n_type=SubjType,
+	     pp_sem_pp_type=none,@takes_pps(PPs)].
+
+% How are the headaches? How do you feel?
+adjp:[sem= @adjp_how_sem,
+      def=n,
+      can_be_nbar=n, wh=y, conj=n, list=n,
+      adjpos=pred, @takes_no_pps, 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	@how_adj_premod.
+
+% Conjoined ADJP - TravelDeals rule
+% I want [three star or four star] accommodation
+adjp:[sem= @conj_list_sem(adj_and, [Adj1, Adj2]),
+      agr=Agr, def=Def,
+      can_be_nbar=n, wh=n, conj=y, list=n, 
+      adjpos=AdjPos, adjtype=undefined, subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	adj:[sem=Adj1,
+	     agr=Agr, def=Def,
+	     adjpos=AdjPos, subj_sem_n_type=SubjType, pp_sem_pp_type=none, @takes_pps(PPs)],
+	conj:[],
+	adj:[sem=Adj2,
+	     agr=Agr, def=Def,
+	     adjpos=AdjPos, subj_sem_n_type=SubjType, pp_sem_pp_type=none, @takes_pps(PPs)].
+
+% A prenominal list+ ADJP can be a non-trivial ADJP_LIST
+adjp:[sem=Adj,
+      agr=Agr, def=Def,
+      can_be_nbar=CanBeNbar, wh=n, conj=n, list=y, adjpos=prenom, adjtype=AdjType,
+      subj_sem_n_type=SubjType, @takes_pps(PPs), 
+      gap=n, gapsin=GIn, gapsout=GIn] -->
+	adjp_list:[sem=Adj,
+		   agr=Agr, def=Def,
+		   can_be_nbar=CanBeNbar, adjtype=AdjType, list=y, 
+		   subj_sem_n_type=SubjType, @takes_pps(PPs)].
+
+% A list- ADJP_LIST is a list- ADJP
+adjp_list:[sem=Adj,
+	   agr=Agr, def=Def,
+	   can_be_nbar=CanBeNbar, adjtype=AdjType, list=n, 
+	   subj_sem_n_type=SubjType, @takes_pps(PPs)] -->
+	adjp:[sem=Adj,
+	      agr=Agr, def=Def,
+	      can_be_nbar=CanBeNbar, wh=n, conj=n, list=n, adjpos=prenom, adjtype=AdjType,
+	      subj_sem_n_type=SubjType, @takes_pps(PPs), 
+	      gap=n, gapsin=GIn, gapsout=GIn].
+
+macro(adjp_list_rule(FirstAdjType, RestAdjTypes),
+(adjp_list:[sem= @adjp_list_sem(Adj1, Adj2),
+	    agr=Agr, def=Def,
+	    can_be_nbar=CanBeNbar, adjtype=FirstAdjType, list=y, 
+	    subj_sem_n_type=SubjType, @takes_pps(PPs)] -->
+ adjp:[sem=Adj1,
+       agr=Agr, def=Def,
+       can_be_nbar=CanBeNbar, wh=n, conj=n, list=n, adjpos=prenom, adjtype=FirstAdjType,
+       subj_sem_n_type=SubjType, 
+       gap=n, gapsin=GIn, gapsout=GIn],
+ adjp_list:[sem=Adj2,
+	    agr=Agr, def=Def,
+	    can_be_nbar=CanBeNbar, adjtype=RestAdjTypes, list=_, 
+	    subj_sem_n_type=SubjType, @takes_pps(PPs)]
+)).
+
+% For downward-compatibility
+@adjp_list_rule(undefined, undefined\/judgement_general\/judgement_specific\/size\/age\/shape\/colour\/nationality\/material\/purpose).
+
+@adjp_list_rule(judgement_general, judgement_general\/judgement_specific\/size\/age\/shape\/colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(judgement_specific, judgement_specific\/size\/age\/shape\/colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(size, size\/age\/shape\/colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(age, age\/shape\/colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(shape, shape\/colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(colour, colour\/nationality\/material\/purpose\/undefined).
+@adjp_list_rule(nationality, nationality\/material\/purpose\/undefined).
+@adjp_list_rule(material, material\/purpose\/undefined).
+@adjp_list_rule(purpose, purpose\/undefined).
+
+%----------------------------------------------------------------------
+
+% ADVP rules
+
+% ADV as ADVP - Med rule
+advp:[sem=Adv, wh=n, conj=n, advpos=AdvPos, adv_type=AdvType,
+      gap=n, gapsin=GIn, gapsout=GIn, main_clause=MainClause] -->
+	adv:[sem=Adv, advpos=AdvPos, adv_type=AdvType, main_clause=MainClause].
+
+% wh+ ADVP - Med rule
+% e.g. [how often] do you have headaches
+advp:[sem= @advp_how_adv_sem(Adv), wh=y, conj=n, advpos=fronted, adv_type=AdvType, 
+      gap=n, gapsin=null, gapsout=null, main_clause=MainClause] -->
+	@how_wh_degree_mod,
+	adv:[sem=Adv, advpos=fronted, adv_type=AdvType, main_clause=MainClause].
+
+%----------------------------------------------------------------------
+
+% Conjunction rules
+
+% Conjoined NPs - PSA rule
+% Currently, conjoined NPs don't take post-modifiers
+% e.g. go to [flight deck and mid deck]
+
+% np_npconj
+np:[sem= @conj_list_sem(np_and, Sem), agr=3/\plur, wh=n, nform=normal, sem_n_type=Type, conj=y, def=Def,
+    gapsin=GIn, gapsout=GIn, pronoun=n, 
+    takes_post_mods=n, n_of_mod_type=none, takes_partitive=n, n_appositive_mod_type=none, @takes_no_pps, case=Case] -->
+	npconj:[sem=Sem, sem_n_type=Type, def=Def, case=Case].
+
+% npconj_np_conj_np
+npconj:[sem= @conjlist_item_item_sem(NP1, NP2), sem_n_type=Type, def=Def,case=Case] -->
+	np:[sem=NP1, wh=n, nform=normal, sem_n_type=Type, def=Def, conj=n, takes_post_mods=n,
+	    @takes_no_pps, gapsin=GIn, gapsout=GIn, case=Case], 
+	conj:[], 
+	np:[sem=NP2, wh=n, nform=normal, sem_n_type=Type, conj=n, takes_post_mods=n,
+	    @takes_no_pps, gapsin=GIn, gapsout=GIn, case=Case].
+
+% npconj_np_npconj
+npconj:[sem= @conjlist_item_conjlist_sem(NP, Conj), sem_n_type=Type, def=Def, case=Case] -->
+	np:[sem=NP, wh=n, nform=normal, sem_n_type=Type, def=Def, conj=n, takes_post_mods=n,
+	    @takes_no_pps, gapsin=GIn, gapsout=GIn, case=Case], 
+	npconj:[sem=Conj, sem_n_type=Type, case=Case].
+
+%----------------------------------------------------------------------
+
+% Gap rules
+
+% Simplify gaps to allow only one gap per clause - this to help compilation to CFG form
+
+% np_Gap - PSA rule
+% e.g. what do the fixed sensors say the pressure is []?
+np:[sem= @np_gap_sem, wh=n, nform=normal, sem_n_type=Type, conj=n, takes_post_mods=y,
+    n_of_mod_type=none, takes_partitive=n, n_appositive_mod_type=none, @takes_all_pps, pronoun=n, 
+    gapsin=np_gap, gapsout=null] --> [].
+
+% pp_Gap - PSA rule
+% e.g. where are you []?
+pp:[sem= @pp_gap_sem, wh=n, sc=n, gap=y, sem_pp_type=Type, gapsin=pp_gap, gapsout=null] --> [].
+
+% adjp_Gap - Med rule
+% e.g. how severe are the headaches []?
+adjp:[sem= @pp_gap_sem,
+      can_be_nbar=n, wh=n, gap=y, adjpos=pred, subj_sem_n_type=Type, gapsin=adjp_gap, gapsout=null] --> [].
+
+% advp_Gap - Med rule
+% e.g. how often do you have headaches []?
+advp:[sem= @advp_gap_sem, wh=n, gap=y, advpos=postvp, gapsin=advp_gap, gapsout=null] --> [].
+
+%----------------------------------------------------------------------
+
+% rel_s
+% Basic relative clause - PSA rule
+% e.g. the pressure [that you measured]
+rel:[sem= @rel_s_sem(Sem), sem_n_type=SemType, relagr=Agr] -->
+	s:[sem=Sem, wh=rel, relagr=Agr, vform=finite, inv=n, operator_wrapped=n, rel_sem_n_type=SemType,
+	   gapsin=null, gapsout=null, elliptical_v=n, main_clause=n].
+
+% Relative clause without relative pronoun - DSTO/Franco rule
+% e.g. the information [you have]
+%rel:[sem= @rel_s_sem( @fronting_sem( @rel_pron_sem, S)), sem_n_type=SemType] -->
+%	s:[sem=S, wh=n, vform=finite, inv=n, whmoved=n, operator_wrapped=n, rel_sem_n_type=SemType,
+%	   gapsin=np_gap, gapsout=null, elliptical_v=n].
+rel:[sem= @rel_s_sem(S)] -->
+	s:[sem=S, wh=n, vform=finite, inv=n, whmoved=n, operator_wrapped=n,
+	   gapsin=np_gap, gapsout=null, elliptical_v=n, main_clause=n].
+
+%----------------------------------------------------------------------
+
+% Time rules
+
+% oh five hundred, fifteen hundred, eleven hundred, twenty four hundred etc 
+
+% time_number_hundred - PSA rule
+% e.g. fifteen hundred
+time:[sem= @time_number_hundred_sem(H)] -->
+	number:[sem=H, num_type=(oh_digit\/ten\/teen\/'20_to_99'), time_type=hour, spelled_out_number=n], 
+	hundred,
+	?hours.
+
+% time_number_timesuffix - Calendar rule
+% e.g. ten a m, six p m, five o'clock
+time:[sem= @time_number_timesuffix_sem(H, Timesuffix)] -->
+	number:[sem=H, num_type=(digit\/ten\/teen), time_type=hour_up_to_twelve, spelled_out_number=n], 	
+	timesuffix:[sem=Timesuffix].
+
+time:[sem= @time_number_timesuffix_sem(H, Timeprefix)] -->
+	timeprefix:[sem=Timeprefix],
+	number:[sem=H, num_type=(digit\/ten\/teen), time_type=hour, spelled_out_number=n].
+
+% Main time rule - PSA rule
+% e.g. oh five fifty, oh nine fifteen, five fifty, nine fifteen,
+% fifteen fifty, fourteen thirteen, fifteen oh four, twenty two oh five,
+% oh oh thirty, zero zero fifteen 
+
+% time_number_number
+time:[sem= @time_hours_minutes_sem(H, M)] -->
+	number:[sem=H, time_type=hour, spelled_out_number=n],
+	@hour_minute_separator_oh_digit,
+	minute:[sem=M, minute_type=military, num_type=oh_digit].
+
+time:[sem= @time_hours_minutes_sem(H, M)] -->
+	number:[sem=H, time_type=hour, spelled_out_number=n],
+	@hour_minute_separator_not_oh_digit,
+	minute:[sem=M, minute_type=military, num_type=(\(oh_digit))].
+
+time:[sem= @time_hours_minutes_timesuffix_sem(H, M, Timeprefix)] -->
+	timeprefix:[sem=Timeprefix],
+	number:[sem=H, time_type=hour, spelled_out_number=n],
+	@hour_minute_separator_oh_digit,
+	minute:[sem=M, minute_type=military, num_type=oh_digit].
+
+time:[sem= @time_hours_minutes_timesuffix_sem(H, M, Timeprefix)] -->
+	timeprefix:[sem=Timeprefix],
+	number:[sem=H, time_type=hour, spelled_out_number=n],
+	@hour_minute_separator_not_oh_digit,
+	minute:[sem=M, minute_type=military, num_type=(\(oh_digit))].
+
+% Times of form X (minutes) past Y - CALL-SLT rule
+% e.g. ten past two, fourteen minutes past eight, quarter past ten
+
+time:[sem= @time_hours_minutes_sem(H, M)] -->
+	minute:[sem=M, minute_type=to_or_past],
+	@past_hour,
+	number:[sem=H, time_type=hour_up_to_twelve, spelled_out_number=n].
+
+% "half past" is a special case: you can't say "half to"
+time:[sem= @time_hours_minutes_sem(H, 30)] -->
+	half,
+	past,
+	number:[sem=H, time_type=hour_up_to_twelve, spelled_out_number=n].
+
+% "halv X" (Swedish) is another special case
+time:[sem= @time_hours_minutes_to_sem(H, 30)] -->
+	halv,
+	number:[sem=H, time_type=hour_up_to_twelve, spelled_out_number=n].
+
+% Times of form X (minutes) to Y - CALL-SLT rule
+% e.g. twenty to three, six minutes to nine, a quarter to five
+
+time:[sem= @time_hours_minutes_to_sem(H, M)] -->
+	minute:[sem=M, minute_type=to_or_past],
+	@to_hour,
+	number:[sem=H, time_type=hour_up_to_twelve, spelled_out_number=n].
+
+minute:[sem=M, minute_type=military, num_type=NumType] -->
+	number:[sem=M, num_type=(\(digit)), num_type=NumType,
+		time_type=minute, spelled_out_number=n].
+
+%----------------------------------------------------------------------
+
+% Month rules - all TravelDeals
+
+% "june"
+
+date:[sem= @date_month_sem(Month)] -->
+	month:[sem=Month].
+
+% "two thousand and seven"
+
+date:[sem= @date_year_sem(Year)] -->
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+% "june two thousand and seven"
+
+date:[sem= @date_month_year_sem(Month, Year)] -->
+	month:[sem=Month],
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+% "first june"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+	ordinal:[sem=Day, time_type=dayofmonth],
+	month:[sem=Month].
+
+% "first june two thousand and seven"
+
+date:[sem= @date_day_month_year_sem(Day, Month, Year)] -->
+	ordinal:[sem=Day, time_type=dayofmonth],
+	month:[sem=Month],
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+% "the first of june"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+	the,
+	ordinal:[sem=Day, time_type=dayofmonth],
+	?of,
+	month:[sem=Month].
+
+% "the first of june two thousand and seven"
+
+date:[sem= @date_day_month_year_sem(Day, Month, Year)] -->
+	the,
+	ordinal:[sem=Day, time_type=dayofmonth],
+	?of,
+	month:[sem=Month],
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+% "june first"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+	month:[sem=Month],
+	?the,
+	ordinal:[sem=Day, time_type=dayofmonth].
+
+% "june first two thousand and seven"
+
+date:[sem= @date_day_month_year_sem(Day, Month, Year)] -->
+	month:[sem=Month],
+	?the,
+	ordinal:[sem=Day, time_type=dayofmonth],
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+% "june one"
+
+date:[sem= @date_day_month_sem(Day, Month)] -->
+	month:[sem=Month],
+	number:[sem=Day, time_type=dayofmonth, spelled_out_number=n].
+
+% "june one two thousand and seven"
+
+date:[sem= @date_day_month_year_sem(Day, Month, Year)] -->
+	month:[sem=Month],
+	number:[sem=Day, time_type=dayofmonth, spelled_out_number=n],
+	number:[sem=Year, time_type=year, spelled_out_number=n].
+
+%----------------------------------------------------------------------
+
+% DET rules
+
+% number as D - PSA rule
+% d_number 
+% e.g. when did the pressure reach [fifteen] p s i
+d:[sem= @det_number_sem(N), article=n, agr=Agr, wh=n, det_type=numeric, prenumber=n, can_be_np=y] -->
+	number:[sem=N, num_type=(\(oh_digit\/a\/size)), agr=Agr].
+
+% Conjoined number as D - TravelDeals rule
+% e.g. [seven or fourteen] nights
+d:[sem= @det_number_conj_number_sem(N1, N2), article=n, agr=Agr2, wh=n, det_type=numeric, prenumber=n, can_be_np=y] -->
+	number:[sem=N1, num_type=(\(oh_digit\/a)), agr=Agr1],
+	conj:[],
+	number:[sem=N2, num_type=(\(oh_digit\/a)), agr=Agr2].
+
+% D of form "?from <Number> to <Number>" - Med rule
+% e.g. [?from two to ten] minutes
+d:[sem= @det_number_to_number_sem(N1, N2), article=n, agr=Agr2, wh=n, det_type=numeric, prenumber=n, can_be_np=y] -->
+	?(@from_start_of_range),
+	number:[sem=N1, num_type=(\(oh_digit\/a)), agr=Agr1],
+	@to_start_of_range,
+	number:[sem=N2, num_type=(\(oh_digit\/a)), agr=Agr2].
+
+% D of form "between <Number> and <Number>" - Med rule
+% e.g. [between two and ten] minutes
+d:[sem= @det_number_to_number_sem(N1, N2), article=n, agr=Agr2, wh=n, det_type=numeric, prenumber=n, can_be_np=y] -->
+	@between,
+	number:[sem=N1, num_type=(\(oh_digit\/a)), agr=Agr1],
+	@and,
+	number:[sem=N2, num_type=(\(oh_digit\/a)), agr=Agr2].
+
+% D composed of D and number - PSA rule
+% d_d_number
+% e.g. [all three] doors
+d:[sem= @det_det_number_sem(D, N), article=n, agr=plur, wh=Wh, det_type=DetType, prenumber=n, can_be_np=y] -->
+	d:[sem=D, prenumber=y, det_type=DetType, wh=Wh], 
+	number:[sem=N, num_type=(\(oh_digit\/a)), spelled_out_number=n, agr=plur].
+
+% D composed of comparative phrase and number - TravelDeals rule
+% e.g. [at least seven] nights
+d:[sem= @det_numcompare_number_sem(D, N), article=n, agr=Agr, wh=n, det_type=numeric, prenumber=n, can_be_np=y] -->
+	numcompare:[sem=D], 
+	number:[sem=N, agr=Agr, num_type=(\(oh_digit)), spelled_out_number=n].
+
+% ordinal as D - Robot rule
+% e.g. this is [second]
+% "second"
+d:[sem= @det_ordinal_sem(N), article=n, agr=sing, wh=n, det_type=ordinal, prenumber=y, can_be_np=y] -->
+	ordinal:[sem=N, time_type=none].
+
+% D + ordinal as D - Robot rule
+% e.g. [the second] floor
+% "the second"
+d:[sem= @det_det_ordinal_sem(D, N), article=n, agr=sing, wh=n, det_type=ordinal, prenumber=y, can_be_np=y] -->
+	d:[sem=D, agr=sing, wh=n, det_type=def\/quant\/indef],
+	ordinal:[sem=N, time_type=none].
+
+%----------------------------------------------------------------------
+
+% Number rules
+
+% Exact multiple of 1000 - Checklist rule
+% e.g. [eight thousand]
+number:[sem= @number_number_thousand_sem(N), num_type=thousand, spelled_out_number=n, agr=plur, time_type=none] -->
+	number:[sem=N, num_type=(digit\/ten\/teen\/'20_to_99'\/hundred\/three_figure), spelled_out_number=n],
+	thousand.
+
+% Lexical entry - put it here, since it belongs with the number rules
+number:[sem=1000, num_type=thousand, spelled_out_number=n, agr=plur] --> a, thousand.
+
+% Four+ figure number - Checklist rule
+% e.g. two thousand two hundred and fifty, fifteen thousand six hundred twenty five
+number:[sem= @number_thousand_plus_sem(Thousands, Rest), num_type=four_plus_figure, spelled_out_number=n,
+	agr=plur, time_type=none] -->
+	number:[sem=Thousands, num_type=thousand, spelled_out_number=n],
+	?and,
+	number:[sem=Rest, num_type=(digit\/ten\/teen\/'20_to_99'\/hundred\/three_figure), spelled_out_number=n].
+
+% Exact multiple of 100 - Travel Deals rule
+% e.g. flight under [five hundred] pounds
+number:[sem= @number_number_hundred_sem(N), num_type=hundred, spelled_out_number=n, agr=plur, time_type=none] -->
+	number:[sem=N, num_type=(digit\/teen), spelled_out_number=n],
+	hundred.
+
+% Lexical entry - put it here, since it belongs with the number rules
+number:[sem=100, num_type=hundred, spelled_out_number=n, agr=plur, time_type=none] --> a, hundred.
+
+% Three figure number - Travel Deals rule
+% e.g. two hundred and fifty, six hundred twenty five
+number:[sem= @number_h_tu_sem(Hundreds, TensAndUnits), num_type=three_figure, spelled_out_number=n, agr=plur, time_type=none] -->
+	number:[sem=Hundreds, num_type=hundred, spelled_out_number=n],
+	?and,
+	number:[sem=TensAndUnits, num_type=digit\/ten\/teen\/'20_to_99', spelled_out_number=n].
+
+% Spelled out two figure number - Checklist rule
+% e.g. [one five]
+number:[sem= @number_two_digits(D1, D2), num_type='20_to_99', spelled_out_number=y, agr=plur, time_type=none] -->
+	number:[sem=D1, num_type=(digit), spelled_out_number=n],
+	number:[sem=D2, num_type=(zero\/digit), spelled_out_number=n].
+
+% Spelled out three figure number - Checklist rule
+% e.g. step [one two five]
+number:[sem= @number_three_digits(D1, D2, D3), num_type=three_figure, spelled_out_number=y, agr=plur, time_type=none] -->
+	number:[sem=D1, num_type=(digit), spelled_out_number=n],
+	number:[sem=D2, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D3, num_type=(zero\/digit), spelled_out_number=n].
+
+% Spelled out four figure number - Checklist rule
+% e.g. step [one two five zero]
+number:[sem= @number_four_digits(D1, D2, D3, D4), num_type=four_plus_figure, spelled_out_number=y, agr=plur, time_type=none] -->
+	number:[sem=D1, num_type=(digit), spelled_out_number=n],
+	number:[sem=D2, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D3, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D4, num_type=(zero\/digit), spelled_out_number=n].
+
+% Spelled out five figure number - Checklist rule
+% e.g. step [one two five zero three]
+number:[sem= @number_five_digits(D1, D2, D3, D4, D5), num_type=four_plus_figure, spelled_out_number=y, agr=plur, time_type=none] -->
+	number:[sem=D1, num_type=(digit), spelled_out_number=n],
+	number:[sem=D2, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D3, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D4, num_type=(zero\/digit), spelled_out_number=n],
+	number:[sem=D5, num_type=(zero\/digit), spelled_out_number=n].
+
+% Restricted decimal number - Checklist rule
+% e.g. step [two point four], step [ten point twelve], step twelve decimal three
+number:[sem= @number_decimal(N1, N2), num_type=decimal, spelled_out_number=SpelledOut, time_type=none] -->
+	number:[sem=N1, num_type=(\(oh_digit\/a\/decimal)), spelled_out_number=SpelledOut],
+	%decimal_point:[],
+	( point ; decimal ),
+	number:[sem=N2, num_type=(\(oh_digit\/a)), spelled_out_number=n].
+
+% Decimal number starting with "point" - Checklist rule
+% e.g. [point two], [point three]
+number:[sem= @number_decimal(0, N2), num_type=decimal, spelled_out_number=n, time_type=none] -->
+	%decimal_point:[],
+	( point ; decimal ),
+	number:[sem=N2, num_type=(\(oh_digit\/a)), spelled_out_number=n].
+
+decimal_point:[] --> ( point ; decimal ).
+
+

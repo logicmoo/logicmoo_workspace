@@ -1,0 +1,15 @@
+INSTALLATION GUIDE
+
+Yadlr is written in Prolog using attributed variables and the clp(Q,R) extension.
+
+You can compile and run using either Yap 5.1 or later of SWI-Prolog 5.6 or later.
+It might be possible to compile using other Prolog implementations or versions,
+but they are neither tested nor supported.
+
+You can get Yap from http://yap.sourceforge.net/ and
+SWI-Prolog from http://www.swi-prolog.org/
+
+You need to compile with attributed variables and co-routining (see configure options
+for Yap or SWI-Prolog about how to do this) and also include the clp(Q,R) package in
+your Prolog installation.
+

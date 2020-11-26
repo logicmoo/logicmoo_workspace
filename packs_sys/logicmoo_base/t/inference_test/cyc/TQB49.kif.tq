@@ -1,0 +1,23 @@
+(note TQB49)
+
+(negativeVestedInterest IslamicGroup Egypt) 
+
+(instance IslamicGroup TerroristGroup) 
+
+(residenceOfOrganization IslamicGroup Egypt) 
+
+
+
+
+(query (findall ?AGENT
+
+ (and 
+ (residenceOfOrganization ?AGENT Egypt) 
+ (instance ?AGENT TerroristGroup) 
+ (negativeVestedInterest ?AGENT Egypt))  ))
+
+(answer IslamicGroup)
+
+
+(end_of_file)
+

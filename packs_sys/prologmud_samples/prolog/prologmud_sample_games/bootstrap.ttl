@@ -1,0 +1,1337 @@
+# modelName=urn:ftd:cogchar.org:2012:runtime#lifter_sheet_22
+# modelSize=4974
+
+@base               <mud> .
+@prefix        owl: <http://www.w3.org/2002/07/owl#> .
+@prefix        xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix       rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix        rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix         dc: <http://purl.org/dc/elements/1.1/> .
+@prefix    knowrob: <http://ias.cs.tum.edu/kb/knowrob.owl#> .
+@prefix computable: <http://ias.cs.tum.edu/kb/computable.owl#> .
+@prefix        mud: <http://ias.cs.tum.edu/kb/knowrob.owl#> .
+@prefix ccrt:    <urn:ftd:cogchar.org:2012:runtime#> .
+@prefix cs:      <http://www.cogchar.org/schema/scene#> .
+@prefix lc:      <http://www.cogchar.org/lift/config#> .
+@prefix lci:     <http://www.cogchar.org/lift/config/instance#> .
+@prefix liftcmd:  <http://www.cogchar.org/lift/config/command#> .
+@prefix liftconfig:  <http://www.cogchar.org/lift/config/configroot#> .
+@prefix liftqa:  <http://www.cogchar.org/lift/question_and_answer#> .
+@prefix liftquery:  <http://www.cogchar.org/lift/action/query#> .
+@prefix liftreg:  <http://www.cogchar.org/lift/action/registration#> .
+@prefix liftsessionvar:  <http://www.cogchar.org/lift/config/sessionVariable#> .
+@prefix liftvar:  <http://www.cogchar.org/lift/config/variable#> .
+@prefix path:    <http://www.cogchar.org/schema/path/definition#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix scenetrig:  <http://www.cogchar.org/schema/scene/trigger#> .
+@prefix thinganim:  <http://www.cogchar.org/schema/thinganim/definition#> .
+
+liftconfig:_M1L1P2
+      rdf:type ccrt:liftconfig ;
+      lc:template (liftvar:a liftvar:b liftvar:c liftvar:d)
+
+
+@base               <mud> .
+@prefix        owl: <http://www.w3.org/2002/07/owl#> .
+@prefix        xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix       rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix        rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix         dc: <http://purl.org/dc/elements/1.1/> .
+@prefix    knowrob: <http://ias.cs.tum.edu/kb/knowrob.owl#> .
+@prefix computable: <http://ias.cs.tum.edu/kb/computable.owl#> .
+@prefix        mud: <file:///opt/PrologMUD/xperimental/knowrob_addons/comp_missingobj/owl/comp_missingobj.owl#> .
+
+# Named toplevel resources (665).
+actionInvolves rdf:type owl:ObjectProperty.
+actionInvolves rdfs:subPropertyOf involves.
+actionInvolves rdfs:domain Action.
+actsOnObject rdf:type owl:ObjectProperty.
+actsOnObject rdfs:label "acts on"@en.
+actsOnObject rdfs:label "agit sur"@fr.
+actsOnObject rdfs:comment "Theme (or Patient) of an action: Entity undergoing the effect of some action\n\nExample: Mary fell over.".
+actsOnObject rdfs:subPropertyOf hasThematicRoleRelationWith.
+actsOnObject rdfs:range PartiallyTangible.
+actsOnObject rdfs:domain PurposefulAction.
+after rdf:type owl:ObjectProperty.
+after rdfs:domain TimePoint.
+after rdfs:range TimePoint.
+after rdfs:subPropertyOf after-Underspecified.
+after-Underspecified rdf:type owl:ObjectProperty.
+after-Underspecified rdfs:subPropertyOf temporallyRelated.
+agentRelativeProperty rdf:type owl:ObjectProperty.
+agentRelativeProperty rdfs:comment "An \"agent relative property\" is always relative to the point of view of the agent \"myself\""@en.
+behind rdf:type owl:ObjectProperty.
+behind rdf:type owl:TransitiveProperty.
+behind rdfs:label "is behind".
+behind rdfs:subPropertyOf hasRelativePosition.
+behind owl:inverseOf inFrontOf.
+behind owl:equivalentProperty behind-Generally.
+belongsTo rdf:type owl:ObjectProperty.
+belongsTo rdfs:label "belongs to"@en.
+belongsTo rdfs:label "appartient \u00E0"@fr.
+belongsTo rdfs:range Agent.
+belongsTo rdfs:domain Artifact.
+bringsToStaticSituation rdf:type owl:ObjectProperty.
+bringsToStaticSituation rdfs:label "leads to the static situation".
+bringsToStaticSituation rdfs:domain Action.
+bringsToStaticSituation rdfs:range StaticSituation.
+canBePerformedBy rdf:type owl:ObjectProperty.
+canBePerformedBy rdfs:label "can be performed by".
+canPerform rdf:type owl:ObjectProperty.
+canPerform rdfs:domain Agent.
+canPerform owl:inverseOf canBePerformedBy.
+canPerform rdfs:range PurposefulAction.
+canUndertakeNow rdf:type owl:ObjectProperty.
+canUndertakeNow rdfs:label "can undertake now".
+canUndertakeNow rdfs:comment "Links an agent to an action it can starts now. When required, this relationship is to be computed by a planner (or inferred from a model of the human).".
+canUndertakeNow rdfs:domain Agent.
+canUndertakeNow rdfs:range PurposefulAction.
+contains rdf:type owl:ObjectProperty.
+contains rdfs:comment "Links a (physical) container to its (physical) content."@en.
+contains rdfs:domain Container.
+contains owl:inverseOf isContainedIn.
+currentlyBodilyDoes rdf:type owl:ObjectProperty.
+currentlyBodilyDoes rdfs:comment "(currentlyBodilyDoes AGENT ACTION) means that the (embodied) AGENT is currently performing a non-intentional action ACTION.".
+currentlyBodilyDoes rdfs:domain EmbodiedAgent.
+currentlyBodilyDoes rdfs:subPropertyOf currentlyDoes.
+currentlyDoes rdf:type owl:ObjectProperty.
+currentlyDoes owl:inverseOf currentlyDoneBy.
+currentlyDoneBy rdf:type owl:ObjectProperty.
+currentlyDoneBy rdfs:comment "Denotes that the DOES of the EVENT is currently doing it. It's a temporaly bound version of doneBy."@en.
+currentlyDoneBy rdfs:subPropertyOf doneBy.
+currentlyPerforms rdf:type owl:ObjectProperty.
+currentlyPerforms rdfs:label "currently performs".
+currentlyPerforms rdfs:comment "(currentlyPerforms AGENT ACTION) means that the AGENT is currently performing the intentional ACTION.".
+currentlyPerforms rdfs:seeAlso "performedBy is the non-temporaly bound inverse property.\n\ncurrentlyBodilyDo is another specialization of currentlyDo, for non intentional actions."@en.
+currentlyPerforms rdfs:domain Agent.
+currentlyPerforms rdfs:subPropertyOf currentlyDoes.
+currentlyPerforms rdfs:range Action.
+desires rdf:type owl:ObjectProperty.
+desires rdfs:label "desire"@en.
+desires rdfs:label "desires"@en.
+desires rdfs:domain Agent.
+desires rdfs:range Situation.
+duration rdf:type owl:ObjectProperty.
+duration rdfs:label "lasts".
+duration rdfs:range TimeInterval.
+duration rdfs:subPropertyOf temporallyRelated.
+duration rdfs:domain TemporalThing.
+endingPoint rdf:type owl:ObjectProperty.
+endingPoint rdfs:range TimePoint.
+endingPoint rdfs:subPropertyOf temporallyRelated.
+endingPoint rdfs:domain Plan-ExpectedSituationType.
+experiences rdf:type owl:ObjectProperty.
+experiences rdfs:label "experiences"@en.
+experiences rdfs:label "vit"@fr.
+experiences rdfs:comment "describes a agent that currently *is* in a specific (static) situation"@en.
+experiences rdfs:domain Agent.
+experiences owl:inverseOf isExperienced.
+experiences rdfs:range StaticSituation.
+focusesOn rdf:type owl:ObjectProperty.
+focusesOn rdfs:label "focuses on".
+focusesOn rdfs:comment "An agent is said to focus on an object if and only if it looksAt it AND pointsAt it."@en.
+focusesOn rdfs:domain Agent.
+focusesOn owl:inverseOf isFocusOf.
+focusesOn rdfs:range EnduringThing-Localized.
+hasBodyPart rdf:type owl:ObjectProperty.
+hasBodyPart rdfs:domain Agent.
+hasBodyPart rdfs:range BodyPart.
+hasCharacteristicLocation rdf:type owl:ObjectProperty.
+hasCharacteristicLocation rdfs:range Location.
+hasColor rdf:type owl:ObjectProperty.
+hasColor rdf:type owl:FunctionalProperty.
+hasColor rdfs:comment "describe the main, significant color of the object.".
+hasColor question "What is the color?"@en.
+hasColor rdfs:range Color.
+hasColor rdfs:subPropertyOf hasFeature.
+hasColor owl:equivalentProperty mainColorOfObject.
+hasFeature rdf:type owl:ObjectProperty.
+hasGoal rdf:type owl:ObjectProperty.
+hasGoal rdfs:label "aims to"@en.
+hasGoal rdfs:label "vise \u00E0"@fr.
+hasGoal rdfs:comment "Goal: Entity towards which something moves.\n\nExample: John went home".
+hasGoal rdfs:subPropertyOf hasThematicRoleRelationWith.
+hasInHand rdf:type owl:ObjectProperty.
+hasInHand rdfs:domain Agent.
+hasInHand rdfs:range GraspableObject.
+hasInLeftHand rdf:type owl:ObjectProperty.
+hasInLeftHand rdf:type owl:FunctionalProperty.
+hasInLeftHand rdfs:subPropertyOf hasInHand.
+hasInRightHand rdf:type owl:ObjectProperty.
+hasInRightHand rdf:type owl:FunctionalProperty.
+hasInRightHand rdfs:subPropertyOf hasInHand.
+hasPosture rdf:type owl:ObjectProperty.
+hasPosture rdf:type owl:FunctionalProperty.
+hasPosture rdfs:domain Agent.
+hasPosture rdfs:range Posture.
+hasRelativePosition rdf:type owl:ObjectProperty.
+hasRelativePosition rdfs:label "has relative position".
+hasRelativePosition rdfs:domain Location.
+hasRelativePosition rdfs:range Location.
+hasRelativePosition rdfs:subPropertyOf agentRelativeProperty.
+hasShape rdf:type owl:ObjectProperty.
+hasShape rdf:type owl:FunctionalProperty.
+hasShape rdfs:range Shape.
+hasShape rdfs:subPropertyOf hasFeature.
+hasSize rdf:type owl:ObjectProperty.
+hasSize rdf:type owl:FunctionalProperty.
+hasSize rdfs:subPropertyOf hasFeature.
+hasThematicRoleRelationWith rdf:type owl:ObjectProperty.
+hasThematicRoleRelationWith rdfs:label "a une relation th\u00E9matique avec"@fr.
+hasThematicRoleRelationWith rdfs:label "has a role relation with".
+hasThematicRoleRelationWith rdfs:subPropertyOf owl:topObjectProperty.
+holds rdf:type owl:ObjectProperty.
+holds rdfs:range PartiallyTangible.
+holds rdfs:subPropertyOf holds-Underspecified.
+inFrontOf rdf:type owl:ObjectProperty.
+inFrontOf rdf:type owl:TransitiveProperty.
+inFrontOf rdfs:label "is in front of".
+inFrontOf rdfs:subPropertyOf hasRelativePosition.
+inFrontOf owl:equivalentProperty inFrontOf-Generally.
+involves rdf:type owl:ObjectProperty.
+involves rdfs:label "involves"@en.
+involves rdfs:label "implique"@fr.
+involves rdfs:domain Situation.
+involves rdfs:range owl:Thing.
+isAbleTo rdf:type owl:ObjectProperty.
+isAbleTo rdfs:label "am able to"@en.
+isAbleTo rdfs:label "are able to"@en.
+isAbleTo rdfs:label "can"@en.
+isAbleTo rdfs:label "is able to"@en.
+isAbleTo rdfs:comment "(isAbleTo AGENT ACTION) says that AGENT it technically/physically able to achieve the ACTION. It does not mean that the agent can do it right now (see canUndertakeNow for this meaning). The ACTION is constrainted to purposeful actions: isAbleTo does not intend to express a fact like \"a stone is able to sink into the water\".".
+isAbleTo rdfs:domain Agent.
+isAbleTo rdfs:range PurposefulAction.
+isAbove rdf:type owl:ObjectProperty.
+isAbove owl:equivalentProperty above-Generally.
+isAt rdf:type owl:ObjectProperty.
+isAt rdfs:label "am at"@en.
+isAt rdfs:label "are at"@en.
+isAt rdfs:label "is at"@en.
+isAt rdfs:range Location.
+isAt rdfs:domain Location.
+isAt owl:inverseOf placeOf.
+isAt owl:equivalentProperty objectFoundInLocation.
+isBelow rdf:type owl:ObjectProperty.
+isBelow rdfs:label "is under"@en.
+isBelow rdfs:label "est sous"@fr.
+isBelow rdfs:domain Location.
+isBelow rdfs:range Location.
+isBelow owl:inverseOf isAbove.
+isContainedIn rdf:type owl:ObjectProperty.
+isExperienced rdf:type owl:ObjectProperty.
+isExperienced rdfs:subPropertyOf staticSituationInvolves.
+isFocusOf rdf:type owl:ObjectProperty.
+isFocusOf rdfs:label "is in the focus of".
+isIn rdf:type owl:ObjectProperty.
+isIn rdfs:label "am in"@en.
+isIn rdfs:label "are in"@en.
+isIn rdfs:label "is in"@en.
+isIn rdfs:label "est dans"@fr.
+isIn rdfs:subPropertyOf isAt.
+isLocated rdf:type owl:ObjectProperty.
+isLocated rdf:type owl:FunctionalProperty.
+isLocated rdfs:label "has relative location".
+isLocated rdfs:comment "describe the symbolic position on an object relative to 'myself'.\nValues can be:\n{NEAR_FAR}_{FRONT LEFT RIGHT BACK}".
+isNextTo rdf:type owl:ObjectProperty.
+isNextTo rdf:type owl:SymmetricProperty.
+isNextTo rdfs:label "am next to"@en.
+isNextTo rdfs:label "are next to"@en.
+isNextTo rdfs:label "is next to"@en.
+isOn rdf:type owl:ObjectProperty.
+isOn rdfs:label "is on"@en.
+isOn rdfs:label "est sur"@fr.
+isOn rdfs:subPropertyOf isAt.
+leftOf rdf:type owl:ObjectProperty.
+leftOf rdf:type owl:TransitiveProperty.
+leftOf rdfs:label "is left of".
+leftOf rdfs:subPropertyOf hasRelativePosition.
+leftOf owl:inverseOf rightOf.
+looksAt rdf:type owl:ObjectProperty.
+looksAt rdfs:label "looks at"@en.
+looksAt rdfs:label "regarde"@fr.
+looksAt rdfs:comment "Describes the status of an agent actively looking at an object ('sees' doesn't imply the agent is actively looking at the object, but only that the object is in the field of view of the agent)."@en.
+looksAt rdfs:domain Agent.
+looksAt rdfs:range EnduringThing-Localized.
+mainColorOfObject rdf:type owl:ObjectProperty.
+mainColorOfObject rdf:type owl:FunctionalProperty.
+mainColorOfObject rdfs:label "has main color".
+mainColorOfObject openCycUri "Mx4r45WD6H7_EdaAAAABAjVgzA".
+mainColorOfObject interrogative "What is the color?"@en.
+objectOfAction rdf:type owl:ObjectProperty.
+objectOfAction rdfs:comment "Binds an action to one or several objects which are targetted by the action.\nFor instance, in the assertion, \"I take a cup\", \"cup\" is the ObjectOfAction of \"to take\".\n\nIn the sentence \"Jido shows the Eiffel tower to the tourist\", the object of action is the Eiffel tower and the receiver is the tourist, as specified by the \"receiverOfAction\" property.".
+objectOfAction rdfs:subPropertyOf actionInvolves.
+objectOfAction rdfs:range owl:Thing.
+placeOf rdf:type owl:ObjectProperty.
+pointsAt rdf:type owl:ObjectProperty.
+pointsAt rdfs:label "points at".
+pointsAt rdfs:comment "Describes the status of an agent physically pointing at a physical location with a hand."@en.
+pointsAt rdfs:domain Agent.
+pointsAt rdfs:range EnduringThing-Localized.
+pointsAt owl:equivalentProperty pointingToward.
+purposeOfAction rdf:type owl:ObjectProperty.
+purposeOfAction rdfs:comment "binds an action to a state of the world (a Situation) which is desired as a result (at short or long term) of this action.".
+purposeOfAction rdfs:subPropertyOf actionInvolves.
+purposeOfAction rdfs:range Situation.
+reaches rdf:type owl:ObjectProperty.
+reaches rdfs:comment "This property represent the \"active form\" of the \"isReachable\" predicate.\n?o isReachable true = myself reaches ?o\n\nIt is meant to be only use through rule inference, and is added to this \"ROMAN\" scenario specific ontology to ensure fluid interaction with the Natural Language module.".
+receivedBy rdf:type owl:ObjectProperty.
+receivedBy rdfs:label "received by"@en.
+receivedBy rdfs:label "re\u00E7u par"@fr.
+receivedBy rdfs:comment "Link an action to the object or agent that is a recipient of the action result.\nNot to be confused with actionOnObject that denote that the object is the main concern of the action.\n\nExample: John got Mary a present.".
+receivedBy rdfs:subPropertyOf hasThematicRoleRelationWith.
+receivedBy rdfs:domain PurposefulAction.
+receivedBy rdfs:range SpatialThing-Localized.
+recipientOfAction rdf:type owl:ObjectProperty.
+recipientOfAction rdfs:comment "When relevant for the considered action, this property specify the agent or object whose state is eventually modified as a *result* of an action. It is not be the object of action itself (specified by the \"objectOfAction\" property).\n\nFor instance, in the sentence \"The robot gives the cup to the human\", the human is the final recipient of the cup and hence the recipientOfAction. In the sentence \"I place the robot on the chair\", the chair is the recipient of action while the robot is the object of the action. In the sentence \"Jido shows the Eiffel tower to the tourist\", the recipient is the tourist and the object of action is the Eiffel tower.".
+recipientOfAction rdfs:subPropertyOf actionInvolves.
+recipientOfAction rdfs:range PartiallyTangible.
+rightOf rdf:type owl:ObjectProperty.
+rightOf rdf:type owl:TransitiveProperty.
+rightOf rdfs:label "is right of".
+rightOf rdfs:subPropertyOf hasRelativePosition.
+sees rdf:type owl:ObjectProperty.
+sees rdfs:label "see"@en.
+sees rdfs:label "sees"@en.
+sees rdfs:label "voit"@fr.
+sees rdfs:domain Agent.
+sees rdfs:range EnduringThing-Localized.
+startingPoint rdf:type owl:ObjectProperty.
+startingPoint rdfs:range TimePoint.
+startingPoint rdfs:subPropertyOf temporallyRelated.
+startingPoint rdfs:domain Plan-ExpectedSituationType.
+startsAfterEndingOf rdf:type owl:ObjectProperty.
+startsAfterEndingOf rdfs:comment "A ComplexTemporalPredicate (q.v.) that relates any pair of temporal things such that the first starts after the second ends. (startsAfterEndingOf AFTER BEFORE) means that the time point (see TimePoint) at which AFTER first starts to exist or occur is temporally later than (see after) the time point at which BEFORE finally ceases to exist or occur. Thus it is equivalent to the form (after (StartFn AFTER) (EndFn BEFORE)). That is, the startingPoint of AFTER is later than the endingPoint of BEFORE."@en.
+startsAfterEndingOf rdfs:subPropertyOf after-Underspecified.
+startsAfterEndingOf rdfs:domain TemporalThing.
+startsAfterEndingOf rdfs:range TemporalThing.
+staticSituationInvolves rdf:type owl:ObjectProperty.
+staticSituationInvolves rdfs:comment "Binds a static situation (a state of the world) to the agents involved in the situation.".
+staticSituationInvolves rdfs:range Agent.
+staticSituationInvolves rdfs:subPropertyOf involves.
+staticSituationInvolves rdfs:domain StaticSituation.
+taskOfPlan rdf:type owl:ObjectProperty.
+taskOfPlan rdfs:label "is a task of plan".
+taskOfPlan rdfs:domain Task.
+taskOfPlan rdfs:range Plan-ExpectedSituationType.
+temporallyRelated rdf:type owl:ObjectProperty.
+above-Generally rdf:type owl:ObjectProperty.
+above_Touching rdf:type owl:ObjectProperty.
+behind-Generally rdf:type owl:ObjectProperty.
+bodilyDoer rdf:type owl:ObjectProperty.
+bodilyDoer rdfs:comment "The predicate bodilyDoer relates a given physical event to any organism that is a non-deliberate \"doer\" of the event (i.e. the organism acts without conscious intention or volition)."@en.
+bodilyDoer rdfs:subPropertyOf doneBy.
+doneBy rdf:type owl:ObjectProperty.
+doneBy rdfs:comment "A very general predicate that relates events to the things that \"do\" them. (doneBy EVENT DOER) means that DOER is a \"doer\" in the event EVENT: some activity on the part of DOER causes or carries out EVENT. This predicate is agnostic as to whether DOER does EVENT intentionally or not. Note that DOER need not even be animate or an agent; e.g. the famous vocanic eruption that buried Pompeii was doneBy Mt. Vesuvius. Note also that an event might have more than one doer; consider a chess game."@en.
+doneBy rdfs:domain Event.
+farFrom rdf:type owl:ObjectProperty.
+farFrom rdf:type owl:SymmetricProperty.
+farFrom rdfs:label "is far from".
+farFrom rdfs:domain Location.
+farFrom owl:propertyDisjointWith near.
+holds-Underspecified rdf:type owl:ObjectProperty.
+holds-Underspecified openCycUri "Mx4rWdwvdL9_EdaAAAACs6MxSQ".
+holds-Underspecified rdfs:domain owl:Thing.
+holds-Underspecified rdfs:range owl:Thing.
+inFrontOf-Generally rdf:type owl:ObjectProperty.
+near rdf:type owl:ObjectProperty.
+near rdf:type owl:SymmetricProperty.
+near rdfs:label "is near of".
+near rdfs:comment "Relates an agent to some object: a \"near\" object is closer than 1m from the agent."@en.
+near rdfs:domain Location.
+objectFoundInLocation rdf:type owl:ObjectProperty.
+objectFoundInLocation rdfs:label "is at".
+objectFoundInLocation openCycUri "Mx4rvVjQ5JwpEbGdrcN5Y29ycA".
+objectFoundInLocation rdfs:comment "Links a localizable thing to its location.".
+performedBy rdf:type owl:ObjectProperty.
+performedBy rdfs:label "performed by"@en.
+performedBy rdfs:label "effectu\u00E9 par"@fr.
+performedBy rdfs:comment "Instigator of some action.\n\nExample: John killed Harry.".
+performedBy rdfs:range Agent.
+performedBy rdfs:subPropertyOf hasThematicRoleRelationWith.
+performedBy rdfs:domain PurposefulAction.
+performedBy rdfs:subPropertyOf doneBy.
+pointingToward rdf:type owl:ObjectProperty.
+owl:topObjectProperty rdf:type owl:ObjectProperty.
+canBeManipulated rdf:type owl:DatatypeProperty.
+canBeManipulated rdf:type owl:FunctionalProperty.
+canBeManipulated rdfs:comment "Indicates if an object can be manipulated (knows a grasping point for the object) by the agent myself. Thus, if the object can be manipulated, it is movable as well.".
+canBeManipulated rdfs:domain PartiallyTangible.
+canBeManipulated rdfs:range xsd:boolean.
+hasCharacteristicDimension rdf:type owl:DatatypeProperty.
+hasCharacteristicDimension rdf:type owl:FunctionalProperty.
+hasCharacteristicDimension rdfs:comment "Characteristic entity dimension, in centimeters".
+hasCharacteristicDimension rdfs:domain PartiallyTangible.
+hasCharacteristicDimension rdfs:range xsd:integer.
+hasCharacteristicWeight rdf:type owl:DatatypeProperty.
+hasCharacteristicWeight rdf:type owl:FunctionalProperty.
+hasCharacteristicWeight rdfs:comment "The characteristic weight of the tangible facet of the object, in grammes".
+hasCharacteristicWeight rdfs:domain PartiallyTangible.
+hasCharacteristicWeight rdfs:range xsd:integer.
+isDesired rdf:type owl:DatatypeProperty.
+isDesired rdf:type owl:FunctionalProperty.
+isDesired openCycUri "Mx4rvViA0JwpEbGdrcN5Y29ycA".
+isDesired rdfs:comment "IsDesired is equivalent to (desires MYSELF PROP). \n(desire AGT PROP) means that the Agent_PartiallyTangible AGT desires that the world be as the proposition PROP (represented by a CycLSentence_Assertible) describes it to be. desires is implied by goals, but is weaker: PROP might be some desirable state of affairs that the agent is not actively working, or planning, to make/keep true; e.g., world peace.".
+isDesired rdfs:domain Situation.
+isDesired rdfs:range xsd:boolean.
+isHolder rdf:type owl:DatatypeProperty.
+isHolder rdf:type owl:FunctionalProperty.
+isHolder rdfs:comment "True if one of the object primary function is to hold other objects.\nSee the temporalProperty holds-Underspecified for a relationship between a holder and a holded object.".
+isHolder rdfs:domain PartiallyTangible.
+isHolder rdfs:range xsd:boolean.
+isInFieldOfView rdf:type owl:DatatypeProperty.
+isInFieldOfView rdfs:comment "Indicates if an enduring thing-localized is directly (ie, without moving) visible for the agent (myself).".
+isInFieldOfView rdfs:seeAlso "sees: X isInFieldOfView true = myself sees X".
+isInFieldOfView rdfs:subPropertyOf owl:topDataProperty.
+isMovable rdf:type owl:DatatypeProperty.
+isMovable rdf:type owl:FunctionalProperty.
+isMovable rdfs:comment "States if a given artifact is movable by someone (not specifying who)."@en.
+isMovable rdfs:domain PartiallyTangible.
+isMovable rdfs:range xsd:boolean.
+isMoving rdf:type owl:DatatypeProperty.
+isMoving rdf:type owl:FunctionalProperty.
+isMoving rdfs:domain EnduringThing-Localized.
+isMoving rdfs:range xsd:boolean.
+isMoving rdfs:subPropertyOf owl:topDataProperty.
+isReachable rdf:type owl:DatatypeProperty.
+isReachable rdf:type owl:FunctionalProperty.
+isReachable rdfs:comment "True if the object is currently reachable by agent myself.\nThus an object can not be said to be generally reachable or not."@en.
+isReachable rdfs:domain PartiallyTangible.
+isReachable rdfs:range xsd:boolean.
+isSitting rdf:type owl:DatatypeProperty.
+isSitting rdf:type owl:FunctionalProperty.
+isSitting rdfs:domain Agent.
+isSitting rdfs:range xsd:boolean.
+isTraversable rdf:type owl:DatatypeProperty.
+isTraversable rdf:type owl:FunctionalProperty.
+isTraversable rdfs:domain EnduringThing-Localized.
+isTraversable rdfs:range xsd:boolean.
+isVisible rdf:type owl:DatatypeProperty.
+isVisible rdf:type owl:FunctionalProperty.
+isVisible rdfs:comment "Indicates if an enduring thing-localized is visible (modulo a head movement) for the agent (myself).\n\nThis means that the object may not be currently in the field of view of the agent, but only requires the agent to turn the head to see it.".
+isVisible rdfs:domain EnduringThing-Localized.
+isVisible rdfs:range xsd:boolean.
+owl:topDataProperty rdf:type owl:DatatypeProperty.
+ActiveConcept rdf:type owl:Class.
+ActiveConcept rdfs:comment "An \"active concept\" is a concept (class or instance) which is considered by the robot to be active at a given time.\n\n\"Active\" may have several meaning, like \"relevant in the current context\" or \"recently accessed\".".
+Agent rdf:type owl:Class.
+Agent rdfs:label "agent"@en.
+Agent rdfs:label "agent"@fr.
+Agent owl:equivalentClass _:node186i5gh9ax1.
+_:node186i5gh9ax1 rdf:type owl:Class.
+_:node186i5gh9ax1 owl:unionOf _:node186i5gh9ax2.
+_:node186i5gh9ax2 rdf:first Human.
+_:node186i5gh9ax2 rdf:rest _:node186i5gh9ax3.
+_:node186i5gh9ax3 rdf:first Robot.
+_:node186i5gh9ax3 rdf:rest rdf:nil.
+Agent rdfs:subClassOf SolidTangibleThing.
+Agent owl:disjointWith BodyPart.
+Agent rdfs:comment "Groups both humans and robots".
+Agent openCycUri "Mx4rvViAB5wpEbGdrcN5Y29ycA".
+Artifact rdf:type owl:Class.
+Artifact rdfs:label "artifact"@en.
+Artifact rdfs:label "object"@en.
+Artifact rdfs:label "artefact"@fr.
+Artifact rdfs:label "objet"@fr.
+Artifact rdfs:subClassOf PartiallyTangible.
+Artifact rdfs:comment "A specialization of InanimateObject. Each instance of Artifact is an at least partially tangible thing which was intentionally created by an Agent_PartiallyTangible (or a group of Agent_PartiallyTangibles working together) to serve some purpose or perform some function. In order to create an instance of Artifact, it is not necessary that an Agent_PartiallyTangible create the matter out of which the Artifact is composed; rather, an Agent_PartiallyTangible can create an instance of Artifact by assembling or modifying existing matter. Examples of Artifacts include a wooden flute that's been whittled from a tree branch, a sawhorse that's been put together out of boards and nails, and a coin that's been minted by embossing or by melting liquid silver into a mold. In addition to the obvious human artifacts (buildings, tools, textiles, power lines), the collection Artifact also includes certain sorts of things made by Animals, such as bird nests, termite mounds, and beaver dams. Artifacts without any tangible parts are excluded from the collection Artifact; they are included in the collection Artifact_Intangible.".
+Artifact openCycUri "Mx4rvVkH_ZwpEbGdrcN5Y29ycA".
+AudioTape rdf:type owl:Class.
+AudioTape rdfs:label "audiotape".
+AudioTape rdfs:label "audio tape".
+AudioTape rdfs:subClassOf Tape.
+AudioTape rdfs:subClassOf _:node186i5gh9ax4.
+_:node186i5gh9ax4 rdf:type owl:Restriction.
+_:node186i5gh9ax4 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax4 owl:someValuesFrom _:node186i5gh9ax5.
+_:node186i5gh9ax5 rdf:type rdfs:Datatype.
+_:node186i5gh9ax5 owl:onDatatype xsd:integer.
+_:node186i5gh9ax5 owl:withRestrictions _:node186i5gh9ax7.
+_:node186i5gh9ax7 rdf:first _:node186i5gh9ax6.
+_:node186i5gh9ax6 xsd:maxInclusive "12"^^xsd:integer.
+_:node186i5gh9ax7 rdf:rest _:node186i5gh9ax9.
+_:node186i5gh9ax9 rdf:first _:node186i5gh9ax8.
+_:node186i5gh9ax8 xsd:minInclusive "7"^^xsd:integer.
+_:node186i5gh9ax9 rdf:rest rdf:nil.
+BodyPart rdf:type owl:Class.
+BodyPart rdfs:label "body part"@en.
+BodyPart rdfs:label "partie du corps"@fr.
+BodyPart rdfs:subClassOf PartiallyTangible.
+Book rdf:type owl:Class.
+Book rdfs:subClassOf SolidTangibleThing.
+Book rdfs:subClassOf _:node186i5gh9ax10.
+_:node186i5gh9ax10 rdf:type owl:Class.
+_:node186i5gh9ax10 owl:intersectionOf _:node186i5gh9ax11.
+_:node186i5gh9ax11 rdf:first Artifact.
+_:node186i5gh9ax11 rdf:rest _:node186i5gh9ax13.
+_:node186i5gh9ax13 rdf:first _:node186i5gh9ax12.
+_:node186i5gh9ax12 rdf:type owl:Restriction.
+_:node186i5gh9ax12 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax12 owl:someValuesFrom _:node186i5gh9ax14.
+_:node186i5gh9ax14 rdf:type rdfs:Datatype.
+_:node186i5gh9ax14 owl:onDatatype xsd:integer.
+_:node186i5gh9ax14 owl:withRestrictions _:node186i5gh9ax16.
+_:node186i5gh9ax16 rdf:first _:node186i5gh9ax15.
+_:node186i5gh9ax15 xsd:maxInclusive "50"^^xsd:integer.
+_:node186i5gh9ax16 rdf:rest _:node186i5gh9ax18.
+_:node186i5gh9ax18 rdf:first _:node186i5gh9ax17.
+_:node186i5gh9ax17 xsd:minInclusive "5"^^xsd:integer.
+_:node186i5gh9ax18 rdf:rest rdf:nil.
+_:node186i5gh9ax13 rdf:rest _:node186i5gh9ax20.
+_:node186i5gh9ax20 rdf:first _:node186i5gh9ax19.
+_:node186i5gh9ax19 rdf:type owl:Restriction.
+_:node186i5gh9ax19 owl:onProperty hasCharacteristicWeight.
+_:node186i5gh9ax19 owl:someValuesFrom _:node186i5gh9ax21.
+_:node186i5gh9ax21 rdf:type rdfs:Datatype.
+_:node186i5gh9ax21 owl:onDatatype xsd:integer.
+_:node186i5gh9ax21 owl:withRestrictions _:node186i5gh9ax23.
+_:node186i5gh9ax23 rdf:first _:node186i5gh9ax22.
+_:node186i5gh9ax22 xsd:minInclusive "50"^^xsd:integer.
+_:node186i5gh9ax23 rdf:rest _:node186i5gh9ax25.
+_:node186i5gh9ax25 rdf:first _:node186i5gh9ax24.
+_:node186i5gh9ax24 xsd:maxInclusive "2000"^^xsd:integer.
+_:node186i5gh9ax25 rdf:rest rdf:nil.
+_:node186i5gh9ax20 rdf:rest _:node186i5gh9ax27.
+_:node186i5gh9ax27 rdf:first _:node186i5gh9ax26.
+_:node186i5gh9ax26 rdf:type owl:Restriction.
+_:node186i5gh9ax26 owl:onProperty isMovable.
+_:node186i5gh9ax26 owl:hasValue "true"^^xsd:boolean.
+_:node186i5gh9ax27 rdf:rest rdf:nil.
+Book openCycUri "Mx4rwJaXepwpEbGdrcN5Y29ycA".
+Bottle rdf:type owl:Class.
+Bottle rdfs:label "Flasche"@de.
+Bottle rdfs:label "bottle"@en.
+Bottle rdfs:label "bouteille"@fr.
+Bottle rdfs:subClassOf Container.
+Bottle rdfs:subClassOf Tableware.
+Bottle rdfs:subClassOf _:node186i5gh9ax28.
+_:node186i5gh9ax28 rdf:type owl:Restriction.
+_:node186i5gh9ax28 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax28 owl:allValuesFrom _:node186i5gh9ax29.
+_:node186i5gh9ax29 rdf:type rdfs:Datatype.
+_:node186i5gh9ax29 owl:onDatatype xsd:float.
+_:node186i5gh9ax29 owl:withRestrictions _:node186i5gh9ax31.
+_:node186i5gh9ax31 rdf:first _:node186i5gh9ax30.
+_:node186i5gh9ax30 xsd:minInclusive "0.1"^^xsd:float.
+_:node186i5gh9ax31 rdf:rest _:node186i5gh9ax33.
+_:node186i5gh9ax33 rdf:first _:node186i5gh9ax32.
+_:node186i5gh9ax32 xsd:maxInclusive "0.3"^^xsd:float.
+_:node186i5gh9ax33 rdf:rest rdf:nil.
+Bottle rdfs:subClassOf _:node186i5gh9ax34.
+_:node186i5gh9ax34 rdf:type owl:Restriction.
+_:node186i5gh9ax34 owl:onProperty hasShape.
+_:node186i5gh9ax34 owl:hasValue cylinderShape.
+Box rdf:type owl:Class.
+Box rdfs:subClassOf Artifact.
+Box rdfs:subClassOf Container.
+Box rdfs:subClassOf _:node186i5gh9ax35.
+_:node186i5gh9ax35 rdf:type owl:Restriction.
+_:node186i5gh9ax35 owl:onProperty hasShape.
+_:node186i5gh9ax35 owl:hasValue boxShape.
+Cardboardbox rdf:type owl:Class.
+Cardboardbox rdfs:label "cardboard box".
+Cardboardbox rdfs:subClassOf Box.
+Cardboardbox rdfs:subClassOf SolidTangibleThing.
+Ceilling rdf:type owl:Class.
+Ceilling rdfs:label "ceilling"@en.
+Ceilling rdfs:label "plafond"@fr.
+Ceilling rdfs:subClassOf PhysicalSupport.
+Ceilling openCycUri "Mx4rvVj3Q5wpEbGdrcN5Y29ycA".
+Cloth rdf:type owl:Class.
+Cloth rdfs:label "cloth"@en.
+Cloth rdfs:label "v\u00EAtement"@fr.
+Cloth rdfs:subClassOf Artifact.
+Cloth rdfs:subClassOf SolidTangibleThing.
+Color rdf:type owl:Class.
+Color rdfs:label "colour"@en.
+Color rdfs:label "couleur"@fr.
+Color rdfs:subClassOf owl:Thing.
+Color openCycUri "Mx4rr19QJHStEdaAAACgyZzFrg".
+Container rdf:type owl:Class.
+Container rdfs:label "container"@en.
+Container rdfs:label "conteneur"@fr.
+Container rdfs:subClassOf PartiallyTangible.
+Container openCycUri "Mx4rvVjOGJwpEbGdrcN5Y29ycA".
+Container rdfs:comment "The collection of tangible objects whose primary function is to contain something."@en.
+ContinuousTimeInterval rdf:type owl:Class.
+ContinuousTimeInterval rdfs:subClassOf TimeInterval.
+Cover rdf:type owl:Class.
+Cover rdfs:label "cover"@en.
+Cover rdfs:label "couvrir"@fr.
+Cover rdfs:subClassOf Manipulation.
+Cup rdf:type owl:Class.
+Cup rdfs:subClassOf Tableware.
+Cup rdfs:subClassOf _:node186i5gh9ax36.
+_:node186i5gh9ax36 rdf:type owl:Restriction.
+_:node186i5gh9ax36 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax36 owl:someValuesFrom _:node186i5gh9ax37.
+_:node186i5gh9ax37 rdf:type rdfs:Datatype.
+_:node186i5gh9ax37 owl:onDatatype xsd:integer.
+_:node186i5gh9ax37 owl:withRestrictions _:node186i5gh9ax39.
+_:node186i5gh9ax39 rdf:first _:node186i5gh9ax38.
+_:node186i5gh9ax38 xsd:maxInclusive "10"^^xsd:integer.
+_:node186i5gh9ax39 rdf:rest _:node186i5gh9ax41.
+_:node186i5gh9ax41 rdf:first _:node186i5gh9ax40.
+_:node186i5gh9ax40 xsd:minInclusive "5"^^xsd:integer.
+_:node186i5gh9ax41 rdf:rest rdf:nil.
+EligibleAction rdf:type owl:Class.
+EligibleAction rdfs:subClassOf Action.
+EligibleAction rdfs:comment "An instance of EligibleAction is an action whose pre-conditions are currently fullfit, thus could possible be started."@en.
+EmbodiedAgent rdf:type owl:Class.
+EmbodiedAgent rdfs:label "embodied agent"@en.
+EmbodiedAgent rdfs:label "agent incarn\u00E9"@fr.
+EmbodiedAgent rdfs:subClassOf Agent.
+EmotionalState rdf:type owl:Class.
+EmotionalState rdfs:subClassOf StaticSituation.
+EmotionalState rdfs:comment "Describes the emotional state of an agent, like being happy, confused, sad..."@en.
+Eyes rdf:type owl:Class.
+Eyes rdfs:label "eye"@en.
+Eyes rdfs:label "\u0153il"@fr.
+Eyes rdfs:subClassOf BodyPart.
+Floor rdf:type owl:Class.
+Floor rdfs:label "floor"@en.
+Floor rdfs:label "sol"@fr.
+Floor rdfs:subClassOf PhysicalSupport.
+Floor openCycUri "Mx4rvVj4k5wpEbGdrcN5Y29ycA".
+GameArtifact rdf:type owl:Class.
+GameArtifact rdfs:subClassOf Artifact.
+GameArtifact rdfs:subClassOf SolidTangibleThing.
+GameArtifact rdfs:comment "Artifact used to play with. One notable subclass is 'Toy'.".
+Give rdf:type owl:Class.
+Give rdfs:label "donner"@en.
+Give rdfs:label "give"@en.
+Give rdfs:subClassOf Manipulation.
+Glass rdf:type owl:Class.
+Glass rdfs:subClassOf Tableware.
+Glass rdfs:subClassOf _:node186i5gh9ax42.
+_:node186i5gh9ax42 rdf:type owl:Restriction.
+_:node186i5gh9ax42 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax42 owl:someValuesFrom _:node186i5gh9ax43.
+_:node186i5gh9ax43 rdf:type rdfs:Datatype.
+_:node186i5gh9ax43 owl:onDatatype xsd:integer.
+_:node186i5gh9ax43 owl:withRestrictions _:node186i5gh9ax45.
+_:node186i5gh9ax45 rdf:first _:node186i5gh9ax44.
+_:node186i5gh9ax44 xsd:maxInclusive "10"^^xsd:integer.
+_:node186i5gh9ax45 rdf:rest _:node186i5gh9ax47.
+_:node186i5gh9ax47 rdf:first _:node186i5gh9ax46.
+_:node186i5gh9ax46 xsd:minInclusive "5"^^xsd:integer.
+_:node186i5gh9ax47 rdf:rest rdf:nil.
+Glass rdfs:subClassOf _:node186i5gh9ax48.
+_:node186i5gh9ax48 rdf:type owl:Restriction.
+_:node186i5gh9ax48 owl:onProperty hasShape.
+_:node186i5gh9ax48 owl:hasValue cylinderShape.
+GraspableObject rdf:type owl:Class.
+GraspableObject rdfs:label "graspable object"@en.
+GraspableObject rdfs:label "objet attrapable"@fr.
+GraspableObject rdfs:subClassOf SolidTangibleThing.
+Hand rdf:type owl:Class.
+Hand owl:equivalentClass Hand.
+Hand rdfs:subClassOf BodyPart.
+Head rdf:type owl:Class.
+Head rdfs:label "head"@en.
+Head rdfs:label "t\u00EAte"@fr.
+Head rdfs:subClassOf BodyPart.
+Human rdf:type owl:Class.
+Human rdfs:label "human"@en.
+Human rdfs:label "humain"@fr.
+Human rdfs:subClassOf EmbodiedAgent.
+Human rdfs:subClassOf _:node186i5gh9ax49.
+_:node186i5gh9ax49 rdf:type owl:Restriction.
+_:node186i5gh9ax49 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax49 owl:someValuesFrom _:node186i5gh9ax50.
+_:node186i5gh9ax50 rdf:type rdfs:Datatype.
+_:node186i5gh9ax50 owl:onDatatype xsd:integer.
+_:node186i5gh9ax50 owl:withRestrictions _:node186i5gh9ax52.
+_:node186i5gh9ax52 rdf:first _:node186i5gh9ax51.
+_:node186i5gh9ax51 xsd:maxInclusive "200"^^xsd:integer.
+_:node186i5gh9ax52 rdf:rest _:node186i5gh9ax54.
+_:node186i5gh9ax54 rdf:first _:node186i5gh9ax53.
+_:node186i5gh9ax53 xsd:minInclusive "140"^^xsd:integer.
+_:node186i5gh9ax54 rdf:rest rdf:nil.
+Human owl:disjointWith Robot.
+Human openCycUri "Mx4rvViAkpwpEbGdrcN5Y29ycA".
+Jacket rdf:type owl:Class.
+Jacket rdfs:label "jacket"@en.
+Jacket rdfs:label "veste"@fr.
+Jacket rdfs:subClassOf Cloth.
+JointAttentionSituation rdf:type owl:Class.
+JointAttentionSituation owl:equivalentClass _:node186i5gh9ax55.
+_:node186i5gh9ax55 rdf:type owl:Class.
+_:node186i5gh9ax55 owl:intersectionOf _:node186i5gh9ax56.
+_:node186i5gh9ax56 rdf:first Situation.
+_:node186i5gh9ax56 rdf:rest _:node186i5gh9ax58.
+_:node186i5gh9ax58 rdf:first _:node186i5gh9ax57.
+_:node186i5gh9ax57 rdf:type owl:Restriction.
+_:node186i5gh9ax57 owl:onProperty involves.
+_:node186i5gh9ax57 owl:someValuesFrom _:node186i5gh9ax59.
+_:node186i5gh9ax59 rdf:type owl:Restriction.
+_:node186i5gh9ax59 owl:onProperty isFocusOf.
+_:node186i5gh9ax59 owl:onClass Agent.
+_:node186i5gh9ax59 owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger.
+_:node186i5gh9ax58 rdf:rest rdf:nil.
+JointAttentionSituation rdfs:subClassOf StaticSituation.
+JointAttentionSituation rdfs:comment "A joint attention situation is a situation where an object is the focus of attention of more than one agent.".
+LeftHand rdf:type owl:Class.
+LeftHand rdfs:subClassOf Hand.
+LeftHand owl:disjointWith RightHand.
+Location rdf:type owl:Class.
+Location owl:equivalentClass SpatialThing-Localized.
+Location rdfs:comment "Location is use in its very broad meaning of \"a spatial-localized thing\". Hence an object is a location, an agent is a location, etc.".
+Manipulation rdf:type owl:Class.
+Manipulation rdfs:label "manipulation"@en.
+Manipulation rdfs:label "manipulation"@fr.
+Manipulation rdfs:subClassOf Action.
+NonAlcoholicBeverage rdf:type owl:Class.
+NonAlcoholicBeverage rdfs:subClassOf Drink.
+NonAlcoholicBeverage owl:disjointWith AlcoholicBeverage.
+Obstacle rdf:type owl:Class.
+Obstacle rdfs:label "obstacle"@en.
+Obstacle rdfs:label "obstacle"@fr.
+Obstacle owl:equivalentClass _:node186i5gh9ax60.
+_:node186i5gh9ax60 rdf:type owl:Class.
+_:node186i5gh9ax60 owl:intersectionOf _:node186i5gh9ax61.
+_:node186i5gh9ax61 rdf:first EnduringThing-Localized.
+_:node186i5gh9ax61 rdf:rest _:node186i5gh9ax63.
+_:node186i5gh9ax63 rdf:first _:node186i5gh9ax62.
+_:node186i5gh9ax62 rdf:type owl:Restriction.
+_:node186i5gh9ax62 owl:onProperty isTraversable.
+_:node186i5gh9ax62 owl:hasValue "false"^^xsd:boolean.
+_:node186i5gh9ax63 rdf:rest rdf:nil.
+Obstacle owl:disjointWith Opening.
+Obstacle openCycUri "Mx4rwJJMaZwpEbGdrcN5Y29ycA".
+Opening rdf:type owl:Class.
+Opening rdfs:label "opening"@en.
+Opening rdfs:label "ouverture"@fr.
+Opening rdfs:subClassOf EnduringThing-Localized.
+PhysicalSupport rdf:type owl:Class.
+PhysicalSupport rdfs:label "physical support"@en.
+PhysicalSupport rdfs:label "support physique"@fr.
+PhysicalSupport owl:equivalentClass _:node186i5gh9ax64.
+_:node186i5gh9ax64 rdf:type owl:Class.
+_:node186i5gh9ax64 owl:intersectionOf _:node186i5gh9ax65.
+_:node186i5gh9ax65 rdf:first PartiallyTangible.
+_:node186i5gh9ax65 rdf:rest _:node186i5gh9ax67.
+_:node186i5gh9ax67 rdf:first _:node186i5gh9ax66.
+_:node186i5gh9ax66 rdf:type owl:Restriction.
+_:node186i5gh9ax66 owl:onProperty isHolder.
+_:node186i5gh9ax66 owl:hasValue "true"^^xsd:boolean.
+_:node186i5gh9ax67 rdf:rest rdf:nil.
+PhysicalSupport rdfs:subClassOf Place.
+PhysicalSupport rdfs:comment "A PhysicalSupport is a special kind of tangible object which main feature is to hold other tangible objects. It includes walls, floors, tables, shelves...".
+Pick rdf:type owl:Class.
+Pick rdfs:label "pick"@en.
+Pick rdfs:label "prendre"@fr.
+Pick rdfs:subClassOf Manipulation.
+Place rdf:type owl:Class.
+Place rdfs:label "place"@en.
+Place rdfs:label "endroit"@fr.
+Place rdfs:subClassOf EnduringThing-Localized.
+Place openCycUri "Mx4rvVjTtJwpEbGdrcN5Y29ycA".
+Place rdfs:comment "A specialization of EnduringThing_Localized (q.v). Each instance of Place is a spatial thing which has a relatively permanent location.".
+Placemat rdf:type owl:Class.
+Placemat rdfs:subClassOf Tableware.
+Placemat rdfs:subClassOf _:node186i5gh9ax68.
+_:node186i5gh9ax68 rdf:type owl:Restriction.
+_:node186i5gh9ax68 owl:onProperty isHolder.
+_:node186i5gh9ax68 owl:hasValue "true"^^xsd:boolean.
+Plan rdf:type owl:Class.
+Plan owl:equivalentClass Plan-ExpectedSituationType.
+Point rdf:type owl:Class.
+Point rdfs:label "point"@en.
+Point rdfs:label "point"@fr.
+Point rdfs:subClassOf SpaceRegion.
+Point rdfs:comment "A specialization of both Point and SpaceRegion_Empirical (qq.v.). Each instance of Point_Empirical is a zero-dimensional object that belongs to, and thus has a fixed location in, the embedding space of the empirical universe (see #$TheSpatialUniverse-Empirical).\n\nExamples include the location of the center of mass of the Milky Way galaxy at the beginning of the 20th Century. Note that empirical space points are embedded in time; if time is not a significant parameter (i.e. if in an atemporal or temporally agnostic context) consider using Point instead.".
+Point rdfs:comment "For ease of use, we use here \"Point\" as \"Point-Empirical\" in the Open Cyc ontology. The OpenCyc URI refers to the correct one (\"Point-Empirical\")".
+Point openCycUri "http://sw.opencyc.org/2008/06/10/concept/Mx4rwH1QOJwpEbGdrcN5Y29ycA".
+Posture rdf:type owl:Class.
+Posture rdfs:label "posture"@en.
+Posture rdfs:label "posture"@fr.
+Posture owl:equivalentClass _:node186i5gh9ax69.
+_:node186i5gh9ax69 rdf:type owl:Class.
+_:node186i5gh9ax69 owl:oneOf _:node186i5gh9ax70.
+_:node186i5gh9ax70 rdf:first sitting.
+_:node186i5gh9ax70 rdf:rest _:node186i5gh9ax71.
+_:node186i5gh9ax71 rdf:first standing.
+_:node186i5gh9ax71 rdf:rest rdf:nil.
+Posture rdfs:subClassOf SpatialThing.
+Put rdf:type owl:Class.
+Put rdfs:label "put"@en.
+Put rdfs:label "poser"@fr.
+Put rdfs:subClassOf Manipulation.
+Release rdf:type owl:Class.
+Release rdfs:label "release"@en.
+Release rdfs:label "l\u00E2cher"@fr.
+Release rdfs:subClassOf Manipulation.
+Remote rdf:type owl:Class.
+Remote rdfs:subClassOf Artifact.
+Remote rdfs:subClassOf _:node186i5gh9ax72.
+_:node186i5gh9ax72 rdf:type owl:Restriction.
+_:node186i5gh9ax72 owl:onProperty hasShape.
+_:node186i5gh9ax72 owl:hasValue boxShape.
+Rest rdf:type owl:Class.
+Rest owl:equivalentClass Resting-Relaxing.
+Rest rdfs:subClassOf Action.
+Rest rdfs:comment "".
+RightHand rdf:type owl:Class.
+RightHand rdfs:subClassOf Hand.
+Robot rdf:type owl:Class.
+Robot rdfs:label "robot"@en.
+Robot rdfs:label "robot"@fr.
+Robot rdfs:subClassOf EmbodiedAgent.
+Robot openCycUri "Mx4rwQr1pJwpEbGdrcN5Y29ycA".
+Shape rdf:type owl:Class.
+Shape rdfs:label "shape"@en.
+Shape rdfs:label "forme"@fr.
+Shape rdfs:subClassOf SpatialThing.
+Shelf rdf:type owl:Class.
+Shelf rdfs:subClassOf Object-SupportingFurniture.
+Shelf openCycUri "Mx4rvVjY_5wpEbGdrcN5Y29ycA".
+Situation rdf:type owl:Class.
+Size rdf:type owl:Class.
+Size rdfs:subClassOf SpatialThing.
+Size rdfs:comment "A symbolic size like large or small has NO absolute meaning. It is always relative to a context."@en.
+SpaceRegion rdf:type owl:Class.
+SpaceRegion rdfs:label "zone"@en.
+SpaceRegion rdfs:label "zone"@fr.
+SpaceRegion owl:equivalentClass Zone.
+SpaceRegion rdfs:subClassOf SpatialThing-Localized.
+SpaceRegion openCycUri "Mx4rvlxdi5wpEbGdrcN5Y29ycA".
+SpaceRegion rdfs:comment "A specialization of both SpatialThing and IntangibleIndividual (qq.v.) whose instances are regions of space that exclusively act as possible locations for other spatial objects, and thus are immobile. A space region might be three-, two-, one-, or zero-dimensional; and spatial objects \"occupy\" such regions accordingly. Three-dimensional space regions (see SpaceChunk) can be occupied by solid objects. Two-dimensional space regions (or Surfaces) can be occupied by a purely two-dimensional objects. And similarly for one-dimensional space regions (Lines) and zero-dimensional space regions (Points).\n\nAnother important specialization of SpaceRegion is SpaceRegion_Empirical, whose instances are pieces of the embedding space for spatio-temporal objects (see SpatialThing_Localized).\n\nFor more on spatial location and occupancy, see AbsoluteLocationalPredicate and its instances.".
+StorageBox rdf:type owl:Class.
+StorageBox rdfs:subClassOf Box.
+Tableware rdf:type owl:Class.
+Tableware rdfs:subClassOf Artifact.
+Tableware rdfs:subClassOf SolidTangibleThing.
+Tableware rdfs:subClassOf _:node186i5gh9ax73.
+_:node186i5gh9ax73 rdf:type owl:Restriction.
+_:node186i5gh9ax73 owl:onProperty isMovable.
+_:node186i5gh9ax73 owl:hasValue "true"^^xsd:boolean.
+Tape rdf:type owl:Class.
+Tape rdfs:subClassOf SolidTangibleThing.
+Tape rdfs:subClassOf _:node186i5gh9ax74.
+_:node186i5gh9ax74 rdf:type owl:Class.
+_:node186i5gh9ax74 owl:intersectionOf _:node186i5gh9ax75.
+_:node186i5gh9ax75 rdf:first Artifact.
+_:node186i5gh9ax75 rdf:rest _:node186i5gh9ax77.
+_:node186i5gh9ax77 rdf:first _:node186i5gh9ax76.
+_:node186i5gh9ax76 rdf:type owl:Restriction.
+_:node186i5gh9ax76 owl:onProperty hasShape.
+_:node186i5gh9ax76 owl:hasValue boxShape.
+_:node186i5gh9ax77 rdf:rest _:node186i5gh9ax79.
+_:node186i5gh9ax79 rdf:first _:node186i5gh9ax78.
+_:node186i5gh9ax78 rdf:type owl:Restriction.
+_:node186i5gh9ax78 owl:onProperty isMovable.
+_:node186i5gh9ax78 owl:hasValue "true"^^xsd:boolean.
+_:node186i5gh9ax79 rdf:rest rdf:nil.
+Task rdf:type owl:Class.
+Task rdfs:label "task"@en.
+Task rdfs:label "t\u00E2che"@fr.
+Task rdfs:subClassOf PurposefulAction.
+Task rdfs:comment "An action considered in the specific context of robotics.".
+TimeInterval rdf:type owl:Class.
+TimeInterval rdfs:label "time interval"@en.
+TimeInterval rdfs:label "intervalle de temps"@fr.
+TimeInterval rdfs:subClassOf Plan-ExpectedSituationType.
+TimePoint rdf:type owl:Class.
+TimePoint rdfs:label "time point".
+TimePoint rdfs:subClassOf ContinuousTimeInterval.
+Toolbox rdf:type owl:Class.
+Toolbox rdfs:subClassOf Box.
+Toolbox rdfs:subClassOf SolidTangibleThing.
+Toolbox rdfs:comment "A specialization of box used to carry tools.".
+Torso rdf:type owl:Class.
+Torso rdfs:label "torso"@en.
+Torso rdfs:label "torse"@fr.
+Torso rdfs:subClassOf BodyPart.
+Toy rdf:type owl:Class.
+Toy rdfs:subClassOf GameArtifact.
+Toy rdfs:subClassOf _:node186i5gh9ax80.
+_:node186i5gh9ax80 rdf:type owl:Restriction.
+_:node186i5gh9ax80 owl:onProperty isMovable.
+_:node186i5gh9ax80 owl:hasValue "true"^^xsd:boolean.
+ToyCube rdf:type owl:Class.
+ToyCube rdfs:subClassOf Toy.
+ToyCube rdfs:comment "A cube, traditionnaly made of wood, meant for children to play with.".
+Trashbin rdf:type owl:Class.
+Trashbin rdfs:subClassOf Artifact.
+Trashbin rdfs:subClassOf SolidTangibleThing.
+Trashbin openCycUri "Mx4rvVjUTpwpEbGdrcN5Y29ycA".
+Uncover rdf:type owl:Class.
+Uncover rdfs:label "uncover"@en.
+Uncover rdfs:label "d\u00E9couvrir"@fr.
+Uncover rdfs:subClassOf Manipulation.
+VideoTape rdf:type owl:Class.
+VideoTape rdfs:label "video tape".
+VideoTape rdfs:label "videotape".
+VideoTape rdfs:subClassOf Tape.
+VideoTape rdfs:subClassOf _:node186i5gh9ax81.
+_:node186i5gh9ax81 rdf:type owl:Restriction.
+_:node186i5gh9ax81 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax81 owl:someValuesFrom _:node186i5gh9ax82.
+_:node186i5gh9ax82 rdf:type rdfs:Datatype.
+_:node186i5gh9ax82 owl:onDatatype xsd:integer.
+_:node186i5gh9ax82 owl:withRestrictions _:node186i5gh9ax84.
+_:node186i5gh9ax84 rdf:first _:node186i5gh9ax83.
+_:node186i5gh9ax83 xsd:maxInclusive "20"^^xsd:integer.
+_:node186i5gh9ax84 rdf:rest _:node186i5gh9ax86.
+_:node186i5gh9ax86 rdf:first _:node186i5gh9ax85.
+_:node186i5gh9ax85 xsd:minInclusive "10"^^xsd:integer.
+_:node186i5gh9ax86 rdf:rest rdf:nil.
+VideoTape rdfs:comment "A magnetic video support".
+VisualMark rdf:type owl:Class.
+VisualMark rdfs:label "marker"@en.
+VisualMark rdfs:label "visual mark"@en.
+VisualMark rdfs:label "marqueur visuel"@fr.
+VisualMark rdfs:subClassOf PartiallyTangible.
+VisualMark openCycUri "Mx4rvVkLmJwpEbGdrcN5Y29ycA".
+Wall rdf:type owl:Class.
+Wall rdfs:label "wall"@en.
+Wall rdfs:label "mur"@fr.
+Wall rdfs:subClassOf PhysicalSupport.
+Wall openCycUri "Mx4rvVjfapwpEbGdrcN5Y29ycA".
+Window rdf:type owl:Class.
+Window rdfs:subClassOf Artifact.
+Window rdfs:subClassOf SolidTangibleThing.
+Window rdfs:subClassOf _:node186i5gh9ax87.
+_:node186i5gh9ax87 rdf:type owl:Restriction.
+_:node186i5gh9ax87 owl:onProperty isTraversable.
+_:node186i5gh9ax87 owl:hasValue "true"^^xsd:boolean.
+Window openCycUri "Mx4rvVj5V5wpEbGdrcN5Y29ycA".
+Zone rdf:type owl:Class.
+ZoneOfAction rdf:type owl:Class.
+ZoneOfAction rdfs:subClassOf SpaceRegion.
+ZoneOfAction rdfs:comment "Defines the portion of space in which an agent can act. It primary relates to actions like taking something.".
+ZoneOfInteraction rdf:type owl:Class.
+ZoneOfInteraction rdfs:subClassOf SpaceRegion.
+ZoneOfInterest rdf:type owl:Class.
+ZoneOfInterest rdfs:label "zone of interest"@en.
+ZoneOfInterest rdfs:label "zone d'int\u00E9r\u00EAt"@fr.
+ZoneOfInterest rdfs:subClassOf SpaceRegion.
+ZoneOfInterest rdfs:comment "A specific region of space which has an interest for some purpose.\nFor instance, a table can have several zone of interests describing parts of the table interessant for the robot (plates, zons in front of chairs,etc.)".
+Action rdf:type owl:Class.
+Action rdfs:label "action"@en.
+Action rdfs:label "action"@fr.
+Action rdfs:subClassOf Event.
+Action openCycUri "Mx4rvVioQZwpEbGdrcN5Y29ycA".
+Action rdfs:comment "An action implies several thematic roles (or semantic roles):\n\nWe use this list of roles (Aarts 1997: 88), which are mapped to specific predicates :\nAgent: The \u2018doer\u2019 or instigator of the action denoted by the predicate.\nPatient: The \u2018undergoer\u2019 of the action or event denoted by the predicate.\nTheme: The entity that is moved by the action or event denoted by the predicate.\nExperiencer: The living entity that experiences the action or event denoted by the predicate.\nGoal: The location or entity in the direction of which something moves.\nBenefactive: The entity that benefits from the action or event denoted by the predicate.\nSource: The location or entity from which something moves\nInstrument: The medium by which the action or event denoted by the predicate is carried out.\nLocative: The specification of the place where the action or event denoted by the predicate in situated.".
+Action rdfs:comment "The collection of Events (q.v.) that are carried out by some \"doer\". Instances of Action include any event in which one or more agents effect some change in the (tangible or intangible) state of the world, typically by an expenditure of effort or energy. Note that it is not required that any tangible object be moved, changed, produced, or destroyed for an action to occur; the effects of an action might be intangible. In the context of the OpenRobotOntology, doers of an action are as a matter of fact instances to Agent_PartiallyTangible (q.v.), even if they may not be in a broader context (e.g. a falling rock that dents a car's roof). Depending upon the context, doers of actions might be animate or inanimate, conscious or nonconscious. For actions that are intentional, see PurposefulAction and performedBy.\n\nThe object of an action is asserted through the properties objectOfAction and recipientOfAction.".
+AlcoholicBeverage rdf:type owl:Class.
+AlcoholicBeverage rdfs:subClassOf Drink.
+AppleJuice rdf:type owl:Class.
+AppleJuice rdfs:label "apple juice"@en.
+AppleJuice rdfs:label "jus de pomme"@fr.
+AppleJuice rdfs:subClassOf NonAlcoholicBeverage.
+AppleJuice owl:disjointWith OrangeJuice.
+ArmChair rdf:type owl:Class.
+ArmChair rdfs:label "armchair"@en.
+ArmChair rdfs:label "fauteuil"@fr.
+ArmChair rdfs:subClassOf FurniturePiece.
+Beer rdf:type owl:Class.
+Beer rdfs:label "beer"@en.
+Beer rdfs:subClassOf AlcoholicBeverage.
+Beer owl:disjointWith Wine.
+Can rdf:type owl:Class.
+Can rdfs:label "Dose"@de.
+Can rdfs:label "can"@en.
+Can rdfs:label "cannette"@fr.
+Can rdfs:subClassOf Artifact.
+Can rdfs:subClassOf Container.
+Can rdfs:subClassOf SolidTangibleThing.
+Can rdfs:subClassOf _:node186i5gh9ax88.
+_:node186i5gh9ax88 rdf:type owl:Restriction.
+_:node186i5gh9ax88 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax88 owl:allValuesFrom _:node186i5gh9ax89.
+_:node186i5gh9ax89 rdf:type rdfs:Datatype.
+_:node186i5gh9ax89 owl:onDatatype xsd:float.
+_:node186i5gh9ax89 owl:withRestrictions _:node186i5gh9ax91.
+_:node186i5gh9ax91 rdf:first _:node186i5gh9ax90.
+_:node186i5gh9ax90 xsd:minInclusive "0.05"^^xsd:float.
+_:node186i5gh9ax91 rdf:rest _:node186i5gh9ax93.
+_:node186i5gh9ax93 rdf:first _:node186i5gh9ax92.
+_:node186i5gh9ax92 xsd:maxInclusive "0.12"^^xsd:float.
+_:node186i5gh9ax93 rdf:rest rdf:nil.
+Can rdfs:subClassOf _:node186i5gh9ax94.
+_:node186i5gh9ax94 rdf:type owl:Restriction.
+_:node186i5gh9ax94 owl:onProperty hasShape.
+_:node186i5gh9ax94 owl:hasValue cylinderShape.
+Can openCycUri "Mx4rvVj-85wpEbGdrcN5Y29ycA".
+Chair-PieceOfFurniture rdf:type owl:Class.
+Chair-PieceOfFurniture rdfs:label "chair"@en.
+Chair-PieceOfFurniture rdfs:label "chaise"@fr.
+Chair-PieceOfFurniture rdfs:subClassOf FurniturePiece.
+Drink rdf:type owl:Class.
+Drink rdfs:label "beverage"@en.
+Drink rdfs:label "drink"@en.
+Drink rdfs:label "boisson"@fr.
+Drink owl:equivalentClass _:node186i5gh9ax95.
+_:node186i5gh9ax95 rdf:type owl:Class.
+_:node186i5gh9ax95 owl:unionOf _:node186i5gh9ax96.
+_:node186i5gh9ax96 rdf:first NonAlcoholicBeverage.
+_:node186i5gh9ax96 rdf:rest _:node186i5gh9ax97.
+_:node186i5gh9ax97 rdf:first AlcoholicBeverage.
+_:node186i5gh9ax97 rdf:rest rdf:nil.
+Drink rdfs:subClassOf FoodOrDrink.
+Drink rdfs:subClassOf LiquidTangibleThing.
+Drink owl:disjointWith Food.
+EdibleStuff rdf:type owl:Class.
+EdibleStuff rdfs:subClassOf PartiallyTangible.
+EnduringThing-Localized rdf:type owl:Class.
+EnduringThing-Localized rdfs:label "spatial enduring thing"@en.
+EnduringThing-Localized rdfs:label "lieu physique"@fr.
+EnduringThing-Localized rdfs:subClassOf SpatialThing-Localized.
+EnduringThing-Localized openCycUri "Mx4ro3lluGJHQdiVxrZReHS-jQ".
+EnduringThing-Localized rdfs:comment "A specialization of both SpatialThing_Localized and SomethingExisting (qq.v.). Each instance of EnduringThing_Localized is a spatial enduring thing at which an event can occur or a situation can obtain. Positive examples include planets, the borders between countries, human beings, rocks, and atoms. Negative example include situations, events, abstract objects, and regions of space that exclusively act as possible locations for other spatial objects (see SpaceRegion). An important specialization of EnduringThing_Localized is Place (q.v.). The salient distinction between places (instances of Place) and locations (instances of EnduringThing_Localized) is that places are assumed to have relatively permanent locations, whereas locations need not have permanent locations. Thus, from the perspective of someone standing on a beach, the crest of a breaking wave can be a location at which foaming is occuring (thus an EnduringThing_Localized), but it cannot be such a place (i.e. it cannot be an instance of Place).".
+Event rdf:type owl:Class.
+Event rdfs:label "event"@en.
+Event rdfs:label "\u00E9v\u00E8nement"@fr.
+Event rdfs:subClassOf Situation.
+Event owl:disjointWith StaticSituation.
+Event openCycUri "Mx4rvViADZwpEbGdrcN5Y29ycA".
+FluidTangibleThing rdf:type owl:Class.
+FluidTangibleThing rdfs:label "fluid"@en.
+FluidTangibleThing rdfs:label "fluide"@fr.
+FluidTangibleThing rdfs:subClassOf PartiallyTangible.
+FluidTangibleThing owl:disjointWith SolidTangibleThing.
+Food rdf:type owl:Class.
+Food rdfs:subClassOf FoodOrDrink.
+FoodOrDrink rdf:type owl:Class.
+FoodOrDrink owl:equivalentClass _:node186i5gh9ax98.
+_:node186i5gh9ax98 rdf:type owl:Class.
+_:node186i5gh9ax98 owl:unionOf _:node186i5gh9ax99.
+_:node186i5gh9ax99 rdf:first Drink.
+_:node186i5gh9ax99 rdf:rest _:node186i5gh9ax100.
+_:node186i5gh9ax100 rdf:first Food.
+_:node186i5gh9ax100 rdf:rest rdf:nil.
+FoodOrDrink rdfs:subClassOf EdibleStuff.
+FoodOrDrink rdfs:comment "A specialization of EdibleStuff (q.v.). Each instance of FoodOrDrink is a substance which instances of some type of organism (that is, some sub-collection of Organism_Whole) normally consume a significant part of. Important specializations of FoodOrDrink include Food (instances of which require chewing in order to be consumed) and Drink (instances of which are liquids that can be consumed without chewing)."@en.
+FurniturePiece rdf:type owl:Class.
+FurniturePiece rdfs:label "furniture"@en.
+FurniturePiece rdfs:label "meuble"@fr.
+FurniturePiece rdfs:subClassOf Artifact.
+FurniturePiece rdfs:subClassOf SolidTangibleThing.
+Hand rdf:type owl:Class.
+Hand rdfs:label "hand"@en.
+Hand rdfs:label "main"@fr.
+Hand owl:equivalentClass _:node186i5gh9ax101.
+_:node186i5gh9ax101 rdf:type owl:Class.
+_:node186i5gh9ax101 owl:unionOf _:node186i5gh9ax102.
+_:node186i5gh9ax102 rdf:first LeftHand.
+_:node186i5gh9ax102 rdf:rest _:node186i5gh9ax103.
+_:node186i5gh9ax103 rdf:first RightHand.
+_:node186i5gh9ax103 rdf:rest rdf:nil.
+Hand rdfs:subClassOf BodyPart.
+LiquidTangibleThing rdf:type owl:Class.
+LiquidTangibleThing rdfs:label "liquid"@en.
+LiquidTangibleThing rdfs:label "liquide"@fr.
+LiquidTangibleThing rdfs:subClassOf FluidTangibleThing.
+Object-SupportingFurniture rdf:type owl:Class.
+Object-SupportingFurniture owl:equivalentClass _:node186i5gh9ax104.
+_:node186i5gh9ax104 rdf:type owl:Class.
+_:node186i5gh9ax104 owl:intersectionOf _:node186i5gh9ax105.
+_:node186i5gh9ax105 rdf:first FurniturePiece.
+_:node186i5gh9ax105 rdf:rest _:node186i5gh9ax107.
+_:node186i5gh9ax107 rdf:first _:node186i5gh9ax106.
+_:node186i5gh9ax106 rdf:type owl:Restriction.
+_:node186i5gh9ax106 owl:onProperty isHolder.
+_:node186i5gh9ax106 owl:hasValue "true"^^xsd:boolean.
+_:node186i5gh9ax107 rdf:rest rdf:nil.
+OrangeJuice rdf:type owl:Class.
+OrangeJuice rdfs:label "orange juice"@en.
+OrangeJuice rdfs:label "jus d'orange"@fr.
+OrangeJuice rdfs:subClassOf NonAlcoholicBeverage.
+PartiallyTangible rdf:type owl:Class.
+PartiallyTangible rdfs:subClassOf EnduringThing-Localized.
+PartiallyTangible openCycUri "Mx4rvVj27ZwpEbGdrcN5Y29ycA".
+PartiallyTangible rdfs:comment "A subcollection of EnduringThing_Localized and TemporalThing. Each instance of PartiallyTangible has a tangible (i.e. material) part and a temporal extent (i.e. it exists in time). It might or might not also have an intangible part. For example, a particular copy of a book is made of matter, has temporal extent, and also has an intangible part: the information content of the text markings on its pages.".
+Plan-ExpectedSituationType rdf:type owl:Class.
+Plan-ExpectedSituationType rdfs:label "plan"@en.
+Plan-ExpectedSituationType rdfs:label "thing with a temporal extend"@en.
+Plan-ExpectedSituationType rdfs:label "plan"@fr.
+Plan-ExpectedSituationType rdfs:subClassOf TemporalThing.
+PurposefulAction rdf:type owl:Class.
+PurposefulAction rdfs:label "purposeful action"@en.
+PurposefulAction rdfs:label "action volontaire"@fr.
+PurposefulAction rdfs:subClassOf Action.
+PurposefulAction openCycUri "Mx4rvVieP5wpEbGdrcN5Y29ycA".
+PurposefulAction rdfs:comment "A specialization of both Action and AtLeastPartiallyMentalEvent. Each instance of PurposefulAction is an action consciously, volitionally, and purposefully done by (see performedBy) at least one actor.".
+Resting-Relaxing rdf:type owl:Class.
+Resting-Relaxing rdfs:label "rest"@en.
+Resting-Relaxing rdfs:label "repos"@fr.
+Resting-Relaxing rdfs:comment "The collection of events in which an animal abstains from strenuous physical activity.".
+Situation rdf:type owl:Class.
+Situation rdfs:label "situation"@en.
+Situation rdfs:label "situation"@fr.
+Situation rdfs:subClassOf Plan-ExpectedSituationType.
+Situation openCycUri "Mx4rvYjIS5wpEbGdrcN5Y29ycA".
+Situation rdfs:comment "Each instance of Situation is a state or event consisting of one or more objects having certain properties or bearing certain relations to each other. Notable specializations of Situation are Event and StaticSituation; it is disjoint with SomethingExisting.".
+Sofa-PieceOfFurniture rdf:type owl:Class.
+Sofa-PieceOfFurniture rdfs:label "couch"@en.
+Sofa-PieceOfFurniture rdfs:label "sofa"@en.
+Sofa-PieceOfFurniture rdfs:label "canap\u00E9"@fr.
+Sofa-PieceOfFurniture rdfs:subClassOf FurniturePiece.
+SoftDrink rdf:type owl:Class.
+SoftDrink rdfs:label "soda"@en.
+SoftDrink rdfs:label "soft drink"@en.
+SoftDrink rdfs:subClassOf NonAlcoholicBeverage.
+SolidTangibleThing rdf:type owl:Class.
+SolidTangibleThing rdfs:subClassOf PartiallyTangible.
+SpatialThing rdf:type owl:Class.
+SpatialThing rdfs:label "spatial thing"@en.
+SpatialThing rdfs:label "chose spatiale"@fr.
+SpatialThing rdfs:subClassOf owl:Thing.
+SpatialThing rdfs:comment "A specialization of Individual. The collection of all things that have a spatial extent or location relative to some other SpatialThing or in some embedding space. Note that to say that an entity is a member of this collection is to remain agnostic about two issues. First, a SpatialThing may be PartiallyTangible (e.g. Texas-State) or wholly Intangible (e.g. ArcticCircle or a line mentioned in a geometric theorem). Second, although we do insist on location relative to another spatial thing or in some embedding space, a SpatialThing might or might not be located in the actual physical universe. It is far from clear that all SpatialThings are so located: an ideal platonic circle or a trajectory through the phase space of some physical system (e.g.) might not be. If the intent is to imply location in the empirically observable cosmos, the user should employ this collection's specialization, SpatialThing-Localized.".
+SpatialThing openCycUri "Mx4rvVjpUZwpEbGdrcN5Y29ycA".
+SpatialThing-Localized rdf:type owl:Class.
+SpatialThing-Localized rdfs:label "location"@en.
+SpatialThing-Localized rdfs:label "lieu"@fr.
+SpatialThing-Localized rdfs:subClassOf SpatialThing.
+SpatialThing-Localized openCycUri "Mx4rwS68M5wpEbGdrcN5Y29ycA".
+SpatialThing-Localized rdfs:comment "A specialization of both SpatialThing and TemporalThing. This is the collection of all spatial things, tangible or intangible, that can meaningfully be said to have location or position in the empirical universe.\n\nExamples of spatially-localized things include all PartiallyTangible things, such as trees and ships, as well as certain Intangible spatial things, like the EarthsEquator. Also included are those events that can be pinned-down to specific places (see Event-Localized), and thus all PhysicalEvents. Excluded from this collection are any SpatialThings that are not localized, such as -- arguably -- purely abstract geometrical figures (e.g. a Platonic sphere).\n\nNote that a fictional or imaginary object (such as Frodo, Captain Queeg, or HAL9000-TheComputer) is typically localized with respect to the universe of the fictional/imagnary context in which it is found, and so is an instance of SpatialThing-Localized with respect to that context.".
+StaticSituation rdf:type owl:Class.
+StaticSituation rdfs:label "static situation"@en.
+StaticSituation rdfs:label "situation statique"@fr.
+StaticSituation rdfs:subClassOf Situation.
+StaticSituation rdfs:comment "A specialization of Situation. Each instance of StaticSituation is a state of affairs between two or more things, persisting statically over some time interval. IE, a state of the world.".
+StaticSituation openCycUri "Mx4rvh5TfJwpEbGdrcN5Y29ycA".
+Table-PieceOfFurniture rdf:type owl:Class.
+Table-PieceOfFurniture rdfs:label "table"@en.
+Table-PieceOfFurniture rdfs:label "table"@fr.
+Table-PieceOfFurniture rdfs:subClassOf Object-SupportingFurniture.
+Table-PieceOfFurniture rdfs:subClassOf _:node186i5gh9ax108.
+_:node186i5gh9ax108 rdf:type owl:Restriction.
+_:node186i5gh9ax108 owl:onProperty hasCharacteristicDimension.
+_:node186i5gh9ax108 owl:someValuesFrom _:node186i5gh9ax109.
+_:node186i5gh9ax109 rdf:type rdfs:Datatype.
+_:node186i5gh9ax109 owl:onDatatype xsd:integer.
+_:node186i5gh9ax109 owl:withRestrictions _:node186i5gh9ax111.
+_:node186i5gh9ax111 rdf:first _:node186i5gh9ax110.
+_:node186i5gh9ax110 xsd:minInclusive "50"^^xsd:integer.
+_:node186i5gh9ax111 rdf:rest _:node186i5gh9ax113.
+_:node186i5gh9ax113 rdf:first _:node186i5gh9ax112.
+_:node186i5gh9ax112 xsd:maxInclusive "300"^^xsd:integer.
+_:node186i5gh9ax113 rdf:rest rdf:nil.
+TemporalThing rdf:type owl:Class.
+TemporalThing rdfs:label "temporal thing"@en.
+TemporalThing rdfs:label "chose temporelle"@fr.
+Tray rdf:type owl:Class.
+Tray rdfs:subClassOf Artifact.
+Tray rdfs:subClassOf Container.
+Wine rdf:type owl:Class.
+Wine rdfs:label "wine"@en.
+Wine rdfs:subClassOf AlcoholicBeverage.
+owl:Thing rdf:type owl:Class.
+owl:Thing rdfs:label "thing"@en.
+owl:Thing rdfs:label "chose"@fr.
+black rdf:type owl:Thing.
+black rdf:type Color.
+black rdf:type owl:NamedIndividual.
+black rdfs:label "black"@en.
+black rdfs:label "noir"@fr.
+black rdfs:comment "A proto-black: a generic instance of the colour black."@en.
+blue rdf:type owl:Thing.
+blue rdf:type Color.
+blue rdf:type owl:NamedIndividual.
+blue rdfs:label "blue"@en.
+blue rdfs:label "bleu"@fr.
+blue rdfs:comment "A proto-blue: a generic instance of the colour blue."@en.
+boxShape rdf:type owl:Thing.
+boxShape rdf:type Shape.
+boxShape rdf:type owl:NamedIndividual.
+boxShape rdfs:label "box shaped"@en.
+boxShape rdfs:label "parall\u00E9lip\u00E9dique"@fr.
+boxShape rdfs:comment "A proto-cube: the most generic instance of the class of shapes \"cube\"."@en.
+current_world_state rdf:type owl:Thing.
+current_world_state rdf:type StaticSituation.
+current_world_state rdf:type owl:NamedIndividual.
+current_world_state rdfs:label "current world state"@en.
+current_world_state rdfs:label "\u00E9tat courant du monde"@fr.
+current_world_state rdfs:comment "By convention, the current static situation representing the state of the world as understood by 'myself'.".
+cylinderShape rdf:type owl:Thing.
+cylinderShape rdf:type Shape.
+cylinderShape rdf:type owl:NamedIndividual.
+cylinderShape rdfs:label "cylindrical"@en.
+cylinderShape rdfs:label "cylindrique"@fr.
+cylinderShape rdfs:comment "A proto-cylinder: the most generic instance of the class of shapes \"cylinder\"."@en.
+gray rdf:type owl:Thing.
+gray rdf:type Color.
+gray rdf:type owl:NamedIndividual.
+gray rdfs:label "gray"@en.
+gray rdfs:label "grey"@en.
+gray rdfs:label "gris"@fr.
+gray rdfs:comment "A proto-grey: a generic instance of the colour grey."@en.
+green rdf:type owl:Thing.
+green rdf:type Color.
+green rdf:type owl:NamedIndividual.
+green rdfs:label "green"@en.
+green rdfs:label "vert"@fr.
+green rdfs:comment "A proto-green: a generic instance of the colour green."@en.
+large rdf:type owl:NamedIndividual.
+medium rdf:type owl:NamedIndividual.
+myself rdf:type owl:Thing.
+myself rdf:type Agent.
+myself rdf:type owl:NamedIndividual.
+myself rdfs:label "myself"@en.
+myself rdfs:label "moi-m\u00EAme"@fr.
+myself rdfs:comment "\"Myself\" is always the cognitive agent who owns the current instance of the ontology."@en.
+orange rdf:type owl:Thing.
+orange rdf:type Color.
+orange rdf:type owl:NamedIndividual.
+orange rdfs:label "orange"@en.
+orange rdfs:label "orange"@fr.
+orange rdfs:comment "A proto-orange: a generic instance of the colour orange."@en.
+pink rdf:type owl:Thing.
+pink rdf:type Color.
+pink rdf:type owl:NamedIndividual.
+pink rdfs:label "pink"@en.
+pink rdfs:label "rose"@en.
+pink rdfs:label "rose"@fr.
+pink rdfs:comment "A proto-pink: a generic instance of the colour pink."@en.
+red rdf:type owl:Thing.
+red rdf:type Color.
+red rdf:type owl:NamedIndividual.
+red rdfs:label "red"@en.
+red rdfs:label "rouge"@fr.
+red rdfs:comment "A proto-red: a generic instance of the colour red."@en.
+sitting rdf:type owl:Thing.
+sitting rdf:type Posture.
+sitting rdf:type owl:NamedIndividual.
+sitting rdfs:label "sitting"@en.
+sitting rdfs:label "assi"@fr.
+small rdf:type owl:NamedIndividual.
+sphereShape rdf:type owl:Thing.
+sphereShape rdf:type Shape.
+sphereShape rdf:type owl:NamedIndividual.
+sphereShape rdfs:label "spherical"@en.
+sphereShape rdfs:label "sph\u00E9rique"@fr.
+sphereShape rdfs:comment "A proto-sphere: the most generic instance of the class of shapes \"sphere\"."@en.
+standing rdf:type owl:Thing.
+standing rdf:type Posture.
+standing rdf:type owl:NamedIndividual.
+standing rdfs:label "standing"@en.
+standing rdfs:label "debout"@fr.
+unknownLocation rdf:type owl:Thing.
+unknownLocation rdf:type SpatialThing.
+unknownLocation rdf:type owl:NamedIndividual.
+unknownLocation rdfs:label "unknown location"@en.
+unknownLocation rdfs:label "position inconnue"@fr.
+unknownLocation rdfs:comment "This special location denote an unknown spatial location. The typical use case is when an object is expected to be found somewhere, but is not actually there, it is in an UnknownLocation."@en.
+violet rdf:type owl:Thing.
+violet rdf:type Color.
+violet rdf:type owl:NamedIndividual.
+violet rdfs:label "violet"@en.
+violet rdfs:label "violet"@fr.
+violet rdfs:comment "A proto-violet: a generic instance of the colour violet."@en.
+white rdf:type owl:Thing.
+white rdf:type Color.
+white rdf:type owl:NamedIndividual.
+white rdfs:label "white"@en.
+white rdfs:label "blanc"@fr.
+white rdfs:comment "A proto-white: a generic instance of the colour white."@en.
+yellow rdf:type owl:Thing.
+yellow rdf:type Color.
+yellow rdf:type owl:NamedIndividual.
+yellow rdfs:label "yellow"@en.
+yellow rdfs:label "jaune"@fr.
+yellow rdfs:comment "A proto-yellow: a generic instance of the colour yellow."@en.
+_:node186i5gh9ax114 rdf:type owl:AllDisjointClasses.
+_:node186i5gh9ax114 owl:members _:node186i5gh9ax115.
+_:node186i5gh9ax115 rdf:first Color.
+_:node186i5gh9ax115 rdf:rest _:node186i5gh9ax116.
+_:node186i5gh9ax116 rdf:first Situation.
+_:node186i5gh9ax116 rdf:rest _:node186i5gh9ax117.
+_:node186i5gh9ax117 rdf:first SpatialThing.
+_:node186i5gh9ax117 rdf:rest rdf:nil.
+_:node186i5gh9ax118 rdf:type owl:AllDisjointClasses.
+_:node186i5gh9ax118 owl:members _:node186i5gh9ax119.
+_:node186i5gh9ax119 rdf:first Agent.
+_:node186i5gh9ax119 rdf:rest _:node186i5gh9ax120.
+_:node186i5gh9ax120 rdf:first Artifact.
+_:node186i5gh9ax120 rdf:rest _:node186i5gh9ax121.
+_:node186i5gh9ax121 rdf:first VisualMark.
+_:node186i5gh9ax121 rdf:rest rdf:nil.
+_:node186i5gh9ax122 rdf:type owl:AllDifferent.
+_:node186i5gh9ax122 owl:distinctMembers _:node186i5gh9ax123.
+_:node186i5gh9ax123 rdf:first boxShape.
+_:node186i5gh9ax123 rdf:rest _:node186i5gh9ax124.
+_:node186i5gh9ax124 rdf:first cylinderShape.
+_:node186i5gh9ax124 rdf:rest _:node186i5gh9ax125.
+_:node186i5gh9ax125 rdf:first sphereShape.
+_:node186i5gh9ax125 rdf:rest rdf:nil.
+_:node186i5gh9ax126 rdf:type owl:AllDifferent.
+_:node186i5gh9ax126 owl:distinctMembers _:node186i5gh9ax127.
+_:node186i5gh9ax127 rdf:first black.
+_:node186i5gh9ax127 rdf:rest _:node186i5gh9ax128.
+_:node186i5gh9ax128 rdf:first blue.
+_:node186i5gh9ax128 rdf:rest _:node186i5gh9ax129.
+_:node186i5gh9ax129 rdf:first gray.
+_:node186i5gh9ax129 rdf:rest _:node186i5gh9ax130.
+_:node186i5gh9ax130 rdf:first green.
+_:node186i5gh9ax130 rdf:rest _:node186i5gh9ax131.
+_:node186i5gh9ax131 rdf:first orange.
+_:node186i5gh9ax131 rdf:rest _:node186i5gh9ax132.
+_:node186i5gh9ax132 rdf:first pink.
+_:node186i5gh9ax132 rdf:rest _:node186i5gh9ax133.
+_:node186i5gh9ax133 rdf:first red.
+_:node186i5gh9ax133 rdf:rest _:node186i5gh9ax134.
+_:node186i5gh9ax134 rdf:first violet.
+_:node186i5gh9ax134 rdf:rest _:node186i5gh9ax135.
+_:node186i5gh9ax135 rdf:first white.
+_:node186i5gh9ax135 rdf:rest _:node186i5gh9ax136.
+_:node186i5gh9ax136 rdf:first yellow.
+_:node186i5gh9ax136 rdf:rest rdf:nil.
+_:node186i5gh9ax137 rdf:type owl:AllDifferent.
+_:node186i5gh9ax137 owl:distinctMembers _:node186i5gh9ax138.
+_:node186i5gh9ax138 rdf:first sitting.
+_:node186i5gh9ax138 rdf:rest _:node186i5gh9ax139.
+_:node186i5gh9ax139 rdf:first standing.
+_:node186i5gh9ax139 rdf:rest rdf:nil.
+_:node186i5gh9ax140 rdf:type owl:AllDisjointClasses.
+_:node186i5gh9ax140 owl:members _:node186i5gh9ax141.
+_:node186i5gh9ax141 rdf:first Artifact.
+_:node186i5gh9ax141 rdf:rest _:node186i5gh9ax142.
+_:node186i5gh9ax142 rdf:first Ceilling.
+_:node186i5gh9ax142 rdf:rest _:node186i5gh9ax143.
+_:node186i5gh9ax143 rdf:first Floor.
+_:node186i5gh9ax143 rdf:rest _:node186i5gh9ax144.
+_:node186i5gh9ax144 rdf:first Wall.
+_:node186i5gh9ax144 rdf:rest rdf:nil.
+_:node186i5gh9ax145 rdf:type owl:AllDisjointClasses.
+_:node186i5gh9ax145 owl:members _:node186i5gh9ax146.
+_:node186i5gh9ax146 rdf:first Bottle.
+_:node186i5gh9ax146 rdf:rest _:node186i5gh9ax147.
+_:node186i5gh9ax147 rdf:first Cup.
+_:node186i5gh9ax147 rdf:rest _:node186i5gh9ax148.
+_:node186i5gh9ax148 rdf:first Glass.
+_:node186i5gh9ax148 rdf:rest rdf:nil.
+urn:swrl#a1 rdf:type swrl:Variable.
+urn:swrl#b rdf:type swrl:Variable.
+urn:swrl#a2 rdf:type swrl:Variable.
+urn:swrl#c rdf:type swrl:Variable.
+_:node186i5gh9ax149 rdf:type swrl:Imp.
+_:node186i5gh9ax149 swrl:head _:node186i5gh9ax150.
+_:node186i5gh9ax150 rdf:type swrl:AtomList.
+_:node186i5gh9ax150 rdf:rest rdf:nil.
+_:node186i5gh9ax150 rdf:first _:node186i5gh9ax151.
+_:node186i5gh9ax151 rdf:type swrl:DifferentIndividualsAtom.
+_:node186i5gh9ax151 swrl:argument1 urn:swrl#a1.
+_:node186i5gh9ax151 swrl:argument2 urn:swrl#a2.
+_:node186i5gh9ax149 swrl:body _:node186i5gh9ax152.
+_:node186i5gh9ax152 rdf:type swrl:AtomList.
+_:node186i5gh9ax152 rdf:first _:node186i5gh9ax153.
+_:node186i5gh9ax153 rdf:type swrl:IndividualPropertyAtom.
+_:node186i5gh9ax153 swrl:propertyPredicate contains.
+_:node186i5gh9ax153 swrl:argument1 urn:swrl#a1.
+_:node186i5gh9ax153 swrl:argument2 urn:swrl#b.
+_:node186i5gh9ax152 rdf:rest _:node186i5gh9ax154.
+_:node186i5gh9ax154 rdf:type swrl:AtomList.
+_:node186i5gh9ax154 rdf:rest _:node186i5gh9ax155.
+_:node186i5gh9ax155 rdf:type swrl:AtomList.
+_:node186i5gh9ax155 rdf:rest rdf:nil.
+_:node186i5gh9ax155 rdf:first _:node186i5gh9ax156.
+_:node186i5gh9ax156 rdf:type swrl:DifferentIndividualsAtom.
+_:node186i5gh9ax156 swrl:argument1 urn:swrl#b.
+_:node186i5gh9ax156 swrl:argument2 urn:swrl#c.
+_:node186i5gh9ax154 rdf:first _:node186i5gh9ax157.
+_:node186i5gh9ax157 rdf:type swrl:IndividualPropertyAtom.
+_:node186i5gh9ax157 swrl:propertyPredicate contains.
+_:node186i5gh9ax157 swrl:argument1 urn:swrl#a2.
+_:node186i5gh9ax157 swrl:argument2 urn:swrl#c.

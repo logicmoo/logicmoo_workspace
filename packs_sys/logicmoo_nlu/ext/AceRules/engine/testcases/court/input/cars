@@ -1,0 +1,15 @@
+"Zurich" is a branch.
+"Geneva" is a branch.
+"Basel" is a branch.
+"BMW 1" is a car and is at "Zurich".
+"BMW 2" is a car and is at "Geneva".
+"Toyota 1" is a car and is at "Basel".
+"Toyota 2" is a car and is at "Zurich".
+"VW 1" is a car and is at "Geneva".
+"VW 1" is red.
+"BMW 2" is faster than "VW 1".
+
+"R101" is a reservation.
+The customer of "R101" is John-Miller.
+The branch of "R101" is "Zurich".
+The day of "R101" is "14".

@@ -1,0 +1,409 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.9</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="metacall.html">
+<link rel="next" href="exception.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="metacall.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="exception.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:delcont"><a id="sec:4.9"><span class="sec-nr">4.9</span> <span class="sec-title">Delimited 
+continuations</span></a></h2>
+
+<a id="sec:delcont"></a>
+
+<p>The predicates <a id="idx:reset3:759"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+and <a id="idx:shift1:760"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+implement <em>delimited continuations</em> for Prolog. Delimited 
+continuation for Prolog is described in <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/SchrijversDDW13">Schrijvers <em>et 
+al.</em>, 2013</a></cite> (<a class="url" href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf">preprint 
+PDF</a>). The mechanism allows for proper <em>coroutines</em>, two or 
+more routines whose execution is interleaved, while they exchange data. 
+Note that coroutines in this sense differ from coroutines realised using 
+attributed variables as described in <a class="sec" href="clp.html#sec:8">chapter 
+8</a>.
+
+<p>Note that <a id="idx:shift1:761"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+captures the <em>forward continuation</em>. It notably does not capture 
+choicepoints. Choicepoints created before the continuation is captures 
+remain open, while choicepoints created when the continuation is 
+executed live their normal life. Unfortunately the consequences for <em>committing</em> 
+a choicepoint is complicated. In general a cut (<a class="pred" href="control.html#!/0">!/0</a>) 
+in the continuation does not have the expected result. Negation (<a class="pred" href="control.html#\+/1">\+/1</a>) 
+and if-then(-else) (<a class="pred" href="control.html#->/2">-&gt;/2</a>) 
+behave as expected, <em>provided the continuation is called immediately</em>. 
+This works because for <a class="pred" href="control.html#\+/1">\+/1</a> 
+and
+<a class="pred" href="control.html#->/2">-&gt;/2</a> the continuation 
+contains a reference to the choicepoint that must be cancelled and this 
+reference is restored when possible. If, as with tabling, the 
+continuation is saved and called later, the commit has no effect. We 
+illustrate the three scenarios using with the programs below.
+
+<pre class="code">
+t1 :-
+    reset(gbad, ball, Cont),
+    (   Cont == 0
+    -&gt;  true
+    ;   writeln(resuming),
+        call(Cont)
+    ).
+
+gbad :-
+    n, !, fail.
+gbad.
+
+n :-
+    shift(ball),
+    writeln(n).
+</pre>
+
+<p>Here, the <a class="pred" href="control.html#!/0">!/0</a> has <b>no 
+effect</b>:
+
+<pre class="code">
+?- t1.
+resuming
+n
+true.
+</pre>
+
+<p>The second example uses <a class="pred" href="control.html#\+/1">\+/1</a>, 
+which is essentially
+<code>(G-&gt;fail;true)</code>.
+
+<pre class="code">
+t2 :-
+    reset(gok, ball, Cont),
+    (   Cont == 0
+    -&gt;  true
+    ;   writeln(resuming),
+        call(Cont)
+    ).
+
+gok :-
+    \+ n.
+</pre>
+
+<p>In this scenario the normal semantics of <a class="pred" href="control.html#\+/1">\+/1</a> 
+is preserved:
+
+<pre class="code">
+?- t1.
+resuming
+n
+false.
+</pre>
+
+<p>In the last example we illustrate what happens if we assert the 
+continuation to be executed later. We write the negation using 
+if-then-else to make it easier to explain the behaviour.
+
+<pre class="code">
+:- dynamic cont/1.
+
+t3 :-
+    retractall(cont(_)),
+    reset(gassert, ball, Cont),
+    (   Cont == 0
+    -&gt;  true
+    ;   asserta(cont(Cont))
+    ).
+
+c3 :-
+    cont(Cont),
+    writeln(resuming),
+    call(Cont).
+
+gassert :-
+    (   n
+    -&gt;  fail
+    ;   true
+    ).
+</pre>
+
+<p>Now, t3/0 succeeds <em>twice</em>. This is because n/0 shifts, so the 
+commit to the <a id="idx:fail0:762"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+branch is not executed and the <a id="idx:true0:763"></a><a class="pred" href="control.html#true/0">true/0</a> 
+branch is evaluated normally. Calling the continuation later using c3/0 
+fails because the choicepoint that realised the if-then-else does not 
+exist in the continuation and thus the effective continuation is the 
+remainder of n/0 and
+<a id="idx:fail0:764"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+in gassert/0 .
+
+<pre class="code">
+?- t3.
+true ;
+true.
+
+?- c3.
+resuming
+n
+false.
+</pre>
+
+<p>The suspension mechanism provided by delimited continuations is used 
+to implement <em>tabling</em> <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/DesouterDS15">Desouter <em>et 
+al.</em>, 2015</a></cite>, (<a class="url" href="https://www.cambridge.org/core/journals/theory-and-practice-of-logic-programming/article/div-classtitletabling-as-a-library-with-delimited-controldiv/227B7C0227FD715CF159B6AF894DE96E">available 
+here</a>). See <a class="sec" href="tabling.html#sec:7">section 7</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="reset/3"><strong>reset</strong>(<var>:Goal, 
+?Ball, -Continuation</var>)</a></dt>
+<dd class="defbody">
+Call <var>Goal</var>. If <var>Goal</var> calls <a id="idx:shift1:765"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+and the argument of <a id="idx:shift1:766"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+can be unified with <var>Ball</var>,<sup class="fn">73<span class="fn-text">The 
+argument order described in <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/SchrijversDDW13">Schrijvers <em>et 
+al.</em>, 2013</a></cite> is <code>reset(Goal,Continuation,Ball)</code>. 
+We swapped the argument order for compatibility with <a id="idx:catch3:767"></a><a class="pred" href="exception.html#catch/3">catch/3</a></span></sup> <a id="idx:shift1:768"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+causes <a id="idx:reset3:769"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+to return, unifying
+<var>Continuation</var> with a goal that represents the <em>continuation</em> 
+after <a id="idx:shift1:770"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>. 
+In other words, meta-calling <var>Continuation</var> completes the 
+execution where shift left it. If <var>Goal</var> does not call <a id="idx:shift1:771"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>,
+<var>Continuation</var> are unified with the integer <code>0</code> 
+(zero).<sup class="fn">74<span class="fn-text">Note that older versions 
+also unify <var>Ball</var> with <code>0</code>. Testing whether or not 
+shift happened on <var>Ball</var> however is <em>always</em> ambiguous.</span></sup></dd>
+<dt class="pubdef"><a id="shift/1"><strong>shift</strong>(<var>+Ball</var>)</a></dt>
+<dd class="defbody">
+Abandon the execution of the current goal, returning control to just
+<em>after</em> the matching <a id="idx:reset3:772"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+call. This is similar to <a id="idx:throw1:773"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+except that (1) nothing is&lsquo;undone' and (2) the 3th argument of
+<a id="idx:reset3:774"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+is unified with the <em>continuation</em>, which allows the code calling <a id="idx:reset3:775"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+to <em>resume</em> the current goal.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,153 @@
+
+.MAIN
+[
+( UTTERANCE:v_0 )
+     {  < value $v_0 > }
+]
+
+UTTERANCE
+[
+( COMMAND:v_0 )
+     {return( $v_0 )}
+( YN_QUESTION:v_0 )
+     {return( $v_0 )}
+]
+
+COMMAND
+[
+( VERB_SWITCHABLE_ANY_IMPERATIVE_SWITCH:v_0 ONOFF:v_1 NP_SWITCHABLE_ANY:v_2 )
+     {return( concat( ( ( utterance_type command ) ) concat( $v_0 concat( $v_1 $v_2 ) ) ) )}
+( dim NP_DIMMABLE_ANY:v_0 )
+     {return( concat( ( ( utterance_type command ) ) concat( ( ( action dim ) ) $v_0 ) ) )}
+]
+
+NP_DIMMABLE_ANY
+[
+( NP_DIMMABLE_PLUR:v_0 )
+     {return( $v_0 )}
+( NP_DIMMABLE_SING:v_0 )
+     {return( $v_0 )}
+]
+
+NP_LOCATION_ANY
+[
+( NP_LOCATION_SING:v_0 )
+     {return( $v_0 )}
+]
+
+NP_SWITCHABLE_ANY
+[
+( NP_SWITCHABLE_PLUR:v_0 )
+     {return( $v_0 )}
+( NP_SWITCHABLE_SING:v_0 )
+     {return( $v_0 )}
+]
+
+VERB_SWITCHABLE_ANY_IMPERATIVE_SWITCH
+[
+( VERB_SWITCHABLE_SING_IMPERATIVE_SWITCH:v_0 )
+     {return( $v_0 )}
+]
+
+VERB_SWITCHABLE_SING_IMPERATIVE_SWITCH
+[
+( switch )
+     {return( ( ( action switch ) ) )}
+( turn )
+     {return( ( ( action switch ) ) )}
+]
+
+YN_QUESTION
+[
+( are NP_SWITCHABLE_PLUR:v_1 ONOFF:v_0 )
+     {return( concat( ( ( utterance_type query ) ) concat( ( ( state be ) ) concat( $v_0 $v_1 ) ) ) )}
+( is NP_SWITCHABLE_SING:v_1 ONOFF:v_0 )
+     {return( concat( ( ( utterance_type query ) ) concat( ( ( state be ) ) concat( $v_0 $v_1 ) ) ) )}
+( are NP_SWITCHABLE_PLUR:v_1 ONOFF:v_0 LOCATION_PP:v_2 )
+     {return( concat( ( ( utterance_type query ) ) concat( ( ( state be ) ) concat( $v_0 concat( $v_1 $v_2 ) ) ) ) )}
+( is NP_SWITCHABLE_SING:v_1 ONOFF:v_0 LOCATION_PP:v_2 )
+     {return( concat( ( ( utterance_type query ) ) concat( ( ( state be ) ) concat( $v_0 concat( $v_1 $v_2 ) ) ) ) )}
+]
+
+NOUN_SWITCHABLE_SING
+[
+( fan )
+     {return( ( ( device fan ) ) )}
+( light )
+     {return( ( ( device light ) ) )}
+<file:/cygwin/home/speech/Regulus/Examples/Toy1Dynamic/Nuance/more_sing_devices.gsl>
+]
+
+NP_DIMMABLE_PLUR
+[
+( the lights )
+     {return( ( ( device light ) ) )}
+( the lights LOCATION_PP:v_0 )
+     {return( concat( ( ( device light ) ) $v_0 ) )}
+]
+
+NP_DIMMABLE_SING
+[
+( the light )
+     {return( ( ( device light ) ) )}
+( the light LOCATION_PP:v_0 )
+     {return( concat( ( ( device light ) ) $v_0 ) )}
+]
+
+NP_LOCATION_SING
+[
+( the NOUN_LOCATION_SING:v_0 )
+     {return( $v_0 )}
+( the NOUN_LOCATION_SING:v_0 LOCATION_PP:v_1 )
+     {return( concat( $v_0 $v_1 ) )}
+]
+
+NP_SWITCHABLE_PLUR
+[
+( the NOUN_SWITCHABLE_PLUR:v_0 )
+     {return( $v_0 )}
+( the NOUN_SWITCHABLE_PLUR:v_0 LOCATION_PP:v_1 )
+     {return( concat( $v_0 $v_1 ) )}
+]
+
+NP_SWITCHABLE_SING
+[
+( the NOUN_SWITCHABLE_SING:v_0 )
+     {return( $v_0 )}
+( the NOUN_SWITCHABLE_SING:v_0 LOCATION_PP:v_1 )
+     {return( concat( $v_0 $v_1 ) )}
+]
+
+LOCATION_PP
+[
+( in NP_LOCATION_ANY:v_0 )
+     {return( $v_0 )}
+]
+
+NOUN_SWITCHABLE_PLUR
+[
+( fans )
+     {return( ( ( device fan ) ) )}
+( lights )
+     {return( ( ( device light ) ) )}
+]
+
+NOUN_LOCATION_SING
+[
+( kitchen )
+     {return( ( ( location kitchen ) ) )}
+( living room )
+     {return( ( ( location living_room ) ) )}
+]
+
+ONOFF
+[
+( off )
+     {return( ( ( onoff off ) ) )}
+( switched off )
+     {return( ( ( onoff off ) ) )}
+( on )
+     {return( ( ( onoff on ) ) )}
+( switched on )
+     {return( ( ( onoff on ) ) )}
+]

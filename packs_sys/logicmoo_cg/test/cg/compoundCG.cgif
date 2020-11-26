@@ -1,0 +1,20 @@
+
+[Goal : *p1  [Goal : *p5 ] 
+             (Goal  ?p5  [Poss_By : ?s_state ]; ) (Plan  ?p5  [Plan : ?p_plan ]; ) (Actor  ?p5  [Human : ?k_karen Karen ]; ) (outcome  ?p5  [Success_Goal_Outcome]; )   ;  & 53 145] 
+[Poss_By : *s_state  [Poss_By : *p6 ] 
+                     (State_Value  ?p6  [State_Value :Yes_State_Value ]; ) (Object  ?p6  [Pizza :Pizza001 ]; ) (Actor  ?p6  [Human : ?k_karen Karen ]; )   ;  & 216 195] 
+[ATrans : *a_atrans  [ATrans : *p7 ] 
+                     (to  ?p7  [Human : ?k_karen Karen ]; ) (Object  ?p7  [Pizza :Pizza001 ]; ) (Actor  ?p7  [Human : ?m_mike Mike ]; )   ;  & 231 319] 
+[Plan : *p_plan  [Plan : *p8 ] 
+                 (RealizedBy  ?p8  [MTrans : ?m_trans ]; ) (Actor  ?p8  [Human : ?k_karen Karen ]; )   ;  & 58 0] 
+[MTrans : *m_trans  [MTrans : *p9 ] [Human : ?k_karen Karen ] [Human : ?m_mike Mike ] 
+                    (to  ?p9  ?m_mike ; ) (Object  ?p9  [ATrans : ?a_atrans ]; ) (Actor  ?p9  ?k_karen ; ) (Father  ?k_karen  ?m_mike ; )   ;  & 388 58] 
+[Goal : *p2  [Goal : *p10 ] 
+             (Goal  ?p10  [ATrans : ?a_atrans ]; ) (Plan  ?p10  [Plan : ?p2_plan ]; ) (Actor  ?p10  [Human : ?m_mike Mike ]; ) (outcome  ?p10  [Success_Goal_Outcome]; )   ;  & 517 186] 
+[Plan : *p2_plan  [Plan : *p13 ] 
+                  (RealizedBy  ?p13  [ATrans : ?a_atrans ]; ) (Actor  ?p13  [Human : ?m_mike Mike ]; )   ;  & 460 466] 
+(intendedBy  ?p1  ?p_plan ; (81 81)(87 145)(125 17)) (intendedBy  ?p2  ?p2_plan ; (515 334)(553 203)(528 466)) (achievedBy  ?p1  ?a_atrans ; (174 240)(92 162)(306 319)) (achievedBy  ?p2  ?a_atrans ; (410 261)(540 203)(330 319)) (RealizedBy  ?p_plan  ?m_trans ; (268 37)(151 17)(436 58)) (RealizedBy  ?p2_plan  ?a_atrans ; (391 401)(523 466)(310 336)) (Actor  ?p1  [Human : *k_karen Karen  [Human :Karen ] [Hair : *p3 ] [Eyes : *p4 ] 
+                                                                                                                     (Hair  Karen  ?p3 ; ) (Age  Karen  [Age :Kid ]; ) (Color  ?p3  [Color :Blond ]; ) (Color  ?p4  [Color :Blue ]; ) (Eyes  Karen  ?p4 ; )   ;  & 7 277]; (84 219)(102 162)(91 276)) 
+                                                                                    (Actor  ?p2  [Human : *m_mike Mike  [Human :Mike ] [Hair : *p11 ] [Eyes : *p12 ] 
+                                                                                                                   (Hair  Mike  ?p11 ; ) (Age  Mike  [Age :Grown_Up ]; ) (Color  ?p11  [Color :Brown ]; ) (Color  ?p12  [Color :Green ]; ) (Eyes  Mike  ?p12 ; )   ;  & 593 319]; (607 261)(576 203)(663 319)) 
+                                                                                    (motivates  ?m_trans  ?p2 ; (487 130)(465 75)(554 186)) (outcome  ?p1  ?s_state ; (167 178)(86 162)(282 195)) (outcome  ?p2  ?s_state ; (437 195)(538 186)(370 205)) 

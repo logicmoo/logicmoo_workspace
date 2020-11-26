@@ -1,0 +1,2 @@
+#!/bin/bash
+sicstus -l $REGULUS/PrologLib/test_start_a.pl |& sicstus -l $REGULUS/PrologLib/search_for_a5.pl > $CALLSLT/tmp/start_a_trace.txt

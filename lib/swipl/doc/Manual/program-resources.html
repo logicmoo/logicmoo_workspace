@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 13.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="state-initialization.html">
+<link rel="next" href="debug-deployed-systems.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="state-initialization.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="debug-deployed-systems.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:program-resources"><a id="sec:13.4"><span class="sec-nr">13.4</span> <span class="sec-title">Using 
+program resources</span></a></h2>
+
+<a id="sec:program-resources"></a>
+
+<p>A <em>resource</em> is similar to a file. Resources, however, can be 
+represented in two different formats: on files, as well as part of the 
+resource <em>archive</em> of a saved state (see <a id="idx:qsaveprogram2:2466"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>) 
+that acts as a <em>virtual file system</em> for the SWI-Prolog I/O 
+predicates (see <a id="idx:open4:2467"></a><a class="pred" href="IO.html#open/4">open/4</a>, <a id="idx:registeririscheme3:2468"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>).
+
+<p>A resource has a <em>name</em>. The <em>source</em> data of a 
+resource is a file. Resources are declared by adding clauses to the 
+predicate
+<a id="idx:resource2:2469"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a> 
+or <a id="idx:resource3:2470"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a>. 
+Resources can be accessed from Prolog as files that start with <code>res://</code> 
+or they can be opened using
+<a id="idx:openresource3:2471"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.
+
+<p><h3 id="sec:res-files"><a id="sec:13.4.1"><span class="sec-nr">13.4.1</span> <span class="sec-title">Resources 
+as files</span></a></h3>
+
+<a id="sec:res-files"></a>
+
+<p>As of SWI-Prolog 7.7.13, resources that are compiled into the program 
+can be accessed using the normal file handling predicates. Currently the 
+following predicates transparently handle resources as read-only files:
+
+<p>
+<ul class="compact">
+<li><a id="idx:open3:2472"></a><a class="pred" href="IO.html#open/3">open/3</a>, <a id="idx:open4:2473"></a><a class="pred" href="IO.html#open/4">open/4</a>
+<li><a id="idx:accessfile2:2474"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>
+<li><a id="idx:existsfile1:2475"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a>
+<li><a id="idx:existsdirectory1:2476"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a>
+<li><a id="idx:timefile2:2477"></a><a class="pred" href="files.html#time_file/2">time_file/2</a>
+<li><a id="idx:sizefile2:2478"></a><a class="pred" href="files.html#size_file/2">size_file/2</a>
+</ul>
+
+<p>In addition, <a id="idx:opensharedobject3:2479"></a><a class="pred" href="foreignlink.html#open_shared_object/3">open_shared_object/3</a>, 
+underlying <a id="idx:useforeignlibrary1:2480"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+handles <em>shared objects</em> or DLLs by copying them to a temporary 
+file and opening this file. If the OS allows for it, the copied file is 
+deleted immediately, otherwise it is deleted on program termination.
+
+<p>With the ability to open resources as if they were files we can use 
+them for many tasks without changing the source code as required when 
+using
+<a id="idx:openresource2:2481"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a>. 
+Below we describe a typical scenario.
+
+<p>
+<ul class="latex">
+<li>Related resources are placed in one or more directories. Consider a 
+web application where we have several directories holding icons. Add 
+clauses to <a id="idx:filesearchpath2:2482"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+that makes all icons accessible using the term <code>icon(file)</code>.
+
+<p>
+<li>Add a clause as below before creating the state. This causes all 
+icons to be become available as
+<code>res://app/icon/</code><var>file</var>.
+
+<pre class="code">
+resource(app/icon, icon(.)).
+</pre>
+
+<p>
+<li>Add a clause to <a id="idx:filesearchpath2:2483"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+that make the icons available from the resource data. For example using 
+the code below.
+
+<pre class="code">
+:- asserta(user:file_search_path(icon, 'res://app/icon').
+</pre>
+
+<p>
+</ul>
+
+<p><h3 id="sec:res-resources"><a id="sec:13.4.2"><span class="sec-nr">13.4.2</span> <span class="sec-title">Access 
+resources using open_resource</span></a></h3>
+
+<a id="sec:res-resources"></a>
+
+<p>Before the system had the ability to open resources as files, 
+resources were opened using the predicates <a id="idx:openresource2:2484"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a> 
+or <a id="idx:openresource3:2485"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>. 
+These predicates provide somewhat better dynamic control over resources 
+depending on whether the code is running from files or from a saved 
+state. The main disadvantage is that having a separate open call 
+requires rewriting code to make it work with resources rather than 
+files.
+
+<dl class="latex">
+<dt class="pubdef"><a id="open_resource/2"><strong>open_resource</strong>(<var>+Name, 
+-Stream</var>)</a></dt>
+<dt class="pubdef"><a id="open_resource/3"><strong>open_resource</strong>(<var>+Name, 
+-Stream, +Options</var>)</a></dt>
+<dd class="defbody">
+Opens the resource specified by <var>Name</var>. If successful, <var>Stream</var> 
+is unified with an input stream that provides access to the resource. 
+The stream can be tuned using the <var>Options</var>, which is a subset 
+of the options provided by <a id="idx:open4:2486"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+
+<dl class="latex">
+<dt><strong>type</strong>(<var>Type</var>)</dt>
+<dt><strong>encoding</strong>(<var>Encoding</var>)</dt>
+<dt><strong>bom</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+Options that determine the binary/text type, encoding for text streams 
+and whether or not the content should be checked for a BOM marker. The 
+options have the same meaning as the corresponding options for <a id="idx:open4:2487"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+</dd>
+</dl>
+
+<p>The predicate <a id="idx:openresource3:2488"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a> 
+first checks <a id="idx:resource2:2489"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a>. 
+When successful it will open the returned resource source file. 
+Otherwise it will look in the program's resource database. When creating 
+a saved state, the system normally saves the resource contents into the 
+resource archive, but does not save the resource clauses.
+
+<p>This way, the development environment uses the files (and 
+modifications) to the <a id="idx:resource3:2490"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a> 
+declarations and/or files containing resource info, thus immediately 
+affecting the running environment, while the runtime system quickly 
+accesses the system resources.
+</dd>
+</dl>
+
+<p><h3 id="sec:res-declare"><a id="sec:13.4.3"><span class="sec-nr">13.4.3</span> <span class="sec-title">Declaring 
+resources</span></a></h3>
+
+<a id="sec:res-declare"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="resource/2"><strong>resource</strong>(<var>:Name, 
++FileSpec</var>)</a></dt>
+<dt class="pubdef"><a id="resource/3"><strong>resource</strong>(<var>:Name, 
++FileSpec, +Options</var>)</a></dt>
+<dd class="defbody">
+These predicates are defined as dynamic predicates in the module
+<code>user</code>. Clauses for them may be defined in any module, 
+including the user module. <var>Name</var> is the name of the resource 
+(an atom). A resource name may contain any character, except for $ and 
+:, which are reserved for internal usage by the resource library. <var>FileSpec</var> 
+is a file specification that may exploit <a id="idx:filesearchpath2:2491"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+(see
+<a id="idx:absolutefilename2:2492"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/2</a>).
+
+<p>Often, resources are defined as unit clauses (facts), but the 
+definition of this predicate also allows for rules. For proper 
+generation of the saved state, it must be possible to enumerate the 
+available resources by calling this predicate with all its arguments 
+unbound.
+
+<p>If <var>FileSpec</var> points at a directory, the content of the 
+directory is recursively added below <var>Name</var>. If <var>FileSpec</var> 
+a term of the form
+<code>Alias(Name)</code>, all directories that match this specification 
+are enumerated and their content is added to the resource database. If 
+an file appears in multiple results of this search path only the first 
+file is added. Note that this is consistent with the normal behaviour 
+where
+<a id="idx:absolutefilename3:2493"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+returns the first match. The <var>Options</var> can be used to control 
+what is saved from a directory.
+
+<dl class="latex">
+<dt><strong>include</strong>(<var>+Patterns</var>)</dt>
+<dd class="defbody">
+Only include a file from a directory if it matches at least one of the 
+members of <var>Patterns</var>.
+</dd>
+<dt><strong>exclude</strong>(<var>+Patterns</var>)</dt>
+<dd class="defbody">
+Excludes a file from a directory if it matches at least one of the 
+members of <var>Patterns</var>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><h3 id="sec:swiplrc"><a id="sec:13.4.4"><span class="sec-nr">13.4.4</span> <span class="sec-title">Managing 
+resource files</span></a></h3>
+
+<a id="sec:swiplrc"></a>
+
+<p>As of version 7.7.13, SWI-Prolog resource files are zip(1) files. 
+Prolog creates and accesses its resource files using the
+<a class="url" href="http://www.winimage.com/zLibDll/minizip.html">minizip</a> 
+project. The resource files may be examined and modified using any tool 
+that can process zip files.
+
+<p></body></html>

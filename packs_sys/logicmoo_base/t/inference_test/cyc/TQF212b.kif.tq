@@ -1,0 +1,56 @@
+(note TQF212b)
+
+(decreases-Generic #$HYP-Accepting-CommunicationAct-52881903 
+  (not 
+    (territoriesControlled Iran AbuMusaIsland)) likelihood)
+
+(implies 
+  (and 
+    (instance ?COM CommunicationAct-Single) 
+    (infoTransferred ?COM ?PROP) 
+    (istDecreasesSlotValue ?PROP ?PROP-2 likelihood)) 
+  (decreases-Generic ?COM ?PROP-2 likelihood)) 
+
+(instance HYP-Accepting-CommunicationAct-52881903 Accepting-CommunicationAct) 
+(subclass Accepting-CommunicationAct CommunicationAct-Single) 
+
+(infoTransferred #$HYP-Accepting-CommunicationAct-52881903 
+ (territoriesControlled Iran AbuMusaIsland))
+
+(istDecreasesSlotValue 
+ (territoriesControlled Iran AbuMusaIsland) 
+ (not 
+   (territoriesControlled Iran AbuMusaIsland)) likelihood)
+
+(query (findall ?SLOT-1 (implies 
+   (and 
+       (instance ?ACCEPT Accepting-CommunicationAct) 
+       (infoTransferred ?ACCEPT 
+           (territoriesControlled Iran AbuMusaIsland)) 
+       (istDecreasesSlotValue 
+           (territoriesControlled Iran AbuMusaIsland) 
+           (not 
+               (territoriesControlled Iran AbuMusaIsland)) likelihood) 
+       (senderOfInfo ?ACCEPT UnitedArabEmirates) 
+       (recipientOfInfo ?ACCEPT Iran) 
+       (temporallySubsumes AbuMusaConflict-1992 ?ACCEPT) 
+       (temporallySubsumes 
+           (MonthFn April 
+               (YearFn 1992)) ?ACCEPT)) 
+   (or 
+       (and 
+           (?SLOT ?ACCEPT 
+               (territoriesControlled Iran AbuMusaIsland) likelihood) 
+           (instance ?SLOT SlotTrendPredicate)) 
+       (and 
+           (?SLOT-1 ?ACCEPT 
+               (not 
+                   (territoriesControlled Iran AbuMusaIsland)) likelihood) 
+           (instance ?SLOT-1 SlotTrendPredicate))))))
+           
+(answer (list 
+  (decreases-Generic #$HYP-Accepting-CommunicationAct-52881903 
+    (not 
+      (territoriesControlled Iran AbuMusaIsland)) likelihood)))
+
+(end_of_file)

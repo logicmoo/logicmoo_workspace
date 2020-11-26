@@ -1,0 +1,797 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="thmonitor.html">
+<link rel="next" href="threadsync.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="thmonitor.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="threadsync.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:threadcom"><a id="sec:10.3"><span class="sec-nr">10.3</span> <span class="sec-title">Thread 
+communication</span></a></h2>
+
+<a id="sec:threadcom"></a>
+
+<p><h3 id="sec:msgqueue"><a id="sec:10.3.1"><span class="sec-nr">10.3.1</span> <span class="sec-title">Message 
+queues</span></a></h3>
+
+<a id="sec:msgqueue"></a>
+
+<p>Prolog threads can exchange data using dynamic predicates, database 
+records, and other globally shared data. These provide no suitable means 
+to wait for data or a condition as they can only be checked in an 
+expensive polling loop. <em>Message queues</em> provide a means for 
+threads to wait for data or conditions without using the CPU.
+
+<p>Each thread has a message queue attached to it that is identified by 
+the thread. Additional queues are created using <a id="idx:messagequeuecreate1:2176"></a><a class="pred" href="threadcom.html#message_queue_create/1">message_queue_create/1</a>. 
+Explicitly created queues come in two flavours. When given an
+<em>alias</em>, they must be destroyed by the user. <em>Anonymous</em> 
+message queues are identified by a <em>blob</em> (see <a class="sec" href="foreigninclude.html#sec:12.4.8">section 
+12.4.8</a>) and subject to garbage collection.
+
+<dl class="latex">
+<dt class="pubdef"><a id="thread_send_message/2"><strong>thread_send_message</strong>(<var>+QueueOrThreadId, 
++Term</var>)</a></dt>
+<dd class="defbody">
+Place <var>Term</var> in the given queue or default queue of the 
+indicated thread (which can even be the message queue of itself, see
+<a id="idx:threadself1:2177"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>). 
+Any term can be placed in a message queue, but note that the term is 
+copied to the receiving thread and variable bindings are thus lost. This 
+call returns immediately.
+
+<p>If more than one thread is waiting for messages on the given queue 
+and at least one of these is waiting with a partially instantiated
+<var>Term</var>, the waiting threads are <em>all</em> sent a wake-up 
+signal, starting a rush for the available messages in the queue. This 
+behaviour can seriously harm performance with many threads waiting on 
+the same queue as all-but-the-winner perform a useless scan of the 
+queue. If there is only one waiting thread or all waiting threads wait 
+with an unbound variable, an arbitrary thread is restarted to scan the 
+queue.<sup class="fn">177<span class="fn-text">See the documentation for 
+the POSIX thread functions pthread_cond_signal() v.s. pthread_cond_broadcast() 
+for background information.</span></sup></dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="thread_send_message/3"><strong>thread_send_message</strong>(<var>+Queue, 
++Term, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:threadsendmessage2:2178"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a>, 
+but providing additional <var>Options</var>. These are to deal with the 
+case that the queue has a finite maximum size and is full: whereas <a id="idx:threadsendmessage2:2179"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a> 
+will block until the queue has drained sufficiently to accept a new 
+message, <a id="idx:threadsendmessage3:2180"></a><a class="pred" href="threadcom.html#thread_send_message/3">thread_send_message/3</a> 
+can accept a time-out or deadline analogously to <a id="idx:threadgetmessage3:2181"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a>. 
+The options are:
+
+<dl class="latex">
+<dt><strong>deadline</strong>(<var>+AbsTime</var>)</dt>
+<dd class="defbody">
+The call fails (silently) if no space has become available before
+<var>AbsTime</var>. See <a id="idx:gettime1:2182"></a><a class="pred" href="system.html#get_time/1">get_time/1</a> 
+for the representation of absolute time. If <var>AbsTime</var> is 
+earlier then the current time, <a id="idx:threadsendmessage3:2183"></a><a class="pred" href="threadcom.html#thread_send_message/3">thread_send_message/3</a> 
+fails immediately. Both resolution and maximum wait time is 
+platform-dependent.<sup class="fn">178<span class="fn-text">The 
+implementation uses MsgWaitForMultipleObjects() on MS-Windows and 
+pthread_cond_timedwait() on other systems.</span></sup></dd>
+<dt><strong>timeout</strong>(<var>+Time</var>)</dt>
+<dd class="defbody">
+<var>Time</var> is a float or integer and specifies the maximum time to 
+wait in seconds. This is a relative-time version of the <code>deadline</code> 
+option. If both options are provided, the earlier time is effective.
+
+<p>If <var>Time</var> is 0 or 0.0, <a id="idx:threadsendmessage3:2184"></a><a class="pred" href="threadcom.html#thread_send_message/3">thread_send_message/3</a> 
+examines the queue and sends the message if space is available, but does 
+not suspend if no space is available, failing immediately instead.
+
+<p>If <var>Time</var> <var>&lt; 0</var>, <a id="idx:threadsendmessage3:2185"></a><a class="pred" href="threadcom.html#thread_send_message/3">thread_send_message/3</a> 
+fails immediately without sending the message.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="thread_get_message/1"><strong>thread_get_message</strong>(<var>?Term</var>)</a></dt>
+<dd class="defbody">
+Examines the thread message queue and if necessary blocks execution 
+until a term that unifies to <var>Term</var> arrives in the queue. After 
+a term from the queue has been unified to <var>Term</var>, the term is 
+deleted from the queue.
+
+<p>Please note that non-unifying messages remain in the queue. After the 
+following has been executed, thread 1 has the term <code>b(gnu)</code> 
+in its queue and continues execution using <var>A</var>&nbsp;=&nbsp;<code>gnat</code>.
+
+<pre class="code">
+   &lt;thread 1&gt;
+   thread_get_message(a(A)),
+
+   &lt;thread 2&gt;
+   thread_send_message(Thread_1, b(gnu)),
+   thread_send_message(Thread_1, a(gnat)),
+</pre>
+
+<p><var>Term</var> may contain attributed variables (see <a class="sec" href="clp.html#sec:8">section 
+8</a>), in which case only terms for which the constraints successfully 
+execute are returned. Handle constraints applies for all predicates that 
+extract terms from message queues. For example, we can get the even 
+numbers from a queue using this code:
+
+<pre class="code">
+get_matching_messages(Queue, Pattern, [H|T]) :-
+    copy_term(Pattern, H),
+    thread_get_message(Queue, H, [timeout(0)]),
+    !,
+    get_matching_messages(Queue, Pattern, T).
+get_matching_messages(_, _, []).
+
+even_numbers(Q, List) :-
+    freeze(Even, Even mod 2 =:= 0),
+    get_matching_messages(Q, Even, List).
+</pre>
+
+<p>See also <a id="idx:threadpeekmessage1:2186"></a><a class="pred" href="threadcom.html#thread_peek_message/1">thread_peek_message/1</a>.</dd>
+<dt class="pubdef"><a id="thread_peek_message/1"><strong>thread_peek_message</strong>(<var>?Term</var>)</a></dt>
+<dd class="defbody">
+Examines the thread message queue and compares the queued terms with <var>Term</var> 
+until one unifies or the end of the queue has been reached. In the first 
+case the call succeeds, possibly instantiating
+<var>Term</var>. If no term from the queue unifies, this call fails. 
+I.e.,
+<a id="idx:threadpeekmessage1:2187"></a><a class="pred" href="threadcom.html#thread_peek_message/1">thread_peek_message/1</a> 
+never waits and does not remove any term from the queue. See also <a id="idx:threadgetmessage3:2188"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a>.</dd>
+<dt class="pubdef"><a id="message_queue_create/1"><strong>message_queue_create</strong>(<var>?Queue</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>message_queue_create(Queue,[])</code>. For 
+compatibility, calling <code>message_queue_create(+Atom)</code> is 
+equivalent to
+<code>message_queue_create(Queue, [alias(Atom)])</code>. New code should 
+use
+<a id="idx:messagequeuecreate2:2189"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a> 
+to create a named queue.</dd>
+<dt class="pubdef"><a id="message_queue_create/2"><strong>message_queue_create</strong>(<var>-Queue, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Create a message queue from <var>Options</var>. Defined options are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>+Alias</var>)</dt>
+<dd class="defbody">
+Create a message queue that is identified by the atom <var>Alias</var>. 
+Message queues created this way must be explicitly destroyed by the 
+user. If the alias option is omitted, an <em>Anonymous</em> queue is 
+created that is identified by a <em>blob</em> (see <a class="sec" href="foreigninclude.html#sec:12.4.8">section 
+12.4.8</a>) and subject to garbage collection.<sup class="fn">179<span class="fn-text">Garbage 
+collecting anonymous message queues is not part of the ISO proposal and 
+most likely not a widely implemented feature.</span></sup></dd>
+<dt><strong>max_size</strong>(<var>+Size</var>)</dt>
+<dd class="defbody">
+Maximum number of terms in the queue. If this number is reached,
+<a id="idx:threadsendmessage2:2190"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a> 
+will suspend until the queue is drained. The option can be used if the 
+source, sending messages to the queue, is faster than the drain, 
+consuming the messages.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="message_queue_destroy/1"><strong>message_queue_destroy</strong>(<var>+Queue</var>)</a></dt>
+<dd class="defbody">
+Destroy a message queue created with <a id="idx:messagequeuecreate1:2191"></a><a class="pred" href="threadcom.html#message_queue_create/1">message_queue_create/1</a>. 
+A permission error is raised if <var>Queue</var> refers to (the default 
+queue of) a thread. Other threads that are waiting for <var>Queue</var> 
+using
+<a id="idx:threadgetmessage2:2192"></a><a class="pred" href="threadcom.html#thread_get_message/2">thread_get_message/2</a> 
+receive an existence error.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="thread_get_message/2"><strong>thread_get_message</strong>(<var>+Queue, 
+?Term</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:threadgetmessage1:2193"></a><a class="pred" href="threadcom.html#thread_get_message/1">thread_get_message/1</a>, 
+operating on a given queue. It is allowed (but not advised) to get 
+messages from the queue of other threads. This predicate raises an 
+existence error exception if <var>Queue</var> doesn't exist or is 
+destroyed using <a id="idx:messagequeuedestroy1:2194"></a><a class="pred" href="threadcom.html#message_queue_destroy/1">message_queue_destroy/1</a> 
+while this predicate is waiting.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="thread_get_message/3"><strong>thread_get_message</strong>(<var>+Queue, 
+?Term, +Options</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:threadgetmessage2:2195"></a><a class="pred" href="threadcom.html#thread_get_message/2">thread_get_message/2</a>, 
+but providing additional <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>deadline</strong>(<var>+AbsTime</var>)</dt>
+<dd class="defbody">
+The call fails (silently) if no message has arrived before
+<var>AbsTime</var>. See <a id="idx:gettime1:2196"></a><a class="pred" href="system.html#get_time/1">get_time/1</a> 
+for the representation of absolute time. If <var>AbsTime</var> is 
+earlier then the current time, <a id="idx:threadgetmessage3:2197"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a> 
+fails immediately. Both resolution and maximum wait time is 
+platform-dependent.<sup class="fn">180<span class="fn-text">The 
+implementation uses MsgWaitForMultipleObjects() on MS-Windows and 
+pthread_cond_timedwait() on other systems.</span></sup></dd>
+<dt><strong>timeout</strong>(<var>+Time</var>)</dt>
+<dd class="defbody">
+<var>Time</var> is a float or integer and specifies the maximum time to 
+wait in seconds. This is a relative-time version of the <code>deadline</code> 
+option. If both options are provided, the earlier time is effective.
+
+<p>If <var>Time</var> is 0 or 0.0, <a id="idx:threadgetmessage3:2198"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a> 
+examines the queue but does not suspend if no matching term is 
+available. Note that unlike
+<a id="idx:threadpeekmessage2:2199"></a><a class="pred" href="threadcom.html#thread_peek_message/2">thread_peek_message/2</a>, 
+a matching term is removed from the queue.
+
+<p>If <var>Time</var> <var>&lt; 0</var>, <a id="idx:threadgetmessage3:2200"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a> 
+fails immediately without removing any message from the queue.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="thread_peek_message/2"><strong>thread_peek_message</strong>(<var>+Queue, 
+?Term</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:threadpeekmessage1:2201"></a><a class="pred" href="threadcom.html#thread_peek_message/1">thread_peek_message/1</a>, 
+operating on a given queue. It is allowed to peek into another thread's 
+message queue, an operation that can be used to check whether a thread 
+has swallowed a message sent to it.</dd>
+<dt class="pubdef"><a id="message_queue_property/2"><strong>message_queue_property</strong>(<var>?Queue, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is a property of <var>Queue</var>. Defined 
+properties are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>Alias</var>)</dt>
+<dd class="defbody">
+Queue has the given alias name.
+</dd>
+<dt><strong>max_size</strong>(<var>Size</var>)</dt>
+<dd class="defbody">
+Maximum number of terms that can be in the queue. See
+<a id="idx:messagequeuecreate2:2202"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a>. 
+This property is not present if there is no limit (default).
+</dd>
+<dt><strong>size</strong>(<var>Size</var>)</dt>
+<dd class="defbody">
+Queue currently contains <var>Size</var> terms. Note that due to 
+concurrent access the returned value may be outdated before it is 
+returned. It can be used for debugging purposes as well as work 
+distribution purposes.
+</dd>
+<dt><strong>waiting</strong>(<var>-Count</var>)</dt>
+<dd class="defbody">
+Number of threads waiting for this queue. This property is not present 
+if no threads waits for this queue.
+</dd>
+</dl>
+
+<p>The <code>size(Size)</code> property is always present and may be 
+used to enumerate the created message queues. Note that this predicate 
+does
+<em>not enumerate</em> threads, but can be used to query the properties 
+of the default queue of a thread.</dd>
+<dt class="pubdef"><a id="message_queue_set/2"><strong>message_queue_set</strong>(<var>+Queue, 
++Property</var>)</a></dt>
+<dd class="defbody">
+Set a property on the queue. Supported properties are:
+
+<dl class="latex">
+<dt><strong>max_size</strong>(<var>+Size</var>)</dt>
+<dd class="defbody">
+Change the number of terms that may appear in the message queue before 
+the next <a id="idx:threadsendmessage23:2203"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/[2,3]</a> 
+blocks on it. If the value is higher then the current maximum and the 
+queue has writers waiting, wakeup the writers. The value can be lower 
+than the current number of terms in the queue. In that case writers will 
+block until the queue is drained below the new maximum.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>Explicit message queues are designed with the <em>worker-pool</em> 
+model in mind, where multiple threads wait on a single queue and pick up 
+the first goal to execute. Below is a simple implementation where the 
+workers execute arbitrary Prolog goals. Note that this example provides 
+no means to tell when all work is done. This must be realised using 
+additional synchronisation.
+
+<pre class="code">
+%%      create_workers(?Id, +N)
+%
+%       Create a pool with Id and number of workers.
+%       After the pool is created, post_job/1 can be used to
+%       send jobs to the pool.
+
+create_workers(Id, N) :-
+        message_queue_create(Id),
+        forall(between(1, N, _),
+               thread_create(do_work(Id), _, [])).
+
+do_work(Id) :-
+        repeat,
+          thread_get_message(Id, Goal),
+          (   catch(Goal, E, print_message(error, E))
+          -&gt;  true
+          ;   print_message(error, goal_failed(Goal, worker(Id)))
+          ),
+        fail.
+
+%%      post_job(+Id, +Goal)
+%
+%       Post a job to be executed by one of the pool's workers.
+
+post_job(Id, Goal) :-
+        thread_send_message(Id, Goal).
+</pre>
+
+<p><h3 id="sec:thread-wait"><a id="sec:10.3.2"><span class="sec-nr">10.3.2</span> <span class="sec-title">Waiting 
+for events</span></a></h3>
+
+<a id="sec:thread-wait"></a>
+
+<p><a id="idx:blackboard:2204"></a>While message queues realizes 
+communicating <em>agents</em> sharing the same program and optionally 
+dynamic data, the predicate <a id="idx:threadwait2:2205"></a><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a> 
+facilitates agents that communicate based on a <em>shared blackboard</em>. 
+An important difference is were message queues require the sender and 
+receiver to know about the queue used to communicate and every message 
+can wakeup at most one thread, the blackboard model allows any number 
+(including zero) of threads to <em>listen</em> to changes on the 
+blackboard. Any module can act as a blackboard. The blackboard can be 
+updated using the standard Prolog database update predicates (<a id="idx:assert1:2206"></a><a class="pred" href="db.html#assert/1">assert/1</a>, <a id="idx:retract1:2207"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+and friends).
+
+<p><a id="idx:conditionvariable:2208"></a>Waiting is implemented using a 
+POSIX <em>condition variable</em> and matching <em>mutex</em>. On a 
+matching database change the condition variable is signalled using a <em>broadcast</em>, 
+waking up all threads waiting in <a id="idx:threadwait2:2209"></a><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a>. 
+Multiple database updates can be grouped and cause a single wakeup using <a id="idx:threadupdate2:2210"></a><a class="pred" href="threadcom.html#thread_update/2">thread_update/2</a>. 
+This predicate also allows signalling the module condition variable 
+without updating the database and controlling whether all or a single 
+thread is activated.
+
+<p>The blackboard architecture is a good match for an intelligent agent 
+system that has to react on a changing world. Input threads gather 
+sensor data from the world and update a shared world view in a set of 
+dynamic predicates in one or more modules. Agent threads listen to this 
+data or a subset thereof and trigger actions. This is notably a good 
+match with <em>tabling</em>, in particular incremental tabling (see
+<a class="sec" href="tabling-incremental.html#sec:7.7">section 7.7</a>) 
+and <em>Well Founded Semantics</em> (see
+<a class="sec" href="WFS.html#sec:7.6">section 7.6</a>).<sup class="fn">181<span class="fn-text">Future 
+versions may provide additional triggers, for example to learn about 
+invalidated tables. Please share your experience.</span></sup>
+
+<dl class="latex">
+<dt class="pubdef"><a id="thread_wait/2"><strong>thread_wait</strong>(<var>:Goal, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Block execution of the calling thread until <var>Goal</var> becomes 
+true. The application must be prepared to handle spurious calls to <var>Goal</var>, 
+i.e., more calls than asked for based on the <var>Options</var> list. A 
+possible exception in <var>Goal</var> is propagated and thus terminates
+<a id="idx:threadwait2:2211"></a><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a>.
+
+<p>The wait is associated with a module. This module is derived from the
+<var>Options</var> argument.
+
+<p>The <var>Options</var> list specifies when <var>Goal</var> is 
+re-evaluated and optionally when the call terminates due to a timeout.
+
+<dl class="latex">
+<dt><strong>deadline</strong>(<var>+AbsTime</var>)</dt>
+<dt><strong>timeout</strong>(<var>+Time</var>)</dt>
+<dd class="defbody">
+Timeout and deadline handling. See <a id="idx:threadgetmessage3:2212"></a><a class="pred" href="threadcom.html#thread_get_message/3">thread_get_message/3</a> 
+for details. This predicate fails when it terminates due to one of these 
+options.</dd>
+<dt><strong>retry_every</strong>(<var>+Time</var>)</dt>
+<dd class="defbody">
+Retry goal every <var>Time</var> seconds regardless of whether an event 
+happened. The default is 1 second. This ensures that signals (see <a id="idx:threadsignal2:2213"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>) 
+and time limits are respected with an optional delay.<sup class="fn">182<span class="fn-text">Some 
+operating systems process such signals immediately, while others only 
+check for such events synchronously.</span></sup></dd>
+<dt><strong>db</strong>(<var>+Boolean</var>)</dt>
+<dd class="defbody">
+Wakeup on arbitrary changes to any dynamic predicate that is defined in 
+the associated module. This is the default if <code>wait_preds(+Preds)</code> 
+is not provided.</dd>
+<dt><strong>wait_preds</strong>(<var>+List</var>)</dt>
+<dd class="defbody">
+Only call <var>Goal</var> if at least one of the predicates in
+<var>List</var> has been modified. Each element of <var>List</var> is a <em>predicate 
+indicator</em> (<i>Name/Arity</i> or
+<i>Name//Arity</i> that is resolved to a predicate in the module this 
+wait is associated with. If the element is <code><code>+</code>(PI)</code><sup class="fn">183<span class="fn-text">Note 
+that <code>+<a id="idx:p1:2214"></a><span class="pred-ext">p/1</span></code> 
+is read as /(+(p),1).</span></sup>, <var>Goal</var> is only triggered if 
+a clause was added (<a id="idx:assert1:2215"></a><a class="pred" href="db.html#assert/1">assert/1</a>). 
+If the element is <code><code>-</code>(PI)</code>, <var>Goal</var> is 
+only triggered if a clause was retracted (<a id="idx:retract1:2216"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+or
+<a id="idx:erase1:2217"></a><a class="pred" href="db.html#erase/1">erase/1</a>). 
+Default is to wakeup on both assert and retract.</dd>
+<dt><strong>modified</strong>(<var>-List</var>)</dt>
+<dd class="defbody">
+The <var>List</var> variable normally also appears in <var>Goal</var> 
+and is unified with a list of predicates from the <code>wait_preds</code> 
+option that have been modified.
+<var>List</var> must be unbound at entry.</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Specifies the module to act on explicitly.
+</dd>
+</dl>
+
+<p>The execution of <var>Goal</var> is synchronized between all threads 
+calling this predicate on the same module, changes to dynamic predicates 
+in this module and calls to <a id="idx:threadupdate2:2218"></a><a class="pred" href="threadcom.html#thread_update/2">thread_update/2</a> 
+on the same module.</dd>
+<dt class="pubdef"><a id="thread_update/2"><strong>thread_update</strong>(<var>:Goal, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Update a module (typically using <a id="idx:assert1:2219"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+and/or <a id="idx:retract1:2220"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+and friends) and on completion signal threads waiting for this module 
+using
+<a id="idx:threadwait2:2221"></a><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a> 
+to reevaluate their <var>Goal</var>. <var>Goal</var> is synchronized 
+between updating and waiting threads. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+Determines the module to operate on. Default is the context module 
+associated with the <var>Options</var> argument.
+</dd>
+<dt><strong>notify</strong>(<var>+Atom</var>)</dt>
+<dd class="defbody">
+Determines whether all waiting threads are activated (<code>broadcast</code>, 
+default) or a single thread (<code>signal</code>).
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p><i>Compatibility</i> The <a id="idx:threadwait2:2222"></a><a class="pred" href="threadcom.html#thread_wait/2">thread_wait/2</a> 
+predicate is modelled after the
+<a class="url" href="http://staff.itee.uq.edu.au/pjr/HomePages/QuPrologHome.html">Qu-Prolog</a> 
+predicate <a id="idx:threadwaitongoal2:2223"></a><span class="pred-ext">thread_wait_on_goal/2</span>. 
+It is largely compatible. Our current implementation does not support 
+predicate time stamps.<sup class="fn">184<span class="fn-text">See <a id="idx:predicateproperty2:2224"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, 
+property <code>generation</code>.</span></sup> We made this predicate 
+act on a specific module rather than the entire database. The timeout 
+specification follows that of the other thread waiting predicates and 
+may be combined with the <code>retry_every</code> option. The default 
+retry-time is also 1 second rather than <i>infinite</i>.
+
+<p><h3 id="sec:thread-signal"><a id="sec:10.3.3"><span class="sec-nr">10.3.3</span> <span class="sec-title">Signalling 
+threads</span></a></h3>
+
+<a id="sec:thread-signal"></a>
+
+<p>These predicates provide a mechanism to make another thread execute 
+some goal as an <em>interrupt</em>. Signalling threads is safe as these 
+interrupts are only checked at safe points in the virtual machine. 
+Nevertheless, signalling in multithreaded environments should be handled 
+with care as the receiving thread may hold a <em>mutex</em> (see <a id="idx:withmutex2:2225"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>). 
+Signalling probably only makes sense to start debugging threads and to 
+cancel no-longer-needed threads with <a id="idx:throw1:2226"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, 
+where the receiving thread should be designed carefully to handle 
+exceptions at any point.
+
+<dl class="latex">
+<dt class="pubdef"><a id="thread_signal/2"><strong>thread_signal</strong>(<var>+ThreadId, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Make thread <var>ThreadId</var> execute <var>Goal</var> at the first 
+opportunity. In the current implementation, this implies at the first 
+pass through the <em>Call port</em>. The predicate <a id="idx:threadsignal2:2227"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a> 
+itself places <var>Goal</var> into the signalled thread's signal queue 
+and returns immediately.
+
+<p>Signals (interrupts) do not cooperate well with the world of 
+multithreading, mainly because the status of mutexes cannot be 
+guaranteed easily. At the call port, the Prolog virtual machine holds no 
+locks and therefore the asynchronous execution is safe.
+
+<p><var>Goal</var> can be any valid Prolog goal, including <a id="idx:throw1:2228"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+to make the receiving thread generate an exception, and <a id="idx:trace0:2229"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+to start tracing the receiving thread.
+
+<p>In the Windows version, the receiving thread immediately executes the 
+signal if it reaches a Windows GetMessage() call, which generally 
+happens if the thread is waiting for (user) input.
+</dd>
+</dl>
+
+<p><h3 id="sec:threadlocal"><a id="sec:10.3.4"><span class="sec-nr">10.3.4</span> <span class="sec-title">Threads 
+and dynamic predicates</span></a></h3>
+
+<a id="sec:threadlocal"></a>
+
+<p>Besides queues (<a class="sec" href="threadcom.html#sec:10.3.1">section 
+10.3.1</a>) threads can share and exchange data using dynamic 
+predicates. The multithreaded version knows about two types of dynamic 
+predicates. By default, a predicate declared
+<em>dynamic</em> (see <a id="idx:dynamic1:2230"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>) 
+is shared by all threads. Each thread may assert, retract and run the 
+dynamic predicate. Synchronisation inside Prolog guarantees the 
+consistency of the predicate. Updates are
+<em>logical</em>: visible clauses are not affected by assert/retract 
+after a query started on the predicate. In many cases primitives from
+<a class="sec" href="threadsync.html#sec:10.4">section 10.4</a> should 
+be used to ensure that application invariants on the predicate are 
+maintained.
+
+<p>Besides shared predicates, dynamic predicates can be declared with 
+the
+<a id="idx:threadlocal1:2231"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a> 
+directive. Such predicates share their attributes, but the clause list 
+is different in each thread.
+
+<dl class="latex">
+<dt class="pubdef"><a id="thread_local/1"><strong>thread_local</strong> <var>+Functor/+Arity, 
+...</var></a></dt>
+<dd class="defbody">
+This directive is related to the <a id="idx:dynamic1:2232"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+directive. It tells the system that the predicate may be modified using <a id="idx:assert1:2233"></a><a class="pred" href="db.html#assert/1">assert/1</a>, <a id="idx:retract1:2234"></a><a class="pred" href="db.html#retract/1">retract/1</a>, 
+etc., during execution of the program. Unlike normal shared dynamic 
+data, however, each thread has its own clause list for the predicate. As 
+a thread starts, this clause list is empty. If there are still clauses 
+when the thread terminates, these are automatically reclaimed by the 
+system (see also <a id="idx:volatile1:2235"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>). 
+The thread_local property implies the properties <em>dynamic</em> and <em>volatile</em>.
+
+<p>Thread-local dynamic predicates are intended for maintaining 
+thread-specific state or intermediate results of a computation.
+
+<p>It is not recommended to put clauses for a thread-local predicate 
+into a file, as in the example below, because the clause is only visible 
+from the thread that loaded the source file. All other threads start 
+with an empty clause list.
+
+<pre class="code">
+:- thread_local
+        foo/1.
+
+foo(gnat).
+</pre>
+
+<p><b>DISCLAIMER</b> Whether or not this declaration is appropriate in 
+the sense of the proper mechanism to reach the goal is still debated. If 
+you have strong feelings in favour or against, please share them in the 
+SWI-Prolog mailing list.
+</dd>
+</dl>
+
+<p></body></html>

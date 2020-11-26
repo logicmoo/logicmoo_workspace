@@ -1,0 +1,10 @@
+Parameterised version of UPDATE\_\-TRANSLATION\_\-JUDGEMENTS. Update
+the translation judgements file, defined by the
+translation\_\-corpus\_\-judgements config file entry, from the output
+of the text translation corpus output file with ID
+$\langle$Arg$\rangle$, defined by the parameterised config file entry
+translation\_\-corpus\_\-results($\langle$Arg$\rangle$). This command
+should be used after editing the output file produced by the
+parameterised command TRANSLATE\_\-CORPUS
+$\langle$Arg$\rangle$. Editing should replace question marks by valid
+judgements, currently 'good', 'ok' or 'bad'.

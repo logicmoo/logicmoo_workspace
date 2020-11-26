@@ -1,0 +1,184 @@
+
+\documentclass{book}
+
+%\usepackage[DRAFT]{cslipubs}    % CSLI Pubs format; use [FINAL] for final copy.
+\usepackage[FINAL]{cslipubs}
+\usepackage{psbox}	
+\usepackage{latexsym}
+\usepackage{epsf}
+\usepackage{graphics}
+\usepackage{graphicx}
+%\usepackage[safe]{tipa}
+\usepackage[latin1]{inputenc}
+\usepackage{listings}
+\usepackage{rotating}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,
+	    citecolor=blue,
+	    linkcolor=blue,
+	    urlcolor=blue
+}
+ 
+\title{The Regulus Cookbook}                     % \title{__}  is necessary.
+
+\author{Manny Rayner} 
+
+%\date{June 23, 2004}                               % \date{__}   is optional.
+ 
+
+%\raggedbottom   % Uncomment this line if large diagrams cause vertical gaps.
+
+\hfuzz = 2pt     % No warnings about margin overhangs less than this amount.
+
+%\crop[]         % Uncomment for centered pages while using [FINAL] option.
+%\crop[cam]      % Uncomment for crosshairs that show corners of each page.
+%\crop[frame]    % Uncomment for rectangle that shows edges of each page.
+
+
+\usepackage[comma]{natbib}           % CSLI Pubs favored bibliography package.
+\bibliographystyle{cslipubs-natbib}  % CSLI Pubs bibliography format.
+
+
+\usepackage{makeidx}               % Necessary if this book has an Index.
+\makeindex                         % Comment out this line when Index is final.
+
+
+% Some extra macros that CSLI publications sometimes uses.  Not essential.
+\usepackage{cslipubs-extra}
+
+% Some more bells and whistles.
+%\usepackage{avm}
+\usepackage{lingmacros}
+
+% Create your own separate style file and load here to avoid cluttering
+% up the preamble more than necessary.  There should be no definitions,
+% etc. after the \begin{document} command.
+%\usepackage{mymacros}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
+% Hack suggested by Ann Copestake - see related line in cslipubs.sty
+\newcommand{\shorttitle}{The Regulus Cookbook}
+
+\newsavebox{\fmbox}
+\newenvironment{fmpage}[1]
+     {\begin{lrbox}{\fmbox}\begin{minipage}{#1}}
+     {\end{minipage}\end{lrbox}\fbox{\usebox{\fmbox}}}
+
+% The \includeonly{__} command is very useful for processing subsections
+% of the entire document.  Read about it in the LaTeX Manual.
+%
+%\includeonly{01-introduction}
+
+\begin{document}
+\lstset{language=Prolog,basicstyle=\small\bfseries\ttfamily,breakindent=10pt, breaklines} %format code
+ 
+% Try to put all stuff that will be printed into \include{__} files.
+% This makes the \includeonly command work better.
+
+
+\frontmatter      %%%%%% Start with Roman page numbers and unnumbered chapters.
+
+
+\maketitle                % Necessary for CSLI Pubs.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Dedication Page  (taken from http://www.ce.cmu.edu/~kijoo/thesis.html)    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{empty}
+\newenvironment{dedication}
+  {\cleardoublepage \thispagestyle{empty} \vspace*{\stretch{1}} \begin{center} \em}
+  {\end{center} \vspace*{\stretch{3}} \clearpage}
+\begin{dedication}
+{\large
+To our users\\
+who should nag us even more often\\
+~\\
+--- M.R.
+}
+\end{dedication}
+% \cleardoublepage generates one blank page for the next 'Abstract'
+% to be on an odd page.
+\thispagestyle{empty} \cleardoublepage
+
+\setcounter{page}{7}
+\setcounter{tocdepth}{1}  % 0 = chapters only in Contents, 1 = sections also.
+\tableofcontents          % LaTeX at least twice for correct Table of Contents.
+%\listoftables 
+%\listoffigures
+
+\include {foreword}   % Introduction, Acknowledgments.
+
+
+\mainmatter       %%%%%% Chapter numbers and Arabic page numbers begin with 1.
+
+
+\include {introduction}
+
+\part{Getting Started}
+
+\include {downloading-and-installing}
+
+\include {basic-functionality}
+
+\part{The Development Environment}
+
+\include {command-line-environment}
+
+\part{Grammars and Text Processing}
+ 
+\include {basic-grammars}
+
+\include {parsing-and-generation}
+
+\include {grammar-specialisation}
+
+\include {english-resource-grammar}
+
+\include {other-resource-grammars}
+
+\include {alterf}
+  
+\part{Speech Processing}
+
+\include {basic-speech}
+
+\include {nuance-9}
+
+\include {slm-and-help}
+
+%\include {mobile-applications}
+
+\part{Spoken Dialogue}
+ 
+\include {basic-dialogue}
+
+\include {advanced-dialogue}
+
+\part{Translation}
+ 
+\include {basic-translation}
+
+\include {advanced-translation}
+
+\part{Command reference}
+
+\include {commands-intro}
+
+\include {commands}
+ 
+\include {config-files}
+
+\include {config-file-entries}
+ 
+\backmatter       %%%%%% No more chapter numbers; page numbering continues.
+
+\include {cookbook-bibliography}
+ 
+\include {cookbook-index}
+
+
+\end{document}
+

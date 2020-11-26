@@ -1,0 +1,161 @@
+getPossibleFood( x, Food, L ) :- Bear( x, Food ):: [Bear : x] <-actor- [Eat] -obj-> [Food = L].
+getPossibleFood( x, Food, L ) :- Bird( x, Food ):: [Bird : x] <-actor- [Eat] -obj-> [Food = L].
+
+Animal( x, Food, _List ) :- Bear( x, Food ):: [Bear : x] <-actor- [Eat] -obj-> [Food = _List].
+Animal( x, Food, _List ) :- Bird( x, Food):: [Bird : x] <-actor- [Eat] -obj-> [Food = _List].
+
+memberFood( x, _Food ) :-
+	Animal( x, Food, L),
+	member( _Food, L ).
+
+// hir we should compute de distance between the two object, the agent and the possible food
+getPossibleFoodInNeiberhood( x, _Ray, _AgentPosition, _Food, _FoodPosition ) :- 
+	getAnimalPosition( x, _AgentPosition ),
+	Environment( Food ):: [Food = _Food] -locatedIn-> [Position = _FoodPosition],
+	comparePosition( _AgentPosition , _FoodPosition , _Ray),
+	memberFood( x, _Food ).
+
+getAnimalPosition( x, _CurrentPosition ) :-      Bird( x, Knowledge ):: [Bird : x] -locatedIn-> [CurrentPosition = _CurrentPosition ].
+getAnimalPosition( x, _CurrentPosition ) :-      Bear( x, Knowledge ):: [Bear : x] -locatedIn-> [CurrentPosition = _CurrentPosition ].
+
+getAnimalPerception( x, _Value ) :- Bear( x, Perception ):: [Bear : x] -has-> [Perception = _Value].
+getAnimalPerception( x, _Value ) :- Bird( x, Perception ):: [Bird : x] -has-> [Perception = _Value].
+
+getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ) :-
+	Bear( x ),
+	getQuantityOfFoodForBear( x, _Food, _Level, _Quantity ).
+getQuantityOfFoodForAnimal( x, _Food, _Level, _Quantity ) :-
+	Bird( x ),
+	getQuantityOfFoodForBird( x, _Food, _Level, _Quantity ).
+
+
+getQuantityOfFoodForBear( x, _Food, _Level, _Quantity ) :-
+	Bear( x, Knowledge ):: [Bear : x] -has-> [Hungry] -
+				-intensityOf-> [Intensity = _Level]
+				-quantityOfFood-> [Food = _Food] -quantityOf-> [Quantity = _Quantity].
+getQuantityOfFoodForBird( x, _Food, _Level, _Quantity ) :-
+	Bird( x, Knowledge ):: [Bird : x] -has-> [Hungry] -
+				-intensityOf-> [Intensity = _Level]
+				-quantityOfFood-> [Food = _Food] -quantityOf-> [Quantity = _Quantity].
+
+getTrajectory( _Object, _Trajectory, _Name  ) :- Environment( Trajectory ):: [ Trajectory = _Name]-
+						-has-> [ List = _Trajectory  ],
+						-obj-> [ Object =  _Object ].
+
+// this rule returns the next position of the agent in the indecated trajectory "_Name"
+NextAgentPosition( x, _Name, _NextPosition ) :-
+	getAnimalPosition( x, _CurrentPosition ),
+	Environment( Trajectory ):: [ Trajectory = _Name]-
+			-has-> [ List = L ],
+			-obj-> [ Object ],
+	NextCoordinates( _CurrentPosition, L, _NextPosition ).
+
+UpDateAgentCurrentPosition( x, _NextPosition ) :- 
+	Bear( x ),
+	// to update the knowledge of the agent
+	myRetract(Bear( x, Knowledge ):: [Bear : x] -locatedIn-> [CurrentPosition ]),
+	asserta(Bear( x, Knowledge ):: [Bear : x] -locatedIn-> [CurrentPosition = _NextPosition ],[]),
+	//to update the knowledge of the environment
+	myRetract(Environment( Agent ):: [Agent = x] - 
+			-locatedIn-> [CurrentPosition ],
+			-typeOf-> [Type = Bear ]),
+	asserta(Environment( Agent ):: [Agent = x] - 
+			-locatedIn-> [CurrentPosition = _NextPosition],
+			-typeOf-> [Type = Bear ],[]).
+
+UpDateAgentCurrentPosition( x, _NextPosition ) :- 
+	Bird( x ),
+	myRetract(Bird( x, Knowledge ):: [Bird : x] -locatedIn-> [CurrentPosition ]),
+	asserta(Bird( x, Knowledge ):: [Bird : x] -locatedIn-> [CurrentPosition = _NextPosition ],[]),
+	//to update the knowledge of the environment
+	myRetract(Environment( Agent ):: [Agent = x] - 
+			-locatedIn-> [CurrentPosition ],
+			-typeOf-> [Type = Bird ]),
+	asserta(Environment( Agent ):: [Agent = x] - 
+			-locatedIn-> [CurrentPosition = _NextPosition],
+			-typeOf-> [Type = Bird ],[]).
+
+
+RetractFoodKnowledge(x, _Food, _FoodPosition) :- 
+	Bear( x ), 
+	myRetract(Bear( x, Knowledge )::  [Object = _Food] -locatedIn-> [Position = _FoodPosition]), !.
+RetractFoodKnowledge(x, _Food, _FoodPosition) :- 
+	Bird( x ), 
+	myRetract(Bird( x, Knowledge )::  [Object = _Food] -locatedIn-> [Position = _FoodPosition]), !.
+RetractFoodKnowledge(x, _Food, _FoodPosition).
+
+AssertaFoodKnowledge(x, _Food, _FoodPosition) :-
+	Bear( x ),
+	Asserta( Bear( x, Knowledge )::  [Object = _Food] -locatedIn-> [Position = _FoodPosition],[]).
+AssertaFoodKnowledge(x, _Food, _FoodPosition) :-
+	Bird( x ),
+	Asserta( Bird( x, Knowledge )::  [Object = _Food] -locatedIn-> [Position = _FoodPosition],[]).
+
+// this goal was added to prevent redundency of  informations
+fullfilAnimalKnowledge( x, Knowledge)::  [Object = _Food] -locatedIn-> [Position = _FoodPosition] :-
+	RetractFoodKnowledge(x, _Food, _FoodPosition),
+	AssertaFoodKnowledge(x, _Food, _FoodPosition).
+
+// Description of the primitive action Eat
+
+//we can elabor this definition later, by adding more argument to modify the quantity availble in the environment
+//for example : which aliment, quantity consumed,
+// and the is no more food availble, the information should be retracted from the environment knowledge
+
+
+Animal( x,PrimitiveAction ):: [Animal : x] <-actor- [Eat] -
+				-obj-> [Food =  _Food]
+				-numberOf-> [Quantity = _QuantityNeeded],
+				-locatedIn-> [Position = _FoodPosition] :-
+	Environment( Food ):: [Food = _Food] -
+				-locatedIn-> [Position = _FoodPosition ],
+				-exists-> [Quantity = _QuantityAvailble ],
+	SupOrEqual(_QuantityAvailble,_QuantityNeeded),
+	SuppressQuantityOfFoodAt( _Food, _FoodPosition, _QuantityNeeded ),
+	verifyNullQuantity(_Food, _FoodPosition ).
+
+getListOfFriendOf( x, _ListOfFriend ):-
+	Bear( x, Friend ):: [Bear : x] <-actor- [Friend] -has-> [List = _ListOfFriend].
+getListOfFriendOf( x, _ListOfFriend ):-
+	Bird( x, Friend ):: [Bird : x] <-actor- [Friend] -has-> [List = _ListOfFriend].
+
+getFoodAnimalKnowledge( _Agent, _NameTrajectory) :-
+	Bear( _Agent ),
+	Bear( _Agent, Food, Knowledge )::  [Food ] -
+			-locatedIn-> [Position = _FoodPosition],
+			-follow->[Trajectory = _NameTrajectory].
+getFoodAnimalKnowledge( _Agent, _NameTrajectory) :-
+	Bird( _Agent ),
+	Bird( _Agent, Food, Knowledge )::  [Food ] -
+			-locatedIn-> [Position = _FoodPosition],
+			-follow->[Trajectory = _NameTrajectory].
+
+getFriendAnimalKnowledge( _Agent, _NameTrajectory) :-
+	Bear( _Agent ),
+	Bear( _Agent, Friend, Knowledge ):: [Agent ] -
+			-locatedIn-> [Position],
+			-follow-> [Trajectory = _NameTrajectory],
+			<-typeOf- [ Type] -actor-> [Name].
+
+getAFriendOfAgent( _Agent, _NameAgent, _TypeAgent) :-
+	Bear( _Agent ),
+	Bear( _Agent, Friend, Knowledge ):: [Agent ] -
+			-locatedIn-> [Position = _Position],
+			-follow-> [Trajectory = _NameTrajectory],
+			<-typeOf- [ Type = _TypeAgent] -actor-> [Name = _NameAgent].
+
+getPossibleFriendOfAgentInNeiberhood( _Agent, _Ray, _FriendPosition, _FriendName ) :-
+	getAnimalPosition( _Agent, _AgentPosition ),
+	getAFriendOfAgent( _Agent, _FriendName, _TypeFriend),
+	Environment( Agent ):: [Agent = _FriendName] - 
+		-locatedIn-> [CurrentPosition = _FriendPosition],
+		-typeOf-> [Type = _TypeFriend],
+	comparePosition( _AgentPosition , _FriendPosition , _Ray).
+
+	
+getInformationOfAgentFriend( _Agent, _Name, _Position) :-
+	Bird( _Agent ),
+	Bird( _Agent, Friend, Knowledge ):: [Agent ] -
+			-locatedIn-> [Position = _Position],
+			-follow-> [Trajectory = _NameTrajectory],
+			<-typeOf- [ Type = _Type] -actor-> [Name = _Name].

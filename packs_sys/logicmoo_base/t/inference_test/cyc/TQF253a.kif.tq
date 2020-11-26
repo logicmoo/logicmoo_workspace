@@ -1,0 +1,44 @@
+(note TQF253a)
+
+(nearestIsa 
+ (NavyFn UnitedStatesOfAmerica) Navy) 
+
+(agent OperationEarnestWill 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(subclass MilitaryEscortOperation ProtectingSomething) 
+
+(nearestIsa OperationEarnestWill MilitaryEscortOperation) 
+
+(instance GroupOfReflaggedTankers (GroupFn OilTanker)) 
+
+(objectProtected OperationEarnestWill GroupOfReflaggedTankers) 
+
+(query (findall (?ACTOR-IN-WAY-TO-PROTECT ?WAY-TO-PROTECT)
+  (exists 
+    (?ACTION) 
+    (exists 
+      (?ACTOR) 
+      (exists 
+        (?TANKER-GROUP) 
+        (exists 
+          (?TANKER) 
+          (and 
+            (nearestIsa ?ACTION ?WAY-TO-PROTECT) 
+            (subclass ?WAY-TO-PROTECT ProtectingSomething) 
+            (or 
+              (and 
+                (objectProtected ?ACTION ?TANKER-GROUP) 
+                (instance ?TANKER-GROUP (GroupFn OilTanker))) 
+              (and 
+                (objectProtected ?ACTION ?TANKER) 
+                (instance ?TANKER OilTanker)))
+            (agent ?ACTION ?ACTOR) 
+            (nearestIsa ?ACTOR ?ACTOR-IN-WAY-TO-PROTECT))))))))
+
+(answer Navy MilitaryEscortOperation)
+
+(end_of_file)
+
+
+

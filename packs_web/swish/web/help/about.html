@@ -1,0 +1,460 @@
+<!DOCTYPE HTML>
+<!-- 
+    Changes by:    Riccardo Zese
+    E-mail:        riccardo.zese@unife.it
+    Copyright:	   2014-2016, University of Ferrara
+-->
+
+<html>
+  <head>
+  <title>About TRILL on cplint on SWISH</title>
+<link rel="stylesheet" href="/css/swish.css">
+<style>
+  div.github {
+    padding-top: 2ex;
+    text-align: center;
+    margin: auto;
+  }
+  div.github iframe {
+    border: 0px;
+  }
+  body {
+    overflow: scroll;
+    margin: 10px;
+  }
+  div.acknowledgement { width: 90%;
+			margin-top: 5px; margin-left: auto; margin-right: auto;
+			border-top: 1px solid #bbb;
+			padding-top: 5px;
+			text-align: center;
+		      }
+  div.sponsors { text-align: center;
+		 width: 70%;
+		 margin: auto;
+		 color: #888;
+	       }
+  div.acknowledgement img { margin: 0px 5px; }
+  img.sponsor-logo.top { vertical-align: top;}
+  img.commit { width: 30% }
+  img.vu { width: 8% }
+  img.cwi { width: 15%; }
+  img.vre4eic { width: 12% }
+  img.synerscope { width: 12% }
+  </style>  </head>
+  <body>
+<div itemscope itemtype="http://schema.org/SoftwareSourceCode">
+<span itemprop="targetProduct" itemscope itemtype="http://schema.org/WebApplication">
+<p>
+<span style="color:maroon">cplint on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+is a web application for trying
+<span itemprop="applicationCategory">probabilistic logic programming</span>
+with a Javascript-enabled web browser on <span itemprop="operatingSystem">any operating system</span>. It was written by <span itemprop="author">
+<a href="http://ds.ing.unife.it/~friguzzi/">Fabrizio Riguzzi</a>, Riccardo Zese and Giuseppe Cota</span>.
+</p></span>
+<p>Please use this <a href="https://groups.google.com/forum/#!forum/cplint" target="_blank">forum</a> for questions or send an email to <a href="mailto:cplint@googlegroups.com">cplint@googlegroups.com</a>.</p>
+
+<p>
+
+The <span style="color:maroon">cplint on</span>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> source is available from
+<a itemprop="codeRepository" href="http://github.com/friguzzi/swish.git">
+Github</a>. It
+requires SWI-Prolog 7 installed from the
+latest <a href="http://github.com/SWI-Prolog/swipl-devel.git">GIT</a>.
+We also provide a <a href="https://hub.docker.com/r/swipl/swish/">Docker image</a>.
+</p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=swish&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=swish&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<p>
+The <span style="color:maroon">cplint</span>
+source is available from
+<a itemprop="codeRepository" href="http://github.com/friguzzi/cplint.git">
+Github</a>.
+</p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=cplint&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=cplint&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<p>
+The source for using <a href="https://www.r-project.org/">R</a> in <span style="color:maroon">cplint</span> was developed by Franco Masotti and is available
+from
+source is available from
+<a itemprop="codeRepository" href="https://github.com/frnmst/cplint_r.git">
+Github</a>.
+</p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=frnmst&amp;repo=cplint_r&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=frnmst&amp;repo=cplint_r&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+
+
+<p><span style="color:maroon">cplint on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> is described in:
+<div style="float: right;">
+<a href="http://ml.unife.it/plp-book/"><img src="../icons/plp-book.png" style="width:250px;vertical-align: top;" itemprop="image" alt="PLP book cover"/></a>
+</div>
+<ul>
+<li>
+Fabrizio Riguzzi.
+ <a href="http://ml.unife.it/plp-book/">Foundations of Probabilistic Logic Programming</a>, River Publishers, Gistrup, Denmark, 2018. 
+ </li>
+<li>
+Marco Alberti, Elena Bellodi, Giuseppe Cota, Fabrizio Riguzzi, and Riccardo
+  Zese.
+ <tt>cplint</tt> on SWISH: Probabilistic logical inference with a
+  web browser.
+ <em>Intelligenza Artificiale</em>, 11(1):47-64, &copy; IOS
+  Press, 2017.
+[&nbsp;<a href="latest_bib.html#AlbBelCot17-IA-IJ">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.3233/IA-170106">DOI</a>&nbsp;| 
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/AlbBelCot-IA17.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Fabrizio Riguzzi, Elena Bellodi, Evelina Lamma, Riccardo Zese, and Giuseppe
+  Cota.
+ Probabilistic logic programming on the web.
+ <em>Software: Practice and Experience</em>, &copy; Wiley, 2015.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2015_bib.html#RigBelLam15-SPE-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.1002/spe.2386">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/RigBelLam-SPE16.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Fabrizio Riguzzi, Riccardo Zese, and Giuseppe Cota.
+ Probabilistic inductive logic programming on the web.
+ In <em>20th International Conference on Knowledge Engineering and
+  Knowledge Management, EKAW 2016; Bologna; Italy; 19 November 2016 through
+  23 November 2016</em>, volume 10180 of <em>Lecture Notes in Computer Science</em>,
+  pages 172-175. Springer, Cham, &copy; Springer International
+  Publishing AG, 2017.
+ The final publication is available at Springer via
+  <a href="http://dx.doi.org/10.1007/978-3-319-58694-6_25">http://dx.doi.org/10.1007/978-3-319-58694-6_25</a>.
+[&nbsp;<a href="latest_bib.html#RigZesCot17-EKAW-IC">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.1007/978-3-319-58694-6_25">DOI</a>&nbsp;| 
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/RigZesCot-EKAW16.pdf">.pdf</a>&nbsp;]
+</li>
+</ul>
+</p>
+<p>The algorithm for exact probabilistic inference (PITA) is described in:</p>
+<ul>
+<li>
+Fabrizio Riguzzi and Terrance Swift.
+ Well-definedness and efficient inference for probabilistic logic
+  programming under the distribution semantics.
+ <em>Theory and Practice of Logic Programming</em>, 13(Special Issue 02 -
+  25th Annual GULP Conference):279-302, &copy; Cambridge University
+  Press, March 2013.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2013_bib.html#RigSwi13-TPLP-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.1017/S1471068411000664">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/RigSwi-TPLP11.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Fabrizio Riguzzi and Terrance Swift.
+ The PITA system: Tabling and answer subsumption for reasoning under
+  uncertainty.
+ <em>Theory and Practice of Logic Programming, 27th International
+  Conference on Logic Programming (ICLP'11) Special Issue, Lexington, Kentucky
+  6-10 July 2011</em>, 11(4-5):433-449, &copy; Cambridge University
+  Press, 2011.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2011_bib.html#RigSwi11-ICLP11-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.1017/S147106841100010X">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/RigSwi-ICLP11.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Fabrizio Riguzzi and Terrance Swift.
+ Tabling and Answer Subsumption for Reasoning on Logic
+  Programs with Annotated Disjunctions.
+ In M.&nbsp;Hermenegildo and T.&nbsp;Schaub, editors, <em>Technical
+  Communications of the 26th Int'l. Conference on Logic Programming (ICLP'10)</em>,
+  volume&nbsp;7 of <em>Leibniz International Proceedings in Informatics (LIPIcs)</em>,
+  pages 162-171, Dagstuhl, Germany, July 2010. License Creative Commons
+  Attribution-Noncommercial-No Derivative Works 3.0, Schloss
+  Dagstuhl-Leibniz-Zentrum fuer Informatik.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2010_bib.html#RigSwi10-ICLP10-IC">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.4230/LIPIcs.ICLP.2010.162">DOI</a>&nbsp;|
+<a href="http://drops.dagstuhl.de/opus/volltexte/2010/2594/">http</a>&nbsp;]
+</li>
+</ul>
+<p>The algorithm for Monte Carlo inference (MCINTYRE) is described in:</p>
+<ul>
+<li>
+Fabrizio Riguzzi.
+ MCINTYRE: A Monte Carlo system for probabilistic logic
+  programming.
+ <em>Fundamenta Informaticae</em>, 124(4):521-541, &copy; IOS
+  Press, 2013.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/journals_bib.html#Rig13-FI-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.3233/FI-2013-847">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/Rig13-FI-IJ.pdf">.pdf</a>&nbsp;]
+</li>
+</ul>
+</p>
+<p id="slipcover">The algorithm for Metropolis/Hastings sampling is described in:</p>
+<ul>
+<li>
+Arun Nampally and C. R. Ramakrishnan.
+Adaptive MCMC-Based Inference in Probabilistic Logic Programs.
+<em>arXiv preprint arXiv:1403.6036</em>, 2014.
+[&nbsp;<a href="http://arxiv.org/pdf/1403.6036.pdf">.pdf</a>&nbsp;]
+</li>
+</ul>
+<!--<p id="slipcover">The algorithm for likelihood weighting is described in:</p>
+<ul>
+<li>
+Davide Nitti, Tinne De Laet, and Luc De Raedt. Probabilistic logic programming for hybrid relational domains. Machine Learning 103(3), 407-449, 2016.
+[&nbsp;<a href="http://link.springer.com/article/10.1007/s10994-016-5558-8/fulltext.html">.pdf</a>&nbsp;]
+</li>
+</ul>-->
+<p id="emblem">The algorithm for parameter learning (EMBLEM) is described in:</p>
+<ul>
+<li>Elena Bellodi and Fabrizio Riguzzi.
+ Expectation Maximization over binary decision diagrams for
+  probabilistic logic programs.
+ <em>Intelligent Data Analysis</em>, 17(2):343-363, &copy; IOS
+  Press, 2013.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2013_bib.html#BelRig13-IDA-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.3233/IDA-130582">DOI</a>&nbsp;|
+<a href="http://iospress.metapress.com/content/k1wu917722636526/?issue=2&genre=article&spage=343&issn=1088-467X&volume=17">http</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/BelRig13-IDA-IJ.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Elena Bellodi and Fabrizio Riguzzi.
+ Experimentation of an expectation maximization algorithm for
+  probabilistic logic programs.
+ <em>Intelligenza Artificiale</em>, 8(1):3-18, &copy; IOS
+  Press, 2012.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2012_bib.html#BelRig12-IA-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.3233/IA-2012-0027">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/BelRig12-IA-IJ.pdf">.pdf</a>&nbsp;]
+</li>
+</ul>
+<p id="slipcover">The SLIPCOVER algorithm for structure learning is described in:</p>
+<ul>
+<li>
+Elena Bellodi and Fabrizio Riguzzi.
+ Structure learning of probabilistic logic programs by searching the
+  clause space.
+ <em>Theory and Practice of Logic Programming</em>, 15(2):169-212,
+  &copy; Cambridge University Press, 2015.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2015_bib.html#BelRig15-TPLP-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.1017/S1471068413000689">DOI</a>&nbsp;|
+<a href="http://journals.cambridge.org/abstract_S1471068413000689">http</a>&nbsp;|
+<a href="http://arxiv.org/abs/1309.2080">http</a>&nbsp;]
+</li>
+</ul>
+
+<p id="slipcover">The LEMUR algorithm for structure learning is described in:</p>
+<ul>
+<li>
+Nicola Di Mauro, Elena Bellodi, and Fabrizio Riguzzi.
+Bandit-based Monte-Carlo structure learning of probabilistic logic programs.
+<em>Machine Learning</em>, 100(1):127-156, &copy; Springer International Publishing, July 2015.
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/2015_bib.html#DiMBelRig15-ML-IJ">bib</a>&nbsp;|
+<a href="http://dx.doi.org/10.1007/s10994-015-5510-3">DOI</a>&nbsp;|
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/DiMBelRig-ML15.pdf">pdf</a>&nbsp;]
+</li>
+</ul>
+<div class="swish-versions v-compact"></div>
+<span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> is a web application for trying <span itemprop="applicationCategory">probabilistic semantic web reasoning</span> with a web browser on <span itemprop="operatingSystem">any operating system</span>. It was written by Riccardo Zese and Fabrizio Riguzzi.
+</p>
+<p>Please use this <a href="https://groups.google.com/forum/#!forum/trill-system" target="_blank">forum</a> for questions or send an email to <a href="mailto:trill-system@googlegroups.com">trill-system@googlegroups.com</a>.</p>
+<p><span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> was originally written by Torbj&ouml;rn Lager
+as a homage to SWI-Prolog. Jan Wielemaker designed and implemented the
+present version. The current <span
+style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+application targets primarily at collaborative exploration of data. <span
+style="color:darkblue">SWI</span><span style="color:maroon">SH</span>
+can be combined with e.g., <a
+href="http://www.swi-prolog.org/pldoc/package/cql">CQL</a> to explore
+relational (SQL) databases or <a
+href="http://www.swi-prolog.org/pack/list?p=sparkle">sparkle</a> to
+explore linked data. A <a
+href="http://cliopatria.swi-prolog.org/packs/swish">ClioPatria
+plugin</a> adds Prolog based exploration of RDF data to ClioPatria.
+</p>
+
+<p>
+<span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is a great tool for teaching Prolog.
+We provide a <a href="http://lpn.swi-prolog.org">prototype of
+Learn Prolog Now!</a> where <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> is embedded to run examples and solve
+excercises from within your browser.  Peter Flach prepared his book
+<a href="http://book.simply-logical.space/">Simply Logical</a> for
+<span style="color:darkblue">SWI</span><span style="color:maroon">SH</span>.
+</p>
+
+<p>
+The <span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> source is available from <a itemprop="codeRepository" href="https://github.com/friguzzi/trill-on-swish.git">Github</a>. 
+It requires SWI-Prolog installed from the latest <a href="http://github.com/SWI-Prolog/swipl-devel.git">GIT</a>.
+</p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=trill-on-swish&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=friguzzi&amp;repo=trill-on-swish&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<p>
+The <span style="color:darkblue">TRILL</span>
+source is available from
+<a itemprop="codeRepository" href="http://github.com/rzese/trill.git">
+Github</a>.
+</p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=rzese&amp;repo=trill&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=rzese&amp;repo=trill&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<p>
+The <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> source is available from <a
+href="http://github.com/SWI-Prolog/swish.git">Github</a>. It is under
+heavy development and often requires SWI-Prolog 7 installed from the
+latest <a href="http://github.com/SWI-Prolog/swipl-devel.git">GIT</a>.
+We also provide a <a href="https://hub.docker.com/r/swipl/swish/">Docker image</a>.
+</p>
+
+<p>
+Avatar graphics created by <a href="http://www.noblemaster.com">Noble
+Master Games</a>, designed by
+<a href="http://liea.deviantart.com">Mei-Li Nieuwland</a>.
+</p>
+<p>
+The <span style="color:darkblue">SWI</span><span
+style="color:maroon">SH</span> source is available from <a
+itemprop="codeRepository" href="http://github.com/SWI-Prolog/swish.git">Github</a>.
+</p>
+</div>
+<p>
+<div class="github">
+<iframe class="github-btn" src="https://ghbtns.com/github-btn.html?user=SWI-Prolog&amp;repo=swish&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="https://ghbtns.com/github-btn.html?user=SWI-Prolog&amp;repo=swish&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<p><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> is described in:</p>
+
+<ul>
+<li>
+Jan Wielemaker, Torbj&ouml;rn Lager, and Fabrizio Riguzzi.
+ SWISH: SWI-Prolog for sharing.
+ In Stefan Ellmauthaler and Claudia Schulz, editors, <em>
+  International Workshop on User-Oriented Logic Programming (IULP 2015)</em>,
+  &copy; by the authors, 2015.<br/>
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/latest_bib.html#WieTorRig15-IULP-IW">bib</a>&nbsp;|
+<a href="http://arxiv.org/abs/1511.00915">http</a>&nbsp;]
+</li>
+</ul>
+
+
+<p>The algorithm for probabilistic inference (TRILL) is described in:</p>
+<ul>
+<li>
+Riccardo Zese, Elena Bellodi, Giuseppe Cota, Fabrizio Riguzzi, and Evelina Lamma. Probabilistic DL reasoning with pinpointing formulas: A Prolog-based approach. <em>Theory and Practice of Logic Programming</em>, 19(3):449--476, 2019. [&nbsp;<a href="http://ml.unife.it/wp-content/uploads/pubbli/zese/latest_bib.html#ZesBelCot19-TPLP-IJ">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.1017/S1471068418000480">DOI</a>&nbsp;| 
+<a href="https://arxiv.org/pdf/1809.06180.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Riccardo Zese.
+ Probabilistic Semantic Web, volume&nbsp;28 of <em>Studies on the
+  Semantic Web</em>.
+ IOS Press, 2017.
+[&nbsp;<a href="http://ds.ing.unife.it/~rzese/latest_bib.html#Zese17-SSW-BK">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.3233/978-1-61499-734-4-i">DOI</a>&nbsp;| 
+<a href="http://ebooks.iospress.nl/volume/probabilistic-semantic-web-reasoning-and-learning">http</a>&nbsp;]
+</li>
+<li>
+Elena Bellodi, Evelina Lamma, Fabrizio Riguzzi, Riccardo Zese, and Giuseppe
+  Cota.
+ A web system for reasoning with probabilistic OWL.
+ <em>Software: Practice and Experience</em>, 47(1):125-142,
+  &copy; Wiley, January 2017.
+[&nbsp;<a href="latest_bib.html#BelLamRig17-SPE-IJ">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.1002/spe.2410">DOI</a>&nbsp;| 
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/BelLamRig-SPE16.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Riccardo Zese, Elena Bellodi, Fabrizio Riguzzi, Giuseppe Cota, and Evelina Lamma. Tableau reasoning for description logics and its extension to probabilities. <em>Annals of Mathematics and Artificial Intelligence</em>, 82(1):101--130, &copy; Springer, March 2018. [&nbsp;<a href="http://ml.unife.it/wp-content/uploads/pubbli/zese/latest_bib.html#ZesBelRig18-AMAI-IJ">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.1007/s10472-016-9529-3">DOI</a>&nbsp;| 
+<a href="http://ml.unife.it/wp-content/uploads/Papers/ZesBelRig-AMAI16.pdf">.pdf</a>&nbsp;| 
+<a href="http://rdcu.be/kONG">http</a>&nbsp;]
+</li>
+<li>
+Riccardo Zese, Elena Bellodi, Evelina Lamma, and Fabrizio Riguzzi.
+ Logic programming techniques for reasoning with probabilistic
+  ontologies.
+ In Odile Papini, Salem Benferhat, Laurent Garcia, and Marie-Laure
+  Mugnier, editors, <em>International Workshop on Ontologies and Logic
+  Programming for Query Answering</em>, &copy; by the authors, 2015.<br/>
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/latest_bib.html#ZesBel15-OntoLP-IW">bib</a>&nbsp;| 
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/ZesBel-OntoLP15.pdf">.pdf</a>&nbsp;| 
+<a href="http://ontolp.lsis.org/files/pdf/proc-ontolp.pdf#page=13">http</a>&nbsp;]
+</li>
+<li>
+Riccardo Zese, Elena Bellodi, Fabrizio Riguzzi, and Evelina Lamma.
+ Tableau reasoners for probabilistic ontologies exploiting logic
+  programming techniques.
+ In Elena Bellodi and Alessio Bonfietti, editors, <em>Proceedings of
+  the Doctoral Consortium (DC) co-located with the 14th Conference of the
+  Italian Association for Artificial Intelligence (AI*IA 2015)</em>, volume 1485 of
+  <em>CEUR Workshop Proceedings</em>, pages 1-6, Aachen, Germany, 2015.
+  &copy; by the authors, Sun SITE Central Europe.<br/>
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/latest_bib.html#ZesBel15-AIIADC-IW">bib</a>&nbsp;| 
+<a href="http://ceur-ws.org/Vol-1485/paper1.pdf">.pdf</a>&nbsp;]
+</li>
+<li>
+Riccardo Zese, Elena Bellodi, Evelina Lamma, Fabrizio Riguzzi, and Fabiano
+  Aguiari.
+ Semantics and inference for probabilistic description logics.
+ In Fernando Bobillo, Rommel&nbsp;N. Carvalho, Paulo&nbsp;C.G. Costa, Claudia
+  d'Amato, Nicola Fanizzi, Kathryn&nbsp;B. Laskey, Kenneth&nbsp;J. Laskey, Thomas
+  Lukasiewicz, Matthias Nickles, and Michael Pool, editors, <em>Uncertainty
+  Reasoning for the Semantic Web III</em>, volume 8816 of <em>Lecture Notes in
+  Computer Science</em>, pages 79-99. Springer International Publishing,
+  &copy; Springer International Publishing, 2014.
+ The original publication is available at
+  <a href="http://www.springerlink.com">http://www.springerlink.com</a>.<br/>
+[&nbsp;<a href="http://ds.ing.unife.it/~friguzzi/latest_bib.html#RigBel14-URSWb-BC">bib</a>&nbsp;| 
+<a href="http://dx.doi.org/10.1007/978-3-319-13413-0_5">DOI</a>&nbsp;| 
+<a href="http://ds.ing.unife.it/~friguzzi/Papers/RigBel14-URSWb-BC.pdf">.pdf</a>&nbsp;]
+</li>
+
+
+</ul>
+
+<p>
+<span style="color:darkblue">TRILL</span><span style="color:maroon"> on </span><span style="color:darkblue">SWI</span><span style="color:maroon">SH</span> is 
+available also as a cpack for Cliopatria.
+ClioPatria is available <a href="http://cliopatria.swi-prolog.org/home">here</a> and from <a itemprop="codeRepository"
+href="https://github.com/ClioPatria/ClioPatria.git">Github</a>. 
+<p>
+<div class="github">
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=ClioPatria&amp;repo=ClioPatria&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+<iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=ClioPatria&amp;repo=ClioPatria&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+</div>
+
+<div class="swish-versions v-compact"></div>
+
+<div class=acknowledgement>
+<a href="http://vu.nl" target="_blank">
+<img src="../icons/VU-logo.png" class="vu sponsor-logo top"></a>
+<a href="http://www.cwi.nl" target="_blank">
+<img src="../icons/cwi-logo.png" class="cwi sponsor-logo"></a>
+<a href="http://www.vre4eic.eu" target="_blank">
+<img src="../icons/vre4eic-logo.png" class="vre4eic sponsor-logo top"></a>
+<a href="http://www.commit-nl.nl" target="_blank">
+<img src="../icons/COMMIT_logo.png" class="commit sponsor-logo"></a>
+<a href="http://www.synerscope.com" target="_blank">
+<img src="../icons/Synerscope-logo.png" class="synerscope sponsor-logo top"></a>
+</div>
+
+<div class="sponsors">
+The development of SWISH as a <em>DataLab</em> is sponsored by
+the <a href="http://www.commit-nl.nl">COMMIT/ consortium</a> and
+<a href="http://www.vre4eic.eu">VRE4EIC</a>.
+</div>
+</body>
+</html>

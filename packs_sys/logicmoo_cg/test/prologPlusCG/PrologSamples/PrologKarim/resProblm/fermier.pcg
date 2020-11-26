@@ -1,0 +1,88 @@
+///////////////////////////  main of problem
+test_Profondeur(_Probleme,_Mouvements):-  
+			etat_initial(_Probleme,_Etat),
+                                                             	 resoudre_Profondeur(_Etat,[_Etat],_Mouvements),!.
+////////////////////////////////////////////////////// deep tree
+resoudre_Profondeur(_Etat,_Historique,[]):-  Etat_final(_Etat).
+resoudre_Profondeur(_Etat,_Historique,[_Mouvement|_Mouvements]):-
+                                                                                                  appliquer_Operateur(_Etat,_Mouvement),
+                                                                                                  mettre_a_jour(_Etat,_Mouvement,_Etat1),
+                                                                                                  etat_legal(_Etat1),
+                                                                                                  non_dans(_Etat1,_Historique),
+                                                                                                  resoudre_Profondeur(_Etat1,[_Etat1|_Historique],_Mouvements).
+////////////////////////////////////////////////// calls
+appliquer_Operateur(_Etat,traverser_seul).
+appliquer_Operateur(_Etat,traverser_avec(X)):-
+                                                                      membre_de(fermier,_Etat),
+                                                                      membre_de(X,_Etat),
+                                                                      not(eq(X,fermier)).
+appliquer_Operateur(_Etat,traverser_avec(X)):-
+                                                                      not(membre_de(fermier,_Etat)),
+                                                                      membre_de(X,[oie,grains,renard]),
+                                                                      not(membre_de(X,_Etat)).
+///////////////////////////////////////////////////
+mettre_a_jour(_Etat,traverser_seul,_Etat1):-
+                                                               membre_de(fermier,_Etat),
+                                                               enlever(fermier,_Etat,_Etat1).   
+mettre_a_jour(_Etat,traverser_seul,_Etat1):-
+                                                               not(membre_de(fermier,_Etat)),
+                                                               conc([fermier],_Etat,_Etat1).   
+mettre_a_jour(_Etat,traverser_avec(X),_Etat1):-
+                                                               not(membre_de(fermier,_Etat)),
+                                                               conc([fermier],_Etat,_Etat2),
+                                                               conc([X],_Etat2,_Etat1).   
+mettre_a_jour(_Etat,traverser_avec(X),_Etat1):-
+                                                               membre_de(fermier,_Etat),
+                                                               enlever(fermier,_Etat,_Etat2),
+                                                               enlever(X,_Etat2,_Etat1).   
+/////////////////////////////////////////////////////////////////////
+etat_initial(probleme_du_fermier,[fermier,oie,grains,renard]).
+etat_final([]).
+etat_legal(_Etat):-
+                         not(etat_illegal(_Etat)).
+etat_illegal(_Etat):-
+                          membre_de(fermier,_Etat),
+                         not(membre_de(oie,_Etat)),
+                         not(membre_de(renard,_Etat)).
+etat_illegal(_Etat):-
+                          membre_de(fermier,_Etat),
+                         not(membre_de(oie,_Etat)),	
+	 not(membre_de(grains,_Etat)).
+
+etat_illegal(_Etat):-
+                         not(membre_de(fermier,_Etat)),
+                         membre_de(oie,_Etat),
+                         membre_de(renard,_Etat).
+
+etat_illegal(_Etat):-
+                         not(membre_de(fermier,_Etat)),
+                         membre_de(oie,_Etat),
+                         membre_de(grains,_Etat).
+////////////////////////////////////////////////////////////// tools
+membre_de(X,[X|L]).
+membre_de(X,[Y|L]):-
+	membre_de(X,L).
+enlever(X,[],[]).
+enlever(X,[X|_Xs],_Xs).
+enlever(X,[Y|_Xs],Z):-
+                                 enlever(X,_Xs,W),
+                                 conc([Y],W,Z).
+conc([],L,L).
+conc([X|_L1],_L2,[X|_L3]):- conc(_L1,_L2,_L3).
+
+non_dans(_Etat,[]).
+non_dans(_Etat,[_Etat1|_Etats]):-
+                                              non_egal(_Etat,_Etat1),
+                                              non_dans(_Etat,_Etats).
+
+non_egal(_Etat,_Etat1):-  not( egal(_Etat,_Etat1)).
+egal(_Etat,_Etat1):-
+                          inclus(_Etat,_Etat1),
+                          inclus(_Etat1,_Etat).
+inclus([],Y).
+inclus([X|_Xs],Y):-
+                            membre_de(X,Y),
+                           inclus(_Xs,Y).
+eq(x, x).
+not(X) :- X,!,fail.
+not(X).

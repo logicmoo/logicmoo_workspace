@@ -1,0 +1,8 @@
+// ontology required (to load first): aminePlatform/samples/ontology/FinanceOntology.xml
+[Transaction]-
+	-part->[Economic_Event : a]-event_subject->[Economic_Resource: c]-
+					-source->[Inside_Agent: i],
+					-destination->[Outside_Agent: o];
+	-part->[Economic_Event : b]-event_subject->[Economic_Resource: d]-
+					-source->[Outside_Agent: o],
+					-destination->[Inside_Agent: i]

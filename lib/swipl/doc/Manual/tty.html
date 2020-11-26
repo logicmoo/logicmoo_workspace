@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.34</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="gvar.html">
+<link rel="next" href="system.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="gvar.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="system.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tty"><a id="sec:4.34"><span class="sec-nr">4.34</span> <span class="sec-title">Terminal 
+Control</span></a></h2>
+
+<a id="sec:tty"></a>
+
+<p>The following predicates form a simple access mechanism to the Unix 
+termcap library to provide terminal-independent I/O for screen 
+terminals. These predicates are only available on Unix machines. The 
+SWI-Prolog Windows console accepts the ANSI escape sequences.
+
+<dl class="latex">
+<dt class="pubdef"><a id="tty_get_capability/3"><strong>tty_get_capability</strong>(<var>+Name, 
++Type, -Result</var>)</a></dt>
+<dd class="defbody">
+Get the capability named <var>Name</var> from the termcap library. See 
+termcap(5) for the capability names. <var>Type</var> specifies the type 
+of the expected result, and is one of <code>string</code>, <code>number</code> 
+or
+<code>bool</code>. String results are returned as an atom, number 
+results as an integer, and bool results as the atom <code>on</code> or <code>off</code>. 
+If an option cannot be found, this predicate fails silently. The results 
+are only computed once. Successive queries on the same capability are 
+fast.
+</dd>
+<dt class="pubdef"><a id="tty_goto/2"><strong>tty_goto</strong>(<var>+X, 
++Y</var>)</a></dt>
+<dd class="defbody">
+Goto position (<var>X</var>, <var>Y</var>) on the screen. Note that the 
+predicates
+<a id="idx:linecount2:1633"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a> 
+and <a id="idx:lineposition2:1634"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a> 
+will not have a well-defined behaviour while using this predicate.
+</dd>
+<dt class="pubdef"><a id="tty_put/2"><strong>tty_put</strong>(<var>+Atom, 
++Lines</var>)</a></dt>
+<dd class="defbody">
+Put an atom via the termcap library function tputs(). This function 
+decodes padding information in the strings returned by <a id="idx:ttygetcapability3:1635"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
+and should be used to output these strings. <var>Lines</var> is the 
+number of lines affected by the operation, or 1 if not applicable (as in 
+almost all cases).
+</dd>
+<dt class="pubdef"><a id="tty_size/2"><strong>tty_size</strong>(<var>-Rows, 
+-Columns</var>)</a></dt>
+<dd class="defbody">
+Determine the size of the terminal. Platforms:
+
+<dl class="latex">
+<dt><b>Unix</b></dt>
+<dd>
+If the system provides <em>ioctl</em> calls for this, these are used and <a id="idx:ttysize2:1636"></a><a class="pred" href="tty.html#tty_size/2">tty_size/2</a> 
+properly reflects the actual size after a user resize of the window. The <em>ioctl</em> 
+is issued on the file descriptor associated with the <code>user_input</code> 
+stream. As a fallback, the system uses <a id="idx:ttygetcapability3:1637"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
+using <code>li</code> and <code>co</code> capabilities. In this case the 
+reported size reflects the size at the first call and is not updated 
+after a user-initiated resize of the terminal.</dd>
+<dt><b>Windows</b></dt>
+<dd>
+Getting the size of the terminal is provided for <b>swipl-win.exe</b>. 
+The requested value reflects the current size. For the multithreaded 
+version the console that is associated with the
+<code>user_input</code> stream is used.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

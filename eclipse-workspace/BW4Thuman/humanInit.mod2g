@@ -1,0 +1,23 @@
+use robot as knowledge.
+use human as knowledge.
+
+% copy of robotInit, with one extra line to share IDs.
+module humanInit {
+	% Store map information, i.e., navigation points in the agent's belief base.
+	forall percept(zone(ID, Name, Neighbours))  
+		do insert(zone(ID, Name, Neighbours)).
+
+	% Record the initial state of movement in belief base.
+	if percept(state(State)) then insert( state(State) ).
+	
+	% Adopt initial goals.
+	forall bel(room(Place)) do adopt(in(Place)).
+
+	% the robot's own ID. Send it to all others so that we can properly handle message destination IDs.
+	% we send it to *all* including ourselves, so that we can learn our own name (...)
+	if percept(ownName(Id)) then insert(ownId(Id)) + all.send(associate(Id)).
+
+	% Exercise 2.1a: insert rules for processing percepts that are sent only at the beginning of a session, 
+	%  and/or need to be initialized.
+	
+}

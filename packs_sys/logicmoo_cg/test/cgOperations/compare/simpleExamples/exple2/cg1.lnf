@@ -1,0 +1,6 @@
+[PetrolEngine #0] -
+               -fuel->[Gasoline]-state->[state = Volatile],
+               -force->[Average]-arg1->[Div #2] -
+                                             -Out->[Number #3]<-topSpeed-[Bus #1] -
+                                                                               -engn->[PetrolEngine #0],
+                                                                               -mass->[Average]-arg2->[Div #2]

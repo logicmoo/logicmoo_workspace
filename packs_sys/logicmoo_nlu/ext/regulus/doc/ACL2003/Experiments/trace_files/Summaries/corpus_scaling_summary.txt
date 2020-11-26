@@ -1,0 +1,93 @@
+
+NUMBER OF TRAINING EXAMPLES: 250
+
+Time to parse training corpus (8 out of coverage): 104.44 secs
+
+Time to do EBL processing: 20.76 secs
+
+Non-lexical rules in specialised grammar: 95
+Lexical rules in specialised grammar: 82
+
+Rules in generated Nuance grammar: 1478
+
+Time for Regulus -> Nuance compilation: 21.93 secs
+
+Initial nodes: 2334
+
+After optimization: 4067
+
+------------------------------------------------------------------------------------------
+
+NUMBER OF TRAINING EXAMPLES: 500
+
+Time to parse training corpus (11 out of coverage): 185.81 secs
+
+Time to do EBL processing: 40.20 secs
+
+Non-lexical rules in specialised grammar: 109
+Lexical rules in specialised grammar: 91
+
+Rules in generated Nuance grammar: 1742
+
+Time for Regulus -> Nuance compilation: 27.12 secs
+
+Initial nodes: 2654
+
+After optimization: 9236
+
+------------------------------------------------------------------------------------------
+
+NUMBER OF TRAINING EXAMPLES: 1000
+
+Time to parse training corpus (30 out of coverage): 409.90 secs
+
+Time to do EBL processing: 79.07 secs
+
+Non-lexical rules in specialised grammar: 138
+Lexical rules in specialised grammar: 96
+
+Rules in generated Nuance grammar: 2135
+
+Time for Regulus -> Nuance compilation: 39.34 secs
+
+Initial nodes: 3148
+
+After optimization: 12545
+
+------------------------------------------------------------------------------------------
+
+NUMBER OF TRAINING EXAMPLES: 2500
+
+Time to parse training corpus (72 out of coverage): 976.63 secs
+
+Time to do EBL processing: 193.08 secs
+
+Non-lexical rules in specialised grammar: 209
+Lexical rules in specialised grammar: 109
+
+Rules in generated Nuance grammar: 3246
+
+Time for Regulus -> Nuance compilation: 66.97 secs
+
+Initial nodes: 4608
+
+After optimization: 12827
+
+------------------------------------------------------------------------------------------
+
+NUMBER OF TRAINING EXAMPLES: 5000
+
+Time to parse training corpus (166 out of coverage): 1979.02 secs
+
+Time to do EBL processing: 383.97 secs
+
+Non-lexical rules in specialised grammar: 263
+Lexical rules in specialised grammar: 122
+
+Rules in generated Nuance grammar: 4357
+
+Time for Regulus -> Nuance compilation: 92.38 secs
+
+Initial nodes: 5946
+
+After optimization: 14148

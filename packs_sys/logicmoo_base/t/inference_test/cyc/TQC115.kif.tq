@@ -1,0 +1,28 @@
+(note TQC115)
+
+(instance HYP-BiologicalAttack-14272342 WeaponOfMassDestructionAttack) 
+
+(implies 
+ (instance ?ATTACK WeaponOfMassDestructionAttack) 
+ (temporallySubsumes (STIF ?ATTACK) 
+ (economicStability 
+ (EconomicSystemFn PlanetEarth) Low))) 
+
+
+
+
+(query (findall ?STABILITYRATE
+
+ (implies 
+ (and 
+ (instance ?ATTACK BiologicalAttack) 
+ (maleficiary ?ATTACK SaudiArabia) 
+ (agent ?ATTACK Iran)) 
+ (temporallySubsumes (STIF ?ATTACK) 
+ (economicStability 
+ (EconomicSystemFn PlanetEarth) ?STABILITYRATE)))))
+
+(answer Low)  
+
+(end_of_file)
+

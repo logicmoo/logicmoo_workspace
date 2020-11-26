@@ -1,0 +1,33 @@
+(note "TQA100-b Symmetric ")
+
+(subclass BodyOfWater Entity)
+(subclass GeographicalArea Region)
+(subclass SymmetricRelation Predicate)
+
+(instance meetsSpatially SymmetricRelation) 
+(instance PersianGulf BodyOfWater) 
+(instance RedSea BodyOfWater)
+(instance SaudiArabia GeographicalArea)
+(instance PersianGulf GeographicalArea)
+(instance RedSea GeographicalArea)
+
+(domain meetsSpatially 2 GeographicalArea)
+(domain meetsSpatially 1 GeographicalArea)
+
+(meetsSpatially SaudiArabia PersianGulf) 
+(meetsSpatially SaudiArabia RedSea)
+
+   
+(query (findall ?X
+  (and 
+    (instance ?X BodyOfWater) 
+  (meetsSpatially ?X SaudiArabia))))  
+
+(answer RedSea )
+(answer PersianGulf )
+
+(end_of_file)
+
+
+
+

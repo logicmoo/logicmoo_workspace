@@ -1,0 +1,13 @@
+
+House: 4
+TravelDeals: 10
+Med: 8
+Checklist: 4
+SynType: 4
+
+Orig:  72 - (4 + 10 + 8 + 4 + 4) = 42
+House: 72 - (10 + 8 + 4 + 4) = 46
+TravelDeals: 72 - (8 + 4 + 4) = 56
+Med: 72 - (4 + 4) = 64
+Checklist: 72
+Mobile agents: 72

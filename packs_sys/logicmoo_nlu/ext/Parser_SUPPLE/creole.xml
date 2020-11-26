@@ -1,0 +1,52 @@
+<CREOLE-DIRECTORY>
+
+  <CREOLE>
+
+    <RESOURCE>
+      <NAME>SUPPLE Parser</NAME>
+      <COMMENT>SUPPLE bottom-up chart parser.</COMMENT>
+      <HELPURL>http://gate.ac.uk/userguide/sec:parsers:supple</HELPURL>
+      <CLASS>shef.nlp.supple.SUPPLE</CLASS>
+      <!-- core SUPPLE classes -->
+      <JAR>SUPPLE.jar</JAR>
+      <!-- Prolog implementations -->
+      <JAR>prolog-impls/plcafe-impl.jar</JAR>
+      <JAR>prolog-impls/sicstus-impl.jar</JAR>
+      <JAR>prolog-impls/swi-impl.jar</JAR>
+      <!-- other libraries -->
+      <JAR>lib/plcafe.jar</JAR>
+      <JAR>lib/compiler.jar</JAR>
+      <JAR>lib/jpl.jar</JAR>
+      <PARAMETER NAME="document"
+         COMMENT="The document to be analysed"
+         RUNTIME="true">gate.Document</PARAMETER>
+      <PARAMETER NAME="configFile"
+         COMMENT="Configuration File"
+         DEFAULT="config/mapping.config"
+         RUNTIME="false">java.net.URL</PARAMETER>
+      <PARAMETER NAME="featureFile"
+         DEFAULT="config/feature_table.config"
+         COMMENT="Features File"
+         RUNTIME="false">java.net.URL</PARAMETER>
+      <PARAMETER NAME="SUPPLEFile"
+         COMMENT="The parsing program - this MUST be a file: URL"
+         DEFAULT="supple.plcafe"
+         RUNTIME="false">java.net.URL</PARAMETER>
+      <PARAMETER NAME="semanticsSetName"
+         COMMENT="The annotation set for semantic information"
+         OPTIONAL="true"
+         RUNTIME="true">java.lang.String</PARAMETER>
+      <PARAMETER NAME="debug"
+         COMMENT="To debug or not to debug, that is the question..."
+         DEFAULT="false"
+         RUNTIME="true">java.lang.Boolean</PARAMETER>
+      <PARAMETER NAME="prologImplementation"
+         COMMENT="The fully qualified name of the class which will interface with Prolog"
+         DEFAULT="shef.nlp.supple.prolog.PrologCafe"
+         REQUIRED="true"
+         RUNTIME="false">java.lang.String</PARAMETER>
+    </RESOURCE>
+
+  </CREOLE>
+
+</CREOLE-DIRECTORY>

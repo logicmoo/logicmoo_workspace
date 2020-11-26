@@ -1,0 +1,36 @@
+
+(note "ForAll/implies many")
+ 
+		(softwarePath Sensing B)
+		(softwarePath Action_Initiation B)
+		(softwarePath Action_Guidance B) 
+		(softwarePath Display_Console B)	
+
+		(pathConnects Sensing sensor)
+		(pathConnects Sensing filter)
+		(pathConnects Sensing FM)
+		(pathConnects Sensing EDM)
+		(pathConnects Sensing ED)
+
+		(containsPrograms B sensor)
+		(containsPrograms B filter)
+		(containsPrograms B FM)
+		(containsPrograms B EDM)
+		(containsPrograms B ED)	
+
+
+	(implies
+			(implies 
+				(pathConnects ?Path  ?Application)
+				(containsPrograms B ?Application)
+			)
+		(behaviorCapable ?Path Executable)
+	)
+
+; Queries:
+;
+
+(query (behaviorCapable Sensing  Executable) )
+
+
+(end_of_file)

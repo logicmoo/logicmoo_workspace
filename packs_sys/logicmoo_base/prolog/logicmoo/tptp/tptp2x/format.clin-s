@@ -1,0 +1,79 @@
+%======================================================================
+%----Procedures for writing out clauses in CLIN-S format, using standard
+%----Prolog.
+%----
+%----Written by M Paramasivam, November 1995.
+%======================================================================
+%--------------------------------------------------------------------
+%----Write out an atom.
+write_clin_s_atom(Atom):-
+    (Atom =.. ['$tptp_equal',LHS,RHS] -> (
+        write(LHS),
+        write('='),
+        write(RHS))
+    ; ( write(Atom)
+      )).
+%--------------------------------------------------------------------
+%----Write out a literal.
+write_clin_s_literal(++Atom):-
+    !,
+    write_clin_s_atom(Atom).
+
+write_clin_s_literal(--Atom):-
+    write('not('),
+    write_clin_s_atom(Atom),
+    write(')').
+%--------------------------------------------------------------------
+%----Write out the literals.
+write_clin_s_literals([OneLiteral]):-
+    !,
+    write_clin_s_literal(OneLiteral).
+
+write_clin_s_literals([FirstLiteral|RestOfLiterals]):-
+    write_clin_s_literal(FirstLiteral),
+    write(', '),
+    write_clin_s_literals(RestOfLiterals).
+%--------------------------------------------------------------------
+%----Write out a CLIN-S clause.
+write_clin_s_clause(input_clause(Name,Status,Literals)):-
+    nl,
+    write('% '),
+    write(Name),
+    write(', '),
+    write(Status),
+    nl,
+    write('[ '),
+    write_clin_s_literals(Literals),
+    write('].').
+%--------------------------------------------------------------------
+%----This writes out a list of clauses in CLIN-S format
+write_clin_s_clauses([]):-
+    !.
+
+write_clin_s_clauses([FirstClause|RestOfClauses]):-
+    write_clin_s_clause(FirstClause),
+    nl,
+    write_clin_s_clauses(RestOfClauses).
+%--------------------------------------------------------------------
+%----This writes out CLIN-S format clauses
+clin_s(clin_s,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('axiom_list(clause).'), nl,
+    write_clin_s_clauses(Clauses),
+    write('end.'),nl,write('end_of_input.'),nl.
+
+%----Do nothing for FOF - just leave a comment
+clin_s(clin_s,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in CLIN-S'),
+    nl.
+%--------------------------------------------------------------------
+%----Provide information about the CLIN-S format
+clin_s_format_information('%','.clin_s').
+%--------------------------------------------------------------------
+%----Provide information about the CLIN-E file
+clin_s_file_information(format,clin_s,'CLIN-S format').
+%-------------------------------------------------------------------
+

@@ -1,0 +1,4 @@
+Relevant to translation applications using an interlingua checking
+grammar.  If interlingua checking succeeds, print the interlingua
+checking grammar's analysis tree.
+

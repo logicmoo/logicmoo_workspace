@@ -1,0 +1,97 @@
+prolog_occam([X = _descrX]-after->[Y = _descrY], [X = _descrX]-cause->[Y = _descrY]) :-
+  causal_pattern(_generalization),
+  _generalization = [X  = _descrX]-cause->[Y = _descrY], !. 
+//*************************************************************************************************************************************************
+prolog_occam([X = _descrX]-after->[Y = _descrY], _generalization) :-
+   chain_explanation([X = _descrX]-cause->[Y = _descrY], _generalization), !,
+   asserta(causal_pattern(_generalization), []).
+
+prolog_occam(_evt, _generalization) :-
+   [Act = [_Act]-
+              -object->[_Object = _obj],
+              -actor->[_Actor = _actorDescr],
+              -to->[_Destination = _destDescr]]-after->[State = [_State]-object->[_Object = _obj]] = _evt,
+   causal_pattern(_pattern),
+   [Act = [_OldAct]-
+                 -object->[_OldObject = _Oldobj],
+                 -actor->[_OldActor = _oldActDescr],
+                 -to->[_OldDestination = _oldDestDescr]]-cause->
+   	[State = [_State]-object->[_OldObject = _Oldobj]] = _pattern,!,
+   retract(causal_pattern(_pattern)),
+   _generalization is 
+      _pattern:generalize([Act = [_Act]-
+                                  -object->[_Object = _obj],
+                                  -actor->[_Actor  = _actorDescr],
+                                  -to->[_Destination = _destDescr]]-cause->
+			[State = [_State]-object->[_Object = _obj]]),
+   asserta(causal_pattern(_generalization), []).
+
+//*************************************************************************************************************************
+prolog_occam(_evt, _generalization) :-  
+	[Act = [_Act]-
+              -object->[_Object = _obj],
+              -actor->[_Actor = _actorDescr],
+              -to->[_Destination = _destDescr]]-after->[State = [_State]-object->[_Object = _obj]] = _evt,
+	!,
+	 _generalization = 
+     	  		[Act = [_Act]-
+                                  -object->[_Object = _obj],
+                                  -actor->[_Actor  = _actorDescr],
+                                  -to->[_Destination = _destDescr]]-cause->
+			[State = [_State]-object->[_Object = _obj]],
+   asserta(causal_pattern(_generalization), []).	
+//*************************************************************************************************************************
+prolog_occam(_evt, _generalization) :-
+   [State = [_State]-object->[_Object = _obj]]-after->[Affect = [_Affect]-actor->[_Actor = _actorDescr]] = _evt,
+   causal_pattern(_pattern),
+   [State = [_OldState]-object->[_OldObject = _Oldobj]
+		]-cause->[Affect = [_Affect]-actor->[_OldActor = _OldActDescr]] = _pattern,!,
+   retract(causal_pattern(_pattern)),
+   _generalization is 
+      _pattern:generalize([State = [_State]-object->[_Object = _obj]]-cause->
+			[Affect = [_Affect]-actor->[_Actor = _actorDescr]]),
+   asserta(causal_pattern(_generalization), []).
+
+//*************************************************************************************************************************
+prolog_occam(_evt, _generalization) :-  
+   [State = [_State]-object->[_Object = _obj]]-after->[Affect = [_Affect]-actor->[_Actor = _actorDescr]] = _evt,
+   !,
+   _generalization = 
+        	[State = [_State]-object->[_Object = _obj]
+				]-cause->[Affect = [_Affect]-actor->[_Actor = _actorDescr]],
+   asserta(causal_pattern(_generalization), []).
+
+
+
+chain_explanation(_newCausalPattern, _generalization) :-
+   [X = _descrX]-cause->[Y = _descrY] = _newCausalPattern,
+   causal_pattern(_generalization),
+   _generalization = _newCausalPattern.
+chain_explanation(_newCausalPattern, _generalization2) :-
+   [_StartX = _StartDescrX]-cause->[_EndY = _EndDescrY] = _newCausalPattern,
+   causal_pattern(_generalization),
+   _generalization = [_StartX = _StartDescrX]-cause->[_MidY = _MidDescrY],
+   _generalization = [_GenStartX = _GenStartDescrX]-cause->[_MidY = _MidDescrY],
+   chain_explanation([_MidY = _MidDescrY]-cause->[_EndY = _EndDescrY],
+                        [_GenMidY = _GenMidDescrY]-cause->[_GenEndY = _GenEndDescrY]),
+   _generalization2 = [_GenStartX = _GenStartDescrX]-cause->[_GenEndY = _GenEnddescrY].
+
+run2(_gener1, _gener2, _gener3, _gener4, _gener5, _gener6) :-
+  remove("causal_pattern/1"),
+  event(gg1, g1),
+  prolog_occam(g1, _gener1),
+  event(gg2, g2),
+  prolog_occam(g2, _gener2),
+  event(gg3, g3),
+  prolog_occam(g3, _gener3),
+  event(bb1, b1),
+  prolog_occam(b1, _gener4),
+  event(bb2, b2),
+  prolog_occam(b2, _gener5),
+  event(ee1, e1),
+  prolog_occam(e1, _gener6).
+
+remove(_paquet) :-
+  suppress(_paquet), !.
+remove(_).
+

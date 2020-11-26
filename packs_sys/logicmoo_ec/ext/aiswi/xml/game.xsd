@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="cell">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="x" maxOccurs="1" />
+        <xs:element ref="y" maxOccurs="1" />
+        <xs:element ref="color" maxOccurs="1" />
+        <xs:element ref="figure" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="chessboard">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cell" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="color">
+    <xs:complexType mixed="true" />
+  </xs:element>
+
+  <xs:element name="figure">
+    <xs:complexType mixed="true" />
+  </xs:element>
+
+ <xs:element name="x">
+    <xs:complexType mixed="true" />
+  </xs:element>
+
+  <xs:element name="y">
+    <xs:complexType mixed="true" />
+  </xs:element>
+
+  <xs:element name="game">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="chessboard" maxOccurs="1" />
+        <xs:element ref="rules" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="rule">
+    <xs:complexType mixed="true" />
+  </xs:element>
+
+  <xs:element name="rules">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="rule" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

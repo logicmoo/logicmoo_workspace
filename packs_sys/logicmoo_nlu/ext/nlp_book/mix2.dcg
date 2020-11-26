@@ -1,0 +1,35 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% mix2.dcg [Chapter  4] Two DCGs for the language {a,b}* such that n(a) = n(b)
+%
+% First grammar is a CF-PSG
+%
+s1		-->	[a],	y1.
+s1		-->	[b],	x1.
+x1		-->	[a],	s1.
+x1		-->	[b],	x1,	x1.
+x1		-->	[a].
+y1		-->	[b],	s1.
+y1		-->	[a],	y1,	y1.
+y1		-->	[b].
+%
+% Second grammar
+%
+%    start two counters:
+x		-->	x(a,b).
+%    if there is an a, then increment the b counter:
+x(A,B)	-->	[a],	x(A,b(B)).
+%    alternatively, if there is an a,
+%    then decrement the a counter:
+x(a(A),B)	-->	[a],	x(A,B).
+%    if there is an b, then increment the a counter:
+x(A,B)	-->	[b],	x(a(A),B).
+%    alternatively, if there is an b,
+%    then decrement the b counter:
+x(A,b(B))	-->	[b],	x(A,B).
+%    eliminate the nonterminal:
+x(a,b)	-->	[].

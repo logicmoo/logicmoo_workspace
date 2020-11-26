@@ -1,0 +1,309 @@
+/***************************************************************************/
+/* Version: 20060314 1630
+/* Issuer: Federico Chesani
+/***************************************************************************/
+
+BUGS:
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+The actual version of unfolding is not correct. The problem is in the way  o f 
+managing built-in predicates. In fact, if a bult-in predicate has more than one
+solution, the actual implementation consider only one of them, and open a choice
+point over the other solutions. Instead, it should propagate the psic for all
+the solutions of the built-in predicate.
+
+
+-----------------------------------------------------------------------------
+file: sokb_parser.pl
+
+The translation of the sokb does not work fine if the sokb contains an unnamed
+variable (_). In fact, it is considered by the parser as a normal variable, and
+quantification is applied on it. But saying that _ is quantified does not make
+sense...
+
+
+-----------------------------------------------------------------------------
+file: history_parser.pl
+
+The parser accepts only event of the type tell(...). It should be extended to
+accept more events...
+
+
+-----------------------------------------------------------------------------
+file: ics_parser.pl
+
+The parser requires that each head of a IC contains as first atom an
+expectation. This was introduced to force the user to put at least one
+expectation in each head disjunction.
+
+
+
+CHANGES:
+-----------------------------------------------------------------------------
+file: reified_unif.pl
+
+CHR Rule nu6c makes a call to the predicate silly, that indeed it is not
+defined anywhere. Simply the call to sillt has been removed.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified by Federico Chesani - 20060314 1530
+% New Version:
+nu6c @ not_unify_constr(X,Y) <=> var(X), var(Y),
+    is_universal(X), is_universal(Y),
+    get_restrictions(X,Rx), get_restrictions(Y,Ry) |
+    \+( (existsf(E), E=X, E=Y) ).
+% End New Version
+% Old Version
+/*
+nu6c @ not_unify_constr(X,Y) <=> var(X), var(Y),
+    is_universal(X), is_universal(Y),
+    get_restrictions(X,Rx), get_restrictions(Y,Ry) |
+    \+( (silly, existsf(E), E=X, E=Y) ).
+*/
+% End Old Version
+% End Modification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+/***************************************************************************/
+/* Version: 20060308 1800
+/* Issuer: Federico Chesani
+/***************************************************************************/
+
+BUGS:
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+The actual version of unfolding is not correct. The problem is in the way  o f 
+managing built-in predicates. In fact, if a bult-in predicate has more than one
+solution, the actual implementation consider only one of them, and open a choice
+point over the other solutions. Instead, it should propagate the psic for all
+the solutions of the built-in predicate.
+
+
+-----------------------------------------------------------------------------
+file: sokb_parser.pl
+
+The translation of the sokb does not work fine if the sokb contains an unnamed
+variable (_). In fact, it is considered by the parser as a normal variable, and
+quantification is applied on it. But saying that _ is quantified does not make
+sense...
+
+
+-----------------------------------------------------------------------------
+file: history_parser.pl
+
+The parser accepts only event of the type tell(...). It should be extended to
+accept more events...
+
+
+-----------------------------------------------------------------------------
+file: ics_parser.pl
+
+The parser requires that each head of a IC contains as first atom an
+expectation. This was introduced to force the user to put at least one
+expectation in each head disjunction.
+
+
+
+
+
+CHANGES:
+-----------------------------------------------------------------------------
+file: reified_unif.pl
+
+CHR rule 'nu6b' has been modified. This rule consider a variable forallf X 
+with a quantifier restriction, that should not unify with a variable existsf Y.
+In such case, the quantifier restriction upon X is negated and it is imposed 
+over variable Y.
+
+In the previous version this didn't work if Y is ground.
+
+% New version:
+nu6b @ not_unify_constr(X,Y) <=> var(X),
+    is_universal(X), existsf_or_ground(Y)  |
+    get_restrictions(X,Rx),
+    impose_neg_constraints(X,Rx,Y).
+%End new version
+% Original version:
+/*
+nu6b @ not_unify_constr(X,Y) <=> var(X), var(Y),
+    is_universal(X), get_quant(Y,existsf) |
+    get_restrictions(X,Rx),
+    impose_neg_constraints(X,Rx,Y).
+*/
+% End original version
+
+
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+Added the possiblity of asserting violation if an happened event does not have
+the corresponding expectation. This corresponds to say that all events must be
+expected.
+The verification if an event is expected is perfomed only in the sciff
+with closure. The capability is controlled by the sciff_option
+'allow_events_not_expected', whose default value is yes.
+This feature has been implemented by using a new constraint, not_expected/1, and
+by defining the new chr rules: 'not_expected_gen', 'not_expected_remove',
+'protocol_e'.
+
+
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+The propagation rule for expectations in the body of ICs has been modified to
+get a slightly optimization. In particular, propagation is applied to
+expectation in the body of ICs only if all the happened events have been already
+propagated. Find below new version and original one.
+% Modified by Federico Chesani
+% Date: 20060301 1925
+propagation_e @
+    e(Event1,Time1),
+    psic([[],NotH,[e(Event2,Time2)|MoreE],NotE,En,NotEn,Abd,A],Head)
+    ==>
+    fn_ok(Event1,Event2)
+    |
+    ccopy(p([[],NotH,[e(Event2,Time2)|MoreE],NotE,En,NotEn,Abd,A],Head),
+      p([[],NotHa,[e(Event2a,Time2a)|MoreEa],NotEa,Ena,NotEna,Abda,Aa],Heada)),
+   reif_unify(p(Event1,Time1),p(Event2a,Time2a),B),
+   status(S,F),
+       (draw_graph(S,propagation_e,e(Event1,Time1)=e(Event2,Time2)),
+       B#=1, psic([[],NotHa,MoreEa,NotEa,Ena,NotEna,Abda,Aa],Heada)
+       ;
+       draw_graph(S,propagation_e,e(Event1,Time1)\=e(Event2,Time2)),
+       B#=0).
+% End modification
+% Original version:
+/*
+propagation_e @
+    e(Event1,Time1),
+    psic([H,NotH,[e(Event2,Time2)|MoreE],NotE,En,NotEn,Abd,A],Head)
+    ==>
+    fn_ok(Event1,Event2)
+    |
+    ccopy(p([H,NotH,[e(Event2,Time2)|MoreE],NotE,En,NotEn,Abd,A],Head),
+      p([Ha,NotHa,[e(Event2a,Time2a)|MoreEa],NotEa,Ena,NotEna,Abda,Aa],Heada)),
+   reif_unify(p(Event1,Time1),p(Event2a,Time2a),B),
+   status(S,F),
+       (draw_graph(S,propagation_e,e(Event1,Time1)=e(Event2,Time2)),
+       B#=1, psic([Ha,NotHa,MoreEa,NotEa,Ena,NotEna,Abda,Aa],Heada)
+       ;
+       draw_graph(S,propagation_e,e(Event1,Time1)\=e(Event2,Time2)),
+       B#=0).
+*/
+% End Original version
+
+
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+Some calls to the predicate printConstraints have been modified. The former
+version tried to call this predicate, that is defined only in module
+sciff_java_gui. Hence, when using the sciff not in conjunction with java, the
+call to the predicate fails. Now, it checks before if such predicate has been
+defined at the user level, and it calls it if it is the case.
+
+
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+Modified the predicate history/0, to manage happened events that contains
+variables. In particualr, the new version imposes the quantification existsf
+over every variable of an happened event.
+
+% New version:
+history:-
+    findall(h(Event,Body),
+        hap(Event,Body),
+        History),
+    set_term_quantification(History, existsf),
+    call_list(History).
+%
+%Older version:
+/*
+history:-
+    findall(h(Event,Body),
+        hap(Event,Body),
+        History),
+    call_list(History).
+*/
+
+
+-----------------------------------------------------------------------------
+file: sciff.pl
+
+Modified the unfolding transition, in order to allow pre-defined predicates.
+However, the actual solution is not correct, since it does not consider
+predicates with multiple solutions...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modification introduced by Federico Chesani
+% Date: 20060228
+%
+% needed for invocation of pre-defined sicstus predicates
+% This is a hack! To be re-discussed well and deep!!!!
+unfold([PSIC|MorePSICS]):-
+    PSIC=psic([BodyAtom|_],_),
+    predicate_property(BodyAtom, dynamic),
+    !
+    get_candidate_clauses(BodyAtom,Clauses),
+    %write('Unfolding: BodyAtom:'), nl,
+    %write(BodyAtom), nl,
+    %write('Unfolding: Clauses:'), nl,
+    %write(Clauses), nl,
+    check_forall(Clauses),
+    get_unfolded_psics(Clauses,PSIC,UnfoldedPSICS),
+    append(UnfoldedPSICS,MorePSICS,NewPSICS),
+    unfold(NewPSICS).
+
+unfold([psic([BodyAtom|MoreBodyAtoms],Head)|MorePSICS]):-
+    %write_debug('Unfolding:'),
+    %BodyAtom=..[Pred|_],
+    %is_sicstus_predicate(Pred),
+    %!,
+    %write('Unfolding predicate: trying to execute: '),
+    %write(BodyAtom), nl,
+    ( call(BodyAtom)
+    ->	%write('Executed.'), nl,
+    		unfold([psic(MoreBodyAtoms,Head)|MorePSICS])
+    ;		%write('Failed.'), nl,
+    		unfold(MorePSICS)
+    ).
+%is_sicstus_predicate(Pred) :- member(Pred, [ground, var, nonvar, write, nl, =,
+memberchk, last_state]).
+%is_sicstus_predicate(Pred) :- member(Pred, [ground, var, nonvar, write, nl, =,
+memberchk]).
+% End modification
+
+
+% ORIGINAL VERSION:
+/*
+unfold([PSIC|MorePSICS]):-
+    PSIC=psic([BodyAtom|_],_),
+    get_candidate_clauses(BodyAtom,Clauses),
+
+    write('Unfolding: BodyAtom:'), nl,
+    write(BodyAtom), nl,
+    write('Unfolding: Clauses:'), nl,
+    write(Clauses), nl,
+
+    check_forall(Clauses),
+    get_unfolded_psics(Clauses,PSIC,UnfoldedPSICS),
+    append(UnfoldedPSICS,MorePSICS,NewPSICS),
+    unfold(NewPSICS).
+*/
+% End original version
+% End Modification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+/***************************************************************************/

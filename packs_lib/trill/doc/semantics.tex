@@ -1,0 +1,67 @@
+\section{Semantics}
+\label{semantics}
+
+Finding the explanations for a query is important for probabilistic inference. In the following we briefly describe the DISPONTE semantics~\cite{RigBelLamZes15-SW-IJ}, which requires the set of all the justifications to compute the probability of the queries.
+
+DISPONTE \cite{RigBelLamZes15-SW-IJ,Zese17-SSW-BK} applies the distribution semantics \cite{DBLP:conf/iclp/Sato95} to Probabilistic Description Logic KBs.
+In DISPONTE, a \emph{probabilistic knowledge base} $\cK$ contains a set of \emph{probabilistic axioms} which take the form
+\begin{align}
+& p::E\label{pax} &
+\end{align}
+where $p$ is a real number in $[0,1]$ and $E$ is a DL axiom. 
+The probability $p$ can be interpreted as the degree of our belief in the truth of axiom $E$. 
+For example, a probabilistic concept membership axiom
+$
+p::a:C
+$
+means that we have degree of belief $p$ in $C(a)$.
+A probabilistic concept inclusion axiom of the form
+$
+p::C\sqsubseteq D
+$
+represents the fact that  we believe in the truth of $C \sqsubseteq D$ with probability $p$. 
+
+For more detail about probabilistic inference with the TRILL framework, we refer the interested reader to Appendix~\ref{app:disponte} and to~\cite{ZesBelCot18-TPLP-IJ}.
+
+The following example illustrates inference under the DISPONTE semantics.
+\begin{example}
+	
+	\begin{align*}
+	&& (E_1)\ 0.5 ::\ & \exists hasAnimal.Pet \sqsubseteq PetOwner\\
+	&& 				& \fluffy: Cat \\
+	&& 				& tom: Cat \\
+	&& (E_2)\ 0.6 ::\ & Cat\sqsubseteq Pet\\
+	&& 				& (kevin,\fluffy):hasAnimal \\
+	&& 				& (kevin,tom):hasAnimal
+	\end{align*}
+	It indicates that the individuals that own an animal which is a pet are pet owners with a 50\% probability and that $kevin$ owns the animals $\fluffy$ and $tom$, which are cats.
+	Moreover, cats are pets with a 60\% probability.
+
+	The query axiom $Q=kevin:PetOwner$ is true with probability $P(Q)=0.5\cdot 0.6=0.3$.
+\end{example}
+
+the translation of this KB into the TRILL syntax is:
+\begin{verbatim}
+subClassOf(someValuesFrom(hasAnimal, pet), petOwner).
+annotationAssertion(disponte:probability,
+                    subClassOf(someValuesFrom(hasAnimal, pet), petOwner),
+                    literal('0.5'))
+classAssertion(cat, fluffy).
+classAssertion(cat, tom).
+subClassOf(cat, pet).
+annotationAssertion(disponte:probability, subClassOf(cat, pet), literal('0.6'))
+propertyAssertion(hasAnimal, kevin, fluffy).
+propertyAssertion(hasAnimal, kevin, tom).
+\end{verbatim}
+Optionally, the KB can also contain the following axioms
+\begin{verbatim}
+namedIndividual(fluffy).
+namedIndividual(kevin).
+namedIndividual(tom).
+objectProperty(hasAnimal).
+annotationProperty('http://ml.unife.it/disponte#probability').
+class(petOwner).
+class(pet).
+\end{verbatim}
+
+

@@ -1,0 +1,117 @@
+%==============================================================================
+%----This DOES WHAT?
+%==============================================================================
+%------------------------------------------------------------------------------
+external_specifications_file(
+'/home/tptp/MyATPSystems/SPASS-XDB/AllExternals.ax'
+).
+%------------------------------------------------------------------------------
+%----These are now taken from the AllExternalsFile
+%sparql_urls(lmdb,lmdb_url/2,'http://data.linkedmdb.org/sparql',
+%'http://www.w3.org/2000/01/rdf-schema#label').
+%
+%sparql_urls(lmdb,lmdb_movie_actor/2,'http://data.linkedmdb.org/sparql',
+%'http://data.linkedmdb.org/resource/movie/actor').
+%
+%xdb_terms(dbpedia,birthPlace/2,[
+%xdb(sparql_endpoint,'http://dbpedia.org/sparql'),
+%xdb(predicate,'http://dbpedia.org/property/birthPlace')]).
+
+%----So it fails if there are none, without any warnings.
+xdb_terms(_,_,_):-
+    fail.
+%------------------------------------------------------------------------------
+get_xdb_template(QuantifiedFormula,Template):-
+    tptp_quantified_formula(QuantifiedFormula,_,_,Formula),
+    !,
+    get_xdb_template(Formula,Template).
+
+get_xdb_template(AtomicFormula,AtomicFormula):-
+    \+ looks_like_a_variable(AtomicFormula),
+    tptp_atomic_formula(AtomicFormula),
+    !.
+
+get_xdb_template(Unknown,_):-
+    write('%----ERROR: Illformed logic for question: '),
+    write(Unknown),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+external_match(QuestionLogic,ExternalSpecifications,UsefulInfo):-
+    get_xdb_template(QuestionLogic,Template),
+%DEBUG write('looking for '),write(Template),nl,
+    tptp2X_member(Specification,ExternalSpecifications),
+    Specification =.. [fof,_,external,ExternalFormula,
+external(_,_,_,UsefulInfo)|_],
+%DEBUG write('specification'),write(ExternalFormula),nl,
+    get_xdb_template(ExternalFormula,ExternalTemplate),
+%DEBUG write('template '),write(ExternalTemplate),nl,
+%----Need to do the unification late otherwise get_xdb_template fails
+    Template = ExternalTemplate.
+%------------------------------------------------------------------------------
+read_externals(_,end_of_file,[]):-
+    !.
+
+read_externals(InputStream,Specification,[Specification|
+ExternalSpecifications]):-
+    read(InputStream,NextSpecification),
+    !,
+    read_externals(InputStream,NextSpecification,ExternalSpecifications).
+%------------------------------------------------------------------------------
+extract_xdb_terms(_,[],[]).
+
+extract_xdb_terms(UsefulInfo,[FirstXDBTermName|RestOfXDBTermNames],
+[xdb(FirstXDBTermName,XDBTermValue)|RestOfXDBTerms]):-
+    tptp2X_member(xdb(FirstXDBTermName,XDBTermValue),UsefulInfo),
+    extract_xdb_terms(UsefulInfo,RestOfXDBTermNames,RestOfXDBTerms).
+%------------------------------------------------------------------------------
+get_xdb_terms(Service,QuestionLogic,_,XDBTerms):-
+    get_xdb_template(QuestionLogic,Template),
+    Template =.. [Predicate|Arguments],
+    tptp2X_length(Arguments,Arity),
+    xdb_terms(Service,Predicate/Arity,XDBTerms),
+    !.
+
+get_xdb_terms(_,QuestionLogic,XDBTermNames,XDBTerms):-
+    external_specifications_file(FileName),
+    open(FileName,read,InputStream),
+    read(InputStream,Specification),
+    read_externals(InputStream,Specification,ExternalSpecifications),
+%DEBUG write(ExternalSpecifications),nl,
+    close(InputStream),
+    external_match(QuestionLogic,ExternalSpecifications,UsefulInfo),
+    extract_xdb_terms(UsefulInfo,XDBTermNames,XDBTerms),
+    !.
+
+get_xdb_terms(Service,QuestionLogic,_,_):-
+    write('%----ERROR: Unknown SPARQL service and predicate combination: '),
+    write(Service),
+    write(' '),
+    write(QuestionLogic),
+    nl,
+    fail.
+%------------------------------------------------------------------------------
+add_xdb_terms([],XDBTerms,unknown,XDBTerms).
+
+add_xdb_terms([Source],XDBTerms,Source,XDBTerms).
+
+add_xdb_terms([Source,UsefulInfo],XDBTerms,Source,XDBUsefulInfo):-
+    tptp2X_append(UsefulInfo,XDBTerms,XDBUsefulInfo).
+%------------------------------------------------------------------------------
+get_service_term_names(lmdb,[sparql_endpoint,predicate]).
+
+get_service_term_names(dbpedia,[sparql_endpoint,predicate]).
+
+get_service_term_names(twitter,[id,pw]).
+%------------------------------------------------------------------------------
+xdb([Question],Dictionary,xdb:Service,[XDBQuestion],Dictionary,NameSuffix):-
+    Question =.. [fof,Name,question,QuestionLogic|SourceAndUsefulInfo],
+    get_service_term_names(Service,XDBTermNames),
+    get_xdb_terms(Service,QuestionLogic,XDBTermNames,XDBTerms),
+    add_xdb_terms(SourceAndUsefulInfo,XDBTerms,Source,UsefulInfo),
+    XDBQuestion =.. [fof,Name,question,QuestionLogic,Source,UsefulInfo],
+    concatenate_atoms(['+',Service],NameSuffix).
+%------------------------------------------------------------------------------
+%----Provide information about the DFG file
+xdb_file_information(transform,xdb:'Service','Add XDB terms').
+%------------------------------------------------------------------------------

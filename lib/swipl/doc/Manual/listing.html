@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.20</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="iostream.html">
+<link rel="next" href="lists.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="iostream.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="lists.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:listing"><a id="sec:A.20"><span class="sec-nr">A.20</span> <span class="sec-title">library(listing): 
+List programs and pretty print clauses</span></a></h2>
+
+<p><a id="sec:listing"></a>
+
+<dl class="tags">
+<dt class="mtag">To be done</dt>
+<dd>
+- More settings, support <i>Coding Guidelines for Prolog</i> and make 
+the suggestions there the default. <br>
+- Provide persistent user customization
+</dd>
+</dl>
+
+<p>This module implements listing code from the internal representation 
+in a human readable format.
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="listing.html#listing/0">listing/0</a> lists a 
+module.
+<li><a class="pred" href="listing.html#listing/1">listing/1</a> lists a 
+predicate or matching clause
+<li><a class="pred" href="listing.html#listing/2">listing/2</a> lists a 
+predicate or matching clause with options
+<li><a class="pred" href="listing.html#portray_clause/2">portray_clause/2</a> 
+pretty-prints a clause-term
+</ul>
+
+<p>Layout can be customized using <code>library(settings)</code>. The 
+effective settings can be listed using <a class="pred" href="settings.html#list_settings/1">list_settings/1</a> 
+as illustrated below. Settings can be changed using <a class="pred" href="settings.html#set_setting/2">set_setting/2</a>.
+
+<pre class="code">
+?- list_settings(listing).
+========================================================================
+Name                      Value (*=modified) Comment
+========================================================================
+listing:body_indentation  4              Indentation used goals in the body
+listing:tab_distance      0              Distance between tab-stops.
+...
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="listing/0"><strong>listing</strong></a></dt>
+<dd class="defbody">
+Lists all predicates defined in the calling module. Imported predicates 
+are not listed. To list the content of the module
+<code>mymodule</code>, use one of the calls below.
+
+<pre class="code">
+?- mymodule:listing.
+?- listing(mymodule:_).
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="listing/1"><strong>listing</strong>(<var>:What</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="listing/2"><strong>listing</strong>(<var>:What, 
++Options</var>)</a></dt>
+<dd class="defbody">
+List matching clauses. <var>What</var> is either a plain specification 
+or a list of specifications. Plain specifications are:
+
+<p>
+<ul class="latex">
+<li>Predicate indicator (Name/Arity or Name<code>//</code>Arity) Lists 
+the indicated predicate. This also outputs relevant
+<i>declarations</i>, such as <a class="pred" href="dynamic.html#multifile/1">multifile/1</a> 
+or <a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.
+<li>A <i>Head</i> term. In this case, only clauses whose head unify with <i>Head</i> 
+are listed. This is illustrated in the query below that only lists the 
+first clause of <a class="pred" href="lists.html#append/3">append/3</a>.
+
+<pre class="code">
+?- listing(append([], _, _)).
+lists:append([], L, L).
+</pre>
+
+<p>
+</ul>
+
+<p>The following options are defined:
+
+<dl class="latex">
+<dt><strong>variable_names</strong>(<var>+How</var>)</dt>
+<dd class="defbody">
+One of <code>source</code> (default) or <code>generated</code>. If <code>source</code>, 
+for each clause that is associated to a source location the system tries 
+to restore the original variable names. This may fail if macro expansion 
+is not reversible or the term cannot be read due to different operator 
+declarations. In that case variable names are generated.
+</dd>
+<dt><strong>source</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>), extract the lines 
+from the source files that produced the clauses, i.e., list the original 
+source text rather than the <i>decompiled</i> clauses. Each set of 
+contiguous clauses is preceded by a comment that indicates the file and 
+line of origin. Clauses that cannot be related to source code are 
+decompiled where the comment indicates the decompiled state. This is 
+notably practical for collecting the state of <i>multifile</i> 
+predicates. For example:
+
+<pre class="code">
+?- listing(file_search_path, [source(true)]).
+</pre>
+
+<p></dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="portray_clause/1"><strong>portray_clause</strong>(<var>+Clause</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="portray_clause/2"><strong>portray_clause</strong>(<var>+Out:stream, 
++Clause</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="portray_clause/3"><strong>portray_clause</strong>(<var>+Out:stream, 
++Clause, +Options</var>)</a></dt>
+<dd class="defbody">
+Portray&lsquo;<var>Clause</var>&rsquo;on the current output stream. 
+Layout of the clause is to our best standards. Deals with control 
+structures and calls via meta-call predicates as determined using the 
+predicate property meta_predicate. If <var>Clause</var> contains 
+attributed variables, these are treated as normal variables.
+
+<p>Variable names are by default generated using <a class="pred" href="manipterm.html#numbervars/4">numbervars/4</a> 
+using the option <code>singletons(true)</code>. This names the variables <var>A</var>, <var>B</var>, 
+... and the singletons <var>_</var>. Variables can be named explicitly 
+by binding them to a term <code>'$VAR'(Name)</code>, where <var>Name</var> 
+is an atom denoting a valid variable name (see the option <code>numbervars(true)</code> 
+from
+<a class="pred" href="termrw.html#write_term/2">write_term/2</a>) as 
+well as by using the <code>variable_names(Bindings)</code> option from <a class="pred" href="termrw.html#write_term/2">write_term/2</a>.
+
+<p><var>Options</var> processed in addition to <a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+options:
+
+<dl class="latex">
+<dt><strong>variable_names</strong>(<var>+Bindings</var>)</dt>
+<dd class="defbody">
+See above and <a class="pred" href="termrw.html#write_term/2">write_term/2</a>.
+</dd>
+<dt><strong>indent</strong>(<var>+Columns</var>)</dt>
+<dd class="defbody">
+Left margin used for the clause. Default <code>0</code>.
+</dd>
+<dt><strong>module</strong>(<var>+Module</var>)</dt>
+<dd class="defbody">
+<var>Module</var> used to determine whether a goal resolves to a meta 
+predicate. Default <code>user</code>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

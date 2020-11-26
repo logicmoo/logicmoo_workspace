@@ -1,0 +1,65 @@
+//
+// Non-literal expressions template example
+//
+// Available in the AAU directory as Non-literal-template.plgCG
+//
+// Adapted from Scharfe, Henrik (2002), "CG Representations of 
+//    Non-literal Expressions." in U. Priss, D Corbett, G.Angelova 
+//   (Eds.) "Conceptual Structures: Integration and Interfaces."
+//   Springer Verlag, Berlin, New York. LNAI 2393. pp. 166-176.
+//
+// Ulrik Petersen
+// Created: Mid-September, 2003
+// Last update: September 18, 2003
+//
+
+
+// Type hierarchy
+Entity > Physical, Abstract.
+Abstract > Proposition, Description, Feeling.
+Proposition > Non_literal.
+
+// Note: This list could easily be extended...
+Non_literal > Hyperbole, Idiom, Irony, Metaphor, Metonymy, Simile.
+
+Description > Title.
+Feeling > Thirsty.
+
+Physical > Object.
+Object > Animate, Inanimate.
+Animate > Person, Animal.
+Animal > Snake.
+Inanimate > Artefact, Plant.
+Artefact > Car.
+Plant > Grass.
+
+// Catalog of instances
+Title = Head_of_department.
+
+//
+// Graph examples
+//
+
+// The car is thirsty
+graph(gr1, [Car: X]-ATTR->[Metaphor = [Car: X]<-EXPR-[Thirsty] ]).
+
+// The head of the department is a snake in the grass
+graph(gr2, [Person: X]-
+                 -CHRC->[Title: Head_of_department],
+                 -ATTR->[Metaphor = [Snake]-LOC->[Grass]]).
+
+// Rules
+
+// Find the source domain of a metaphor
+source(L, S) :-
+    graph(L, G),   // Get the graph and its label
+    subsume([Metaphor], G),  // Check that it has a metaphor
+    branchOfCG(S-R->[Metaphor], G).  // Find the source domain 
+    
+// Find the target domain of a metaphor
+target(L, T) :- 
+    graph(L, G),       // Get the graph and its label
+    subsume([Metaphor], G),  // Check that it has a metaphor
+    concOfCG([Metaphor = T], G).  // Get the metaphor's target domain
+
+

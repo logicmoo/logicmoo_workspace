@@ -1,0 +1,49 @@
+(note TQD28)
+
+(implies 
+ (exportThroughAmountDuring ?REGION ?PRODUCT-TYPE ?PT ?TIME ?AMOUNT) 
+ (supplyFromThroughAmountDuring PlanetEarth ?PRODUCT-TYPE ?REGION ?PT ?TIME ?AMOUNT)) 
+
+(exportThroughAmountDuring Qatar PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (BarrelsPerDay 436760)) 
+
+
+(supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Qatar StraitOfHormuz 
+ (YearFn 1995) 
+ (BarrelsPerDay 436760)) 
+
+(instance 
+ (MillionBarrelsPerDay 69.8600) FlowRate) 
+
+(productionAmountDuring PlanetEarth PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 69.8600)) 
+
+(supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 14)) 
+
+(implies 
+ (productionAmountDuring PlanetEarth ?PRODUCT-TYPE ?TIME ?AMOUNT) 
+ (supplyAmountDuring PlanetEarth ?PRODUCT-TYPE ?TIME ?AMOUNT)) 
+
+
+(query (findall (?AMOUNT ?TIME ?TOTAL-PRODUCT-AMOUNT )
+(thereExists ?IA1-TR-PRODUCT-AMOUNT 
+   (thereExists ?TR-PRODUCT-AMOUNT 
+       (and 
+           (instance ?TOTAL-PRODUCT-AMOUNT FlowRate) 
+           (supplyAmountDuring PlanetEarth PetroleumProduct ?TIME ?TOTAL-PRODUCT-AMOUNT) 
+           (supplyThroughAmountDuring PlanetEarth PetroleumProduct StraitOfHormuz ?TIME ?TR-PRODUCT-AMOUNT) 
+           (supplyFromThroughAmountDuring PlanetEarth PetroleumProduct Qatar StraitOfHormuz ?TIME ?IA1-TR-PRODUCT-AMOUNT) 
+           (evaluate ?AMOUNT 
+               (DifferenceFn ?TR-PRODUCT-AMOUNT ?IA1-TR-PRODUCT-AMOUNT)))))
+
+))
+
+(answer 14 1995 69.8600
+)
+
+(end_of_file)
+

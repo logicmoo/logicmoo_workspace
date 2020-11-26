@@ -1,0 +1,25 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+This notebook loads mcintyre
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- use_module(library(mcintyre)).
+
+:- mc.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell program">
+</div>
+
+<div class="nb-cell query">
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- end_lpad.
+</div>
+
+</div>

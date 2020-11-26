@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Eclipse-BundleShape: dir
+Bundle-ManifestVersion: 2
+Bundle-Name: Prolog Connector
+Bundle-SymbolicName: org.cs3.prolog.connector;singleton:=true
+Bundle-Version: 3.1.2.qualifier
+Bundle-ClassPath: .
+Export-Package: org.cs3.prolog.connector,
+ org.cs3.prolog.connector.common,
+ org.cs3.prolog.connector.cterm,
+ org.cs3.prolog.connector.internal.cterm.parser;x-friends:="org.cs3.prolog.connector.tests",
+ org.cs3.prolog.connector.internal.lifecycle;x-friends:="org.cs3.prolog.connector.tests",
+ org.cs3.prolog.connector.internal.process;x-friends:="org.cs3.prolog.connector.tests",
+ org.cs3.prolog.connector.internal.process.socket;x-friends:="org.cs3.prolog.connector.tests",
+ org.cs3.prolog.connector.internal.session.socket;x-friends:="org.cs3.prolog.connector.tests",
+ org.cs3.prolog.connector.process,
+ org.cs3.prolog.connector.session
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: http://sewiki.iai.uni-bonn.de/research/pdt/docs
+

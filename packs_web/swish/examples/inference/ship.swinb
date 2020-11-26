@@ -1,0 +1,54 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+# Fire on a ship
+
+From 
+ - Steffen Michels, Arjen Hommersom, Peter J. F. Lucas, Marina Velikova:
+   A new probabilistic constraint logic programming language based on a generalised distribution semantics.   
+   Artif. Intell. 228: 1-44 (2015)
+
+Suppose there is a fire in one compartment of a ship. The heat causes the hull of that compartment to warp and if the fire is not extinguished within 1.25 minutes the hull will breach. After 0.75 minutes the fire will spread to the compartment behind. This means that if the fire is extinguished within 0.75 minutes the ship is saved for sure:
+</div>
+
+<div class="nb-cell program" data-background="true">
+:- use_module(library(mcintyre)).
+
+:- if(current_predicate(use_rendering/1)).
+:- use_rendering(c3).
+:- use_rendering(graphviz).
+:- endif.
+
+:- mc.
+:- begin_lpad.
+saved:- 
+  time_comp_1(T),
+  {T<0.75}.
+</div>
+<div class="nb-cell markdown">
+In the other compartment the hull will breach 0.625 minutes after the fire breaks out. In order to reach the second compartment the fire in the first one has to be extinguished. So both fires have to be extinguished within 0.75 +0.625 =1.375 minutes. Additionally, the fire in the first compartment has to be extinguished within 1.25 minutes, because otherwise the hull breaches there. The second compartment is however more accessible, such that four fire-fighters can extinguish the fire at the same time, which means they can work four times faster:
+</div>
+
+<div class="nb-cell program" data-background="true">
+saved:-
+  time_comp_1(T1),
+  time_comp_2(T2),
+  {T1 < 1.25},
+  {T1 + 0.25 * T2 < 1.375}.
+</div>
+<div class="nb-cell markdown">
+Finally, assume exponential distributions for both time durations available to extinguish the fires:
+</div>
+
+<div class="nb-cell program" data-background="true">
+time_comp_1(T) : exponential(T,1).
+time_comp_2(T) : exponential(T,1).
+:- end_lpad.
+</div>
+<div class="nb-cell markdown">
+The interesting question here is how likely it is that the ship is saved.
+</div>
+<div class="nb-cell query">
+mc_sample(saved,1000,Prob).
+</div>
+</div>

@@ -1,0 +1,36 @@
+CGE (Conceptual Graph Editor) is graphical interface to CGT
+(Conceptual Graph Tools). CGE needs X-Prolog to run. This package just
+contains the basic files for people to see how programming is done
+with X-Prolog. CGE is copyrighted by Michel Wermelinger
+
+The CGE package contains the following files:
+
+Name		Size	Contents
+
+cge_widgets.pl		contains rhe widgets making up the editor
+cge_actions.pl		the actions associated to keyboard shortcuts and menus
+choice.pl			the choice dialog widget
+wdl_ext.pl			some extensions to the Widget Description Language
+dialog.pl			more dialog widgets
+COPYING				GNU General Public License
+README.CGE			this file
+
+According to the License you may not use (parts of) CGE for commercial
+purposes. But if you want to do so, please drop me a note and I'm sure
+we'll reach somee kind of agreement.
+
+I would also very much appreciate if you could send your changes back
+to me, so I may keep a master version to send regularly to everyone
+interested in CGE.
+
+Anything you write (working papers, reports, articles, etc.) about
+your work using GET is also of great interest to me (and probably
+everyone else working with CGE).
+
+Bug reports, criticisms, but not flames (I know that parts of the code
+are ghastly), and suggestions are most welcome.
+
+Michel Wermelinger
+Dept. de Informatica, Univ. Nova de Lisboa, Quinta da Torre
+P - 2825 Monte da Caparica, PORTUGAL
+Phone: (+351) (1) 295 44 64 ext. 1360  Internet: mw@fct.unl.pt

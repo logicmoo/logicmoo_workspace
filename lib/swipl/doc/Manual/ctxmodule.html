@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.14</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="dynamic-modules.html">
+<link rel="next" href="manipmodule.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="dynamic-modules.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="manipmodule.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:ctxmodule"><a id="sec:6.14"><span class="sec-nr">6.14</span> <span class="sec-title">Transparent 
+predicates: definition and context module</span></a></h2>
+
+<a id="sec:ctxmodule"></a>
+
+<p><i>The&lsquo;module-transparent' mechanism is still underlying the 
+actual implementation. Direct usage by programmers is deprecated. Please 
+use <a id="idx:metapredicate1:1964"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+to deal with meta-predicates.</i>
+
+<p>The qualification of module-sensitive arguments described in <a class="sec" href="metapred.html#sec:6.5">section 
+6.5</a> is realised using <em>transparent</em> predicates. It is now 
+deprecated to use this mechanism directly. However, studying the 
+underlying mechanism helps to understand SWI-Prolog's modules. In some 
+respect, the transparent mechanism is more powerful than meta-predicate 
+declarations.
+
+<p>Each predicate of the program is assigned a module, called its
+<em>definition module</em>. The definition module of a predicate is 
+always the module in which the predicate was originally defined. Each 
+active goal in the Prolog system has a <em>context module</em> assigned 
+to it.
+
+<p>The context module is used to find predicates for a Prolog term. By 
+default, the context module is the definition module of the predicate 
+running the goal. For transparent predicates, however, this is the 
+context module of the goal inherited from the parent goal. Below, we 
+implement <a id="idx:maplist3:1965"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+using the transparent mechanism. The code of
+<a id="idx:maplist3:1966"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+and maplist_/3 is the same as in
+<a class="sec" href="metapred.html#sec:6.5">section 6.5</a>, but now we 
+must declare both the main predicate and the helper as transparent to 
+avoid changing the context module when calling the helper.
+
+<pre class="code">
+:- module(maplist, maplist/3).
+
+:- module_transparent
+        maplist/3,
+        maplist_/3.
+
+maplist(Goal, L1, L2) :-
+        maplist_(L1, L2, G).
+
+maplist_([], [], _).
+maplist_([H0|T0], [H|T], Goal) :-
+        call(Goal, H0, H),
+        maplist_(T0, T, Goal).
+</pre>
+
+<p>Note that <em>any</em> call that translates terms into predicates is 
+subject to the transparent mechanism, not just the terms passed to 
+module-sensitive arguments. For example, the module below counts the 
+number of unique atoms returned as bindings for a variable. It works as 
+expected. If we use the directive
+<code>:- module_transparent <a id="idx:countatomresults3:1967"></a><span class="pred-ext">count_atom_results/3</span>.</code> 
+instead,
+<a id="idx:atomresult2:1968"></a><span class="pred-ext">atom_result/2</span> 
+is called wrongly in the module <em>calling</em> count_atom_results/3 . 
+This can be solved using
+<a id="idx:stripmodule3:1969"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a> 
+to create a qualified goal and a non-transparent helper predicate that 
+is defined in the same module.
+
+<pre class="code">
+:- module(count_atom_results,
+          [ count_atom_results/3
+          ]).
+:- meta_predicate count_atom_results(-,0,-).
+
+count_atom_results(A, Goal, Count) :-
+        setof(A, atom_result(A, Goal), As), !,
+        length(As, Count).
+count_atom_results(_, _, 0).
+
+atom_result(Var, Goal) :-
+        call(Goal),
+        atom(Var).
+</pre>
+
+<p>The following predicates support the module-transparent interface:
+
+<dl class="latex">
+<dt class="pubdef"><a id="module_transparent/1">:- <strong>module_transparent</strong>(<var>+Preds</var>)</a></dt>
+<dd class="defbody">
+<var>Preds</var> is a comma-separated list of name/arity pairs (like
+<a id="idx:dynamic1:1970"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>). 
+Each goal associated with a transparent-declared predicate will inherit 
+the <em>context module</em> from its parent goal.</dd>
+<dt class="pubdef"><a id="context_module/1"><strong>context_module</strong>(<var>-Module</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Module</var> with the context module of the current goal.
+<a id="idx:contextmodule1:1971"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
+itself is, of course, transparent.</dd>
+<dt class="pubdef"><a id="strip_module/3"><strong>strip_module</strong>(<var>+Term, 
+-Module, -Plain</var>)</a></dt>
+<dd class="defbody">
+Used in module-transparent predicates or meta-predicates to extract the 
+referenced module and plain term. If <var>Term</var> is a 
+module-qualified term, i.e. of the format <var>Module</var>:<var>Plain</var>, <var>Module</var> 
+and <var>Plain</var> are unified to these values. Otherwise, <var>Plain</var> 
+is unified to
+<var>Term</var> and <var>Module</var> to the context module.
+</dd>
+</dl>
+
+<p></body></html>

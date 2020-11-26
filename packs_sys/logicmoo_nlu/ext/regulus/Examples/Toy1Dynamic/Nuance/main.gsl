@@ -1,0 +1,18 @@
+MAIN
+[
+  ( PLURAL_NP:np ) { < value $np > }
+  ( SINGULAR_NP:np ) { < value $np > } 
+]
+
+SINGULAR_NP
+( SINGULAR_SPEC:s <file:../Nuance/domestic.gsl#SINGULAR_NOUN>:n )
+     {return( ( ( spec $s ) ( noun $n ) ) )} 
+
+PLURAL_NP
+( PLURAL_SPEC:s <file:../Nuance/domestic.gsl#PLURAL_NOUN>:n )
+     {return( ( ( spec $s ) ( noun $n ) ) )} 
+
+
+SINGULAR_SPEC one {return( 1 )}
+
+PLURAL_SPEC two {return( 2 )}

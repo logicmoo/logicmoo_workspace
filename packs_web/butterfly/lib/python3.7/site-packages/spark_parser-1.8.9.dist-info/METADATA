@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: spark-parser
+Version: 1.8.9
+Summary: An Earley-Algorithm Context-free grammar Parser Toolkit
+Home-page: https://github.com/rocky/python-spark/
+Author: Rocky Bernstein
+Author-email: rb@dustyfeet.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.3
+Classifier: Programming Language :: Python :: 2.4
+Classifier: Programming Language :: Python :: 2.5
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Software Development :: Code Generators
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: click
+
+|buildstatus| |Supported Python Versions|
+
+An Earley Algorithm Parser toolkit.
+===========================================
+
+This package uses Jay Earley's algorithm for parsing context free
+grammars, and comes with some generic Abstract Syntax Tree
+routines. There is also a prototype scanner which does its job by
+combining Python regular expressions.
+
+(SPARK stands for Scanning, Parsing, and Rewriting Kit. It is a poor
+name since it conflicts with a more popular package of the same
+name. In the future we will rename this.)
+
+The original version of this was written by John Aycock for his Ph.d
+thesis and was described in his 1998 paper: "Compiling Little
+Languages in Python" at the 7th International Python Conference. The
+current incarnation of this code is maintained (or not) by Rocky
+Bernstein.
+
+Note: Earley algorithm parsers are almost linear when given an LR grammar.
+These are grammars which are left-recursive.
+
+Installation
+------------
+
+This uses `setup.py`, so it follows the standard Python routine:
+
+::
+
+    python setup.py install # may need sudo
+    # or if you have pyenv:
+    python setup.py develop
+
+Example
+-------
+
+The github `example` directory_ has a worked-out examples; Package uncompyle6_
+uses this and contains a much larger example.
+
+See Also
+--------
+
+* features_
+* http://pages.cpsc.ucalgary.ca/~aycock/spark/ (Old and not very well maintained)
+* https://pypi.python.org/pypi/uncompyle6/
+
+.. _features: https://github.com/rocky/python-spark/blob/master/NEW-FEATURES.rst
+.. _directory: https://github.com/rocky/python-spark/tree/master/example
+.. _uncompyle6: https://pypi.python.org/pypi/uncompyle6/
+.. |downloads| image:: https://img.shields.io/pypi/dd/spark.svg
+.. |buildstatus| image:: https://travis-ci.org/rocky/python-spark.svg
+		 :target: https://travis-ci.org/rocky/python-spark
+.. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/spark_parser.svg
+
+
+

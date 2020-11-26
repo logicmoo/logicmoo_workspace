@@ -1,0 +1,18 @@
+// This file contains a group of multi-step inference examples, which show the expressive and inferential capability of NARS, as implemented in version 1.5.1.
+
+// Each example starts at a line with a "*" to empty the memory of the system. 
+// To run an example, copy/paste the input lines into the input window of the NARS. 
+// Listed after the input lines are the lines displayed in the main window of NARS during the processing of the input, followed by a brief explanation of the example.
+
+// To only display the relevant output, in the main window of NARS go to menu item "Paremeter", then select "Report Silence Level", and move the scrollbar to its right-most position (value 100). Click "Hide" to finish the change.
+
+
+**** Choice ****
+<robin --> bird>.
+10
+<swan --> bird>. %1.00;0.80%
+10
+<penguin --> bird>. %0.80%
+10
+<?1 --> bird>?
+60

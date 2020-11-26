@@ -1,0 +1,1990 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.9</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="clpb.html">
+<link rel="next" href="clpqr.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="clpb.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="clpqr.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:clpfd"><a id="sec:A.9"><span class="sec-nr">A.9</span> <span class="sec-title">library(clpfd): 
+CLP(FD): Constraint Logic Programming over Finite Domains</span></a></h2>
+
+<a id="sec:clpfd"></a>
+
+<p><a id="sec:clpfd"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+<a class="url" href="https://www.metalevel.at">Markus Triska</a>
+</dd>
+</dl>
+
+<p><b>Development of this library has moved to SICStus Prolog.</b><br>
+Please see
+<a class="url" href="https://github.com/triska/clpz"><b>CLP(Z)</b></a> 
+for more information.
+
+<p><h3 id="sec:clpfd-intro"><a id="sec:A.9.1"><span class="sec-nr">A.9.1</span> <span class="sec-title">Introduction</span></a></h3>
+
+<p><a id="sec:clpfd-intro"></a>
+
+<p>This library provides CLP(FD): Constraint Logic Programming over 
+Finite Domains. This is an instance of the general CLP(<i>X</i>) scheme 
+(<a class="sec" href="clp.html#sec:8">section 8</a>), extending logic 
+programming with reasoning over specialised domains. CLP(FD) lets us 
+reason about <b>integers</b> in a way that honors the relational nature 
+of Prolog.
+
+<p>Read <a class="url" href="https://www.metalevel.at/prolog"><b>The 
+Power of Prolog</b></a> to understand how this library is meant to be 
+used in practice.
+
+<p>There are two major use cases of CLP(FD) constraints:
+
+<p>
+<ol class="latex">
+<li><b>declarative integer arithmetic</b> (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>)
+<li>solving <b>combinatorial problems</b> such as planning, scheduling 
+and allocation tasks.
+</ol>
+
+<p>The predicates of this library can be classified as:
+
+<p>
+<ul class="latex">
+<li><i>arithmetic</i> constraints like <a class="pred" href="clpfd.html##=/2">#=/2</a>, <a class="pred" href="clpfd.html##>/2">#&gt;/2</a> 
+and <a class="pred" href="clpfd.html##\=/2">#\=/2</a> (<a class="sec" href="clpfd.html#sec:A.9.17.1">section 
+A.9.17.1</a>)
+<li>the <i>membership</i> constraints <a class="pred" href="clpfd.html#in/2">in/2</a> 
+and <a class="pred" href="clpfd.html#ins/2">ins/2</a> (<a class="sec" href="clpfd.html#sec:A.9.17.2">section 
+A.9.17.2</a>)
+<li>the <i>enumeration</i> predicates <a class="pred" href="clpfd.html#indomain/1">indomain/1</a>, <a class="pred" href="clpfd.html#label/1">label/1</a> 
+and <a class="pred" href="clpfd.html#labeling/2">labeling/2</a> (<a class="sec" href="clpfd.html#sec:A.9.17.3">section 
+A.9.17.3</a>)
+<li><i>combinatorial</i> constraints like <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a> 
+and <a class="pred" href="clpfd.html#global_cardinality/2">global_cardinality/2</a> 
+(<a class="sec" href="clpfd.html#sec:A.9.17.4">section A.9.17.4</a>)
+<li><i>reification</i> predicates such as <a class="pred" href="clpfd.html##<==>/2">#&lt;==&gt;/2</a> 
+(<a class="sec" href="clpfd.html#sec:A.9.17.5">section A.9.17.5</a>)
+<li><i>reflection</i> predicates such as <a class="pred" href="clpfd.html#fd_dom/2">fd_dom/2</a> 
+(<a class="sec" href="clpfd.html#sec:A.9.17.6">section A.9.17.6</a>)
+</ul>
+
+<p>In most cases, <i>arithmetic constraints</i> (<a class="sec" href="clpfd.html#sec:A.9.2">section 
+A.9.2</a>) are the only predicates you will ever need from this library. 
+When reasoning over integers, simply replace low-level arithmetic 
+predicates like <code>(is)/2</code> and <code>(&gt;)/2</code> by the 
+corresponding CLP(FD) constraints like <a class="pred" href="clpfd.html##=/2">#=/2</a> 
+and <a class="pred" href="clpfd.html##>/2">#&gt;/2</a> to honor and 
+preserve declarative properties of your programs. For satisfactory 
+performance, arithmetic constraints are implicitly rewritten at 
+compilation time so that low-level fallback predicates are automatically 
+used whenever possible.
+
+<p>Almost all Prolog programs also reason about integers. Therefore, it 
+is highly advisable that you make CLP(FD) constraints available in all 
+your programs. One way to do this is to put the following directive in 
+your <code>&lt;config&gt;/init.pl</code> initialisation file:
+
+<pre class="code">
+:- use_module(library(clpfd)).
+</pre>
+
+<p>All example programs that appear in the CLP(FD) documentation assume 
+that you have done this.
+
+<p>Important concepts and principles of this library are illustrated by 
+means of usage examples that are available in a public git repository:
+<a class="url" href="https://github.com/triska/clpfd"><b>github.com/triska/clpfd</b></a>
+
+<p>If you are used to the complicated operational considerations that 
+low-level arithmetic primitives necessitate, then moving to CLP(FD) 
+constraints may, due to their power and convenience, at first feel to 
+you excessive and almost like cheating. It <i>isn't</i>. Constraints are 
+an integral part of all popular Prolog systems, and they are designed to 
+help you eliminate and avoid the use of low-level and less general 
+primitives by providing declarative alternatives that are meant to be 
+used instead.
+
+<p>When teaching Prolog, CLP(FD) constraints should be introduced
+<i>before</i> explaining low-level arithmetic predicates and their 
+procedural idiosyncrasies. This is because constraints are easy to 
+explain, understand and use due to their purely relational nature. In 
+contrast, the modedness and directionality of low-level arithmetic 
+primitives are impure limitations that are better deferred to more 
+advanced lectures.
+
+<p>We recommend the following reference (PDF:
+<a class="url" href="https://www.metalevel.at/swiclpfd.pdf">metalevel.at/swiclpfd.pdf</a>) 
+for citing this library in scientific publications:
+
+<pre class="code">
+@inproceedings{Triska12,
+  author    = {Markus Triska},
+  title     = {The Finite Domain Constraint Solver of {SWI-Prolog}},
+  booktitle = {FLOPS},
+  series    = {LNCS},
+  volume    = {7294},
+  year      = {2012},
+  pages     = {307-316}
+}
+</pre>
+
+<p>More information about CLP(FD) constraints and their implementation 
+is contained in: <a class="url" href="https://www.metalevel.at/drt.pdf"><b>metalevel.at/drt.pdf</b></a>
+
+<p>The best way to discuss applying, improving and extending CLP(FD) 
+constraints is to use the dedicated <code>clpfd</code> tag on
+<a class="url" href="http://stackoverflow.com">stackoverflow.com</a>. 
+Several of the world's foremost CLP(FD) experts regularly participate in 
+these discussions and will help you for free on this platform.
+
+<p><h3 id="sec:clpfd-arith-constraints"><a id="sec:A.9.2"><span class="sec-nr">A.9.2</span> <span class="sec-title">Arithmetic 
+constraints</span></a></h3>
+
+<p><a id="sec:clpfd-arith-constraints"></a>
+
+<p>In modern Prolog systems, <b>arithmetic constraints</b> subsume and 
+supersede low-level predicates over integers. The main advantage of 
+arithmetic constraints is that they are true <i>relations</i> and can be 
+used in all directions. For most programs, arithmetic constraints are 
+the only predicates you will ever need from this library.
+
+<p>The most important arithmetic constraint is <a class="pred" href="clpfd.html##=/2">#=/2</a>, 
+which subsumes both
+<code>(is)/2</code> and <code>(=:=)/2</code> over integers. Use <a class="pred" href="clpfd.html##=/2">#=/2</a> 
+to make your programs more general. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).
+
+<p>In total, the arithmetic constraints are:
+<blockquote>
+<table class="latex frame-box">
+<tr><td>Expr1 <code>#=</code> Expr2</td><td>Expr1 equals Expr2 </td></tr>
+<tr><td>Expr1 <code>#\=</code> Expr2</td><td>Expr1 is not equal to Expr2 </td></tr>
+<tr><td>Expr1 <code>#&gt;=</code> Expr2</td><td>Expr1 is greater than or 
+equal to Expr2 </td></tr>
+<tr><td>Expr1 <code>#=&lt;</code> Expr2</td><td>Expr1 is less than or 
+equal to Expr2 </td></tr>
+<tr><td>Expr1 <code>#&gt;</code> Expr2</td><td>Expr1 is greater than 
+Expr2 </td></tr>
+<tr><td>Expr1 <code>#&lt;</code> Expr2</td><td>Expr1 is less than Expr2 </td></tr>
+</table>
+</blockquote>
+
+<p><var>Expr1</var> and <var>Expr2</var> denote <b>arithmetic 
+expressions</b>, which are:
+<blockquote>
+<table class="latex frame-box">
+<tr><td><i>integer</i> </td><td>Given value </td></tr>
+<tr><td><i>variable</i> </td><td>Unknown integer </td></tr>
+<tr><td>?(<i>variable</i>)</td><td>Unknown integer </td></tr>
+<tr><td>-Expr</td><td>Unary minus </td></tr>
+<tr><td>Expr + Expr</td><td>Addition </td></tr>
+<tr><td>Expr * Expr</td><td>Multiplication </td></tr>
+<tr><td>Expr - Expr</td><td>Subtraction </td></tr>
+<tr><td>Expr <code>^</code> Expr</td><td>Exponentiation </td></tr>
+<tr><td><code>min(Expr,Expr)</code> </td><td>Minimum of two expressions </td></tr>
+<tr><td><code>max(Expr,Expr)</code> </td><td>Maximum of two expressions </td></tr>
+<tr><td>Expr <code>mod</code> Expr</td><td>Modulo induced by floored 
+division </td></tr>
+<tr><td>Expr <code>rem</code> Expr</td><td>Modulo induced by truncated 
+division </td></tr>
+<tr><td><code>abs(Expr)</code> </td><td>Absolute value </td></tr>
+<tr><td>Expr <code>//</code> Expr</td><td>Truncated integer division </td></tr>
+<tr><td>Expr div Expr</td><td>Floored integer division </td></tr>
+</table>
+</blockquote>
+
+<p>where <var>Expr</var> again denotes an arithmetic expression.
+
+<p>The bitwise operations <code>(\)/1</code>, <code>(/\)/2</code>, <code>(\/)/2</code>, <code>(&gt;&gt;)/2</code>,
+<code>(&lt;&lt;)/2</code>, <code>lsb/1</code>, <code>msb/1</code>, <code>popcount/1</code> 
+and <code>(xor)/2</code> are also supported.
+
+<p><h3 id="sec:clpfd-integer-arith"><a id="sec:A.9.3"><span class="sec-nr">A.9.3</span> <span class="sec-title">Declarative 
+integer arithmetic</span></a></h3>
+
+<p><a id="sec:clpfd-integer-arith"></a>
+
+<p>The <i>arithmetic constraints</i> (<a class="sec" href="clpfd.html#sec:A.9.2">section 
+A.9.2</a>) <a class="pred" href="clpfd.html##=/2">#=/2</a>, <a class="pred" href="clpfd.html##>/2">#&gt;/2</a> 
+etc. are meant to be used <i>instead</i> of the primitives <code>(is)/2</code>,
+<code>(=:=)/2</code>, <code>(&gt;)/2</code> etc. over integers. Almost 
+all Prolog programs also reason about integers. Therefore, it is 
+recommended that you put the following directive in your <code>&lt;config&gt;/init.pl</code> 
+initialisation file to make CLP(FD) constraints available in all your 
+programs:
+
+<pre class="code">
+:- use_module(library(clpfd)).
+</pre>
+
+<p>Throughout the following, it is assumed that you have done this.
+
+<p>The most basic use of CLP(FD) constraints is <i>evaluation</i> of 
+arithmetic expressions involving integers. For example:
+
+<pre class="code">
+?- X #= 1+2.
+X = 3.
+</pre>
+
+<p>This could in principle also be achieved with the lower-level 
+predicate <code>(is)/2</code>. However, an important advantage of 
+arithmetic constraints is their purely relational nature: Constraints 
+can be used in <i>all directions</i>, also if one or more of their 
+arguments are only partially instantiated. For example:
+
+<pre class="code">
+?- 3 #= Y+2.
+Y = 1.
+</pre>
+
+<p>This relational nature makes CLP(FD) constraints easy to explain and 
+use, and well suited for beginners and experienced Prolog programmers 
+alike. In contrast, when using low-level integer arithmetic, we get:
+
+<pre class="code">
+?- 3 is Y+2.
+ERROR: is/2: Arguments are not sufficiently instantiated
+
+?- 3 =:= Y+2.
+ERROR: =:=/2: Arguments are not sufficiently instantiated
+</pre>
+
+<p>Due to the necessary operational considerations, the use of these 
+low-level arithmetic predicates is considerably harder to understand and 
+should therefore be deferred to more advanced lectures.
+
+<p>For supported expressions, CLP(FD) constraints are drop-in 
+replacements of these low-level arithmetic predicates, often yielding 
+more general programs. See <code>n_factorial/2</code> (<a class="sec" href="clpfd.html#sec:A.9.4">section 
+A.9.4</a>) for an example.
+
+<p>This library uses <a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+to automatically rewrite constraints at compilation time so that 
+low-level arithmetic predicates are <i>automatically</i> used whenever 
+possible. For example, the predicate:
+
+<pre class="code">
+positive_integer(N) :- N #&gt;= 1.
+</pre>
+
+<p>is executed as if it were written as:
+
+<pre class="code">
+positive_integer(N) :-
+        (   integer(N)
+        -&gt;  N &gt;= 1
+        ;   N #&gt;= 1
+        ).
+</pre>
+
+<p>This illustrates why the performance of CLP(FD) constraints is almost 
+always completely satisfactory when they are used in modes that can be 
+handled by low-level arithmetic. To disable the automatic rewriting, set 
+the Prolog flag <code>clpfd_goal_expansion</code> to <code>false</code>.
+
+<p>If you are used to the complicated operational considerations that 
+low-level arithmetic primitives necessitate, then moving to CLP(FD) 
+constraints may, due to their power and convenience, at first feel to 
+you excessive and almost like cheating. It <i>isn't</i>. Constraints are 
+an integral part of all popular Prolog systems, and they are designed to 
+help you eliminate and avoid the use of low-level and less general 
+primitives by providing declarative alternatives that are meant to be 
+used instead.
+
+<p><h3 id="sec:clpfd-factorial"><a id="sec:A.9.4"><span class="sec-nr">A.9.4</span> <span class="sec-title">Example: 
+Factorial relation</span></a></h3>
+
+<p><a id="sec:clpfd-factorial"></a>
+
+<p>We illustrate the benefit of using <a class="pred" href="clpfd.html##=/2">#=/2</a> 
+for more generality with a simple example.
+
+<p>Consider first a rather conventional definition of <code>n_factorial/2</code>, 
+relating each natural number <i>N</i> to its factorial <i>F</i>:
+
+<pre class="code">
+n_factorial(0, 1).
+n_factorial(N, F) :-
+        N #&gt; 0,
+        N1 #= N - 1,
+        n_factorial(N1, F1),
+        F #= N * F1.
+</pre>
+
+<p>This program uses CLP(FD) constraints <i>instead</i> of low-level 
+arithmetic throughout, and everything that <i>would have worked</i> with 
+low-level arithmetic <i>also</i> works with CLP(FD) constraints, 
+retaining roughly the same performance. For example:
+
+<pre class="code">
+?- n_factorial(47, F).
+F = 258623241511168180642964355153611979969197632389120000000000 ;
+false.
+</pre>
+
+<p>Now the point: Due to the increased flexibility and generality of 
+CLP(FD) constraints, we are free to <i>reorder</i> the goals as follows:
+
+<pre class="code">
+n_factorial(0, 1).
+n_factorial(N, F) :-
+        N #&gt; 0,
+        N1 #= N - 1,
+        F #= N * F1,
+        n_factorial(N1, F1).
+</pre>
+
+<p>In this concrete case, <i>termination</i> properties of the predicate 
+are improved. For example, the following queries now both terminate:
+
+<pre class="code">
+?- n_factorial(N, 1).
+N = 0 ;
+N = 1 ;
+false.
+
+?- n_factorial(N, 3).
+false.
+</pre>
+
+<p>To make the predicate terminate if <i>any</i> argument is 
+instantiated, add the (implied) constraint <code>F #\= 0</code> before 
+the recursive call. Otherwise, the query <code>n_factorial(N, 0)</code> 
+is the only non-terminating case of this kind.
+
+<p>The value of CLP(FD) constraints does <i>not</i> lie in completely 
+freeing us from <i>all</i> procedural phenomena. For example, the two 
+programs do not even have the same <i>termination properties</i> in all 
+cases. Instead, the primary benefit of CLP(FD) constraints is that they 
+allow you to try different execution orders and apply <a class="url" href="https://www.metalevel.at/prolog/debugging"><b>declarative 
+debugging</b></a> techniques <i>at all</i>! Reordering goals (and 
+clauses) can significantly impact the performance of Prolog programs, 
+and you are free to try different variants if you use declarative 
+approaches. Moreover, since all CLP(FD) constraints <i>always terminate</i>, 
+placing them earlier can at most <i>improve</i>, never worsen, the 
+termination properties of your programs. An additional benefit of 
+CLP(FD) constraints is that they eliminate the complexity of introducing <code>(is)/2</code> 
+and <code>(=:=)/2</code> to beginners, since <i>both</i> predicates are 
+subsumed by <a class="pred" href="clpfd.html##=/2">#=/2</a> when 
+reasoning over integers.
+
+<p>In the case above, the clauses are mutually exclusive <i>if</i> the 
+first argument is sufficiently instantiated. To make the predicate 
+deterministic in such cases while retaining its generality, you can use <a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a> 
+to <i>reify</i> a comparison, making the different cases distinguishable 
+by pattern matching. For example, in this concrete case and others like 
+it, you can use <code>zcompare(Comp, 0, N)</code> to obtain as <var>Comp</var> 
+the symbolic outcome (<code>&lt;</code>, <code>=</code>, <code>&gt;</code>) 
+of 0 compared to N.
+
+<p><h3 id="sec:clpfd-combinatorial"><a id="sec:A.9.5"><span class="sec-nr">A.9.5</span> <span class="sec-title">Combinatorial 
+constraints</span></a></h3>
+
+<p><a id="sec:clpfd-combinatorial"></a>
+
+<p>In addition to subsuming and replacing low-level arithmetic 
+predicates, CLP(FD) constraints are often used to solve combinatorial 
+problems such as planning, scheduling and allocation tasks. Among the 
+most frequently used <b>combinatorial constraints</b> are <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a>,
+<a class="pred" href="clpfd.html#global_cardinality/2">global_cardinality/2</a> 
+and <a class="pred" href="clpfd.html#cumulative/2">cumulative/2</a>. 
+This library also provides several other constraints like <a class="pred" href="clpfd.html#disjoint2/1">disjoint2/1</a> 
+and <a class="pred" href="clpfd.html#automaton/8">automaton/8</a>, which 
+are useful in more specialized applications.
+
+<p><h3 id="sec:clpfd-domains"><a id="sec:A.9.6"><span class="sec-nr">A.9.6</span> <span class="sec-title">Domains</span></a></h3>
+
+<p><a id="sec:clpfd-domains"></a>
+
+<p>Each CLP(FD) variable has an associated set of admissible integers, 
+which we call the variable's <b>domain</b>. Initially, the domain of 
+each CLP(FD) variable is the set of <i>all</i> integers. CLP(FD) 
+constraints like <a class="pred" href="clpfd.html##=/2">#=/2</a>, <a class="pred" href="clpfd.html##>/2">#&gt;/2</a> 
+and <a class="pred" href="clpfd.html##\=/2">#\=/2</a> can at most 
+reduce, and never extend, the domains of their arguments. The 
+constraints <a class="pred" href="clpfd.html#in/2">in/2</a> and <a class="pred" href="clpfd.html#ins/2">ins/2</a> 
+let us explicitly state domains of CLP(FD) variables. The process of 
+determining and adjusting domains of variables is called constraint
+<b>propagation</b>, and it is performed automatically by this library. 
+When the domain of a variable contains only one element, then the 
+variable is automatically unified to that element.
+
+<p>Domains are taken into account when further constraints are stated, 
+and by enumeration predicates like <a class="pred" href="clpfd.html#labeling/2">labeling/2</a>.
+
+<p><h3 id="sec:clpfd-sudoku"><a id="sec:A.9.7"><span class="sec-nr">A.9.7</span> <span class="sec-title">Example: 
+Sudoku</span></a></h3>
+
+<p><a id="sec:clpfd-sudoku"></a>
+
+<p>As another example, consider <i>Sudoku</i>: It is a popular puzzle 
+over integers that can be easily solved with CLP(FD) constraints.
+
+<pre class="code">
+sudoku(Rows) :-
+        length(Rows, 9), maplist(same_length(Rows), Rows),
+        append(Rows, Vs), Vs ins 1..9,
+        maplist(all_distinct, Rows),
+        transpose(Rows, Columns),
+        maplist(all_distinct, Columns),
+        Rows = [As,Bs,Cs,Ds,Es,Fs,Gs,Hs,Is],
+        blocks(As, Bs, Cs),
+        blocks(Ds, Es, Fs),
+        blocks(Gs, Hs, Is).
+
+blocks([], [], []).
+blocks([N1,N2,N3|Ns1], [N4,N5,N6|Ns2], [N7,N8,N9|Ns3]) :-
+        all_distinct([N1,N2,N3,N4,N5,N6,N7,N8,N9]),
+        blocks(Ns1, Ns2, Ns3).
+
+problem(1, [[_,_,_,_,_,_,_,_,_],
+            [_,_,_,_,_,3,_,8,5],
+            [_,_,1,_,2,_,_,_,_],
+            [_,_,_,5,_,7,_,_,_],
+            [_,_,4,_,_,_,1,_,_],
+            [_,9,_,_,_,_,_,_,_],
+            [5,_,_,_,_,_,_,7,3],
+            [_,_,2,_,1,_,_,_,_],
+            [_,_,_,_,4,_,_,_,9]]).
+</pre>
+
+<p>Sample query:
+
+<pre class="code">
+?- problem(1, Rows), sudoku(Rows), maplist(portray_clause, Rows).
+[9, 8, 7, 6, 5, 4, 3, 2, 1].
+[2, 4, 6, 1, 7, 3, 9, 8, 5].
+[3, 5, 1, 9, 2, 8, 7, 4, 6].
+[1, 2, 8, 5, 3, 7, 6, 9, 4].
+[6, 3, 4, 8, 9, 2, 1, 5, 7].
+[7, 9, 5, 4, 6, 1, 8, 3, 2].
+[5, 1, 9, 2, 8, 6, 4, 7, 3].
+[4, 7, 2, 3, 1, 9, 5, 6, 8].
+[8, 6, 3, 7, 4, 5, 2, 1, 9].
+Rows = [[9, 8, 7, 6, 5, 4, 3, 2|...], ... , [...|...]].
+</pre>
+
+<p>In this concrete case, the constraint solver is strong enough to find 
+the unique solution without any search. For the general case, see search 
+(<a class="sec" href="clpfd.html#sec:A.9.9">section A.9.9</a>).
+
+<p><h3 id="sec:clpfd-residual-goals"><a id="sec:A.9.8"><span class="sec-nr">A.9.8</span> <span class="sec-title">Residual 
+goals</span></a></h3>
+
+<p><a id="sec:clpfd-residual-goals"></a>
+
+<p>Here is an example session with a few queries and their answers:
+
+<pre class="code">
+?- X #&gt; 3.
+X in 4..sup.
+
+?- X #\= 20.
+X in inf..19\/21..sup.
+
+?- 2*X #= 10.
+X = 5.
+
+?- X*X #= 144.
+X in -12\/12.
+
+?- 4*X + 2*Y #= 24, X + Y #= 9, [X,Y] ins 0..sup.
+X = 3,
+Y = 6.
+
+?- X #= Y #&lt;==&gt; B, X in 0..3, Y in 4..5.
+B = 0,
+X in 0..3,
+Y in 4..5.
+</pre>
+
+<p>The answers emitted by the toplevel are called <i>residual programs</i>, 
+and the goals that comprise each answer are called <b>residual goals</b>. 
+In each case above, and as for all pure programs, the residual program 
+is declaratively equivalent to the original query. From the residual 
+goals, it is clear that the constraint solver has deduced additional 
+domain restrictions in many cases.
+
+<p>To inspect residual goals, it is best to let the toplevel display 
+them for us. Wrap the call of your predicate into <a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+to make sure that all constrained variables are displayed. To make the 
+constraints a variable is involved in available as a Prolog term for 
+further reasoning within your program, use <a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>. 
+For example:
+
+<pre class="code">
+?- X #= Y + Z, X in 0..5, copy_term([X,Y,Z], [X,Y,Z], Gs).
+Gs = [clpfd: (X in 0..5), clpfd: (Y+Z#=X)],
+X in 0..5,
+Y+Z#=X.
+</pre>
+
+<p>This library also provides <i>reflection</i> predicates (like <a class="pred" href="clpfd.html#fd_dom/2">fd_dom/2</a>,
+<a class="pred" href="clpfd.html#fd_size/2">fd_size/2</a> etc.) with 
+which we can inspect a variable's current domain. These predicates can 
+be useful if you want to implement your own labeling strategies.
+
+<p><h3 id="sec:clpfd-search"><a id="sec:A.9.9"><span class="sec-nr">A.9.9</span> <span class="sec-title">Core 
+relations and search</span></a></h3>
+
+<p><a id="sec:clpfd-search"></a>
+
+<p>Using CLP(FD) constraints to solve combinatorial tasks typically 
+consists of two phases:
+
+<p>
+<ol class="latex">
+<li><b>Modeling</b>. In this phase, all relevant constraints are stated.
+<li><b>Search</b>. In this phase, <i>enumeration predicates</i> are used 
+to search for concrete solutions.
+</ol>
+
+<p>It is good practice to keep the modeling part, via a dedicated 
+predicate called the <b>core relation</b>, separate from the actual 
+search for solutions. This lets us observe termination and determinism 
+properties of the core relation in isolation from the search, and more 
+easily try different search strategies.
+
+<p>As an example of a constraint satisfaction problem, consider the 
+cryptoarithmetic puzzle SEND + MORE = MONEY, where different letters 
+denote distinct integers between 0 and 9. It can be modeled in CLP(FD) 
+as follows:
+
+<pre class="code">
+puzzle([S,E,N,D] + [M,O,R,E] = [M,O,N,E,Y]) :-
+        Vars = [S,E,N,D,M,O,R,Y],
+        Vars ins 0..9,
+        all_different(Vars),
+                  S*1000 + E*100 + N*10 + D +
+                  M*1000 + O*100 + R*10 + E #=
+        M*10000 + O*1000 + N*100 + E*10 + Y,
+        M #\= 0, S #\= 0.
+</pre>
+
+<p>Notice that we are <i>not</i> using <a class="pred" href="clpfd.html#labeling/2">labeling/2</a> 
+in this predicate, so that we can first execute and observe the modeling 
+part in isolation. Sample query and its result (actual variables 
+replaced for readability):
+
+<pre class="code">
+?- puzzle(As+Bs=Cs).
+As = [9, A2, A3, A4],
+Bs = [1, 0, B3, A2],
+Cs = [1, 0, A3, A2, C5],
+A2 in 4..7,
+all_different([9, A2, A3, A4, 1, 0, B3, C5]),
+91*A2+A4+10*B3#=90*A3+C5,
+A3 in 5..8,
+A4 in 2..8,
+B3 in 2..8,
+C5 in 2..8.
+</pre>
+
+<p>From this answer, we see that this core relation <i>terminates</i> 
+and is in fact <i>deterministic</i>. Moreover, we see from the residual 
+goals that the constraint solver has deduced more stringent bounds for 
+all variables. Such observations are only possible if modeling and 
+search parts are cleanly separated.
+
+<p>Labeling can then be used to search for solutions in a separate 
+predicate or goal:
+
+<pre class="code">
+?- puzzle(As+Bs=Cs), label(As).
+As = [9, 5, 6, 7],
+Bs = [1, 0, 8, 5],
+Cs = [1, 0, 6, 5, 2] ;
+false.
+</pre>
+
+<p>In this case, it suffices to label a subset of variables to find the 
+puzzle's unique solution, since the constraint solver is strong enough 
+to reduce the domains of remaining variables to singleton sets. In 
+general though, it is necessary to label all variables to obtain ground 
+solutions.
+
+<p><h3 id="sec:clpfd-n-queens"><a id="sec:A.9.10"><span class="sec-nr">A.9.10</span> <span class="sec-title">Example: 
+Eight queens puzzle</span></a></h3>
+
+<p><a id="sec:clpfd-n-queens"></a>
+
+<p>We illustrate the concepts of the preceding sections by means of the 
+so-called <i>eight queens puzzle</i>. The task is to place 8 queens on 
+an 8x8 chessboard such that none of the queens is under attack. This 
+means that no two queens share the same row, column or diagonal.
+
+<p>To express this puzzle via CLP(FD) constraints, we must first pick a 
+suitable representation. Since CLP(FD) constraints reason over
+<i>integers</i>, we must find a way to map the positions of queens to 
+integers. Several such mappings are conceivable, and it is not 
+immediately obvious which we should use. On top of that, different 
+constraints can be used to express the desired relations. For such 
+reasons, <i>modeling</i> combinatorial problems via CLP(FD) constraints 
+often necessitates some creativity and has been described as more of an 
+art than a science.
+
+<p>In our concrete case, we observe that there must be exactly one queen 
+per column. The following representation therefore suggests itself: We 
+are looking for 8 integers, one for each column, where each integer 
+denotes the <i>row</i> of the queen that is placed in the respective 
+column, and which are subject to certain constraints.
+
+<p>In fact, let us now generalize the task to the so-called <i>N queens 
+puzzle</i>, which is obtained by replacing 8 by <i>N</i> everywhere it 
+occurs in the above description. We implement the above considerations 
+in the
+<b>core relation</b> <code>n_queens/2</code>, where the first argument 
+is the number of queens (which is identical to the number of rows and 
+columns of the generalized chessboard), and the second argument is a 
+list of <i>N</i> integers that represents a solution in the form 
+described above.
+
+<pre class="code">
+n_queens(N, Qs) :-
+        length(Qs, N),
+        Qs ins 1..N,
+        safe_queens(Qs).
+
+safe_queens([]).
+safe_queens([Q|Qs]) :- safe_queens(Qs, Q, 1), safe_queens(Qs).
+
+safe_queens([], _, _).
+safe_queens([Q|Qs], Q0, D0) :-
+        Q0 #\= Q,
+        abs(Q0 - Q) #\= D0,
+        D1 #= D0 + 1,
+        safe_queens(Qs, Q0, D1).
+</pre>
+
+<p>Note that all these predicates can be used in <i>all directions</i>: 
+We can use them to <i>find</i> solutions, <i>test</i> solutions and <i>complete</i> 
+partially instantiated solutions.
+
+<p>The original task can be readily solved with the following query:
+
+<pre class="code">
+?- n_queens(8, Qs), label(Qs).
+Qs = [1, 5, 8, 6, 3, 7, 2, 4] .
+</pre>
+
+<p>Using suitable labeling strategies, we can easily find solutions with 
+80 queens and more:
+
+<pre class="code">
+?- n_queens(80, Qs), labeling([ff], Qs).
+Qs = [1, 3, 5, 44, 42, 4, 50, 7, 68|...] .
+
+?- time((n_queens(90, Qs), labeling([ff], Qs))).
+% 5,904,401 inferences, 0.722 CPU in 0.737 seconds (98% CPU)
+Qs = [1, 3, 5, 50, 42, 4, 49, 7, 59|...] .
+</pre>
+
+<p>Experimenting with different search strategies is easy because we 
+have separated the core relation from the actual search.
+
+<p><h3 id="sec:clpfd-optimisation"><a id="sec:A.9.11"><span class="sec-nr">A.9.11</span> <span class="sec-title">Optimisation</span></a></h3>
+
+<p><a id="sec:clpfd-optimisation"></a>
+
+<p>We can use <a class="pred" href="clpfd.html#labeling/2">labeling/2</a> 
+to minimize or maximize the value of a CLP(FD) expression, and generate 
+solutions in increasing or decreasing order of the value. See the 
+labeling options <code>min(Expr)</code> and <code>max(Expr)</code>, 
+respectively.
+
+<p>Again, to easily try different labeling options in connection with 
+optimisation, we recommend to introduce a dedicated predicate for 
+posting constraints, and to use <code>labeling/2</code> in a separate 
+goal. This way, we can observe properties of the core relation in 
+isolation, and try different labeling options without recompiling our 
+code.
+
+<p>If necessary, we can use <code>once/1</code> to commit to the first 
+optimal solution. However, it is often very valuable to see alternative 
+solutions that are <i>also</i> optimal, so that we can choose among 
+optimal solutions by other criteria. For the sake of
+<a class="url" href="https://www.metalevel.at/prolog/purity"><b>purity</b></a> 
+and completeness, we recommend to avoid <code>once/1</code> and other 
+constructs that lead to impurities in CLP(FD) programs.
+
+<p>Related to optimisation with CLP(FD) constraints are
+<a class="url" href="http://eu.swi-prolog.org/man/simplex.html"><code>library(simplex)</code></a> 
+and CLP(Q) which reason about <i>linear</i> constraints over rational 
+numbers.
+
+<p><h3 id="sec:clpfd-reification"><a id="sec:A.9.12"><span class="sec-nr">A.9.12</span> <span class="sec-title">Reification</span></a></h3>
+
+<p><a id="sec:clpfd-reification"></a>
+
+<p>The constraints <a class="pred" href="clpfd.html#in/2">in/2</a>, <a class="pred" href="clpfd.html##=/2">#=/2</a>, <a class="pred" href="clpfd.html##\=/2">#\=/2</a>, <a class="pred" href="clpfd.html##</2">#&lt;/2</a>, <a class="pred" href="clpfd.html##>/2">#&gt;/2</a>, <a class="pred" href="clpfd.html##=</2">#=&lt;/2</a>, 
+and <a class="pred" href="clpfd.html##>=/2">#&gt;=/2</a> can be
+<i>reified</i>, which means reflecting their truth values into Boolean 
+values represented by the integers 0 and 1. Let P and Q denote reifiable 
+constraints or Boolean variables, then:
+<blockquote>
+<table class="latex frame-box">
+<tr><td><code>#\</code> Q</td><td>True iff Q is false </td></tr>
+<tr><td>P <code>#\/</code> Q</td><td>True iff either P or Q </td></tr>
+<tr><td>P <code>#/\</code> Q</td><td>True iff both P and Q </td></tr>
+<tr><td>P <code>#\</code> Q</td><td>True iff either P or Q, but not both </td></tr>
+<tr><td>P <code>#&lt;==&gt;</code> Q</td><td>True iff P and Q are 
+equivalent </td></tr>
+<tr><td>P <code>#==&gt;</code> Q</td><td>True iff P implies Q </td></tr>
+<tr><td>P <code>#&lt;==</code> Q</td><td>True iff Q implies P </td></tr>
+</table>
+</blockquote>
+
+<p>The constraints of this table are reifiable as well.
+
+<p>When reasoning over Boolean variables, also consider using CLP(B) 
+constraints as provided by
+<a class="url" href="http://eu.swi-prolog.org/man/clpb.html"><code>library(clpb)</code></a>.
+
+<p><h3 id="sec:clpfd-monotonicity"><a id="sec:A.9.13"><span class="sec-nr">A.9.13</span> <span class="sec-title">Enabling 
+monotonic CLP(FD)</span></a></h3>
+
+<p><a id="sec:clpfd-monotonicity"></a>
+
+<p>In the default execution mode, CLP(FD) constraints still exhibit some 
+non-relational properties. For example, <i>adding</i> constraints can 
+yield new solutions:
+
+<pre class="code">
+?-          X #= 2, X = 1+1.
+false.
+
+?- X = 1+1, X #= 2, X = 1+1.
+X = 1+1.
+</pre>
+
+<p>This behaviour is highly problematic from a logical point of view, 
+and it may render declarative debugging techniques inapplicable.
+
+<p>Set the Prolog flag <code>clpfd_monotonic</code> to <code>true</code> 
+to make CLP(FD)
+<b>monotonic</b>: This means that <i>adding</i> new constraints <i>cannot</i> 
+yield new solutions. When this flag is <code>true</code>, we must wrap 
+variables that occur in arithmetic expressions with the functor <code>(?)/1</code> 
+or <code>(#)/1</code>. For example:
+
+<pre class="code">
+?- set_prolog_flag(clpfd_monotonic, true).
+true.
+
+?- #(X) #= #(Y) + #(Z).
+#(Y)+ #(Z)#= #(X).
+
+?-          X #= 2, X = 1+1.
+ERROR: Arguments are not sufficiently instantiated
+</pre>
+
+<p>The wrapper can be omitted for variables that are already constrained 
+to integers.
+
+<p><h3 id="sec:clpfd-custom-constraints"><a id="sec:A.9.14"><span class="sec-nr">A.9.14</span> <span class="sec-title">Custom 
+constraints</span></a></h3>
+
+<p><a id="sec:clpfd-custom-constraints"></a>
+
+<p>We can define custom constraints. The mechanism to do this is not yet 
+finalised, and we welcome suggestions and descriptions of use cases that 
+are important to you.
+
+<p>As an example of how it can be done currently, let us define a new 
+custom constraint <code>oneground(X,Y,Z)</code>, where Z shall be 1 if 
+at least one of X and Y is instantiated:
+
+<pre class="code">
+:- multifile clpfd:run_propagator/2.
+
+oneground(X, Y, Z) :-
+        clpfd:make_propagator(oneground(X, Y, Z), Prop),
+        clpfd:init_propagator(X, Prop),
+        clpfd:init_propagator(Y, Prop),
+        clpfd:trigger_once(Prop).
+
+clpfd:run_propagator(oneground(X, Y, Z), MState) :-
+        (   integer(X) -&gt; clpfd:kill(MState), Z = 1
+        ;   integer(Y) -&gt; clpfd:kill(MState), Z = 1
+        ;   true
+        ).
+</pre>
+
+<p>First, <span class="pred-ext">clpfd:make_propagator/2</span> is used 
+to transform a user-defined representation of the new constraint to an 
+internal form. With
+<span class="pred-ext">clpfd:init_propagator/2</span>, this internal 
+form is then attached to X and Y. From now on, the propagator will be 
+invoked whenever the domains of X or Y are changed. Then, <span class="pred-ext">clpfd:trigger_once/1</span> 
+is used to give the propagator its first chance for propagation even 
+though the variables' domains have not yet changed. Finally, <span class="pred-ext">clpfd:run_propagator/2</span> 
+is extended to define the actual propagator. As explained, this 
+predicate is automatically called by the constraint solver. The first 
+argument is the user-defined representation of the constraint as used in
+<span class="pred-ext">clpfd:make_propagator/2</span>, and the second 
+argument is a mutable state that can be used to prevent further 
+invocations of the propagator when the constraint has become entailed, 
+by using <span class="pred-ext">clpfd:kill/1</span>. An example of using 
+the new constraint:
+
+<pre class="code">
+?- oneground(X, Y, Z), Y = 5.
+Y = 5,
+Z = 1,
+X in inf..sup.
+</pre>
+
+<p><h3 id="sec:clpfd-applications"><a id="sec:A.9.15"><span class="sec-nr">A.9.15</span> <span class="sec-title">Applications</span></a></h3>
+
+<p><a id="sec:clpfd-applications"></a>
+
+<p>CLP(FD) applications that we find particularly impressive and worth 
+studying include:
+
+<p>
+<ul class="latex">
+<li>Michael Hendricks uses CLP(FD) constraints for flexible reasoning 
+about <i>dates</i> and <i>times</i> in the
+<a class="url" href="http://www.swi-prolog.org/pack/list?p=julian"><code>julian</code></a> 
+package.
+<li>Julien Cumin uses CLP(FD) constraints for integer arithmetic in
+<a class="url" href="https://github.com/JCumin/Brachylog"><code>Brachylog</code></a>.
+</ul>
+
+<p><h3 id="sec:clpfd-acknowledgments"><a id="sec:A.9.16"><span class="sec-nr">A.9.16</span> <span class="sec-title">Acknowledgments</span></a></h3>
+
+<p><a id="sec:clpfd-acknowledgments"></a>
+
+<p>This library gives you a glimpse of what <a class="url" href="https://sicstus.sics.se/"><b>SICStus 
+Prolog</b></a> can do. The API is intentionally mostly compatible with 
+that of SICStus Prolog, so that you can easily switch to a much more 
+feature-rich and much faster CLP(FD) system when you need it. I thank <a class="url" href="https://www.sics.se/~matsc/">Mats 
+Carlsson</a>, the designer and main implementor of SICStus Prolog, for 
+his elegant example. I first encountered his system as part of the 
+excellent
+<a class="url" href="http://www.complang.tuwien.ac.at/ulrich/gupu/"><b>GUPU</b></a> 
+teaching environment by <a class="url" href="http://www.complang.tuwien.ac.at/ulrich/">Ulrich 
+Neumerkel</a>. Ulrich was also the first and most determined tester of 
+the present system, filing hundreds of comments and suggestions for 
+improvement. <a class="url" href="https://people.cs.kuleuven.be/~tom.schrijvers/">Tom 
+Schrijvers</a> has contributed several constraint libraries to 
+SWI-Prolog, and I learned a lot from his coding style and implementation 
+examples. <a class="url" href="https://people.cs.kuleuven.be/~bart.demoen/">Bart 
+Demoen</a> was a driving force behind the implementation of attributed 
+variables in SWI-Prolog, and this library could not even have started 
+without his prior work and contributions. Thank you all!
+
+<p><h3 id="sec:clpfd-predicate-index"><a id="sec:A.9.17"><span class="sec-nr">A.9.17</span> <span class="sec-title">CLP(FD) 
+predicate index</span></a></h3>
+
+<p><a id="sec:clpfd-predicate-index"></a>
+
+<p>In the following, each CLP(FD) predicate is described in more detail.
+
+<p>We recommend the following link to refer to this manual:
+
+<p><a class="url" href="http://eu.swi-prolog.org/man/clpfd.html">http://eu.swi-prolog.org/man/clpfd.html</a>
+
+<p><h4 id="sec:clpfd-arithmetic"><a id="sec:A.9.17.1"><span class="sec-nr">A.9.17.1</span> <span class="sec-title">Arithmetic 
+constraints</span></a></h4>
+
+<p><a id="sec:clpfd-arithmetic"></a>
+
+<p><i>Arithmetic</i> constraints are the most basic use of CLP(FD). 
+Every time you use <code>(is)/2</code> or one of the low-level 
+arithmetic comparisons (<code>(&lt;)/2</code>, <code>(&gt;)/2</code> 
+etc.) over integers, consider using CLP(FD) constraints <i>instead</i>. 
+This can at most <i>increase</i> the generality of your programs. See 
+declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).
+
+<dl class="latex">
+<dt class="pubdef"><a id="#=/2"><var>?X</var> <strong>#=</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+The arithmetic expression <var>X</var> equals <var>Y</var>. This is the 
+most important arithmetic constraint (<a class="sec" href="clpfd.html#sec:A.9.2">section 
+A.9.2</a>), subsuming and replacing both <code>(is)/2</code> <i>and</i> <code>(=:=)/2</code> 
+over integers. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).</dd>
+<dt class="pubdef"><a id="#\=/2"><var>?X</var> <strong>#\=</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+The arithmetic expressions <var>X</var> and <var>Y</var> evaluate to 
+distinct integers. When reasoning over integers, replace <code>(=\=)/2</code> 
+by <a class="pred" href="clpfd.html##\=/2">#\=/2</a> to obtain more 
+general relations. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).</dd>
+<dt class="pubdef"><a id="#>=/2"><var>?X</var> <strong>#&gt;=</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+Same as <var>Y</var> <code>#=&lt;</code> <var>X</var>. When reasoning 
+over integers, replace <code>(&gt;=)/2</code> by
+<a class="pred" href="clpfd.html##>=/2">#&gt;=/2</a> to obtain more 
+general relations. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).</dd>
+<dt class="pubdef"><a id="#=</2"><var>?X</var> <strong>#=&lt;</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+The arithmetic expression <var>X</var> is less than or equal to <var>Y</var>. 
+When reasoning over integers, replace <code>(=&lt;)/2</code> by <a class="pred" href="clpfd.html##=</2">#=&lt;/2</a> 
+to obtain more general relations. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).</dd>
+<dt class="pubdef"><a id="#>/2"><var>?X</var> <strong>#&gt;</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+Same as <var>Y</var> <code>#&lt;</code> <var>X</var>. When reasoning 
+over integers, replace <code>(&gt;)/2</code> by
+<a class="pred" href="clpfd.html##>/2">#&gt;/2</a> to obtain more 
+general relations See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).</dd>
+<dt class="pubdef"><a id="#</2"><var>?X</var> <strong>#&lt;</strong> <var>?Y</var></a></dt>
+<dd class="defbody">
+The arithmetic expression <var>X</var> is less than <var>Y</var>. When 
+reasoning over integers, replace <code>(&lt;)/2</code> by <a class="pred" href="clpfd.html##</2">#&lt;/2</a> 
+to obtain more general relations. See declarative integer arithmetic (<a class="sec" href="clpfd.html#sec:A.9.3">section 
+A.9.3</a>).
+
+<p>In addition to its regular use in tasks that require it, this 
+constraint can also be useful to eliminate uninteresting symmetries from 
+a problem. For example, all possible matches between pairs built from 
+four players in total:
+
+<pre class="code">
+?- Vs = [A,B,C,D], Vs ins 1..4,
+        all_different(Vs),
+        A #&lt; B, C #&lt; D, A #&lt; C,
+   findall(pair(A,B)-pair(C,D), label(Vs), Ms).
+Ms = [ pair(1, 2)-pair(3, 4),
+       pair(1, 3)-pair(2, 4),
+       pair(1, 4)-pair(2, 3)].
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h4 id="sec:clpfd-membership"><a id="sec:A.9.17.2"><span class="sec-nr">A.9.17.2</span> <span class="sec-title">Membership 
+constraints</span></a></h4>
+
+<p><a id="sec:clpfd-membership"></a>
+
+<p>If you are using CLP(FD) to model and solve combinatorial tasks, then 
+you typically need to specify the admissible domains of variables. The <i>membership 
+constraints</i> <a class="pred" href="clpfd.html#in/2">in/2</a> and <a class="pred" href="clpfd.html#ins/2">ins/2</a> 
+are useful in such cases.
+
+<dl class="latex">
+<dt class="pubdef"><a id="in/2"><var>?Var</var> <strong>in</strong> <var>+Domain</var></a></dt>
+<dd class="defbody">
+<var>Var</var> is an element of <var>Domain</var>. <var>Domain</var> is 
+one of:
+
+<dl class="latex">
+<dt><strong><var>Integer</var></strong></dt>
+<dd class="defbody">
+Singleton set consisting only of <i><var>Integer</var></i>.
+</dd>
+<dt><var><var>Lower</var></var> <strong>..</strong> <var><var>Upper</var></var></dt>
+<dd class="defbody">
+All integers <i>I</i> such that <i><var>Lower</var></i> <code>=&lt;</code> <i>I</i> <code>=&lt;</code> <i><var>Upper</var></i>.
+<i><var>Lower</var></i> must be an integer or the atom <b>inf</b>, which 
+denotes negative infinity. <i><var>Upper</var></i> must be an integer or 
+the atom <b>sup</b>, which denotes positive infinity.
+</dd>
+<dt><var><var>Domain1</var></var> <strong><code>\/</code></strong> <var><var>Domain2</var></var></dt>
+<dd class="defbody">
+The union of <var>Domain1</var> and <var>Domain2</var>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="ins/2"><var>+Vars</var> <strong>ins</strong> <var>+Domain</var></a></dt>
+<dd class="defbody">
+The variables in the list <var>Vars</var> are elements of <var>Domain</var>. 
+See <a class="pred" href="clpfd.html#in/2">in/2</a> for the syntax of <var>Domain</var>.
+</dd>
+</dl>
+
+<p><h4 id="sec:clpfd-enumeration"><a id="sec:A.9.17.3"><span class="sec-nr">A.9.17.3</span> <span class="sec-title">Enumeration 
+predicates</span></a></h4>
+
+<p><a id="sec:clpfd-enumeration"></a>
+
+<p>When modeling combinatorial tasks, the actual search for solutions is 
+typically performed by <i>enumeration predicates</i> like <a class="pred" href="clpfd.html#labeling/2">labeling/2</a>. 
+See the the section about <i>core relations</i> and search for more 
+information.
+
+<dl class="latex">
+<dt class="pubdef"><a id="indomain/1"><strong>indomain</strong>(<var>?Var</var>)</a></dt>
+<dd class="defbody">
+Bind <var>Var</var> to all feasible values of its domain on 
+backtracking. The domain of <var>Var</var> must be finite.</dd>
+<dt class="pubdef"><a id="label/1"><strong>label</strong>(<var>+Vars</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>labeling([], Vars)</code>. See <a class="pred" href="clpfd.html#labeling/2">labeling/2</a>.</dd>
+<dt class="pubdef"><a id="labeling/2"><strong>labeling</strong>(<var>+Options, 
++Vars</var>)</a></dt>
+<dd class="defbody">
+Assign a value to each variable in <var>Vars</var>. Labeling means 
+systematically trying out values for the finite domain variables <var>Vars</var> 
+until all of them are ground. The domain of each variable in <var>Vars</var> 
+must be finite.
+<var>Options</var> is a list of options that let you exhibit some 
+control over the search process. Several categories of options exist:
+
+<p>The variable selection strategy lets you specify which variable of
+<var>Vars</var> is labeled next and is one of:
+
+<dl class="latex">
+<dt><strong>leftmost</strong></dt>
+<dd class="defbody">
+Label the variables in the order they occur in <var>Vars</var>. This is 
+the default.
+</dd>
+<dt><strong>ff</strong></dt>
+<dd class="defbody">
+<i>First fail</i>. Label the leftmost variable with smallest domain 
+next, in order to detect infeasibility early. This is often a good 
+strategy.
+</dd>
+<dt><strong>ffc</strong></dt>
+<dd class="defbody">
+Of the variables with smallest domains, the leftmost one participating 
+in most constraints is labeled next.
+</dd>
+<dt><strong>min</strong></dt>
+<dd class="defbody">
+Label the leftmost variable whose lower bound is the lowest next.
+</dd>
+<dt><strong>max</strong></dt>
+<dd class="defbody">
+Label the leftmost variable whose upper bound is the highest next.
+</dd>
+</dl>
+
+<p>The value order is one of:
+
+<dl class="latex">
+<dt><strong>up</strong></dt>
+<dd class="defbody">
+Try the elements of the chosen variable's domain in ascending order. 
+This is the default.
+</dd>
+<dt><strong>down</strong></dt>
+<dd class="defbody">
+Try the domain elements in descending order.
+</dd>
+</dl>
+
+<p>The branching strategy is one of:
+
+<dl class="latex">
+<dt><strong>step</strong></dt>
+<dd class="defbody">
+For each variable X, a choice is made between X = V and X <code>#\=</code> 
+V, where V is determined by the value ordering options. This is the 
+default.
+</dd>
+<dt><strong>enum</strong></dt>
+<dd class="defbody">
+For each variable X, a choice is made between X = V_1, X = V_2 etc., for 
+all values V_i of the domain of X. The order is determined by the value 
+ordering options.
+</dd>
+<dt><strong>bisect</strong></dt>
+<dd class="defbody">
+For each variable X, a choice is made between X <code>#=&lt;</code> M 
+and X <code>#&gt;</code> M, where M is the midpoint of the domain of X.
+</dd>
+</dl>
+
+<p>At most one option of each category can be specified, and an option 
+must not occur repeatedly.
+
+<p>The order of solutions can be influenced with:
+
+<p>
+<ul class="compact">
+<li><code>min(Expr)</code>
+<li><code>max(Expr)</code>
+</ul>
+
+<p>This generates solutions in ascending/descending order with respect 
+to the evaluation of the arithmetic expression Expr. Labeling <var>Vars</var> 
+must make Expr ground. If several such options are specified, they are 
+interpreted from left to right, e.g.:
+
+<pre class="code">
+?- [X,Y] ins 10..20, labeling([max(X),min(Y)],[X,Y]).
+</pre>
+
+<p>This generates solutions in descending order of X, and for each 
+binding of X, solutions are generated in ascending order of Y. To obtain 
+the incomplete behaviour that other systems exhibit with "<code>maximize(Expr)</code>" 
+and "<code>minimize(Expr)</code>", use <a class="pred" href="metacall.html#once/1">once/1</a>, 
+e.g.:
+
+<pre class="code">
+once(labeling([max(Expr)], Vars))
+</pre>
+
+<p>Labeling is always complete, always terminates, and yields no 
+redundant solutions. See core relations and search (<a class="sec" href="clpfd.html#sec:A.9.9">section 
+A.9.9</a>) for usage advice.
+</dd>
+</dl>
+
+<p><h4 id="sec:clpfd-global"><a id="sec:A.9.17.4"><span class="sec-nr">A.9.17.4</span> <span class="sec-title">Global 
+constraints</span></a></h4>
+
+<p><a id="sec:clpfd-global"></a>
+
+<p>A <i>global constraint</i> expresses a relation that involves many 
+variables at once. The most frequently used global constraints of this 
+library are the combinatorial constraints <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a>,
+<a class="pred" href="clpfd.html#global_cardinality/2">global_cardinality/2</a> 
+and <a class="pred" href="clpfd.html#cumulative/2">cumulative/2</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="all_distinct/1"><strong>all_distinct</strong>(<var>+Vars</var>)</a></dt>
+<dd class="defbody">
+True iff <var>Vars</var> are pairwise distinct. For example, <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a> 
+can detect that not all variables can assume distinct values given the 
+following domains:
+
+<pre class="code">
+?- maplist(in, Vs,
+           [1\/3..4, 1..2\/4, 1..2\/4, 1..3, 1..3, 1..6]),
+   all_distinct(Vs).
+false.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="all_different/1"><strong>all_different</strong>(<var>+Vars</var>)</a></dt>
+<dd class="defbody">
+Like <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a>, 
+but with weaker propagation. Consider using
+<a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a> 
+instead, since <a class="pred" href="clpfd.html#all_distinct/1">all_distinct/1</a> 
+is typically acceptably efficient and propagates much more strongly.</dd>
+<dt class="pubdef"><a id="sum/3"><strong>sum</strong>(<var>+Vars, +Rel, 
+?Expr</var>)</a></dt>
+<dd class="defbody">
+The sum of elements of the list <var>Vars</var> is in relation <var>Rel</var> 
+to <var>Expr</var>.
+<var>Rel</var> is one of #=, #<code>\</code>=, #<var>&lt;</var>, #<var>&gt;</var>, <code>#=&lt;</code> 
+or #<var>&gt;</var>=. For example:
+
+<pre class="code">
+?- [A,B,C] ins 0..sup, sum([A,B,C], #=, 100).
+A in 0..100,
+A+B+C#=100,
+B in 0..100,
+C in 0..100.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="scalar_product/4"><strong>scalar_product</strong>(<var>+Cs, 
++Vs, +Rel, ?Expr</var>)</a></dt>
+<dd class="defbody">
+True iff the scalar product of <var>Cs</var> and <var>Vs</var> is in 
+relation <var>Rel</var> to <var>Expr</var>.
+<var>Cs</var> is a list of integers, <var>Vs</var> is a list of 
+variables and integers.
+<var>Rel</var> is #=, #<code>\</code>=, #<var>&lt;</var>, #<var>&gt;</var>, <code>#=&lt;</code> 
+or #<var>&gt;</var>=.</dd>
+<dt class="pubdef"><a id="lex_chain/1"><strong>lex_chain</strong>(<var>+Lists</var>)</a></dt>
+<dd class="defbody">
+<var>Lists</var> are lexicographically non-decreasing.</dd>
+<dt class="pubdef"><a id="tuples_in/2"><strong>tuples_in</strong>(<var>+Tuples, 
++Relation</var>)</a></dt>
+<dd class="defbody">
+True iff all <var>Tuples</var> are elements of <var>Relation</var>. Each 
+element of the list <var>Tuples</var> is a list of integers or finite 
+domain variables.
+<var>Relation</var> is a list of lists of integers. Arbitrary finite 
+relations, such as compatibility tables, can be modeled in this way. For 
+example, if 1 is compatible with 2 and 5, and 4 is compatible with 0 and 
+3:
+
+<pre class="code">
+?- tuples_in([[X,Y]], [[1,2],[1,5],[4,0],[4,3]]), X = 4.
+X = 4,
+Y in 0\/3.
+</pre>
+
+<p>As another example, consider a train schedule represented as a list 
+of quadruples, denoting departure and arrival places and times for each 
+train. In the following program, Ps is a feasible journey of length 3 
+from A to D via trains that are part of the given schedule.
+
+<pre class="code">
+trains([[1,2,0,1],
+        [2,3,4,5],
+        [2,3,0,1],
+        [3,4,5,6],
+        [3,4,2,3],
+        [3,4,8,9]]).
+
+threepath(A, D, Ps) :-
+        Ps = [[A,B,_T0,T1],[B,C,T2,T3],[C,D,T4,_T5]],
+        T2 #&gt; T1,
+        T4 #&gt; T3,
+        trains(Ts),
+        tuples_in(Ps, Ts).
+</pre>
+
+<p>In this example, the unique solution is found without labeling:
+
+<pre class="code">
+?- threepath(1, 4, Ps).
+Ps = [[1, 2, 0, 1], [2, 3, 4, 5], [3, 4, 8, 9]].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="serialized/2"><strong>serialized</strong>(<var>+Starts, 
++Durations</var>)</a></dt>
+<dd class="defbody">
+Describes a set of non-overlapping tasks.
+<var>Starts</var> = [S_1,...,S_n], is a list of variables or integers,
+<var>Durations</var> = [D_1,...,D_n] is a list of non-negative integers. 
+Constrains <var>Starts</var> and <var>Durations</var> to denote a set of 
+non-overlapping tasks, i.e.: S_i + D_i <code>=&lt;</code> S_j or S_j + 
+D_j <code>=&lt;</code> S_i for all 1 <code>=&lt;</code> i <var>&lt;</var> 
+j <code>=&lt;</code> n. Example:
+
+<pre class="code">
+?- length(Vs, 3),
+   Vs ins 0..3,
+   serialized(Vs, [1,2,3]),
+   label(Vs).
+Vs = [0, 1, 3] ;
+Vs = [2, 0, 3] ;
+false.
+</pre>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Dorndorf et al. 2000, "Constraint Propagation Techniques for the 
+Disjunctive Scheduling Problem"
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="element/3"><strong>element</strong>(<var>?N, 
++Vs, ?V</var>)</a></dt>
+<dd class="defbody">
+The <var>N</var>-th element of the list of finite domain variables <var>Vs</var> 
+is <var>V</var>. Analogous to <a class="pred" href="lists.html#nth1/3">nth1/3</a>.</dd>
+<dt class="pubdef"><a id="global_cardinality/2"><strong>global_cardinality</strong>(<var>+Vs, 
++Pairs</var>)</a></dt>
+<dd class="defbody">
+Global Cardinality constraint. Equivalent to
+<code>global_cardinality(Vs, Pairs, [])</code>. See <a class="pred" href="clpfd.html#global_cardinality/3">global_cardinality/3</a>.
+
+<p>Example:
+
+<pre class="code">
+?- Vs = [_,_,_], global_cardinality(Vs, [1-2,3-_]), label(Vs).
+Vs = [1, 1, 3] ;
+Vs = [1, 3, 1] ;
+Vs = [3, 1, 1].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="global_cardinality/3"><strong>global_cardinality</strong>(<var>+Vs, 
++Pairs, +Options</var>)</a></dt>
+<dd class="defbody">
+Global Cardinality constraint. <var>Vs</var> is a list of finite domain 
+variables, <var>Pairs</var> is a list of Key-Num pairs, where Key is an 
+integer and Num is a finite domain variable. The constraint holds iff 
+each V in <var>Vs</var> is equal to some key, and for each Key-Num pair 
+in <var>Pairs</var>, the number of occurrences of Key in <var>Vs</var> 
+is Num. <var>Options</var> is a list of options. Supported options are:
+
+<dl class="latex">
+<dt><strong>consistency</strong>(<var>value</var>)</dt>
+<dd class="defbody">
+A weaker form of consistency is used.
+</dd>
+<dt><strong>cost</strong>(<var>Cost, Matrix</var>)</dt>
+<dd class="defbody">
+<var>Matrix</var> is a list of rows, one for each variable, in the order 
+they occur in <var>Vs</var>. Each of these rows is a list of integers, 
+one for each key, in the order these keys occur in <var>Pairs</var>. 
+When variable v_i is assigned the value of key k_j, then the associated 
+cost is <var>Matrix</var>_{ij}. <var>Cost</var> is the sum of all costs.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="circuit/1"><strong>circuit</strong>(<var>+Vs</var>)</a></dt>
+<dd class="defbody">
+True iff the list <var>Vs</var> of finite domain variables induces a 
+Hamiltonian circuit. The k-th element of <var>Vs</var> denotes the 
+successor of node k. Node indexing starts with 1. Examples:
+
+<pre class="code">
+?- length(Vs, _), circuit(Vs), label(Vs).
+Vs = [] ;
+Vs = [1] ;
+Vs = [2, 1] ;
+Vs = [2, 3, 1] ;
+Vs = [3, 1, 2] ;
+Vs = [2, 3, 4, 1] .
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="cumulative/1"><strong>cumulative</strong>(<var>+Tasks</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>cumulative(Tasks, [limit(1)])</code>. See <a class="pred" href="clpfd.html#cumulative/2">cumulative/2</a>.</dd>
+<dt class="pubdef"><a id="cumulative/2"><strong>cumulative</strong>(<var>+Tasks, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Schedule with a limited resource. <var>Tasks</var> is a list of tasks, 
+each of the form <code>task(S_i, D_i, E_i, C_i, T_i)</code>. S_i denotes 
+the start time, D_i the positive duration, E_i the end time, C_i the 
+non-negative resource consumption, and T_i the task identifier. Each of 
+these arguments must be a finite domain variable with bounded domain, or 
+an integer. The constraint holds iff at each time slot during the start 
+and end of each task, the total resource consumption of all tasks 
+running at that time does not exceed the global resource limit. <var>Options</var> 
+is a list of options. Currently, the only supported option is:
+
+<dl class="latex">
+<dt><strong>limit</strong>(<var>L</var>)</dt>
+<dd class="defbody">
+The integer <var>L</var> is the global resource limit. Default is 1.
+</dd>
+</dl>
+
+<p>For example, given the following predicate that relates three tasks 
+of durations 2 and 3 to a list containing their starting times:
+
+<pre class="code">
+tasks_starts(Tasks, [S1,S2,S3]) :-
+        Tasks = [task(S1,3,_,1,_),
+                 task(S2,2,_,1,_),
+                 task(S3,2,_,1,_)].
+</pre>
+
+<p>We can use <a class="pred" href="clpfd.html#cumulative/2">cumulative/2</a> 
+as follows, and obtain a schedule:
+
+<pre class="code">
+?- tasks_starts(Tasks, Starts), Starts ins 0..10,
+   cumulative(Tasks, [limit(2)]), label(Starts).
+Tasks = [task(0, 3, 3, 1, _G36), task(0, 2, 2, 1, _G45), ...],
+Starts = [0, 0, 2] .
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="disjoint2/1"><strong>disjoint2</strong>(<var>+Rectangles</var>)</a></dt>
+<dd class="defbody">
+True iff <var>Rectangles</var> are not overlapping. <var>Rectangles</var> 
+is a list of terms of the form F(X_i, W_i, Y_i, H_i), where F is any 
+functor, and the arguments are finite domain variables or integers that 
+denote, respectively, the X coordinate, width, Y coordinate and height 
+of each rectangle.</dd>
+<dt class="pubdef"><a id="automaton/3"><strong>automaton</strong>(<var>+Vs, 
++Nodes, +Arcs</var>)</a></dt>
+<dd class="defbody">
+Describes a list of finite domain variables with a finite automaton. 
+Equivalent to <code>automaton(Vs, _, Vs, Nodes, Arcs, [], [], _)</code>, 
+a common use case of <a class="pred" href="clpfd.html#automaton/8">automaton/8</a>. 
+In the following example, a list of binary finite domain variables is 
+constrained to contain at least two consecutive ones:
+
+<pre class="code">
+two_consecutive_ones(Vs) :-
+        automaton(Vs, [source(a),sink(c)],
+                  [arc(a,0,a), arc(a,1,b),
+                   arc(b,0,a), arc(b,1,c),
+                   arc(c,0,c), arc(c,1,c)]).
+</pre>
+
+<p>Example query:
+
+<pre class="code">
+?- length(Vs, 3), two_consecutive_ones(Vs), label(Vs).
+Vs = [0, 1, 1] ;
+Vs = [1, 1, 0] ;
+Vs = [1, 1, 1].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="automaton/8"><strong>automaton</strong>(<var>+Sequence, 
+?Template, +Signature, +Nodes, +Arcs, +Counters, +Initials, ?Finals</var>)</a></dt>
+<dd class="defbody">
+Describes a list of finite domain variables with a finite automaton. 
+True iff the finite automaton induced by <var>Nodes</var> and <var>Arcs</var> 
+(extended with <var>Counters</var>) accepts <var>Signature</var>. <var>Sequence</var> 
+is a list of terms, all of the same shape. Additional constraints must 
+link
+<var>Sequence</var> to <var>Signature</var>, if necessary. <var>Nodes</var> 
+is a list of
+<code>source(Node)</code> and <code>sink(Node)</code> terms. <var>Arcs</var> 
+is a list of
+<code>arc(Node,Integer,Node)</code> and <code>arc(Node,Integer,Node,Exprs)</code> 
+terms that denote the automaton's transitions. Each node is represented 
+by an arbitrary term. Transitions that are not mentioned go to an 
+implicit failure node. <var>Exprs</var> is a list of arithmetic 
+expressions, of the same length as <var>Counters</var>. In each 
+expression, variables occurring in <var>Counters</var> symbolically 
+refer to previous counter values, and variables occurring in <var>Template</var> 
+refer to the current element of <var>Sequence</var>. When a transition 
+containing arithmetic expressions is taken, each counter is updated 
+according to the result of the corresponding expression. When a 
+transition without arithmetic expressions is taken, all counters remain 
+unchanged.
+<var>Counters</var> is a list of variables. <var>Initials</var> is a 
+list of finite domain variables or integers denoting, in the same order, 
+the initial value of each counter. These values are related to <var>Finals</var> 
+according to the arithmetic expressions of the taken transitions.
+
+<p>The following example is taken from Beldiceanu, Carlsson, Debruyne 
+and Petit: "Reformulation of Global Constraints Based on Constraints 
+Checkers", Constraints 10(4), pp 339-362 (2005). It relates a sequence 
+of integers and finite domain variables to its number of inflexions, 
+which are switches between strictly ascending and strictly descending 
+subsequences:
+
+<pre class="code">
+sequence_inflexions(Vs, N) :-
+        variables_signature(Vs, Sigs),
+        automaton(Sigs, _, Sigs,
+                  [source(s),sink(i),sink(j),sink(s)],
+                  [arc(s,0,s), arc(s,1,j), arc(s,2,i),
+                   arc(i,0,i), arc(i,1,j,[C+1]), arc(i,2,i),
+                   arc(j,0,j), arc(j,1,j),
+                   arc(j,2,i,[C+1])],
+                  [C], [0], [N]).
+
+variables_signature([], []).
+variables_signature([V|Vs], Sigs) :-
+        variables_signature_(Vs, V, Sigs).
+
+variables_signature_([], _, []).
+variables_signature_([V|Vs], Prev, [S|Sigs]) :-
+        V #= Prev #&lt;==&gt; S #= 0,
+        Prev #&lt; V #&lt;==&gt; S #= 1,
+        Prev #&gt; V #&lt;==&gt; S #= 2,
+        variables_signature_(Vs, V, Sigs).
+</pre>
+
+<p>Example queries:
+
+<pre class="code">
+?- sequence_inflexions([1,2,3,3,2,1,3,0], N).
+N = 3.
+
+?- length(Ls, 5), Ls ins 0..1,
+   sequence_inflexions(Ls, 3), label(Ls).
+Ls = [0, 1, 0, 1, 0] ;
+Ls = [1, 0, 1, 0, 1].
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="chain/2"><strong>chain</strong>(<var>+Zs, 
++Relation</var>)</a></dt>
+<dd class="defbody">
+<var>Zs</var> form a chain with respect to <var>Relation</var>. <var>Zs</var> 
+is a list of finite domain variables that are a chain with respect to 
+the partial order
+<var>Relation</var>, in the order they appear in the list. <var>Relation</var> 
+must be #=,
+#=<var>&lt;</var>, #<var>&gt;</var>=, <code>#&lt;</code> or #<var>&gt;</var>. 
+For example:
+
+<pre class="code">
+?- chain([X,Y,Z], #&gt;=).
+X#&gt;=Y,
+Y#&gt;=Z.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h4 id="sec:clpfd-reification-predicates"><a id="sec:A.9.17.5"><span class="sec-nr">A.9.17.5</span> <span class="sec-title">Reification 
+predicates</span></a></h4>
+
+<p><a id="sec:clpfd-reification-predicates"></a>
+
+<p>Many CLP(FD) constraints can be <i>reified</i>. This means that their 
+truth value is itself turned into a CLP(FD) variable, so that we can 
+explicitly reason about whether a constraint holds or not. See 
+reification (<a class="sec" href="clpfd.html#sec:A.9.12">section A.9.12</a>).
+
+<dl class="latex">
+<dt class="pubdef"><a id="#\/1"><strong>#\</strong> <var>+Q</var></a></dt>
+<dd class="defbody">
+<var>Q</var> does <i>not</i> hold. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).
+
+<p>For example, to obtain the complement of a domain:
+
+<pre class="code">
+?- #\ X in -3..0\/10..80.
+X in inf.. -4\/1..9\/81..sup.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="#<==>/2"><var>?P</var> <strong>#&lt;==&gt;</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+<var>P</var> and <var>Q</var> are equivalent. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).
+
+<p>For example:
+
+<pre class="code">
+?- X #= 4 #&lt;==&gt; B, X #\= 4.
+B = 0,
+X in inf..3\/5..sup.
+</pre>
+
+<p>The following example uses reified constraints to relate a list of 
+finite domain variables to the number of occurrences of a given value:
+
+<pre class="code">
+vs_n_num(Vs, N, Num) :-
+        maplist(eq_b(N), Vs, Bs),
+        sum(Bs, #=, Num).
+
+eq_b(X, Y, B) :- X #= Y #&lt;==&gt; B.
+</pre>
+
+<p>Sample queries and their results:
+
+<pre class="code">
+?- Vs = [X,Y,Z], Vs ins 0..1, vs_n_num(Vs, 4, Num).
+Vs = [X, Y, Z],
+Num = 0,
+X in 0..1,
+Y in 0..1,
+Z in 0..1.
+
+?- vs_n_num([X,Y,Z], 2, 3).
+X = 2,
+Y = 2,
+Z = 2.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="#==>/2"><var>?P</var> <strong>#==&gt;</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+<var>P</var> implies <var>Q</var>. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).</dd>
+<dt class="pubdef"><a id="#<==/2"><var>?P</var> <strong>#&lt;==</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+<var>Q</var> implies <var>P</var>. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).</dd>
+<dt class="pubdef"><a id="#/\/2"><var>?P</var> <strong>#/\</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+<var>P</var> and <var>Q</var> hold. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).</dd>
+<dt class="pubdef"><a id="#\//2"><var>?P</var> <strong>#\/</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+<var>P</var> or <var>Q</var> holds. See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>).
+
+<p>For example, the sum of natural numbers below 1000 that are multiples 
+of 3 or 5:
+
+<pre class="code">
+?- findall(N, (N mod 3 #= 0 #\/ N mod 5 #= 0, N in 0..999,
+               indomain(N)),
+           Ns),
+   sum(Ns, #=, Sum).
+Ns = [0, 3, 5, 6, 9, 10, 12, 15, 18|...],
+Sum = 233168.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="#\/2"><var>?P</var> <strong>#\</strong> <var>?Q</var></a></dt>
+<dd class="defbody">
+Either <var>P</var> holds or <var>Q</var> holds, but not both. See 
+reification (<a class="sec" href="clpfd.html#sec:A.9.12">section A.9.12</a>).</dd>
+<dt class="pubdef"><a id="zcompare/3"><strong>zcompare</strong>(<var>?Order, 
+?A, ?B</var>)</a></dt>
+<dd class="defbody">
+Analogous to <a class="pred" href="compare.html#compare/3">compare/3</a>, 
+with finite domain variables <var>A</var> and <var>B</var>.
+
+<p>Think of <a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a> 
+as <i>reifying</i> an arithmetic comparison of two integers. This means 
+that we can explicitly reason about the different cases <i>within</i> 
+our programs. As in <a class="pred" href="compare.html#compare/3">compare/3</a>, 
+the atoms
+<code>&lt;</code>, <code>&gt;</code> and <code>=</code> denote the 
+different cases of the trichotomy. In contrast to <a class="pred" href="compare.html#compare/3">compare/3</a> 
+though, <a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a> 
+works correctly for <i>all modes</i>, also if only a subset of the 
+arguments is instantiated. This allows you to make several predicates 
+over integers deterministic while preserving their generality and 
+completeness. For example:
+
+<pre class="code">
+n_factorial(N, F) :-
+        zcompare(C, N, 0),
+        n_factorial_(C, N, F).
+
+n_factorial_(=, _, 1).
+n_factorial_(&gt;, N, F) :-
+        F #= F0*N,
+        N1 #= N - 1,
+        n_factorial(N1, F0).
+</pre>
+
+<p>This version of <span class="pred-ext">n_factorial/2</span> is 
+deterministic if the first argument is instantiated, because argument 
+indexing can distinguish the different clauses that reflect the possible 
+and admissible outcomes of a comparison of <var>N</var> against 0. 
+Example:
+
+<pre class="code">
+?- n_factorial(30, F).
+F = 265252859812191058636308480000000.
+</pre>
+
+<p>Since there is no clause for <code>&lt;</code>, the predicate 
+automatically
+<i>fails</i> if <var>N</var> is less than 0. The predicate can still be 
+used in all directions, including the most general query:
+
+<pre class="code">
+?- n_factorial(N, F).
+N = 0,
+F = 1 ;
+N = F, F = 1 ;
+N = F, F = 2 .
+</pre>
+
+<p>In this case, all clauses are tried on backtracking, and <a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a> 
+ensures that the respective ordering between N and 0 holds in each case.
+
+<p>The truth value of a comparison can also be reified with (<code>#&lt;==&gt;</code>)/2 
+in combination with one of the <i>arithmetic constraints</i> (<a class="sec" href="clpfd.html#sec:A.9.2">section 
+A.9.2</a>). See reification (<a class="sec" href="clpfd.html#sec:A.9.12">section 
+A.9.12</a>). However, <a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a> 
+lets you more conveniently distinguish the cases.
+</dd>
+</dl>
+
+<p><h4 id="sec:clpfd-reflection-predicates"><a id="sec:A.9.17.6"><span class="sec-nr">A.9.17.6</span> <span class="sec-title">Reflection 
+predicates</span></a></h4>
+
+<p><a id="sec:clpfd-reflection-predicates"></a>
+
+<p>Reflection predicates let us obtain, in a well-defined way, 
+information that is normally internal to this library. In addition to 
+the predicates explained below, also take a look at
+<a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+and <a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> to 
+reason about CLP(FD) constraints that arise in programs. This can be 
+useful in program analyzers and declarative debuggers.
+
+<dl class="latex">
+<dt class="pubdef"><a id="fd_var/1"><strong>fd_var</strong>(<var>+Var</var>)</a></dt>
+<dd class="defbody">
+True iff <var>Var</var> is a CLP(FD) variable.</dd>
+<dt class="pubdef"><a id="fd_inf/2"><strong>fd_inf</strong>(<var>+Var, 
+-Inf</var>)</a></dt>
+<dd class="defbody">
+<var>Inf</var> is the infimum of the current domain of <var>Var</var>.</dd>
+<dt class="pubdef"><a id="fd_sup/2"><strong>fd_sup</strong>(<var>+Var, 
+-Sup</var>)</a></dt>
+<dd class="defbody">
+<var>Sup</var> is the supremum of the current domain of <var>Var</var>.</dd>
+<dt class="pubdef"><a id="fd_size/2"><strong>fd_size</strong>(<var>+Var, 
+-Size</var>)</a></dt>
+<dd class="defbody">
+Reflect the current size of a domain. <var>Size</var> is the number of 
+elements of the current domain of <var>Var</var>, or the atom <b>sup</b> 
+if the domain is unbounded.</dd>
+<dt class="pubdef"><a id="fd_dom/2"><strong>fd_dom</strong>(<var>+Var, 
+-Dom</var>)</a></dt>
+<dd class="defbody">
+<var>Dom</var> is the current domain (see <a class="pred" href="clpfd.html#in/2">in/2</a>) 
+of <var>Var</var>. This predicate is useful if you want to reason about 
+domains. It is <i>not</i> needed if you only want to display remaining 
+domains; instead, separate your model from the search part and let the 
+toplevel display this information via residual goals.
+
+<p>For example, to implement a custom labeling strategy, you may need to 
+inspect the current domain of a finite domain variable. With the 
+following code, you can convert a <i>finite</i> domain to a list of 
+integers:
+
+<pre class="code">
+dom_integers(D, Is) :- phrase(dom_integers_(D), Is).
+
+dom_integers_(I)      --&gt; { integer(I) }, [I].
+dom_integers_(L..U)   --&gt; { numlist(L, U, Is) }, Is.
+dom_integers_(D1\/D2) --&gt; dom_integers_(D1), dom_integers_(D2).
+</pre>
+
+<p>Example:
+
+<pre class="code">
+?- X in 1..5, X #\= 4, fd_dom(X, D), dom_integers(D, Is).
+D = 1..3\/5,
+Is = [1,2,3,5],
+X in 1..3\/5.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:clpfd-closing-opening"><a id="sec:A.9.18"><span class="sec-nr">A.9.18</span> <span class="sec-title">Closing 
+and opening words about CLP(FD)</span></a></h3>
+
+<p><a id="sec:clpfd-closing-opening"></a>
+
+<p>CLP(FD) constraints are one of the main reasons why logic programming 
+approaches are picked over other paradigms for solving many tasks of 
+high practical relevance. The usefulness of CLP(FD) constraints for 
+scheduling, allocation and combinatorial optimization tasks is 
+well-known both in academia and industry.
+
+<p>With this library, we take the applicability of CLP(FD) constraints 
+one step further, following the road that visionary systems like SICStus 
+Prolog have already clearly outlined: This library is designed to 
+completely subsume and <i>replace</i> low-level predicates over 
+integers, which were in the past repeatedly found to be a major 
+stumbling block when introducing logic programming to beginners.
+
+<p>Embrace the change and new opportunities that this paradigm allows! 
+Use CLP(FD) constraints in your programs. The use of CLP(FD) constraints 
+instead of low-level arithmetic is also a good indicator to judge the 
+quality of any introductory Prolog text.
+
+<p></body></html>

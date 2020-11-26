@@ -1,0 +1,3 @@
+% -*-Prolog-*-
+
+switch(Name), ~(status(Name,X), {X \== false}) => status(Name,false).

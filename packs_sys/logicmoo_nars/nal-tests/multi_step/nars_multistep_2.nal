@@ -1,0 +1,13 @@
+*** Semi-compositionality
+<(&,light,[red]) --> traffic_signal>? 
+5
+<[red] --> traffic_signal>. %0.1%
+<light --> traffic_signal>. %0.1%  
+500
+''outputMustContain('<(&,[red],light) --> traffic_signal>. %0.19;0.81%')
+1000
+<{light_1} --> (&,light,[red])>. 
+<{light_1} --> traffic_signal>.
+200000
+''outputMustContain('<(&,[red],light) --> traffic_signal>. %0.30;0.83%') 
+

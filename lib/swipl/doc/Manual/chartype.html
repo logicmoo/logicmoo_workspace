@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.24</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="locale.html">
+<link rel="next" href="operators.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="locale.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="operators.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:chartype"><a id="sec:4.24"><span class="sec-nr">4.24</span> <span class="sec-title">Character 
+properties</span></a></h2>
+
+<a id="sec:chartype"></a>
+
+<p>SWI-Prolog offers two comprehensive predicates for classifying 
+characters and character codes. These predicates are defined as built-in 
+predicates to exploit the C-character classification's handling of
+<em>locale</em> (handling of local character sets). These predicates are 
+fast, logical and deterministic if applicable.
+
+<p>In addition, there is the library <code>library(ctypes)</code> 
+providing compatibility with some other Prolog systems. The predicates 
+of this library are defined in terms of <a id="idx:codetype2:1476"></a><a class="pred" href="chartype.html#code_type/2">code_type/2</a>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="char_type/2"><strong>char_type</strong>(<var>?Char, 
+?Type</var>)</a></dt>
+<dd class="defbody">
+Tests or generates alternative <var>Type</var>s or <var>Char</var>s. The 
+character types are inspired by the standard C <code>&lt;ctype.h&gt;</code> 
+primitives. The types are sensititve to the active <em>locale</em>, see <a id="idx:setlocale3:1477"></a><a class="pred" href="system.html#setlocale/3">setlocale/3</a>. 
+Most of the <var>Type</var>s are mapped to the Unicode classification 
+functions from <code>&lt;wctype.h&gt;</code>, e.g., <code>alnum</code> 
+uses iswalnum(). The types <code>prolog_var_start</code>, <code>prolog_atom_start</code>,
+<code>prolog_identifier_continue</code> and <code>prolog_symbol</code> 
+are based on the locale-independent built-in classification routines 
+that are also used by <a id="idx:read1:1478"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+and friends.
+
+<p>Note that the mode (-,+) is only efficient if the <var>Type</var> has 
+a parameter, e.g., <code>char_type(C, digit(8))</code>. If <var>Type</var> 
+is a atomic, the whole unicode range (0..0x1ffff) is generated and 
+tested against the character classification function.
+
+<dl class="latex">
+<dt><strong>alnum</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a letter (upper- or lowercase) or digit.
+</dd>
+<dt><strong>alpha</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a letter (upper- or lowercase).
+</dd>
+<dt><strong>csym</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a letter (upper- or lowercase), digit or the 
+underscore (<code>_</code>). These are valid C and Prolog symbol 
+characters.
+</dd>
+<dt><strong>csymf</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a letter (upper- or lowercase) or the underscore (<code>_</code>). 
+These are valid first characters for C and Prolog symbols.
+</dd>
+<dt><strong>ascii</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a 7-bit ASCII character (0..127).
+</dd>
+<dt><strong>white</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a space or tab, i.e. white space inside a line.
+</dd>
+<dt><strong>cntrl</strong></dt>
+<dd class="defbody">
+<var>Char</var> is an ASCII control character (0..31), ASCII DEL 
+character (127), or non-ASCII character in the range 128..159 or 
+8232..8233.
+</dd>
+<dt><strong>digit</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a digit.
+</dd>
+<dt><strong>digit</strong>(<var>Weight</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is a digit with value <var>Weight</var>. I.e. <code>char_type(X, 
+digit(6))</code> yields <var>X</var> = <code>&rsquo;6'</code>. Useful 
+for parsing numbers.
+</dd>
+<dt><strong>xdigit</strong>(<var>Weight</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is a hexadecimal digit with value <var>Weight</var>. 
+I.e. <code>char_type(a, xdigit(X))</code> yields <var>X</var> = <code>&rsquo;10'</code>. 
+Useful for parsing numbers.
+</dd>
+<dt><strong>graph</strong></dt>
+<dd class="defbody">
+<var>Char</var> produces a visible mark on a page when printed. Note 
+that the space is not included!
+</dd>
+<dt><strong>lower</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a lowercase letter.
+</dd>
+<dt><strong>lower</strong>(<var>Upper</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is a lowercase version of <var>Upper</var>. Only true if
+<var>Char</var> is lowercase and <var>Upper</var> uppercase.
+</dd>
+<dt><strong>to_lower</strong>(<var>Upper</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is a lowercase version of <var>Upper</var>. For 
+non-letters, or letter without case, <var>Char</var> and <var>Lower</var> 
+are the same. See also <a id="idx:upcaseatom2:1479"></a><a class="pred" href="chartype.html#upcase_atom/2">upcase_atom/2</a> 
+and <a id="idx:downcaseatom2:1480"></a><a class="pred" href="chartype.html#downcase_atom/2">downcase_atom/2</a>.
+</dd>
+<dt><strong>upper</strong></dt>
+<dd class="defbody">
+<var>Char</var> is an uppercase letter.
+</dd>
+<dt><strong>upper</strong>(<var>Lower</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is an uppercase version of <var>Lower</var>. Only true 
+if
+<var>Char</var> is uppercase and <var>Lower</var> lowercase.
+</dd>
+<dt><strong>to_upper</strong>(<var>Lower</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is an uppercase version of <var>Lower</var>. For 
+non-letters, or letter without case, <var>Char</var> and <var>Lower</var> 
+are the same. See also <a id="idx:upcaseatom2:1481"></a><a class="pred" href="chartype.html#upcase_atom/2">upcase_atom/2</a> 
+and <a id="idx:downcaseatom2:1482"></a><a class="pred" href="chartype.html#downcase_atom/2">downcase_atom/2</a>.
+</dd>
+<dt><strong>punct</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a punctuation character. This is a <code>graph</code> 
+character that is not a letter or digit.
+</dd>
+<dt><strong>space</strong></dt>
+<dd class="defbody">
+<var>Char</var> is some form of layout character (tab, vertical tab, 
+newline, etc.).
+</dd>
+<dt><strong>end_of_file</strong></dt>
+<dd class="defbody">
+<var>Char</var> is -1.
+</dd>
+<dt><strong>end_of_line</strong></dt>
+<dd class="defbody">
+<var>Char</var> ends a line (ASCII: 10..13).
+</dd>
+<dt><strong>newline</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a newline character (10).
+</dd>
+<dt><strong>period</strong></dt>
+<dd class="defbody">
+<var>Char</var> counts as the end of a sentence (.,!,?).
+</dd>
+<dt><strong>quote</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a quote character (<code>"</code>, <code>'</code>, <code>`</code>).
+</dd>
+<dt><strong>paren</strong>(<var>Close</var>)</dt>
+<dd class="defbody">
+<var>Char</var> is an open parenthesis and <var>Close</var> is the 
+corresponding close parenthesis.
+</dd>
+<dt><strong>prolog_var_start</strong></dt>
+<dd class="defbody">
+<var>Char</var> can start a Prolog variable name.
+</dd>
+<dt><strong>prolog_atom_start</strong></dt>
+<dd class="defbody">
+<var>Char</var> can start a unquoted Prolog atom that is not a symbol.
+</dd>
+<dt><strong>prolog_identifier_continue</strong></dt>
+<dd class="defbody">
+<var>Char</var> can continue a Prolog variable name or atom.
+</dd>
+<dt><strong>prolog_symbol</strong></dt>
+<dd class="defbody">
+<var>Char</var> is a Prolog symbol character. Sequences of Prolog symbol 
+characters glue together to form an unquoted atom. Examples are <code><code>=..</code></code>, <code><code>\=</code></code>, 
+etc.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="code_type/2"><strong>code_type</strong>(<var>?Code, 
+?Type</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:chartype2:1483"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a>, 
+but uses character codes rather than one-character atoms. Please note 
+that both predicates are as flexible as possible. They handle either 
+representation if the argument is instantiated and will instantiate only 
+with an integer code or a one-character atom, depending of the version 
+used. See also the Prolog flag
+<a class="flag" href="flags.html#flag:double_quotes">double_quotes</a>, <a id="idx:atomchars2:1484"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a> 
+and <a id="idx:atomcodes2:1485"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:case"><a id="sec:4.24.1"><span class="sec-nr">4.24.1</span> <span class="sec-title">Case 
+conversion</span></a></h3>
+
+<a id="sec:case"></a>
+
+<p>There is nothing in the Prolog standard for converting case in 
+textual data. The SWI-Prolog predicates <a id="idx:codetype2:1486"></a><a class="pred" href="chartype.html#code_type/2">code_type/2</a> 
+and <a id="idx:chartype2:1487"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+can be used to test and convert individual characters. We have started 
+some additional support:
+
+<dl class="latex">
+<dt class="pubdef"><a id="downcase_atom/2"><strong>downcase_atom</strong>(<var>+AnyCase, 
+-LowerCase</var>)</a></dt>
+<dd class="defbody">
+Converts the characters of <var>AnyCase</var> into lowercase as <a id="idx:chartype2:1488"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+does (i.e. based on the defined <em>locale</em> if Prolog provides 
+locale support on the hosting platform) and unifies the lowercase atom 
+with <var>LowerCase</var>.</dd>
+<dt class="pubdef"><a id="upcase_atom/2"><strong>upcase_atom</strong>(<var>+AnyCase, 
+-UpperCase</var>)</a></dt>
+<dd class="defbody">
+Converts, similar to <a id="idx:downcaseatom2:1489"></a><a class="pred" href="chartype.html#downcase_atom/2">downcase_atom/2</a>, 
+an atom to uppercase.
+</dd>
+</dl>
+
+<p><h3 id="sec:whitespace"><a id="sec:4.24.2"><span class="sec-nr">4.24.2</span> <span class="sec-title">White 
+space normalization</span></a></h3>
+
+<a id="sec:whitespace"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="normalize_space/2"><strong>normalize_space</strong>(<var>-Out, 
++In</var>)</a></dt>
+<dd class="defbody">
+Normalize white space in <var>In</var>. All leading and trailing white 
+space is removed. All non-empty sequences for Unicode white space 
+characters are replaced by a single space (<code>\u0020</code>) 
+character. <var>Out</var> uses the same conventions as <a id="idx:withoutputto2:1490"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
+and <a id="idx:format3:1491"></a><a class="pred" href="format.html#format/3">format/3</a>.
+</dd>
+</dl>
+
+<p><h3 id="sec:collate"><a id="sec:4.24.3"><span class="sec-nr">4.24.3</span> <span class="sec-title">Language-specific 
+comparison</span></a></h3>
+
+<a id="sec:collate"></a>
+
+<p><a id="idx:locale:1492"></a><a id="idx:collate:1493"></a><a id="idx:comparelanguagespecific:1494"></a>This 
+section deals with predicates for language-specific string comparison 
+operations.
+
+<dl class="latex">
+<dt class="pubdef"><a id="collation_key/2"><strong>collation_key</strong>(<var>+Atom, 
+-Key</var>)</a></dt>
+<dd class="defbody">
+Create a <var>Key</var> from <var>Atom</var> for locale-specific 
+comparison. The key is defined such that if the key of atom <var>A</var> 
+precedes the key of atom <var>B</var> in the standard order of terms, <var>A</var> 
+is alphabetically smaller than <var>B</var> using the sort order of the 
+current locale.
+
+<p>The predicate <a id="idx:collationkey2:1495"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
+is used by <a id="idx:localesort2:1496"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a> 
+from library(sort). Please examine the implementation of <a id="idx:localesort2:1497"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a> 
+as an example of using this call.
+
+<p>The <var>Key</var> is an implementation-defined and generally 
+unreadable string. On systems that do not support locale handling, <var>Key</var> 
+is simply unified with <var>Atom</var>.</dd>
+<dt class="pubdef"><a id="locale_sort/2"><strong>locale_sort</strong>(<var>+List, 
+-Sorted</var>)</a></dt>
+<dd class="defbody">
+Sort a list of atoms using the current locale. <var>List</var> is a list 
+of atoms or string objects (see <a class="sec" href="string.html#sec:5.2">section 
+5.2</a>). <var>Sorted</var> is unified with a list containing all atoms 
+of <var>List</var>, sorted to the rules of the current locale. See also <a id="idx:collationkey2:1498"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
+and
+<a id="idx:setlocale3:1499"></a><a class="pred" href="system.html#setlocale/3">setlocale/3</a>.
+</dd>
+</dl>
+
+<p></body></html>

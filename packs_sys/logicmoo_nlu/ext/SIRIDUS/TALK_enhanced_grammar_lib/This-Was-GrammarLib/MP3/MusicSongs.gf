@@ -1,0 +1,113 @@
+
+abstract MusicSongs = {
+
+cat Song;
+
+fun
+
+-- Swedish titles
+blinkar_bla 			: Song;
+segla_pa_ett_moln 		: Song;
+undantag 			: Song;
+det_hon_vill_ha 		: Song;
+skuggor_i_skymningen 		: Song;
+vem_ska_jag_tro_pa 		: Song;
+solglasogon 			: Song;
+atta_hundra_grader 		: Song;
+karlekens_tunga 		: Song;
+angeln_i_rummet 		: Song;
+vem_tander_stjarnorna 		: Song;
+vindarna 			: Song;
+flickorna_pa_tv_tva 		: Song;
+du_ska_va_president 		: Song;
+precis_som_du 			: Song;
+vara_vanner 			: Song;
+om_du_var_har 			: Song;
+kom_ihag_mig 			: Song;
+vem_vet 			: Song;
+himlen_runt_hornet 		: Song;
+diamanter 			: Song;
+efter_stormen 			: Song;
+det_finns 			: Song;
+sarah 				: Song;
+vingar 				: Song;
+flickan_och_krakan 		: Song;
+vintersaga 			: Song;
+allt_som_jag_kanner 		: Song;
+jag_blir_hellre_jagad_av_vargar : Song;
+du_far_gora_som_du_vill 	: Song;
+hall_om_mig 			: Song;
+sag_som_det_ar 			: Song;
+vinden_har_vant 		: Song;
+jackie 				: Song;
+lilla_fagel_bla 		: Song;
+sommaren_ar_kort 		: Song;
+en_del_av_mitt_hjarta 		: Song;
+oppna_landskap 			: Song;
+under_ytan 			: Song;
+teknikens_under 		: Song;
+tva_av_oss 			: Song;
+vandraren 			: Song;
+under_norrskenet 		: Song;
+vill_ha_mer 			: Song;
+flykting 			: Song;
+sanningens_krigare 		: Song;
+i_vargens_spar 			: Song;
+nu_tandas_tusen_julejus 	: Song;
+alla_alskar_dig 		: Song;
+hon_far 			: Song;
+
+-- English titles
+another_world 				: Song;
+deeper_than_the_usual_feeling 		: Song;
+london_calling 				: Song;
+should_i_stay_or_should_i_go 		: Song;
+dead_stars 				: Song;
+like_tears_in_rain 			: Song;
+figurehead 				: Song;
+final_countdown                         : Song;
+leviathan 				: Song;
+stalker 				: Song;
+friday_im_in_love 			: Song;
+sadness 				: Song;
+i_think_im_paranoid 			: Song;
+in_the_city 				: Song;
+time_for_truth 				: Song;
+the_man_with_the_child_in_his_eyes 	: Song;
+totem_pole 				: Song;
+lucky_star 				: Song;
+material_girl 				: Song;
+if_i_should_die_tonight 		: Song;
+angel 					: Song;
+teardrop 				: Song;
+sly 					: Song;
+sex_by_force 				: Song;
+ars_magica 				: Song;
+razors_through_flesh 			: Song;
+heads_high 				: Song;
+latest_news 				: Song;
+good_enough 				: Song;
+thorn 					: Song;
+let_beauty_loose 			: Song;
+eleanor_rigby 				: Song;
+west_end_girls 				: Song;
+suburbia 				: Song;
+debaser 				: Song;
+poison 					: Song;
+existence 				: Song;
+darkangel 				: Song;
+rubicon 				: Song;
+all_that_she_wants 			: Song;
+the_final_countdown 			: Song;
+stone_me_into_the_groove 		: Song;
+oh_i_like_it 				: Song;
+save_tonight 				: Song;
+tears_never_dry 			: Song;
+it_takes_a_fool_to_remain_sain 		: Song;
+youre_gonna_get_it 			: Song;
+i_breathe 				: Song;
+legion 					: Song;
+standing 				: Song;
+like_a_prayer 				: Song;
+
+}

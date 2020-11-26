@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.7</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="charsio.html">
+<link rel="next" href="clpb.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="charsio.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="clpb.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:check"><a id="sec:A.7"><span class="sec-nr">A.7</span> <span class="sec-title">library(check): 
+Consistency checking</span></a></h2>
+
+<p><a id="sec:check"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="xref.html#gxref/0">gxref/0</a> provides a 
+graphical cross referencer <br>
+- PceEmacs performs real time consistency checks while you edit <br>
+- <code>library(prolog_xref)</code> implements&lsquo;offline' 
+cross-referencing <br>
+- <code>library(prolog_codewalk)</code> implements&lsquo;online' 
+analysis
+</dd>
+</dl>
+
+<p>This library provides some consistency checks for the loaded Prolog 
+program. The predicate <a class="pred" href="consulting.html#make/0">make/0</a> 
+runs <a class="pred" href="check.html#list_undefined/0">list_undefined/0</a> 
+to find undefined predicates in&lsquo;user' modules.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="check/0"><strong>check</strong></a></dt>
+<dd class="defbody">
+Run all consistency checks defined by <a class="pred" href="check.html#checker/2">checker/2</a>. 
+Checks enabled by default are:
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="check.html#list_undefined/0">list_undefined/0</a> 
+reports undefined predicates
+<li><a class="pred" href="check.html#list_trivial_fails/0">list_trivial_fails/0</a> 
+reports calls for which there is no matching clause.
+<li><a class="pred" href="check.html#list_redefined/0">list_redefined/0</a> 
+reports predicates that have a local definition and a global definition. 
+Note that these are
+<b>not</b> errors.
+<li><a class="pred" href="check.html#list_autoload/0">list_autoload/0</a> 
+lists predicates that will be defined at runtime using the autoloader.
+</ul>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_undefined/0"><strong>list_undefined</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_undefined/1"><strong>list_undefined</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+Report undefined predicates. This predicate finds undefined predicates 
+by decompiling and analyzing the body of all clauses.
+<var>Options</var>:
+
+<dl class="latex">
+<dt><strong>module_class</strong>(<var>+Classes</var>)</dt>
+<dd class="defbody">
+Process modules of the given <var>Classes</var>. The default for classes 
+is <code>[user]</code>. For example, to include the libraries into the 
+examination, use <code>[user,library]</code>.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <a class="pred" href="xref.html#gxref/0">gxref/0</a> provides a 
+graphical cross-referencer. <br>
+- <a class="pred" href="consulting.html#make/0">make/0</a> calls <a class="pred" href="check.html#list_undefined/0">list_undefined/0</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_autoload/0"><strong>list_autoload</strong></a></dt>
+<dd class="defbody">
+Report predicates that may be auto-loaded. These are predicates that are 
+not defined, but will be loaded on demand if referenced.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<span class="pred-ext">autoload/0</span>
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+This predicate uses an older mechanism for finding undefined predicates. 
+Should be synchronized with list undefined.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="list_redefined/0"><strong>list_redefined</strong></a></dt>
+<dd class="defbody">
+Lists predicates that are defined in the global module <code>user</code> 
+as well as in a normal module; that is, predicates for which the local 
+definition overrules the global default definition.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_cross_module_calls/0"><strong>list_cross_module_calls</strong></a></dt>
+<dd class="defbody">
+List calls from one module to another using Module:Goal where the callee 
+is not defined exported, public or multifile, i.e., where the callee 
+should be considered <i>private</i>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_void_declarations/0"><strong>list_void_declarations</strong></a></dt>
+<dd class="defbody">
+List predicates that have declared attributes, but no clauses.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_trivial_fails/0"><strong>list_trivial_fails</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_trivial_fails/1"><strong>list_trivial_fails</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+List goals that trivially fail because there is no matching clause. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>module_class</strong>(<var>+Classes</var>)</dt>
+<dd class="defbody">
+Process modules of the given <var>Classes</var>. The default for classes 
+is <code>[user]</code>. For example, to include the libraries into the 
+examination, use <code>[user,library]</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="trivial_fail_goal/1"><strong>trivial_fail_goal</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Multifile hook that tells <a class="pred" href="check.html#list_trivial_fails/0">list_trivial_fails/0</a> 
+to accept <var>Goal</var> as valid.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_strings/0"><strong>list_strings</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_strings/1"><strong>list_strings</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+List strings that appear in clauses. This predicate is used to find 
+portability issues for changing the Prolog flag
+<code>double_quotes</code> from <code>codes</code> to <code>string</code>, 
+creating packed string objects. Warnings may be suppressed using the 
+following multifile hooks:
+
+<p>
+<ul class="latex">
+<li><a class="pred" href="check.html#string_predicate/1">string_predicate/1</a> 
+to stop checking certain predicates
+<li><a class="pred" href="check.html#valid_string_goal/1">valid_string_goal/1</a> 
+to tell the checker that a goal is safe.
+</ul>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Prolog flag <code>double_quotes</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_rationals/0"><strong>list_rationals</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_rationals/1"><strong>list_rationals</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+List rational numbers that appear in clauses. This predicate is used to 
+find portability issues for changing the Prolog flag
+<code>rational_syntax</code> to <code>natural</code>, creating rational 
+numbers from
+<var>&lt;</var>integer<var>&gt;</var>/<var>&lt;</var>nonneg<var>&gt;</var>. <var>Options</var>:
+
+<dl class="latex">
+<dt><strong>module_class</strong>(<var>+Classes</var>)</dt>
+<dd class="defbody">
+Determines the modules classes processed. By default only user code is 
+processed. See <span class="pred-ext">prolog_program_clause/2</span>.
+</dd>
+<dt><strong>arithmetic</strong>(<var>+Bool</var>)</dt>
+<dd class="defbody">
+If <code>true</code> (default <code>false</code>) also warn on rationals 
+appearing in arithmetic expressions.
+</dd>
+</dl>
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Prolog flag <code>rational_syntax</code> and <code>prefer_rationals</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_format_errors/0"><strong>list_format_errors</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_format_errors/1"><strong>list_format_errors</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+List argument errors for <a class="pred" href="format.html#format/2">format/2</a>,3.</dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="string_predicate/1"><strong>string_predicate</strong>(<var>:PredicateIndicator</var>)</a></dt>
+<dd class="defbody">
+Multifile hook to disable <a class="pred" href="string.html#list_strings/0">list_strings/0</a> 
+on the given predicate. This is typically used for facts that store 
+strings.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="valid_string_goal/1"><strong>valid_string_goal</strong>(<var>+Goal</var>)</a></dt>
+<dd class="defbody">
+Multifile hook that qualifies <var>Goal</var> as valid for <a class="pred" href="string.html#list_strings/0">list_strings/0</a>. 
+For example, <code>format("Hello world~n")</code> is considered proper 
+use of string constants.</dd>
+<dt class="multidef"><span class="pred-tag">[nondet,multifile]</span><a id="checker/2"><strong>checker</strong>(<var>:Goal, 
++Message:text</var>)</a></dt>
+<dd class="defbody">
+Register code validation routines. Each clause defines a <var>Goal</var> 
+which performs a consistency check executed by <a class="pred" href="check.html#check/0">check/0</a>. <var>Message</var> 
+is a short description of the check. For example, assuming the <code>my_checks</code> 
+module defines a predicate <span class="pred-ext">list_format_mistakes/0</span>:
+
+<pre class="code">
+:- multifile check:checker/2.
+check:checker(my_checks:list_format_mistakes,
+              "errors with format/2 arguments").
+</pre>
+
+<p>The predicate is dynamic, so you can disable checks with <a class="pred" href="db.html#retract/1">retract/1</a>. 
+For example, to stop reporting redefined predicates:
+
+<pre class="code">
+retract(check:checker(list_redefined,_)).
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,16 @@
+
+Show wavfiles recorded using recognition from the top-level
+(the RECOGNISE command). Each file is displayed together with
+a timestamp and associated text. The associated text is a 
+transcription if one is available, or the recognition result
+otherwise. 
+
+The files shown by this command can be used as top-level 
+recorded speech input by typing
+\begin{verbatim}
+WAVFILE <Wavfile>
+\end{verbatim}
+e.g.
+\begin{verbatim}
+WAVFILE c:/Regulus/recorded_wavfiles/2008-04-24_22-36-03/utt05.wav
+\end{verbatim}

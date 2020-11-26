@@ -1,0 +1,156 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 2.0
+ *
+ *  Author: c0360946
+ *  Institution: University of Huddersfield
+ *  Date created: Tue Nov 28 13:11:21 GMT 2006
+ *  Date last modified: 2006/12/13 at 05:55:44 PM GMT
+ *  Description:
+ *    
+ * Object Life History : bakingCake.gfx
+ */
+
+domain_name(bakingCake).
+
+% Sorts
+sorts(primitive_sorts,[oven,decorator,cake]).
+
+% Objects
+objects(oven,[ovenA,ovenB]).
+objects(decorator,[hoda]).
+objects(cake,[cake1,cake2,cake3]).
+
+% Predicates
+predicates([
+    open(oven),
+    closed(oven),
+    full(oven),
+    empty(oven),
+    decorating(decorator),
+    available(decorator),
+    raw(cake),
+    cooked(cake),
+    decorated(cake),
+    inOven(cake),
+    withDecorator(cake),
+    unDecorated(cake)]).
+
+% Object Class Definitions
+substate_classes(oven,Oven,[
+    [open(Oven)],
+    [closed(Oven)],
+    [full(Oven)],
+    [empty(Oven)]]).
+substate_classes(decorator,Decorator,[
+    [decorating(Decorator)],
+    [available(Decorator)]]).
+substate_classes(cake,Cake,[
+    [raw(Cake)],
+    [cooked(Cake)],
+    [decorated(Cake)],
+    [inOven(Cake)],
+    [withDecorator(Cake)],
+    [unDecorated(Cake)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(passToDecorater(Decorator,Cake),
+    % prevail
+    [],
+    % necessary
+    [     sc(decorator,Decorator,[available(Decorator)]=>[decorating(Decorator)]),
+     sc(cake,Cake,[unDecorated(Cake)]=>[withDecorator(Cake)])],
+    % conditional
+    []).
+operator(takeOut(Oven,Cake),
+    % prevail
+    [     se(oven,Oven,[open(Oven)])],
+    % necessary
+    [     sc(cake,Cake,[cooked(Cake)]=>[unDecorated(Cake)]),
+     sc(oven,Oven,[full(Oven)]=>[empty(Oven)])],
+    % conditional
+    []).
+operator(decorate(Cake,Decorator),
+    % prevail
+    [],
+    % necessary
+    [     sc(cake,Cake,[withDecorator(Cake)]=>[decorated(Cake)]),
+     sc(decorator,Decorator,[decorating(Decorator)]=>[available(Decorator)])],
+    % conditional
+    []).
+operator(cook(Oven,Cake),
+    % prevail
+    [     se(oven,Oven,[closed(Oven)])],
+    % necessary
+    [     sc(cake,Cake,[inOven(Cake)]=>[cooked(Cake)])],
+    % conditional
+    []).
+operator(closeOven(Oven),
+    % prevail
+    [],
+    % necessary
+    [     sc(oven,Oven,[open(Oven)]=>[closed(Oven)])],
+    % conditional
+    []).
+operator(openOven(Oven),
+    % prevail
+    [],
+    % necessary
+    [     sc(oven,Oven,[closed(Oven)]=>[open(Oven)])],
+    % conditional
+    []).
+operator(putInOven(Oven,Cake),
+    % prevail
+    [     se(oven,Oven,[open(Oven)])],
+    % necessary
+    [     sc(oven,Oven,[empty(Oven)]=>[full(Oven)]),
+     sc(cake,Cake,[raw(Cake)]=>[inOven(Cake)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(decorator,hoda,[available(hoda)]),
+     se(cake,cake1,[decorated(cake1)]),
+     se(oven,ovenA,[closed(ovenA)]),
+     se(oven,ovenA,[empty(ovenA)]),
+     se(oven,ovenB,[full(ovenB)]),
+     se(oven,ovenB,[closed(ovenB)]),
+     se(cake,cake2,[inOven(cake2)])],
+    % INIT States
+    [
+     ss(oven,ovenA,[closed(ovenA)]),
+     ss(oven,ovenA,[empty(ovenA)]),
+     ss(oven,ovenB,[closed(ovenB)]),
+     ss(oven,ovenB,[empty(ovenB)]),
+     ss(decorator,hoda,[available(hoda)]),
+     ss(cake,cake1,[raw(cake1)]),
+     ss(cake,cake2,[raw(cake2)])]).
+planner_task(2,
+    % Goals
+    [
+     se(cake,cake1,[decorated(cake1)]),
+     se(decorator,hoda,[available(hoda)]),
+     se(oven,ovenA,[empty(ovenA)]),
+     se(oven,ovenA,[closed(ovenA)])],
+    % INIT States
+    [
+     ss(oven,ovenA,[closed(ovenA)]),
+     ss(oven,ovenA,[empty(ovenA)]),
+     ss(decorator,hoda,[available(hoda)]),
+     ss(cake,cake1,[raw(cake1)])]).

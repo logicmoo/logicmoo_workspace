@@ -1,0 +1,9 @@
+Speech mode version of BATCH\_\-DIALOGUE. Process the default dialogue
+mode speech corpus, defined by the dialogue\_\-speech\_\-corpus config file
+entry. The output file, defined by the dialogue\_\-speechcorpus\_\-results
+config file entry, contains question marks for dialogue processing
+steps that have not yet been judged. If these are replaced by valid
+judgements, currently 'good', or 'bad', the new judgements can be
+incorporated into the dialogue judgements file (defined by the
+dialogue\_\-corpus\_\-judgements config file entry) using the command
+UPDATE\_\-DIALOGUE\_\-JUDGEMENTS\_\-SPEECH.

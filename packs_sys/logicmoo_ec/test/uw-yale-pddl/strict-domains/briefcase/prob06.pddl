@@ -1,0 +1,8 @@
+(define (problem uget-paid2)
+    (:domain uni-bw)
+  (:objects P D home office)
+  (:init (place home)(place office) (obj p)(obj d)(obj b)
+	 (at B home) (at P home) (at D home) (in P))
+  (:goal (and (at P home) (at D office) (at B home)))
+  (:length (:serial 4) (:parallel 4))
+    )

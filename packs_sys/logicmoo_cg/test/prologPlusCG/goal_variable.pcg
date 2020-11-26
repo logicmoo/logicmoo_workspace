@@ -1,0 +1,4 @@
+pere(khalid, hicham).
+compute(pere(khalid, x)).
+mere(khadija, hicham).
+test(x) :- compute(x), x, mere(t1, t2).

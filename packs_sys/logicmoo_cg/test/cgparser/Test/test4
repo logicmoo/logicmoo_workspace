@@ -1,0 +1,4 @@
+[EAT]-
+	(AGNT)->[MONKEY]	/* comment test */
+	(OBJ)->[WALNUT:*x]
+	(INST)->[SPOON]->(MATR)->[SHELL]<-(PART)<-[WALNUT:*x],.

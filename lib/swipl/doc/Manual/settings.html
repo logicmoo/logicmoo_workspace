@@ -1,0 +1,449 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.41</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="registry.html">
+<link rel="next" href="strings.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="registry.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="strings.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:settings"><a id="sec:A.41"><span class="sec-nr">A.41</span> <span class="sec-title">library(settings): 
+Setting management</span></a></h2>
+
+<p><a id="sec:settings"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Jan Wielemaker
+</dd>
+<dt class="tag">See also</dt>
+<dd>
+<code>library(config)</code> distributed with XPCE provides an 
+alternative aimed at graphical applications.
+</dd>
+</dl>
+
+<p>This library allows management of configuration settings for Prolog 
+applications. Applications define settings in one or multiple files 
+using the directive <a class="pred" href="settings.html#setting/4">setting/4</a> 
+as illustrated below:
+
+<pre class="code">
+:- use_module(library(settings)).
+
+:- setting(version, atom,   '1.0', 'Current version').
+:- setting(timeout, number,    20, 'Timeout in seconds').
+</pre>
+
+<p>The directive is subject to <a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>, 
+which guarantees proper synchronisation of the database if source-files 
+are reloaded. This implies it is <b>not</b> possible to call <a class="pred" href="settings.html#setting/4">setting/4</a> 
+as a predicate.
+
+<p>Settings are local to a module. This implies they are defined in a 
+two-level namespace. Managing settings per module greatly simplifies 
+assembling large applications from multiple modules that configuration 
+through settings. This settings management library ensures proper 
+access, loading and saving of settings.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="setting/4"><strong>setting</strong>(<var>:Name, 
++Type, +Default, +Comment</var>)</a></dt>
+<dd class="defbody">
+Define a setting. <var>Name</var> denotes the name of the setting, <var>Type</var> 
+its type. <var>Default</var> is the value before it is modified. <var>Default</var> 
+can refer to environment variables and can use arithmetic expressions as 
+defined by <span class="pred-ext">eval_default/4</span>.
+
+<p>If a second declaration for a setting is encountered, it is ignored 
+if <var>Type</var> and <var>Default</var> are the same. Otherwise a 
+permission_error is raised.
+<table class="arglist">
+<tr><td><var>Name</var> </td><td><var>Name</var> of the setting (an 
+atom) </td></tr>
+<tr><td><var>Type</var> </td><td><var>Type</var> for setting. One of <code>any</code> 
+or a type defined by <a class="pred" href="error.html#must_be/2">must_be/2</a>. </td></tr>
+<tr><td><var>Default</var> </td><td><var>Default</var> value for the 
+setting. </td></tr>
+<tr><td><var>Comment</var> </td><td>Atom containing a (short) 
+descriptive note. </td></tr>
+</table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="setting/2"><strong>setting</strong>(<var>:Name, 
+?Value</var>)</a></dt>
+<dd class="defbody">
+True when <var>Name</var> is a currently defined setting with <var>Value</var>. 
+Note that <code>setting(Name, Value)</code> only enumerates the settings 
+of the current module. All settings can be enumerated using
+<code>setting(Module:Name, Value)</code>. This predicate is <code>det</code> 
+if <var>Name</var> is ground.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>existence_error(setting, Name)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_setting/2"><strong>set_setting</strong>(<var>:Name, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Change a setting. Performs existence and type-checking for the setting. 
+If the effective value of the setting is changed it broadcasts the event 
+below.
+
+<pre class="code">
+settings(changed(Module:Name, Old, New))
+</pre>
+
+<p>Note that modified settings are <b>not</b> automatically persistent. 
+The application should call <a class="pred" href="settings.html#save_settings/0">save_settings/0</a> 
+to persist the changes.
+
+<dl class="tags">
+<dt class="mtag">Errors</dt>
+<dd>
+- <code>existence_error(setting, Name)</code> <br>
+- <code>type_error(Type, Value)</code>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="restore_setting/1"><strong>restore_setting</strong>(<var>:Name</var>)</a></dt>
+<dd class="defbody">
+Restore the value of setting <var>Name</var> to its default. Broadcast a 
+change like <a class="pred" href="settings.html#set_setting/2">set_setting/2</a> 
+if the current value is not the default.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_setting_default/2"><strong>set_setting_default</strong>(<var>:Name, 
++Default</var>)</a></dt>
+<dd class="defbody">
+Change the default for a setting. The effect is the same as
+<a class="pred" href="settings.html#set_setting/2">set_setting/2</a>, 
+but the new value is considered the default when saving and restoring a 
+setting. It is intended to change application defaults in a particular 
+context.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="load_settings/1"><strong>load_settings</strong>(<var>File</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="load_settings/2"><strong>load_settings</strong>(<var>File, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Load local settings from <var>File</var>. Succeeds if <var>File</var> 
+does not exist, setting the default save-file to <var>File</var>. <var>Options</var> 
+are:
+
+<dl class="latex">
+<dt><strong>undefined</strong>(<var>+Action</var>)</dt>
+<dd class="defbody">
+Define how to handle settings that are not defined. When
+<code>error</code>, an error is printed and the setting is ignored. when <code>load</code>, 
+the setting is loaded anyway, waiting for a definition.
+</dd>
+</dl>
+
+<p>If possibly changed settings need to be persistent, the application 
+must call <a class="pred" href="settings.html#save_settings/0">save_settings/0</a> 
+as part of its shutdown. In simple cases calling <code>at_halt(save_settings)</code> 
+is sufficient.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="save_settings/0"><strong>save_settings</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="save_settings/1"><strong>save_settings</strong>(<var>+File</var>)</a></dt>
+<dd class="defbody">
+Save modified settings to <var>File</var>. Fails silently if the 
+settings file cannot be written. The <a class="pred" href="settings.html#save_settings/0">save_settings/0</a> 
+only attempts to save the settings file if some setting was modified 
+using <a class="pred" href="settings.html#set_setting/2">set_setting/2</a>.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>context_error(settings, no_default_file)</code> for <a class="pred" href="settings.html#save_settings/0">save_settings/0</a> 
+if no default location is known.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_setting/1"><strong>current_setting</strong>(<var>?Setting</var>)</a></dt>
+<dd class="defbody">
+True if <var>Setting</var> is a currently defined setting</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="setting_property/2"><strong>setting_property</strong>(<var>+Setting, 
++Property</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="setting_property/2"><strong>setting_property</strong>(<var>?Setting, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+Query currently defined settings. <var>Property</var> is one of
+
+<dl class="latex">
+<dt><strong>comment</strong>(<var>-Atom</var>)</dt>
+<dt><strong>type</strong>(<var>-Type</var>)</dt>
+<dd class="defbody">
+<var>Type</var> of the setting.
+</dd>
+<dt><strong>default</strong>(<var>-Default</var>)</dt>
+<dd class="defbody">
+<var>Default</var> value. If this is an expression, it is evaluated.
+</dd>
+<dt><strong>source</strong>(<var>-File:-Line</var>)</dt>
+<dd class="defbody">
+Location where the setting is defined.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_settings/0"><strong>list_settings</strong></a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="list_settings/1"><strong>list_settings</strong>(<var>+Module</var>)</a></dt>
+<dd class="defbody">
+List settings to <code>current_output</code>. The second form only lists 
+settings on the matching module.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Compute the required column widths
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="convert_setting_text/3"><strong>convert_setting_text</strong>(<var>+Type, 
++Text, -Value</var>)</a></dt>
+<dd class="defbody">
+Converts from textual form to Prolog <var>Value</var>. Used to convert 
+values obtained from the environment. Public to provide support in 
+user-interfaces to this library.
+
+<dl class="tags">
+<dt class="tag">Errors</dt>
+<dd>
+<code>type_error(Type, Value)</code>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,33 @@
+Metadata-Version: 2.1
+Name: butterfly
+Version: 3.2.5
+Summary: A sleek web based terminal emulator
+Home-page: https://github.com/paradoxxxzero/butterfly
+Author: Florian Mounier
+Author-email: paradoxxx.zero@gmail.com
+License: GPLv3
+Platform: Any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Terminals
+Provides-Extra: themes
+Provides-Extra: systemd
+Provides-Extra: lint
+Requires-Dist: tornado (>=3.2)
+Requires-Dist: pyOpenSSL
+Provides-Extra: lint
+Requires-Dist: pytest; extra == 'lint'
+Requires-Dist: pytest-flake8; extra == 'lint'
+Requires-Dist: pytest-isort; extra == 'lint'
+Provides-Extra: systemd
+Requires-Dist: tornado-systemd; extra == 'systemd'
+Provides-Extra: themes
+Requires-Dist: libsass; extra == 'themes'
+
+UNKNOWN
+
+

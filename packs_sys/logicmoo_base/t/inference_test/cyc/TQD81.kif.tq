@@ -1,0 +1,36 @@
+(note TQD81)
+
+(subclass WeaponOfMassDestruction MilitaryWeapon) 
+
+(instance HYP-NuclearWeapon-61106643 WeaponOfMassDestruction) 
+
+(deviceUsed HYP-AttackOnTangible-18287004 HYP-NuclearWeapon-61106643) 
+
+(instance HYP-AttackOnTangible-18287004 AttackOnTangible) 
+
+(not 
+ (relationInstanceExistsMany possesses Iran WeaponOfMassDestruction)) 
+
+(completeExtentKnown relationInstanceExistsMany) 
+
+(implies 
+  (and 
+    (subclass ?WEAPONTYPE MilitaryWeapon) 
+    (instance ?WEAPON ?WEAPONTYPE) 
+    (deviceUsed ?ATTACK ?WEAPON) 
+    (instance ?ATTACK AttackOnTangible) 
+    (capableOfDoing ?AGENT ?ATTACK agent)) 
+  (relationInstanceExistsMany possesses ?AGENT ?WEAPONTYPE)) 
+
+
+(queryyn
+(implies 
+   (and 
+       (instance ?ATTACK AttackOnTangible) 
+       (deviceUsed ?ATTACK ?WEAPON) 
+       (instance ?WEAPON NuclearWeapon) 
+       (eventOccursAt ?ATTACK PersianGulfRegion)) 
+   (not 
+       (capableOfDoing Iran ?ATTACK agent))))
+
+(answer Yes)

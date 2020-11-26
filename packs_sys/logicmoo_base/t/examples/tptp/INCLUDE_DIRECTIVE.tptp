@@ -1,0 +1,9 @@
+% -----------------------------------------------------------------------------
+% Name: INCLUDE DIRECTIVE
+%
+% Should be able to process include directives.
+% -----------------------------------------------------------------------------
+
+include('INCLUDED_FILE.tptp').
+
+fof(goal, conjecture, p).

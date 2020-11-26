@@ -1,0 +1,206 @@
+(note TQF231c)
+(abort)
+
+(implies 
+ (inReactionTo ?ACT ?EVENT) 
+ (cfImplies 
+ (not 
+ (eventOccurs ?EVENT)) 
+ (not 
+ (eventOccurs ?ACT)))) 
+
+(inReactionTo RevolutionaryGuardHarassmentCampaign OperationEarnestWill) 
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance GroupOfReflaggedTankers 
+ (GroupFn OilTanker)) 
+
+(subOrganizations 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(officialArmedForces 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(implies 
+ (and 
+ (agent ?ACT ?AGENT) 
+ (subOrganizations 
+ (GovernmentFn ?COUNTRY) ?AGENT)) 
+ (agent ?ACT ?COUNTRY)) 
+
+(agent OperationEarnestWill 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(subOrganizations 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(officialArmedForces 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(cfImplies 
+ (not 
+ (eventOccurs OperationEarnestWill)) 
+ (not 
+ (eventOccurs RevolutionaryGuardHarassmentCampaign))) 
+
+(groupMemberType GroupOfReflaggedTankers OilTanker) 
+
+(agent OperationEarnestWill UnitedStatesOfAmerica) 
+
+(objectProtected OperationEarnestWill GroupOfReflaggedTankers) 
+
+(instance OperationEarnestWill MilitaryEscortOperation) 
+
+(implies 
+ (and 
+ (different ?EVENT ?SUB) 
+ (subProcess ?EVENT ?SUB)) 
+ (cfImplies 
+ (not 
+ (eventOccurs ?EVENT)) 
+ (not 
+ (eventOccurs ?SUB)))) 
+
+(subProcess OperationEarnestWill ReflaggedTankerStrikesMine) 
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance GroupOfReflaggedTankers 
+ (GroupFn OilTanker)) 
+
+(subOrganizations 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(officialArmedForces 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(implies 
+ (and 
+ (agent ?ACT ?AGENT) 
+ (subOrganizations 
+ (GovernmentFn ?COUNTRY) ?AGENT)) 
+ (agent ?ACT ?COUNTRY)) 
+
+(agent OperationEarnestWill 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(subOrganizations 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(officialArmedForces 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(cfImplies 
+ (not 
+ (eventOccurs OperationEarnestWill)) 
+ (not 
+ (eventOccurs ReflaggedTankerStrikesMine))) 
+
+(groupMemberType GroupOfReflaggedTankers OilTanker) 
+
+(agent OperationEarnestWill UnitedStatesOfAmerica) 
+
+(objectProtected OperationEarnestWill GroupOfReflaggedTankers) 
+
+(instance OperationEarnestWill MilitaryEscortOperation) 
+
+(implies 
+ (and 
+ (different ?EVENT ?SUB) 
+ (subProcess ?EVENT ?SUB)) 
+ (cfImplies 
+ (not 
+ (eventOccurs ?EVENT)) 
+ (not 
+ (eventOccurs ?SUB)))) 
+
+(firstSubEvents OperationEarnestWill ConvoyEntersStraitOfHormuz) 
+
+(implies 
+ (instance ?GROUP 
+ (GroupFn ?TYPE)) 
+ (groupMemberType ?GROUP ?TYPE)) 
+
+(instance GroupOfReflaggedTankers 
+ (GroupFn OilTanker)) 
+
+(subOrganizations 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(officialArmedForces 
+ (GovernmentFn ?COUNTRY) 
+ (NavyFn ?COUNTRY)) 
+
+(implies 
+ (and 
+ (agent ?ACT ?AGENT) 
+ (subOrganizations 
+ (GovernmentFn ?COUNTRY) ?AGENT)) 
+ (agent ?ACT ?COUNTRY)) 
+
+(agent OperationEarnestWill 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(subOrganizations 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(officialArmedForces 
+ (GovernmentFn UnitedStatesOfAmerica) 
+ (NavyFn UnitedStatesOfAmerica)) 
+
+(cfImplies 
+ (not 
+ (eventOccurs OperationEarnestWill)) 
+ (not 
+ (eventOccurs ConvoyEntersStraitOfHormuz))) 
+
+(groupMemberType GroupOfReflaggedTankers OilTanker) 
+
+(agent OperationEarnestWill UnitedStatesOfAmerica) 
+
+(objectProtected OperationEarnestWill GroupOfReflaggedTankers) 
+
+(instance OperationEarnestWill MilitaryEscortOperation) 
+
+(query (findall (?LATER-EVENT ?ESCORTING)
+
+(ist Iran-IraqTankerWarMt 
+(exists 
+(?GROUP) 
+(and 
+(instance ?ESCORTING MilitaryEscortOperation) 
+(agent ?ESCORTING UnitedStatesOfAmerica) 
+(objectProtected ?ESCORTING ?GROUP) 
+(groupMemberType ?GROUP OilTanker) 
+(cfImplies 
+(not 
+(eventOccurs ?ESCORTING)) 
+(not 
+(eventOccurs ?LATER-EVENT))))))
+
+))
+
+(answer OperationEarnestWill ReflaggedTankerStrikesMine
+)
+(answer OperationEarnestWill ConvoyEntersStraitOfHormuz
+)
+(answer OperationEarnestWill RevolutionaryGuardHarassmentCampaign
+)
+(end_of_file)

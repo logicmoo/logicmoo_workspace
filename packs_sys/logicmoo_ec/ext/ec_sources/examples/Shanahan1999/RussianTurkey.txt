@@ -1,0 +1,97 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Shanahan1999/RussianTurkey.e
+loading foundations/Root.e
+loading foundations/EC.e
+35 variables and 87 clauses
+relsat solver
+2 models
+---
+model 1:
+0
+Alive().
+1
+Happens(Load(), 1).
+2
++Loaded().
+Happens(Spin(), 2).
+3
+-Loaded().
+Happens(Shoot(), 3).
+4
+P
+ReleasedAt(Loaded(), 3).
+!Happens(Load(), 0).
+!Happens(Load(), 2).
+!Happens(Load(), 3).
+!Happens(Load(), 4).
+!Happens(Shoot(), 0).
+!Happens(Shoot(), 1).
+!Happens(Shoot(), 2).
+!Happens(Shoot(), 4).
+!Happens(Spin(), 0).
+!Happens(Spin(), 1).
+!Happens(Spin(), 3).
+!Happens(Spin(), 4).
+!ReleasedAt(Alive(), 0).
+!ReleasedAt(Alive(), 1).
+!ReleasedAt(Alive(), 2).
+!ReleasedAt(Alive(), 3).
+!ReleasedAt(Alive(), 4).
+!ReleasedAt(Loaded(), 0).
+!ReleasedAt(Loaded(), 1).
+!ReleasedAt(Loaded(), 2).
+!ReleasedAt(Loaded(), 4).
+---
+model 2:
+0
+Alive().
+1
+Happens(Load(), 1).
+2
++Loaded().
+Happens(Spin(), 2).
+3
+Happens(Shoot(), 3).
+4
+-Alive().
+-Loaded().
+P
+ReleasedAt(Loaded(), 3).
+!Happens(Load(), 0).
+!Happens(Load(), 2).
+!Happens(Load(), 3).
+!Happens(Load(), 4).
+!Happens(Shoot(), 0).
+!Happens(Shoot(), 1).
+!Happens(Shoot(), 2).
+!Happens(Shoot(), 4).
+!Happens(Spin(), 0).
+!Happens(Spin(), 1).
+!Happens(Spin(), 3).
+!Happens(Spin(), 4).
+!ReleasedAt(Alive(), 0).
+!ReleasedAt(Alive(), 1).
+!ReleasedAt(Alive(), 2).
+!ReleasedAt(Alive(), 3).
+!ReleasedAt(Alive(), 4).
+!ReleasedAt(Loaded(), 0).
+!ReleasedAt(Loaded(), 1).
+!ReleasedAt(Loaded(), 2).
+!ReleasedAt(Loaded(), 4).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+RussianTurkey: 0 predicates, 0 functions, 2 fluents, 3 events, 9 axioms
+encoding 0.0s
+solution 0.0s
+total 0.1s
+Discrete Event Calculus Reasoner 1.0

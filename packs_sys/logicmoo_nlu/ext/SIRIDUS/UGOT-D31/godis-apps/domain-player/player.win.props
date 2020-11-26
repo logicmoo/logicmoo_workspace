@@ -1,0 +1,36 @@
+ROOT =  C:/demo/GODIS
+TRINDIKIT = ${ROOT}/trindikit4
+GODIS = ${ROOT}/godis
+
+SEP = ;
+NUANCE=C:/Nuance/v8.5.0
+MUSICLIB=${ROOT}/musik/sve
+
+JLGUI =${ROOT}/jlGuiAgent1.1
+PLAYERGUI = ${ROOT}/talk/player_gui
+
+ALARM = ${ROOT}/TkitAlarmAgent
+
+APPDIR = ${ROOT}/godis-apps/domain-player
+INOUTNUANCE = ${APPDIR}/inoutnuance
+NUANCECP = ${NUANCE}/java/vcomsc.jar${SEP}${NUANCE}/java/nsc.jar
+
+TKITJAR = ${ROOT}/jars/tkit_oaa.jar
+NEWOAA2 = ${ROOT}/jars/oaa2-latin1.jar
+OAAJP = ${OAA_HOME}/lib/jar
+OAACP = ${NEWOAA2}${SEP}${OAAJP}/antlr-oaa.jar${SEP}${OAAJP}/concurrent-1.3.1.jar${SEP}${OAAJP}/log4j-1.2.7.jar
+
+
+JLGUICP = ${OAACP}${SEP}${TKITJAR}${SEP}${JLGUI}/oaa_jlgui.jar${SEP}${JLGUI}/lib/basicplayer2.3.jar${SEP}${JLGUI}/lib/commons-logging-api.jar${SEP}${JLGUI}/lib/jl1.0.jar${SEP}${JLGUI}/lib/jlgui2.3.jar${SEP}${JLGUI}/lib/jogg-0.0.5.jar${SEP}${JLGUI}/lib/jorbis-0.0.12.jar${SEP}${JLGUI}/lib/jspeex0.9.3.jar${SEP}${JLGUI}/lib//mp3spi1.9.1.jar${SEP}${JLGUI}/lib/tritonus_share.jar${SEP}${JLGUI}/lib/vorbisspi1.0.jar
+
+PLAYERGUICP = ${PLAYERGUI}/src${SEP}${OAACP}${SEP}${TKITJAR}
+
+ALARMCP = ${ALARM}/TkitAlarm.jar${SEP}${OAACP}
+
+INOUTNUANCECP = ${INOUTNUANCE}${SEP}${OAACP}${SEP}${NUANCECP}
+
+FAC = ${OAA_HOME}/runtime/facilitator/win32/fac.exe
+PKGDIR = ${APPDIR}/Speech
+PKG = mp3-handmade
+
+

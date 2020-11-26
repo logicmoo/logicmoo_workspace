@@ -1,0 +1,343 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FIXUPS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (multiWordString
+;;        ("free") AVI-TheWord CountNoun
+;;        (and
+;;            (isa ?AVI AVIFile)
+;;            (isa ?INST FreeThing)
+;;            (instantiationOfWork ?AVI ?INST)))
+;;
+;; =>
+;;
+;;
+;; (multiWordString
+;;   (TheList "free") AVI-TheWord CountNoun
+;;   (and
+;;     (isa :NOUN AVIFile)
+;;     (isa :NOUN FreeThing)))
+
+default mt: GeneralEnglishMt.
+F:
+ (implies 
+       (and 
+	   (not (equals ?WORD (WordWithPrefixFn ??FIRSTPREFIX ??BASE)))
+	   (isa ?ThePrefix NegativePrefix)
+	   (isa ?ThePrefix DeAdjectivalAffix)
+           (adjSemTrans ?WORD ?NUM ?FRAME ?TRANS))
+      (ist GeneralEnglishMt (adjSemTrans (WordWithPrefixFn ?ThePrefix ?WORD) ?NUM ?FRAME (not ?TRANS)))).
+
+;; (implies
+;;        (and
+;;            (isa ?THEPREFIX DeAdjectivalAffix)
+;;            (isa ?THEPREFIX NegativePrefix)
+;;            (adjSemTrans ?WORD ?NUM ?FRAME ?TRANS))
+;;        (or
+;;            (equals ?WORD
+;;                (WordWithPrefixFn ??FIRSTPREFIX ??BASE))
+;;            (ist GeneralEnglishMt
+;;                (adjSemTrans
+;;                    (WordWithPrefixFn ?THEPREFIX ?WORD) ?NUM ?FRAME
+;;                    (not ?TRANS)))))
+
+
+default Mt: BaseKB.  
+F: (implies (givenNames ?AGNT ??STRING) (isa ?AGNT Agent-Generic)).
+F: (implies (and (arityMin ?PRED ??ARITY)  (isa ?PRED Function-Denotational) )(isa ?PRED VariableArityFunction)).
+F: (implies (and (arityMin ?PRED ??ARITY)  (isa ?PRED Predicate) )(isa ?PRED VariableArityPredicate)).
+F: (implies (arityMax ?PRED ??ARITY) (isa ?PRED VariableArityRelation)).
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; IsaFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default Mt: BaseKB.        
+constant: IsaFn.
+isa: CollectionDenotingFunction UnaryFunction Function-Denotational.
+arity: 1.
+resultIsa: Collection.
+arg1Isa: Thing. 
+F:  (functionCorrespondingPredicate-Generic IsaFn isa 2).
+F: (implies (isa ?INST ?COL) (equals (IsaFn ?INST) ?COL)).
+F: (isa ?INST (IsaFn ?INST)).
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; substituteFrameKeywords
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default Mt: BaseKB.        
+constant: substituteFrameKeywords.
+F: (isa substituteFrameKeywords Predicate).
+F: (arity substituteFrameKeywords 6).
+
+F: (comment substituteFrameKeywords "(substituteFrameKeywords +TEMPLATE +SUBJECT +EVENT +OBJECT +TARGET -FACTS)").
+
+F: (substituteFrameKeywords ?TEMPLATE ?SUBJECT ?EVENT ?OBJECT ?TARGET 
+              (SubstituteFormulaFn ?OBJECT :OBJECT 
+                   (SubstituteFormulaFn ?SUBJECT :SUBJECT 
+                       (SubstituteFormulaFn ?EVENT :ACTION 
+                           (SubstituteFormulaFn ?TARGET :OBLIQUE-OBJECT 
+                             (SubstituteFormulaFn ?SUBJECT :NOUN 
+                                (SubstituteFormulaFn (IsaFn ?SUBJECT) :REPLACE ?TEMPLATE))))))).
+
+
+                                                                                                                                                     
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; E2C-Parses-CCW
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+constant: E2C-Parses-CCW.
+default mt: UniversalVocabularyMt.
+isa :  PublishedMaterial TextualPCW .
+
+default mt: BaseKB.
+contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW) .
+
+;;;default mt: TKB-FETSourceDocumentsMt.
+;;;contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW)  .
+
+                                                       
+constant: E2C-Parses-CCW.
+default mt: UniversalVocabularyMt.
+isa :  PublishedMaterial TextualPCW .
+
+default mt: UniversalVocabularyMt.
+constant: DoomTemplateParsingMt.
+isa: EnglishLexicalMicrotheory TemplateParsingMicrotheory.
+default mt: BaseKB.
+genlMt: RKFParsingMt.
+default mt: UniversalVocabularyMt.
+constant: nlTemplateCatagoryForInstance.
+isa: BinaryPredicate NLPredicate.
+arity: 2.
+F: (argsIsa nlTemplateCatagoryForInstance Collection).
+F: (arg2Genl nlTemplateCatagoryForInstance ParsingTemplateCategory).
+F: (transitiveViaArg nlTemplateCatagoryForInstance genls 1).
+;;;F: (transitiveViaArg nlTemplateCatagoryForInstance genls 2).
+
+default mt: DoomTemplateParsingMt.
+contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW) .
+
+;;;default mt: TKB-FETSourceDocumentsMt.
+;;;contextOfPCW :  (ContextOfPCWFn E2C-Parses-CCW)  .
+
+
+default mt: (ParseMtForSourceFn E2C-Parses-CCW).
+
+default mt: UniversalVocabularyMt.
+
+F: (denotation He-TheWord SubjectPronoun 0 
+       (PronounFn ThirdPerson-NLAttr Singular-NLAttr Masculine-NLAttr SubjectPronoun)).
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; not used except when all else fails
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+constant:  hypotheticSubjectVerbObjectPrepOblique .
+constant:  hypotheticSubjectVerbPrepObjectOblique.
+constant:  hypotheticSubjectVerbObjectPrep .
+constant:  hypotheticSubjectVerbPrepObject .
+constant:  hypotheticSubjectVerbObject .
+constant:  hypotheticSubjectVerbPrep .
+constant:  hypotheticSubjectVerb .
+F: (and
+(isa hypotheticSubjectVerbObjectPrepOblique QuintaryPredicate)
+(isa hypotheticSubjectVerbPrepObjectOblique QuintaryPredicate)
+(isa hypotheticSubjectVerbObjectPrep QuaternaryPredicate)
+(isa hypotheticSubjectVerbPrepObject QuaternaryPredicate)
+(isa hypotheticSubjectVerbObject TernaryPredicate)
+(isa hypotheticSubjectVerbPrep TernaryPredicate)
+(isa hypotheticSubjectVerb BinaryPredicate)).
+
+
+
+
+
+;; default mt: UniversalVocabularyMt.
+;; constant: hypotheticDenotation.
+;; isa: TernaryPredicate.
+;; F: (isa hypotheticDenotation TernaryPredicate).
+;; F: (arg1Isa hypotheticDenotation IndeterminateTerm).
+;; F: (arg2Isa hypotheticDenotation TermPhrasesConstraint).
+;; F: (arg3Isa hypotheticDenotation LexicalWord).  ;; or CharacterString?
+;; default mt: UniversalVocabularyMt.
+;; F: (implies
+;;        (and
+;;            (posOfPhraseType ?PHRASETYPE ?POSMASTER)
+;;            (genls  ?POS ?POSMASTER)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (hypotheticDenotation ?HYPOTHETIC ?PHRASETYPE ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;;         ;F: (hypotheticDenotation The-Slow-Car Slow-TheWord Adjective)
+;;;F: (hypotheticDenotation The-Slow-Car Car-TheWord Noun)
+;;
+;;;hypotheticPartOfSpeech         /LexicalWord
+;;;CycLReifiableDenotationalTerm NLWordForm SpeechPart
+;;
+;;
+;; default mt: BaseKB.
+;; constant: lexicallySubsumed.
+;; isa: BinaryPredicate.
+;; arg1Isa: Thing.
+;; arg2Isa: Thing.
+;; arg1Format: SetTheFormat.
+;; arg2Format: SetTheFormat.
+;; default mt: UniversalVocabularyMt.
+;; arg1Format: SetTheFormat.
+;; arg2Format: SetTheFormat.
+;; default mt: BaseKB.
+;; default mt: BaseKB.
+;; genlOrSpecPreds: genls isa equals posOfPhraseType nlPhraseTypeForTemplateCategory.
+;; default mt: BaseKB.
+;; F: (implies  (genlOrSpecPreds lexicallySubsumed ?PRED)
+;;      (ist BaseKB  (implies (?PRED ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2)))).
+;;
+;; F:  (and (implies (posOfPhraseType ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;; (backchainEncouraged lexicallySubsumed)
+;;  (implies (isa ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (genls ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (equals ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))
+;;  (implies (nlPhraseTypeForTemplateCategory ?ARG1 ?ARG2)(lexicallySubsumed ?ARG1 ?ARG2))).
+;;
+;; default mt: BaseKB.
+;;
+;; F: (lexicallySubsumed ProperNoun Noun).
+;; F: (implies
+;;        (and
+;;            (hypotheticDenotation ?HYPOTHETIC ?POSSOME ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (lexicallySubsumed ?POS ?POSSOME))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;;
+;;;F: (hypotheticDenotation The-Slow-Car Slow-TheWord Adjective)
+;;;F: (hypotheticDenotation The-Slow-Car Car-TheWord Noun)
+;;
+;;;hypotheticPartOfSpeech         /LexicalWord
+;;;CycLReifiableDenotationalTerm NLWordForm SpeechPart
+;;
+;; default mt: UniversalVocabularyMt.
+;; F: (implies
+;;        (and
+;;            (posOfPhraseType ?PHRASETYPE ?POSMASTER)
+;;            (genls  ?POS ?POSMASTER)
+;;            (speechPartPreds ?POS ?PRED)
+;;            (hypotheticDenotation ?HYPOTHETIC ?PHRASETYPE ?STRING)
+;;            (wordForms ?WORD ?PRED ?STRING))
+;;        (hypotheticDenotation ?HYPOTHETIC ?POS ?WORD)).
+;;
+;; default mt: (ParseMtForSourceFn E2C-Parses-CCW).
+;;
+;; F:   (implies (and (hypotheticDenotation ?HYPOTHETIC ?POS ?THEWORD) (denotation ?THEWORD ?POS ?N0 ?WHAT)) (isa ?HYPOTHETIC ?WHAT)).
+;;;F:   (implies (and (hypotheticDenotation ?HYPOTHETIC Pronoun ?THEWORD) (denotation ?THEWORD SubjectPronoun ?N0 ?WHAT)) (equals ?HYPOTHETIC ?WHAT)).
+;;;F:   (implies (and (hypotheticDenotation ?HYPOTHETIC ?Pronoun ?THEWORD) (denotation ?THEWORD ObjectPronoun ?N0 ?WHAT)) (equals ?HYPOTHETIC ?WHAT)).
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; DoomCyclifyFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+default mt: UniversalVocabularyMt.
+constant: DoomCyclifyFn.
+isa:  VariableArityFunction EvaluatableFunction  .
+resultIsa:  (ListOfTypeFn CycLSentence)  .
+arg1QuotedIsa:  SubLString  .
+F: (evaluationDefn DoomCyclifyFn (SubLQuoteFn 'DOOM-CYCLIFY)).
+
+F:(comment  DoomCyclifyFn  "A function mapping English string to ordered lists of CycL interpretations. (evaluate ?W (DoomCyclifyFn \"I know you\" ))" ) .
+F:(exampleSentences  DoomCyclifyFn  
+  (#$evaluate ?X 
+  (#$DoomCyclifyFn "Two small curved ramps on either side of the
+room lead north to the lower part of the bridge, and a large circular
+skylight shows the space outside the ship"))).
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  paraphrasePattern / ParaphrasePatternFn
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+default mt: UniversalVocabularyMt.
+constant: ReformulatorTestCase.
+isa: KBContentTestSpecificationType.
+genls: NLGenerationIntegrityTest.
+constant: paraphrasePattern.
+isa: FunctionalSlot BinaryPredicate TimeDependentRelation CycLReformulationRulePredicate StrictlyFunctionalPredicate CycLReformulationRulePredicate 
+  TransitiveBinaryPredicate IntangibleObjectRelatingPredicate ReformulatorDirectivePredicate DefaultMonotonicPredicate .
+genlPreds: reformulatorRule.
+constant: ParaphrasePatternFn.
+isa: EvaluatableFunction UnaryFunction TermMacroFunction NLGenerationFunction.
+genlFunctions: (FunctionToArg 2 paraphrasePattern).
+
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO functionCorrespondsToPredicate: (paraphrasePattern 2).;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO ;; TODO ;; TODO ;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+;; TODO 
+
+resultQuotedIsa: CycLDenotationalTerm.
+constant: paraphrasePattern.
+conceptuallyRelated: rewriteOf.
+argsQuotedIsa: CycLDenotationalTerm.
+afterAdding :  (SubLQuoteFn 'CYC-ADD-REFORMULATION-ASSERTION).
+afterRemoving :  (SubLQuoteFn 'CYC-REMOVE-REFORMULATION-ASSERTION).
+strictlyFunctionalInArgs: 2.
+canonicalizerDirectiveForAllArgs: AllowGenericArgVariables LeaveSomeTermsAtEL.
+F: (interArgIsa paraphrasePattern 1 NLPhrase 2 TemplateParsingSyntacticConstraint).
+F: (interArgGenls paraphrasePattern 1 NLPhraseType 2 ParsingTemplateCategory).
+F: (interArgIsa paraphrasePattern 1 SubLString 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 EnglishWord 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 SententialConstituent 2 TemplateParsingSyntacticConstraint).
+F: (interArgIsa paraphrasePattern 1 CycLVariable 2 CycLVariable).
+F: (implies (interArgIsa1-2 paraphrasePattern ?C ?CC) (interArgResultIsa ParaphrasePatternFn 1 ?C ?CC)).
+F: (implies (interArgGenls paraphrasePattern 1 ?C 2 ?CC) (interArgResultGenl ParaphrasePatternFn 1 ?C ?CC)).
+F: (implies (?PRED paraphrasePattern ?VAL) (?PRED (ParaphrasePatternFn ?VAL) ?VAL)).
+;;;F: (paraphrasePattern (ParaphrasePatternFn ?ARG1) ((FunctionToArg 2 paraphrasePattern) ?ARG1)).
+F: (paraphrasePattern (ParaphraseFn ?ARG1) (ParaphrasePatternFn ?ARG1)).
+inTopic:  SubcategorizationFrames-Lexicon-Topic.
+
+default mt: DoomTemplateParsingMt.
+  F: (and
+  (paraphrasePattern NLSentence STemplate)
+  (paraphrasePattern NounPhrase NPTemplate)
+  (paraphrasePattern (PhraseFn-Bar1 Noun) NPTemplate)
+  (paraphrasePattern (ParaphraseFn-Np ?ARG1) (ParaphrasePatternFn ?ARG1))
+
+  (paraphrasePattern (ConcatenatePhrasesFn . ?ARG1) (ParaphrasePatternFn (TheList . ?ARG1)))
+  (paraphrasePattern (BestStringOfNLPhraseFn ?ARG1) (ParaphrasePatternFn (StringTokenizeFn ?ARG1 " ")))
+ ;;VariableArityFunction NLFunction 
+  (paraphrasePattern (TheList ?ARG1) (ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (TheList . ?ARGS) (NLPatternList (MapFunctionOverList ParaphrasePatternFn (TheList . ?ARGS))))
+  (paraphrasePattern (ParaphrasePatternFn (TheList ?ARG1))(ParaphrasePatternFn ?ARG1))
+  (paraphrasePattern (ParaphrasePatternFn (TheList . ?ARGS))(NLPatternList (MapFunctionOverList ParaphrasePatternFn (TheList . ?ARGS))))).
+
+
+

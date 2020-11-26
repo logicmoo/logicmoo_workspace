@@ -1,0 +1,3 @@
+[Drive]-
+   -obj->[Car],
+   -agnt->[Boy: John]

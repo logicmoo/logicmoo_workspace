@@ -1,0 +1,12 @@
+Junk-Rule: If a message is from a retailer then the message is not important.
+Delivery-Rule: If a message is from someone from who Karen awaits a delivery then the message is important.
+Delivery-Rule overrides Junk-Rule.
+Karen awaits a delivery from ParisCo.
+FaveCo is a retailer.
+BabyCo is a retailer.
+ParisCo is a retailer.
+FaveCo-Rule: If a message is from FaveCo then the message is important.
+FaveCo-Rule overrides Junk-Rule.
+110 is a message and is from ParisCo.
+116 is a message and is from FaveCo.
+211 is a message and is from BabyCo.

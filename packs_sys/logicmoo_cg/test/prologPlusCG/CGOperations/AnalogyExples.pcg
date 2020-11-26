@@ -1,0 +1,62 @@
+analogy(_source, _targetBefore, _targetAfter) :-
+   cg(_source, _targetBefore), 
+   _targetAfter is _targetBefore:copy(), 
+   _targetAfter:analogy(_source).
+
+// An Example of an analogy between two CGs
+cg([Man:karim]<-agnt-[Cut]-
+		-obj->[Apple]-
+			-colorOf->[Color: yellow],
+			-attr->[Good];
+		-instr->[Knife],
+		-manr->[Strong],
+    [Woman]<-agnt-[Cut]-obj->[Orange]-colorOf->[Color: red]).
+
+// This example illustrates the case where some parts of the source CG cannot be transfered because 
+// their transfer will violate the canonicity of the CG.
+cg([Man:karim]<-agnt-[Cut]-
+		-obj->[Apple]-
+			-colorOf->[Color: yellow],
+			-attr->[Good];
+		-instr->[Knife],
+		-manr->[Strong],
+    [Monkey]<-agnt-[Drink]-obj->[Milk]).
+
+// An Example of an analogy between two CGs that illustrates the possibility of several overlap (matching):
+// at least : three possible matching: a matching with 1 relation (attr) matched, a matching with 2 relations (colorOf and sizeOf)
+// and a matching with 3 relations (agnt, obj, colorOf). analogy will select the third matching because it has the maximal overlap.
+cg([Man:karim]-
+	-colorOf->[Color:white],
+	-sizeOf->[Size: big],
+	<-agnt-[Cut]-
+	                -obj->[Apple]-
+		             -colorOf->[Color: yellow],
+		             -attr->[Good];
+	                -instr->[Knife],
+	                -manr->[Strong],
+    [Nice]<-attr-[Woman]<-agnt-[Cut]-obj->[Orange]-
+			              -sizeOf->[Size: small],
+			              -colorOf->[Color: red]).
+
+// An Example of an analogy between two compound CGs (CGs with contexts). Note that the analogy of embedded 
+// contexts is sensitive to analogy of antecedent contexts.
+   // t is t1:toCG(), 
+analogy2(s, t1, t2) :-
+   cg3(s, t1),
+   t2 is t1:copy(),
+   concOfCG(e_s, [State : _], s),
+   concOfCG(e_t2, [State :_], t2),
+   t2:analogy(e_t2, s, e_s).
+   
+
+cg3([State = [Star : sun]-
+	         -Mass->[Mass]-greatherThan->[Mass]<-Mass-[Planet :p]-Temperature->[Temperature]<-greatherThan-[Temperature *t],
+	         -Temperature->[Temperature ?t] 
+	]-cause->
+     [Event = [Star : sun]<-pat-[Attract]-obj->[Planet : p]
+	]-cause->
+     [Event = [Planet:p]<-pat-[RevolveAround]-obj->[Star : sun] ],
+     [State = [Nucleus]-
+	         -Mass->[Mass]-greatherThan->[Mass]<-Mass-[Electron]-Charge->[Charge]<-oppositeSign-[Charge *c],
+	         -Charge->[Charge ?c] 
+	]).

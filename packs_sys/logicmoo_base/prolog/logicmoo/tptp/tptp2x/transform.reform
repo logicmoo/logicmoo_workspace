@@ -1,0 +1,1508 @@
+%==============================================================================
+%----Convert problems with finite HU to propositional problems (slowly)
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Instantiate variables from list in all possible ways
+instantiate_variables([],_).
+
+instantiate_variables([Variable|RestOfVariables],Constants):-
+    tptp2X_member(Variable,Constants),
+    instantiate_variables(RestOfVariables,Constants).
+%------------------------------------------------------------------------------
+%----Make all the ground instances of clauses using the constants
+make_all_ground_instances([],_,[]).
+
+make_all_ground_instances([FirstClause|RestOfClauses],Constants,
+GroundClauses):-
+    tptp2X_syntax_extract_variables(FirstClause,_,FirstVariables),
+    findall(FirstClause,instantiate_variables(FirstVariables,Constants),
+FirstGroundInstances),
+    make_all_ground_instances(RestOfClauses,Constants,RestOfGroundInstances),
+    tptp2X_append(FirstGroundInstances,RestOfGroundInstances,GroundClauses).
+%------------------------------------------------------------------------------
+%----Go through literals replacing ground atoms by propositions
+replace_atoms_by_propositions([],Index,Mappings,[],Index,Mappings).
+
+%----Case that the mapping is known already
+replace_atoms_by_propositions([FirstLiteral|RestOfLiterals],Index,Mappings,
+[PropLiteral|RestOfPropLiterals],NewIndex,NewMappings):-
+    FirstLiteral =.. [Sign,Atom],
+    tptp2X_member(Atom-PropAtom,Mappings),
+    !,
+    PropLiteral =.. [Sign,PropAtom],
+    replace_atoms_by_propositions(RestOfLiterals,Index,Mappings,
+RestOfPropLiterals,NewIndex,NewMappings).
+
+%----Case that the mapping is unknown, so make one
+replace_atoms_by_propositions([FirstLiteral|RestOfLiterals],Index,Mappings,
+[PropLiteral|RestOfPropLiterals],NewIndex,NewMappings):-
+    FirstLiteral =.. [Sign,Atom],
+    concatenate_atoms([p,Index],PropAtom),
+    PropLiteral =.. [Sign,PropAtom],
+    MiddleIndex is Index + 1,
+    replace_atoms_by_propositions(RestOfLiterals,MiddleIndex,[Atom-PropAtom|
+Mappings],RestOfPropLiterals,NewIndex,NewMappings).
+%------------------------------------------------------------------------------
+%----Replace ground instances of atoms by propositions
+replace_by_propositions([],_,_,[]).
+
+replace_by_propositions([input_clause(Name,Status,Literals)|
+RestOfGroundClauses],Index,Mappings,[input_clause(Name,Status,PropLiterals)|
+RestOfPropositionalClauses]):-
+    replace_atoms_by_propositions(Literals,Index,Mappings,PropLiterals,
+NewIndex,NewMappings),
+    replace_by_propositions(RestOfGroundClauses,NewIndex,NewMappings,
+RestOfPropositionalClauses).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to remove implications and other non-standard stuff
+%==============================================================================
+remove_top_level_and([],[]).
+
+%----Don't remove from conjecture
+remove_top_level_and([fof(Name,conjecture,Formula)|RestOfFormulae],
+[fof(Name,conjecture,Formula)|RestOfNoAndFormulae]):-
+    !,
+    remove_top_level_and(RestOfFormulae,RestOfNoAndFormulae).
+ 
+remove_top_level_and([fof(Name,Type,(LHS & RHS))|RestOfFormulae],
+NoAndFormulae):-
+    !,
+    concatenate_atoms([Name,'_AndLHS'],LHSName),
+    concatenate_atoms([Name,'_AndRHS'],RHSName),
+    remove_top_level_and([fof(LHSName,Type,LHS),fof(RHSName,Type,RHS)|
+RestOfFormulae],NoAndFormulae).
+ 
+remove_top_level_and([FirstFormula|RestOfFormulae],[FirstFormula|
+RestOfNoAndFormulae]):-
+    remove_top_level_and(RestOfFormulae,RestOfNoAndFormulae).
+%------------------------------------------------------------------------------
+%----Remove <= <~> ~| and ~&
+%DEBUG standardize_formula(F,_):-write('SF--- '),write(F),nl,fail.
+
+%----Catch variables early (for THF case)
+standardize_formula(Variable,Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+%----Remove <=
+standardize_formula((P <= Q),StandardisedImplication):-
+    !,
+    standardize_formula((Q => P),StandardisedImplication).
+
+%----Remove <~>
+standardize_formula((P <~> Q),(~(P1 <=> Q1))):-
+    !,
+    standardize_formula(P,P1),
+    standardize_formula(Q,Q1).
+
+%----Remove ~&
+standardize_formula((P ~& Q),(~(P1 & Q1))):-
+    !,
+    standardize_formula(P,P1),
+    standardize_formula(Q,Q1).
+
+%----Remove ~|
+standardize_formula((P '~|' Q),(~ (P1 ; Q1))):-
+    !,
+    standardize_formula(P,P1),
+    standardize_formula(Q,Q1).
+
+%----Remove => false. For THF prevent instantiation
+standardize_formula(LHS => RHS,~ (StandardisedLHS)):-
+    RHS == '$false',
+    !,
+    standardize_formula(LHS,StandardisedLHS).
+
+%----Remove true =>
+standardize_formula(LHS => RHS,StandardisedRHS):-
+    LHS == '$true',
+    !,
+    standardize_formula(RHS,StandardisedRHS).
+
+%----Remove true & anything
+standardize_formula(LHS & RHS,StandardisedLHS):-
+    RHS == '$true',
+    !,
+    standardize_formula(LHS,StandardisedLHS).
+
+standardize_formula(LHS & RHS,StandardisedRHS):-
+    LHS == '$true',
+    !,
+    standardize_formula(RHS,StandardisedRHS).
+
+%----Remove false | anything
+standardize_formula(LHS | RHS,StandardisedLHS):-
+    RHS == '$false',
+    !,
+    standardize_formula(LHS,StandardisedLHS).
+
+standardize_formula(LHS | RHS,StandardisedRHS):-
+    LHS == '$false',
+    !,
+    standardize_formula(RHS,StandardisedRHS).
+
+%----Do all others by parts
+standardize_formula(QuantifiedFormula,StandardisedQuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variables,Formula),
+    !,
+    standardize_formula(Formula,StandardizedFormula),
+    tptp_quantified_formula(StandardisedQuantifiedFormula,Quantifier,Variables,
+StandardizedFormula).
+
+standardize_formula(BinaryFormula,StandardizedBinaryFormula):-
+    tptp_binary_formula(BinaryFormula,BinaryConnective,LHS,RHS),
+    !,
+    standardize_formula(LHS,StandardizedLHS),
+    standardize_formula(RHS,StandardizedRHS),
+    tptp_binary_formula(StandardizedBinaryFormula,BinaryConnective,
+StandardizedLHS,StandardizedRHS).
+
+standardize_formula(UnaryFormula,StandardizedUnaryFormula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    standardize_formula(Formula,StandardizedFormula),
+    tptp_unary_formula(StandardizedUnaryFormula,UnaryConnective,
+StandardizedFormula).
+
+standardize_formula(P,P).
+%------------------------------------------------------------------------------
+standardize_formulae([],[]).
+
+standardize_formulae([AnnotatedFormula|RestOfFormulae],
+[StandardizedAnnotatedFormula|RestOfStandardizedFormulae]):-
+    AnnotatedFormula =.. [Language,Name,Role,Formula|Rest],
+    standardize_formula(Formula,StandardizedFormula),
+    StandardizedAnnotatedFormula =.. [Language,Name,Role,StandardizedFormula|
+Rest],
+    standardize_formulae(RestOfFormulae,RestOfStandardizedFormulae).
+%------------------------------------------------------------------------------
+%----These quick tricks added by Ben Cockfield. Smokin'!
+%----Recommended by McCune
+and_or_not_limit((~(P <=> Q)),((P1 ; Q1) & (~ P1 ; ~ Q1))):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+and_or_not_limit((P <=> Q),((~ P1 ; Q1) & (~ Q1 ; P1))):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+and_or_not_limit(~(P <= Q),(~ P1 & Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+and_or_not_limit(~(P => Q),(P1 & ~ Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Standard approach to removing implications
+%----Remove =>
+and_or_not_limit((P => Q),(~ P1 ; Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Remove <=
+and_or_not_limit((P <= Q),(P1 ; ~ Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Remove <~>
+and_or_not_limit((P <~> Q),((P1 & ~ Q1) ; (~ P1 & Q1))):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Remove ~&
+and_or_not_limit((P ~& Q),(~(P1 & Q1))):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Remove ~|
+and_or_not_limit((P '~|' Q),(~ (P1 ; Q1))):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----Do all others by parts
+and_or_not_limit(! X : P,! X : P1):-
+    !,
+    and_or_not_limit(P,P1).
+
+and_or_not_limit(? X : P,? X : P1):-
+    !,
+    and_or_not_limit(P,P1).
+
+and_or_not_limit((P & Q),(P1 & Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+and_or_not_limit((P ; Q),(P1 ; Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+%----|;BUG
+and_or_not_limit((P '|' Q),(P1 ; Q1)):-
+    !,
+    and_or_not_limit(P,P1),
+    and_or_not_limit(Q,Q1).
+
+and_or_not_limit((~ P),(~ P1)):-
+    !,
+    and_or_not_limit(P,P1).
+
+and_or_not_limit(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Make lists of quantified variable single ones. Assumes => and <=> 
+%----are gone.
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Any single variable not in a list get put in one - TPTP standard
+single_variable_quantification(QuantifiedFormula,NewQuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,Variable,Formula),
+    var(Variable),
+    !,
+    single_variable_quantification(Formula,SingleVariablesFormula),
+    Quantification =.. [Quantifier,[Variable]],
+    NewQuantifiedFormula =.. [:,Quantification,SingleVariablesFormula].
+
+single_variable_quantification(QuantifiedFormula,NewQuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,[Variable],Formula),
+    !,
+    single_variable_quantification(Formula,SingleVariablesFormula),
+    Quantification =.. [Quantifier,[Variable]],
+    NewQuantifiedFormula =.. [:,Quantification,SingleVariablesFormula].
+
+single_variable_quantification(QuantifiedFormula,NewQuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,[Variable|
+RestOfVariables],Formula),
+    !,
+    InnerQuantification =.. [Quantifier,RestOfVariables],
+    InnerQuantifiedFormula =.. [:,InnerQuantification,Formula],
+    single_variable_quantification(InnerQuantifiedFormula,
+SingleVariablesFormula),
+    Quantification =.. [Quantifier,[Variable]],
+    NewQuantifiedFormula =.. [:,Quantification,SingleVariablesFormula].
+
+single_variable_quantification(BinaryFormula,SingleVariablesFormula):-
+    tptp_binary_formula(BinaryFormula,_,_,_),
+    !,
+%----Have to get it again to keep internal representation
+    BinaryFormula =.. [BinaryConnective,LHS,RHS],
+    single_variable_quantification(LHS,LHS1),
+    single_variable_quantification(RHS,RHS1),
+    SingleVariablesFormula =.. [BinaryConnective,LHS1,RHS1].
+
+single_variable_quantification(UnaryFormula,SingleVariablesFormula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    single_variable_quantification(Formula,Formula1),
+    SingleVariablesFormula =.. [UnaryConnective,Formula1].
+
+single_variable_quantification(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to distinguish quantified variables
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Make a new Prolog variable for this one
+replace_variable(OldVariable,Variable,NewVariable,NewVariable):-
+    var(Variable),
+    Variable == OldVariable,
+    !.
+
+replace_variable(_,Variable,_,Variable):-
+    var(Variable),
+    !.
+
+replace_variable(_,[],_,[]):-
+%----Must cut to avoid backtracking to function case.
+    !.
+
+replace_variable(OldVariable,[FirstTerm|RestOfTerms],NewVariable,
+[FirstNewTerm|RestOfNewTerms]):-
+    !,
+    replace_variable(OldVariable,FirstTerm,NewVariable,FirstNewTerm),
+    replace_variable(OldVariable,RestOfTerms,NewVariable,RestOfNewTerms).
+
+replace_variable(OldVariable,Term,NewVariable,NewTerm):-
+    nonvar(Term),
+    Term =.. [Symbol|TermArguments],
+    replace_variable(OldVariable,TermArguments,NewVariable,NewArguments),
+    NewTerm =.. [Symbol|NewArguments].
+%------------------------------------------------------------------------------
+%----Make new Prolog variables for these
+replace_variable_list([],Formula,[],Formula).
+
+replace_variable_list([FirstVariable|RestOfVariables],Formula,
+[FirstNewVariable|RestOfNewVariables],ReplacedFormula):-
+    replace_variable(FirstVariable,Formula,FirstNewVariable,MiddleFormula),
+    replace_variable_list(RestOfVariables,MiddleFormula,RestOfNewVariables,
+ReplacedFormula).
+%------------------------------------------------------------------------------
+%----Make quantified variable unique (in a Prolog sense)
+%DEBUG unique_quantification(F,_):-write('=========='),nl,write(F),fail.
+
+unique_quantification(Variable,Variable):-
+    looks_like_a_variable(Variable),
+    !.
+
+unique_quantification(QuantifiedFormula,UniqueQuantifiedFormula):-
+    tptp_quantified_formula(QuantifiedFormula,Quantifier,[Variable],Formula),
+    !,
+    replace_variable(Variable,Formula,NewVariable,ReplacedFormula),
+    unique_quantification(ReplacedFormula,UniqueFormula),
+    Quantification =.. [Quantifier,[NewVariable]],
+    UniqueQuantifiedFormula =.. [:,Quantification,UniqueFormula].
+
+%----Do other connectives by parts
+unique_quantification(BinaryFormula,UniqueBinaryFormula):-
+    tptp_binary_formula(BinaryFormula,_,_,_),
+    !,
+%----Have to get it again to keep internal representation
+    BinaryFormula =.. [BinaryConnective,LHS,RHS],
+    unique_quantification(LHS,NewLHS),
+    unique_quantification(RHS,NewRHS),
+    UniqueBinaryFormula =.. [BinaryConnective,NewLHS,NewRHS].
+
+unique_quantification(UnaryFormula,UniqueUnaryFormula):-
+    tptp_unary_formula(UnaryFormula,UnaryConnective,Formula),
+    !,
+    unique_quantification(Formula,Formula1),
+    UniqueUnaryFormula =.. [UnaryConnective,Formula1].
+
+%----Atoms get returned as is
+unique_quantification(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to move out quantifiers (Taken from Bundy). Assumes => and
+%----<=> are gone.
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Move forall out through negation
+do_move_out_quantifiers(~ (! X : P),(? X : (~ P))).
+
+%----Move exists out through negation
+do_move_out_quantifiers(~ (? X : P),(! X : (~ P))).
+
+%----Do binary connectives by parts
+do_move_out_quantifiers((! X : P) & Q,! X : (P & Q)).
+    
+do_move_out_quantifiers((? X : P) & Q,? X : (P & Q)).
+    
+do_move_out_quantifiers(P & ! X : Q,! X : (P & Q)).
+
+do_move_out_quantifiers(P & ? X : Q,? X : (P & Q)).
+
+%----; cases
+do_move_out_quantifiers(((! X : P) ; Q),! X : (P ; Q)).
+    
+do_move_out_quantifiers(((? X : P) ; Q),? X : (P ; Q)).
+    
+do_move_out_quantifiers((P ; (! X : Q)),! X : (P ; Q)).
+
+do_move_out_quantifiers((P ; (? X : Q)),? X : (P ; Q)).
+
+%----Other connectives tried recursively
+do_move_out_quantifiers(! X : P,! X : P1):-
+    do_move_out_quantifiers(P,P1).
+
+do_move_out_quantifiers(? X : P,? X : P1):-
+    do_move_out_quantifiers(P,P1).
+
+do_move_out_quantifiers(~ P,~ P1):-
+    do_move_out_quantifiers(P,P1).
+
+do_move_out_quantifiers(P & Q,P1 & Q):-
+    do_move_out_quantifiers(P,P1).
+
+do_move_out_quantifiers(P & Q,P & Q1):-
+    do_move_out_quantifiers(Q,Q1).
+
+do_move_out_quantifiers((P ; Q),(P1 ; Q)):-
+    do_move_out_quantifiers(P,P1).
+
+do_move_out_quantifiers((P ; Q),(P ; Q1)):-
+    do_move_out_quantifiers(Q,Q1).
+%------------------------------------------------------------------------------
+%----To move out quantification, find one way to reduce then start from
+%----the top again. There may be a more direct approach, but I can't
+%----think of it. Shit! See reduce_quantification/2 for same hassle.
+move_out_quantifiers(P,P2):-
+    do_move_out_quantifiers(P,P1),
+%----A move has been done, so loop and start again.
+    !,
+    move_out_quantifiers(P1,P2).
+
+%----If no reduction can be done, then exit.
+move_out_quantifiers(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to move in quantifiers. Assumes => and <=> are gone.
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Commute & and ; expressions to move a part that is free of the
+%----given variable to the front
+commute_variable_free_formula(X,P & Q,P & Q):-
+    tptp2X_occurs_check(X,P),
+    !.
+
+commute_variable_free_formula(X,P & Q,Q & P):-
+    tptp2X_occurs_check(X,Q),
+    !.
+
+%----Look in the left and right hand sides
+commute_variable_free_formula(X,P & (Q & R),Q1 & (P & R1)):-
+    commute_variable_free_formula(X,Q & R,Q1 & R1).
+
+commute_variable_free_formula(X,(P & Q) & R,P1 & (Q1 & R)):-
+    commute_variable_free_formula(X,P & Q,P1 & Q1).
+
+%----; cases
+commute_variable_free_formula(X,(P ; Q),(P ; Q)):-
+    tptp2X_occurs_check(X,P),
+    !.
+
+commute_variable_free_formula(X,(P ; Q),(Q ; P)):-
+    tptp2X_occurs_check(X,Q),
+    !.
+
+commute_variable_free_formula(X,(P ; (Q ; R)),(Q1 ; (P ; R1))):-
+    commute_variable_free_formula(X,(Q ; R),(Q1 ; R1)).
+
+commute_variable_free_formula(X,((P ; Q) ; R),(P1 ; (Q1 ; R))):-
+    commute_variable_free_formula(X,(P ; Q),(P1 ; Q1)).
+%------------------------------------------------------------------------------
+%----If the quantified variable is not in the formula, drop the quantifier
+do_reduce_quantification(_,! [X] : P,P):-
+    tptp2X_occurs_check(X,P).
+
+do_reduce_quantification(_,? [X] : P,P):-
+    tptp2X_occurs_check(X,P).
+
+%----Forall over ; depends on variable usage
+do_reduce_quantification(_,(! [X] : (P ; Q)),(P1 ; (! [X] : Q1))):-
+    commute_variable_free_formula(X,(P ; Q),(P1 ; Q1)).
+
+%----Exists over & depends on variable usage
+do_reduce_quantification(_,? [X] : (P & Q),P1 & ? [X] : Q1):-
+    commute_variable_free_formula(X,P & Q,P1 & Q1).
+
+%----Move quantifiers in through negations only if permitted
+do_reduce_quantification(yes,(! X : (~ P)),(~ (? X : P))).
+    
+do_reduce_quantification(yes,(? X : (~ P)),(~ (! X : P))).
+
+%----Forall can be distributed over &
+do_reduce_quantification(_,(! [X] : (P & Q)),((! [X] : P) & (! [X1] : Q1))):-
+    replace_variable(X,Q,X1,Q1).
+
+%----Exists can be distributed over ;
+do_reduce_quantification(_,(? [X] : (P ; Q)),((? [X] : P) ; (? [X1] : Q1))):-
+    replace_variable(X,Q,X1,Q1).
+
+%----Quantifications over anything else get tried recursively
+do_reduce_quantification(ThruNegation,(! X : P),(! X : P1)):-
+    do_reduce_quantification(ThruNegation,P,P1).
+
+do_reduce_quantification(ThruNegation,(? X : P),(? X : P1)):-
+    do_reduce_quantification(ThruNegation,P,P1).
+
+do_reduce_quantification(ThruNegation,~ P,~ P1):-
+    do_reduce_quantification(ThruNegation,P,P1).
+ 
+%----For binary operators, the two sides get done independently
+do_reduce_quantification(ThruNegation,P & Q,P1 & Q):-
+    do_reduce_quantification(ThruNegation,P,P1).
+
+do_reduce_quantification(ThruNegation,P & Q,P & Q1):-
+    do_reduce_quantification(ThruNegation,Q,Q1).
+
+do_reduce_quantification(ThruNegation,(P ; Q),(P1 ; Q)):-
+    do_reduce_quantification(ThruNegation,P,P1).
+
+do_reduce_quantification(ThruNegation,(P ; Q),(P ; Q1)):-
+    do_reduce_quantification(ThruNegation,Q,Q1).
+%------------------------------------------------------------------------------
+%----To reduce quantification, find one way to reduce then start from
+%----the top again. There may be a more direct approach, but I can't
+%----think of it. Shit! (Try something like 
+%----forall(X,forall(Y,p(X) & q)) which should reduce to
+%----forall(X,p(X)) & q. Not so easy when going straight in, and there
+%----are similar examples for straight out.
+reduce_quantification(ThruNegation,P,P2):-
+    do_reduce_quantification(ThruNegation,P,P1),
+%----A reduction done, so loop and start again.
+    !,
+    reduce_quantification(ThruNegation,P1,P2).
+
+%----If no reduction can be done, then exit.
+reduce_quantification(_,P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to move in negations. Assumes => and <=> are gone.
+%==============================================================================
+%------------------------------------------------------------------------------
+negate((~ P),P1):-
+    !,
+    move_in_negations(P,P1).
+
+negate(! X : P,? X : P1):-
+    !,
+    negate(P,P1).
+
+negate(? X : P,! X : P1):-
+    !,
+    negate(P,P1).
+
+negate((P & Q),(P1 ; Q1)):-
+    !,
+    negate(P,P1),
+    negate(Q,Q1).
+
+negate((P ; Q),(P1 & Q1)):-
+    !,
+    negate(P,P1),
+    negate(Q,Q1).
+
+negate(P,(~ P)).
+%------------------------------------------------------------------------------
+move_in_negations((~ P),P1):-
+    !,
+    negate(P,P1).
+
+move_in_negations(! X : P,! X : P1):-
+    !,
+    move_in_negations(P,P1).
+
+move_in_negations(? X : P,? X : P1):-
+    !,
+    move_in_negations(P,P1).
+
+move_in_negations((P & Q),(P1 & Q1)):-
+    !,
+    move_in_negations(P,P1),
+    move_in_negations(Q,Q1).
+
+move_in_negations((P ; Q),(P1 ; Q1)):-
+    !,
+    move_in_negations(P,P1),
+    move_in_negations(Q,Q1).
+
+move_in_negations(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to Skolemize. Assumes => and <=> are gone. Assumes that
+%----All quantifiers are outside all negations.
+%==============================================================================
+%----Singly universally quantified variables
+skolemize(! [X] : P,! [X] : P1,UniversalVariables,SkolemNumber,
+NewSkolemNumber):-
+    !,
+    skolemize(P,P1,[X|UniversalVariables],SkolemNumber,NewSkolemNumber).
+
+%----Singly existentially quantified variables
+skolemize(? [X] : P1,P2,UniversalVariables,SkolemNumber,NewSkolemNumber):-
+    !,
+    concatenate_atoms(['sk',SkolemNumber],Functor),
+    NextSkolemNumber is SkolemNumber + 1,
+    X =.. [Functor|UniversalVariables],
+    skolemize(P1,P2,UniversalVariables,NextSkolemNumber,NewSkolemNumber).
+
+skolemize((P ; Q),(P1 ; Q1),UniversalVariables,SkolemNumber,
+NewSkolemNumber):-
+    !,
+    skolemize(P,P1,UniversalVariables,SkolemNumber,SkolemNumber1),
+    skolemize(Q,Q1,UniversalVariables,SkolemNumber1,NewSkolemNumber).
+
+skolemize((P & Q),(P1 & Q1),UniversalVariables,SkolemNumber,
+NewSkolemNumber):-
+    !,
+    skolemize(P,P1,UniversalVariables,SkolemNumber,SkolemNumber1),
+    skolemize(Q,Q1,UniversalVariables,SkolemNumber1,NewSkolemNumber).
+
+skolemize(P,P,_,SkolemNumber,SkolemNumber).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to move out universal quantifiers
+%==============================================================================
+%----Man, can't I do this in skolemize?????
+
+remove_universal_quantifiers(! _ : P,P1):-
+    !,
+    remove_universal_quantifiers(P,P1).
+
+remove_universal_quantifiers((P & Q),(P1 & Q1)):-
+    !,
+    remove_universal_quantifiers(P,P1),
+    remove_universal_quantifiers(Q,Q1).
+
+remove_universal_quantifiers((P ; Q),(P1 ; Q1)):-
+    !,
+    remove_universal_quantifiers(P,P1),
+    remove_universal_quantifiers(Q,Q1).
+
+remove_universal_quantifiers(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to distribute conjunctions
+%==============================================================================
+distribute_conjunctions((P ; Q),R):-
+    !,
+    distribute_conjunctions(P,P1),
+    distribute_conjunctions(Q,Q1),
+    distribute_conjunctions1((P1 ; Q1),R).
+
+distribute_conjunctions((P & Q),(P1 & Q1)):-
+    !,
+    distribute_conjunctions(P,P1),
+    distribute_conjunctions(Q,Q1).
+
+distribute_conjunctions(P,P).
+%------------------------------------------------------------------------------
+distribute_conjunctions1(((P & Q) ; (R & S)),(PR & PS & QR & QS)):-
+    !,
+    distribute_conjunctions((P ; R),PR),
+    distribute_conjunctions((P ; S),PS),
+    distribute_conjunctions((Q ; R),QR),
+    distribute_conjunctions((Q ; S),QS).
+
+distribute_conjunctions1(((P & Q) ; R),(P1 & Q1)):-
+    !,
+    distribute_conjunctions((P ; R),P1),
+    distribute_conjunctions((Q ; R),Q1).
+
+distribute_conjunctions1((P ; (Q & R)),(P1 & Q1)):-
+    !,
+    distribute_conjunctions((P ; Q),P1),
+    distribute_conjunctions((P ; R),Q1).
+
+distribute_conjunctions1(P,P).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to convert to clauses
+%==============================================================================
+%------------------------------------------------------------------------------
+make_set_from_disjunction((P ; Q),PQSet):-
+    !,
+    make_set_from_disjunction(P,PSet),
+    make_set_from_disjunction(Q,QSet),
+    tptp2X_append(PSet,QSet,PQSet).
+
+make_set_from_disjunction(P,[P]).
+%------------------------------------------------------------------------------
+put_in_sets([],[]).
+
+put_in_sets([FirstDisjunction|Rest],[FirstSet|RestSets]):-
+    make_set_from_disjunction(FirstDisjunction,FirstSet),
+    put_in_sets(Rest,RestSets).
+%------------------------------------------------------------------------------
+break_conjunctions((P & Q),PQClauses):-
+    !,
+    break_conjunctions(P,PClauses),
+    break_conjunctions(Q,QClauses),
+    tptp2X_append(PClauses,QClauses,PQClauses).
+
+break_conjunctions(P,[P]).
+%------------------------------------------------------------------------------
+make_clauses(Formulas,Clauses):-
+    break_conjunctions(Formulas,Disjunctions),
+    put_in_sets(Disjunctions,Clauses).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to call each step of the translation
+%==============================================================================
+%------------------------------------------------------------------------------
+%----New TPTP clausifying algorithm
+translate_formula_to_clauses(tptp,Formula,Clauses,SkolemNumber,
+NextSkolemNumber):-
+%----Remove implications
+    and_or_not_limit(Formula,WithoutImplications),
+%----Make single variables in each quantification
+    single_variable_quantification(WithoutImplications,SingleVariables),
+%----Make quantified variables unique
+    unique_quantification(SingleVariables,UniqueQuantified),
+%----Move in quantifiers through negation. Some will be moved out again 
+%----in the next step. This is the step different from Otter.
+    reduce_quantification(yes,UniqueQuantified,QuantifiersIn),
+%----Negations moved in
+    move_in_negations(QuantifiersIn,NegationsIn),
+%----Skolemize
+    skolemize(NegationsIn,Skolemized,[],SkolemNumber,NextSkolemNumber),
+%----Move out universal quantification
+    remove_universal_quantifiers(Skolemized,Universalized),
+%----Distribute conjunctions
+    distribute_conjunctions(Universalized,Distributed),
+%----Convert to clauses
+    make_clauses(Distributed,Clauses).
+
+%----Otter clausifying algorithm
+translate_formula_to_clauses(otter,Formula,Clauses,SkolemNumber,
+NextSkolemNumber):-
+%DEBUG write('Translate '),write(Formula),nl,
+%----Remove implications
+    and_or_not_limit(Formula,WithoutImplications),
+%DEBUG write('Simplified to '),write(WithoutImplications),nl,
+%----Make single variables in each quantification
+    single_variable_quantification(WithoutImplications,SingleVariables),
+%DEBUG write('Expanded variables '),write(SingleVariables),nl,
+%----Make quantified variables unique
+    unique_quantification(SingleVariables,UniqueQuantified),
+%DEBUG write('Renamed variables '),write(UniqueQuantified),nl,
+%----Negations moved in
+    move_in_negations(UniqueQuantified,NegationsIn),
+%DEBUG write('Literal normal form '),write(NegationsIn),nl,
+%----Skolemize
+    skolemize(NegationsIn,Skolemized,[],SkolemNumber,NextSkolemNumber),
+%DEBUG write('Skolem normal form '),write(Skolemized),nl,
+%----Move out universal quantification
+    remove_universal_quantifiers(Skolemized,Universalized),
+%DEBUG write('Removed quantifier '),write(Universalized),nl,
+%----Distribute conjunctions
+    distribute_conjunctions(Universalized,Distributed),
+%DEBUG write('Conjunctive normal form '),write(Distributed),nl,
+%----Convert to clauses
+    make_clauses(Distributed,Clauses).
+
+%----Bundy's clausifying algorithm
+translate_formula_to_clauses(bundy,Formula,Clauses,SkolemNumber,
+NextSkolemNumber):-
+%----Remove implications
+    and_or_not_limit(Formula,WithoutImplications),
+%DEBUG output_generic_formula(tptp,fof,WithoutImplications),nl,nl,
+%----Make single variables in each quantification
+    single_variable_quantification(WithoutImplications,SingleVariables),
+%----Make quantified variables unique
+    unique_quantification(SingleVariables,UniqueQuantified),
+%----Quantifiers moved out
+    move_out_quantifiers(UniqueQuantified,QuantifiersOut),
+%DEBUG output_generic_formula(tptp,fof,QuantifiersOut),nl,nl,
+%----Skolemize
+    skolemize(QuantifiersOut,Skolemized,[],SkolemNumber,NextSkolemNumber),
+%DEBUG output_generic_formula(tptp,fof,Skolemized),nl,nl,
+%----Make literals
+    move_in_negations(Skolemized,NegationsIn),
+%DEBUG output_generic_formula(tptp,fof,NegationsIn),nl,nl,
+%----Move out universal quantification
+    remove_universal_quantifiers(NegationsIn,Universalized),
+%----Distribute conjunctions
+    distribute_conjunctions(Universalized,Distributed),
+%DEBUG output_generic_formula(tptp,fof,Distributed),nl,nl,
+%----Convert to clauses
+    make_clauses(Distributed,Clauses).
+
+%----Quaife's clausifying algorithm
+translate_formula_to_clauses(quaife,Formula,Clauses,SkolemNumber,
+NextSkolemNumber):-
+%----Remove implications
+    and_or_not_limit(Formula,WithoutImplications),
+%----Make single variables in each quantification
+    single_variable_quantification(WithoutImplications,SingleVariables),
+%----Make quantified variables unique
+    unique_quantification(SingleVariables,UniqueQuantified),
+%----Negations moved in
+    move_in_negations(UniqueQuantified,NegationsIn),
+%----Move in quantifiers, not through negations
+    reduce_quantification(no,NegationsIn,QuantifiersIn),
+%----Skolemize
+    skolemize(QuantifiersIn,Skolemized,[],SkolemNumber,NextSkolemNumber),
+%----Move out universal quantification
+    remove_universal_quantifiers(Skolemized,Universalized),
+%----Distribute conjunctions
+    distribute_conjunctions(Universalized,Distributed),
+%----Convert to clauses
+    make_clauses(Distributed,Clauses).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to convert to tptp clauses
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Convert a clause by adding ++ to positive literals
+convert_to_oldtptp_literals([],[]).
+
+convert_to_oldtptp_literals([~ Atom|RestOfLiterals],[--Atom|
+RestOfTPTPLiterals]):-
+    !,
+    convert_to_oldtptp_literals(RestOfLiterals,RestOfTPTPLiterals).
+
+convert_to_oldtptp_literals([Atom|RestOfLiterals],[++Atom|
+RestOfTPTPLiterals]):-
+    convert_to_oldtptp_literals(RestOfLiterals,RestOfTPTPLiterals).
+%------------------------------------------------------------------------------
+%----Converts internal representation to tptp standard for clauses
+convert_to_oldtptp_clauses([],_,_,[]).
+
+convert_to_oldtptp_clauses([FirstClause|RestOfClauses],Name,Status,
+[input_clause(Name,Status,TPTPLiterals)|RestOfTPTPClauses]):-
+    convert_to_oldtptp_literals(FirstClause,TPTPLiterals),
+    convert_to_oldtptp_clauses(RestOfClauses,Name,Status,RestOfTPTPClauses).
+%------------------------------------------------------------------------------
+%----Make unique clause names
+make_unique_clause_names([],_,[]).
+
+make_unique_clause_names([input_clause(Name,Status,TPTPLiterals)|
+RestOfClauses],Index,[input_clause(NewName,Status,TPTPLiterals)|
+RestOfRenamedClauses]):-
+    concatenate_atoms([Name,'_',Index],NewName),
+    NextIndex is Index + 1,
+    make_unique_clause_names(RestOfClauses,NextIndex,RestOfRenamedClauses).
+%------------------------------------------------------------------------------
+%----Remove instantiated variables from a disctionary list
+remove_instantiated_variables_from_dictionary([],[]).
+
+%----If using numbervars on a clause, then don't remove it
+remove_instantiated_variables_from_dictionary([numbervars=Term|RestOfPairs],
+[numbervars=Term|NewRestOfPairs]):-
+    !,
+    remove_instantiated_variables_from_dictionary(RestOfPairs,
+NewRestOfPairs).
+
+%----This variable has been replaced by a Skolem function, so remove it
+%----from the dictionary.
+remove_instantiated_variables_from_dictionary([_=NonVariable|RestOfPairs],
+NewRestOfPairs):-
+    nonvar(NonVariable),
+    !,
+    remove_instantiated_variables_from_dictionary(RestOfPairs,NewRestOfPairs).
+
+%----This variable is retained as is.
+remove_instantiated_variables_from_dictionary([Name=Variable|RestOfPairs],
+[Name=Variable|NewRestOfPairs]):-
+    var(Variable),
+    !,
+    remove_instantiated_variables_from_dictionary(RestOfPairs,NewRestOfPairs).
+%------------------------------------------------------------------------------
+%----Variables get instantiated by Skolemization and unification. Remove 
+%----them from the dictionary as they are no longer variables.
+remove_instantiated_variables_from_dictionary_list([],[]).
+
+remove_instantiated_variables_from_dictionary_list([FirstList|RestOfLists],
+[FirstNewList|RestOfNewLists]):-
+    remove_instantiated_variables_from_dictionary(FirstList,FirstNewList),
+    remove_instantiated_variables_from_dictionary_list(RestOfLists,
+RestOfNewLists).
+%------------------------------------------------------------------------------
+%----Rename the variables in each clause and make a dictionary
+rename_variables([],_,[],[]).
+
+%----At the moment I don't try retain variable names because they
+%----get lost in the clausification anyway. Just numbervars.
+rename_variables([FirstClause|RestOfClauses],CommonClauseDictionary,
+[FirstRenamedClause|RestOfRenamedClauses],[[numbervars=FirstRenamedClause]|
+RestOfClausesDictionary]):-
+    copy_term(FirstClause-CommonClauseDictionary,FirstRenamedClause-_),
+    rename_variables(RestOfClauses,CommonClauseDictionary,
+RestOfRenamedClauses,RestOfClausesDictionary).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Simplification within clauses
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Determine of a list of literals has two complimentarily identical
+tautologous_clause(Literals):-
+    tptp2X_member(Literal,Literals),
+    tptp2X_invert_literal(Literal,NegatedLiteral),
+    tptp2X_member(AnotherLiteral,Literals),
+    NegatedLiteral == AnotherLiteral.
+
+tautologous_clause(Literals):-
+    tptp2X_member(++ '$true',Literals).
+
+tautologous_clause(Literals):-
+    tptp2X_member(-- '$false',Literals).
+%------------------------------------------------------------------------------
+%----Remove tautologous clauses
+%----If none kept, then they were all tautologies => valid
+remove_tautologies([],[],0,[input_clause(satisfiable_dummy,negated_conjecture,
+[++ '$true'])],[[]]):-
+    !.
+
+remove_tautologies([],[],Kept,[],[]):-
+    Kept > 0,
+    !.
+
+remove_tautologies([input_clause(_,_,Literals)|RestOfClauses],
+[_|RestOfDictionary],Kept,TautologyFreeClauses,TautologyFreeDictionary):-
+    tautologous_clause(Literals),
+    !,
+    remove_tautologies(RestOfClauses,RestOfDictionary,Kept,TautologyFreeClauses,
+TautologyFreeDictionary).
+
+remove_tautologies([FirstClause|RestOfClauses],[FirstDictionary|
+RestOfDictionary],Kept,[FirstClause|RestTautologyFreeClauses],[FirstDictionary|
+RestOfTautologyFreeDictionary]):-
+    NewKept is Kept + 1,
+    remove_tautologies(RestOfClauses,RestOfDictionary,NewKept,
+RestTautologyFreeClauses,RestOfTautologyFreeDictionary).
+%------------------------------------------------------------------------------
+%----Remove constant false from literals
+remove_false_from_literals(Literals,FalseFreeLiterals):-
+    tptp2X_select(++ '$false',Literals,LessFalseLiterals),
+    !,
+    remove_false_from_literals(LessFalseLiterals,FalseFreeLiterals).
+
+remove_false_from_literals(Literals,FalseFreeLiterals):-
+    tptp2X_select(-- '$true',Literals,LessFalseLiterals),
+    !,
+    remove_false_from_literals(LessFalseLiterals,FalseFreeLiterals).
+
+remove_false_from_literals(FalseFreeLiterals,FalseFreeLiterals).
+%------------------------------------------------------------------------------
+%----Remove constant false from clauses
+remove_false_from_clauses([],[]).
+
+remove_false_from_clauses([input_clause(Name,Status,Literals)|RestOfClauses],
+[input_clause(Name,Status,FalseFreeLiterals)|RestOfFalseFreeClauses]):-
+    remove_false_from_literals(Literals,FalseFreeLiterals),
+    remove_false_from_clauses(RestOfClauses,RestOfFalseFreeClauses).
+%------------------------------------------------------------------------------
+merge_identical_literals([],[]).
+
+merge_identical_literals([input_clause(Name,Status,Literals)|
+RestOfClauses],[input_clause(Name,Status,MergedLiterals)|
+RestOfMergedClauses]):-
+    setof(Literal,tptp2X_member(Literal,Literals),MergedLiterals),
+    merge_identical_literals(RestOfClauses,RestOfMergedClauses).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Simplification at the clausal level
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Check every member of the first list is a member of the second
+all_members([],_).
+
+all_members([H|T],L):-
+    tptp2X_member(H,L),
+    all_members(T,L).
+%------------------------------------------------------------------------------
+%----Check if a list of literals subsumed another
+literals_subsume(SubsumingLiterals,SubsumedLiterals):-
+%----Verify to avoid instiating variables
+    \+ ( \+ (
+        numbervars(SubsumedLiterals,0,_),
+        all_members(SubsumingLiterals,SubsumedLiterals))).
+%------------------------------------------------------------------------------
+%----Remove all clauses that are back subsumed
+back_subsume(input_clause(SubsumingName,SubsumingStatus,SubsumingLiterals),
+Clauses,Dictionary,[input_clause(SubsumedName,SubsumedStatus,
+SubsumedLiterals)|RestOfSubsumedClauses],UnsubsumedClauses,
+UnsubsumedDictionary):-
+%----Select clause to subsume.
+    tptp2X_select_Nth(input_clause(SubsumedName,SubsumedStatus,
+SubsumedLiterals),Clauses,ClauseNumber,OtherClauses),
+%----Check that the factor subsumes the literals
+    literals_subsume(SubsumingLiterals,SubsumedLiterals),
+    !,
+%----Remove subsumed clause dictionary
+    tptp2X_select_Nth(_,Dictionary,ClauseNumber,OtherDictionary),
+%----Try do more
+    back_subsume(input_clause(SubsumingName,SubsumingStatus,
+SubsumingLiterals),OtherClauses,OtherDictionary,RestOfSubsumedClauses,
+UnsubsumedClauses,UnsubsumedDictionary).
+
+%----Can do no more
+back_subsume(_,Clauses,Dictionary,[],Clauses,Dictionary).
+%------------------------------------------------------------------------------
+%----Remove subsumed clauses and their dictionaries
+subsume_clauses([],[],[],[]).
+
+%----Forward subsumption. Delete if subsumed by a later one
+subsume_clauses([input_clause(_SubsumedName,_,SubsumedLiterals)|RestOfClauses],
+[_|RestOfDictionary],OutputClauses,OutputClausesDictionary):-
+    tptp2X_member(input_clause(_SubsumingName,_,SubsumingLiterals),
+RestOfClauses),
+    literals_subsume(SubsumingLiterals,SubsumedLiterals),
+    !,
+% write(input_clause(SubsumingName,Status,SubsumingLiterals)),nl,
+% write('FORWARD SUBSUMES'),nl,
+% write(input_clause(SubsumedName,_,SubsumedLiterals)),nl,nl,
+    subsume_clauses(RestOfClauses,RestOfDictionary,OutputClauses,
+OutputClausesDictionary).
+
+%----Backward subsumption. Remove later ones and keep.
+subsume_clauses([SubsumingClause|RestOfClauses],[SubsumingDictionary|
+RestOfDictionary],[SubsumingClause|RestOfOutputClauses],
+[SubsumingDictionary|RestOfOutputDictionary]):-
+    back_subsume(SubsumingClause,RestOfClauses,RestOfDictionary,
+_SubsumedClauses,UnsubsumedClauses,UnsubsumedDictionary),
+% write(SubsumingClause),nl,
+% write('BACKWARD SUBSUMES'),nl,
+% write(SubsumedClauses),nl,nl,
+    subsume_clauses(UnsubsumedClauses,UnsubsumedDictionary,
+RestOfOutputClauses,RestOfOutputDictionary).
+%------------------------------------------------------------------------------
+%----Sound unification
+%----Identical things unify. This is a short cut, and also used by pairs
+%----of empty lists.
+unify(Term1,Term2):-
+    Term1 == Term2,
+    !.
+
+%----There's a variable about
+unify(Variable,Term):-
+    var(Variable),
+    !,
+%----Do occurs check
+%----Copy the term
+    copy_term(Term,TermCopy),
+%----Count how many variables in the copy
+    numbervars(TermCopy,0,NumberOfVariables),
+    \+ ( \+ (
+%----Instantiate the variable
+        Variable = dummy_value_no_one_will_use,
+%----Make sure the original has the same number of variables still. If it
+%----doesn't then the Term contains the variable.
+        numbervars(Term,0,NumberOfVariables)
+        )),
+    Variable = Term.
+
+unify(Term,Variable):-
+    var(Variable),
+    !,
+    unify(Variable,Term).
+
+%----Lists of terms
+unify([H1|T1],[H2|T2]):-
+    !,
+    unify(H1,H2),
+    unify(T1,T2).
+
+%----Functions
+unify(Function1,Function2):-
+    Function1 =.. [Functor|Arguments1],
+    Function2 =.. [Functor|Arguments2],
+    unify(Arguments1,Arguments2).
+%------------------------------------------------------------------------------
+%----Create a factor of a list of literals. Only need to do one factor
+%----because if factor C'' of factor C' of C subsumes C, then C' subsumes
+%----C. I.e., create C' i one step, allow it to subsume C, then the
+%----loop in factor_simplify_clauses/4 will call again to create C''.
+factor_literals([FirstLiteral|RestOfLiterals],RestOfLiterals):-
+    tptp2X_member(SecondLiteral,RestOfLiterals),
+    unify(FirstLiteral,SecondLiteral).
+
+factor_literals([FirstLiteral|RestOfLiterals],[FirstLiteral|
+RestOfFactoredLiterals]):-
+    factor_literals(RestOfLiterals,RestOfFactoredLiterals).
+%------------------------------------------------------------------------------
+%----My factor simplification. Only need to consider subsumption of
+%----the parent clause because if factor C' of C subsumes D then C
+%----subsumes D. Better to not create C' (it may not subsume C).
+
+factor_simplify_clauses([],[],[],[]).
+
+%----See if there is a factor that subsumes the clause
+factor_simplify_clauses([input_clause(Name,Status,Literals)|RestOfClauses],
+Dictionary,FactoredClauses,FactoredDictionary):-
+%----A more efficient overall plan may be
+%---- 1) Select a literal (the one that the factored literal corresponds
+%----    to in the subsumption test.
+%---- 2) Numbervars it
+%---- 3) Check two literals (the ones that will factor) are members that
+%----    (Prolog) unify with that ground literal.
+%----Quick check if even possible (not so quick it seems - try NLP004+1
+%    \+ \+ (
+%        tptp2X_member(SubsumingLiteral,Literals),
+%        numbervars(SubsumingLiteral,0,_),
+%        tptp2X_select(SubsumingLiteral,Literals,OtherLiterals),
+%        tptp2X_member(SubsumingLiteral,OtherLiterals)),
+%----Create factor
+    copy_term(Literals,CopyOfLiterals),
+    factor_literals(CopyOfLiterals,FactoredLiterals),
+%----Check that the literals are subsumed
+    literals_subsume(FactoredLiterals,Literals),
+    !,
+%DEBUG write(input_clause(Name,Status,FactoredLiterals)),nl,
+%DEBUG write('FACTOR SUBSUMES'),nl,
+%DEBUG write(input_clause(Name,Status,Literals)),nl,nl,
+    factor_simplify_clauses([input_clause(Name,Status,FactoredLiterals)|
+RestOfClauses],Dictionary,FactoredClauses,FactoredDictionary).
+
+%----No more useful factors 
+factor_simplify_clauses([FirstClause|RestOfClauses],[FirstDictionary|
+RestOfDictionary],[FirstClause|RestOfFactoredClauses],[FirstDictionary|
+RestOfFactoredDictionary]):-
+    factor_simplify_clauses(RestOfClauses,RestOfDictionary,
+RestOfFactoredClauses,RestOfFactoredDictionary).
+%------------------------------------------------------------------------------
+%----Do all unit subsumptions possible with this unit clause
+unit_subsumed_resolvants(UnitLiteral,Clauses,Dictionary,[input_clause(Name,
+Status,OtherLiterals)|RestOfResolvants],UnitSubsumedClauses,
+UnitSubsumedDictionary):-
+%----Extract sign and atom
+    UnitLiteral =.. [UnitSign,UnitAtom],
+%----Create template for other literal
+    functor(UnitAtom,PredicateSymbol,Arity),
+    functor(TemplateAtom,PredicateSymbol,Arity),
+    tptp2X_invert_sign(UnitSign,TemplateSign),
+    TemplateLiteral =.. [TemplateSign,TemplateAtom],
+%----Select clause to resolve against
+    tptp2X_select_Nth(input_clause(Name,Status,Literals),Clauses,
+ClauseNumber,OtherClauses),
+%----Select literal to resolve against
+    tptp2X_select(TemplateLiteral,Literals,OtherLiterals),
+%----Check the unit subsumes the selected
+    literals_subsume([UnitAtom],[TemplateAtom]),
+    !,
+%----Take out the dictionary
+    tptp2X_select_Nth(ParentDictionary,Dictionary,ClauseNumber,
+OtherDictionary),
+%----Loop to use this unit again
+    unit_subsumed_resolvants(UnitLiteral,[input_clause(Name,Status,
+OtherLiterals)|OtherClauses],[ParentDictionary|OtherDictionary],
+RestOfResolvants,UnitSubsumedClauses,UnitSubsumedDictionary).
+
+%----No more unit resolvants
+unit_subsumed_resolvants(_,Clauses,Dictionary,[],Clauses,Dictionary).
+%------------------------------------------------------------------------------
+%----Do unit subsumed resolution
+unit_subsumed_resolution(Clauses,Dictionary,UnitSubsumedClauses,
+UnitSubsumedDictionary):-
+%----Select a unit clause
+%DEBUG write('%=======clause are: '),write(Clauses),nl,
+    tptp2X_member(input_clause(_,_,[UnitLiteral]),Clauses),
+%DEBUG write('%=======using unit '),write(UnitLiteral),nl,
+%----Do all unit subsumptions
+    unit_subsumed_resolvants(UnitLiteral,Clauses,Dictionary,[_|_],
+ThisUnitSubsumedClauses,ThisUnitSubsumedDictionary),
+%DEBUG write('%=======after unitr: '),write(ThisUnitSubsumedClauses),nl,
+%----If some unit resolvants are done, then loop. Required as units
+%----may have been created. A bit inefficient.
+    !,
+    unit_subsumed_resolution(ThisUnitSubsumedClauses,
+ThisUnitSubsumedDictionary,UnitSubsumedClauses,UnitSubsumedDictionary).
+
+%----If no more units, then exit
+unit_subsumed_resolution(Clauses,Dictionary,Clauses,Dictionary).
+%------------------------------------------------------------------------------
+%----Check if the literal can complementarity unify with another
+can_resolve_on_literal(EqualityLiteral,_,yes):-
+    EqualityLiteral =.. [_,'$tptp_equal'(_,_)].
+
+%----Can always resolve on arithmetic literals
+can_resolve_on_literal(ArithmeticLiteral,_,_):-
+    ArithmeticLiteral =.. [_,Atom],
+    functor(Atom,Predicate,_),
+    tptp2X_member(Predicate,['$int','$rat','$real','$less','$lesseq',
+'$greater','$greatereq','$is_int','$is_rat','$evaleq']).
+
+can_resolve_on_literal(Literal,OtherClauses,EqualityPresent):-
+%----Make a template for the literal to resolve against
+    Literal =.. [Sign,Atom],
+    functor(Atom,Symbol,Arity),
+    functor(TemplateAtom,Symbol,Arity),
+    tptp2X_invert_sign(Sign,InvertedSign),
+    TemplateLiteral =.. [InvertedSign,TemplateAtom],
+%----Find a literal to resolve against
+    tptp2X_member(input_clause(_,_,OtherLiterals),OtherClauses),
+    tptp2X_member(TemplateLiteral,OtherLiterals),
+%----Check that they unify
+    (EqualityPresent == yes ; unify(TemplateAtom,Atom)).
+%------------------------------------------------------------------------------
+%----Check if a clause is pure, i.e., contains a literals that cannot
+%----complementarily unify with another
+%----If nothing left, then make satisfiable clause
+eliminate_pure_literals([],_,_,
+[input_clause(satisfiable_dummy,negated_conjecture,[++ '$true'])],
+[[]]):-
+    !.
+
+eliminate_pure_literals(Clauses,Dictionary,EqualityPresent,PureClauses,
+PureDictionary):-
+    tptp2X_select_Nth(input_clause(_PureName,_,Literals),Clauses,N,
+OtherClauses),
+%----Choose a literal
+    tptp2X_member(Literal,Literals),
+    \+ can_resolve_on_literal(Literal,OtherClauses,EqualityPresent),
+    !,
+%DEBUG write(input_clause(PureName,_,Literals)),nl,
+%DEBUG write('is PURE LITERAL ELIMNATED on'),nl,
+%DEBUG write(Literal),nl,nl,
+    tptp2X_select_Nth(_,Dictionary,N,OtherDictionary),
+    eliminate_pure_literals(OtherClauses,OtherDictionary,EqualityPresent,
+PureClauses,PureDictionary).
+
+eliminate_pure_literals(Clauses,Dictionary,_,Clauses,Dictionary).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----Procedures to control the process
+%==============================================================================
+%------------------------------------------------------------------------------
+all_digits([]).
+
+all_digits([DigitASCII|RestOfDigitsASCII]):-
+    DigitASCII >= 48,
+    DigitASCII =< 57,
+    all_digits(RestOfDigitsASCII).
+%------------------------------------------------------------------------------
+find_largest_sk_number([],LargestSkNumber,LargestSkNumber).
+
+find_largest_sk_number([FirstSymbol|RestOfSymbols],LargestSoFar,
+LargestSkNumber):-
+    atom(FirstSymbol),
+    name(FirstSymbol,FirstASCII),
+    tptp2X_append("sk",DigitsASCII,FirstASCII),
+    \+ (
+        tptp2X_member(NonDigit,DigitsASCII),
+        \+ tptp2X_member(NonDigit,"0123456789")
+    ),
+    name(ThisNumber,DigitsASCII),
+    ThisNumber > LargestSoFar,
+    !,
+    find_largest_sk_number(RestOfSymbols,ThisNumber,LargestSkNumber).
+
+find_largest_sk_number([_|RestOfSymbols],LargestSoFar,LargestSkNumber):-
+    find_largest_sk_number(RestOfSymbols,LargestSoFar,LargestSkNumber).
+%------------------------------------------------------------------------------
+get_first_skolem_number(Formulae,Number):-
+    examine_formulae_for_predicates(Formulae,_,_,Predicates),
+    examine_formulae_for_functors(Formulae,_,Functors),
+    tptp2X_append(Predicates,Functors,Symbols),
+    find_largest_sk_number(Symbols,0,LargestSkNumber),
+    Number is LargestSkNumber + 1.
+%------------------------------------------------------------------------------
+%----Translate a list of formulae
+translate_to_oldtptp_clauses([],[],_,_,[],[]).
+
+translate_to_oldtptp_clauses([FirstAnnotatedFormula|
+RestOfAnnotatedFormulae],[FormulaDictionary|RestOfDictionary],Algorithm,
+SkolemNumber,OutputClauses,OutputDictionary):-
+    FirstAnnotatedFormula =.. [fof,Name,Status,FirstFormula|_],
+%DEBUG write('Translate FirstAnnotatedFormula '),nl,write(FirstAnnotatedFormula),nl,
+%DEBUG write('Translate FormulaDictionary '),nl,write(FormulaDictionary),nl,
+    translate_formula_to_clauses(Algorithm,FirstFormula,FirstClauses,
+SkolemNumber,NextSkolemNumber),
+%DEBUG write('FirstClauses'),nl,write(FirstClauses),nl,
+%----Convert to tptp clauses
+    convert_to_oldtptp_clauses(FirstClauses,Name,Status,FirstTPTPClauses),
+%DEBUG write('FirstTPTPClauses'),nl,write(FirstClauses),nl,
+%----Rename the variable in each clause (numbervars them now = shit)
+    rename_variables(FirstTPTPClauses,FormulaDictionary,RenamedClauses,
+FirstClausesDictionary),
+%DEBUG write('FirstClausesDictionary'),nl,write(FirstClausesDictionary),nl,
+%----Do the rest of the formulae
+%DEBUG write('RestOfAnnotatedFormulae'),nl,write(RestOfAnnotatedFormulae),nl,
+%DEBUG write('RestOfDictionary'),nl,write(RestOfDictionary),nl,
+    translate_to_oldtptp_clauses(RestOfAnnotatedFormulae,RestOfDictionary,
+Algorithm,NextSkolemNumber,RestOfOutputClauses,RestOfOutputClausesDictionary),
+    tptp2X_append(RenamedClauses,RestOfOutputClauses,OutputClauses),
+    tptp2X_append(FirstClausesDictionary,RestOfOutputClausesDictionary,
+OutputDictionary).
+%------------------------------------------------------------------------------
+%----Do simplifications that once done, need not be repeated
+fixed_simplification(Clauses,Dictionary,SimplifiedClauses,
+SimplifiedDictionary):-
+%----Merge identical literals
+    merge_identical_literals(Clauses,MergedClauses),
+%----Remove false constants from clauses
+    remove_false_from_clauses(MergedClauses,FalseFreeClauses),
+%----Remove tautologies
+    remove_tautologies(FalseFreeClauses,Dictionary,0,SimplifiedClauses,
+SimplifiedDictionary).
+%------------------------------------------------------------------------------
+%----Do simplifications that must be repeat until a fixed point is reached
+%----Check if nothing has been done
+repeated_simplification(Clauses,Dictionary,_,PreviousClauses,Clauses,
+Dictionary):-
+    Clauses == PreviousClauses,
+    !.
+
+repeated_simplification(Clauses,Dictionary,EqualityPresent,_,SimplifiedClauses,
+SimplifiedDictionary):-
+%----Do my factor simplification
+%DEBUG write('%-------------------------------------'),nl,
+%DEBUG write('%-----before factor_simplify_clauses: '),write(Clauses),nl,
+    factor_simplify_clauses(Clauses,Dictionary,FactoredClauses,
+FactoredDictionary),
+%----Do unit subsumed resolution
+%DEBUG write('%-----before unit_subsumed_resolution: '),write(FactoredClauses),nl,
+    unit_subsumed_resolution(FactoredClauses,FactoredDictionary,
+UnitSubsumedClauses,UnitSubsumedDictionary),
+%----Remove subsumed clauses
+%DEBUG write('%-----before subsume_clauses: '),write(UnitSubsumedClauses),nl,
+    subsume_clauses(UnitSubsumedClauses,UnitSubsumedDictionary,
+SubsumedClauses,SubsumedDictionary),
+%----Do pure literal elimination
+%DEBUG write('%-----before eliminate_pure_literals: '),write(SubsumedClauses),nl,
+    eliminate_pure_literals(SubsumedClauses,SubsumedDictionary,EqualityPresent,
+PureClauses,PureDictionary),
+%DEBUG write('%-----after eliminate_pure_literals: '),write(PureClauses),nl,
+%----Try to do more
+    repeated_simplification(PureClauses,PureDictionary,EqualityPresent,
+Clauses,SimplifiedClauses,SimplifiedDictionary).
+%------------------------------------------------------------------------------
+detect_equality(Clauses,yes):-
+    examine_formulae_for_predicates(Clauses,_,_,PredicateSymbols),
+    tptp2X_member(Predicate,PredicateSymbols),
+    tptp2X_member(Predicate,['$tptp_equal']),
+% ,'$int','$rat','$real','$less','$lesseq','$greater','$greatereq','$evaleq']),
+    !.
+
+detect_equality(Clauses,yes):-
+    examine_formulae_for_functors(Clauses,_,Functors),
+    tptp2X_member(Functor,Functors),
+    looks_like_a_number(Functor),
+    !.
+
+detect_equality(_,no).
+%------------------------------------------------------------------------------
+%----Do simplifications amongst the clauses
+simplify_clause_set(Clauses,Dictionary,SimplifiedClauses,
+SimplifiedDictionary):-
+    detect_equality(Clauses,EqualityPresent),
+%----Simplifications that once done, need not be repeated
+    fixed_simplification(Clauses,Dictionary,FixedSimplifiedClauses,
+FixedSimplifiedDictionary),
+%----Simplifications that affect each other
+    repeated_simplification(FixedSimplifiedClauses,FixedSimplifiedDictionary,
+EqualityPresent,_,SimplifiedClauses,SimplifiedDictionary).
+%------------------------------------------------------------------------------
+%----Negate a conjecture formula (max one)
+do_negate_conjecture(Formulae,_):-
+    tptp2X_select(Conjecture,Formulae,OtherFormulae),
+    Conjecture =.. [_,_,conjecture|_],
+    tptp2X_member(AnotherConjecture,OtherFormulae),
+    AnotherConjecture =.. [_,_,conjecture|_],
+    !,
+    write('ERROR : More than one conjecture'),
+    nl,
+    fail.
+
+do_negate_conjecture(Formulae,NegatedConjectureFormulae):-
+    tptp2X_select(Conjecture,Formulae,OtherFormulae),
+    Conjecture =.. [Language,Name,conjecture,Formula|Rest],
+    !,
+    NewFormula =.. [Language,Name,negated_conjecture,~(Formula)|Rest],
+    tptp2X_append(OtherFormulae,[NewFormula],NegatedConjectureFormulae).
+
+%----If none, e.g., checking satisfiable, then do nothing
+do_negate_conjecture(Formulae,Formulae).
+%------------------------------------------------------------------------------
+%do_varify([],[]).
+%
+%do_varify([AnnotatedFormula|RestOfAnnotatedFormulae],[VarifiedAnnotatedFormula|
+%RestOfVarifiedAnnotatedFormulae]):-
+%    AnnotatedFormula =.. [Form,Name,Role,Formula|Rest],
+%write('B4: '),write(Formula),nl,
+%    unique_quantification(Formula,VarifiedFormula),
+%write('AF: '),write(VarifiedFormula),nl,
+%    VarifiedAnnotatedFormula =.. [Form,Name,Role,VarifiedFormula|Rest],
+%    do_varify(RestOfAnnotatedFormulae,RestOfVarifiedAnnotatedFormulae).
+%------------------------------------------------------------------------------
+%----Rename variables apart
+%varify(Formulae,Dictionary,varify,UniqueVarFormulae,Dictionary,'+var'):-
+%    do_varify(Formulae,UniqueVarFormulae).
+ 
+%----Convert to propositional if HU is finite
+propify(Clauses,_,propify,PropositionalClauses,[],'+prop'):-
+    tptp_clauses(Clauses),
+%----Do basic syntactic examination
+    examine_formulae_for_functors(Clauses,FunctorStructures,Constants),
+%----Ensure that there are no real functions
+    \+ (tptp2X_member(_/Arity,FunctorStructures),
+        Arity > 0),
+    !,
+%----Make all ground instances of the clauses
+    make_all_ground_instances(Clauses,Constants,GroundClauses),
+%----Replace by propositional symbols
+    replace_by_propositions(GroundClauses,1,[],PropositionalClauses).
+
+propify(Formulae,Dictionary,propify,Formulae,Dictionary,''):-
+    tptp_formulae(Formulae).
+
+%----Formulae are standardized - removed <~> <= ~| and ~&
+stdfof(Formulae,Dictionary,stdfof,StandardizedFormulae,Dictionary,'+stdfof'):-
+    tptp_formulae(Formulae),
+    !,
+    remove_top_level_and(Formulae,NoAndFormulae),
+    standardize_formulae(NoAndFormulae,StandardizedFormulae).
+
+stdfof(Formulae,Dictionary,stdfof,Formulae,Dictionary,'').
+
+negate_conjecture(Formulae,Dictionary,negate_conjecture,
+NegatedConjectureFormulae,Dictionary,'+negated_conjecture'):-
+    do_negate_conjecture(Formulae,NegatedConjectureFormulae).
+
+%----Formulae are clausifed 
+clausify(Formulae,Dictionary,clausify:Algorithm,TPTPClauses,
+TPTPClausesDictionary,NameSuffix):-
+    tptp_formulae(Formulae),
+    get_first_skolem_number(Formulae,FirstSkolemNumber),
+%----Negate the conjecture formula (assume there is only one)
+    do_negate_conjecture(Formulae,FormulaeToClausify),
+%DEBUG write('FormulaeToClausify '),nl,write(FormulaeToClausify),nl,
+%DEBUG write('Dictionary '),nl,write(Dictionary),nl,
+    translate_to_oldtptp_clauses(FormulaeToClausify,Dictionary,Algorithm,
+FirstSkolemNumber,OutputClauses,OutputDictionary),
+%DEBUG write('OutputClauses '),nl,write(OutputClauses),nl,
+%DEBUG write('OutputDictionary '),nl,write(OutputDictionary),nl,
+%----Remove dictionary entries instantiated by Skolemization and unification
+    remove_instantiated_variables_from_dictionary_list(OutputDictionary,
+TPTPClausesDictionary),
+%DEBUG write('TPTPClausesDictionary '),nl,write(TPTPClausesDictionary),nl,
+%----Make new names for all the clauses
+    make_unique_clause_names(OutputClauses,1,TPTPClauses),
+    concatenate_atoms(['+cls_',Algorithm],NameSuffix).
+
+%----Clauses are not clausified
+clausify(Formulae,Dictionary,clausify:_,Formulae,Dictionary,''):-
+    tptp_clauses(Formulae).
+
+%----Clauses are simplified
+simplify(Clauses,Dictionary,simplify,TPTPClauses,TPTPClausesDictionary,
+'+simp'):-
+    tptp_clauses(Clauses),
+%----Do simplifications amongst the clauses
+    simplify_clause_set(Clauses,Dictionary,TPTPClauses,SimplifiedDictionary),
+%----Remove dictionary entries instantiated by Skolemization and unification
+    remove_instantiated_variables_from_dictionary_list(SimplifiedDictionary,
+TPTPClausesDictionary).
+%----Make new names for all the clauses
+%    make_unique_clause_names(SimplifiedClauses,1,TPTPClauses).
+
+simplify(Formulae,Dictionary,simplify,Formulae,Dictionary,''):-
+    tptp_formulae(Formulae).
+
+%----Formulae are clausifed and simplified
+cnf(Formulae,Dictionary,cnf:Algorithm,TPTPClauses,TPTPClausesDictionary,
+NameSuffix):-
+    tptp_formulae(Formulae),
+%DEBUG write('Formulae'),nl,write(Formulae),nl,
+%DEBUG write('Dictionary'),nl,write(Dictionary),nl,
+    clausify(Formulae,Dictionary,clausify:Algorithm,Clauses,
+ClausesDictionary,_),
+%DEBUG write('Clauses'),nl,write(Clauses),nl,
+%DEBUG write('ClausesDictionary'),nl,write(ClausesDictionary),nl,
+    simplify(Clauses,ClausesDictionary,simplify,TPTPClauses,
+TPTPClausesDictionary,_),
+%DEBUG write('TPTPClauses'),nl,write(TPTPClauses),nl,
+%DEBUG write('TPTPClausesDictionary'),nl,write(TPTPClausesDictionary),nl,
+    concatenate_atoms(['+cnf_',Algorithm],NameSuffix).
+
+%----Clauses are not clausified
+cnf(Formulae,Dictionary,cnf:_,Formulae,Dictionary,''):-
+    tptp_clauses(Formulae).
+%------------------------------------------------------------------------------
+reform_file_information(transform,stdfof,
+'Convert to standard FOF, without weird operators or top level &').
+
+reform_file_information(transform,cnf:otter,
+'Convert to CNF using any of tptp, otter, bundy, or quaife algorithms').
+
+reform_file_information(transform,clausify:otter,
+'Convert to CNF using any of tptp, otter, bundy, or quaife algorithms, but do not simplify').
+
+reform_file_information(transform,simplify,'Simplify a set of clauses').
+
+reform_file_information(transform,propify,
+'Convert to propositional form if the HU is finite').
+%------------------------------------------------------------------------------

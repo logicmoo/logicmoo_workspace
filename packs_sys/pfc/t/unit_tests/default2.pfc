@@ -1,0 +1,5 @@
+% -*-Prolog-*-
+
+:- use_module(library(pfc)).
+
+switch(Name), ~(status(Name,X), {X \== false}) ==> status(Name,false).

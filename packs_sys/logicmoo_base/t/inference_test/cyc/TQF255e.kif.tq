@@ -1,0 +1,140 @@
+(note TQF255e)
+(abort)
+
+(formulaImplies 
+ (thereExists ?HOLDING 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?HOLDING HoldingHostages) 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (objectActedOn ?HOLDING ?GROUP)))) 
+ (thereExists ?ILL-TREATMENT 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (instance ?ILL-TREATMENT HoldingHostages) 
+ (objectActedOn ?ILL-TREATMENT ?GROUP))))) 
+
+(subclass HoldingHostages HostileSocialAction) 
+
+(subProcess Iranian-TalibanConflict-1998 IranAndTalibanAgreeToTalks) 
+
+(agent IranAndTalibanAgreeToTalks Taliban) 
+
+(eventOutcomes SpecialEnvoyMeetsWithTaliban IranAndTalibanAgreeToTalks) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(instance Iranian-TalibanConflict-1998 DisputeEvent) 
+
+(grievanceInDispute Iranian-TalibanConflict-1998 Iran 
+ (thereExists ?HOLDING 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?HOLDING HoldingHostages) 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (objectActedOn ?HOLDING ?GROUP))))) 
+
+(instance IranAndTalibanAgreeToTalks CooperationEvent) 
+
+(decreasesImmediatelyCausally IranAndTalibanAgreeToTalks Iran 
+ (Kappa 
+ (?AGENT ?LEVEL) 
+ (statusWithAgent-Gradient ?AGENT Taliban StateOfDiplomaticTension ?LEVEL))) 
+
+(formulaImplies 
+ (thereExists ?HOLDING 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?HOLDING HoldingHostages) 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (objectActedOn ?HOLDING ?GROUP)))) 
+ (thereExists ?ILL-TREATMENT 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (instance ?ILL-TREATMENT HoldingHostages) 
+ (objectActedOn ?ILL-TREATMENT ?GROUP))))) 
+
+(subclass HoldingHostages HostileSocialAction) 
+
+(subProcess Iranian-TalibanConflict-1998 IranAndTalibanAgreeToTalks) 
+
+(agent IranAndTalibanAgreeToTalks Taliban) 
+
+(eventOutcomes SpecialEnvoyMeetsWithIran IranAndTalibanAgreeToTalks) 
+
+(opponentsInConflict Iran Taliban Iranian-TalibanConflict-1998) 
+
+(instance Iranian-TalibanConflict-1998 DisputeEvent) 
+
+(grievanceInDispute Iranian-TalibanConflict-1998 Iran 
+ (thereExists ?HOLDING 
+ (thereExists ?GROUP 
+ (and 
+ (instance ?HOLDING HoldingHostages) 
+ (instance ?GROUP 
+ (GroupFn IranianPerson)) 
+ (objectActedOn ?HOLDING ?GROUP))))) 
+
+(instance IranAndTalibanAgreeToTalks CooperationEvent) 
+
+(decreasesImmediatelyCausally IranAndTalibanAgreeToTalks Iran 
+ (Kappa 
+ (?AGENT ?LEVEL) 
+ (statusWithAgent-Gradient ?AGENT Taliban StateOfDiplomaticTension ?LEVEL))) 
+
+
+(query (findall (?EARLIER-EVENT)
+
+(ist Iranian-TalibanCrisisMt 
+(exists 
+(?RESOLUTION) 
+(exists 
+(?CONFLICT) 
+(exists 
+(?PROP) 
+(exists 
+(?AGENT) 
+(exists 
+(?LEVEL) 
+(exists 
+(?HARM) 
+(and 
+(instance ?RESOLUTION CooperationEvent) 
+(agent ?RESOLUTION Taliban) 
+(subProcess ?CONFLICT ?RESOLUTION) 
+(instance ?CONFLICT DisputeEvent) 
+(opponentsInConflict Iran Taliban ?CONFLICT) 
+(grievanceInDispute ?CONFLICT Iran ?PROP) 
+(subclass ?HARM HostileSocialAction) 
+(formulaImplies ?PROP 
+(exists 
+(?ILL-TREATMENT) 
+(exists 
+(?GROUP) 
+(and 
+(instance ?ILL-TREATMENT ?HARM) 
+(objectActedOn ?ILL-TREATMENT ?GROUP) 
+(instance ?GROUP 
+(GroupFn IranianPerson)))))) 
+(decreasesImmediatelyCausally ?RESOLUTION Iran 
+(Kappa 
+(?AGENT ?LEVEL) 
+(statusWithAgent-Gradient ?AGENT Taliban StateOfDiplomaticTension ?LEVEL))) 
+(eventOutcomes ?EARLIER-EVENT ?RESOLUTION)))))))))
+
+))
+
+(answer SpecialEnvoyMeetsWithTaliban
+)
+(answer SpecialEnvoyMeetsWithIran
+)
+
+(end_of_file)
+

@@ -1,0 +1,54 @@
+(note TQF234c)
+
+(subProcess Iranian-TalibanConflict-1998 IranClaimsRightToStrikeTaliban) 
+(instance KillingOfIranianDiplomats Process) 
+(inReactionTo IranClaimsRightToStrikeTaliban KillingOfIranianDiplomats) 
+(recipientOfInfo IranClaimsRightToStrikeTaliban Taliban) 
+
+(infoTransferred IranClaimsRightToStrikeTaliban 
+  (thereExists ?ATTACK 
+    (and 
+      (instance ?ATTACK AttackOnTangible) 
+      (directingAgent ?ATTACK Iran) 
+      (intendedMaleficiary ?ATTACK Taliban) 
+      (not 
+        (actionViolatesObligation ?ATTACK ModernInternationalRelationsCOC)))))
+
+(instance IranClaimsRightToStrikeTaliban CommunicationAct-Single) 
+(senderOfInfo IranClaimsRightToStrikeTaliban Iran) 
+
+(implies 
+  (and 
+    (instance ?SIT Process) 
+    (inReactionTo ?ACT ?SIT)) 
+  (eventOutcomes ?SIT ?ACT)) 
+
+(instance IranianMediaReports Process) 
+(inReactionTo IranClaimsRightToStrikeTaliban IranianMediaReports) 
+
+(query (findall (?RELEVANT-EVENT)
+  (exists 
+    (?THREAT) 
+    (and 
+      (instance ?THREAT CommunicationAct-Single) 
+      (senderOfInfo ?THREAT Iran) 
+      (recipientOfInfo ?THREAT Taliban) 
+      (infoTransferred ?THREAT 
+        (exists 
+          (?ATTACK) 
+          (and 
+            (instance ?ATTACK AttackOnTangible) 
+            (directingAgent ?ATTACK Iran) 
+            (intendedMaleficiary ?ATTACK Taliban) 
+            (not 
+              (actionViolatesObligation ?ATTACK ModernInternationalRelationsCOC)))))
+      (temporallySubsumes Iranian-TalibanConflict-1998 ?THREAT) 
+      (or 
+        (eventOutcomes ?RELEVANT-EVENT ?THREAT) 
+        (reasonForAction ?THREAT ?COGNITIVE-RELATION ?AGENT ?REASON))))))
+
+(answer KillingOfIranianDiplomats)
+(answer IranianMediaReports)
+
+(end_of_file)
+

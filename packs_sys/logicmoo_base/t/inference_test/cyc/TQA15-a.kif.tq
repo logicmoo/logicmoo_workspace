@@ -1,0 +1,41 @@
+(note TQA15-a)
+
+(meetsSpatially RedSea CityOfAinSukhnaEgypt) 
+
+(implies 
+ (and 
+ (meetsSpatially ?REGION ?SUB) 
+ (contains ?SUPER ?SUB)) 
+ (meetsSpatially ?REGION ?SUPER)) 
+
+(meetsSpatially GulfOfSuez CityOfAinSukhnaEgypt) 
+
+(meetsSpatially GulfOfSuez CityOfAinSukhnaEgypt) 
+
+(instance meetsSpatially SymmetricRelation) 
+
+(contains RedSea GulfOfSuez) 
+
+(meetsSpatially MediterraneanSea CityOfSidiKerirEgypt) 
+
+(between SuMedPipeline CityOfSidiKerirEgypt CityOfAinSukhnaEgypt) 
+
+(instance SuMedPipeline OilPipeline) 
+
+(flowCapacity SuMedPipeline 
+ ((Mega BarrelsPerDay) 2.50000)) 
+
+
+(query (findall ?CAPACITY (thereExists ?SOURCE 
+   (thereExists ?DEST 
+       (thereExists ?PIPE 
+           (and 
+               (instance ?PIPE OilPipeline) 
+               (meetsSpatially MediterraneanSea ?SOURCE) 
+               (meetsSpatially RedSea ?DEST) 
+               (flowCapacity ?PIPE ?CAPACITY) 
+               (between ?PIPE ?SOURCE ?DEST))))) ))
+
+(answer 2.50000 )
+
+(end_of_file)

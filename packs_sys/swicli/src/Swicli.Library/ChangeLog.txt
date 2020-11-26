@@ -1,0 +1,31 @@
+﻿- change some testcases to reflect SWI-Prolog changes. E.g. ToString() of a term foo(a, b) return foo(a,b), (without the space)
+1.1.5990.0
+- BREAKING CHANGE:
+	SWI-PROLOG has changed some names of dlls and exe. For details see the 
+	changelog at http://prolog.cs.vu.nl/git/pl-devel.git?a=blob_plain;f=ChangeLog;hb=HEAD
+1.1.5800.0
+- FIX: Crash if a query contains unicode charaters. reported by Robert Czerny.
+- FIX: A query with two anonymous variables work wrong. reported by Robert Czerny.
+		see mailing list 'read_term and anonymous variables'.
+- FIX: a wrong capitalized query throw two exceptions. reported by Robert Czerny.
+	   caused by the destruction of the PlQuery object.
+		1) e.g. "Syntax error: Unexpected end of clause"
+		2) System.AccessViolationException 
+
+1.1.5714.0
+- Added a 64-Bit version by Arne Skjærholt
+- BREAKING CHANGE:
+	- PlTermV has changed from a class to a struct.
+	- DelegateParameterVarArgs has now only one PlTermV parameter
+	- Indexer of PlTerm work now with PL_get_arg/3 for compound terms.
+- Added the sample t_creating_a_list_doc to the documentation of DelegateParameter1
+
+1.1.5711.0
+- Added PlTerm.ToStringCanonical() to do PlTerm.PlCompound("cs_speak('hello world')").ToStringCanonical()=="cs_speak('hello world')" suggested by Batu Akan
+- Added a FAQ and some notes about [FATAL ERROR: Could not find system resources] in the documentation
+
+1.1.578.1
+- versioning
+- PlEngine.Initialize: add a empty string at the first place in the parameter list
+- Redirection of the output-stream function is done before Initialize
+- documentation

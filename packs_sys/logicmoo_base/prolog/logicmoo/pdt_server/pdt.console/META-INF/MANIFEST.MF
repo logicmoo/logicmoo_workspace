@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Eclipse-BundleShape: dir
+Bundle-ManifestVersion: 2
+Bundle-Name: PDT Console
+Bundle-SymbolicName: org.cs3.pdt.console; singleton:=true
+Bundle-Version: 3.1.2.qualifier
+Bundle-Activator: org.cs3.pdt.console.PrologConsolePlugin
+Export-Package: org.cs3.pdt.console,
+ org.cs3.pdt.console.internal,
+ org.cs3.pdt.console.internal.views
+Require-Bundle: org.eclipse.swt,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.eclipse.ui.editors,
+ org.eclipse.ui,
+ org.cs3.pdt.common;bundle-version="[3.1.2,4.0.0)",
+ org.eclipse.search
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: http://sewiki.iai.uni-bonn.de/research/pdt/docs

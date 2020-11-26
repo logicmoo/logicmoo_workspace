@@ -1,0 +1,95 @@
+---------- Evt 1 ----------
+[Meet]-
+	-agnt->[Human:vance],
+	-with->[Organisation:NATO],
+	-obj->[Strategy]-subj->[SelfDefense]
+
+---------- Evt 2 ----------
+[Negotiate]-
+	-obj->[Accept]-
+		-obj->[Join]-
+			-agnt->[Country:Israel],
+			-target->[Organisation:NATO];
+		-agnt->[Organisation:NATO];
+	-agnt->[Human:vance],
+	-with->[Organisation:NATO]
+
+---------- Evt 3 ----------
+[Suppose]-
+	-agnt->[Human:vance],
+	-with->[Country:Israel],
+	-obj->[Dominate]-
+		-agnt->[Country:USA],
+		-obj->[Region:MiddleEast];
+	-attr->[Join]-
+		-agnt->[Country:Israel],
+		-target->[Organisation:NATO]
+
+---------- Evt 4 ----------
+[Treat]-
+	-agnt->[Human:vance],
+	-with->[Country:Irak],
+	-obj->[WarStrategy]-
+		-against->[Country:Iran],
+		-goal->[Stop]-obj->[IslamicFlow]
+
+---------- Evt 5 ----------
+[Search]-
+	-agnt->[Human:vance],
+	-with->[GolfForeignMinister],
+	-obj->[Found]-
+		-attr->[Army:MoujahidineArmy],
+		-against->[Invade]-
+				-agnt->[Country:USSR],
+				-obj->[Country:Afghanistan];
+		-obj->[Stop]-obj->[CommunistFlow]
+
+
+---------- Evt 6 ----------
+[Meet]-
+	-agnt->[Human:vance],
+	-with->[Country:SaoudiArabia],
+	-obj->[Study]-
+		-obj->[Mode]-
+			-obj->[Investment],
+			-attr->[Petrol]
+
+
+---------- Evt 7 ----------
+[Treat]-
+	-agnt->[Human:vance],
+	-with->[Country:SaoudiArabia],
+	-obj->[Install]-
+		-obj->[AmericanMilitaryBase],
+		-loc->[Country:SaoudiArabia],
+		-goal->[Preserve]-
+			-agnt->[Country:SaoudiArabia],
+			-obj->[StrategicInterest]
+			
+
+---------- Evt 8 ----------
+[Negotiate]-
+	-agnt->[Human:vance],
+	-with->[Organisation:UN],
+	-obj->[Impose]-obj->[Embargo]-against->[Country:Iran]
+
+
+
+---------- Evt 9 ----------
+[Negotiate]-
+	-agnt->[Human:vance],
+	-with->[Organisation:NATO],
+	-obj->[Attack]-
+		-against->[Country:Lybia],
+		-goal->[Protect]-obj->[InternationalSecurity]
+
+---------- Evt 10 ----------
+[Meet]-
+	-agnt->[Human:vance],
+	-with->[RussianForeignMinister],
+	-obj->[Fight]-
+		-against->[Terrorism],
+		-obj->[TheAttack]-target->[Country:Lybia]
+
+
+

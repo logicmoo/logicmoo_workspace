@@ -1,0 +1,348 @@
+\documentclass[a4paper,titlepage,openany,twoside]{book}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{amstext}
+\usepackage{url}
+
+\title{SUPPLE:\\The Sheffield University Prolog Parser for Language Engineering}
+\author{Horacio Saggion and Mark A. Greenwood\\
+Department of Computer Science\\University of Sheffield}
+
+\begin{document}
+\maketitle
+
+
+{\huge A royalty-free license is granted for the use of this software for
+NON\_COMMERCIAL PURPOSES ONLY.\\
+
+The program is provided ``as is'' without warranty of any kind, either
+expressed or implied, including, but not limited to, the implied
+warranties of merchantability and fitness for a particular purpose.
+The entire risk as to the quality and performance of the program is
+with you.  Should the program prove defective, you assume the cost of
+all necessary servicing, repair or correction.}
+
+\chapter{Introduction}
+
+
+SUPPLE is a bottom-up  parser that constructs syntax trees and
+logical forms for English sentences. The parser is complete in the
+sense that every analysis licensed by the grammar is produced. In the
+current version only the `best' parser is selected at the end of the
+parsing process. The English grammar (see Chapter~\ref{sec:grammar}) is implemented as an
+attribute-value 
+context free grammar which consists of subgrammars for  noun phrases (NP), verb phrases (VP), prepositional 
+phrases (PP), relative phrases (R) and sentences (S). The semantics
+ associated with each grammar rule allow the parser to produce logical
+forms composed of unary predicates to denote  entities and
+events (e.g., {\em chase(e1)},  {\em run(e2)}) and binary predicates
+for properties  (e.g. {\em lsubj(e1,e2)}). Constants (e.g., $e1$,
+$e2$) are used to represent entity and event identifiers.
+The Gate SUPPLE Wrapper stores syntactic infomation produced by the
+parser
+in the gate document in the form of: SyntaxTreeNodes which are used to
+display the parsing tree when the sentence is `edited'; `parse'
+annotations containing a bracketed representation of the parse; and
+`semantics' annotations that contains the logical forms produced by
+the parser.  
+
+
+
+
+\chapter{Software requirements}
+
+
+In order to compile and use the parser you will need the following 
+software:
+
+\begin{itemize}
+
+\item SUPPLE parser and Gate wrapper\\
+Available from \url{http://nlp.shef.ac.uk/research/supple/}
+
+\item The GATE Framework\\
+Available from \url{http://gate.ac.uk}
+ 
+\item Java (v1.4 or above)
+Available from \url{http://www.javasoft.com}
+
+\item Ant (to construct the parser)\\
+Available from \url{http://ant.apache.org}
+
+\item A Prolog implementation. We currently support:
+\begin{itemize}
+\item SICStus prolog (v3.8.6 or above)\\
+For details see \url{http://www.sics.se/sicstus/}
+
+\item PrologCafe (v0.9 or above)\\
+Available from \url{http://kaminari.scitec.kobe-u.ac.jp/PrologCafe/}
+
+\item SWI Prolog (v5.4.2 or above)\\
+Available from \url{http://www.swi-prolog.org/}
+\end{itemize}
+See Chapter \ref{chap:prolog} for details of how to use other Prolog implementations.
+
+\end{itemize}
+
+\chapter{Distribution}
+
+
+The present distribution (`supple' is the root)  contains the
+following project directories and files:
+
+\begin{itemize}
+
+\item build.xml: the  build for ANT necessary to construct the system
+
+\item classes: the java classes
+
+\item config: contains the configuration files the wrapper needs to
+translate information from Gate into SUPPLE. Two files can be found here
+mapping.config and feature\_table.config. See
+Section~\ref{sec:config} for an explanation of how the mapping is specified. 
+
+
+\item docs: documentation. Contains this document.
+
+\item lib: libraries necessary to compile and run different prolog
+implementations.
+
+\item src: the java source files.
+
+\item creole.xml the configuration of the Gate SUPPLE Wrapper
+
+\end{itemize}
+
+\chapter{Building the system}
+
+You will have to edit the build.xml file and adapt the `user
+modifiable options' to your particular settings.
+
+\begin{itemize}
+
+\item {\em ant plcafe} constructs the PrologCafe version of the parser
+
+\item {\em ant sicstus} constructs the SICStus version of the parser
+
+\item {\em ant swi} constructts the SWIProlog version of the parser
+
+\end{itemize}
+
+\chapter{Running the parser in a Gate Gui}
+
+To run the parser from the Gate GUI you need to load the creole.xml
+that comes with this distribution, you have to this in the usual way
+in Gate. If you want  a standalone application, just look at the
+testing code provided in the source. In order to parse a document you will
+need to construct an application that has:
+
+\begin{itemize}
+\item document reset (usefull)
+
+\item tokeniser (mandatory)
+
+\item splitter (mandatory)
+
+\item POS-tagger (mandatory)
+
+\item Morphology (mandatory)
+
+\item Bottom-Up Chart Parser (mandatory) with parameters
+\begin{itemize}
+\item mapping file (config/mapping.config)
+\item feature table file (config/feature\_table,mapping)
+\item parser file (supple.plcafe, supple.sicstus or supple.swi)
+\item the classname of the Prolog wrapper (i.e. shef.nlp.supple.prolog.SICStusProlog)
+\end{itemize}
+You can take a look at build.xml to see examples of invocation for
+the different implementations.
+
+\end{itemize} 
+
+{\bf IMPORTANT NOTE:} The wrapper writes temporary files
+in your temp directory, these files are deleted once the
+process is finished {\em unless} the debug option is set to {\em true}
+in which case the temporary files will be kept in your file system.
+Do not forget to  turn the debug option to false in order to avoid 
+disk space problems.
+
+\chapter{Running the parser standalone}
+
+One test for each configuration is provided with the build.xml. 
+
+\begin{itemize}
+
+\item {\em ant test.plcafe} tests the PrologCafe implementation
+
+\item {\em ant test.sicstus} tests the Sicstus implementation
+
+\item {\em ant test.swi} tests the SWI Prolog implementation
+
+
+\end{itemize}
+
+The program run is shef.nlp.supple.TestSuite which you can use as a
+base for developing your own application.
+
+\chapter{Configuration files}
+\label{sec:config}
+
+Two files are used to pass information from Gate to the SUPPLE
+parser: the {\em mapping} file and the {\em feature table} file.\\
+
+\section{Mapping file}
+The mapping file specifies how annotations produced using Gate 
+are to be passed to the parser.   
+The file is composed of a number of  pairs of lines, the first line in
+a pair specifies a Gate annotation  we want to pass to the parser. It includes the AnnotationSet (or
+default), the AnnotationType, and a number of features and values that
+depend on the AnnotationType.
+The second line of the pair specifies how to encode the Gate
+annotation in a SUPPLE syntactic category, this line also
+includes a number of features and values.
+As an example consider the mapping:
+
+\begin{verbatim}
+Gate;AnnotationType=Token;category=DT;string=&S
+SUPPLE;category=dt;m_root=&S;s_form=&S
+\end{verbatim}
+
+
+It specifies how a determinant (`DT') will be translated into
+a category `dt' for the parser. The construct `\&S' is used to
+represent a variable that will be instantiated to the appropriate
+value during the mapping process. More specifically a token like `The'
+recognised as a DT by the POS-tagging will be mapped into the
+following category:
+
+\begin{verbatim}
+dt(s_form:`The',m_root:`The',m_affix:`_',text:`_').
+\end{verbatim}
+
+
+As another example consider the mapping:
+
+\begin{verbatim}
+Gate;AnnotationType=Lookup;majorType=person_first;minorType=female;string=&S
+SUPPLE;category=list_np;s_form=&S;ne_tag=person;ne_type=person_first;gender=female
+\end{verbatim}
+
+
+It specified that an annotation of type `Lookup' in Gate is mapped
+into
+a category `list\_np' with specific features and values. More
+specifically a token like `Mary' identified in Gate as a Lookup will
+be
+mapped into the following SUPPLE category: 
+
+\begin{verbatim}
+list_np(s_form:`Mary',m_root:`_',m_affix:`_',
+text:`_',ne_tag:`person',ne_type:`person_first',gender:`female').
+\end{verbatim}
+
+
+
+\section{Feature table}
+\label{sec:features}
+
+The feature table file specifies SUPPLE `lexical' categories and its
+features.  As an example an entry in this file is:
+
+\begin{verbatim}
+n;s_form;m_root;m_affix;text;person;number
+\end{verbatim}
+
+
+which specifies which features and in which order a noun category
+should be writen. In this case:
+
+\begin{verbatim}
+n(s_form:...,m_root:...,m_affix:...,text:...,person:...,number:....).
+\end{verbatim}
+
+\chapter{Parser and Grammar}
+\label{sec:grammar}
+
+The parser which is a Bottom-up Chart Parser builds a semantic representation
+compositionally, and a `best parse' algorithm is applied to each final
+chart, providing a partial parse if no complete sentence span can be
+constructed. The parser uses a feature valued grammar.  Each \texttt{Category} entry has the form:
+\begin{verbatim}
+Category(Feature1:Value1,...,FeatureN:ValueN)
+\end{verbatim}
+where the number and type of features is dependent on the category
+type (see Section ~\ref{sec:features}).  All categories will have the features \texttt{s\_form} (surface
+form) and \texttt{m\_root} (morphological root); nominal and verbal
+categories will also have \texttt{person} and \texttt{number}
+features; verbal categories will also have \texttt{tense} and
+\texttt{vform} features; and adjectival categories will have a
+\texttt{degree} feature.  The \texttt{list\_np} category has the same
+features as other nominal categories plus \texttt{ne\_tag} and
+\texttt{ne\_type}.\\
+
+Syntactic rules are specifed in Prolog with the predicate
+$rule(LHS,RHS)$ where $LHS$ is a syntactic category and 
+$RHS$ is a list of syntactic categories. A rule such as $BNP\_HEAD
+\Rightarrow N$ (``a basic noun phrase head is composed of a noun'') is
+writen as follows:
+
+\begin{verbatim}
+rule(bnp_head(sem:E^[[R,E],[number,E,N]],number:N), 
+[n(m_root:R,number:N)]).
+\end{verbatim}
+
+
+Where the feature `sem' is used to construct the semantics while the
+parser
+processes input, and E, R, and N are variables tobe instantiated
+during parsing.\\
+
+The full grammar of this distribution can be found in the
+prolog/grammar directory, the file load.pl specifies which grammars
+are used by the parser. The grammars are compiled when the system is
+built and the compied version is used for parsing.\\
+
+\subsection{Mapping Named Entities}
+
+
+SUPPLE has a prolog grammar which deals with named entities, the only
+information required is the Lookup annotations
+produced by Gate, which are specified in the mapping file.
+ However, you may want to  pass named entities identified with your
+own Jape grammars in 
+Gate. This can be done using a special syntactic category provided 
+with this distribution. The category
+sem\_cat is used as a bridge between GATE named entities and the
+SUPPLE grammar.
+An example of how to use it (provided in the mapping file) is:
+
+\begin{verbatim}
+Gate;AnnotationType=Date;string=&S
+SUPPLE;category=sem_cat;type=Date;text=&S;kind=date;name=&S
+\end{verbatim}
+
+which maps a named entity `Date' into a syntactic  category
+`sem\_cat'.  A grammar file called semantic\_rules.pl is provided 
+to map sem\_cat into the appropriate  syntactic category expected by
+the phrasal rules. The following rule for example:
+
+\begin{verbatim}
+rule(ne_np(s_form:F,sem:X^[[name,X,NAME],[KIND,X]]),[
+sem_cat(s_form:F,text:TEXT,type:`Date',kind:KIND,name:NAME)]).
+\end{verbatim}
+
+
+is used to parse a `Date' into a named entity in SUPPLE which in turn
+will be parsed into a noun phrase.
+
+
+\chapter{Using Other Prolog Implementations}
+\label{chap:prolog}
+You have to write a new Prolog wrapper by extending shef.nlp.supple.prolog.Prolog
+and you will probably have to write a Prolog file to compile the parser (look at mkparser-*.pl)
+for examples of how to do this.
+
+\end{document}
+
+

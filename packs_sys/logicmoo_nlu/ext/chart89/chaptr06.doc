@@ -1,0 +1,422 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%     Extracts from the book "Natural Language Processing in Prolog"    %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+Well-formed substring tables & charts
+
+In implementing a chart-parser in Prolog, it is tempting to use the                     
+Prolog database itself as the repository for the chart, and store
+edges by asserting them in a format such as the following:
+
+    edge(START,FINISH,LABEL,TOFIND,FOUND)
+
+We shall succumb to this temptation in implementing our first two
+chart parsers, though later in the chapter it will become apparent
+that we have bought simplicity at the cost of flexibility.
+
+Given this approach, the first thing we need is a means of
+initializing the chart by asserting inactive edges for each word in
+the string.  The predicate 'start_chart' is provided with a string of
+words as its third argument and a position in the chart to start from
+(a number) in its first argument.  Its job is to enter the appropriate
+words in the chart and instantiate the second argument to the final
+position in the chart.  If the string is empty, it does nothing and
+returns the position in the string:
+
+    start_chart(V0,V0,[]).
+
+Otherwise, it takes the first word in the string, adds an inactive
+edge to the chart for each occurrence of that word in the lexicon, and
+then continues with the rest of the string:
+
+    start_chart(V0,Vn,[Word|Words]) :-
+        V1 is V0+1,
+        foreach(word(Category,Word),
+          add_edge(V0,V1,Category,[],[Word,Category])),
+        start_chart(V1,Vn,Words).
+
+The predicate 'foreach' can be found in the file utilities.pl in the
+appendix, and its definition will not be discussed here.  It
+backtracks through all possible ways of satisfying its first argument
+as a Prolog goal, for each one invoking its second argument as a
+Prolog goal.  So the effect here is to call 'add_edge' for each word-
+category combination found by the 'word' predicate.  Notice that we
+include the Category itself in the FOUND argument of each edge to be
+added.  By having the FOUND argument be a list containing the category
+and the parse trees of the "found" phrases, we automatically construct
+parse trees as we go.
+
+The predicate 'add_edge', however, does more than simply assert the
+existence of the edge.  It also needs to determine what other edges
+need to be added to the chart as a consequence of the addition.
+First, it needs to check if the edge already exists, and, if so, do
+nothing:
+
+    add_edge(V0,V1,Category,Categories,Parse) :-
+        edge(V0,V1,Category,Categories,Parse),!.
+
+Otherwise, it asserts the edge, and then adds any further (active)
+edges that are contingent on the addition of this edge to the chart.
+If an inactive Category1 edge spanning V1 to V2 is being added (and
+thus the TOFIND argument is an empty list), then, for each rule whose
+leftmost daughter is of Category1, it adds an empty active edge at V1,
+of the kind dictated by the applicable rule.  This is the bottom-up
+rule:
+
+    add_edge(V1,V2,Category1,[],Parse) :-
+        asserta(edge(V1,V2,Category1,[],Parse)),
+        foreach(rule(Category2,[Category1|Categories]),
+          add_edge(V1,V1,Category2,[Category1|Categories],[Category2])),
+
+Then, as the second part of this clause, for every active edge which
+currently ends at V1, and which is looking for a Category1, we add a
+further edge (which may turn out to be either active or inactive)
+based on it, that ends at V2.  This is the fundamental rule (for the
+case when an inactive edge is added):
+
+        foreach(edge(V0,V1,Category2,[Category1|Categories],Parses),
+          add_edge(V0,V2,Category2,Categories,[Parse|Parses])).
+
+That clause deals with everything that has to be done on the occasion
+of the addition of an inactive edge.  But we still need a clause to
+cater for the case of active edge addition, and this turns out to be
+simpler.  We just look for every inactive edge that could allow the
+active edge to be extended, and add edges extending it, as
+appropriate.  This is the fundamental rule (for the case when an
+active edge is added).
+
+    add_edge(V0,V1,Category1,[Category2|Categories],Parses) :-
+        asserta(edge(V0,V1,Category1,[Category2|Categories],Parses)),
+        foreach(edge(V1,V2,Category2,[],Parse),
+          add_edge(V0,V2,Category1,Categories,[Parse|Parses])).
+
+That essentially completes our bottom-up chart parser, but it is
+convenient to wrap the top level predicate 'start_chart' into a
+further predicate that (i) will save us having to specify the initial
+vertex, (ii) will display the results of the parse, and (iii) will
+clean up afterwards by removing all the edges created:
+
+    test(String) :-
+        V0 is 1,
+        start_chart(V0,Vn,String),
+        foreach(edge(V0,Vn,Symbol,[],Parse),
+          write(Parse)),
+        retractall(edge(_,_,_,_,_)).
+
+Implementing a top-down chart parser in Prolog is not significantly
+harder than the bottom-up case, and the code is remarkably similar to
+before.  At the top-level we have a predicate 'parse' that initializes
+the chart with inactive word edges, ascertains the category of the
+initial symbol in use (usually 'S') and starts active empty edges at
+the beginning of the chart with this category.  As before, each
+addition of an edge to the chart may cause the addition of further
+edges.
+
+    parse(V0,Vn,String) :-
+           start_chart(V0,Vn,String),
+           initial(Symbol),
+           start_active(V0,Symbol).
+
+The definition of 'start_chart' can simply be carried over from our
+earlier bottom-up parser (though the predicates it calls cannot be),
+but 'start_active(Vertex,Category)' requires definition.  This is
+straightforward: for every rule that expands Category, start an empty
+active edge based on the rule at Vertex.
+
+    start_active(V0,Category) :-
+            foreach(rule(Category,Categories),
+             add_edge(V0,V0,Category,Categories,[Category])).
+
+Both 'start_chart' and 'start_active' call 'add_edge' and the
+definition of the latter cannot simply be taken over from our bottom-
+up parser, though the first clause is the same:
+
+    add_edge(V1,V2,Category,Categories,Parse) :-
+           edge(V1,V2,Category,Categories,Parse),!.
+
+Apart from this, as before we need to distinguish the addition of
+active and inactive edges.  For an inactive edge, we need only worry
+about the fundamental rule:
+
+    add_edge(V1,V2,Category1,[],Parse) :-
+             asserta(edge(V1,V2,Category1,[],Parse)),
+            foreach(edge(V0,V1,Category2,[Category1|Categories],Parses),
+             add_edge(V0,V2,Category2,Categories,[Parse|Parses])).
+
+For an active edge, we need to worry about both the fundamental rule
+and the top-down rule:
+
+    add_edge(V1,V2,Category1,[Category2|Categories],Parses) :-
+             asserta(edge(V1,V2,Category1,[Category2|Categories],Parses)),
+            foreach(edge(V2,V3,Category2,[],Parse),
+             add_edge(V1,V3,Category1,Categories,[Parse|Parses])),
+            start_active(V2,Category2).
+
+In both cases, the edge is added by assertion.  If an inactive edge is
+added, then the fundamental rule is applied in respect of every active
+edge that can make use of it.  Conversely, if an active edge is added,
+then the fundamental rule is applied in respect of every inactive edge
+that it can use, and in addition an active edge is added for every
+category that appear at the start of the RHS of a rule for the next
+category required.  Fortunately, this last set of additions can be
+achieved using our already defined predicate 'start_active'.
+
+That completes our top-down chart parser, but again it is convenient
+to wrap the top level predicate 'parse' into a further predicate that
+will (i) save us having to specify the initial vertex, (ii) display
+the results of the parse, and (iii) clean up afterwards by removing
+all the edges created:
+
+    test(String) :-
+        V0 is 1,
+        initial(Symbol),
+        parse(V0,Vn,String),
+        foreach(edge(V0,Vn,Symbol,[],Parse),
+          write(Parse)),
+        retractall(edge(_,_,_,_,_)).
+
+Our example parsers above had two characteristics in common:
+(i) they used the Prolog database to store the chart, and
+(ii) they had no explicit agenda, but simply relied on Prolog
+backtracking as their control strategy.  This approach makes for short
+code, but sacrifices flexibility.  In the two parsers that we describe
+in this section, we will maintain and manipulate both the chart and an
+explicit agenda as lists of edges that get passed as arguments from
+predicate to predicate.  As we shall see, it then becomes possible to
+switch between depth-first-like to breadth-first-like processing by
+interchanging the order of arguments in a single predicate call.
+
+Our basic data structure remains the edge, only one shorn of the final
+FOUND component used in our earlier chart parsers.
+
+    edge(START,FINISH,LABEL,TOFIND)
+
+This means that, for simplicity, we are talking about a recognizer,
+rather than a parser.  Charts and agendas simply consist of lists of
+such edges.
+
+As before, we begin with a bottom-up parser.  We start off with an
+initialization predicate 'start_agenda(String,Vertex,Agenda)' which
+produces an initial Agenda of lexical edges given String starting at
+Vertex.  If the string is empty, then there is an empty agenda:
+
+    start_agenda([],V0,[]).
+
+Otherwise, we peel off the first word, consult the lexicon and map all
+the relevant inactive edges spanning this word into an agenda,
+appending this to the front of the agenda obtained by looking at the
+rest of the words:
+
+    start_agenda([Word|Words],V0,Agenda) :-
+        V1 is V0+1,
+        findall(edge(V0,V1,Category,[]),
+          word(Category,Word),
+          Agenda1),
+        start_agenda(Words,V1,Agenda2),
+        append(Agenda1,Agenda2,Agenda).
+
+The predicate 'findall', which is in the utilities library, is used to
+collect in its third argument a list which contains for each solution
+of the second argument the appropriate instantiation of the first
+argument.  It is similar to the built-in predicates 'setof' and
+'bagof' that are provided with many Prolog systems, except that
+'findall' produces the empty list in its third argument (rather than
+failing) if there are no solutions to the second argument.  In this
+case, 'findall' is used to iterate over all possible ways of finding
+Word as an instance of some Category.  For each such solution, an
+appropriate 'edge' term is included in the answer list (Agenda1).
+
+The predicate 'extend_edges(Agenda, InChart, OutChart)' is used to add
+the edges in Agenda to an initial chart InChart, taking into account
+the fundamental rule and bottom-up rule to generate yet more edges,
+producing a new chart OutChart.  It is an identity function when the
+agenda is empty:
+
+    extend_edges([],Chart,Chart).
+
+Otherwise, it takes the first edge on the agenda and sees whether it
+is already in the chart.  If so, it can move down the agenda without
+more ado:
+
+    extend_edges([Edge|Agenda1],Chart1,Chart2) :-
+       member(Edge,Chart1), !,
+       extend_edges(Agenda1,Chart1,Chart2).
+
+Otherwise 'extend_edges' adds the first edge to the chart, looks for
+any new edges that it provokes as a result of addition, adds them to
+the agenda, and then continues with this new agenda and the augmented
+chart
+
+    extend_edges([Edge|Agenda1], Chart1, Chart3) :-
+        Chart2 = [Edge|Chart1],
+        new_edges(Edge,Chart2,Edges),
+        add_edges(Agenda1,Edges,Agenda2),
+        extend_edges(Agenda2,Chart2,Chart3).
+
+You 'add' an edge to a list of edges either by finding that it is
+already there, or by just adding it:
+
+    add_edge(Edge,Edges,Edges) :-
+        member(Edge,Edges), !.
+    add_edge(Edge,Edges,[Edge|Edges]).
+
+And you combine two lists of edges by calling 'add_edge' in the
+obvious recursive manner:
+
+    add_edges([],Edges,Edges).
+    add_edges([Edge|Edges],Edges1,Edges3) :-
+        add_edge(Edge,Edges1,Edges2),
+        add_edges(Edges,Edges2,Edges3).
+
+So far, so good, but the essence of chart-parsing, the fundamental
+rule, has yet to make its appearance.  We find it here in the
+predicate 'new_edges(Edge,Chart,Edges)' which maps Edge and Chart into
+a set of new edges, Edges, that arises from the addition of Edge to
+Chart.  It is also this 'new_edges' predicate which is responsible for
+adding the empty active edges that get everything going.  If an
+inactive Category1 edge spanning V1 to V2 is being added then, for
+each rule whose leftmost daughter is of Category1, create an empty
+active edge at V1, of the kind dictated by the applicable rule:
+
+    new_edges(edge(V1,V2,Category1,[]),Chart,Edges) :-
+        findall(edge(V1,V1,Category2,[Category1|Categories1]),
+          rule(Category2,[Category1|Categories1]),
+          Edges1),
+
+Then, for every existing active edge which currently ends at V1, and
+which is looking for a Category1, add a further edge (which may turn
+out to be either active or inactive) based on it, that ends at V2:
+
+        findall(edge(V0,V2,Category3,Categories2),
+          member(edge(V0,V1,Category3,[Category1|Categories2]),Chart),
+          Edges2),
+
+Finally, combine the two resulting sets of edges:
+
+        add_edges(Edges1,Edges2,Edges).
+
+That clause deals with everything that has to be done on the occasion
+of the addition of an inactive edge.  But we still need a clause to
+cater for the case of active edge addition, and, as with our earlier
+bottom-up chart parser example, this turns out to be simpler.  We just
+look for every inactive edge that could allow the active edge to be
+extended, and add edges extending it, as appropriate:
+
+    new_edges(edge(V1,V2,Category1,[Category2|Categories]),Chart,Edges) :-
+        findall(edge(V1,V3,Category1,Categories),
+          member(edge(V2,V3,Category2,[]),Chart),
+          Edges).
+
+That really completes our new bottom-up chart parser, but it is
+convenient to wrap the top level predicates 'start_agenda' and
+'extend_edges' into a further predicate that will save us having to
+specify the initial vertex, and will check to see that the chart does
+indeed contain an edge that spans the string with an instance of the
+initial symbol:
+
+    test(String) :-                     
+        start_agenda(String,0,Agenda),
+        extend_edges(Agenda,[],Chart),
+        initial(Symbol),
+        member(edge(0,M,Symbol,[]),Chart),
+        N is M + 1,
+        not(member(edge(_,N,_,_),Chart)).
+
+The parser we have been considering operates depth-first and, to the
+casual reader, this might appear to simply follow from our decision to
+implement it in Prolog.  But this is not the case.  In fact, it
+follows from the order in which things get added to the agenda, and
+this is within our control.  At present, the new edges that result
+from adding an edge get put on the front of the agenda, which means
+that the list is functioning as a stack.  We can redefine
+'extend_edges' by commenting out the existing agenda contruction call
+of 'add_edges' and replace it with a call in which the order of the
+first two arguments (the existing agenda and the new items) is
+reversed.  This simple move gives us a list that behaves like a queue
+and hence a parser that explores the search space in an approximately
+breadth-first manner.
+
+    extend_edges([Edge|Agenda1], Chart1, Chart3) :-
+        Chart2 = [Edge|Chart1],
+        new_edges(Edge,Chart2,Edges),
+    %   add_edges(Edges,Agenda1,Agenda2),      % depth-first processing
+        add_edges(Agenda1,Edges,Agenda2),      % breadth-first processing
+        extend_edges(Agenda2,Chart2,Chart3).
+
+Switching from bottom-up to top-down requires rather more work,
+however, although some of the code we have developed so far can be
+carried over unchanged, namely 'start_agenda', 'add_edge', 'add_edges'
+and both variants of 'extend_edges'.  The predicate 'start_agenda'
+creates an initialized agenda of lexical edges, which, given that
+there is no bottom-up rule, we can simply treat as the initial chart
+in top-down parsing.  We also need a way to get active edges started,
+however, and we do this, as in our earlier top-down parser, with a
+predicate called 'start_active(Category, Vertex, Edges)'.  This is
+straightforward: for every rule that expands Category, create an empty
+active edge based on the rule at Vertex and put it in Edges:
+
+    start_active(Category,Vertex,Edges) :-
+        findall(edge(Vertex,Vertex,Category,Categories),
+          rule(Category,Categories),
+          Edges).
+
+Our new top-down parser still has to incorporate the fundamental rule.
+We find it, as with the preceding example, in the predicate
+'new_edges(Edge,Chart,Edges)' which maps Edge and Chart into a set of
+new edges, Edges, that arises from the addition of Edge to Chart.  If
+an inactive Category1 edge spanning V1 to V2 is being added, then for
+every existing active edge which currently ends at V1, and which is
+looking for a Category1, add a further edge (which may turn out to be                     
+either active or inactive) based on it, that ends at V2:
+
+    new_edges(edge(V1,V2,Category1,[]),Chart,Edges) :-
+        findall(edge(V0,V2,Category2,Categories),
+           member(edge(V0,V1,Category2,[Category1|Categories]),Chart),
+          Edges).
+
+That clause deals with everything that has to be done on the occasion
+of the addition of an inactive edge.  But we also need a clause to
+cater for the case of active edge addition.  We need to do three
+things: (i) create the relevant empty active edges to look for the
+next category (the top-down parsing strategy), (ii) look for every
+inactive edge that could allow the active edge to be extended, and
+create edges extending it, as appropriate, and (iii) combine the two
+resulting sets of edges:
+
+    new_edges(edge(V1,V2,Category1,[Category2|Categories]),Chart,Edges) :-
+        start_active(Category2,V2,Edges1),
+        findall(edge(V1,V3,Category1,Categories),
+           member(edge(V2,V3,Category2,[]),Chart),
+           Edges2),
+        append(Edges1,Edges2,Edges).
+
+Our new top-down chart parser is almost complete.  It only remains to
+wrap the predicates into a package that will initialize the chart,
+start an empty active edge for the initial symbol, create an initial
+agenda, elaborate the chart to termination, and conclude by checking
+for success:
+
+    test(String) :-
+        initial(Symbol),
+        start_agenda(String,0,Chart1),
+        start_active(Symbol,0,Agenda),
+        extend_edges(Agenda,Chart1,Chart2),
+        member(edge(0,M,Symbol,[]),Chart2),
+        N is M + 1,
+        not(member(edge(_,N,_,_),Chart2)).
+
+Obviously our representation of the chart and/or agenda as a simple
+Prolog list of edge data structures is one of the worst possible
+choices as regards the efficiency of finding an edge of a given type
+in a large chart/agenda.  The approach of representing the chart as
+Prolog assertions is marginally better, as many Prolog implementations
+index the clauses of a predicate to take account of some of the
+arguments of the predicate.  This means that not all the possible
+clauses would have to be considered when a search is made for an edge
+with particular characteristics.  The automatic indexing introduced by
+a Prolog compiler is not necessarily tuned to the type of searches
+that one actually wants to perform, however, and so rather more
+careful programming would be required to build a really efficient
+chart parser in Prolog.

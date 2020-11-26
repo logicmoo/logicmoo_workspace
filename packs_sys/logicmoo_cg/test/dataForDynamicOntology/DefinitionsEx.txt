@@ -1,0 +1,34 @@
+TT1 is [TT:super]-rr2->[AA1]
+
+TT2 is [TT:super]-
+		-rr2->[AA1],
+		-rr4->[AA2]
+
+TT3 is [TT:super]-rr1->[AA3]
+
+TT4 is [TT:super]-
+		-rr2->[AA1],
+		-rr3->[AA4]
+
+QQ1 is [QQ:super]-rr5->[AA2]
+
+QQ2 is [QQ:super]-
+		-rr5->[AA2],
+		-rr8->[AA7]
+
+
+QQ3 is [QQ:super]-
+		-rr6->[AA5],
+		-rr8->[AA7]
+
+TT5 is
+[TT:super]-
+	-rr2->[AA1],
+	-rr4->[AA2:x]<-rr5-[QQ]-
+				-rr6->[AA5]-
+					-rr8->[AA6],
+					-rr7->[AA4:y];
+				-rr8->[AA7];
+	-rr1->[AA3],
+	-rr3->[AA4:y]-rr1->[AA6]
+

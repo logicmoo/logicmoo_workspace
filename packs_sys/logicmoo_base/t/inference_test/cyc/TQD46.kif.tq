@@ -1,0 +1,52 @@
+(note TQD46)
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (targetedProductType ?EMBARGO ?PRODUCTTYPE) 
+ (maleficiary ?EMBARGO ?HARMED) 
+ (imports ?REG ?PRODUCTTYPE) 
+ (importsFrom ?REG ?PRODUCTTYPE ?HARMED) 
+ (relationInstanceExistsMany affiliatedWith ?REG MilitaryOrganization)) 
+ (capableOfDoing ?REG ?EMBARGO agent)) 
+
+(instance HYP-EconomicEmbargo-57857958 EconomicEmbargo) 
+
+(maleficiary HYP-EconomicEmbargo-57857958 Iran) 
+
+(relationInstanceExistsMany affiliatedWith WesternEurope MilitaryOrganization) 
+
+(imports WesternEurope PetroleumProduct) 
+
+(importsFrom WesternEurope PetroleumProduct Iran) 
+
+(targetedProductType HYP-EconomicEmbargo-57857958 PetroleumProduct) 
+
+(relationInstanceExistsMany affiliatedWith WesternEurope MilitaryOrganization) 
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (targetedProductType ?EMBARGO ?PRODUCTTYPE) 
+ (maleficiary ?EMBARGO ?HARMED) 
+ (imports ?REG ?PRODUCTTYPE) 
+ (importsFrom ?REG ?PRODUCTTYPE ?HARMED) 
+ (relationInstanceExistsMany affiliatedWith ?REG MilitaryOrganization)) 
+ (capableOfDoing ?REG ?EMBARGO agent)) 
+
+(capableOfDoing WesternEurope HYP-EconomicEmbargo-57857958 agent) 
+
+(queryyn 
+(implies 
+   (and 
+       (instance ?ACT EconomicEmbargo) 
+       (targetedProductType ?ACT PetroleumProduct) 
+       (maleficiary ?ACT Iran)) 
+   (capableOfDoing WesternEurope ?ACT agent))
+)
+
+(answer Yes
+)
+
+(end_of_file)
+

@@ -1,0 +1,26 @@
+* automatisk konvertering till dialogplaner
+* om anv. informerar att handling är klar, skippa resten av planen för
+ den handlingen
+
+* mode switching in single system
+
+X answer "how"
+
+* instead of saying "reinstall ...", refill the plan and start over
+
+* clear shared^com when restarting
+
+* reqRep, repeat etc.
+
+* $S> Has the carriage moved from the center position?
+
+$U> zdf
+$S> I didn't understand that. Please rephrase.
+
+$U> what?
+$S> I didn't understand that. Please rephrase.
+FRÅGAN BORDE UPPREPAS!!!
+
+* weird men funkar; "the print head is now secured" - "ok" tolkas som
+  confirming that action is performed...
+ - borde skilja på confirm och feedback...

@@ -1,0 +1,164 @@
+Universal > Person, Object, Action, Attribute, Proposition.
+Person > Man, Woman.
+Object > Pyramid, Cube, Sphere.
+Action > Put, Push, Create, Move.
+Attribute > Size, Color, Modality, Coord3D, Manner.
+
+Color = blue, red, green.
+Size = small, big.
+Man = john.
+
+lexicon("push", verb, [Push]-
+		    	                      -obj->[Object],
+		                          -on->[Object]     ).
+lexicon("create", verb, [Create]-obj->[Object]-colorOf->[Color]).
+lexicon("move", verb, [Move]-
+                         -obj->[Object],
+				                         -position->[Coord3D]).
+lexicon("move", verb, [Move]-
+                         -srce->[Object],
+                         -dest->[Object],
+                         -manr->[Manner]). 
+
+lexicon("pyramid", noun, Pyramid).
+lexicon("cone", noun, Cone).
+lexicon("sphere", noun, Sphere).
+
+lexicon("small", adj, sizeOf, Size, small).
+lexicon("red", adj, colorOf, Color, red).
+lexicon("green", adj, colorOf, Color, green).
+lexicon("big", adj, sizeOf, Size, big).
+lexicon("blue", adj, colorOf, Color, blue).
+lexicon("position", noun, Coord3D).
+
+lexicon("on", prep, on).
+lexicon("under", prep, under).
+lexicon("left", prep, left).
+lexicon("right", prep, right).
+lexicon("at", prep, loc).
+lexicon("to", prep, loc).
+
+lexicon("the", art, x).
+lexicon("a", art, x).
+Verb(v, G) :- lexicon(v, verb, G).
+
+Prep((v|P), P, V) :- lexicon(v, prep, V).
+
+Art((v|P), P, V) :- lexicon(v, art, V), /.
+Art(P, P, undefined).
+
+Noun((v|P), P, V) :- lexicon(v, noun, V).
+
+Adj(A, R, T, V) :- lexicon(A, adj, R, T, V).
+
+Shrdlu :-
+  write("**** Welcome to the SHRDLU_PCG Program *******"),
+  new(aShrdlu_Canvas3D, "ShrdluCanvas3D", ()),
+  read_sentence(_sentence),
+  ShrdluDialog(_sentence), /.
+
+ShrdluDialog(("end", ".")) :- 
+  execMethod(void, aShrdlu_Canvas3D, "close", ()), 
+  /.
+ShrdluDialog(_sentence) :-
+  Semantic_Analysis(_sentence, _CG),
+  write(_CG),	
+  _CG,
+  read_sentence(_s),
+  ShrdluDialog(_s), /.
+
+semantic_analyzer :-
+   read_sentence(P),
+   phrase_imperative(P, G),
+   write(G), /.
+
+Semantic_Analysis(_sentence, _CG) :- 
+   imperative_sentence(_sentence, _CG).
+
+[Proposition = G]-mode->[Modality = imperative] :- G.
+
+[Create]-obj->[T_Obj : _IdObj]-colorOf->[Color = C] :-
+   asserta(object([T_Obj : _IdObj]-colorOf->[Color = C]), ()),
+   write((T_Obj, _IdObj, C)), 
+   rendreChaine(T_Obj, s_typObj),
+   rendreChaine(C, s_couleur),
+   write((s_typObj, _IdObj, s_couleur)), /,
+   execMethod(void, aShrdlu_Canvas3D, s_typObj, (_IdObj, s_couleur)).
+
+[Move]-
+       -obj->[T_Obj : _IdObj],
+				       -position->[Coord3D = (p1, p2, p3)]  :- 
+   // il faut mettre a jour la base car la position de idObj a change
+   execMethod(void, aShrdlu_Canvas3D, "move", (_IdObj, p1, p2, p3)), /.
+
+rendreChaine(i_ident, i_string) :-
+  identToLetters(i_ident, L),
+  stringToLetters(i_string, L), /.
+
+imperative_sentence((V|P1), 
+                   [Proposition = G]-mode->[Modality = imperative]) :- 
+   Verb(V, G_V),
+   NP(P1, P2, E_NP1, S1),
+   eq([T_Verb]-obj->E_N_G1, G_V),
+   maximalJoin(G_V, E_N_G1, S1, E_NP1, G1_S1, _),
+   complement(P2, T_Verb, G1_S1, G).
+
+complement(("."), _, G, G) :- /.
+complement(P2, T_Verb, G1_S1, G) :-
+   Prep(P2, P3, s_prep),
+   NP(P3, ("."), E_NP2, S2),
+   eq([T_Verb]-s_prep->E_N_G2, G1_S1),
+   maximalJoin(G1_S1, E_N_G2, S2, E_NP2, G, _).
+
+
+NP(P, P1, E, G) :-
+   Art(P, P2, A1),
+   AdjsSynt(P2, P3, L_Adjs),
+   Noun(P3, P4, N),
+   suiteNP(P4, P1, N, A1, L_Adjs, E, G), /.
+
+suiteNP((x1, ",", x2, p_ponct, x3|P1), P1, Coord3D, A1, L_Adjs, E, G) :-
+   execMethod(x11, "java.lang.Integer", "valueOf", (x1)),
+   execMethod(x22, "java.lang.Integer", "valueOf", (x2)),
+   execMethod(x33, "java.lang.Integer", "valueOf", (x3)),
+   SemAdjs(L_Adjs, Coord3D, (x11, x22, x33), G, E), /.
+suiteNP((N1|P1), P1, N, A1, L_Adjs, E, G) :-
+   not(lexicon(N1, _, _)),
+   not(lexicon(N1, _, _, _, _)),
+   traiteInst(N1, N),
+   SemAdjs(L_Adjs, N, N1, G, E), /.
+suiteNP(P4, P1, N, A1, L_Adjs, E, G) :-
+   SemAdjs(L_Adjs, N, A1, S, E1),
+   AdjsSynt(P4, P1, L_Adjs2),
+   SemAdjs(L_Adjs2, N, A1, S1, E11),
+   maximalJoin(S, E1, S1, E11, G, E).
+
+traiteInst(N1, N) :-
+  isInstanceOf(N1, N), /.
+traiteInst(N1, N) :-
+  addInstance(N1, N).
+
+AdjsSynt((A|P), P1, (A|L_Adjs)) :-
+  lexicon(A, adj, _, _, _),
+  AdjsSynt(P, P1, L_Adjs), /.
+AdjsSynt(P, P, ()).
+
+SemAdjs((A|P), N, A1, S, E_N_S) :-
+   Adj(A, R1, T1, V1),
+   eq(G, [N : A1]-R1->[T1 = V1]), 
+   eq(G, E_N-R1->x),
+   SemAdjs2(P, G, E_N, N, A1, S, E_N_S), /.
+SemAdjs((), N, (x|y), G, E) :-
+   eq(G, [N = (x|y)]),
+   eq(G, E-rel->[Universal]), /.
+SemAdjs((), N, A1, G, E) :-
+   eq(G, [N : A1]),
+   eq(G, E-rel->[Universal]), /.
+
+SemAdjs2((A|P), G, E_N, N, A1, S, E_S) :-
+   Adj(A, R, T, V),
+   eq(G1, [N : A1]-R->[T = V]),
+   eq(G1, E_N1-R->x),
+   maximalJoin(G, E_N, G1, E_N1, G2, E_N2), 
+   SemAdjs2(P, G2, E_N2, N, A1, S, E_S), /.
+SemAdjs2((), G, E, _, _, G, E).

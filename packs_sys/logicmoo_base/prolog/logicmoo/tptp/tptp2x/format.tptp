@@ -1,0 +1,417 @@
+%==============================================================================
+%----Procedures for writing out clauses in TSTP format
+%----
+%----Written by Geoff Sutcliffe, March 2003.
+%==============================================================================
+%----Generic output
+%==============================================================================
+%------------------------------------------------------------------------------
+tptp_output_separator(':=',_):-
+    !,
+    write(' :=').
+
+tptp_output_separator('<<',_):-
+    !,
+    write(' <<').
+
+tptp_output_separator('>>',_):-
+    !,
+    write(' >>').
+
+tptp_output_separator(Separator,_):-
+    write(Separator).
+%------------------------------------------------------------------------------
+%----Output variables 
+tptp_output_variable(Variable):-
+    prolog_dialect(swi),
+    !,
+    write_term(Variable,[numbervars(true)]).
+
+tptp_output_variable(Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    write(Variable).
+
+tptp_output_variable(Language,Variable := Definition,Indent,_):-
+    tptp_flat_binary_formula(Definition,_),
+    !,
+    tptp_output_variable(Variable),
+    write(':= '),
+    output_formula(tptp,Language,Definition,Indent,Indent,none).
+
+tptp_output_variable(Language,Variable : Type,Indent,_):-
+    tptp_flat_type(Type,BinaryTypeConnective),
+    !,
+    tptp_output_variable(Variable),
+    write(': '),
+    (   BinaryTypeConnective == '@'
+    ->  StartLevel = none
+    ;   StartLevel = outermost
+    ),
+    output_formula(tptp,Language,Type,Indent,Indent,StartLevel).
+
+tptp_output_variable(Language,TwoPart,Indent,_):-
+    TwoPart =.. [Separator,Variable,TypeOrDefn],
+    !,
+    tptp_output_variable(Variable),
+    write(Separator),
+    nl,
+    TypeDefIndent is Indent + 2,
+    output_formula(tptp,Language,TypeOrDefn,TypeDefIndent,0,none).
+
+tptp_output_variable(_,Variable,_,_):-
+    tptp_output_variable(Variable).
+%------------------------------------------------------------------------------
+%----If it starts with a dollar, no quotes (allowed in TPTP)
+tptp_output_functor(Functor):-
+    name(Functor,[36|_]),
+    !,
+    write(Functor).
+
+tptp_output_functor(NotQuoted):-
+    tptp2X_member(NotQuoted,['!!','??']),
+    !,
+    write(NotQuoted).
+
+tptp_output_functor(Functor):-
+    writeq(Functor).
+%------------------------------------------------------------------------------
+tptp_output_complex_equality(Language,LHS,EqualitySymbol,RHS,Indent,
+AlreadyIndented,ConnectiveAbove):-
+    output_indent(Indent,AlreadyIndented),
+    name(EqualitySymbol,ConnectiveASCII),
+    tptp2X_length(ConnectiveASCII,ConnectiveLength),
+%----THF equalities have to be ()ed unless outermost, because p = q | r is 
+%----ambiguous. outermost already have their ()s done
+    (   ConnectiveAbove == outermost
+    ->  (   NewIndent is Indent,
+            ConnectiveIndent is Indent - 1 - ConnectiveLength
+        )
+    ;   (   write('( '),
+            NewIndent is Indent + 2,
+            ConnectiveIndent is Indent + 1 - ConnectiveLength
+        )
+    ),
+%----Extra ()s get around equated binders in the quantified part
+    output_formula(tptp,Language,LHS,NewIndent,NewIndent,'='),
+%----Do atomic all on one line
+    (   (   tptp_atomic_formula(LHS),
+            tptp_atomic_formula(RHS)
+        )
+    ->  write(' ')
+    ;   (   nl,
+            output_indent(ConnectiveIndent,0)
+        )
+    ),
+    write(EqualitySymbol),
+    write(' '),
+    output_formula(tptp,Language,RHS,NewIndent,NewIndent,'='),
+    (   ConnectiveAbove == outermost
+    ->  true
+    ;   write(' )')
+    ).
+%------------------------------------------------------------------------------
+tptp_output_atom_list(_,[]):-
+    !.
+
+tptp_output_atom_list(Language,[One]):-
+    !,
+    tptp_output_atom(Language,One).
+
+tptp_output_atom_list(Language,[One,Two|Rest]):-
+    tptp_output_atom(Language,One),
+    write(','),
+    tptp_output_atom_list(Language,[Two|Rest]).
+%------------------------------------------------------------------------------
+%----Variables are also output as atoms.
+%----Only THF should have variable atoms. This is where an atom that should
+%----be 'Quoted' might lose its quotes.
+%DEBUG tptp_output_atom(_,Atom):-write('ATOM '),write(Atom),nl,fail.
+
+tptp_output_atom(_,Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    tptp_output_variable(Variable).
+
+%----Things that look like anonymous variables
+tptp_output_atom(_,'_'):-
+    !,
+    write('_').
+
+%tptp_output_atom(_,ASCIIList):-
+%    looks_like_a_string(ASCIIList),
+%    !,
+%    name(Atom,ASCIIList),
+%    writeq(Atom).
+
+tptp_output_atom(Language,Equality):-
+    Equality =.. [EqualitySymbol,LHS,RHS],
+    tptp2X_member(EqualitySymbol-NewEqualitySymbol,['$tptp_equal'-'=','='-'=',
+'$tptp_not_equal'-'!=','!='-'!=']),
+    !,
+    output_formula(tptp,Language,LHS,0,0,outermost),
+    write(' '),
+    write(NewEqualitySymbol),
+    write(' '),
+    output_formula(tptp,Language,RHS,0,0,outermost).
+
+%----DLF dereference of a defined word
+tptp_output_atom(Language,&(DollarWord)):-
+    name(DollarWord,[36|_]),
+    !,
+    write('&'),
+    write('('),
+    tptp_output_atom(Language,DollarWord),
+    write(')').
+
+%----DLF dereference
+tptp_output_atom(_,&(Atom)):-
+    !,
+    write('&'),
+    write(Atom).
+
+tptp_output_atom(_,DefinedAtom):-
+    atomic(DefinedAtom),
+    !,
+    tptp_output_functor(DefinedAtom).
+
+%----Rational terms
+tptp_output_atom(Language,Numerator/Denominator):-
+    tptp_output_atom(Language,Numerator),
+    write('/'),
+    tptp_output_atom(Language,Denominator).
+
+%----TFF and FOF non-atomic don't get a new line
+tptp_output_atom(Language,Formula):-
+    tptp2X_member(Language,[tff,fof]),
+    tptp_non_atomic_formula(Formula),
+    !,
+    output_formula(tptp,Language,Language,0,0,outermost).
+
+%----THF get a new line
+tptp_output_atom(Language,Formula):-
+    tptp_non_atomic_formula(Formula),
+    !,
+    nl,
+    output_formula(tptp,Language,Formula,2,0,outermost).
+
+tptp_output_atom(Language,Term):-
+    Term =.. [Functor|Arguments],
+    tptp_output_functor(Functor),
+    write('('),
+    tptp_output_atom_list(Language,Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%----Equalities need to be ()ed for THF, because p = q | r is ambiguous. The
+%----user is responsible for that in tptp2X world, for otherwise CNF output
+%----is broken.
+tptp_output_atom(Language,Equality,Indent,AlreadyIndented,ConnectiveAbove):-
+    tptp2X_member(Language,[thf,dlf]),
+    Equality =.. [EqualitySymbol,LHS,RHS],
+    tptp2X_member(EqualitySymbol-NewEqualitySymbol,['$tptp_equal'-'=','='-'=',
+'$tptp_not_equal'-'!=','!='-'!=']),
+    !,
+    tptp_output_complex_equality(Language,LHS,NewEqualitySymbol,RHS,Indent,
+AlreadyIndented,ConnectiveAbove).
+
+tptp_output_atom(Language,Equality,_,_,_):-
+    Equality =.. [EqualitySymbol,LHS,RHS],
+    tptp2X_member(EqualitySymbol,['$tptp_equal','=','$tptp_not_equal','!=']),
+    tptp_atomic_formula(LHS),
+    tptp_atomic_formula(RHS),
+    !,
+    tptp_output_atom(Language,Equality).
+
+tptp_output_atom(_Language,_Symbol:_Signature,_Indent,_AlreadyIndented,_):-
+    !,
+    write('IF YOU SEE THIS EMAIL GEOFF SUTCLIFFE'),nl.
+%    tptp_output_atom(Language,Symbol),
+%    write(':'),
+%    (   tptp_flat_type(Signature,_) ->
+%        (   NewIndent is Indent,
+%            NewAlreadyIndented is Indent - 1,
+%            InitialConnectiveAbove = outermost
+%        )
+%    ;   (   nl,
+%            NewIndent is Indent + 2,
+%            NewAlreadyIndented is 0,
+%            InitialConnectiveAbove = none
+%        )
+%    ),
+%    output_formula(tptp,Language,Signature,NewIndent,NewAlreadyIndented,
+%InitialConnectiveAbove).
+
+tptp_output_atom(Language,Atom,_,_,_):-
+    tptp_output_atom(Language,Atom).
+%------------------------------------------------------------------------------
+%==============================================================================
+%----FOF format
+%==============================================================================
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in TSTP format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+tptp_quantified_format('',' [',',','] : ','').
+
+%----FormulaPrefix,ConnectivePrefix,ConnectiveSuffix,FormulaSuffix
+tptp_binary_format('( ','',' ',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+tptp_unary_format('',' ','').
+%------------------------------------------------------------------------------
+output_tptp_formula_start(Language,Name,Status):-
+    write(Language),
+    write('('),
+    writeq(Name),
+    write(','),
+    write(Status),
+    write(',').
+%------------------------------------------------------------------------------
+output_tptp_formula_end(short,_,_):-
+    write(').'),
+    nl.
+    
+output_tptp_formula_end(long,Source,UsefulInfo):-
+    write(','),
+    nl,
+    write('    '),
+    tptp_output_atom(fof,Source),
+    write(','),
+    nl,
+    write('    ['),
+    tptp_output_atom_list(fof,UsefulInfo),
+    write(']).'),
+    nl.
+%------------------------------------------------------------------------------
+outer_bracketed_formula(Formula):-
+    tptp_binary_formula(Formula,_,_,_),
+    !.
+
+outer_bracketed_formula(~'$tptp_equal'(LHS,RHS)):-
+    !,
+    outer_bracketed_formula('$tptp_equal'(LHS,RHS)).
+
+%----Definitions in DLF treated like equality for output
+outer_bracketed_formula(Equality):-
+    Equality =.. [EqualitySymbol,LHS,RHS],
+    tptp2X_member(EqualitySymbol,[':=','$tptp_equal','=','$tptp_not_equal',
+'!=']),
+    ( tptp_non_atomic_formula(LHS)
+    ; tptp_non_atomic_formula(RHS) ),
+    !.
+
+%------------------------------------------------------------------------------
+make_tptp_source_and_usefulinfo([],unknown,[]).
+
+make_tptp_source_and_usefulinfo([Source],Source,[]).
+
+make_tptp_source_and_usefulinfo([Source,UsefulInfo],Source,UsefulInfo).
+%------------------------------------------------------------------------------
+%----Write a tptp formula in fof form
+output_tptp_formula(Format,Length,AnnotatedFormula):-
+    AnnotatedFormula =.. [Language,Name,Status,Formula|SourceAndUsefulInfo],
+%DEBUG write('OTF--- '),display(Formula),nl,
+    output_tptp_formula_start(Language,Name,Status),
+%----Binary formulae and equalities (which are binary in THF) get a ( on 
+%----next line
+    (   outer_bracketed_formula(Formula)
+    ->  (   nl,
+            write('    ('),
+            output_formula(Format,Language,Formula,6,5,outermost)
+        )
+    ;   (   write('('),
+            nl,
+            output_formula(Format,Language,Formula,4,0,outermost)
+        )
+    ),
+%----Old way, but extra brackets around clauses
+%----output_generic_formula(Format,Language,Formula),
+    write(' )'),
+    make_tptp_source_and_usefulinfo(SourceAndUsefulInfo,Source,UsefulInfo),
+    output_tptp_formula_end(Length,Source,UsefulInfo).
+%------------------------------------------------------------------------------
+%----Write out each formula in TSTP format
+output_tptp_formulae(Format,Length,[OneFormula]):-
+    !,
+    output_tptp_formula(Format,Length,OneFormula).
+
+output_tptp_formulae(Format,Length,[FirstFormula|RestOfFormulae]):-
+    output_tptp_formula(Format,Length,FirstFormula),
+    nl,
+    output_tptp_formulae(Format,Length,RestOfFormulae).
+%------------------------------------------------------------------------------
+output_tptp_literals_on_one_line(Format,Language,Length,(LHS|RHS)):-
+    !,
+    output_tptp_literals_on_one_line(Format,Language,Length,LHS),
+    write(' | '),
+    output_tptp_literals_on_one_line(Format,Language,Length,RHS).
+
+output_tptp_literals_on_one_line(Format,Language,_Length,Literal):-
+    output_formula(Format,Language,Literal,0,0,'|').
+%------------------------------------------------------------------------------
+%----Write out a TSTP clause, one literal per line
+output_tptp_clause(Format,Clause,Length,no):-
+    !,
+    output_tptp_formula(Format,cnf,Length,Clause).
+    
+output_tptp_clause(Format,Clause,Length,yes):-
+    Clause =.. [cnf,Name,Status,Literals|_],
+    output_tptp_formula_start(cnf,Name,Status),
+    nl,
+    write('    '),
+    write('( '),
+    output_tptp_literals_on_one_line(Format,cnf,Length,Literals),
+    write(' )'),
+    output_tptp_formula_end(Length,unknown,[]).
+%------------------------------------------------------------------------------
+%----This writes out a list of clauses in TSTP format
+%----If only one clause left, then no new line
+output_tptp_clauses(Format,[OneClause],Length,OneLineOfLiterals):-
+    !,
+    output_tptp_clause(Format,OneClause,Length,OneLineOfLiterals).
+
+output_tptp_clauses(Format,[FirstClause|RestOfClauses],Length,
+OneLineOfLiterals):-
+    output_tptp_clause(Format,FirstClause,Length,OneLineOfLiterals),
+    nl,
+    output_tptp_clauses(Format,RestOfClauses,Length,OneLineOfLiterals).
+%------------------------------------------------------------------------------
+choose_tptp_length([],short).
+
+choose_tptp_length([Formula|_],long):-
+    Formula =.. [_,_,_,_,Source,UsefulInfo],
+    (   Source \== unknown
+    ;   UsefulInfo \== [] ),
+    !.
+
+choose_tptp_length([_|RestOfFormulae],Length):-
+    choose_tptp_length(RestOfFormulae,Length).
+%------------------------------------------------------------------------------
+%----This writes out TSTP format clauses
+tptp(tptp:Length,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    convert_clauses_to_tptp(Clauses,TSTPFormulae),
+%----If propositional then literals may be output on one line.
+    (   tptp_propositional(TSTPFormulae)
+    ->  output_tptp_clauses(tptp,TSTPFormulae,Length,yes)
+    ;   output_tptp_formulae(tptp,Length,TSTPFormulae) 
+    ).
+
+tptp(tptp:Length,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    convert_formulae_to_tptp(Formulae,TSTPFormulae),
+    output_tptp_formulae(tptp,Length,TSTPFormulae).
+
+%----No length - work out best guess for length
+tptp(tptp,Formulae,FileHeader):-
+    choose_tptp_length(Formulae,Length),
+    tptp(tptp:Length,Formulae,FileHeader).
+%------------------------------------------------------------------------------
+%----Provide information about the TSTP format
+tptp_format_information('%','.tptp').
+%------------------------------------------------------------------------------
+%----Provide information about the TSTP file
+tptp_file_information(format,tptp:short,'Variant is short or long').
+%------------------------------------------------------------------------------

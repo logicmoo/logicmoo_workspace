@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="errors.html">
+<link rel="next" href="threadcreate.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="errors.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="threadcreate.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:threads"><a id="sec:10"><span class="sec-nr">10</span> <span class="sec-title">Multithreaded 
+applications</span></a></h1>
+
+<a id="sec:threads"></a>
+
+<p>SWI-Prolog multithreading is based on standard C language 
+multithreading support. It is not like <em>ParLog</em> or other parallel 
+implementations of the Prolog language. Prolog threads have their own 
+stacks and only share the Prolog <em>heap</em>: predicates, records, 
+flags and other global non-backtrackable data. SWI-Prolog thread support 
+is designed with the following goals in mind.
+
+<p>
+<ul class="latex">
+<li><i>Multithreaded server applications</i><br>
+Today's computing services often focus on (internet) server 
+applications. Such applications often have need for communication 
+between services and/or fast non-blocking service to multiple concurrent 
+clients. The shared heap provides fast communication, and thread 
+creation is relatively cheap.<sup class="fn">172<span class="fn-text">On 
+an Intel i7-2600K, running Ubuntu Linux 12.04, SWI-Prolog 6.2 creates 
+and joins 32,000 threads per second elapsed time.</span></sup>
+
+<p>
+<li><i>Interactive applications</i><br>
+Interactive applications often need to perform extensive computation. If 
+such computations are executed in a new thread, the main thread can 
+process events and allow the user to cancel the ongoing computation. 
+User interfaces can also use multiple threads, each thread dealing with 
+input from a distinct group of windows. See also <a class="sec" href="mt-xpce.html#sec:10.7">section 
+10.7</a>.
+
+<p>
+<li><i>Natural integration with foreign code</i><br>
+Each Prolog thread runs in a native thread of the operating system, 
+automatically making them cooperate with <em>MT-safe</em> foreign code. 
+In addition, any foreign thread can create its own Prolog engine for 
+dealing with calling Prolog from C code.
+</ul>
+
+<p>SWI-Prolog multithreading is based on the POSIX thread standard
+<cite><a class="cite" href="Bibliography.html#Butenhof:1997:PPT">Butenhof, 
+1997</a></cite> used on most popular systems except for MS-Windows. On 
+Windows it uses the
+<a class="url" href="http://sources.redhat.com/pthreads-win32/">pthread-win32</a> 
+emulation of POSIX threads mixed with the Windows native API for 
+smoother and faster operation. The SWI-Prolog thread implementation has 
+been discussed in the ISO WG17 working group and is largely adopted by 
+YAP and XSB Prolog.<sup class="fn">173<span class="fn-text">The latest 
+version of the ISO draft can be found at <a class="url" href="http://logtalk.org/plstd/threads.pdf">http://logtalk.org/plstd/threads.pdf</a>. 
+It appears to have dropped from the ISO WG17 agenda.</span></sup>
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="threadcreate.html"><span class="sec-nr">10.1</span> <span class="sec-title">Creating 
+and destroying Prolog threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="thmonitor.html"><span class="sec-nr">10.2</span> <span class="sec-title">Monitoring 
+threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadcom.html"><span class="sec-nr">10.3</span> <span class="sec-title">Thread 
+communication</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.1"><span class="sec-nr">10.3.1</span> <span class="sec-title">Message 
+queues</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.2"><span class="sec-nr">10.3.2</span> <span class="sec-title">Waiting 
+for events</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.3"><span class="sec-nr">10.3.3</span> <span class="sec-title">Signalling 
+threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="threadcom.html#sec:10.3.4"><span class="sec-nr">10.3.4</span> <span class="sec-title">Threads 
+and dynamic predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="threadsync.html"><span class="sec-nr">10.4</span> <span class="sec-title">Thread 
+synchronisation</span></a></div>
+<div class="toc-h2"><a class="sec" href="thutil.html"><span class="sec-nr">10.5</span> <span class="sec-title">Thread 
+support library(threadutil)</span></a></div>
+<div class="toc-h3"><a class="sec" href="thutil.html#sec:10.5.1"><span class="sec-nr">10.5.1</span> <span class="sec-title">Debugging 
+threads</span></a></div>
+<div class="toc-h3"><a class="sec" href="thutil.html#sec:10.5.2"><span class="sec-nr">10.5.2</span> <span class="sec-title">Profiling 
+threads</span></a></div>
+<div class="toc-h2"><a class="sec" href="foreignthread.html"><span class="sec-nr">10.6</span> <span class="sec-title">Multithreaded 
+mixed C and Prolog applications</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignthread.html#sec:10.6.1"><span class="sec-nr">10.6.1</span> <span class="sec-title">A 
+Prolog thread for each native thread (one-to-one)</span></a></div>
+<div class="toc-h3"><a class="sec" href="foreignthread.html#sec:10.6.2"><span class="sec-nr">10.6.2</span> <span class="sec-title">Pooling 
+Prolog engines (many-to-many)</span></a></div>
+<div class="toc-h2"><a class="sec" href="mt-xpce.html"><span class="sec-nr">10.7</span> <span class="sec-title">Multithreading 
+and the XPCE graphics system</span></a></div>
+</div>
+</body></html>

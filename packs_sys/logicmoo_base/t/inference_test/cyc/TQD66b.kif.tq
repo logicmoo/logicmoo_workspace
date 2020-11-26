@@ -1,0 +1,31 @@
+(note TQD66b)
+
+(contains Egypt Egypt) 
+
+(inRegion SuMedPipeline Egypt) 
+
+(objectOfPossessionTransfer HYP-ExpropriatingSomething-53630022 SuMedPipeline) 
+
+(instance HYP-ExpropriatingSomething-53630022 ExpropriatingSomething) 
+
+(instance Egypt IndependentCountry) 
+
+(implies 
+  (and 
+    (instance ?COUNTRY IndependentCountry) 
+    (contains ?COUNTRY ?TERR) 
+    (inRegion ?OBJ ?TERR) 
+    (objectOfPossessionTransfer ?EXP ?OBJ) 
+    (instance ?EXP ExpropriatingSomething)) 
+  (capableOfDoing ?COUNTRY ?EXP toPossessor)) 
+
+
+(queryyn  (implies 
+   (and 
+       (instance ?ACTION ExpropriatingSomething) 
+       (objectOfPossessionTransfer ?ACTION SuMedPipeline)) 
+   (capableOfDoing Egypt ?ACTION toPossessor)))
+
+(answer Yes)
+
+(end_of_file)

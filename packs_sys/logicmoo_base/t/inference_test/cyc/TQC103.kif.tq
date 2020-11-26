@@ -1,0 +1,46 @@
+(note TQC103)
+
+(existant Stage2-USConfirmsAnthraxContamination 
+ (DateInSituationFn CalendarDay 23 HPKBScenarioConflict)) 
+
+(inverse existant temporallySubsumes) 
+
+(directingAgent Stage2-USConfirmsAnthraxContamination UnitedStatesOfAmerica) 
+
+(subrelation directingAgent agent) 
+
+(inReactionTo Stage2-USConfirmsAnthraxContamination Stage2-BWAttackAtRasTannurah) 
+
+(directingAgent Stage2-BWAttackAtRasTannurah Iran) 
+
+(subProcess HPKBScenarioConflict Stage2-BWAttackAtRasTannurah) 
+
+(instance Stage2-BWAttackAtRasTannurah AttackOnTangible) 
+
+(instrument-Generic Stage2-BWAttackAtRasTannurah Stage2-BiologicalWeapon1) 
+
+(instance Stage2-BiologicalWeapon1 WeaponOfMassDestruction) 
+
+
+
+
+(query (findall ?RESP 
+
+ (thereExists ?ACT 
+ (and 
+ (subProcess HPKBScenarioConflict ?ACT) 
+ (instance ?ACT AttackOnTangible) 
+ (thereExists ?FORCE 
+ (and 
+ (instrument-Generic ?ACT ?FORCE) 
+ (instance ?FORCE WeaponOfMassDestruction))) 
+ (inReactionTo ?RESP ?ACT) 
+ (agent ?ACT Iran) 
+ (agent ?RESP UnitedStatesOfAmerica) 
+ (temporallySubsumes 
+ (DateInSituationFn CalendarDay 23 HPKBScenarioConflict) ?RESP)))))
+
+(answer Stage2-USConfirmsAnthraxContamination)  
+
+(end_of_file)
+

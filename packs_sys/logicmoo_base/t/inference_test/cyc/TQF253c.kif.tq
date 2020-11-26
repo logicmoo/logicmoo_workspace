@@ -1,0 +1,18 @@
+(note TQF253c)
+
+(typeBehaviorCapable Warhead BiologicalAttack dispersionSource) 
+(typeBehaviorCapable Anthrax-DryForm BiologicalAttack dispersionSource) 
+(typeBehaviorCapable Bomb BiologicalAttack dispersionSource) 
+(typeBehaviorCapable AerosolCan BiologicalAttack dispersionSource) 
+(typeBehaviorCapable Atomizer BiologicalAttack dispersionSource) 
+
+(query (findall (?BIOLOGICAL-ATTACK-METHOD  ?BIOLOGICAL-WEAPON-TYPE )
+  (typeBehaviorCapable ?BIOLOGICAL-WEAPON-TYPE BiologicalAttack ?BIOLOGICAL-ATTACK-METHOD)))
+
+(answer dispersionSource Warhead)
+(answer dispersionSource Anthrax-DryForm)
+(answer dispersionSource Bomb)
+(answer dispersionSource AerosolCan)
+(answer dispersionSource Atomizer)
+
+(end_of_file)

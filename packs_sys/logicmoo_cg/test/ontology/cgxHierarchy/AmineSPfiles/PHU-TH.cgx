@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conceptualgraph editor="CharGer" version="3.6" created="28-Nov-2010 14:15:27" user="Simon">
+<graph id="48951222455" owner="0">
+    <type>
+        <label>Proposition</label>
+    </type>
+    <layout>
+        <rectangle x="0.0" y="0.0" width="900.0" height="750.0"/>
+        <color foreground="0,0,175" background="0,0,175"/>
+    </layout>
+    <typelabel id="234381910758" owner="48951222455">
+        <type>
+            <label>Established_Researcher&apos;s_Time</label>
+        </type>
+        <layout>
+            <rectangle x="795.0" y="337.375" width="234.0" height="29.25"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="234381910667" owner="48951222455">
+        <type>
+            <label>Community_Objective</label>
+        </type>
+        <layout>
+            <rectangle x="837.5" y="249.5" width="163.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775712" owner="48951222455">
+        <type>
+            <label>Community</label>
+        </type>
+        <layout>
+            <rectangle x="318.0" y="339.5" width="118.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775717" owner="48951222455">
+        <type>
+            <label>Transaction</label>
+        </type>
+        <layout>
+            <rectangle x="648.0" y="90.5" width="92.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="171131463937" owner="48951222455">
+        <type>
+            <label>Agent</label>
+        </type>
+        <layout>
+            <rectangle x="402.5" y="90.5" width="51.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="234381910690" owner="48951222455">
+        <type>
+            <label>Revenue_Diversion</label>
+        </type>
+        <layout>
+            <rectangle x="97.0" y="249.5" width="150.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775702" owner="48951222455">
+        <type>
+            <label>Cash_Payment</label>
+        </type>
+        <layout>
+            <rectangle x="43.0" y="175.5" width="112.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775703" owner="48951222455">
+        <type>
+            <label>Psychical_Stimulation</label>
+        </type>
+        <layout>
+            <rectangle x="181.5" y="176.5" width="161.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775700" owner="48951222455">
+        <type>
+            <label>T</label>
+        </type>
+        <layout>
+            <rectangle x="384.0" y="18.0" width="88.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775701" owner="48951222455">
+        <type>
+            <label>Economic_Event</label>
+        </type>
+        <layout>
+            <rectangle x="108.5" y="91.5" width="127.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775706" owner="48951222455">
+        <type>
+            <label>Economic_Resource</label>
+        </type>
+        <layout>
+            <rectangle x="641.5" y="176.5" width="154.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775707" owner="48951222455">
+        <type>
+            <label>Emerging_Researcher&apos;s_Time</label>
+        </type>
+        <layout>
+            <rectangle x="566.5" y="338.3125" width="219.0" height="27.375"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775704" owner="48951222455">
+        <type>
+            <label>Outside_Agent</label>
+        </type>
+        <layout>
+            <rectangle x="371.0" y="176.5" width="114.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775705" owner="48951222455">
+        <type>
+            <label>Inside_Agent</label>
+        </type>
+        <layout>
+            <rectangle x="515.5" y="176.5" width="102.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775710" owner="48951222455">
+        <type>
+            <label>Staff</label>
+        </type>
+        <layout>
+            <rectangle x="152.5" y="339.5" width="125.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775708" owner="48951222455">
+        <type>
+            <label>Motivated_Staff</label>
+        </type>
+        <layout>
+            <rectangle x="394.5" y="413.5" width="121.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <typelabel id="57485775709" owner="48951222455">
+        <type>
+            <label>Educational_Institution</label>
+        </type>
+        <layout>
+            <rectangle x="441.5" y="249.5" width="171.0" height="25.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </typelabel>
+    <genspeclink id="234381910675" owner="48951222455" label="-" from="234381910667" to="57485775706">
+        <layout>
+            <rectangle x="816.25" y="223.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="171131463953" owner="48951222455" label="-" from="171131463937" to="57485775700">
+        <layout>
+            <rectangle x="425.5" y="64.25" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775714" owner="48951222455" label="-" from="57485775702" to="57485775701">
+        <layout>
+            <rectangle x="133.0" y="143.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775715" owner="48951222455" label="-" from="57485775703" to="57485775701">
+        <layout>
+            <rectangle x="214.5" y="144.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775713" owner="48951222455" label="-" from="57485775701" to="57485775700">
+        <layout>
+            <rectangle x="301.61395" y="63.568848" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775718" owner="48951222455" label="-" from="57485775717" to="57485775700">
+        <layout>
+            <rectangle x="557.5" y="63.977448" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775719" owner="48951222455" label="-" from="57485775706" to="57485775700">
+        <layout>
+            <rectangle x="570.75" y="107.25" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="234381910696" owner="48951222455" label="-" from="234381910690" to="57485775701">
+        <layout>
+            <rectangle x="169.5" y="180.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="171131463947" owner="48951222455" label="-" from="57485775704" to="171131463937">
+        <layout>
+            <rectangle x="425.5" y="143.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775723" owner="48951222455" label="-" from="57485775709" to="57485775705">
+        <layout>
+            <rectangle x="544.25" y="223.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775720" owner="48951222455" label="-" from="57485775710" to="57485775704">
+        <layout>
+            <rectangle x="319.0" y="268.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="171131464215" owner="48951222455" label="-" from="57485775712" to="57485775704">
+        <layout>
+            <rectangle x="400.0" y="268.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="171131463950" owner="48951222455" label="-" from="57485775705" to="171131463937">
+        <layout>
+            <rectangle x="494.75" y="143.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="234381910763" owner="48951222455" label="-" from="234381910758" to="57485775706">
+        <layout>
+            <rectangle x="811.4887" y="266.9375" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="234381910707" owner="48951222455" label="-" from="57485775708" to="57485775710">
+        <layout>
+            <rectangle x="332.5" y="386.5" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775790" owner="48951222455" label="-" from="57485775708" to="57485775706">
+        <layout>
+            <rectangle x="584.25" y="305.0" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+    <genspeclink id="57485775789" owner="48951222455" label="-" from="57485775707" to="57485775706">
+        <layout>
+            <rectangle x="694.9048" y="267.40625" width="6.0" height="6.0"/>
+            <color foreground="0,0,0" background="255,255,255"/>
+        </layout>
+    </genspeclink>
+</graph>
+
+</conceptualgraph>
+

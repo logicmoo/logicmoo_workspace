@@ -1,0 +1,2 @@
+Relevant to translation applications. Points to a file containing the
+compiled form of the ellipsis processing rules.

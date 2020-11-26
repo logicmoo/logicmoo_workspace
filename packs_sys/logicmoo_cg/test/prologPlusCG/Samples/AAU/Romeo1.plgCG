@@ -1,0 +1,50 @@
+// Type-hierarchy
+entity > Person, Act, Haste, Utterance, Proposition, Situation, Manner.
+Manner > Loud, Quiet, Wisely, Slow, Fast, Sudden.
+
+// Type-instances
+Person = Romeo, FriarLawrence.
+Act = Insist, Walk, Run, Stumble.
+
+// CG 1:
+// Romeo cries to Friar Lawrence: "I stand on sudden haste."
+[Utterance]-
+         -Agnt->[Person: Romeo],
+         -Rcpt->[Person: FriarLawrence],
+         -Manr->[Loud],
+         -Thme->[Proposition =
+                     [Act: Insist]-
+                       -Agnt->[Person: I],
+                       -Thme->[Situation =
+                                  [Haste]-Attr->[Sudden]
+                                ]
+                  ]
+.
+
+//
+// CG 2:
+// Friar Lawrence says to Romeo: "Wisely and slow,
+// they stumble that run fast."
+[Utterance]-
+         -Agnt->[Person: FriarLawrence],
+         -Rcpt->[Person: Romeo],
+         -Manr->[Quiet],
+         -Thme->[Proposition =
+                         [Proposition =
+                                 [Act: Walk]-
+                                   -Manr->[Wisely],
+                                   -Manr->[Slow]
+                         ]-Reas->[Proposition =
+                                     [Act: Stumble]-Agnt->[Person=  
+                                         [Person]<-Agnt-[Act: Run]-Manr->[fast]
+                                                    ]
+                                 ]
+                         ]
+.
+
+//
+// Who talks to whom?
+Talk(A,R) :- [r:A]<-Agnt-[Utterance]-Rcpt->[s:R].
+
+
+

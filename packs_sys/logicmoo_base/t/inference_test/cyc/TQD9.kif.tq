@@ -1,0 +1,16 @@
+(note TQD9)
+
+(laborForceFractionDuring Libya IndustrialEconomicSector 
+ (MonthFn July 
+ (YearFn 1997)) 0.31) 
+
+(query (findall (?FRACTION ?TIME)
+ (thereExists ?NR 
+   (and 
+       (laborForceFractionDuring Libya IndustrialEconomicSector ?TIME ?NR) 
+       (evaluate ?FRACTION 
+           (QuantityConversionFn Percent ?NR))))))
+
+(answer 31 1997)
+
+(end_of_file)

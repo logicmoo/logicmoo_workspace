@@ -1,0 +1,54 @@
+(note TQC101a)
+
+(located ArzewOilRefinery Algeria) 
+
+(subrelation located inRegion) 
+
+(instance ArzewOilRefinery OilRefinery) 
+
+
+
+
+(located El-Djazair-Refinery Algeria) 
+
+(subrelation located inRegion) 
+
+(instance El-Djazair-Refinery OilRefinery) 
+
+
+
+
+(located SkikdaOilRefinery Algeria) 
+
+(instance SkikdaOilRefinery OilRefinery) 
+
+
+
+
+(located HassiMessaoud-Refinery Algeria) 
+
+(instance HassiMessaoud-Refinery OilRefinery) 
+
+
+
+
+(located InAmenas-Refinery Algeria) 
+
+(instance InAmenas-Refinery OilRefinery) 
+
+
+
+
+(query (findall ?X
+
+ (and 
+ (instance ?X OilRefinery) 
+ (inRegion ?X Algeria))))
+
+(answer ArzewOilRefinery)
+(answer El-Djazair-Refinery)
+(answer SkikdaOilRefinery)
+(answer HassiMessaoud-Refinery)
+(answer InAmenas-Refinery)  
+
+(end_of_file)

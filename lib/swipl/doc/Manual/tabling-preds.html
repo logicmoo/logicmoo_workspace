@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.11</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-restraints.html">
+<link rel="next" href="tabling-about.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-restraints.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tabling-about.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-preds"><a id="sec:7.11"><span class="sec-nr">7.11</span> <span class="sec-title">Tabling 
+predicate reference</span></a></h2>
+
+<a id="sec:tabling-preds"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="table/1">:- <strong>table</strong>(<var>:Specification</var>)</a></dt>
+<dd class="defbody">
+Prepare the predicates specified by <var>Specification</var> for tabled 
+execution. <var>Specification</var> is a <em>comma-list</em>, each 
+member specifying tabled execution for a specific predicate. The 
+individual specification is either a <em>predicate indicator</em> 
+(name/arity or name//arity) or head specifying tabling with <em>answer 
+subsumption</em>.
+
+<p>Although <a id="idx:table1:2027"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+is normally used as a directive, SWI-Prolog allows calling it as a 
+runtime predicate to prepare an existing predicate for tabled execution. 
+The predicate <a id="idx:untable1:2028"></a><a class="pred" href="tabling-preds.html#untable/1">untable/1</a> 
+can be used to remove the tabling instrumentation from a predicate.
+
+<p>The example below prepares the predicate <a id="idx:edge2:2029"></a><span class="pred-ext">edge/2</span> 
+and the non-terminal statement//1 for tabled execution.
+
+<pre class="code">
+:- table edge/2, statement//1.
+</pre>
+
+<p>Below is an example declaring a predicate to use tabling with
+<em>answer subsumption</em>. Answer subsumption or <em>mode directed 
+tabling</em> is discussed in <a class="sec" href="tabling-mode-directed.html#sec:7.3">section 
+7.3</a>.
+
+<pre class="code">
+:- table connection(_,_,min).
+</pre>
+
+<p>Additional tabling options can be provided using a term <b>as/2</b>, 
+which can be applied to a single specification or a comma list of 
+specifications. The options themselves are a comma-list of one or more 
+of the following atoms:
+
+<dl class="latex">
+<dt><strong>variant</strong></dt>
+<dd class="defbody">
+Default. Create a table for each call variant.
+</dd>
+<dt><strong>subsumptive</strong></dt>
+<dd class="defbody">
+Instead of creating a new table for each call variant, check whether 
+there is a completed table for a more general goal and if this is the 
+case extract the answers from this table. See
+<a class="sec" href="tabling-subsumptive.html#sec:7.5">section 7.5</a>.
+</dd>
+<dt><strong>shared</strong></dt>
+<dd class="defbody">
+Declare that the table shall be shared between threads. See
+<a class="sec" href="tabling-shared.html#sec:7.9">section 7.9</a>
+</dd>
+<dt><strong>private</strong></dt>
+<dd class="defbody">
+Declare that the table shall be local to the calling thread. See
+<a class="sec" href="tabling-shared.html#sec:7.9">section 7.9</a>
+</dd>
+<dt><strong>incremental</strong></dt>
+<dd class="defbody">
+Declare that the table depends on other tables and
+<em>incremental</em> dynamic predicates. See
+<a class="sec" href="tabling-incremental.html#sec:7.7">section 7.7</a>.
+</dd>
+<dt><strong>dynamic</strong></dt>
+<dd class="defbody">
+Declare that the predicate is dynamic. Often used together with <code>incremental</code>.
+</dd>
+</dl>
+
+<p>This syntax is closely related to the table declarations used in XSB 
+Prolog. Where in XSB <code>as</code> is an operator with priority above 
+the priority of the comma, it is an operator with priority below the 
+comma in SWI-Prolog. Therefore, multiple predicates or options must be 
+enclosed in parenthesis. For example:
+
+<pre class="code">
+:- table p/1 as subsumptive.
+:- table (q/1, r/2) as subsumptive.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="tnot/1"><strong>tnot</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+The <a id="idx:tnot1:2030"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+predicate implements <em>tabled negation</em>. This predicate realises <em>Well 
+Founded Semantics</em>. See <a class="sec" href="WFS.html#sec:7.6">section 
+7.6</a> for details.</dd>
+<dt class="pubdef"><a id="not_exists/1"><strong>not_exists</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Handles tabled negation for non-ground (<em>floundering</em>) <var>Goal</var> 
+as well as non tabled goals. If <var>Goal</var> is ground and tabled
+<a id="idx:notexists1:2031"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a> 
+calls <a id="idx:tnot1:2032"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a>. 
+Otherwise it used <code>tabled_call(Goal)</code> to create a table and 
+subsequently uses <a id="idx:tnot1:2033"></a><a class="pred" href="tabling-preds.html#tnot/1">tnot/1</a> 
+on the created table.
+
+<p>Logically, <code>not_exists(p(X))</code> is defined as tnot(<var>&exist</var><var>X</var>(p(<var>X</var>)))
+
+<p>Note that each <var>Goal</var> variant populates a table for <a id="idx:tabledcall1:2034"></a><a class="pred" href="tabling-preds.html#tabled_call/1">tabled_call/1</a>. 
+Applications may need to abolish such tables to limit memory usage or 
+guarantee consistency&lsquo;after the world changed'.</dd>
+<dt class="pubdef"><a id="tabled_call/1"><strong>tabled_call</strong>(<var>:Goal</var>)</a></dt>
+<dd class="defbody">
+Helper predicate for <a id="idx:notexists1:2035"></a><a class="pred" href="tabling-preds.html#not_exists/1">not_exists/1</a>. 
+Defined as below. The helper is public because application may need to 
+abolish its tables.
+
+<pre class="code">
+:- table tabled_call/1 as variant.
+tabled_call(Goal) :- call(Goal).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="current_table/2"><strong>current_table</strong>(<var>:Variant, 
+-Trie</var>)</a></dt>
+<dd class="defbody">
+True when <var>Trie</var> is the answer table for <var>Variant</var>.</dd>
+<dt class="pubdef"><a id="untable/1"><strong>untable</strong>(<var>:Specification</var>)</a></dt>
+<dd class="defbody">
+Remove the tabling instrumentation for the specified predicates.
+<var>Specification</var> is compatible with <a id="idx:table1:2036"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>, 
+although tabling with
+<em>answer subsumption</em> may be removed using a name/arity 
+specification.</dd>
+<dt class="pubdef"><a id="abolish_all_tables/0"><strong>abolish_all_tables</strong></a></dt>
+<dd class="defbody">
+Remove all tables, both <em>private</em> and <em>shared</em> (see
+<a class="sec" href="tabling-shared.html#sec:7.9">section 7.9</a>). 
+Since the introduction of <em>incremental tabling</em> (see <a class="sec" href="tabling-incremental.html#sec:7.7">section 
+7.7</a>) abolishing tables is rarely required to maintain consistency of 
+the tables with a changed environment. Tables may be abolished 
+regardless of the current state of the table. <em>Incomplete</em> tables 
+are flagged for destruction when they are completed. See <a class="sec" href="tabling-shared.html#sec:7.9.1">section 
+7.9.1</a> for the semantics of destroying shared tables and the 
+following predicates for destroying a subset of the tables: <a id="idx:abolishprivatetables0:2037"></a><a class="pred" href="tabling-preds.html#abolish_private_tables/0">abolish_private_tables/0</a>,
+<a id="idx:abolishsharedtables0:2038"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>, <a id="idx:abolishtablesubgoals1:2039"></a><a class="pred" href="tabling-preds.html#abolish_table_subgoals/1">abolish_table_subgoals/1</a> 
+and
+<a id="idx:abolishmoduletables1:2040"></a><a class="pred" href="tabling-preds.html#abolish_module_tables/1">abolish_module_tables/1</a>.</dd>
+<dt class="pubdef"><a id="abolish_private_tables/0"><strong>abolish_private_tables</strong></a></dt>
+<dd class="defbody">
+Abolish all tables that are private to this thread.</dd>
+<dt class="pubdef"><a id="abolish_shared_tables/0"><strong>abolish_shared_tables</strong></a></dt>
+<dd class="defbody">
+Abolish all tables that are shared between threads. See also
+<a class="sec" href="tabling-shared.html#sec:7.9.1">section 7.9.1</a></dd>
+<dt class="pubdef"><a id="abolish_table_subgoals/1"><strong>abolish_table_subgoals</strong>(<var>:Subgoal</var>)</a></dt>
+<dd class="defbody">
+Abolish all tables that unify with <var>SubGoal</var>. Tables that have 
+undefined answers that depend of the abolished table are abolished as 
+well (recursively). For example, given the program below,
+<code>abolish_table_subgoals(und)</code> will also abolish the table for 
+p/0 because its answer refers to und/0 .
+
+<pre class="code">
+p :- und.
+und :- tnot(und).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="abolish_module_tables/1"><strong>abolish_module_tables</strong>(<var>+Module</var>)</a></dt>
+<dd class="defbody">
+Remove all tables that belong to predicates in <var>Module</var>.</dd>
+<dt class="pubdef"><a id="abolish_nonincremental_tables/0"><strong>abolish_nonincremental_tables</strong></a></dt>
+<dt class="pubdef"><a id="abolish_nonincremental_tables/1"><strong>abolish_nonincremental_tables</strong>(<var>+Options</var>)</a></dt>
+<dd class="defbody">
+Similar to <a id="idx:abolishalltables0:2041"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a>, 
+but does not abolish
+<em>incremental</em> tables as their consistency is maintained by the 
+system. Options:
+
+<dl class="latex">
+<dt><strong>on_incomplete</strong>(<var>Action</var>)</dt>
+<dd class="defbody">
+<var>Action</var> is one of <code>skip</code> or <code>error</code>. If <var>Action</var> 
+is <code>skip</code>, do not delete the table.<sup class="fn">bug<span class="fn-text">XSB 
+marks such tables for deletion after completion. That is not yet 
+implemented.</span></sup>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

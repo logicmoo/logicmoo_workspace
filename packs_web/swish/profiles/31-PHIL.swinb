@@ -1,0 +1,43 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+This notebook loads phil
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="false">
+:-use_module(library(phil)).
+
+:-phil.
+
+% Settings
+:- set_hplp(verbosity,1).
+
+:- begin_in.
+
+% Input theory here
+
+
+:- end_in.  
+
+:- begin_bg.
+
+% Background knowledge here
+
+:- end_bg.
+
+% Fold definition
+% fold(train,[folds list]).
+% fold(test,[[folds list]).
+
+
+% Language bias
+
+
+% Models / Examples
+
+</div>
+
+<div class="nb-cell query">
+</div>
+
+</div>

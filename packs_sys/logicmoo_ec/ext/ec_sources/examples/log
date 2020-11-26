@@ -1,0 +1,109 @@
+; 
+; Copyright (c) 2005 IBM Corporation and others.
+; All rights reserved. This program and the accompanying materials
+; are made available under the terms of the Common Public License v1.0
+; which accompanies this distribution, and is available at
+; http://www.eclipse.org/legal/cpl-v10.html
+; 
+; Contributors:
+; IBM - Initial implementation
+; 
+OK examples/AkmanEtAl2004/ZooTest1.e 37.3s
+OK examples/AkmanEtAl2004/ZooTest2.e 4.0s
+OK examples/AkmanEtAl2004/ZooTest3.e 15.3s
+OK examples/AkmanEtAl2004/ZooTest4.1.e 38.7s
+OK examples/AkmanEtAl2004/ZooTest4.2.e 56.1s
+OK examples/AkmanEtAl2004/ZooTest5.1.e 29.5s
+OK examples/AkmanEtAl2004/ZooTest5.2.e 29.4s
+OK examples/AkmanEtAl2004/ZooTest6.e 7.2s
+OK examples/Antoniou1997/Dropout.e 0.1s
+OK examples/Antoniou1997/Student.e 0.1s
+OK examples/BrewkaDixKonolige1997/Wine.e 0.1s
+OK examples/Cassimatis2002/OneScreen.e 20.4s
+OK examples/Cassimatis2002/TwoScreens.e 60.0s
+OK examples/FrankEtAl2003/Story1.e 0.5s
+OK examples/GiunchigliaEtAl2004/MonkeyPlanning.e 0.9s
+OK examples/GiunchigliaEtAl2004/MonkeyPostdiction.e 0.5s
+OK examples/GiunchigliaEtAl2004/MonkeyPrediction.e 0.5s
+OK examples/Manual/Example1a.e 0.1s
+OK examples/Manual/Example1.e 0.1s
+OK examples/Manual/Example2.e 0.1s
+OK examples/Manual/Example3.e 0.1s
+OK examples/Manual/Example4.e 0.1s
+OK examples/MillerShanahan2002/Bowl.e 0.1s
+OK examples/Mueller2004a/Holding.e 0.2s
+OK examples/Mueller2004a/Leaf.e 2.3s
+OK examples/Mueller2004b/Approve.e 0.1s
+OK examples/Mueller2004b/Leaf.e 0.7s
+OK examples/Mueller2004b/OffOn.e 0.1s
+OK examples/Mueller2004b/PickUp.e 0.8s
+OK examples/Mueller2004b/RouletteWheel.e 0.2s
+OK examples/Mueller2004b/RunningAndDriving1.e 0.1s
+OK examples/Mueller2004b/RunningAndDriving2.e 0.1s
+OK examples/Mueller2004b/TV1.e 0.1s
+OK examples/Mueller2004b/TV2.e 0.1s
+OK examples/Mueller2006/Chapter10/MovingNewspaperAndBox.e 4.0s
+OK examples/Mueller2006/Chapter10/OneScreen.e 0.5s
+OK examples/Mueller2006/Chapter10/TwoScreens.e 2.8s
+OK examples/Mueller2006/Chapter11/HungryCat.e 267.4s/4.5m
+OK examples/Mueller2006/Chapter11/Lottery.e 0.6s
+OK examples/Mueller2006/Chapter12/BrokenDevice.e 0.1s
+OK examples/Mueller2006/Chapter12/DefaultEvent.e 0.4s
+OK examples/Mueller2006/Chapter12/DefaultLocation.e 0.2s
+OK examples/Mueller2006/Chapter12/Device.e 0.1s
+OK examples/Mueller2006/Chapter12/ErraticDevice.e 0.1s
+OK examples/Mueller2006/Chapter12/MethodB.e 0.1s
+OK examples/Mueller2006/Chapter12/MethodD.e 0.1s
+OK examples/Mueller2006/Chapter13/Abduction.e 0.1s
+OK examples/Mueller2006/Chapter13/Deduction1.e 0.1s
+OK examples/Mueller2006/Chapter13/Deduction2.e 0.1s
+OK examples/Mueller2006/Chapter13/ModelFinding.e 0.1s
+OK examples/Mueller2006/Chapter13/Postdiction.e 0.1s
+OK examples/Mueller2006/Chapter14/NetBill1.e 3.0s
+OK examples/Mueller2006/Chapter14/NetBill2.e 2.5s
+OK examples/Mueller2006/Chapter14/NetBill3.e 1.7s
+OK examples/Mueller2006/Chapter14/Vision.e 0.3s
+OK examples/Mueller2006/Chapter14/Workflow.e 2.1s
+OK examples/Mueller2006/Chapter2/Inconsistency1.e 0.1s
+OK examples/Mueller2006/Chapter2/Inconsistency2.e 0.1s
+OK examples/Mueller2006/Chapter2/Inconsistency3.e 0.1s
+OK examples/Mueller2006/Chapter2/Inconsistency4.e 0.1s
+OK examples/Mueller2006/Chapter2/Sleep1.e 0.1s
+OK examples/Mueller2006/Chapter2/Sleep2.e 0.1s
+OK examples/Mueller2006/Chapter2/Sleep3.e 0.1s
+OK examples/Mueller2006/Chapter2/Sleep4.e 0.1s
+OK examples/Mueller2006/Chapter3/Telephone1.e 1.7s
+OK examples/Mueller2006/Chapter3/Telephone2.e 1.7s
+OK examples/Mueller2006/Chapter4/AlarmClock.e 0.4s
+OK examples/Mueller2006/Chapter4/BankAccountServiceFee.e 4.2s
+OK examples/Mueller2006/Chapter6/CarryingABook1.e 0.3s
+OK examples/Mueller2006/Chapter6/CarryingABook2.e 0.2s
+OK examples/Mueller2006/Chapter6/ShanahanCircuit.e 0.2s
+OK examples/Mueller2006/Chapter6/ThielscherCircuit1.e 1.0s
+OK examples/Mueller2006/Chapter6/ThielscherCircuit2.e 0.2s
+OK examples/Mueller2006/Chapter7/FallingObjectWithAntiTrajectory.e 3.6s
+OK examples/Mueller2006/Chapter7/FallingObjectWithEvents.e 0.3s
+OK examples/Mueller2006/Chapter7/HotAirBalloon.e 1.0s
+OK examples/Mueller2006/Chapter8/CameraWithFlash.e 0.1s
+OK examples/Mueller2006/Chapter8/MovingRobot.e 3.1s
+OK examples/Mueller2006/Chapter8/PatHeadRubStomach.e 0.1s
+OK examples/Mueller2006/Chapter9/RouletteWheel.e 0.2s
+OK examples/Mueller2006/Chapter9/RunningAndDriving.e 0.1s
+OK examples/Mueller2006/Exercises/Counter.e 3.1s
+OK examples/Mueller2006/Exercises/MixingPaints.e 0.8s
+OK examples/Mueller2006/Exercises/SnoozeAlarm.e 98.5s/1.6m
+OK examples/Mueller2006/Exercises/TeacherTells.e 0.2s
+OK examples/Mueller2006/Exercises/TelephoneBugs.e 3.3s
+OK examples/ReiterCriscuolo1981/NixonDiamond1.e 0.1s
+OK examples/ReiterCriscuolo1981/NixonDiamond2.e 0.1s
+OK examples/Shanahan1997/BusRide.e 0.1s
+OK examples/Shanahan1997/DeadOrAlive.e 0.1s
+OK examples/Shanahan1997/StolenCar.e 0.1s
+OK examples/Shanahan1997/StuffyRoom.e 0.1s
+OK examples/Shanahan1997/Supermarket.e 0.3s
+OK examples/Shanahan1997/Yale.e 0.1s
+OK examples/Shanahan1999/ChessBoard.e 0.1s
+OK examples/Shanahan1999/CoinToss.e 0.1s
+OK examples/Shanahan1999/Happy.e 0.1s
+OK examples/Shanahan1999/RussianTurkey.e 0.1s
+OK examples/Shanahan1999/ThielscherCircuit.e 0.6s

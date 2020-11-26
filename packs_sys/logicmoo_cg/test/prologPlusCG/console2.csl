@@ -1,0 +1,11 @@
+************************************************
+         PROLOG+CG, Version 3.0, 2004         
+             (c) Dr. Adil KABBAJ              
+                  Amine Group             
+************************************************
+
+?- loadOntology("C:\Amine\AmineCourant\src\aminePlatform\classes\aminePlatform\samples\ontology\Souris2.xml").
+yes
+?- consult(["DynamicOntologySample.pcg"]).
+yes
+?- 

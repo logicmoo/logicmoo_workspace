@@ -1,0 +1,47 @@
+member( x, [x|_] ) .
+member( x, [ _ | L ] ) :- member( x, L ).
+
+eq( x, x ).
+
+or(p,q) :- p,!.
+or(p,q) :- q.
+
+diff( x, y ) :- eq( x, y),!,fail.
+diff( x, y).
+
+InfCouple( r,[ a | L ] ) :-  Inf( a, r ), RestInf( r, L ).
+RestInf( r, [ b | J ] ) :- Inf( b, r ).
+Inf( x, y ) :-  true is x < y.
+Sup( x, y ) :- true is x > y.
+InfOrEqual( x, y ) :- true is x = y, !.
+InfOrEqual( x, y ) :-  true is x < y.
+SupOrEqual( x, y ) :- true is x = y, !.
+SupOrEqual( x, y ) :- true is x > y.
+
+
+compute( _Xa, _Xb, _Ya, _Yb, _res ) :-  _res is "RenaldoTools":distance( _Xa, _Xb, _Ya, _Yb ).
+randomNumber(_Max, _res) :- _res is "RenaldoTools":intRandomValue( _Max).
+printInConsole( _String) :-  "RenaldoTools":print( _String ).
+printlnInConsole( _String) :-  "RenaldoTools":println( _String ).
+printInPanel( _String) :-  "RenaldoTools":printPanel( _String ).
+readFromConsole( _int ) :-  _int is "RenaldoTools":read().
+
+comparePosition( _Couple1, _Coupl2, _DistanceMax) :- 
+	getCoordinates( _Couple1, _Coupl2, a, b, x, y ),
+	compute( a, b, x, y,_distance), 
+	Inf( _distance , _DistanceMax ).
+
+getCoordinates( [a | b], [x | y ], a, b1, x, Y1 ) :- getYcoordinate(b,b1), getYcoordinate(y,Y1).
+getYcoordinate( [y | _], y ).
+
+NextCoordinates( _CurrentPosition, [ _CurrentPosition | L ], _NextPosition ) :- 
+	ReturnFirstElementOf( L, _NextPosition).
+NextCoordinates( _CurrentPosition, [ _element | L ], _NextPosition ) :- 
+	NextCoordinates( _CurrentPosition, L, _NextPosition ).
+
+ReturnFirstElementOf( [ _First | _ ], _First). 
+
+/// i think that the error is in retract, it seams that is not possible to put an expression
+myRetract(B) :- 
+	B,
+	retract(B).

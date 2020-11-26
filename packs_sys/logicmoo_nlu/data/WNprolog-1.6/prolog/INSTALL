@@ -1,0 +1,38 @@
+Installation instructions for WordNet 1.6 Prolog database package.
+
+1. Manifest
+
+When the WordNet Prolog database package is unbundled you should have
+the following files and subdirectories in this directory:
+
+	INSTALL		this file
+	LICENSE		WordNet copyright and license agreement
+	README		README file for WordNet system
+	doc		Prolog database documentation:
+
+				prologdb.5	man page source (nroff)
+				prologdb.5ps	man page in PostScript
+				prologdb.htm	man page in HTML
+				prologdb.txt	man page in ASCII
+	wn_*.pl		16 files representing WordNet database
+
+2. Using the Prolog database
+
+The Prolog version of WordNet 1.6 is completely independent from the
+version used by the WordNet browser software.  It is provided to
+researchers for use in their own applications and system development.
+The documentation provided describes the format of the Prolog database
+files.  
+
+3. Information about WordNet
+
+Additional documenation and information about Wordnet is available
+online.  From the WordNet Web site you can browse all of the WordNet
+Reference Manual manual pages (including 'prologdb'), and can download
+"Five Papers on WordNet" which describes the WordNet project.  The
+WordNet Reference Manual is also available for download as a
+compressed tar file or zip file from either our Web site or FTP site.
+
+Web site - http://www.cogsci.princeton.edu/~wn/
+FTP site - ftp.cogsci.princeton.edu, directory "pub/wordnet"
+

@@ -1,0 +1,13 @@
+(note "disjunctive syllogism")
+
+(forall (?X ?Y) (=> (f ?X ?Y) (g ?X ?Y)))
+
+(forall (?X ?Y) (=> (h ?X ?Y) (i ?X ?Y)))
+
+(forall (?X ?Y)(or (f ?X ?Y) (h ?X ?Y)))
+
+(queryyn (forall (?X ?Y)(or (g ?X ?Y) (i ?X ?Y))))
+
+(answer Yes)
+
+(end_of_file)

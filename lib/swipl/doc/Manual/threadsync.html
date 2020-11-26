@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="threadcom.html">
+<link rel="next" href="thutil.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="threadcom.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="thutil.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:threadsync"><a id="sec:10.4"><span class="sec-nr">10.4</span> <span class="sec-title">Thread 
+synchronisation</span></a></h2>
+
+<a id="sec:threadsync"></a>
+
+<p>All internal Prolog operations are thread-safe. This implies that two 
+Prolog threads can operate on the same dynamic predicate without 
+corrupting the consistency of the predicate. This section deals with 
+user-level
+<em>mutexes</em> (called <em>monitors</em> in ADA or
+<em>critical sections</em> by Microsoft). A mutex is a
+<b>MUT</b>ual <b>EX</b>clusive device, which implies that at most one 
+thread can <em>hold</em> a mutex.
+
+<p>Mutexes are used to realise related updates to the Prolog database. 
+With&lsquo;related', we refer to the situation where a&lsquo;transaction' 
+implies two or more changes to the Prolog database. For example, we have 
+a predicate address/2 , representing the address of a person and we want 
+to change the address by retracting the old and asserting the new 
+address. Between these two operations the database is invalid: this 
+person has either no address or two addresses, depending on the 
+assert/retract order.
+
+<p>The code below provides a solution to this problem based on
+<a id="idx:withmutex2:2236"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>. 
+It also illustrates the problem of mutexes. The predicate
+<a id="idx:withmutex2:2237"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
+behaves as <a id="idx:once1:2238"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
+with respect to the guarded goal. This means that our predicate 
+address/2 is no longer a nice logical non-deterministic relation. This 
+could be solved by explicit locking and unlocking a mutex using <a id="idx:setupcallcleanup3:2239"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>, 
+but at the risk of deadlocking the program if the choice point is left 
+open by accident.
+
+<pre class="code">
+change_address(Id, Address) :-
+        with_mutex(addressbook,
+                   ( retractall(address(Id, _)),
+                     asserta(address_db(Id, Address))
+                   )).
+
+address(Id, Address) :-
+        with_mutex(addressbook,
+                   address_db(Id, Address)).
+</pre>
+
+<p>Message queues (see <a id="idx:messagequeuecreate2:2240"></a><a class="pred" href="threadcom.html#message_queue_create/2">message_queue_create/2</a>) 
+often provide simpler and more robust ways for threads to communicate. 
+Still, mutexes can be a sensible solution and are therefore provided.
+
+<dl class="latex">
+<dt class="pubdef"><a id="mutex_create/1"><strong>mutex_create</strong>(<var>?MutexId</var>)</a></dt>
+<dd class="defbody">
+Create a mutex. If <var>MutexId</var> is an atom, a <em>named</em> mutex 
+is created. If it is a variable, an anonymous mutex reference is 
+returned. Anonymous mutexes are subject to (atom) garbage collection.</dd>
+<dt class="pubdef"><a id="mutex_create/2"><strong>mutex_create</strong>(<var>-MutexId, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Create a mutex using options. Defined options are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>Alias</var>)</dt>
+<dd class="defbody">
+Set the alias name. Using <code>mutex_create(X, [alias(name)])</code> is 
+preferred over the equivalent <code>mutex_create(name)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="mutex_destroy/1"><strong>mutex_destroy</strong>(<var>+MutexId</var>)</a></dt>
+<dd class="defbody">
+Destroy a mutex. If the mutex is not locked, it is destroyed and further 
+access yields an <code>existence_error</code> exception. As of version 
+7.1.19, this behaviour is reliable. If the mutex is locked, the mutex is 
+scheduled for <em>delayed destruction</em>: it will be destroyed when it 
+becomes unlocked.</dd>
+<dt class="pubdef"><a id="with_mutex/2"><strong>with_mutex</strong>(<var>+MutexId, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Execute <var>Goal</var> while holding <var>MutexId</var>. If <var>Goal</var> 
+leaves choice points, these are destroyed (as in <a id="idx:once1:2241"></a><a class="pred" href="metacall.html#once/1">once/1</a>). 
+The mutex is unlocked regardless of whether <var>Goal</var> succeeds, 
+fails or raises an exception. An exception thrown by <var>Goal</var> is 
+re-thrown after the mutex has been successfully unlocked. See also <a id="idx:mutexcreate1:2242"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a> 
+and <a id="idx:setupcallcleanup3:2243"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.
+
+<p>Although described in the thread section, this predicate is also 
+available in the single-threaded version, where it behaves simply as
+<a id="idx:once1:2244"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
+<dt class="pubdef"><a id="mutex_lock/1"><strong>mutex_lock</strong>(<var>+MutexId</var>)</a></dt>
+<dd class="defbody">
+Lock the mutex. Prolog mutexes are <em>recursive</em> mutexes: they can 
+be locked multiple times by the same thread. Only after unlocking it as 
+many times as it is locked does the mutex become available for locking 
+by other threads. If another thread has locked the mutex the calling 
+thread is suspended until the mutex is unlocked.
+
+<p>If <var>MutexId</var> is an atom, and there is no current mutex with 
+that name, the mutex is created automatically using <a id="idx:mutexcreate1:2245"></a><a class="pred" href="threadsync.html#mutex_create/1">mutex_create/1</a>. 
+This implies named mutexes need not be declared explicitly.
+
+<p>Please note that locking and unlocking mutexes should be paired 
+carefully. Especially make sure to unlock mutexes even if the protected 
+code fails or raises an exception. For most common cases, use
+<a id="idx:withmutex2:2246"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a>, 
+which provides a safer way for handling Prolog-level mutexes. The 
+predicate <a id="idx:setupcallcleanup3:2247"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+is another way to guarantee that the mutex is unlocked while retaining 
+non-determinism.</dd>
+<dt class="pubdef"><a id="mutex_trylock/1"><strong>mutex_trylock</strong>(<var>+MutexId</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:mutexlock1:2248"></a><a class="pred" href="threadsync.html#mutex_lock/1">mutex_lock/1</a>, 
+but if the mutex is held by another thread, this predicates fails 
+immediately.</dd>
+<dt class="pubdef"><a id="mutex_unlock/1"><strong>mutex_unlock</strong>(<var>+MutexId</var>)</a></dt>
+<dd class="defbody">
+Unlock the mutex. This can only be called if the mutex is held by the 
+calling thread. If this is not the case, a <code>permission_error</code> 
+exception is raised.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="mutex_unlock_all/0"><strong>mutex_unlock_all</strong></a></dt>
+<dd class="defbody">
+Unlock all mutexes held by the current thread. This predicate should not 
+be needed if mutex unlocking is guaranteed with <a id="idx:withmutex2:2249"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
+or
+<a id="idx:setupcallcleanup3:2250"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a>.<sup class="fn">185<span class="fn-text">The 
+also deprecated <a id="idx:threadexit1:2251"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+bypasses the automatic cleanup.</span></sup></dd>
+<dt class="pubdef"><a id="mutex_property/2"><strong>mutex_property</strong>(<var>?MutexId, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is a property of <var>MutexId</var>. Defined 
+properties are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>Alias</var>)</dt>
+<dd class="defbody">
+Mutex has the defined alias name. See <a id="idx:mutexcreate2:2252"></a><a class="pred" href="threadsync.html#mutex_create/2">mutex_create/2</a> 
+using the&lsquo;alias' option.</dd>
+<dt><strong>status</strong>(<var>Status</var>)</dt>
+<dd class="defbody">
+Current status of the mutex. One of <code>unlocked</code> if the mutex 
+is currently not locked, or <code>locked(Owner, Count)</code> if mutex 
+is locked
+<var>Count</var> times by thread <var>Owner</var>. Note that unless <var>Owner</var> 
+is the calling thread, the locked status can change at any time. There 
+is no useful application of this property, except for diagnostic 
+purposes.<sup class="fn">bug<span class="fn-text">As <var>Owner</var> 
+and <var>Count</var> are fetched separately from the mutex, the values 
+may be inconsistent.</span></sup>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

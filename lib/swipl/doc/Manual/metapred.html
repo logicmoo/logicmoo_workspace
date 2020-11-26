@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.5</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="module-autoload.html">
+<link rel="next" href="overrule.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="module-autoload.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="overrule.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:metapred"><a id="sec:6.5"><span class="sec-nr">6.5</span> <span class="sec-title">Defining 
+a meta-predicate</span></a></h2>
+
+<a id="sec:metapred"></a>
+
+<p>A meta-predicate is a predicate that calls other predicates 
+dynamically, modifies a predicate, or reasons about properties of a 
+predicate. Such predicates use either a compound term or a <em>predicate 
+indicator</em> to describe the predicate they address, e.g., <code>assert(name(jan))</code> 
+or <code>abolish(<a id="idx:name1:1913"></a><span class="pred-ext">name/1</span>)</code>. 
+With modules, this simple schema no longer works as each module defines 
+its own mapping from name+arity to predicate. This is resolved by 
+wrapping the original description in a term &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;, 
+e.g., <code>assert(person:name(jan))</code> or
+<code>abolish(<a id="idx:personname1:1914"></a><span class="pred-ext">person:name/1</span>)</code>.
+
+<p>Of course, when calling <a id="idx:assert1:1915"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+from inside a module, we expect to assert to a predicate local to this 
+module. In other words, we do not wish to provide this <code><code>:</code>/2</code> 
+wrapper by hand. The <a id="idx:metapredicate1:1916"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+directive tells the compiler that certain arguments are terms that will 
+be used to look up a predicate and thus need to be wrapped (qualified) 
+with &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;, unless they are 
+already wrapped.
+
+<p>In the example below, we use this to define <a id="idx:maplist3:1917"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+inside a module. The argument&lsquo;2' in the meta_predicate declaration 
+means that the argument is module-sensitive and refers to a predicate 
+with an arity that is two more than the term that is passed in. The 
+compiler only distinguishes the values 0..9 and <code><code>:</code></code>, 
+which denote module-sensitive arguments, from <code><code>+</code></code>, <code><code>-</code></code> 
+and <code><code>?</code></code>, which denote
+<em>modes</em>. The values 0..9 are used by the
+<em>cross-referencer</em> and syntax highlighting. Note that the helper 
+predicate maplist_/3 does not need to be declared as a meta-predicate 
+because the <a id="idx:maplist3:1918"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+wrapper already ensures that
+<var>Goal</var> is qualified as &lt;<var>module</var>&gt;:<var>Goal</var>. 
+See the description of
+<a id="idx:metapredicate1:1919"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+for details.
+
+<pre class="code">
+:- module(maplist, [maplist/3]).
+:- meta_predicate maplist(2, ?, ?).
+
+%%      maplist(:Goal, +List1, ?List2)
+%
+%       True if Goal can successfully be applied to all
+%       successive pairs of elements from List1 and List2.
+
+maplist(Goal, L1, L2) :-
+        maplist_(L1, L2, Goal).
+
+maplist_([], [], _).
+maplist_([H0|T0], [H|T], Goal) :-
+        call(Goal, H0, H),
+        maplist_(T0, T, Goal).
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><a id="meta_predicate/1"><strong>meta_predicate</strong> <var>+Head, 
+...</var></a></dt>
+<dd class="defbody">
+Define the predicates referenced by the comma-separated list <var>Head</var> 
+as <em>meta-predicates</em>. Each argument of each head is a
+<em>meta argument specifier</em>. Defined specifiers are given below. 
+Only 0..9, <code><code>:</code></code> and <code><code>^</code></code> 
+are interpreted; the mode declarations
+<code><code>+</code></code>, <code><code>-</code></code> and <code><code>?</code></code> 
+are ignored.
+
+<dl class="latex">
+<dt><strong>0..9</strong></dt>
+<dd class="defbody">
+The argument is a term that is used to reference a predicate with <var>N</var> 
+more arguments than the given argument term. For example: <code>call(0)</code> 
+or <code>maplist(1, +)</code>.
+</dd>
+<dt><strong><code>:</code></strong></dt>
+<dd class="defbody">
+The argument is module-sensitive, but does not directly refer to a 
+predicate. For example: <code>consult(:)</code>.
+</dd>
+<dt><strong><code>-</code></strong></dt>
+<dd class="defbody">
+The argument is not module-sensitive and unbound on entry.
+</dd>
+<dt><strong><code>?</code></strong></dt>
+<dd class="defbody">
+The argument is not module-sensitive and the mode is unspecified.
+</dd>
+<dt><strong><code>*</code></strong></dt>
+<dd class="defbody">
+The argument is not module-sensitive and the mode is unspecified. The 
+specification <code><code>*</code></code> is equivalent to <code><code>?</code></code>. 
+It is accepted for compatibility reasons. The predicate <a id="idx:predicateproperty2:1920"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+reports arguments declared using <code><code>*</code></code> with <code><code>?</code></code>.
+</dd>
+<dt><strong><code>+</code></strong></dt>
+<dd class="defbody">
+The argument is not module-sensitive and bound (i.e., nonvar) on entry.
+</dd>
+<dt><strong><code>^</code></strong></dt>
+<dd class="defbody">
+This extension is used to denote the possibly <code>^</code>-annotated 
+goal of
+<a id="idx:setof3:1921"></a><a class="pred" href="allsolutions.html#setof/3">setof/3</a>, <a id="idx:bagof3:1922"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, <a id="idx:aggregate3:1923"></a><a class="pred" href="aggregate.html#aggregate/3">aggregate/3</a> 
+and <a id="idx:aggregate4:1924"></a><a class="pred" href="aggregate.html#aggregate/4">aggregate/4</a>. 
+It is processed similar to&lsquo;0', but leaving the <code><code>^</code></code>/2 
+intact.
+</dd>
+<dt><strong><code>//</code></strong></dt>
+<dd class="defbody">
+The argument is a DCG body. See <a id="idx:phrase3:1925"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.
+</dd>
+</dl>
+
+<p>Each argument that is module-sensitive (i.e., marked 0..9, <code><code>:</code></code> 
+or
+<code><code>^</code></code>) is qualified with the context module of the 
+caller if it is not already qualified. The implementation ensures that 
+the argument is passed as &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;, 
+where &lt;<var>module</var>&gt; is an atom denoting the name of a module 
+and &lt;<var>term</var>&gt; itself is not a <code><code>:</code>/2</code> 
+term where the first argument is an atom. Below is a simple declaration 
+and a number of queries.
+
+<pre class="code">
+:- meta_predicate
+        meta(0, +).
+
+meta(Module:Term, _Arg) :-
+        format('Module=~w, Term = ~q~n', [Module, Term]).
+</pre>
+
+<pre class="code">
+?- meta(test, x).
+Module=user, Term = test
+?- meta(m1:test, x).
+Module=m1, Term = test
+?- m2:meta(test, x).
+Module=m2, Term = test
+?- m1:meta(m2:test, x).
+Module=m2, Term = test
+?- meta(m1:m2:test, x).
+Module=m2, Term = test
+?- meta(m1:42:test, x).
+Module=42, Term = test
+</pre>
+
+<p>The <a id="idx:metapredicate1:1926"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+declaration is the portable mechanism for defining meta-predicates and 
+replaces the old SWI-Prolog specific mechanism provided by the 
+deprecated predicates <a id="idx:moduletransparent1:1927"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>,
+<a id="idx:contextmodule1:1928"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
+and <a id="idx:stripmodule3:1929"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
+See also <a class="sec" href="modulecompat.html#sec:6.16">section 6.16</a>.
+</dd>
+</dl>
+
+<p></body></html>

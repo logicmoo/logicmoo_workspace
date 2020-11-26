@@ -1,0 +1,554 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 3.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="editreload.html">
+<link rel="next" href="guitracer.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="editreload.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="guitracer.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:pceemacs"><a id="sec:3.4"><span class="sec-nr">3.4</span> <span class="sec-title">Using 
+the PceEmacs built-in editor</span></a></h2>
+
+<a id="sec:pceemacs"></a>
+
+<p><h3 id="sec:runpceemacs"><a id="sec:3.4.1"><span class="sec-nr">3.4.1</span> <span class="sec-title">Activating 
+PceEmacs</span></a></h3>
+
+<a id="sec:runpceemacs"></a>
+
+<p>Initially <a id="idx:edit1:375"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+uses the editor specified in the <code>EDITOR</code> environment 
+variable. There are two ways to force it to use the built-in editor. One 
+is to set the Prolog flag <a class="flag" href="flags.html#flag:editor">editor</a> 
+to
+<code>pce_emacs</code> and the other is by starting the editor 
+explicitly using the emacs/[0,1] predicates.
+
+<p><h3 id="sec:emacsbluff"><a id="sec:3.4.2"><span class="sec-nr">3.4.2</span> <span class="sec-title">Bluffing 
+through PceEmacs</span></a></h3>
+
+<a id="sec:emacsbluff"></a>
+
+<p>PceEmacs closely mimics Richard Stallman's GNU-Emacs commands, adding 
+features from modern window-based editors to make it more acceptable for 
+beginners.<sup class="fn">41<span class="fn-text">Decent merging with 
+MS-Windows control-key conventions is difficult as many conflict with 
+GNU-Emacs. Especially the cut/copy/paste commands conflict with 
+important GNU-Emacs commands.</span></sup>
+
+<p>At the basis, PceEmacs maps keyboard sequences to methods defined on 
+the extended <i>editor</i> object. Some frequently used commands are, 
+with their key-binding, presented in the menu bar above each editor 
+window. A complete overview of the bindings for the current <em>mode</em> 
+is provided through <strong>Help/Show key bindings</strong> (<code>Control-h 
+Control-b</code>).
+
+<p><h4 id="sec:pceemacsmodes"><a id="sec:3.4.2.1"><span class="sec-nr">3.4.2.1</span> <span class="sec-title">Edit 
+modes</span></a></h4>
+
+<a id="sec:pceemacsmodes"></a>
+
+<p>Modes are the heart of (Pce)Emacs. Modes define dedicated editing 
+support for a particular kind of (source) text. For our purpose we want
+<em>Prolog mode</em>. There are various ways to make PceEmacs use Prolog 
+mode for a file.
+
+<p>
+<ul class="latex">
+<li><i>Using the proper extension</i><br>
+If the file ends in <code>.pl</code> or the selected alternative (e.g. <code>.pro</code>) 
+extension, Prolog mode is selected.
+
+<p>
+<li><i>Using <code>#!/path/to/.../swipl</code></i><br>
+If the file is a <em>Prolog Script</em> file, starting with the line
+<code>#!/path/to/swipl</code> <var>options</var>, Prolog mode is 
+selected regardless of the extension.
+
+<p>
+<li><i>Using <code>-*- Prolog -*-</code></i><br>
+If the above sequence appears in the first line of the file (inside a 
+Prolog comment) Prolog mode is selected.
+
+<p>
+<li><i>Explicit selection</i><br>
+Finally, using <strong>File/Mode/Prolog</strong> you can switch to 
+Prolog mode explicitly.
+</ul>
+
+<p><h4 id="sec:pceemacscommands"><a id="sec:3.4.2.2"><span class="sec-nr">3.4.2.2</span> <span class="sec-title">Frequently 
+used editor commands</span></a></h4>
+
+<a id="sec:pceemacscommands"></a>
+
+<p>Below we list a few important commands and how to activate them.
+
+<p>
+<ul class="latex">
+<li><i>Cut/Copy/Paste</i><br>
+These commands follow Unix/X11 traditions. You're best suited with a 
+three-button mouse. After selecting using the left-mouse (double-click 
+uses word-mode and triple line-mode), the selected text is
+<em>automatically</em> copied to the clipboard (X11 primary selection on 
+Unix). <em>Cut</em> is achieved using the <code>DEL</code> key or by 
+typing something else at the location. <em>Paste</em> is achieved using 
+the middle-mouse (or wheel) button. If you don't have a middle-mouse 
+button, pressing the left- and right-button at the same time is 
+interpreted as a middle-button click. If nothing helps, there is the <strong>Edit/Paste</strong> 
+menu entry. Text is pasted at the caret location.
+
+<p>
+<li><i>Undo</i><br>
+Undo is bound to the GNU-Emacs <code>Control-_</code> as well as the 
+MS-Windows
+<code>Control-Z</code> sequence.
+
+<p>
+<li><i>Abort</i><br>
+Multi-key sequences can be aborted at any stage using <code>Control-G</code>.
+
+<p>
+<li><i>Find</i><br>
+Find (Search) is started using <code>Control-S</code> (forward) or
+<code>Control-R</code> (backward). PceEmacs implements <em>incremental 
+search</em>. This is difficult to use for novices, but very powerful 
+once you get the clue. After one of the above start keys, the system 
+indicates search mode in the status line. As you are typing the search 
+string, the system searches for it, extending the search with every 
+character you type. It illustrates the current match using a green 
+background.
+
+<p>If the target cannot be found, PceEmacs warns you and no longer 
+extends the search string.<sup class="fn">42<span class="fn-text">GNU-Emacs 
+keeps extending the string, but why? Adding more text will not make it 
+match.</span></sup> During search, some characters have special meaning. 
+Typing anything but these characters commits the search, re-starting 
+normal edit mode. Special commands are:
+
+<dl class="latex">
+<dt><b><code>Control-S</code></b></dt>
+<dd class="defbody">
+Search forwards for next.
+</dd>
+<dt><b><code>Control-R</code></b></dt>
+<dd class="defbody">
+Search backwards for next.
+</dd>
+<dt><b><code>Control-W</code></b></dt>
+<dd class="defbody">
+Extend search to next word boundary.
+</dd>
+<dt><b><code>Control-G</code></b></dt>
+<dd class="defbody">
+Cancel search, go back to where it started.
+</dd>
+<dt><b><code>ESC</code></b></dt>
+<dd class="defbody">
+Commit search, leaving caret at found location.
+</dd>
+<dt><b><code>Backspace</code></b></dt>
+<dd class="defbody">
+Remove a character from the search string.
+</dd>
+</dl>
+
+<p>
+<li><i>Dynamic Abbreviation</i><br>
+Also called <em>dabbrev</em>, dynamic abbreviation is an important 
+feature of Emacs clones to support programming. After typing the first 
+few letters of an identifier, you may press <code>Alt-/</code>, causing 
+PceEmacs to search backwards for identifiers that start the same and use 
+it to complete the text you typed. A second <code>Alt-/</code> searches 
+further backwards. If there are no hits before the caret, it starts 
+searching forwards. With some practice, this system allows for entering 
+code very fast with nice and readable identifiers (or other difficult 
+long words).
+
+<p>
+<li><i>Open (a file)</i><br>
+Is called <strong>File/Find file</strong> (<code>Control-x Control-f</code>). 
+By default the file is loaded into the current window. If you want to 
+keep this window, press <code>Alt-s</code> or click the little icon at 
+the bottom left to make the window <em>sticky</em>.
+
+<p>
+<li><i>Split view</i><br>
+Sometimes you want to look at two places in the same file. To do this, 
+use <code>Control-x 2</code> to create a new window pointing to the same 
+file. Do not worry, you can edit as well as move around in both.
+<code>Control-x 1</code> kills all other windows running on the same 
+file.
+</ul>
+
+<p>These are the most commonly used commands. In
+<a class="sec" href="pceemacs.html#sec:3.4.3">section 3.4.3</a> we 
+discuss specific support for dealing with Prolog source code.
+
+<p><h3 id="sec:emacsprologmode"><a id="sec:3.4.3"><span class="sec-nr">3.4.3</span> <span class="sec-title">Prolog 
+Mode</span></a></h3>
+
+<a id="sec:emacsprologmode"></a>
+
+<p>In the previous section (<a class="sec" href="pceemacs.html#sec:3.4.2">section 
+3.4.2</a>) we explained the basics of PceEmacs. Here we continue with 
+Prolog-specific functionality. Possibly the most interesting is <em>Syntax 
+highlighting</em>. Unlike most editors where this is based on simple 
+patterns, PceEmacs syntax highlighting is achieved by Prolog itself 
+actually reading and interpreting the source as you type it. There are 
+three moments at which PceEmacs checks (part of) the syntax.
+
+<p>
+<ul class="latex">
+<li><i>After typing a <code><code>.</code></code></i><br>
+After typing a <code><code>.</code></code> that is not preceded by a <em>symbol</em> 
+character, the system assumes you completed a clause, tries to find the 
+start of this clause and verifies the syntax. If this process succeeds 
+it colours the elements of the clause according to the rules given 
+below. Colouring is done using information from the last full check on 
+this file. If it fails, the syntax error is displayed in the status line 
+and the clause is not coloured.
+
+<p>
+<li><i>After the command <code>Control-c Control-s</code></i><br>
+Acronym for <b>C</b>heck <b>S</b>yntax, it performs the same checks as 
+above for the clause surrounding the caret. On a syntax error, however, 
+the caret is moved to the expected location of the error.<sup class="fn">43<span class="fn-text">In 
+most cases the location where the parser cannot proceed is further down 
+the file than the actual error location.</span></sup>
+
+<p>
+<li><i>After pausing for two seconds</i><br>
+After a short pause (2 seconds), PceEmacs opens the edit buffer and 
+reads it as a whole, creating an index of defined, called, dynamic, 
+imported and exported predicates. After completing this, it re-reads the 
+file and colours all clauses and calls with valid syntax.
+
+<p>
+<li><i>After typing <code>Control-l Control-l</code></i><br>
+The <code>Control-l</code> command re-centers the window (scrolls the 
+window to make the caret the center of the window). Typing this command 
+twice starts the same process as above.
+</ul>
+
+<p><b>The colour schema</b> itself is defined in
+<code>library(emacs/prolog_colour)</code>. The colouring can be extended 
+and modified using multifile predicates. Please check this source file 
+for details. In general, underlined objects have a popup (right-mouse 
+button) associated with common commands such as viewing the 
+documentation or source. <b>Bold</b> text is used to indicate the 
+definition of objects (typically predicates when using plain Prolog). 
+Other colours follow intuitive conventions. See <a class="tab" href="pceemacs.html#tab:plcolour">table 
+3</a>.
+
+<p><table class="latex frame-box center">
+<tr><td colspan=2 align=center>Clauses</tr>
+<tr class="hline"><td>Blue bold</td><td>Head of an exported predicate </td></tr>
+<tr><td>Red bold</td><td>Head of a predicate that is not called </td></tr>
+<tr><td>Black bold</td><td>Head of remaining predicates </td></tr>
+<tr class="hline"><td colspan=2 align=center>Calls in the clause body</tr>
+<tr class="hline"><td>Blue</td><td>Call to built-in or imported 
+predicate </td></tr>
+<tr><td>Red</td><td>Call to undefined predicate </td></tr>
+<tr><td>Purple</td><td>Call to dynamic predicate </td></tr>
+<tr class="hline"><td colspan=2 align=center>Other entities</tr>
+<tr class="hline"><td>Dark green</td><td>Comment </td></tr>
+<tr><td>Dark blue</td><td>Quoted atom or string </td></tr>
+<tr><td>Brown</td><td>Variable </td></tr>
+</table>
+<a id="tab:plcolour"></a>
+<div class="caption"><b>Table 3 : </b>Colour conventions</div>
+
+<p><b>Layout support</b> 
+
+<p>Layout is not&lsquo;just nice', it is <em>essential</em> for writing 
+readable code. There is much debate on the proper layout of Prolog. 
+PceEmacs, being a rather small project, supports only one particular 
+style for layout.<sup class="fn">44<span class="fn-text">Defined in 
+Prolog in the file <code>library(emacs/prolog_mode)</code>, you may wish 
+to extend this. Please contribute your extensions!</span></sup> Below 
+are examples of typical constructs.
+
+<pre class="code">
+head(arg1, arg2).
+
+head(arg1, arg2) :- !.
+
+head(Arg1, arg2) :- !,
+        call1(Arg1).
+
+head(Arg1, arg2) :-
+        (   if(Arg1)
+        -&gt;  then
+        ;   else
+        ).
+
+head(Arg1) :-
+        (   a
+        ;   b
+        ).
+
+head :-
+        a(many,
+          long,
+          arguments(with,
+                    many,
+                    more),
+          and([ a,
+                long,
+                list,
+                with,
+                a,
+              | tail
+              ])).
+</pre>
+
+<p>PceEmacs uses the same conventions as GNU-Emacs. The <code>TAB</code> 
+key indents the current line according to the syntax rules. <code>Alt-q</code> 
+indents all lines of the current clause. It provides support for head, 
+calls (indented 1 tab), if-then-else, disjunction and argument lists 
+broken across multiple lines as illustrated above.
+
+<p><h4 id="sec:pceemacshelp"><a id="sec:3.4.3.1"><span class="sec-nr">3.4.3.1</span> <span class="sec-title">Finding 
+your way around</span></a></h4>
+
+<a id="sec:pceemacshelp"></a>
+
+<p>The command <code>Alt-.</code> extracts name and arity from the caret 
+location and jumps (after conformation or edit) to the definition of the 
+predicate. It does so based on the source-location database of loaded 
+predicates also used by <a id="idx:edit1:376"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+This makes locating predicates reliable if all sources are loaded and 
+up-to-date (see <a id="idx:make0:377"></a><a class="pred" href="consulting.html#make/0">make/0</a>).
+
+<p>In addition, references to files in <a id="idx:usemodule12:378"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>, <a id="idx:consult1:379"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, 
+etc. are red if the file cannot be found and underlined blue if the file 
+can be loaded. A popup allows for opening the referenced file.
+
+<p></body></html>

@@ -1,0 +1,16 @@
+(note TQD87)
+
+(budgetExpenditureFractionOfGDP Libya GovernmentMilitaryOrganization 
+ (YearFn 1994) 
+ (Percent 6.1)) 
+
+(query (findall (?FRACTION ?TIME)
+(thereExists ?NR 
+   (and 
+       (budgetExpenditureFractionOfGDP Libya GovernmentMilitaryOrganization ?TIME ?NR) 
+       (evaluate ?FRACTION 
+           (QuantityConversionFn Percent ?NR))))))
+
+(answer 6.1 1994)
+
+(end_of_file)

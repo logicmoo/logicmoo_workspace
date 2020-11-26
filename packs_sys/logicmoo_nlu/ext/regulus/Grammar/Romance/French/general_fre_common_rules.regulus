@@ -1,0 +1,34 @@
+%macro(has_spec, [has_spec=_]).
+
+yn_question:[sem=S] -->
+	'est-ce', que,
+	 s:[sem=S].
+
+%en combien de temps la douleur irradie-t'elle la nuque 
+wh_question:[sem=concat(WhPP, concat(Np, Vp))] -->
+	wh_pp:[sem=WhPP],
+	np:[sem=Np, sem_np_type=SubjType, agr=Agr, gapsin=null, gapsout=null],
+	vp:[sem=Vp, inv=inverted, subj_pron=dummy_pronoun, subj_sem_np_type=SubjType, agr=Agr, gapsin=pp_gap, gapsout=null].
+
+
+%% est - elle
+vbar:[sem=concat([[voice, active]], concat(V, concat(Pron, Advp))), inv=inverted, subj_pron=PronType,
+      vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, sem_pp_type=PPType, agr=Agr] -->
+	verb:[sem=V, vform=finite, subcat=Subcat, clitic_subcat=CliticSubcat,
+	      subj_sem_np_type=SubjType, obj_sem_np_type=ObjType, sem_pp_type=PPType, agr=Agr],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=PronType],
+	optional_adverb:[sem=Advp].
+
+% la douleur [est-elle] causée par X
+aux_vbar:[sem=concat(AuxV, concat(Pron, Advp)), inv=inverted, subj_pron=PronType,
+	  vform=VForm, vform=(finite\/infinitive\/pres_participle), 
+	  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+	  participle_agr=ParticipleAgr, voice=Voice] -->
+	aux_verb:[sem=AuxV, vform=VForm, 
+		  aux_v_type=AuxVerbType, participle_vform=MainVerbForm, agr=Agr,
+		  participle_agr=ParticipleAgr, voice=Voice],
+	hyphen:[],
+	pronoun:[sem=Pron, agr=Agr, pron_type=PronType],
+	optional_adverb:[sem=Advp, position=pre].

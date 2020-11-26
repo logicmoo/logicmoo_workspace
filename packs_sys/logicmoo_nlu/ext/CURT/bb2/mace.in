@@ -1,0 +1,32 @@
+set(auto).
+
+clear(print_proofs).
+
+set(prolog_style_variables).
+
+formula_list(usable).
+
+(((all A (event(A) -> thing(A))) & 
+     ((all B (entity(B) -> thing(B))) & 
+          ((all C (object(C) -> entity(C))) & 
+               ((all D (organism(D) -> entity(D))) & 
+                    ((all E (animal(E) -> organism(E))) & 
+                         ((all F (person(F) -> organism(F))) & 
+                              ((all G (man(G) -> person(G))) & 
+                                   ((all H (woman(H) -> person(H))) & 
+                                        ((all I (entity(I) -> -(event(I)))) & 
+                                             ((all J (organism(J) -> -(object(J)))) & 
+                                                  ((all K (person(K) -> -(animal(K)))) & 
+                                                       ((all L (woman(L) -> -(man(L)))) & 
+                                                            ((all M (man(M) -> male(M))) & 
+                                                                 ((all N (object(N) -> neuter(N))) & 
+                                                                      ((all O (event(O) -> neuter(O))) & 
+                                                                           ((all P (woman(P) -> female(P))) & 
+                                                                                ((all Q (male(Q) -> -(female(Q)))) & 
+                                                                                     ((all R (neuter(R) -> -(male(R)))) & 
+                                                                                          ((all S (female(S) -> -(neuter(S)))) & 
+                                                                                               (all T ((T = mia) -> woman(T)))))))))))))))))))))) & 
+     -((exists U ((U = mia) & 
+          walk(U))))).
+
+end_of_list.

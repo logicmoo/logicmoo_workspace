@@ -1,0 +1,38 @@
+;--------------------------------------------------------------------------
+; File     : GRP014-1 : TPTP v2.2.0. Released v1.0.0.
+; Domain   : Group Theory
+; Problem  : Product is associative in this group theory
+; Version  : [Ove90] (equality) axioms : Incomplete.
+; English  : The group theory specified by the axiom given implies the 
+;            associativity of multiply.
+
+; Refs     : [Ove90] Overbeek (1990), ATP competition announced at CADE-10
+;          : [Ove93] Overbeek (1993), The CADE-11 Competitions: A Personal 
+;          : [LM93]  Lusk & McCune (1993), Uniform Strategies: The CADE-11 
+;          : [Zha93] Zhang (1993), Automated Proofs of Equality Problems in
+; Source   : [Ove90]
+; Names    : CADE-11 Competition Eq-4 [Ove90]
+;          : THEOREM EQ-4 [LM93]
+;          : PROBLEM 4 [Zha93]
+
+; Status   : unsatisfiable
+; Rating   : 0.33 v2.2.0, 0.43 v2.1.0, 0.50 v2.0.0
+; Syntax   : Number of clauses    :    2 (   0 non-Horn;   2 unit;   1 RR)
+;            Number of literals   :    2 (   2 equality)
+;            Maximal clause size  :    1 (   1 average)
+;            Number of predicates :    1 (   0 propositional; 2-2 arity)
+;            Number of functors   :    5 (   3 constant; 0-2 arity)
+;            Number of variables  :    4 (   0 singleton)
+;            Maximal term depth   :    9 (   4 average)
+
+; Comments : The group_axiom is in fact a single axiom for group theory
+;            [LM93].
+;          : tptp2X -f kif -t rm_equality:rstfp GRP014-1.p 
+;--------------------------------------------------------------------------
+; group_axiom, axiom.
+(or (= (multiply ?A (inverse (multiply (multiply (inverse (multiply (inverse ?B) (multiply (inverse ?A) ?C))) ?D) (inverse (multiply ?B ?D))))) ?C))
+
+; prove_associativity, conjecture.
+(or (/= (multiply a (multiply b c)) (multiply (multiply a b) c)))
+
+;--------------------------------------------------------------------------

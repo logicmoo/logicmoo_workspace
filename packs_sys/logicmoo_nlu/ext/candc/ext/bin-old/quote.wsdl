@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="quote"
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="urn:xmethods-delayed-quotes"
+ xmlns:tns="urn:xmethods-delayed-quotes"
+ xmlns:ns="urn:xmethods-delayed-quotes">
+
+<types>
+ <schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  targetNamespace="urn:xmethods-delayed-quotes"
+  xmlns:ns="urn:xmethods-delayed-quotes">
+
+  <complexType name="getQuoteResponse">
+   <all>
+    <element name="result" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+   </all>
+  </complexType>
+
+ </schema>
+</types>
+
+<message name="getQuoteRequest">
+ <part name="symbol" type="xsd:string"/>
+</message>
+
+<message name="getQuoteResponse">
+ <part name="result" type="xsd:float"/>
+</message>
+
+<portType name="quotePortType">
+ <operation name="getQuote">
+  <documentation>Service definition of function ns__getQuote</documentation>
+  <input message="tns:getQuoteRequest"/>
+  <output message="tns:getQuoteResponse"/>
+ </operation>
+</portType>
+
+<binding name="quoteBinding" type="tns:quotePortType">
+ <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="getQuote">
+  <SOAP:operation soapAction="urn:xmethods-delayed-quotes#getQuote"/>
+  <input>
+   <SOAP:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </input>
+  <output>
+   <SOAP:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="quote">
+ <documentation>gSOAP 2.1.6b generated service definition</documentation>
+ <port name="quotePort" binding="tns:quoteBinding">
+  <SOAP:address location="http://services.xmethods.net/soap/quote.cgi"/>
+ </port>
+</service>
+
+</definitions>

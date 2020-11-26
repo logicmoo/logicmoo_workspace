@@ -1,0 +1,3 @@
+%%% Stay in touch with others by phone or email. If you live alone and become sick during a COVID-19 outbreak, you may need help. If you have a chronic medical condition and live alone, ask family, friends, and health care providers to check on you during an outbreak. Stay in touch with family and friends with chronic medical conditions.
+
+%%% Take care of the emotional health of your household members. Outbreaks can be stressful for adults and children. Children respond differently to stressful situations than adults. Talk with your children about the outbreak, try to stay calm, and reassure them that they are safe.

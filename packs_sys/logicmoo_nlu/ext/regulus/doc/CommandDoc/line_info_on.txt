@@ -1,0 +1,17 @@
+A typical parse tree printed with line info will look like this:
+\begin{verbatim}
+.MAIN [TOY1_RULES:1-4]
+   utterance [TOY1_RULES:5-9]
+      command [TOY1_RULES:10-14]
+      /  verb lex(switch) [TOY1_LEXICON:8-10]
+      |  onoff null lex(on) [TOY1_LEXICON:24-25]
+      |  np [TOY1_RULES:25-29]
+      |  /  lex(the)
+      |  |  noun lex(light) [TOY1_LEXICON:16-17]
+      \  \  null
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+\end{verbatim}

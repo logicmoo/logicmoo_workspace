@@ -1,0 +1,136 @@
+(note TQF238b-2)
+
+(implies 
+ (and 
+ (instance ?TERROR-GROUP TerroristGroup) 
+ (sponsors ?SUPPORTER ?TERROR-GROUP)) 
+ (goalCategoryForAgent ?TERROR-GROUP 
+ (statusWithAgent-Gradient ?TERROR-GROUP ?SUPPORTER Prestige VeryHigh) StatusGoal)) 
+
+(sponsors HYP-Agent-60371920 HYP-TerroristGroup-24474319) 
+
+(instance HYP-TerroristGroup-24474319 TerroristGroup) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(goalCategoryForAgent HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Prestige VeryHigh) StatusGoal) 
+
+(evaluate 
+ (statusWithAgent-Gradient 
+ (The Agent) HYP-Agent-60371920 Prestige VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Prestige VeryHigh))) 
+
+(unknownFormula 
+ (desires HYP-TransnationalCriminalOrganization-5109197 
+ (statusWithAgent-Gradient HYP-TransnationalCriminalOrganization-5109197 HYP-Agent-60371920 Prestige VeryHigh))) 
+
+(evaluate 
+ (statusWithAgent-Gradient HYP-TransnationalCriminalOrganization-5109197 HYP-Agent-60371920 Prestige VeryHigh) 
+ (SubstituteFormulaFn HYP-TransnationalCriminalOrganization-5109197 HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Prestige VeryHigh))) 
+
+(desires HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Prestige VeryHigh)) 
+
+(evaluate 
+ (secrecyOfOperations 
+ (The Agent) VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh))) 
+
+(instance HYP-TerroristGroup-24474319 CovertAgent) 
+
+(unknownFormula 
+ (desires HYP-TransnationalCriminalOrganization-5109197 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh))) 
+
+(evaluate 
+ (secrecyOfOperations HYP-TransnationalCriminalOrganization-5109197 VeryHigh) 
+ (SubstituteFormulaFn HYP-TransnationalCriminalOrganization-5109197 HYP-TerroristGroup-24474319 
+ (secrecyOfOperations HYP-TerroristGroup-24474319 VeryHigh))) 
+
+(implies 
+ (instance ?AGENT CovertAgent) 
+ (goalCategoryForAgent ?AGENT 
+ (secrecyOfOperations ?AGENT VeryHigh) SelfPreservationGoal)) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(implies 
+ (and 
+ (instance ?TERROR-GROUP TerroristGroup) 
+ (sponsors ?SUPPORTER ?TERROR-GROUP)) 
+ (goalCategoryForAgent ?TERROR-GROUP 
+ (statusWithAgent-Gradient ?TERROR-GROUP ?SUPPORTER Influence VeryHigh) StatusGoal)) 
+
+(sponsors HYP-Agent-60371920 HYP-TerroristGroup-24474319) 
+
+(instance HYP-TerroristGroup-24474319 TerroristGroup) 
+
+(implies 
+ (goalCategoryForAgent ?AGT ?FORM ?GOALATT) 
+ (desires ?AGT ?FORM)) 
+
+(goalCategoryForAgent HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Influence VeryHigh) StatusGoal) 
+
+(evaluate 
+ (statusWithAgent-Gradient 
+ (The Agent) HYP-Agent-60371920 Influence VeryHigh) 
+ (SubstituteFormulaFn 
+ (The Agent) HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Influence VeryHigh))) 
+
+(unknownFormula 
+ (desires HYP-TransnationalCriminalOrganization-5109197 
+ (statusWithAgent-Gradient HYP-TransnationalCriminalOrganization-5109197 HYP-Agent-60371920 Influence VeryHigh))) 
+
+(evaluate 
+ (statusWithAgent-Gradient HYP-TransnationalCriminalOrganization-5109197 HYP-Agent-60371920 Influence VeryHigh) 
+ (SubstituteFormulaFn HYP-TransnationalCriminalOrganization-5109197 HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Influence VeryHigh))) 
+
+(desires HYP-TerroristGroup-24474319 
+ (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Influence VeryHigh)) 
+
+
+(query (findall (?JUST-TERROR-GENERIC-GOAL)
+(=> 
+(and 
+(instance ?TERROR-GROUP TerroristGroup) 
+(sponsors ?AGENT ?TERROR-GROUP) 
+(instance ?CRIMINAL-ORG TransnationalCriminalOrganization) 
+(operatesInRegion ?CRIMINAL-ORG ?REGION)) 
+(exists 
+(?CRIMINAL-GOAL-VERSION) 
+(exists 
+(?JUST-TERROR-GOAL) 
+(and 
+(desires ?TERROR-GROUP ?JUST-TERROR-GOAL) 
+(evaluate ?CRIMINAL-GOAL-VERSION 
+(SubstituteFormulaFn ?CRIMINAL-ORG ?TERROR-GROUP ?JUST-TERROR-GOAL)) 
+(evaluate ?JUST-TERROR-GENERIC-GOAL 
+(SubstituteFormulaFn 
+(The Agent) ?TERROR-GROUP ?JUST-TERROR-GOAL)) 
+(unknownFormula 
+(desires ?CRIMINAL-ORG ?CRIMINAL-GOAL-VERSION))))))
+
+))
+
+(answer (list  (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Prestige VeryHigh)
+))
+(answer (list 
+ (secrecyOfOperations ?AGENT VeryHigh) SelfPreservationGoal)) 
+)
+(answer (list  (statusWithAgent-Gradient HYP-TerroristGroup-24474319 HYP-Agent-60371920 Influence VeryHigh)) 
+)
+
+(end_of_file)

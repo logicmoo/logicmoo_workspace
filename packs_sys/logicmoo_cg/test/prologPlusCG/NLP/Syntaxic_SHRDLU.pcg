@@ -1,0 +1,72 @@
+lexicon("push", verb).
+lexicon("create", verb).
+
+lexicon("pyramid", noun).
+lexicon("cube", noun).
+lexicon("sphere", noun).
+
+lexicon("small", adj).
+lexicon("red", adj).
+lexicon("big", adj).
+lexicon("blue", adj).
+
+lexicon("on", prep).
+lexicon("under", prep).
+lexicon("left", prep).
+lexicon("right", prep).
+
+lexicon("the", art).
+lexicon("a", art).
+
+Verb(v) :- lexicon(v, verb).
+
+Prep([v|P], P) :- lexicon(v, prep).
+
+Art([v|P], P) :- lexicon(v, art), !.
+Art(P, P).
+
+Noun([v|P], P) :- lexicon(v, noun).
+
+Adj(A) :- lexicon(A, adj).
+
+Syntaxic_Shrdlu :-
+  writeln("**** Welcome to the SHRDLU_Prolog+CG Program *******"),
+  //new(aShrdlu_Canvas3D, "PrologPlusCG.Shrdlu_Canvas3D", ()),
+  readSentence(_sentence),
+  ShrdluDialog(_sentence), !.
+
+ShrdluDialog(["end", "."]) :- !.
+ShrdluDialog(_sentence) :-
+  Syntaxic_Analysis(_sentence),
+  assertz(phrase(_sentence), []),
+  readSentence(_s),
+  ShrdluDialog(_s), !.
+
+syntaxic_analyzer :-
+   readSentence(P),
+   imperative_sentence(P), !.
+
+Syntaxic_Analysis(_sentence) :- 
+   imperative_sentence(_sentence).
+
+imperative_sentence([V|P1]) :- 
+   Verb(V),
+   NP(P1, P2),
+   complement(P2).
+
+NP(P, P1) :-
+   Art(P, P2),
+   AdjsSynt(P2, P3),
+   Noun(P3, P4),
+   AdjsSynt(P4, P1), !.
+
+complement(["."]) :- !.
+complement(P2) :-
+   Prep(P2, P3),
+   NP(P3, ["."]).
+
+AdjsSynt([A|P], P1) :-
+  Adj(A),
+  AdjsSynt(P, P1), !.
+AdjsSynt(P, P).
+

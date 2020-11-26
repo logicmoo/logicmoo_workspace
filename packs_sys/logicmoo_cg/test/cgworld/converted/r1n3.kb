@@ -1,0 +1,6 @@
+% (convert_into[security][cash])
+cgc(188,simple,'security',[fs(num,sing)],[]).
+cgc(189,simple,'cash',[fs(num,sing)],[]).
+cg(190,[cgr(convert_into, [188, 189], _)], 
+        [],
+        [fs(kind,normal)]).

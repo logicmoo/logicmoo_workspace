@@ -1,0 +1,36 @@
+(note TQB16)
+
+(instance 
+ (MillionBarrelsPerDay 2.15641)  Rate) 
+
+
+(productionAmountDuring Kuwait PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.15641) ) 
+
+(instance 
+ (MillionBarrelsPerDay 2.60000) Rate) 
+
+(productionCapacityDuring Kuwait PetroleumProduct 
+ (YearFn 1995) 
+ (MillionBarrelsPerDay 2.60000))
+
+
+
+
+(query (findall ?FRACTION (findall ?MAX  (findall ?RATE (findall ?TIME
+
+ (and 
+ (productionCapacityDuring Kuwait PetroleumProduct ?TIME ?MAX) 
+ (productionAmountDuring Kuwait PetroleumProduct ?TIME ?RATE) 
+ (instance ?MAX Rate) 
+ (instance ?RATE Rate) 
+ (evaluate ?FRACTION 
+ (QuotientFn ?RATE ?MAX))) )))))
+
+(answer 0.829388 2.60000 2.15641 1995)
+
+(end_of_file)
+
+
+

@@ -1,0 +1,32 @@
+(note "TQA65-unSkolemed")
+
+(thereExists (?X ?Y) 
+  (and
+    (subProcess Iran-IraqWar ?X) 
+    (agent ?X Iran) 
+    (instance ?X AttackOnTangible)
+    (instance ?Y BallisticMissile) 
+    (deviceUsed ?X ?Y)
+    (subProcess Iran-IraqWar ?X)))
+
+(subrelation subProcess temporallySubsumes) 
+
+(implies 
+  (deviceUsed ?EV ?DEV) 
+  (instrument-Generic ?EV ?DEV)) 
+
+(query 
+  (thereExists ?ACT 
+    (thereExists ?FORCE 
+      (and 
+        (agent ?ACT Iran) 
+        (instance ?ACT AttackOnTangible) 
+        (instance ?FORCE BallisticMissile) 
+        (instrument-Generic ?ACT ?FORCE) 
+        (temporallySubsumes Iran-IraqWar ?ACT)))))
+ 
+(answer Yes)
+
+(end_of_file)
+
+

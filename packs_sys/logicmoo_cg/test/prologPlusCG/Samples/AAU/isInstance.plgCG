@@ -1,0 +1,9 @@
+// Type hierarchy
+Entity > Philosopher.
+
+// Catalog of instances
+Philosopher = Peirce, Whitehead, Heraclitus.
+
+// Rule
+is_philosopher(I) :- isInstance(I, Philosopher).
+

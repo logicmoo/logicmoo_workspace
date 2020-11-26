@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 8.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="attvar.html">
+<link rel="next" href="chr.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="attvar.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="chr.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:coroutining"><a id="sec:8.2"><span class="sec-nr">8.2</span> <span class="sec-title">Coroutining</span></a></h2>
+
+<a id="sec:coroutining"></a>
+
+<p>Coroutining allows us to delay the execution of Prolog goals until 
+their truth can be safely decided.
+
+<p>Among the most important coroutining predicates is <a id="idx:dif2:2073"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>, 
+which expresses <i>disequality</i> of terms in a sound way. The actual 
+test is delayed until the terms are sufficiently different, or have 
+become identical. For example:
+
+<pre class="code">
+?- dif(X, Y), X = a, Y = b.
+X = a,
+Y = b.
+
+?- dif(X, Y), X = a, Y = a.
+false.
+</pre>
+
+<p>There are also lower-level coroutining predicates that are intended 
+as building blocks for higher-level constraints. For example, we can use
+<a id="idx:freeze2:2074"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+to define a variable that can only be assigned an atom:
+
+<pre class="code">
+?- freeze(X, atom(X)), X = a.
+X = a.
+</pre>
+
+<p>In this case, calling <a id="idx:atom1:2075"></a><a class="pred" href="typetest.html#atom/1">atom/1</a> 
+earlier causes the whole query to fail:
+
+<pre class="code">
+?- atom(X), X = a.
+false.
+</pre>
+
+<p>If available, domain-specific constraints should be used in such 
+cases. For example, to state that a variable can only assume even 
+integers, use the CLP(FD) constraint <a class="pred" href="clpfd.html##=/2">#=/2</a>:
+
+<pre class="code">
+?- X mod 2 #= 0.
+X mod 2#=0.
+</pre>
+
+<p>Importantly, domain-specific constraints can apply stronger 
+propagation by exploiting logical properties of their respective 
+domains. For example:
+
+<pre class="code">
+?- X mod 2 #= 0, X in 1..3.
+X = 2.
+</pre>
+
+<p>Remaining constraints, such as <code>X mod 2#=0</code> in the example 
+above, are called <em>residual</em><a id="idx:residual:2076"></a> goals. 
+They are said to
+<em>flounder</em><a id="idx:flounder:2077"></a>, because their truth is 
+not yet decided. Declaratively, the query is only true if all residual 
+goals are satisfiable. Use <a id="idx:callresiduevars2:2078"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+to collect all variables that are involved in constraints.
+
+<dl class="latex">
+<dt class="pubdef"><a id="dif/2"><strong>dif</strong>(<var>@A, @B</var>)</a></dt>
+<dd class="defbody">
+The <a id="idx:dif2:2079"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+predicate is a <i>constraint</i> that is true if and only if <var>A</var> 
+and <var>B</var> are different terms. If <var>A</var> and <var>B</var> 
+can never unify, <a id="idx:dif2:2080"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+succeeds deterministically. If <var>A</var> and <var>B</var> are 
+identical, it fails immediately. Finally, if <var>A</var> and <var>B</var> 
+can unify, goals are delayed that prevent <var>A</var> and <var>B</var> 
+to become equal. It is this last property that makes <a id="idx:dif2:2081"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+a more general and more declarative alternative for <a class="pred" href="compare.html#\=/2">\=/2</a> 
+and related predicates.
+
+<p>This predicate behaves as if defined by
+<code>dif(X, Y) :- when(?=(X,Y), X \== Y)</code>. See also <a class="pred" href="compare.html#?=/2">?=/2</a>. 
+The implementation can deal with cyclic terms.
+
+<p>The <a id="idx:dif2:2082"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+predicate is realised using attributed variables associated with the 
+module <code>dif</code>. It is an autoloaded predicate that is defined 
+in the library <code>library(dif)</code>.</dd>
+<dt class="pubdef"><a id="freeze/2"><strong>freeze</strong>(<var>+Var, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Delay the execution of <var>Goal</var> until <var>Var</var> is bound 
+(i.e., is not a variable or attributed variable). If <var>Var</var> is 
+bound on entry
+<a id="idx:freeze2:2083"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+is equivalent to <a id="idx:call1:2084"></a><a class="pred" href="metacall.html#call/1">call/1</a>. 
+The <a id="idx:freeze2:2085"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+predicate is realised using an attributed variable associated with the 
+module <code>freeze</code>. See also <a id="idx:frozen2:2086"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="frozen/2"><strong>frozen</strong>(<var>@Term, 
+-Goal</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Goal</var> with the goal or conjunction of goals delayed on 
+some attributed variable in <var>Term</var>. If <var>Term</var> is free 
+of attributed variables, <var>Goal</var> is unified to <code>true</code>. 
+Note that
+<a id="idx:frozen2:2087"></a><a class="pred" href="coroutining.html#frozen/2">frozen/2</a> 
+reports all delayed goals, not only those delayed due to
+<a id="idx:freeze2:2088"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a>. 
+The goals are extracted using <a id="idx:copyterm3:2089"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>.<sup class="fn">170<span class="fn-text">Versions 
+prior to 8.3.7 only report goals delayed using <a id="idx:freeze2:2090"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+on a plain variable. The new behaviour is compatible with SICStus.</span></sup> 
+See also
+<a id="idx:termattvars2:2091"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
+and <a id="idx:callresiduevars2:2092"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a>.</dd>
+<dt class="pubdef"><a id="when/2"><strong>when</strong>(<var>@Condition, 
+:Goal</var>)</a></dt>
+<dd class="defbody">
+Execute <var>Goal</var> when <var>Condition</var> becomes true. <var>Condition</var> 
+is one of <code>?=(X, Y)</code>, <code>nonvar(X)</code>, <code>ground(X)</code>,
+<code><code>,</code>(Cond1, Cond2)</code> or <code><code>;</code>(Cond1, 
+Cond2)</code>. See also <a id="idx:freeze2:2093"></a><a class="pred" href="coroutining.html#freeze/2">freeze/2</a> 
+and <a id="idx:dif2:2094"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a>. 
+The implementation can deal with cyclic terms in <var>X</var> and <var>Y</var>.
+
+<p>The <a id="idx:when2:2095"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
+predicate is realised using attributed variables associated with the 
+module <code>when</code>. It is defined in the autoload library
+<code>library(when)</code>.</dd>
+<dt class="pubdef"><a id="call_residue_vars/2"><strong>call_residue_vars</strong>(<var>:Goal, 
+-Vars</var>)</a></dt>
+<dd class="defbody">
+Find residual attributed variables left by <var>Goal</var>. This 
+predicate is intended for reasoning about and debugging programs that 
+use coroutining or constraints. To see why this predicate is necessary, 
+consider a predicate that poses contradicting constraints on a variable, 
+and where that variable does not appear in any argument of the predicate 
+and hence does not yield any residual goals on the toplevel when the 
+predicate is invoked. Such programs should fail, but sometimes succeed 
+because the constraint solver is too weak to detect the contradiction. 
+Ideally, delayed goals and constraints are all executed at the end of 
+the computation. The meta predicate
+<a id="idx:callresiduevars2:2096"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+finds variables that are given attributes or whose attributes are 
+modified by <var>Goal</var>, regardless of whether or not these 
+variables are reachable from the arguments of
+<var>Goal</var>.<sup class="fn">171<span class="fn-text">The 
+implementation of <a id="idx:callresiduevars2:2097"></a><a class="pred" href="coroutining.html#call_residue_vars/2">call_residue_vars/2</a> 
+is completely redone in version 7.3.2 (7.2.1) after discussion with Bart 
+Demoen. The current implementation no longer performs full scans of the 
+stacks. The overhead is proportional to the number of attributed 
+variables on the stack, dead or alive.</span></sup>.
+</dd>
+</dl>
+
+</body></html>

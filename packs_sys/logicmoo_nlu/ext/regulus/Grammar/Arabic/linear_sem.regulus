@@ -1,0 +1,87 @@
+
+macro(ynq_sem(Advp2, S),
+      concat(Advp2, [[utterance_type, ynq]], S)).
+
+macro(whq_pp_s_sem(WH, S),
+      concat(WH,concat([[utterance_type, whq]], S))).
+
+macro(whq_fronted_np_sem(Vp),
+      concat([[utterance_type, whq]],concat([[pronoun, que]], Vp))).
+
+macro(transitive_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+      concat(Advp3, Advp2, Advp, Verb, Obj, PP)).
+
+macro(pp_compl_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+      concat(Advp3, Advp2, Advp, Verb, Obj, PP)).
+
+macro(trans_min_vp_sem(Advp3, Advp2, Advp, Verb, Obj, PP),
+      concat(Advp3, Advp2, Advp, Verb, Obj, PP)).
+
+macro(s_compl_vp_sem(Advp3, S, Advp2, Advp, Verb, PP),
+      concat(Advp3, [[clause, S]], Advp2, Advp, Verb, PP)).
+
+macro(intrans_vp_sem(Advp3, Advp, Verb, PP),
+      concat(Advp3, Advp, Verb, PP)).
+
+macro(pred_vp_sem(Advp3, Adj, Advp, Verb, PP),
+      concat(Advp3, Adj, Advp, Verb, PP)).
+
+macro(implicit_subj_vbar_sem(Verb, Subj),
+      concat(Verb, [[voice, active]], Subj)).
+
+macro(inverted_subj_vbar_sem(Verb, Subj),
+      concat(Verb, [[voice, active]], Subj)).
+
+macro(vbar_v_sem(Verb),
+      concat(Verb, [[voice, active]])).
+
+macro(np_spec_nbar_sem(S, N),
+      concat(S, N)).
+
+macro(nbar_noun_np_sem(N, NP),
+      concat(N, NP)).
+
+macro(nbar_noun_pp_sem(N, PP),
+      concat(N, PP)).
+
+macro(noun_noun_poss_sem(N, Poss),
+      concat(N, Poss)).
+
+macro(noun_noun_number_sem(N, Num),
+      concat(N, Num)).
+
+macro(noun_comparative_noun_number_sem(N, Comparative, Num),
+      concat(N, Comparative, Num)).
+
+macro(noun_comparative_noun_sem(N, Comparative),
+      concat(N, Comparative)).
+
+macro(ppcompl_prep_np_sem(P, NP),
+      concat(P, NP)).
+
+macro(implicit_pred_verb_sem,
+      [[state, be], [tense, present]]).
+
+macro(v_v_clitic_sem(Pron, V),
+      concat(Pron, V)).
+
+macro(pp_prep_np_sem(P, NP),
+      concat(P, NP)).
+
+macro(pp_np_temporal_sem(NP),
+      NP).
+
+macro(pp_sc_s_sem(Sc, S),
+      concat(Sc, [[clause, S]])).
+
+macro(lexical_pp_sem(_Role, P, Body),
+      [[P, Body]]).
+
+macro(lexical_possessive(Body),
+      [[possessive, Body]]).
+
+macro(prep(Type, P),
+      [[Type, P]]).
+
+macro(sc(Sc),
+      [[sc, Sc]]).

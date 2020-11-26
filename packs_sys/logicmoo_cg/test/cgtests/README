@@ -1,0 +1,20 @@
+Date: Wed, 27 May 92 16:25:16 -0500
+From: esch%email.sp.unisys.com@metro.ucc.su.OZ.AU (John Esch)
+To: cg@cs.umn.edu
+Subject: Test Cases
+
+In the near future I will be sending a number of messages
+of the form SUBJECT: CG TESTi, <kind>,
+where kind is graphs, actors, contexts, etc.
+Each of these will contain a file that is used in
+regression testing CONSTRUCT; that is,
+whenever we varified that recent additions had not
+made any unexpected changes, we read in each of
+these linear form files, wrote them back out, 
+and compared the results to verify that the
+basic capabilities had not been altered by the additions.
+
+It you are looking for example graphs, these will
+include many of the graphs in John Sowa's book plus others.
+
+Cheers, John.

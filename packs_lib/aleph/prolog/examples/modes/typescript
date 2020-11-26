@@ -1,0 +1,63 @@
+Script started on Fri 15 Nov 2002 16:49:14 GMT
+[1m~[41]>[m cd ~/aleph/test/examples/modes
+[1m~/aleph/test/examples/modes[42]>[m yap
+[ Restoring file /users/ashwin/Yap-4.3.18/solaris/startup ]
+[ YAP version Yap-4.3.18 ]
+   ?- [aleph].
+ [ consulting aleph... ]
+
+
+A L E P H
+Version 4
+Last modified: Wed Nov 13 16:18:53 GMT 2002
+
+Manual: http://www.comlab.ox.ac.uk/oucl/groups/machlearn/Aleph/index.html
+
+ [ aleph consulted 1161856 bytes in 0.46 seconds ]
+
+yes
+   ?- read_all(train).
+ [ reconsulting train.b... ]
+ [ train.b reconsulted 49984 bytes in 0.02 seconds ]
+[consulting pos examples] [train.f]
+[consulting neg examples] [train.n]
+
+yes
+   ?- show(modes).
+
+[modes]
+
+yes
+   ?- induce_modes.
+
+[modes]
+mode(*,eastbound(+type1)).
+mode(*,has_car(+type1,-type13)).
+mode(*,short(+type13)).
+mode(*,closed(+type13)).
+mode(*,long(+type13)).
+mode(*,open_car(+type13)).
+mode(*,double(+type13)).
+mode(*,jagged(+type13)).
+mode(*,load(+type13,-type15,-type16)).
+mode(*,wheels(+type13,+type16)).
+mode(*,shape(+type13,-type9)).
+mode(1,+type1= #type1).
+mode(1,+type13= #type13).
+mode(1,+type15= #type15).
+mode(1,+type16= #type16).
+mode(1,+type9= #type9).
+mode(1,+type9= +type15).
+mode(1,not short(+type13)).
+mode(1,not closed(+type13)).
+mode(1,not long(+type13)).
+mode(1,not open_car(+type13)).
+mode(1,not double(+type13)).
+mode(1,not jagged(+type13)).
+mode(1,not wheels(+type13,+type16)).
+
+yes
+   ?- [1m~/aleph/test/examples/modes[43]>[m exit
+exit
+
+script done on Fri 15 Nov 2002 16:50:25 GMT

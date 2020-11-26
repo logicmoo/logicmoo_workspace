@@ -1,0 +1,149 @@
+:- include(library(pfc_header_3_0)).
+
+
+/*
+
+:- table (p/1, q/1) as incremental.
+:- dynamic([d/1], [incremental(true)]).
+
+p(X) :- q(X).
+q(X) :- d(X), X < 10.
+
+d(1).
+:- listing([p/1,d/1,q/1]).
+
+
+*/
+
+% :- dynamic(fiba/2).
+
+%:- table(fiba/2).
+%:- table(fiba_c/2).
+
+
+==> fiba(0, 1).
+==> fiba(1, 1).
+fiba(N, F) <-
+        N > 1,
+        N1 is N-1,
+        N2 is N-2,
+        fiba(N1, F1),
+        fiba(N2, F2),
+        {F is F1+F2}.
+
+% fiba_c(X,Y):- pfc_call(fiba(N, F)),fail.
+% fiba_c(X,Y):- pfc_cache_bc(fiba(X,Y)), fiba(X,Y).
+
+
+%:- forall(predicate_property(fiba(_,_),PP),dmsg(PP)).
+
+:- listing([fiba/2]).
+
+:- listing(pfctmp:knows_will_table_as).
+:- break.
+
+
+
+
+
+% -*-Prolog-*-
+  
+==> fact(0,1).
+==> fact(1,1).
+==> fact(2,2).
+
+% :- rtrace.
+fact(N,M) <- {N>0,N1 is N-1}, fact(N1,M1), {M is N*M1}.
+% :- break.
+
+==> fib(0,1). 
+==> fib(1,1).
+==> fib(2,2).
+fib(N,M) <- 
+  {N>2,N1 is N-1,N2 is N-2},
+  fib(N1,M1),
+  fib(N2,M2),
+  {M is M1+M2}.
+
+
+
+/*
+?- prolog_statistics:time(user:pfc_call(fibt(25,M))).
+% 1,539 inferences, 0.001 CPU in 0.001 seconds (100% CPU, 1708969 Lips)
+M = 121393.
+
+?- prolog_statistics:time(user:pfc_call(fibt(25,M))).
+% 45 inferences, 0.000 CPU in 0.000 seconds (93% CPU, 865701 Lips)
+M = 121393.
+
+
+*/
+:- table fibt/2.
+
+fibt(0, 1) :- !.
+fibt(1, 1) :- !.
+fibt(N, F) :-
+        N > 1,
+        N1 is N-1,
+        N2 is N-2,
+        fibt(N1, F1),
+        fibt(N2, F2),
+        F is F1+F2.
+
+
+/*
+?- prolog_statistics:time(user:pfc_call(fibb(25,M))).
+% 43,456,726 inferences, 30.400 CPU in 30.412 seconds (100% CPU, 1429489 Lips)
+M = 121393.
+
+?- prolog_statistics:time(user:pfc_call(fibb(25,M))).
+% 21,729,206 inferences, 15.159 CPU in 15.164 seconds (100% CPU, 1433379 Lips)
+M = 121393.
+
+*/
+==> fibb(0, 1).
+==> fibb(1, 1).
+fibb(N, F) <-
+        N > 1,
+        N1 is N-1,
+        N2 is N-2,
+        fibb(N1, F1),
+        fibb(N2, F2),
+        F is F1+F2.
+
+
+
+/*
+?- prolog_statistics:time(user:pfc_call(fibc(25,M))).
+% 21,364,715 inferences, 11.331 CPU in 11.333 seconds (100% CPU, 1885575 Lips)
+M = 121393.
+
+?- prolog_statistics:time(user:pfc_call(fibc(25,M))).
+% 10,682,513 inferences, 5.381 CPU in 5.382 seconds (100% CPU, 1985223 Lips)
+*/
+==> fibc(0, 1).
+==> fibc(1, 1).
+fibc(N, F) <-
+        { N > 1,
+        N1 is N-1,
+        N2 is N-2 },
+        fibc(N1, F1),
+        fibc(N2, F2),
+        {F is F1+F2}.
+
+
+pfc_time(Goal):- pfcSetSearch(thread), prolog_statistics:time(user:pfc_call(Goal)),!.
+
+
+
+==> fibe(0, 1).
+==> fibe(1, 1).
+fibe(N, F) <-
+        { N > 1,
+        N1 is N-1,
+        N2 is N-2 },
+        fibe(N1, F1),
+        fibe(N2, F2),
+        {F is F1+F2}.
+
+

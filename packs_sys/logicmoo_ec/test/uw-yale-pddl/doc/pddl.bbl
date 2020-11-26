@@ -1,0 +1,78 @@
+\begin{thebibliography}{10}
+
+\bibitem{AndrewsEtal95}
+Scott Andrews, Brian Kettler, Kutluhan Erol, and James Hendler.
+\newblock Um {T}ranslog: A {P}lanning {D}omain for the {D}evelopment and
+  {B}enchmarking of {P}lanning {S}ystems.
+\newblock 1995.
+
+\bibitem{ucpop-manual-4}
+A.~Barrett, D.~Christianson, M.~Friedman, K.~Golden, C.~Kwok, J.S. Penberthy,
+  Y.~Sun, and D.~Weld.
+\newblock {UCPOP} user's manual, (version 4.0).
+\newblock Technical Report 93-09-06d, University of Washington, Department of
+  Computer Science and Engineering, November 1995.
+\newblock Available via FTP from \verb|pub/ai/| at {\tt ftp.cs.washington.edu}.
+
+\bibitem{prodigy4.0-manual}
+Jim Blythe, Oren Etzioni, Yolanda Gil, Robert Joseph, Dan Kahn, Craig Knoblock,
+  Steven Minton, Alicia P\'{e}rez, Scott Reilly, Manuela Veloso, and Xuemei
+  Wang.
+\newblock Prodigy 4.0: The manual and tutorial.
+\newblock Technical Report CMU-CS-92-150, Carnegie Mellon University, 1992.
+
+\bibitem{clark-78}
+K.~L. Clark.
+\newblock Negation as failure.
+\newblock In H.~Gallaire and J.~Minker, editors, {\em Logic and Data Bases},
+  pages 293--322. Plenum Publishing Corporation, New York, NY, 1978.
+
+\bibitem{currie-oplan}
+K.~Currie and A.~Tate.
+\newblock {O}-{P}lan: the open planning architecture.
+\newblock {\em Artificial Intelligence}, 52(1):49--86, November 1991.
+
+\bibitem{erol-aips-94}
+K.~Erol, J.~Hendler, and D.~Nau.
+\newblock {UMCP}: A sound and complete procedure for hierarchical task-network
+  planning.
+\newblock In {\em Proc. 2nd Intl. Conf. on AI Planning Systems}, pages
+  249--254, June 1994.
+
+\bibitem{mcdermott88}
+Drew McDermott.
+\newblock {R}evised {N}isp {M}anual.
+\newblock Technical Report 642, Yale Computer Science Department, 1988.
+
+\bibitem{mcdermott96}
+Drew McDermott.
+\newblock {A} {H}euristic {E}stimator for {M}eans-ends {A}nalysis in
+  {P}lanning.
+\newblock In {\em {P}roc. {I}nternational {C}onference on {A}I {P}lanning
+  {S}ystems \bf 3}, pages 142--149, 1996.
+
+\bibitem{pednault-ci88}
+E.~Pednault.
+\newblock Synthesizing plans that contain actions with context-dependent
+  effects.
+\newblock {\em Computational Intelligence}, 4(4):356--372, 1988.
+
+\bibitem{pednault-kr89}
+E.~Pednault.
+\newblock {ADL}: Exploring the middle ground between {STRIPS} and the situation
+  calculus.
+\newblock In {\em Proc. 1st Int. Conf. on Principles of Knowledge
+  Representation and Reasoning}, pages 324--332, 1989.
+
+\bibitem{weld-etzioni-aaai94}
+Dan Weld and Oren Etzioni.
+\newblock The first law of robotics (a call to arms).
+\newblock In {\em Proc. 12th Nat. Conf. on AI}, pages 1042--1047, 1994.
+
+\bibitem{wilkins88}
+David Wilkins.
+\newblock {\em {P}ractical Planning: Extending the Classical {A}I Planning
+  Paradigm}.
+\newblock Morgan Kaufmann Publishers, Inc, 1988.
+
+\end{thebibliography}

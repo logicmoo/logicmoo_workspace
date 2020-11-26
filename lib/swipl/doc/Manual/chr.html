@@ -1,0 +1,302 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="coroutining.html">
+<link rel="next" href="chrintro.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="coroutining.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="chrintro.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h1 id="sec:chr"><a id="sec:9"><span class="sec-nr">9</span> <span class="sec-title">CHR: 
+Constraint Handling Rules</span></a></h1>
+
+<a id="sec:chr"></a>
+
+<p>This chapter is written by Tom Schrijvers, K.U. Leuven, and 
+adjustments by Jan Wielemaker.
+
+<p>The CHR system of SWI-Prolog is the <em>K.U.Leuven CHR system</em>. 
+The runtime environment is written by Christian Holzbaur and Tom 
+Schrijvers while the compiler is written by Tom Schrijvers. Both are 
+integrated with SWI-Prolog and licensed under compatible conditions with 
+permission from the authors.
+
+<p>The main reference for the K.U.Leuven CHR system is:
+<ul class="latex">
+<li>T. Schrijvers, and B. Demoen, <em>The K.U.Leuven CHR System: 
+Implementation and Application</em>, First Workshop on Constraint 
+Handling Rules: Selected Contributions (Fr&uuml;hwirth, T. and Meister, 
+M., eds.), pp. 1--5, 2004.
+</ul>
+
+<p>On the K.U.Leuven CHR website (<a class="url" href="http://dtai.cs.kuleuven.be/CHR/">http://dtai.cs.kuleuven.be/CHR/</a>) 
+you can find more related papers, references and example programs.
+
+<p>
+<hr>
+<div style="text-align:center">
+
+<h2>Section Index</h2>
+
+</div>
+<hr>
+<div class="toc">
+<div class="toc-h2"><a class="sec" href="chrintro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction</span></a></div>
+<div class="toc-h2"><a class="sec" href="SyntaxAndSemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">Syntax 
+and Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
+of CHR rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics</span></a></div>
+<div class="toc-h2"><a class="sec" href="practical.html"><span class="sec-nr">9.3</span> <span class="sec-title">CHR 
+in SWI-Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.1"><span class="sec-nr">9.3.1</span> <span class="sec-title">Embedding 
+in Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">Constraint 
+declaration</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">Compilation</span></a></div>
+<div class="toc-h2"><a class="sec" href="debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">Ports</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
+Debugging Predicates</span></a></div>
+<div class="toc-h2"><a class="sec" href="examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">Examples</span></a></div>
+<div class="toc-h2"><a class="sec" href="sicstus-chr.html"><span class="sec-nr">9.6</span> <span class="sec-title">Backwards 
+Compatibility</span></a></div>
+<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
+Old SICStus CHR implementation</span></a></div>
+<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
+Old ECLiPSe CHR implementation</span></a></div>
+<div class="toc-h2"><a class="sec" href="guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">Programming 
+Tips and Tricks</span></a></div>
+<div class="toc-h2"><a class="sec" href="errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">Compiler 
+Errors and Warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
+Compiler Errors</span></a></div>
+</div>
+</body></html>

@@ -1,0 +1,560 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 8.1</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="clp.html">
+<link rel="next" href="coroutining.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="clp.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="coroutining.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:attvar"><a id="sec:8.1"><span class="sec-nr">8.1</span> <span class="sec-title">Attributed 
+variables</span></a></h2>
+
+<a id="sec:attvar"></a>
+
+<p><em>Attributed variables</em> provide a technique for extending the 
+Prolog unification algorithm <cite><a class="cite" href="Bibliography.html#holzbaur:1992">Holzbaur, 
+1992</a></cite> by hooking the binding of attributed variables. There is 
+no consensus in the Prolog community on the exact definition and 
+interface to attributed variables. The SWI-Prolog interface is identical 
+to the one realised by Bart Demoen for hProlog <cite><a class="cite" href="Bibliography.html#Demoen:CW350">Demoen, 
+2002</a></cite>. This interface is simple and available on all Prolog 
+systems that can run the Leuven CHR system (see <a class="sec" href="chr.html#sec:9">chapter 
+9</a> and the Leuven <a class="url" href="https://dtai.cs.kuleuven.be/CHR/">CHR 
+page</a>).
+
+<p>Binding an attributed variable schedules a goal to be executed at the 
+first possible opportunity. In the current implementation the hooks are 
+executed immediately after a successful unification of the clause-head 
+or successful completion of a foreign language (built-in) predicate. 
+Each attribute is associated to a module, and the hook (<a id="idx:attrunifyhook2:2055"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a>) 
+is executed in this module. The example below realises a very simple and 
+incomplete finite domain reasoner:
+
+<pre class="code">
+:- module(domain,
+          [ domain/2                    % Var, ?Domain
+          ]).
+:- use_module(library(ordsets)).
+
+domain(X, Dom) :-
+        var(Dom), !,
+        get_attr(X, domain, Dom).
+domain(X, List) :-
+        list_to_ord_set(List, Domain),
+        put_attr(Y, domain, Domain),
+        X = Y.
+
+%       An attributed variable with attribute value Domain has been
+%       assigned the value Y
+
+attr_unify_hook(Domain, Y) :-
+        (   get_attr(Y, domain, Dom2)
+        -&gt;  ord_intersection(Domain, Dom2, NewDomain),
+            (   NewDomain == []
+            -&gt;  fail
+            ;   NewDomain = [Value]
+            -&gt;  Y = Value
+            ;   put_attr(Y, domain, NewDomain)
+            )
+        ;   var(Y)
+        -&gt;  put_attr( Y, domain, Domain )
+        ;   ord_memberchk(Y, Domain)
+        ).
+
+%       Translate attributes from this module to residual goals
+
+attribute_goals(X) --&gt;
+        { get_attr(X, domain, List) },
+        [domain(X, List)].
+</pre>
+
+<p>Before explaining the code we give some example queries:
+<blockquote>
+<table class="latex frame-void">
+<tr><td><code>?- domain(X, [a,b]), X = c</code></td><td>fail </td></tr>
+<tr><td><code>?- domain(X, [a,b]), domain(X, [a,c]).</code></td><td>X = 
+a </td></tr>
+<tr><td><code>?- domain(X, [a,b,c]), domain(X, [a,c]).</code></td><td>domain(X, 
+[a, c]) </td></tr>
+</table>
+</blockquote>
+
+<p>The predicate domain/2 fetches (first clause) or assigns (second 
+clause) the variable a <em>domain</em>, a set of values the variable can 
+be unified with. In the second clause, <a id="idx:domain2:2056"></a><span class="pred-ext">domain/2</span> 
+first associates the domain with a fresh variable (Y) and then unifies X 
+to this variable to deal with the possibility that X already has a 
+domain. The predicate <a id="idx:attrunifyhook2:2057"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a> 
+(see below) is a hook called after a variable with a domain is assigned 
+a value. In the simple case where the variable is bound to a concrete 
+value, we simply check whether this value is in the domain. Otherwise we 
+take the intersection of the domains and either fail if the intersection 
+is empty (first example), assign the value if there is only one value in 
+the intersection (second example), or assign the intersection as the new 
+domain of the variable (third example). The nonterminal 
+attribute_goals//1 is used to translate remaining attributes to 
+user-readable goals that, when called, reinstate these attributes or 
+attributes that correspond to equivalent constraints.
+
+<p>Implementing constraint solvers (<a class="sec" href="clp.html#sec:8">chapter 
+8</a>) is the most common, but not the only use case for attributed 
+variables: If you implement algorithms that require efficient 
+destructive modifications, then using attributed variables is often a 
+more convenient and somewhat more declarative alternative for <a id="idx:setarg3:2058"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+and related predicates whose sharing semantics are harder to understand. 
+In particular, attributed variables make it easy to express graph 
+networks and graph-oriented algorithms, since each variable can store 
+pointers to further variables in its attributes. In such cases, the use 
+of attributed variables should be confined within a module that exposes 
+its functionality via more declarative interface predicates.
+
+<p><h3 id="sec:attvar-predicates"><a id="sec:8.1.1"><span class="sec-nr">8.1.1</span> <span class="sec-title">Attribute 
+manipulation predicates</span></a></h3>
+
+<a id="sec:attvar-predicates"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="attvar/1"><strong>attvar</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+Succeeds if <var>Term</var> is an attributed variable. Note that <a id="idx:var1:2059"></a><a class="pred" href="typetest.html#var/1">var/1</a> 
+also succeeds on attributed variables. Attributed variables are created 
+with
+<a id="idx:putattr3:2060"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.</dd>
+<dt class="pubdef"><a id="put_attr/3"><strong>put_attr</strong>(<var>+Var, 
++Module, +Value</var>)</a></dt>
+<dd class="defbody">
+If <var>Var</var> is a variable or attributed variable, set the value 
+for the attribute named <var>Module</var> to <var>Value</var>. If an 
+attribute with this name is already associated with <var>Var</var>, the 
+old value is replaced. Backtracking will restore the old value (i.e., an 
+attribute is a mutable term; see also <a id="idx:setarg3:2061"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a>). 
+This predicate raises an uninstantiation error if
+<var>Var</var> is not a variable, and a type error if <var>Module</var> 
+is not an atom.</dd>
+<dt class="pubdef"><a id="get_attr/3"><strong>get_attr</strong>(<var>+Var, 
++Module, -Value</var>)</a></dt>
+<dd class="defbody">
+Request the current <var>value</var> for the attribute named <var>Module</var>. 
+If
+<var>Var</var> is not an attributed variable or the named attribute is 
+not associated to <var>Var</var> this predicate fails silently. If <var>Module</var> 
+is not an atom, a type error is raised.</dd>
+<dt class="pubdef"><a id="del_attr/2"><strong>del_attr</strong>(<var>+Var, 
++Module</var>)</a></dt>
+<dd class="defbody">
+Delete the named attribute. If <var>Var</var> loses its last attribute 
+it is transformed back into a traditional Prolog variable. If <var>Module</var> 
+is not an atom, a type error is raised. In all other cases this 
+predicate succeeds regardless of whether or not the named attribute is 
+present.
+</dd>
+</dl>
+
+<p><h3 id="sec:attvar-hooks"><a id="sec:8.1.2"><span class="sec-nr">8.1.2</span> <span class="sec-title">Attributed 
+variable hooks</span></a></h3>
+
+<a id="sec:attvar-hooks"></a>
+
+<p>Attribute names are linked to modules. This means that certain 
+operations on attributed variables cause <em>hooks</em> to be called in 
+the module whose name matches the attribute name.
+
+<dl class="latex">
+<dt class="pubdef"><a id="attr_unify_hook/2"><strong>attr_unify_hook</strong>(<var>+AttValue, 
++VarValue</var>)</a></dt>
+<dd class="defbody">
+A hook that must be defined in the module to which an attributed 
+variable refers. It is called <em>after</em> the attributed variable has 
+been unified with a non-var term, possibly another attributed variable.
+<var>AttValue</var> is the attribute that was associated to the variable 
+in this module and <var>VarValue</var> is the new value of the variable. 
+If this predicate fails, the unification fails. If <var>VarValue</var> 
+is another attributed variable the hook often combines the two 
+attributes and associates the combined attribute with <var>VarValue</var> 
+using
+<a id="idx:putattr3:2062"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>.
+
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+The way in which this hook currently works makes the implementation of 
+important classes of constraint solvers impossible or at least extremely 
+impractical. For increased generality and convenience, simultaneous 
+unifications as in <code>[X,Y]=[0,1]</code> should be processed 
+sequentially by the Prolog engine, or a more general hook should be 
+provided in the future. See <cite><a class="cite" href="Bibliography.html#clpb:Triska2016">Triska, 
+2016</a></cite> for more information.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="attribute_goals//1"><strong>attribute_goals</strong>(<var>+Var</var>)</a><code>//</code></dt>
+<dd class="defbody">
+This nonterminal is the main mechanism in which residual constraints are 
+obtained. It is called in every module where it is defined, and
+<var>Var</var> has an attribute. Its argument is that variable. In each 
+module, attribute_goals//1 must describe a list of Prolog goals that are 
+declaratively equivalent to the goals that caused the attributes of that 
+module to be present and in their current state. It is always possible 
+to do this (since these attributes stem from such goals), and it is the 
+responsibility of constraint library authors to provide this mapping 
+without exposing any library internals. Ideally and typically, remaining 
+relevant attributes are mapped to <em>pure</em> and potentially 
+simplified Prolog goals that satisfy both of the following:
+
+<p>
+<ul class="latex">
+<li>They are declaratively equivalent to the constraints that were 
+originally posted.
+
+<p>
+<li>They use only predicates that are themselves exported and documented 
+in the modules they stem from.
+</ul>
+
+<p>The latter property ensures that users can reason about residual 
+goals, and see for themselves whether a constraint library behaves 
+correctly. It is this property that makes it possible to thoroughly test 
+constraint solvers by contrasting obtained residual goals with expected 
+answers.
+
+<p>This nonterminal is used by <a id="idx:copyterm3:2063"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>, 
+on which the Prolog top level relies to ensure the basic invariant of 
+pure Prolog programs: The answer is <i>declaratively equivalent</i> to 
+the query.
+
+<p>Note that instead of <em>defaulty</em> representations, a Prolog
+<i>list</i> is used to represent residual goals. This simplifies 
+processing and reasoning about residual goals throughout all programs 
+that need this functionality.</dd>
+<dt class="pubdef"><a id="project_attributes/2"><strong>project_attributes</strong>(<var>+QueryVars, 
++ResidualVars</var>)</a></dt>
+<dd class="defbody">
+A hook that can be defined in each module to project constraints on 
+newly introduced variables back to the query variables.
+<var>QueryVars</var> is the list of variables occurring in the query and
+<var>ResidualVars</var> is a list of variables that have attributes 
+attached. There may be variables that occur in both lists. If possible, <a id="idx:projectattributes2:2064"></a><a class="pred" href="attvar.html#project_attributes/2">project_attributes/2</a> 
+should change the attributes so that all constraints are expressed as 
+residual goals that refer only to
+<var>QueryVars</var>, while other variables are existentially 
+quantified.</dd>
+<dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="attr_portray_hook/2"><strong>attr_portray_hook</strong>(<var>+AttValue, 
++Var</var>)</a></dt>
+<dd class="defbody">
+Called by <a id="idx:writeterm2:2065"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+and friends for each attribute if the option
+<code>attributes(portray)</code> is in effect. If the hook succeeds the 
+attribute is considered printed. Otherwise <code>Module = ...</code> is 
+printed to indicate the existence of a variable. This predicate is 
+deprecated because it cannot work with pure interface predicates like
+<a id="idx:copyterm3:2066"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>. 
+Use attribute_goals//1 instead to map attributes to residual goals.
+</dd>
+</dl>
+
+<p><h3 id="sec:terms-with-attvars"><a id="sec:8.1.3"><span class="sec-nr">8.1.3</span> <span class="sec-title">Operations 
+on terms with attributed variables</span></a></h3>
+
+<a id="sec:terms-with-attvars"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="copy_term/3"><strong>copy_term</strong>(<var>+Term, 
+-Copy, -Gs</var>)</a></dt>
+<dd class="defbody">
+Create a regular term <var>Copy</var> as a copy of <var>Term</var> 
+(without any attributes), and a list <var>Gs</var> of goals that 
+represents the attributes. The goal <code>maplist(call, Gs)</code> 
+recreates the attributes for <var>Copy</var>. The nonterminal 
+attribute_goals//1, as defined in the modules the attributes stem from, 
+is used to convert attributes to lists of goals.
+
+<p>This building block is used by the top level to report pending 
+attributes in a portable and understandable fashion. This predicate is 
+the preferred way to reason about and communicate terms with 
+constraints.
+
+<p>The form <code>copy_term(Term, Term, Gs)</code> can be used to reason 
+about the constraints in which <code>Term</code> is involved.</dd>
+<dt class="pubdef"><a id="copy_term_nat/2"><strong>copy_term_nat</strong>(<var>+Term, 
+-Copy</var>)</a></dt>
+<dd class="defbody">
+As <a id="idx:copyterm2:2067"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>. 
+Attributes, however, are <em>not</em> copied but replaced by fresh 
+variables.</dd>
+<dt class="pubdef"><a id="term_attvars/2"><strong>term_attvars</strong>(<var>+Term, 
+-AttVars</var>)</a></dt>
+<dd class="defbody">
+<var>AttVars</var> is a list of all attributed variables in <var>Term</var> 
+and its attributes. That is, <a id="idx:termattvars2:2068"></a><a class="pred" href="attvar.html#term_attvars/2">term_attvars/2</a> 
+works recursively through attributes. This predicate is cycle-safe. The 
+goal
+<code>term_attvars(Term,[])</code> in an efficient test that <var>Term</var> 
+has
+<em>no</em> attributes; scanning the term is aborted after the first 
+attributed variable is found.
+</dd>
+</dl>
+
+<p><h3 id="sec:attvar-low-level-preds"><a id="sec:8.1.4"><span class="sec-nr">8.1.4</span> <span class="sec-title">Special 
+purpose predicates for attributes</span></a></h3>
+
+<a id="sec:attvar-low-level-preds"></a>
+
+<p>Normal user code should deal with <a id="idx:putattr3:2069"></a><a class="pred" href="attvar.html#put_attr/3">put_attr/3</a>, <a id="idx:getattr3:2070"></a><a class="pred" href="attvar.html#get_attr/3">get_attr/3</a> 
+and <a id="idx:delattr2:2071"></a><a class="pred" href="attvar.html#del_attr/2">del_attr/2</a>. 
+The routines in this section fetch or set the entire attribute list of a 
+variable. Use of these predicates is anticipated to be restricted to 
+printing and other special purpose operations.
+
+<dl class="latex">
+<dt class="pubdef"><a id="get_attrs/2"><strong>get_attrs</strong>(<var>+Var, 
+-Attributes</var>)</a></dt>
+<dd class="defbody">
+Get all attributes of <var>Var</var>. <var>Attributes</var> is a term of 
+the form
+<code>att(Module, Value, MoreAttributes)</code>, where <var>MoreAttributes</var> 
+is
+<code><code>[]</code></code> for the last attribute.</dd>
+<dt class="pubdef"><a id="put_attrs/2"><strong>put_attrs</strong>(<var>+Var, 
+-Attributes</var>)</a></dt>
+<dd class="defbody">
+Set all attributes of <var>Var</var>. See <a id="idx:getattrs2:2072"></a><a class="pred" href="attvar.html#get_attrs/2">get_attrs/2</a> 
+for a description of
+<var>Attributes</var>.</dd>
+<dt class="pubdef"><a id="del_attrs/1"><strong>del_attrs</strong>(<var>+Var</var>)</a></dt>
+<dd class="defbody">
+If <var>Var</var> is an attributed variable, delete <em>all</em> its 
+attributes. In all other cases, this predicate succeeds without 
+side-effects.
+</dd>
+</dl>
+
+<p></body></html>

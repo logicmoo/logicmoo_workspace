@@ -1,0 +1,4 @@
+!/bin/bash
+cd /devel/logicmoo/src_modules/candc
+bin/soap_client --url http://127.0.0.1:9066 --input $1 --output $2
+sed -i $2 -e "s|\\\'|-APOS-|g"

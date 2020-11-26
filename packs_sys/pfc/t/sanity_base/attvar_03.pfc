@@ -1,0 +1,49 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+%  was_module(sanity_attvar_03,[]).
+
+:- use_module(library(pfc)).
+:- use_module(library(pfc_test)).
+
+:- include(test_header).
+:- use_module(library(attvar_reader)).
+% :- '$set_source_module'(ABox),'$set_typein_module'(ABox).
+
+:- ABox = user, '$set_source_module'(ABox),'$set_typein_module'(ABox).
+% Tests Non-module Forward chaining of assertable attributed variables
+
+
+:- debug_logicmoo(_).
+:- nodebug_logicmoo(http(_)).
+:- debug_logicmoo(logicmoo(_)).
+
+:- mpred_trace_exec.
+% :- begin_pfc.
+
+:- dynamic(sk_out/1).
+:- dynamic(sk_in/1).
+
+% :- process_this_script.
+
+
+sk_in(Ex)==>sk_out(Ex).
+
+sk_in(foo).
+
+:- read_attvars(true).
+:- set_prolog_flag(access_level,system).
+
+sk_in(avar([vn='Ex',sk='SKF-666'])).
+
+:- listing(sk_out/1).
+:- listing(sk_in/1).
+
+
+:- must((sk_in(VAR),get_attr(VAR,sk,What),What='SKF-666')).
+
+

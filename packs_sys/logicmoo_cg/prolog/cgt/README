@@ -1,0 +1,66 @@
+CGT (Conceptual Graph Tools) is a partial implementation of Sowa's
+Conceptual Structures Theory written in Quintus Prolog, although it
+uses very few Quintus-specific features. It should be easily adaptable
+to any Edinburgh-style Prolog.
+
+The CGT package contains the following files:
+
+Name		Size	Contents
+
+qxp.pl		 5490	main file; consult and read this first
+can_ops.pl	19102	canonical formation rules
+type_ops.pl	13450	operations on the type hierarchy
+gen_lin.pl	21282	linear form generator
+rec_lin.pl	24245	linear form parser
+gramaux.pl	10404	tokeniser
+log_ops.pl	16270	propositional inference rules
+misc.pl 	40313	DB management, referent expansions & contractions
+list.pl		10509	list and set operations
+canon.gr	 3906	a canonical basis (graphs)
+canon.cty	 3330	a canonical basis (concept types)
+canon.rty	 1527	a canonical basis (relation types)
+canon.hrc	 1093	a canonical basis (type hierarchy)
+canon.dsc	   26	a canonical basis (graph descriptions)
+cgp_id.dat	   39	a canonical basis (database keys)
+COPYING		17982	GNU General Public License
+README			this file
+
+According to the License you may not use (parts of) CGT for commercial
+purposes. But if you want to do so, please drop me a note and I'm sure
+we'll reach somee kind of agreement.
+
+Each file begins with the following sections:
+
+COPYRIGHT	copyright, warranty, and license notice
+AUTHOR(S)	names and addresses of all authors that contributed
+GENERALITIES	file identification (name, creation, description, etc.)
+HISTORY		development of the changes: version, date, author, description
+CONTENTS	predicates exported by the file (name & description)
+
+The rest of the file contains the code for the predicates. Each one is
+preceded by a comment section.
+
+If you change the code please adhere to the following conventions:
+	- add your name and address to the AUTHOR(S) section
+	- add an abbreviation for your name in the GENERALITIES section
+	- update the HISTORY section using your abbreviation
+	- if you change existing predicates put a comment with your
+	  abbreviation next to the change
+	- if you add new predicates also add "comment sections" in the
+	  same style
+
+I would also very much appreciate if you could send your changes back
+to me, so I may keep a master version to send regularly to everyone
+interested in CGT.
+
+Anything you write (working papers, reports, articles, etc.) about
+your work using GET is also of great interest to me (and probably
+everyone else working with CGT).
+
+Bug reports, criticisms, but not flames (I know that parts of the code
+are ghastly), and suggestions are most welcome.
+
+Michel Wermelinger
+Dept. de Informatica, Univ. Nova de Lisboa, Quinta da Torre
+P - 2825 Monte da Caparica, PORTUGAL
+Phone: (+351) (1) 295 44 64 ext. 1360  Internet: mw@fct.unl.pt

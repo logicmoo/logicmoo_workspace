@@ -1,0 +1,10 @@
+(note "existential instantiation soundness check7" )
+
+
+(exists ?X (exists ?Y (L ?X ?Y) ) )
+
+(queryyn (exists ?X (L ?X ?X) ) )
+
+(answer Unproven)
+
+(end_of_file)

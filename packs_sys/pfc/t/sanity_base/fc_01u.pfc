@@ -1,0 +1,30 @@
+#!/usr/bin/env swipl
+% 
+% Dec 13, 2035
+% Douglas Miles
+%  cls ; kill -9 %1 ; swipl -g "ensure_loaded(pack(logicmoo_base/t/sanity_base/fc_01.pfc'))."
+:- set_prolog_flag(runtime_debug,1).
+:- use_module(library(pfc)).
+:- use_module(library(pfc_test)).
+
+% :- set_prolog_flag(lm_pfc_lean,true).
+:- mpred_trace_exec.
+
+
+a11 ==> b11.
+a11.
+
+% :- pp_DB.
+
+:- mpred_test(b11).
+
+end_of_file.
+
+:- break.
+
+:- mpred_test(a11).
+
+:- break.
+
+
+

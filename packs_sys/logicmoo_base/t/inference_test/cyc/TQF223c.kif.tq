@@ -1,0 +1,179 @@
+(note TQF223c)
+
+(goalCategoryForAgent Italy 
+ (not 
+ (thereExists ?ATTACK 
+ (thereExists ?TANKER 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (instance ?TANKER OilTanker) 
+ (directingAgent ?ATTACK Iran) 
+ (hasOwnershipIn ?TANKER Kuwait) 
+ (damages ?ATTACK ?TANKER))))) StrategicNationalInterest) 
+
+(goalCategoryForAgent France 
+ (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK StraitOfHormuz)))) StrategicNationalInterest) 
+
+(goalCategoryForAgent Italy 
+ (thereExists ?ACTION 
+ (decreasesCausally ?ACTION 
+ (thereExists ?EVENT 
+ (eventPosesThreat ?EVENT Italy)) likelihood)) StrategicNationalInterest) 
+
+(goalCategoryForAgent Italy 
+ (politicalStability Italy MediumToVeryHigh) StrategicNationalInterest) 
+
+(thereExists ?R
+  (goalCategoryForAgent France 
+    (?R DesertShieldCoalition France) StrategicNationalInterest)) 
+
+(thereExists ?R
+  (goalCategoryForAgent Italy 
+    (?R DesertShieldCoalition Italy) StrategicNationalInterest)) 
+
+(goalCategoryForAgent France 
+ (politicalStability WesternEurope MediumToVeryHigh) VitalNationalInterest) 
+
+(goalCategoryForAgent France 
+ (politicalStability WesternEurope MediumToVeryHigh) StrategicNationalInterest) 
+
+(goalCategoryForAgent France 
+ (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK GazoducMaghreb-EuropePipeline)))) StrategicNationalInterest) 
+
+(goalCategoryForAgent Italy 
+ (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK Transmed-Pipeline)))) StrategicNationalInterest) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Italy 
+ (thereExists ?ACTION 
+ (decreasesCausally ?ACTION 
+ (thereExists ?EVENT 
+ (eventPosesThreat ?EVENT Italy)) likelihood)) VitalNationalInterest) 
+
+(implies 
+ (instance ?COUNTRY Country) 
+ (goalCategoryForAgent ?COUNTRY 
+ (thereExists ?ACTION 
+ (decreasesCausally ?ACTION 
+ (thereExists ?EVENT 
+ (eventPosesThreat ?EVENT ?COUNTRY)) likelihood)) VitalNationalInterest)) 
+
+(instance Italy Country) 
+
+(implies 
+ (and 
+ (instance ?COUNTRY IndependentCountry) 
+ (contains ?SUPER-REGION ?COUNTRY) 
+ (instance ?SUPER-REGION GeographicalAgent)) 
+ (goalCategoryForAgent ?COUNTRY 
+ (politicalStability ?SUPER-REGION MediumToVeryHigh) VitalNationalInterest)) 
+
+(instance Italy IndependentCountry) 
+(contains Italy Italy) 
+(instance Italy GeographicalAgent) 
+
+(implies 
+ (and 
+ (subAttribute ?SPEC ?GEN) 
+ (goalCategoryForAgent ?AGT ?GOAL ?SPEC)) 
+ (goalCategoryForAgent ?AGT ?GOAL ?GEN)) 
+
+(goalCategoryForAgent Italy 
+ (politicalStability Italy MediumToVeryHigh) VitalNationalInterest) 
+
+(implies 
+ (and 
+ (internationalOrg-MemberCountry ?ORG ?COUNTRY) 
+ (instance ?ORG Coalition-International)) 
+ (thereExists ?GOAL 
+ (and 
+ (goalCategoryForAgent ?COUNTRY ?GOAL StrategicNationalInterest) 
+ (desires ?ORG ?GOAL)))) 
+
+(instance DesertShieldCoalition Coalition-International) 
+(internationalOrg-MemberCountry DesertShieldCoalition Italy) 
+
+(implies 
+ (and 
+ (instance ?COUNTRY IndependentCountry) 
+ (contains ?SUPER-REGION ?COUNTRY) 
+ (instance ?SUPER-REGION GeographicalAgent)) 
+ (goalCategoryForAgent ?COUNTRY 
+ (politicalStability ?SUPER-REGION MediumToVeryHigh) VitalNationalInterest)) 
+
+(instance France IndependentCountry) 
+(contains WesternEurope France) 
+(instance WesternEurope GeographicalAgent) 
+
+(implies 
+ (instance ?COUNTRY WesternEuropeanCountry) 
+ (contains WesternEurope ?COUNTRY)) 
+
+(instance France WesternEuropeanCountry) 
+
+(query  (findall ?MOTIVATION  (or 
+(goalCategoryForAgent Italy ?MOTIVATION StrategicNationalInterest) 
+(goalCategoryForAgent France ?MOTIVATION StrategicNationalInterest))))						   
+
+(answer (list  (not 
+ (thereExists ?ATTACK 
+ (thereExists ?TANKER 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (instance ?TANKER OilTanker) 
+ (directingAgent ?ATTACK Iran) 
+ (hasOwnershipIn ?TANKER Kuwait) 
+ (damages ?ATTACK ?TANKER)))) )))
+
+(answer (list (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK StraitOfHormuz)))) ))
+ 
+(answer (list (thereExists ?ACTION 
+ (decreasesCausally ?ACTION 
+ (thereExists ?EVENT 
+ (eventPosesThreat ?EVENT Italy)) likelihood)) ))
+
+(answer  (politicalStability Italy MediumToVeryHigh))
+(answer   (thereExists ?R (?R DesertShieldCoalition France)))
+(answer  (thereExists ?R (?R DesertShieldCoalition Italy)))
+
+(answer  (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK StraitOfHormuz)))) )
+ 
+(answer   (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK GazoducMaghreb-EuropePipeline)))))
+ 
+(answer  (not 
+ (thereExists ?BLOCK 
+ (and 
+ (instance ?BLOCK BlockingTraffic) 
+ (objectActedOn ?BLOCK Transmed-Pipeline)))))
+
+(end_of_file)
+

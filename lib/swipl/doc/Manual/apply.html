@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ansiterm.html">
+<link rel="next" href="assoc.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ansiterm.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="assoc.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:apply"><a id="sec:A.3"><span class="sec-nr">A.3</span> <span class="sec-title">library(apply): 
+Apply predicates on a list</span></a></h2>
+
+<p><a id="sec:apply"></a>
+
+<dl class="tags">
+<dt class="mtag">See also</dt>
+<dd>
+- <code>apply_macros.pl</code> provides compile-time expansion for part 
+of this library. <br>
+- <a class="url" href="http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm">http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm</a>
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+Add <span class="pred-ext">include/4</span>, <span class="pred-ext">include/5</span>, <span class="pred-ext">exclude/4</span>, <span class="pred-ext">exclude/5</span>
+</dd>
+</dl>
+
+<p>This module defines meta-predicates that apply a predicate on all 
+members of a list.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="include/3"><strong>include</strong>(<var>:Goal, 
++List1, ?List2</var>)</a></dt>
+<dd class="defbody">
+Filter elements for which <var>Goal</var> succeeds. True if <var>List2</var> 
+contains those elements Xi of <var>List1</var> for which <code>call(Goal, Xi)</code> 
+succeeds.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+Older versions of SWI-Prolog had <span class="pred-ext">sublist/3</span> 
+with the same arguments and semantics.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="exclude/3"><strong>exclude</strong>(<var>:Goal, 
++List1, ?List2</var>)</a></dt>
+<dd class="defbody">
+Filter elements for which <var>Goal</var> fails. True if <var>List2</var> 
+contains those elements Xi of <var>List1</var> for which <code>call(Goal, Xi)</code> 
+fails.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="partition/4"><strong>partition</strong>(<var>:Pred, 
++List, ?Included, ?Excluded</var>)</a></dt>
+<dd class="defbody">
+Filter elements of <var>List</var> according to <var>Pred</var>. True if <var>Included</var> 
+contains all elements for which <code>call(Pred, X)</code> succeeds and
+<var>Excluded</var> contains the remaining elements.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="partition/5"><strong>partition</strong>(<var>:Pred, 
++List, ?Less, ?Equal, ?Greater</var>)</a></dt>
+<dd class="defbody">
+Filter <var>List</var> according to <var>Pred</var> in three sets. For 
+each element Xi of <var>List</var>, its destination is determined by <code>call(Pred, Xi, Place)</code>, 
+where Place must be unified to one of <code>&lt;</code>, <code>=</code> 
+or <code>&gt;</code>.
+<var>Pred</var> must be deterministic.</dd>
+<dt class="pubdef"><a id="maplist/2"><strong>maplist</strong>(<var>:Goal, 
+?List1</var>)</a></dt>
+<dt class="pubdef"><a id="maplist/3"><strong>maplist</strong>(<var>:Goal, 
+?List1, ?List2</var>)</a></dt>
+<dt class="pubdef"><a id="maplist/4"><strong>maplist</strong>(<var>:Goal, 
+?List1, ?List2, ?List3</var>)</a></dt>
+<dt class="pubdef"><a id="maplist/5"><strong>maplist</strong>(<var>:Goal, 
+?List1, ?List2, ?List3, ?List4</var>)</a></dt>
+<dd class="defbody">
+True if <var>Goal</var> is successfully applied on all matching elements 
+of the list. The maplist family of predicates is defined as:
+
+<pre class="code">
+maplist(P, [X11,...,X1n], ..., [Xm1,...,Xmn]) :-
+    P(X11, ..., Xm1),
+    ...
+    P(X1n, ..., Xmn).
+</pre>
+
+<p>This family of predicates is deterministic iff <var>Goal</var> is 
+deterministic and <var>List1</var> is a proper list, i.e., a list that 
+ends in <code>[]</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="convlist/3"><strong>convlist</strong>(<var>:Goal, 
++ListIn, -ListOut</var>)</a></dt>
+<dd class="defbody">
+Similar to <a class="pred" href="apply.html#maplist/3">maplist/3</a>, 
+but elements for which <code>call(Goal, ElemIn, _)</code> fails are 
+omitted from <var>ListOut</var>. For example (using <code>library(yall)</code>):
+
+<pre class="code">
+?- convlist([X,Y]&gt;&gt;(integer(X), Y is X^2),
+            [3, 5, 4.4, 2], L).
+L = [9, 25, 4].
+</pre>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+Also appears in YAP <code>library(maplist)</code> and SICStus
+<code>library(lists)</code>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="foldl/4"><strong>foldl</strong>(<var>:Goal, 
++List, +V0, -V</var>)</a></dt>
+<dt class="pubdef"><a id="foldl/5"><strong>foldl</strong>(<var>:Goal, 
++List1, +List2, +V0, -V</var>)</a></dt>
+<dt class="pubdef"><a id="foldl/6"><strong>foldl</strong>(<var>:Goal, 
++List1, +List2, +List3, +V0, -V</var>)</a></dt>
+<dt class="pubdef"><a id="foldl/7"><strong>foldl</strong>(<var>:Goal, 
++List1, +List2, +List3, +List4, +V0, -V</var>)</a></dt>
+<dd class="defbody">
+Fold a list, using arguments of the list as left argument. The foldl 
+family of predicates is defined by:
+
+<pre class="code">
+foldl(P, [X11,...,X1n], ..., [Xm1,...,Xmn], V0, Vn) :-
+      P(X11, ..., Xm1, V0, V1),
+      ...
+      P(X1n, ..., Xmn, V', Vn).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="scanl/4"><strong>scanl</strong>(<var>:Goal, 
++List, +V0, -Values</var>)</a></dt>
+<dt class="pubdef"><a id="scanl/5"><strong>scanl</strong>(<var>:Goal, 
++List1, +List2, +V0, -Values</var>)</a></dt>
+<dt class="pubdef"><a id="scanl/6"><strong>scanl</strong>(<var>:Goal, 
++List1, +List2, +List3, +V0, -Values</var>)</a></dt>
+<dt class="pubdef"><a id="scanl/7"><strong>scanl</strong>(<var>:Goal, 
++List1, +List2, +List3, +List4, +V0, -Values</var>)</a></dt>
+<dd class="defbody">
+Left scan of list. The scanl family of higher order list operations is 
+defined by:
+
+<pre class="code">
+scanl(P, [X11,...,X1n], ..., [Xm1,...,Xmn], V0,
+      [V0,V1,...,Vn]) :-
+      P(X11, ..., Xm1, V0, V1),
+      ...
+      P(X1n, ..., Xmn, V', Vn).
+</pre>
+
+<p></dd>
+</dl>
+
+<p></body></html>

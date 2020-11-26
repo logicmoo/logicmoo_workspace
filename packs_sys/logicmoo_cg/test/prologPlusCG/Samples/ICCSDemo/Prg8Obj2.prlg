@@ -1,0 +1,13 @@
+hamza::[PERSON]-DateOfBirth->[BIRTH]-ptime->[DATE = (5, 04, 1995)].
+hamza::Age(A) :- 
+     currentDate(D1),
+     hamza::[PERSON]-DateOfBirth->[BIRTH]-ptime->[DATE = D2],
+     diffDate(D1, D2, A).
+
+
+currentDate((10, 08, 2000)).
+
+diffDate((x_Day2, y_month2, z_year2),  (x_Day1, y_month1, z_year1), (x_Day, y_month, z_year)) :-
+   val(x_Day, sub(x_Day2, x_Day1)),
+   val(y_month, sub(y_month2, y_month1)),
+   val(z_year, sub(z_year2,  z_year1)), /.

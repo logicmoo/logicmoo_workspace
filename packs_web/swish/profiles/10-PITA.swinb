@@ -1,0 +1,25 @@
+<div class="notebook">
+
+<div class="nb-cell markdown">
+This notebook loads pita
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- use_module(library(pita)).
+
+:- pita.
+
+:- begin_lpad.
+</div>
+
+<div class="nb-cell program">
+</div>
+
+<div class="nb-cell query">
+</div>
+
+<div class="nb-cell program" data-background="true" data-singleline="true">
+:- end_lpad.
+</div>
+
+</div>

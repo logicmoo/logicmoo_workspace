@@ -1,0 +1,869 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 5.4</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ext-syntax.html">
+<link rel="next" href="ext-integration.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ext-syntax.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="ext-integration.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:bidicts"><a id="sec:5.4"><span class="sec-nr">5.4</span> <span class="sec-title">Dicts: 
+structures with named arguments</span></a></h2>
+
+<a id="sec:bidicts"></a>
+
+<p>SWI-Prolog version&nbsp;7 introduces dicts as an abstract object with 
+a concrete modern syntax and functional notation for accessing members 
+and as well as access functions defined by the user. The syntax for a 
+dict is illustrated below. <var>Tag</var> is either a variable or an 
+atom. As with compound terms, there is <b>no</b> space between the tag 
+and the opening brace. The keys are either atoms or small integers (up 
+to
+<a class="flag" href="flags.html#flag:max_tagged_integer">max_tagged_integer</a>). 
+The values are arbitrary Prolog terms which are parsed using the same 
+rules as used for arguments in compound terms.
+<blockquote> Tag{Key1:Value1, Key2:Value2, ...}
+</blockquote>
+
+<p>A dict can <em>not</em> hold duplicate keys. The dict is transformed 
+into an opaque internal representation that does <em>not</em> respect 
+the order in which the key-value pairs appear in the input text. If a 
+dict is written, the keys are written according to the standard order of 
+terms (see <a class="sec" href="compare.html#sec:4.6.1">section 4.6.1</a>). 
+Here are some examples, where the second example illustrates that the 
+order is not maintained and the third illustrates an anonymous dict.
+
+<pre class="code">
+?- A = point{x:1, y:2}.
+A = point{x:1, y:2}.
+
+?- A = point{y:2, x:1}.
+A = point{x:1, y:2}.
+
+?- A = _{first_name:"Mel", last_name:"Smith"}.
+A = _G1476{first_name:"Mel", last_name:"Smith"}.
+</pre>
+
+<p>Dicts can be unified following the standard symmetric Prolog 
+unification rules. As dicts use an internal canonical form, the order in 
+which the named keys are represented is not relevant. This behaviour is 
+illustrated by the following example.
+
+<pre class="code">
+?- point{x:1, y:2} = Tag{y:2, x:X}.
+Tag = point,
+X = 1.
+</pre>
+
+<p><b>Note</b> In the current implementation, two dicts unify only if 
+they have the same set of keys and the tags and values associated with 
+the keys unify. In future versions, the notion of unification between 
+dicts could be modified such that two dicts unify if their tags and the 
+values associated with <em>common</em> keys unify, turning both dicts 
+into a new dict that has the union of the keys of the two original 
+dicts.
+
+<p><h3 id="sec:ext-dict-functions"><a id="sec:5.4.1"><span class="sec-nr">5.4.1</span> <span class="sec-title">Functions 
+on dicts</span></a></h3>
+
+<a id="sec:ext-dict-functions"></a>
+
+<p>The infix operator dot (<code>op(100, yfx, .)</code> is used to 
+extract values and evaluate functions on dicts. Functions are recognised 
+if they appear in the argument of a <em>goal</em> in the source text, 
+possibly nested in a term. The keys act as field selector, which is 
+illustrated in this example.
+
+<pre class="code">
+?- X = point{x:1,y:2}.x.
+X = 1.
+
+?- Pt = point{x:1,y:2}, write(Pt.y).
+2
+Pt = point{x:1,y:2}.
+
+?- X = point{x:1,y:2}.C.
+X = 1,
+C = x ;
+X = 2,
+C = y.
+</pre>
+
+<p>The compiler translates a goal that contains <code><code>.</code>/2</code> 
+terms in its arguments into a conjunction of calls to <a class="pred" href="bidicts.html#./3">./3</a> 
+defined in the
+<code>system</code> module. Terms functor<code>.</code>2 that appears in 
+the head are replaced with a variable and calls to <a class="pred" href="bidicts.html#./3">./3</a> 
+are inserted at the start of the body. Below are two examples, where the 
+first extracts the
+<code>x</code> key from a dict and the second extends a dict containing 
+an address with the postal code, given a find_postal_code/4 predicate.
+
+<pre class="code">
+dict_x(X, X.x).
+
+add_postal_code(Dict, Dict.put(postal_code, Code)) :-
+        find_postal_code(Dict.city,
+                         Dict.street,
+                         Dict.house_number,
+                         Code).
+</pre>
+
+<p>Note that expansion of <code><code>.</code>/2</code> terms implies 
+that such terms cannot be created by writing them explicitly in your 
+source code. Such terms can still be created with <a id="idx:functor3:1837"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>, <a class="pred" href="manipterm.html#=../2">=../2</a>,
+<a id="idx:compoundnamearity3:1838"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+and
+<a id="idx:compoundnamearguments3:1839"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.<sup class="fn">160<span class="fn-text">Traditional 
+code is unlikely to use <code><code>.</code>/2</code> terms because they 
+were practically reserved for usage in lists. We do not provide a 
+quoting mechanism as found in functional languages because it would only 
+be needed to quote <code><code>.</code>/2</code> terms, such terms are 
+rare and term manipulation provides an escape route.</span></sup>
+
+<dl class="latex">
+<dt class="pubdef"><a id="./3"><strong>.</strong>(<var>+Dict, +Function, 
+-Result</var>)</a></dt>
+<dd class="defbody">
+This predicate is called to evaluate <code><code>.</code>/2</code> terms 
+found in the arguments of a goal. This predicate evaluates the field 
+extraction described above, raising an exception if <var>Function</var> 
+is an atom (<em>key</em>) and <var>Dict</var> does not contain the 
+requested key. If <var>Function</var> is a compound term, it checks for 
+the predefined functions on dicts described in <a class="sec" href="bidicts.html#sec:5.4.1.2">section 
+5.4.1.2</a> or executes a user defined function as described in
+<a class="sec" href="bidicts.html#sec:5.4.1.1">section 5.4.1.1</a>.
+</dd>
+</dl>
+
+<p><h4 id="sec:ext-dict-user-functions"><a id="sec:5.4.1.1"><span class="sec-nr">5.4.1.1</span> <span class="sec-title">User 
+defined functions on dicts</span></a></h4>
+
+<a id="sec:ext-dict-user-functions"></a>
+
+<p>The tag of a dict associates the dict to a module. If the dot 
+notation uses a compound term, this calls the goal below.
+<blockquote>
+&lt;<var>module</var>&gt;:&lt;<var>name</var>&gt;(Arg1, ..., +Dict, 
+-Value)
+</blockquote>
+
+<p>Functions are normal Prolog predicates. The dict infrastructure 
+provides a more convenient syntax for representing the head of such 
+predicates without worrying about the argument calling conventions. The 
+code below defines a function <code>multiply(Times)</code> on a point 
+that creates a new point by multiplying both coordinates. and <code>len</code><sup class="fn">161<span class="fn-text">as <code>length</code> 
+would result in a predicate <a id="idx:length2:1840"></a><a class="pred" href="builtinlist.html#length/2">length/2</a>, 
+this name cannot be used. This might change in future versions.</span></sup> 
+to compute the length from the origin. The . and <code>:=</code> 
+operators are used to abstract the location of the predicate arguments. 
+It is allowed to define multiple a function with multiple clauses, 
+providing overloading and non-determinism.
+
+<pre class="code">
+:- module(point, []).
+
+M.multiply(F) := point{x:X, y:Y} :-
+        X is M.x*F,
+        Y is M.y*F.
+
+M.len() := Len :-
+        Len is sqrt(M.x**2 + M.y**2).
+</pre>
+
+<p>After these definitions, we can evaluate the following functions:
+
+<pre class="code">
+?- X = point{x:1, y:2}.multiply(2).
+X = point{x:2, y:4}.
+
+?- X = point{x:1, y:2}.multiply(2).len().
+X = 4.47213595499958.
+</pre>
+
+<p><h4 id="sec:ext-dicts-predefined"><a id="sec:5.4.1.2"><span class="sec-nr">5.4.1.2</span> <span class="sec-title">Predefined 
+functions on dicts</span></a></h4>
+
+<a id="sec:ext-dicts-predefined"></a>
+
+<p>Dicts currently define the following reserved functions:
+
+<dl class="latex">
+<dt class="pubdef"><a id="m-get-1"><strong>get</strong>(<var>?Key</var>)</a></dt>
+<dd class="defbody">
+Same as <var>Dict</var>.<var>Key</var>, but fails silently if the dict 
+does not contain <var>Key</var>. See also <a class="pred" href="bidicts.html#:</2">:&lt;/2</a>, 
+which can be used to test for existence and unify multiple key values 
+from a dict. For example:
+
+<pre class="code">
+?- write(t{a:x}.get(a)).
+x
+?- write(t{a:x}.get(b)).
+false.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="m-put-1"><strong>put</strong>(<var>+New</var>)</a></dt>
+<dd class="defbody">
+Evaluates to a new dict where the key-values in <var>New</var> replace 
+or extend the key-values in the original dict. See <a id="idx:putdict3:1841"></a><a class="pred" href="bidicts.html#put_dict/3">put_dict/3</a>.</dd>
+<dt class="pubdef"><a id="m-put-2"><strong>put</strong>(<var>+KeyPath, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Evaluates to a new dict where the <var>KeyPath</var>-<var>Value</var> 
+replaces or extends the key-values in the original dict. <var>KeyPath</var> 
+is either a key or a term <var>KeyPath</var>/<var>Key</var>,<sup class="fn">162<span class="fn-text">Note 
+that we do not use the&rsquo;.' functor here, because the <code><code>.</code>/2</code> 
+would <em>evaluate</em>.</span></sup> replacing the value associated 
+with <var>Key</var> in a sub-dict of the dict on which the function 
+operates. See <a id="idx:putdict4:1842"></a><a class="pred" href="bidicts.html#put_dict/4">put_dict/4</a>. 
+Below are some examples:
+
+<pre class="code">
+?- A = _{}.put(a, 1).
+A = _G7359{a:1}.
+
+?- A = _{a:1}.put(a, 2).
+A = _G7377{a:2}.
+
+?- A = _{a:1}.put(b/c, 2).
+A = _G1395{a:1, b:_G1584{c:2}}.
+
+?- A = _{a:_{b:1}}.put(a/b, 2).
+A = _G1429{a:_G1425{b:2}}.
+
+?- A = _{a:1}.put(a/b, 2).
+A = _G1395{a:_G1578{b:2}}.
+</pre>
+
+<p></dd>
+</dl>
+
+<p><h3 id="sec:ext-dict-predicates"><a id="sec:5.4.2"><span class="sec-nr">5.4.2</span> <span class="sec-title">Predicates 
+for managing dicts</span></a></h3>
+
+<a id="sec:ext-dict-predicates"></a>
+
+<p>This section documents the predicates that are defined on dicts. We 
+use the naming and argument conventions of the traditional <code>library(assoc)</code>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="is_dict/1"><strong>is_dict</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a dict. This is the same as <code>is_dict(Term,_)</code>.</dd>
+<dt class="pubdef"><a id="is_dict/2"><strong>is_dict</strong>(<var>@Term, 
+-Tag</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a dict of <var>Tag</var>.</dd>
+<dt class="pubdef"><a id="get_dict/3"><strong>get_dict</strong>(<var>?Key, 
++Dict, -Value</var>)</a></dt>
+<dd class="defbody">
+Unify the value associated with <var>Key</var> in dict with <var>Value</var>. 
+If
+<var>Key</var> is unbound, all associations in <var>Dict</var> are 
+returned on backtracking. The order in which the associations are 
+returned is undefined. This predicate is normally accessed using the 
+functional notation <code>Dict.Key</code>. See <a class="sec" href="bidicts.html#sec:5.4.1">section 
+5.4.1</a>.
+
+<p>Fails silently if Key does not appear in Dict. This is different from 
+the behavior of the functional&lsquo;.`-notation, which throws an 
+existence error in that case.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="get_dict/5"><strong>get_dict</strong>(<var>+Key, 
++Dict, -Value, -NewDict, +NewValue</var>)</a></dt>
+<dd class="defbody">
+Create a new dict after updating the value for <var>Key</var>. Fails if
+<var>Value</var> does not unify with the current value associated with
+<var>Key</var>. <var>Dict</var> is either a dict or a list the can be 
+converted into a dict.
+
+<p>Has the behavior as if defined in the following way:
+
+<pre class="code">
+get_dict(Key, Dict, Value, NewDict, NewValue) :-
+        get_dict(Key, Dict, Value),
+        put_dict(Key, Dict, NewValue, NewDict).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="dict_create/3"><strong>dict_create</strong>(<var>-Dict, 
++Tag, +Data</var>)</a></dt>
+<dd class="defbody">
+Create a dict in <var>Tag</var> from <var>Data</var>. <var>Data</var> is 
+a list of attribute-value pairs using the syntax <code>Key:Value</code>,
+<code>Key=Value</code>, <code>Key-Value</code> or <code>Key(Value)</code>. 
+An exception is raised if <var>Data</var> is not a proper list, one of 
+the elements is not of the shape above, a key is neither an atom nor a 
+small integer or there is a duplicate key.</dd>
+<dt class="pubdef"><a id="dict_pairs/3"><strong>dict_pairs</strong>(<var>?Dict, 
+?Tag, ?Pairs</var>)</a></dt>
+<dd class="defbody">
+Bi-directional mapping between a dict and an ordered list of pairs (see <a class="sec" href="pairs.html#sec:A.29">section 
+A.29</a>).</dd>
+<dt class="pubdef"><a id="put_dict/3"><strong>put_dict</strong>(<var>+New, 
++DictIn, -DictOut</var>)</a></dt>
+<dd class="defbody">
+<var>DictOut</var> is a new dict created by replacing or adding 
+key-value pairs from <var>New</var> to <var>Dict</var>. <var>New</var> 
+is either a dict or a valid input for <a id="idx:dictcreate3:1843"></a><a class="pred" href="bidicts.html#dict_create/3">dict_create/3</a>. 
+This predicate is normally accessed using the functional notation. Below 
+are some examples:
+
+<pre class="code">
+?- A = point{x:1, y:2}.put(_{x:3}).
+A = point{x:3, y:2}.
+
+?- A = point{x:1, y:2}.put([x=3]).
+A = point{x:3, y:2}.
+
+?- A = point{x:1, y:2}.put([x=3,z=0]).
+A = point{x:3, y:2, z:0}.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="put_dict/4"><strong>put_dict</strong>(<var>+Key, 
++DictIn, +Value, -DictOut</var>)</a></dt>
+<dd class="defbody">
+<var>DictOut</var> is a new dict created by replacing or adding
+<var>Key</var>-<var>Value</var> to <var>DictIn</var>. For example:
+
+<pre class="code">
+?- A = point{x:1, y:2}.put(x, 3).
+A = point{x:3, y:2}.
+</pre>
+
+<p>This predicate can also be accessed by using the functional notation, 
+in which case Key can also be a *path* of keys. For example:
+
+<pre class="code">
+?- Dict = _{}.put(a/b, c).
+Dict = _6096{a:_6200{b:c}}.
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="del_dict/4"><strong>del_dict</strong>(<var>+Key, 
++DictIn, ?Value, -DictOut</var>)</a></dt>
+<dd class="defbody">
+True when <var>Key</var>-<var>Value</var> is in <var>DictIn</var> and <var>DictOut</var> 
+contains all associations of <var>DictIn</var> except for <var>Key</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id=":</2"><var>+Select</var> <strong>:&lt;</strong> <var>+From</var></a></dt>
+<dd class="defbody">
+True when <var>Select</var> is a&lsquo;sub dict' of <var>From</var>: the 
+tags must unify and all keys in <var>Select</var> must appear with 
+unifying values in <var>From</var>. <var>From</var> may contain keys 
+that are not in
+<var>Select</var>. This operation is frequently used to <em>match</em> a 
+dict and at the same time extract relevant values from it. For example:
+
+<pre class="code">
+plot(Dict, On) :-
+        _{x:X, y:Y, z:Z} :&lt; Dict, !,
+        plot_xyz(X, Y, Z, On).
+plot(Dict, On) :-
+        _{x:X, y:Y} :&lt; Dict, !,
+        plot_xy(X, Y, On).
+</pre>
+
+<p>The goal <code>Select :&lt; From</code> is equivalent to
+<code>select_dict(Select, From, _)</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="select_dict/3"><strong>select_dict</strong>(<var>+Select, 
++From, -Rest</var>)</a></dt>
+<dd class="defbody">
+True when the tags of <var>Select</var> and <var>From</var> have been 
+unified, all keys in <var>Select</var> appear in <var>From</var> and the 
+corresponding values have been unified. The key-value pairs of <var>From</var> 
+that do not appear in <var>Select</var> are used to form an anonymous 
+dict, which us unified with <var>Rest</var>. For example:
+
+<pre class="code">
+?- select_dict(P{x:0, y:Y}, point{x:0, y:1, z:2}, R).
+P = point,
+Y = 1,
+R = _G1705{z:2}.
+</pre>
+
+<p>See also <a class="pred" href="bidicts.html#:</2">:&lt;/2</a> to 
+ignore <var>Rest</var> and <a class="pred" href="bidicts.html#>:</2">&gt;:&lt;/2</a> 
+for a symmetric partial unification of two dicts.</dd>
+<dt class="pubdef"><a id=">:</2"><var>+Dict1</var> <strong>&gt;:&lt;</strong> <var>+Dict2</var></a></dt>
+<dd class="defbody">
+This operator specifies a <em>partial unification</em> between
+<var>Dict1</var> and <var>Dict2</var>. It is true when the tags and the 
+values associated with all <em>common</em> keys have been unified. The 
+values associated to keys that do not appear in the other dict are 
+ignored. Partial unification is symmetric. For example, given a list of 
+dicts, find dicts that represent a point with X equal to zero:
+
+<pre class="code">
+    member(Dict, List),
+    Dict &gt;:&lt; point{x:0, y:Y}.
+</pre>
+
+<p>See also <a class="pred" href="bidicts.html#:</2">:&lt;/2</a> and <a id="idx:selectdict3:1844"></a><a class="pred" href="bidicts.html#select_dict/3">select_dict/3</a>.
+</dd>
+</dl>
+
+<p><h4 id="sec:ext-dict-assignment"><a id="sec:5.4.2.1"><span class="sec-nr">5.4.2.1</span> <span class="sec-title">Destructive 
+assignment in dicts</span></a></h4>
+
+<a id="sec:ext-dict-assignment"></a>
+
+<p>This section describes the destructive update operations defined on 
+dicts. These actions can only <em>update</em> keys and not add or remove 
+keys. If the requested key does not exist the predicate raises
+<code>existence_error(key, Key, Dict)</code>. Note the additional 
+argument.
+
+<p>Destructive assignment is a non-logical operation and should be used 
+with care because the system may copy or share identical Prolog terms at 
+any time. Some of this behaviour can be avoided by adding an additional 
+unbound value to the dict. This prevents unwanted sharing and ensures 
+that <a id="idx:copyterm2:1845"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a> 
+actually copies the dict. This pitfall is demonstrated in the example 
+below:
+
+<pre class="code">
+?- A = a{a:1}, copy_term(A,B), b_set_dict(a, A, 2).
+A = B, B = a{a:2}.
+
+?- A = a{a:1,dummy:_}, copy_term(A,B), b_set_dict(a, A, 2).
+A = a{a:2, dummy:_G3195},
+B = a{a:1, dummy:_G3391}.
+</pre>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="b_set_dict/3"><strong>b_set_dict</strong>(<var>+Key, 
+!Dict, +Value</var>)</a></dt>
+<dd class="defbody">
+Destructively update the value associated with <var>Key</var> in <var>Dict</var> 
+to
+<var>Value</var>. The update is trailed and undone on backtracking. This 
+predicate raises an existence error if <var>Key</var> does not appear in
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:setarg3:1846"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+and
+<a id="idx:bsetval2:1847"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nb_set_dict/3"><strong>nb_set_dict</strong>(<var>+Key, 
+!Dict, +Value</var>)</a></dt>
+<dd class="defbody">
+Destructively update the value associated with <var>Key</var> in <var>Dict</var> 
+to a copy of <var>Value</var>. The update is <em>not</em> undone on 
+backtracking. This predicate raises an existence error if <var>Key</var> 
+does not appear in
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:nbsetarg3:1848"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a> 
+and
+<a id="idx:nbsetval2:1849"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="nb_link_dict/3"><strong>nb_link_dict</strong>(<var>+Key, 
+!Dict, +Value</var>)</a></dt>
+<dd class="defbody">
+Destructively update the value associated with <var>Key</var> in <var>Dict</var> 
+to
+<var>Value</var>. The update is <em>not</em> undone on backtracking. 
+This predicate raises an existence error if <var>Key</var> does not 
+appear in
+<var>Dict</var>. The update semantics are equivalent to <a id="idx:nblinkarg3:1850"></a><a class="pred" href="manipterm.html#nb_linkarg/3">nb_linkarg/3</a> 
+and
+<a id="idx:nblinkval2:1851"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a>. 
+Use with extreme care and consult the documentation of
+<a id="idx:nblinkval2:1852"></a><a class="pred" href="gvar.html#nb_linkval/2">nb_linkval/2</a> 
+before use.
+</dd>
+</dl>
+
+<p><h3 id="sec:ext-dicts-usage"><a id="sec:5.4.3"><span class="sec-nr">5.4.3</span> <span class="sec-title">When 
+to use dicts?</span></a></h3>
+
+<a id="sec:ext-dicts-usage"></a>
+
+<p>Dicts are a new type in the Prolog world. They compete with several 
+other types and libraries. In the list below we have a closer look at 
+these relations. We will see that dicts are first of all a good 
+replacement for compound terms with a high or not clearly fixed arity, 
+library
+<code>library(record)</code> and option processing.
+
+<dl class="latex">
+<dt><b>Compound terms</b></dt>
+<dd>
+Compound terms with positional arguments form the traditional way to 
+package data in Prolog. This representation is well understood, fast and 
+compound terms are stored efficiently. Compound terms are still the 
+representation of choice, provided that the number of arguments is low 
+and fixed or compactness or performance are of utmost importance.
+
+<p>A good example of a compound term is the representation of RDF 
+triples using the term <code>rdf(Subject, Predicate, Object)</code> 
+because RDF triples are defined to have precisely these three arguments 
+and they are always referred to in this order. An application processing 
+information about persons should probably use dicts because the 
+information that is related to a person is not so fixed. Typically we 
+see first and last name. But there may also be title, middle name, 
+gender, date of birth, etc. The number of arguments becomes unmanageable 
+when using a compound term, while adding or removing an argument leads 
+to many changes in the program.</dd>
+<dt><b>Library <code>library(record)</code></b></dt>
+<dd>
+Using library <code>library(record)</code> relieves the maintenance 
+issues associated with using compound terms significantly. The library 
+generates access and modification predicates for each field in a 
+compound term from a declaration. The library provides sound access to 
+compound terms with many arguments. One of its problems is the verbose 
+syntax needed to access or modify fields which results from long names 
+for the generated predicates and the restriction that each field needs 
+to be extracted with a separate goal. Consider the example below, where 
+the first uses library <code>library(record)</code> and the second uses 
+dicts.
+
+<pre class="code">
+    ...,
+    person_first_name(P, FirstName),
+    person_last_name(P, LastName),
+    format('Dear ~w ~w,~n~n', [FirstName, LastName]).
+
+    ...,
+    format('Dear ~w ~w,~n~n', [Dict.first_name, Dict.last_name]).
+</pre>
+
+<p>Records have a fixed number of arguments and (non-)existence of an 
+argument must be represented using a value that is outside the normal 
+domain. This lead to unnatural code. For example, suppose our person 
+also has a title. If we know the first name we use this and else we use 
+the title. The code samples below illustrate this.
+
+<pre class="code">
+salutation(P) :-
+    person_first_name(P, FirstName), nonvar(FirstName), !,
+    person_last_name(P, LastName),
+    format('Dear ~w ~w,~n~n', [FirstName, LastName]).
+salutation(P) :-
+    person_title(P, Title), nonvar(Title), !,
+    person_last_name(P, LastName),
+    format('Dear ~w ~w,~n~n', [Title, LastName]).
+
+salutation(P) :-
+    _{first_name:FirstName, last_name:LastName} :&lt; P, !,
+    format('Dear ~w ~w,~n~n', [FirstName, LastName]).
+salutation(P) :-
+    _{title:Title, last_name:LastName} :&lt; P, !,
+    format('Dear ~w ~w,~n~n', [Title, LastName]).
+</pre>
+
+</dd>
+<dt><b>Library <code>library(assoc)</code></b></dt>
+<dd>
+This library implements a balanced binary tree. Dicts can replace the 
+use of this library if the association is fairly static (i.e., there are 
+few update operations), all keys are atoms or (small) integers and the 
+code does not rely on ordered operations.</dd>
+<dt><b>Library <code>library(option)</code></b></dt>
+<dd>
+Option lists are introduced by ISO Prolog, for example for <a id="idx:readterm3:1853"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>,
+<a id="idx:open4:1854"></a><a class="pred" href="IO.html#open/4">open/4</a>, 
+etc. The <code>library(option)</code> library provides operations to 
+extract options, merge options lists, etc. Dicts are well suited to 
+replace option lists because they are cheaper, can be processed faster 
+and have a more natural syntax.</dd>
+<dt><b>Library <code>library(pairs)</code></b></dt>
+<dd>
+This library is commonly used to process large name-value associations. 
+In many cases this concerns short-lived data structures that result from
+<a id="idx:findall3:1855"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:maplist3:1856"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+and similar list processing predicates. Dicts may play a role if 
+frequent random key lookups are needed on the resulting association. For 
+example, the skeleton&lsquo;create a pairs list',&lsquo;use
+<a id="idx:listtoassoc2:1857"></a><a class="pred" href="assoc.html#list_to_assoc/2">list_to_assoc/2</a> 
+to create an assoc', followed by frequent usage of
+<a id="idx:getassoc3:1858"></a><a class="pred" href="assoc.html#get_assoc/3">get_assoc/3</a> 
+to extract key values can be replaced using <a id="idx:dictpairs3:1859"></a><a class="pred" href="bidicts.html#dict_pairs/3">dict_pairs/3</a> 
+and the dict access functions. Using dicts in this scenario is more 
+efficient and provides a more pleasant access syntax.
+</dd>
+</dl>
+
+<p><h3 id="sec:ext-dicts-motivation"><a id="sec:5.4.4"><span class="sec-nr">5.4.4</span> <span class="sec-title">A 
+motivation for dicts as primary citizens</span></a></h3>
+
+<a id="sec:ext-dicts-motivation"></a>
+
+<p>Dicts, or key-value associations, are a common data structure. A good 
+old example are <em>property lists</em> as found in Lisp, while a good 
+recent example is formed by JavaScript <em>objects</em>. Traditional 
+Prolog does not offer native property lists. As a result, people are 
+using a wide range of data structures for key-value associations:
+
+<p>
+<ul class="latex">
+<li>Using compound terms and positional arguments, e.g.,
+<code>point(1,2)</code>.
+<li>Using compound terms with library <code>library(record)</code>, 
+which generates access predicates for a term using positional arguments 
+from a description.
+<li>Using lists of terms <code>Name=Value</code>, <code>Name-Value</code>,
+<code>Name:Value</code> or <code>Name(Value)</code>.
+<li>Using library <code>library(assoc)</code> which represents the 
+associations as a balanced binary tree.
+</ul>
+
+<p>This situation is unfortunate. Each of these have their advantages 
+and disadvantages. E.g., compound terms are compact and fast, but 
+inflexible and using positional arguments quickly breaks down. Library
+<code>library(record)</code> fixes this, but the syntax is considered 
+hard to use. Lists are flexible, but expensive and the alternative 
+key-value representations that are used complicate the matter even more. 
+Library
+<code>library(assoc)</code> allows for efficient manipulation of 
+changing associations, but the syntactical representation of an assoc is 
+complex, which makes them unsuitable for e.g., <em>options lists</em> as 
+seen in predicates such as <a id="idx:open4:1860"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+
+<p><h3 id="sec:ext-dicts-implementation"><a id="sec:5.4.5"><span class="sec-nr">5.4.5</span> <span class="sec-title">Implementation 
+notes about dicts</span></a></h3>
+
+<a id="sec:ext-dicts-implementation"></a>
+
+<p>Although dicts are designed as an abstract data type and we 
+deliberately reserve the possibility to change the representation and 
+even use multiple representations, this section describes the current 
+implementation.
+
+<p>Dicts are currently represented as a compound term using the functor
+<code>`dict`</code>. The first argument is the tag. The remaining 
+arguments create an array of sorted key-value pairs. This representation 
+is compact and guarantees good locality. Lookup is order <var>log( N )</var>, 
+while adding values, deleting values and merging with other dicts has 
+order
+<var>N</var>. The main disadvantage is that changing values in large 
+dicts is costly, both in terms of memory and time.
+
+<p>Future versions may share keys in a separate structure or use a 
+binary trees to allow for cheaper updates. One of the issues is that the 
+representation must either be kept canonical or unification must be 
+extended to compensate for alternate representations.
+
+<p></body></html>

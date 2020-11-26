@@ -1,0 +1,366 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.2</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="threadcreate.html">
+<link rel="next" href="threadcom.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="threadcreate.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="threadcom.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:thmonitor"><a id="sec:10.2"><span class="sec-nr">10.2</span> <span class="sec-title">Monitoring 
+threads</span></a></h2>
+
+<a id="sec:thmonitor"></a>
+
+<p>Normal multithreaded applications should not need the predicates from 
+this section because almost any usage of these predicates is unsafe. For 
+example checking the existence of a thread before signalling it is of no 
+use as it may vanish between the two calls. Catching exceptions using <a id="idx:catch3:2164"></a><a class="pred" href="exception.html#catch/3">catch/3</a> 
+is the only safe way to deal with thread-existence errors.
+
+<p>These predicates are provided for diagnosis and monitoring tasks. See 
+also <a class="sec" href="thutil.html#sec:10.5">section 10.5</a>, 
+describing more high-level primitives.
+
+<dl class="latex">
+<dt class="pubdef"><a id="is_thread/1"><strong>is_thread</strong>(<var>@Term</var>)</a></dt>
+<dd class="defbody">
+True if <var>Term</var> is a handle to an existing thread.</dd>
+<dt class="pubdef"><a id="thread_property/2"><strong>thread_property</strong>(<var>?Id, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if thread <var>Id</var> has <var>Property</var>. Either or both 
+arguments may be unbound, enumerating all relations on backtracking. 
+Calling <a id="idx:threadproperty2:2165"></a><a class="pred" href="thmonitor.html#thread_property/2">thread_property/2</a> 
+does not influence any thread. See also
+<a id="idx:threadjoin2:2166"></a><a class="pred" href="threadcreate.html#thread_join/2">thread_join/2</a>. 
+For threads that have an alias name, this name is returned in <var>Id</var> 
+instead of the opaque thread identifier. Defined properties are:
+
+<dl class="latex">
+<dt><strong>alias</strong>(<var>Alias</var>)</dt>
+<dd class="defbody">
+<var>Alias</var> is the alias name of thread <var>Id</var>.</dd>
+<dt><strong>detached</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+Current detached status of the thread.</dd>
+<dt><strong>id</strong>(<var>Integer</var>)</dt>
+<dd class="defbody">
+Integer identifier for the thread. Can be used as argument to the thread 
+predicates, but applications must be aware that these references are 
+reused.</dd>
+<dt><strong>status</strong>(<var>Status</var>)</dt>
+<dd class="defbody">
+Current status of the thread. <var>Status</var> is one of:
+
+<dl class="latex">
+<dt><strong>running</strong></dt>
+<dd class="defbody">
+The thread is running. This is the initial status of a thread. Please 
+note that threads waiting for something are considered running too.</dd>
+<dt><strong>suspended</strong></dt>
+<dd class="defbody">
+Only if the thread is an engine (see <a class="sec" href="engines.html#sec:11">section 
+11</a>). Indicates that the engine is currently not associated with an 
+OS thread.</dd>
+<dt><strong>false</strong></dt>
+<dd class="defbody">
+The <var>Goal</var> of the thread has been completed and failed.</dd>
+<dt><strong>true</strong></dt>
+<dd class="defbody">
+The <var>Goal</var> of the thread has been completed and succeeded.</dd>
+<dt><strong>exited</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+The <var>Goal</var> of the thread has been terminated using <a id="idx:threadexit1:2167"></a><a class="pred" href="threadcreate.html#thread_exit/1">thread_exit/1</a> 
+with <var>Term</var> as argument. If the underlying native thread has 
+exited (using pthread_exit()) <var>Term</var> is unbound.</dd>
+<dt><strong>exception</strong>(<var>Term</var>)</dt>
+<dd class="defbody">
+The <var>Goal</var> of the thread has been terminated due to an uncaught 
+exception (see <a id="idx:throw1:2168"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+and <a id="idx:catch3:2169"></a><a class="pred" href="exception.html#catch/3">catch/3</a>).
+</dd>
+</dl>
+
+</dd>
+<dt><strong>engine</strong>(<var>Boolean</var>)</dt>
+<dd class="defbody">
+If the thread is an engine (see <a class="sec" href="engines.html#sec:11">chapter 
+11</a>), <var>Boolean</var> is
+<code>true</code>. Otherwise the property is not present.</dd>
+<dt><strong>thread</strong>(<var>ThreadId</var>)</dt>
+<dd class="defbody">
+If the thread is an engine that is currently attached to a thread,
+<var>ThreadId</var> is the thread that executes the engine.</dd>
+<dt><strong>size</strong>(<var>Bytes</var>)</dt>
+<dd class="defbody">
+The amount of memory associated with this thread. This includes the 
+thread structure, its stacks, its default message queue, its clauses in 
+its thread local dynamic predicates (see <a id="idx:threadlocal1:2170"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
+and memory used for representing thread-local answer tries (see <a class="sec" href="tabling.html#sec:7">section 
+7</a>).</dd>
+<dt><strong>system_thread_id</strong>(<var>Integer</var>)</dt>
+<dd class="defbody">
+Thread identifier used by the operating system for the calling thread. 
+Not available on all OSes. This is the same as the Prolog flag
+<a class="flag" href="flags.html#flag:system_thread_id">system_thread_id</a> 
+for the calling thread. Access to the system thread identifier can, on 
+some systems, be used to gain additional control over or information 
+about Prolog threads.
+</dd>
+</dl>
+
+<p>See also <a id="idx:threadstatistics3:2171"></a><a class="pred" href="thmonitor.html#thread_statistics/3">thread_statistics/3</a> 
+to obtain resource usage information and
+<a id="idx:messagequeueproperty2:2172"></a><a class="pred" href="threadcom.html#message_queue_property/2">message_queue_property/2</a> 
+to get the number of queued messages for a thread.</dd>
+<dt class="pubdef"><a id="thread_statistics/3"><strong>thread_statistics</strong>(<var>+Id, 
++Key, -Value</var>)</a></dt>
+<dd class="defbody">
+Obtains statistical information on thread <var>Id</var> as <a id="idx:statistics2:2173"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
+does in single-threaded applications. This call supports all keys of <a id="idx:statistics2:2174"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>, 
+although only stack sizes, <code>cputime</code>,
+<code>inferences</code> and <code>epoch</code> yield different values 
+for each thread.<sup class="fn">176<span class="fn-text">There is no 
+portable interface to obtain thread-specific CPU time and some operating 
+systems provide no access to this information at all. On such systems 
+the total process CPU is returned. Thread CPU time is supported on 
+MS-Windows, Linux and MacOSX.</span></sup></dd>
+<dt class="pubdef"><a id="mutex_statistics/0"><strong>mutex_statistics</strong></a></dt>
+<dd class="defbody">
+Print usage statistics on internal mutexes and mutexes associated with 
+dynamic predicates. For each mutex two numbers are printed: the number 
+of times the mutex was acquired and the number of <em>collisions</em>: 
+the number of times the calling thread has to wait for the mutex. The 
+output is written to <code>current_output</code> and can thus be 
+redirected using <a id="idx:withoutputto2:2175"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
+</dd>
+</dl>
+
+<p></body></html>

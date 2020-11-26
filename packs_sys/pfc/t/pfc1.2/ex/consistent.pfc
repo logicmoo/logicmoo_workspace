@@ -1,0 +1,21 @@
+% -*-Prolog-*-
+% here is an interesting rule!
+
+not(P), P => contradiction(P).
+
+contradiction(P) => 
+  {format('~n% contradiction - both ~w and not(~w) added.~n',[P,P])}.
+
+% this means that both P and Q can't be true.
+disjoint(P,Q)
+  =>
+  (P => not(Q)),
+  (Q => not(P)).
+
+=> disjoint(male(P), female(P)).
+
+=> male(shirley).
+
+=> mother(shirley,mary).
+
+mother(X,Y) => female(X).

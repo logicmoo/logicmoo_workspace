@@ -1,0 +1,41 @@
+<html lang="en">
+    <head>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="/js/pengines.js"></script>
+        <script type="text/x-prolog">
+
+            main :-
+		read_names.
+
+	    read_names :-
+                pengine_input('Please enter a name, stop with "stop"', X),
+                pengine_debug('Got ~p', [X]),
+		(   X == stop
+		->  !
+		;   pengine_output(X),
+		    read_names
+		).
+
+        </script>
+        <script>
+	    var pengine = new Pengine({
+                oncreate: handleCreate,
+                onprompt: handlePrompt,
+                onoutput: handleOutput
+            });
+            function handleCreate() {
+                pengine.ask('main');
+	    }
+            function handlePrompt() {
+                pengine.respond(prompt(this.data));
+	    }
+            function handleOutput() {
+                $('#out').append("<div>"+this.data+"</div>");
+	    }
+        </script>
+    </head>
+    <body>
+	<p>Please open the browser's console to see the debug messages</p>
+        <div id="out"></div>
+    </body>
+</html>

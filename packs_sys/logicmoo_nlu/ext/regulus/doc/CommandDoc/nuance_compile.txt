@@ -1,0 +1,12 @@
+Compile the generated Nuance grammar, defined by the
+{\tt ebl\_\-nuance\_\-grammar} or {\tt nuance\_\-grammar} config file entry, into
+a recognition package with the same name. This will be done using the
+Nuance language pack defined by the {\tt nuance\_\-language\_\-pack} config
+file entry and the extra parameters defined by the
+{\tt nuance\_\-compile\_\-params} config file entry. Typical values for
+these parameters are as follows: 
+\begin{verbatim}
+regulus_config(nuance_language_pack, 'English.America').
+regulus_config(nuance_compile_params, 
+               ['-auto_pron', '-dont_flatten']).  
+\end{verbatim}

@@ -1,0 +1,5 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Eat #0] -
+      -obj->[Apple],
+      -manr->[Fast],
+      -agnt->[Man]

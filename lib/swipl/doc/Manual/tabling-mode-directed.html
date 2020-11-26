@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-non-termination.html">
+<link rel="next" href="tnotpure.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-non-termination.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="tnotpure.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-mode-directed"><a id="sec:7.3"><span class="sec-nr">7.3</span> <span class="sec-title">Answer 
+subsumption or mode directed tabling</span></a></h2>
+
+<a id="sec:tabling-mode-directed"></a>
+
+<p><a id="idx:answersubsumptiontabling:1989"></a>Tabling as defined 
+above has a serious limitation. Although the definition of connection/2 
+from section
+<a class="sec" href="tabling-non-termination.html#sec:7.2">section 7.2</a> 
+can compute the transitive closure of connected cities, it cannot 
+provide you with a route to travel. The reason is that there are 
+infinitely many routes if there are cycles in the network and each new 
+route found will be added to the answer table and cause the tabled 
+execution's completion algorithm to search for more routes, eventually 
+running out of memory.
+
+<p>The solution to this problem is called <em>mode directed tabling</em> 
+or
+<em>answer subsumption</em>.<sup class="fn">166<span class="fn-text">The 
+term <em>answer subsumption</em> is used by XSB and <em>mode directed 
+tabling</em> by YAP and B-Prolog. The idea is that some arguments are 
+considered&lsquo;outputs', where multiple values for the same&lsquo;input' 
+are combined. Possibly <em>answer aggregation</em> would have been a 
+better name.</span></sup> In this execution model one or more arguments 
+are <em>not</em> added to the table. Instead, we remember a single <em>aggregated</em> 
+value for these arguments. The example below is derived from
+<a class="sec" href="tabling-non-termination.html#sec:7.2">section 7.2</a> 
+and returns the connection as a list of cities. This argument is defined 
+as a <em>moded</em> argument using the
+<code>lattice(PI)</code> mode.<sup class="fn">167<span class="fn-text">This 
+mode is compatible to XSB Prolog.</span></sup> This causes the tabling 
+engine each time that it finds an new path to call shortest/3 and keep 
+the shortest route.
+
+<pre class="code">
+:- table
+    connection(_,_,lattice(shortest/3)).
+
+shortest(P1, P2, P):-
+    length(P1, L1),
+    length(P2, L2),
+    (   L1 &lt; L2
+    -&gt;  P = P1
+    ;   P = P2
+    ).
+
+connection(X, Y, [X,Y]) :-
+    connection(X, Y).
+connection(X, Y, P) :-
+    connection(X, Z, P0),
+    connection(Z, Y),
+    append(P0, [Y], P).
+</pre>
+
+<p>The mode declaration scheme is equivalent to XSB with partial 
+compatibility support for YAP and B-Prolog. The <code>lattice(PI)</code> 
+mode is the most general mode. The YAP <code>all</code> (B-Prolog <code>@</code>) 
+mode is not yet supported. The list below describes the supported modes 
+and indicates the portability.
+
+<dl class="latex">
+<dt><strong>Var</strong></dt>
+<dt><strong><code>+</code></strong></dt>
+<dt><strong>index</strong></dt>
+<dd class="defbody">
+A variable (XSB), the atom <code>index</code> (YAP) or a <code><code>+</code></code> 
+(B-Prolog, YAP) declare that the argument is tabled normally.</dd>
+<dt><strong>lattice</strong>(<var>Pred</var>)</dt>
+<dd class="defbody">
+<var>Pred</var> denotes a predicate with arity&nbsp;3. It may be 
+specified as an predicate indicator (<var>Name</var>/3), plain predicate 
+name (<var>Name</var>) or a head term <code>Name(_,_,_)</code>. On each 
+answer, <var>PI</var> is called with three arguments: the current 
+aggregated answer and the new answer are inputs. The last argument must 
+be unified with a term that represents the new aggregated answer.</dd>
+<dt><strong>po</strong>(<var>PI</var>)</dt>
+<dd class="defbody">
+<em>Partial Ordering</em>. The new answer is added iff
+<code>call(PI, +Old, +Answer)</code> succeeds. For example, <code>po('&lt;'/2)</code> 
+accumulates the largest result. In SWI-Prolog the arity (2) may be 
+omitted, resulting in <code>po(&lt;)</code>.</dd>
+<dt><strong><code>-</code></strong></dt>
+<dt><strong>first</strong></dt>
+<dd class="defbody">
+The atom <code><code>-</code></code> (B-Prolog, YAP) and <code>first</code> 
+(YAP) declare to keep the first answer for this argument.</dd>
+<dt><strong>last</strong></dt>
+<dd class="defbody">
+The atom <code>last</code> (YAP) declares to keep the last answer.</dd>
+<dt><strong>min</strong></dt>
+<dd class="defbody">
+The atom <code>min</code> (YAP) declares to keep the smallest answer 
+according to the standard order of terms (see <a class="pred" href="compare.html#@</2">@&lt;/2</a>). 
+Note that in SWI-Prolog the standard order of terms orders numbers by 
+value.</dd>
+<dt><strong>max</strong></dt>
+<dd class="defbody">
+The atom <code>max</code> (YAP) declares to keep the largest answer 
+according to the standard order of terms (see <a class="pred" href="compare.html#@>/2">@&gt;/2</a>). 
+Note that in SWI-Prolog the standard order of terms orders numbers by 
+value.</dd>
+<dt><strong>sum</strong></dt>
+<dd class="defbody">
+The atom <code>sum</code> (YAP) declares to sum numeric answers.
+</dd>
+</dl>
+
+<p></body></html>

@@ -1,0 +1,20 @@
+(note TQC87)
+
+(instance 
+ (BillionDollars 11.4000) ScalarInterval) 
+
+(exportAmountDuring Libya PartiallyTangibleProduct 
+ (YearFn 1997) 
+ (BillionDollars 11.4000)) 
+
+
+
+(query (findall (?A2 ?TIME)
+
+ (and 
+ (exportAmountDuring Libya PartiallyTangibleProduct ?TIME ?A2) 
+ (instance ?A2 ScalarInterval))))
+
+(answer 11.4000 1997)  
+
+(end_of_file)

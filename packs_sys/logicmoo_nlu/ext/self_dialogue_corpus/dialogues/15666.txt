@@ -1,0 +1,20 @@
+Yes that's correct D, C,F, E is what you get transpose Bb, G#, C#,  C.
+Yes. I am good at this.
+Well now consider the last rule.
+Um... what was the last rule?
+Begin the row with any note you want except without repeating the notes. Well, that's more like rule 1 AND 4, but anyway
+oh yeah...
+Consider the following notes.  D, C,F, E, Bb, G#, C#,  C.
+Um, those are the same notes we did before.
+Yes, Now you're gonna treat them as a row.
+So the row is now D, C, F, E, Bb, G#, C#, C?
+Yes. What's wrong here?
+Oh... C is repeating.
+Precisely. How can you fix this?
+We constructed this initially by tranposing the retrograde by a 3rd.
+What happend is if transpose it by a 4th?
+Let's see. I should've gotten Eb, C#, F#, F?
+Yes. And if you were to use that in your row, can you?
+No.
+Why not?
+Eb, C#, F#, F, Bb, G#, C#, C now gives me repeating C#.

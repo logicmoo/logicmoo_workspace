@@ -1,0 +1,32 @@
+<html lang="en">
+    <head>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="/js/pengines.js"></script>
+        <script type="text/x-prolog">
+
+            main :-
+                pengine_input('Please enter a file to delete', X),
+		delete_file(X).
+
+        </script>
+        <script>
+	    var pengine = new Pengine({
+                oncreate: handleCreate,
+                onprompt: handlePrompt,
+                onerror:  handleError
+            });
+            function handleCreate() {
+                pengine.ask('main');
+	    }
+            function handlePrompt() {
+                pengine.input(prompt(this.data));
+	    }
+	    function handleError() {
+                $("#error").html(this.data);
+	    }
+        </script>
+    </head>
+    <body>
+        <div id="error"></div>
+    </body>
+</html>

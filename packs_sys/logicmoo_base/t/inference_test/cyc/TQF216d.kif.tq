@@ -1,0 +1,93 @@
+(note TQF216d)
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (not 
+    (governmentType UnitedArabEmirates IslamicRepublic)) InternalSecurityGoal)
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (thereExists ?MILITARY-ORG 
+    (and 
+      (instance ?MILITARY-ORG ModernMilitaryOrganization) 
+      (officialArmedForces 
+        (GovernmentFn UnitedStatesOfAmerica) ?MILITARY-ORG) 
+      (operatesInRegion ?MILITARY-ORG PersianGulfRegion))) NationalDefenseGoal)
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (not 
+    (thereExists ?EVENT 
+      (increases-Generic ?EVENT Iraq power-Military))) NationalDefenseGoal)
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (not 
+    (thereExists ?REV 
+      (and 
+        (instance ?REV Revolution-Political) 
+        (directingAgent ?REV Iran) 
+        (eventOccursAt ?REV UnitedArabEmirates)))) InternalSecurityGoal) 
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (not 
+    (thereExists ?GROUP 
+      (thereExists ?SUPPORT 
+        (and 
+          (instance ?GROUP PoliticalInterestGroup) 
+          (hasBeliefSystems ?GROUP IslamicNationalistIdeology) 
+          (hasBeliefSystems ?GROUP ShiiteIslam) 
+          (residenceOfOrganization ?GROUP UnitedArabEmirates) 
+          (givesSupportToAgent Iran ?GROUP ?SUPPORT))))) InternalSecurityGoal)
+
+(goalCategoryForAgent UnitedArabEmirates 
+  (thereExists ?INCREASE 
+    (increases-Generic ?INCREASE UnitedArabEmirates power-Military)) NationalDefenseGoal)
+
+(query (findall ( ?DEFENSE-GOAL ?DEFENSE-GOAL-CATEGORY ?SECURITY-GOAL ?SECURITY-GOAL-CATEGORY)   
+   (or 
+       (and 
+           (goalCategoryForAgent UnitedArabEmirates ?DEFENSE-GOAL ?DEFENSE-GOAL-CATEGORY) 
+           (subAttribute ?DEFENSE-GOAL-CATEGORY NationalDefenseGoal)) 
+       (and 
+           (goalCategoryForAgent UnitedArabEmirates ?SECURITY-GOAL ?SECURITY-GOAL-CATEGORY) 
+           (subAttribute ?SECURITY-GOAL-CATEGORY InternalSecurityGoal)))))
+
+(answer ?? ?? (List  (not 
+ (governmentType UnitedArabEmirates IslamicRepublic))) InternalSecurityGoal)
+
+(answer (List  
+  (thereExists ?MILITARY-ORG 
+    (and 
+      (instance ?MILITARY-ORG ModernMilitaryOrganization) 
+      (officialArmedForces 
+        (GovernmentFn UnitedStatesOfAmerica) ?MILITARY-ORG) 
+        (operatesInRegion ?MILITARY-ORG PersianGulfRegion)))) NationalDefenseGoal ?? ??)
+
+(answer (List  
+  (not 
+    (thereExists ?EVENT 
+      (increases-Generic ?EVENT Iraq power-Military)))) NationalDefenseGoal ?? ??)
+
+(answer ?? ?? (List 
+  (not 
+    (thereExists ?REV 
+      (and 
+        (instance ?REV Revolution-Political) 
+        (directingAgent ?REV Iran) 
+        (eventOccursAt ?REV UnitedArabEmirates))))) InternalSecurityGoal)
+
+(answer ?? ??  
+  (not 
+    (thereExists ?GROUP 
+      (thereExists ?SUPPORT 
+        (and 
+          (instance ?GROUP PoliticalInterestGroup) 
+          (hasBeliefSystems ?GROUP IslamicNationalistIdeology) 
+          (hasBeliefSystems ?GROUP ShiiteIslam) 
+          (residenceOfOrganization ?GROUP UnitedArabEmirates) 
+          (givesSupportToAgent Iran ?GROUP ?SUPPORT))))) InternalSecurityGoal)
+
+(answer (List 
+  (thereExists ?INCREASE 
+    (increases-Generic ?INCREASE UnitedArabEmirates power-Military))) NationalDefenseGoal ?? ??)		
+
+(end_of_file)
+
+

@@ -1,0 +1,65 @@
+(note TQF219c)
+
+(agent Y2Stage6-AIOCAnnouncement AIOC) 
+(subrelation agent agent) 
+(beneficiary Y2Stage6-AIOCAnnouncement Russia) 
+(agent Y2Stage6-AIOCAnnouncement AIOC) 
+
+(behaviorCapable Russia 
+  (CollectionSubsetFn HelpingAnAgent 
+    (TheSetOf ?OBJ 
+      (beneficiary ?OBJ AIOC))) agent) 
+
+(intendedBeneficiary Y2Stage6-AIOCAnnouncement Russia) 
+
+(implies 
+  (and 
+    (different ?AGENT ?FRIEND) 
+    (beneficiary ?ACT ?AGENT) 
+    (intendedBeneficiary ?ACT ?AGENT) 
+    (agent ?ACT ?FRIEND) 
+    (behaviorCapable ?AGENT 
+      (CollectionSubsetFn HelpingAnAgent 
+        (TheSetOf ?RESPONSE 
+          (beneficiary ?RESPONSE ?FRIEND))) agent))
+  (optionAvailableToAgent-SitType ?AGENT 
+    (CollectionSubsetFn 
+      (AttemptingFn HelpingAnAgent) 
+      (TheSetOf ?HELPING 
+        (and 
+          (intendedBeneficiary ?HELPING ?FRIEND) 
+          (purposeInEvent ?AGENT ?HELPING 
+            (thereExists ?ANOTRACT 
+              (and 
+                (instance ?ANOTRACT PurposefulAction) 
+                (beneficiary ?ANOTRACT ?AGENT) 
+                (startsAfterEndingOf ?ANOTRACT ?ACT) 
+                (agent ?ANOTRACT ?FRIEND))))))) agent))
+
+(query (findall (?ROLE ?WHAT)
+  (implies
+    (and 
+      (beneficiary Y2Stage6-AIOCAnnouncement Russia) 
+      (intendedBeneficiary Y2Stage6-AIOCAnnouncement Russia) 
+      (behaviorCapable Russia 
+        (CollectionSubsetFn HelpingAnAgent 
+          (TheSetOf ?OBJ 
+            (beneficiary ?OBJ AIOC))) agent))
+    (optionAvailableToAgent-SitType Russia ?WHAT ?ROLE))
+
+(answer agent (list 
+  (CollectionSubsetFn 
+    (AttemptingFn HelpingAnAgent) 
+      (TheSetOf ?HELPING 
+        (and 
+          (intendedBeneficiary ?HELPING AIOC) 
+          (purposeInEvent Russia ?HELPING 
+            (thereExists ?ANOTRACT 
+              (and 
+                (instance ?ANOTRACT PurposefulAction) 
+                (beneficiary ?ANOTRACT Russia) 
+                (startsAfterEndingOf ?ANOTRACT ?ACT) 
+                (agent ?ANOTRACT AIOC)))))))))
+
+(end_of_file)
+

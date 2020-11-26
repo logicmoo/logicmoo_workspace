@@ -1,0 +1,90 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Exercises/MixingPaints.e
+loading foundations/Root.e
+loading foundations/EC.e
+219 variables and 1244 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+OnPalette(Palette1, Red).
+Happens(PlaceOnPalette(Palette1, Green), 0).
+1
+-OnPalette(Palette1, Red).
++OnPalette(Palette1, Green).
+Happens(PlaceOnPalette(Palette1, Blue), 1).
+Happens(PlaceOnPalette(Palette1, Yellow), 1).
+2
+Happens(PlaceOnPalette(Palette1, Yellow), 2).
+3
+-OnPalette(Palette1, Green).
++OnPalette(Palette1, Yellow).
+Happens(PlaceOnPalette(Palette1, Blue), 3).
+4
+-OnPalette(Palette1, Yellow).
++OnPalette(Palette1, Blue).
+Happens(PlaceOnPalette(Palette1, Blue), 4).
+Happens(PlaceOnPalette(Palette1, Yellow), 4).
+5
+-OnPalette(Palette1, Blue).
++OnPalette(Palette1, Green).
+P
+!Happens(PlaceOnPalette(Palette1, Blue), 0).
+!Happens(PlaceOnPalette(Palette1, Blue), 2).
+!Happens(PlaceOnPalette(Palette1, Blue), 5).
+!Happens(PlaceOnPalette(Palette1, Green), 1).
+!Happens(PlaceOnPalette(Palette1, Green), 2).
+!Happens(PlaceOnPalette(Palette1, Green), 3).
+!Happens(PlaceOnPalette(Palette1, Green), 4).
+!Happens(PlaceOnPalette(Palette1, Green), 5).
+!Happens(PlaceOnPalette(Palette1, Red), 0).
+!Happens(PlaceOnPalette(Palette1, Red), 1).
+!Happens(PlaceOnPalette(Palette1, Red), 2).
+!Happens(PlaceOnPalette(Palette1, Red), 3).
+!Happens(PlaceOnPalette(Palette1, Red), 4).
+!Happens(PlaceOnPalette(Palette1, Red), 5).
+!Happens(PlaceOnPalette(Palette1, Yellow), 0).
+!Happens(PlaceOnPalette(Palette1, Yellow), 3).
+!Happens(PlaceOnPalette(Palette1, Yellow), 5).
+!ReleasedAt(OnPalette(Palette1, Blue), 0).
+!ReleasedAt(OnPalette(Palette1, Blue), 1).
+!ReleasedAt(OnPalette(Palette1, Blue), 2).
+!ReleasedAt(OnPalette(Palette1, Blue), 3).
+!ReleasedAt(OnPalette(Palette1, Blue), 4).
+!ReleasedAt(OnPalette(Palette1, Blue), 5).
+!ReleasedAt(OnPalette(Palette1, Green), 0).
+!ReleasedAt(OnPalette(Palette1, Green), 1).
+!ReleasedAt(OnPalette(Palette1, Green), 2).
+!ReleasedAt(OnPalette(Palette1, Green), 3).
+!ReleasedAt(OnPalette(Palette1, Green), 4).
+!ReleasedAt(OnPalette(Palette1, Green), 5).
+!ReleasedAt(OnPalette(Palette1, Red), 0).
+!ReleasedAt(OnPalette(Palette1, Red), 1).
+!ReleasedAt(OnPalette(Palette1, Red), 2).
+!ReleasedAt(OnPalette(Palette1, Red), 3).
+!ReleasedAt(OnPalette(Palette1, Red), 4).
+!ReleasedAt(OnPalette(Palette1, Red), 5).
+!ReleasedAt(OnPalette(Palette1, Yellow), 0).
+!ReleasedAt(OnPalette(Palette1, Yellow), 1).
+!ReleasedAt(OnPalette(Palette1, Yellow), 2).
+!ReleasedAt(OnPalette(Palette1, Yellow), 3).
+!ReleasedAt(OnPalette(Palette1, Yellow), 4).
+!ReleasedAt(OnPalette(Palette1, Yellow), 5).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+MixingPaints: 0 predicates, 0 functions, 1 fluents, 1 events, 13 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 0.4s
+solution 0.0s
+total 0.8s
+Discrete Event Calculus Reasoner 1.0

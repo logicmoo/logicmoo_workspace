@@ -1,0 +1,245 @@
+<?xml version='1.0'?>
+<!DOCTYPE rdf:RDF SYSTEM "rdf_schema.dtd" [
+         <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+         <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#"> 
+] >
+
+<!-- A INFRAENGINE document is just a RDF document. Its descriptions are
+     either:
+
+     - about instances of 'rule', specifying a planning rule.
+       rdf:parseType=Literal is used to represent quoted descriptions
+       as values of the rule's properties 'action', 'after',
+       'remaining', 'before', and 'constrained'.
+
+     - about instances of 'query', specifying a planning query.
+
+     - about classes, properties and other resources, thus
+       providing schema information.
+-->    
+
+<rdf:RDF
+  xmlns:rdf="&rdf;"
+  xmlns:rdfs="&rdfs;"
+  xmlns:inf="http://www.infraengine.com/planner/"
+  xml:base="http://www.infraengine.com/planner/">
+
+  <!-- Variables -->
+
+  <rdf:Property rdf:about="var"
+    rdfs:comment="Logical variable (syntactical pseudo property).">
+    <rdfs:domain rdf:resource="&rdfs;Resource" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="Literal"
+    rdfs:comment="Literal (syntactical pseudo class for
+    associating meta information with literals).">
+    <!-- hmmm, but we can say "anything about anything" -->
+    <rdfs:subClassOf rdf:resource="&rdfs;Literal"/>
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="value"
+    rdfs:comment="The literal value of a Literal pseudo object 
+    (syntactical pseudo property).">
+    <rdfs:domain rdf:resource="Literal" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- User Input Parameters, *** experimental, lambda like -->
+			  
+  <rdf:Property rdf:about="parameter"
+    rdfs:comment="User input parameter (syntactical pseudo property).">
+    <rdfs:domain rdf:resource="&rdfs;Resource" />
+    <rdfs:range rdf:resource="Parameter" />
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="Parameter"
+    rdfs:comment="User input parameter." />
+
+  <rdf:Property rdf:about="parameterVar"
+    rdfs:comment="The variable name corrsponding to the parameter." >
+    <rdfs:domain rdf:resource="Parameter" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="parameterDefaultValue">
+    <rdfs:domain rdf:resource="Parameter" />
+  </rdf:Property>
+    
+  <rdf:Property rdf:about="parameterValue">
+    <rdfs:domain rdf:resource="Parameter" />
+  </rdf:Property>
+
+  <!-- Statement -->
+
+  <rdfs:Class rdf:about="Statement"
+    rdfs:comment="Abstract superclass of Rule and Query." />
+  
+  <!-- Rule -->
+
+  <rdfs:Class rdf:about="Rule"
+    rdfs:comment="Planning rule.">
+    <rdfs:subClassOf rdf:resource="Statement" />
+  </rdfs:Class>
+  
+  <rdf:Property rdf:about="action"
+    rdfs:comment="The action.">
+    <rdfs:domain rdf:resource="Rule" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="after"
+    rdfs:comment="Fluents holding after the action is performed.">
+    <rdfs:domain rdf:resource="Rule" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="remaining"
+    rdfs:comment="Fluents holding before and after the action is performed.">
+    <rdfs:domain rdf:resource="Rule" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="before"
+    rdfs:comment="Fluents holding before the action is performed.">
+    <rdfs:domain rdf:resource="Rule" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="constrained"
+    rdfs:comment="Constraints, e.g. arithmetic relationships.">
+    <rdfs:domain rdf:resource="Statement" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <!-- Constraints -->
+
+  <rdfs:Class rdf:about="Constraint"
+    rdfs:comment="Abstract superclass of constraints." >
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="expression"
+    rdfs:comment="Constraint expression literal.">
+    <rdfs:domain rdf:resource="Constraint" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdfs:Class rdf:about="ArithmeticConstraint"
+    rdfs:comment="Arithmetic constraint." >
+    <rdfs:subClassOf rdf:resource="Constraint" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="OutputConstraint"
+    rdfs:comment="To pass constraint information to the output." >
+    <rdfs:subClassOf rdf:resource="Constraint" />
+  </rdfs:Class>
+
+  <!-- 
+  <rdfs:Class rdf:about="PrologConstraint"
+    rdfs:comment="Prolog evaluation (for now)." >
+    <rdfs:subClassOf rdf:resource="Constraint" />
+  </rdfs:Class>
+  -->
+
+  <!-- Query -->
+
+  <rdfs:Class rdf:about="Query"
+    rdfs:comment="Planning Query." >
+    <rdfs:subClassOf rdf:resource="Statement" />
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="goal"
+    rdfs:comment="Fluents holding in a goal state.">
+    <rdfs:domain rdf:resource="Query" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="start"
+    rdfs:comment="Fluents holding in the start state.">
+    <rdfs:domain rdf:resource="Query" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="actions"
+    rdfs:comment="Actions that are allowed in the result plan.">
+    <rdfs:domain rdf:resource="Query" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+  
+  <!-- *** experimental -->
+  <rdf:Property rdf:about="useRule"
+    rdfs:comment="A specific rule to use, among others.">
+    <rdfs:domain rdf:resource="Query" />
+    <rdfs:range rdf:resource="Rule" />
+  </rdf:Property>
+
+  <!-- Plan -->
+
+  <rdfs:Class rdf:about="PlanNode"
+    rdfs:comment="Action labeled node in a plan." />
+
+  <rdf:Property rdf:about="planAction"
+    rdfs:comment="The action of a plan node." >
+    <rdfs:domain rdf:resource="PlanNode" />
+    <rdfs:range rdf:resource="&rdfs;Resource" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="planFollows" 
+    rdfs:comment="To execute the plan, the action of subject PlanNode
+    must be performed after that of the object PlanNode." >
+    <rdfs:domain rdf:resource="PlanNode" />
+    <rdfs:range rdf:resource="PlanNode" />
+  </rdf:Property>
+
+
+  <!-- Solution - *** experimental - -->
+
+  <rdfs:Class rdf:about="Solution"
+    rdfs:comment="Solution to a planning problem." />
+
+  <rdf:Property rdf:about="solutionPlan"
+    rdfs:comment="Goal node of the solution's plan" >
+    <rdfs:domain rdf:resource="Solution" />
+    <rdfs:range rdf:resource="PlanNode" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="solutionConstraints">
+    <rdfs:domain rdf:resource="Solution" />
+    <rdfs:range rdf:resource="&rdfs;Resource" />
+  </rdf:Property>
+
+  <rdf:Property rdf:about="solutionPool">
+    <rdfs:domain rdf:resource="Solution" />
+    <rdfs:range rdf:resource="&rdfs;Resource" />
+  </rdf:Property>
+
+
+  <!-- HMMM: constraints would suffice to report vars 
+       (via answer lits in constraints)
+
+  <rdf:Property rdf:about="solutionStart"
+    rdfs:comment="The start state."
+    <rdfs:domain rdf:resource="Solution" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="solutionGoal"
+    rdfs:comment="The goal state." />
+    <rdfs:domain rdf:resource="Solution" />
+    <rdfs:range rdf:resource="&rdfs;Literal" />
+  </rdf:Property>
+
+-->
+  
+
+
+</rdf:RDF>
+
+
+
+
+
+
+
+

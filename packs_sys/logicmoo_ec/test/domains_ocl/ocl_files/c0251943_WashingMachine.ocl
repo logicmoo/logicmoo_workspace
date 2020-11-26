@@ -1,0 +1,233 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: Gaz
+ *  Institution: University of Huddersfield
+ *  Date created: Wed Dec 13 23:50:18 GMT 2006
+ *  Date last modified: 2006/12/14 at 12:52:12 AM GMT
+ *  Description:
+ *    
+ * Object Life History : WashingMachine.gfx
+ */
+
+domain_name(washing).
+
+% Sorts
+sorts(primitive_sorts,[door,power,machine,clothes]).
+
+% Objects
+objects(door,[door1,door2]).
+objects(power,[plug1,plug2]).
+objects(machine,[myMachine,yourMachine]).
+objects(clothes,[lights,darks,cotton,silk]).
+
+% Predicates
+predicates([
+    doorOpen(door),
+    doorClosed(door),
+    locked(door),
+    unplugged(power),
+    pluggedIn(power),
+    turnedOn(power),
+    empty(machine,door,power),
+    washing(machine,door,clothes,power),
+    fullDirty(machine,door,clothes,power),
+    fullClean(machine,door,clothes,power),
+    dirty(clothes),
+    clean(clothes),
+    beingWashed(clothes)]).
+
+% Object Class Definitions
+substate_classes(door,Door,[
+    [doorOpen(Door)],
+    [doorClosed(Door)],
+    [locked(Door)]]).
+substate_classes(power,Power,[
+    [unplugged(Power)],
+    [pluggedIn(Power)],
+    [turnedOn(Power)]]).
+substate_classes(machine,Machine,[
+    [empty(Machine,Door,Power)],
+    [washing(Machine,Door,Clothes,Power)],
+    [fullDirty(Machine,Door,Clothes,Power)],
+    [fullClean(Machine,Door,Clothes,Power)]]).
+substate_classes(clothes,Clothes,[
+    [dirty(Clothes)],
+    [clean(Clothes)],
+    [beingWashed(Clothes)]]).
+
+% Atomic Invariants
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+operator(close(Door),
+    % prevail
+    [],
+    % necessary
+    [     sc(door,Door,[doorOpen(Door)]=>[doorClosed(Door)])],
+    % conditional
+    []).
+operator(finishedWash(Door,Clothes,Machine,Power),
+    % prevail
+    [],
+    % necessary
+    [     sc(door,Door,[locked(Door)]=>[doorClosed(Door)]),
+     sc(clothes,Clothes,[beingWashed(Clothes)]=>[clean(Clothes)]),
+     sc(machine,Machine,[washing(Machine,Door,Clothes,Power)]=>[fullClean(Machine,Door,Clothes,Power)])],
+    % conditional
+    []).
+operator(open(Door),
+    % prevail
+    [],
+    % necessary
+    [     sc(door,Door,[doorClosed(Door)]=>[doorOpen(Door)])],
+    % conditional
+    []).
+operator(unplug(Power),
+    % prevail
+    [],
+    % necessary
+    [     sc(power,Power,[pluggedIn(Power)]=>[unplugged(Power)])],
+    % conditional
+    []).
+operator(plugIn(Power),
+    % prevail
+    [],
+    % necessary
+    [     sc(power,Power,[unplugged(Power)]=>[pluggedIn(Power)])],
+    % conditional
+    []).
+operator(turnOff(Machine,Door,Power),
+    % prevail
+    [     se(machine,Machine,[empty(Machine,Door,Power)])],
+    % necessary
+    [     sc(power,Power,[turnedOn(Power)]=>[pluggedIn(Power)])],
+    % conditional
+    []).
+operator(turnOn(Power),
+    % prevail
+    [],
+    % necessary
+    [     sc(power,Power,[pluggedIn(Power)]=>[turnedOn(Power)])],
+    % conditional
+    []).
+operator(add(Clothes,Door,Machine,Power),
+    % prevail
+    [     se(clothes,Clothes,[dirty(Clothes)]),
+     se(door,Door,[doorOpen(Door)])],
+    % necessary
+    [     sc(machine,Machine,[empty(Machine,Door,Power)]=>[fullDirty(Machine,Door,Clothes,Power)])],
+    % conditional
+    []).
+operator(remove(Clothes,Door,Machine,Power),
+    % prevail
+    [     se(clothes,Clothes,[clean(Clothes)]),
+     se(door,Door,[doorOpen(Door)])],
+    % necessary
+    [     sc(machine,Machine,[fullClean(Machine,Door,Clothes,Power)]=>[empty(Machine,Door,Power)])],
+    % conditional
+    []).
+operator(startWash(Power,Clothes,Machine,Door),
+    % prevail
+    [     se(power,Power,[turnedOn(Power)])],
+    % necessary
+    [     sc(clothes,Clothes,[dirty(Clothes)]=>[beingWashed(Clothes)]),
+     sc(machine,Machine,[fullDirty(Machine,Door,Clothes,Power)]=>[washing(Machine,Door,Clothes,Power)]),
+     sc(door,Door,[doorClosed(Door)]=>[locked(Door)])],
+    % conditional
+    []).
+operator(time(Clothes),
+    % prevail
+    [],
+    % necessary
+    [     sc(clothes,Clothes,[clean(Clothes)]=>[dirty(Clothes)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(power,plug1,[unplugged(plug1)])],
+    % INIT States
+    [
+     ss(power,plug1,[pluggedIn(plug1)])]).
+planner_task(2,
+    % Goals
+    [
+     se(door,door1,[doorOpen(door1)]),
+     se(power,plug1,[unplugged(plug1)]),
+     se(machine,myMachine,[empty(myMachine,door1,plug1)]),
+     se(clothes,darks,[clean(darks)])],
+    % INIT States
+    [
+     ss(door,door1,[doorClosed(door1)]),
+     ss(power,plug1,[unplugged(plug1)]),
+     ss(machine,myMachine,[empty(myMachine,door1,plug1)]),
+     ss(clothes,darks,[dirty(darks)])]).
+planner_task(3,
+    % Goals
+    [
+     se(machine,myMachine,[empty(myMachine,door1,plug1)]),
+     se(machine,yourMachine,[empty(yourMachine,door2,plug2)]),
+     se(door,door1,[doorOpen(door1)]),
+     se(clothes,lights,[clean(lights)]),
+     se(power,plug1,[unplugged(plug1)]),
+     se(clothes,darks,[clean(darks)]),
+     se(power,plug2,[unplugged(plug2)]),
+     se(door,door2,[doorOpen(door2)])],
+    % INIT States
+    [
+     ss(machine,myMachine,[empty(myMachine,door1,plug1)]),
+     ss(machine,yourMachine,[empty(yourMachine,door2,plug2)]),
+     ss(door,door1,[doorClosed(door1)]),
+     ss(clothes,darks,[dirty(darks)]),
+     ss(clothes,lights,[dirty(lights)]),
+     ss(power,plug1,[unplugged(plug1)]),
+     ss(power,plug2,[pluggedIn(plug2)]),
+     ss(door,door2,[doorClosed(door2)])]).
+planner_task(4,
+    % Goals
+    [
+     se(machine,myMachine,[empty(myMachine,door1,plug1)]),
+     se(machine,yourMachine,[empty(yourMachine,door2,plug2)]),
+     se(door,door1,[doorOpen(door1)]),
+     se(clothes,lights,[clean(lights)]),
+     se(power,plug1,[unplugged(plug1)]),
+     se(clothes,darks,[clean(darks)]),
+     se(power,plug2,[unplugged(plug2)]),
+     se(door,door2,[doorOpen(door2)])],
+    % INIT States
+    [
+     ss(machine,yourMachine,[empty(yourMachine,door2,plug2)]),
+     ss(door,door1,[doorClosed(door1)]),
+     ss(clothes,darks,[dirty(darks)]),
+     ss(clothes,lights,[dirty(lights)]),
+     ss(power,plug1,[unplugged(plug1)]),
+     ss(power,plug2,[pluggedIn(plug2)]),
+     ss(door,door2,[doorClosed(door2)]),
+     ss(machine,myMachine,[fullDirty(myMachine,door1,darks,plug1)])]).
+planner_task(5,
+    % Goals
+    [
+     se(machine,myMachine,[washing(myMachine,door1,lights,plug1)]),
+     se(door,door1,[locked(door1)]),
+     se(clothes,lights,[beingWashed(lights)]),
+     se(power,plug1,[turnedOn(plug1)])],
+    % INIT States
+    [
+     ss(machine,myMachine,[fullDirty(myMachine,door1,lights,plug1)]),
+     ss(door,door1,[doorOpen(door1)]),
+     ss(clothes,lights,[dirty(lights)]),
+     ss(power,plug1,[unplugged(plug1)])]).

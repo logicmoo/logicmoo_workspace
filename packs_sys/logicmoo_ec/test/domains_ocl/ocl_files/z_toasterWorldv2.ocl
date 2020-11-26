@@ -1,0 +1,474 @@
+/**
+ *  All rights reserved. Use of this software is permitted for non-commercial
+ *  research purposes, and it may be copied only for that use.  All copies must
+ *  include this copyright message.  This software is made available AS IS, and
+ *  neither the GIPO team nor the University of Huddersfield make any warranty
+ *  about the software or its performance.
+ *
+ *  Automatically generated OCL Domain from  GIPO Version 3.0
+ *
+ *  Author: Bhonda
+ *  Institution: University of Huddersfield
+ *  Date created: Wed Dec 13 11:42:46 GMT 2006
+ *  Date last modified: 2006/12/15 at 04:26:22 AM GMT
+ *  Description:
+ *    
+ * Object Life History : toasterWorld.gfx
+ */
+
+domain_name(nonetw).
+
+% Sorts
+sorts(primitive_sorts,[plates,toaster,item,loc,spreads,kitchenware]).
+
+% Objects
+/* -- Plates are used to put a single item of toast on when serving.  Once served, plates can be reused, after washing -- */
+objects(plates,[bigPlate,smallPlate]).
+
+/* -- Items are things that can be toasted.  There is a nullItem that is used as a parameter-filler when no other Item is applicable -- */
+objects(item,[bread,pita,crumpet,nullItem]).
+
+/* -- Locations are the places where the item can be at.  Toasting can only happen when the item is in the toaster.  There is a sequence 
+ * -- of locations, defined by the 'next' predicate. -- */
+objects(loc,[fridge,side,toaster,servePlate]).
+
+/* -- Spreads are the things that can be put on an item of toast.  A spread can only be put on one item, but there are no restrictions as to 
+ * -- how many spreads can be on a single item of toast. -- */
+objects(spreads,[butter,marmite,honey]).
+
+/* -- Kitchenware is used to put the spread onto the toast.  Cannot be used if dirty, as they require cleaning after use. -- */
+objects(kitchenware,[smallKnife,bigKnife]).
+
+/* -- Toaster is where the item is toasted, and needs to be plugged in before use. -- */
+objects(toaster,[blueToaster]).
+
+
+% Predicates
+predicates([
+    cleanPlate(plates),
+    dirtyPlate(plates),
+    pluggedIn(toaster),
+    notPluggedIn(toaster),
+    isCold(item),
+    location(item,loc),
+    isToasted(item),
+    isMade(item),
+    inJar(spreads),
+    item(spreads,item),
+    onToast(spreads),
+    clean(kitchenware),
+    dirty(kitchenware),
+    next(loc,loc)]).
+
+% Object Class Definitions
+substate_classes(plates,Plates,[
+    [cleanPlate(Plates)],
+    [dirtyPlate(Plates)]]).
+substate_classes(toaster,Toaster,[
+    [pluggedIn(Toaster)],
+    [notPluggedIn(Toaster)]]).
+substate_classes(item,Item,[
+    [isCold(Item),location(Item,Loc)],
+    [isToasted(Item),location(Item,Loc)],
+    [isMade(Item),location(Item,Loc)]]).
+substate_classes(spreads,Spreads,[
+    [inJar(Spreads),item(Spreads,Item)],
+    [onToast(Spreads),item(Spreads,Item)]]).
+substate_classes(kitchenware,Kitchenware,[
+    [clean(Kitchenware)],
+    [dirty(Kitchenware)]]).
+
+% Atomic Invariants
+atomic_invariants([
+    next(fridge,side),
+    next(side,toaster),
+    next(toaster,side),
+    next(side,servePlate),
+    next(servePlate,side)]).
+
+% Implied Invariants
+
+% Inconsistent Constraints
+
+% Operators
+/* -- Washes kitchenware -- */
+operator(wash(Kitchenware),
+    % prevail
+    [],
+    % necessary
+    [     sc(kitchenware,Kitchenware,[dirty(Kitchenware)]=>[clean(Kitchenware)])],
+    % conditional
+    []).
+
+/* -- Spreads the defined spread using the kitchenware on the Item, which has to be toasted -- */
+operator(use(Item,Kitchenware,Spreads),
+    % prevail
+    [],
+    % necessary
+    [     sc(item,Item,[isToasted(Item),location(Item,side)]=>[isToasted(Item),location(Item,side)]),
+
+     sc(kitchenware,Kitchenware,[clean(Kitchenware)]=>[dirty(Kitchenware)]),
+     sc(spreads,Spreads,[inJar(Spreads),item(Spreads,nullItem)]=>[onToast(Spreads),item(Spreads,Item)])],
+    % conditional
+    []).
+
+/* -- Toasts the item, in the given toaster -- */
+operator(toast(Toaster,Item),
+    % prevail
+    [     se(toaster,Toaster,[pluggedIn(Toaster)])],
+    % necessary
+    [     sc(item,Item,[isCold(Item),location(Item,toaster)]=>[isToasted(Item),location(Item,toaster)])],
+    % conditional
+    []).
+
+/* -- Cleans the given -- */
+operator(cleanThePlate(Plates),
+    % prevail
+    [],
+    % necessary
+    [     sc(plates,Plates,[dirtyPlate(Plates)]=>[cleanPlate(Plates)])],
+    % conditional
+    []).
+
+/* -- Plugs in the given toaster -- */
+operator(plugIn(Toaster),
+    % prevail
+    [],
+    % necessary
+    [     sc(toaster,Toaster,[notPluggedIn(Toaster)]=>[pluggedIn(Toaster)])],
+    % conditional
+    []).
+
+/* -- Unplugs the given toaster -- */
+operator(unplug(Toaster),
+    % prevail
+    [],
+    % necessary
+    [     sc(toaster,Toaster,[pluggedIn(Toaster)]=>[notPluggedIn(Toaster)])],
+    % conditional
+    []).
+
+/* -- Puts the given item on the given plate, and moves to the defined place -- */
+operator(serve(Plates,LocA,LocB,Item),
+    % prevail
+    [],
+    % necessary
+    [     sc(plates,Plates,[cleanPlate(Plates),next(LocA,LocB)]=>[dirtyPlate(Plates)]),
+     sc(item,Item,[isToasted(Item),location(Item,LocA),next(LocA,LocB)]=>[isMade(Item),location(Item,LocB)])],
+    % conditional
+    []).
+
+/* -- Moves the item before toasting from one location to another, as long as the locations are next to each other -- */
+operator(move(Item,LocA,LocB),
+    % prevail
+    [],
+    % necessary
+    [     sc(item,Item,[isCold(Item),location(Item,LocA),next(LocA,LocB)]=>[isCold(Item),location(Item,LocB)])],
+    % conditional
+    []).
+
+/* -- Moves the item after toasting from one location to another, as long as the locations are next to each other -- */
+operator(moveHot(Item,LocA,LocB),
+    % prevail
+    [],
+    % necessary
+    [     sc(item,Item,[isToasted(Item),location(Item,LocA),next(LocA,LocB)]=>[isToasted(Item),location(Item,LocB)])],
+    % conditional
+    []).
+
+% Methods
+
+% Domain Tasks
+planner_task(1,
+    % Goals
+    [
+     se(item,bread,[isCold(bread),location(bread,toaster)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[pluggedIn(blueToaster)])]).
+planner_task_slow(2,
+    % Goals
+    [
+     se(item,bread,[isToasted(bread),location(bread,side)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[pluggedIn(blueToaster)])]).
+planner_task(3,
+    % Goals
+    [
+     se(item,pita,[isToasted(pita),location(pita,side)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(4,
+    % Goals
+    [
+     se(item,crumpet,[isToasted(crumpet),location(crumpet,side)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(5,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(plates,bigPlate,[dirtyPlate(bigPlate)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(6,
+    % Goals
+    [
+     se(item,pita,[isMade(pita),location(pita,servePlate)]),
+     se(plates,smallPlate,[dirtyPlate(smallPlate)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[pluggedIn(blueToaster)])]).
+planner_task(7,
+    % Goals
+    [
+     se(item,crumpet,[isMade(crumpet),location(crumpet,servePlate)]),
+     se(plates,smallPlate,[dirtyPlate(smallPlate)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[pluggedIn(blueToaster)])]).
+planner_task(8,
+    % Goals
+    [
+     se(kitchenware,smallKnife,[clean(smallKnife)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(9,
+    % Goals
+    [
+     se(kitchenware,bigKnife,[clean(bigKnife)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(10,
+    % Goals
+    [
+     se(plates,bigPlate,[cleanPlate(bigPlate)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(11,
+    % Goals
+    [
+     se(plates,smallPlate,[cleanPlate(smallPlate)])],
+    % INIT States
+    [
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,side)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)]),
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(12,
+    % Goals
+    [
+     se(item,pita,[isToasted(pita),location(pita,side)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(13,
+    % Goals
+    [
+     se(item,crumpet,[isToasted(crumpet),location(crumpet,side)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)]),
+     ss(item,crumpet,[isToasted(crumpet),location(crumpet,side)])]).
+planner_task(14,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(spreads,marmite,[onToast(marmite),item(marmite,bread)]),
+     se(item,pita,[isMade(pita),location(pita,servePlate)]),
+     se(spreads,honey,[onToast(honey),item(honey,pita)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[dirtyPlate(bigPlate)]),
+     ss(plates,smallPlate,[dirtyPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,side)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,bigKnife,[dirty(bigKnife)]),
+     ss(kitchenware,smallKnife,[dirty(smallKnife)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(15,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(spreads,butter,[onToast(butter),item(butter,bread)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(toaster,blueToaster,[pluggedIn(blueToaster)])]).
+planner_task(16,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(spreads,butter,[onToast(butter),item(butter,bread)]),
+     se(item,pita,[isMade(pita),location(pita,servePlate)]),
+     se(spreads,honey,[onToast(honey),item(honey,pita)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(17,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(spreads,butter,[onToast(butter),item(butter,bread)]),
+     se(item,pita,[isMade(pita),location(pita,servePlate)]),
+     se(spreads,honey,[onToast(honey),item(honey,pita)]),
+     se(item,crumpet,[isMade(crumpet),location(crumpet,servePlate)]),
+     se(spreads,marmite,[onToast(marmite),item(marmite,crumpet)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).
+planner_task(18,
+    % Goals
+    [
+     se(item,bread,[isMade(bread),location(bread,servePlate)]),
+     se(spreads,butter,[onToast(butter),item(butter,crumpet)]),
+     se(item,pita,[isMade(pita),location(pita,servePlate)]),
+     se(spreads,honey,[onToast(honey),item(honey,pita)]),
+     se(item,crumpet,[isMade(crumpet),location(crumpet,servePlate)]),
+     se(spreads,marmite,[onToast(marmite),item(marmite,crumpet)])],
+    % INIT States
+    [
+     ss(plates,bigPlate,[cleanPlate(bigPlate)]),
+     ss(plates,smallPlate,[cleanPlate(smallPlate)]),
+     ss(item,bread,[isCold(bread),location(bread,fridge)]),
+     ss(item,pita,[isCold(pita),location(pita,fridge)]),
+     ss(spreads,butter,[inJar(butter),item(butter,nullItem)]),
+     ss(spreads,marmite,[inJar(marmite),item(marmite,nullItem)]),
+     ss(spreads,honey,[inJar(honey),item(honey,nullItem)]),
+     ss(kitchenware,smallKnife,[clean(smallKnife)]),
+     ss(kitchenware,bigKnife,[clean(bigKnife)]),
+     ss(item,crumpet,[isCold(crumpet),location(crumpet,fridge)]),
+     ss(toaster,blueToaster,[notPluggedIn(blueToaster)])]).

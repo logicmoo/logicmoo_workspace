@@ -1,0 +1,101 @@
+
+:- include(test_header).
+
+
+end_of_file.
+
+:- if(exists_source(library(logicmoo_user))).
+
+:- use_module(library(logicmoo_user)).
+
+
+% From https://www.webeks.net/prolog-example-exercise-flights/
+flight(lju,cdg,2,955).
+flight(lju,fco,1,506).
+flight(cdg,fco,3,1100).
+flight(cdg,jfk,7,5830).
+flight(cdg,lax,10,9096).
+flight(cdg,sin,12,10712).
+flight(jfk,lax,5,3971).
+flight(jfk,nrt,6,5486).
+flight(lax,nrt,7,6230).
+flight(fco,jfk,8,6861).
+flight(fco,sin,11,10039).
+flight(sin,nrt,11,9857).
+
+% See:  https://www.webeks.net/wp-content/uploads/2008/09/prolog-excercise-graph-airport.gif
+
+
+flight(Start, Destination,_,_) ==> holds(flight,Start,Destination).
+
+
+
+holds(flight,Start,Destination) =>  holds(connExists,Start,Destination).
+holds(connExists,Start,Connect) & holds(flight,Connect,Destination) =>  holds(connExists,Start,Destination).
+
+
+inFOL( 
+ exists(Ri,
+   exists(RPlus, 
+     holds(RPlus,X,Y) , holds(Ri,Y,Z) => 
+           ( holds(RPlus,X,Z) , ~holds(Ri,X,Z))))).
+
+
+:- inFOL(FOL),kif_to_boxlog(FOL,Entailments),wdmsgl(Entailments).
+
+
+:- endif.
+
+
+end_of_file.
+
+This and everyting below is commented out due to the 'end_of_file' above
+
+
+waiting(cdg,4).
+waiting(fco,5).
+waiting(jfk,2).
+waiting(lax,2).
+waiting(sin,1).
+waiting(lju,1).
+waiting(nrt,1).
+
+connExists(Start,Destination):-
+ flight(Start, Destination,_,_).
+connExists(Start,Destination):-
+ flight(Start, X,_,_),
+ connExists(X,Destination).
+
+travelTime(Start,Destination,Time,Path):-
+ flight(Start,Destination,FlightTime,_),
+ waiting(Start,WTimeStart),
+ waiting(Destination,WTimeDest),
+ Time is FlightTime + WTimeStart + WTimeDest,
+ conc([Start],[Destination],Path).
+ 
+travelTime(Start,Destination,Time,Path):-
+ flight(Start,X,FlightTime,_),
+ waiting(Start,WTimeStart1),
+ travelTime(X,Destination,TimeX,PathX),
+ Time is FlightTime + TimeX +WTimeStart1,
+ conc([Start],PathX,Path).
+
+allShorthestPaths:-
+ waiting(X,_),
+ waiting(Y,_),
+ X == Y,
+ setof(T,(X^Y^C^P^travelTime(X,Y,T,P)),L),
+ sort(L,[M|_]),
+ assert(shortestPath(X,Y,M)),
+ fail.
+
+%pathLength(Path,Length)
+pathLength([],0).
+pathLength([_],0).
+pathLength([X,Y|L],Length):-
+ flight(X,Y,_,T),
+ pathLength([Y|L], Length1),
+ Length is Length1+ T.
+
+
+

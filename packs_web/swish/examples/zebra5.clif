@@ -1,0 +1,322 @@
+;; Module zebra5 - Test Zerbra Puzzle in CLIF for SWI-Prolog
+;; Maintainer: Douglas Miles
+;; Load with  ?- load_clif(pack('logicmoo_base/t/examples/fol/zebra5.clif'))
+;; causes deduction of argument types
+(:- (module zebra5 ()))
+(:- (ensure_loaded (library logicmoo_snark)))
+(set-kif-option :assume-wff)
+(kif-mode tell)
+
+
+;; PROGRAM A
+
+(domain livesIn 1 tHuman)
+(domain livesIn 2 tHouse)
+(domain natOrigin 1 tHuman)
+(domain natOrigin 2 tCountry)
+(domain colorOf 1 tPhysical)
+(domain colorOf 2 vtColor)
+(domain address 1 tHouse)
+(domain address 2 tAddress)
+(argQuotedIsa address 2 ftInt)
+(domain caresFor 1 tHuman)
+(domain caresFor 2 tAnimal)
+
+(subclass tNonHumanAnimal tAnimal)
+(subclass tHuman tAnimal)
+(disjointWith tHuman tNonHumanAnimal)
+
+(domain drinks 1 tHuman)
+(domain drinks 2 tBeverage)
+
+(typeGenls ttBeverageType tBeverage)
+(instance tCoffee ttBeverageType)
+
+(domain smokesBrand 1 tHuman)
+(domain smokesBrand 2 tBrandName)
+(argQuotedIsa smokesBrand 2 ftString)
+
+
+(domain caresForType 1 tHuman)
+(domainSubclass caresForType 2 tAnimal)
+
+(iff (and (caresForType ?m1 ?t1) (instance ?p1 ?t1) ) (caresFor ?m1 ?p1))
+
+(domain vtColor 1 vtColor)
+
+(vtColor vYellow)
+(vtColor vBlue)
+(vtColor vGreen)
+(vtColor vRed)
+(vtColor vIvory)
+
+
+;; Special Logicmoo operator specific to forward chaining
+;;(==> (and (domain ?P ?n ?c) (admittedArgument ?p ?n ?i)) (instance ?i ?c))
+
+
+; ============================================================
+; There are five houses                                        #1
+; ============================================================
+(exactly 1 ?h1 (address ?h1 1))
+
+(exactly 5 ?h1 (instance ?h1 tRiddleHouse))
+
+
+(subclass tRiddleHouse tHouse)
+
+; All house have a different address
+(forall (?h1 ?h2) 
+ (if (and (instance ?h1 tHouse) (instance ?h2 tHouse) (different ?h1 ?h2)
+                 (address ?h1 ?a1) (address ?h2 ?a2)) 
+     (different ?a1 ?a2)))
+
+(address house1 1)
+(address house2 2)
+(address house3 3)
+(address house4 4)
+(address house5 5)
+
+
+
+; ============================================================
+; The Englishman lives in the red house                         #2
+; ============================================================
+(exists (?m1 ?h1) (iff (livesIn ?m1 ?h1)  (and (natOrigin ?m1 iEngland) (colorOf ?h1 vRed))))
+
+; ============================================================
+; The Spaniard owns the dog					#3
+; ============================================================
+;; NOTE this file uses purposely overuses instance/2 for performance testing
+(exists (?m1 ?pet) (iff (and (instance ?m1 tHuman) (natOrigin ?m1 iSpain))  (and (caresFor ?m1 ?pet) (instance ?pet tDog))))
+
+; ============================================================
+; All coffee is drunk in the green house
+; ============================================================
+(forall (?b) (iff (instance ?b tCoffee) (and  (drinks ?m1 ?b) (livesIn ?m1 ?h1) (colorOf ?h1 vGreen))))
+
+; ============================================================
+; The Ukrainian drinks tea
+; ============================================================
+(exists (?m1) (if (and (instance ?m1 tHuman) (natOrigin ?m1 iUkrain)) (and (drinks ?m1 ?b) (instance ?b tTea))))
+
+
+; ============================================================
+; The green house is immediately to the right of the ivory house (right means your right)
+; ============================================================
+(exists (?h1 ?h2) 
+  (if (and (instance ?h1 tHouse) (instance ?h2 tHouse) (colorOf ?h1 tGreen) (colorOf ?h2 vIvory)) (rightOfSpatial ?h1 ?h2)))
+
+(if (rightOfSpatial ?h1 ?h2) (and (address ?h1 ?a1) (address ?h2 ?a2) (equals ?a2 (AdditionFn ?a1 1))))
+
+(if (rightOfSpatial ?h1 ?h2) (nextTo ?h1 ?h2))
+
+
+(iff (nextTo ?h1 ?h2) (nextTo ?h2 ?h1))
+
+; ============================================================
+; The Old Gold smoker owns snails
+; ============================================================
+
+(exists ((?m1 tHuman)) (if (smokesBrand ?m1 "Old Gold") (caresForType ?m1 tSnail)))
+
+; ============================================================
+; Kools are smoked in the yellow house
+; ============================================================
+
+(forall (?b1) (if (smokesBrand ?m1 "Kools") (and (livesIn ?m1 ?h1) (colorOf ?h1 vYellow))))
+
+; ============================================================
+; Milk is drunk in the middle house
+; ============================================================
+
+(forall (?b1) (if (and (instance ?b1 tMilk) (livesIn ?m1 ?h1) (drinks ?m1 ?b1)) (address ?h1 3)))
+
+; ============================================================
+; The Norwegian lives in the first house
+; ============================================================
+
+(exists (?m1) (if (and (instance ?m1 tHuman) (natOrigin ?m1 iNorway)) (and (livesIn ?m1 ?h1) (address ?h1 1))))
+
+
+; ============================================================
+; The man who smokesBrand Chesterfields lives in the house next to the man with the fox
+; ============================================================
+
+(exists (?m1 tHuman) 
+ (if 
+  (smokesBrand ?m1 "Chesterfields")   
+  (and 
+   (livesIn ?m1 ?h1)
+   (nextTo ?h1 ?h2)
+   (livesIn ?m2  ?h2)
+   (caresFor ?m1 ?p2)
+   (instance ?p2  tFox))))
+
+
+; ============================================================
+; Kools are smoked in the house next to the house where the horse is kept
+; ============================================================
+
+(exists ((?h1 tHouse))
+ (if (livesIn ?m1 ?h1)  (and (smokesBrand ?m1 "Kools") (caresFor ?m1 ?p1) (instance ?p1  tHorse))))
+
+(sanity-test (subclass tHorse tAnimal))
+
+; ============================================================
+; The Lucky Strike smoker drinks orange juice
+; ============================================================
+
+(exists (?m1) 
+ (if
+  (and (instance ?m1 tHuman) (smokesBrand ?m1 "LuckyStrikes"))
+  (and (drinks ?m1 ?b1) (instance ?b1 tOrangeJuice))))
+
+; ============================================================
+; The Japanese smokes Parliaments
+; ============================================================
+
+(if (natOrigin ?m1 iJapan) (smokesBrand ?m1 "Parliaments"))
+
+
+; ============================================================
+; The Norwegian lives next to the blue house
+; ============================================================
+
+(exists (?h1)
+ (if (and (instance ?h1 tHouse) (instance ?h2 tHouse) (livesIn ?m1 ?h1)
+  (natOrigin ?m1 iNorway) (nextTo ?h1 ?h2)) (colorOf ?h2 vBlue)))
+
+
+; ============================================================
+; In the interest of clarity   it must be added that
+; each of the five houses is painted a different color
+; ============================================================
+
+; new syntax makes us
+; (forall (?h1)
+;   (if (instance ?h1 tHouse)(exists (c1) (colorOf ?h1 ?c1))))
+
+; we'll use old way though
+(forall ((?h1 tHouse))
+ (exists (c1) (colorOf ?h1 ?c1)))
+
+
+
+(forall (?h1 ?h2)
+ (if (and (instance ?h1 tRiddleHouse) (instance ?h2 tRiddleHouse) (colorOf ?h1 ?c1) (different ?h1 ?h2))
+  (and (colorOf ?h2 ?c2) (different ?c1 ?c2))))
+
+
+
+; ============================================================
+; and their inhabitants are of different national extractions
+; ============================================================
+
+(forall ((?h1 tRiddleHouse))
+ (exists (?t1)
+  (if (livesIn ?m1 ?h1)   (natOrigin ?m1 ?t1))))
+
+(forall (?h1 ?h2)
+ (if (and (instance ?h1 tRiddleHouse) (instance ?h2 tRiddleHouse) (livesIn ?m1 ?h1) (livesIn ?m2 ?h2) (different ?h1 ?h2))
+  (and (natOrigin ?m1 ?t1) (natOrigin ?m2 ?t2) (different ?t1 ?t2))))
+		    
+; ============================================================
+; own different pets
+; ============================================================
+
+(forall ((?h1 tRiddleHouse))
+ (exists ((?p1 tNonHumanAnimal))
+  (if (livesIn ?m1 ?h1)(caresFor ?m1 ?p1))))
+
+(forall (?m1 ?m2)
+ (if (and (instance ?m1 tHuman) (instance ?m2 tHuman) (different ?m1 ?m2))
+    (and (caresFor ?m1 ?p1) (caresFor ?m2 ?p2) (instance ?p1 ?t1) (instance ?p2 ?t2) (different ?t1 ?t2))))
+
+; ============================================================
+; drink different beverages
+; ============================================================
+
+; (forall ((?m1 tHuman)( ?m2 tHuman))
+;  (if (and (drinks ?m1 ?b1) (drinks ?m2 ?b2) (different ?m1 ?m2))
+;     (exists ((?bt1 ttBeverageType) (?bt2 ttBeverageType)) (and (instance ?b1 ?bt1) (instance ?b2 ?bt2) (different ?bt1 ?bt2)))))
+
+
+
+; ============================================================
+; and smoke different brands of American cigaretes
+; ============================================================
+
+(forall (?m1 ?m2)
+ (if (and (instance ?m1 tHuman) (instance ?m2 tHuman) (different ?m1 ?m2))
+  (and (smokesBrand ?m1 ?b1) (smokesBrand ?m2 ?b2) (different ?b1 ?b2))))
+
+(forall ((?h1 tRiddleHouse))
+ (exists (?b1)
+  (if (livesIn ?m1 ?h1)  (smokesBrand ?m1 ?b1))))
+
+(sanity-test (and (caresFor ?Who ?Animal) (instance ?Animal tZebra)) '(?? ??))
+
+
+
+;; PROGRAM B
+
+(comment ?? #|
+
+
+
+:-
+
+    Hs = [_,_,_,_,_]                         %  1
+  , H3 = h(_,_,_,milk,_), Hs = [_,_,H3,_,_]  %  9
+  , H1 = h(_,nvg,_,_,_ ), Hs = [H1|_]        % 10
+ 
+  , maplist( flip(member,Hs),
+       [ h(red,eng,_,_,_)                    %  2
+       , h(_,swe,dog,_,_)                    %  3
+       , h(_,dan,_,tea,_)                    %  4
+       , h(green,_,_,coffe,_)                %  6
+       , h(_,_,birds,_,pm)                   %  7
+       , h(yellow,_,_,_,dh)                  %  8
+       , h(_,_,_,beer,bm)                    % 13
+       , h(_,ger,_,_,pri)                    % 14
+       ])
+ 
+  , infix([ h(green,_,_,_,_)
+          , h(white,_,_,_,_) ], Hs)          %  5
+ 
+  , maplist( flip(nextto,Hs),
+      [ [h(_,_,_,_,bl   ), h(_,_,cats,_,_)]  % 11
+      , [h(_,_,horse,_,_), h(_,_,_,_,dh  )]  % 12
+      , [h(_,nvg,_,_,_  ), h(blue,_,_,_,_)]  % 15
+      , [h(_,_,_,water,_), h(_,_,_,_,bl  )]  % 16
+      ])
+     member(h(_,X,zebra,_,_), Hs),
+ % debug  findall(_, (member(H,Hs), write(H), nl), _), nl,
+   write('the one who keeps zebra: '), write(X), nl.
+ 
+ 
+flip(F,X,Y) :- call(F,Y,X). 
+ 
+infix(Xs,Ys) :- append(Xs,_,Zs) , append(_,Zs,Ys).
+nextto(P,Xs) :- permutation(P,R), infix(R,Xs).
+ 
+ 
+ :- findall(_, (zebra(_), nl), _), halt.
+
+|#)
+(dmsg "Zebra.clif loaded")
+
+;; How what is the minimum/right number of logical steps to transform PROGRAM A to PROGRAM B?
+
+;; PROGRAM B runs in 34 microseconds
+
+;; PROGRAM A in SNARK can take 5 seconds!
+
+;; Can we transform PROGRAM A to B in 4 seconds?!  If so,  we have done something usefull?
+;; Can this technology be reused?
+
+
+;; http://tinyurl.com/prodcos1-pdf
+;; https://arxiv.org/pdf/1601.00691.pdf
+;; https://github.com/naturalog/partsolve/blob/master/paper.pdf

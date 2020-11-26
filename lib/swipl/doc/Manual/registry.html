@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.40</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="record.html">
+<link rel="next" href="settings.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="record.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="settings.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:registry"><a id="sec:A.40"><span class="sec-nr">A.40</span> <span class="sec-title">library(registry): 
+Manipulating the Windows registry</span></a></h2>
+
+<a id="sec:registry"></a>
+
+<p>The <code>library(registry)</code> is only available on the 
+MS-Windows version of SWI-Prolog. It loads the foreign extension <code>plregtry.dll</code>, 
+providing the predicates described below. This library only makes the 
+most common operations on the registry available through the Prolog 
+user. The underlying DLL provides a more complete coverage of the 
+Windows registry API. Please consult the sources in
+<code>pl/src/win32/foreign/plregtry.c</code> for further details.
+
+<p>In all these predicates, <var>Path</var> refers to a&lsquo;/' 
+separated path into the registry. This is <em>not</em> an atom 
+containing&lsquo;/'-characters as used for filenames, but a term using 
+the functor <code><code>/</code>/2</code>. Windows defines the following 
+roots for the registry:
+<code>classes_root</code>,
+<code>current_user</code>,
+<code>local_machine</code> and
+<code>users</code>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="registry_get_key/2"><strong>registry_get_key</strong>(<var>+Path, 
+-Value</var>)</a></dt>
+<dd class="defbody">
+Get the principal (default) value associated to this key. Fails silently 
+if the key does not exist.</dd>
+<dt class="pubdef"><a id="registry_get_key/3"><strong>registry_get_key</strong>(<var>+Path, 
++Name, -Value</var>)</a></dt>
+<dd class="defbody">
+Get a named value associated to this key.</dd>
+<dt class="pubdef"><a id="registry_set_key/2"><strong>registry_set_key</strong>(<var>+Path, 
++Value</var>)</a></dt>
+<dd class="defbody">
+Set the principal (default) value of this key. Creates (a path to) the 
+key if it does not already exist.</dd>
+<dt class="pubdef"><a id="registry_set_key/3"><strong>registry_set_key</strong>(<var>+Path, 
++Name, +Value</var>)</a></dt>
+<dd class="defbody">
+Associate a named value to this key. Creates (a path to) the key if it 
+does not already exist.</dd>
+<dt class="pubdef"><a id="registry_delete_key/1"><strong>registry_delete_key</strong>(<var>+Path</var>)</a></dt>
+<dd class="defbody">
+Delete the indicated key.</dd>
+<dt class="pubdef"><a id="shell_register_file_type/4"><strong>shell_register_file_type</strong>(<var>+Ext, 
++Type, +Name, +OpenAction</var>)</a></dt>
+<dd class="defbody">
+Register a file-type. <var>Ext</var> is the extension to associate.
+<var>Type</var> is the type name, often something like <code>prolog.type</code>.
+<var>Name</var> is the name visible in the Windows file-type browser. 
+Finally, <var>OpenAction</var> defines the action to execute when a file 
+with this extension is opened in the Windows explorer.</dd>
+<dt class="pubdef"><a id="shell_register_dde/6"><strong>shell_register_dde</strong>(<var>+Type, 
++Action, +Service, +Topic, +Command, +IfNotRunning</var>)</a></dt>
+<dd class="defbody">
+Associate DDE actions to a type. <var>Type</var> is the same type as 
+used for the 2nd argument of <a id="idx:shellregisterfiletype4:2528"></a><a class="pred" href="registry.html#shell_register_file_type/4">shell_register_file_type/4</a>, <var>Action</var> 
+is the action to perform, <var>Service</var> and <var>Topic</var> 
+specify the DDE topic to address, and <var>Command</var> is the command 
+to execute on this topic. Finally, <var>IfNotRunning</var> defines the 
+command to execute if the required DDE server is not present.</dd>
+<dt class="pubdef"><a id="shell_register_prolog/1"><strong>shell_register_prolog</strong>(<var>+Ext</var>)</a></dt>
+<dd class="defbody">
+Default registration of SWI-Prolog, which is invoked as part of the 
+initialisation process on Windows systems. As the source also includes 
+the above predicates, it is given as an example:
+
+<pre class="code">
+shell_register_prolog(Ext) :-
+        current_prolog_flag(argv, [Me|_]),
+        atomic_list_concat(['"', Me, '" "%1"'], OpenCommand),
+        shell_register_file_type(
+            Ext, 'prolog.type', 'Prolog Source', OpenCommand),
+        shell_register_dde(
+            'prolog.type', consult,
+            prolog, control, 'consult(''%1'')', Me),
+        shell_register_dde(
+            'prolog.type', edit,
+            prolog, control, 'edit(''%1'')', Me).
+</pre>
+
+<p></dd>
+</dl>
+
+</body></html>

@@ -1,0 +1,35 @@
+#!/usr/bin/env swipl
+%
+%  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
+%
+% Dec 13, 2035
+% Douglas Miles
+
+% Tests Retraction undoes Backchaining memo idea is working
+
+
+%  was_module(bc_01a,[]).
+
+:- include(test_header).
+
+
+:- kb_global(mudContains/2).
+mudContains(a,b).
+
+%:- kb_shared(genlInverse/2).
+%:- kb_shared(mudInsideOf/2).
+
+meta_argtypes(genlInverse(rtBinaryPredicate,rtBinaryPredicate)).
+
+genlInverse(mudContains,mudInsideOf).
+
+
+% :- must(ain((( genlInverse(P1,P2),arity(P1,2),arity(P2,2), t(P1,A,B)) ==> t(P2,B,A)))).
+
+%:- must(ain((( genlInverse(P1,P2),arity(P1,2),arity(P2,2)) ==> ( t(P1,A,B) ==> t(P2,B,A))))).
+
+genlInverse(P1,P2) ==> ( t(P1,A,B) ==> t(P2,B,A)).
+
+:- mpred_test(mudInsideOf(b,a)).
+
+

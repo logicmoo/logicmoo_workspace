@@ -1,0 +1,230 @@
+%===================================================================
+%--- This transforms TPTP clauses and first order formulae into   
+%--- bliksem format. 
+%===================================================================
+% Print the header for first order formulae: 
+blk_fof_header :-
+   nl, 
+   write( 'Auto.' ),
+   nl,
+   nl. 
+
+
+% Print the header for CNF-clauses: 
+
+blk_cnf_header :- 
+   nl, 
+   write('Set( totalproof, 1 ).'),
+   nl, 
+   write('Set( prologoutput, 1 ).'),
+   nl,
+   write( 'Auto.' ),
+   nl, nl. 
+
+
+% True if all elements of L have form fof( Name, Type, F ). 
+
+blk_isfof( [] ).
+blk_isfof( [ fof( _, _, _ ) | R ] ) :-
+   blk_isfof( R ).    
+
+
+% True if all elements of L have form input_clause( Name, Type, F ). 
+
+blk_iscnf( [] ). 
+blk_iscnf( [ input_clause( _, _, _ ) | R ] ) :-
+   blk_iscnf( R ). 
+
+
+
+blk_printvarlist( [] ) :-
+   write( 'THIS SHOULD NOT HAPPEN' ). 
+blk_printvarlist( [ F ] ) :-
+   !, 
+   write( F ).
+blk_printvarlist( [ F | R ] ) :-
+   write( F ),
+   write( ', ' ),
+   blk_printvarlist( R ). 
+
+
+% Print a formula in fof format. We do not attempt make the result
+% human readable. 
+
+blk_printfof( ~ A ) :-
+   !, blk_printunary( '!', A ). 
+% the final proof that Prolog cannot be trusted: 
+blk_printfof( '|'(A,B) ) :-
+   !, blk_printbinary( '|', A, B ). 
+blk_printfof( (A ; B) ) :-
+   !, blk_printbinary( '|', A, B ). 
+blk_printfof( A & B ) :-
+   !, blk_printbinary( '&', A, B ). 
+blk_printfof( A <=> B ) :-
+   !, blk_printbinary( '<->', A, B ). 
+blk_printfof( A => B ) :-
+   !, blk_printbinary( '->', A, B ). 
+blk_printfof( A <= B ) :-
+   !, blk_printbinary( '->', B, A ).
+blk_printfof( A <~> B ) :-
+   !, blk_printnegbinary( '<->', A, B ).
+blk_printfof( A '~|' B ) :-
+   !, blk_printnegbinary( '|', A, B ).
+blk_printfof( A ~& B ) :-
+   !, blk_printnegbinary( '&', A, B ).
+blk_printfof( ! L : F ) :-
+   !, blk_printquantifier( '[', ']', L, F ). 
+blk_printfof( ? L : F ) :-
+   !, blk_printquantifier( '<', '>', L, F ). 
+blk_printfof( '$tptp_equal'( A, B ) ) :-
+   !, blk_printbinary( '=', A, B ). 
+
+blk_printfof('$true'):-
+    !,
+    write('( && )').
+
+blk_printfof('$false'):-
+    !,
+    write('( || )').
+
+blk_printfof( F ) :-
+   write( F ). 
+
+
+
+blk_printunary( _, A ) :-
+   write( '! ( ' ), blk_printfof( A ), write( ')' ).
+
+blk_printbinary( Operator, A, B ) :-
+   write( '(' ), blk_printfof( A ), write( ')' ),
+   write( Operator ),
+   write( '(' ), blk_printfof( B ), write( ')' ).
+      
+blk_printnegbinary( Operator, A, B ) :-
+   write( '! (( ' ), blk_printfof( A ), write( ')' ),   
+   write( Operator ),
+   write( '(' ), blk_printfof( B ), write( '))' ).
+
+blk_printquantifier( Start, End, A, B ) :- 
+   write( '( ' ),
+   write( Start ),
+   blk_printvarlist( A ),
+   write( End ),
+   blk_printfof( B ),
+   write( ')' ). 
+
+
+% Print a list of first order formulae. A '.' is inserted after every
+% formula, together with a newline. 
+
+blk_printfoflist( [] ).
+blk_printfoflist( [ fof( Name, Status, F ) | R ] ) :-
+   tptp2X_member(Status,[axiom,hypothesis,lemma,definition]),
+   !,
+   write( '# '),
+   write(Status),
+   write(' ' ), write( Name ), 
+   write( ':' ), nl, !, 
+   blk_printfof( F ), !, 
+   write( '.' ), 
+   nl,
+   blk_printfoflist( R ). 
+
+blk_printfoflist( [ fof( Name, conjecture, F ) | R ] ) :-
+%----Need this for dodgy processing in Ratify
+    write('#----This is the conjecture with negated conjecture'),
+    nl,
+   write( '# conjecture (has been negated) '), write( Name ), 
+   write( ':' ), nl, !, 
+   blk_printfof( ~ F ), !, 
+   write( '.' ), 
+   nl,
+   blk_printfoflist( R ). 
+
+% Print atoms: An atom can be printed without problems, because bliksem 
+% has the Prolog convention for variables. '$tptp_equal'(A,B) has to be 
+% replaced by A = B. 
+
+blk_printatom( '$tptp_equal'( A, B ) ) :-
+   write( A = B ),
+   !. 
+
+blk_printatom('$true'):-
+    !,
+    write(' && ').
+
+blk_printatom('$false'):-
+    !,
+    write(' || ').
+
+blk_printatom( X ) :-
+   write( X ). 
+
+% Print a literal: ++ X is printed as X. -- X is printed as ! X.  
+
+blk_printliteral( ++ X ) :-
+   blk_printatom( X ).
+blk_printliteral( -- X ) :-
+   write( '! ' ),
+   blk_printatom( X ). 
+
+
+% Print list of literals, separated by comma's. 
+
+blk_printliterals( [] ).
+blk_printliterals( [ F ] ) :-
+   !, 
+   blk_printliteral( F ),
+   write( ' ' ).
+blk_printliterals( [ F | R ] ) :-
+   blk_printliteral( F ),
+   write( ', ' ),
+   blk_printliterals( R ).
+
+
+% Print a clause: 
+
+blk_printclause( Cls ) :-
+   write( '{ ' ),
+   blk_printliterals( Cls ),
+   write( '}.' ).
+
+
+% Print a clause list: 
+
+blk_printclauselist( [] ).
+blk_printclauselist( [ input_clause( Name, Type, F ) | R ] ) :-
+   write( '# ' ), write( Type ), write( ' ' ), write( Name ),
+   write( ':' ), nl, !, 
+   blk_printclause( F ), !, 
+   nl,
+   blk_printclauselist( R ).
+
+
+% Convert TPTP to bliksem. It is necessary to check the format in advance 
+% in order to produce the right header. 
+
+bliksem( bliksem, Formulalist, _ ) :-
+   blk_isfof( Formulalist ), !,
+   blk_fof_header,
+   blk_printfoflist( Formulalist ),
+   nl. 
+
+bliksem( bliksem, Formulalist, _ ) :- 
+   blk_iscnf( Formulalist ), !, 
+   blk_cnf_header,
+   blk_printclauselist( Formulalist ),
+   nl. 
+
+bliksem( bliksem, Formulalist, _ ) :-
+   write( 'Sorry, cannot handle this: ' ),
+   write( Formulalist ),
+   nl.
+
+
+% We chose # for comment. % was not possible because it is allowed in 
+% identifiers. 
+
+bliksem_format_information( '#', '.blk' ).
+bliksem_file_information( format, bliksem, 'Bliksem format' ).
+

@@ -1,0 +1,12 @@
+(note "existential implication soundness check" )
+
+(exists ?X (implies (FFF ?X) (GGG ?X)) )
+
+(queryyn  (implies  (exists ?X (FFF ?X))  (exists ?X (GGG ?X))))
+
+(answer Yes)
+
+; Changed Unproven to Yes becasue We can find an ?X to make this true
+
+
+(end_of_file)

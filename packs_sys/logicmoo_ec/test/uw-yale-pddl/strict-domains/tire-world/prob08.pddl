@@ -1,0 +1,10 @@
+(define (problem fix3)			;tools not put away
+    (:domain flat-tire-typing)
+  (:objects wheel1 wheel2 - wheel the-hub - hub nuts - nut boot - container)
+  (:init (intact wheel2)
+	 (have pump) (have wheel2)
+	 (have wrench) (on wheel1 the-hub) (inflated wheel2)
+	 (loose nuts the-hub))
+  (:goal (and (tight nuts the-hub) (on-ground the-hub)
+	      (on wheel2 the-hub)
+	      )))

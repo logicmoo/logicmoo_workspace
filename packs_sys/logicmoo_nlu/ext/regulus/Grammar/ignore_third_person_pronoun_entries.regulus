@@ -1,0 +1,10 @@
+/* 
+
+It can be convenient to ignore the general entries for personal impersonal pronouns in gen_eng_lex,
+and substitute more specific ones
+
+*/
+
+ignore_item(it).
+ignore_item(they).
+ignore_item(them).

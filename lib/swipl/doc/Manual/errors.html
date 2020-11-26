@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 9.8</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="guidelines.html">
+<link rel="next" href="threads.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="guidelines.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="threads.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:errors"><a id="sec:9.8"><span class="sec-nr">9.8</span> <span class="sec-title">Compiler 
+Errors and Warnings</span></a></h2>
+
+<a id="sec:errors"></a> In this section we summarize the most important 
+error and warning messages of the CHR compiler.
+
+<p><h3 id="sec:chr-errors"><a id="sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
+Compiler Errors</span></a></h3>
+
+<a id="sec:chr-errors"></a>
+
+<dl class="latex">
+<dt><b>Type clash</b></dt>
+<dd>
+for variable ... in rule ...
+
+<p>This error indicates an inconsistency between declared types; a 
+variable can not belong to two types. See static type checking.</dd>
+<dt><b>Invalid functor</b></dt>
+<dd>
+in head ... of rule ...
+
+<p>This error indicates an inconsistency between a declared type and the 
+use of a functor in a rule. See static type checking.</dd>
+<dt><b>Cyclic alias</b></dt>
+<dd>
+definition: ... == ...
+
+<p>You have defined a type alias in terms of itself, either directly or 
+indirectly.</dd>
+<dt><b>Ambiguous type aliases</b></dt>
+<dd>
+
+<p>You have defined two overlapping type aliases.</dd>
+<dt><b>Multiple definitions</b></dt>
+<dd>
+for type
+
+<p>You have defined the same type multiple times.</dd>
+<dt><b>Non-ground type</b></dt>
+<dd>
+in constraint definition: ...
+
+<p>You have declared a non-ground type for a constraint argument.</dd>
+<dt><b>Could not find type definition</b></dt>
+<dd>
+for ...
+
+<p>You have used an undefined type in a type declaration.</dd>
+<dt><b>Illegal mode/type declaration</b></dt>
+<dd>
+
+<p>You have used invalid syntax in a constraint declaration.</dd>
+<dt><b>Constraint multiply defined</b></dt>
+<dd>
+
+<p>There is more than one declaration for the same constraint.</dd>
+<dt><b>Undeclared constraint</b></dt>
+<dd>
+... in head of ...
+
+<p>You have used an undeclared constraint in the head of a rule. This 
+often indicates a misspelled constraint name or wrong number of 
+arguments.</dd>
+<dt><b>Invalid pragma</b></dt>
+<dd>
+... in ... Pragma should not be a variable.
+
+<p>You have used a variable as a pragma in a rule. This is not allowed.</dd>
+<dt><b>Invalid identifier</b></dt>
+<dd>
+... in pragma passive in ...
+
+<p>You have used an identifier in a passive pragma that does not 
+correspond to an identifier in the head of the rule. Likely the 
+identifier name is misspelled.</dd>
+<dt><b>Unknown pragma</b></dt>
+<dd>
+... in ...
+
+<p>You have used an unknown pragma in a rule. Likely the pragma is 
+misspelled or not supported.</dd>
+<dt><b>Something unexpected</b></dt>
+<dd>
+happened in the CHR compiler
+
+<p>You have most likely bumped into a bug in the CHR compiler. Please 
+contact Tom Schrijvers to notify him of this error.
+
+<p></dd>
+</dl>
+
+</body></html>

@@ -1,0 +1,12 @@
+ERROR: Invalid ACE text:
+The word "trustworthy" is unknown.
+The word "trustworthy" is unknown.
+The word "thief" is unknown.
+The word "shoplifter" is unknown.
+The word "teenager" is unknown.
+The word "shoplifter" is unknown.
+The word "thief" is unknown.
+The word "shoplifter" is unknown.
+The word "teenager" is unknown.
+"If there is someone X and it is not provable that X is a criminal then X is trustworthy <>.": This is the first sentence that was not ACE. The sign <> indicates the position where parsing failed.
+

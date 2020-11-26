@@ -1,0 +1,5 @@
+use facts as knowledge.
+
+module events {
+	if percept(scream) then delete( wumpusIsAlive ).
+}

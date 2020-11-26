@@ -1,0 +1,46 @@
+(note TQF206a)
+
+(instance Y2Stage3-UnknownAzeriCourier Agent) 
+
+(agent Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownAzeriCourier) 
+
+(fromLocation Y2Stage3-AnthraxTransportedToIran Russia) 
+
+(toLocation Y2Stage3-AnthraxTransportedToIran Iran) 
+
+(instance Y2Stage3-AnthraxTransportedToIran 
+ (SmugglingFn Anthrax-Bacterium)) 
+
+(beneficiary Y2Stage3-AnthraxTransportedToIran Iran) 
+
+(driverActor Y2Stage3-AnthraxTransportedToIran Y2Stage3-UnknownAzeriCourier) 
+
+(implies 
+  (and 
+    (instance ?TP TransferringPossession) 
+    (toPossessor ?TP ?REC)) 
+  (beneficiary ?TP ?REC)) 
+
+(instance Y2Stage3-AnthraxTransportedToIran TransferringPossession) 
+
+(toPossessor Y2Stage3-AnthraxTransportedToIran Iran) 
+
+(query (findall ?BENEFICIARY  
+   (thereExists ?SMUGGLING 
+       (thereExists ?BIO-AGENT 
+           (thereExists ?AGENT 
+               (and 
+                   (instance ?SMUGGLING 
+                       (SmugglingFn ?BIO-AGENT)) 
+                   (instance ?AGENT Agent) 
+                   (subclass ?BIO-AGENT BiologicalAgent) 
+                   (agent ?SMUGGLING ?AGENT) 
+                   (fromLocation ?SMUGGLING Russia) 
+                   (toLocation ?SMUGGLING Iran) 
+                   (beneficiary ?SMUGGLING ?BENEFICIARY)))))))
+
+(answer Iran)
+
+(end_of_file)
+
+

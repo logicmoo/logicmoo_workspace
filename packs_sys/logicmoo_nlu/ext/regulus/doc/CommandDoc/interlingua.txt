@@ -1,0 +1,9 @@
+
+Do translation through interlingua, i.e.\ by first applying
+source-to-interlingua rules (from the file that {\tt
+to\_\-interlingua\_\-rules} points to) and then interlingua-to-target
+rules ((from the file that {\tt from\_\-interlingua\_\-rules} points
+to). This applies both to interactive processing in translate mode,
+and to batch processing using commands like {\tt TRANSLATE\_\-CORPUS},
+{\tt TRANSLATE\_\-SPEECH\_\-CORPUS} and {\tt
+TRANSLATE\_\-SPEECH\_\-CORPUS\_\-AGAIN}.

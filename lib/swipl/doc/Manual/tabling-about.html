@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 7.12</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="tabling-preds.html">
+<link rel="next" href="clp.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="tabling-preds.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="clp.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:tabling-about"><a id="sec:7.12"><span class="sec-nr">7.12</span> <span class="sec-title">About 
+the tabling implementation</span></a></h2>
+
+<a id="sec:tabling-about"></a>
+
+<p>The SWI-Prolog implementation uses <em>Delimited continuations</em> 
+(see
+<a class="sec" href="delcont.html#sec:4.9">section 4.9</a> to realise 
+suspension of variant calls. The initial version was written by Benoit 
+Desouter and described in
+<cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/DesouterDS15">Desouter <em>et 
+al.</em>, 2015</a></cite>. We moved the main data structures required 
+for tabling, the <em>answer tables</em> (see
+<a class="sec" href="db.html#sec:4.14.4">section 4.14.4</a>) and the <em>worklist</em> 
+to SWI-Prolog's C&nbsp;core.
+<em>Mode directed tabling</em> (<a class="sec" href="tabling-mode-directed.html#sec:7.3">section 
+7.3</a>) is based on a prototype implementation by Fabrizio Riguzzi.
+
+<p>The implementation of dynamic SCCs, dynamically stratified negation 
+and Well Founded Semantics was initiated by Benjamin Grosof from Kyndi 
+and was realised with a lot of help by Theresa Swift, David Warren and 
+Fabrizio Riguzzi, as well as publications about XSB
+<cite><a class="cite" href="Bibliography.html#DBLP:journals/toplas/SagonasS98">Sagonas &amp; 
+Swift, 1998</a>, <a class="cite" href="Bibliography.html#SAGONAS20001">Sagonas <em>et 
+al.</em>, 2000</a></cite>.
+
+<p>The <a id="idx:table1:2042"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+directive causes the creation of a wrapper calling the renamed original 
+predicate. For example, the program in
+<a class="sec" href="tabling-non-termination.html#sec:7.2">section 7.2</a> 
+is translated into the following program. We give this information to 
+improve your understanding of the current tabling implementation. Future 
+versions are likely to use a more low-level translation that is not 
+based on wrappers.
+
+<pre class="code">
+connection(A, B) :-
+        start_tabling(user:connection(A, B),
+                      'connection tabled'(A, B)).
+
+'connection tabled'(X, Y) :-
+        connection(X, Z),
+        connection(Z, Y).
+'connection tabled'(X, Y) :-
+        connection(Y, X).
+
+'connection tabled'('Amsterdam', 'Schiphol').
+'connection tabled'('Amsterdam', 'Haarlem').
+'connection tabled'('Schiphol', 'Leiden').
+'connection tabled'('Haarlem', 'Leiden').
+</pre>
+
+<p><h4 id="sec:tabling-status"><a id="sec:7.12.1"><span class="sec-nr">7.12.1</span> <span class="sec-title">Status 
+of tabling</span></a></h4>
+
+<a id="sec:tabling-status"></a>
+
+<p>The current implementation is merely a first prototype. It needs 
+several enhancements before we can consider it a serious competitor to 
+Prolog systems with mature tabling such as XSB, YAP and B-Prolog. In 
+particular,
+
+<p>
+<ul class="compact">
+<li>The performance needs to be improved.
+<li>Memory usage needs to be reduced.
+<li>Tables must be shared between threads, both to reduce space and 
+avoid recomputation.
+<li>Tables must be invalidated and reclaimed automatically.
+<li>Notably XSB supports incremental tabling and well-founded semantics 
+under negation.
+</ul>
+
+<p></body></html>

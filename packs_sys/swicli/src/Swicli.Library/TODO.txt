@@ -1,0 +1,26 @@
+﻿Errors regarding the charset 
+	e.g. consult a file with a char 'Ä' ( c3 84 )
+	results into an error if we call PlTerm.ToString()
+	( it is ok if 'Ä' is coded as c4
+	
+	
+	
+PlConNet:
+	
+	
+
+Pltern(string / plterm.PlCompount
+	einer ist über
+
+Documentation:
+	- erste seite
+	- beispiele für die neue query
+		- try catch
+		
+fern ziel echtes stream marshalling
+
+-----------------------------------------------
+
+25.03.09 - PlQuery free private machen
+	- PlQuery auch mit arity == 0 e.g. listing.
+	- in der solution loop debugging facileties und <return> , ';' usw.

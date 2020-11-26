@@ -1,0 +1,14 @@
+Relevant to translation applications. Take the results held in the
+file indicated by {\tt translation\_\-corpus\_\-results} and turn them into
+a training file for Nuance PCFG tuning, using the argument as the
+relevant Nuance grammar. Put the result in the file indicated by
+{\tt target\_\-grammar\_\-probs}. Thus, for example, the call
+\begin{verbatim}
+MAKE_TARGET_GRAMMAR_PROBS_CORPUS .MAIN
+\end{verbatim}
+will create a file where, for each translation {\tt $\langle$Sent$\rangle$}
+in {\tt translation\_\-corpus\_\-results}, the file {\tt target\_\-grammar\_\-probs}
+will contain a record of the form
+\begin{verbatim}
+.MAIN <Sent>
+\end{verbatim}

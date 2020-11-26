@@ -1,0 +1,1589 @@
+:-include(library('ec_planner/ec_test_incl')).
+:-expects_dialect(pfc).
+% Tue, 06 Oct 2020 19:30:33 GMT%;
+%; Copyright (c) 2005 IBM Corporation and others.
+%; All rights reserved. This program and the accompanying materials
+%; are made available under the terms of the Common Public License v1.0
+%; which accompanies this distribution, and is available at
+%; http://www.eclipse.org/legal/cpl-v10.html
+%;
+%; Contributors:
+%; IBM - Initial implementation
+%;
+%; @inproceedings{WinikoffEtAl:2002,
+%;   author = "Michael Winikoff and Lin Padgham and James Harland and John Thangarajah",
+%;   year = "2002",
+%;   title = "Declarative \& procedural goals in intelligent agent systems",
+%;   editor = "Dieter Fensel and Fausto Giunchiglia and Deborah McGuinness and Mary-Anne Williams",
+%;   booktitle = "\uppercase{P}roceedings of the \uppercase{E}ighth \uppercase{I}nternational \uppercase{C}onference on \uppercase{P}rinciples of \uppercase{K}nowledge \uppercase{R}epresentation and \uppercase{R}easoning",
+%;   pages = "470--481",
+%;   address = "San Francisco",
+%;   publisher = "Morgan Kaufmann",
+%; }
+%;
+%; @book{Mueller:2006,
+%;   author = "Erik T. Mueller",
+%;   year = "2006",
+%;   title = "Commonsense Reasoning",
+%;   address = "San Francisco",
+%;   publisher = "Morgan Kaufmann/Elsevier",
+%; }
+%;
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:30
+% load foundations/Root.e
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:31
+% load foundations/EC.e
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:33
+% sort object
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:34
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:34
+sort(object).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:34
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:34
+sort(object).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:34
+% sort agent: object
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:35
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:35
+subsort(agent,object).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:35
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:35
+subsort(agent,object).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:35
+% sort food: object
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:36
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:36
+subsort(food,object).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:36
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:36
+subsort(food,object).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:36
+% sort surface
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:37
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:37
+sort(surface).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:37
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:37
+sort(surface).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:37
+% sort plan
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:38
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:38
+sort(plan).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:38
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:38
+sort(plan).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:39
+% reified sort belief
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+reified_sort(belief).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+reified_sorts([belief/0]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+reified_sorts([belief/0]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+mpred_prop(belief,reified_sort).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:40
+mpred_prop(belief,reified_sort).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:41
+% agent Cat
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:42
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:42
+t(agent,cat).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:42
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:42
+agent(cat).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:42
+% surface Floor, Chair, Shelf, Table
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+t(surface,floor).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+surface(floor).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+t(surface,chair).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+surface(chair).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+t(surface,shelf).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+surface(shelf).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+t(surface,table).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+surface(table).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:43
+% food Food1, Food2
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+t(food,food1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+food(food1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+t(food,food2).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+food(food2).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:44
+% plan P1, P1a, P1b, P2, P2a
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+t(plan,p1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+plan(p1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+t(plan,p1a).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+plan(p1a).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+t(plan,p1b).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+plan(p1b).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+t(plan,p2).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+plan(p2).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+t(plan,p2a).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:45
+plan(p2a).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:46
+% predicate SelectedPlan(agent,belief,plan,time)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+predicate(selectedPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+actions([selectedPlan/4]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+actions([selectedPlan/4]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+meta_argtypes(selectedPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+meta_argtypes(selectedPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+mpred_prop(selectedPlan(agent,belief,plan,time),predicate).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+mpred_prop(selectedPlan(agent,belief,plan,time),predicate).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+meta_argtypes(selectedPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+meta_argtypes(selectedPlan(agent,belief,plan,time)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:47
+% predicate SoundPlan(agent,belief,plan,time)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+predicate(soundPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+actions([soundPlan/4]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+actions([soundPlan/4]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+meta_argtypes(soundPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+meta_argtypes(soundPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+mpred_prop(soundPlan(agent,belief,plan,time),predicate).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+mpred_prop(soundPlan(agent,belief,plan,time),predicate).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+meta_argtypes(soundPlan(agent,belief,plan,time)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:48
+meta_argtypes(soundPlan(agent,belief,plan,time)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:49
+% fluent On(object,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+fluent(on(object,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+fluents([on/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+fluents([on/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+meta_argtypes(on(object,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+meta_argtypes(on(object,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+mpred_prop(on(object,surface),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+mpred_prop(on(object,surface),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+meta_argtypes(on(object,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+meta_argtypes(on(object,surface)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:50
+% fluent Goal(agent,belief)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+fluent(goal(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+fluents([goal/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+fluents([goal/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+meta_argtypes(goal(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+meta_argtypes(goal(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+mpred_prop(goal(agent,belief),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+mpred_prop(goal(agent,belief),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+meta_argtypes(goal(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+meta_argtypes(goal(agent,belief)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:51
+% fluent CanJump(surface,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+fluent(canJump(surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+fluents([canJump/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+fluents([canJump/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+meta_argtypes(canJump(surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+meta_argtypes(canJump(surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+mpred_prop(canJump(surface,surface),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+mpred_prop(canJump(surface,surface),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+meta_argtypes(canJump(surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+meta_argtypes(canJump(surface,surface)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:52
+% fluent Plan(agent,belief,plan)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+fluent(plan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+fluents([plan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+fluents([plan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+meta_argtypes(plan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+meta_argtypes(plan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+mpred_prop(plan(agent,belief,plan),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+mpred_prop(plan(agent,belief,plan),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+meta_argtypes(plan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+meta_argtypes(plan(agent,belief,plan)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:53
+% fluent Satiated(agent)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+fluent(satiated(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+fluents([satiated/1]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+fluents([satiated/1]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+meta_argtypes(satiated(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+meta_argtypes(satiated(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+mpred_prop(satiated(agent),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+mpred_prop(satiated(agent),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+meta_argtypes(satiated(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+meta_argtypes(satiated(agent)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:54
+% fluent Believe(agent,belief)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+fluent(believe(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+fluents([believe/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+fluents([believe/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+meta_argtypes(believe(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+meta_argtypes(believe(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+mpred_prop(believe(agent,belief),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+mpred_prop(believe(agent,belief),fluent).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+meta_argtypes(believe(agent,belief)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:55
+meta_argtypes(believe(agent,belief)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:56
+% event AddPlan(agent,belief,plan)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+event(addPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+actions([addPlan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+actions([addPlan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+meta_argtypes(addPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+meta_argtypes(addPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+mpred_prop(addPlan(agent,belief,plan),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+mpred_prop(addPlan(agent,belief,plan),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+meta_argtypes(addPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+meta_argtypes(addPlan(agent,belief,plan)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:57
+% event DropPlan(agent,belief,plan)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+event(dropPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+actions([dropPlan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+actions([dropPlan/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+meta_argtypes(dropPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+meta_argtypes(dropPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+mpred_prop(dropPlan(agent,belief,plan),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+mpred_prop(dropPlan(agent,belief,plan),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+meta_argtypes(dropPlan(agent,belief,plan)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+meta_argtypes(dropPlan(agent,belief,plan)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:58
+% event Jump(agent,surface,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+event(jump(agent,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+actions([jump/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+actions([jump/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+meta_argtypes(jump(agent,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+meta_argtypes(jump(agent,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+mpred_prop(jump(agent,surface,surface),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+mpred_prop(jump(agent,surface,surface),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+meta_argtypes(jump(agent,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+meta_argtypes(jump(agent,surface,surface)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:59
+% event Move(surface,surface,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+event(move(surface,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+events([move/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+events([move/3]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+meta_argtypes(move(surface,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+meta_argtypes(move(surface,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+mpred_prop(move(surface,surface,surface),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+mpred_prop(move(surface,surface,surface),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+meta_argtypes(move(surface,surface,surface)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+meta_argtypes(move(surface,surface,surface)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:60
+% event Eat(agent,food)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+event(eat(agent,food)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+actions([eat/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+actions([eat/2]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+meta_argtypes(eat(agent,food)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+meta_argtypes(eat(agent,food)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+mpred_prop(eat(agent,food),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+mpred_prop(eat(agent,food),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+meta_argtypes(eat(agent,food)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+meta_argtypes(eat(agent,food)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:61
+% event Wait(agent)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+event(wait(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+actions([wait/1]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+actions([wait/1]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+meta_argtypes(wait(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+meta_argtypes(wait(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+mpred_prop(wait(agent),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+mpred_prop(wait(agent),event).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+meta_argtypes(wait(agent)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:62
+meta_argtypes(wait(agent)).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:63
+% belief BSatiated(agent)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+
+ /*  fix_axiom_head(Time) ->
+       [ belief(bSatiated(agent)),
+          (->),
+         holds_at(belief(bSatiated(agent)), Time)
+       ].
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(belief(bSatiated(agent)), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+holds_at(belief(bSatiated(agent)),Time1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+l_int(holds(belief(bSatiated(agent)),Time1),[]).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:64
+% belief BCanJump(surface,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+
+ /*  fix_axiom_head(Time) ->
+       [ belief(bCanJump(surface, surface)),
+          (->),
+         holds_at(belief(bCanJump(surface, surface)), Time)
+       ].
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(belief(bCanJump(surface, surface)), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+holds_at(belief(bCanJump(surface,surface)),Time1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+l_int(holds(belief(bCanJump(surface,surface)),Time1),[]).
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:65
+% belief BOn(object,surface)
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+
+ /*  fix_axiom_head(Time) ->
+       [ belief(bOn(object, surface)),
+          (->),
+         holds_at(belief(bOn(object, surface)), Time)
+       ].
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(belief(bOn(object, surface)), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+holds_at(belief(bOn(object,surface)),Time1).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:66
+l_int(holds(belief(bOn(object,surface)),Time1),[]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:67
+%; Sigma
+%; A5
+% [agent,belief,plan,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+% Initiates(AddPlan(agent,belief,plan),Plan(agent,belief,plan),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(addPlan(Agent, Belief, Plan),
+                    plan(Agent, Belief, Plan),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+initiates(addPlan(AddplanP_Num3_V,A,Addplan),
+	  plan(AddplanP_Num3_V,A,Addplan),
+	  Initiates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:71
+initiated(happens(addPlan(AddplanP_Num3_V,A,Addplan),
+		  Maptime,
+		  Happens),
+	  plan(AddplanP_Num3_V,A,Addplan),
+	  []).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:73
+%; A6
+% [agent,belief,plan,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+% Terminates(DropPlan(agent,belief,plan),Plan(agent,belief,plan),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(dropPlan(Agent, Belief, Plan),
+                     plan(Agent, Belief, Plan),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+terminates(dropPlan(DropplanP_Num3_V,A,Dropplan),
+	   plan(DropplanP_Num3_V,A,Dropplan),
+	   Terminates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:75
+terminated(happens(dropPlan(DropplanP_Num3_V,
+			    A,
+			    Dropplan),
+		   Maptime,
+		   Happens),
+	   plan(DropplanP_Num3_V,A,Dropplan),
+	   []).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:77
+% [agent,surface1,surface2,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:78
+% HoldsAt(On(agent,surface1),time) &
+% HoldsAt(CanJump(surface1,surface2),time) ->
+% Initiates(Jump(agent,surface1,surface2),On(agent,surface2),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:80
+
+ /*  [holds_at(on(Agent, Surface1), Time), holds_at(canJump(Surface1, Surface2), Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(jump(Agent, Surface1, Surface2),
+                    on(Agent, Surface2),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:80
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:80
+holds_at(on(JumpP_Num3_V, On), Time4), holds_at(canJump(On, Canjump), Time4) ->
+    initiates(jump(JumpP_Num3_V, On, Canjump),
+              on(JumpP_Num3_V, Canjump),
+              Time4).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:80
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:80
+reactive_rule([ holds(on(JumpP_Num3_V,On),Time4),
+		holds(canJump(On,Canjump),Time4)
+	      ],
+	      [ initiates(jump(JumpP_Num3_V,
+			       On,
+			       Canjump),
+			  at(on(JumpP_Num3_V,Canjump),
+			     Time4))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:82
+% [agent,surface1,surface2,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:83
+% HoldsAt(On(agent,surface1),time) &
+% HoldsAt(CanJump(surface1,surface2),time) ->
+% Terminates(Jump(agent,surface1,surface2),On(agent,surface1),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:85
+
+ /*  [holds_at(on(Agent, Surface1), Time), holds_at(canJump(Surface1, Surface2), Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(jump(Agent, Surface1, Surface2),
+                     on(Agent, Surface1),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:85
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:85
+holds_at(on(JumpP_Num3_V, On), Time4), holds_at(canJump(On, Canjump), Time4) ->
+    terminates(jump(JumpP_Num3_V, On, Canjump),
+               on(JumpP_Num3_V, On),
+               Time4).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:85
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:85
+reactive_rule([ holds(on(JumpP_Num3_V,On),Time4),
+		holds(canJump(On,Canjump),Time4)
+	      ],
+	      [ terminates(jump(JumpP_Num3_V,
+				On,
+				Canjump),
+			   at(on(JumpP_Num3_V,On),
+			      Time4))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:87
+% [surface1,surface2,surface3,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+% Initiates(Move(surface1,surface2,surface3),CanJump(surface1,surface3),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(move(Surface1, Surface2, Surface3),
+                    canJump(Surface1, Surface3),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+initiates(move(MoveP_Num3_V,_,Move),
+	  canJump(MoveP_Num3_V,Move),
+	  Initiates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:88
+initiated(happens(move(MoveP_Num3_V,_,Move),
+		  Maptime,
+		  Happens),
+	  canJump(MoveP_Num3_V,Move),
+	  []).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:90
+% [surface1,surface2,surface3,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+% Terminates(Move(surface1,surface2,surface3),CanJump(surface1,surface2),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+
+ /*  [] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(move(Surface1, Surface2, Surface3),
+                     canJump(Surface1, Surface2),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+terminates(move(MoveP_Num3_V,Canjump,Move),
+	   canJump(MoveP_Num3_V,Canjump),
+	   Terminates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:91
+terminated(happens(move(MoveP_Num3_V,Canjump,Move),
+		   Maptime,
+		   Happens),
+	   canJump(MoveP_Num3_V,Canjump),
+	   []).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:93
+% [agent,food,surface,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:94
+% HoldsAt(On(agent,surface),time) &
+% HoldsAt(On(food,surface),time) ->
+% Initiates(Eat(agent,food),Satiated(agent),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:96
+
+ /*  [holds_at(on(Agent, Surface), Time), holds_at(on(Food, Surface), Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(eat(Agent, Food), satiated(Agent), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:96
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:96
+holds_at(on(Satiated, On), Time4), holds_at(on(Eat, On), Time4) ->
+    initiates(eat(Satiated, Eat),
+              satiated(Satiated),
+              Time4).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:96
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:96
+reactive_rule([ holds(on(Satiated,On),Time4),
+		holds(on(Eat,On),Time4)
+	      ],
+	      [ initiates(eat(Satiated,Eat),
+			  at(satiated(Satiated),Time4))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:98
+% [agent,food,surface,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:99
+% HoldsAt(On(agent,surface),time) &
+% HoldsAt(On(food,surface),time) ->
+% Terminates(Eat(agent,food),On(food,surface),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:101
+
+ /*  [holds_at(on(Agent, Surface), Time), holds_at(on(Food, Surface), Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(eat(Agent, Food),
+                     on(Food, Surface),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:101
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:101
+holds_at(on(A, On), Time4), holds_at(on(Eat, On), Time4) ->
+    terminates(eat(A, Eat), on(Eat, On), Time4).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:101
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:101
+reactive_rule([ holds(on(A,On),Time4),
+		holds(on(Eat,On),Time4)
+	      ],
+	      [ terminates(eat(A,Eat),
+			   at(on(Eat,On),Time4))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:103
+% [agent,surface1,surface2,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:104
+% HoldsAt(Believe(agent,BOn(agent,surface1)),time) &
+% HoldsAt(Believe(agent,BCanJump(surface1,surface2)),time) &
+% (belief = BOn(agent,surface2)) ->
+% Initiates(Jump(agent,surface1,surface2),
+%           Believe(agent,belief),
+%           time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:109
+
+ /*  [holds_at(believe(Agent, bOn(Agent, Surface1)), Time), holds_at(believe(Agent, bCanJump(Surface1, Surface2)), Time), equals(Belief, bOn(Agent, Surface2))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(jump(Agent, Surface1, Surface2),
+                    believe(Agent, Belief),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:109
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:109
+holds_at(believe(JumpP_Num3_V, bOn(JumpP_Num3_V, Bon)), Time5), holds_at(believe(JumpP_Num3_V, bCanJump(Bon, Bcanjump)), Time5), equals(Believe, bOn(JumpP_Num3_V, Bcanjump)) ->
+    initiates(jump(JumpP_Num3_V, Bon, Bcanjump),
+              believe(JumpP_Num3_V, Believe),
+              Time5).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:109
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:109
+reactive_rule([ holds(believe(JumpP_Num3_V,
+			      bOn(JumpP_Num3_V,Bon)),
+		      Time5),
+		holds(believe(JumpP_Num3_V,
+			      bCanJump(Bon,Bcanjump)),
+		      Time5),
+		equals(Believe,
+		       bOn(JumpP_Num3_V,Bcanjump))
+	      ],
+	      [ initiates(jump(JumpP_Num3_V,
+			       Bon,
+			       Bcanjump),
+			  at(believe(JumpP_Num3_V,Believe),
+			     Time5))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:111
+% [agent,surface1,surface2,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:112
+% HoldsAt(Believe(agent,BOn(agent,surface1)),time) &
+% HoldsAt(Believe(agent,BCanJump(surface1,surface2)),time) &
+% (belief = BOn(agent,surface1)) ->
+% Terminates(Jump(agent,surface1,surface2),
+%            Believe(agent,belief),
+%            time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:117
+
+ /*  [holds_at(believe(Agent, bOn(Agent, Surface1)), Time), holds_at(believe(Agent, bCanJump(Surface1, Surface2)), Time), equals(Belief, bOn(Agent, Surface1))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(jump(Agent, Surface1, Surface2),
+                     believe(Agent, Belief),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:117
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:117
+holds_at(believe(JumpP_Num3_V, bOn(JumpP_Num3_V, Bon)), Time5), holds_at(believe(JumpP_Num3_V, bCanJump(Bon, Bcanjump)), Time5), equals(Believe, bOn(JumpP_Num3_V, Bon)) ->
+    terminates(jump(JumpP_Num3_V, Bon, Bcanjump),
+               believe(JumpP_Num3_V, Believe),
+               Time5).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:117
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:117
+reactive_rule([ holds(believe(JumpP_Num3_V,
+			      bOn(JumpP_Num3_V,Bon)),
+		      Time5),
+		holds(believe(JumpP_Num3_V,
+			      bCanJump(Bon,Bcanjump)),
+		      Time5),
+		equals(Believe,bOn(JumpP_Num3_V,Bon))
+	      ],
+	      [ terminates(jump(JumpP_Num3_V,
+				Bon,
+				Bcanjump),
+			   at(believe(JumpP_Num3_V,Believe),
+			      Time5))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:119
+% [agent,surface1,surface2,surface3,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:120
+% (belief = BCanJump(surface1,surface3)) ->
+% Initiates(Move(surface1,surface2,surface3),
+%           Believe(agent,belief),
+%           time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:123
+
+ /*  [equals(Belief, bCanJump(Surface1, Surface3))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(move(Surface1, Surface2, Surface3),
+                    believe(Agent, Belief),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:123
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:123
+equals(Believe, bCanJump(MoveP_Num3_V, Bcanjump)) ->
+    initiates(move(MoveP_Num3_V, _, Bcanjump),
+              believe(_, Believe),
+              Initiates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:123
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:123
+reactive_rule([ equals(Believe,
+		       bCanJump(MoveP_Num3_V,Bcanjump))
+	      ],
+	      [ initiates(move(MoveP_Num3_V,
+			       _,
+			       Bcanjump),
+			  at(believe(_,Believe),
+			     Initiates))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:125
+% [agent,surface1,surface2,surface3,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:126
+% (belief = BCanJump(surface1,surface2)) ->
+% Terminates(Move(surface1,surface2,surface3),
+%            Believe(agent,belief),
+%            time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:129
+
+ /*  [equals(Belief, bCanJump(Surface1, Surface2))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(move(Surface1, Surface2, Surface3),
+                     believe(Agent, Belief),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:129
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:129
+equals(Believe, bCanJump(MoveP_Num3_V, Bcanjump)) ->
+    terminates(move(MoveP_Num3_V, Bcanjump, Move),
+               believe(_, Believe),
+               Terminates).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:129
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:129
+reactive_rule([ equals(Believe,
+		       bCanJump(MoveP_Num3_V,Bcanjump))
+	      ],
+	      [ terminates(move(MoveP_Num3_V,
+				Bcanjump,
+				Move),
+			   at(believe(_,Believe),
+			      Terminates))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:131
+% [agent,food,surface,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:132
+% HoldsAt(Believe(agent,BOn(agent,surface)),time) &
+% HoldsAt(Believe(agent,BOn(food,surface)),time) &
+% (belief = BSatiated(agent)) ->
+% Initiates(Eat(agent,food),Believe(agent,belief),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:135
+
+ /*  [holds_at(believe(Agent, bOn(Agent, Surface)), Time), holds_at(believe(Agent, bOn(Food, Surface)), Time), equals(Belief, bSatiated(Agent))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          initiates(eat(Agent, Food),
+                    believe(Agent, Belief),
+                    Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:135
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:135
+holds_at(believe(Bsatiated, bOn(Bsatiated, Bon)), Time5), holds_at(believe(Bsatiated, bOn(Eat, Bon)), Time5), equals(Believe, bSatiated(Bsatiated)) ->
+    initiates(eat(Bsatiated, Eat),
+              believe(Bsatiated, Believe),
+              Time5).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:135
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:135
+reactive_rule([ holds(believe(Bsatiated,
+			      bOn(Bsatiated,Bon)),
+		      Time5),
+		holds(believe(Bsatiated,bOn(Eat,Bon)),
+		      Time5),
+		equals(Believe,bSatiated(Bsatiated))
+	      ],
+	      [ initiates(eat(Bsatiated,Eat),
+			  at(believe(Bsatiated,Believe),
+			     Time5))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:137
+% [agent,food,surface,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:138
+% HoldsAt(Believe(agent,BOn(agent,surface)),time) &
+% HoldsAt(Believe(agent,BOn(food,surface)),time) &
+% (belief = BOn(food,surface)) ->
+% Terminates(Eat(agent,food),Believe(agent,belief),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:141
+
+ /*  [holds_at(believe(Agent, bOn(Agent, Surface)), Time), holds_at(believe(Agent, bOn(Food, Surface)), Time), equals(Belief, bOn(Food, Surface))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          terminates(eat(Agent, Food),
+                     believe(Agent, Belief),
+                     Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:141
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:141
+holds_at(believe(A, bOn(A, Bon)), Time5), holds_at(believe(A, bOn(Eat, Bon)), Time5), equals(Believe, bOn(Eat, Bon)) ->
+    terminates(eat(A, Eat),
+               believe(A, Believe),
+               Time5).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:141
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:141
+reactive_rule([ holds(believe(A,bOn(A,Bon)),
+		      Time5),
+		holds(believe(A,bOn(Eat,Bon)),
+		      Time5),
+		equals(Believe,bOn(Eat,Bon))
+	      ],
+	      [ terminates(eat(A,Eat),
+			   at(believe(A,Believe),
+			      Time5))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:143
+%; Delta
+%; A7
+% [agent,belief,plan,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:147
+% HoldsAt(Goal(agent,belief),time) &
+% !HoldsAt(Believe(agent,belief),time) &
+% SelectedPlan(agent,belief,plan,time) &
+% (!{plan1} HoldsAt(Plan(agent,belief,plan1),time)) ->
+% Happens(AddPlan(agent,belief,plan),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  holds_at(goal(Agent, Belief), Time), holds_at(neg(believe(Agent, Belief)), Time), selectedPlan(Agent, Belief, Plan, Time), not(exists([Plan1], holds_at(plan(Agent, Belief, Plan1), Time))) ->
+       happens(addPlan(Agent, Belief, Plan), Time).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  happens(addPlan(Agent, Belief, Plan), Time) :-
+       holds_at(goal(Agent, Belief), Time),
+       holds_at(neg(believe(Agent, Belief)), Time),
+       selectedPlan(Agent, Belief, Plan, Time),
+       not(holds_at(plan(Agent, Belief, Plan1), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  [holds_at(goal(Agent, Belief), Time), holds_at(neg(believe(Agent, Belief)), Time), selectedPlan(Agent, Belief, Plan, Time), holds_at(neg(plan(Agent, Belief, Plan1)), Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          happens(addPlan(Agent, Belief, Plan), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+holds_at(goal(SelectedplanP_Num4_V, Goal), Time5), holds_at(neg(believe(SelectedplanP_Num4_V, Goal)), Time5), selectedPlan(SelectedplanP_Num4_V, Goal, Addplan, Time5), holds_at(neg(plan(SelectedplanP_Num4_V, Goal, Plan8)), Time5) ->
+    happens(addPlan(SelectedplanP_Num4_V, Goal, Addplan),
+            Time5).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+reactive_rule([ holds(goal(SelectedplanP_Num4_V,Goal),
+		      Time5),
+		holds(not(believe(SelectedplanP_Num4_V,
+				  Goal)),
+		      Time5),
+		selectedPlan(SelectedplanP_Num4_V,
+			     Goal,
+			     Addplan,
+			     Time5),
+		holds(not(plan(SelectedplanP_Num4_V,
+			       Goal,
+			       Plan8)),
+		      Time5)
+	      ],
+	      [ happens(addPlan(SelectedplanP_Num4_V,
+				Goal,
+				Addplan),
+			Time5)
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  not(holds_at(goal(Agent, Belief), Time)) :-
+       holds_at(neg(believe(Agent, Belief)), Time),
+       selectedPlan(Agent, Belief, Plan, Time),
+       not(holds_at(plan(Agent, Belief, Plan1), Time)),
+       not(happens(addPlan(Agent, Belief, Plan), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  [holds_at(neg(believe(Agent, Belief)), Time), selectedPlan(Agent, Belief, Plan, Time), holds_at(neg(plan(Agent, Belief, Plan1)), Time), not(happens(addPlan(Agent, Belief, Plan), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(neg(goal(Agent, Belief)), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+holds_at(neg(believe(SelectedplanP_Num4_V12, Believe)), Time10), selectedPlan(SelectedplanP_Num4_V12, Believe, Addplan14, Time10), holds_at(neg(plan(SelectedplanP_Num4_V12, Believe, Plan13)), Time10), not(happens(addPlan(SelectedplanP_Num4_V12, Believe, Addplan14), Time10)) ->
+    holds_at(neg(goal(SelectedplanP_Num4_V12, Believe)),
+             Time10).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+reactive_rule([ holds(not(believe(SelectedplanP_Num4_V12,
+				  Believe)),
+		      Time10),
+		selectedPlan(SelectedplanP_Num4_V12,
+			     Believe,
+			     Addplan14,
+			     Time10),
+		holds(not(plan(SelectedplanP_Num4_V12,
+			       Believe,
+			       Plan13)),
+		      Time10),
+		not(happens(addPlan(SelectedplanP_Num4_V12,
+				    Believe,
+				    Addplan14),
+			    Time10))
+	      ],
+	      [ holds(not(goal(SelectedplanP_Num4_V12,
+			       Believe)),
+		      Time10)
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  not(holds_at(neg(believe(Agent, Belief)), Time)) :-
+       selectedPlan(Agent, Belief, Plan, Time),
+       not(holds_at(plan(Agent, Belief, Plan1), Time)),
+       holds_at(goal(Agent, Belief), Time),
+       not(happens(addPlan(Agent, Belief, Plan), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  [selectedPlan(Agent, Belief, Plan, Time), holds_at(neg(plan(Agent, Belief, Plan1)), Time), holds_at(goal(Agent, Belief), Time), not(happens(addPlan(Agent, Belief, Plan), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(believe(Agent, Belief), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+selectedPlan(SelectedplanP_Num4_V16, Goal18, Addplan19, Time15), holds_at(neg(plan(SelectedplanP_Num4_V16, Goal18, Plan17)), Time15), holds_at(goal(SelectedplanP_Num4_V16, Goal18), Time15), not(happens(addPlan(SelectedplanP_Num4_V16, Goal18, Addplan19), Time15)) ->
+    holds_at(believe(SelectedplanP_Num4_V16, Goal18), Time15).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+reactive_rule([ selectedPlan(SelectedplanP_Num4_V16,
+			     Goal18,
+			     Addplan19,
+			     Time15),
+		holds(not(plan(SelectedplanP_Num4_V16,
+			       Goal18,
+			       Plan17)),
+		      Time15),
+		holds(goal(SelectedplanP_Num4_V16,Goal18),
+		      Time15),
+		not(happens(addPlan(SelectedplanP_Num4_V16,
+				    Goal18,
+				    Addplan19),
+			    Time15))
+	      ],
+	      [ holds(believe(SelectedplanP_Num4_V16,
+			      Goal18),
+		      Time15)
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  not(selectedPlan(Agent, Belief, Plan, Time)) :-
+       not(holds_at(plan(Agent, Belief, Plan1), Time)),
+       holds_at(neg(believe(Agent, Belief)), Time),
+       holds_at(goal(Agent, Belief), Time),
+       not(happens(addPlan(Agent, Belief, Plan), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  [holds_at(neg(plan(Agent, Belief, Plan1)), Time), holds_at(neg(believe(Agent, Belief)), Time), holds_at(goal(Agent, Belief), Time), not(happens(addPlan(Agent, Belief, Plan), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          not(selectedPlan(Agent, Belief, Plan, Time))).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+holds_at(neg(plan(PlanP_Num3_V, Believe23, Plan21)), Time20), holds_at(neg(believe(PlanP_Num3_V, Believe23)), Time20), holds_at(goal(PlanP_Num3_V, Believe23), Time20), not(happens(addPlan(PlanP_Num3_V, Believe23, Addplan24), Time20)) ->
+    not(selectedPlan(PlanP_Num3_V,
+                     Believe23,
+                     Addplan24,
+                     Time20)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+reactive_rule([ holds(not(plan(PlanP_Num3_V,
+			       Believe23,
+			       Plan21)),
+		      Time20),
+		holds(not(believe(PlanP_Num3_V,Believe23)),
+		      Time20),
+		holds(goal(PlanP_Num3_V,Believe23),
+		      Time20),
+		not(happens(addPlan(PlanP_Num3_V,
+				    Believe23,
+				    Addplan24),
+			    Time20))
+	      ],
+	      [ not(selectedPlan(PlanP_Num3_V,
+				 Believe23,
+				 Addplan24,
+				 Time20))
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  holds_at(plan(Agent, Belief, Plan1), Time) :-
+       selectedPlan(Agent, Belief, Plan, Time),
+       holds_at(neg(believe(Agent, Belief)), Time),
+       holds_at(goal(Agent, Belief), Time),
+       not(happens(addPlan(Agent, Belief, Plan), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+
+ /*  [selectedPlan(Agent, Belief, Plan, Time), holds_at(neg(believe(Agent, Belief)), Time), holds_at(goal(Agent, Belief), Time), not(happens(addPlan(Agent, Belief, Plan), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(plan(Agent, Belief, Plan1), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+selectedPlan(SelectedplanP_Num4_V26, Believe27, Addplan28, Time25), holds_at(neg(believe(SelectedplanP_Num4_V26, Believe27)), Time25), holds_at(goal(SelectedplanP_Num4_V26, Believe27), Time25), not(happens(addPlan(SelectedplanP_Num4_V26, Believe27, Addplan28), Time25)) ->
+    holds_at(plan(SelectedplanP_Num4_V26, Believe27, Plan29),
+             Time25).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:151
+reactive_rule([ selectedPlan(SelectedplanP_Num4_V26,
+			     Believe27,
+			     Addplan28,
+			     Time25),
+		holds(not(believe(SelectedplanP_Num4_V26,
+				  Believe27)),
+		      Time25),
+		holds(goal(SelectedplanP_Num4_V26,
+			   Believe27),
+		      Time25),
+		not(happens(addPlan(SelectedplanP_Num4_V26,
+				    Believe27,
+				    Addplan28),
+			    Time25))
+	      ],
+	      [ holds(plan(SelectedplanP_Num4_V26,
+			   Believe27,
+			   Plan29),
+		      Time25)
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:153
+%; A8
+% [agent,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:155
+% HoldsAt(Plan(agent,belief,P1),time) &
+% !HoldsAt(Believe(agent,belief),time) &
+% SoundPlan(agent,belief,P1,time) ->
+% Happens(Jump(Cat,Floor,Chair),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  holds_at(plan(Agent, Belief, p1), Time), holds_at(neg(believe(Agent, Belief)), Time), soundPlan(Agent, Belief, p1, Time) ->
+       happens(jump(cat, floor, chair), Time).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  happens(jump(cat, floor, chair), Time) :-
+       holds_at(plan(Agent, Belief, p1), Time),
+       holds_at(neg(believe(Agent, Belief)), Time),
+       soundPlan(Agent, Belief, p1, Time).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  [holds_at(plan(Agent, Belief, p1), Time), holds_at(neg(believe(Agent, Belief)), Time), soundPlan(Agent, Belief, p1, Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          happens(jump(cat, floor, chair), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+holds_at(plan(PlanP_Num3_V, Believe, p1), Time3), holds_at(neg(believe(PlanP_Num3_V, Believe)), Time3), soundPlan(PlanP_Num3_V, Believe, p1, Time3) ->
+    happens(jump(cat, floor, chair), Time3).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+reactive_rule([ holds(plan(PlanP_Num3_V,Believe,p1),
+		      Time3),
+		holds(not(believe(PlanP_Num3_V,Believe)),
+		      Time3),
+		soundPlan(PlanP_Num3_V,
+			  Believe,
+			  p1,
+			  Time3)
+	      ],
+	      [happens(jump(cat,floor,chair),Time3)]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  not(holds_at(plan(Agent, Belief, p1), Time)) :-
+       holds_at(neg(believe(Agent, Belief)), Time),
+       soundPlan(Agent, Belief, p1, Time),
+       not(happens(jump(cat, floor, chair), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  [holds_at(neg(believe(Agent, Belief)), Time), soundPlan(Agent, Belief, p1, Time), not(happens(jump(cat, floor, chair), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(neg(plan(Agent, Belief, p1)), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+holds_at(neg(believe(SoundplanP_Num4_V, Believe7)), Time6), soundPlan(SoundplanP_Num4_V, Believe7, p1, Time6), not(happens(jump(cat, floor, chair), Time6)) ->
+    holds_at(neg(plan(SoundplanP_Num4_V, Believe7, p1)), Time6).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+reactive_rule([ holds(not(believe(SoundplanP_Num4_V,
+				  Believe7)),
+		      Time6),
+		soundPlan(SoundplanP_Num4_V,
+			  Believe7,
+			  p1,
+			  Time6),
+		not(happens(jump(cat,floor,chair),Time6))
+	      ],
+	      [ holds(not(plan(SoundplanP_Num4_V,
+			       Believe7,
+			       p1)),
+		      Time6)
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  not(holds_at(neg(believe(Agent, Belief)), Time)) :-
+       soundPlan(Agent, Belief, p1, Time),
+       holds_at(plan(Agent, Belief, p1), Time),
+       not(happens(jump(cat, floor, chair), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  [soundPlan(Agent, Belief, p1, Time), holds_at(plan(Agent, Belief, p1), Time), not(happens(jump(cat, floor, chair), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          holds_at(believe(Agent, Belief), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+soundPlan(SoundplanP_Num4_V10, Believe11, p1, Time9), holds_at(plan(SoundplanP_Num4_V10, Believe11, p1), Time9), not(happens(jump(cat, floor, chair), Time9)) ->
+    holds_at(believe(SoundplanP_Num4_V10, Believe11), Time9).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+reactive_rule([ soundPlan(SoundplanP_Num4_V10,
+			  Believe11,
+			  p1,
+			  Time9),
+		holds(plan(SoundplanP_Num4_V10,
+			   Believe11,
+			   p1),
+		      Time9),
+		not(happens(jump(cat,floor,chair),Time9))
+	      ],
+	      [ holds(believe(SoundplanP_Num4_V10,
+			      Believe11),
+		      Time9)
+	      ]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  not(soundPlan(Agent, Belief, p1, Time)) :-
+       holds_at(neg(believe(Agent, Belief)), Time),
+       holds_at(plan(Agent, Belief, p1), Time),
+       not(happens(jump(cat, floor, chair), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+
+ /*  [holds_at(neg(believe(Agent, Belief)), Time), holds_at(plan(Agent, Belief, p1), Time), not(happens(jump(cat, floor, chair), Time))] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          not(soundPlan(Agent, Belief, p1, Time))).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+holds_at(neg(believe(PlanP_Num3_V14, Believe13)), Time12), holds_at(plan(PlanP_Num3_V14, Believe13, p1), Time12), not(happens(jump(cat, floor, chair), Time12)) ->
+    not(soundPlan(PlanP_Num3_V14, Believe13, p1, Time12)).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:158
+reactive_rule([ holds(not(believe(PlanP_Num3_V14,Believe13)),
+		      Time12),
+		holds(plan(PlanP_Num3_V14,Believe13,p1),
+		      Time12),
+		not(happens(jump(cat,floor,chair),Time12))
+	      ],
+	      [ not(soundPlan(PlanP_Num3_V14,
+			      Believe13,
+			      p1,
+			      Time12))
+	      ]).
+
+
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:160
+% [agent,belief,time]
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:161
+% HoldsAt(Plan(agent,belief,P1a),time) &
+% !HoldsAt(Believe(agent,belief),time) &
+% SoundPlan(agent,belief,P1a,time) ->
+% Happens(Wait(Cat),time).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+
+ /*  holds_at(plan(Agent, Belief, p1a), Time), holds_at(neg(believe(Agent, Belief)), Time), soundPlan(Agent, Belief, p1a, Time) ->
+       happens(wait(cat), Time).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+
+ /*  happens(wait(cat), Time) :-
+       holds_at(plan(Agent, Belief, p1a), Time),
+       holds_at(neg(believe(Agent, Belief)), Time),
+       soundPlan(Agent, Belief, p1a, Time).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+
+ /*  [holds_at(plan(Agent, Belief, p1a), Time), holds_at(neg(believe(Agent, Belief)), Time), soundPlan(Agent, Belief, p1a, Time)] ->
+       ta(Time,
+          tvs1=[Time],
+          tvs2=[Time],
+          happens(wait(cat), Time)).
+ */
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+holds_at(plan(PlanP_Num3_V, Believe, p1a), Time3), holds_at(neg(believe(PlanP_Num3_V, Believe)), Time3), soundPlan(PlanP_Num3_V, Believe, p1a, Time3) ->
+    happens(wait(cat), Time3).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+reactive_rule([ holds(plan(PlanP_Num3_V,Believe,p1a),
+		      Time3),
+		holds(not(believe(PlanP_Num3_V,Believe)),
+		      Time3),
+		soundPlan(PlanP_Num3_V,
+			  Believe,
+			  p1a,
+			  Time3)
+	      ],
+	      [happens(wait(cat),Time3)]).
+% From /pack/logicmoo_ec/ext/ec_sources/examples/Mueller2006/Chapter11/HungryCat.e:164
+
+ /*  not(holds_at(plan(Agent, Belief, p1a), Time)) :-
+       holds_at(neg(believe(Agent, Belief)), Time),
+       soundPlan(Agent, Belief, p1a, Time),
+       not(happens(wait(cat), Time)).
+ */

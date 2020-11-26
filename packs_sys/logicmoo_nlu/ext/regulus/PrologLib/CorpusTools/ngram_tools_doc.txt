@@ -1,0 +1,71 @@
+
+UTILITIES FOR MANIPULATING NGRAMS
+---------------------------------
+
+Basic scheme:
+
+0. Clean and sentence-tokenize the data using the Python scripts read_forum_data.py and analyse_collected_data_new.py.
+
+1. Use tokenize_sents_in_file/2 in tokenize_sents.pl to tokenize the data into words.
+
+2. Use extract_ngrams/4 in extract_ngrams.pl to extract ngram count records.
+
+3. Use normalise_ngram_file/4 in manipulate_ngram_files.pl to convert counts into frequencies.
+   Possibly use combine_normalised_ngram_files/3 to combine files (we generally want to combine with other training data, e.g. Europarl).
+
+4. Use order_combined_ngrams/3 in manipulate_ngram_files.pl to create an ordered file of ngram frequencies selected by some predicate.
+
+
+FILES
+-----
+
+tokenize_sents.pl
+
+tokenize_sents_in_file(+InFile, +OutFile)
+
+Tokenizes sents in InFile and puts results in OutFile. 
+InFile may have been created by the utilities for cleaning and sentence-tokenizing French data.
+
+Both files are UTF-8.
+
+------------------------
+
+extract_ngrams.pl
+
+extract_ngrams(+InFile, +TmpFile, +SortedTmpFile, +OutFile) :-
+
+InFile is a tokenized file produced by tokenize_sents_in_file/2.
+
+TmpFile and SortedTmpFile are temporary working files.
+
+OutFile is a sorted file associating ngrams with counts. 
+
+All files are UTF-8.
+
+------------------------
+
+manipulate_ngram_files.pl
+
+normalise_ngram_file(+InFile, +OutFile)
+
+InFile is a sorted ngram/count file produced by extract_ngrams/4.
+
+OutFile is an ngram/frequency file.
+
+combine_normalised_ngram_files(+InFile1, +InFile2, +OutFile)
+
+InFile1 and InFile2 are ngram/frequency files.
+
+OutFile is an ngram/frequency file which combines them.
+
+order_combined_ngrams(+InFile, +FilterPred, +OutFile)
+
+InFile is an ngram/frequency file.
+
+FilterPred is a predicate defined in this file which may hold of an n-gram
+
+OutFile is a sorted ngram/frequency file containing the elements for which FilterPred holds.
+
+DATA
+----
+

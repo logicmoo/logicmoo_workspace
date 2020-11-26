@@ -1,0 +1,90 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%   Example code from the book "Natural Language Processing in Prolog"  %
+%                      published by Addison Wesley                      %
+%        Copyright (c) 1989, Gerald Gazdar & Christopher Mellish.       %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%
+% airlines.ptr [Chapter  8] Syntax and semantics for airline fragment
+%
+test1 :- test(['Delta',is_independent]).
+test2 :- test([every,hotel_chain,is_independent]).
+test3 :- test([an,airline,took_over,every,hotel_chain]).
+test4 :- test([each,airline,took_over,a,hotel_chain]).
+test5 :- test([who,took_over,an,airline]).
+
+W ord 'Delta' :-
+        W : cat === np,
+        W : sem === W : hole,
+        W : referent === 'Delta'.
+
+W ord is_independent :-
+        W : cat === vp,
+        W : sem : arg0 === W : arg0,
+        W : sem : predicate === independent.
+
+W ord took_over :-
+        W : cat === tv,
+        W : sem : arg0 === W : arg0,
+        W : sem : arg1 === W : arg1,
+        W : sem : predicate === took_over.
+
+W ord airline :-
+       W : cat === n,
+       W : sem : arg0 === W : referent,
+       W : sem : predicate === airline.
+
+W ord hotel_chain :-
+       W : cat === n,
+       W : sem : arg0 === W : referent,
+       W : sem : predicate === hotel_chain.
+
+W ord each :-
+       W : cat === det,
+       W : sem : quantifier === all.
+
+W ord every :-
+       W : cat === det,
+       W : sem : quantifier === all.
+
+W ord an :-
+       W : cat === det,
+       W : sem : quantifier === exists.
+
+W ord a :-
+       W : cat === det,
+       W : sem : quantifier === exists.
+
+W ord who :-
+        W : cat === np,
+        W : sem : quantifier === all,
+        W : sem : restriction === W : hole,
+        W : sem : body : action === printout,
+        W : sem : body : arg0 === W : sem : variable,
+        W : sem : variable === W : referent.
+
+R ule S ---> [NP, VP] :-
+        S : cat === s,
+        S : sem === NP : sem,
+        NP : cat === np,
+        NP : hole === VP : sem,
+        NP : referent === VP : arg0,
+        VP : cat === vp.
+
+R ule VP ---> [TV, NP] :-
+        VP : cat === vp,
+        VP : sem === NP : sem,
+        TV : cat === tv,
+        TV : arg0 === VP : arg0,
+        TV : arg1 === NP : referent,
+        NP : cat === np,
+        NP : hole === TV : sem.
+
+R ule NP ---> [DET, N] :-
+        NP : cat === np,
+        NP : sem : quantifier === DET : sem : quantifier,
+        NP : sem : variable === NP : referent ,
+        NP : sem : restriction === N : sem,
+        NP : sem : body === NP : hole,
+        DET : cat === det,
+        N : cat === n,
+        N : referent === NP : referent.

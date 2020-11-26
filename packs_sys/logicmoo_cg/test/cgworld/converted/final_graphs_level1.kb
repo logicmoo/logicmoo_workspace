@@ -1,0 +1,177 @@
+% [Entity:'Block'(ATTR[Block*b][Color])(CHRC?b[Shape]);Each block has a color and shape;]
+cgc(4,simple,'block',[fs(num,sing)],[]).
+cgc(5,simple,'color',[fs(num,sing)],[]).
+cgc(7,simple,'shape',[fs(num,sing)],[]).
+cg(6,[cgr(attr, [4, 5], _),
+        cgr(chrc, [4, 7], _)], [],
+        
+        [fs(comment,'Each block has a color and shape'),
+        fs(kind,body_of_context)]).
+cgc(3,complex,entity,[6],[fs(name,'Block'),fs(comment,'Each block has a color and shape')]).
+% [Act:'Pickup'(PTNT[Pickup*p][Block*b])(INST?p[Hand*h])(RSLT?p[Situation:(GRASP?h?b)]);Each block is picked up using a hand;]
+cgc(9,simple,'pickup',[fs(num,sing)],[]).
+cgc(10,simple,'block',[fs(num,sing)],[]).
+cgc(12,simple,'hand',[fs(num,sing)],[]).
+cg(14,[cgr(grasp, [12, 10], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(13,complex,situation,[14],[]).
+cg(11,[cgr(ptnt, [9, 10], _),
+        cgr(inst, [9, 12], _),cgr(rslt, [9, 13], _)], 
+        [],
+        [fs(comment,'Each block is picked up using a hand'),
+        fs(kind,body_of_context)]).
+cgc(8,complex,act,[11],[fs(name,'Pickup'),fs(comment,'Each block is picked up using a hand')]).
+% [Act:'Putdown'(PTNT[Putdown*p][Block*b])(DEST?p[Location*l])(INST?p[Hand])(RSLT?p[Situation:(Top?b?l)]);Each block is put down at a location from the hand;]
+cgc(16,simple,'putdown',[fs(num,sing)],[]).
+cgc(17,simple,'block',[fs(num,sing)],[]).
+cgc(19,simple,'location',[fs(num,sing)],[]).
+cgc(20,simple,'hand',[fs(num,sing)],[]).
+cg(22,[cgr(top, [17, 19], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(21,complex,situation,[22],[]).
+cg(18,[cgr(ptnt, [16, 17], _),
+        cgr(dest, [16, 19], _),cgr(inst, [16, 20], _),
+        cgr(rslt, [16, 21], _)], [],
+        
+        [fs(comment,'Each block is put down at a location from the hand'),
+        fs(kind,body_of_context)]).
+cgc(15,complex,act,[18],[fs(name,'Putdown'),fs(comment,'Each block is put down at a location from the hand')]).
+% [Act:'MoveHand'(DEST[MoveHand*m][Location*l])(PTNT?m[Hand*h])(RSLT?m[Situation:(At?h?l)]);This action moves the hand to a location;]
+cgc(24,simple,'movehand',[fs(num,sing)],[]).
+cgc(25,simple,'location',[fs(num,sing)],[]).
+cgc(27,simple,'hand',[fs(num,sing)],[]).
+cg(29,[cgr(at, [27, 25], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(28,complex,situation,[29],[]).
+cg(26,[cgr(dest, [24, 25], _),
+        cgr(ptnt, [24, 27], _),cgr(rslt, [24, 28], _)], 
+        [],
+        [fs(comment,'This action moves the hand to a location'),
+        fs(kind,body_of_context)]).
+cgc(23,complex,act,[26],[fs(name,'MoveHand'),fs(comment,'This action moves the hand to a location')]).
+% [Act:'MoveBlock'(DEST[MoveBlock*m][Location*l])(PTNT?m[Block*b])(INST?m[Hand])(RSLT?m[Situation:(At?b?l)]);This action moves the block to a location;]
+cgc(31,simple,'moveblock',[fs(num,sing)],[]).
+cgc(32,simple,'location',[fs(num,sing)],[]).
+cgc(34,simple,'block',[fs(num,sing)],[]).
+cgc(35,simple,'hand',[fs(num,sing)],[]).
+cg(37,[cgr(at, [34, 32], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(36,complex,situation,[37],[]).
+cg(33,[cgr(dest, [31, 32], _),
+        cgr(ptnt, [31, 34], _),cgr(inst, [31, 35], _),
+        cgr(rslt, [31, 36], _)], [],
+        
+        [fs(comment,'This action moves the block to a location'),
+        fs(kind,body_of_context)]).
+cgc(30,complex,act,[33],[fs(name,'MoveBlock'),fs(comment,'This action moves the block to a location')]).
+% [Relation:'At'(POS[Entity][Location])]
+cgc(39,simple,'entity',[fs(num,sing)],[]).
+cgc(40,simple,'location',[fs(num,sing)],[]).
+cg(41,[cgr(pos, [39, 40], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(38,complex,relation,[41],[fs(name,'At')]).
+% [Relation:'Top'(Ontable[Block*b1][Location])~[(Above[Block*b2]?b1)];A block on top is at a location and has no blocks above it;]
+cgc(43,simple,'block',[fs(num,sing)],[]).
+cgc(44,simple,'location',[fs(num,sing)],[]).
+cgc(46,simple,'block',[fs(num,sing)],[]).
+cg(47,[cgr(above, [46, 43], _)], 
+        [],
+        [fs(kind,normal)]).
+cg(45,[cgr(ontable, [43, 44], _),
+        cgr(not, [47], _)], [],
+        
+        [fs(comment,'A block on top is at a location and has no blocks above it'),
+        fs(kind,body_of_context)]).
+cgc(42,complex,relation,[45],[fs(name,'Top'),fs(comment,'A block on top is at a location and has no blocks above it')]).
+% [Relation:'EmptyHand'~[(GRASP[Hand][Block])];A block is empty when no blocks are in it;]
+cgc(49,simple,'hand',[fs(num,sing)],[]).
+cgc(50,simple,'block',[fs(num,sing)],[]).
+cg(51,[cgr(grasp, [49, 50], _)], 
+        [],
+        [fs(kind,normal)]).
+cg(52,[cgr(not, [51], _)], 
+        [],
+        [fs(comment,'A block is empty when no blocks are in it'),
+        fs(kind,body_of_context)]).
+cgc(48,complex,relation,[52],[fs(name,'EmptyHand'),fs(comment,'A block is empty when no blocks are in it')]).
+% [Relation:'OnTable'(At[Block*b][Location])~[(GRASP[Hand]?b)];A block on the table is at a location and not in the hand;]
+cgc(54,simple,'block',[fs(num,sing)],[]).
+cgc(55,simple,'location',[fs(num,sing)],[]).
+cgc(57,simple,'hand',[fs(num,sing)],[]).
+cg(58,[cgr(grasp, [57, 54], _)], 
+        [],
+        [fs(kind,normal)]).
+cg(56,[cgr(at, [54, 55], _),
+        cgr(not, [58], _)], [],
+        
+        [fs(comment,'A block on the table is at a location and not in the hand'),
+        fs(kind,body_of_context)]).
+cgc(53,complex,relation,[56],[fs(name,'OnTable'),fs(comment,'A block on the table is at a location and not in the hand')]).
+% [Relation:'Above'(OnTable[Block*b1][Location*l])(OnTable[Block*b2]?l);The first block is above the second block at the same location;]
+cgc(60,simple,'block',[fs(num,sing)],[]).
+cgc(61,simple,'location',[fs(num,sing)],[]).
+cgc(63,simple,'block',[fs(num,sing)],[]).
+cg(62,[cgr(ontable, [60, 61], _),
+        cgr(ontable, [63, 61], _)], 
+        [],
+        [fs(comment,'The first block is above the second block at the same location'),
+        fs(kind,body_of_context)]).
+cgc(59,complex,relation,[62],[fs(name,'Above'),fs(comment,'The first block is above the second block at the same location')]).
+% (ATTR[Block*b:#1][Color:'Red'])(CHRC?b[Shape:'Cubical'])
+cgc(64,simple,'block',[fs(num,sing),fs(type,def),fs(refID,1)],[]).
+cgc(65,simple,'color',[fs(name,'Red')],[]).
+cgc(67,simple,'shape',[fs(name,'Cubical')],[]).
+cg(66,[cgr(attr, [64, 65], _),
+        cgr(chrc, [64, 67], _)], [],
+        
+        [fs(kind,normal)]).
+% (ATTR[Block*b:#2][Color:'Blue'])(CHRC?b[Shape:'Cubical'])
+cgc(68,simple,'block',[fs(num,sing),fs(type,def),fs(refID,2)],[]).
+cgc(69,simple,'color',[fs(name,'Blue')],[]).
+cgc(71,simple,'shape',[fs(name,'Cubical')],[]).
+cg(70,[cgr(attr, [68, 69], _),
+        cgr(chrc, [68, 71], _)], [],
+        
+        [fs(kind,normal)]).
+% (ATTR[Block*b:#3][Color:'Green'])(CHRC?b[Shape:'Cubical'])
+cgc(72,simple,'block',[fs(num,sing),fs(type,def),fs(refID,3)],[]).
+cgc(73,simple,'color',[fs(name,'Green')],[]).
+cgc(75,simple,'shape',[fs(name,'Cubical')],[]).
+cg(74,[cgr(attr, [72, 73], _),
+        cgr(chrc, [72, 75], _)], [],
+        
+        [fs(kind,normal)]).
+% (OnTable[Block:#1][Location:#5])
+cgc(76,simple,'block',[fs(num,sing),fs(type,def),fs(refID,1)],[]).
+cgc(77,simple,'location',[fs(num,sing),fs(type,def),fs(refID,5)],[]).
+cg(78,[cgr(ontable, [76, 77], _)], 
+        [],
+        [fs(kind,normal)]).
+% (OnTable[Block:#2][Location:#6])
+cgc(79,simple,'block',[fs(num,sing),fs(type,def),fs(refID,2)],[]).
+cgc(80,simple,'location',[fs(num,sing),fs(type,def),fs(refID,6)],[]).
+cg(81,[cgr(ontable, [79, 80], _)], 
+        [],
+        [fs(kind,normal)]).
+% (OnTable[Block:#3][Location:#5])
+cgc(82,simple,'block',[fs(num,sing),fs(type,def),fs(refID,3)],[]).
+cgc(83,simple,'location',[fs(num,sing),fs(type,def),fs(refID,5)],[]).
+cg(84,[cgr(ontable, [82, 83], _)], 
+        [],
+        [fs(kind,normal)]).
+% (Above[Block:#1][Block:#3])
+cgc(85,simple,'block',[fs(num,sing),fs(type,def),fs(refID,1)],[]).
+cgc(86,simple,'block',[fs(num,sing),fs(type,def),fs(refID,3)],[]).
+cg(87,[cgr(above, [85, 86], _)], 
+        [],
+        [fs(kind,normal)]).
+% (Emptyhand[Hand:#4])
+cgc(88,simple,'hand',[fs(num,sing),fs(type,def),fs(refID,4)],[]).
+cg(89,[cgr(emptyhand, [88], _)], 
+        [],
+        [fs(kind,normal)]).

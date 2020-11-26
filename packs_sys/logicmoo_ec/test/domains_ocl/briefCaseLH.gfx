@@ -1,0 +1,150 @@
+<jgx-1.01>
+<model>
+	<a class="state" id="1" val="1" rect="114.0,108.0,45.0,37.0" attr="0">
+		<a class="port" id="2" val="2"/>
+	</a>
+	<a class="state" id="3" val="3" rect="252.0,96.0,37.0,37.0" attr="1">
+		<a class="port" id="4" val="2"/>
+	</a>
+	<a class="state" id="5" val="4" rect="258.0,192.0,37.0,37.0" attr="2">
+		<a class="port" id="6" val="2"/>
+	</a>
+	<a class="transState" id="7" val="5" rect="294.0,150.0,52.0,17.0" attr="3">
+		<a class="port" id="8" val="2"/>
+	</a>
+	<a class="transState" id="9" val="6" rect="210.0,150.0,35.0,17.0" attr="3">
+		<a class="port" id="10" val="2"/>
+	</a>
+	<a class="transitionEdge" id="11" val="2" src="4" tgt="10" pts="10.0,10.0,20.0,20.0" attr="4"/>
+	<a class="transitionEdge" id="12" val="2" src="10" tgt="6" pts="10.0,10.0,20.0,20.0" attr="4"/>
+	<a class="transitionEdge" id="13" val="2" src="6" tgt="8" pts="10.0,10.0,20.0,20.0" attr="4"/>
+	<a class="transitionEdge" id="14" val="2" src="8" tgt="4" pts="10.0,10.0,20.0,20.0" attr="4"/>
+	<a class="transValue" id="15" val="7" rect="114.0,210.0,36.0,17.0" attr="5">
+		<a class="port" id="16" val="2"/>
+	</a>
+	<a class="transitionEdge" id="17" val="2" src="2" tgt="16" pts="136.5,126.5,108.0,174.0,132.0,218.5" attr="4"/>
+	<a class="transitionEdge" id="18" val="2" src="16" tgt="2" pts="132.0,218.5,162.0,180.0,136.5,126.5" attr="4"/>
+	<a class="OneWayMergeEdge" id="19" val="8" src="2" tgt="10" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="OneWayMergeEdge" id="20" val="9" src="2" tgt="8" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="transValue" id="21" val="10" rect="258.0,264.0,36.0,17.0" attr="5">
+		<a class="port" id="22" val="2"/>
+	</a>
+	<a class="transitionEdge" id="23" val="2" src="22" tgt="6" pts="291.0,272.5,240.0,252.0,276.5,210.5" attr="4"/>
+	<a class="transitionEdge" id="24" val="2" src="6" tgt="22" pts="276.5,210.5,306.0,246.0,276.0,272.5" attr="4"/>
+	<a class="OneWayMergeEdge" id="25" val="11" src="16" tgt="22" pts="10.0,10.0,20.0,20.0" attr="6"/>
+	<a class="textNote" id="26" val="12" rect="96.0,30.0,45.0,42.0" attr="7"/>
+	<a class="textNote" id="27" val="13" rect="240.0,18.0,65.0,42.0" attr="7"/>
+</model>
+<attrs>
+	<map id="0">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="bordercolor" val="0,0,0"/>
+		<a key="icon" val="/home/ron/workspace/gipoV3/jplan/domains/icons/icoBag.png"/>
+		<a key="opaque" val="true"/>
+	</map>
+	<map id="1" pid="0">
+		<a key="icon" val="/home/ron/workspace/gipoV3/jplan/domains/icons/icoCheque.png"/>
+	</map>
+	<map id="2" pid="0">
+		<a key="icon" val="/home/ron/workspace/gipoV3/jplan/domains/icons/icoCheque.png"/>
+	</map>
+	<map id="3" pid="0">
+		<a key="gradientColor" val="0,255,0"/>
+		<a key="icon" val=""/>
+	</map>
+	<map id="4">
+		<a key="labelAlongEdge" val="false"/>
+		<a key="lineEnd" val="4"/>
+		<a key="labelposition" val="500,500"/>
+	</map>
+	<map id="5" pid="3">
+		<a key="gradientColor" val="0,255,255"/>
+		<a key="bordercolor" val="0,0,255"/>
+	</map>
+	<map id="6" pid="4">
+		<a key="linecolor" val="255,0,0"/>
+		<a key="labelAlongEdge" val="true"/>
+		<a key="lineEnd" val="1"/>
+	</map>
+	<map id="7">
+		<a key="backgroundColor" val="255,255,255"/>
+		<a key="autosize" val="true"/>
+		<a key="opaque" val="false"/>
+	</map>
+</attrs>
+<user>
+	<a key="3">
+		<a key="label" val="outAt"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="Property" val="thingLocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="13">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3EThings%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="11">
+		<a key="label" val=""/>
+	</a>
+	<a key="8">
+		<a key="label" val="%2B"/>
+	</a>
+	<a key="7">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="bag"/>
+		<a key="ValueSort" val="location"/>
+	</a>
+	<a key="9">
+		<a key="label" val="-"/>
+	</a>
+	<a key="12">
+		<a key="label" val="%3Chtml%3E%0A++%3Chead%3E%0A++++%0A++%3C%2Fhead%3E%0A++%3Cbody%3E%0A++++%3Ch2%3E%0A++++++%3Cfont+color%3D%22red%22%3EBags%3C%2Ffont%3E%0A++++%3C%2Fh2%3E%0A++%3C%2Fbody%3E%0A%3C%2Fhtml%3E%0A"/>
+	</a>
+	<a key="6">
+		<a key="label" val="putIn"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="5">
+		<a key="label" val="takeOut"/>
+		<a key="ObjectSort" val="thing"/>
+	</a>
+	<a key="1">
+		<a key="label" val="atPlace"/>
+		<a key="ObjectSort" val="bag"/>
+		<a key="Property" val="location"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="4">
+		<a key="label" val="inBag"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="Property" val="thingLocation"/>
+		<a key="Property+Type" val="loc"/>
+	</a>
+	<a key="10">
+		<a key="EdgeName" val="fullyConnected"/>
+		<a key="label" val="move"/>
+		<a key="ObjectSort" val="thing"/>
+		<a key="ValueSort" val="thingLocation"/>
+	</a>
+	<a key="2" val=""/>
+</user>
+<view>
+	<a key="editable" val="true"/>
+	<a key="bendable" val="true"/>
+	<a key="cloneable" val="true"/>
+	<a key="connectable" val="true"/>
+	<a key="disconnectable" val="true"/>
+	<a key="disconnectOnMove" val="false"/>
+	<a key="doubleBuffered" val="true"/>
+	<a key="dragEnabled" val="false"/>
+	<a key="dropEnabled" val="true"/>
+	<a key="moveable" val="true"/>
+	<a key="sizeable" val="true"/>
+	<a key="gridVisible" val="false"/>
+	<a key="gridEnabled" val="true"/>
+	<a key="gridSize" val="6.0"/>
+	<a key="gridMode" val="0"/>
+	<a key="scale" val="1.0"/>
+	<a key="antiAlias" val="false"/>
+</view>
+</jgx-1.01>

@@ -1,0 +1,170 @@
+% sample.gmr
+% Sample Grammar for SCP
+% Philip Brooks
+%  Based on a grammar by Michael Covington
+% 05/08/03
+
+% Most grammars will need this.
+:- discontiguous rule/2.
+:- discontiguous word/2.
+
+% Prepositional Phrase
+
+rule( chunk, 	[ pp ] ).
+
+rule( pp,	[ p, [np] ] ).
+
+word( p, at ).
+word( p, into ).
+word( p, in ).
+word( p, to ).
+
+
+% Possessive Noun Phrase
+
+rule( chunk, 	[ poss ] ).
+
+rule( poss, 	[ np, possessive_clitic ] ).
+
+word( possessive_clitic, s ).
+
+
+% Noun Phrase
+
+rule( chunk, 	[ np ] ).
+
+rule( np,	[ pronoun ] ).
+rule( np,	[ name ] ).
+rule( np,	[ [d], [adjp], [adjp], [adjp], n ] ).
+
+word( d, the ).
+word( d, a ).
+word( d, an ).
+word( d, this ).
+
+word( n, dog ).
+word( n, cat ).
+word( n, rat ).
+word( n, house ).
+word( n, word ).
+word( n, garden ).
+word( n, birds ).
+word( n, meeting ).
+word( n, statement ).
+word( n, information ).
+word( n, fact ).
+
+word( pronoun, we ).
+word( pronoun, us ).
+word( pronoun, nobody ).
+word( pronoun, everyone ).
+word( pronoun, him ).
+word( pronoun, this ).
+
+
+% Adjective Phrase
+
+rule( chunk,	[ adjp ] ).
+
+rule( adjp,	[ [degree], adj ] ).
+
+word( degree, very ).
+word( degree, slightly ).
+
+word( adj, old ).
+word( adj, big ).
+word( adj, greenish ).
+
+
+% Verb Phrase
+
+rule( chunk,	[ vp ] ).
+
+rule( vp,	[ v ] ).
+rule( vp,	[ vaux, [neg], [vp] ] ).	% Note that this
+						% makes the grammar
+						% recursive.
+
+word( v, chase ).
+word( v, chased ).
+word( v, chases ).
+word( v, chasing ).
+word( v, meowed ).
+word( v, meowing ).
+word( v, meows ).
+word( v, recognize ).
+word( v, gave ).
+word( v, spoke ).
+word( v, fly ).
+word( v, surprised ).
+word( v, believed ).
+word( v, said ).
+word( v, lived ).
+word( v, built ).
+
+word( vaux, will ).
+word( vaux, has ).
+word( vaux, is ).
+word( vaux, was ).
+
+word( neg, not ).
+
+
+% Name
+
+rule( name,	[ first_name, [last_name] ] ).
+rule( name,	[ last_name ] ).
+
+word( first_name, max ).
+word( first_name, john ).
+word( first_name, jack ).
+
+word( last_name, smith ).
+word( last_name, covington ).
+word( last_name, brooks ).
+
+
+% Miscellaneous
+
+rule( chunk,	[ separator ] ).
+
+rule( separator,	[ unspoken_separator ] ).
+rule( separator,	[ spoken_separator ] ).
+
+word( unspoken_separator, '.' ).
+word( unspoken_separator, ',' ).
+word( unspoken_separator, ';' ).
+word( spoken_separator, 'that' ).	% as in "He said that..."
+
+rule( chunk,	[ unrecognized_word ] ).
+
+word( unrecognized_word, _ ).
+
+
+% Test texts
+
+test(N) :- text(N,T), chunk_parse_text(T).
+
+text(1,[
+	the,big,old,dog,will,chase,a,slightly,greenish,cat,'.',
+	the,cat,was,meowing,in,the,garden,'.',
+	this,gobbledegook,is,a,word,we,will,not,recognize,'.'
+	]).
+text(2,[
+	max,spoke,at,the,meeting,'.',
+	max,gave,us,the,information,'.',
+	max,gave,the,information,to,everyone,'.',
+	the,fact,that,birds,fly,surprised,him,'.',
+	nobody,believed,john,s,statement,at,the,meeting,that,
+	birds,fly,'.',
+	max,said,birds,fly,'.'
+	]).
+text(3,[
+	this,is,the,cat,
+	that,chased,the,rat,
+	that,lived,in,the,house,
+	that,jack,built
+	]).
+text(4,[
+	this,is,max,smith,'.'
+	]).

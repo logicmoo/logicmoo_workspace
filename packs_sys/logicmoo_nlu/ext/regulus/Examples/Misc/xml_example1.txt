@@ -1,0 +1,39 @@
+HTTP/1.1 200 OK
+
+Connection: close
+
+Date: Thu, 22 May 2008 03:10:05 GMT
+
+Set-Cookie: _session_id=44fa5dca4c4b32d25dce344b5007fbc7; path=/
+
+Status: 200 OK
+
+Cache-Control: no-cache
+
+Server: Mongrel 1.1.1
+
+Content-Type: application/xml; charset=utf-8
+
+Content-Length: 796
+
+
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+<message>
+  <result type="success">
+    <resulttext>Login successful. Use this session id with subsequent requests to the server</resulttext>
+    <version>1.0.2.0</version>
+    <sessionid>44fa5dca4c4b32d25dce344b5007fbc7</sessionid>
+    <userid>12892</userid>
+    <user_name>John Doe</user_name>
+    <timezone>US/Pacific</timezone>
+    <timezoneoffset>-25200</timezoneoffset>
+    <alarmpreference>3</alarmpreference>
+    <alarmemail>johndoe@someaddress.com</alarmemail>
+    <alarmnumber>1-9998888</alarmnumber>
+    <task_reminder_time>9:30 AM</task_reminder_time>
+    <event_reminder_time>30</event_reminder_time>
+    <session_timeout_period>3600</session_timeout_period>
+    <client_refresh_period>600</client_refresh_period>
+  </result>
+</message>

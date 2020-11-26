@@ -1,0 +1,123 @@
+%==============================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the ANL CARINE system.
+%----
+%----Written by Geoff Sutcliffe, June, 2003.
+%==============================================================================
+%------------------------------------------------------------------------------
+carine_output_term_list([]).
+
+carine_output_term_list([Term]):-
+    !,
+    carine_output_term(Term).
+
+carine_output_term_list([Term|RestOfTerms]):-
+    carine_output_term(Term),
+    write(','),
+    carine_output_term_list(RestOfTerms).
+%------------------------------------------------------------------------------
+%----Generic output of terms
+carine_output_term(Variable):-
+    looks_like_a_variable(Variable),
+    !,
+    write(Variable).
+
+carine_output_term('$true'):-
+    !,
+    write(true).
+
+carine_output_term('$false'):-
+    !,
+    write(false).
+
+carine_output_term(Atom):-
+    Atom =.. [Symbol|Arguments],
+    functor(Atom,Symbol,Arity),
+    write(Symbol),
+    write('_'),
+    write(Arity),
+    write('('),
+    carine_output_term_list(Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+carine_output_atom(Atom):-
+    atomic(Atom),
+    !,
+    write(Atom).
+
+carine_output_atom(Atom):-
+    carine_output_term(Atom).
+%------------------------------------------------------------------------------
+%----Output a literal with - for negative, nothing for positive
+output_carine_signed_literal(--Atom):-
+    !,
+    write('~'),
+    carine_output_atom(Atom).
+
+output_carine_signed_literal(++Atom):-
+    write(' '),
+    carine_output_atom(Atom).
+%------------------------------------------------------------------------------
+%----Output the literals of the clause in Otter format
+output_carine_clause([OneLiteral]):-
+    !,
+    output_carine_signed_literal(OneLiteral),
+    nl,
+    nl.
+
+output_carine_clause([FirstLiteral|RestOfLiterals]):-
+    output_carine_signed_literal(FirstLiteral),
+    write(' | '),
+    output_carine_clause(RestOfLiterals).
+%------------------------------------------------------------------------------
+%----Output the clauses selected by status
+output_carine_clauses([]):-
+    !.
+
+%----If the clause has an acceptable status then output
+output_carine_clauses([input_clause(Name,Status,Literals)|
+RestOfClauses]):-
+    write('; '),
+    write(Name),
+    write(', '),
+    write(Status),
+    write('.'),
+    nl,
+    output_carine_clause(Literals),
+    output_carine_clauses(RestOfClauses).
+%------------------------------------------------------------------------------
+%----Extract all the conjecture clauses
+extract_carine_conjecture_clauses(Clauses,
+[input_clause(Name,negated_conjecture,Literals)|RestOfConjectureClauses],
+OtherClauses):-
+    tptp2X_select(input_clause(Name,negated_conjecture,Literals),Clauses,
+RestOfClauses),
+    !,
+    extract_carine_conjecture_clauses(RestOfClauses,RestOfConjectureClauses,
+OtherClauses).
+
+extract_carine_conjecture_clauses(Clauses,[],Clauses).
+%------------------------------------------------------------------------------
+%----Output all the clauses in Otter format
+carine(carine,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    extract_carine_conjecture_clauses(Clauses,ConjectureClauses,OtherClauses),
+    output_carine_clauses(OtherClauses),
+    write('negated_conclusion'),
+    nl,nl,
+    output_carine_clauses(ConjectureClauses).
+
+%----Do nothing for FOF - just leave a comment
+carine(carine,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in PTTP'),
+    nl.
+%------------------------------------------------------------------------------
+%----Provide information about the Otter format
+carine_format_information(';','.car').
+%------------------------------------------------------------------------------
+%----Provide information about the Otter file
+carine_file_information(format,carine,'').
+%------------------------------------------------------------------------------

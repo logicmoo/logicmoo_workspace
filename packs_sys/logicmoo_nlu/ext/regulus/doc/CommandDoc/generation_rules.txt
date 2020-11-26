@@ -1,0 +1,8 @@
+Relevant to translation applications. Points to the file containing
+the generation grammar. Normally this will be a Regulus grammar
+compiled for generation. The translation code currently assumes that
+this file will define the module generator, and that the top-level
+predicate will be of the form
+\begin{verbatim}
+generator:generate(Representation, Tree, Words)
+\end{verbatim}

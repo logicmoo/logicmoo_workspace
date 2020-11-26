@@ -1,0 +1,42 @@
+[Cat *x] [Mat *y] (On ?x ?y)
+.
+[Cat: *x] [Mat: *y] (On ?x ?y)
+.
+(On [Cat: #this] [Mat: #1234])
+.
+(On [Cat: ] [Mat: ])
+.
+[Cat: @every*x] [Mat: *y] (On ?x ?y)
+.
+(On [Cat: @every] [Mat: #])
+.
+~[ [Cat: *x]  ~[ (On ?x [Mat: #]) ]]
+.
+[Go: *x] [Person: 'John' *y] [City: 'Boston' *z] [Bus: *w]
+   (Agnt ?x ?y) (Dest ?x ?z) (Inst ?x ?z)
+.
+[Go*x][Person:'John'*y][City:'Boston'*z][Bus*w](Agnt?x?y)(Dest?x?z)(Inst?x?z)
+.
+[Go *x] (Agnt ?x [Person: 'John']) (Dest ?x [City: 'Boston']) (Inst ?x [Bus])
+.
+(Betw [Rock] [Place *x] [Person])  (Attr ?x [Hard])
+.
+[Person *x] [Rock *y] [Place *z] [Hard *w]
+     (betw ?y ?z ?x) (attr ?z ?w)
+.
+[Cat *x: 'Yojo' (attr ?x [Black]) ]
+.
+(attr [Cat: 'Yojo'] [Black])
+.
+[Person: 'Tom' *x1] [Believe *x2] (Expr ?x2 ?x1)
+   (Thme ?x2 [Proposition:
+      [Person: 'Mary' *x3] [Want *x4] (Expr ?x4 ?x3)
+         (Thme ?x4 [Situation:
+            [Marry *x5] (Agnt ?x5 ?x3) (Thme ?x5 [Sailor]) ]) ])
+.
+[If: (On [Cat] [Mat])
+   [Then (Attr [Cat:#] [Happy]) ]]
+.
+[If (GreaterThan [Integer: +453536*x] [Number: -678.88e-34])
+   [Then: [Number*y] (Sum ?x [Number:+.01] ?y) ] ]
+.

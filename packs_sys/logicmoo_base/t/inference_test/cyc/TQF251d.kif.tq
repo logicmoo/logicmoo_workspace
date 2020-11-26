@@ -1,0 +1,58 @@
+(note TQF251d)
+
+(subclass BiologicalWeapon WeaponOfMassDestruction) 
+
+(importanceOfProp Iran 
+  (thereExists ?DEVELOP 
+    (and 
+      (instance ?DEVELOP 
+        (DevelopingAFn BiologicalWeapon)) 
+      (successfulForAgents ?DEVELOP Iran))) High) 
+
+(goalImportance Iran 
+  (thereExists ?DEVELOP 
+    (and 
+      (instance ?DEVELOP 
+      (DevelopingAFn BiologicalWeapon)) 
+      (successfulForAgents ?DEVELOP Iran))) High) 
+ 
+(implies 
+  (and 
+    (intermediateGoals ?AGT ?MEANS ?END) 
+    (goalImportance ?AGT ?END ?LEVEL)) 
+  (goalImportance ?AGT ?MEANS ?LEVEL)) 
+
+(intermediateGoals Iran 
+  (thereExists ?DEVELOP 
+    (and 
+      (instance ?DEVELOP (DevelopingAFn BiologicalWeapon)) 
+      (successfulForAgents ?DEVELOP Iran)))
+  (thereExists ?COERCE 
+    (and 
+      (instance ?COERCE CoercingAnAgent) 
+      (agent ?COERCE Iran) 
+      (objectActedOn ?COERCE SaudiArabia)))) 
+
+(goalImportance Iran 
+  (thereExists ?COERCE 
+    (and 
+      (instance ?COERCE CoercingAnAgent) 
+      (agent ?COERCE Iran) 
+      (objectActedOn ?COERCE SaudiArabia))) High) 
+
+(query (findall (?IMPORTANCE)
+  (exists 
+    (?WMD-TYPE) 
+    (and 
+      (subclass ?WMD-TYPE WeaponOfMassDestruction) 
+      (importanceOfProp Iran 
+        (exists 
+          (?DEVELOPMENT) 
+          (and 
+            (instance ?DEVELOPMENT (DevelopingAFn ?WMD-TYPE)) 
+            (successfulForAgents ?DEVELOPMENT Iran))) ?IMPORTANCE)))))
+
+(answer High)
+
+(end_of_file)
+

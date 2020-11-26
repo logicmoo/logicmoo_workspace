@@ -1,0 +1,38 @@
+(note TQA84)
+
+(relationInstanceExistsMany possesses Iran ArmoredPersonnelCarrier-BTR60) 
+
+(different ArmoredPersonnelCarrier ArmoredPersonnelCarrier-BTR60) 
+
+(subclass ArmoredPersonnelCarrier-BTR60 ArmoredPersonnelCarrier) 
+
+
+
+
+(relationInstanceExistsMany possesses Iran ArmoredPersonnelCarrier-M113) 
+
+(different ArmoredPersonnelCarrier-M113 ArmoredPersonnelCarrier) 
+
+(subclass ArmoredPersonnelCarrier-M113 ArmoredPersonnelCarrier) 
+
+
+
+
+(relationInstanceExistsMany possesses Iran ArmoredPersonnelCarrier-BTR50) 
+
+(different ArmoredPersonnelCarrier-BTR50 ArmoredPersonnelCarrier) 
+
+(subclass ArmoredPersonnelCarrier-BTR50 ArmoredPersonnelCarrier) 
+
+
+(query  (findall ?WEAPONTYPE (and 
+   (subclass ?WEAPONTYPE ArmoredPersonnelCarrier) 
+   (different ArmoredPersonnelCarrier ?WEAPONTYPE) 
+   (relationInstanceExistsMany possesses Iran ?WEAPONTYPE))  ))
+
+(answer ArmoredPersonnelCarrier-M113 )
+(answer ArmoredPersonnelCarrier-BTR60 )
+(answer ArmoredPersonnelCarrier-BTR50 )
+
+(end_of_file)
+

@@ -1,0 +1,16 @@
+(note TQC35-a)
+
+(queryyn 
+  (consistent 
+    (thereExists ?ACT 
+      (thereExists ?DEVICE 
+        (and 
+          (instance ?ACT TerroristAct) 
+          (eventOccursAt ?ACT SaudiArabia) 
+          (directingAgent ?ACT Iran) 
+          (deviceUsed ?ACT ?DEVICE) 
+          (instance ?DEVICE WeaponOfMassDestruction))))))
+
+(answer Yes)
+
+(end_of_file)

@@ -1,0 +1,883 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+
+\title{\bf Accessing WordNet from Prolog}
+
+\author{Sarah Witzig\\
+        Artificial Intelligence Center\\
+        The University of Georgia \\
+        http://www.ai.uga.edu\\
+        sarah\_witzig@hotmail.com}
+
+\date{2003 May 8}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+WordNet is a lexical reference system, developed by the university of Princeton.
+This paper gives a detailed documentation of the Prolog
+database of WordNet and predicates to interface it. \footnote{Special thanks to Dr. Covington for his guidence on the project.
+Special thanks to Abhishek Jain and John Burke for proofreading this paper.}
+
+\end{abstract}
+
+\section{Introduction}
+
+WordNet is a lexical reference system, developed by the university of Princeton. WordNet 1.7.1 is the most recently
+available version of the software. It can be downloaded from the Internet. Its design makes the use
+of dictionaries more convenient. You do not have to spend a lot of time going through the alphabetical list of words
+to find information about an expression. With WordNet, you type in what you are looking for, and you get all its possible meanings.
+
+Moreover, data from WordNet can be used as input for various applications. It provides a database, written in Prolog.
+This paper documents the Prolog database of WordNet. It will also provide a few ideas that utilize the database efficiently.
+
+\section{Documentation of WordNet from a Prolog programmer's point of view}
+
+\subsection{Basic concept}
+
+WordNet is based on a concept called \emph{synsets}, also known as synonym sets. A synset is a group of words,
+connected by meaning.
+Only words of the same part of speech can belong to the same synset. A synset ID is assigned to every word.
+Words in the same synset have the same synset ID.
+As one word can have several meanings, it can belong to more
+than one synset. Then, the word gets several entries in
+the Prolog database, and each entry has a different synset ID assigned.
+
+The Prolog clauses, which store this basic information, are defined in the file {\bfseries wn\_s.pl}. Each clause contains one word,
+an assigned synset ID, and some additional information.
+
+There are 15 other {\bfseries wn\_} \emph{operator}{\bfseries .pl} files,
+where \emph{operator} corresponds to several different relations in WordNet. For example, the file
+{\bfseries wn\_s.pl} organizes the synsets, accordingly its operator \emph{s} is derived from the word \emph{synset}.
+
+The relations, described by the operators, are either of semantic or lexical nature. A lexical relation
+describes a connection between lexical units, say between words. Grouping words in synonym sets
+is a lexical relation. A semantic relation describes a connection between meanings.
+For example, \emph{hypernymy} is a semantic relation of \emph{being superordinate or belonging to a higher rank or class}
+(Fellbaum et al. 2003e).
+
+\subsection{The Prolog Files}
+
+\subsubsection{wn\_s.pl}
+
+One of the main files is {\bfseries wn\_s.pl}, which stores the synset information of the WordNet corpus.
+Each word has an entry by the six place predicate
+\begin{verbatim}
+s(synset_ID,w_num,`word',ss_type,sense_number,tag_count).
+\end{verbatim}
+The first argument is the 9-digit {\tt synset\_ID}, indicating to which synset does the word belong. As discussed before,
+words belonging to the same synset are synonyms, which signifies similarity in their meaning.
+The {\tt synset\_ ID} encodes information about the syntactic category of the synset.
+Synset IDs starting with {\tt 1} contain only nouns, synset IDs starting with {\tt 2} store the verbs.
+A {\tt 3} in the beginning indicates an adjective, a {\tt 4} an adverb. The remaining eight
+digits, called \emph{synset offset}, identify a specific synset.
+
+The second argument {\tt w\_num} allows addressing one word in a synset.
+The words in a synset are numbered serially, starting
+with one. For example, the knowledge base for the synset {\tt 100041682} looks like this:
+\begin{verbatim}
+s(100041682,1,`close_call',n,1,0).
+s(100041682,2,`close_shave',n,1,0).
+s(100041682,3,`squeak',n,2,0).
+s(100041682,4,`squeaker',n,2,0).
+s(100041682,5,`narrow_escape',n,1,1).
+\end{verbatim}
+The third argument is the word itself, written in single quotes.
+
+The {\tt ss\_type} stores the synset type. In WordNet the synset categories are limited to nouns, verbs, adverbs and adjectives.
+You can not find any pronouns, conjunctions, prepositions or interjections.
+The {\tt ss\_type} instantiated to the letter {\tt n}, indicates the particular word is a noun, the letter {\tt v} refers to a verb,
+and the letter {\tt r} to an adverb.
+Adjectives are divided into adjectives and adjective satellites.
+A word is an adjective if it belongs to a head synset. It is an adjective satellite if it belongs to a
+satellite synset. Head synsets contain at least one word that has an antonym. Satellite synsets do not contain
+any word that has an antonym. The two letters {\tt a} and {\tt s} indicate whether a word is an adjective or an adjective satellite.
+
+The fifth argument is the {\tt sense\_number}. It gives information about how common a word is.
+Words within one part of speech are ordered from most to least frequently. The higher the {\tt sense\_number}, the less common
+is the word. For example, here are two entries for the word \emph{mouse}, the first one refers to the animal,
+the second to the computer device.
+\begin{verbatim}
+s(101993048,1,`mouse',n,1,14).
+s(103304722,1,`mouse',n,2,0).
+\end{verbatim}
+According to WordNet the word \emph{mouse}, referring to the animal, has the {\tt sense\_number} {\tt 1}. Therefore, it
+is more common than the word \emph{mouse}, referring to the computer device with {\tt sense\_number} {\tt 2}.
+
+The last argument is the {\tt tag\_count}. This number indicates how common a word is in relation to a text.
+The number is equal to the times the word was found in a test corpus. Therefore the higher the number,
+the more common the word.
+
+\subsubsection{wn\_g.pl}
+
+
+The file {\bfseries wn\_g.pl} stores a gloss for every synset.
+The gloss may contain an explanation, definition and example sentences.
+
+The two place predicate {\tt g} has the following structure:
+\begin{verbatim}
+g(synset_ID,`(gloss)').
+\end{verbatim}
+The first argument labels the {\tt synset\_ID}, the second argument allocates a gloss, written in
+parenthesis and single quotes. For example, the synset with the ID {\tt 100031541} consists of the two words
+\emph{walking} and \emph{sledding}. The matching {\tt g} clause gives us a definition for the two words.
+\begin{verbatim}
+g(100031541, `(advancing toward a goal; ``persuading him was easy going'';
+             ``the proposal faces tough sledding'')').
+\end{verbatim}
+
+\subsubsection{wn\_hyp.pl}
+
+{\tt Hyp} is short for hypernym. A hypernym is a word that is more generic than a given word. Only verbs and nouns can have
+hypernyms. For example, \emph{mammal} and \emph{animal}
+are hypernyms of the word \emph{dog}. Hypernymy is a relation between synsets. Thus, it is a semantical relation.
+
+The file {\bfseries wn\_hyp.pl} stores hypernym relations in the two place predicate
+\begin{verbatim}
+hyp(synset_ID_1,synset_ID_2).
+\end{verbatim}
+The synset corresponding to the second argument {\tt synset\_ID\_2} is a hypernym of the synset corresponding to the first argument
+{\tt synset\_ID\_1}. For example, {\tt 101752990} is the {\tt synset\_ID} of the word \emph{dog}.
+Consulting the file {\bfseries wn\_hyp.pl} we find
+\begin{verbatim}
+hyp(101752990, 101752283).
+\end{verbatim}
+The synset {\tt 101752283} consists of hypernyms of the word \emph{dog}, e.g. \emph{canine}.
+Bear in mind, a hypernym of a hypernym of a word, is also a hypernym of the word. This gives you the
+possibility of finding hypernym chains.
+
+In the section \emph{Working with WordNet} the predicates {\tt find\_hyp/3} and {\tt find\_hyp\_chains/2} will be introduced to
+experiment with the relation.
+
+\subsubsection{wn\_ent.pl}
+
+
+{\tt Ent} is short for entailment. An entailment is a verb describing an event that facilitates another event.
+Therefore only verbs can be described by
+the relation entailment. For example, \emph{to sleep} is an entailment of \emph{to snore}, as you need to sleep if you snore.
+The file {\bfseries wn\_ent.pl} stores all entailment relations. Like hypernyms entailments are semantical relations.
+
+The predicate {\tt ent/2} has the same structure as the predicate {\tt hyp/2}.
+\begin{verbatim}
+ent(synset_ID_1,synset_ID_2).
+\end{verbatim}
+{\tt Synset\_ID\_2} contains verbs that are entailments of the verbs in {\tt synset\_ID\_1}.
+
+In the section \emph{Working with WordNet} the predicates {\tt find\_ent/3} and {\tt find\_ent\_chains/2} will be introduced to
+experiment with the relation.
+
+\subsubsection{wn\_sim.pl}
+
+{\tt Sim} is an abbreviation for similar meaning. This relation allocates adjectives that have similar meanings. Again,
+the relation connects synsets, thus it is semantical.
+
+Like {\tt hyp/2} and {\tt ent/2}, {\tt sim/2} takes two synset IDs as arguments.
+\begin{verbatim}
+sim(synset_ID_1,synset_ID_2).
+sim(synset_ID_2,synset_ID_1).
+\end{verbatim}
+As similarity works in both directions, there is a reflexive predicate defined for every clause.
+The two addressed synsets are either two head synsets, or one head synset and one satellite synset.
+There is no matching {\tt sim} clause for two satellite synsets. Because, if they would have similar meanings, they
+would be grouped together in one synset.
+
+For example, one satellite synset contains the synonyms \emph{devious}, \emph{circuitous} and \emph{roundabout}.
+By consulting {\tt sim/2}, we get one head synset with similar meaning, consisting of the word \emph{indirect}.
+
+In the section \emph{Working with WordNet} the predicates {\tt find\_sim/2} and {\tt find\_sim\_meaning/1} will be introduced to
+experiment with the relation.
+
+\subsubsection{wn\_mm.pl,wn\_ms.pl,wn\_mp.pl}
+
+The three file extensions {\tt mm}, {\tt ms} and {\tt mp} refer to
+the semantic meronym relation, also called the part-whole
+relation. A word X is a meronym of a word Y, if  you can apply the
+sentence \emph{A Y has an X} or \emph{An X is a part of a Y}
+(Beckwith et al. 1993:8). This relation only holds for nouns. The
+reflexive relation is called holonym relation.
+
+The extension mm refers to the member meronym relation, also called the member-group relation.
+For example, the word \emph{person} is a member
+meronym of the word \emph{faculty}, as we can say \emph{A faculty is a group of persons}
+or \emph{A person is a member of a faculty}.
+Applying the reflexive relation, \emph{faculty} is a holonym of the word \emph{person}.
+Accordingly, the predicate of the {\bfseries wn\_mm.pl} file has the following structure:
+\begin{verbatim}
+mm(synset_ID_1,synset_ID_2).
+\end{verbatim}
+The words of {\tt synset\_ID\_1} are member meronyms of the words of {\tt synset\_ID\_2}.
+Reflexive, the words of {\tt synset\_ID\_2} are member holonyms of the words of {\tt synset\_ID\_1}.
+
+Note, that the first {\tt synset\_ID} contains meronyms of words of the second {\tt synset\_ID}, not the other way round.
+This is explained incorrectly in the original Prolog documentation of WordNet (Fellbaum et al. 2003a).
+
+The extension ms refers to the substance meronym relation. For example, the word \emph{water} is a substance meronym
+of the word \emph{tear} as we can say \emph{A tear has water as a substance}  or \emph{Water is a substance of tears}.
+Applying the reflexive relation, \emph{tear} is a substance holonym of the word \emph{water}.
+The predicate has exactly the same structure as {\tt mm/2}, only the operator changed.
+\begin{verbatim}
+ms(synset_ID_1,synset_ID_2).
+\end{verbatim}
+The words of {\tt synset\_ID\_1} are substance meronyms of the words of {\tt synset\_ID\_2}.
+Reflexive, the words of {\tt synset\_ID\_2} are substance holonyms of the words of {\tt synset\_ID\_1}.
+
+The extension mp refers to the part meronym relation. For example, the word \emph{leg} is a part meronym
+of the word \emph{table}, as we can say \emph{A table has a leg as a part} or \emph{A leg is a part of a table}.
+Also, the reflexive relation,
+\emph{table} being a holonym of \emph{leg}, is valid.
+The structure and unification of the predicate is the same as {\tt mm/2} and {\tt ms/2}.
+\begin{verbatim}
+mp(synset_ID_1,synset_ID_2).
+\end{verbatim}
+The words of {\tt synset\_ID\_1} are part meronyms of the words of {\tt synset\_ID\_2}.
+Reflexively, the words of {\tt synset\_ID\_2} are part holonyms of the words of {\tt synset\_ID\_1}.
+
+In the section \emph{Working with WordNet} several predicates will be introduced to
+experiment with these relations.
+
+\subsubsection{wn\_cs.pl}
+
+The file {\bfseries wn\_cs.pl} describes a semantic relation for verbs. The predicate
+\begin{verbatim}
+cs(synset_ID_1,synset_ID_2).
+\end{verbatim}
+takes a {\tt synset\_ID\_1} as the first argument and assigns a {\tt synset\_ID\_2} that contains verbs that are caused
+by the action of the verbs of {\tt synset\_ID\_1}. For example, the {\tt synset\_ID 200017177}, containing the verb \emph{to anesthetize},
+unifies with the predicate
+\begin{verbatim}
+cs(200017177,200011887).
+\end{verbatim}
+The {\tt synset\_ID 200011887} contains the verbs \emph{to kip}, \emph{to sleep}, \emph{to slumber},
+which are all events caused by the
+event of the verb \emph{to anesthetize}.
+
+The predicate {\tt cause/2}, defined in \emph{Working with WordNet}, takes a verb and gives out a list of verbs connected by this
+relation.
+
+\subsubsection{wn\_vgp.pl}
+
+The file {\bfseries vgp.pl} handles lexical relations between verbs. The four place predicate
+\begin{verbatim}
+vgp(synset_ID_1,w_num_1,synset_ID_2,w_num_2).
+\end{verbatim}
+takes two {\tt synset\_IDs}, whose synsets are similar in meaning.
+The second and the fourth arguments are word numbers, which usually specify one word in a synset.
+Nevertheless, the relation holds for any verb in the addressed synset.
+Therefore, the arguments {\tt w\_num\_1} and {\tt w\_num\_2} are instantiated to {\tt 0}.
+
+
+Basically, the arguments two and four have no other use than to indicate that {\tt vgp} is a lexical, not a semantical relation.
+
+For example,
+\begin{verbatim}
+vgp(200072911,0,200437549,0).
+\end{verbatim}
+Consulting {\bfseries wn\_s.pl} and {\bfseries wn\_g.pl}, returns that the synset {\tt 200072911}
+containing the words \emph{to grow}, \emph{to develop}, \emph{to produce},
+\emph{to get}, \emph{to acquire}, meaning \emph{come to have or undergo a change of physical features and attributes}.
+The synset {\tt 200437549} contains the verbs \emph{to develop} and \emph{to evolve} with a similar meaning:
+\emph{acquire or build up traits or characteristics}.
+
+Because the relation is reflexive, there is an entry with switched {\tt synset\_ID} for every clause.
+
+\subsubsection{wn\_at.pl}
+
+The file {\bfseries wn\_at.pl} describes the attribute relation between noun and adjective synsets.
+An attribute is a noun that describes
+a characteristic of an entity. Each attribute has values, which are described by adjectives. For example, the noun
+\emph{size} is an attribute with the values \emph{little}, \emph{small}, \emph{big} and \emph{large}.
+This relation between nouns and adjectives are
+defined by the {\tt at} operator
+\begin{verbatim}
+at(synset_ID_1,synset_ID_2).
+\end{verbatim}
+So the entries
+\begin{verbatim}
+at(104322959,301148236).
+at(104322959,301149766).
+\end{verbatim}
+determine that the synset {\tt 104322959}, containing only the noun \emph{weight} is in an attribute relation to the adjectives
+of the synset {\tt 301148236}, containing the word \emph{heavy}, and of the synset {\tt 301149766}, containing the word \emph{light}.
+
+The attribute relation between nouns and adjectives is semantical.
+
+\subsubsection{wn\_ant.pl}
+
+{\tt Ant} is an abbreviation for antonymous words. The file {\tt wn\_ant.pl} stores all relations between words that are antonyms.
+Two words are antonyms if they have opposite meanings.
+For example, the two words \emph{natural object} and \emph{artefact} are antonyms, which tells us their meaning is opposite.
+Being an antonym of a word, does not mean that you can always say, the antonym \emph{is not} the word.
+For example \emph{artefact}, being an
+antonym of a \emph{natural object}, does not necessarily mean \emph{an artefact is not a natural object}.
+
+The four place predicate, storing all this information, has the following structure:
+\begin{verbatim}
+ant(synset_ID_1,w_num_1,synset_ID_2,w_num_2).
+ant(synset_ID_2,w_num_2,synset_ID_1,w_num_1).
+\end{verbatim}
+The arguments {\tt synset\_ID\_1} and {\tt w\_num\_1} refer to one word in the corpus,
+{\tt synset\_ID\_2} and {\tt w\_num\_2} to its antonym.
+
+Note, that the relation antonymy works in both directions, that is being an antonym of a word makes
+the word itself an antonym of the antonym. Therefore every {\tt ant/4} is followed by an {\tt ant/4},
+expressing the reverse relation. Antonymy is a lexical relation, as it relates two words, not two synsets.
+
+\subsubsection{wn\_sa.pl}
+
+The file {\bfseries wn\_sa.pl} relates two words, one giving additional information about the other one.
+This lexical relation only connects verbs or adjectives.
+The general structure of the {\tt sa} operator takes four arguments, specifying two words.
+\begin{verbatim}
+sa(synset_ID_2,w_num_2,synset_ID_1,w_num_1).
+\end{verbatim}
+First, let us have a look at {\tt sa/4} for verb relations. The first two arguments specify a verb,
+the third and fourth argument define its phrasal verbs that are similar in meaning.
+Recall, a phrasal verb is a verb plus a preposition that can be different in meaning to the original verb.
+For example, \emph{to give up} would be a phrasal verb, meaning
+\emph{to stop doing something}, which is different to the meaning of the verb \emph{to give}.
+\begin{verbatim}
+sa(200001742,1,200003768,3).
+sa(200001742,1,200004389,3).
+\end{verbatim}
+The synset {\tt 200001742} and word number {\tt 1} specify the word \emph{to breathe}.
+The two words described by the third and fourth argument of the two clauses are its phrasal verbs
+\emph{to breathe out} and \emph{to breathe in}, which have a similar meaning to \emph{to breathe}.
+The relation does not return all phrasal verbs belonging to a verb, only the ones that do not change their meaning.
+
+For adjectives, the word, specified by the third and fourth argument, describes the word linked to the first
+two arguments. If the relation is true for one adjective of a synset, then it holds for any adjective of
+the synset. Thus, {\tt w\_num} is equal to {\tt 0} in every predicate entry.
+As an example, consider the word \emph{abstract}, being the only word of the synset {\tt 300012315}.
+The predicates
+\begin{verbatim}
+sa(300012315,0,302319830,0).
+sa(300012315,0,301928363,0).
+\end{verbatim}
+reveal, that the words \emph{intangible} and \emph{impalpable} of the synset {\tt 302319830}
+and the word \emph{nonrepresentational} of the synset
+{\tt 301928363} describe the word \emph{abstract}.
+
+\subsubsection{wn\_ppl.pl}
+
+The {\tt ppl} operator arranges the participle relation between verbs and adjectives. In English, there is the present and the past
+participle, both describing either a tense form of a verb, or an adjective derived from a verb.
+As WordNet does not store any information on different tenses, the {\tt ppl} operator
+describes the verb-adjective participle relation.
+The present participle adds \emph{-ing} to the stem of the verb, e.g. the verb \emph{to walk} becomes the adjective \emph{walking}, like in
+the phrase \emph{a walking person}. The past participle adds \emph{-ed} to the stem of a word to form an adjective, e.g.
+\emph{the stressed person} where the adjective is derived from the verb \emph{to stress}.
+The predicate takes four arguments to specify two words.
+\begin{verbatim}
+ppl(synset_ID_1,w_num_1,synset_ID_2,w_num_).
+\end{verbatim}
+{\tt Synset\_ID\_1} and {\tt w\_num\_1} determine the adjective related to the verb, recorded by {\tt synset\_ID\_2} and {\tt w\_num\_2}.
+The relation is lexical.
+
+\subsubsection{wn\_per.pl}
+
+The extension {\tt per} stands for pertain and describes a lexical relation where a word pertains to another word.
+The predicates {\tt per/4} defines two words by their synset ID and word number.
+\begin{verbatim}
+per(synset_ID_1,w_num_1,synset_ID_2,w_num_2).
+\end{verbatim}
+The first word, located by the first two arguments, can either be an adjective or an adverb.
+
+In case of an adjective,
+the second word must be a noun or another adjective. Then, the original adjective pertains
+to the noun or the other adjective. For example, the first two arguments could refer to the adjective \emph{weekly}, which pertains
+to the noun \emph{week}, defined by the third and fourth argument. Or, the first two arguments could refer to the
+adjective \emph{transatlantic}, which pertains to the adjective \emph{Atlantic}, defined by the third and fourth argument.
+
+If the first two arguments describe an adverb, then the assigned second word is the adjective from which the adverb is derived.
+E.g. the adverb \emph{essentially} is derived from the adjective \emph{essential}.
+
+\subsubsection{wn\_fr.pl}
+
+The last Prolog database file {\bfseries wn\_fr.pl} is intended to offer a generic sentence frame for one or all verbs in a synset.
+The predicate structure is as follows:
+\begin{verbatim}
+fr(synset_ID,f_num,w_num).
+\end{verbatim}
+The first argument is the {\tt synset\_ID} of the concerned verb(s). The third argument specifies the word by a word number
+or is equal to {\tt 0} if the relation holds for every word in the synset.
+The second argument specifies, which sentence frame should be assigned to which verb.
+Unfortunately, the Prolog database does not offer any information on the sentence frames. In that sense, the predicate
+is useless. You would need to consult the WordNet documentation (Fellbaum et al. 2003d)
+to translate which {\tt f\_num} belongs to which sentence.
+
+In the software packet belonging to this paper, I included a file called {\bfseries wn\_sen.pl},
+which should be added to the original WordNet files. Here, an additional predicate called {\tt sen}, short for sentence, is listed.
+\begin{verbatim}
+sen(f_num,string_1,string2).
+\end{verbatim}
+{\tt Sen} takes {\tt f\_num} as the first argument and assigns two strings. {\tt String\_1} should be the part of the sentence
+in front of the looked up verb, {\tt string\_2} the part after the verb.
+
+For example, the verb \emph{to prefer} is the only word in the synset {\tt 201433968}. Consulting {\bfseries fr\_wn.pl}
+we get the predicate
+\begin{verbatim}
+fr(201433968,15,0).
+\end{verbatim}
+Therefore, we know all verbs in the affected synset, in this case only one, are assigned to the sentence frame with {\tt f\_num 15}.
+Now, we can consult the new added predicates and find
+\begin{verbatim}
+sen(15,`Somebody',`s something to somebody').
+\end{verbatim}
+Accordingly, we find out that the verb \emph{to prefer} is used in the general context \emph{Somebody prefers something to somebody}.
+
+To experiment with {\tt fr/3} and {\tt sen/3}, try the following program. Be sure, that you have consulted
+the files {\bfseries wn\_s.pl}, {\bfseries wn\_fr.pl} and {\bfseries wn\_sen.pl}.
+\begin{verbatim}
+% sentence_frame(+Verb)
+% take an atom as argument, which should be a verb, and print out a sentence
+% on the screen that shows the context in which the verb usually occurs
+
+sentence_frame(Verb) :-
+                             s(Num,W_Num,Verb,v,_,_),
+                             fr(Num,F_Num,W_Num),
+                             sen(F_Num,String_1,String_2),
+                             write(String_1),
+                             write(Verb),
+                             write(String_2), nl.
+
+sentence_frame(Verb) :-
+                             s(Num,_,Verb,v,_,_),
+                             fr(Num,F_Num,0),
+                             sen(F_Num,String_1,String_2),
+                             write(String_1),
+                             write(Verb),
+                             write(String_2), nl.
+\end{verbatim}
+The predicate {\tt sentence\_frame/1} takes a verb and finds its {\tt synset\_ID}.
+Then, it consults the predicate {\tt fr/3}, which either succeeds, if the third argument
+is equal to the {\tt w\_num}, or fails and backtracks.
+In the later case, the {\tt fr/3} succeeds with {\tt 0} as the third argument, meaning the relation holds for all the verbs in the synset.
+In the end, consult {\tt sen/3} and output the matched sentence.
+
+Examples:
+\begin{verbatim}
+?- sentence_frame(`prefer').
+Somebody prefers something.
+
+?- sentence_frame(`walk').
+Somebody walks.
+
+?- sentence_frame(`give').
+Somebody gives somebody something.
+\end{verbatim}
+
+
+\section{Working with WordNet}
+
+The following section discusses some basic issues that arise while working with WordNet and offers some
+handy predicates to work efficiently. For further documentation of the mentioned predicates, please consult
+the Prolog files of the predicates.
+
+\subsection{Indexing and WordNet}
+
+The Prolog database files of WordNet consist of 484381 lines of code. Therefore, speeding up the processing of these files is
+one of the main goals when working with WordNet.
+
+One approach to reduce the running time for looking up a word is indexing. Indexing decreases the number of clauses
+that are tried before matching one. The simplest version of indexing, used in every Prolog,
+is to go directly to the right predicate of the asked arity. SWI-Prolog also indexes on the first argument by default (Wielemaker 2003:81).
+
+To look up a word in WordNet we need to consult the predicate
+\begin{verbatim}
+s(+Synset_ID,+W_Num,+Word,+SS_Type,+Sense_Number,+Tag_Count).
+\end{verbatim}
+After finding out which {\tt synset\_ID} is assigned to the word, one can look up the meaning by consulting
+\begin{verbatim}
+g(+Synset_ID,+Gloss).
+\end{verbatim}
+The given word is stored in the third argument of the {\tt s} predicate, which means the default indexing does not affect the unification.
+
+There are two possible attempts to speed up the running time by indexing. The built-in predicate
+\begin{verbatim}
+index(+Predicate).
+\end{verbatim}
+specifies on which
+arguments of a predicate indexing should be performed.
+The argument {\tt Predicate} gets instantiated to {\tt 1} if indexing were to be executed on the argument, otherwise to
+{\tt 0}. Keep in mind that at most four arguments and only the first 32 arguments can be indexed (Wielemaker 2003:82).
+In this case the predicate
+\begin{verbatim}
+index(s(0,0,1,0,0,0)).
+\end{verbatim}
+would optimize the running time of looking up a word.
+The advantage of this technique is that we can declare indexing on more than one argument,
+e.g. on the {\tt Synset\_ID} and the {\tt Word}.
+The disadvantage is that we would have to declare the predicate {\tt index/1} in every file we produce,
+and the database becomes less portable.
+
+The second attempt to speed up the time by indexing, is to change the argument order
+of {\bfseries wn\_s.pl}. The predicate {\tt improve\_file/0} takes the word from the {\tt s} predicate and
+puts it as the first argument. The other arguments remain in their order.
+The newly created file is called {\tt wn\_s\_new.pl}. Now the default indexing of Prolog speeds up the process.
+Timing the simple predicate of looking up a word shows that
+the indexing speeds up the process nine times.
+
+\subsection{Converting WordNet Files}
+
+Working with the WordNet files with respect to Natural Language Processing, there are several generalisations that simplify
+the interaction with other tools. Especially in developing ProNTo (Prolog Natural Language Tools), we agreed on the
+following parameters to improve interaction. First, we only want lower case letters to appear in the clauses. Second, instead of
+using underscores to divide words, we represent the words in lists. Furthermore, we use open lists, in the aspect
+that one wants to work not only with one word at a time, but with sentences or texts that can be easily turned into lists.
+
+The predicate {\tt convert\_file/0} takes care of converting the {\tt wn\_s.pl} file accordingly.
+It is an extended version of the predicate {\tt improve\_file/0}. All advantages of using indexing remain the same.
+The following clause is an example of the new structure:
+\begin{verbatim}
+s([human, action|_G4016],100022113,2,n,1,1).
+\end{verbatim}
+
+\subsection{A subset of WordNet}
+
+For testing purposes, it is handy to use only a subset of WordNet, which is smaller and contains only the most common
+words of the English language. Here, I want to introduce  the predicate
+\begin{verbatim}
+subset_wn_s(+Number).
+\end{verbatim}
+that takes the {\bfseries wn\_s.pl} file as input and creates a new file {\bfseries wn\_s\_subset.pl},
+containing only the most common words, based on the last argument of the {\tt s/6} predicate (see
+section \emph{Documentation of WordNet from a Prolog programmer's point of view}).
+The argument {\tt Number} indicates how many words should be in the subset.
+This should speed up experimenting with WordNet enormously.
+
+If you decide to work with a subset on a project, it might
+be interesting to not only shorten the main {\tt wn\_s.pl} file, but also all other WordNet files. The predicate
+\begin{verbatim}
+subset_wordnet(+Number).
+\end{verbatim}
+calls {\tt subset\_wn\_s/1}, and then converts all other WordNet files accordingly. The new files are named
+{\bfseries wn\_}\emph{operator}{\bfseries \_subset.pl}.
+
+These predicates offer the possibility of knowing the advantages associated with working on subsets of WordNet.
+Apart from that,
+they offer an outline on how to program the automatic converting of the files. An extension for the future could be to create
+different kinds of subsets of WordNet, e.g. a subset containing only nouns, only verbs or only adjectives.
+
+\subsection{Useful predicates for working with WordNet}
+
+To work with WordNet, we need predicates
+that interface with the Prolog databases.
+All predicates listed here, including the ones of earlier sections, are described in detail
+in the Prolog files. To use a predicate, you just need to consult the file in which the predicate is defined, all other needed files
+will be consulted by {\tt ensure\_loaded}.
+
+First, it needs to be clarified which input should to be accepted by the predicates. As we converted our files to use open lists,
+it is obvious that open lists are one possible input. To improve the convenience for the user, atoms should be accepted, too.
+For example, if you want to input the word \emph{dog} you could either type {\tt dog} or {\tt [dog$|$X]}.
+There is one exception: as we decided earlier, that underscores are not customisable with other Natural Language Processing Tools,
+you have to use the open list format if you want to give in two words, e.g. {\tt [physical,thing$|$X]}.
+
+All predicates are designed to be used with the converted WordNet files, not the originals. Working with subsets or the
+whole database is optional.
+
+One of the most obvious tasks in WordNet is the looking up of words. The predicate
+\begin{verbatim}
+lookup(+Word).
+\end{verbatim}
+looks up a word in {\bfseries wn\_s.pl} and prints out its syntactic category and definition. The extended predicate
+\begin{verbatim}
+lookup(+Word,-SynsetList).
+\end{verbatim}
+looks up a word and returns a list of all synsets in that the word was found. This can be useful if you want to get
+synonyms for all the different meanings of a word. The two predicates are defined in the file {\bfseries lookup.pl}.
+
+In the first part of this paper, I documented the WordNet files and described
+how the words are grouped in synsets. The predicate
+\begin{verbatim}
+find_synset(+Synset_ID,-WordList).
+\end{verbatim}
+returns a list of all words that are in the synset of the given {\tt Synset\_ID}. The predicate is defined in the file
+{\bfseries find\_synset.pl}.
+
+Also, all semantical and lexical relations have been explained in detail. The following predicates experiment
+with these relations.
+ \begin{verbatim}
+find_hyp_chains(+Word,+Cat).
+\end{verbatim}
+finds all hypernym chains of a word and lists them on the screen. For example,
+\begin{verbatim}
+[[organism|_G529], [being|_G520]]
+\end{verbatim}
+is a hypernym chain for the word dog, so is
+\begin{verbatim}
+[[animal|_G616], [animate, being|_G607], [beast|_G595], [brute|_G586], ... .
+\end{verbatim}
+Bear in mind, that only verbs and nouns can
+be hypernyms. As a word can only have hypernyms of the same category as itself, the user has to specify the category in the second
+argument. For example, if you are looking for hypernyms of the noun \emph{dog},
+you might find the word \emph{mammal}. You certainly
+do not want to find the word \emph{to move}, which is a hypernym of the verb \emph{to dog}.
+\begin{verbatim}
+find_hyp(+Word,+Cat,-HypList).
+\end{verbatim}
+finds all hypernyms of a Word and returns them in a list.
+
+The two predicates
+\begin{verbatim}
+find_ent_chains(+Word), find_ent(+Word,-EntList).
+\end{verbatim}
+work the same way as the according hypernym predicates, only that we do not need to specify the category, as an entailment
+can only be a verb.
+
+The two hypernym predicates and the two entailment predicates are defined in the file {\bfseries hyp\_ent.pl}.
+
+As the structure of the predicates are so similar, the predicates {\tt find\_hyp\_chains/2}
+and {\tt find\_ent\_chains/1} call the predicate {\tt find\_chain/3},
+which is a generalized procedure, with the fourth argument handing over whether an entailment or a hypernym relation is
+requested. Likewise {\tt find\_hyp/3} and {\tt find\_ent/1} calls {\tt find/4}, a generalized procedure,
+handing over which relation is requested in the
+third argument.
+
+The predicate
+\begin{verbatim}
+find_sim_meanings(+Word).
+\end{verbatim}
+takes an adjective, finds all its similar meanings and prints it on the screen. The similar predicate
+\begin{verbatim}
+find_sim(+Word,-SimList).
+\end{verbatim}
+returns a list of words with similar meanings of the input word. The predicates are similar to the hypernym and entailment predicates.
+But, there is one basic difference: Handling similar meanings, it does not seem reasonable to follow chains, like we did
+for hypernyms and entailments. Therefore, the algorithm just looks for all similar meanings of
+the given word with the build-in predicate {\tt find\_all}. It does not use recursion to find a chain of similar meanings.
+
+As discussed in the earlier sections {\bfseries wn\_mm.pl}, {\bfseries wn\_ms.pl} and {\bfseries wn\_mp.pl}
+describe several relations
+between meronyms and holonyms. The following predicates interface these relationships. This relation only holds
+for nouns. The predicate
+\begin{verbatim}
+member_of(+Word,-GroupList).
+\end{verbatim}
+takes a word as input and finds the list of groups that the word is a member of. For example,
+\begin{verbatim}
+?- member_of(faculty,X).
+X  = [school|_G413]
+\end{verbatim}
+As a result we get that a \emph{faculty} is a member of a \emph{school}.
+\begin{verbatim}
+has_member(+Word,-MemberList).
+\end{verbatim}
+finds the list of members that are in the group. For example,
+\begin{verbatim}
+?-has_member(faculty,X).
+X = [professor|_G407]
+\end{verbatim}
+As a result we get a \emph{professor} is a member of a \emph{faculty}.
+
+Similarly, the predicates
+\begin{verbatim}
+substance_of(+Word,-List).
+has_substance(+Word,-SubstanceList).
+\end{verbatim}
+find the list of words that a given word is a substance of, or the list of substances that are in one word.
+
+Examples:
+\begin{verbatim}
+?- substance_of(water,X).
+X = [tear|_G407]
+
+? has_substance(water,X).
+X = [h2o|_G407]
+\end{verbatim}
+\emph{Water} is a substance of a \emph{tear}, \emph{H20} is a substance found in \emph{water}.
+
+The two predicates
+\begin{verbatim}
+part_of(+Word,-WholeList), has_part(+Word,-PartList).
+\end{verbatim}
+return the list of things that one word is a
+part of, or the list of things that are part of one word.
+
+Examples:
+\begin{verbatim}
+?- part_of(leg,X).
+X = [table|_G407]
+
+? has_part(leg,X).
+X = [knee|_G407]
+\end{verbatim}
+
+The word \emph{leg} is a part of a \emph{table} and a \emph{knee} is a part of a \emph{leg}.
+
+The input can be an atom or an open list, the output is always an open list. The predicates are
+defined and documented in the file {\bfseries meronym\_holonym.pl}.
+
+The three predicates {\tt member\_of/2}, {\tt substance\_of/2} and {\tt part\_of/2}
+call the predicate {\tt all\_one/4} with the third argument instantiated to the corresponding filename extensions {\tt mm}, {\tt ms}
+and {\tt mp}. Then the procedure is generalized. First, we form the predicate we are looking for by using the univ operator, then we
+call the build-in predicate {\tt find\_all/3} to get all possible answers. {\tt Make\_list/2} then finds all the words belonging
+to the synset IDs and stores them in a list.
+There are two alternatives defined, one handling atoms, and one handling open lists. The predicate {\tt all\_two/4} is similar,
+but instead of matching the first argument and returning the second, it is looking for the first one by unifying the second one.
+By that procedure it handles the cases for the predicates {\tt has\_member/2}, {\tt has\_substance/2} and {\tt has\_part/2}.
+
+Last, I want to describe the predicate
+
+\begin{verbatim}
+cause(+Verb,-CauseList).
+\end{verbatim}
+
+Given a verb, it creates a list of verbs that are causes of the given verb. For example, the verb \emph{to leak} is
+a cause of the verbs \emph{to break}, \emph{to get out}, \emph{to get around}. The predicate is defined in the file {\bfseries cause.pl}
+and
+consists of only one line of code. It works exactly the same way as the predicate {\tt member\_of/2}. It
+calls the predicate {\tt all\_one/4} with the third argument instantiated to {\tt cs}, the wn extension of the corresponding
+database file. Now, we realize why the predicate {\tt all\_one/4} needs the fourth argument, indicating the category. In the
+meronym-holonym relation this seemed unreasonable, as we were only handling nouns. But as we reuse the predicate
+for the cs relation, we need to introduce another argument, so that it can handle verbs, too.
+
+\subsection{How to handle common words that are not in WordNet}
+
+This section is about words that can not be found in WordNet. This becomes a non-trivial question when faced with the fact
+that WordNet Files act as the database for Natural Language Processing Tools.
+
+The predicate
+\begin{verbatim}
+lookup_text(+FileName).
+\end{verbatim}
+tries looking up all the words in a text, finds out, which words are not in WordNet and prints them on the screen. By running the
+program, you might find that the words \emph{this}, \emph{which}, \emph{whether}, \emph{of}, \emph{from}, \emph{the},
+\emph{my}, \emph{is} are not in the WordNet database.
+
+In what way to handle these words, depends on the problem you are approaching. Extending the knowledge base is one.
+
+{\tt Lookup\_text/1} would be more useful if the words would not be printed on the screen, but returned
+in a list. The predicate
+
+\begin{verbatim}
+lookup_text(+FileName,-List).
+\end{verbatim}
+
+executes this.
+
+\subsection{Interfacing with the ProNTo Morphological Analyser}
+
+The ProNTo toolkit are independent Natural Language Processing Tools, which can be used alone or together.
+If used together, the WordNet database would have to interface with the morphological analyser. Designed
+by Jason Schlachter, the ProNTo morphological analyser has several outputs that need to be
+checked in WordNet whether they are words or not.
+
+The morphological analyser is able to analyze only one word at a time. It outputs a list
+containing a single morphological analyzes. By backtracking you can get all other possibilities. The output could then be
+\begin{verbatim}
+[[walk,-ed]].
+\end{verbatim}
+Later, the morphological analyzer has been extended to output not only one analyzes, but a list containing all possibilities
+of how to split up one word, e.g.
+\begin{verbatim}
+[[walked],[walke,-d],[walk,-ed]].
+\end{verbatim}
+Now, to check whether one of the morphological interpretations is a word or not, we call the predicate
+\begin{verbatim}
+morph_atoms_lookup(+Morph).
+\end{verbatim}
+which takes one of the just described outputs and succeeds if the word, or one of the words, can be found in
+WordNet and fails if none can be found.
+
+But the morphological analyzer also interprets longer phrases or sentences. E.g. the output for
+a sentence could be
+\begin{verbatim}
+[[[he]],[[walked],[walke,-ed],[walk,-ed]],[[slowly],[slow,-ly]]].
+\end{verbatim}
+This case is handled by the predicate
+\begin{verbatim}
+morph_bag_lookup(+Morph).
+\end{verbatim}
+which takes the described input and succeeds if at least one word of each list, containing different
+morphological analyses of a word, is found in WordNet and fails if not.
+
+These predicates might be useful for someone who wants to interface our
+tools. But it might not be enough that the predicates are succeeding or failing, some output containing information
+would be useful. Therefore I designed two more predicates
+\begin{verbatim}
+morph_atoms_lookup(Morph,Result).
+morph_bag_lookup(Morph,Result).
+\end{verbatim}
+which are taking the same input, but instead of failing or succeeding, they return a list to the second argument.
+This list contains a list for each input word. Either, if the word can not be found, it returns {\tt [is,not,a,word]}, or if the word
+can be found, it returns the list {\tt [word,synset\_ID,w\_num,category]}.
+\newpage
+Examples:
+\footnote{In this case the pronoun \emph{he} is found in WordNet as there is an entry for \emph{he}
+of the category noun. But not all
+pronouns have entries like this. For example the word \emph{she} can not be found in WordNet.}
+\begin{verbatim}
+?- morph_atoms_lookup([[talk,-ed]],R).
+R = [[talk, 100677091, 1, n]] ;
+R = [[talk, 105953501, 1, n]]
+
+ ?- morph_bag_lookup([[[he]],[[talked],[talke,-d],[talk,-ed]]],R).
+R = [[he, 105716399, 1, n], [talk, 100677091, 1, n]] ;
+R = [[he, 105716399, 1, n], [talk, 105953501, 1, n]]
+\end{verbatim}
+
+For further reference on how the predicates work, please consult the file {\bfseries morph\_lookup.pl}.
+
+
+\section{Conclusion}
+
+This paper was written to give a good documentation of the Prolog WordNet Files. The knowlege presented in this
+paper should simplify the work with the Prolog WordNet database. Of course, the list of interface predicates can be extended,
+according to the needs, felt by the user.
+
+\newpage
+
+\begin{thebibliography}{}
+\raggedright
+\frenchspacing
+
+\item[Beckwith, Richard; Fellbaum, Christiane; Gross, Derek; Miller, George A.;
+and Miller, Katherine]
+(1993).
+\emph{Five papers on WordNet.}
+Technical report. Princeton University. Computer Science Laboratory.
+
+\item[Fellbaum, Christiane (1999).]
+\emph{WordNet: an electronic lexical database.}
+Cambridge, Mass: MIT Press.
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.; Tengi, Randee; Wakefield, Pamela;]
+and Wolff, Susanne (2003a).
+\emph{Format of Prolog-loadable WordNet files - prologdb(5WN).}
+WordNet 1.7.1 Reference Manual: Section 5 File Formats. Princeton University.
+http://www.cogsci.princeton.edu/\( \tilde{} \)wn/man1.7.1/prologdb.5WN.html.
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.; Tengi, Randee; Wakefield, Pamela;]
+and Wolff, Susanne (2003b).
+\emph{Format of sense index file - senseidx(5WN).}
+WordNet 1.7.1 Reference Manual: Section 5 File Formats. Princeton University.
+http://www.cogsci.princeton.edu/\( \tilde{} \)wn/man1.7.1/senseidx.5WN.html.
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.; Tengi, Randee; Wakefield, Pamela;]
+and Wolff, Susanne (2003c).
+\emph{Format of WordNet database files - wndb(5WN).}
+WordNet 1.7.1 Reference Manual: Section 5 File Formats. Princeton University.
+http://www.cogsci.princeton.edu/\( \tilde{} \)wn/man1.7.1/wndb.5WN.html.
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.; Tengi, Randee; Wakefield, Pamela;]
+and Wolff, Susanne (2003d).
+\emph{Format of lexicographer files - wninput(5WN).}
+WordNet 1.7.1 Reference Manual: Section 5 File Formats. Princeton University.
+http://www.cogsci.princeton.edu/\( \tilde{} \)wn/man1.7.1/wninput.5WN.html.
+
+\item[Fellbaum, Christiane; Langone, Helen; Miller, George A.; Tengi, Randee; Wakefield, Pamela;]
+and Wolff, Susanne (2003e).
+\emph{WordNet 1.7.1. - a lexical database for the English language.}
+http://www.cogsci.princeton.edu/\( \tilde{} \)wn.
+
+\item[Wielemaker, Jan (2003).]
+\emph{SWI 5.1 Reference Manual.}
+University of Amsterdam. Dept. of Social Science Informatics (SWI).
+
+\end{thebibliography}
+
+
+\end{document}

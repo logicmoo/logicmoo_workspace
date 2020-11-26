@@ -1,0 +1,48 @@
+% Quicksort version Warren 1977
+% avec un accumulateur
+% equivalente a la vision Shapiro (pp244) 
+% avec les listes de difference.
+
+   $ partition([],N,[],[]).
+   $ partition([X|L],Y,[X|L1],L2) :- le(X,Y), !,
+                                      partition(L,Y,L1,L2).
+   $ partition([X|L],Y,L1,[X|L2]) :- partition(L,Y,L1,L2).
+   $ tpartition :- partition([1,3,9,5,7,4,6,2,8,0],5,X,Y),
+                   wb(X), wb(Y).
+   $ qsort([],R,R).
+   $ qsort([X|L],R,R0) :- partition(L,X,L1,L2),
+                          qsort(L2,R1,R0),
+                          qsort(L1,R,[X|R1]).
+   $ rapide([],R,R).
+   $ rapide([X|L],R0,R) :- partition(L,X,L1,L2), 
+                        rapide(L1,R0,[X|R1]),
+                        rapide(L2,R1,R).
+   $ r([],R,R).
+   $ r([X|L],R0,R) :-   wb([X|L]), wb(R0), wb(R), nl,
+                        partition(L,X,L1,L2), 
+                        r(L1,R0,[X|R1]),
+                        r(L2,R1,R).
+
+   $ tqsort :- qsort([6,2,1,8,5,9,0,7,3,4],X,[]), wb(X).
+   $ tr :- r([6,2,1,8,5,9,0,7,3,4],X,[]), wb(X).
+   $ trapi1 :- rapide([0,1,2,3,4,5,6,7,8,9],X,[]), wb(X).
+   $ tqsort1 :- qsort([0,1,2,3,4,5,6,7,8,9],X,[]), wb(X).
+
+
+ % Quicksort classique avec conc Shapiro (pp55-56)
+   $ qs([],[]).
+   $ qs([X|L],R):- partition(L,X,L1,L2), qs(L2,R2), qs(L1,R1),
+                   conc(R1,[X|R2],R).
+   $ tqs :- qs([6,2,1,8,5,9,0,7,3,4],X), wb(X).
+   $ tqs1 :- qs([0,1,2,3,4,5,6,7,8,9],X), wb(X).
+
+
+ % Tri par insertion Shapiro p55
+
+   $ insert_(X,[],[X]).
+   $ insert_(X,[Y|Ys],[Y|Zs]) :- lt(Y,X), !, insert_(X,Ys,Zs).
+   $ insert_(X,[Y|Ys],[X,Y|Ys]).
+   $ sort([],[]).
+   $ sort([X|Xs],Ys) :- sort(Xs,Zs), insert_(X,Zs,Ys).
+   $ tsort :- sort([6,2,1,8,5,9,0,7,3,4],X), wb(X).
+   $ tsort1 :- sort([0,1,2,3,4,5,6,7,8,9],X), wb(X).

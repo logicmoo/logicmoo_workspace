@@ -1,0 +1,51 @@
+(note TQD98)
+
+
+
+(grossDomesticProduct SaudiArabia 
+ (YearFn 1997) 
+ (BillionDollars 123.700)) 
+
+(grossDomesticProduct Algeria 
+ (YearFn 1997) 
+ (BillionDollars 73.0600)) 
+
+
+
+
+
+(grossDomesticProduct SaudiArabia 
+ (YearFn 1996) 
+ (BillionDollars 205.600)) 
+
+(grossDomesticProduct Algeria 
+ (YearFn 1996) 
+ (BillionDollars 115.900)) 
+
+
+
+
+
+(query (findall (?TIME ?GREATER )
+(thereExists ?LESSER 
+   (thereExists ?LESSER-AMT 
+       (thereExists ?GREATER-AMT 
+           (and 
+               (grossDomesticProduct ?GREATER ?TIME ?GREATER-AMT) 
+               (grossDomesticProduct ?LESSER ?TIME ?LESSER-AMT) 
+               (greaterThan ?GREATER-AMT ?LESSER-AMT) 
+               (or 
+                   (and 
+                       (equals Algeria ?GREATER) 
+                       (equals SaudiArabia ?LESSER)) 
+                   (and 
+                       (equals SaudiArabia ?GREATER) 
+                       (equals Algeria ?LESSER))))))) 
+))
+
+(answer SaudiArabia 1997
+)
+(answer SaudiArabia 1996
+)
+(end_of_file)
+

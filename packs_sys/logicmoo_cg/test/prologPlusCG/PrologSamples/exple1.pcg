@@ -1,0 +1,74 @@
+// ?- cg([Man:karim]<-agnt-[x]).
+cg([Man:karim]<-agnt-[Eat]-obj->[Apple]).
+cg([Man:imad]<-agnt-[Drive]-obj->[Car]).
+cg([Man:karim]<-agnt-[Drink]-obj->[Water]).
+cg(cgx, [Man:karim]<-agnt-[verb(Drink)]-obj->[noun(Water)]).
+
+// ?- cg(cgx, [Man:karim]<-agnt-[t1]-obj->[t2]).
+// ?- cg(cgx, [Man:karim]<-agnt-[t1]-obj->[t2]), eq(t1, verb(x)), g is x:getDefinition().
+
+// Example of a call to a member method: the size of the list L (the value associated to the variable L)
+length(L, s) :- s is L:size().
+
+// ?- compute(1, 4, 6), useGlobal(1, r).
+compute(x, y, z) :-
+    w is x + y * z,
+    result is w - 34 .
+
+useGlobal(x, r) :-
+   r is result + x .
+
+// Example of a call to a static method : try this request directly on the console : 
+// ?- v is "java.lang.String":valueOf(345).
+
+cg(cg1, [Person]<-agnt-[Eat]).
+cg(cg2, [Man:karim]<-agnt-[Eat]-obj->[Apple]).
+
+// Example of a call to a member method from Amine APIs (maximalJoin operation) : 
+// cg(cg1, G1), cg(cg2, G2), maximalJoin(G1, G2, G3).
+maximalJoin(G1, G2, G3) :- G3 is G1:maximalJoin(G2).
+
+// cg(cg1, G1), cg(cg2, G2), isMoreGeneralThan(G1, G2).
+isMoreGeneralThan(G1, G2) :- G1:subsume(G2).
+
+// x is Man:getMaxComSubType(Woman).
+// x is Man:getMinComSuperType(Woman).
+
+testType([t : r], [t1: r2], t2) :-
+  t2 is t:getMaxComSubType(t1).
+
+createAStack(r) :-
+   v is "java.util.Stack":new(),
+   v:push(one),
+   v:push(two),
+   r is v:peek().
+
+
+eq(x, x).
+
+dif(x, y) :- eq(x, y), !, fail.
+dif(x, y).
+
+sup(x, y) :- true is x > y.
+
+inf(x, y) :- true is x < y.
+
+or(p, q) :- p, !.
+or(p, q) :- q.
+
+car(1, "bmw").
+car(2, "gfdgfd").
+
+assertMetaPredicates :-
+   	assertz(car(3, "peugeot"), []),
+	asserta(car(0, "honda"), []).
+
+removeMetaPredicates :-
+	car(x,y), 
+	check(x), 
+	retract(car(x,y)),
+	fail.
+removeMetaPredicates.
+
+check(1).
+check(2).

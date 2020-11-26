@@ -1,0 +1,4 @@
+macro(j(KanaKanji, Romaji, Gloss), Gloss).
+
+% Default to romaji if there is no gloss.
+macro(j(KanaKanji, Romaji), Romaji).

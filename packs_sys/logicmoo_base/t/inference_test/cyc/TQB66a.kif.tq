@@ -1,0 +1,34 @@
+(note TQB66a)
+
+(firstSubEvents PersianGulfWar IraqInvadingKuwait) 
+
+(subrelation firstSubEvents temporallySubsumes) 
+
+(different Kuwait Iraq) 
+
+(instance Iraq IndependentCountry) 
+
+(agent IraqInvadingKuwait Iraq) 
+
+(maleficiary IraqInvadingKuwait Kuwait) 
+
+(instance IraqInvadingKuwait MilitaryEvent) 
+
+
+
+
+(query (findall ?COUNTRY
+ (thereExists ?ACTION 
+ (and 
+ (instance ?ACTION MilitaryEvent) 
+ (agent ?ACTION ?COUNTRY) 
+ (maleficiary ?ACTION Kuwait) 
+ (instance ?COUNTRY IndependentCountry) 
+ (different ?COUNTRY Kuwait) 
+ (temporallySubsumes PersianGulfWar ?ACTION))) ) )
+
+(answer Iraq)
+
+(end_of_file)
+
+

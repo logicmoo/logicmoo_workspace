@@ -1,0 +1,121 @@
+
+
+body {
+	font-family:arial,sans-serif;
+}
+
+.code {
+	font-family: courier;
+}
+
+.errors {font-family:courrier;}
+.warnings {font-family:courrier;}
+.failedParses {font-family:courrier;}
+
+
+h3 {
+	margin-left: 1em;
+	color:#009;
+}
+
+div span {
+	margin-left: 1em;
+}
+
+
+.resultTable {
+	margin-left:1.5em;
+	border-style: solid;
+	caption-side: bottom; 
+	border-collapse: collapse; 
+}
+
+.textToTextHeaders {
+	background-color:#EEEEEE;
+}
+
+.textToTextMisrecognized {
+	background-color:#E2D8DC;
+}
+
+.speechToTextSER {
+	background-color:#E2D8DC;
+}
+
+.speechToTextWER {
+	background-color:#E2D8DC;
+}
+
+.textToTextResults1a {
+	background-color:#F0FFFF;
+}
+
+.textToTextResults1b {
+	background-color:#F0FFFF;
+}
+
+.textToTextResults2a {
+	background-color:#EEEEEE;
+}
+
+.textToTextResults2b {
+	background-color:#EEEEEE;
+}
+
+.textToTextResults3a {
+	background-color:#F0FFFF;
+}
+
+.textToTextResults3b {
+	background-color:#F0FFFF;
+}
+
+.speechToTextTotalWords {
+	background-color:#EEEEEE;
+}
+
+.textToTextTotalProcessed {
+	background-color:#EEEEEE;
+}
+
+.speechToTextTimesRT {
+	background-color:#EEEEEE;
+}
+
+.notAvailable {
+	color: #cccccc;
+	text-align: right;
+	border: 1px solid;
+	border-color: #cccccc;
+}
+
+caption {
+	text-align: right;
+}
+
+th {
+	border: 1px solid;
+	border-color: #cccccc;
+}
+
+td.lang, td.domain  {
+	text-align: left;
+	border: 1px solid;
+	border-color: #cccccc;
+}
+
+td.result {
+	text-align: right;
+	border: 1px solid;
+	border-color: #cccccc;
+}
+
+tr {
+	border: 1px solid;
+	border-color: #cccccc;
+}
+
+tr:hover {
+	/* outline: 1px solid grey; */
+	background-color:#FFFFFF;
+}

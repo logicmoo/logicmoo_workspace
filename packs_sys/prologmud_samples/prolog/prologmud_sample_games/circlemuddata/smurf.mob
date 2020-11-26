@@ -1,0 +1,195 @@
+#300
+papa smurf~
+Papa Smurf~
+Papa Smurf is here making sure everything in Smurfville is smurfy.
+~
+Papa Smurf, the leader of the smurfs, looks like one mean dude.  Both smart and strong he is prepared for
+any obstacle.
+~
+aglnop m 550 S
+10 10 4 10d5+100 4d10+5
+2500 15000
+8 8 1
+#301
+gargamel man~
+Gargamel~
+Gargamel is standing here plotting against the smurfs.
+~
+Gargamel, the archenemy of the do-goody smurfs, is definitly evil.  He scowls at you and wonders why you
+are invading his privacy.
+~
+abegjlmn cde -700 S
+7 17 7 5d5+40 4d5+3
+2000 5400
+8 8 1
+#302
+brainy smurf~
+Brainy Smurf~
+Brainy Smurf is here pondering something.
+~
+Brainy Smurf looks to be, of course, smart.  But he spends too much time with his nose in a book to be a
+very good fighter you imagine.
+~
+aghlo 0 600 E
+5 19 7 3d4+30 2d4+0
+400 2500
+8 8 1
+Str: 8
+Int: 18
+E
+#303
+cat azrael~
+Azrael~
+Azrael is loafing around thinking about having a tasty smurf for dinner.
+~
+Azrael the cat, Gargamel's sidekick, appears to be eyeing you as food.
+~
+bcglmp k -650 S
+6 14 6 5d5+35 4d4+3
+250 3000
+5 5 1
+#304
+barney dinosaur purple~
+Barney~
+Barney, the purple dinosaur, is here.  He is foaming from the mouth and quite psychotic at this point.
+~
+Barney, once every childs hero, appears now as a lean, mean, purple fighting machine.
+~
+abcfgo 0 0 S
+8 11 3 10d5+90 4d5+5
+500 4900
+8 8 1
+#305
+smurf art artist~
+Artist Smurf~
+Artist Smurf is here thinking up his next great masterpiece.
+~
+Artist Smurf is very creative.  Making paintings ranging from Smurfette to the Smurfberry Patch.
+~
+acglor 0 500 S
+4 16 8 5d5+50 2d4+1
+500 2200
+8 8 1
+#306 
+fireman smurf~
+Fireman Smurf~
+Fireman Smurf is watching for any sign of smoke.
+~
+Fireman Smurf spends his day wandering around looking for fires to fight.
+~
+aglo 0 650 S
+5 15 6 7d5+60 2d5+2
+600 2000
+8 8 1
+#307
+smurfette smurf~
+Smurfette~
+Smurfette is standing around looking pretty.
+~
+Smurfette looks extremely beautiful, if you were blue and extremely small.
+~
+aglno 0 550 S
+5 18 6 6d5+50 2d3+1
+700 1200
+8 8 2
+#308
+clumsy smurf~
+Clumsy Smurf~
+Clumsy Smurf is here trying not to trip over his own feet.
+~
+Clumsy Smurf is, well, clumsy.  You should put him out of his misery.
+~
+aglo 0 600 S
+4 20 8 7d7+50 2d4+1
+300 1600
+8 8 1
+#309
+grumpy smurf~
+Grumpy Smurf~
+Grumpy Smurf is here, looking extremly annoyed.
+~
+Grumpy Smurf is frowning at you.
+~
+aglno j 400 S
+5 15 5 7d5+60 3d5+2
+600 2000
+8 8 1
+#310
+johann man~
+Johann~
+Johann is here helping the smurfs.
+~
+Johann is a small boy who continually helps the smurfs do thier deeds.
+~
+bglmo 0 500 S
+4 16 7 5d5+50 2d5+3
+400 2400
+8 8 1
+#311
+sebastian man~
+Sebastian~
+Sebastian is here helping the smurfs.
+~
+Sebastian is a small boy who continually helps the smurfs do thier deeds.
+~
+bglmo 0 500 S
+4 16 7 5d5+50 2d5+3
+400 2400
+8 8 1
+#312
+vainity smurf~
+Vainity Smurf~
+Vainity Smurf is here checking his looks with a small mirror.
+~
+Vainity Smurf is well groomed and fancily dressed.  You wouldn't want to get blood on his new outfit, now
+would you?
+~
+aglo 0 550 S
+5 15 6 7d5+60 2d5+2
+700 2000
+8 8 1
+#313
+athletic smurf~
+Athletic Smurf~
+Athletic Smurf is doing squats here.
+~
+Athletic Smurf is a big buff smurf.  His bulging blue biceps stick out from his smurfy shirt.
+~
+aglo 0 600 S
+5 14 5 8d6+60 2d5+4
+700 2200
+8 8 1
+#314
+handy smurf~
+Handy Smurf~
+Handy Smurf is here repairing something.
+~
+Handy Smurf appears to be a pretty normal fix-it-all smurf.
+~
+aglo 0 600 S
+4 16 6 5d5+50 2d5+1
+600 2200
+8 8 1
+#315
+smurf~
+smurf~
+A smurf is here doing smurfy things.
+~
+You see a little blue happy man.
+~
+aglo 0 650 S
+4 16 7 5d5+50 2d5+1
+500 2000
+8 8 1
+#316
+miner smurf~
+Miner Smurf~
+Miner Smurf is here digging a hole.
+~
+Miner Smurf's blue skin is covered with mid and lamp oil.
+~
+abglo k 600 S
+5 15 5 7d5+60 2d5+2
+600 2000
+8 8 1
+$~ 

@@ -1,0 +1,5 @@
+// *******   utilities *******
+not(p) :- p, !, fail.
+not(p).
+
+eq(x, x).

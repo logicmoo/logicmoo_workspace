@@ -1,0 +1,116 @@
+(note TQD53)
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1))
+
+(instance HYP-AttackOnTangible-35141979 AttackOnTangible) 
+
+(instance Iran Country) 
+
+(different SaudiArabia Iran) 
+
+(inRegion HYP-SomethingExisting-16859250 Iran) 
+
+(eventOccursAt HYP-AttackOnTangible-35141979 HYP-SomethingExisting-16859250) 
+
+(instance SaudiArabia Country) 
+
+(agent HYP-AttackOnTangible-35141979 SaudiArabia) 
+
+(maleficiary HYP-AttackOnTangible-35141979 Iran) 
+
+(instance Iran GeographicalAgent) 
+
+(desires SaudiArabia 
+ (economicStability 
+ (EconomicSystemFn Iran) Low))
+
+(instance HYP-AttackOnTangible-35141979 MilitaryAttack) 
+
+(implies 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (maleficiary ?ATTACK ?GEOPOL) 
+ (instance ?GEOPOL GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (economicStability 
+ (EconomicSystemFn ?GEOPOL) Low) likelihood))
+
+(implies 
+ (and 
+ (instance ?ATTACK AttackOnTangible) 
+ (agent ?ATTACK ?COUNTRY2) 
+ (instance ?COUNTRY2 Country) 
+ (eventOccursAt ?ATTACK ?AREA) 
+ (different ?COUNTRY1 ?COUNTRY2) 
+ (inRegion ?AREA ?COUNTRY1) 
+ (instance ?COUNTRY1 Country)) 
+ (maleficiary ?ATTACK ?COUNTRY1))
+
+(instance HYP-AttackOnTangible-35141979 AttackOnTangible) 
+
+(instance Iran Country) 
+
+(different SaudiArabia Iran) 
+
+(inRegion HYP-SomethingExisting-16859250 Iran) 
+
+(eventOccursAt HYP-AttackOnTangible-35141979 HYP-SomethingExisting-16859250) 
+
+(instance SaudiArabia Country) 
+
+(agent HYP-AttackOnTangible-35141979 SaudiArabia) 
+
+(maleficiary HYP-AttackOnTangible-35141979 Iran) 
+
+(instance Iran GeographicalAgent) 
+
+(desires SaudiArabia 
+ (politicalStability Iran Low)) 
+
+(instance HYP-AttackOnTangible-35141979 MilitaryAttack) 
+
+(implies 
+ (and 
+ (instance ?ATTACK MilitaryAttack) 
+ (maleficiary ?ATTACK ?GEOPOL) 
+ (instance ?GEOPOL GeographicalAgent)) 
+ (increasesCausally ?ATTACK 
+ (politicalStability ?GEOPOL Low) likelihood))
+
+(query (findall ?PROP
+ (implies 
+   (and 
+       (agent ?ACT SaudiArabia) 
+       (instance ?ACT AttackOnTangible) 
+       (eventOccursAt ?ACT ?TARGET) 
+       (inRegion ?TARGET Iran) 
+       (deviceUsed ?ACT ?FORCE) 
+       (instance ?FORCE ConventionalWeapon) 
+       (instance ?FORCE MilitaryHardware) 
+       (startsAfterStartingOf ?ACT 
+           (DateInSituationFn CalendarDay 28 HPKBScenarioConflict))) 
+   (or 
+       (and 
+           (desires SaudiArabia ?PROP) 
+           (increasesCausally ?ACT ?PROP likelihood)) 
+       (and 
+           (desires SaudiArabia 
+               (not ?PROP)) 
+           (decreasesCausally ?ACT ?PROP likelihood))))))
+
+(answer (list  (economicStability 
+ (EconomicSystemFn Iran) Low)))
+ 
+(answer  (list  (politicalStability Iran Low)))
+
+(end_of_file)
+

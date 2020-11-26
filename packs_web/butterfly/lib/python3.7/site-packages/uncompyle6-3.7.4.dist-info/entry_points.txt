@@ -1,0 +1,4 @@
+[console_scripts]
+pydisassemble = uncompyle6.bin.pydisassemble:main
+uncompyle6 = uncompyle6.bin.uncompile:main_bin
+

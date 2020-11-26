@@ -1,0 +1,5 @@
+
+ignore_feature(syn_type).
+ignore_feature(subj_syn_type).
+ignore_feature(obj_syn_type).
+ignore_feature(indobj_syn_type).

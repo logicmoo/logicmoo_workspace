@@ -1,0 +1,779 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.16</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="packs.html">
+<link rel="next" href="cyclic.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="packs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="cyclic.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:syntax"><a id="sec:2.16"><span class="sec-nr">2.16</span> <span class="sec-title">The 
+SWI-Prolog syntax</span></a></h2>
+
+<a id="sec:syntax"></a>
+
+<p>SWI-Prolog syntax is close to ISO-Prolog standard syntax, which is 
+based on the Edinburgh Prolog syntax. A formal description can be found 
+in the ISO standard document. For an informal introduction we refer to 
+Prolog text books (see <a class="sec" href="intro.html#sec:1">section 1</a>) 
+and
+<a class="url" href="http://www.swi-prolog.org/Links.html">online 
+tutorials</a>. In addition to the differences from the ISO standard 
+documented here, SWI-Prolog offers several extensions, some of which 
+also extend the syntax. See <a class="sec" href="extensions.html#sec:5">section 
+5</a> for more information.
+
+<p><h3 id="sec:isosyntax"><a id="sec:2.16.1"><span class="sec-nr">2.16.1</span> <span class="sec-title">ISO 
+Syntax Support</span></a></h3>
+
+<a id="sec:isosyntax"></a>
+
+<p>This section lists various extensions w.r.t. the ISO Prolog syntax.
+
+<p><h4 id="sec:processorcharset"><a id="sec:2.16.1.1"><span class="sec-nr">2.16.1.1</span> <span class="sec-title">Processor 
+Character Set</span></a></h4>
+
+<a id="sec:processorcharset"></a>
+
+<p><a id="idx:ISOLatin1:265"></a><a id="idx:characterset:266"></a>The 
+processor character set specifies the class of each character used for 
+parsing Prolog source text. Character classification is fixed to
+<a class="url" href="http://www.unicode.org/">Unicode</a>. See also <a class="sec" href="widechars.html#sec:2.19">section 
+2.19</a>.
+
+<p><h4 id="sec:nestedcomments"><a id="sec:2.16.1.2"><span class="sec-nr">2.16.1.2</span> <span class="sec-title">Nested 
+comments</span></a></h4>
+
+<a id="sec:nestedcomments"></a>
+
+<p>SWI-Prolog allows for nesting <code>/* ... */</code> comments. Where 
+the ISO standard accepts <code>/* ... /* ... */</code> as a comment, 
+SWI-Prolog will search for a terminating <code>*/</code>. This is useful 
+if some code with <code>/* ... */</code> comment statements in it should 
+be commented out. This modification also avoids unintended commenting in 
+the example below, where the closing <code>*/</code> of the first 
+comment has been forgotten.<sup class="fn">24<span class="fn-text">Recent 
+copies of GCC give a style warning if <code>/*</code> is encountered in 
+a comment, which suggests that this problem has been recognised more 
+widely.</span></sup>
+
+<pre class="code">
+/* comment
+
+code
+
+/* second comment */
+
+code
+
+</pre>
+
+<p><h4 id="sec:charescapes"><a id="sec:2.16.1.3"><span class="sec-nr">2.16.1.3</span> <span class="sec-title">Character 
+Escape Syntax</span></a></h4>
+
+<a id="sec:charescapes"></a>
+
+<p>Within quoted atoms (using single quotes: <code>&rsquo;&lt;<var>atom</var>&gt;&rsquo;</code>) 
+special characters are represented using escape sequences. An escape 
+sequence is led in by the backslash (<code><code>\</code></code>) 
+character. The list of escape sequences is compatible with the ISO 
+standard but contains some extensions, and the interpretation of 
+numerically specified characters is slightly more flexible to improve 
+compatibility. Undefined escape characters raise a <code>syntax_error</code> 
+exception.<sup class="fn">25<span class="fn-text">Up to SWI-Prolog&nbsp;6.1.9, 
+undefined escape characters were copied verbatim, i.e., removing the 
+backslash.</span></sup>
+
+<dl class="latex">
+<dt><code>\a</code></dt>
+<dd class="defbody">
+Alert character. Normally the ASCII character 7 (beep).
+</dd>
+<dt><code>\b</code></dt>
+<dd class="defbody">
+Backspace character.
+</dd>
+<dt><code>\c</code></dt>
+<dd class="defbody">
+No output. All input characters up to but not including the first 
+non-layout character are skipped. This allows for the specification of 
+pretty-looking long lines. Not supported by ISO. Example:
+
+<pre class="code">
+format('This is a long line that looks better if it was \c
+       split across multiple physical lines in the input')
+</pre>
+
+</dd>
+<dt><code>\&lt;<var><span style="font-variant:small-caps">NEWLINE</span></var>&gt;</code></dt>
+<dd class="defbody">
+When in ISO mode (see the Prolog flag <a class="flag" href="flags.html#flag:iso">iso</a>), 
+only skip this sequence. In native mode, white space that follows the 
+newline is skipped as well and a warning is printed, indicating that 
+this construct is deprecated and advising to use <code>\c</code>. We 
+advise using <code>\c</code> or putting the layout <em>before</em> the <code><code>\</code></code>, 
+as shown below. Using
+<code>\c</code> is supported by various other Prolog implementations and 
+will remain supported by SWI-Prolog. The style shown below is the most 
+compatible solution.<sup class="fn">26<span class="fn-text">Future 
+versions will interpret <code><code>\</code></code>&lt;<var>return</var>&gt; 
+according to ISO.</span></sup>
+
+<pre class="code">
+format('This is a long line that looks better if it was \
+split across multiple physical lines in the input')
+</pre>
+
+<p>instead of
+
+<pre class="code">
+format('This is a long line that looks better if it was\
+ split across multiple physical lines in the input')
+</pre>
+
+<p>Note that SWI-Prolog also allows unescaped newlines to appear in 
+quoted material. This is not allowed by the ISO standard, but used to be 
+common practice before.
+</dd>
+<dt><code>\e</code></dt>
+<dd class="defbody">
+Escape character (<span style="font-variant:small-caps">ASCII</span> 
+27). Not ISO, but widely supported.
+</dd>
+<dt><code>\f</code></dt>
+<dd class="defbody">
+Form-feed character.
+</dd>
+<dt><code>\n</code></dt>
+<dd class="defbody">
+Next-line character.
+</dd>
+<dt><code>\r</code></dt>
+<dd class="defbody">
+Carriage-return only (i.e., go back to the start of the line).
+</dd>
+<dt><code>\s</code></dt>
+<dd class="defbody">
+Space character. Intended to allow writing <code>0'\s</code> to get the 
+character code of the space character. Not ISO.
+</dd>
+<dt><code>\t</code></dt>
+<dd class="defbody">
+Horizontal tab character.
+</dd>
+<dt><code>\v</code></dt>
+<dd class="defbody">
+Vertical tab character (<span style="font-variant:small-caps">ASCII</span> 
+11).
+</dd>
+<dt><code>\<code>xXX..\</code></code></dt>
+<dd class="defbody">
+Hexadecimal specification of a character. The closing <code>\</code> is 
+obligatory according to the ISO standard, but optional in SWI-Prolog to 
+enhance compatibility with the older Edinburgh standard. The code
+<code>\xa\3</code> emits the character 10 (hexadecimal&lsquo;a') 
+followed by&lsquo;3'. Characters specified this way are interpreted as 
+Unicode characters. See also <code>\u</code>.
+</dd>
+<dt><code>\uXXXX</code></dt>
+<dd class="defbody">
+Unicode character specification where the character is specified using
+<em>exactly</em> 4 hexadecimal digits. This is an extension to the ISO 
+standard, fixing two problems. First, where <code>\x</code> defines a 
+numeric character code, it doesn't specify the character set in which 
+the character should be interpreted. Second, it is not needed to use the 
+idiosyncratic closing <code><code>\</code></code> ISO Prolog syntax.
+</dd>
+<dt><code>\UXXXXXXXX</code></dt>
+<dd class="defbody">
+Same as <code>\uXXXX</code>, but using 8 digits to cover the whole 
+Unicode set.
+</dd>
+<dt><code>\40</code></dt>
+<dd class="defbody">
+Octal character specification. The rules and remarks for hexadecimal 
+specifications apply to octal specifications as well.
+</dd>
+<dt><code>\<code>\</code></code></dt>
+<dd class="defbody">
+Escapes the backslash itself. Thus, <code>'\\'</code> is an atom 
+consisting of a single <code><code>\</code></code>.
+</dd>
+<dt><code>\&rsquo;</code></dt>
+<dd class="defbody">
+Single quote. Note that <code>'\''</code> and <code>''''</code> both 
+describe the atom with a single&nbsp;<code>&rsquo;</code>, i.e., <code>'\'' == ''''</code> 
+is true.
+</dd>
+<dt><code>\"</code></dt>
+<dd class="defbody">
+Double quote.
+</dd>
+<dt><code>\&lsquo;</code></dt>
+<dd class="defbody">
+Back quote.
+</dd>
+</dl>
+
+<p>Character escaping is only available if
+<code>current_prolog_flag(character_escapes, true)</code> is active 
+(default). See <a id="idx:currentprologflag2:267"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>. 
+Character escapes conflict with <a id="idx:writef2:268"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+in two ways: <code>\40</code> is interpreted as decimal 40 by <a id="idx:writef2:269"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+but as octal 40 (decimal 32) by <code>read</code>. Also, the <a id="idx:writef2:270"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+sequence
+<code>\l</code> is illegal. It is advised to use the more widely 
+supported
+<a id="idx:format23:271"></a><a class="pred" href="format.html#format/2">format/[2,3]</a> 
+predicate instead. If you insist upon using <a id="idx:writef2:272"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+either switch <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+to <code>false</code>, or use double <code>\\</code>, as in <code>writef('\\l')</code>.
+
+<p><h4 id="sec:nondecsyntax"><a id="sec:2.16.1.4"><span class="sec-nr">2.16.1.4</span> <span class="sec-title">Syntax 
+for non-decimal numbers</span></a></h4>
+
+<a id="sec:nondecsyntax"></a>
+
+<p>SWI-Prolog implements both Edinburgh and ISO representations for 
+non-decimal numbers. According to Edinburgh syntax, such numbers are 
+written as <code>&lt;<var>radix</var>&gt;&rsquo;&lt;<var>number</var>&gt;</code>, 
+where &lt;<var>radix</var>&gt; is a number between 2 and 36. ISO defines 
+binary, octal and hexadecimal numbers using
+<code>0<em>[bxo]</em>&lt;<var>number</var>&gt;</code>. For example: <code>A is 0b100 \/ 0xf00</code> 
+is a valid expression. Such numbers are always unsigned.
+
+<p><h4 id="sec:digitgroupsyntax"><a id="sec:2.16.1.5"><span class="sec-nr">2.16.1.5</span> <span class="sec-title">Using 
+digit groups in large integers</span></a></h4>
+
+<a id="sec:digitgroupsyntax"></a>
+
+<p>SWI-Prolog supports splitting long integers into <em>digit groups</em>. 
+Digit groups can be separated with the sequence &lt;<var>underscore</var>&gt;,
+&lt;<var>optional white space</var>&gt;. If the &lt;<var>radix</var>&gt; 
+is 10 or lower, they may also be separated with exactly one space. The 
+following all express the integer 1&nbsp;million:
+
+<pre class="code">
+1_000_000
+1 000 000
+1_000_/*more*/000
+</pre>
+
+<p>Integers can be printed using this notation with <a id="idx:format2:273"></a><a class="pred" href="format.html#format/2">format/2</a>, 
+using the
+<code>~I</code> format specifier. For example:
+
+<pre class="code">
+?- format('~I', [1000000]).
+1_000_000
+</pre>
+
+<p>The current syntax has been proposed by Ulrich Neumerkel on the 
+SWI-Prolog mailinglist.
+
+<p><h4 id="sec:syntax-rational-numbers"><a id="sec:2.16.1.6"><span class="sec-nr">2.16.1.6</span> <span class="sec-title">Rational 
+number syntax</span></a></h4>
+
+<a id="sec:syntax-rational-numbers"></a>
+
+<p>As of version 8.1.22, SWI-Prolog supports rational numbers as a 
+primary citizen atomic data type if SWI-Prolog is compiled with the GMP 
+library. This can be tested using the <a class="flag" href="flags.html#flag:bounded">bounded</a> 
+Prolog flag. An atomic type also requires a syntax. Unfortunately there 
+are few options for adding rational numbers without breaking the ISO 
+standard.<sup class="fn">27<span class="fn-text">ECLiSPe uses <var>numerator</var>_<var>denominator</var>. 
+This syntax conflicts with SWI-Prolog digit groups (see <a class="sec" href="syntax.html#sec:2.16.1.5">section 
+2.16.1.5</a>) and does not have a recognised link to rational numbers. 
+The notation <code>1/3r</code> and <code>1/3R</code> have also been 
+proposed. The <code>1/3r</code> is compatible to Ruby, but is hard to 
+parse due to the required look-ahead and not very natural. See also <a class="url" href="https://en.wikipedia.org/wiki/Rational_data_type">https://en.wikipedia.org/wiki/Rational_data_type</a>.</span></sup>
+
+<p>ECLiSPe and SWI-Prolog have agreed to define the canonical syntax for 
+rational numbers to be e.g., <code>1r3</code>. In addition, ECLiSPe 
+accepts
+<code>1_3</code> and SWI-Prolog can be asked to accept <code>1/3</code> 
+using the module sensitive Prolog flag <a class="flag" href="flags.html#flag:rational_syntax">rational_syntax</a>, 
+which has the values below. Note that <a id="idx:writecanonical1:274"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a> 
+always uses the compatible
+<code>1r3</code> syntax.
+
+<dl class="latex">
+<dt><strong>natural</strong></dt>
+<dd class="defbody">
+This is the default mode where we ignore the ambiguity issue and follow 
+the most natural &lt;<var>integer</var>&gt;/&lt;<var>nonneg</var>&gt; 
+alternative. Here, &lt;<var>integer</var>&gt; follows the normal rules 
+for Prolog decimal integers and &lt;<var>nonneg</var>&gt; does the same, 
+but does not allows for a sign. Note that the parser translates a 
+rational number to its canonical form which implies there are no common 
+divisors in the resulting numerator and denominator. Examples of ration 
+numbers are:
+
+<p><table class="latex frame-void">
+<tr><td>1/2</td><td>1/2 </td></tr>
+<tr><td>2/4</td><td>1/2 </td></tr>
+<tr><td>1 000 000/33 000</td><td>1000/33 </td></tr>
+<tr><td>-3/5</td><td>-3/5 </td></tr>
+</table>
+
+<p>We expect very few programs to have text parsed into a rational 
+number while a term was expected. Note that for rationals appearing in 
+an arithmetic expression the only difference is that evaluation moves 
+from runtime to compiletime. The utility <a id="idx:listrationals0:275"></a><a class="pred" href="check.html#list_rationals/0">list_rationals/0</a> 
+may be used on a loaded program to check whether the program contains 
+rational numbers inside clauses and thus may be subject to compatibility 
+issues. If a term is intended this can be written as <code>/(1,2)</code>, <code>(1)/2</code>,
+<code>1 / 2</code> or some variation thereof.</dd>
+<dt><strong>compatibility</strong></dt>
+<dd class="defbody">
+Read and write rational numbers as e.g., <code>1r3</code>. In other 
+words, this adheres to the same rules as <code>natural</code> above, but 
+using the&lsquo;<code>r</code>&rsquo;instead of&lsquo;<code><code>/</code></code>&rsquo;. 
+Note that this may conflict with traditional Prolog as&lsquo;<code>r</code>&rsquo;can 
+be defined as an infix operator. The same argument holds for <code>0x23</code> 
+and similar syntax for numbers that are part of the ISO standard.
+</dd>
+</dl>
+
+<p>While the syntax is controlled by the flag <a class="flag" href="flags.html#flag:rational_syntax">rational_syntax</a>, 
+behavior on integer division and exponentiation is controlled by the 
+flag <a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a>. 
+See section <a class="sec" href="arith.html#sec:4.27.2.2">section 
+4.27.2.2</a> for arithmetic on rational numbers.
+
+<p><h4 id="sec:floatsyntax"><a id="sec:2.16.1.7"><span class="sec-nr">2.16.1.7</span> <span class="sec-title">NaN 
+and Infinity floats and their syntax</span></a></h4>
+
+<a id="sec:floatsyntax"></a>
+
+<p>SWI-Prolog supports reading and printing&lsquo;special' floating 
+point values according to
+<a class="url" href="http://eclipseclp.org/Specs/core_update_float.html">Proposal 
+for Prolog Standard core update wrt floating point arithmetic</a> by 
+Joachim Schimpf and available in ECLiPSe Prolog. In particular,
+
+<p>
+<ul class="latex">
+<li>Infinity is printed as <code>1.0Inf</code> or <code>-1.0Inf</code>. 
+Any sequence matching the regular expression <code>[+-]?\sd+[.]\sd+Inf</code> 
+is mapped to plus or minus infinity.
+
+<p>
+<li><code>NaN</code> (Not a Number) is printed as <code>1.xxxNaN</code>, 
+where
+<i>1.xxx</i> is the float after replacing the exponent by&lsquo;1'. Such 
+numbers are read, resulting in the same <code>NaN</code>. The
+<code>NaN</code> constant can also be produced using the function
+<a class="function" href="arith.html#f-nan/0">nan/0</a>, e.g.,
+
+<pre class="code">
+?- A is nan.
+A = 1.5NaN.
+</pre>
+
+<p>
+</ul>
+
+<p>By default SWI-Prolog arithmetic (see <a class="sec" href="arith.html#sec:4.27">section 
+4.27</a>) follows the ISO standard with describes that floating point 
+operations either produce a
+<em>normal</em> floating point number or raise an exception.
+<a class="sec" href="arith.html#sec:4.27.2.4">section 4.27.2.4</a> 
+describes the Prolog flags that can be used to support the IEEE special 
+float values. The ability to create, read and write such values 
+facilitates the exchange of data with languages that can represent the 
+full range of IEEE doubles.
+
+<p><h4 id="sec:varprefix"><a id="sec:2.16.1.8"><span class="sec-nr">2.16.1.8</span> <span class="sec-title">Force 
+only underscore to introduce a variable</span></a></h4>
+
+<a id="sec:varprefix"></a>
+
+<p>According to the ISO standard and most Prolog systems, identifiers 
+that start with an uppercase letter or an underscore are variables. In 
+the past, <em>Prolog by BIM</em> provided an alternative syntax, where 
+only the underscore (<code>_</code>) introduces a variable. As of 
+SWI-Prolog 7.3.27 SWI-Prolog supports this alternative syntax, 
+controlled by the Prolog flag <a class="flag" href="flags.html#flag:var_prefix">var_prefix</a>. 
+As the <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
+flag, this flag is maintained per module, where the default is
+<code>false</code>, supporting standard syntax.
+
+<p>Having only the underscore introduce a variable is particularly 
+useful if code contains identifiers for case sensitive external 
+languages. Examples are the RDF library where code frequently specifies 
+property and class names<sup class="fn">28<span class="fn-text">Samer 
+Abdallah suggested this feature based on experience with non-Prolog 
+users using the RDF library.</span></sup> and the R interface for 
+specifying functions or variables that start with an uppercase 
+character. Lexical databases where part of the terms start with an 
+uppercase letter is another category were the readability of the code 
+improves using this option.
+
+<p><h4 id="sec:unicodesyntax"><a id="sec:2.16.1.9"><span class="sec-nr">2.16.1.9</span> <span class="sec-title">Unicode 
+Prolog source</span></a></h4>
+
+<a id="sec:unicodesyntax"></a>
+
+<p>The ISO standard specifies the Prolog syntax in ASCII characters. As 
+SWI-Prolog supports Unicode in source files we must extend the syntax. 
+This section describes the implication for the source files, while 
+writing international source files is described in <a class="sec" href="projectfiles.html#sec:3.1.3">section 
+3.1.3</a>.
+
+<p>The SWI-Prolog Unicode character classification is based on version 
+6.0.0 of the Unicode standard. Please note that <a id="idx:chartype2:276"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+and friends, intended to be used with all text except Prolog source 
+code, is based on the C library locale-based classification routines.
+
+<p>
+<ul class="latex">
+<li><i>Quoted atoms and strings</i><br>
+Any character of any script can be used in quoted atoms and strings. The 
+escape sequences <code>\uXXXX</code> and <code>\UXXXXXXXX</code> (see
+<a class="sec" href="syntax.html#sec:2.16.1.3">section 2.16.1.3</a>) 
+were introduced to specify Unicode code points in ASCII files.
+
+<p>
+<li><i>Atoms and Variables</i><br>
+We handle them in one item as they are closely related. The Unicode 
+standard defines a syntax for identifiers in computer languages.<sup class="fn">29<span class="fn-text"><a class="url" href="http://www.unicode.org/reports/tr31/">http://www.unicode.org/reports/tr31/</a></span></sup> 
+In this syntax identifiers start with <code>ID_Start</code> followed by 
+a sequence of <code>ID_Continue</code> codes. Such sequences are handled 
+as a single token in SWI-Prolog. The token is a <em>variable</em> iff it 
+starts with an uppercase character or an underscore (<code>_</code>). 
+Otherwise it is an atom. Note that many languages do not have the notion 
+of character case. In such languages variables <em>must</em> be written 
+as
+<code>_name</code>.
+
+<p>
+<li><i>White space</i><br>
+All characters marked as separators (Z*) in the Unicode tables are 
+handled as layout characters.
+
+<p>
+<li><i>Control and unassigned characters</i><br>
+Control and unassigned (C*) characters produce a syntax error if 
+encountered outside quoted atoms/strings and outside comments.
+
+<p>
+<li><i>Other characters</i><br>
+The first 128 characters follow the ISO Prolog standard. Unicode symbol 
+and punctuation characters (general category S* and P*) act as glueing 
+symbol characters (i.e., just like <code><code>==</code></code>: an 
+unquoted sequence of symbol characters are combined into an atom).
+
+<p>Other characters (this is mainly <code>No</code>: <i>a numeric 
+character of other type</i>) are currently handled as&lsquo;solo'.
+</ul>
+
+<p><h4 id="sec:singleton"><a id="sec:2.16.1.10"><span class="sec-nr">2.16.1.10</span> <span class="sec-title">Singleton 
+variable checking</span></a></h4>
+
+<a id="sec:singleton"></a>
+
+<p><a id="idx:singletonvariable:277"></a><a id="idx:anonymousvariable:278"></a>A <em>singleton 
+variable</em> is a variable that appears only one time in a clause. It 
+can always be replaced by <code>_</code>, the
+<em>anonymous</em> variable. In some cases, however, people prefer to 
+give the variable a name. As mistyping a variable is a common mistake, 
+Prolog systems generally give a warning (controlled by <a id="idx:stylecheck1:279"></a><a class="pred" href="debugger.html#style_check/1">style_check/1</a>) 
+if a variable is used only once. The system can be informed that a 
+variable is meant to appear once by <em>starting</em> it with an 
+underscore, e.g.,
+<code>_Name</code>. Please note that any variable, except plain <code>_</code>, 
+shares with variables of the same name. The term <code>t(_X, _X)</code> 
+is equivalent to <code>t(X, X)</code>, which is <em>different</em> from
+<code>t(_, _)</code>.
+
+<p>As Unicode requires variables to start with an underscore in many 
+languages, this schema needs to be extended.<sup class="fn">30<span class="fn-text">After 
+a proposal by Richard O'Keefe.</span></sup> First we define the two 
+classes of named variables.
+
+<p>
+<ul class="latex">
+<li><i>Named singleton variables</i><br>
+Named singletons start with a double underscore (<code>__</code>) or a 
+single underscore followed by an uppercase letter, e.g., <code>__var</code> 
+or
+<code>_Var</code>.
+
+<p>
+<li><i>Normal variables</i><br>
+All other variables are&lsquo;normal' variables. Note this makes <code>_var</code> 
+a normal variable.<sup class="fn">31<span class="fn-text">Some Prolog 
+dialects write variables this way.</span></sup>
+</ul>
+
+<p>Any normal variable appearing exactly once in the clause <em>and</em> 
+any named singleton variables appearing more than once are reported. 
+Below are some examples with warnings in the right column. Singleton 
+messages can be suppressed using the <a id="idx:stylecheck1:280"></a><a class="pred" href="debugger.html#style_check/1">style_check/1</a> 
+directive.
+
+<p><table class="latex frame-box center">
+<tr><td>test(_).</td></tr>
+<tr><td>test(_a).</td><td>Singleton variables: [_a] </td></tr>
+<tr><td>test(_12).</td><td>Singleton variables: [_12] </td></tr>
+<tr><td>test(A).</td><td>Singleton variables: [A] </td></tr>
+<tr><td>test(_A).</td></tr>
+<tr><td>test(__a).</td></tr>
+<tr><td>test(_, _).</td></tr>
+<tr><td>test(_a, _a).</td></tr>
+<tr><td>test(__a, __a).</td><td>Singleton-marked variables appearing 
+more than once: [__a] </td></tr>
+<tr><td>test(_A, _A).</td><td>Singleton-marked variables appearing more 
+than once: [_A] </td></tr>
+<tr><td>test(A, A).</td></tr>
+</table>
+
+<p><b>Semantic singletons</b> 
+
+<p>Starting with version 6.5.1, SWI-Prolog has <em>syntactic singletons</em> 
+and <em>semantic singletons</em>. The first are checked by
+<a id="idx:readclause3:281"></a><a class="pred" href="termrw.html#read_clause/3">read_clause/3</a> 
+(and <a id="idx:readterm3:282"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a> 
+using the option
+<code>singletons(warning)</code>). The latter are generated by the 
+compiler for variables that appear alone in a <em>branch</em>. For 
+example, in the code below the variable <var>X</var> is not a <em>syntactic</em> 
+singleton, but the variable <var>X</var> does not communicate any 
+bindings and replacing
+<var>X</var> with <var>_</var> does not change the semantics.
+
+<pre class="code">
+test :-
+        (   test_1(X)
+        ;   test_2(X)
+        ).
+</pre>
+
+<p></body></html>

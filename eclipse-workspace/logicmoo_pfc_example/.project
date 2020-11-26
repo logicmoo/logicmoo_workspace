@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>logicmoo_pfc_example</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>swiprolog-packs</name>
+			<type>2</type>
+			<location>C:/Users/logicmoo/AppData/Local/swi-prolog/pack</location>
+		</link>
+	</linkedResources>
+</projectDescription>

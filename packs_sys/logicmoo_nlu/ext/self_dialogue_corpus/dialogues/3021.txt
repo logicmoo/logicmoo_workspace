@@ -1,0 +1,20 @@
+Patriots ran 117 yards per game last season. Cowboys gave up 83.6 yards.
+Oh wait I was wrong then. The ratio greater than 1 doesn't mean offense is good, it means it facing tougher opponent.
+What?
+I said earlier.. here look. Pat's 117 yards/game divided by Cowboy's 83.6 yards/game is equal to 1.39. This Doesn't mean the Pats will hve better time running, it means Pats will struggle against the Cowboy's run defense.
+Wait, can we check this against last year's record?
+I guess we could, let see who has a similar run record as the Pats in NFC?
+Let's see. Pats ran 117 yards per game, so that would be... Either falcons with 120 or Panthers with 113 yrads per game
+Let's look at how Cowboys' defense did against Falcons.  Wait... They didn't play Falcons last year. Let's check panthers
+They didn't play the Panthers either... Let's try San Francisco, they ran 126 yards/game.
+Ok. Dallas won that game 24-17. Now we have a game to check out metric against. So we have 49er's 126 yards/game gained average against cowboys 83.5 yards/games allowed
+which is about 1.5. This should be analyzed how?
+Well, we have to look at the data now. We need to run stat from that game
+From the Cowboys/49ers game?
+No, from the Cowboys and Pats game, Of course from the Cowboys/49ers game!
+Dallas dominated the yards 428 for cowboys to 295 for 49ers
+What was the run allwoed for the niners?
+106 yards for the game, but they averaged 126 yard for the season.
+Which means the runs were 84% of their season average with a decrease of 16%, so the metric of run offense vs run defense of 1.5 is correlated with 16% decrease in runs.
+What does that tell you?
+Maybe this thing woriks... we have to repeat this for all the teams. I need to write a program to do this.

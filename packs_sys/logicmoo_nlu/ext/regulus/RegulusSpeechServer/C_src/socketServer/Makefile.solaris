@@ -1,0 +1,39 @@
+#
+#    File:   Makefile for RCApp
+
+INCDIR = $(NUANCE)/include
+BINDIR = bin/$(MACHINE_TYPE)
+OBJDIR = bin/obj
+LIBDIR = $(NUANCE)/lib/$(MACHINE_TYPE)$(OPTION)
+
+include $(NUANCE)/common/Makefile.include.$(MACHINE_TYPE)
+
+#  If you don't have/like the compiler defined in
+#  $NUANCE/common/Makefile.include.$MACHINE_TYPE,
+#  Simply redefine CXX here.
+#
+#  CXX = name_your_C++_compiler_here
+CXX = /unige/workshop_7.0/SUNWspro/bin/CC
+
+BINARY = $(BINDIR)/regserver
+OBJECTS = $(OBJDIR)/nl_regulus_utils.o $(OBJDIR)/regulusSpeechServer.o $(OBJDIR)/main.o $(OBJDIR)/PlaybackBuffer.o
+
+all:	$(BINARY)
+
+$(BINARY): $(OBJECTS)
+	$(CXX) -o $@ $(OBJECTS) -L$(LIBDIR) $(RCAPI_LIB) $(LDFLAGS)
+
+$(OBJDIR)/nl_regulus_utils.o:	nl_regulus_utils.cpp
+	$(CXX) -c $(NUANCE_CXXFLAGS) -I$(INCDIR) -o $@ nl_regulus_utils.cpp
+
+$(OBJDIR)/regulusSpeechServer.o:	regulusSpeechServer.cpp
+	$(CXX) -c $(NUANCE_CXXFLAGS) -I$(INCDIR) -o $@ regulusSpeechServer.cpp
+
+$(OBJDIR)/PlaybackBuffer.o:	PlaybackBuffer.cpp
+	$(CXX) -c $(NUANCE_CXXFLAGS) -I$(INCDIR) -o $@ PlaybackBuffer.cpp
+
+$(OBJDIR)/main.o:	main.cpp
+	$(CXX) -c $(NUANCE_CXXFLAGS) -I$(INCDIR) -o $@ main.cpp
+
+clean:
+	rm -f $(BINARY) $(OBJECTS)

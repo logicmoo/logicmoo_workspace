@@ -1,0 +1,31 @@
+
+
+   %premier essai
+
+     $ pere_de(paul,jacques).
+     $ pere_de(paul,marie).
+     $ pere_de(jacques,henry).
+     $ pere_de(jacques,andre).
+
+     $ grand_pere_de(Gp,PFils) :- pere_de(Gp,Fils),
+                                  pere_de(Fils,PFils).
+     $ tgp :- grand_pere_de(X,Y), wb(X), wf(Y).
+
+  %Logic Programming Newsletter n¡3
+
+     $ parent(john,eve).
+     $ parent(john,steve).
+     $ parent(jane,eve).
+     $ parent(jane,steve).
+     $ parent(steve,phil).
+     $ parent(ada,phil).
+     $ parent(phil,gil).
+ 
+     $ ancetre(X,Z) :- parent(X,Z).
+     $ ancetre(X,Z) :- var(Z), !, parent(X,Y), ancetre(Y,Z).
+     $ ancetre(X,Z) :- parent(Y,Z), ancetre(X,Y).
+
+     $ tjohn :- ancetre(john,X), wf(X).
+     $ tgil :- ancetre(X,gil), wf(X).
+     $ ta :- ancetre(X,gil), ancetre(john,X), wf(X).
+

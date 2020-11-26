@@ -1,0 +1,645 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section A.27</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="option.html">
+<link rel="next" href="ordsets.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="option.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="ordsets.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:optparse"><a id="sec:A.27"><span class="sec-nr">A.27</span> <span class="sec-title">library(optparse): 
+command line parsing</span></a></h2>
+
+<p><a id="sec:optparse"></a>
+
+<dl class="tags">
+<dt class="tag">author</dt>
+<dd>
+Marcus Uneson
+</dd>
+<dt class="tag">version</dt>
+<dd>
+0.20 (2011-04-27)
+</dd>
+<dt class="tag">To be done</dt>
+<dd>
+: validation? e.g, numbers; file path existence; 
+one-out-of-a-set-of-atoms
+</dd>
+</dl>
+
+<p>This module helps in building a command-line interface to an 
+application. In particular, it provides functions that take an option 
+specification and a list of atoms, probably given to the program on the 
+command line, and return a parsed representation (a list of the 
+customary Key(Val) by default; or optionally, a list of Func(Key, Val) 
+terms in the style of <a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>). 
+It can also synthesize a simple help text from the options 
+specification.
+
+<p>The terminology in the following is partly borrowed from python, see
+<a class="url" href="http://docs.python.org/library/optparse.html#terminology">http://docs.python.org/library/optparse.html#terminology</a> 
+. Very briefly,
+<i>arguments</i> is what you provide on the command line and for many 
+prologs show up as a list of atoms <code>Args</code> in <code>current_prolog_flag(argv, Args)</code>. 
+For a typical prolog incantation, they can be divided into
+
+<p>
+<ul class="latex">
+<li><i>runtime arguments</i>, which controls the prolog runtime; 
+conventionally, they are ended by&rsquo;--';
+<li><i>options</i>, which are key-value pairs (with a boolean value 
+possibly implicit) intended to control your program in one way or 
+another; and
+<li><i>positional arguments</i>, which is what remains after all runtime 
+arguments and options have been removed (with implicit arguments -- 
+true/false for booleans -- filled in).
+</ul>
+
+<p>Positional arguments are in particular used for mandatory arguments 
+without which your program won't work and for which there are no 
+sensible defaults (e.g,, input file names). Options, by contrast, offer 
+flexibility by letting you change a default setting. Options are 
+optional not only by etymology: this library has no notion of mandatory 
+or required options (see the python docs for other rationales than 
+laziness).
+
+<p>The command-line arguments enter your program as a list of atoms, but 
+the programs perhaps expects booleans, integers, floats or even prolog 
+terms. You tell the parser so by providing an <i>options specification</i>. 
+This is just a list of individual option specifications. One of those, 
+in turn, is a list of ground prolog terms in the customary Name(Value) 
+format. The following terms are recognized (any others raise error).
+
+<dl class="latex">
+<dt><strong>opt</strong>(<var>Key</var>)</dt>
+<dd class="defbody">
+<var>Key</var> is what the option later will be accessed by, just like 
+for
+<code>current_prolog_flag(Key, Value)</code>. This term is mandatory (an 
+error is thrown if missing).
+</dd>
+<dt><strong>shortflags</strong>(<var>ListOfFlags</var>)</dt>
+<dd class="defbody">
+<var>ListOfFlags</var> denotes any single-dashed, single letter args 
+specifying the current option (<code>-s , -K</code>, etc). Uppercase 
+letters must be quoted. Usually <var>ListOfFlags</var> will be a 
+singleton list, but sometimes aliased flags may be convenient.
+</dd>
+<dt><strong>longflags</strong>(<var>ListOfFlags</var>)</dt>
+<dd class="defbody">
+<var>ListOfFlags</var> denotes any double-dashed arguments specifying 
+the current option (<code>--verbose, --no-debug</code>, etc). They are 
+basically a more readable alternative to short flags, except
+</dd>
+</dl>
+
+<p>
+<ol class="latex">
+<li>long flags can be specified as <code>--flag value</code> or
+<code>--flag=value</code> (but not as <code>--flagvalue</code>); short 
+flags as
+<code>-f val</code> or <code>-fval</code> (but not <code>-f=val</code>)
+<li>boolean long flags can be specified as <code>--bool-flag</code> or <code>--bool-flag=true</code> 
+or <code>--bool-flag true</code>; and they can be negated as <code>--no-bool-flag</code> 
+or <code>--bool-flag=false</code> or
+<code>--bool-flag false</code>.
+
+<p>Except that shortflags must be single characters, the distinction 
+between long and short is in calling convention, not in namespaces. 
+Thus, if you have <code>shortflags([v])</code>, you can use it as <code>-v2</code> 
+or <code>-v 2</code> or <code>--v=2</code> or <code>--v 2</code> (but 
+not
+<code>-v=2</code> or <code>--v2</code>).
+
+<p>Shortflags and longflags both default to <code>[]</code>. It can be 
+useful to have flagless options -- see example below.
+</ol>
+
+<dl class="latex">
+<dt><strong>meta</strong>(<var>Meta</var>)</dt>
+<dd class="defbody">
+<var>Meta</var> is optional and only relevant for the synthesized usage 
+message and is the name (an atom) of the metasyntactic variable 
+(possibly) appearing in it together with type and default value (e.g,
+<code>x:integer=3</code>, <code>interest:float=0.11</code>). It may be 
+useful to have named variables (<code>x</code>, <code>interest</code>) 
+in case you wish to mention them again in the help text. If not given 
+the <code>Meta:</code> part is suppressed -- see example below.
+</dd>
+<dt><strong>type</strong>(<var>Type</var>)</dt>
+<dd class="defbody">
+<var>Type</var> is one of <code>boolean, atom, integer, float, term</code>. 
+The corresponding argument will be parsed appropriately. This term is 
+optional; if not given, defaults to <code>term</code>.
+</dd>
+<dt><strong>default</strong>(<var>Default</var>)</dt>
+<dd class="defbody">
+<var>Default</var> value. This term is optional; if not given, or if 
+given the special value&rsquo;_', an uninstantiated variable is created 
+(and any type declaration is ignored).
+</dd>
+<dt><strong>help</strong>(<var>Help</var>)</dt>
+<dd class="defbody">
+<var>Help</var> is (usually) an atom of text describing the option in 
+the help text. This term is optional (but obviously strongly recommended 
+for all options which have flags).
+
+<p>Long lines are subject to basic word wrapping -- split on white 
+space, reindent, rejoin. However, you can get more control by supplying 
+the line breaking yourself: rather than a single line of text, you can 
+provide a list of lines (as atoms). If you do, they will be joined with 
+the appropriate indent but otherwise left untouched (see the option <code>mode</code> 
+in the example below).
+</dd>
+</dl>
+
+<p>Absence of mandatory option specs or the presence of more than one 
+for a particular option throws an error, as do unknown or incompatible 
+types.
+
+<p>As a concrete example from a fictive application, suppose we want the 
+following options to be read from the command line (long <code>flag(s)</code>, 
+short
+<code>flag(s)</code>, meta:type=default, help)
+
+<pre class="code">
+--mode                  -m     atom=SCAN       data gathering mode,
+                                               one of
+                                                SCAN: do this
+                                                READ: do that
+                                                MAKE: make numbers
+                                                WAIT: do nothing
+--rebuild-cache         -r     boolean=true    rebuild cache in
+                                               each iteration
+--heisenberg-threshold  -t,-h  float=0.1       heisenberg threshold
+--depths, --iters       -i,-d  K:integer=3     stop after K
+                                               iterations
+--distances                    term=[1,2,3,5]  initial prolog term
+--output-file           -o     FILE:atom=_     write output to FILE
+--label                 -l     atom=REPORT     report label
+--verbosity             -v     V:integer=2     verbosity level,
+                                               1 &lt;= V &lt;= 3
+</pre>
+
+<p>We may also have some configuration parameters which we currently 
+think not needs to be controlled from the command line, say
+<code>path('/some/file/path')</code>.
+
+<p>This interface is described by the following options specification 
+(order between the specifications of a particular option is irrelevant).
+
+<pre class="code">
+ExampleOptsSpec =
+    [ [opt(mode    ), type(atom), default('SCAN'),
+        shortflags([m]),   longflags(['mode'] ),
+        help([ 'data gathering mode, one of'
+             , '  SCAN: do this'
+             , '  READ: do that'
+             , '  MAKE: fabricate some numbers'
+             , '  WAIT: don''t do anything'])]
+
+    , [opt(cache), type(boolean), default(true),
+        shortflags([r]),   longflags(['rebuild-cache']),
+        help('rebuild cache in each iteration')]
+
+    , [opt(threshold), type(float), default(0.1),
+        shortflags([t,h]),  longflags(['heisenberg-threshold']),
+        help('heisenberg threshold')]
+
+    , [opt(depth), meta('K'), type(integer), default(3),
+        shortflags([i,d]),longflags([depths,iters]),
+        help('stop after K iterations')]
+
+    , [opt(distances), default([1,2,3,5]),
+        longflags([distances]),
+        help('initial prolog term')]
+
+    , [opt(outfile), meta('FILE'), type(atom),
+        shortflags([o]),  longflags(['output-file']),
+        help('write output to FILE')]
+
+    , [opt(label), type(atom), default('REPORT'),
+        shortflags([l]), longflags([label]),
+        help('report label')]
+
+    , [opt(verbose),  meta('V'), type(integer), default(2),
+        shortflags([v]),  longflags([verbosity]),
+        help('verbosity level, 1 &lt;= V &lt;= 3')]
+
+    , [opt(path), default('/some/file/path/')]
+    ].
+</pre>
+
+<p>The help text above was accessed by <code>opt_help(ExamplesOptsSpec, HelpText)</code>. 
+The options appear in the same order as in the OptsSpec.
+
+<p>Given <code>ExampleOptsSpec</code>, a command line (somewhat 
+syntactically inconsistent, in order to demonstrate different calling 
+conventions) may look as follows
+
+<pre class="code">
+ExampleArgs = [ '-d5'
+              , '--heisenberg-threshold', '0.14'
+              , '--distances=[1,1,2,3,5,8]'
+              , '--iters', '7'
+              , '-ooutput.txt'
+              , '--rebuild-cache', 'true'
+              , 'input.txt'
+              , '--verbosity=2'
+              ].
+</pre>
+
+<p><code>opt_parse(ExampleOptsSpec, ExampleArgs, Opts, PositionalArgs)</code> 
+would then succeed with
+
+<pre class="code">
+Opts =    [ mode('SCAN')
+          , label('REPORT')
+          , path('/some/file/path')
+          , threshold(0.14)
+          , distances([1,1,2,3,5,8])
+          , depth(7)
+          , outfile('output.txt')
+          , cache(true)
+          , verbose(2)
+          ],
+PositionalArgs = ['input.txt'].
+</pre>
+
+<p>Note that <code>path('/some/file/path')</code> showing up in Opts has 
+a default value (of the implicit type&rsquo;term'), but no corresponding 
+flags in OptsSpec. Thus it can't be set from the command line. The rest 
+of your program doesn't need to know that, of course. This provides an 
+alternative to the common practice of asserting such hard-coded 
+parameters under a single predicate (for instance <code>setting(path, '/some/file/path')</code>), 
+with the advantage that you may seamlessly upgrade them to command-line 
+options, should you one day find this a good idea. Just add an 
+appropriate flag or two and a line of help text. Similarly, suppressing 
+an option in a cluttered interface amounts to commenting out the flags.
+
+<p><a class="pred" href="optparse.html#opt_parse/5">opt_parse/5</a> 
+allows more control through an additional argument list as shown in the 
+example below.
+
+<pre class="code">
+?- opt_parse(ExampleOptsSpec, ExampleArgs,  Opts, PositionalArgs,
+             [ output_functor(appl_config)
+             ]).
+
+Opts =    [ appl_config(verbose, 2),
+          , appl_config(label, 'REPORT')
+          ...
+          ]
+</pre>
+
+<p>This representation may be preferable with the empty-flag 
+configuration parameter style above (perhaps with asserting <span class="pred-ext">appl_config/2</span>).
+
+<p><h3 id="sec:optparse-notes"><a id="sec:A.27.1"><span class="sec-nr">A.27.1</span> <span class="sec-title">Notes 
+and tips</span></a></h3>
+
+<p><a id="sec:optparse-notes"></a>
+
+<p>
+<ul class="latex">
+<li>In the example we were mostly explicit about the types. Since the 
+default is <code>term</code>, which subsumes <code>integer, float, atom</code>, 
+it may be possible to get away cheaper (e.g., by only giving booleans). 
+However, it is recommended practice to always specify types: parsing 
+becomes more reliable and error messages will be easier to interpret.
+<li>Note that <code>-sbar</code> is taken to mean <code>-s bar</code>, 
+not <code>-s -b -a -r</code>, that is, there is no clustering of flags.
+<li><code>-s=foo</code> is disallowed. The rationale is that although 
+some command-line parsers will silently interpret this as <code>-s =foo</code>, 
+this is very seldom what you want. To have an option argument start with&rsquo;=' 
+(very un-recommended), say so explicitly.
+<li>The example specifies the option <code>depth</code> twice: once as
+<code>-d5</code> and once as <code>--iters 7</code>. The default when 
+encountering duplicated flags is to <code>keeplast</code> (this 
+behaviour can be controlled, by ParseOption duplicated_flags).
+<li>The order of the options returned by the parsing functions is the 
+same as given on the command line, with non-overridden defaults 
+prepended and duplicates removed as in previous item. You should not 
+rely on this, however.
+<li>Unknown flags (not appearing in OptsSpec) will throw errors. This is 
+usually a Good Thing. Sometimes, however, you may wish to pass along 
+flags to an external program (say, one called by <a class="pred" href="system.html#shell/2">shell/2</a>), 
+and it means duplicated effort and a maintenance headache to have to 
+specify all possible flags for the external program explicitly (if it 
+even can be done). On the other hand, simply taking all unknown flags as 
+valid makes error checking much less efficient and identification of 
+positional arguments uncertain. A better solution is to collect all 
+arguments intended for passing along to an indirectly called program as 
+a single argument, probably as an atom (if you don't need to inspect 
+them first) or as a prolog term (if you do).
+</ul>
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="opt_arguments/3"><strong>opt_arguments</strong>(<var>+OptsSpec, 
+-Opts, -PositionalArgs</var>)</a></dt>
+<dd class="defbody">
+Extract commandline options according to a specification. Convenience 
+predicate, assuming that command-line arguments can be accessed by <a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+(as in swi-prolog). For other access mechanisms and/or more control, get 
+the args and pass them as a list of atoms to <a class="pred" href="optparse.html#opt_parse/4">opt_parse/4</a> 
+or <a class="pred" href="optparse.html#opt_parse/5">opt_parse/5</a> 
+instead.
+
+<p><var>Opts</var> is a list of parsed options in the form Key(Value). 
+Dashed args not in <var>OptsSpec</var> are not permitted and will raise 
+error (see tip on how to pass unknown flags in the module description).
+<var>PositionalArgs</var> are the remaining non-dashed args after each 
+flag has taken its argument (filling in <code>true</code> or <code>false</code> 
+for booleans). There are no restrictions on non-dashed arguments and 
+they may go anywhere (although it is good practice to put them last). 
+Any leading arguments for the runtime (up to and including&rsquo;--') 
+are discarded.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="opt_parse/4"><strong>opt_parse</strong>(<var>+OptsSpec, 
++ApplArgs, -Opts, -PositionalArgs</var>)</a></dt>
+<dd class="defbody">
+Equivalent to <code>opt_parse(OptsSpec, ApplArgs, Opts, PositionalArgs, [])</code>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="opt_parse/5"><strong>opt_parse</strong>(<var>+OptsSpec, 
++ApplArgs, -Opts, -PositionalArgs, +ParseOptions</var>)</a></dt>
+<dd class="defbody">
+Parse the arguments Args (as list of atoms) according to <var>OptsSpec</var>. 
+Any runtime arguments (typically terminated by&rsquo;--') are assumed to 
+be removed already.
+
+<p><var>Opts</var> is a list of parsed options in the form Key(Value), 
+or (with the option <code>functor(Func)</code> given) in the form 
+Func(Key, Value). Dashed args not in <var>OptsSpec</var> are not 
+permitted and will raise error (see tip on how to pass unknown flags in 
+the module description).
+<var>PositionalArgs</var> are the remaining non-dashed args after each 
+flag has taken its argument (filling in <code>true</code> or <code>false</code> 
+for booleans). There are no restrictions on non-dashed arguments and 
+they may go anywhere (although it is good practice to put them last).
+<var>ParseOptions</var> are
+
+<dl class="latex">
+<dt><strong>output_functor</strong>(<var>Func</var>)</dt>
+<dd class="defbody">
+Set the functor <var>Func</var> of the returned options <var>Func</var>(Key,Value). 
+Default is the special value&rsquo;OPTION' (upper-case), which makes the 
+returned options have form Key(Value).
+</dd>
+<dt><strong>duplicated_flags</strong>(<var>Keep</var>)</dt>
+<dd class="defbody">
+Controls how to handle options given more than once on the commad line.
+<var>Keep</var> is one of <code>keepfirst, keeplast, keepall</code> with 
+the obvious meaning. Default is <code>keeplast</code>.
+</dd>
+<dt><strong>allow_empty_flag_spec</strong>(<var>Bool</var>)</dt>
+<dd class="defbody">
+If true (default), a flag specification is not required (it is allowed 
+that both shortflags and longflags be either <code>[]</code> or absent). 
+Flagless options cannot be manipulated from the command line and will 
+not show up in the generated help. This is useful when you have (also) 
+general configuration parameters in your <var>OptsSpec</var>, especially 
+if you think they one day might need to be controlled externally. See 
+example in the module overview.
+<code>allow_empty_flag_spec(false)</code> gives the more customary 
+behaviour of raising error on empty flags.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="opt_help/2"><strong>opt_help</strong>(<var>+OptsSpec, 
+-Help:atom</var>)</a></dt>
+<dd class="defbody">
+True when <var>Help</var> is a help string synthesized from <var>OptsSpec</var>.</dd>
+<dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="parse_type/3"><strong>parse_type</strong>(<var>+Type, 
++Codes:list(code), -Result</var>)</a></dt>
+<dd class="defbody">
+Hook to parse option text <var>Codes</var> to an object of type <var>Type</var>.
+</dd>
+</dl>
+
+<p></body></html>

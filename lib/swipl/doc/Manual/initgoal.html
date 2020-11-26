@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.3</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="initfile.html">
+<link rel="next" href="cmdline.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="initfile.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="cmdline.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:initgoal"><a id="sec:2.3"><span class="sec-nr">2.3</span> <span class="sec-title">Initialisation 
+files and goals</span></a></h2>
+
+<a id="sec:initgoal"></a>
+
+<p>Using command line arguments (see <a class="sec" href="cmdline.html#sec:2.4">section 
+2.4</a>), SWI-Prolog can be forced to load files and execute queries for 
+initialisation purposes or non-interactive operation. The most commonly 
+used options are
+<strong>-f</strong> <var>file</var> or <strong>-s</strong> <var>file</var> 
+to make Prolog load a file,
+<strong>-g</strong> <var>goal</var> to define initialisation goals and
+<strong>-t</strong> <var>goal</var> to define the <em>top-level goal</em>. 
+The following is a typical example for starting an application directly 
+from the command line.
+
+<pre class="code">
+machine% swipl -s load.pl -g go -t halt
+</pre>
+
+<p>It tells SWI-Prolog to load <code>load.pl</code>, start the 
+application using the <em>entry point</em> go/0 and ---instead of 
+entering the interactive top level--- exit after completing go/0 .
+
+<p>The command line may have multiple <strong>-g</strong> <var>goal</var> 
+occurrences. The goals are executed in order. Possible choice points of 
+individual goals are pruned. If a <var>goal</var> fails execution stops 
+with exit status
+<code>1</code>. If a <var>goal</var> raises an exception, the exception 
+is printed and the process stops with exit code <code>2</code>.
+
+<p>The <strong>-q</strong> may be used to suppress all informational 
+messages as well as the error message that is normally printed if an 
+initialisation goal <em>fails</em>.
+
+<p>In MS-Windows, the same can be achieved using a short-cut with 
+appropriately defined command line arguments. A typically seen 
+alternative is to write a file <code>run.pl</code> with content as 
+illustrated below. Double-clicking <code>run.pl</code> will start the 
+application.
+
+<pre class="code">
+:- [load].                      % load program
+:- go.                          % run it
+:- halt.                        % and exit
+</pre>
+
+<p><a class="sec" href="compilation.html#sec:2.11.2.1">Section 2.11.2.1</a> 
+discusses further scripting options, and
+<a class="sec" href="runtime.html#sec:13">chapter 13</a> discusses the 
+generation of runtime executables. Runtime executables are a means to 
+deliver executables that do not require the Prolog system.
+
+<p></body></html>

@@ -1,0 +1,21 @@
+(note TQC9)
+
+
+(industryFractionOfGDP Libya IndustrialEconomicSector 
+ (YearFn 1996) 
+ (Percent 55)) 
+
+
+
+
+(query (findall (?FRACTION ?TIME)
+
+ (thereExists ?QUANTITY 
+ (and 
+ (industryFractionOfGDP Libya IndustrialEconomicSector ?TIME ?QUANTITY) 
+ (evaluate ?FRACTION 
+ (QuantityConversionFn Percent ?QUANTITY))))))
+
+(answer 55.0000 1996)  
+
+(end_of_file)

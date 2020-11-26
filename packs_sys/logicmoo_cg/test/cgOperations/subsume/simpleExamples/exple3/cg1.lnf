@@ -1,0 +1,1 @@
+[Person]-childOf->[Person : {John, Sam}]

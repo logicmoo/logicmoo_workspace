@@ -1,0 +1,49 @@
+- exec_forget, exec_forget_except: forget everything that unifies with P 
+  instead of only one Prop
+- exec_protect: protect plan sequences as well
+
++ install tv card
+
+- tvgodis
+  - new directory 'domain-vcrtel' (?) containing login-domain and vcr-domain  
+
+  - OAA java agents
+    - nuance telephony functionality
+    - vcr agent
+      -Non-solver/agent classes imported 
+
+      -ValidChannel (re)implemented
+      -AddJob
+      -GetChannels
+      -CheckUser
+      -RemoveJob
+      -ExistRecJobWithId
+      -GetRecJobs
+      -GetWeekday (?) 
+    
+    - GetChannels should be renamed ValidChannels etc.
+    - cronjobs etc now in godis/data. no good solution. 
+      also - files should be created if they do not exist.
+    - More intuitive representation of dates and times (i.e. date(Y,M,D) and
+    time(H,M) ).
+
+      
+    - date agent (implement in prolog instead?) - done not tested
+      
+    - integrate prolog calendar see above instead of date agent
+
+    -dev_query with arguments (like dev_do)
+- trindikit in/output modules ( 
+
+- control algorithm that works with both telephony and native audio
+
+
+
+LATER:
+
+- concurrent godis
+ 
+- update demo
+
+- put visualization java files in java directory...
+

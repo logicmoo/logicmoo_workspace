@@ -1,0 +1,6 @@
+[Begin]-
+  -obj->[Session],
+  -srce->[Proposition = [Press]-
+                           -obj->[Key : enter]- partOf->[Keyboard],
+                           -agnt->[Person]],
+  -agnt->[Person]

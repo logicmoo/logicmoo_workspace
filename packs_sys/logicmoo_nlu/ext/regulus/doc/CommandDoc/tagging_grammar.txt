@@ -1,0 +1,6 @@
+Relevant to applications using surface processing. Points to a file
+that defines a tagging grammar, in DCG form. The top-level rule should
+be of the form
+\begin{verbatim}
+tagging_grammar(Item) --> <Body>.
+\end{verbatim}

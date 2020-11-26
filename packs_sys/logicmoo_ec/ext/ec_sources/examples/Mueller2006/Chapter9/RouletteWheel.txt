@@ -1,0 +1,73 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter9/RouletteWheel.e
+loading foundations/Root.e
+loading foundations/EC.e
+28 variables and 133 clauses
+relsat solver
+3 models
+---
+model 1:
+0
+WheelNumberDeterminer(Wheel1, 3).
+Happens(Spin(Dealer1, Wheel1), 0).
+1
+-WheelNumberDeterminer(Wheel1, 3).
++WheelNumber(Wheel1, 3).
++WheelNumberDeterminer(Wheel1, 1).
+P
+ReleasedAt(WheelNumberDeterminer(Wheel1, 1), 0).
+ReleasedAt(WheelNumberDeterminer(Wheel1, 1), 1).
+ReleasedAt(WheelNumberDeterminer(Wheel1, 2), 0).
+ReleasedAt(WheelNumberDeterminer(Wheel1, 2), 1).
+ReleasedAt(WheelNumberDeterminer(Wheel1, 3), 0).
+ReleasedAt(WheelNumberDeterminer(Wheel1, 3), 1).
+!Happens(Reset(Dealer1, Wheel1), 0).
+!Happens(Reset(Dealer1, Wheel1), 1).
+!Happens(Spin(Dealer1, Wheel1), 1).
+!ReleasedAt(WheelNumber(Wheel1, 1), 0).
+!ReleasedAt(WheelNumber(Wheel1, 1), 1).
+!ReleasedAt(WheelNumber(Wheel1, 2), 0).
+!ReleasedAt(WheelNumber(Wheel1, 2), 1).
+!ReleasedAt(WheelNumber(Wheel1, 3), 0).
+!ReleasedAt(WheelNumber(Wheel1, 3), 1).
+---
+model 2 diff:2c2
+< WheelNumberDeterminer(Wheel1, 3).
+---
+> WheelNumberDeterminer(Wheel1, 2).
+5,6c5,6
+< -WheelNumberDeterminer(Wheel1, 3).
+< +WheelNumber(Wheel1, 3).
+---
+> -WheelNumberDeterminer(Wheel1, 2).
+> +WheelNumber(Wheel1, 2).
+
+---
+model 3 diff:2c2
+< WheelNumberDeterminer(Wheel1, 2).
+---
+> WheelNumberDeterminer(Wheel1, 1).
+5,7c5
+< -WheelNumberDeterminer(Wheel1, 2).
+< +WheelNumber(Wheel1, 2).
+< +WheelNumberDeterminer(Wheel1, 1).
+---
+> +WheelNumber(Wheel1, 1).
+
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+RouletteWheel: 0 predicates, 0 functions, 2 fluents, 2 events, 9 axioms
+encoding 0.0s
+solution 0.0s
+total 0.2s
+Discrete Event Calculus Reasoner 1.0

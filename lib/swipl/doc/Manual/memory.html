@@ -1,0 +1,533 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.42</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="profile.html">
+<link rel="next" href="DDE.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="profile.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="DDE.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:memory"><a id="sec:4.42"><span class="sec-nr">4.42</span> <span class="sec-title">Memory 
+Management</span></a></h2>
+
+<a id="sec:memory"></a>
+
+<p><h3 id="sec:gc"><a id="sec:4.42.1"><span class="sec-nr">4.42.1</span> <span class="sec-title">Garbage 
+collection</span></a></h3>
+
+<a id="sec:gc"></a>
+
+<dl class="latex">
+<dt class="pubdef"><a id="garbage_collect/0"><strong>garbage_collect</strong></a></dt>
+<dd class="defbody">
+Invoke the global and trail stack garbage collector. Normally the 
+garbage collector is invoked automatically if necessary. Explicit 
+invocation might be useful to reduce the need for garbage collections in 
+time-critical segments of the code. After the garbage collection
+<a id="idx:trimstacks0:1769"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+is invoked to release the collected memory resources.</dd>
+<dt class="pubdef"><a id="garbage_collect_atoms/0"><strong>garbage_collect_atoms</strong></a></dt>
+<dd class="defbody">
+Reclaim unused atoms. Normally invoked after <a class="flag" href="flags.html#flag:agc_margin">agc_margin</a> 
+(a Prolog flag) atoms have been created. On multithreaded versions the 
+actual collection is delayed until there are no threads performing 
+normal garbage collection. In this case <a id="idx:garbagecollectatoms0:1770"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
+returns immediately. Note that there is no guarantee it will <em>ever</em> 
+happen, as there may always be threads performing garbage collection.</dd>
+<dt class="pubdef"><a id="garbage_collect_clauses/0"><strong>garbage_collect_clauses</strong></a></dt>
+<dd class="defbody">
+Reclaim retracted clauses. During normal operation, retracting a clause 
+implies setting the <em>erased generation</em> to the current
+<em>generation</em> of the database and increment the generation. 
+Keeping the clause around is both needed to realise the <em>logical 
+update view</em> and deal with the fact that other threads may be 
+executing the clause. Both static and dynamic code is processed this 
+way.<sup class="fn">149<span class="fn-text">Up to version 7.3.11, 
+dynamic code was handled using <em>reference counts</em>.</span></sup>.
+
+<p>The clause garbage collector (CGC) scans the environment stacks of 
+all threads for referenced dirty predicates and at which generation this 
+reference accesses the predicate. It then removes the references for 
+clauses that have been retracted before the oldest access generation 
+from the clause list as well as the secondary clauses indexes of the 
+predicate. If the clause list is not being scanned, the clause 
+references and ultimately the clause itself is reclaimed.
+
+<p>The clause garbage collector is called under three conditions, (1) 
+after
+<em>reloading</em> a source file, (2) if the memory occupied by 
+retracted but not yet reclaimed clauses exceeds 12.5% of the program 
+store, or (3) if skipping dead clauses in the clause lists becomes too 
+costly. The cost of clause garbage collection is proportional with the 
+total size of the local stack of all threads (the scanning phase) and 
+the number of clauses in all&lsquo;dirty' predicates (the reclaiming 
+phase).</dd>
+<dt class="pubdef"><a id="set_prolog_gc_thread/1"><strong>set_prolog_gc_thread</strong>(<var>+Status</var>)</a></dt>
+<dd class="defbody">
+Control whether or not atom and clause garbage collection are executed 
+in a dedicated thread. The default is <code>true</code>. Values for
+<var>Status</var> are <code>true</code>, <code>false</code> and <code>stop</code>. 
+The latter stops the <code>gc</code> thread but allows is to be 
+recreated lazily. This is use by e.g., <a id="idx:fork1:1771"></a><span class="pred-ext">fork/1</span> 
+to avoid forking a multi-threaded application. See also <a class="flag" href="flags.html#flag:gc_thread">gc_thread</a>.</dd>
+<dt class="pubdef"><a id="trim_stacks/0"><strong>trim_stacks</strong></a></dt>
+<dd class="defbody">
+Release stack memory resources that are not in use at this moment, 
+returning them to the operating system. It can be used to release memory 
+resources in a backtracking loop, where the iterations require typically 
+seconds of execution time and very different, potentially large, amounts 
+of stack space. Such a loop can be written as follows:
+
+<pre class="code">
+loop :-
+        generator,
+            trim_stacks,
+            potentially_expensive_operation,
+        stop_condition, !.
+</pre>
+
+<p>The Prolog top-level loop is written this way, reclaiming memory 
+resources after every user query.</dd>
+<dt class="pubdef"><a id="set_prolog_stack/2"><strong>set_prolog_stack</strong>(<var>+Stack, 
++KeyValue</var>)</a></dt>
+<dd class="defbody">
+Set a parameter for one of the Prolog runtime stacks. <var>Stack</var> 
+is one of <code>local</code>, <code>global</code> or <code>trail</code>. 
+The table below describes the <var>Key</var>(<var>Value</var>) pairs.
+
+<p>Current settings can be retrieved with <a id="idx:prologstackproperty2:1772"></a><a class="pred" href="memory.html#prolog_stack_property/2">prolog_stack_property/2</a>.
+
+<dl class="latex">
+<dt><strong>min_free</strong>(<var>+Cells</var>)</dt>
+<dd class="defbody">
+Minimum amount of free space after trimming or shifting the stack. 
+Setting this value higher can reduce the number of garbage collections 
+and stack-shifts at the cost of higher memory usage. The amount is 
+reported and specified in <em>cells</em>. A cell is 4 bytes in the 
+32-bit version and 8 bytes on the 64-bit version. See
+<a class="flag" href="flags.html#flag:address_bits">address_bits</a>. 
+See also <a id="idx:trimstacks0:1773"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+and <a id="idx:debug0:1774"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+<dt><strong>low</strong>(<var>+Cells</var>)</dt>
+<dt><strong>factor</strong>(<var>+Number</var>)</dt>
+<dd class="defbody">
+These two figures determine whether, if the stacks are low, a stack
+<em>shift</em> (expansion) or garbage collection is performed. This 
+depends on these two parameters, the current stack usage and the amount 
+of stack used after the last garbage collection. A garbage collection is 
+started if <var>used &gt; factor &times; lastused + low</var>.</dd>
+<dt><strong>spare</strong>(<var>+Cells</var>)</dt>
+<dd class="defbody">
+All stacks trigger overflow before actually reaching the limit, so the 
+resulting error can be handled gracefully. The spare stack is used for
+<a id="idx:printmessage2:1775"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+from the garbage collector and for handling exceptions. The default 
+suffices, unless the user redefines related hooks. Do
+<b>not</b> specify large values for this because it reduces the amount 
+of memory available for your real task.
+
+<p>Related hooks are <a id="idx:messagehook3:1776"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+(redefining GC messages),
+<a id="idx:prologtraceinterception4:1777"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a> 
+and <a id="idx:prologexceptionhook4:1778"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="prolog_stack_property/2"><strong>prolog_stack_property</strong>(<var>?Stack, 
+?KeyValue</var>)</a></dt>
+<dd class="defbody">
+True if <var>KeyValue</var> is a current property of <var>Stack</var>. 
+See
+<a id="idx:setprologstack2:1779"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a> 
+for defined properties.
+</dd>
+</dl>
+
+<p>The total space limit for all stacks is controlled using the prolog 
+flag <a class="flag" href="flags.html#flag:stack_limit">stack_limit</a>.
+
+<p><h3 id="sec:malloc"><a id="sec:4.42.2"><span class="sec-nr">4.42.2</span> <span class="sec-title">Heap 
+memory (malloc)</span></a></h3>
+
+<a id="sec:malloc"></a>
+
+<p><a id="idx:tcmalloc:1780"></a>SWI-Prolog's memory management is based 
+on the C runtime malloc() function and related functions. The 
+characteristics of the malloc() implementation may affect performance 
+and overall memory usage of the system. For most Prolog programs the 
+performance impact of the allocator is small.<sup class="fn">150<span class="fn-text">Multi-threaded 
+applications may suffer from allocators that do not effectively avoid <em>false 
+sharing</em> that affect CPU cache behaviour or operate using a single 
+lock to provide thread safety. Such allocators should be rare in modern 
+OSes.</span></sup> The impact on total memory usage can be significant 
+though, in particular for multi-threaded applications. This is due to 
+two aspects of SWI-Prolog memory management:
+
+<p>
+<ul class="latex">
+<li>The Prolog stacks are allocated using malloc(). The stacks can be 
+extremely large. SWI-Prolog assumes malloc() will use a mechanism that 
+allows returning this memory to the OS. Most todays allocators satisfy 
+this requirement.
+
+<p>
+<li>Atoms and clauses are allocated by the thread that requires them, 
+but this memory is freed by the thread running the atom or clause 
+garbage collector (see <a id="idx:garbagecollectatoms0:1781"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a> 
+and
+<a id="idx:garbagecollectclauses0:1782"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>). 
+Normally these run in the thread
+<code>gc</code>, which means that all deallocation happens in this 
+thread. Notably the <a class="url" href="http://www.malloc.de/en/">ptmalloc</a> 
+implementation used by the GNU C library (glibc) seems to handle this 
+poorly.
+</ul>
+
+<p>Starting with version 8.1.27, SWI-Prolog by default links against
+<a class="url" href="https://github.com/google/tcmalloc">tcmalloc</a> 
+when available. Note that changing the allocator can only be done by 
+linking the main executable (<b>swipl</b>) to an alternative library. 
+When embedded (see <a class="sec" href="foreigninclude.html#sec:12.4.23">section 
+12.4.23</a>) the main program that embeds <code>libswipl</code> must be 
+linked with tcmalloc. On ELF based systems (Linux), this effect can also 
+be achieved using the environment variable <code>LD_PRELOAD</code>:
+
+<pre class="code">
+% LD_PRELOAD=/path/to/libtcmalloc.so swipl ...
+</pre>
+
+<p>If SWI-Prolog core detects that tcmalloc is the current allocator and 
+provides the following additional predicates.
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="malloc_property/1"><strong>malloc_property</strong>(<var>?Property</var>)</a></dt>
+<dd class="defbody">
+True when <var>Property</var> is a property of the current allocator. 
+The properties are defined by the allocator. The properties of tcmalloc 
+are defined in
+<code>gperftools/malloc_extension.h</code>:<sup class="fn">151<span class="fn-text">Documentation 
+copied from the header.</span></sup>
+
+<dl class="latex">
+<dt><strong>&rsquo;generic.current_allocated_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of bytes currently allocated by application.
+</dd>
+<dt><strong>&rsquo;generic.heap_size'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of bytes in the heap (= current_allocated_bytes + fragmentation + 
+freed memory regions).
+</dd>
+<dt><strong>&rsquo;tcmalloc.max_total_thread_cache_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Upper limit on total number of bytes stored across all thread caches.
+</dd>
+<dt><strong>&rsquo;tcmalloc.current_total_thread_cache_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of bytes used across all thread caches.
+</dd>
+<dt><strong>&rsquo;tcmalloc.central_cache_free_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of free bytes in the central cache that have been assigned to 
+size classes. They always count towards virtual memory usage, and unless 
+the underlying memory is swapped out by the OS, they also count towards 
+physical memory usage.
+</dd>
+<dt><strong>&rsquo;tcmalloc.transfer_cache_free_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of free bytes that are waiting to be transferred between the 
+central cache and a thread cache. They always count towards virtual 
+memory usage, and unless the underlying memory is swapped out by the OS, 
+they also count towards physical
+</dd>
+<dt><strong>&rsquo;tcmalloc.thread_cache_free_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of free bytes in thread caches. They always count towards virtual 
+memory usage, and unless the underlying memory is swapped out by the OS, 
+they also count towards physical memory usage.
+</dd>
+<dt><strong>&rsquo;tcmalloc.pageheap_free_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of bytes in free, mapped pages in page heap. These bytes can be 
+used to fulfill allocation requests. They always count towards virtual 
+memory usage, and unless the underlying memory is swapped out by the OS, 
+they also count towards physical memory usage. This property is not 
+writable.
+</dd>
+<dt><strong>&rsquo;tcmalloc.pageheap_unmapped_bytes'</strong>(<var>-Int</var>)</dt>
+<dd class="defbody">
+Number of bytes in free, unmapped pages in page heap. These are bytes 
+that have been released back to the OS, possibly by one of the 
+MallocExtension "Release" calls. They can be used to fulfill allocation 
+requests, but typically incur a page fault. They always count towards 
+virtual memory usage, and depending on the OS, typically do not count 
+towards physical memory usage.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="set_malloc/1"><strong>set_malloc</strong>(<var>+Property</var>)</a></dt>
+<dd class="defbody">
+Set properties described in <a id="idx:mallocproperty1:1783"></a><a class="pred" href="memory.html#malloc_property/1">malloc_property/1</a>. 
+Currently the only writable property is
+<code>tcmalloc.max_total_thread_cache_bytes</code>. Setting an unknown 
+property raises a <code>domain_error</code> and setting a read-only 
+property raises a <code>permission_error</code> exception.</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="thread_idle/2"><strong>thread_idle</strong>(<var>:Goal, 
++Duration</var>)</a></dt>
+<dd class="defbody">
+Indicates to the system that the calling thread will idle for some time 
+while calling <var>Goal</var> as <a id="idx:once1:1784"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+This call releases resources to the OS to minimise the footprint of the 
+calling thread while it waits. Despite the name this predicate is always 
+provided, also if the system is not configured with tcmalloc or is 
+single threaded.
+<var>Duration</var> is one of
+
+<dl class="latex">
+<dt><strong>short</strong></dt>
+<dd class="defbody">
+Calls <a id="idx:trimstacks0:1785"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+and, if tcmalloc is used, calls 
+MallocExtension_MarkThreadTemporarilyIdle() which empties the thread's 
+malloc cache but preserves the cache itself.</dd>
+<dt><strong>long</strong></dt>
+<dd class="defbody">
+Calls <a id="idx:garbagecollect0:1786"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
+and <a id="idx:trimstacks0:1787"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a> 
+and, if tcmalloc is used, calls MallocExtension_MarkThreadIdle() which 
+releases all thread-specific allocation data structures.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

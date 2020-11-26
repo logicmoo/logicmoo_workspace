@@ -1,0 +1,1 @@
+[Man:John]-childOf->[Boy:{John, Sam}]<-agnt-[Love]-obj->[Girl: Mary]

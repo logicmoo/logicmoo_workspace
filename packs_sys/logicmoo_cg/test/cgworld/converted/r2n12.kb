@@ -1,0 +1,19 @@
+% (provide[secondary_market][situation:(convert_into[security][cash])])(rcpt[situation:(convert_into[security][cash])][investor])
+cgc(204,simple,'secondary_market',[fs(num,sing)],[]).
+cgc(206,simple,'security',[fs(num,sing)],[]).
+cgc(207,simple,'cash',[fs(num,sing)],[]).
+cg(208,[cgr(convert_into, [206, 207], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(205,complex,situation,[208],[]).
+cgc(211,simple,'security',[fs(num,sing)],[]).
+cgc(212,simple,'cash',[fs(num,sing)],[]).
+cg(213,[cgr(convert_into, [211, 212], _)], 
+        [],
+        [fs(kind,body_of_context)]).
+cgc(210,complex,situation,[213],[]).
+cgc(214,simple,'investor',[fs(num,sing)],[]).
+cg(209,[cgr(provide, [204, 205], _),
+        cgr(rcpt, [210, 214], _)], 
+        [],
+        [fs(kind,normal)]).

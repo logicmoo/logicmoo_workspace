@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section B.9</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="intlibs.html">
+<link rel="next" href="dialect.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="intlibs.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="dialect.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:loadfilehook"><a id="sec:B.9"><span class="sec-nr">B.9</span> <span class="sec-title">Hooks 
+for loading files</span></a></h2>
+
+<a id="sec:loadfilehook"></a>
+
+<p>All loading of source files is achieved by <a id="idx:loadfiles2:2605"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+The hook
+<a id="idx:prologloadfile2:2606"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a> 
+can be used to load Prolog code from non-files or even load entirely 
+different information, such as foreign files.
+
+<dl class="latex">
+<dt class="pubdef"><a id="prolog_load_file/2"><strong>prolog_load_file</strong>(<var>+Spec, 
++Options</var>)</a></dt>
+<dd class="defbody">
+Load a single object. If this call succeeds, <a id="idx:loadfiles2:2607"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+assumes the action has been taken care of. This hook is only called if <var>Options</var> 
+does not contain the <code>stream(Input)</code> option. The hook must be 
+defined in the module <code>user</code>.
+
+<p>This can be used to load from unusual places as well as dealing with 
+Prolog code that is not represented as a Prolog source text (for example 
+some binary representation). For example, library <code>library(http/http_load)</code> 
+loads Prolog directly from an HTTP server. See also
+<a id="idx:prologopensourcehook3:2608"></a><a class="pred" href="loadfilehook.html#prolog:open_source_hook/3">prolog:open_source_hook/3</a>, 
+which merely allows for changing how a physical file is opened.</dd>
+<dt class="pubdef"><a id="prolog:open_source_hook/3"><strong>prolog:open_source_hook</strong>(<var>+Path, 
+-Stream, +Options</var>)</a></dt>
+<dd class="defbody">
+This hooks is called by the compiler to overrule the default <a id="idx:open3:2609"></a><a class="pred" href="IO.html#open/3">open/3</a> 
+call
+<code>open(Path, read, Stream)</code>. <var>Options</var> provide the 
+options as provided to <a id="idx:loadfiles2:2610"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+If the hook succeeds compilation continues by loading from the returned 
+(input) stream. This hook is particularly suited to support running the 
+code to a preprocessor. See also
+<a id="idx:prologloadfile2:2611"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a>.</dd>
+<dt class="pubdef"><a id="prolog:comment_hook/3"><strong>prolog:comment_hook</strong>(<var>+Comments, 
++Pos, +Term</var>)</a></dt>
+<dd class="defbody">
+This hook allows for processing comments encountered by the compiler. If 
+this hook is defined, the compiler calls <a id="idx:readterm2:2612"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+with the option
+<code>comments(Comments)</code>. If the list of comments returned by
+<a id="idx:readterm2:2613"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+is not empty it calls this comment hook with the following arguments.
+
+<p>
+<ul class="latex">
+<li><var>Comments</var> is the non-empty list of comments. Each comment 
+is a pair <var>Position</var>-<var>String</var>, where
+<var>String</var> is a string object (see <a class="sec" href="string.html#sec:5.2">section 
+5.2</a>) that contains the comment <em>including</em> delimiters. 
+Consecutive line comments are returned as a single comment.
+<li><var>Pos</var> is a stream-position term that describes the starting 
+position of <var>Term</var>
+<li><var>Term</var> is the term read.
+</ul>
+
+<p>This hook is exploited by the documentation system. See
+<a id="idx:streampositiondata3:2614"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>. 
+See also <a id="idx:readterm3:2615"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>.
+</dd>
+</dl>
+
+</body></html>

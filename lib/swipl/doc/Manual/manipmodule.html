@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.15</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="ctxmodule.html">
+<link rel="next" href="modulecompat.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="ctxmodule.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="modulecompat.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:manipmodule"><a id="sec:6.15"><span class="sec-nr">6.15</span> <span class="sec-title">Module 
+properties</span></a></h2>
+
+<a id="sec:manipmodule"></a>
+
+<p>The following predicates can be used to query the module system for 
+reflexive programming:
+
+<dl class="latex">
+<dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="current_module/1"><strong>current_module</strong>(<var>?Module</var>)</a></dt>
+<dd class="defbody">
+True if <var>Module</var> is a currently defined module. This predicate 
+enumerates all modules, whether loaded from a file or created 
+dynamically. Note that modules cannot be destroyed in the current 
+version of SWI-Prolog.</dd>
+<dt class="pubdef"><a id="module_property/2"><strong>module_property</strong>(<var>?Module, 
+?Property</var>)</a></dt>
+<dd class="defbody">
+True if <var>Property</var> is a property of <var>Module</var>. Defined 
+properties are:
+
+<dl class="latex">
+<dt><strong>class</strong>(<var>-Class</var>)</dt>
+<dd class="defbody">
+True when <var>Class</var> is the class of the module. Defined classes 
+are
+
+<dl class="latex">
+<dt><strong>user</strong></dt>
+<dd class="defbody">
+Default for user-defined modules.
+</dd>
+<dt><strong>system</strong></dt>
+<dd class="defbody">
+Module <code>system</code> and modules from <code>&lt;<var>home</var>&gt;/boot</code>.
+</dd>
+<dt><strong>library</strong></dt>
+<dd class="defbody">
+Other modules from the system directories.
+</dd>
+<dt><strong>temporary</strong></dt>
+<dd class="defbody">
+Module is temporary.
+</dd>
+<dt><strong>test</strong></dt>
+<dd class="defbody">
+Modules that create tests.
+</dd>
+<dt><strong>development</strong></dt>
+<dd class="defbody">
+Modules that only support the development environment.
+</dd>
+</dl>
+
+</dd>
+<dt><strong>file</strong>(<var>?File</var>)</dt>
+<dd class="defbody">
+True if <var>Module</var> was loaded from <var>File</var>.
+</dd>
+<dt><strong>line_count</strong>(<var>-Line</var>)</dt>
+<dd class="defbody">
+True if <var>Module</var> was loaded from the N-th line of file.
+</dd>
+<dt><strong>exports</strong>(<var>-ListOfPredicateIndicators</var>)</dt>
+<dd class="defbody">
+True if <var>Module</var> exports the given predicates. Predicate 
+indicators are in canonical form (i.e., always using name/arity and 
+never the DCG form name//arity). Future versions may also use the DCG 
+form. See also <a id="idx:predicateproperty2:1972"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>. 
+Succeeds with an empty list if the module exports no predicates.
+</dd>
+<dt><strong>exported_operators</strong>(<var>-ListOfOperators</var>)</dt>
+<dd class="defbody">
+True if <var>Module</var> exports the given operators. Each exported 
+operator is represented as a term <code>op(Pri,Assoc,Name)</code>. 
+Succeeds with an empty list if the module exports no operators.
+</dd>
+<dt><strong>size</strong>(<var>-Bytes</var>)</dt>
+<dd class="defbody">
+Total size in bytes used to represent the module. This includes the 
+module itself, its (hash) tables and the summed size of all predicates 
+defined in this module. See also the <code>size(Bytes)</code> property 
+in <a id="idx:predicateproperty2:1973"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
+</dd>
+<dt><strong>program_size</strong>(<var>-Bytes</var>)</dt>
+<dd class="defbody">
+Memory (in bytes) used for storing the predicates of this module. This 
+figure includes the predicate header and clauses.
+</dd>
+<dt><strong>program_space</strong>(<var>-Bytes</var>)</dt>
+<dd class="defbody">
+If present, this number limits the <code>program_size</code>. See
+<a id="idx:setmodule1:1974"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
+</dd>
+<dt><strong>last_modified_generation</strong>(<var>-Generation</var>)</dt>
+<dd class="defbody">
+Integer expression the last database generation where a clause was added 
+or removed from a predicate that is implemented in this module. See also <a id="idx:predicateproperty2:1975"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="set_module/1"><strong>set_module</strong>(<var>:Property</var>)</a></dt>
+<dd class="defbody">
+Modify properties of the module. Currently, the following properties may 
+be modified:
+
+<dl class="latex">
+<dt><strong>base</strong>(<var>+Base</var>)</dt>
+<dd class="defbody">
+Set the default import module of the current module to <var>Module</var>. 
+Typically, <var>Module</var> is one of <code>user</code> or <code>system</code>. 
+See
+<a class="sec" href="importmodule.html#sec:6.10">section 6.10</a>.
+</dd>
+<dt><strong>class</strong>(<var>+Class</var>)</dt>
+<dd class="defbody">
+Set the class of the module. See <a id="idx:moduleproperty2:1976"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
+</dd>
+<dt><strong>program_space</strong>(<var>+Bytes</var>)</dt>
+<dd class="defbody">
+Maximum amount of memory used to store the predicates defined inside the 
+module. Raises a permission error if the current usage is above the 
+requested limit. Setting the limit to 0 (zero) removes the limit. An 
+attempt to assert clauses that causes the limit to be exceeded causes a
+<code>resource_error(program_space)</code> exception. See <a id="idx:assertz1:1977"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+and
+<a id="idx:moduleproperty2:1978"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p></body></html>

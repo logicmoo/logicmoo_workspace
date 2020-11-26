@@ -1,0 +1,7 @@
+// ontology required (to load first): aminePlatform/samples/ontology/ManOntology2.xml
+[Begin]-
+        -obj->[Session],
+        -srce->[Proposition = [Press]-
+	       -obj->[Key : enter]-partOf->[Keyboard],
+	       -agnt->[Person : John] ],
+        -agnt->[Person : John]

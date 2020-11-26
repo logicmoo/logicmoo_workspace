@@ -1,0 +1,132 @@
+/* <module>
+% ===================================================================
+% File 'mpred_builtin.pfc'
+% Purpose: Agent Reactivity for SWI-Prolog
+% Maintainer: Douglas Miles
+% Contact: $Author: dmiles $@users.sourceforge.net ;
+% Version: 'interface' 1.0.0
+% Revision: $Revision: 1.9 $
+% Revised At: $Date: 2002/06/27 14:13:20 $
+% ===================================================================
+%
+% PFC is a language extension for prolog.. there is so much that can be done in the language for exmaple.. 
+%
+%
+% props(Obj,height(ObjHt)) == holds(height,Obj,ObjHt) == rdf(Obj,height,ObjHt) == height(Obj,ObjHt)
+% padd(Obj,height(ObjHt)) == padd(height,Obj,ObjHt,...) == moo(QueryForm)
+% kretract[all](Obj,height(ObjHt)) == kretract[all](Obj,height,ObjHt) == pretract[all](height,Obj,ObjHt) == del[all](QueryForm)
+% keraseall(AnyTerm).
+%
+%
+% Dec 13, 2035
+% Douglas Miles
+*/
+:- if(current_prolog_flag(logicmoo_modules,default)).
+:- module(plarkc_cyc_xform,[]).
+:- endif.
+
+:- op(500,fx,'~').
+:- op(1050,xfx,('==>')).
+:- op(1050,xfx,'<==>').
+:- op(1050,xfx,('<-')).
+:- op(1100,fx,('==>')).
+:- op(1150,xfx,('::::')).
+
+:- include(logicmoo('pfc2.0'/'mpred_header.pi')).
+/*
+
+genls(_Sub, Super) ==> tCol(Super).
+genls(Sub, _Super) ==> tCol(Sub).
+% use backchain instead (isa(I,Sub), disjointWith(Sub, Super)) ==> ~(isa(I,Super)).
+
+*/
+
+
+genls(vtAssertion,ftAssertable).
+tSet(vtAssertion).
+ftSpec(ftAssertable).
+
+:- kb_global(baseKB:ist/2).
+
+prologHybrid(ist(tMicrotheory,ftAssertable)).
+prologHybrid(istAsserted(ftAssertable)).
+
+resultIsa(aAssertionFn(tMicrotheory,ftAssertable),vtAssertion).
+
+:-asserta((mudEquals(aAssertionFn(MT,Sent),ist(MT,Sent)):-must(assert_if_new(MT:Sent)))).
+
+:- install_constant_renamer_until_eof.
+
+:-ain((isa(X,'SecondOrderCollection')<==>isa(X,'ttTypeType'))).
+isa(X,'FirstOrderCollection')==>isa(X,'tCol').
+isa(X,'LinguisticObjectType')==>isa(X,tCol).
+
+remappedCollection(tSet,'Collection').
+remappedCollection(ttExpressionType,'SubLExpression').
+remappedCollection(tCol,'SetOrCollection').
+remappedConstant(tPred,'Predicate').
+
+cyc_coextensional_causes_trouble:-
+   ain((remappedCollection(Prolog,CycL)==>coExtensional(CycL,Prolog))),
+   ain((coExtensional(CycL,Prolog)==>(genls(CycL,Prolog),coExtensional(Prolog,CycL)))).
+
+
+% Hook a predicate up!
+/*
+(tinyInstallToAssertedEL(F,A) ==> ({current_predicate(make_el_stub/4),functor(H,F,A),make_el_stub(H,_,_,B)},(H<=B))).
+
+((tinyPredTypeActive(PREDTYPE),isa(F,PREDTYPE)) ==> tinyPredActive(F)).
+
+((tinyPredActive(F),arity(F,A))==>tinyInstallToAssertedEL(F,A)).
+
+
+
+==>tinyPredActive(isa).
+==>tinyPredActive(genls).
+==>tinyPredActive(arity).
+==>tinyInstallToAssertedEL(afterAdding,2).
+
+==>tinyPredTypeActive('WFFConstraintSatisfactionPredicate').
+==>tinyPredTypeActive('WFFConstraintPredicate').
+==>tinyPredTypeActive('WFFSupportedPredicate').
+
+==>tinyPredActive(afterRemoving).
+==>tinyPredActive(afterAdding).
+
+% argQuotedIsa(Pred, N, FT) <=  (argIsa(Pred, N, Type),genls(Type,FT),ttExpressionType(FT)).
+
+% consistent(CycL) <= cycLToMpred(~(CycL),Consequent),not(pfcCall(Consequent)). 
+
+==>tinyPredTypeActive('expansion').
+==>tinyPredTypeActive('collectionExpansion').
+(isa(F,tPred),arity(F,A),{once((tinyAssertion0(DB,MT,STR),arg(1,DB,F),atom(F)))})==>tinyInstallToAssertedEL(F,A).
+*/
+
+% argQuotedIsa(sentenceTruth,1,'CycLSentence-Assertible').
+argQuotedIsa(sentenceTruth,1,'ftAssertible').
+:- ain(((collectionExpansion(COL,RULE),isa(PRED,COL),{subst(RULE,':ARG1',PRED,NEWRULE)}) ==> trueSentence(NEWRULE))).
+:- ain(((expansion(F,RULE),arity(F,A),{make_kw_functor(F,A,CYCL),kw_to_vars((CYCL<==>RULE),NEWRULE)}) ==> trueSentence(NEWRULE))).
+
+nearestIsa(I,C) :- cwc, tSet(C), must(fully_expand_real(isa(I,C),ISA))->mpred_fact(ISA).
+% nearestGenls(I,C) :- mpred_fact(genls(I,C)).
+
+
+% meta_argtypes(ArgTypes)/is_declarations(ArgTypes) ==> {wdmsg(in_loop(meta_argtypes))},meta_argtypes(ArgTypes).
+tRelation(ArgTypes)/is_declarations(ArgTypes) ==> meta_argtypes(ArgTypes).
+:- ain(((isa(Compound,prologMacroHead)/(compound_functor(Compound,F),\+ tFunction(F))) ==> functorDeclares(F))).
+(ttExpressionType(FT)/is_declarations(FT))==>meta_argtypes(FT).
+
+:- show_call(why,source_location(_,_)).
+
+:- must(in_file_expansion;in_file_directive).
+
+
+end_of_file.
+
+%(exactlyAssertedSentence(CycL), is_simple_gaf(CycL)) ==> ({cycAssert(CycL)},CycL).
+%(exactlyAssertedSentence(CycL), needs_indexing(CycL)) ==> call_u_no_bc(CycL).
+%(exactlyAssertedSentence(CycL), needs_canoncalization(CycL)) ==> trueSentence(CycL).
+%:- prolog.
+call_u_no_bc(CycL) ==> ({ sent_to_conseq(CycL,Consequent) }, Consequent).
+trueSentence(CycL) ==> ({ sent_to_conseq(CycL,Consequent) }, Consequent).
+

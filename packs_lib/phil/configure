@@ -1,0 +1,2 @@
+cp Makefile.temp Makefile
+CFLAGS="-Wall -Wextra -g -O3 -fPIC"

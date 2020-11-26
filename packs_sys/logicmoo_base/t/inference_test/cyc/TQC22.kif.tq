@@ -1,0 +1,152 @@
+(note TQC22)
+
+;;(quantityChangeFunction 
+;; (LongTermFn HYP-EconomicEmbargo-62719269) PetroleumProduct 
+;; (Kappa  (?PRODUCT ?PRICE)  (priceChargedFor Iran ?PRODUCT ?PRICE)) StabilizingFunction) 
+
+;; (quantityChangeFunction 
+;; (ShortTermFn HYP-EconomicEmbargo-62719269) PetroleumProduct 
+;; (Kappa  (?PRODUCT ?PRICE)  (priceChargedFor Iran ?PRODUCT ?PRICE)) SpikeFunction) 
+
+;; (quantityChangeFunction 
+;;  (LongTermFn HYP-EconomicEmbargo-62719269) PetroleumProduct 
+;;  (Kappa (?PRODUCT ?PRICE)  (priceChargedFor Iran ?PRODUCT ?PRICE)) NetUnchangingFunction) 
+
+;; (quantityChangeFunction 
+;;  (ShortTermFn HYP-EconomicEmbargo-62719269) PetroleumProduct 
+;;  (Kappa  (?PRODUCT ?PRICE)  (demandRate Iran ?PRODUCT ?PRICE)) NetDecreasingFunction) 
+
+(implies 
+ (quantityChangeFunction ?TIME ?PRODUCT-TYPE 
+ (Kappa 
+ (?PRODUCT-1 ?PRICE-1) 
+ (demandRate ?REGION ?PRODUCT-1 ?PRICE-1)) ?SIMILAR-FUNCTIONS) 
+ (quantityChangeFunction ?TIME ?PRODUCT-TYPE 
+ (Kappa 
+ (?PRODUCT-2 ?PRICE-2) 
+ (priceChargedFor ?REGION ?PRODUCT-2 ?PRICE-2)) ?SIMILAR-FUNCTIONS)) 		     
+
+
+
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (capableOfDoing ?EMBARGOER ?EMBARGO agent) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityChangeFunction 
+ (LongTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor ?EMBARGOE ?PRODUCT ?PRICE)) StabilizingFunction)) 
+
+(instance HYP-EconomicEmbargo-62719269 EconomicEmbargo) 
+
+(agent HYP-EconomicEmbargo-62719269 WesternCountries) 
+
+(capableOfDoing WesternCountries HYP-EconomicEmbargo-62719269 agent) 
+
+(targetedProductType HYP-EconomicEmbargo-62719269 PetroleumProduct) 
+
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (capableOfDoing ?EMBARGOER ?EMBARGO agent) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityChangeFunction 
+ (ShortTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor ?EMBARGOE ?PRODUCT ?PRICE)) SpikeFunction)) 
+
+(instance HYP-EconomicEmbargo-62719269 EconomicEmbargo) 
+
+(agent HYP-EconomicEmbargo-62719269 WesternCountries) 
+
+(capableOfDoing WesternCountries HYP-EconomicEmbargo-62719269 agent) 
+
+(targetedProductType HYP-EconomicEmbargo-62719269 PetroleumProduct) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (capableOfDoing ?EMBARGOER ?EMBARGO agent) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityChangeFunction 
+ (LongTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor ?EMBARGOE ?PRODUCT ?PRICE)) NetUnchangingFunction)) 
+
+(instance HYP-EconomicEmbargo-62719269 EconomicEmbargo) 
+
+(agent HYP-EconomicEmbargo-62719269 WesternCountries) 
+
+(capableOfDoing WesternCountries HYP-EconomicEmbargo-62719269 agent) 
+
+(targetedProductType HYP-EconomicEmbargo-62719269 PetroleumProduct) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (agent ?EMBARGO ?EMBARGOER) 
+ (capableOfDoing ?EMBARGOER ?EMBARGO agent) 
+ (maleficiary ?EMBARGO ?EMBARGOEE) 
+ (targetedProductType ?EMBARGO ?PROD-TYPE)) 
+ (quantityChangeFunction 
+ (ShortTermFn ?EMBARGO) PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (demandRate ?EMBARGOEE ?PRODUCT ?PRICE)) NetDecreasingFunction)) 
+
+(instance HYP-EconomicEmbargo-62719269 EconomicEmbargo) 
+
+(agent HYP-EconomicEmbargo-62719269 WesternCountries) 
+
+(capableOfDoing WesternCountries HYP-EconomicEmbargo-62719269 agent) 
+
+(targetedProductType HYP-EconomicEmbargo-62719269 PetroleumProduct) 
+
+
+
+
+(implies 
+ (and 
+ (instance ?EMBARGO EconomicEmbargo) 
+ (maleficiary ?EMBARGO ?COUNTRY) 
+ (instance ?COUNTRY Country)) 
+ (capableOfDoing WesternCountries ?EMBARGO agent)) 
+
+(maleficiary HYP-EconomicEmbargo-62719269 Iran) 
+
+(instance Iran Country) 
+
+
+
+
+(query (findall (?TIME ?PRICE ?CHANGE-FUNCTION) 
+
+ (quantityChangeFunction ?TIME PetroleumProduct 
+ (Kappa 
+ (?PRODUCT ?PRICE) 
+ (priceChargedFor Iran ?PRODUCT ?PRICE)) ?CHANGE-FUNCTION)))
+
+(answer  (list ((LongTermFn HYP-EconomicEmbargo-62719269) StabilizingFunction )))
+(answer (list(ShortTermFn HYP-EconomicEmbargo-62719269) SpikeFunction ))
+(answer  (list (LongTermFn HYP-EconomicEmbargo-62719269) NetUnchangingFunction))
+(answer (list (LongTermFn HYP-EconomicEmbargo-62719269)NetDecreasingFunction ))
+
+(end_of_file)		       

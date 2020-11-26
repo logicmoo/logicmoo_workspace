@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.43</title><link rel="home" href="index.html">
+<link rel="contents" href="Contents.html">
+<link rel="index" href="DocIndex.html">
+<link rel="summary" href="summary.html">
+<link rel="previous" href="memory.html">
+<link rel="next" href="miscpreds.html">
+
+<style type="text/css">
+
+/* Style sheet for SWI-Prolog latex2html
+*/
+
+dd.defbody
+{ margin-bottom: 1em;
+}
+
+dt.pubdef, dt.multidef
+{ color: #fff;
+padding: 2px 10px 0px 10px;
+margin-bottom: 5px;
+font-size: 18px;
+vertical-align: middle;
+overflow: hidden;
+}
+
+dt.pubdef { background-color: #0c3d6e; }
+dt.multidef { background-color: #ef9439; }
+
+.bib dd
+{ margin-bottom: 1em;
+}
+
+.bib dt
+{ float: left;
+margin-right: 1.3ex;
+}
+
+pre.code
+{ margin-left: 1.5em;
+margin-right: 1.5em;
+border: 1px dotted;
+padding-top: 5px;
+padding-left: 5px;
+padding-bottom: 5px;
+background-color: #f8f8f8;
+}
+
+div.navigate
+{ text-align: center;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+}
+
+div.title
+{ text-align: center;
+padding-bottom: 1em;
+font-size: 200%;
+font-weight: bold;
+}
+
+div.author
+{ text-align: center;
+font-style: italic;
+}
+
+div.abstract
+{ margin-top: 2em;
+background-color: #f0f0f0;
+border: 1px dotted;
+padding: 5px;
+margin-left: 10%; margin-right:10%;
+}
+
+div.abstract-title
+{ text-align: center;
+padding: 5px;
+font-size: 120%;
+font-weight: bold;
+}
+
+div.toc-h1
+{ font-size: 200%;
+font-weight: bold;
+}
+
+div.toc-h2
+{ font-size: 120%;
+font-weight: bold;
+margin-left: 2em;
+}
+
+div.toc-h3
+{ font-size: 100%;
+font-weight: bold;
+margin-left: 4em;
+}
+
+div.toc-h4
+{ font-size: 100%;
+margin-left: 6em;
+}
+
+span.sec-nr
+{
+}
+
+span.sec-title
+{
+}
+
+span.pred-ext
+{ font-weight: bold;
+}
+
+span.pred-tag
+{ float: right;
+padding-top: 0.2em;
+font-size: 80%;
+font-style: italic;
+color: #fff;
+}
+
+div.caption
+{ width: 80%;
+margin: auto;
+text-align:center;
+}
+
+/* Footnotes */
+.fn {
+color: red;
+font-size: 70%;
+}
+
+.fn-text, .fnp {
+position: absolute;
+top: auto;
+left: 10%;
+border: 1px solid #000;
+box-shadow: 5px 5px 5px #888;
+display: none;
+background: #fff;
+color: #000;
+margin-top: 25px;
+padding: 8px 12px;
+font-size: larger;
+}
+
+sup:hover span.fn-text
+{ display: block;
+}
+
+/* Lists */
+
+dl.latex
+{ margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.latex dl.latex dd.defbody
+{ margin-bottom: 0.5ex;
+}
+
+/* PlDoc Tags */
+
+dl.tags
+{ font-size: 90%;
+margin-left: 5ex;
+margin-top: 1ex;
+margin-bottom: 0.5ex;
+}
+
+dl.tags dt
+{ margin-left: 0pt;
+font-weight: bold;
+}
+
+dl.tags dd
+{ margin-left: 3ex;
+}
+
+td.param
+{ font-style: italic;
+font-weight: bold;
+}
+
+/* Index */
+
+dt.index-sep
+{ font-weight: bold;
+font-size: +1;
+margin-top: 1ex;
+}
+
+/* Tables */
+
+table.center
+{ margin: auto;
+}
+
+table.latex
+{ border-collapse:collapse;
+}
+
+table.latex tr
+{ vertical-align: text-top;
+}
+
+table.latex td,th
+{ padding: 2px 1em;
+}
+
+table.latex tr.hline td,th
+{ border-top: 1px solid black;
+}
+
+table.frame-box
+{ border: 2px solid black;
+}
+
+</style>
+</head>
+<body style="background:white">
+<div class="navigate"><a class="nav" href="index.html"><img src="home.gif" alt="Home"></a>
+<a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
+<a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
+<a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
+<a class="nav" href="memory.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="miscpreds.html"><img src="next.gif" alt="Next"></a>
+</div>
+<h2 id="sec:DDE"><a id="sec:4.43"><span class="sec-nr">4.43</span> <span class="sec-title">Windows 
+DDE interface</span></a></h2>
+
+<a id="sec:DDE"></a>
+
+<p>The predicates in this section deal with MS-Windows&lsquo;Dynamic 
+Data Exchange' or DDE protocol.<sup class="fn">152<span class="fn-text">This 
+interface is contributed by Don Dwiggins.</span></sup> A Windows DDE 
+conversation is a form of interprocess communication based on sending 
+reserved window events between the communicating processes.
+
+<p>Failing DDE operations raise an error of the structure below, where
+<var>Operation</var> is the name of the (partial) operation that failed 
+and
+<var>Message</var> is a translation of the operator error code. For some 
+errors, <var>Context</var> provides additional comments.
+
+<pre class="code">
+        error(dde_error(Operation, Message), Context)
+</pre>
+
+<p><h3 id="sec:dde-client"><a id="sec:4.43.1"><span class="sec-nr">4.43.1</span> <span class="sec-title">DDE 
+client interface</span></a></h3>
+
+<a id="sec:dde-client"></a>
+
+<p>The DDE client interface allows Prolog to talk to DDE server 
+programs. We will demonstrate the use of the DDE interface using the 
+Windows PROGMAN (Program Manager) application:
+
+<pre class="code">
+1 ?- open_dde_conversation(progman, progman, C).
+
+C = 0
+2 ?- dde_request(0, groups, X)
+
+--&gt; Unifies X with description of groups
+
+3 ?- dde_execute(0, '[CreateGroup("DDE Demo")]').
+true.
+
+4 ?- close_dde_conversation(0).
+true.
+</pre>
+
+<p>For details on interacting with <b>progman</b>, use the SDK online 
+manual section on the Shell DDE interface. See also the Prolog
+<code>library(progman)</code>, which may be used to write simple Windows 
+setup scripts in Prolog.
+
+<dl class="latex">
+<dt class="pubdef"><a id="open_dde_conversation/3"><strong>open_dde_conversation</strong>(<var>+Service, 
++Topic, -Handle</var>)</a></dt>
+<dd class="defbody">
+Open a conversation with a server supporting the given service name and 
+topic (atoms). If successful, <var>Handle</var> may be used to send 
+transactions to the server. If no willing server is found this predicate 
+fails silently.</dd>
+<dt class="pubdef"><a id="close_dde_conversation/1"><strong>close_dde_conversation</strong>(<var>+Handle</var>)</a></dt>
+<dd class="defbody">
+Close the conversation associated with <var>Handle</var>. All opened 
+conversations should be closed when they're no longer needed, although 
+the system will close any that remain open on process termination.</dd>
+<dt class="pubdef"><a id="dde_request/3"><strong>dde_request</strong>(<var>+Handle, 
++Item, -Value</var>)</a></dt>
+<dd class="defbody">
+Request a value from the server. <var>Item</var> is an atom that 
+identifies the requested data, and <var>Value</var> will be a string (<code>CF_TEXT</code> 
+data in DDE parlance) representing that data, if the request is 
+successful.</dd>
+<dt class="pubdef"><a id="dde_execute/2"><strong>dde_execute</strong>(<var>+Handle, 
++Command</var>)</a></dt>
+<dd class="defbody">
+Request the DDE server to execute the given command string. Succeeds if 
+the command could be executed and fails with an error message otherwise.</dd>
+<dt class="pubdef"><a id="dde_poke/4"><strong>dde_poke</strong>(<var>+Handle, 
++Item, +Command</var>)</a></dt>
+<dd class="defbody">
+Issue a <code>POKE</code> command to the server on the specified <var>Item</var>.
+<var>command</var> is passed as data of type <code>CF_TEXT</code>.
+</dd>
+</dl>
+
+<p><h3 id="sec:dde-server"><a id="sec:4.43.2"><span class="sec-nr">4.43.2</span> <span class="sec-title">DDE 
+server mode</span></a></h3>
+
+<a id="sec:dde-server"></a>
+
+<p>The <code>library(dde)</code> defines primitives to realise simple 
+DDE server applications in SWI-Prolog. These features are provided as of 
+version 2.0.6 and should be regarded as prototypes. The C part of the 
+DDE server can handle some more primitives, so if you need features not 
+provided by this interface, please study <code>library(dde)</code>.
+
+<dl class="latex">
+<dt class="pubdef"><a id="dde_register_service/2"><strong>dde_register_service</strong>(<var>+Template, 
++Goal</var>)</a></dt>
+<dd class="defbody">
+Register a server to handle DDE request or DDE <code>execute</code> 
+requests from other applications. To register a service for a DDE 
+request, <var>Template</var> is of the form:
+<blockquote> +Service(+Topic, +Item, +Value)
+</blockquote>
+<var>Service</var> is the name of the DDE service provided (like
+<b>progman</b> in the client example above). <var>Topic</var> is either 
+an atom, indicating <var>Goal</var> only handles requests on this topic, 
+or a variable that also appears in <var>Goal</var>. <var>Item</var> and <var>Value</var> 
+are variables that also appear in <var>Goal</var>. <var>Item</var> 
+represents the request data as a Prolog atom.<sup class="fn">153<span class="fn-text">Up 
+to version 3.4.5 this was a list of character codes. As recent versions 
+have atom garbage collection there is no need for this anymore.</span></sup>
+
+<p>The example below registers the Prolog <a id="idx:currentprologflag2:1788"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a> 
+predicate to be accessible from other applications. The request may be 
+given from the same Prolog as well as from another application.
+
+<pre class="code">
+?- dde_register_service(prolog(current_prolog_flag, F, V),
+                        current_prolog_flag(F, V)).
+
+?- open_dde_conversation(prolog, current_prolog_flag, Handle),
+   dde_request(Handle, home, Home),
+   close_dde_conversation(Handle).
+
+Home = '/usr/local/lib/pl-2.0.6/'
+</pre>
+
+<p>Handling DDE <code>execute</code> requests is very similar. In this 
+case the template is of the form:
+<blockquote> +Service(+Topic, +Item)
+</blockquote>
+
+<p>Passing a <var>Value</var> argument is not needed as <code>execute</code> 
+requests either succeed or fail. If <var>Goal</var> fails, a&lsquo;not 
+processed' is passed back to the caller of the DDE request.
+</dd>
+<dt class="pubdef"><a id="dde_unregister_service/1"><strong>dde_unregister_service</strong>(<var>+Service</var>)</a></dt>
+<dd class="defbody">
+Stop responding to <var>Service</var>. If Prolog is halted, it will 
+automatically call this on all open services.
+</dd>
+<dt class="pubdef"><a id="dde_current_service/2"><strong>dde_current_service</strong>(<var>-Service, 
+-Topic</var>)</a></dt>
+<dd class="defbody">
+Find currently registered services and the topics served on them.
+</dd>
+<dt class="pubdef"><a id="dde_current_connection/2"><strong>dde_current_connection</strong>(<var>-Service, 
+-Topic</var>)</a></dt>
+<dd class="defbody">
+Find currently open conversations.
+</dd>
+</dl>
+
+<p></body></html>

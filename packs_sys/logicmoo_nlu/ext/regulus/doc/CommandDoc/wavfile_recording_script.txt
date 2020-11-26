@@ -1,0 +1,32 @@
+Relevant to translation applications. If output speech is to be
+produced using recorded wavfiles, points to an automatically created
+file that holds a script which can be used to create the missing
+wavfiles. This script is produced by finding all the lexical items in
+the file referenced by generation\_\-rules, and creating an entry for
+every item not already in wavfile\_\-directory. The file is created as
+part of the processing carried out by the LOAD\_\-TRANSLATE command.
+
+Due to limitations of some operating systems the script contains some latin-1 characters translated to character sequences shown in the table below. 
+\begin{verbatim}
+Char   Translates to
+á      a1
+â      a2
+à      a3
+ä      a4
+å      a5
+ç      c1
+é      e1
+ê      e2
+è      e3
+ë      e4
+æ      e6
+ñ      n1
+ó      o1
+ô      o2
+ò      o3
+ö      o4
+ú      u1
+û      u2
+ù      u3
+ü      u4
+\end{verbatim}

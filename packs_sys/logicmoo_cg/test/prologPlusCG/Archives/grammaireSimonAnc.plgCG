@@ -1,0 +1,124 @@
+phrase(P) :- ph(P, ()).
+ph(P, P1) :- sn(P, P2), sv(P2, P1), /.
+
+sn(P, P1) :- nomPropre(P, P1), /.
+sn(P, P1) :- 
+  det(P, P2), 
+  sadj(P2, P3), 
+  nom(P3, P4), 
+  suiteGN(P4, P1), /.
+sn(P, P1) :- quant(P, P2), sn(P2, P1), /.
+
+suiteGN(P, P1) :- sprep(P, P1), /.
+suiteGN(P, P1) :- phRelative(P, P1), /.
+suiteGN(P, P).
+
+sadj(P, P1) :- adj(P, P1), /.
+sadj(P, P1) :- adv(P, P2), adj(P2, P1), /.
+sadj(P, P).
+
+sprep(P, P1) :- prep(P, P2), sn(P2, P1), /.
+
+sv(P, P1) :- gv(P, P2), suiteSV(P2, P1), /.
+suiteSV(P, P1) :- sn(P, P1), /.
+suiteSV(P, P1) :- sprep(P, P1), /.
+suiteSV(P, P1) :- phComp(P, P1), /.
+suiteSV(P, P).
+
+gv(P, P1) :- constrVerbale(P, P2), suiteGV(P2, P1), /.
+suiteGV(P, P1) :- adv(P, P1), /.
+suiteGV(P, P).
+
+constrVerbale(P, P1) :- est(P, P2), suiteConstrVerbale(P2, P1), /.
+constrVerbale(P, P1) :- aux(P, P2), participe(P2, P1), /.
+constrVerbale(P, P1) :- verbe(P, P1), /.
+
+suiteConstrVerbale(P, P1) :- participe(P, P1), /.
+suiteConstrVerbale(P, P1) :- sadj(P, P1), /.
+suiteConstrVerbale(P, P).
+
+phRelative(P, P1) :- pronom(P, P2), phInterne(P2, P1), /.
+phComp(P, P1) :- conj(P, P2), phInterne(P2, P1), /.
+
+phInterne(P, P1) :-
+  snEventuel(P, P2),
+  sv(p2, P1), /.
+
+snEventuel(P, P1) :- sn(P, P1), /.
+snEventuel(P, P). 
+
+nomPropre((N|P), P) :- nomPropre(N), /.
+nom((N|P), P) :- nom(N), /.
+
+det((N|P), P) :- det(N), /.
+adj((N|P), P) :- adj(N), /.
+adv((N|P), P) :- adv(N), /.
+prep((N|P), P) :- prep(N), /.
+verbe((N|P), P) :- verbe(N), /.
+est((N|P), P) :- etre(N), /.
+
+aux((N|P), P) :- aux(N), /.
+participe((N|P), P) :- participe(N), /.
+pronom((N|P), P) :- pronom(N), /.
+conj((N|P), P) :- conj(N), /.
+quant((N|P), P) :- quant(N), /.
+
+ 
+nomPropre(pierre).
+nomPropre(paul).
+
+nom(soeur).
+nom(soupe).
+nom(mere).
+nom(chien).
+nom(os).
+nom(cour).
+nom(voisine).
+nom(voisine).
+nom(colis).
+nom(frere).
+nom(membres).
+nom(famille).
+nom(informatique).
+nom(travail).
+
+det(ma).
+det(mon).
+det(la).
+det(le).
+det(les).
+det(ll).
+det(du).
+
+adj(jolie).
+adj(gros).
+
+adv(tres).
+adv(bien).
+adv(hier).
+
+prep(de).
+prep(dans).
+
+verbe(pense).
+// remplacer par l'entree est : lexicon(est, verbe).
+verbe(aime).
+verbe(était).
+verbe(disent).
+verbe(apporte).
+
+etre(est).
+
+aux(aa).
+aux(avait).
+
+participe(arrivé).
+participe(commandé).
+participe(rongé).
+
+pronom(qui).
+pronom(que).
+
+conj(que).
+
+quant(tous).

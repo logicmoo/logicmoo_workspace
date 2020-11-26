@@ -1,0 +1,60 @@
+Installation - Quick guide
+==========================
+
+- I'm assuming you're running Linux (but it might work on any Unix environment).
+- You should have Perl installed in order to run the Flash policy server.
+
+1 - Flash Policy Server
+-----------------------
+
+First, you MUST set up a Flash policy server in order to make the Flash
+plugin connect to your MUD server. Since it uses Flash (and its sockets lib)
+hMUD WILL NOT connect if you do not have the policy server running and properly
+configured.
+
+Fortunately, there's already a policy server bundled with hMUD. I got this one
+from:
+
+    http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html
+
+It's already distributed within hMUD and it's simple to use. From the hMUD root
+folder, just run:
+
+    ./policyd
+
+Ok, now it should be listening the port 4010 and ready to authorize Flash to
+connect from any website running the client to any port of your MUD server.
+
+2 - Configuring hMUD
+--------------------
+
+    - Edit config.js
+    - Change the host entry to your MUD hostname or IP number
+    - Change the port entry to the port number in which your MUD is running
+
+3 - Run the client!
+-------------------
+
+Ok, there's more to do probably. But that's the minimal configuration necessary
+to make hMUD work and access your MUD.
+
+Let's assume you installed hMUD in <yourmudname.com/hmud/>, from a web browser
+like Firefox, Google Chrome or IE7 (please, not Lynx...) access this link:
+
+    http://yourmudname.com/hmud/hmud.html
+
+IT SHOULD WORK INSTANTLY!
+
+And that's all, hMUD should be running right now.
+
+4 - Messages in your language
+-----------------------------
+
+If you want hMUD in English, just run this command:
+
+    cp messages.en.js messages.js
+
+hMUD uses the messages in message.js to display messages. If you want to see
+hMUD in other languages, please, just translate messages.js to your language
+and reload hMUD in your browser. Clear the browser cache if that doesn't work!
+

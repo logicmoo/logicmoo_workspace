@@ -1,0 +1,18 @@
+Splits the speech translation corpus output file, defined by the {\tt
+translation\_\-speech\_\-corpus} config file entry, into 
+\begin{itemize} 
+\item an in-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg2$\rangle$)}
+config file entry, and
+
+\item an out-of-coverage part defined by a {\tt
+translation\_\-speech\_\-corpus($\langle$Arg3$\rangle$)}
+config file entry.  
+\end{itemize}
+Coverage is with respect to the top-level grammar {\tt
+$\langle$Arg1$\rangle$}, which must be loaded.
+
+Typical call: 
+\begin{verbatim}
+SPLIT_SPEECH_CORPUS .MAIN in_coverage out_of_coverage
+\end{verbatim}

@@ -1,0 +1,37 @@
+(note "TQF128d - needs work")
+(abort)
+
+(instance PKKAttack038-1 Action) 
+(sponsorsAgentInAction Iran KurdistanWorkersParty PKKAttack038-1) 
+(instance PKKAttack038-2 Action) 
+(sponsorsAgentInAction Iran KurdistanWorkersParty PKKAttack038-2) 
+
+(instance 
+ (MediumAmountFn EconomicSupport) InterAgentSupportAttribute) 
+
+(givesSupportToAgent Iran KurdistanWorkersParty 
+ (MediumAmountFn EconomicSupport)) 
+
+(query (findall ?ACTION ?DEGREE ?IRAN-RELATED-TO-PKK)
+  (thereExists ?IRAN-RELATION-TO-PKK 
+    (or 
+       (?PKK-RELATED-TO-IRAN KurdistanWorkersParty Iran) 
+       (?IRAN-RELATION-TO-PKK Iran KurdistanWorkersParty) 
+       (?PKK-RELATED-TO-IRAN KurdistanWorkersParty Iran ?OTHER) 
+       (and 
+           (?IRAN-RELATED-TO-PKK Iran KurdistanWorkersParty ?ACTION) 
+           (instance ?ACTION Action)) 
+       (and 
+           (?IRAN-RELATED-TO-PKK Iran KurdistanWorkersParty ?DEGREE) 
+           (instance ?DEGREE InterAgentSupportAttribute)) 
+       (?PKK-RELATED-TO-IRAN KurdistanWorkersParty ?OTHER Iran) 
+       (?IRAN-RELATED-TO-PKK Iran ?OTHER KurdistanWorkersParty) 
+       (?PKK-RELATED-TO-IRAN ?OTHER KurdistanWorkersParty Iran) 
+       (?IRAN-RELATED-TO-PKK ?OTHER Iran KurdistanWorkersParty))))
+
+(answer PKKAttack038-1 ?? sponsorsAgentInAction)
+(answer PKKAttack038-2 ?? sponsorsAgentInAction)
+(answer ?? (MediumAmountFn EconomicSupport) givesSupportToAgent)
+(end_of_file)
+
+

@@ -1,0 +1,44 @@
+
+Compile and load the Regulus grammar defined by the {\tt
+regulus\_\-grammar} config file entry in DCG and left-corner form,
+including extra rules useful for grammar debugging. This makes
+parsing slightly slower.
+
+When the grammar is loaded in this form, a top-level input of the form
+\begin{verbatim}
+<CategoryName> <Sentence> 
+\end{verbatim} 
+is treated as a request to parse {\tt $\langle$Sentence$\rangle$} as an instance of
+{\tt $\langle$CategoryName$\rangle$}, printing out semantic and feature values. 
+\ref{Figure:LOAD-DEBUG-example} shows an example using the Toy1 grammar.
+\begin{figure}
+\begin{verbatim}
+>> LOAD_DEBUG
+
+(...)
+
+>> np the light
+(Parsing with left-corner parser)
+
+Analysis time: 0.00 seconds
+
+Return value: [[device,light]]
+
+Global value: []
+
+Syn features: [sem_np_type=switchable\/dimmable,singplur=sing]
+
+Parse tree:
+
+np [TOY1_RULES:25-29]
+/  lex(the)
+\  noun lex(light) [TOY1_LEXICON:16-17]
+
+------------------------------- FILES -------------------------------
+
+TOY1_LEXICON: d:/regulus/examples/toy1/regulus/toy1_lexicon.regulus
+TOY1_RULES:   d:/regulus/examples/toy1/regulus/toy1_rules.regulus
+\end{verbatim} 
+\caption{Example showing use of {\tt LOAD\_DEBUG}}
+\label{Figure:LOAD-DEBUG-example}
+\end{figure}

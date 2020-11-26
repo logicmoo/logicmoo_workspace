@@ -1,0 +1,125 @@
+# 
+# Copyright (c) 2005 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Common Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/cpl-v10.html
+# 
+# Contributors:
+# IBM - Initial implementation
+# 
+
+loading examples/Mueller2006/Chapter8/MovingRobot.e
+loading foundations/Root.e
+loading foundations/EC.e
+168 variables and 3690 clauses
+relsat solver
+1 model
+---
+model 1:
+0
+Direction(Robot1, 0).
+Location(Robot1, 0, 0).
+Happens(MoveRightWheel(Robot1), 0).
+1
+-Direction(Robot1, 0).
++Direction(Robot1, 1).
+Happens(MoveLeftWheel(Robot1), 1).
+Happens(MoveRightWheel(Robot1), 1).
+2
+-Location(Robot1, 0, 0).
++Location(Robot1, 2, 1).
+3
+P
+!Happens(MoveLeftWheel(Robot1), 0).
+!Happens(MoveLeftWheel(Robot1), 2).
+!Happens(MoveLeftWheel(Robot1), 3).
+!Happens(MoveRightWheel(Robot1), 2).
+!Happens(MoveRightWheel(Robot1), 3).
+!ReleasedAt(Direction(Robot1, 0), 0).
+!ReleasedAt(Direction(Robot1, 0), 1).
+!ReleasedAt(Direction(Robot1, 0), 2).
+!ReleasedAt(Direction(Robot1, 0), 3).
+!ReleasedAt(Direction(Robot1, 1), 0).
+!ReleasedAt(Direction(Robot1, 1), 1).
+!ReleasedAt(Direction(Robot1, 1), 2).
+!ReleasedAt(Direction(Robot1, 1), 3).
+!ReleasedAt(Direction(Robot1, 2), 0).
+!ReleasedAt(Direction(Robot1, 2), 1).
+!ReleasedAt(Direction(Robot1, 2), 2).
+!ReleasedAt(Direction(Robot1, 2), 3).
+!ReleasedAt(Direction(Robot1, 3), 0).
+!ReleasedAt(Direction(Robot1, 3), 1).
+!ReleasedAt(Direction(Robot1, 3), 2).
+!ReleasedAt(Direction(Robot1, 3), 3).
+!ReleasedAt(Location(Robot1, 0, 0), 0).
+!ReleasedAt(Location(Robot1, 0, 0), 1).
+!ReleasedAt(Location(Robot1, 0, 0), 2).
+!ReleasedAt(Location(Robot1, 0, 0), 3).
+!ReleasedAt(Location(Robot1, 0, 1), 0).
+!ReleasedAt(Location(Robot1, 0, 1), 1).
+!ReleasedAt(Location(Robot1, 0, 1), 2).
+!ReleasedAt(Location(Robot1, 0, 1), 3).
+!ReleasedAt(Location(Robot1, 0, 2), 0).
+!ReleasedAt(Location(Robot1, 0, 2), 1).
+!ReleasedAt(Location(Robot1, 0, 2), 2).
+!ReleasedAt(Location(Robot1, 0, 2), 3).
+!ReleasedAt(Location(Robot1, 0, 3), 0).
+!ReleasedAt(Location(Robot1, 0, 3), 1).
+!ReleasedAt(Location(Robot1, 0, 3), 2).
+!ReleasedAt(Location(Robot1, 0, 3), 3).
+!ReleasedAt(Location(Robot1, 1, 0), 0).
+!ReleasedAt(Location(Robot1, 1, 0), 1).
+!ReleasedAt(Location(Robot1, 1, 0), 2).
+!ReleasedAt(Location(Robot1, 1, 0), 3).
+!ReleasedAt(Location(Robot1, 1, 1), 0).
+!ReleasedAt(Location(Robot1, 1, 1), 1).
+!ReleasedAt(Location(Robot1, 1, 1), 2).
+!ReleasedAt(Location(Robot1, 1, 1), 3).
+!ReleasedAt(Location(Robot1, 1, 2), 0).
+!ReleasedAt(Location(Robot1, 1, 2), 1).
+!ReleasedAt(Location(Robot1, 1, 2), 2).
+!ReleasedAt(Location(Robot1, 1, 2), 3).
+!ReleasedAt(Location(Robot1, 1, 3), 0).
+!ReleasedAt(Location(Robot1, 1, 3), 1).
+!ReleasedAt(Location(Robot1, 1, 3), 2).
+!ReleasedAt(Location(Robot1, 1, 3), 3).
+!ReleasedAt(Location(Robot1, 2, 0), 0).
+!ReleasedAt(Location(Robot1, 2, 0), 1).
+!ReleasedAt(Location(Robot1, 2, 0), 2).
+!ReleasedAt(Location(Robot1, 2, 0), 3).
+!ReleasedAt(Location(Robot1, 2, 1), 0).
+!ReleasedAt(Location(Robot1, 2, 1), 1).
+!ReleasedAt(Location(Robot1, 2, 1), 2).
+!ReleasedAt(Location(Robot1, 2, 1), 3).
+!ReleasedAt(Location(Robot1, 2, 2), 0).
+!ReleasedAt(Location(Robot1, 2, 2), 1).
+!ReleasedAt(Location(Robot1, 2, 2), 2).
+!ReleasedAt(Location(Robot1, 2, 2), 3).
+!ReleasedAt(Location(Robot1, 2, 3), 0).
+!ReleasedAt(Location(Robot1, 2, 3), 1).
+!ReleasedAt(Location(Robot1, 2, 3), 2).
+!ReleasedAt(Location(Robot1, 2, 3), 3).
+!ReleasedAt(Location(Robot1, 3, 0), 0).
+!ReleasedAt(Location(Robot1, 3, 0), 1).
+!ReleasedAt(Location(Robot1, 3, 0), 2).
+!ReleasedAt(Location(Robot1, 3, 0), 3).
+!ReleasedAt(Location(Robot1, 3, 1), 0).
+!ReleasedAt(Location(Robot1, 3, 1), 1).
+!ReleasedAt(Location(Robot1, 3, 1), 2).
+!ReleasedAt(Location(Robot1, 3, 1), 3).
+!ReleasedAt(Location(Robot1, 3, 2), 0).
+!ReleasedAt(Location(Robot1, 3, 2), 1).
+!ReleasedAt(Location(Robot1, 3, 2), 2).
+!ReleasedAt(Location(Robot1, 3, 2), 3).
+!ReleasedAt(Location(Robot1, 3, 3), 0).
+!ReleasedAt(Location(Robot1, 3, 3), 1).
+!ReleasedAt(Location(Robot1, 3, 3), 2).
+!ReleasedAt(Location(Robot1, 3, 3), 3).
+EC: 7 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+MovingRobot: 0 predicates, 2 functions, 2 fluents, 2 events, 21 axioms
+Root: 0 predicates, 0 functions, 0 fluents, 0 events, 0 axioms
+encoding 2.3s
+solution 0.1s
+total 3.1s
+Discrete Event Calculus Reasoner 1.0

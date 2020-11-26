@@ -1,0 +1,182 @@
+%====================================================================
+%----This outputs TPTP Problem Set clauses in a format acceptable to 
+%----the TUM SETHEO system.
+%----
+%----Written by Geoff Sutcliffe, July, 1992.
+%----Revised by Geoff Sutcliffe, January 1994.
+%====================================================================
+%--------------------------------------------------------------------
+%----Output the atoms, separated and terminated as indicated.
+%----First case, there never were any of this sign.
+output_setheo_atoms([],_,_,_,Terminator,no):-
+    !,
+    write(Terminator).
+
+%----The last one, if there ever were any
+output_setheo_atoms([OneAtom],NL,Prefix,_,Terminator,yes):-
+    !,
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Terminator).
+
+%----More than one, write separated
+output_setheo_atoms([OneAtom,TwoAtoms|RestOfAtoms],NL,Prefix,
+Separator,Terminator,yes):-
+    (NL == yes ->
+        (nl,
+            write(Prefix));
+        true),
+    write(OneAtom),
+    write(Separator),
+    output_setheo_atoms([TwoAtoms|RestOfAtoms],yes,Prefix,
+Separator,Terminator,_).
+%-------------------------------------------------------------------
+%----Extract the atoms of literals with the given sign
+select_setheo_atoms_with_sign(_,[],[]).
+
+select_setheo_atoms_with_sign(Sign,[Literal|Rest],[Atom|SelectedRest]):-
+    Literal =.. [Sign,Atom],
+    !,
+    select_setheo_atoms_with_sign(Sign,Rest,SelectedRest).
+
+select_setheo_atoms_with_sign(Sign,[_|Rest],SelectedRest):-
+    select_setheo_atoms_with_sign(Sign,Rest,SelectedRest).
+%-------------------------------------------------------------------
+%----Output signed literals, separated and terminated appropriately
+output_setheo_sign_literals(Literals,Sign,NL,Prefix,Separator,Terminator,
+NextNL):-
+    select_setheo_atoms_with_sign(Sign,Literals,Atoms),
+    output_setheo_atoms(Atoms,NL,Prefix,Separator,Terminator,NextNL).
+%-------------------------------------------------------------------
+%----Set the SETHEO sign of all the literals 
+set_setheo_signs([],_,[]).
+
+set_setheo_signs([FirstLiteral|RestOfLiterals],Sign,[SpacedAtom|
+RestOfFlippedLiterals]):-
+    FirstLiteral =.. [Sign,Atom],
+    Atom =.. [Symbol|Arguments],
+    concatenate_atoms([' ',Symbol],SpacedSymbol),
+    SpacedAtom =.. [SpacedSymbol|Arguments],
+    set_setheo_signs(RestOfLiterals,Sign,RestOfFlippedLiterals).
+
+set_setheo_signs([FirstLiteral|RestOfLiterals],Sign,[TildedAtom|
+RestOfFlippedLiterals]):-
+    tptp2X_invert_sign(Sign,FlipSign),
+    FirstLiteral =.. [FlipSign,Atom],
+    Atom =.. [Symbol|Arguments],
+    concatenate_atoms(['~',Symbol],TildedSymbol),
+    TildedAtom =.. [TildedSymbol|Arguments],
+    set_setheo_signs(RestOfLiterals,Sign,RestOfFlippedLiterals).
+%-------------------------------------------------------------------
+%----Output clause in format based on its type.
+%----Special case for the empty clause - make a simple problem
+output_setheo_clause(Style,Type,[]):-
+    !,
+    output_setheo_clauses(Style,[input_clause(positive_dummy,Type,[++dummy]),
+input_clause(negative_dummy,Type,[--dummy])]).
+
+%----Semantic constants
+output_setheo_clause(Style,Type,[++ '$false']):-
+    !,
+    output_setheo_clauses(Style,[input_clause(positive_dummy,Type,[++dummy]),
+input_clause(negative_dummy,Type,[--dummy])]).
+
+output_setheo_clause(Style,Type,[++ '$true']):-
+    !,
+    output_setheo_clauses(Style,[input_clause(dummy,Type,[++dummy,--dummy])]).
+
+%----The default sign (sequent) style
+output_setheo_clause(sign,_,Literals):-
+    output_setheo_sign_literals(Literals,++,no,'',';',' <- ',NextNL),
+    output_setheo_sign_literals(Literals,--,NextNL,'    ',',','.',_).
+
+%----type style for negative non-conjectures. Move one literal across.
+output_setheo_clause(type,Type,[FirstLiteral|RestOfLiterals]):-
+    tptp2X_member(Type,[axiom,hypothesis,lemma,theorem,definition]),
+    \+ tptp2X_member(++_,[FirstLiteral|RestOfLiterals]),
+    !,
+    write('# First literal moved to make clause a non-query'),
+    nl,
+    set_setheo_signs([FirstLiteral],++,[PositiveFirstLiteral]),
+    output_setheo_atoms([PositiveFirstLiteral],no,'',';',' <- ',NextNL),
+    output_setheo_sign_literals(RestOfLiterals,--,NextNL,'    ',',','.',_).
+
+%----type style for other non-conjectures
+output_setheo_clause(type,Type,Literals):-
+    tptp2X_member(Type,[axiom,hypothesis,lemma,theorem,definition]),
+    output_setheo_clause(sign,Type,Literals).
+
+%----type style for conjectures
+output_setheo_clause(type,conjecture,Literals):-
+    write('# All literals moved to make clause a query'),
+    nl,
+    set_setheo_signs(Literals,--,SetLiterals),
+    output_setheo_sign_literals([],++,no,'',';',' <- ',NextNL),
+    output_setheo_atoms(SetLiterals,NextNL,'    ',',','.',_).
+%-------------------------------------------------------------------
+%----Output each clause, preceded by a comment with it's name and
+%----status.
+output_setheo_clauses(_,[]).
+
+%----Output in sequent format
+output_setheo_clauses(Style,[input_clause(Name,Type,Literals)|
+RestOfClauses]):-
+    write('# '),
+    write(Name),
+    write(', '),
+    write(Type),
+    write('.'),
+    nl,
+    output_setheo_clause(Style,Type,Literals),
+    nl,
+    nl,
+    output_setheo_clauses(Style,RestOfClauses).
+%-------------------------------------------------------------------
+%----Choose the style required, based on this email ...
+%----IF there is no negative non-conjecture (axiom or hypothesis) clause THEN
+%----   DO sign (the old conversion: no shifting of literals across <-)
+%----ELSE
+%----   (i.e., there exists a negative non-conjecture clause)
+%----   DO type (conjecture/nonconjecture clause type specific conversion:
+%----      in all negative non-conjecture clauses all literals are shifted to 
+%----   the left of "<-", and in all conjecture clauses all literals are 
+%----   shifted to the right of "<-").
+%----
+%----In the type conversion, it is in fact sufficient to move 1 literal from
+%----the right to the left of "<-", because this already makes it a non-query.
+%----Yeah, do that. Ideally, also print a comment saying something (like
+%----"literal moved to make clause a non-query".
+
+choose_setheo_style(sign,_,sign).
+
+choose_setheo_style(type,Clauses,type):-
+    tptp2X_member(input_clause(_,Type,Literals),Clauses),
+    tptp2X_member(Type,[axiom,hypothesis,lemma,definition]),
+    \+ tptp2X_member(++_,Literals),
+    !.
+
+choose_setheo_style(type,_,sign).
+%-------------------------------------------------------------------
+%----Output the clauses, preceded by the problem name as a comment.
+setheo(setheo:Style,Clauses,_):-
+    tptp_clauses(Clauses),
+    choose_setheo_style(Style,Clauses,ChosenStyle),
+    output_setheo_clauses(ChosenStyle,Clauses).
+
+%----Do nothing for FOF - just leave a comment
+setheo(setheo:_,Formulae,_):-
+    tptp_formulae(Formulae),
+    !,
+    write('ERROR: No FOF format available in SETHEO'),
+    nl.
+%-------------------------------------------------------------------
+%----Provide information about the SETHEO format
+setheo_format_information('#','.lop').
+%-------------------------------------------------------------------
+%----Provide information about the SETHEO file
+setheo_file_information(format,setheo:sign,
+'Variant is sign or type').
+%-------------------------------------------------------------------

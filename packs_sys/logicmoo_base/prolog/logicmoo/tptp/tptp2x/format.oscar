@@ -1,0 +1,187 @@
+%==============================================================================
+%----Procedures for writing out clauses in OSCAR format
+%----
+%----Written by Geoff Sutcliffe, January 1997
+%==============================================================================
+%------------------------------------------------------------------------------
+%----Rename each variable for OSCAR which want unique variable names
+%----and disallows V. At this stage the variables are Prolog ones so
+%----it can be done by instantiation.
+rename_oscar_variables_in_formulae([],[]).
+
+rename_oscar_variables_in_formulae([fof(Name,Status,Formula)|
+RestOfFormulae],[fof(Name,Status,UniqueFormula)|
+RestOfRenamedFormulae]):-
+    single_variable_quantification(Formula,SingleVariablesFormula),
+    unique_quantification(SingleVariablesFormula,UniqueFormula),
+    numbervars(UniqueFormula,26,_),
+    rename_oscar_variables_in_formulae(RestOfFormulae,RestOfRenamedFormulae).
+%------------------------------------------------------------------------------
+%----Rename each variable for OSCAR which want unique variable names
+%----and disallows V. 
+rename_oscar_variables_in_fof(Formulae,RenamedFormulae):-
+    reload_formulae(Formulae,[],ReloadedFormulae,_),
+    rename_oscar_variables_in_formulae(ReloadedFormulae,RenamedFormulae).
+%------------------------------------------------------------------------------
+%----Recognise and split up quantified formulae
+oscar_quantified_formula(QuantifiedFormula,OtterQuantifier,Variables,
+Formula):-
+    QuantifiedFormula =.. [:,Quantification,Formula],
+    !,
+    Quantification =.. [Quantifier,Variables],
+    tptp2X_member((Quantifier)-(OtterQuantifier),[('!')-(all),('?')-(some)]).
+%------------------------------------------------------------------------------
+%----Recognise and split up binary formulae
+oscar_binary_formula(BinaryFormula,OtterConnective,LHS,RHS):-
+    BinaryFormula =.. [Connective,LHS,RHS],
+    tptp2X_member((Connective)-(OtterConnective),
+[('<=>')-('<->'),('=>')-('->'),('&')-('&'),(';')-('v'),('|')-('v')]).
+%----Both needed after shorten which sets '|' somewhere - need to check
+%----|;BUG
+%------------------------------------------------------------------------------
+%----Recognise and split up unary formulae
+oscar_unary_formula(UnaryFormula,OtterConnective,Formula):-
+    UnaryFormula =.. [Connective,Formula],
+%----Had to use ()s due to some Prolog confusion about -
+    tptp2X_member((Connective)-(OtterConnective),[('~')-('~')]).
+%------------------------------------------------------------------------------
+%----The format for outputing quantified formulae in oscar format
+%----FormulaPrefix,VariablesPrefix,VariablesSeparator,VariablesSuffix,
+%----FormulaSuffix
+oscar_quantified_format('( ',' ','*',' ',' )').
+
+%----PrefixBracket,ConnectivePrefix,ConnectiveSuffix,SuffixBracket
+oscar_binary_format('(','','',' )').
+
+%----FormulaPrefix,ConnectiveSuffix,FormulaSuffix
+oscar_unary_format('( ',' ',' )').
+%------------------------------------------------------------------------------
+%----Output predicates and terms in prefix brackets
+output_oscar_term([OneTerm]):-
+    !,
+    output_oscar_term(OneTerm).
+
+output_oscar_term([FirstTerm|RestOfTerms]):-
+    !,
+    output_oscar_term(FirstTerm),
+    write(' '),
+    output_oscar_term(RestOfTerms).
+
+%----Numbervarsed variables
+output_oscar_term('$VAR'(Index)):-
+    !,
+    write('$VAR'(Index)).
+
+%----Variables and constants
+output_oscar_term(Term):-
+    atomic(Term),
+    !,
+    write(Term).
+
+%----Complex terms
+output_oscar_term(Complex):-
+    Complex =.. [Symbol|Arguments],
+    write('('),
+    write(Symbol),
+    write(' '),
+    output_oscar_term(Arguments),
+    write(')').
+%------------------------------------------------------------------------------
+%----Output variables 
+oscar_output_variable(Variable):-
+    output_oscar_term(Variable).
+%------------------------------------------------------------------------------
+%----Output atoms 
+oscar_output_atom(_,Atom):-
+    output_oscar_term(Atom).
+%------------------------------------------------------------------------------
+%----Write a oscar formula in fof form
+output_oscar_formula(fof(Name,Status,Formula)):-
+    write(';----'),
+    write(Name),
+    write(','),
+    write(Status),
+    nl,
+    write('  ('),
+    nl,
+    output_generic_prefix_formula(oscar,Formula),
+    nl,
+    write('  1.0)'),
+    nl.
+%------------------------------------------------------------------------------
+%----Write out each formula in OSCAR format
+output_oscar_formulae([]).
+
+output_oscar_formulae([OneFormula]):-
+    !,
+    output_oscar_formula(OneFormula).
+
+output_oscar_formulae([FirstFormula|RestOfFormulae]):-
+    output_oscar_formula(FirstFormula),
+    nl,
+    output_oscar_formulae(RestOfFormulae).
+%------------------------------------------------------------------------------
+%----Write list of formulae in wrapper brackets
+output_oscar_formulae_list(Type,Formulae):-
+    write(';----'),
+    write(Type),
+    nl,
+    write('('),
+    nl,
+    output_oscar_formulae(Formulae),
+    nl,
+    write(')'),
+    nl.
+%------------------------------------------------------------------------------
+%----This writes out OSCAR format formulae
+oscar(oscar,Clauses,_):-
+    tptp_clauses(Clauses),
+    !,
+    write('ERROR: No CNF format available in OSCAR'),
+    nl.
+
+oscar(oscar,Formulae,_):-
+    tptp_formulae(Formulae),
+%----Check there is a conjecture
+    tptp2X_member(fof(_,conjecture,_),Formulae),
+    !,
+%----Rename variables for OSCAR restrictions
+    rename_oscar_variables_in_fof(Formulae,RenamedFormulae),
+%----Take out the conjecture
+    tptp2X_select(fof(Name,conjecture,Formula),RenamedFormulae,
+Premises),
+%----Write problem header - no number sequence possible
+    write('(setf *problems* ''('),
+    nl,
+    write(';----Problem number 1'),
+    nl,
+    write('(1'),
+    nl,
+    nl,
+%----Output the non-conjecture formulae
+    output_oscar_formulae_list('Premises',Premises),
+    nl,
+%----Output the conjecture formulae
+    output_oscar_formulae_list('Conclusions',[fof(Name,conjecture,
+Formula)]),
+    nl,
+%----Output trailing gumf
+    write(';----Substantive reasons'),
+    nl,
+    write('    nil nil nil nil'),
+    nl,
+    write(';----Identifying string'),
+    nl,
+    write('    ""'),
+    nl,
+    write(')'),
+    nl,
+    write('))'),
+    nl.
+%------------------------------------------------------------------------------
+%----Provide information about the OSCAR format
+oscar_format_information(';','.oscar').
+%------------------------------------------------------------------------------
+%----Provide information about the OSCAR file
+oscar_file_information(format,oscar,'OSCAR format').
+%------------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+(note "syllogism soundness check")
+
+(forall ?X (implies (M ?X) (P ?X))) 
+
+(not (exists ?X (and (S ?X) (M ?X))))
+
+(queryyn 
+(not (exists ?X (and (S ?X) (P ?X))))
+)
+
+(answer Unproven)
+
+(end_of_file)
