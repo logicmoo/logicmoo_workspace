@@ -41,12 +41,12 @@
 :- link_foreign_library(m).
 :- gen_foreign_library(plbin(libarithex)).
 
-:- pred [user:cbrt( +num, -B:num),
-         user:exp10(+num, -B:num),
-         user:exp2( +num, -B:num),
-         user:expm1(+num, -B:num),
-         user:log1p(+num, -B:num),
-         user:log2( +num, -B:num),
+:- pred [user:cbrt(  +num, -B:num),
+         user:exp10( +num, -B:num),
+         user:exp2(  +num, -B:num),
+         user:expm1( +num, -B:num),
+         user:log1p( +num, -B:num),
+         user:log2(  +num, -B:num),
          user:tgamma(+num, -B:num),
          user:hypot(+num, +num, -B:num)
         ] is (det, returns(B), foreign).

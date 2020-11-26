@@ -36,9 +36,7 @@
 
 :- use_module(library(assertions)).
 :- use_module(library(assertions_op)).
-:- use_module(library(predicate_from)).
 :- use_module(user:library(plprops)).
-:- use_module(library(pldoc/doc_modes)).
 
 :- create_prolog_flag(assrt_comment, yes, [type(atom)]).
 

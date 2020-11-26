@@ -34,6 +34,7 @@
 
 :- module(arithex, []).
 
+:- use_module(library(arithmetic)).
 :- use_module(library(libarithex)).
 
 :- arithmetic_function(user:cbrt/1).
