@@ -148,6 +148,7 @@ do_rtcheck(Status, Call, PLoc) :-
 :- meta_predicate rtcheck_call(+,0,+).
 
 rtcheck_call(Status, Call, PLoc) :-
-    rtchecks_disable,
-    \+ do_rtcheck(Status, Call, PLoc),
-    rtchecks_enable.
+    setup_call_cleanup(
+        rtchecks_disable,
+        \+ do_rtcheck(Status, Call, PLoc),
+        rtchecks_enable).
