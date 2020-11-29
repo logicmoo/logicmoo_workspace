@@ -2,6 +2,6 @@
 <Workspace Version="10.0" VendorName="SlickEdit">
 	<Projects>
 		<Project File="logicmoo_workspace.vpj"/>
-		<Project File="packs_xtra/packs_xtra.vpj"/>
+		<Project File="other_files.vpj"/>
 	</Projects>
 </Workspace>

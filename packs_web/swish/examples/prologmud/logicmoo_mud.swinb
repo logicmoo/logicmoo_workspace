@@ -12,7 +12,7 @@
    retry in 5 minutes as the server likely restarting for running tests
 
 </pre>
-<iframe src="https://logicmoo.org/port3100/" frameborder="0" style="overflow:hidden;width:100%" height="800px" width="100%"></iframe>
+<iframe src="https://logicmoo.org:13100/" frameborder="0" style="overflow:hidden;width:100%" height="800px" width="100%"></iframe>
 </div>
 
 

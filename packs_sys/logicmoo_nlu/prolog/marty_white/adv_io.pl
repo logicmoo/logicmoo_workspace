@@ -132,11 +132,13 @@ bug(_) :- debugging(adv(unknown), YN), !, YN.
 
 term_to_pretty_string(L, LinePrefix, SO):-
   string_concat("\n", LinePrefix, SC),
-  sformat(S, '~@', [prolog_pprint(L, [])]),
+  sformat(S, '~@', [prolog_pprint(L)]),
   split_string(S, "", "\s\t\n", [SS]),
   replace_in_string("\n", SC, SS, SSS),
   string_concat(LinePrefix, SSS, SO).
 
+prolog_pprint(Term):- prolog_pprint(Term, []).
+%prolog_pprint(Term, Options):- Options ==[],pprint_ecp_cmt(blue, Term),!.
 prolog_pprint(Term, Options):-
    \+ \+ (portray_vars:pretty_numbervars(Term, Term2),
           prolog_pretty_print:print_term(Term2, [ portray(true), output(current_output)|Options])).

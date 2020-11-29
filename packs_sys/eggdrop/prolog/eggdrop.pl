@@ -633,10 +633,10 @@ irc_hooks:on_irc_msg(_Channel,_User,_Stuff):-fail.
 recordlast(Channel,User,say(What)):-!,retractall(lmconf:chat_isChannelUserAct(Channel,User,say,_)),asserta(lmconf:chat_isChannelUserAct(Channel,User,say,What)),!.
 recordlast(Channel,User,What):-functor(What,F,_),retractall(lmconf:chat_isChannelUserAct(Channel,User,F,_)),asserta(lmconf:chat_isChannelUserAct(Channel,User,F,What)),!.
 
-tg_name_name_text(StringIn, _Name, _Value) :-
-        atom_concat(" ", _, StringIn),!,fail.
+/*
+% tg_name_name_text(StringIn, _Name, _Value) :- atom_concat(" ", _, StringIn),!,fail.
 tg_name_name_text(User, String, User, Value) :-
-  \+ t_l:session_prefix(_),
+ % \+ t_l:session_prefix(_),
   sub_string(String, Before, _, _, ': '), Before>1,!, 
   sub_string(String, 0, Before, _, ChannelTrim),
   \+ atom_contains(ChannelTrim, " "),
@@ -648,16 +648,24 @@ tg_name_name_text(User, String, User, Value) :-
 
 tg_name_name_text(_User, String, Name, Value) :- 
   tg_name_text( String, Name, Value),!.
+*/
 
 % awaiting some inputs
 
+name_value_split(String, Splitter, Name, Value) :-
+        sub_string(String, Before, _, After, Splitter), !, Before>0, After>0,
+        get_text_restore_pred(String,Restore),
+        sub_string(String, 0, Before, _, NameR),
+        sub_string(String, _, After, 0, ValueR),
+        call(Restore, NameR, Name),
+        call(Restore, ValueR, Value),!.
+
+
 tg_name_text(StringIn, Name, Value) :-
-        atom_concat("<", _, StringIn),
-        replace_in_string("> [edited] ", "> ",StringIn,String),
-        sub_string(String, Before, _, After, ">"), Before>1, !,
-        sub_string(String, 0, Before, _, NameString),
-        filter_tg_name(NameString, Name),!,
-        sub_string(String, After,_, 0, Value).
+        atom_concat("<", String0, StringIn),     
+        replace_in_string("> [edited] ", "> ",String0,String),        
+        name_value_split(String, "> ", NameA, Value),
+        filter_tg_name(NameA, Name).
 
 filter_tg_name(StringIn, Name):- replace_in_string("[d]"," ",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
 filter_tg_name(NameString, Name):- filter_chars(is_printing_alpha_char,NameString, Name).
@@ -667,6 +675,8 @@ filter_chars(How,NameString, Name):- get_text_restore_pred(NameString,DataPred),
 
 is_printing_alpha_char(' '):- !,fail.
 is_printing_alpha_char('_'):-!.
+is_printing_alpha_char('-'):-!.
+is_printing_alpha_char('#'):-!.
 is_printing_alpha_char(X):- char_type(X,alpha),!.
 is_printing_alpha_char(X):- char_type(X,digit),!.
 
@@ -688,21 +698,31 @@ ircEvent(DEST,User,Stuff):- atom(User),downcase_atom(User,DUser),User\=@=DUser,!
 ircEvent(DEST,User,say(W)):- \+ string(W), if_catch_fail(text_to_string(W,S)),!,ircEvent(DEST,User,say(S)).
 
 
+ircEvent(DEST,User,say(W)):- any_to_codelist(W,CodeList), 
+  include(>(128),CodeList,NewCodeList),CodeList\==NewCodeList,!,any_to_string(NewCodeList,NewW),
+  ircEvent(DEST,User,say(NewW)).
 
 %  "<@\003\1Douglas Miles\017\> ?- member(Z,[a])."
 % irc_receive("tglm","~IRChuu@c-73-67-179-188.hsd1.wa.comcast.net","*","#logicmoo",say("<@\003\1Douglas Miles\017\> 123")).
 
+/*
 ircEvent(DEST,User,say(W)):- 
    tg_name_name_text(User, W, Name, Value),
    User\==Name, 
    W\==Value,!,
    locally(t_l:default_user(Name),
       ircEvent(DEST,Name,say(Value))).
+*/
 
 ircEvent(DEST,_User,ctcp("ACTION",W)):- 
    tg_name_text(W, Name, Value),W\==Value,!,
    locally(t_l:default_user(Name),
       ircEvent(DEST,Name,ctcp("ACTION",Value))).
+
+ircEvent(DEST,_User,say(W)):- 
+   tg_name_text(W, Name, Value),W\==Value,!,
+   locally(t_l:default_user(Name),
+      ircEvent(DEST,Name,say(Value))).
 
 ircEvent(DEST,User,say(W)):- fail,
  term_to_atom(cu(DEST,User),QUEUE),
@@ -735,23 +755,32 @@ starts_white(W):- text_to_string_safe(W,Str), atom_codes(Str,[WS|_]), char_type(
 dont_allow_whitespace_if_unregisterd(Channel,Agent, W):- starts_white(W),!, is_reg_with_nonignore(Channel,Agent).
 %dont_allow_whitespace_if_unregisterd(Channel,Agent, _):- is_reg_with_nonignore(Channel,Agent),!.
 dont_allow_whitespace_if_unregisterd(_Channel,_Agent, _):- !.
-% Say -> Call
 
-ircEventUsed(Channel,Agent,say(W)):-
- dont_allow_whitespace_if_unregisterd(Channel, Agent, W),
- % with_dmsg_to_main
+
+% Say -> Call with_dmsg_to_main
+ircEventUsed(Channel,Agent,say(W)):- ircEventUsed_as_call(Channel,Agent,say(W)),!.
+ircEventUsed(Channel,Agent,say(W)):- notrace(maybe_chat_command(Channel,Agent,say,W)).
+
+ircEventUsed(Channel,Agent,ctcp(ACTION,W)):- notrace(maybe_chat_command(Channel,Agent,ctcp(ACTION),W)).
+
+% Call -> call_for_results
+ircEventUsed(Channel,Agent,call(CALL,Vs)):- irc_filtered_call(Channel,Agent,CALL,Vs).
+
+
+ircEventUsed_as_call(Channel,Agent,say(W)):-
+   name_value_split(W, ': ', Ctx, Call),
+   \+ atom_contains(Ctx,' '),
+   locally(t_l:session_prefix(Ctx),
+     ircEventUsed_as_call(Channel,Agent,say(Call))),!.
+
+ircEventUsed_as_call(Channel,Agent,say(W)):-
+  dont_allow_whitespace_if_unregisterd(Channel, Agent, W),
   DidAny = did(false),
   source_and_module_for_agent(Agent,SourceModule,_CallModule),
   forall(
     read_egg_term(SourceModule,W,CALL,Vs), % read_each_term_egg(W,CALL,Vs)
      (irc_filtered_call(Channel,Agent,CALL,Vs),nb_setarg(1,DidAny,true))),
   ((DidAny = did(true)) -> ! ; fail).
-
-ircEventUsed(Channel,Agent,ctcp(ACTION,W)):- notrace(maybe_chat_command(Channel,Agent,ctcp(ACTION),W)).
-ircEventUsed(Channel,Agent,say(W)):- notrace(maybe_chat_command(Channel,Agent,say,W)).
-% Call -> call_for_results
-ircEventUsed(Channel,Agent,call(CALL,Vs)):- irc_filtered_call(Channel,Agent,CALL,Vs).
-
 
 
 ci_concat_text(Left,Right,All):- var(Right),!, string_lower(All,LAll),string_lower(Left,LLeft), 
@@ -862,17 +891,24 @@ use_agent_module(AgentS):-
    '$set_source_module'(SourceModule),
    '$set_typein_module'(CallModule).
 
-save_agent_module(AgentS):- any_to_atom(AgentS,Agent), 
+save_agent_module(AgentS):- agent_to_letters_atom(AgentS,Agent), 
    retractall(lmconf:chat_isModule(Agent,_,_)), 
    once('$current_source_module'(SourceModule);'$set_source_module'(SourceModule,SourceModule)),
    once('$current_typein_module'(CallModule);'$module'(CallModule,CallModule)),
    asserta(lmconf:chat_isModule(Agent,SourceModule,CallModule)).
 
+agent_to_letters_atom(AgentS,DCAtom):-
+  any_to_atom(AgentS,Agent),
+  filter_chars(is_letter_atom,Agent,Atom),
+  downcase_atom(Atom,DCAtom).
+
+is_letter_atom(C):- char_type(C,alpha).
+
 source_and_module_for_agent(AgentS,SourceModule,CallModule):- 
-    any_to_atom(AgentS,Agent), 
+    agent_to_letters_atom(AgentS,Agent), 
     lmconf:chat_isModule(Agent,SourceModule,CallModule),!.
 source_and_module_for_agent(AgentS,SourceModule,CallModule):- 
-    any_to_atom(AgentS,Agent), 
+    agent_to_letters_atom(AgentS,Agent), 
     create_agent_module(Agent,SourceModule),
     create_agent_module(Agent,CallModule),    
     asserta(lmconf:chat_isModule(Agent,SourceModule,CallModule)).
