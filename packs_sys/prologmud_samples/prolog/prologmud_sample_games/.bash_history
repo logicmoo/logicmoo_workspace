@@ -462,3 +462,6 @@ ls
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 ls
 eggdrop
+df
+df -h
+ncdu -x /dev/sde1

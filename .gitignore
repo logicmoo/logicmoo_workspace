@@ -1,4 +1,6 @@
 swipl-devel/
+packs_xtra/programk/
+/FromWindows.v*
 #packs_xtra/logicmoo_packages/prolog/*/
 /html
 packs_sys/prologmud_samples/prolog/prologmud_sample_games/.dbus/

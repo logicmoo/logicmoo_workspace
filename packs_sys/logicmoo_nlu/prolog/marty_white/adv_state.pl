@@ -207,7 +207,8 @@ agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !
 
 :- export(declare/3).
 %:- defn_state_setter(declare(fact)).
-select_from(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, notrace(select_from_list(Fact, State, NewState)).
+select_from(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, 
+   notrace(select_from_list(Fact, State, NewState)).
 select_from(Fact, inst(Object), inst(Object)):- !,
    get_advstate(State),
    (declared(props(Object, PropList), State);PropList=[]), !,
