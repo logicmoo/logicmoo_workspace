@@ -2,7 +2,7 @@
 
     Author:        Andrew Dougherty, Douglas Miles
     E-mail:        andrewdo@frdcsa.org, logicmoo@gmail.com
-    WWW:           https://github.com/TeamSPoon/planner_external_api
+    WWW:           https://github.com/logicmoo/planner_external_api
     Copyright (C): 2017, Process Design Center, Breda, The Netherlands.
     All rights reserved.
 

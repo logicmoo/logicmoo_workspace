@@ -1,5 +1,5 @@
-* LOGICMOO WIKI https://github.com/TeamSPoon/logicmoo_workspace/wiki
-* PrologMUD WIKI https://github.com/TeamSPoon/prologmud/wiki
+* LOGICMOO WIKI https://github.com/logicmoo/logicmoo_workspace/wiki
+* PrologMUD WIKI https://github.com/logicmoo/prologmud/wiki
 
 * GDOCS https://drive.google.com/#folders/0B0QA19UX0ehlV1ZEaXEzc3hjTWM
 

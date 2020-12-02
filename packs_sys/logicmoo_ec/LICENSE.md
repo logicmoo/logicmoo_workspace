@@ -1,6 +1,6 @@
 BSD 2-Clause License
 
-Copyright (c) 2018, Andrew Daughtery, Douglas R. Miles and rest of TeamSPoon.
+Copyright (c) 2018, Andrew Daughtery, Douglas R. Miles and rest of logicmoo.
 
 All rights reserved.
 

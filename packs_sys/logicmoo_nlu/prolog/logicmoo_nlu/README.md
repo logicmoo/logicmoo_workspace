@@ -1,4 +1,4 @@
-Initial starter Docs https://github.com/TeamSPoon/PrologMUD/wiki
+Initial starter Docs https://github.com/logicmoo/PrologMUD/wiki
 
 Installation see.. https://docs.google.com/document/d/1fkOxnmI1LqxadvZuCRS-fGIEweIKyPn6AVGp5Yjse1I/edit
 

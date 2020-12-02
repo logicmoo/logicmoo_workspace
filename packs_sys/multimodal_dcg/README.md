@@ -3,7 +3,7 @@ Reduce floundering of DCGs by constraining and narrowing search
 
 ```prolog
 
- :- pack_install('https://github.com/TeamSPoon/multimodal_dcg.git').
+ :- pack_install('https://github.com/logicmoo/multimodal_dcg.git').
 
 ```
 
@@ -37,14 +37,14 @@ Untangle the 'pack' install deps
 
 Dislike having tons of forks that are several commits behind the main git repo?
 
-Be old school - Please ask to be added to TeamSPoon and Contribute directly !
+Be old school - Please ask to be added to logicmoo and Contribute directly !
 
 Still, we wont stop you from doing it the Fork+PullRequest method
 
 # [BSD 2-Clause License](LICENSE.md)
 
 Copyright (c) 2017, 
-TeamSPoon and Douglas Miles <logicmoo@gmail.com> 
+logicmoo and Douglas Miles <logicmoo@gmail.com> 
 All rights reserved.
 
 

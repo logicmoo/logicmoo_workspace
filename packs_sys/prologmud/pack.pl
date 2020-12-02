@@ -4,9 +4,9 @@ title('Online text adventure game - MUD Server').
 keywords([game,ai]).
 
 author('Douglas R. Miles','logicmoo@gmail.com').
-packager('TeamSPoon', 'https://github.com/TeamSPoon/').
-maintainer('TeamSPoon', 'https://github.com/TeamSPoon/').
-home('https://github.com/TeamSPoon/prologmud.git').
-download( 'https://github.com/TeamSPoon/prologmud/release/*.zip').
+packager('logicmoo', 'https://github.com/logicmoo/').
+maintainer('logicmoo', 'https://github.com/logicmoo/').
+home('https://github.com/logicmoo/prologmud.git').
+download( 'https://github.com/logicmoo/prologmud/release/*.zip').
 requires(logicmoo_base).
 

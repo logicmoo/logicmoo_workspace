@@ -38,7 +38,7 @@ hmud_directory(O):- expand_file_search_path(pack(hMUD),O).
       
 
 install_hmud_files:- hmud_directory(O),exists_directory(O),!.
-install_hmud_files:- hmud_directory(O),sformat(S,'git clone https://github.com/TeamSPoon/hMUD.git ~w',[O]),shell(S).
+install_hmud_files:- hmud_directory(O),sformat(S,'git clone https://github.com/logicmoo/hMUD.git ~w',[O]),shell(S).
 
 run_flash_policy_server:- hmud_directory(O),sformat(S,'~w/policyd &>2 ||:',[O]),ignore_all(shell(S)).
 

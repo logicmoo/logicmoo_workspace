@@ -4,7 +4,7 @@ find ../../.. -name "*.bak" -delete
 
 sed -e "s| function \(.*\){| function \1\n    {|g" -e "s|class \(.*\){|class \1\n{|g"  -e "s|\! |\!|g" 
 
-git clone https://github.com/TeamSPoon/elFinder ef
+git clone https://github.com/logicmoo/elFinder ef
 
 [core]
         repositoryformatversion = 0
@@ -14,7 +14,7 @@ git clone https://github.com/TeamSPoon/elFinder ef
         symlinks = false
         ignorecase = true
 [remote "origin"]
-        url = https://github.com/TeamSPoon/elFinder
+        url = https://github.com/logicmoo/elFinder
         fetch = +refs/heads/*:refs/remotes/origin/*
 [remote "upstream"]
         url = https://github.com/Studio-42/elFinder/

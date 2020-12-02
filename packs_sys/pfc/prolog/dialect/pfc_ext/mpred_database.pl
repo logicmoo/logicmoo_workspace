@@ -249,7 +249,7 @@ pfc_is_callable(C):-current_predicate(_,C),!.
 %     prologHybrid,predCanHaveSingletons,prologDynamic,prologBuiltin,functorIsMacro,prologListValued,prologSingleValued),P),.. )
 
 
-% TODO ISSUE https://github.com/TeamSPoon/PrologMUD/issues/7
+% TODO ISSUE https://github.com/logicmoo/PrologMUD/issues/7
 
 %% check_context_module is semidet.
 %
@@ -516,7 +516,7 @@ mpred_nochaining(Goal):- locally_tl(no_attempt_side_effects,call(Goal)).
 %
 with_chaining(Goal):- locally(- t_l:no_attempt_side_effects,call(Goal)).
 
-% TODO ISSUE https://github.com/TeamSPoon/PrologMUD/issues/7
+% TODO ISSUE https://github.com/logicmoo/PrologMUD/issues/7
 
 
 %% match_source_ref1( :TermARG1) is semidet.

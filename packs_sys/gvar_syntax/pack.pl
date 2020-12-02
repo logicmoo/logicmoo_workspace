@@ -2,9 +2,9 @@ name(gvar_syntax).
 title('Global Variable Syntax').
 
 version('2.0.3').
-download('https://github.com/TeamSPoon/gvar_syntax/releases/*.zip').
+download('https://github.com/logicmoo/gvar_syntax/releases/*.zip').
 
 author( 'Douglas R. Miles', 'logicmoo@gmail.com' ).
-packager( 'TeamSPoon/LogicMoo', 'https://github.com/TeamSPoon/' ).
-maintainer( 'TeamSPoon', 'https://github.com/TeamSPoon/' ).
-home('https://github.com/TeamSPoon/gvar_syntax').
+packager( 'logicmoo/LogicMoo', 'https://github.com/logicmoo/' ).
+maintainer( 'logicmoo', 'https://github.com/logicmoo/' ).
+home('https://github.com/logicmoo/gvar_syntax').

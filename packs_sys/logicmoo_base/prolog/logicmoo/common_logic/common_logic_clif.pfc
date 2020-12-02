@@ -11,9 +11,9 @@ vim: set filetype=md:
 %
 % If you've come here looking for the clif examples please follow this link
 %
-%  https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md
+%  https://github.com/logicmoo/PrologMUD/blob/master/runtime/try_logicmoo_examples.md
 %
-%  <a href="https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md">https://github.com/TeamSPoon/PrologMUD/blob/master/runtime/try_logicmoo_examples.md</a>
+%  <a href="https://github.com/logicmoo/PrologMUD/blob/master/runtime/try_logicmoo_examples.md">https://github.com/logicmoo/PrologMUD/blob/master/runtime/try_logicmoo_examples.md</a>
 */
 
 % Term expansion was suppored to make this ok

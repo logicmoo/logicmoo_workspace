@@ -3102,7 +3102,7 @@ correct_module(MT,_,_,_,MT):-!.
 % =============================================================
 %                 SIDE EFFECT PROCESSING
 %
-% TODO ISSUE https://github.com/TeamSPoon/PrologMUD/issues/7
+% TODO ISSUE https://github.com/logicmoo/PrologMUD/issues/7
 % =============================================================
 
 

@@ -5,7 +5,7 @@
 # logicmoo_base
 
 Source code available and pull requests accepted on GitHub:
-https://github.com/TeamSPoon/PrologMUD/tree/master/pack/logicmoo_base
+https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base
 
 Knowledge Base Maintenance System
 
@@ -42,7 +42,7 @@ mother(Ma,X),mother(Ma,Y),{X\==Y}
 
 ````
 
-examples:  https://github.com/TeamSPoon/PrologMUD/tree/master/pack/logicmoo_base/t/examples/fol
+examples:  https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base/t/examples/fol
 
 # First Order Logic (FOL) declarations in Prolog source code. 
 

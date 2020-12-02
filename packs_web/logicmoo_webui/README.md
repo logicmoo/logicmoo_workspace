@@ -1,4 +1,4 @@
-TeamSPoon's LogicMOO WebUI Setup Scripts/Sources
+logicmoo's LogicMOO WebUI Setup Scripts/Sources
 
 Directory structure and shared global scripts
 
@@ -7,7 +7,7 @@ Directory structure and shared global scripts
 
 ````bash
 
-git remote add origin https://github.com/TeamSPoon/logicmoo_webui.git
+git remote add origin https://github.com/logicmoo/logicmoo_webui.git
 
 git push -u origin master --force
 
@@ -40,8 +40,8 @@ cd ..
 )
 
 % git subtree add --prefix ClioPatria https://github.com/logicmoo/ClioPatria-filessytem-and-clausedb.git master --squash
-git clone https://github.com/TeamSPoon/swish.git
-git clone https://github.com/TeamSPoon/lps_corner.git
+git clone https://github.com/logicmoo/swish.git
+git clone https://github.com/logicmoo/lps_corner.git
 
 git clone https://github.com/logicmoo/ClioPatria-filessytem-and-clausedb.git ClioPatria
 

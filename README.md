@@ -1,6 +1,6 @@
-# TeamSPoon's LogicMOO Parent Project 
+# logicmoo's LogicMOO Parent Project 
 
-Initial starter Docs https://github.com/TeamSPoon/logicmoo_workspace/wiki
+Initial starter Docs https://github.com/logicmoo/logicmoo_workspace/wiki
 
 As well as https://docs.google.com/document/d/1fkOxnmI1LqxadvZuCRS-fGIEweIKyPn6AVGp5Yjse1I/edit
 

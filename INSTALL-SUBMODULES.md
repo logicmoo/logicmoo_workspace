@@ -123,12 +123,12 @@ install_swi_package packs_sys wam_common_lisp
 install_swi_package packs_sys lps_corner 
 # install_swi_package packs_sys planner_api 
 
-install_swi_package packs_sys logicmoo_nars https://github.com/TeamSPoon/logicmoo_nars
+install_swi_package packs_sys logicmoo_nars https://github.com/logicmoo/logicmoo_nars
 
 
 install_swi_package packs_web logicmoo_webui 
-install_swi_package packs_web swish https://github.com/TeamSPoon/swish
-install_swi_package packs_web ClioPatria https://github.com/TeamSPoon/ClioPatria
+install_swi_package packs_web swish https://github.com/logicmoo/swish
+install_swi_package packs_web ClioPatria https://github.com/logicmoo/ClioPatria
 
    
 
@@ -175,8 +175,8 @@ echo "to start the MUD type: ./startMUDServer.sh"
 
 # (Non)"Packs" that create the remote interface
 ## echo git clone --recursive https://github.com/logicmoo/swish-with-filesystem-editing packs_web/swish
-## echo git clone --recursive https://github.com/TeamSPoon/ClioPatria-filessytem-and-clausedb packs_web/ClioPatria-filessytem-and-clausedb
-## git clone --recursive https://github.com/TeamSPoon/plweb packs_web/plweb-realtime
+## echo git clone --recursive https://github.com/logicmoo/ClioPatria-filessytem-and-clausedb packs_web/ClioPatria-filessytem-and-clausedb
+## git clone --recursive https://github.com/logicmoo/plweb packs_web/plweb-realtime
 
 # Very large packs are way beyond most peoples scope and interest (or just too random)
 ## echo git clone --recursive https://gitlab.logicmoo.org:8060/NomicMU/logicmoo_nlu/  packs_xtra/logicmoo_nlu/

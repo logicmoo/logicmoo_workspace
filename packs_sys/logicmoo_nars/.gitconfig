@@ -4,7 +4,7 @@
 	bare = false
 	logallrefupdates = true
 [remote "origin"]
-        url = https://github.com/TeamSPoon/narsese
+        url = https://github.com/logicmoo/narsese
         fetch = +refs/heads/*:refs/remotes/origin/*
 [remote "upstream"]
 	url = https://github.com/opennars/OpenNARS-for-Applications

@@ -5,12 +5,12 @@
 
 Using SWI-Prolog 7.1 or later:
 
-    ?- pack_install('https://github.com/TeamSPoon/gvar_syntax.git').
+    ?- pack_install('https://github.com/logicmoo/gvar_syntax.git').
 
 
 
 Source code available and pull requests accepted at
-http://github.com/TeamSPoon/gvar_syntax
+http://github.com/logicmoo/gvar_syntax
 
 ```prolog
 ?- use_module(library(gvar_syntax)).
@@ -53,7 +53,7 @@ true.
 
 ```
 
-Another Pack  called [dictoo](https://github.com/TeamSPoon/dictoo) 
+Another Pack  called [dictoo](https://github.com/logicmoo/dictoo) 
 adds better OO API on these values
 
 
@@ -71,14 +71,14 @@ Untangle the 'pack' install deps
 
 Dislike having tons of forks that are several commits behind the main git repo?
 
-Be old school - Please ask to be added to TeamSPoon and Contribute directly !
+Be old school - Please ask to be added to logicmoo and Contribute directly !
 
 Still, we wont stop you from doing it the Fork+PullRequest method
 
 # [BSD 2-Clause License](LICENSE.md)
 
 Copyright (c) 2017, 
-TeamSPoon and Douglas Miles <logicmoo@gmail.com> 
+logicmoo and Douglas Miles <logicmoo@gmail.com> 
 All rights reserved.
 
 
