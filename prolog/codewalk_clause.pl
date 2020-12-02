@@ -166,20 +166,28 @@ walk_head_body(Head, Body, _) :-
     writeln(user_error, walk_head_body(Head, Body, -)),
     fail.
 
+walk_called_mod(G, C, M, CM, Opts) :-
+    ( atom(M)
+    ->setup_call_cleanup(
+          ( '$current_source_module'(OldM),
+            '$set_source_module'(CM)
+          ),
+          walk_called(G, C, M, Opts),
+          '$set_source_module'(OldM))
+    ; true
+    ).
+
 walk_called(G, _, _, _) :-
     var(G),
     !.
 walk_called(true, _, _, _) :- !.
+walk_called(@(G,CM), C, _, Opts) :-
+    !,
+    strip_module(CM:G, M, H),
+    walk_called_mod(H, C, M, CM, Opts).
 walk_called(M:G, C, _, Opts) :-
     !,
-    ( atom(M)
-    ->setup_call_cleanup(( '$current_source_module'(OldM),
-                           '$set_source_module'(M)
-                         ),
-                         walk_called(G, C, M, Opts),
-                         '$set_source_module'(OldM))
-    ; true
-    ).
+    walk_called_mod(G, C, M, M, Opts).
 walk_called((A,B), C, M, O) :-
     !,
     walk_called(A, C, M, O),
@@ -244,7 +252,8 @@ walk_called_3(Meta, Caller, M, Opts) :-
     ),
     !,
     mark_args_non_fresh(1, Head, Meta),
-    walk_meta_call(1, Head, Meta, Caller, M, Opts).
+    '$current_source_module'(CM),
+    walk_meta_call(1, Head, Meta, Caller, CM, Opts).
 walk_called_3(Goal, _, Module, _) :-
     nonvar(Module),
     '$get_predicate_attribute'(Module:Goal, defined, 1),
@@ -271,15 +280,15 @@ undefined(Goal, Caller, Opts) :-
 undefined(_, _, _).
 
 walk_called_by([], _, _, _).
-walk_called_by([H|T], C, M, O) :-
+walk_called_by([H|T], C, CM, O) :-
     (   H = G+N
     ->  (   extend(G, N, G1, O)
-        ->  walk_called(G1, C, M, O)
+        ->  walk_called(@(G1,CM), C, CM, O)
         ;   true
         )
-    ;   walk_called(H, C, M, O)
+    ;   walk_called(@(H,CM), C, CM, O)
     ),
-    walk_called_by(T, C, M, O).
+    walk_called_by(T, C, CM, O).
 
 walk_meta_call(I, Head, Meta, Caller, M, Opts) :-
     arg(I, Head, AS),
