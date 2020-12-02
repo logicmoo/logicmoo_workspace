@@ -2,7 +2,7 @@
 
 :- pack_install(eggdrop). 
 
-% Read README @ https://github.com/TeamSPoon/eggdrop
+% Read README @ https://github.com/logicmoo/eggdrop
 
 :- use_module(pack('eggdrop/t/foofy_bot')).
 

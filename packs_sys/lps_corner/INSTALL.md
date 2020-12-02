@@ -21,7 +21,7 @@ true.
 
 ?- pack_install(lps_corner).
 % Contacting server at https://www.swi-prolog.org/pack/query ... ok
-Install lps_corner@2.0.2 from GIT at https://github.com/TeamSPoon/lps_corner.git Y/n?
+Install lps_corner@2.0.2 from GIT at https://github.com/logicmoo/lps_corner.git Y/n?
 
 Create directory for packages
    (1) * /home/test_installer/.local/share/swi-prolog/pack
@@ -35,10 +35,10 @@ Package:                lps_corner
 Title:                  LPS Corner with SWISH and Dialect
 Installed version:      2.0.2
 Author:                 Douglas R. Miles <logicmoo@gmail.com>
-Maintainer:             TeamSPoon <https://github.com/TeamSPoon/>
-Packager:               TeamSPoon/LogicMoo <https://github.com/TeamSPoon/>
-Home page:              https://github.com/TeamSPoon/lps_corner
-Download URL:           https://github.com/TeamSPoon/lps_corner/releases/*.zip
+Maintainer:             logicmoo <https://github.com/logicmoo/>
+Packager:               logicmoo/LogicMoo <https://github.com/logicmoo/>
+Home page:              https://github.com/logicmoo/lps_corner
+Download URL:           https://github.com/logicmoo/lps_corner/releases/*.zip
 Activate pack "lps_corner" Y/n?
 true.
 

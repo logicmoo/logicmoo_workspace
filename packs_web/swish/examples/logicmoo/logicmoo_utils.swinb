@@ -4,12 +4,12 @@
 
 ## Logicmoo Utils Examples
 
- from https://github.com/TeamSPoon/logicmoo_utils.git
+ from https://github.com/logicmoo/logicmoo_utils.git
 
  Install locally with
 
  ````prolog
- ?- pack_install('https://github.com/TeamSPoon/logicmoo_utils.git').
+ ?- pack_install('https://github.com/logicmoo/logicmoo_utils.git').
  ````
 
 

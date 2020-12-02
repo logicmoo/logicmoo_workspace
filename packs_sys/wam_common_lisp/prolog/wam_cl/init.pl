@@ -259,7 +259,7 @@ show_must(G):-dmsg(doing(G)),!, (must_or_rtrace(G)*->dmsg(did(G));must(G)).
 show_must(G):-dmsg(doing(G)),(catch(G,Err,(dmsg(Err->G),rtrace(G)))*->dmsg(did(G));must(G)).
 
 show_help:- writeln(
-'WAM-CL (https://github.com/TeamSPoon/wam_common_lisp) is an ANSI Common Lisp implementation.
+'WAM-CL (https://github.com/logicmoo/wam_common_lisp) is an ANSI Common Lisp implementation.
 Usage:  wamcl [prolog-options] [wamcl-options] [lispfile [argument ...]]
 
 Host Prolog options:

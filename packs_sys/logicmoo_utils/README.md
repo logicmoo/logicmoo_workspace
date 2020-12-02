@@ -1,11 +1,11 @@
 ##  Common predicates used by external Logicmoo Utils
-[![Build Status](https://travis-ci.org/TeamSPoon/logicmoo_utils.svg?branch=master)](https://travis-ci.org/TeamSPoon/logicmoo_utils) master
-[![Build Status](https://travis-ci.org/TeamSPoon/logicmoo_utils.svg)](https://travis-ci.org/TeamSPoon/logicmoo_utils) default
+[![Build Status](https://travis-ci.org/logicmoo/logicmoo_utils.svg?branch=master)](https://travis-ci.org/logicmoo/logicmoo_utils) master
+[![Build Status](https://travis-ci.org/logicmoo/logicmoo_utils.svg)](https://travis-ci.org/logicmoo/logicmoo_utils) default
 
 
 ## Installation using SWI-Prolog 8.1.x or later (due to duplicate transitive deps failing in earlier versions):
 
-    `?- pack_install('https://github.com/TeamSPoon/logicmoo_utils.git'). `
+    `?- pack_install('https://github.com/logicmoo/logicmoo_utils.git'). `
 
 
 
@@ -355,7 +355,7 @@ Call a Goal with local assertions
 
 ## Not _obligated_ to maintain a git fork just to contribute
 
-( Please ask to be added to TeamSPoon and Contribute directly ! )
+( Please ask to be added to logicmoo and Contribute directly ! )
 
 I really dislike having tons of forks that are several commits behind the main git repo.
 
@@ -368,7 +368,7 @@ Still, we wont stop you from doing it the Fork+PullRequest method
 ## [BSD 2-Clause License](LICENSE.md)
 
 Copyright (c) 1997 - 2018 
-TeamSPoon and Douglas Miles <logicmoo@gmail.com> 
+logicmoo and Douglas Miles <logicmoo@gmail.com> 
 
 
 

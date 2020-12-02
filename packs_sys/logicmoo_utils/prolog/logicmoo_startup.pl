@@ -7,10 +7,10 @@
     Revision:      $Revision: 1.2 $
     Revised At:    $Date: 2017/06/02 21:57:28 $
     Author:        Douglas R. Miles
-    Maintainers:   TeamSPoon
+    Maintainers:   logicmoo
     E-mail:        logicmoo@gmail.com
     WWW:           http://www.prologmoo.com
-    SCM:           https://github.com/TeamSPoon/logicmoo_utils/blob/master/prolog/logicmoo_startup.pl
+    SCM:           https://github.com/logicmoo/logicmoo_utils/blob/master/prolog/logicmoo_startup.pl
     Copyleft:      1999-2015, LogicMOO Prolog Extensions
     License:       Lesser GNU Public License
 % ===================================================================
@@ -1066,7 +1066,7 @@ logicmoo_base_port(Base):- app_argv1(One),\+ is_list(One),
 
 teamspoon_pack(Pack):-
   call((user:use_module(library(prolog_pack)))),
-  pack_property(Pack,home(Home)),once(sub_string(Home, _, _, _, 'github.com/TeamSPoon')).
+  pack_property(Pack,home(Home)),once(sub_string(Home, _, _, _, 'github.com/logicmoo')).
 
 logicmoo_update:-  call((user:use_module(library(prolog_pack)))),
     forall(teamspoon_pack(Pack),dmsg(warning,maybe_pack_upgrade(Pack))).
@@ -1181,7 +1181,7 @@ correct_unsatisfied_dependencies:-!.
 
 ensure_this_pack_installed_correctly:-
   % pack_upgrade(logicmoo_utils),
-  % pack_install('https://github.com/TeamSPoon/predicate_streams.git',[silent(true),git(true),interactive(false)]),
+  % pack_install('https://github.com/logicmoo/predicate_streams.git',[silent(true),git(true),interactive(false)]),
   pack_install(predicate_streams,[interactive(false)]),
   pack_install(gvar_syntax,[interactive(false)]),
   pack_install(dictoo,[interactive(false)]),
@@ -1200,7 +1200,7 @@ ensure_this_pack_installed:-
 :- ensure_this_pack_installed.
 
 ensure_logicmoo_pack_install(X):- pack_property(X,version(_)),!.
-ensure_logicmoo_pack_install(X):- atomic_list_concat(['https://github.com/TeamSPoon/',X,'.git'],URL),pack_install(URL,[interactive(false)]).
+ensure_logicmoo_pack_install(X):- atomic_list_concat(['https://github.com/logicmoo/',X,'.git'],URL),pack_install(URL,[interactive(false)]).
 install_logicmoo:-
   ensure_this_pack_installed,
   maplist(ensure_logicmoo_pack_install,[

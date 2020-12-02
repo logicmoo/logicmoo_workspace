@@ -2,8 +2,8 @@
 
 % %% for examples of working behaviors, see:
 
-% %% https://github.com/TeamSPoon/logicmoo_nlu/blob/master/prolog/marty_white/adv_axiom.pl
-% %% https://github.com/TeamSPoon/logicmoo_nlu/blob/master/prolog/marty_white/adv_implies.pl
+% %% https://github.com/logicmoo/logicmoo_nlu/blob/master/prolog/marty_white/adv_axiom.pl
+% %% https://github.com/logicmoo/logicmoo_nlu/blob/master/prolog/marty_white/adv_implies.pl
 
 % %% ideas:
 

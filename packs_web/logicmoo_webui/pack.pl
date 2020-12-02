@@ -6,9 +6,9 @@ author( 'Fabrizio Riguzzi', 'fabrizio.riguzzi@unife.it' ).
 author( 'Jan Wielemaker', 'J.Wielemaker@vu.nl' ).
 author( 'Andrew Dougherty', 'andrewdo@frdcsa.org' ).
 author( 'Douglas Miles', 'logicmoo@gmail.com' ).
-packager( 'TeamSPoon/LogicMoo', 'https://github.com/TeamSPoon/' ).
-home('https://github.com/TeamSPoon/logicmoo_webui').
-download('https://github.com/TeamSPoon/logicmoo_webui.git').
+packager( 'logicmoo/LogicMoo', 'https://github.com/logicmoo/' ).
+home('https://github.com/logicmoo/logicmoo_webui').
+download('https://github.com/logicmoo/logicmoo_webui.git').
 autoload(false).
 requires(logicmoo_utils).
 

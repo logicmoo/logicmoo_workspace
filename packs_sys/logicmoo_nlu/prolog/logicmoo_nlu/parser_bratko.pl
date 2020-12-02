@@ -13,7 +13,7 @@
   From Bratko chapter 17 page 455.
    This comes from Pereira and Warren paper, AI journal, 1980
 
-   To see the non-toy version: https://github.com/TeamSPoon/logicmoo_nlu/blob/master/prolog/logicmoo_nlu/parser_bratko.pl 
+   To see the non-toy version: https://github.com/logicmoo/logicmoo_nlu/blob/master/prolog/logicmoo_nlu/parser_bratko.pl 
 
    This version goes straight from Text to Deep Logical-Form :) 
 

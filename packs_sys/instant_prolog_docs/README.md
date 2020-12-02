@@ -4,7 +4,7 @@ Magically document prolog source files based on predicate and variable naming co
 
 ```prolog
 
- :- pack_install('https://github.com/TeamSPoon/instant_prolog_docs.git').
+ :- pack_install('https://github.com/logicmoo/instant_prolog_docs.git').
 
 ```
 
@@ -33,12 +33,12 @@ Still in progress (Moving predicates over here from logicmoo_base)
 
 Copyright (c) 2017, 
 Douglas Miles <logicmoo@gmail.com> and
-TeamSPoon - All rights reserved.
+logicmoo - All rights reserved.
 
 # Not _obligated_ to maintain a git fork just to contribute
 
 Dislike having tons of forks that are several commits behind the main git repo?
 
-Be old school - Please ask to be added to TeamSPoon and Contribute directly !
+Be old school - Please ask to be added to logicmoo and Contribute directly !
 Still, we wont stop you from doing it the Fork+PullRequest method
 

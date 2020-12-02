@@ -5,7 +5,7 @@ Logicmoo Event Calc -- A SWI-Prolog Pack that lets Prolog code seamlessly use pl
 Installation using SWI-Prolog 7.3 or later:
 
 ````prolog
-    ?- pack_install('https://github.com/TeamSPoon/logicmoo_ec.git').
+    ?- pack_install('https://github.com/logicmoo/logicmoo_ec.git').
 ```` 
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) **TODO**: Andrew Dougherty - Ensure whatever is needed from the interfaces to VAL etc 
 
@@ -50,7 +50,7 @@ logicmoo_lps = LPS Solver for PDDL/DEC Files
 
 This guide is designed for first-time readers, people who need refreshers and others, like myself, who sometimes need some syntax sanity-checking.
 
-If you read anything here that you believe needs improvement, [contribute to it on GitHub](https://github.com/TeamSPoon/logicmoo_ec). 
+If you read anything here that you believe needs improvement, [contribute to it on GitHub](https://github.com/logicmoo/logicmoo_ec). 
 
 ## Introduction
 
@@ -219,7 +219,7 @@ We'll also have to define **actions/operators**. We need to be able to pick up a
 )
 ```
  
-Put all the above into a file, and you have [a domain file](https://github.com/TeamSPoon/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl)!
+Put all the above into a file, and you have [a domain file](https://github.com/logicmoo/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl)!
 
 Now we'll look at the problem file. We'll start by letting it know which domain it's associated to, and define the objects that exist in the world.
 ```
@@ -247,7 +247,7 @@ Finally, we define the **goal specification**: the cupcake on in the plate.
 	(on cupcake plate)
 )
 ```
-Put that all together and you'll have [the problem file](https://github.com/TeamSPoon/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl)!
+Put that all together and you'll have [the problem file](https://github.com/logicmoo/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl)!
 
 If you run this using [OPTIC](https://nms.kcl.ac.uk/planning/software/optic.html), you'll get this solution:
 
@@ -277,7 +277,7 @@ Here are a few tasks to make it more complex and enforce your understanding.
 
 ## Not-as-Simple Example
 
-If you want to check out something a bit more complex, check out the [driverlog domain](https://github.com/TeamSPoon/logicmoo_ec/tree/master/files/driverlog).
+If you want to check out something a bit more complex, check out the [driverlog domain](https://github.com/logicmoo/logicmoo_ec/tree/master/files/driverlog).
 
 ## Past the Basics
 
@@ -365,7 +365,7 @@ Another important concept is the Transportation Infrastructure which encompasses
 
 
 
-If you'd like to be listed as  a Contributor, make a [pull request](https://github.com/TeamSPoon/logicmoo_ec/pulls).
+If you'd like to be listed as  a Contributor, make a [pull request](https://github.com/logicmoo/logicmoo_ec/pulls).
 
 
 # Output Format

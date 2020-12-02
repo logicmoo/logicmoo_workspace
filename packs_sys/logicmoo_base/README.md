@@ -34,7 +34,7 @@ mother(Ma,X),mother(Ma,Y),{X\==Y}
 
 ````
 
-examples:  https://github.com/TeamSPoon/PrologMUD/tree/master/pack/logicmoo_base/t/examples/fol
+examples:  https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base/t/examples/fol
 
 # First Order Logic (FOL) declarations in Prolog source code. 
 
@@ -116,7 +116,7 @@ The abiliity to use CLIF/KIF/CycL Etc
 
 
 Source code available and pull requests accepted on GitHub:
-https://github.com/TeamSPoon/PrologMUD/tree/master/pack/logicmoo_base
+https://github.com/logicmoo/PrologMUD/tree/master/pack/logicmoo_base
 
 
 # Some TODOs
@@ -130,14 +130,14 @@ Still in progress (Moving predicates over here from logicmoo_base)
 [BSD 2-Clause License](LICENSE.md)
 
 Copyright (c) 2017, 
-Douglas Miles <logicmoo@gmail.com> and TeamSPoon
+Douglas Miles <logicmoo@gmail.com> and logicmoo
 All rights reserved.
 
 # Not _obligated_ to maintain a git fork just to contribute
 
 Dislike having tons of forks that are several commits behind the main git repo?
 
-Be old school - Please ask to be added to TeamSPoon and Contribute directly !
+Be old school - Please ask to be added to logicmoo and Contribute directly !
 Still, we wont stop you from doing it the Fork+PullRequest method
 
 

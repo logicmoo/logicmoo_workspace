@@ -6,10 +6,10 @@ blocks for writing your own Sockets in some Prolog I cannot remember.
 
 Installation using SWI-Prolog 7.1 or later:
 
-   `?- pack_install('https://github.com/TeamSPoon/predicate_streams.git').`
+   `?- pack_install('https://github.com/logicmoo/predicate_streams.git').`
 
 
-Source code available and pull requests accepted at http://github.com/TeamSPoon/predicate_streams
+Source code available and pull requests accepted at http://github.com/logicmoo/predicate_streams
 
 # Example usages
 
@@ -82,14 +82,14 @@ Write tests
 [BSD 2-Clause License](LICENSE.md)
 
 Copyright (c) 2017, 
-Douglas Miles <logicmoo@gmail.com> and TeamSPoon
+Douglas Miles <logicmoo@gmail.com> and logicmoo
 All rights reserved.
 
 # Not _obligated_ to maintain a git fork just to contribute
 
 Dislike having tons of forks that are several commits behind the main git repo?
 
-Be old school - Please ask to be added to TeamSPoon and Contribute directly !
+Be old school - Please ask to be added to logicmoo and Contribute directly !
 Still, we wont stop you from doing it the Fork+PullRequest method
 
 

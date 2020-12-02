@@ -190,7 +190,7 @@ ctrl_port(3334).
 
 
 :- module_transparent(ircEvent/3).
-% from https://github.com/TeamSPoon/PrologMUD/tree/master/src_lib/logicmoo_util 
+% from https://github.com/logicmoo/PrologMUD/tree/master/src_lib/logicmoo_util 
 % supplies locally/2,atom_concats/2, dmsg/1, my_wdmsg/1, must/1, if_startup_script/0
 
 /*

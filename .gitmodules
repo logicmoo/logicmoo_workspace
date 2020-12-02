@@ -1,6 +1,6 @@
 [submodule "wikis/logicmoo_workspace.wiki"]
 	path = wikis/logicmoo_workspace.wiki
-	url = https://github.com/TeamSPoon/logicmoo_workspace.wiki
+	url = https://github.com/logicmoo/logicmoo_workspace.wiki
 [submodule "packs_lib/auc"]
 	path = packs_lib/auc
 	url = https://github.com/friguzzi/auc.git
@@ -45,64 +45,64 @@
 	url = https://github.com/rzese/trill.git
 [submodule "packs_sys/logicmoo_base"]
 	path = packs_sys/logicmoo_base
-	url = https://github.com/TeamSPoon/logicmoo_base.git
+	url = https://github.com/logicmoo/logicmoo_base.git
 [submodule "packs_sys/logicmoo_cg"]
 	path = packs_sys/logicmoo_cg
-	url = https://github.com/TeamSPoon/logicmoo_cg.git
+	url = https://github.com/logicmoo/logicmoo_cg.git
 [submodule "packs_sys/logicmoo_ec"]
 	path = packs_sys/logicmoo_ec
-	url = https://github.com/TeamSPoon/logicmoo_ec.git
+	url = https://github.com/logicmoo/logicmoo_ec.git
 [submodule "packs_sys/logicmoo_nlu"]
 	path = packs_sys/logicmoo_nlu
-	url = https://github.com/TeamSPoon/logicmoo_nlu.git
+	url = https://github.com/logicmoo/logicmoo_nlu.git
 [submodule "packs_sys/prologmud"]
 	path = packs_sys/prologmud
-	url = https://github.com/TeamSPoon/prologmud.git
+	url = https://github.com/logicmoo/prologmud.git
 [submodule "packs_sys/prologmud_samples"]
 	path = packs_sys/prologmud_samples
-	url = https://github.com/TeamSPoon/prologmud_samples.git
+	url = https://github.com/logicmoo/prologmud_samples.git
 [submodule "packs_sys/wam_common_lisp"]
 	path = packs_sys/wam_common_lisp
-	url = https://github.com/TeamSPoon/wam_common_lisp.git
+	url = https://github.com/logicmoo/wam_common_lisp.git
 [submodule "packs_sys/lps_corner"]
 	path = packs_sys/lps_corner
-	url = https://github.com/TeamSPoon/lps_corner.git
+	url = https://github.com/logicmoo/lps_corner.git
 [submodule "packs_web/ClioPatria"]
 	path = packs_web/ClioPatria
-	url = https://github.com/TeamSPoon/ClioPatria
+	url = https://github.com/logicmoo/ClioPatria
 [submodule "packs_sys/logicmoo_utils"]
 	path = packs_sys/logicmoo_utils
-	url = https://github.com/TeamSPoon/logicmoo_utils.git
+	url = https://github.com/logicmoo/logicmoo_utils.git
 [submodule "packs_sys/dictoo"]
 	path = packs_sys/dictoo
-	url = https://github.com/TeamSPoon/dictoo.git
+	url = https://github.com/logicmoo/dictoo.git
 [submodule "packs_sys/gvar_syntax"]
 	path = packs_sys/gvar_syntax
-	url = https://github.com/TeamSPoon/gvar_syntax.git
+	url = https://github.com/logicmoo/gvar_syntax.git
 [submodule "packs_sys/predicate_streams"]
 	path = packs_sys/predicate_streams
-	url = http://github.com/TeamSPoon/predicate_streams.git
+	url = http://github.com/logicmoo/predicate_streams.git
 [submodule "packs_sys/multimodal_dcg"]
 	path = packs_sys/multimodal_dcg
-	url = https://github.com/TeamSPoon/multimodal_dcg.git
+	url = https://github.com/logicmoo/multimodal_dcg.git
 [submodule "packs_sys/pfc"]
 	path = packs_sys/pfc
-	url = https://github.com/TeamSPoon/pfc.git
+	url = https://github.com/logicmoo/pfc.git
 [submodule "packs_sys/logicmoo_nars"]
 	path = packs_sys/logicmoo_nars
-	url = https://github.com/TeamSPoon/logicmoo_nars
+	url = https://github.com/logicmoo/logicmoo_nars
 [submodule "packs_web/swish"]
 	path = packs_web/swish
-	url = https://github.com/TeamSPoon/swish
+	url = https://github.com/logicmoo/swish
 [submodule "packs_web/logicmoo_webui"]
 	path = packs_web/logicmoo_webui
-	url = https://github.com/TeamSPoon/logicmoo_webui.git
+	url = https://github.com/logicmoo/logicmoo_webui.git
 [submodule "packs_sys/body_reordering"]
 	path = packs_sys/body_reordering
-	url = https://github.com/TeamSPoon/body_reordering.git
+	url = https://github.com/logicmoo/body_reordering.git
 [submodule "packs_sys/eggdrop"]
 	path = packs_sys/eggdrop
-	url = https://github.com/TeamSPoon/eggdrop.git
+	url = https://github.com/logicmoo/eggdrop.git
 [submodule "packs_sys/slack_prolog"]
 	path = packs_sys/slack_prolog
 	url = https://github.com/swi-to-yap/slack_prolog

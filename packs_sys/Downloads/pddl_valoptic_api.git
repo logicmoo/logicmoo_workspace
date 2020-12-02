@@ -47,14 +47,14 @@
 
   <meta name="viewport" content="width=device-width">
   
-  <title>GitHub - TeamSPoon/logicmoo_ec: A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners</title>
-    <meta name="description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - TeamSPoon/logicmoo_ec">
+  <title>GitHub - logicmoo/logicmoo_ec: A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners</title>
+    <meta name="description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - logicmoo/logicmoo_ec">
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
   <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
   <meta property="fb:app_id" content="1401488693436528">
   <meta name="apple-itunes-app" content="app-id=1477376905" />
-    <meta name="twitter:image:src" content="https://avatars0.githubusercontent.com/u/7349971?s=400&amp;v=4" /><meta name="twitter:site" content="@github" /><meta name="twitter:card" content="summary" /><meta name="twitter:title" content="TeamSPoon/logicmoo_ec" /><meta name="twitter:description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - TeamSPoon/logicmoo_ec" />
-    <meta property="og:image" content="https://avatars0.githubusercontent.com/u/7349971?s=400&amp;v=4" /><meta property="og:site_name" content="GitHub" /><meta property="og:type" content="object" /><meta property="og:title" content="TeamSPoon/logicmoo_ec" /><meta property="og:url" content="https://github.com/TeamSPoon/logicmoo_ec" /><meta property="og:description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - TeamSPoon/logicmoo_ec" />
+    <meta name="twitter:image:src" content="https://avatars0.githubusercontent.com/u/7349971?s=400&amp;v=4" /><meta name="twitter:site" content="@github" /><meta name="twitter:card" content="summary" /><meta name="twitter:title" content="logicmoo/logicmoo_ec" /><meta name="twitter:description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - logicmoo/logicmoo_ec" />
+    <meta property="og:image" content="https://avatars0.githubusercontent.com/u/7349971?s=400&amp;v=4" /><meta property="og:site_name" content="GitHub" /><meta property="og:type" content="object" /><meta property="og:title" content="logicmoo/logicmoo_ec" /><meta property="og:url" content="https://github.com/logicmoo/logicmoo_ec" /><meta property="og:description" content="A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners - logicmoo/logicmoo_ec" />
 
 
 
@@ -111,14 +111,14 @@
   <meta http-equiv="x-pjax-version" content="0f68153fc98ea69fbc2b94efd37d9ddd1a1cadef75f6b17f5cefbd0fddfdc1d2">
   
 
-        <link href="https://github.com/TeamSPoon/logicmoo_ec/commits/master.atom" rel="alternate" title="Recent Commits to logicmoo_ec:master" type="application/atom+xml">
+        <link href="https://github.com/logicmoo/logicmoo_ec/commits/master.atom" rel="alternate" title="Recent Commits to logicmoo_ec:master" type="application/atom+xml">
 
-  <meta name="go-import" content="github.com/TeamSPoon/logicmoo_ec git https://github.com/TeamSPoon/logicmoo_ec.git">
+  <meta name="go-import" content="github.com/logicmoo/logicmoo_ec git https://github.com/logicmoo/logicmoo_ec.git">
 
-  <meta name="octolytics-dimension-user_id" content="7349971" /><meta name="octolytics-dimension-user_login" content="TeamSPoon" /><meta name="octolytics-dimension-repository_id" content="135863411" /><meta name="octolytics-dimension-repository_nwo" content="TeamSPoon/logicmoo_ec" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="false" /><meta name="octolytics-dimension-repository_network_root_id" content="135863411" /><meta name="octolytics-dimension-repository_network_root_nwo" content="TeamSPoon/logicmoo_ec" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="false" />
+  <meta name="octolytics-dimension-user_id" content="7349971" /><meta name="octolytics-dimension-user_login" content="logicmoo" /><meta name="octolytics-dimension-repository_id" content="135863411" /><meta name="octolytics-dimension-repository_nwo" content="logicmoo/logicmoo_ec" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="false" /><meta name="octolytics-dimension-repository_network_root_id" content="135863411" /><meta name="octolytics-dimension-repository_network_root_nwo" content="logicmoo/logicmoo_ec" /><meta name="octolytics-dimension-repository_explore_github_marketplace_ci_cta_shown" content="false" />
 
 
-    <link rel="canonical" href="https://github.com/TeamSPoon/logicmoo_ec" data-pjax-transient>
+    <link rel="canonical" href="https://github.com/logicmoo/logicmoo_ec" data-pjax-transient>
 
 
   <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
@@ -164,7 +164,7 @@
         <div class="d-flex flex-items-center">
               <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&amp;source=header-repo"
                 class="d-inline-block d-lg-none f5 text-white no-underline border border-gray-dark rounded-2 px-2 py-1 mr-3 mr-sm-5"
-                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2ed9b195808c0e54c9c03aeebb9ee430335b19a2c7644ca82ecfe15ffbbee5d4"
+                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2ed9b195808c0e54c9c03aeebb9ee430335b19a2c7644ca82ecfe15ffbbee5d4"
                 data-ga-click="Sign up, click to sign up for account, ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;;ref_cta:Sign up;ref_loc:header logged out">
                 Sign&nbsp;up
               </a>
@@ -295,7 +295,7 @@
   aria-expanded="false"
 >
   <div class="position-relative">
-    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="js-site-search-form" role="search" aria-label="Site" data-scope-type="Repository" data-scope-id="135863411" data-scoped-search-url="/TeamSPoon/logicmoo_ec/search" data-unscoped-search-url="/search" action="/TeamSPoon/logicmoo_ec/search" accept-charset="UTF-8" method="get">
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="js-site-search-form" role="search" aria-label="Site" data-scope-type="Repository" data-scope-id="135863411" data-scoped-search-url="/logicmoo/logicmoo_ec/search" data-unscoped-search-url="/search" action="/logicmoo/logicmoo_ec/search" accept-charset="UTF-8" method="get">
       <label class="form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
         <input type="text"
           class="form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
@@ -435,15 +435,15 @@
 
           </div>
 
-        <a href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec"
+        <a href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec"
           class="HeaderMenu-link no-underline mr-3"
-          data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="239fd325559f6792659d08d9a9e9d543468c7736ca233e418f064aec37b2af81"
+          data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="239fd325559f6792659d08d9a9e9d543468c7736ca233e418f064aec37b2af81"
           data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">
           Sign&nbsp;in
         </a>
-            <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&amp;source=header-repo&amp;source_repo=TeamSPoon%2Flogicmoo_ec"
+            <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&amp;source=header-repo&amp;source_repo=logicmoo%2Flogicmoo_ec"
               class="HeaderMenu-link d-inline-block no-underline border border-gray-dark rounded-1 px-2 py-1"
-              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="239fd325559f6792659d08d9a9e9d543468c7736ca233e418f064aec37b2af81"
+              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="239fd325559f6792659d08d9a9e9d543468c7736ca233e418f064aec37b2af81"
               data-ga-click="Sign up, click to sign up for account, ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;;ref_cta:Sign up;ref_loc:header logged out">
               Sign&nbsp;up
             </a>
@@ -516,11 +516,11 @@
             <h1 class=" d-flex flex-wrap flex-items-center break-word f3 text-normal">
     <svg class="octicon octicon-repo text-gray mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
     <span class="author flex-self-stretch" itemprop="author">
-      <a class="url fn" rel="author" data-hovercard-type="organization" data-hovercard-url="/orgs/TeamSPoon/hovercard" href="/TeamSPoon">TeamSPoon</a>
+      <a class="url fn" rel="author" data-hovercard-type="organization" data-hovercard-url="/orgs/logicmoo/hovercard" href="/logicmoo">logicmoo</a>
     </span>
     <span class="mx-1 flex-self-stretch color-text-secondary">/</span>
   <strong itemprop="name" class="mr-2 flex-self-stretch">
-    <a data-pjax="#js-repo-pjax-container" class="" href="/TeamSPoon/logicmoo_ec">logicmoo_ec</a>
+    <a data-pjax="#js-repo-pjax-container" class="" href="/logicmoo/logicmoo_ec">logicmoo_ec</a>
   </strong>
   
 </h1>
@@ -531,10 +531,10 @@
           <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
 
   <li>
-          <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f30972dfaa376155b1e69a00ba7c052997ebea0fa0fa417885d4fc9434099be8" href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec">
+          <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f30972dfaa376155b1e69a00ba7c052997ebea0fa0fa417885d4fc9434099be8" href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec">
     <svg class="octicon octicon-eye" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
     Watch
-</a>    <a class="social-count" href="/TeamSPoon/logicmoo_ec/watchers"
+</a>    <a class="social-count" href="/logicmoo/logicmoo_ec/watchers"
        aria-label="8 users are watching this repository">
       8
     </a>
@@ -542,11 +542,11 @@
   </li>
 
   <li>
-          <a class="btn btn-sm btn-with-count  tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="6571cf75afd01f6f506b7144ced606aae844a7243f439c54b976da60973ab182" href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec">
+          <a class="btn btn-sm btn-with-count  tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="6571cf75afd01f6f506b7144ced606aae844a7243f439c54b976da60973ab182" href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec">
       <svg class="octicon octicon-star v-align-text-bottom" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
       Star
 </a>
-    <a class="social-count js-social-count" href="/TeamSPoon/logicmoo_ec/stargazers"
+    <a class="social-count js-social-count" href="/logicmoo/logicmoo_ec/stargazers"
       aria-label="8 users starred this repository">
       8
     </a>
@@ -554,11 +554,11 @@
   </li>
 
   <li>
-        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="d9485fc777068950b1eaabc7ed3d18518985bb5787bee80736c27ebe9643ff53" href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec">
+        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="d9485fc777068950b1eaabc7ed3d18518985bb5787bee80736c27ebe9643ff53" href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec">
           <svg class="octicon octicon-repo-forked" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>
           Fork
 </a>
-      <a href="/TeamSPoon/logicmoo_ec/network/members" class="social-count"
+      <a href="/logicmoo/logicmoo_ec/network/members" class="social-count"
          aria-label="0 users forked this repository">
         0
       </a>
@@ -571,31 +571,31 @@
         A SWI-Prolog Pack that lets Prolog code seamlessly switch between planners
       </p>
       <div class="mb-2">
-        <a href="/TeamSPoon/logicmoo_ec/blob/master/LICENSE.md" class="muted-link">
+        <a href="/logicmoo/logicmoo_ec/blob/master/LICENSE.md" class="muted-link">
           <svg class="octicon octicon-law mr-1" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.75.75a.75.75 0 00-1.5 0V2h-.984c-.305 0-.604.08-.869.23l-1.288.737A.25.25 0 013.984 3H1.75a.75.75 0 000 1.5h.428L.066 9.192a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.514 3.514 0 00.686.45A4.492 4.492 0 003 11c.88 0 1.556-.22 2.023-.454a3.515 3.515 0 00.686-.45l.045-.04.016-.015.006-.006.002-.002.001-.002L5.25 9.5l.53.53a.75.75 0 00.154-.838L3.822 4.5h.162c.305 0 .604-.08.869-.23l1.289-.737a.25.25 0 01.124-.033h.984V13h-2.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-2.5V3.5h.984a.25.25 0 01.124.033l1.29.736c.264.152.563.231.868.231h.162l-2.112 4.692a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.517 3.517 0 00.686.45A4.492 4.492 0 0013 11c.88 0 1.556-.22 2.023-.454a3.512 3.512 0 00.686-.45l.045-.04.01-.01.006-.005.006-.006.002-.002.001-.002-.529-.531.53.53a.75.75 0 00.154-.838L13.823 4.5h.427a.75.75 0 000-1.5h-2.234a.25.25 0 01-.124-.033l-1.29-.736A1.75 1.75 0 009.735 2H8.75V.75zM1.695 9.227c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327l-1.305 2.9zm10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327l-1.305 2.9z"></path></svg>
             BSD-2-Clause License
         </a>
       </div>
     <div class="mb-3">
-      <a class="link-gray no-underline mr-3" href="/TeamSPoon/logicmoo_ec/stargazers">
+      <a class="link-gray no-underline mr-3" href="/logicmoo/logicmoo_ec/stargazers">
         <svg class="octicon octicon-star mr-1" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
         <span class="text-bold">8</span>
         stars
-</a>      <a class="link-gray no-underline" href="/TeamSPoon/logicmoo_ec/network/members">
+</a>      <a class="link-gray no-underline" href="/logicmoo/logicmoo_ec/network/members">
         <svg class="octicon octicon-repo-forked mr-1" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>
         <span class="text-bold">0</span>
         forks
 </a>    </div>
     <div class="d-flex">
       <div class="flex-1 mr-2">
-            <a class="btn btn-sm  btn-block tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="6571cf75afd01f6f506b7144ced606aae844a7243f439c54b976da60973ab182" href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec">
+            <a class="btn btn-sm  btn-block tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:135863411,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="6571cf75afd01f6f506b7144ced606aae844a7243f439c54b976da60973ab182" href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec">
       <svg class="octicon octicon-star v-align-text-bottom" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
       Star
 </a>
 
       </div>
       <div class="flex-1">
-              <a class="tooltipped tooltipped-s btn btn-sm btn-block" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f30972dfaa376155b1e69a00ba7c052997ebea0fa0fa417885d4fc9434099be8" href="/login?return_to=%2FTeamSPoon%2Flogicmoo_ec">
+              <a class="tooltipped tooltipped-s btn btn-sm btn-block" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f30972dfaa376155b1e69a00ba7c052997ebea0fa0fa417885d4fc9434099be8" href="/login?return_to=%2Flogicmoo%2Flogicmoo_ec">
     <svg class="octicon octicon-eye" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
     Watch
 </a>
@@ -607,43 +607,43 @@
 <nav aria-label="Repository" data-pjax="#js-repo-pjax-container" class="js-repo-nav js-sidenav-container-pjax js-responsive-underlinenav overflow-hidden UnderlineNav px-3 px-md-4 px-lg-5 bg-gray-light">
   <ul class="UnderlineNav-body list-style-none ">
           <li class="d-flex">
-        <a class="js-selected-navigation-item selected UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="code-tab" data-hotkey="g c" data-ga-click="Repository, Navigation click, Code tab" aria-current="page" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches repo_packages repo_deployments /TeamSPoon/logicmoo_ec" href="/TeamSPoon/logicmoo_ec">
+        <a class="js-selected-navigation-item selected UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="code-tab" data-hotkey="g c" data-ga-click="Repository, Navigation click, Code tab" aria-current="page" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches repo_packages repo_deployments /logicmoo/logicmoo_ec" href="/logicmoo/logicmoo_ec">
               <svg class="octicon octicon-code UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path></svg>
             <span data-content="Code">Code</span>
               <span title="Not available" class="Counter "></span>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="issues-tab" data-hotkey="g i" data-ga-click="Repository, Navigation click, Issues tab" data-selected-links="repo_issues repo_labels repo_milestones /TeamSPoon/logicmoo_ec/issues" href="/TeamSPoon/logicmoo_ec/issues">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="issues-tab" data-hotkey="g i" data-ga-click="Repository, Navigation click, Issues tab" data-selected-links="repo_issues repo_labels repo_milestones /logicmoo/logicmoo_ec/issues" href="/logicmoo/logicmoo_ec/issues">
               <svg class="octicon octicon-issue-opened UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9 3a1 1 0 11-2 0 1 1 0 012 0zm-.25-6.25a.75.75 0 00-1.5 0v3.5a.75.75 0 001.5 0v-3.5z"></path></svg>
             <span data-content="Issues">Issues</span>
               <span title="1" class="Counter ">1</span>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="pull-requests-tab" data-hotkey="g p" data-ga-click="Repository, Navigation click, Pull requests tab" data-selected-links="repo_pulls checks /TeamSPoon/logicmoo_ec/pulls" href="/TeamSPoon/logicmoo_ec/pulls">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="pull-requests-tab" data-hotkey="g p" data-ga-click="Repository, Navigation click, Pull requests tab" data-selected-links="repo_pulls checks /logicmoo/logicmoo_ec/pulls" href="/logicmoo/logicmoo_ec/pulls">
               <svg class="octicon octicon-git-pull-request UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>
             <span data-content="Pull requests">Pull requests</span>
               <span title="0" hidden="hidden" class="Counter ">0</span>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="actions-tab" data-hotkey="g a" data-ga-click="Repository, Navigation click, Actions tab" data-selected-links="repo_actions /TeamSPoon/logicmoo_ec/actions" href="/TeamSPoon/logicmoo_ec/actions">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="actions-tab" data-hotkey="g a" data-ga-click="Repository, Navigation click, Actions tab" data-selected-links="repo_actions /logicmoo/logicmoo_ec/actions" href="/logicmoo/logicmoo_ec/actions">
               <svg class="octicon octicon-play UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>
             <span data-content="Actions">Actions</span>
               <span title="Not available" class="Counter "></span>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="projects-tab" data-hotkey="g b" data-ga-click="Repository, Navigation click, Projects tab" data-selected-links="repo_projects new_repo_project repo_project /TeamSPoon/logicmoo_ec/projects" href="/TeamSPoon/logicmoo_ec/projects">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="projects-tab" data-hotkey="g b" data-ga-click="Repository, Navigation click, Projects tab" data-selected-links="repo_projects new_repo_project repo_project /logicmoo/logicmoo_ec/projects" href="/logicmoo/logicmoo_ec/projects">
               <svg class="octicon octicon-project UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
             <span data-content="Projects">Projects</span>
               <span title="0" hidden="hidden" class="Counter ">0</span>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="security-tab" data-hotkey="g s" data-ga-click="Repository, Navigation click, Security tab" data-selected-links="security overview alerts policy token_scanning code_scanning /TeamSPoon/logicmoo_ec/security" href="/TeamSPoon/logicmoo_ec/security">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="security-tab" data-hotkey="g s" data-ga-click="Repository, Navigation click, Security tab" data-selected-links="security overview alerts policy token_scanning code_scanning /logicmoo/logicmoo_ec/security" href="/logicmoo/logicmoo_ec/security">
               <svg class="octicon octicon-shield UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.467.133a1.75 1.75 0 011.066 0l5.25 1.68A1.75 1.75 0 0115 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.7 1.7 0 01-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 011.217-1.667l5.25-1.68zm.61 1.429a.25.25 0 00-.153 0l-5.25 1.68a.25.25 0 00-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.2.2 0 00.154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.25.25 0 00-.174-.237l-5.25-1.68zM9 10.5a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.75a.75.75 0 10-1.5 0v3a.75.75 0 001.5 0v-3z"></path></svg>
             <span data-content="Security">Security</span>
-              <include-fragment src="/TeamSPoon/logicmoo_ec/security/overall-count" accept="text/fragment+html"></include-fragment>
+              <include-fragment src="/logicmoo/logicmoo_ec/security/overall-count" accept="text/fragment+html"></include-fragment>
 </a>      </li>
       <li class="d-flex">
-        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="insights-tab" data-ga-click="Repository, Navigation click, Insights tab" data-selected-links="repo_graphs repo_contributors dependency_graph dependabot_updates pulse people /TeamSPoon/logicmoo_ec/pulse" href="/TeamSPoon/logicmoo_ec/pulse">
+        <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="insights-tab" data-ga-click="Repository, Navigation click, Insights tab" data-selected-links="repo_graphs repo_contributors dependency_graph dependabot_updates pulse people /logicmoo/logicmoo_ec/pulse" href="/logicmoo/logicmoo_ec/pulse">
               <svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
             <span data-content="Insights">Insights</span>
               <span title="Not available" class="Counter "></span>
@@ -661,31 +661,31 @@
   
             <ul>
                 <li data-menu-item="code-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item selected dropdown-item" aria-current="page" data-selected-links=" /TeamSPoon/logicmoo_ec" href="/TeamSPoon/logicmoo_ec">
+                  <a role="menuitem" class="js-selected-navigation-item selected dropdown-item" aria-current="page" data-selected-links=" /logicmoo/logicmoo_ec" href="/logicmoo/logicmoo_ec">
                     Code
 </a>                </li>
                 <li data-menu-item="issues-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/issues" href="/TeamSPoon/logicmoo_ec/issues">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/issues" href="/logicmoo/logicmoo_ec/issues">
                     Issues
 </a>                </li>
                 <li data-menu-item="pull-requests-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/pulls" href="/TeamSPoon/logicmoo_ec/pulls">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/pulls" href="/logicmoo/logicmoo_ec/pulls">
                     Pull requests
 </a>                </li>
                 <li data-menu-item="actions-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/actions" href="/TeamSPoon/logicmoo_ec/actions">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/actions" href="/logicmoo/logicmoo_ec/actions">
                     Actions
 </a>                </li>
                 <li data-menu-item="projects-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/projects" href="/TeamSPoon/logicmoo_ec/projects">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/projects" href="/logicmoo/logicmoo_ec/projects">
                     Projects
 </a>                </li>
                 <li data-menu-item="security-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/security" href="/TeamSPoon/logicmoo_ec/security">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/security" href="/logicmoo/logicmoo_ec/security">
                     Security
 </a>                </li>
                 <li data-menu-item="insights-tab" hidden>
-                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /TeamSPoon/logicmoo_ec/pulse" href="/TeamSPoon/logicmoo_ec/pulse">
+                  <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /logicmoo/logicmoo_ec/pulse" href="/logicmoo/logicmoo_ec/pulse">
                     Insights
 </a>                </li>
             </ul>
@@ -720,7 +720,7 @@
         </button>
         <h3 class="pt-2">Join GitHub today</h3>
         <p class="col-6 mx-auto">GitHub is home to over 50 million developers working together to host and review code, manage projects, and build software together.</p>
-        <a class="btn btn-primary" data-ga-click="(Logged out) Sign up prompt, clicked Sign up, text:sign-up" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;files signup prompt&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="716df97a2a1034b1cad800948c89546e7a2a98cffa1a690610cdc8c488dd800a" href="/join?source=prompt-code&amp;source_repo=TeamSPoon%2Flogicmoo_ec">Sign up</a>
+        <a class="btn btn-primary" data-ga-click="(Logged out) Sign up prompt, clicked Sign up, text:sign-up" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;files signup prompt&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="716df97a2a1034b1cad800948c89546e7a2a98cffa1a690610cdc8c488dd800a" href="/join?source=prompt-code&amp;source_repo=logicmoo%2Flogicmoo_ec">Sign up</a>
       </div>
     </div>
   </signup-prompt>
@@ -748,7 +748,7 @@
       <span class="dropdown-caret"></span>
     </summary>
 
-    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/TeamSPoon/logicmoo_ec/refs/master?source_action=disambiguate&amp;source_controller=files" preload>
+    <details-menu class="SelectMenu SelectMenu--hasFilter" src="/logicmoo/logicmoo_ec/refs/master?source_action=disambiguate&amp;source_controller=files" preload>
       <div class="SelectMenu-modal">
         <include-fragment class="SelectMenu-loading" aria-label="Menu is loading">
           <svg class="octicon octicon-octoface anim-pulse" height="32" viewBox="0 0 24 24" version="1.1" width="32" aria-hidden="true"><path d="M7.75 11c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5C9 11.56 8.44 11 7.75 11zm1.27 4.5a.469.469 0 01.48-.5h5a.47.47 0 01.48.5c-.116 1.316-.759 2.5-2.98 2.5s-2.864-1.184-2.98-2.5zm7.23-4.5c-.69 0-1.25.56-1.25 1.25v1.5a1.25 1.25 0 102.5 0v-1.5c0-.69-.56-1.25-1.25-1.25z"></path><path fill-rule="evenodd" d="M21.255 3.82a1.725 1.725 0 00-2.141-1.195c-.557.16-1.406.44-2.264.866-.78.386-1.647.93-2.293 1.677A18.442 18.442 0 0012 5c-.93 0-1.784.059-2.569.17-.645-.74-1.505-1.28-2.28-1.664a13.876 13.876 0 00-2.265-.866 1.725 1.725 0 00-2.141 1.196 23.645 23.645 0 00-.69 3.292c-.125.97-.191 2.07-.066 3.112C1.254 11.882 1 13.734 1 15.527 1 19.915 3.13 23 12 23c8.87 0 11-3.053 11-7.473 0-1.794-.255-3.647-.99-5.29.127-1.046.06-2.15-.066-3.125a23.652 23.652 0 00-.689-3.292zM20.5 14c.5 3.5-1.5 6.5-8.5 6.5s-9-3-8.5-6.5c.583-4 3-6 8.5-6s7.928 2 8.5 6z"></path></svg>
@@ -761,12 +761,12 @@
 
 
   <div class="flex-self-center ml-3 flex-self-stretch d-none d-lg-flex flex-items-center lh-condensed-ultra">
-    <a data-pjax href="/TeamSPoon/logicmoo_ec/branches" class="link-gray-dark no-underline">
+    <a data-pjax href="/logicmoo/logicmoo_ec/branches" class="link-gray-dark no-underline">
       <svg class="octicon octicon-git-branch text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z"></path></svg>
       <strong>2</strong>
       <span class="text-gray-light">branches</span>
     </a>
-    <a data-pjax href="/TeamSPoon/logicmoo_ec/tags" class="ml-3 link-gray-dark no-underline">
+    <a data-pjax href="/logicmoo/logicmoo_ec/tags" class="ml-3 link-gray-dark no-underline">
       <svg class="octicon octicon-tag text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"></path></svg>
       <strong>0</strong>
       <span class="text-gray-light">tags</span>
@@ -775,7 +775,7 @@
 
   <div class="flex-auto"></div>
 
-  <a class="btn ml-2" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="5a17a1f073fec14170b71fa648522d8f430674e22b4633d030edfdedcb72bba8" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/TeamSPoon/logicmoo_ec/find/master">
+  <a class="btn ml-2" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="5a17a1f073fec14170b71fa648522d8f430674e22b4633d030edfdedcb72bba8" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/logicmoo/logicmoo_ec/find/master">
     Go to file
 </a>
 
@@ -785,7 +785,7 @@
         
 <get-repo>
   <details class="position-relative details-overlay details-reset" data-action="toggle:get-repo#onDetailsToggle">
-    <summary class="btn btn-primary" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;repository_id&quot;:135863411,&quot;target&quot;:&quot;CLONE_OR_DOWNLOAD_BUTTON&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="a6291aff1804247330e2ab4c5f7ee19d2b5118c4d38575f6aeaeac428fe504ac">
+    <summary class="btn btn-primary" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;repository_id&quot;:135863411,&quot;target&quot;:&quot;CLONE_OR_DOWNLOAD_BUTTON&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="a6291aff1804247330e2ab4c5f7ee19d2b5118c4d38575f6aeaeac428fe504ac">
       <svg class="octicon octicon-download mr-1" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.47 10.78a.75.75 0 001.06 0l3.75-3.75a.75.75 0 00-1.06-1.06L8.75 8.44V1.75a.75.75 0 00-1.5 0v6.69L4.78 5.97a.75.75 0 00-1.06 1.06l3.75 3.75zM3.75 13a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5z"></path></svg>
       Code
       <span class="dropdown-caret"></span>
@@ -807,18 +807,18 @@
   <div class="UnderlineNav my-2 box-shadow-none">
     <div class="UnderlineNav-body" role="tablist">
       <!-- '"` --><!-- </textarea></xmp> --></option></form><form data-remote="true" action="/users/set_protocol?protocol_type=clone" accept-charset="UTF-8" method="post"><input type="hidden" data-csrf="true" name="authenticity_token" value="v62drOoBnrMyBe7HZrpOBS5nNuQ9ZTzyUHU5iM1BV0Nr3fiq/IbBlei6bSWUCFWT8QdnCLQgP+Yqlr5opi2r5w==" />
-          <button name="protocol_selector" type="submit" role="tab" class="UnderlineNav-item lh-default f6 py-0 px-0 mr-2 position-relative" aria-selected="true" value="http" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;USE_HTTPS&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="4f07de2949365489511766e70644eba826c65be912d77cbd00daa1e3b97f061e">
+          <button name="protocol_selector" type="submit" role="tab" class="UnderlineNav-item lh-default f6 py-0 px-0 mr-2 position-relative" aria-selected="true" value="http" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;USE_HTTPS&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="4f07de2949365489511766e70644eba826c65be912d77cbd00daa1e3b97f061e">
             HTTPS
-</button>          <button name="protocol_selector" type="submit" role="tab" class="UnderlineNav-item lh-default f6 py-0 px-0 mr-2 position-relative" value="gh_cli" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;USE_GH_CLI&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="178baab99f2d6655160a1547fe2ac424d425a9c7d3c1e6e2e1a7b32ef01e20a1">
+</button>          <button name="protocol_selector" type="submit" role="tab" class="UnderlineNav-item lh-default f6 py-0 px-0 mr-2 position-relative" value="gh_cli" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;USE_GH_CLI&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="178baab99f2d6655160a1547fe2ac424d425a9c7d3c1e6e2e1a7b32ef01e20a1">
             GitHub CLI
 </button></form>    </div>
   </div>
 
   <div role="tabpanel">
     <div class="input-group">
-  <input type="text" class="form-control input-monospace input-sm bg-gray-light" data-autoselect value="https://github.com/TeamSPoon/logicmoo_ec.git" aria-label="https://github.com/TeamSPoon/logicmoo_ec.git" readonly>
+  <input type="text" class="form-control input-monospace input-sm bg-gray-light" data-autoselect value="https://github.com/logicmoo/logicmoo_ec.git" aria-label="https://github.com/logicmoo/logicmoo_ec.git" readonly>
   <div class="input-group-button">
-    <clipboard-copy value="https://github.com/TeamSPoon/logicmoo_ec.git" aria-label="Copy to clipboard" class="btn btn-sm" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;COPY_URL&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2286160f38cb310dcdd0fedd0735a2ad76cbb11b276743efd5f0574b5950708f"><svg class="octicon octicon-clippy" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></clipboard-copy>
+    <clipboard-copy value="https://github.com/logicmoo/logicmoo_ec.git" aria-label="Copy to clipboard" class="btn btn-sm" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;COPY_URL&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2286160f38cb310dcdd0fedd0735a2ad76cbb11b276743efd5f0574b5950708f"><svg class="octicon octicon-clippy" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></clipboard-copy>
   </div>
 </div>
 
@@ -830,9 +830,9 @@
 
   <div role="tabpanel" hidden>
     <div class="input-group">
-  <input type="text" class="form-control input-monospace input-sm bg-gray-light" data-autoselect value="gh repo clone TeamSPoon/logicmoo_ec" aria-label="gh repo clone TeamSPoon/logicmoo_ec" readonly>
+  <input type="text" class="form-control input-monospace input-sm bg-gray-light" data-autoselect value="gh repo clone logicmoo/logicmoo_ec" aria-label="gh repo clone logicmoo/logicmoo_ec" readonly>
   <div class="input-group-button">
-    <clipboard-copy value="gh repo clone TeamSPoon/logicmoo_ec" aria-label="Copy to clipboard" class="btn btn-sm" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;COPY_URL&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2286160f38cb310dcdd0fedd0735a2ad76cbb11b276743efd5f0574b5950708f"><svg class="octicon octicon-clippy" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></clipboard-copy>
+    <clipboard-copy value="gh repo clone logicmoo/logicmoo_ec" aria-label="Copy to clipboard" class="btn btn-sm" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;COPY_URL&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2286160f38cb310dcdd0fedd0735a2ad76cbb11b276743efd5f0574b5950708f"><svg class="octicon octicon-clippy" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></clipboard-copy>
   </div>
 </div>
 
@@ -846,12 +846,12 @@
           </div>
           <ul class="list-style-none">
             <li data-platforms="windows,mac" class="Box-row Box-row--hover-gray p-0 rounded-0 mt-0 js-remove-unless-platform">
-              <a class="d-flex flex-items-center text-gray-dark text-bold no-underline p-3" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;OPEN_IN_DESKTOP&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f55d026455d9272bf9e41eb4aa6f2293856688c4585f9b05e665872ce795461d" data-action="click:get-repo#showDownloadMessage" href="https://desktop.github.com">
+              <a class="d-flex flex-items-center text-gray-dark text-bold no-underline p-3" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;OPEN_IN_DESKTOP&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="f55d026455d9272bf9e41eb4aa6f2293856688c4585f9b05e665872ce795461d" data-action="click:get-repo#showDownloadMessage" href="https://desktop.github.com">
                 <svg class="octicon octicon-desktop-download mr-3" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.75 5V.75a.75.75 0 00-1.5 0V5H5.104a.25.25 0 00-.177.427l2.896 2.896a.25.25 0 00.354 0l2.896-2.896A.25.25 0 0010.896 5H8.75zM1.5 2.75a.25.25 0 01.25-.25h3a.75.75 0 000-1.5h-3A1.75 1.75 0 000 2.75v7.5C0 11.216.784 12 1.75 12h3.727c-.1 1.041-.52 1.872-1.292 2.757A.75.75 0 004.75 16h6.5a.75.75 0 00.565-1.243c-.772-.885-1.193-1.716-1.292-2.757h3.727A1.75 1.75 0 0016 10.25v-7.5A1.75 1.75 0 0014.25 1h-3a.75.75 0 000 1.5h3a.25.25 0 01.25.25v7.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25v-7.5zM9.018 12H6.982a5.72 5.72 0 01-.765 2.5h3.566a5.72 5.72 0 01-.765-2.5z"></path></svg>
                 Open with GitHub Desktop
 </a>            </li>
             <li class="Box-row Box-row--hover-gray p-0">
-              <a class="d-flex flex-items-center text-gray-dark text-bold no-underline p-3" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;DOWNLOAD_ZIP&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="14aac1a9ffda2ff2140f372914210d677f0884b2fc720ab13c3c20365ba6ee28" data-ga-click="Repository, download zip, location:repo overview" data-open-app="link" href="/TeamSPoon/logicmoo_ec/archive/master.zip">
+              <a class="d-flex flex-items-center text-gray-dark text-bold no-underline p-3" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;clone_or_download.click&quot;,&quot;payload&quot;:{&quot;feature_clicked&quot;:&quot;DOWNLOAD_ZIP&quot;,&quot;git_repository_type&quot;:&quot;REPOSITORY&quot;,&quot;repository_id&quot;:135863411,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="14aac1a9ffda2ff2140f372914210d677f0884b2fc720ab13c3c20365ba6ee28" data-ga-click="Repository, download zip, location:repo overview" data-open-app="link" href="/logicmoo/logicmoo_ec/archive/master.zip">
                 <svg class="octicon octicon-file-zip mr-3" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.5 1.75a.25.25 0 01.25-.25h3a.75.75 0 000 1.5h.5a.75.75 0 000-1.5h2.086a.25.25 0 01.177.073l2.914 2.914a.25.25 0 01.073.177v8.586a.25.25 0 01-.25.25h-.5a.75.75 0 000 1.5h.5A1.75 1.75 0 0014 13.25V4.664c0-.464-.184-.909-.513-1.237L10.573.513A1.75 1.75 0 009.336 0H3.75A1.75 1.75 0 002 1.75v11.5c0 .649.353 1.214.874 1.515a.75.75 0 10.752-1.298.25.25 0 01-.126-.217V1.75zM8.75 3a.75.75 0 000 1.5h.5a.75.75 0 000-1.5h-.5zM6 5.25a.75.75 0 01.75-.75h.5a.75.75 0 010 1.5h-.5A.75.75 0 016 5.25zm2 1.5A.75.75 0 018.75 6h.5a.75.75 0 010 1.5h-.5A.75.75 0 018 6.75zm-1.25.75a.75.75 0 000 1.5h.5a.75.75 0 000-1.5h-.5zM8 9.75A.75.75 0 018.75 9h.5a.75.75 0 010 1.5h-.5A.75.75 0 018 9.75zm-.75.75a1.75 1.75 0 00-1.75 1.75v3c0 .414.336.75.75.75h2.5a.75.75 0 00.75-.75v-3a1.75 1.75 0 00-1.75-1.75h-.5zM7 12.25a.25.25 0 01.25-.25h.5a.25.25 0 01.25.25v2.25H7v-2.25z"></path></svg>
                 Download ZIP
 </a>            </li>
@@ -899,14 +899,14 @@
   <div class="Box-header Box-header--blue position-relative">
     <h2 class="sr-only">Latest commit</h2>
     <div class="js-details-container Details d-flex rounded-top-1 flex-items-center flex-wrap" data-issue-and-pr-hovercards-enabled>
-      <include-fragment src="/TeamSPoon/logicmoo_ec/tree-commit/7e7789f104665737fece23a67a46cbd1c52f75d7" class="d-flex flex-auto flex-items-center" aria-busy="true" aria-label="Loading latest commit">
+      <include-fragment src="/logicmoo/logicmoo_ec/tree-commit/7e7789f104665737fece23a67a46cbd1c52f75d7" class="d-flex flex-auto flex-items-center" aria-busy="true" aria-label="Loading latest commit">
         <div class="Skeleton avatar avatar-user flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1" style="width:24px;height:24px;"></div>
         <div class="Skeleton Skeleton--text col-5 ml-3">&nbsp;</div>
 </include-fragment>      <div class="flex-shrink-0">
         <h2 class="sr-only">Git stats</h2>
         <ul class="list-style-none d-flex">
           <li class="ml-0 ml-md-3">
-            <a data-pjax href="/TeamSPoon/logicmoo_ec/commits/master" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
+            <a data-pjax href="/logicmoo/logicmoo_ec/commits/master" class="pl-3 pr-3 py-3 p-md-0 mt-n3 mb-n3 mr-n3 m-md-0 link-gray-dark no-underline no-wrap">
               <svg class="octicon octicon-history text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path></svg>
               <span class="d-none d-sm-inline">
                     <strong>82</strong>
@@ -922,8 +922,8 @@
   
 
 
-  <include-fragment src="/TeamSPoon/logicmoo_ec/file-list/master">
-      <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/TeamSPoon/logicmoo_ec/tree/7e7789f104665737fece23a67a46cbd1c52f75d7">Permalink</a>
+  <include-fragment src="/logicmoo/logicmoo_ec/file-list/master">
+      <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/logicmoo/logicmoo_ec/tree/7e7789f104665737fece23a67a46cbd1c52f75d7">Permalink</a>
 
   <div class="include-fragment-error flash flash-error flash-full py-2">
   <svg class="octicon octicon-alert" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
@@ -946,7 +946,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".github" href="/TeamSPoon/logicmoo_ec/tree/master/.github">.github</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".github" href="/logicmoo/logicmoo_ec/tree/master/.github">.github</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -965,7 +965,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="docs" href="/TeamSPoon/logicmoo_ec/tree/master/docs">docs</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="docs" href="/logicmoo/logicmoo_ec/tree/master/docs">docs</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -984,7 +984,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="ext" href="/TeamSPoon/logicmoo_ec/tree/master/ext">ext</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="ext" href="/logicmoo/logicmoo_ec/tree/master/ext">ext</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1003,7 +1003,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="prolog" href="/TeamSPoon/logicmoo_ec/tree/master/prolog">prolog</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="prolog" href="/logicmoo/logicmoo_ec/tree/master/prolog">prolog</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1022,7 +1022,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="test" href="/TeamSPoon/logicmoo_ec/tree/master/test">test</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="test" href="/logicmoo/logicmoo_ec/tree/master/test">test</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1041,7 +1041,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitignore" href="/TeamSPoon/logicmoo_ec/blob/master/.gitignore">.gitignore</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".gitignore" href="/logicmoo/logicmoo_ec/blob/master/.gitignore">.gitignore</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1060,7 +1060,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".travis.yml" href="/TeamSPoon/logicmoo_ec/blob/master/.travis.yml">.travis.yml</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title=".travis.yml" href="/logicmoo/logicmoo_ec/blob/master/.travis.yml">.travis.yml</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1079,7 +1079,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LICENSE.md" itemprop="license" href="/TeamSPoon/logicmoo_ec/blob/master/LICENSE.md">LICENSE.md</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LICENSE.md" itemprop="license" href="/logicmoo/logicmoo_ec/blob/master/LICENSE.md">LICENSE.md</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1098,7 +1098,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LogicmooPlanner.vpj" href="/TeamSPoon/logicmoo_ec/blob/master/LogicmooPlanner.vpj">LogicmooPlanner.vpj</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="LogicmooPlanner.vpj" href="/logicmoo/logicmoo_ec/blob/master/LogicmooPlanner.vpj">LogicmooPlanner.vpj</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1117,7 +1117,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="README.md" href="/TeamSPoon/logicmoo_ec/blob/master/README.md">README.md</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="README.md" href="/logicmoo/logicmoo_ec/blob/master/README.md">README.md</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1136,7 +1136,7 @@
           </div>
 
           <div role="rowheader" class="flex-auto min-width-0 col-md-2 mr-3">
-            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="pack.pl" href="/TeamSPoon/logicmoo_ec/blob/master/pack.pl">pack.pl</a></span>
+            <span class="css-truncate css-truncate-target d-block width-fit"><a class="js-navigation-open link-gray-dark" title="pack.pl" href="/logicmoo/logicmoo_ec/blob/master/pack.pl">pack.pl</a></span>
           </div>
 
           <div role="gridcell" class="flex-auto min-width-0 d-none d-md-block col-5 mr-3" >
@@ -1169,11 +1169,11 @@
     </div>
         <div class="Popover anim-scale-in js-tagsearch-popover"
      hidden
-     data-tagsearch-url="/TeamSPoon/logicmoo_ec/find-definition"
+     data-tagsearch-url="/logicmoo/logicmoo_ec/find-definition"
      data-tagsearch-ref="master"
      data-tagsearch-path="README.md"
      data-tagsearch-lang="Markdown"
-     data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_symbol&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_symbol&quot;,&quot;repository_id&quot;:135863411,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Markdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/TeamSPoon/logicmoo_ec&quot;,&quot;user_id&quot;:null}}"
+     data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_symbol&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_symbol&quot;,&quot;repository_id&quot;:135863411,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;Markdown&quot;,&quot;originating_url&quot;:&quot;https://github.com/logicmoo/logicmoo_ec&quot;,&quot;user_id&quot;:null}}"
      data-hydro-click-hmac="b66460be78a9e49675cd38cb046ed91f61e999febff0aeed4e46881847f52964">
   <div class="Popover-message Popover-message--large Popover-message--top-left TagsearchPopover mt-1 mb-4 mx-auto Box box-shadow-large">
     <div class="TagsearchPopover-content js-tagsearch-popover-content overflow-auto" style="will-change:transform;">
@@ -1185,7 +1185,7 @@
         <article class="markdown-body entry-content container-lg" itemprop="text"><h1><a id="user-content-logicmoo_ec" class="anchor" aria-hidden="true" href="#logicmoo_ec"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>logicmoo_ec</h1>
 <p>Logicmoo Event Calc -- A SWI-Prolog Pack that lets Prolog code seamlessly use planners speaking LPS, Decreasoner EventCalc, PDDLish and OCLh</p>
 <p>Installation using SWI-Prolog 7.3 or later:</p>
-<div class="highlight highlight-source-prolog"><pre>    ?- pack_install('https://github.com/TeamSPoon/logicmoo_ec.git').</pre></div>
+<div class="highlight highlight-source-prolog"><pre>    ?- pack_install('https://github.com/logicmoo/logicmoo_ec.git').</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="https://camo.githubusercontent.com/2d7906543b9379f6b19505994bf15caa3c1cb74f2af682f1bb6ab8168cb6be26/68747470733a2f2f706c616365686f6c642e69742f31352f6630336331352f3030303030303f746578743d2b"><img src="https://camo.githubusercontent.com/2d7906543b9379f6b19505994bf15caa3c1cb74f2af682f1bb6ab8168cb6be26/68747470733a2f2f706c616365686f6c642e69742f31352f6630336331352f3030303030303f746578743d2b" alt="#f03c15" data-canonical-src="https://placehold.it/15/f03c15/000000?text=+" style="max-width:100%;"></a> <strong>TODO</strong>: Andrew Dougherty - Ensure whatever is needed from the interfaces to VAL etc</p>
 <h1><a id="user-content-solvers" class="anchor" aria-hidden="true" href="#solvers"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Solvers</h1>
 <p>ocl  = OCL Planner called HyHTN (.ocl)
@@ -1215,7 +1215,7 @@ logicmoo_lps = LPS Solver for PDDL/DEC Files</p>
 <h1><a id="user-content-getting-started-with-pddl" class="anchor" aria-hidden="true" href="#getting-started-with-pddl"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Getting Started with PDDL</h1>
 <p><a target="_blank" rel="noopener noreferrer" href="https://camo.githubusercontent.com/2d7906543b9379f6b19505994bf15caa3c1cb74f2af682f1bb6ab8168cb6be26/68747470733a2f2f706c616365686f6c642e69742f31352f6630336331352f3030303030303f746578743d2b"><img src="https://camo.githubusercontent.com/2d7906543b9379f6b19505994bf15caa3c1cb74f2af682f1bb6ab8168cb6be26/68747470733a2f2f706c616365686f6c642e69742f31352f6630336331352f3030303030303f746578743d2b" alt="#f03c15" data-canonical-src="https://placehold.it/15/f03c15/000000?text=+" style="max-width:100%;"></a> <strong>NOTICE</strong>: This is a work in progress and is being updated weekly.</p>
 <p>This guide is designed for first-time readers, people who need refreshers and others, like myself, who sometimes need some syntax sanity-checking.</p>
-<p>If you read anything here that you believe needs improvement, <a href="https://github.com/TeamSPoon/logicmoo_ec">contribute to it on GitHub</a>.</p>
+<p>If you read anything here that you believe needs improvement, <a href="https://github.com/logicmoo/logicmoo_ec">contribute to it on GitHub</a>.</p>
 <h2><a id="user-content-introduction" class="anchor" aria-hidden="true" href="#introduction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Introduction</h2>
 <p>PDDL one of the few languages designed for the purpose of creating a standard for Artificial Intelligence (AI) planning. It was developed in 1998 and was introduced at ICAPS, with improvements and extensions being built into it over the years <a href="https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language#De_facto_official_versions_of_PDDL" rel="nofollow">[1]</a>.</p>
 <p>The most popular of PDDL used today are PDDL2.1, which is an extension to PDDL for expressing temporal domains <a href="http://www.jair.org/papers/paper1129.html" rel="nofollow">[2]</a>; PDDL 3 <a href="http://www.cs.yale.edu/homes/dvm/papers/pddl-ipc5.pdf" rel="nofollow">[3]</a> which adds trajectory constraints and preferences to PDDL 2.1, and PDDL+ <a href="http://www.jair.org/papers/paper2044.html" rel="nofollow">[4]</a> which allows modelling mixed discrete-continuous domains in PDDL.</p>
@@ -1267,7 +1267,7 @@ logicmoo_lps = LPS Solver for PDDL/DEC Files</p>
 </code></pre>
 <p>where <code>&lt;title&gt;</code> is the title of the problem file and <code>&lt;domain-name&gt;</code> refers to the name of the corresponding domain file.</p>
 <h2><a id="user-content-simple-example-lets-eat" class="anchor" aria-hidden="true" href="#simple-example-lets-eat"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Simple Example: Let's Eat!</h2>
-<p><a target="_blank" rel="noopener noreferrer" href="/TeamSPoon/logicmoo_ec/blob/master/docs/image/arm-cupcake.png"><img src="/TeamSPoon/logicmoo_ec/raw/master/docs/image/arm-cupcake.png" alt="Gripper" style="max-width:100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="/logicmoo/logicmoo_ec/blob/master/docs/image/arm-cupcake.png"><img src="/logicmoo/logicmoo_ec/raw/master/docs/image/arm-cupcake.png" alt="Gripper" style="max-width:100%;"></a></p>
 <p>Let's imagine we have a robot gripper arm, a cupcake and a plate. The gripper is empty, the cupcake is on the table and we want to put the cupcake on the plate.</p>
 <p>Before we model this in PDDL, let's look at the components of the PDDL problem:</p>
 <p>First we define the domain.</p>
@@ -1348,7 +1348,7 @@ logicmoo_lps = LPS Solver for PDDL/DEC Files</p>
    )
 )
 </code></pre>
-<p>Put all the above into a file, and you have <a href="https://github.com/TeamSPoon/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl">a domain file</a>!</p>
+<p>Put all the above into a file, and you have <a href="https://github.com/logicmoo/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl">a domain file</a>!</p>
 <p>Now we'll look at the problem file. We'll start by letting it know which domain it's associated to, and define the objects that exist in the world.</p>
 <pre><code>(define (problem letseat-simple)
 	(:domain letseat)
@@ -1372,7 +1372,7 @@ logicmoo_lps = LPS Solver for PDDL/DEC Files</p>
 	(on cupcake plate)
 )
 </code></pre>
-<p>Put that all together and you'll have <a href="https://github.com/TeamSPoon/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl">the problem file</a>!</p>
+<p>Put that all together and you'll have <a href="https://github.com/logicmoo/logicmoo_ec/blob/master/docs/files/letseat/domain.pddl">the problem file</a>!</p>
 <p>If you run this using <a href="https://nms.kcl.ac.uk/planning/software/optic.html" rel="nofollow">OPTIC</a>, you'll get this solution:</p>
 <pre><code>Initial heuristic = 3
 Initial stats: t=0s, 4299060kb
@@ -1398,7 +1398,7 @@ b (2 @ n=3, t=0s, 4300084kb)b (1 @ n=6, t=0s, 4308276kb)
 <li>Add a unicorn object to the domain, and make the goal for the unicorn to eat the cupcake. The unicorn can only eat the cupcake if it's on the plate.</li>
 </ul>
 <h2><a id="user-content-not-as-simple-example" class="anchor" aria-hidden="true" href="#not-as-simple-example"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Not-as-Simple Example</h2>
-<p>If you want to check out something a bit more complex, check out the <a href="https://github.com/TeamSPoon/logicmoo_ec/tree/master/files/driverlog">driverlog domain</a>.</p>
+<p>If you want to check out something a bit more complex, check out the <a href="https://github.com/logicmoo/logicmoo_ec/tree/master/files/driverlog">driverlog domain</a>.</p>
 <h2><a id="user-content-past-the-basics" class="anchor" aria-hidden="true" href="#past-the-basics"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Past the Basics</h2>
 <p>If you're a first timer, don't venture into this part until after you've fully understood the basics.</p>
 <h3><a id="user-content-durative-actions" class="anchor" aria-hidden="true" href="#durative-actions"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Durative Actions</h3>
@@ -1438,20 +1438,20 @@ b (2 @ n=3, t=0s, 4300084kb)b (1 @ n=6, t=0s, 4308276kb)
 <p>Second, ontologies are expected to change, grow and evolve as new domains and techniques are contemplated in them (Davies et al., 2006). Leaving the more abstract and general concepts in an upper layer, and the more specific ones in lower layers, reinforces the idea that altering the most general concepts should be avoided, making them less likely to suffer constant modifications that could lead to unnecessary changes throughout the ontology. This is important because ontologies often reuse and extend other ontologies. Updating an ontology without proper care can potentially corrupt the others depending on it and consequently all the systems that use it.</p>
 <h4><a id="user-content-252-upper-ontology-design-principles" class="anchor" aria-hidden="true" href="#252-upper-ontology-design-principles"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>2.5.2 Upper ontology design principles</h4>
 <p>Upper ontologies should be designed to describe general concepts that can be used across all domains. They have a central role in facilitating interoperability among domain specific ontologies, which are built hierarchically underneath the upper and generic layers, and therefore can be seen as specialization of the more abstract concepts.</p>
-<p><a target="_blank" rel="noopener noreferrer" href="/TeamSPoon/logicmoo_ec/blob/master/docs/images/fig1.png"><img src="/TeamSPoon/logicmoo_ec/raw/master/docs/images/fig1.png" alt="Figure 1" style="max-width:100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="/logicmoo/logicmoo_ec/blob/master/docs/images/fig1.png"><img src="/logicmoo/logicmoo_ec/raw/master/docs/images/fig1.png" alt="Figure 1" style="max-width:100%;"></a></p>
 <p>Figure above presents a subset of the proposed upper ontology. Its development was prompted by our use cases in management and control of complex systems-of-systems, and was inspired by other ontologies such as SUMO (Suggested Upper Mergerd Ontology) (Niles and Pease, 2001), and W3C SSN (Semantic Sensor Network Ontology) (Compton et al., 2012).</p>
 <p>Some important concepts defined on the proposed general ontology include System, Cyber-Physical System, Agent and CPS Agent. A System is a set of connected parts forming a complex whole that can also be used as a resource by other systems. A Cyber-Physical System is a system with both physical and computational components. They deeply integrate computation, communication and control into physical systems. An Agent is a system that can act on its own, sense the environment and produce changes in the world. When an agent is embedded into a cyberphysical system it is called a CPS Agent, or cyberphysical
 agent.</p>
 <p>Important for mathematical desciptions of interrelations between systems are the elements Arc, Node and Graph. Where an Arc is any element of a graph that connects two Nodes, while a Graph is a set of Nodes connected by Arcs.</p>
 <p>The concept of System can be further expanded by a number of attributes, such as Capacity, Role and Capability that can also have relationships among them. The System itself is represented within the Declarative Knowledge as an Object. Affordance is a property the defines the tasks that can be done on a specific System, while Capability defines the set of tasks the system can perform. Systems can also have Constraints, which in turn are related to KPIs that are used to measure whether such constraints are satisfied. The higher level of the proposed ontology also provides definitions and relationships between the main Knowlegde Base concepts, the Declarative and Procedural Knowledge.</p>
 <p>In our knowledge model, a Transition is a Procedural Knowledge concept that determines how to achieve a certain state (Action) given that an agent observes a particular state (Precondition) as being true in the world and there is an ordered list of effect free function calls in that state (Computation). Meanwhile, both Precondition and Action have a Predicate Set that is directly related to the concept of State from the Declarative Knowledge. The Goal State, which is an specification of State, is related to the concepts of Task and Workflow from the Procedural Knowledge. Where a Workflow is defined as sequence of Tasks, which in turn is defined by a sequence of Goal States assigned to a single Agent.</p>
-<p><a target="_blank" rel="noopener noreferrer" href="/TeamSPoon/logicmoo_ec/blob/master/docs/images/fig2.png"><img src="/TeamSPoon/logicmoo_ec/raw/master/docs/images/fig2.png" alt="Figure 2" style="max-width:100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="/logicmoo/logicmoo_ec/blob/master/docs/images/fig2.png"><img src="/logicmoo/logicmoo_ec/raw/master/docs/images/fig2.png" alt="Figure 2" style="max-width:100%;"></a></p>
 <p>Figure above presents the main elements of the knowledge base modeling.</p>
 <h4><a id="user-content-253-its-domain-ontology-design-principles" class="anchor" aria-hidden="true" href="#253-its-domain-ontology-design-principles"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>2.5.3 ITS Domain ontology design principles</h4>
-<p><a target="_blank" rel="noopener noreferrer" href="/TeamSPoon/logicmoo_ec/blob/master/docs/images/fig3.png"><img src="/TeamSPoon/logicmoo_ec/raw/master/docs/images/fig3.png" alt="Figure 3" style="max-width:100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="/logicmoo/logicmoo_ec/blob/master/docs/images/fig3.png"><img src="/logicmoo/logicmoo_ec/raw/master/docs/images/fig3.png" alt="Figure 3" style="max-width:100%;"></a></p>
 <p>With the support of the presented upper ontology model, in this section we propose an ITS domain specific ontology, as depicted in Figure above. One of the central concepts within the ITS domain is the Transport Agent, that extends Agent from the upper ontology. The Transport Agent encompasses agents that are capable of transporting some entity, ranging from physical goods to virtual data. Some important concepts from the upper layers that apply to the Transport Agent include Dynamics and Capacity, among others. Transport Agents in turn are strongly related to the Abstract concept of Transportation Mode which defines the type of transportion scenario (e.g., Roads, Rail, Telco).</p>
 <p>Another important concept is the Transportation Infrastructure which encompasses all elements required by a Transportation Mode, such as Routes, Tracks and Transportation Networks. Most elements within the Transportation Infrastructure are extensions of Graph, Arc and Node, abstract concepts from the Upper ontology. Therefore, by using high level graph definitions it is possible to define most of the transportation infrastructure in an ITS Domain. A node inside the transportation infrastructure is referred to as a POI (Point of Interest) and it can be any desired location within the Transportation Network (e.g., a crossing, a specific point in the route, coordinate, a warehouse, a bus stop). A Traffic Semaphore is modeled as a generic Actuator that is used to control and regulate traffic and it can be applied in any transportation scenario. A Transportable Entity encompasses any element that can be transported by a Transport Agent, such as regular Cargo or network Data. A typical Passenger is also a Transportable Entity and extends the upper ontology concept of Human.</p>
-<p>If you'd like to be listed as  a Contributor, make a <a href="https://github.com/TeamSPoon/logicmoo_ec/pulls">pull request</a>.</p>
+<p>If you'd like to be listed as  a Contributor, make a <a href="https://github.com/logicmoo/logicmoo_ec/pulls">pull request</a>.</p>
 <h1><a id="user-content-output-format" class="anchor" aria-hidden="true" href="#output-format"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Output Format</h1>
 <p><code>plasp</code> 3 translates SAS and PDDL files into a uniform ASP fact format.</p>
 <h2><a id="user-content-overview" class="anchor" aria-hidden="true" href="#overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Overview</h2>
@@ -1493,7 +1493,7 @@ PDDL predicates are turned into Boolean variables to make the output format cons
 <div class="highlight highlight-source-prolog"><pre><span class="pl-c">% declares a required feature</span>
 <span class="pl-en">requires</span>(feature(&lt;<span class="pl-c1">name</span>&gt;))<span class="pl-k">.</span></pre></div>
 <p><code>plasp</code> recognizes and declares advanced features used by the input problem, such as conditional effects, <a href="#mutex-groups">mutex groups</a> and <a href="#axiom-rules">axiom rules</a> (currently only SAS).
-See the <a href="/TeamSPoon/logicmoo_ec/blob/master/feature-requirements.md">full list of supported features</a> for more information.</p>
+See the <a href="/logicmoo/logicmoo_ec/blob/master/feature-requirements.md">full list of supported features</a> for more information.</p>
 <p>The feature requirement predicates may be used in meta encodings to warn about unsupported features.</p>
 <h3><a id="user-content-types" class="anchor" aria-hidden="true" href="#types"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Types</h3>
 <div class="highlight highlight-source-prolog"><pre><span class="pl-c">% declares a &lt;type&gt;</span>
@@ -1624,7 +1624,7 @@ That is, if axiom rules are present in <code>plasp</code>�s output, they have 
 
   <h3 class="sr-only">License</h3>
   <div class="mt-3">
-    <a href="/TeamSPoon/logicmoo_ec/blob/master/LICENSE.md" class="muted-link" >
+    <a href="/logicmoo/logicmoo_ec/blob/master/LICENSE.md" class="muted-link" >
       <svg class="octicon octicon-law mr-2" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.75.75a.75.75 0 00-1.5 0V2h-.984c-.305 0-.604.08-.869.23l-1.288.737A.25.25 0 013.984 3H1.75a.75.75 0 000 1.5h.428L.066 9.192a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.514 3.514 0 00.686.45A4.492 4.492 0 003 11c.88 0 1.556-.22 2.023-.454a3.515 3.515 0 00.686-.45l.045-.04.016-.015.006-.006.002-.002.001-.002L5.25 9.5l.53.53a.75.75 0 00.154-.838L3.822 4.5h.162c.305 0 .604-.08.869-.23l1.289-.737a.25.25 0 01.124-.033h.984V13h-2.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-2.5V3.5h.984a.25.25 0 01.124.033l1.29.736c.264.152.563.231.868.231h.162l-2.112 4.692a.75.75 0 00.154.838l.53-.53-.53.53v.001l.002.002.002.002.006.006.016.015.045.04a3.517 3.517 0 00.686.45A4.492 4.492 0 0013 11c.88 0 1.556-.22 2.023-.454a3.512 3.512 0 00.686-.45l.045-.04.01-.01.006-.005.006-.006.002-.002.001-.002-.529-.531.53.53a.75.75 0 00.154-.838L13.823 4.5h.427a.75.75 0 000-1.5h-2.234a.25.25 0 01-.124-.033l-1.29-.736A1.75 1.75 0 009.735 2H8.75V.75zM1.695 9.227c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L3 6.327l-1.305 2.9zm10 0c.285.135.718.273 1.305.273s1.02-.138 1.305-.273L13 6.327l-1.305 2.9z"></path></svg>
         BSD-2-Clause License
     </a>
@@ -1635,7 +1635,7 @@ That is, if axiom rules are present in <code>plasp</code>�s output, they have 
           <div class="BorderGrid-row">
             <div class="BorderGrid-cell">
               <h2 class="h4 mb-3">
-  <a href="/TeamSPoon/logicmoo_ec/releases" class="link-gray-dark no-underline ">
+  <a href="/logicmoo/logicmoo_ec/releases" class="link-gray-dark no-underline ">
     Releases
 </a></h2>
 
@@ -1646,7 +1646,7 @@ That is, if axiom rules are present in <code>plasp</code>�s output, they have 
           <div class="BorderGrid-row">
             <div class="BorderGrid-cell">
               <h2 class="h4 mb-3">
-  <a href="/orgs/TeamSPoon/packages?repo_name=logicmoo_ec" class="link-gray-dark no-underline ">
+  <a href="/orgs/logicmoo/packages?repo_name=logicmoo_ec" class="link-gray-dark no-underline ">
     Packages <span title="0" hidden="hidden" class="Counter ">0</span>
 </a></h2>
 
@@ -1661,19 +1661,19 @@ That is, if axiom rules are present in <code>plasp</code>�s output, they have 
           </div>
           <div class="BorderGrid-row" hidden>
             <div class="BorderGrid-cell">
-              <include-fragment src="/TeamSPoon/logicmoo_ec/used_by_list" accept="text/fragment+html">
+              <include-fragment src="/logicmoo/logicmoo_ec/used_by_list" accept="text/fragment+html">
 </include-fragment>
             </div>
           </div>
           <div class="BorderGrid-row">
             <div class="BorderGrid-cell">
               <h2 class="h4 mb-3">
-  <a href="/TeamSPoon/logicmoo_ec/graphs/contributors" class="link-gray-dark no-underline ">
+  <a href="/logicmoo/logicmoo_ec/graphs/contributors" class="link-gray-dark no-underline ">
     Contributors <span title="2" class="Counter ">2</span>
 </a></h2>
 
 
-    <include-fragment src="/TeamSPoon/logicmoo_ec/contributors_list?count=2&amp;current_repository=logicmoo_ec&amp;items_to_show=2" aria-busy="true" aria-label="Loading contributors">
+    <include-fragment src="/logicmoo/logicmoo_ec/contributors_list?count=2&amp;current_repository=logicmoo_ec&amp;items_to_show=2" aria-busy="true" aria-label="Loading contributors">
       <ul class="list-style-none ">
           <li class="mb-2 d-flex">
             <div class="Skeleton avatar avatar-user mr-2" style="width:32px;height:32px;"></div>
@@ -1704,42 +1704,42 @@ That is, if axiom rules are present in <code>plasp</code>�s output, they have 
 </span></div>
 <ul class="list-style-none">
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=prolog"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=prolog"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#74283c;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">Prolog</span>
         <span>77.7%</span>
       </a>
     </li>
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=html"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=html"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#e34c26;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">HTML</span>
         <span>7.9%</span>
       </a>
     </li>
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=common-lisp"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=common-lisp"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#3fb68b;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">Common Lisp</span>
         <span>5.9%</span>
       </a>
     </li>
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=e"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=e"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#ccce35;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">E</span>
         <span>4.8%</span>
       </a>
     </li>
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=tex"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=tex"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#3D6117;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">TeX</span>
         <span>1.7%</span>
       </a>
     </li>
     <li class="d-inline">
-      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/TeamSPoon/logicmoo_ec/search?l=c%2B%2B"  data-ga-click="Repository, language stats search click, location:repo overview">
+      <a class="d-inline-flex flex-items-center flex-nowrap link-gray no-underline text-small mr-3" href="/logicmoo/logicmoo_ec/search?l=c%2B%2B"  data-ga-click="Repository, language stats search click, location:repo overview">
         <svg class="octicon octicon-dot-fill mr-2" style="color:#f34b7d;" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
         <span class="text-gray-dark text-bold mr-1">C++</span>
         <span>0.5%</span>

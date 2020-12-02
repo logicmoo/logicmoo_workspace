@@ -31,7 +31,7 @@
 2019-09-05 18:35:57 <dmiles> for
       #$likes(#$AndrewDougherty,#friendFn(#$argFn(#$thisContainingPredicate,1)))
       i use
-      https://github.com/TeamSPoon/sigma_ace/blob/master/engine/sigma_functions.pl
+      https://github.com/logicmoo/sigma_ace/blob/master/engine/sigma_functions.pl
 2019-09-05 18:36:01 <aindilis> 'The latter would be very unwise as Black would
       simply take the Rook with his Bishop, again checking White''s King.'
 2019-09-05 18:36:08 <dmiles> as my rewrit etechnique
