@@ -465,3 +465,8 @@ eggdrop
 df
 df -h
 ncdu -x /dev/sde1
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
+ls
+df /
+df -h
