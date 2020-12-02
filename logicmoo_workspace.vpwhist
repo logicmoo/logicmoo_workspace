@@ -1,58 +1,24 @@
 [Global]
 CurrentProject=packs_usr\wam_common_lisp\wamcl.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20201113123148069
-packs_xtra\packs_xtra.vpj=20201123161437357
-packs_usr\wam_common_lisp\wamcl.vpj=
+logicmoo_workspace.vpj=20201127182025202
+other_files.vpj=20201128195747927
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
 packs_xtra\packs_xtra.vpj=Release
 [TreeExpansion2]
 - logicmoo_workspace.vpj
-  + .config
-    + configstore
-    + swi-prolog
-      + dir-history
   + eclipse-workspace\.sonarlint
     + modules
       + BW4Thuman
         + issues
-          + 5
-            + 2
-            + f
-          + 6
-            + 3
-          + 8
-            + 6
-            + e
       + External Prolog Files
         + issues
-          + 2
-            + c
-          + 5
-            + 6
-          + 6
-            + c
-          + c
-            + 0
       + ProDTTest
         + issues
-          + 6
-            + d
-          + f
-            + 3
       + WumpusAgents
         + issues
-          + 1
-            + 2
-          + 9
-            + 4
-            + a
-          + c
-            + 8
-          + f
-            + a
   + bin
     + old-scripts
   + eclipse-workspace
@@ -64,25 +30,12 @@ packs_xtra\packs_xtra.vpj=Release
     + RemoteSystemsTempFiles
     + sdfasd
     + WumpusAgents
-      + WumpusWorlds
   + etc
     + profile.d
-  + \etc
-    - apache2
-      + conf-available
-      - conf-enabled
-      + mods-available
-      + mods-enabled
-      + nssdb
-      - sites-available
-      - sites-enabled
-      + suexec
   + lib
     + cmake
       + swipl
     + swipl
-      + bin
-        + x86_64-linux
       + boot
       + customize
       + demo
@@ -102,7 +55,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + factorial
                 + family
                 + semWeb
-                + system
                 + test
                 + testGC
                 + thread
@@ -125,8 +77,6 @@ packs_xtra\packs_xtra.vpj=Release
       + include
         + sicstus
         + Yap
-      + lib
-        + x86_64-linux
       + library
         + chr
         + clp
@@ -147,9 +97,7 @@ packs_xtra\packs_xtra.vpj=Release
         + DTD
         + http
           + web
-            + css
             + icons
-            + js
         + iri_scheme
         + latex2html
         + lynx
@@ -159,11 +107,8 @@ packs_xtra\packs_xtra.vpj=Release
         + tipc
         + unicode
       + xpce
-        + appl-help
         + bitmaps
-          + patterns
         + man
-          + faq
           + reference
             + class
         + prolog
@@ -187,12 +132,10 @@ packs_xtra\packs_xtra.vpj=Release
             + xref
   + packs_lib
     + aleph
-      + doc
       + prolog
         + aleph_test
         + examples
           + abduce
-          + constraints
           + features
           + gcws
           + good
@@ -225,10 +168,6 @@ packs_xtra\packs_xtra.vpj=Release
         + nanotrav\.deps
         + st\.deps
         + util\.deps
-        + cplusplus\.libs
-        + cudd\.libs
-        + dddmp\.libs
-        + autom4te.cache
         + build-aux
         + cplusplus
         + cudd
@@ -248,12 +187,8 @@ packs_xtra\packs_xtra.vpj=Release
         + _build
           + doctrees
           + html
-            + _sources
             + _static
           + latex
-        + _static
-        + old_docs
-        + static
       + prolog
         + cplint_test
         + examples
@@ -276,19 +211,12 @@ packs_xtra\packs_xtra.vpj=Release
         + _build
           + doctrees
           + html
-            + _sources
             + _static
           + latex
-        + _static
-        + static
       + prolog
         + examples
         + phil_test
     + rocksdb
-      + rocksdb\.circleci
-      + rocksdb\.github
-        + workflows
-      + cpp
       + demo
       + prolog
       + rocksdb
@@ -304,22 +232,10 @@ packs_xtra\packs_xtra.vpj=Release
           + db_impl
         + db_stress_tool
         + docs
-          + _data
           + _docs
-          + _includes
-            + content
-              + items
-            + nav
-            + plugins
-            + ui
-          + _layouts
           + _posts
-          + _sass
           + _top-level
-          + blog
-          + css
           + doc-type-examples
-          + docs
           + static
             + fonts
             + images
@@ -336,39 +252,18 @@ packs_xtra\packs_xtra.vpj=Release
             + utilities
               + lua
         + java
-          + benchmark
-            + src
-              + main
-                + java
-                  + org
-                    + rocksdb
-                      + benchmark
           + crossbuild
           + jmh
-            + src
-              + main
-                + java
-                  + org
-                    + rocksdb
-                      + jmh
-                      + util
           + rocksjni
-          + samples
-            + src
-              + main
-                + java
           + src
             + main
               + java
                 + org
                   + rocksdb
-                    + util
             + test
               + java
                 + org
                   + rocksdb
-                    + test
-                    + util
         + logging
         + memory
         + memtable
@@ -394,7 +289,6 @@ packs_xtra\packs_xtra.vpj=Release
               + portability
               + synchronization
                 + detail
-                + test
           + gtest-1.8.1
             + fused-src
               + gtest
@@ -402,7 +296,6 @@ packs_xtra\packs_xtra.vpj=Release
           + advisor
             + advisor
             + test
-              + input_files
           + block_cache_analyzer
           + dump
           + rdb
@@ -451,13 +344,10 @@ packs_xtra\packs_xtra.vpj=Release
       + prolog
         + checkers
       + tests
-  - packs_sys
+  + packs_sys
     + logicmoo_ec\.github
       + ISSUE_TEMPLATE
-      + workflows
-    + logicmoo_utils\.github
-      + workflows
-    - body_reordering
+    + body_reordering
       - prolog
       + t
     + dictoo
@@ -465,7 +355,7 @@ packs_xtra\packs_xtra.vpj=Release
       + t
     + Downloads
       + JanWielemaker-rserve_client-1965cf2
-    - eggdrop
+    + eggdrop
       + conf
       - prolog
       + t
@@ -511,15 +401,6 @@ packs_xtra\packs_xtra.vpj=Release
             + pdt.analysis
               + META-INF
               + pl
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + analysis
-                        + model
-                          + prolog
-                        + views
-                          + prolog
             + pdt.builder
               + example_files
                 + meta_finder_examples
@@ -529,7 +410,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + analyzer
                 + util
             + pdt.common
-              + css
               + icons
               + META-INF
               + pl
@@ -538,20 +418,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + metainference
                 + xref
                   + testcase
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + common
-                        + callhierachy
-                        + example
-                        + internal
-                          + externalproject
-                          + preferences
-                        + metadata
-                        + queries
-                        + search
-                        + structureElements
             + pdt.connector
               + META-INF
                 + maven
@@ -562,58 +428,18 @@ packs_xtra\packs_xtra.vpj=Release
                   + prolog
                     + connector
                       + internal
-                        + cterm
-                          + parser
                         + process
                           + socket
                       + process
               + pl
                 + lgt
-              + schema
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + connector
-                        + internal
-                          + preferences
-                          + service
-                        + load
-                        + registry
-                        + service
-                        + subscription
-                        + util
-                          + preferences
             + pdt.connector.tests
               + META-INF
-              + src
-                + org
-                  + cs3
-                    + prolog
-                      + connector
-                        + internal
-                          + test
-                        + ui
-                          + test
-                      + load
-                        + test
             + pdt.console
               + icons
               + META-INF
               + pl
-              + schema
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + console
-                        + internal
-                          + loadfile
-                          + preferences
-                          + views
-                            + completion
             + pdt.editor
-              + css
               + doc
               + icons
               + META-INF
@@ -633,32 +459,10 @@ packs_xtra\packs_xtra.vpj=Release
                     + pdt
                       + editor
                         + internal
-                          + actions
-                          + contentassistant
-                            + templates
-                          + editors
-                            + breakpoints
-                          + preferences
-                          + queries
-                          + structureElements
                           + views
-                            + lightweightOutline
                             + testdata
-                          + wizards
-                        + metadata
-                        + quickfix
-              + templates
-                + logtalk
-                  + textmate
             + pdt.editor.tests
               + META-INF
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + editor
-                        + internal
-                          + editors
             + pdt.feature
             + pdt.graphicalviews
               + icons
@@ -667,60 +471,22 @@ packs_xtra\packs_xtra.vpj=Release
               + META-INF
               + pl
                 + lgt
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + graphicalviews
-                        + focusview
-                        + graphml
-                        + internal
-                          + ui
-                        + main
-                        + model
-                          + labels
-                          + realizer
-                            + edges
-                            + groups
-                            + nodes
-                        + preferences
-                          + controls
-                        + utils
-                        + view
-                          + modes
             + pdt.navigator
               + icons
               + META-INF
                 + maven
                   + org.cs3.roots
                     + org.cs3.pdt.navigator
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + navigator
-                        + internal
-                          + actions
-                          + decorators
             + pdt.plunit
               + META-INF
               + src
                 + org
                   + cs3
                     + plunit
-                      + actions
-                      + common
                       + framework
-                      + matcher
             + pdt.refactoring
               + META-INF
-              + src
-                + org
-                  + cs3
-                    + pdt
-                      + refactoring
             + pdt.updatesite
-              + web
             + prolog.connector
               + META-INF
                 + maven
@@ -731,8 +497,6 @@ packs_xtra\packs_xtra.vpj=Release
                   + prolog
                     + connector
                       + internal
-                        + cterm
-                          + parser
                         + process
                           + socket
                       + process
@@ -741,32 +505,12 @@ packs_xtra\packs_xtra.vpj=Release
                   + cs3
                     + prolog
                       + connector
-                        + common
-                        + cterm
                         + internal
-                          + cterm
-                            + parser
-                          + lifecycle
                           + process
                             + socket
-                          + session
-                            + socket
                         + process
-                        + session
             + prolog.connector.tests
               + META-INF
-              + src
-                + org
-                  + cs3
-                    + prolog
-                      + cterm
-                        + internal
-                          + parser
-                            + test
-                      + internal
-                        + socket
-                          + test
-                      + test
             + prolog.library
               + META-INF
                 + maven
@@ -776,13 +520,6 @@ packs_xtra\packs_xtra.vpj=Release
             + PrologBenchmarkTool
               + example
               + resources
-              + src
-                + org
-                  + cs3
-                    + plbenchmarks
-                      + data
-                      + gui
-                      + utils
           + pfc
           + plarkc
           + pttp
@@ -800,17 +537,14 @@ packs_xtra\packs_xtra.vpj=Release
                       + examples
                       + images
                   + rdf
-                + elisp
                 + skel
                   + infra
-                + templates
               + src
                 + swilib
             + leancop
             + pdl-tableau
             + tptp2x
           + typesystem
-          + xray
       + t
         + docs
         + examples
@@ -825,11 +559,7 @@ packs_xtra\packs_xtra.vpj=Release
           + snark
           + tptp
         + inference_test
-          + canonical
           + cyc
-          + soundness
-          + theorems
-          + user
         + KBs
     + logicmoo_cg
       + prolog
@@ -919,36 +649,27 @@ packs_xtra\packs_xtra.vpj=Release
               + exple2
               + exple3
         + cgparser
-          + Test
         + cgtests
         + cgworld
           + beans
           + cgif
           + CGTools
-          + converted
           + example
-            + ready
           + examples
             + CGTools01
               + basic
               + final
             + LarfLast
             + sisyphus-1
-          + finance
           + levels
           + translators
             + test
-        + dataForDynamicOntology
-        + knowledgeBase
         + mas
           + renaldo
         + ontology
           + cgxHierarchy
             + AmineSPfiles
           + ontBasedOnACEOntology
-          + owlOntology
-          + synergyOntology
-          + txtOntology
         + prologPlusCG
           + Archives
             + ExplesInAmzi
@@ -987,24 +708,12 @@ packs_xtra\packs_xtra.vpj=Release
         + images
       + ext
         + aiswi
-          + dist
-            + javadoc
-              + index-files
-              + javasciff
-                + class-use
-              + test
-                + class-use
           + img
           + project_template
           + relazione
           + sciff
           + src
-            + gamegui
             + icons
-            + javasciff
-            + lib
-            + test
-          + xml
         + dialog_test
         + ec_sources
           + ecnet
@@ -1074,7 +783,6 @@ packs_xtra\packs_xtra.vpj=Release
             + ch6
             + ch8
         + Tom
-          + Doc
           + Samples
           + Src
         + xray
@@ -1083,10 +791,10 @@ packs_xtra\packs_xtra.vpj=Release
             + iris
             + trains
           + pl
-      + prolog
-        + ec_planner
-          + code_icl
-        + hyhtn_pddl
+      - prolog
+        - ec_planner
+          - code_icl
+        - hyhtn_pddl
           + ptools
         + lps_pddl
       + test
@@ -1096,18 +804,10 @@ packs_xtra\packs_xtra.vpj=Release
           + chameleonWorld
           + domains
           + icons
-          + library
           + ocl_files
           + robot
           + toasterWorldv2
         + ec_planner
-          + asp
-          + bin
-          + ec2asp_linux_files
-            + page0001-2_files
-            + page0002_files
-            + page0003_files
-            + page0004_files
           + ecasp-source
           + ectest
           + iwfms
@@ -1225,17 +925,13 @@ packs_xtra\packs_xtra.vpj=Release
             + woodworking-sat11-strips
             + zenotravel
           + elearning
-          + failing_or_too_slow
           + orig_pddl_parser
-            + charts
             + docs
-            + output
             + test
               + blocks
               + elevators
               + gripper
               + hanoi
-          + sanity
           + sizes
             + psr-large
             + psr-middle
@@ -1247,8 +943,6 @@ packs_xtra\packs_xtra.vpj=Release
           + doc
           + domains
             + transplan
-            + washington
-          + src
           + strict-domains
             + art
             + art-1d
@@ -1283,37 +977,25 @@ packs_xtra\packs_xtra.vpj=Release
             + truckworld
             + woodshop
     + logicmoo_nars
-      + config
       + examples
         + english
-        + more
-        + nal
         + prolog
       + ImportantDocs
         + jmc
       + misc
         + C
-        + CPP
         + Networking
         + Python
       + nal-tests
-        + application
         + multi_step
-        + nal1
-        + nal2
-        + nal4
-        + nal5
-        + nal6
         + single_step
-        + stability
-      + prolog
+      - prolog
         + miles
           + doc
           + examples
           + gencon_instances
-          + xmiles_resources
-        + multagnt
-        + nars
+        - multagnt
+        - nars
         + sldr_dl
         + sre_dna
       + unused
@@ -1324,7 +1006,6 @@ packs_xtra\packs_xtra.vpj=Release
       + data
         + WNprolog-1.6
           + prolog
-            + doc
         + WNprolog-1.7.1
           + prolog
         + WNprolog-3.0
@@ -1333,12 +1014,10 @@ packs_xtra\packs_xtra.vpj=Release
         + ace_in_gf
           + docs
             + d11_1
-              + images
           + grammars
             + ace
             + acewiki_aceowl
             + attempto
-            + exclude
           + lib
             + src
               + ace
@@ -1348,9 +1027,6 @@ packs_xtra\packs_xtra.vpj=Release
             + ace
             + acewiki_aceowl
             + Geography
-              + Ace
-              + Ger
-              + Spa
             + geo
             + no
             + ontograph_40
@@ -1371,20 +1047,9 @@ packs_xtra\packs_xtra.vpj=Release
         + AceRules
           + engine
             + court_interpreter
-            + examples
             + parser
             + skolemizer
             + stable_interpreter
-            + testcases
-              + court
-                + input
-                + output
-              + stable
-                + input
-                + output
-              + stable_strong
-                + input
-                + output
             + verbalizer
             + webservice
           + webapp
@@ -1394,33 +1059,12 @@ packs_xtra\packs_xtra.vpj=Release
                   + ifi
                     + attempto
                       + acerules
-                        + help
-                          + page
-                            + error
-                            + ref
                         + resource
-                        + style
             + war
               + WEB-INF
-          + webclient
         + ape
           + examples
           + java
-            + src
-              + main
-                + java
-                  + ch
-                    + uzh
-                      + ifi
-                        + attempto
-                          + ape
-              + test
-                + java
-                  + ch
-                    + uzh
-                      + ifi
-                        + attempto
-                          + ape
           + prolog
             + lexicon
             + logger
@@ -1431,22 +1075,12 @@ packs_xtra\packs_xtra.vpj=Release
             + testruns
           + tools
         + candc
-          + bin
-          + bin-old
-          + candc-1.00
-            + bin
-          + doc
-            + tutorial
           + ext
             + bin-old
-              + extras
               + src
               + wsdlcpp
           + lib
             + pkgconfig
-          + share
-            + man
-              + man1
           + src
             + api
               + ccg
@@ -1454,18 +1088,9 @@ packs_xtra\packs_xtra.vpj=Release
               + python
               + soap
             + data
-              + boot
-              + boxer
-              + ccg
-                + cats
-              + ccg2ptb
               + italian
                 + prolog
-                + scripts
-              + mpi
               + vpe
-                + wsj
-            + html
             + include
               + bootstrap
               + config
@@ -1510,18 +1135,13 @@ packs_xtra\packs_xtra.vpj=Release
               + boxer
                 + sick
               + ccg
-              + class
               + memex
             + tests
               + ccg
               + depbank560
             + web
-              + static
-                + css
-                + js
           + working
             + tutorial
-              + rte
         + chart89
         + chat80
         + chat80_regress
@@ -1531,63 +1151,23 @@ packs_xtra\packs_xtra.vpj=Release
           + bb2
         + dialogue-discourse-relation
         + e2c
-          + backup
           + cl
             + emacs-cl
               + contrib
                 + closette
                 + gabriel
-          + cogbotstuff
           + cynd
-          + cyndpandor3
           + microEx
           + microPrologIIV4
-          + microUt
-          + paip
           + pjb-micro-prolog-ii
         + nlp_book
           + lisp
           + pop11
           + prolog
         + Parser_SUPPLE
-          + config
-          + docs
           + lib
           + prolog
             + grammar
-          + prolog-impls
-            + plcafe
-              + gen-src
-                + shef
-                  + nlp
-                    + supple
-                      + prolog
-                        + cafe
-              + src
-                + shef
-                  + nlp
-                    + supple
-                      + prolog
-            + sicstus
-              + src
-                + shef
-                  + nlp
-                    + supple
-                      + prolog
-            + swi
-              + src
-                + shef
-                  + nlp
-                    + supple
-                      + prolog
-          + src
-            + shef
-              + nlp
-                + supple
-                  + category
-                  + mapping
-                  + prolog
-                  + utils
         + ProNTo
           + Brooks
           + dparser
@@ -1611,24 +1191,11 @@ packs_xtra\packs_xtra.vpj=Release
                 + IterationScripts
                 + Prolog
                 + RCAUScaleScripts
-                + Regulus
                 + RegulusForIteration
-                + trace_files
-                  + Summaries
               + Paper
             + CommandDoc
             + Cookbook
-            + EACL_demo
-              + Paper
             + protege-regulus-exporter
-            + regClient
-              + index-files
-              + net
-                + sf
-                  + regulus
-                    + class-use
-                    + interpretation
-                      + class-use
           + Examples
             + Bridge
               + corpora
@@ -1638,38 +1205,11 @@ packs_xtra\packs_xtra.vpj=Release
               + scripts
             + Calendar
               + corpora
-                + JapDataCollSep2008
                 + speech
               + doc
               + Generated
               + japanese_wavfiles
-                + logs
               + java
-                + doc
-                  + gui
-                    + class-use
-                    + transact
-                      + class-use
-                  + index-files
-                  + issco
-                    + eval
-                      + class-use
-                  + socket
-                    + class-use
-                + issco
-                  + calendar
-                    + gui
-                    + socket
-                  + eval
-                    + ts
-                  + nbest
-                  + util
-                + src
-                  + gui
-                    + transact
-                  + socket
-                + test
-                  + socket
               + Prolog
               + Regulus
               + scripts
@@ -1677,7 +1217,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + scripts
             + Doris
               + corpora
-              + doc
               + Generated
               + Prolog
               + Regulus
@@ -1686,14 +1225,12 @@ packs_xtra\packs_xtra.vpj=Release
               + corpora
               + Generated
               + prolog
-              + regulus
               + scripts
             + Generic
               + Prolog
             + GermanRobots
               + corpora
               + prolog
-              + regulus
               + scripts
             + Misc
             + PSA
@@ -1702,7 +1239,6 @@ packs_xtra\packs_xtra.vpj=Release
               + GeneratedFiles
               + logfiles
               + Prolog
-              + Regulus
               + scripts
             + SHRD2
               + corpora
@@ -1715,27 +1251,19 @@ packs_xtra\packs_xtra.vpj=Release
             + Toy0
               + doc
               + Generated
-              + java
-                + audio
-              + Nuance
               + Prolog
-              + Regulus
               + scripts
-              + wavfiles
             + Toy0Strcat
               + Generated
-              + Regulus
               + scripts
             + Toy1
               + corpora
                 + recorded_wavfiles
-                + wavfiles
               + doc
               + Generated
               + java
               + logfiles
               + Prolog
-              + Regulus
               + scripts
             + Toy1Alterf
               + corpora
@@ -1743,18 +1271,13 @@ packs_xtra\packs_xtra.vpj=Release
               + Generated
               + Prolog
                 + Alterf
-              + Regulus
               + scripts
             + Toy1Course
               + Prolog
-              + Regulus
               + scripts
             + Toy1Dynamic
               + doc
               + Generated
-              + java
-                + audio
-              + Nuance
               + scripts
             + Toy1RoleMarked
               + corpora
@@ -1769,7 +1292,6 @@ packs_xtra\packs_xtra.vpj=Release
               + java
               + logfiles
               + Prolog
-              + Regulus
               + scripts
             + Toy1SpecialisedDynamic
               + corpora
@@ -1777,58 +1299,32 @@ packs_xtra\packs_xtra.vpj=Release
               + DynamicNuance
               + Generated
               + Prolog
-              + Regulus
               + scripts
             + Toy1Strcat
               + Generated
-              + Regulus
               + scripts
-          + Grammar
-            + Arabic
-            + German
-            + Germanic
-              + English
-              + German
-            + Japanese
-            + Korean
-            + Romance
-              + French
-            + Scandinavian
-              + English
-              + Swedish
           + Java
             + JudgeGUI
             + RegulusGUI
-            + TestGUI
           + Mobile
-            + bin
-              + arm-linux
-              + i386-linux
             + CalendarGUI
               + data
                 + pixmaps
-              + src
             + Common
             + CommunicationChannel
-              + src
             + GUI
               + data
                 + pixmaps
-              + src
             + MedSLTDoctorGUI
               + data
                 + pixmaps
-              + src
             + MedSLTGUI
               + data
                 + pixmaps
-              + src
             + MedSLTPatientGUI
               + data
                 + pixmaps
-              + src
             + MedSLTPatientPlainGUI
-              + src
           + Prolog
             + Misc
             + SICStusPatches
@@ -1842,49 +1338,28 @@ packs_xtra\packs_xtra.vpj=Release
             + C_src
               + socketServer
             + java
-              + net
-                + sf
-                  + regulus
-                    + interpretation
-                    + plugins
-                      + protege
             + Prolog
             + runtime
-              + sparc-solaris
             + SampleApp
               + Prolog
               + Scripts
-            + VC++
           + RegulusTechReports
           + scripts
         + self_dialogue_corpus
-          + dialogues
         + SIRIDUS
           + dbaseAgent
-            + docs
             + src
           + icalAgent
-            + docs
-            + icsFiles
-            + src
           + TALK_enhanced_grammar_lib
-            + Agenda
-            + Common
-            + MP3
-            + OWL
             + This-Was-GrammarLib
               + Agenda
               + Common
               + MP3
-              + OWL
               + Tram
-            + Tram
           + TALK_unimodal_grammar_lib
             + delux
-              + Grammars
               + Resources
             + djgodis
-              + Grammars
               + Resources
             + GF_GoDiS
               + Core
@@ -1929,10 +1404,6 @@ packs_xtra\packs_xtra.vpj=Release
               + godis-basic
               + godis-grounding
               + godis-iod
-            + jars
-            + tkit_inout_nuance
-              + logs
-            + tkit_inout_text
             + trindikit4
               + examples
                 + godis-basic
@@ -1963,8 +1434,6 @@ packs_xtra\packs_xtra.vpj=Release
               + domain-legoturtle
                 + asrg_legoturtle_english
                 + asrg_vcr_english
-                + logs
-                + OLD
                 + rcxTcl
               + domain-medical
                 + Database
@@ -1974,7 +1443,6 @@ packs_xtra\packs_xtra.vpj=Release
                         + workshop
                 + Experiments
               + domain-player
-                + DBaseAgent
                 + DJGoDisGram
                   + DBase
                     + English
@@ -1984,7 +1452,6 @@ packs_xtra\packs_xtra.vpj=Release
                   + Shared
                   + System
                   + User
-                + inoutnuance
                 + player-old
                   + Resources
                 + Resources
@@ -2022,7 +1489,6 @@ packs_xtra\packs_xtra.vpj=Release
         + stanford
           + bin
           + conf
-          + data
       - prolog
         + config_nomicmu
           + example_bt
@@ -2033,7 +1499,6 @@ packs_xtra\packs_xtra.vpj=Release
                     + coronavirus
                       + 2019-ncov
                         + downloads
-              + research
           + plugins
         + logicmoo_nlu
           + e2c
@@ -2062,17 +1527,13 @@ packs_xtra\packs_xtra.vpj=Release
           + simulation
         + external_interfaces
         + forTesting
-        + survival_game
       + prolog
         + dialect
       + swish
         + docker
-        + log
         + profiles
-        + systemd
         + upstart
         + web
-          + help
           + lps
       + utils
         + moreTestResults
@@ -2110,7 +1571,6 @@ packs_xtra\packs_xtra.vpj=Release
           + Python_xinetd
           + Standalone
         + swfobject
-          + src
       + prolog
         + prologmud
           + actions
@@ -2126,9 +1586,7 @@ packs_xtra\packs_xtra.vpj=Release
             + assetsources
             + http
               + web
-                + css
                 + icons
-                + js
             + model
             + mudconsole
       + t
@@ -2136,90 +1594,30 @@ packs_xtra\packs_xtra.vpj=Release
       - prolog
         + prologmud_sample_games\.config
           + butterfly
-          + configstore
           + swi-prolog
-            + dir-history
             + xpce
+        + prologmud_sample_games\.local
+          + bin
+          + lib
+            + python3.8
+              + site-packages
+                + asyncio
+                + asyncio-3.4.3.dist-info
+                + butterfly
+                  + bin
+                  + static
+                    + fonts
+                    + images
+                  + themes
+                    + C64
+                      + font
+                    + DOS
+                    + old-school
+                + butterfly-3.2.5.dist-info
         - prologmud_sample_games
           + attic
           + btepisode
           + cache
-            + rdf
-              + 00
-                + b0
-              + 10
-                + aa
-              + 1b
-                + 5a
-              + 1c
-                + a2
-              + 22
-                + e8
-              + 25
-                + 33
-              + 30
-                + ac
-              + 32
-                + d7
-              + 47
-                + 8e
-              + 61
-                + 63
-              + 65
-                + 32
-              + 6b
-                + fd
-              + 6c
-                + b1
-              + 7a
-                + fe
-              + 7b
-                + 0c
-              + 7f
-                + b5
-              + 88
-                + 77
-              + 8f
-                + 07
-              + 9b
-                + f7
-              + 9e
-                + 42
-                + 73
-              + a2
-                + e4
-              + a4
-                + 3f
-              + ad
-                + d4
-              + af
-                + 78
-                + fb
-              + b0
-                + 67
-              + ba
-                + c6
-              + bf
-                + 51
-              + c0
-                + e4
-              + c5
-                + 16
-              + c7
-                + 9b
-                + e6
-              + d5
-                + 15
-              + d6
-                + 0f
-              + e3
-                + 6b
-              + f1
-                + 66
-              + f7
-                + a6
-              + fd
-                + e4
             + url
               + 66
                 + 3f
@@ -2230,19 +1628,8 @@ packs_xtra\packs_xtra.vpj=Release
             + gitty
           + data
             + avatars
-            + chat
-              + a3
-                + 8a
-            + storage
-              + ref
-          + gv.git
-            + hooks
-            + info
-          + log
           + logtalk-scratch
-          + mail
           + pack
-          + RDF-store
           + src_game_nani
             + web
               + css
@@ -2276,78 +1663,20 @@ packs_xtra\packs_xtra.vpj=Release
       + doc
         + api_files
       + lib
-        + amd64
-        + i386-linux
         + i386-win32
         + x64-win64
-        + x86_64-linux
       + prolog
       + src
         + Debugger.Core.JDWP
           + Debugger.Core
-            + Configuration
-            + Control
-            + Debugger
-            + Expressions
-              + Ast
-            + Internal
-              + Tests
-            + Interop
-              + CorDebug
-              + CorSym
-              + Enums
-              + MetaData
-            + JDWP
-              + win
-            + Metadata
             + Mono.Cecil
-              + CodeGen
-                + templates
-              + Mono.Cecil
-              + Mono.Cecil.Binary
-              + Mono.Cecil.Cil
-              + Mono.Cecil.Metadata
-              + Mono.Cecil.Signatures
-              + Mono.Xml
-            + RemotingSinks
-              + InvokeOnSTASink
-              + PrivateEventHandlersSink
-              + TestClient
-              + TestCommonTypes
-              + TestServer
-            + Util
             + Values
-            + Wrappers
-              + CorDebug
-                + Autogenerated
-              + CorPub
-                + Autogenerated
-              + CorSym
-                + Autogenerated
-              + MetaData
-          + Debugger.Tests
-            + Configuration
-            + TestPrograms
-        + Example4SWICLI
-          + Properties
-        + ExampleCallsPrologSWICLI
         + ikvm-native
-        + jar2ikvmc
-          + Properties
-        + packages
-          + ICSharpCode.NRefactory.5.0.0.3
-          + Mono.Cecil.0.9.5.2
         + PlConsole
-          + Properties
-        + SWICFFITests
         + Swicli.Library
           + cmake
             + Modules
           + mindtouch.reflection
-            + Properties
-          + Properties
-        + SWICLITestDLL
-          + Properties
         + swicli
         + swicliYap
     + wam_common_lisp
@@ -2358,14 +1687,12 @@ packs_xtra\packs_xtra.vpj=Release
           + src
             + clos
             + clx
-              + demo
             + cmp
             + crs
               + porting
             + doc
             + lsp
             + pcl
-            + util
       + t
         + reference
           + lisp_8500
@@ -2376,36 +1703,14 @@ packs_xtra\packs_xtra.vpj=Release
       + bin
       + butterfly
         + bin
-        + sass
         + static
           + fonts
           + images
-        + templates
         + themes
-          + abstract-image
           + C64
             + font
-          + color-base16-dark
-          + color-base16-light
-          + color-dracula
-          + color-monokai
-          + color-mostly-bright
-          + color-neon
-          + color-oceanic
-          + color-one-dark
-          + color-smyck
-          + color-snazzy
-          + color-solarized-dark
-          + color-solarized-light
-          + color-visibone
-          + color-yousai
-          + color-zenburn
           + DOS
           + old-school
-          + sketchy
-      + butterfly.egg-info
-      + coffees
-        + ext
       + docker
       + lib
         + python3.7
@@ -2431,37 +1736,17 @@ packs_xtra\packs_xtra.vpj=Release
               + pgen2
             + butterfly
               + bin
-              + sass
               + static
                 + fonts
                 + images
-              + templates
               + themes
-                + abstract-image
                 + C64
                   + font
-                + color-base16-dark
-                + color-base16-light
-                + color-dracula
-                + color-monokai
-                + color-mostly-bright
-                + color-neon
-                + color-oceanic
-                + color-one-dark
-                + color-smyck
-                + color-snazzy
-                + color-solarized-dark
-                + color-solarized-light
-                + color-visibone
-                + color-yousai
-                + color-zenburn
                 + DOS
                 + old-school
-                + sketchy
             + butterfly-3.2.5.egg-info
             + cffi
             + cffi-1.14.3.dist-info
-            + cffi.libs
             + click
             + click-7.1.2.dist-info
             + cryptography
@@ -2867,13 +2152,9 @@ packs_xtra\packs_xtra.vpj=Release
             + tornado
               + platform
               + test
-                + csv_translations
                 + gettext_translations
                   + fr_FR
                     + LC_MESSAGES
-                + static
-                  + dir
-                + templates
             + tornado-6.1.dist-info
             + typed_ast
               + tests
@@ -2957,37 +2238,17 @@ packs_xtra\packs_xtra.vpj=Release
               + pgen2
             + butterfly
               + bin
-              + sass
               + static
                 + fonts
                 + images
-              + templates
               + themes
-                + abstract-image
                 + C64
                   + font
-                + color-base16-dark
-                + color-base16-light
-                + color-dracula
-                + color-monokai
-                + color-mostly-bright
-                + color-neon
-                + color-oceanic
-                + color-one-dark
-                + color-smyck
-                + color-snazzy
-                + color-solarized-dark
-                + color-solarized-light
-                + color-visibone
-                + color-yousai
-                + color-zenburn
                 + DOS
                 + old-school
-                + sketchy
             + butterfly-3.2.5.egg-info
             + cffi
             + cffi-1.14.3.dist-info
-            + cffi.libs
             + click
             + click-7.1.2.dist-info
             + cryptography
@@ -3393,13 +2654,9 @@ packs_xtra\packs_xtra.vpj=Release
             + tornado
               + platform
               + test
-                + csv_translations
                 + gettext_translations
                   + fr_FR
                     + LC_MESSAGES
-                + static
-                  + dir
-                + templates
             + tornado-6.1.dist-info
             + typed_ast
               + tests
@@ -3459,7 +2716,6 @@ packs_xtra\packs_xtra.vpj=Release
               + opcodes
             + xdis-5.0.5.dist-info
             + zipp-3.4.0.dist-info
-      + scripts
       + share
         + python-wheels
     + ClioPatria
@@ -3482,147 +2738,44 @@ packs_xtra\packs_xtra.vpj=Release
         + semweb
       + rdf
         + base
-        + cpack
-        + tool
       + rdfql
       + skin
       + test
         + Tests
           + sparql
             + ARQ
-              + Algebra
-              + Ask
-              + Basic
               + BasicPatterns
-              + BlankNodes
-              + Bound
               + Construct
-              + Dataset
               + Describe
-              + Distinct
-              + Examples
-              + Expr
-              + Expr1
-              + Expr2
-              + ExprBuiltIns
-              + ExprDatatypes
-              + ExprEquals
-              + ExprRegex
-              + Extensions
-              + Function
-              + General
-              + OpenWorld
-              + Optional
               + OrderBy
-              + Planning
-              + PropertyFunctions
-              + Select
               + Serialization
-              + SolutionSeq
-              + Sort
               + Syntax
-                + Syntax-ARQ
-                + Syntax-SPARQL
-                + Syntax-SPARQL2
-                + Syntax-SPARQL3
-              + TypePromotion
-              + Union
-              + Unsaid
               + ValueTesting
             + test-suite-archive
               + data-r2
                 + algebra
-                + ask
-                + basic
-                + bnode-coreference
-                + boolean-effective-value
-                + bound
-                + cast
-                + construct
-                + dataset
-                + distinct
-                + expr-builtin
-                + expr-equals
-                + expr-ops
-                + graph
                 + i18n
-                + open-world
-                + optional
-                + optional-filter
-                + reduced
-                + regex
-                + solution-seq
                 + sort
-                + syntax-sparql1
-                + syntax-sparql2
-                + syntax-sparql3
-                + syntax-sparql4
-                + syntax-sparql5
-                + triple-match
-                + type-promotion
           + sparql-1.1
             + 2009
               + sparql
                 + docs
                   + tests
                     + data-sparql11
-                      + add
-                      + aggregates
-                      + basic-update
-                      + bind
-                      + bindings
-                      + clear
-                      + construct
-                      + copy
-                      + csv-tsv-res
-                      + delete
-                      + delete-data
-                      + delete-insert
-                      + delete-where
-                      + drop
-                      + entailment
-                      + entailment-owlds
-                      + entailment-RDF
-                      + entailment-RDFS
-                      + exists
-                      + function-library
-                      + functions
-                      + grouping
-                      + http-rdf-update
-                      + json-res
-                      + move
-                      + negation
-                      + project-expression
-                      + property-path
-                      + protocol
                       + service
-                      + service-description
                       + subquery
-                      + syntax-fed
-                      + syntax-query
-                      + syntax-update-1
-                      + syntax-update-2
-                      + update-silent
       + user
-      + w3c
       + web
-        + css
         + FlintSparqlEditor
           + ll1
           + sparql
             + css
             + images
-            + lib
-            + test
-              + runmode
         + help
           + cpack
           + howto
-        + html
         + icons
         + js
-          + path
-          + prototype
         + tutorial
           + Parsia
         + yasqe
@@ -3633,45 +2786,17 @@ packs_xtra\packs_xtra.vpj=Release
           + lib
             + grammar
               + util
-          + src
-            + autocompleters
-            + scss
         + yasr
           + dist
           + doc
             + imgs
           + gulp
-          + lib
-          + src
-            + jquery
-            + parsers
-            + scss
         + yui
           + 2.7.0
             + build
               + assets
                 + skins
                   + sam
-              + autocomplete
-                + assets
-                  + skins
-                    + sam
-              + button
-              + container
-                + assets
-                  + skins
-                    + sam
-              + datasource
-              + treeview
-                + assets
-                  + skins
-                    + sam
-              + utilities
-            + examples
-              + treeview
-                + assets
-                  + css
-                    + folders
       + Windows
     + logicmoo_webui
       - etc
@@ -3686,12 +2811,9 @@ packs_xtra\packs_xtra.vpj=Release
             + ef
               + files\.tmb
               + files
-                + temp
               + img
               + js
                 + extras
-                + i18n
-                + ui
               + php
                 + libs
                 + plugins
@@ -3701,7 +2823,6 @@ packs_xtra\packs_xtra.vpj=Release
                   + Sanitizer
                   + Watermark
             + efCloserMine
-              + js
               + php
             + icons
               + small
@@ -3722,7 +2843,6 @@ packs_xtra\packs_xtra.vpj=Release
         + learning
         + lemur
         + logicmoo
-        + logtalk
         + phil
         - prologmud
         + trill
@@ -3736,38 +2856,24 @@ packs_xtra\packs_xtra.vpj=Release
             + chat80\.xpce
             + chat80
         + hdt
-          + c
           + hdt-cpp
             + hdt-it
               + doc
             + hdt-lib
-              + data
-              + examples
-              + include
-              + presets
               + qmake
                 + tools
                   + hdtsearch
                   + rdf2hdt
               + src
                 + bitsequence
-                + dictionary
-                + hdt
-                + header
                 + huffman
                 + libdcs
                   + fmindex
                   + hutucker
-                + rdf
-                + sequence
-                + sparql
-                + triples
                 + util
-              + tests
               + third
               + tools
             + libcds-v1.0.12
-              + docs
               + includes
               + lib
               + qmake
@@ -3819,17 +2925,14 @@ packs_xtra\packs_xtra.vpj=Release
             + r
           + Rserve
             + m4
-            + man
             + R
             + src
               + client
                 + cxx
-                  + autom4te.cache
                 + java
                   + JRI
                     + test
                   + Rserve
-                    + protocol
                     + test
                 + php
               + include
@@ -3842,48 +2945,26 @@ packs_xtra\packs_xtra.vpj=Release
         + wordnet
           + prolog
       + profiles
-      + rdf
-        + cpack
-      + scripts
       + test
-        + diff
       + tutorial
         + inference
         + learning
       + web
-        + node_modules\.bin
         + css
-        + help
         + icons
           + noble
             + components
           + tiles
         + js
           + codemirror
-            + addon
-              + hint
-              + hover
             + mode
               + prolog
-            + theme
-          + render
           + tutorials
         + node_modules
-          + c3\.circleci
-          + ace\.github
-            + workflows
           + c3\.github
           + printthis\.github
             + ISSUE_TEMPLATE
           + ace
-            + node_modules\.bin
-            + build\.github
-            + api
-              + resources
-                + csses
-                + font
-                + images
-                + javascripts
             + build
               + demo
                 + bookmarklet
@@ -3900,533 +2981,127 @@ packs_xtra\packs_xtra.vpj=Release
                 + snippets
               + textarea
                 + images
-            + build_support
-            + demo
-              + kitchen-sink
-                + docs
-              + r.js
-              + static-highlighter
-              + webpack
-            + doc
-              + site
-                + images
-                + js
-              + template
-                + jade
-                + resources
-                  + csses
-                  + font
-                  + images
-                  + javascripts
-              + wiki
-            + experiments
-            + lib
-              + ace
-                + autocomplete
-                + commands
-                + css
-                + edit_session
-                + ext
-                  + menu_tools
-                + keyboard
-                + layer
-                + lib
-                + mode
-                  + _test
-                  + behaviour
-                  + coffee
-                  + css
-                  + folding
-                  + html
-                  + javascript
-                  + json
-                  + lua
-                  + php
-                  + xml
-                  + xquery
-                + mouse
-                + requirejs
-                + snippets
-                + test
-                  + asyncjs
-                + theme
-                + worker
-            + node_modules
-              + amd-loader\.c9
-                + metadata
-                  + workspace
-              + amd-loader
-                + test
-                  + node_modules
-              + amdefine
-              + architect-build
-                + build_support
-              + async
-                + dist
-                + lib
-              + asyncjs
-                + demo
-                  + assets
-                + lib
-                  + plugins
-                + test
-                  + assets
-                    + dir1
-                    + dir11
-                    + dir2
-                    + nonemptydir
-                    + symlink-dir
-                    + walk
-                      + dir1
-                      + dir2
-                        + dir22
-              + dryice
-                + node_modules\.bin
-                + lib
-                  + dryice
-                + node_modules
-                  + uglify-js
-                    + bin
-                    + lib
-                    + test
-                      + unit
-                        + compress
-                          + expected
-                          + test
-                    + tmp
-              + mkdirp
-                + examples
-                + test
-              + optimist
-                + example
-                + test
-                  + _
-              + source-map
-                + build
-                + lib
-                  + source-map
-                + test
-                  + source-map
-              + through
-                + test
-              + uglify-js
-                + bin
-                + lib
-                + node_modules
-                  + async
-                    + lib
-                + test
-                  + compress
-                + tools
-              + uglify-to-browserify
-                + test
-              + wordwrap
-                + example
-                + test
-            + tool
-              + templates
-              + tmthemes
           + bootstrap
             + dist
               + css
               + fonts
               + js
             + docs
-              + _data
-              + _includes
-                + components
-                + css
-                + getting-started
-                + js
-                + nav
-              + _layouts
-              + _plugins
               + _pug
               + assets
-                + brand
                 + css
                 + img
                 + js
-                  + src
                   + vendor
-                + less
               + dist
                 + css
                 + fonts
                 + js
-              + examples
-                + blog
-                + carousel
-                + cover
-                + dashboard
-                + grid
-                + jumbotron
-                + jumbotron-narrow
-                + justified-nav
-                + navbar
-                + navbar-fixed-top
-                + navbar-static-top
-                + non-responsive
-                + offcanvas
-                + signin
-                + starter-template
-                + sticky-footer
-                + sticky-footer-navbar
-                + theme
-                + tooltip-viewport
             + fonts
             + grunt
             + js
               + tests
                 + unit
                 + vendor
-                + visual
-            + less
-              + mixins
             + nuget
           + c3
-            + data
             + design
             + docs
               + css
-                + samples
-              + data
               + img
               + js
-                + ace
-                + samples
                 + vendor
-              + layouts
-              + samples
             + extensions
               + chart-bubble
               + exporter
-              + js
             + htdocs
               + css
-              + data
-              + js
-                + extensions
-                + samples
-              + samples
             + node_modules
               + d3
-                + node_modules\.bin
                 + dist
             + spec
             + src
-              + scss
           + codemirror
-            + addon
-              + comment
-              + dialog
-              + display
-              + edit
-              + fold
-              + hint
-              + lint
-              + merge
-              + mode
-              + runmode
-              + scroll
-              + search
-              + selection
-              + tern
-              + wrap
-            + bin
             + component-tools
-            + keymap
-            + lib
             + mode
-              + apl
-              + asciiarmor
-              + asn.1
-              + asterisk
-              + brainfuck
-              + clike
-              + clojure
               + cmake
-              + cobol
-              + coffeescript
-              + commonlisp
-              + crystal
-              + css
-              + cypher
-              + d
-              + dart
-              + diff
-              + django
-              + dockerfile
-              + dtd
-              + dylan
-              + ebnf
-              + ecl
-              + eiffel
-              + elm
-              + erlang
-              + factor
-              + fcl
-              + forth
-              + fortran
-              + gas
-              + gfm
-              + gherkin
-              + go
-              + groovy
-              + haml
-              + handlebars
-              + haskell
-              + haskell-literate
-              + haxe
-              + htmlembedded
-              + htmlmixed
-              + http
-              + idl
-              + javascript
-              + jinja2
-              + jsx
-              + julia
-              + livescript
-              + lua
-              + markdown
-              + mathematica
-              + mbox
-              + mirc
-              + mllike
-              + modelica
-              + mscgen
-              + mumps
-              + nginx
-              + nsis
-              + ntriples
-              + octave
-              + oz
-              + pascal
-              + pegjs
-              + perl
-              + php
-              + pig
-              + powershell
-              + properties
-              + protobuf
-              + pug
-              + puppet
-              + python
-              + q
-              + r
-              + rpm
-                + changes
-              + rst
-              + ruby
-              + rust
-              + sas
-              + sass
-              + scheme
-              + shell
-              + sieve
-              + slim
-              + smalltalk
-              + smarty
-              + solr
-              + soy
-              + sparql
-              + spreadsheet
-              + sql
-              + stex
-              + stylus
-              + swift
-              + tcl
-              + textile
-              + tiddlywiki
-              + tiki
-              + toml
-              + tornado
-              + troff
-              + ttcn
-              + ttcn-cfg
-              + turtle
-              + twig
-              + vb
-              + vbscript
-              + velocity
-              + verilog
-              + vhdl
-              + vue
-              + webidl
-              + xml
-              + xquery
-              + yacas
-              + yaml
-              + yaml-frontmatter
-              + z80
-            + src
-              + display
-              + edit
-              + input
-              + line
-              + measurement
-              + model
-              + util
-            + theme
           + commander
-            + typings
           + d3
           + d3-array
             + dist
-            + src
-              + threshold
           + d3-axis
             + dist
-            + src
           + d3-brush
             + dist
-            + src
           + d3-chord
             + dist
-            + src
           + d3-collection
             + dist
-            + src
           + d3-color
             + dist
-            + src
           + d3-contour
             + dist
-            + src
           + d3-dispatch
             + dist
-            + src
           + d3-drag
             + dist
-            + src
           + d3-dsv
-            + bin
             + dist
-            + src
           + d3-ease
             + dist
-            + src
           + d3-fetch
-            + node_modules\.bin
             + dist
-            + src
           + d3-force
             + dist
-            + src
           + d3-format
             + dist
-            + locale
-            + src
           + d3-geo
             + dist
-            + src
-              + clip
-              + path
-              + projection
           + d3-hierarchy
             + dist
-            + src
-              + hierarchy
-              + pack
-              + treemap
           + d3-interpolate
             + dist
-            + src
-              + transform
           + d3-path
             + dist
-            + src
           + d3-polygon
             + dist
-            + src
           + d3-quadtree
             + dist
-            + src
           + d3-random
             + dist
-            + src
           + d3-scale
             + dist
-            + src
           + d3-scale-chromatic
             + dist
-            + src
-              + categorical
-              + diverging
-              + sequential-multi
-              + sequential-single
           + d3-selection
             + dist
-            + src
-              + selection
           + d3-shape
             + dist
-            + src
-              + curve
-              + link
-              + offset
-              + order
-              + symbol
           + d3-time
             + dist
-            + src
           + d3-time-format
             + dist
-            + locale
-            + src
           + d3-timer
             + dist
-            + src
           + d3-transition
             + dist
-            + src
-              + selection
-              + transition
           + d3-voronoi
             + dist
-            + src
           + d3-zoom
             + dist
-            + src
           + iconv-lite
-            + encodings
-              + tables
-            + lib
           + jquery
             + dist
             + external
               + sizzle
                 + dist
             + src
-              + ajax
-                + var
-              + attributes
               + core
-                + var
-              + css
-                + var
-              + data
-                + var
-              + deferred
-              + effects
-              + event
-              + exports
-              + manipulation
-                + var
-              + queue
-              + traversing
-                + var
-              + var
           + jquery.splitter
-            + css
             + js
           + js-sha1
             + build
-            + src
-            + tests
           + laconic
-            + test
-              + lib
           + monaco-editor
             + dev
               + vs
@@ -4442,202 +3117,9 @@ packs_xtra\packs_xtra.vpj=Release
                 + base
                   + browser
                     + ui
-                      + actionbar
-                      + aria
-                      + checkbox
                       + codiconLabel
                         + codicon
-                      + contextview
-                      + countBadge
-                      + findinput
-                      + highlightedlabel
-                      + iconLabel
-                      + inputbox
-                      + keybindingLabel
-                      + list
-                      + menu
-                      + progressbar
-                      + sash
-                      + scrollbar
-                        + media
-                      + splitview
-                      + tree
-                        + media
-                  + common
-                    + diff
-                    + insane
-                    + marked
-                    + worker
-                  + parts
-                    + quickopen
-                      + browser
-                      + common
-                    + tree
-                      + browser
-                  + worker
                 + editor
-                  + browser
-                    + config
-                    + controller
-                    + core
-                    + services
-                    + view
-                    + viewParts
-                      + contentWidgets
-                      + currentLineHighlight
-                      + decorations
-                      + editorScrollbar
-                      + glyphMargin
-                      + indentGuides
-                      + lineNumbers
-                      + lines
-                      + linesDecorations
-                      + margin
-                      + marginDecorations
-                      + minimap
-                      + overlayWidgets
-                      + overviewRuler
-                      + rulers
-                      + scrollDecoration
-                      + selections
-                      + viewCursors
-                      + viewZones
-                    + widget
-                      + media
-                  + common
-                    + commands
-                    + config
-                    + controller
-                    + core
-                    + diff
-                    + model
-                      + pieceTreeTextBuffer
-                    + modes
-                      + supports
-                    + services
-                    + standalone
-                      + promise-polyfill
-                    + view
-                    + viewLayout
-                    + viewModel
-                  + contrib
-                    + bracketMatching
-                    + caretOperations
-                    + clipboard
-                    + codeAction
-                    + codelens
-                    + colorPicker
-                    + comment
-                    + contextmenu
-                    + cursorUndo
-                    + dnd
-                    + documentSymbols
-                      + media
-                    + find
-                    + folding
-                    + fontZoom
-                    + format
-                    + gotoError
-                      + media
-                    + gotoSymbol
-                      + link
-                      + peek
-                    + hover
-                    + indentation
-                    + inPlaceReplace
-                    + linesOperations
-                    + links
-                    + markdown
-                    + message
-                    + multicursor
-                    + parameterHints
-                    + peekView
-                      + media
-                    + quickOpen
-                    + rename
-                    + smartSelect
-                    + snippet
-                    + suggest
-                      + media
-                    + toggleTabFocusMode
-                    + tokenization
-                    + wordHighlighter
-                    + wordOperations
-                    + wordPartOperations
-                    + zoneWidget
-                  + standalone
-                    + browser
-                      + accessibilityHelp
-                      + inspectTokens
-                      + iPadShowKeyboard
-                      + quickOpen
-                      + referenceSearch
-                      + toggleHighContrast
-                    + common
-                      + monarch
-                + platform
-                  + accessibility
-                    + common
-                  + actions
-                    + common
-                  + browser
-                  + clipboard
-                    + common
-                  + commands
-                    + common
-                  + configuration
-                    + common
-                  + contextkey
-                    + browser
-                    + common
-                  + contextview
-                    + browser
-                  + dialogs
-                    + common
-                  + editor
-                    + common
-                  + environment
-                    + common
-                  + extensions
-                    + common
-                  + files
-                    + common
-                  + instantiation
-                    + common
-                  + jsonschemas
-                    + common
-                  + keybinding
-                    + common
-                  + label
-                    + common
-                  + layout
-                    + browser
-                  + list
-                    + browser
-                  + log
-                    + common
-                  + markers
-                    + common
-                  + notification
-                    + common
-                  + opener
-                    + common
-                  + progress
-                    + common
-                  + registry
-                    + common
-                  + severityIcon
-                    + common
-                  + storage
-                    + common
-                  + telemetry
-                    + common
-                  + theme
-                    + common
-                  + workspace
-                    + common
-                  + workspaces
-                    + common
             + min
               + vs
                 + base
@@ -4645,7 +3127,6 @@ packs_xtra\packs_xtra.vpj=Release
                     + ui
                       + codiconLabel
                         + codicon
-                  + worker
                 + editor
             + min-maps
               + vs
@@ -4654,28 +3135,21 @@ packs_xtra\packs_xtra.vpj=Release
                 + editor
           + opencollective-postinstall
           + printthis
-            + node_modules\.bin
             + assets
-              + css
               + images
           + requirejs
           + rw
             + lib
               + rw
-            + test
           + safer-buffer
           + sparkline
             + dist
-            + src
           + svg-pan-zoom
             + demo
             + dist
-            + src
-              + media
             + tests
               + assets
           + tagmanager
-            + docs
             + node_modules
               + jquery
                 + dist
@@ -4683,119 +3157,260 @@ packs_xtra\packs_xtra.vpj=Release
                   + sizzle
                     + dist
                 + src
-                  + ajax
-                    + var
-                  + attributes
                   + core
-                    + var
-                  + css
-                    + var
-                  + data
-                    + var
-                  + effects
-                  + event
-                  + exports
-                  + manipulation
-                    + var
-                  + queue
-                  + traversing
-                    + var
-                  + var
           + typeahead.js
             + dist
             + doc
               + migration
-            + src
-              + bloodhound
-              + common
-              + typeahead
-            + test
-              + bloodhound
-              + fixtures
-              + helpers
-              + integration
-              + typeahead
         + patches
   + packs_xtra
     + logicmoo_packages
       + prolog
         + theorist
     + logicmoo_pldata
+      + ext
+        + plkb0988
       + prolog
-  + \root
+    + programk
+      + aiml
+        + chomskyAIML
+        + stdchar
+        + test_suite
+          + ProgramY
+            + arrow_tests
+            + authenticate_tests
+            + authorise_tests
+            + basics_tests
+            + bot_tests
+            + condition_tests
+            + conversations_tests
+            + datetime_tests
+            + denormalize_tests
+            + dynamic_tests
+              + system
+            + gender_tests
+            + get_tests
+            + hash_tests
+            + info_tests
+            + input_tests
+            + learn_tests
+            + learnf_tests
+            + loop_tests
+            + map_tests
+            + mulit_sentence_tests
+            + multiples_tests
+            + normalize_tests
+            + oob_tests
+            + pattern_bot_tests
+            + pattern_iset_tests
+            + pattern_ordering_tests
+            + pattern_set_tests
+            + patterns_tests
+            + person2_tests
+            + person_tests
+            + priority_tests
+            + random_tests
+            + regex_templates_tests
+            + regex_tests
+            + request_tests
+            + response_tests
+            + richmedia_tests
+              + button_tests
+              + openchatbot_tests
+            + scratch
+            + sr_tests
+            + srai_set_tests
+            + srai_tests
+            + sraix_tests
+            + standardlibrary_tests
+            + star_tests
+            + template_map_tests
+            + template_set_tests
+            + text_tests
+            + that_srai_tests
+            + that_tests
+              + case
+              + coffee
+              + core
+              + multi_sentence
+            + thatstar_tests
+            + think_tests
+            + timeout_tests
+            + topic_tests
+              + core
+              + gimisa
+              + yesno
+            + topicstar_tests
+            + train_tests
+            + udc_tests
+              + hash
+              + star
+            + underline_tests
+            + unicode_tests
+            + util_tests
+            + vocab_tests
+            + wildcard_tests
+            + xml_tests
+            + xplode_tests
+      + prolog
+        + dcg_hash
+        + notaiml
+        + programk
+          + aiml_1_0
+          + cyc_pl
+          + logicmoo
+      + temp
+      + test
+  + patch
+    + lib
+      + swipl
+        + boot
+        + library
   + share
-    + man
-      + man1
     + pkgconfig
   + wikis
     + logicmoo_workspace.wiki
-+ packs_xtra\packs_xtra.vpj
-+ packs_usr\wam_common_lisp\wamcl.vpj
++ other_files.vpj
 scroll:0
 [State]
-SCREEN: 1920 1200 100 -6 1440 767 0 0 M 0 0 0 0 1432 703
-CWD: packs_sys\pfc\t\sanity_base
+SCREEN: 1920 1200 100 -6 1440 767 0 0 M 0 0 0 0 1432 641
+CWD: ..\logicmoo_workspace
+BUFFER: BN="StartLogicmoo.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.702 CL=63 LE=0 CX=62 CY=10 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.498 CL=44 LE=0 CX=43 CY=8 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL-EGGDROP.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.63 CL=1 LE=0 CX=0 CY=7 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL-DEPS.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=17 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="INSTALL-PACKS.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-PACKS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-EGGDROP.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.63 CL=22 LE=0 CX=21 CY=7 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-DEPS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=24 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="StartLogicmoo.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.807 CL=89 LE=0 CX=88 CY=24 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.498 CL=44 LE=0 CX=43 CY=15 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.506 CL=1 LE=0 CX=0 CY=9 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
 BUFFER: BN="web_install.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.30 CL=5 LE=0 CX=4 CY=3 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.30 CL=110 LE=0 CX=109 CY=3 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_sicstus.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_swi.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=27 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.369 CL=28 LE=0 CX=27 CY=16 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\agent.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1645 CL=27 LE=0 CX=26 CY=21 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\nal.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 433 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=168 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 433 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=229 BI=34 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1224 433 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\nal.pl"
+VIEW: LN=.292 CL=74 LE=0 CX=73 CY=14 WI=233 BI=41 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1224 433 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\agent.pl"
+VIEW: LN=.1645 CL=1 LE=0 CX=0 CY=6 WI=231 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1224 433 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl"
+VIEW: LN=.369 CL=28 LE=0 CX=27 CY=2 WI=174 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 433 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=227 BI=35 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1224 433 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=225 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 208 208 1224 433 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=223 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 433 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=170 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1224 433 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_swi.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=221 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1224 433 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_sicstus.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=219 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1224 433 -1 -1 N  WF=0 WT=16 ",,,"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
+VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=27 WI=217 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 234 234 1198 469 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="web_install.sh"
+VIEW: LN=.30 CL=110 LE=5 CX=104 CY=3 WI=161 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 832 242 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=9 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1198 469 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+VIEW: LN=.506 CL=1 LE=0 CX=0 CY=7 WI=160 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 832 242 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=16 WI=205 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1198 469 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="StartLogicmoo.sh"
-VIEW: LN=.807 CL=63 LE=0 CX=62 CY=10 WI=201 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1198 469 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-VIEW: LN=.498 CL=44 LE=0 CX=43 CY=8 WI=203 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1198 469 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-EGGDROP.md"
-VIEW: LN=.63 CL=1 LE=0 CX=0 CY=7 WI=197 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1198 469 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-DEPS.md"
-VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=24 WI=199 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1198 469 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-PACKS.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=195 BI=22 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.506 CL=1 LE=0 CX=0 CY=7 WI=159 BI=27 HT=0 HN=0 HF=0 HC=4
 WINDOW: 52 52 832 242 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=152 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 832 242 -1 -1 N  WF=0 WT=3 ",,,"
+VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=158 BI=4 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1198 469 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="INSTALL-PACKS.md"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=157 BI=21 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1198 469 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="INSTALL-DEPS.md"
+VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=17 WI=156 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1198 469 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="INSTALL-EGGDROP.md"
+VIEW: LN=.63 CL=1 LE=0 CX=0 CY=7 WI=155 BI=22 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1198 469 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
+VIEW: LN=.498 CL=44 LE=0 CX=43 CY=8 WI=154 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1198 469 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="StartLogicmoo.sh"
+VIEW: LN=.702 CL=63 LE=0 CX=62 CY=10 WI=153 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 208 208 1198 469 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
 BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=9 WI=150 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 832 242 -1 -1 N  WF=0 WT=2 ",,,"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=8 WI=147 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 234 234 1198 469 -1 -1 M  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="web_install.sh"
-VIEW: LN=.30 CL=110 LE=0 CX=109 CY=3 WI=207 BI=28 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.506 CL=1 LE=0 CX=0 CY=16 WI=152 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1224 433 -1 -1 M  WF=0 WT=14 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=172 BI=31 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\eggdrop\prolog\.ircbot.pl
-packs_sys\eggdrop\prolog\eggdrop.pl
-INSTALL-PACKS.md
-INSTALL-DEPS.md
-packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh
-packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh
-INSTALL-EGGDROP.md
-web_install.sh
-StartLogicmoo.sh
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl
+packs_sys\logicmoo_nars\prolog\nars\nal.pl
+packs_sys\logicmoo_nars\prolog\nars\agent.pl
+packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl

@@ -81,5 +81,260 @@
 				<F N="/etc/apache2/ports.conf"/>
 			</Folder>
 		</Folder>
+		<Folder Name="packs_web">
+			<Folder Name="swish">
+				<Folder Name="lib">
+					<Folder Name="data">
+						<F N="packs_web/swish/lib/data/csv.pl"/>
+						<F N="packs_web/swish/lib/data/scrape.pl"/>
+						<F N="packs_web/swish/lib/data/sparql.pl"/>
+					</Folder>
+					<Folder Name="plugin">
+						<F N="packs_web/swish/lib/plugin/email.pl"/>
+						<F N="packs_web/swish/lib/plugin/hdt.pl"/>
+						<F N="packs_web/swish/lib/plugin/http_authenticate.pl"/>
+						<F N="packs_web/swish/lib/plugin/http_dyn_workers.pl"/>
+						<F N="packs_web/swish/lib/plugin/login.pl"/>
+						<F N="packs_web/swish/lib/plugin/notify.pl"/>
+						<F N="packs_web/swish/lib/plugin/profile.pl"/>
+					</Folder>
+					<Folder Name="render">
+						<F N="packs_web/swish/lib/render/bdd.pl"/>
+						<F N="packs_web/swish/lib/render/c3.pl"/>
+						<F N="packs_web/swish/lib/render/chess.pl"/>
+						<F N="packs_web/swish/lib/render/codes.pl"/>
+						<F N="packs_web/swish/lib/render/cp_rdf.pl"/>
+						<F N="packs_web/swish/lib/render/dot.html"/>
+						<F N="packs_web/swish/lib/render/graphviz.pl"/>
+						<F N="packs_web/swish/lib/render/gvterm.pl"/>
+						<F N="packs_web/swish/lib/render/html.pl"/>
+						<F N="packs_web/swish/lib/render/lpad.pl"/>
+						<F N="packs_web/swish/lib/render/mathjax.pl"/>
+						<F N="packs_web/swish/lib/render/prolog.pl"/>
+						<F N="packs_web/swish/lib/render/rdf.pl"/>
+						<F N="packs_web/swish/lib/render/sldnf.pl"/>
+						<F N="packs_web/swish/lib/render/sudoku.pl"/>
+						<F N="packs_web/swish/lib/render/svgtree.pl"/>
+						<F N="packs_web/swish/lib/render/swish.pl"/>
+						<F N="packs_web/swish/lib/render/table.pl"/>
+						<F N="packs_web/swish/lib/render/tiles.pl"/>
+						<F N="packs_web/swish/lib/render/url.pl"/>
+						<F N="packs_web/swish/lib/render/wordnet.pl"/>
+					</Folder>
+					<F N="packs_web/swish/lib/attvar.pl"/>
+					<F N="packs_web/swish/lib/authenticate.pl"/>
+					<F N="packs_web/swish/lib/avatar.pl"/>
+					<F N="packs_web/swish/lib/bad-words-google.txt"/>
+					<F N="packs_web/swish/lib/bad-words.txt"/>
+					<F N="packs_web/swish/lib/bootstrap.pl"/>
+					<F N="packs_web/swish/lib/chat.pl"/>
+					<F N="packs_web/swish/lib/chatstore.pl"/>
+					<F N="packs_web/swish/lib/config.pl"/>
+					<F N="packs_web/swish/lib/content_filter.pl"/>
+					<F N="packs_web/swish/lib/cp_authenticate.pl"/>
+					<F N="packs_web/swish/lib/cron.pl"/>
+					<F N="packs_web/swish/lib/dashboard.pl"/>
+					<F N="packs_web/swish/lib/data_source.pl"/>
+					<F N="packs_web/swish/lib/download.pl"/>
+					<F N="packs_web/swish/lib/examples.pl"/>
+					<F N="packs_web/swish/lib/filesystems.pl"/>
+					<F N="packs_web/swish/lib/flags.pl"/>
+					<F N="packs_web/swish/lib/form.pl"/>
+					<F N="packs_web/swish/lib/gitty.pl"/>
+					<F N="packs_web/swish/lib/gitty_bdb.pl"/>
+					<F N="packs_web/swish/lib/gitty_driver_bdb.pl"/>
+					<F N="packs_web/swish/lib/gitty_driver_files.pl"/>
+					<F N="packs_web/swish/lib/gitty_tools.pl"/>
+					<F N="packs_web/swish/lib/help.pl"/>
+					<F N="packs_web/swish/lib/highlight.pl"/>
+					<F N="packs_web/swish/lib/html_output.pl"/>
+					<F N="packs_web/swish/lib/http_version.pl"/>
+					<F N="packs_web/swish/lib/include.pl"/>
+					<F N="packs_web/swish/lib/jquery.pl"/>
+					<F N="packs_web/swish/lib/logging.pl"/>
+					<F N="packs_web/swish/lib/markdown.pl"/>
+					<F N="packs_web/swish/lib/md_eval.pl"/>
+					<F N="packs_web/swish/lib/messages.pl"/>
+					<F N="packs_web/swish/lib/noble_avatar.pl"/>
+					<F N="packs_web/swish/lib/oauth2.pl"/>
+					<F N="packs_web/swish/lib/page.pl"/>
+					<F N="packs_web/swish/lib/patch.pl"/>
+					<F N="packs_web/swish/lib/paths.pl"/>
+					<F N="packs_web/swish/lib/pep.pl"/>
+					<F N="packs_web/swish/lib/procps.pl"/>
+					<F N="packs_web/swish/lib/profiles.pl"/>
+					<F N="packs_web/swish/lib/projection.pl"/>
+					<F N="packs_web/swish/lib/provenance.pl"/>
+					<F N="packs_web/swish/lib/r_swish.pl"/>
+					<F N="packs_web/swish/lib/render.pl"/>
+					<F N="packs_web/swish/lib/replay.pl"/>
+					<F N="packs_web/swish/lib/replay_cm.pl"/>
+					<F N="packs_web/swish/lib/rgb.txt"/>
+					<F N="packs_web/swish/lib/search.pl"/>
+					<F N="packs_web/swish/lib/session.pl"/>
+					<F N="packs_web/swish/lib/ssl_certificate.pl"/>
+					<F N="packs_web/swish/lib/storage.pl"/>
+					<F N="packs_web/swish/lib/swish_chr.pl"/>
+					<F N="packs_web/swish/lib/swish_csv.pl"/>
+					<F N="packs_web/swish/lib/swish_debug.pl"/>
+					<F N="packs_web/swish/lib/template_hint.pl"/>
+					<F N="packs_web/swish/lib/trace.pl"/>
+					<F N="packs_web/swish/lib/tutorial.pl"/>
+					<F N="packs_web/swish/lib/version.pl"/>
+					<F N="packs_web/swish/lib/web.pl"/>
+				</Folder>
+				<Folder Name="rdf">
+					<Folder Name="cpack">
+						<F N="packs_web/swish/rdf/cpack/swish.ttl"/>
+					</Folder>
+				</Folder>
+				<Folder Name="web">
+					<Folder Name="css">
+						<F N="packs_web/swish/web/css/answer.css"/>
+						<F N="packs_web/swish/web/css/chat.css"/>
+						<F N="packs_web/swish/web/css/chatbell.css"/>
+						<F N="packs_web/swish/web/css/chatroom.css"/>
+						<F N="packs_web/swish/web/css/css-inline.pl"/>
+						<F N="packs_web/swish/web/css/diffview.css"/>
+						<F N="packs_web/swish/web/css/editor.css"/>
+						<F N="packs_web/swish/web/css/file-icon.png"/>
+						<F N="packs_web/swish/web/css/filesystems.css"/>
+						<F N="packs_web/swish/web/css/flash.css"/>
+						<F N="packs_web/swish/web/css/form.css"/>
+						<F N="packs_web/swish/web/css/gitty.css"/>
+						<F N="packs_web/swish/web/css/login.css"/>
+						<F
+							N="packs_web/swish/web/css/Makefile"
+							Type="Makefile"/>
+						<F N="packs_web/swish/web/css/modal.css"/>
+						<F N="packs_web/swish/web/css/navbar.css"/>
+						<F N="packs_web/swish/web/css/notebook.css"/>
+						<F N="packs_web/swish/web/css/pane.css"/>
+						<F N="packs_web/swish/web/css/print.css"/>
+						<F N="packs_web/swish/web/css/query.css"/>
+						<F N="packs_web/swish/web/css/runner.css"/>
+						<F N="packs_web/swish/web/css/sourcelist.css"/>
+						<F N="packs_web/swish/web/css/swish.css"/>
+						<F N="packs_web/swish/web/css/tabbed.css"/>
+						<F N="packs_web/swish/web/css/term.css"/>
+						<F N="packs_web/swish/web/css/typeaheadjs.css"/>
+						<F N="packs_web/swish/web/css/types.css"/>
+						<F N="packs_web/swish/web/css/version.css"/>
+					</Folder>
+					<Folder Name="help">
+						<F N="packs_web/swish/web/help/about.html"/>
+						<F N="packs_web/swish/web/help/background.html"/>
+						<F N="packs_web/swish/web/help/beware.html"/>
+						<F N="packs_web/swish/web/help/caveats.html"/>
+						<F N="packs_web/swish/web/help/chat.html"/>
+						<F N="packs_web/swish/web/help/credits.html"/>
+						<F N="packs_web/swish/web/help/debug.html"/>
+						<F N="packs_web/swish/web/help/editor.html"/>
+						<F N="packs_web/swish/web/help/hangout.html"/>
+						<F N="packs_web/swish/web/help/help-aleph.html"/>
+						<F N="packs_web/swish/web/help/help-cplint.html"/>
+						<F N="packs_web/swish/web/help/help-trill.html"/>
+						<F N="packs_web/swish/web/help/help.html"/>
+						<F N="packs_web/swish/web/help/index.json"/>
+						<F N="packs_web/swish/web/help/login.html"/>
+						<F N="packs_web/swish/web/help/newchat.html"/>
+						<F N="packs_web/swish/web/help/notebook.html"/>
+						<F N="packs_web/swish/web/help/privacy.html"/>
+						<F N="packs_web/swish/web/help/query.html"/>
+						<F N="packs_web/swish/web/help/runner.html"/>
+						<F N="packs_web/swish/web/help/sourcelist.html"/>
+					</Folder>
+					<Folder Name="js">
+						<Folder Name="codemirror">
+							<Folder Name="addon">
+								<Folder Name="hint">
+									<F N="packs_web/swish/web/js/codemirror/addon/hint/show-context-info.css"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hint/show-context-info.js"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hint/show-hint-eclipse.css"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hint/templates-hint.css"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hint/templates-hint.js"/>
+								</Folder>
+								<Folder Name="hover">
+									<F N="packs_web/swish/web/js/codemirror/addon/hover/prolog-hover.css"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hover/prolog-hover.js"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hover/text-hover.css"/>
+									<F N="packs_web/swish/web/js/codemirror/addon/hover/text-hover.js"/>
+								</Folder>
+							</Folder>
+							<Folder Name="mode">
+								<Folder Name="prolog">
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/index.html"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog-ctype.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog-enhanced.png"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog-template-hint.css"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog-template-hint.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog_keys.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog_op.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog_query.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/prolog_server.js"/>
+									<F N="packs_web/swish/web/js/codemirror/mode/prolog/README.md"/>
+								</Folder>
+							</Folder>
+							<Folder Name="theme">
+								<F N="packs_web/swish/web/js/codemirror/theme/prolog.css"/>
+							</Folder>
+						</Folder>
+						<Folder Name="render">
+							<F N="packs_web/swish/web/js/render/svg-tree-drawer.js"/>
+						</Folder>
+						<Folder Name="tutorials">
+							<F N="packs_web/swish/web/js/tutorials/jquery-doc.json"/>
+							<F N="packs_web/swish/web/js/tutorials/jquery-doc.md"/>
+						</Folder>
+						<F N="packs_web/swish/web/js/.gitignore"/>
+						<F N="packs_web/swish/web/js/answer.js"/>
+						<F N="packs_web/swish/web/js/build.js.in"/>
+						<F N="packs_web/swish/web/js/chat.js"/>
+						<F N="packs_web/swish/web/js/chatbell.js"/>
+						<F N="packs_web/swish/web/js/chatroom.js"/>
+						<F N="packs_web/swish/web/js/conf.json"/>
+						<F N="packs_web/swish/web/js/config.js"/>
+						<F N="packs_web/swish/web/js/diff.js"/>
+						<F N="packs_web/swish/web/js/difflib.js"/>
+						<F N="packs_web/swish/web/js/diffview.js"/>
+						<F N="packs_web/swish/web/js/download.js"/>
+						<F N="packs_web/swish/web/js/editor.js"/>
+						<F N="packs_web/swish/web/js/empty.js"/>
+						<F N="packs_web/swish/web/js/filesystems.html"/>
+						<F N="packs_web/swish/web/js/form.js"/>
+						<F N="packs_web/swish/web/js/gitty.js"/>
+						<F N="packs_web/swish/web/js/history.js"/>
+						<F N="packs_web/swish/web/js/jquery.jsdoc"/>
+						<F N="packs_web/swish/web/js/jswish.js"/>
+						<F N="packs_web/swish/web/js/links.js"/>
+						<F N="packs_web/swish/web/js/login.js"/>
+						<F
+							N="packs_web/swish/web/js/Makefile"
+							Type="Makefile"/>
+						<F N="packs_web/swish/web/js/mkjsbuild.pl"/>
+						<F N="packs_web/swish/web/js/modal.js"/>
+						<F N="packs_web/swish/web/js/navbar.js"/>
+						<F N="packs_web/swish/web/js/notebook.js"/>
+						<F N="packs_web/swish/web/js/pane.js"/>
+						<F N="packs_web/swish/web/js/plugin.js"/>
+						<F N="packs_web/swish/web/js/preferences.js"/>
+						<F N="packs_web/swish/web/js/prolog.js"/>
+						<F N="packs_web/swish/web/js/query.js"/>
+						<F N="packs_web/swish/web/js/README.md"/>
+						<F N="packs_web/swish/web/js/runner.js"/>
+						<F N="packs_web/swish/web/js/search.js"/>
+						<F N="packs_web/swish/web/js/sourcelist.js"/>
+						<F N="packs_web/swish/web/js/storage.js"/>
+						<F N="packs_web/swish/web/js/svgavatar.js"/>
+						<F N="packs_web/swish/web/js/swish.js"/>
+						<F N="packs_web/swish/web/js/tabbed.js"/>
+						<F N="packs_web/swish/web/js/term.js"/>
+						<F N="packs_web/swish/web/js/utils.js"/>
+						<F N="packs_web/swish/web/js/version.js"/>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
 	</Files>
 </Project>

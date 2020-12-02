@@ -172,6 +172,7 @@ define(["jquery", "config", "modal"],
           var swishStore = config.http.locations.swish + "p/";
           var swishExamples = config.http.locations.swish + "example/";
           var href = a.attr("href");
+          var hreftarget = a.attr("target");
           var windowOrigin = window.location.origin;
 
 
@@ -236,11 +237,20 @@ define(["jquery", "config", "modal"],
                 $(ev.target).closest(".swish").swish('playURL', {url: href});
                 return;
               }
-               debugger;
+
               if (href.startsWith("/")) {
                 debugger;
                 href = "/swish" + href;
                 $(ev.target).closest(".swish").swish('playURL', {url: href});
+                return;
+              }
+              if (href.startsWith(":")) {
+                href = windowOrigin + href;
+                done = true;
+                ev.preventDefault();
+                //ev.preventDefault();
+                window.open(href, hreftarget,  "toolbar=no,scrollbars=yes,resizable=yes,top=100,left=100,width=800,height=800");                
+                ev.stopPropagation();
                 return;
               }
             }
