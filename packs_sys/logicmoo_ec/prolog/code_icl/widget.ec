@@ -3,6 +3,8 @@
 % based on the example of Draper, Hanks and Weld 94
 % Copyright 1997, David Poole, all rights reserved.
 
+:- expects_dialect(icl).
+
 % NATURE MODULE
 utility(1) <- do(agent1,notify,T) & painted(T) & processed(T).
 
