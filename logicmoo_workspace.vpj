@@ -84,6 +84,11 @@
                         Refilter="0"
                         Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
                 <F
+                        N="*.lp*"
+                        Recurse="1"
+                        Refilter="0"
+                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+                <F
                         N="*.*h"
                         Recurse="1"
                         Refilter="0"

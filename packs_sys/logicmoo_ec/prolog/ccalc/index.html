@@ -1,0 +1,138 @@
+<html>
+<head>
+   <title>CCalc</title>
+</head>
+
+<body bgcolor=#eeeeee>
+<center>
+<h1>
+The Causal Calculator
+</h1>
+</center>
+
+The Causal Calculator (CCalc) is a system for representing commonsense
+knowledge about action and change.  It implements a fragment of the causal
+logic described in the paper
+"<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">Nonmonotonic
+causal theories</a>" by
+<a href="http://www.mrg.dist.unige.it/~enrico/">Enrico Giunchiglia</a>,
+<a href="http://peace.eas.asu.edu/joolee/">Joohyung Lee</a>,
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>,
+Norman McCain and
+<a href="http://www.d.umn.edu/~hudson">Hudson Turner</a>
+(<i>Artificial Intelligence</i>, Vol.&nbsp;153, 2004, pp.&nbsp;49-104).
+The original version of CCalc was part of Norman McCain's dissertation,
+<i>
+<a href="http://www.cs.utexas.edu/users/vl/dissertations/mccain.ps">
+<!-- <a href="ftp://ftp.cs.utexas.edu/pub/techreports/tr97-25.ps"> -->
+Causality
+in commonsense reasoning about actions</a></i> (University of Texas, 1997).
+Now the system is being maintained by
+<a href="http://www.cs.utexas.edu/users/tag">Texas Action Group at Austin.</a>
+<p>
+
+The semantics of the language of CCalc is related to default logic and logic
+programming.  Computationally, CCalc uses ideas of satisfiability
+planning.  
+(A related system, 
+<a href="http://reasoning.eas.asu.edu/cplus2asp/">Cplus2ASP</a> 
+from Arizona State University, 
+processes CCalc input using answer set solvers instead of SAT solvers.)<p>
+
+A later project, 
+<a href="http://www.cs.utexas.edu/users/tag/mad/">
+MAD<!-- (the Modular Action Description language) --></a>,
+adds the capability to split action descriptions into modules, and
+allows action/fluent constants to be redefined during the process of
+"importing" a module.
+
+
+<h2>
+CCalc at UT Austin
+</h2>
+
+On the machines of the Department of Computer Sciences of the University of
+Texas at Austin, CCalc is installed in the <tt>/projects/tag/ccalc/</tt>
+directory.<p>
+
+To execute SWI Prolog, use the command: 
+<!-- &nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New,Courier">  </font> -->
+<p><tt>% swipl</tt><p>
+
+For Sicstus Prolog, use the command:
+<!-- &nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New,Courier">  </font> -->
+<p><tt>% /stage/public/linux/bin/sicstus</tt><p>
+
+<!-- 
+on a Sun used to be /projects/prolog/sicstus3.7.1/sparc5native/sicstus
+-->
+
+<h2>
+How to Download CCalc
+</h2>
+
+To run CCalc, you need either 
+<a href="http://www.sics.se/sicstus/">SICStus Prolog</a> 
+(version 3.7.1 or later)
+or <a href="http://www.swi-prolog.org/">SWI Prolog</a>
+(version 5.6.49 or later).<p>
+
+Download the file
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ccalc.2.0/ccalc-2.0r2.tar.gz"><tt>ccalc-2.0r2.tar.gz</a></tt>
+<p>
+
+and unpack it using the commands
+
+<!-- &nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New,Courier"> </font> -->
+<p><tt>% gunzip ccalc-2.0r2.tar.gz</tt>
+<!-- &nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New,Courier"> </font> -->
+<p><tt>% tar -xvf ccalc-2.0r2.tar</tt> 
+
+<p>
+CCalc 2.0 will be installed in directory <tt>ccalc</tt>
+created under your current directory.
+
+<p> 
+Satisfiability solvers compiled for Linux and SunOS are provided with CCalc. If
+you will run CCalc under a different operating system, you may need to obtain
+or recompile the SAT solvers for your system.  Please see the file <a
+href="README">README</a>, in the ccalc directory after you unzip it, for
+instructions on how to do this.<p>
+
+<h2>
+<a href="tutorial/toc.html">On-line Tutorial</a>
+</h2>
+
+<h2>
+<a href="examples/">Examples of Action Domains
+Described in the Language of CCalc</a>
+</h2>
+
+<b><font size="4">If you liked CCalc</font></b> then you may be also interested
+in systems<p>
+<center>
+<A HREF="http://assat.cs.ust.hk/">ASSAT</A>,
+<a href="http://www.cs.rochester.edu/u/kautz/satplan/blackbox/index.html">
+ BLACKBOX</a>,
+<!--
+<a href="http://www.cs.washington.edu/homes/kautz/blackbox/">BLACKBOX</a>,
+-->
+<a href="http://www.cs.utexas.edu/users/tag/cmodels/">CMODELS</a>,
+<a href="http://www.cs.uni-potsdam.de/wv/coala/">Coala</a>,
+<a href="http://reasoning.eas.asu.edu/cplus2asp/">Cplus2ASP</a>,
+<a href="http://www.dbai.tuwien.ac.at/proj/dlv/">DLV</a>,
+<a href="http://www.cs.utexas.edu/users/tag/mad/">MAD</a>,
+<a href="http://www.tcs.hut.fi/Software/smodels/">SMODELS</a>
+<!-- <a href="http://saturn.hut.fi/pub/smodels/">SMODELS</a> -->
+and <a href="http://www.ida.liu.se/~jonkv/vital/">VITAL</a>.
+</center>
+<p>
+
+<b><font size="4">Questions?</font></b> Send an e-mail to
+<a href="mailto:ccalc-help@cs.utexas.edu">ccalc-help@cs.utexas.edu</a>.<p>
+
+</html>
+
+

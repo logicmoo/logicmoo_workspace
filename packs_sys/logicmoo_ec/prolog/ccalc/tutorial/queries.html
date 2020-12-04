@@ -1,0 +1,54 @@
+<head>
+   <title>CCalc Tutorial: Queries</title>
+</head>
+
+<center>
+<h2>
+0.3. Queries
+</h2>
+</center>
+
+When an action domain is represented by a transition system, many
+computational problems involving that domain can be stated as questions about
+paths in this transition system.  This idea is used in the approach to
+queries adopted in the input language of CCalc.<p>
+
+Consider, for instance, several identical objects, say coins, and a box in
+which these objects can be placed.  There is enough room in the box for
+10 coins.  We are interested in the effect of the action <i>a</i> of putting
+ a coin in the box on the number <i>c</i> of coins that are currently in the
+box.  This domain can be represented by transition system
+<a href="transitionsystems.html#coins"><i>TS2</i></a> (Section 0.1) with
+<i>N</i>=10.<p>
+
+<i>Prediction.</i>  Currently there are 5 coins in the box.  If I put one coin
+in the box twice in a row, how many coins will there be in the box at the
+end?<p>
+
+In terms of paths in the transition system: consider the path of length 2 that
+starts at the vertex <i>c</i>=5 and has both edges labeled <i>a</i>=<b>t</b>.
+Where does it end? (Answer: <i>c</i>=7.)<p>
+
+<i>Postdiction.</i>  I just put one coin in the box twice in a row, and now
+there are 5 coins in it.  How many coins were there in the box initially?<p>
+
+In terms of paths: consider the path of length 2 that ends at the vertex
+<i>c</i>=5 and has both edges labeled <i>a</i>=<b>t</b>.  Where does it
+start?  (Answer: <i>c</i>=3.)<p>
+
+<i>Planning.</i>  Currently there are 4 coins in the box.  Find the shortest
+sequence of events that will make the box full.<p>
+
+In terms of paths: find the shortest path from the vertex <i>c</i>=4 to the
+vertex <i>c</i>=10. (Answer: path of length 6 with every edge labeled
+<i>a</i>=<b>t</b>.)<p>
+
+<hr><p>
+
+<address><a href="input1.html">Forward</a>
+to Section 1.1: CCalc Input: Transition Systems</a><br></address>
+
+<address><a href="describing.html">Back</a>
+to Section 0.2: Describing Actions</a><br></address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

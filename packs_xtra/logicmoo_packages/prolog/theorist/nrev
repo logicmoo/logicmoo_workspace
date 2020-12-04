@@ -1,9 +1,0 @@
-explainable nrev(X,Y).
-fact app([],X,X).
-fact app([A|X],Y,[A|Z]) <-
-   app(X,Y,Z).
-
-fact nrev([],[]).
-fact nrev([H|T],R) <-
-   nrev(T,NT),
-   app(NT,[H],R).

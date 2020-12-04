@@ -1,0 +1,14 @@
+c Instance is: ccsat.in
+c Random number seed: 0
+c Learn order is: 3
+c Reading instance.....done.
+c Preprocessing instance: removing redundancies...resolving...unit reducing...resolving...completed in 0 seconds.
+c Initial clause count: 2
+c New clause count    : 2
+c Solving instance...
+SAT
+1 
+Variable Assignments        : 2
+Branch Selections           : 0
+Contradictions Discovered   : 0
+Seconds Elapsed (real time) : 0

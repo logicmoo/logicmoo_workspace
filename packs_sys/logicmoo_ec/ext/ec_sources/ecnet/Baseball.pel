@@ -197,7 +197,8 @@ onOppositeTeams(Ballgame, Agent1, Agent2) <->
 % HoldsAt(Near(agent2,homeplate),time) &
 % OnOppositeTeams(ballgame,agent1,agent2).
 :-was_s_l('/pack/logicmoo_ec/ext/ec_sources/ecnet/Baseball.e',99).
-happens_at(pitch(Ballgame, Agent1, Hardball, Agent2), Time), pitchermoundOf(Ballgame)=Pitchermound, homeplateOf(Ballgame)=Homeplate ->
+happens_at(pitch(Ballgame, Agent1, Hardball, Agent2), Time), 
+    pitchermoundOf(Ballgame)=Pitchermound, homeplateOf(Ballgame)=Homeplate ->
     holds_at(near(Agent1, Pitchermound), Time),
     holds_at(near(Agent2, Homeplate), Time),
     onOppositeTeams(Ballgame, Agent1, Agent2).

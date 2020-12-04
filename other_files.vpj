@@ -336,5 +336,27 @@
 				</Folder>
 			</Folder>
 		</Folder>
+		<Folder Name="packs_xtra">
+			<Folder Name="logicmoo_packages">
+				<Folder Name="prolog">
+					<F
+						N="packs_xtra/logicmoo_packages/prolog/*.*"
+						Recurse="1"
+						Refilter="0"
+						Excludes=""/>
+				</Folder>
+			</Folder>
+		</Folder>
+                <Folder Name="packs_sys">
+                        <Folder Name="logicmoo_ec">
+                                <Folder Name="prolog">
+                                        <F
+                                                N="packs_sys/logicmoo_ec/prolog/*.*"
+                                                Recurse="1"
+                                                Refilter="0"
+                                                Excludes=""/>
+                                </Folder>
+                        </Folder>
+                </Folder>
 	</Files>
 </Project>

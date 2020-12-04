@@ -1,0 +1,130 @@
+<head>
+   <title>CCalc Tutorial: CCalc Input: Transition Systems</title>
+</head>
+
+<center>
+<h1>
+1. Getting Started with CCalc
+</h1>
+<h2>
+1.1. CCalc Input: Transition Systems
+</h2>
+</center>
+
+Transition system
+<a href="transitionsystems.html#boolean"><i>TS1</i></a> from Section 0.1
+can be described in the input language of CCalc as follows:<p>
+
+<a name="boolean">
+<pre>
+:- constants
+ p :: inertialFluent;
+ a :: exogenousAction.
+
+a causes p.
+</pre>
+
+This description consists of the declarations of the constants <tt>p</tt>
+and <tt>a</tt> (the first 3 lines) and a proposition (the last line).
+The declaration part begins with the heading <tt>:-&nbsp;constants</tt> and
+ends with a period.  The proposition is followed by a period also.  A semicolon
+separates the two declarations from each other.  Within each declaration, the
+symbol <tt>::</tt> separates the constant that is being declared from the
+symbol that indicates what kind of constant it is.<p>
+
+Note that <tt>p</tt> is declared here as an <tt>inertialFluent</tt>, rather
+than simply a fluent,  and <tt>a</tt> is declared as an
+<tt>exogenousAction</tt>, rather than simply an action.  See
+<a href="describing.html">Section 0.2</a> above for a brief, informal
+discussion of these ideas.<p>
+
+Transition system <a href="transitionsystems.html#coins"><i>TS2</i></a>
+is actually a family of transition systems, one for each value of <i>N</i>.
+The following piece of code defines the system corresponding to <i>N</i>=3:
+
+<pre>
+:- constants
+ c :: inertialFluent(0..3);
+ a :: exogenousAction.
+
+a causes c=1 if c=0.
+a causes c=2 if c=1.
+a causes c=3 if c=2.
+
+nonexecutable a if c=3.
+</pre>
+
+In the declaration of <tt>c</tt>, the symbol <tt>inertialFluent</tt> is
+followed by <tt>(0..3)</tt> to indicate that the possible values of this
+fluent are integers between 0 and 3, rather than <b>f</b> and <b>t</b>.
+Each of the <tt>causes</tt> propositions is conditional -- it includes
+<tt>if</tt>. For instance, the
+first of them describes the effect of action <i>a</i> when it is executed
+in a state satisfying <i>c</i>=0.
+The <tt>nonexecutable</tt> proposition in the last line tells us that the
+transition system does not have an edge that begins at the vertex
+<i>c</i>=3 and is labeled <i>a</i>=<b>t</b>.  (Without this proposition,
+such an edge would be included in the transition system, according to the
+semantics of
+C+.   Since the <tt>causes</tt> propositions in this action description do not
+postulate any effect of <i>a</i> on <i>c</i> when <i>c</i>=3, this edge, by
+inertia, would be a loop.)<p>
+
+The <tt>causes</tt> propositions in this example follow a simple pattern, and
+the input language of CCalc allows us to use this fact to make the action
+description more compact:
+
+<pre>
+:- constants
+ c :: inertialFluent(0..3);
+ a :: exogenousAction.
+
+:- variables
+ I :: 0..2.
+
+a causes c=I+1 if c=I.
+
+nonexecutable a if c=3.
+</pre>
+
+The letter <tt>I</tt> is declared here to be a variable ranging over
+<tt>0,1,2</tt>, and we use it in a "schematic proposition" that represents
+a set of 3 instances.  In CCalc code, capital letters and identifiers
+beginning with a capital letter are customarily used as variables, but not
+as constants (or as anything else, for that matter).  This convention is
+related to the fact that CCalc is written in Prolog.  Violating this
+convention is considered, in some cases, a syntax error.<p>
+
+The last piece of code can be further improved by treating the value of
+<i>N</i> as a macro:<p>
+
+<a name="coins">
+<pre>
+:- macros
+ n -> 3.
+
+:- constants
+ c :: inertialFluent(0..n);
+ a :: exogenousAction.
+
+:- variables
+ I :: 0..n-1.
+
+a causes c=I+1 if c=I.
+
+nonexecutable a if c=n.
+</pre>
+
+The macro definition instructs CCalc to replace every
+occurrence of <tt>n</tt> in the rest of the file by <tt>3</tt>, as a
+preprocessing step.<p>
+
+<hr><p>
+
+<address><a href="input2.html">Forward</a>
+to Section 1.2: CCalc Input: Queries</a><br></address>
+
+<address><a href="queries.html">Back</a>
+to Section 0.3: Queries</a><br></address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

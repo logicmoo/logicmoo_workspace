@@ -1,0 +1,29 @@
+% File 'arithmetic'
+
+:- sorts
+  additiveInteger >> nnAdditiveInteger.
+
+:- macros
+  minAdditive -> -(maxAdditive).
+
+:- objects
+  minAdditive..maxAdditive      :: additiveInteger;
+  0..maxAdditive                :: nnAdditiveInteger.  
+
+:- macros
+  sum(#1,#2,#3) ->
+        #1 is max(minAdditive, min((#2)+(#3),maxAdditive));  
+  diff(#1,#2,#3) ->
+        #1 is max(minAdditive, min((#2)-(#3),maxAdditive));  
+  prod(#1,#2,#3) -> 
+        #1 is max(minAdditive, min((#2)*(#3),maxAdditive)).
+
+:- macros
+  sum2(#1,#2) ->
+        max(minAdditive, min((#1)+(#2),maxAdditive));  
+  diff2(#1,#2) ->
+        max(minAdditive, min((#1)-(#2),maxAdditive));  
+  prod2(#1,#2) -> 
+        max(minAdditive, min((#1)*(#2),maxAdditive)).
+
+

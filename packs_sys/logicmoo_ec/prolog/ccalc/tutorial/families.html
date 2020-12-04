@@ -1,0 +1,199 @@
+<head>
+   <title>Ccalc Tutorial: Families of Fluents, Actions and Constants</title>
+</head>
+
+<center>
+<h2>
+3.2. Families of Fluents, Actions and Objects
+</h2>
+</center>
+
+Many action domains involve parameterized families of fluents and actions,
+rather than individual fluents and actions as in the examples discussed in
+this tutorial so far.  For instance, in the blocks world
+(<a href="objects.html">Section 3.1</a>), a configuration of blocks can be
+described by a family of fluents -- the location-valued fluents
+<tt>loc(B)</tt>, where <tt>B</tt> is an object of sort <tt>block</tt>.
+Actions in this domain are <tt>move(B,L)</tt> ("move block <tt>B</tt> to
+location <tt>L</tt>"); this is a family of actions with two parameters.
+Here is how these families can be declared in the language of CCalc:
+
+<pre>
+:- constants
+ loc(block)           :: inertialFluent(location);
+ move(block,location) :: exogenousAction.
+</pre>
+
+After that, expressions such as <tt>loc(a)</tt> and <tt>loc(B)</tt> can be
+used as names of fluents (here <tt>a</tt> is an object of sort <tt>block</tt>,
+and <tt>B</tt> is a variable for blocks), and similarly for actions.  For
+instance, the effect of moving blocks can be described by the schematic
+proposition
+
+<pre>
+move(B,L) causes loc(B)=L.
+</pre>
+
+As another example, consider the enhancement of the shooting domain from
+<a href="ysp.html">Section 2.1</a> in which there are two potential targets,
+Turkey 1 and Turkey 2, and the effect of shooting depends on how the gun is
+aimed (<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">NMCT</a>,
+Section 5.1</tt>).  The CCalc representation of that domain shown in file
+<a href="../examples/nmct/turkeys">turkeys</a> declares the family of fluents
+<tt>alive(turkey)</tt> and the family of actions <tt>aim(turkey)</tt>.<p>
+
+In this example, an interesting problem arises in connection with the fluent
+<tt>target</tt>, which describes how the gun is aimed.  Its values are objects
+of sort <tt>turkey</tt>.  But we want to allow the gun not to be aimed at any
+target at all; this is what happens immediately after loading.  How can we
+declare such a "partially defined fluent"?  Technically, this is accomplished
+by including the special symbol <tt>none</tt> in the set of its possible
+values.  The
+supersort mechanism, described in <a href="objects.html">Section 3.1</a>,
+can be used to introduce an auxiliary sort that can be referred to in the
+declaration of <tt>target</tt>:
+
+<pre>
+:- sorts
+ aux >> turkey.
+
+:- objects
+ none    :: aux.
+
+:- constants
+ target  :: inertialFluent(aux).
+</pre>
+
+But adding <tt>none</tt> to a sort is such a useful operation that the
+language of CCalc provides special, more compact syntax for it.  In
+file <a href="../examples/nmct/turkeys">turkeys</a> we simply write:
+
+<pre>
+:- sorts
+  turkey.
+
+:- constants
+  target  :: inertialFluent(turkey+none).
+</pre>
+
+The query at the end of file <a href="../examples/nmct/turkeys">turkeys</a>
+contains a variable:
+
+<pre>
+:- query
+maxstep :: 5..6;
+0: alive(T),
+   target=none,
+   -loaded;
+maxstep:
+  -alive(T).
+</pre>
+
+Variables in queries are understood to be universally quantified,
+so that this query has the same meaning as
+
+<pre>
+:- query
+ maxstep :: 5..6;
+ 0: alive(turkey1) & alive(turkey2),
+    target=none,
+    -loaded;
+ maxstep: -alive(turkey1) & -alive(turkey2).
+</pre>
+
+The implicit universal quantifier over <tt>T</tt> can be also shown explicitly:
+
+<pre>
+:- query
+ maxstep :: 5..6;
+ 0: [/\T | alive(T)],
+    target=none,
+    -loaded;
+ maxstep: [/\T | -alive(T)].
+</pre>
+
+If we replaced the universal quantifier <tt>/\</tt> (that is to say, multiple
+conjunction) in the last line with the existential quantifier (multiple
+disjunction) <tt>\/</tt> and wrote
+
+<pre>
+ maxstep: [\/T | -alive(T)]
+</pre>
+
+then the goal would be to kill at least one turkey.  To express that the
+goal is to kill exactly one turkey, we can write
+
+<pre>
+maxstep: [\/ T /\ T1 | alive(T1) <-> T=T1]
+</pre>
+where <tt>T1</tt> is another variable of sort <tt>turkey</tt>.
+<p>
+
+The answer to the query produced by CCalc begins with the lines
+
+<pre>
+0:  alive(turkey1)  alive(turkey2)  
+
+ACTIONS:  load  
+
+1:  loaded  alive(turkey1)  alive(turkey2)
+
+ACTIONS:  aim(turkey1)  
+
+2:  loaded  alive(turkey1)  alive(turkey2)  target=turkey1  
+</pre>
+
+Note that, in the output of CCalc, the value of <tt>target</tt> is shown in
+state 2, but not in states 0 and 1.  This is because CCalc does not
+display the value of a fluent when that value is <tt>none</tt>, in
+accordance with the interpretation of that value as "undefined."<p>
+
+<b>Exercise 3.2.</b>
+Consider the modification of the domain from file
+<a href="../examples/nmct/turkeys">turkeys</a> in which two hunters with guns
+(<tt>mygun</tt> and <tt>hisgun</tt>) pursue three animals (<tt>buffalo</tt>,
+<tt>deer</tt> and <tt>fox</tt>).  Initially the
+guns are loaded but not aimed, and the goal is to kill all three animals.
+Use CCalc to find a solution.<p>
+
+<b>Exercise 3.3.</b>
+John and Mary from Problem 3.1 (<a href="objects.html">Section 3.1</a>)
+have three coins: a penny, a nickel and a dime.  Besides giving coins to
+each other, they can also throw them away.  All coins are currently in
+Mary's possession.  John wants to have exctly two coins, and he wants Mary
+to have nothing.  Instruct CCalc to suggest an appropriate course of action.<p>
+
+If we want to talk about 100 turkeys, instead of two, the declaration
+
+<pre>
+:- objects 
+  turkey1, turkey2    :: turkey.
+</pre>
+
+in file <a href="../examples/nmct/turkeys">turkeys</a> will become much
+longer.  An alternative is to replace the individually declared objects
+<tt>turkey1</tt>, <tt>turkey2</tt>, etc., by a family of objects indexed
+by numbers:
+
+<pre>
+:- sorts
+  index; turkey.
+
+:- objects 
+  1..100               :: index;
+  t(index)             :: turkey.
+</pre><p>
+
+<b>Exercise 3.4.</b>
+Modify your solution to Exercise 3.2 to include 5 guns.<p>
+
+<hr><p>
+
+<address><a href="constraints.html">Forward</a>
+to Section 4.1: Constraints</address>
+
+<address><a href="objects.html">Back</a>
+to Section 3.1: Objects and Sorts</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>
+

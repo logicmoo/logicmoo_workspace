@@ -1,0 +1,74 @@
+% File 'precedences.std', implicitly included at the
+%  beginning of every CCalc input file
+
+% Precedences of operators are used to disambiguate expressions
+% whose structure is not made explicit through the use of
+% parentheses.  They are defined here in the Prolog notation.
+% Each operator is assigned a number called its precedence, and
+% it is the operator with the highest precedence that is the
+% principal functor.  If there are two operators in the
+% subexpression having the same highest precedence, the ambiguity
+% is resolved from the types of the operators. The possible types
+% for an infix operator are 
+%
+% xfx     xfy     yfx
+%
+% For an operator of type xfx both arguments must be of lower
+% precedence than the operator itself.  For an operators of type
+% xfy the left-hand subexpression must be of lower precedence; the
+% right-hand subexpression can be of the same precedence as the
+% main operator. Operators of type yfx are the other way around. 
+% Type fx indicates a prefix operator, and type xf indicates a
+% postfix operator.
+%
+% The members of the list Names are declared to be operators of
+% type Type and precedence Precedence by the Prolog directive
+%
+% :- op(Precedence, Type, Names).
+%
+% Some directives below are commented out because they are standard
+% in Prolog.
+
+% :- op( 1200, fx,  [ :- ]).  
+  :- op( 1200, xfy, [ :- ]). %^
+  :- op( 1170, fx,  [ sorts, objects, constants,  
+                      variables, tests, macros,
+                      query, nmquery, include, show, loadf ]).
+  :- op( 1160, xfy, [ ; ]).  
+  :- op( 1070, xfx, [ ::, where ] ).
+  :- op( 1060, xfx, [ <=, =>, <-, :- ]).
+  :- op( 1060, fx,  [ <=, <- ]).
+% :- op( 1050, xfy, [ -> ]).
+  :- op( 1045, xfx, [ unless ]).
+  :- op( 1030, xfx, [ after, of ]).
+  :- op( 1020, xfx, [ if ]).
+  :- op( 1010, xfx, [ causes ]).
+  :- op( 1010, yfx, [ cause ]).
+  :- op( 1010, fx,  [ caused, constraint, always, default,
+                      exogenous, inertial, % maxstep,
+                      never, nonexecutable, rigid ]).
+  :- op( 1010, xfx, [ constraint, never, nonexecutable ] ).
+  :- op( 1010, fy,  [ possibly ]).
+  :- op( 1010, xf,  [ may]).
+  :- op( 1005, xfy, [ : ]). % overrides the Prolog precedence 550
+% :- op( 1000, xfy, [ ',' ]).
+%  :- op( 1000, xfx, [ maxstep ] ). % infix notation used with query command
+%  :- op( 1000, fy,  [maxstep]).
+  :- op(  800, xfy, [ <-> ]).
+  :- op(  780, xfy, [ ->> ]).
+  :- op(  770, xfy, [ ++ ]). 
+  :- op(  760, xfy, [ &&, & ]).
+  :- op(  700, xfx, [ =, \=, <, >, =<, >=, @<, @>, @=<, @>= ]).
+%  :- op(  700, xfx, [ << ]).  % new
+  :- op(  700, xfx, [ <> ]).
+  :- op(  700, xfy, [ eq ]).
+  :- op(  600, fx,  [ not ]).
+  :- op(  540, xfx, [ .. ]).
+% :- op(  500, yfx, [ +, - ]).
+  :- op(  400, xfy, [ >> ]).
+% :- op(  400, yfx, [ *, //, mod ]).
+  :- op(  300, fx,  [ /\, \/ ]).
+% :- op(  200, xfx, [ ** ]).
+  :- op(  200, fx,  [# ]).
+% :- op(  200, fy,  [ - ]).
+  :- op(  100, xf,  [ * ]).  % star sort

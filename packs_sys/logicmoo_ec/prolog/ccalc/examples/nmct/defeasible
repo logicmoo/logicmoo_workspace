@@ -1,0 +1,105 @@
+% File: 'defeasible'
+% Defeasible Rules in the Monkey and Bananas Domain
+% ("Nonmonotonic Causal Theories," Section 3.5)
+
+:- sorts
+  thing >> monkey;
+  location.
+
+:- objects
+  bananas,box               :: thing;
+  adam,david,goliath        :: monkey;
+  l1,l2,l3                  :: location.
+
+:- variables
+  M,M1                      :: monkey;
+  L,L1                      :: location.
+
+:- constants
+  loc(thing)                :: inertialFluent(location);
+  onBox(monkey),
+  hasBananas(monkey)        :: inertialFluent;
+
+  walk(monkey,location),
+  pushBox(monkey,location),
+  climbOn(monkey),
+  climbOff(monkey),
+  graspBananas(monkey)      :: exogenousAction.
+
+
+caused loc(bananas)=L if hasBananas(M) & loc(M)=L.
+caused loc(M)=L if loc(box)=L & onBox(M).
+
+constraint hasBananas(M) & hasBananas(M1) ->> M=M1.
+constraint onBox(M) & onBox(M1) ->> M=M1 unless ab1(M,M1).
+
+walk(M,L) causes loc(M)=L.
+nonexecutable walk(M,L) if loc(M)=L.
+nonexecutable walk(M,L) if onBox(M).
+
+pushBox(M,L) causes loc(box)=L unless ab2(M).
+pushBox(M,L) causes loc(M)=L unless ab2(M).
+nonexecutable pushBox(M,L) if loc(M)=L.
+nonexecutable pushBox(M,L) if onBox(M).
+nonexecutable pushBox(M,L) if loc(M)\=loc(box).
+
+climbOn(M) causes onBox(M).
+nonexecutable climbOn(M) if loc(M)\=loc(box).
+nonexecutable climbOn(M) if onBox(M).
+
+climbOff(M) causes -onBox(M).
+nonexecutable climbOff(M) if -onBox(M).
+
+graspBananas(M) causes hasBananas(M).
+nonexecutable graspBananas(M) if hasBananas(M).
+nonexecutable graspBananas(M) if loc(M)\=loc(bananas).
+nonexecutable graspBananas(M) if -onBox(M).
+
+nonexecutable walk(M,L) & pushBox(M,L1).
+nonexecutable walk(M,L) & climbOn(M).
+nonexecutable pushBox(M,L) & climbOn(M).
+nonexecutable climbOff(M) & graspBananas(M).
+
+
+% There is enough room on the box for David and another monkey
+caused ab1(david,M).
+caused ab1(M,david).
+
+% Can Adam and Goliath be on top of the box at the same time?
+:- query 
+label :: 1;
+maxstep :: 0;
+0: onBox(adam),
+   onBox(goliath).
+
+% Can Adam and David be on top of the box at the same time?
+:- query 
+label :: 2;
+maxstep :: 0;
+0: onBox(adam),
+   onBox(david).
+
+
+% attempt to push the box doesn't succeed if Goliath is on it
+caused ab2(M) if onBox(goliath).
+
+% attempt to push the box doesn't succeed if Goliath is climbing
+caused ab2(M) if climbOn(goliath).
+
+% Can the box change its position while Adam is climbing?
+:- query
+label :: 3;
+maxstep :: 1;
+0: climbOn(adam);
+(0: loc(box))\= (1: loc(box)).
+
+% Can the box change its position while Goliath is climbing?
+:- query
+label :: 4;
+maxstep :: 1;
+0: climbOn(goliath);
+(0: loc(box))\= (1: loc(box)).
+
+
+
+

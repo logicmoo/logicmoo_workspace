@@ -1,8 +1,8 @@
 [Global]
 CurrentProject=packs_usr\wam_common_lisp\wamcl.vpj
 [ProjectDates]
-logicmoo_workspace.vpj=20201127182025202
-other_files.vpj=20201128195747927
+logicmoo_workspace.vpj=20201202150536371
+other_files.vpj=20201204070350433
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -30,8 +30,8 @@ packs_xtra\packs_xtra.vpj=Release
     + RemoteSystemsTempFiles
     + sdfasd
     + WumpusAgents
-  + etc
-    + profile.d
+  - etc
+    - profile.d
   + lib
     + cmake
       + swipl
@@ -155,7 +155,7 @@ packs_xtra\packs_xtra.vpj=Release
       + tests
         + foreign
           + include
-    + auc
+    - auc
       + prolog
         + examples
     + bddem
@@ -344,7 +344,7 @@ packs_xtra\packs_xtra.vpj=Release
       + prolog
         + checkers
       + tests
-  + packs_sys
+  - packs_sys
     + logicmoo_ec\.github
       + ISSUE_TEMPLATE
     + body_reordering
@@ -365,6 +365,11 @@ packs_xtra\packs_xtra.vpj=Release
     + instant_prolog_docs
       + prolog
       + t
+    + logicmoo_agi
+      - ImportantDocs
+        + jmc
+      - prolog
+        - agi_lib
     + logicmoo_base
       + prolog
         + logicmoo
@@ -562,11 +567,11 @@ packs_xtra\packs_xtra.vpj=Release
           + cyc
         + KBs
     + logicmoo_cg
-      + prolog
+      - prolog
         + cgp_lib
         + cgt
           + cge
-        + dialect
+        - dialect
       + test
         + cg
           + cgifCharGer
@@ -700,7 +705,7 @@ packs_xtra\packs_xtra.vpj=Release
           + tests
         + synergy
           + cgifCharGer
-    + logicmoo_ec
+    - logicmoo_ec
       + docs
         + files
           + driverlog
@@ -792,11 +797,17 @@ packs_xtra\packs_xtra.vpj=Release
             + trains
           + pl
       - prolog
-        - ec_planner
-          - code_icl
-        - hyhtn_pddl
+        + ccalc
+        + code_icl
+        + dialect
+          + logicmoo
+        + ec_planner
+        + hyhtn_pddl
           + ptools
-        + lps_pddl
+        + iwfms
+        - lps_pddl
+        + PKnows-0.9.9
+          + vpdl
       + test
         + domains_ocl
           + assTaxi
@@ -808,6 +819,7 @@ packs_xtra\packs_xtra.vpj=Release
           + robot
           + toasterWorldv2
         + ec_planner
+          + asp
           + ecasp-source
           + ectest
           + iwfms
@@ -980,8 +992,6 @@ packs_xtra\packs_xtra.vpj=Release
       + examples
         + english
         + prolog
-      + ImportantDocs
-        + jmc
       + misc
         + C
         + Networking
@@ -1527,6 +1537,7 @@ packs_xtra\packs_xtra.vpj=Release
           + simulation
         + external_interfaces
         + forTesting
+        + survival_game
       + prolog
         + dialect
       + swish
@@ -1590,7 +1601,7 @@ packs_xtra\packs_xtra.vpj=Release
             + model
             + mudconsole
       + t
-    - prologmud_samples
+    + prologmud_samples
       - prolog
         + prologmud_sample_games\.config
           + butterfly
@@ -1698,7 +1709,7 @@ packs_xtra\packs_xtra.vpj=Release
           + lisp_8500
           + r6rs-plt-redex-model
   + packs_usr
-  + packs_web
+  - packs_web
     + butterfly
       + bin
       + butterfly
@@ -2798,10 +2809,10 @@ packs_xtra\packs_xtra.vpj=Release
                 + skins
                   + sam
       + Windows
-    + logicmoo_webui
+    - logicmoo_webui
       - etc
         - apache2
-          + conf-available
+          - conf-available
           - sites-enabled
       + prolog
       + var
@@ -3163,11 +3174,35 @@ packs_xtra\packs_xtra.vpj=Release
             + doc
               + migration
         + patches
-  + packs_xtra
+  - packs_xtra
     + logicmoo_packages
       + prolog
+        + aiswi
+          + img
+          + project_template
+          + relazione
+          + sciff
+          + src
+            + icons
+        + BN-search
+        + pHa_code
         + theorist
-    + logicmoo_pldata
+          + cilog_code
+            + ch2
+            + ch3
+            + ch4
+            + ch6
+            + ch8
+        + Tom
+          + Samples
+          + Src
+        + xray
+        + yadlr
+          + examples
+            + iris
+            + trains
+          + pl
+    - logicmoo_pldata
       + ext
         + plkb0988
       + prolog
@@ -3270,147 +3305,112 @@ packs_xtra\packs_xtra.vpj=Release
     + pkgconfig
   + wikis
     + logicmoo_workspace.wiki
-+ other_files.vpj
+- other_files.vpj
+  - \etc
+    - apache2
+      - sites-enabled
+  + packs_sys
+    + logicmoo_ec
+      + prolog
+        + ccalc
+          + CVS
+          + examples
+            + additive
+            + airport
+            + nmct
+            + traffic
+            + zoo
+          + solvers
+            + CVS
+            + Linux
+              + CVS
+            + SunOS
+              + CVS
+          + tutorial
+        + code_icl
+        + dialect
+          + logicmoo
+        + ec_planner
+        + hyhtn_pddl
+          + ptools
+        + iwfms
+        + lps_pddl
+        + PKnows-0.9.9
+          + vpdl
+  - packs_web
+    + swish
+      - lib
+        + data
+        + plugin
+        + render
+      + rdf
+        + cpack
+      + web
+        + css
+        + help
+        + js
+          + codemirror
+            + addon
+              + hint
+              + hover
+            + mode
+              + prolog
+            + theme
+          + render
+          + tutorials
+  - packs_xtra
+    - logicmoo_packages
+      - prolog
+        + aiswi
+          - dist
+            + javadoc
+              + index-files
+              + javasciff
+                + class-use
+              + resources
+              + test
+                + class-use
+          + img
+          + project_template
+          + relazione
+          + sciff
+          - src
+            + gamegui
+            + icons
+            + javasciff
+            + lib
+            + test
+          + xml
+        + BN-search
+        + pHa_code
+        + theorist
+          - cilog_code
+            - ch2
+            + ch3
+            + ch4
+            + ch6
+            + ch8
+        + Tom
+          + Doc
+          - Samples
+          + Src
+        + xray
+        + yadlr
+          + examples
+            + iris
+            + trains
+          + pl
 scroll:0
 [State]
-SCREEN: 1920 1200 100 -6 1440 767 0 0 M 0 0 0 0 1432 641
+SCREEN: 1920 1200 170 183 1440 767 0 0 M 0 0 0 0 1432 672
 CWD: ..\logicmoo_workspace
-BUFFER: BN="StartLogicmoo.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.702 CL=63 LE=0 CX=62 CY=10 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.498 CL=44 LE=0 CX=43 CY=8 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-EGGDROP.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.63 CL=1 LE=0 CX=0 CY=7 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-DEPS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Bourne Shell	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=17 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="INSTALL-PACKS.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=9 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="web_install.sh"
-BI: MA=1 74 1  TABS=1 4  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Slick-C	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.30 CL=110 LE=0 CX=109 CY=3 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_sicstus.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_swi.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=35 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=34 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=27 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.369 CL=28 LE=0 CX=27 CY=16 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\agent.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1645 CL=27 LE=0 CX=26 CY=21 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\nal.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 433 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=168 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 433 -1 -1 N  WF=0 WT=22 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=229 BI=34 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1224 433 -1 -1 N  WF=0 WT=24 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\nal.pl"
-VIEW: LN=.292 CL=74 LE=0 CX=73 CY=14 WI=233 BI=41 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1224 433 -1 -1 N  WF=0 WT=23 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nars\prolog\nars\agent.pl"
-VIEW: LN=.1645 CL=1 LE=0 CX=0 CY=6 WI=231 BI=40 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1224 433 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl"
-VIEW: LN=.369 CL=28 LE=0 CX=27 CY=2 WI=174 BI=33 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 433 -1 -1 N  WF=0 WT=21 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=227 BI=35 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1224 433 -1 -1 N  WF=0 WT=20 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=225 BI=32 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1224 433 -1 -1 N  WF=0 WT=19 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=223 BI=38 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 433 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=170 BI=30 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1224 433 -1 -1 N  WF=0 WT=18 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_swi.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=221 BI=36 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1224 433 -1 -1 N  WF=0 WT=17 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_common_sicstus.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=219 BI=37 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1224 433 -1 -1 N  WF=0 WT=16 ",,,"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
-VIEW: LN=.-1 CL=1 LE=0 CX=0 CY=27 WI=217 BI=31 HT=0 HN=0 HF=0 HC=4
-WINDOW: 234 234 1198 469 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="web_install.sh"
-VIEW: LN=.30 CL=110 LE=5 CX=104 CY=3 WI=161 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 832 242 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=7 WI=160 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 832 242 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=7 WI=159 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 832 242 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\eggdrop\prolog\eggdrop.pl"
-VIEW: LN=.6728 CL=20 LE=0 CX=19 CY=5 WI=158 BI=4 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1198 469 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-PACKS.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=157 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1198 469 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-DEPS.md"
-VIEW: LN=.2651 CL=40 LE=0 CX=39 CY=17 WI=156 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1198 469 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="INSTALL-EGGDROP.md"
-VIEW: LN=.63 CL=1 LE=0 CX=0 CY=7 WI=155 BI=22 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1198 469 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\StartMUD.sh"
-VIEW: LN=.498 CL=44 LE=0 CX=43 CY=8 WI=154 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1198 469 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="StartLogicmoo.sh"
-VIEW: LN=.702 CL=63 LE=0 CX=62 CY=10 WI=153 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1198 469 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\PreStartMUD.sh"
-VIEW: LN=.506 CL=1 LE=0 CX=0 CY=16 WI=152 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1224 433 -1 -1 M  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=172 BI=31 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_loader.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_lps_convert.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_test_incl.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_rules.pfc.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_reader_no_lps.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_planner_dmiles.pl
-packs_sys\logicmoo_nars\prolog\nars\nal.pl
-packs_sys\logicmoo_nars\prolog\nars\agent.pl
-packs_sys\logicmoo_ec\prolog\ec_planner\ec_config.pl
+packs_xtra\logicmoo_packages\prolog\theorist\birdsfly
+packs_xtra\logicmoo_packages\prolog\theorist\cilog_code\ch2\west.pl
+packs_xtra\logicmoo_packages\prolog\theorist\README
+packs_xtra\logicmoo_packages\prolog\theorist\theorist.tex
+packs_xtra\logicmoo_packages\prolog\Tom\Src\tom.cfg
+packs_xtra\logicmoo_packages\prolog\Tom\Samples\non13.mat
+packs_xtra\logicmoo_packages\prolog\Tom\Samples\non18.mat
+packs_xtra\logicmoo_packages\prolog\theorist\snark_theorist.pl
+packs_xtra\logicmoo_packages\prolog\aiswi\sciff\r_solver.pl

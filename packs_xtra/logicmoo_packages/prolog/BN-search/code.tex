@@ -1,0 +1,125 @@
+% this is both a latex file and a quintus prolog file
+% the only difference is that the latex version comments out the following
+% line:
+ /* 
+\section{Auxiliary Definitions}
+
+$member(X,L)$ is true if $X$ is a member of list $L$.
+\begin{verbatim} */
+member(X,[X|_]).
+member(X,[_|L]) :-
+   member(X,L).
+/* \end{verbatim}
+
+$insert(X,L1,L2)$ is true if $L2$ is the result of inserting $X$ into $L1$.
+\begin{verbatim} */
+insert(X,[],[X]).
+insert(X,[X|L],[X|L]) :- !.
+insert(X,[A|L],[A|L1]) :-
+   insert(X,L,L1).
+
+intersect([],_,[]).
+intersect([A|L],B,[A|C]) :-
+   member(A,B),!,
+   intersect(L,B,C).
+intersect([_|L],B,C) :-
+   intersect(L,B,C).
+/* \end{verbatim}
+
+$min(A,B,C)$ is true if $C$ is the minimum of $A$ and $B$.
+\index{start}
+\begin{verbatim} */
+min(A,B,A) :- A =< B.
+min(A,B,B) :- A > B.
+/* \end{verbatim}
+
+$max(A,B,C)$ is true if $C$ is the maximum of $A$ and $B$.
+\index{start}
+\begin{verbatim} */
+max(A,B,A) :- A >= B.
+max(A,B,B) :- A < B.
+/* \end{verbatim}
+
+$power(X,N,P)$ is true if $N$ is a postive integer, and $P$ is $X$ multiplies by itself $N$ times (i.e. $P=X^N$).
+\index{start}
+\begin{verbatim} */
+power(X,1,X).
+power(X,N,V) :- 
+   even(N),
+   N>1,
+   X2 is X*X,
+   N2 is N //2,
+   power(X2,N2,V).
+power(X,N,V) :-
+   odd(N),
+   N>1,
+   N1 is N-1,
+   power(X,N1,V1),
+   V is V1 * X.
+% odd(N) is true if N evaluates to an odd integer
+odd(N) :-
+   1 is abs(N) mod 2.
+% even(N) is true if N evaluates to an even integer
+even(N) :-
+   0 is abs(N) mod 2.
+% ? odd(77*3).
+/* \end{verbatim}
+
+$newindex(N)$ returns a new value for $N$ each time it is called.
+\index{start}
+\begin{verbatim} */
+:- dynamic previndex/1.
+previndex(0).
+
+newindex(I1) :-
+   retract(previndex(I)),
+   I1 is I+1,
+   assert(previndex(I1)).
+/* \end{verbatim}
+
+$accumulate(Goal,Init,Prev,Acc,Next,Result)$ accumulates information for each success of Goal. Init is the start. Acc is a predicate that shows how to derive Next accumulation from Prev accumulation. Result is the final accumulation.
+
+\index{start}
+\begin{verbatim} */
+accumulate(G,I,P,CN,N,Res) :-
+   newindex(Ind),
+   accumulate(Ind,G,I,P,CN,N,Res).
+
+accumulate(Ind,G,I,P,CN,N,_) :-
+   assert(result(Ind,I)),
+   G,
+   retract(result(Ind,P)),
+   CN,
+   assert(result(Ind,N)),
+   fail.
+accumulate(Ind,_,_,_,_,_,Res) :-
+   retract(result(Ind,Res)).
+
+:- dynamic p/1.
+p(3).
+p(5).
+p(7).
+p(1).
+% ? accumulate(p(X),0,P,N is P+X,N,Res).
+% ? accumulate(p(X),1,P,N is P*X,N,Res).
+% ? accumulate(p(X),[],P,N=[X|P],N,Res).
+% ? accumulate(p(X),L-L,P1-P2,P2=[X|P],P1-P,Res-[]).
+/* \end{verbatim}
+
+$allof(X,G,Res)$ is true if $Res$ is the list of $X$ such that $G$ succeeds.
+\index{start}
+\begin{verbatim} */
+allof(X,G,Res) :-
+   accumulate(G,L-L,P1-[X|P],true,P1-P,Res-[]).
+%? allof(X,p(X),L).
+%? allof(together(X,Y),append(_,[X,Y|_],[a,b,c,d]),L).
+%---------
+/* \end{verbatim}
+
+$writeln(L)$ is true if $L$ is a list of items to be written on a line, followed by a newline.
+\index{start}
+\begin{verbatim} */
+writeln([]) :- nl.
+writeln([H|T]) :- write(H), writeln(T).
+/* \end{verbatim}
+*/

@@ -1,0 +1,374 @@
+%& latex
+% this is both a latex file and a quintus prolog file
+% the only difference is that the latex version comments out the following
+% line:
+ /* 
+\documentstyle[12pt,fullpage]{article}
+%\setlength{\textwidth}{15.5cm}
+%\setlength{\textheight}{22cm}
+\title{Probabilistic conflicts in searching  
+Bayesian networks\\Prolog Code}
+\author{David Poole\thanks{Scholar, Canadian Institute for Advanced Research}\\
+Department of Computer Science,\\ 
+University of British Columbia,\\
+2366 Main Mall,\\
+Vancouver, B.C., Canada V6T 1Z4\\ 
+poole@cs.ubc.ca}
+\begin{document}
+\maketitle
+\appendix
+\section{A Prolog Implementation} \label{code}
+
+This code implements a bottom-up depth-first depth-bounded search to
+find the most likely possible worlds that are consistent with the
+observations. Here we exploit the pattern-matching of Prolog, without
+utilizing the declarative nature or the search of the Language.  All
+of the code here is deterministic; this program does not backtrack.
+This is done here by the use of the Prolog cut (!). N.B. we could also
+write a program that uses Prolog search (and no cuts) to do the
+depth-first search. This was not done as the following code is more
+efficient (by our tests), and can be more directly translated into
+committed-choice parallel logic programming languages or more traditional
+languages such as Lisp.
+
+\subsection{Network Representation}
+The Bayesian network is described using the relations:
+\begin{description}
+\item $\em nextvar(I1,I2)$ means that variable $\em I2$ is the next variable 
+after $\em I1$ in the total order of variables. The first (dummy) variable
+is $\em init$. $\em prevvar(I2,I1)$ is the inverse of $\em nextvar$ (needed 
+because Prolog is not a real logic programming language).
+\item $\em vals(I,VI)$ is true if $\em VI$ is the list of variables of variable $I$.
+\item $\em parents(I,A,F)$ is true if $F$ is the set of values of parents of 
+variable $I$, given the list $A$ of values of the ancestors of $I$ in
+reverse order (i.e, the first element of the list is the value of the
+variable before $V$).
+\item $\em prob(E,F,P)$ is true if proposition $E$ given parents $F$ has 
+probability $P$. That is if $\em p(E|F)=P$. A proposition $E$ is written
+as an equality $\em Variable=Value$.
+\item $\em observed(E)$ is true if proposition $E$ of the form 
+{\em Variable=Value} is observed.
+\item $\em miniscule(P)$ is true if $P$ is below the threshold for searching 
+in the depth-bounded search.
+\item $\em interesting(E)$ is true if proposition $E$ of the form 
+{\em Variable=Value} is an interesting value to print out when printing
+possible worlds.
+\end{description}
+
+\subsection{Search Procedure}
+A possible world is represented as $\em pw(P,Vs)$ which represents the
+possible world with values given by the list $\em Vs$ and probability $P$.
+$\em Vs$ is the list of the values of the variables in reverse order.
+
+The found possible worlds that are consistent with the observations
+are represented as $\em wf(IM,FM,MW,FND)$ where $\em IM$ is the mass of the
+possible worlds pruned by inconsistency, $\em FM$ is the sum of the
+probabilities of the possible worlds found (these are all consistent
+with the observations) $\em MW$ is the mass of pruned miniscule worlds and
+$\em FND$ is a list of these worlds.
+
+The state of the computation is represented as the tuple
+\[\em state(D,H,C)\]
+where
+\begin{description}
+\item[$D$] is the worlds found so far.
+\item[$H$] is the heuristic function to be used.
+\item[$C$] is the conflict set.
+\end{description}
+
+
+The top level procedure is to search through the values $\em VIs$ of
+variable $I$ and all subsequent variables:
+\[\em chain(I,VIs,VAs,PAs,S0,S1)\]where 
+\begin{description}
+\item[$I$] is
+the current variable; 
+\item[$\em VIs$] is the list remaining values of $I$ to test, 
+\item[$\em VAs$] is the list of the values of the ancestors of $I$ (in reverse 
+order, i.e., the first element of the list is the value of the
+immediate predecessor of $I$);
+\item[$\em PAs=P(VAs)$];
+\item[$\em S0$] is the state before.
+\item[$\em S1$] is the state after.
+\end{description}
+N.B. the first clause is when we are backtracking to a previous
+variable. In this case the heuristic function should be updated, if
+$I$ is a pivot variable.
+\index{chain}
+\begin{verbatim} */
+chain(I,[],_,_,state(D,H0,C),state(D,H1,C)) :-
+   hpivot(I,C,P), !,
+   H1 is H0*P.
+chain(_,[],_,_,S,S) :- !.
+chain(I,VIs,VAs,PAs,S0,S1) :-
+   parents(I,VAs,Parents),
+   remove_max(I,Parents,V1,VIs,VRs,PV1),
+   P1 is PAs*PV1, !,
+   test(I,V1,P1,VRs,VAs,PAs,S0,S1).
+/* \end{verbatim}
+
+\[\em remove\_max(I,Parents,Vmax,VIs,VRs,Pmax)\]
+is true if $\em Vmax$ is the element of $\em VIs$ such that
+$\em P(I=Vmax|Parents)=Pmax$ is maximal. $\em VRs$ is the remaining elements
+of $\em VIs$ once $\em Vmax$ is removed.
+
+\index{chain}
+\begin{verbatim} */
+remove_max(I,Parents,V1,[V1],[],MaxProb) :-
+   prob(I=V1,Parents,MaxProb),!.
+remove_max(I,Parents,VMax,[V1|VIs],VRs,MaxProb) :-
+   prob(I=V1,Parents,PV1),
+   remove_max(I,Parents,V2,VIs,V2Rs,PV2),
+   ( PV1 > PV2 -> VMax=V1, MaxProb=PV1, VRs=VIs
+    ; VMax=V2, MaxProb=PV2, VRs=[V1|V2Rs] 
+    ).
+/* \end{verbatim}
+
+The procedure $\em test$ is to test one of the values of the variable
+being tested, to add it to the collection of inconsistent values,
+elements that remain on the (pseudo) queue or recurse to find all of
+the possible worlds that are its descendents.
+\[\em test(I,V1,P1,VIs,VAs,PAs,S0,S1)\]
+is true when
+\begin{description}
+\item[$I$] is
+the current variable; 
+\item[$\em V1$] is a possible value for variable $I$;
+\item[$\em P1$] is the probability $I$ having value $V$ and all 
+other variables having values given by $\em VAs$.
+\item[$\em VIs$] is the list remaining values of $I$ to test (after $\em V1$), 
+\item[$\em VAs$] is the list of the values of the ancestors of $I$ (in 
+reverse order, i.e., the first element of the list is the value of the
+immediate predecessor of $I$);
+\item[$\em PAs=P(VAs)$];
+\item[$\em S0$] is the state before.
+\item[$\em S1$] is the state after.
+\end{description}
+
+\index{start}
+\begin{verbatim} */
+test(I,V1,P1,VIs,VAs,PAs,state(wf(IM0,FM,MW,FND),H0,C0),S2) :-
+   inconsis_obs(I=V1), !,
+   (miniscule(P1*H0) -> C0=C1
+   ; expand_conflict_set(I,VAs,C0,C1) ),
+   IM1 is IM0 + P1,
+   chain(I,VIs,VAs,PAs,state(wf(IM1,FM,MW,FND),H0,C1),S2).
+test(I,_,P1,VIs,VAs,PAs,state(wf(IM0,FM,MW0,FND),H0,C0),S2) :-
+   miniscule(P1*H0), !,
+   MW1 is MW0+P1*H0,
+   IM1 is IM0+P1*(1-H0),
+   chain(I,VIs,VAs,PAs,state(wf(IM1,FM,MW1,FND),H0,C0),S2).
+test(I,V1,P1,VIs,VAs,PAs,state(D0,H0,C0),S2) :-
+   nextvar(I,I1), !,
+   ( hpivot(I1,C0,PP) -> H1 is H0/PP
+   ; H1=H0 ),
+   vals(I1,VI1), !,
+   chain(I1,VI1,[V1|VAs],P1,state(D0,H1,C0),S1), !,
+   chain(I,VIs,VAs,PAs,S1,S2).
+test(I,V1,P1,VIs,VAs,PAs,state(wf(IM0,FM,MW,FND),H0,C0),S1) :-
+   FM1 is FM+P1, !,
+   chain(I,VIs,VAs,PAs,
+         state(wf(IM0,FM1,MW,[pw(P1,[V1|VAs])|FND]),H0,C0),S1).
+/* \end{verbatim}
+
+$\em inconsis\_obs(E)$ is true if proposition $E$ is inconsistent with the
+observations (it may have probability zero, and not be caught by this
+test; this means directly contradicted by the observation,
+independently of the background knowledge stated as probabilities).
+\index{inconsis\_obs}
+\begin{verbatim} */
+inconsis_obs(I=V) :-
+    observed(I=VO),
+    \+ V=VO.
+/* \end{verbatim}
+
+\subsection{Conflict Sets}
+A conflict set is a list of conflicts. Each conflict is represented as
+\[\em conflict(MProb,LeastVar,MaxVar,Conflict)\]
+where $\em Conflict$ is the set of variables that are in conflict.
+$\em LeastVar$ is the least (in the total ordering of the variables)
+variable in the conflict. $\em MaxVar$ is the largest (in the total
+ordering of the variables) variable in the conflict. $\em MProb$ is a
+bound on the maximum probability that an assignment of values to
+variables in the conflict can take.
+
+\[\em expand\_conflict\_set(I,VAs,C0,C1)\]
+where $I$ is a variable whose value is unexpected given ancestor's values 
+$\em VAs$, expands the conflict set from $\em C0$ to $\em C1$.
+
+N.B. we have to make sure that each variable is only in one conflict
+(otherwise the conflicts are not independent and we cannot multiple
+the heuristic values of the conflicts). This is the role of the first
+clause.
+\index{expand\_conflict\_set}
+\begin{verbatim} */
+expand_conflict_set(I,_,C0,C0) :-
+   inconflict(I,C0),!.
+expand_conflict_set(I,VAs,C0,C1) :-
+   observed(I=Vobs),
+   writeln(['looking for conflict: ',I=Vobs]),
+   extract_counter(I,Vobs,VAs,C0,[],C,MP,I,LV),
+   (MP >= 1.0 -> C1=C0 ,
+     writeln(['Observed ',I=Vobs,' Conflict ',C,' rejected. MP=',MP])
+   ; C1 = [conflict(MP,LV,I,C)|C0],
+     writeln(['*** Conflict found: ',C]),
+     writeln(['*** Heuristic value = ',MP,'; Minvar=',LV,'; Maxvar =',I]) ).
+/* \end{verbatim}
+
+The following us used to test the case where there are no conflicts.
+\begin{verbatim}
+expand_conflict_set(_,_,C0,C0).
+\end{verbatim}
+
+$\em hpivot(I,CS,P)$ is true if $I$ is the least variable in a conflict in
+$\em CS$. $P$ is the heuristic value of the conflict. Analogously,
+$\em upivot(I,CS,P)$ is true if $I$ is the largest variable in a conflict
+in $\em CS$, with probability $P$.
+\index{hpivot}
+\index{upivot}
+\begin{verbatim} */
+hpivot(I,CS,P) :-
+   member(conflict(P,I,_,_),CS).
+upivot(I,CS,P) :-
+   member(conflict(P,_,I,_),CS).
+/* \end{verbatim}
+
+$\em inconflict(I,CS)$ is true if variable $I$ is in a conflict in 
+conflict set $\em CS$.
+\index{inconflict}
+\begin{verbatim} */
+inconflict(I,CS) :-
+   member(conflict(_,_,_,C),CS), member(I,C),!.
+/* \end{verbatim}
+\subsection{Finding Conflicts}
+
+\[\em extract\_counter(I,Vobs,VAs,PCon,C0,C1,Prob,LV0,LV1)\]
+is true if
+$\em I=Vobs$ is unexpected given ancestor values
+$\em VAs$ and so the conflict grows from $\em C0$
+to $\em C1$.  $\em Prob$ the the probability
+bound of the counter found. $\em LV1$ is the least variable in the
+conflict. $\em PCon$ is the list of previously found conflicts.
+
+\index{extract\_counter}
+\begin{verbatim} */
+extract_counter0(I,Vobs,_,_,C0,C0,0,LV0,LV0) :-
+   inconsis_obs(I=Vobs),!.
+extract_counter0(I,Vobs,VAs,PCon,C0,C1,Prob,LV0,LV1) :-
+   extract_counter(I,Vobs,VAs,PCon,C0,C1,Prob,LV0,LV1).
+
+extract_counter(I,Vobs,VAs,PCon,C0,C2,Prob,LV0,LV1) :-
+   allof(cp(PV,P),prob(I=Vobs,PV,P),Vpars),
+   counter_parents(I,Vpars,VAs,PCon,C0,C1,0,Prob,LV0,LV1),
+   insert(I,C1,C2).
+/* \end{verbatim}
+   
+\[\em counter\_parents(I,Vpars,VAs,PCon,C0,C1,P0,P1,LV0,LV1)\]
+is true if $\em Vpars$ is the list of $cp(PV,P)$ where $PV$ is a
+parent assignment and $PP$ is the conditional probability of the value
+of $I$ given $Pars$, and $P1-P0$ the corresponding probability that
+could have produced the observed value.  This results in conflict $\em
+C1-C0$.
+
+\index{counter\_parents}
+\begin{verbatim} */
+counter_parents(_,[],_,_,L,L,P,P,LV,LV).
+counter_parents(I,[cp(_,0)|R],VAs,PCon,C0,C1,P0,P2,LV0,LV1) :- !,
+   counter_parents(I,R,VAs,PCon,C0,C1,P0,P2,LV0,LV1).
+counter_parents(I,[cp(PV,PP)|R],VAs,PCon,C0,C1,P0,P2,LV0,LV1) :-
+   parents(I,VAs,PV), !, % values predicted by current partial description
+   P1 is P0+PP,
+   counter_parents(I,R,VAs,PCon,C0,C1,P1,P2,LV0,LV1).
+counter_parents(I,[cp(PV,PP)|R],VAs,PCon,C0,C2,P0,P2,LV0,LV2) :-
+   parents(I,Anc,PV),
+   find_mismatch(I,Anc,PP,VAs,PCon,C0,C1,P0,P1,LV0,LV1),
+   counter_parents(I,R,VAs,PCon,C1,C2,P1,P2,LV1,LV2).
+/* \end{verbatim}
+   
+\[\em find\_mismatch(I,Anc,VAs,PCon,C0,C1,P0,P1,LV0,LV1)\]
+is true if $\em VAs$ is the list of
+variables that correspond to the first mismatch between expected and
+found values.  This results in conflict $\em C1-C0$. N.B. other (perhaps
+smaller) conflicts can be found by choosing other mismatches other than the first found.
+
+\index{find\_mismatch}
+\begin{verbatim} */
+find_mismatch(_,_,_,_,_,C0,C0,1,1,I,I) :- !.
+find_mismatch(I,[A|P],PP,[A|Vs],PCon,C0,C1,P0,P1,I,LV1) :- !,
+ % predicted value; least variable must be updated
+   prevvar(I,I1),
+   find_mismatch(I1,P,PP,Vs,PCon,C0,C1,P0,P1,I1,LV1).
+find_mismatch(I,[A|P],PP,[A|Vs],PCon,C0,C1,P0,P1,LV0,LV1) :- !,
+ % predicted value; least variable not updated
+   prevvar(I,I1),
+   find_mismatch(I1,P,PP,Vs,PCon,C0,C1,P0,P1,LV0,LV1).
+find_mismatch(I,_,_,_,PCon,C0,C0,_,1,_,I) :- 
+   inconflict(I,PCon),!.
+ % found a clash with a previous conflict
+find_mismatch(I,[A|_],PP,[_|Vs],PCon,C0,C2,P0,P1,I,LV1) :- !,
+ % found mismatch; least value needs to be updated
+   prevvar(I,I1),
+   extract_counter0(I1,A,Vs,PCon,C0,C1,Prob,I1,LV1),
+   (Prob < 1 ->
+        P1 is P0+ PP*Prob, C2=C1
+   ; P1 is P0+PP, C2=C0).
+find_mismatch(I,[A|_],PP,[_|Vs],PCon,C0,C1,P0,P1,LV0,LV1) :-
+   prevvar(I,I1),
+   extract_counter0(I1,A,Vs,PCon,C0,C1,Prob,LV0,LV1),
+   (Prob < 1 ->
+        P1 is P0+ PP*Prob, C2=C1
+   ; P1 is P0+PP, C2=C0).
+/* \end{verbatim}
+
+\subsection{Information Seeking}
+
+$\em make\_worlds(Wlds)$ searches and returns all the consistent worlds
+with probability above the threshold.
+\index{start}
+\begin{verbatim} */
+make_worlds(Wlds) :- 
+   nextvar(init,I0),
+   vals(I0,VI0),
+   chain(I0,VI0,[],1,state(wf(0,0,0,[]),1,[]),state(Wlds,_,_)).
+/* \end{verbatim}
+
+To start the search for the possible worlds, you call $\em start$.
+\index{start}
+\begin{verbatim} */
+start :-
+   statistics(runtime,_),
+   make_worlds(wf(IM,Pfnd,MW,Fnd)),
+   statistics(runtime,[_,T]),
+   writeln(['Runtime: ',T,' msec.']),
+   Qmass is 1-IM-Pfnd,
+   writeln(['Prob found = ',Pfnd]),
+   writeln(['Inconsistency mass = ', IM]),
+   writeln(['Pruned mass =',MW]),
+   writeln(['Queue Mass = ',Qmass]),
+   Err is Qmass / (2 * (Pfnd+Qmass)),
+   writeln(['Error in posterior estimation = ',Err]),
+   print_worlds(Pfnd,Qmass,Fnd,_).
+
+print_worlds(_,_,[],0).
+print_worlds(Pfnd,Qmass,[pw(P,Vs)|R],N) :-
+   print_worlds(Pfnd,Qmass,R,N1),!,
+   N is N1+1,
+   writeln(['World #',N]),
+   writeln(['   Prior Probability = ',P]),
+   LB is P / (Pfnd + Qmass),
+   UB is P  / Pfnd,
+   writeln(['   Posterior Probability = [',LB,',',UB,']']),
+   writeln(['   Interesting Values:']),!,
+   print_vals(Vs,_).
+
+print_vals([],init).
+print_vals([V1|R],NV) :-
+   print_vals(R,V),
+   nextvar(V,NV),
+   (interesting(NV=V1) -> writeln(['      ',NV=V1]) ; true).
+/* \end{verbatim}
+
+\input{adder}
+\input{code}
+\end{document}
+*/

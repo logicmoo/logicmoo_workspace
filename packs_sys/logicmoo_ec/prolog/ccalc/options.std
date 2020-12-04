@@ -1,0 +1,23 @@
+:- set(solver,mchaff).
+:- set(num,1).
+:- set(file_io,true).
+:- set(timed,true).
+:- set(verbose,true).
+:- set(compact,false).
+:- set(optimize,true).
+:- set(eliminate_tautologies,true).	
+
+:- set(solver_opts(relsat),'-l3 -tn -un').
+:- set(solver_opts(relsat_old),'3').
+:- set(solver_opts(sato_old),'-g10 -s2 -l200000').
+:- set(solver_opts(sato),'-g10 -s2 -l200000').
+:- set(solver_opts(satz),'').
+:- set(solver_opts(satz-rand),'').
+:- set(solver_opts(grasp),'').
+:- set(solver_opts(walksat),'').
+:- set(solver_opts(zchaff),'').
+:- set(solver_opts(mchaff),'').
+
+% :- set(dir,'examples').
+
+

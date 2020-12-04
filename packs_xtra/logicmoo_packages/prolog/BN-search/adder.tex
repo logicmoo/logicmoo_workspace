@@ -1,0 +1,152 @@
+% this is both a latex file and a quintus prolog file
+% the only difference is that the latex version comments out the following
+% line:
+ /* 
+\subsection{Representation of a one thousand bit adder}
+
+The following represents a 100 bit cascaded ripple adder. See
+Section \ref{code} for a description of the relations used.
+\begin{verbatim} */
+nextvar(init,i1(1)).
+nextvar(i1(N),i2(N)).
+nextvar(i2(N),i3(N)).
+nextvar(i3(N),x1ok(N)).
+nextvar(x1ok(N),x1(N)).
+nextvar(x1(N),x2ok(N)).
+nextvar(x2ok(N),x2(N)).
+nextvar(x2(N),a1ok(N)).
+nextvar(a1ok(N),a1(N)).
+nextvar(a1(N),a2ok(N)).
+nextvar(a2ok(N),a2(N)).
+nextvar(a2(N),o1ok(N)).
+nextvar(o1ok(N),o1(N)).
+nextvar(o1(N),i1(N1)) :-
+   N < 1000,
+   N1 is N+1.
+
+prevvar(i1(N1),o1(N)) :- 
+   N1>1, !,
+   N is N1-1.
+prevvar(V1,V2) :- nextvar(V2,V1),!.
+
+vals(i1(_),[on,off]).
+vals(i2(_),[on,off]).
+vals(i3(_),[on,off]).
+vals(x1ok(_),[ok,stuck1,stuck0]).
+vals(x1(_),[on,off]).
+vals(x2ok(_),[ok,stuck1,stuck0]).
+vals(x2(_),[on,off]).
+vals(a1ok(_),[ok,stuck1,stuck0]).
+vals(a1(_),[on,off]).
+vals(a2ok(_),[ok,stuck1,stuck0]).
+vals(a2(_),[on,off]).
+vals(o1ok(_),[ok,stuck1,stuck0]).
+vals(o1(_),[on,off]).
+
+parents(i1(_),_,[]).
+parents(i2(_),_,[]).
+parents(i3(1),_,[]).
+parents(i3(N),[_,_,Vo1|_],[Vo1]) :- N>1.
+parents(x1ok(_),_,[]).
+parents(x1(_),[X1ok,_,Vi2,Vi1|_],
+              [X1ok,Vi2,Vi1]).
+parents(x2ok(_),_,[]).
+parents(x2(_),[X2ok,Vx1,_,Vi3|_],
+              [X2ok,Vx1,Vi3]).
+parents(a1ok(_),_,[]).
+parents(a1(_),[A1ok,_,_,_,_,_,Vi2,Vi1|_],
+              [A1ok,Vi2,Vi1]).
+parents(a2ok(_),_,[]).
+parents(a2(_),[A2ok,_,_,_,_,Vx1,_,Vi3|_],
+              [A2ok,Vx1,Vi3]).
+parents(o1ok(_),_,[]).
+parents(o1(_),[O1ok,Va2,_,Va1|_],
+              [O1ok,Va2,Va1]).
+
+
+prob(i1(_)=on,[],0).
+prob(i1(_)=off,[],1).
+prob(i2(_)=on,[],0).
+prob(i2(_)=off,[],1).
+prob(i3(1)=on,[],0).
+prob(i3(1)=off,[],1).
+prob(i3(N)=V,[V],1) :- N>1.
+prob(i3(N)=on,[off],0) :- N>1.
+prob(i3(N)=off,[on],0) :- N>1.
+
+prob(x1ok(_)=V,[],P) :-
+   prob_ok(V,P).
+prob_ok(ok,0.99999).
+prob_ok(stuck1,0.000005).
+prob_ok(stuck0,0.000005).
+
+prob(x1(_)=V,Par,Prob) :-
+   prob_xorgate(V,Par,Prob).
+
+prob(x2ok(_)=V,[],P) :-
+   prob_ok(V,P).
+prob(x2(_)=V,Par,Prob) :-
+   prob_xorgate(V,Par,Prob).
+prob(a1ok(_)=V,[],P) :-
+   prob_ok(V,P).
+prob(a1(_)=V,Par,Prob) :-
+   prob_andgate(V,Par,Prob).
+prob(a2ok(_)=V,[],P) :-
+   prob_ok(V,P).
+prob(a2(_)=V,Par,Prob) :-
+   prob_andgate(V,Par,Prob).
+prob(o1ok(_)=V,[],P) :-
+   prob_ok(V,P).
+prob(o1(_)=V,Par,Prob) :-
+   prob_orgate(V,Par,Prob).
+
+prob_xorgate(on,[ok,on,on],0).
+prob_xorgate(off,[ok,on,on],1).
+prob_xorgate(on,[ok,on,off],1).
+prob_xorgate(off,[ok,on,off],0).
+prob_xorgate(on,[ok,off,on],1).
+prob_xorgate(off,[ok,off,on],0).
+prob_xorgate(on,[ok,off,off],0).
+prob_xorgate(off,[ok,off,off],1).
+prob_xorgate(on,[stuck1,_,_],1).
+prob_xorgate(off,[stuck1,_,_],0).
+prob_xorgate(on,[stuck0,_,_],0).
+prob_xorgate(off,[stuck0,_,_],1).
+
+prob_andgate(on,[ok,on,on],1).
+prob_andgate(off,[ok,on,on],0).
+prob_andgate(on,[ok,on,off],0).
+prob_andgate(off,[ok,on,off],1).
+prob_andgate(on,[ok,off,_],0).
+prob_andgate(off,[ok,off,_],1).
+prob_andgate(on,[stuck1,_,_],1).
+prob_andgate(off,[stuck1,_,_],0).
+prob_andgate(on,[stuck0,_,_],0).
+prob_andgate(off,[stuck0,_,_],1).
+
+prob_orgate(on,[ok,on,_],1).
+prob_orgate(off,[ok,on,_],0).
+prob_orgate(on,[ok,off,on],1).
+prob_orgate(off,[ok,off,on],0).
+prob_orgate(on,[ok,off,off],0).
+prob_orgate(off,[ok,off,off],1).
+prob_orgate(on,[stuck1,_,_],1).
+prob_orgate(off,[stuck1,_,_],0).
+prob_orgate(on,[stuck0,_,_],0).
+prob_orgate(off,[stuck0,_,_],1).
+
+%observed(x2(N)=off) :- N =\= 300, N=\=700.
+%observed(x2(300)=on).
+%observed(x2(700)=on).
+
+ observed(x2(N)=off) :- N =\= 500.
+ observed(x2(500)=on).
+
+interesting(_=stuck1).
+interesting(_=stuck0).
+
+miniscule(P) :- 
+   % P < 0.0000000000001. % appropriate bound for double errors
+   P < 0.000001.     % appropriate bound for single errors
+/* \end{verbatim} 
+*/

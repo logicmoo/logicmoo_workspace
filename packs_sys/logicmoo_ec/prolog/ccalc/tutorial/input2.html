@@ -1,0 +1,126 @@
+<head>
+   <title>CCalc Tutorial: CCalc Input: Queries</title>
+</head>
+
+<center>
+<h2>
+1.2. CCalc Input: Queries
+</h2>
+</center>
+
+A query in CCalc input begins with the expression <tt>:-&nbsp;query</tt> and
+ends with a period.  A query is a question about paths in the transition
+system under consideration (see <a href="queries.html">Section 0.3</a>).  The
+length of the paths is denoted by the expression <tt>maxstep</tt>, so that the
+paths have the form
+
+<p><center>
+<<i>v</i><sub>0</sub>, <i>e</i><sub>0</sub>,
+<i>v</i><sub>1</sub>, <i>e</i><sub>1</sub>, ..., 
+<i>v</i><sub><tt>maxstep</tt></sub>>
+</center><p>
+
+where <i>v</i><sub><i>i</i></sub> are vertices and <i>e</i><sub><i>i</i></sub>
+are edges.<p>
+
+For instance, the query
+
+<pre>
+:- query
+ maxstep :: 1.
+</pre>
+
+calls for finding paths of length 1, that is to say, edges of the transition
+system.<p>
+
+Here is how the language of CCalc can express the examples from
+<a href="queries.html">Section 0.3</a>.  The prediction problem -- a question
+about the path in <a href="transitionsystems.html#coins"><i>TS2</i></a>
+of length 2 that starts at the vertex <i>c</i>=5 and has both
+edges labeled <i>a</i>=<b>t</b> -- can be encoded as
+
+<pre>
+:- query
+ maxstep :: 2;
+ 0: c=5;
+ 0: a;
+ 1: a.
+</pre>
+
+Prefixing a constant or a condition with <i>i</i><tt>:</tt>
+indicates that it is evaluated at the vertex <i>v<sub>i</sub></i> or
+the edge <i>e<sub>i</sub></i>.  For instance, the expression
+<tt>0:&nbsp;c=5</tt> in this query means that the condition <i>c</i>=5
+holds at the starting vertex <i>v</i><sub>0</sub> of the path.  Similarly,
+<tt>0:&nbsp;a</tt> and <tt>1:&nbsp;a</tt> mean that the labels
+of <i>e</i><sub>0</sub> and <i>e</i><sub>1</sub> assign to <i>a</i> the value
+<b>t</b>.  Note that the colon in each of these expressions is separated
+from the formula that follows by a space; without such a space, CCalc may
+parse the expression incorrectly.  The part
+
+<pre>
+ 0: c=5;
+ 0: a;
+</pre>
+
+can be also written as
+
+<pre>
+ 0: c=5, a
+</pre>
+
+or as
+
+<pre>
+ 0: c=5 & a
+</pre>
+<p>
+
+To express the postdiction problem from
+<a href="queries.html">Section 0.3</a> -- a question about the path of length 2
+that ends at <i>c</i>=5 and has both edges labeled <i>a</i>=<b>t</b> -- we
+only need to replace the part <tt>0:&nbsp;c=5</tt> in the query above
+with
+
+<pre>
+2:&nbsp;c=5
+</pre>
+
+Alternatively, we can write this line as
+
+<pre>
+maxstep:&nbsp;c=5
+</pre>
+
+because CCalc treats every occurrence of
+<tt>maxstep</tt> in a query after its first occurrence as a macro for the
+corresponding number, like <tt>n</tt> in the example at the end of
+<a href="input1.html">Section 1.1</a>.<p>
+
+Finally, the planning problem  from
+<a href="queries.html">Section 0.3</a> calls for finding the shortest path from
+<i>c</i>=4 to <i>c</i>=10.  We can describe this problem in the language of
+CCalc as follows:
+
+<pre>
+:- query
+ maxstep :: 0..infinity;
+ 0: c=4;
+ maxstep: c=10.
+</pre>
+
+This query asks for the shortest path satisfying the conditions in the last
+two lines.  By replacing here the
+interval <tt>0..infinity</tt> with <tt>5..10</tt> we would instruct CCalc
+to limit its search for the shortest solution to paths not shorter than 5
+and not longer than 10.<p>
+
+<hr><p>
+
+<address><a href="running.html">Forward</a>
+to Section 1.3: Running CCalc</a><br></address>
+
+<address><a href="input1.html">Back</a>
+to Section 1.1: CCalc Input: Transition Systems</a><br></address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

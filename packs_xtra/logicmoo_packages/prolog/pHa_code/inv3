@@ -1,0 +1,9 @@
+rule(( val(out(G),on,T) :- ok(G), val(in(G),off,T) )).
+rule(( val(out(G),off,T) :- ok(G), val(in(G),on,T) )).
+rule(( val(out(G),V,T) :- shorted(G), val(in(G),V,T) )).
+rule(( val(out(G),off,T) :- blown(G) )).
+rule(( val(in(G),V,T) :- conn(G1,G), val(out(G1),V,T) )).
+rule( conn(i1,i2)).
+rule( conn(i2,i3)).
+disjoint([ok(G):0.95,shorted(G):0.03,blown(G):0.02]).
+disjoint([val(in(i1),on,T):0.5, val(in(i1),off,T):0.5]).

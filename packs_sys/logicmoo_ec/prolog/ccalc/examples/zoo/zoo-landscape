@@ -1,0 +1,63 @@
+%%% ZOO LANDSCAPE %%%
+
+:- sorts
+  position;
+  location >> cage;
+  gate.
+
+:- variables
+  P,P1                              :: position;
+  L                                 :: location;
+  C                                 :: cage;
+  G,G1                              :: gate.
+
+:- constants
+% Each position is included in exactly one location (lmw)
+  loc(position)                     :: location;
+  neighbor(position,position)       :: boolean;
+  side1(gate)                       :: position;
+  side2(gate)                       :: position;
+  opened(gate)                      :: inertialFluent.
+
+default -neighbor(P,P1).
+
+% Each position must have at least one neighbor (lmw)
+constraint [\/P1 | neighbor(P,P1)].
+
+% The neighbor relation is irreflexive
+constraint -neighbor(P,P).
+
+% The neighbor relation is symmetric (lmw)
+constraint neighbor(P,P1) ->> neighbor(P1,P).
+
+:- objects
+% One designated location is called the outside (lmw)
+  outside                           :: location.
+
+% All other locations are cages (lmw)
+constraint [\/C | L=C] where L\=outside.
+
+% Two positions are the sides of a gate
+:- constants
+  sides(position,position,gate)     :: boolean.
+
+caused sides(P,P1,G) if side1(G)=P & side2(G)=P1.
+caused sides(P,P1,G) if side1(G)=P1 & side2(G)=P.
+default -sides(P,P1,G).
+
+% Each gate is associated with exactly two positions that are 
+%  said to be at its sides, and these positions must belong to 
+%  different locations  (lmw)
+constraint loc(side1(G))\=loc(side2(G)).
+
+% No two gates have the same two sides
+constraint sides(P,P1,G) & sides(P,P1,G1) ->> G=G1.
+
+% Two positions are neighbors if they are the sides of a gate
+constraint sides(P,P1,G) ->> neighbor(P,P1).
+
+% Two positions in different locations are neighbors only if 
+%  they are the two sides of a gate
+constraint loc(P)\=loc(P1) & neighbor(P,P1) 
+                  ->> [\/G | sides(P,P1,G)].
+

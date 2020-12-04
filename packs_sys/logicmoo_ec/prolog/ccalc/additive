@@ -1,0 +1,38 @@
+% File 'additive'
+ 
+:- include 'arithmetic'.
+
+:- variables
+  V_A,V_A1,V_A2,V_A3,V_A4            :: action;
+  V_I,V_I1                           :: additiveInteger;
+  V_NNI                              :: nnAdditiveInteger.
+
+% parsing propositions involving 'increments' and 'decrements'
+
+:- op(1010,xfx,increments).
+:- op(1010,xfx,decrements).
+:- op(1015,xfx,by).
+
+% definitions of 'increments' and 'decrements'
+
+:- macros 
+  #1 increments #2 by #3 if #4 
+    -> caused contribution(#1,#2) = #3 if #1 & #4 ;
+
+  #1 increments #2 by #3
+    -> #1 increments #2 by #3 if true;
+
+  #1 decrements #2 by #3 if #4
+    -> caused contribution(#1,#2) = -(#3) if #1 & #4 ;
+
+  #1 decrements #2 by #3 
+    -> #1 decrements #2 by #3 if true .
+
+% total order on actions induced by @<
+
+:- macros 
+  next(#1,#2) -> (#1 @< #2 & 
+                     -([\/V_A2 | (#1 @< V_A2 & V_A2 @< #2)]));
+  first(#1) -> -([\/V_A3 | (V_A3 @< #1)]);
+  last(#1) ->  -([\/V_A4 | (#1 @< V_A4)]).
+

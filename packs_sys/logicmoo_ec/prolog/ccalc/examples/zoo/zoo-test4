@@ -1,0 +1,66 @@
+% File 'zoo-test4'
+
+:- sorts
+  animal >> (elephant; horse; dog).
+
+:- variables
+  SP                           :: species;
+  E                            :: elephant;
+  HR                           :: horse;
+  D                            :: dog.
+  
+:- objects
+  elephantSpecies, 
+  horseSpecies,
+  dogSpecies                   :: species.
+
+caused sp(E)=elephantSpecies.
+constraint sp(ANML)=elephantSpecies ->> [\/E | ANML=E].
+
+caused sp(HR)=horseSpecies.
+constraint sp(ANML)=horseSpecies ->> [\/HR | ANML=HR].
+
+caused sp(D)=dogSpecies.
+constraint sp(ANML)=dogSpecies ->> [\/D | ANML=D].
+
+default largeSpecies(SP). 
+caused -largeSpecies(dogSpecies).
+
+
+:- objects
+  homer                        :: human;
+  jumbo                        :: elephant.
+
+
+% Initially Homer was outside, and Jumbo, an elephant, was inside the cage, 
+% with the gate closed. How many steps are required to switch their locations?
+
+:- query 
+label :: 0;
+maxstep :: 3..10;
+0: -opened(gateAO),
+   loc(pos(homer))=outside,
+   loc(pos(jumbo))=cageA;
+maxstep: 
+   loc(pos(homer))=cageA,
+   loc(pos(jumbo))=outside.
+
+
+% If Homer has never mounted Jumbo in the above query, will the answers 
+% be the same?
+
+:- query 
+label :: 1;
+maxstep :: 4..10;
+0: -opened(gateAO),
+   loc(pos(homer))=outside,
+   loc(pos(jumbo))=cageA;
+maxstep: 
+   loc(pos(homer))=cageA,
+   loc(pos(jumbo))=outside;
+[/\var(step,a) /\ANML | (var(step,a): -mounted(homer,ANML))].
+
+% the last line may be replaced with
+% var(step,a): -mounted(homer,ANML).
+
+

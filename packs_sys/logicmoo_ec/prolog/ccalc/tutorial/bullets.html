@@ -1,0 +1,153 @@
+<head>
+   <title>CCalc Tutorial: Counting Bullets</title>
+</head>
+
+<center>
+<h2>
+2.3. Counting Bullets
+</h2>
+</center>
+
+In the original formalization of the Yale Shooting Problem
+(<a href="ysp.html">Section 2.1</a>) the gun is assumed to hold at most one
+bullet--it becomes unloaded after shooting.  Let us consider a more general
+case when the number of bullets in the gun is an integer
+between 0 and a fixed upper bound.  This number goes up by 1 after
+loading, and goes down by 1 after shooting.<p>
+
+Here is a possible formalization of the modified domain:
+
+<pre>
+:- macros
+ capacity -> 6;
+ loaded -> (numberOfBullets>0).
+
+:- constants
+ alive :: inertialFluent;
+ numberOfBullets :: inertialFluent(0..capacity);
+ load, shoot :: exogenousAction.
+
+:- variables
+ I :: 0..capacity.
+
+load causes numberOfBullets=I+1 if numberOfBullets=I
+    where I&lt;capacity.
+nonexecutable load if numberOfBullets=capacity.
+
+shoot causes -alive.
+shoot causes numberOfBullets=I-1 if numberOfBullets=I
+    where I&gt;0.
+nonexecutable shoot if -loaded.
+
+nonexecutable load & shoot.
+</pre>
+
+In the new formalization, we defined <tt>loaded</tt> as a macro, rather
+than an action constant.  (The two macro definitions are combined here
+under one <tt>:-&nbsp;macros</tt> heading, separated from each other by a
+semicolon.)  In the presence of this definition, CCalc expands the line
+
+<pre>
+nonexecutable shoot if -loaded
+</pre>
+
+into
+
+<pre>
+nonexecutable shoot if -(numberOfBullets>0).
+</pre>
+
+Then it eliminates the symbol <tt>&gt;</tt> from this proposition.  This is
+done in two steps.  First, the proposition is rewritten as the schematic
+proposition
+
+<p><tt>nonexecutable shoot
+  if numberOfBullets=</tt><i>var</i> <tt>&amp; -(</tt><i>var</i>&gt;0)</tt><p>
+
+where <i>var</i> is a variable ranging over the domain <tt>0..capacity</tt>
+of the constant <tt>numberOfBullets</tt>.  Then this schematic proposition is
+grounded and, in every ground instance, <i>var</i>&gt;0</tt> is replaced
+by <tt>true</tt> or by <tt>false</tt> depending on the value of <i>var</i>.<p>
+
+Note the <tt>where</tt> clauses appended to two schematic propositions in the
+example above.  In the proposition describing the effect of <tt>load</tt> on
+<tt>numberOfBullets</tt>
+we would like <tt>I</tt> to range over <tt>0..capacity-1</tt>; in the
+proposition describing the effect of <tt>shoot</tt> on this fluent, we would
+like <tt>I</tt> to range over <tt>1..capacity</tt>.  Instead of using two
+different variables, we declared <tt>I</tt> to be a variable for all numbers
+in the interval <tt>0..capacity</tt>, but instructed CCalc not to use the
+"bad" values of <tt>I</tt> in the process of grounding the schematic
+propositions containing that variable.  The clause
+<pre>
+where I&lt;capacity
+</pre>
+appended to the schematic proposition
+<pre>
+load causes numberOfBullets=I+1 if numberOfBullets=I
+</pre>
+tells CCalc that the value <tt>capacity</tt> should not be substituted
+for <tt>I</tt> when that proposition is grounded.  Similarly, the clause
+<pre>
+where I&gt;0
+</pre>
+tells CCalc not to use the value <tt>0</tt>.<p>
+
+<b>Exercise 2.7.</b>
+What do you think will happen if you remove one of the <tt>where</tt> clauses
+from the formalization of the shooting domain above and then instruct CCalc to
+<tt>loadf</tt> the modified version?  Check that your conjecture is correct.<p>
+
+<b>Exercise 2.8.</b>
+Recall that file <a href="coins"><tt>coins</tt></a> describes the action 
+of putting a coin in the box.  That action is not executable if the box is
+full.  Consider the extension of that domain that includes also a second
+action -- putting two coins in the box.  That action is not executable if the
+box is full or "nearly full."  Represent this extension in the language of
+CCalc using only one variable.<p>
+
+The conditions on the values of variables used in <tt>where</tt> clauses are
+called <i>tests</i>.  In a test, variables ranging over subsets of integers
+and their values (such as <tt>0</tt> and <tt>capacity</tt>) can be combined
+using symbols for arithmetical operations<p>
+
+<center>
+<tt>+</tt>&nbsp;&nbsp;<tt>-</tt>&nbsp;&nbsp;<tt>*</tt>&nbsp;&nbsp;<tt>//</tt>
+</center>
+
+<p>(the last is integer division).  Atomic tests can be formed from
+arithmetical expressions using equality and the negation of equality<p>
+
+<center>
+<tt>=</tt>&nbsp;&nbsp;<tt>\=</tt>
+</center>
+
+<p> and order relations<p>
+
+<center>
+<tt>&lt;&nbsp;&nbsp;&gt;&nbsp;&nbsp;=&lt;&nbsp;&nbsp;&gt;=</tt>
+</center><p>
+
+Atomic tests can be further combined into complex tests using
+propositional connectives<p>
+
+<center>
+<tt>-</tt>&nbsp;&nbsp;<tt>&</tt>&nbsp;&nbsp;<tt>++</tt>&nbsp;&nbsp;
+<tt>-&gt;&gt;</tt>&nbsp;&nbsp;<tt>&lt;-&gt;</tt>&nbsp;&nbsp;
+</center>
+
+<p>(the last two are material implication and equivalence).
+Tests are a special case of formulas of the kind
+that we see, for instance, after <tt>if</tt> in propositions.  What is special
+about tests is that they do not contain fluent symbols, so that they can be
+evaluated in the process of grounding.<p>
+
+<hr><p>
+
+<address><a href="objects.html">Forward</a>
+to Section 3.1: Objects and Sorts</address>
+
+<address><a href="nondeterminism.html">Back</a>
+to Section 2.2: Nondeterministic Shooting</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

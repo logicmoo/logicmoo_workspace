@@ -1,0 +1,135 @@
+<head>
+   <title>CCalc Tutorial: Objects and Sorts</title>
+</head>
+
+<center>
+<h1>
+3. How To Use Objects
+</h1>
+<h2>
+3.1. Objects and Sorts
+</h2>
+</center>
+
+In CCalc code we often refer to finite sets, for instance, sets of integers.
+A set can serve as the set of values of a fluent, or as the domain of a
+variable, or for other purposes.
+The language of CCalc allows us to introduce names for finite sets.  These
+names are called <i>sorts</i>, and the elements of a set are called
+<i>objects</i> of the corresponding sort.  Sorts can be used in variable and
+constant declarations.<p>
+
+For example, the fragment
+
+<pre>
+:- constants
+ c :: inertialFluent(0..n);
+ a :: exogenousAction.
+
+:- variables
+ I :: 0..n-1.
+</pre>
+
+of file <a href="coins"><tt>coins</tt></a> can be rewritten as follows:
+
+<pre>
+:- sorts
+ number; smallnumber.
+
+:- objects
+ 0..n :: number;
+ 0..n-1 :: smallnumber.
+
+:- constants 
+ c :: inertialFluent(number);
+ a :: exogenousAction.
+
+:- variables
+ I :: smallnumber.
+</pre>
+
+The sort declaration in the first two lines says that the symbols
+<tt>number</tt> and <tt>smallnumber</tt> are names of sets.  The object
+declaration that follows tells us what the elements of those sets are.  The
+names are used then in the declarations of the constant <tt>c</tt> and the
+variable <tt>I</tt>.<p>
+
+After declaring a sort in a CCalc file, we "populate" it
+by listing the objects of that sort.  If this is not done, CCalc will treat
+this sort as empty.<p>
+
+The sort and object declarations
+
+<pre>
+:- sorts
+ number; smallnumber.
+
+:- objects
+ 0..n :: number;
+ 0..n-1 :: smallnumber.
+</pre>
+
+can be also written as
+
+<pre>
+:- sorts
+ number >> smallnumber.
+
+:- objects
+ 0..n-1 :: smallnumber;
+ n :: number.
+</pre>
+
+The symbol <tt>&gt;&gt;</tt> in the sort declaration expresses that the
+sort <tt>number</tt> is a "supersort" of
+sort <tt>smallnumber</tt>, so that every element of the
+latter is automatically counted as an element of the former.  Accordingly,
+when we declare objects of sort <tt>number</tt> later, there is no need
+to include all integers in the interval <tt>0..n</tt>; it is enough to mention
+<tt>n</tt>.<p>
+
+Sort and object declarations allow us to talk about sets that are more
+complex than intervals.  For instance, we can declare:
+
+<pre>
+:- sorts
+ number.
+
+:- objects
+ 1..10, 20, 50, 100 :: number.
+</pre>
+
+A sort can be populated not only with numbers, but also with identifiers.
+Consider,
+for instance, the blocks world with the blocks called <tt>a</tt>, <tt>b</tt>,
+<tt>c</tt>, in which a block can be located on top of another block or on the
+table.  The description of this system can include the declarations
+
+<pre>
+:- sorts
+ location >> block.
+
+:- objects
+ a, b, c :: block;
+ table :: location.
+</pre>
+
+<b>Exercise 3.1.</b>
+Consider the following modification of the domain from
+<a href="running.html#ex1.4">Exercise 1.4</a> (Section 1.3).  Instead of 11
+people around the table,
+there are just two, John and Mary.  The value of the fluent <tt>owner</tt>
+tells us which of them has the coin.  When the action <tt>give</tt> is
+executed, the current owner of the coin gives it to the other person.  This
+action was executed twice, and now the coin belongs to John.  Use CCalc to
+find out who was the owner of the coin originally.<p>
+
+<hr><p>
+
+<address><a href="families.html">Forward</a>
+to Section 3.2: Families of Fluents, Actions and Objects</address>
+
+<address><a href="bullets.html">Back</a>
+to Section 2.3: Counting Bullets</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

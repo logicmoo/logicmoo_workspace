@@ -1,0 +1,80 @@
+<head>
+   <title>CCalc Tutorial: Transition Systems</title>
+</head>
+
+<center>
+<h1>
+Introduction
+</h1>
+<h2>
+0.1. Transition Systems
+</h2>
+</center>
+
+CCalc is a program for solving computational problems related to action
+and change.  Many problems of this kind can be described in terms of
+"transition systems" -- directed graphs with vertices corresponding to
+states, and edges corresponding to events.<p>
+
+Consider, for instance, a system with 2 states defined by the value of a
+Boolean-valued parameter ("fluent") <i>p</i>.  Executing action <i>a</i> causes
+<i>p</i> to be true.  This system can be graphically represented as
+follows:<br>
+
+<a name="boolean">
+<center>
+<img src="9-9-03-small.jpg">
+</center>
+
+<p>
+We will refer to this transition system as <i>TS1</i>.
+Its two edges labeled <i>a=</i><b>t</b> represent the events in which
+action <i>a</i> is executed; these edges lead to the state <i>p=</i><b>t</b>.
+The other two edges are labeled <i>a=</i><b>f</b> (action <i>a</i> is not
+executed), so that these edges are loops.
+
+<p>
+If a system involves several fluents
+<i>p</i><sub>1</sub>, <i>p</i><sub>2</sub>, <i>p</i><sub>3</sub>, ...
+then every vertex is labeled by a set of equations specifying the values
+of all fluents in the corresponding state, for instance:
+
+<center>
+<i>p</i><sub>1</sub>=<b>t</b>, <i>p</i><sub>2</sub>=<b>t</b>,
+<i>p</i><sub>3</sub>=<b>f</b>, ... .
+</center><p>
+
+If there are several actions
+<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>, <i>a</i><sub>3</sub>, ...
+then every edge is labeled by a set of equations specifying which actions
+are executed in the corresponding event, for instance:<p>
+
+<center>
+<i>a</i><sub>1</sub>=<b>t</b>, <i>a</i><sub>2</sub>=<b>t</b>,
+<i>a</i><sub>3</sub>=<b>f</b>, ... .
+</center><p>
+
+Assigning the value <b>t</b> to several action symbols indicates that
+the corresponding actions are executed concurrently.<p>
+
+Besides Boolean-valued fluents, transition systems may include fluents with
+any other values.  Consider, for instance, a fluent <i>c</i> that takes values
+from an initial segment of nonnegative integers {0,...,<i>N</i>}.  Transition
+system <i>TS2</i> below shows the effect of the action <i>a</i> that increments
+<i>c</i> by 1 when <i>c</i><<i>N</i> and is nonexecutable otherwise.<br>
+
+<a name="coins">
+<center>
+<img src="9-9-03-file2-small.jpg">
+</center>
+<p>
+
+<hr><p>
+
+<address><a href="describing.html">Forward</a>
+to Section 0.2: Describing Actions</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>
+
+
+

@@ -1,0 +1,48 @@
+% File 'zoo-test3'
+
+:- sorts
+  animal >> (elephant; horse; dog).
+
+:- variables
+  SP                           :: species;
+  E                            :: elephant;
+  HR                           :: horse;
+  D                            :: dog.
+  
+:- objects
+  elephantSpecies, 
+  horseSpecies,
+  dogSpecies                   :: species.
+
+caused sp(E)=elephantSpecies.
+constraint sp(ANML)=elephantSpecies ->> [\/E | ANML=E].
+
+caused sp(HR)=horseSpecies.
+constraint sp(ANML)=horseSpecies ->> [\/HR | ANML=HR].
+
+caused sp(D)=dogSpecies.
+constraint sp(ANML)=dogSpecies ->> [\/D | ANML=D].
+
+default largeSpecies(SP). 
+caused -largeSpecies(dogSpecies).
+
+
+:- objects
+  homer                        :: human;
+  snoopy                       :: dog.
+
+
+% Initially Homer was outside, and Snoopy, a dog, was inside the cage, 
+% with the gate closed. Is it possible that they switched their
+% locations in one step? in two steps?  
+
+:- query 
+maxstep :: 1..2;
+0: -opened(gateAO),
+   loc(pos(homer))=outside,
+   loc(pos(snoopy))=cageA;
+maxstep: 
+   loc(pos(homer))=cageA,
+   loc(pos(snoopy))=outside.
+
+

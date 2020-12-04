@@ -1,0 +1,166 @@
+<head>
+   <title>CCalc Tutorial: Basic Formulation</title>
+</head>
+
+<center>
+<h1>
+2. Example: Yale Shooting Problem
+</h1>
+<h2>
+2.1. Basic Formulation
+</h2>
+</center>
+
+The Yale Shooting Problem was introduced by
+Steve Hanks and <a  href="http://www.cs.yale.edu/homes/dvm/">Drew McDermott</a>
+in 1987 (<i>Artificial Intelligence</i>, Vol. 33).  It is about a person
+(according to other accounts, a
+turkey) who at any point in time is either alive or dead, and about a gun that
+can be either loaded or unloaded.  The gun becomes loaded any time a load
+action is executed.  The person becomes dead any time he is shot with a loaded
+gun.<p>
+
+Assume that the person is initially alive.  The gun is loaded, then
+he waits for a while, and then he is shot with the gun.  What can we say,
+given these assumptions, about the values of the fluents involved --
+<i>alive</i> and <i>loaded</i> -- at various points in time?<p>
+
+The description of the domain above does not say whether the load action is
+considered executable when the gun is already loaded.  Let's decide that the
+answer is yes: when the gun is loaded, that action can be executed but will
+have no effect.<p>
+
+Note that the assumptions of the Yale Shooting Problem do not determine
+the initial state completely: the fluent <i>loaded</i> can be either true
+or false in the initial state.  But once the initial value of this fluent is
+selected, all future changes in the values of fluents are uniquely defined.<p>
+
+The shooting domain can be described in the language of CCalc by the following
+declarations and propositions:
+
+<pre>
+:- constants
+ loaded, alive :: inertialFluent;
+ load, shoot   :: exogenousAction.
+
+load causes loaded.
+
+shoot causes -alive.
+shoot causes -loaded.
+nonexecutable shoot if -loaded.
+
+nonexecutable load & shoot.
+</pre>
+
+The declarations of the two fluent constants are combined here into one, and
+so are the declarations of the two action constants.  The last line expresses
+the assumption (implicit in the informal description of the domain) that the
+two actions cannot be executed concurrently.<p>
+
+The corresponding transition system has 4 vertices:<p>
+
+<center>
+<i>alive</i>=<b>f</b>,&nbsp;<i>loaded</i>=<b>f</b><br>
+<i>alive</i>=<b>f</b>,&nbsp;<i>loaded</i>=<b>t</b><br>
+<i>alive</i>=<b>t</b>,&nbsp;<i>loaded</i>=<b>f</b><br>
+<i>alive</i>=<b>t</b>,&nbsp;<i>loaded</i>=<b>t</b><br>
+</center>
+
+<p>Its edges are labeled by 3 events:<p>
+
+<center>
+<i>load</i>=<b>f</b>,&nbsp;<i>shoot</i>=<b>f</b><br>
+<i>load</i>=<b>f</b>,&nbsp;<i>shoot</i>=<b>t</b><br>
+<i>load</i>=<b>t</b>,&nbsp;<i>shoot</i>=<b>f</b><br>
+</center>
+
+<p><b>Exercise 2.1.</b>
+How many edges do you think this transition system has?  Verify your
+answer using CCalc.<p>
+
+Expressing the assumptions about the sequence of events in the Yale
+Shooting Problem (load, then wait, then shoot) by a CCalc query can be made
+easier by introducing the macro
+
+<pre>
+:- macros
+ wait -> -load & -shoot.
+</pre>
+
+(to wait means not to load and not to shoot).  Then we can write:
+
+<pre>
+:- query
+ maxstep:: 3;
+ 0: alive;
+ 0: load;
+ 1: wait;
+ 2: shoot.
+</pre>
+
+<b>Exercise 2.2.</b>
+Run CCalc to verify that this query has exactly two answers, as expected.<p>
+
+The examination of the answers to the query above shows that, in each of
+them, the fluent <i>alive</i> is false at step 3.  In this sense, the
+assumptions of the Yale Shooting Problem entail the conclusion that this
+fluent eventually becomes false.  An alternative way to verify this
+conclusion is to instruct CCalc to answer the query in which this conclusion
+is required not to hold:
+
+<pre>
+:- query
+ maxstep:: 3;
+ 0: alive;
+ 0: load;
+ 1: wait;
+ 2: shoot;
+ 3: alive.
+</pre>
+
+CCalc will determine that these assumptions are inconsistent.<p>
+
+<b>Exercise 2.3.</b>
+Use CCalc to check that the assumption 0:<i>-alive</i> entails
+10:<i>-alive</i>.<p>
+
+<b>Exercise 2.4.</b>
+Modify the original formalization of the Yale Shooting Problem to reflect
+the assumption that the shoot action is executable even when the gun is
+not loaded, but it does not affect the fluent <i>alive</i> in this case.
+How does this modification affect the number of edges  of the transition
+system, in your opinion?  Verify your answer using CCalc.<p>
+
+<b>Exercise 2.5.</b>
+In the modification of the Yale Shooting Problem introduced by Andrew Baker
+in 1991 (<i>Artificial Intelligence</i>, Vol. 49) and known as the Stanford
+Murder Mystery, the person is alive initially, but is found to be
+dead after a wait followed by shooting.  Using CCalc, check under these
+assumptions that the gun was initially loaded.<p>
+
+Instead of defining <tt>wait</tt> as an abbreviation, we can treat this
+symbol as a third action constant.  The assumption that no two actions out of
+3 can be executed concurrently requires 3 propositions:
+
+<pre>
+nonexecutable load & shoot.
+nonexecutable load & wait.
+nonexecutable shoot & wait.
+</pre>
+
+The language of CCalc allows us to express the no concurrency assumption
+more concisely, simply by writing
+
+<pre>
+noconcurrency.
+</pre>
+
+<hr><p>
+
+<address><a href="nondeterminism.html">Forward</a>
+to Section 2.2: Nondeterministic Shooting</address>
+
+<address><a href="parameters.html">Back</a>
+to Section 1.5: Setting Paramemeters</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

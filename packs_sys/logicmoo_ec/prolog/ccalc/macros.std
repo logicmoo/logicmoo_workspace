@@ -1,0 +1,513 @@
+% File 'macros.std'
+
+:- macros
+  ((#1 ; #2) where #3)
+        -> ( (#1 where #3) ; (#2 where #3) ).
+
+% Abbreviations 
+
+:- macros
+  constraint #1,#2
+        -> (constraint #1 ; constraint #2) ;
+  constraint #1                        
+        -> caused false if -(#1);
+  always #1,#2
+        -> (always #1 ; always #2) ;
+  always #1                        
+        -> caused false after -(#1) ;  % or, constraint false after #1.
+  default #1,#2 if #3 after #4
+        -> (default #1 if #3 after #4; default #2 if #3 after #4) ;
+  default #1 if #2 after #3
+        -> caused #1 if #1 & #2 after #3 ;
+  default #1,#2 after #3
+        -> (default #1 after #3 ; default #2 after #3) ;
+  default #1 after #2 
+        -> (default #1 if true after #2) ;
+  default #1,#2 if #3
+        -> (default #1 if #3 ; default #2 if #3) ;
+  default #1 if #2
+        -> caused #1 if #1 & #2 ;
+  default #1,#2 
+        -> default #1,#2 if true ;
+  default #1
+        -> default #1 if true ;
+
+  exogenous #1,#2 if #3
+        -> (exogenous #1 if #3 ; exogenous #2 if #3) ;
+  exogenous #1 if #2
+        -> default #1 = var(sort(#1),-1) if #2 ;
+  exogenous #1,#2
+        -> (exogenous #1 ; exogenous #2) ;
+  exogenous #1
+        -> exogenous #1 if true .
+
+% Abbreviations 
+
+:- macros
+
+  caused #1 after #3 
+        -> caused #1 if true after #3 ;
+
+  possibly caused #1 if #2 after #3
+        -> default #1 if #2 after #3 ;
+  possibly caused #1 after #2 
+        -> default #1 after #2;
+
+  #1 causes #2 if #3
+        -> caused #2 after #1 & #3
+                    where action_formula(#1), simpleFluent_formula(#2) ;
+  #1 causes #2 if #3 
+        -> caused #2 if #1 & #3
+                    where action_formula(#1), action_formula(#2),
+                          fluent_formula(#3) ;                            
+  #1 causes #2 
+        -> #1 causes #2 if true 
+                    where action_formula(#1);
+
+  #1 may cause #2 if #3
+        -> default #2 after #3 & #4 
+                             where tuple_to_conjunct(#1,#4) ;
+  #1 may cause #2
+        -> default #2 after #3 
+                             where tuple_to_conjunct(#1,#3) ;
+  nonexecutable #1 if #2
+        -> always #2 ->> -(#3)
+                             where tuple_to_conjunct(#1,#3);
+  nonexecutable #1
+        -> nonexecutable #1 if true;
+
+  inertial #1,#2 if #3
+        -> (inertial #1 if #3 ; inertial #2 if #3) ;
+  inertial #1 if #2
+        -> default #1 = var(sort(#1),-1) 
+                   after #1 = var(sort(#1),-1) & #2 ;
+  inertial #1,#2
+        -> (inertial #1 ; inertial #2) ;
+  inertial #1
+        -> inertial #1 if true ;
+
+  rigid #1,#2
+        -> (rigid #1 ; rigid #2) where is_constant(#1) ;
+  rigid #1
+        -> caused false if -(#1 = var(sort(#1),-1))
+                        after #1 = var(sort(#1),-1) where is_constant(#1).
+
+% Transformations to basic form
+
+:- macros
+  #1: -(#2) 
+        -> -((#1: #2)) ;
+  #1: #2 && #3
+        -> (#1: #2) && (#1: #3) ;
+  #1: #2 & #3
+        -> (#1: #2) &  (#1: #3) ;
+  #1: #2 , #3 
+        -> (#1: #2) & (#1: #3) ;
+  #1: #2 ++ #3
+        -> (#1: #2) ++ (#1: #3) ;
+  #1: #2 ->> #3 
+        -> (#1: #2) ->> (#1: #3) ;
+  #1: #2 <-> #3 
+        -> (#1: #2) <-> (#1: #3) .
+
+
+:- macros
+% to use more quantifiers, simply put ',' between them
+
+  #1: [\/ #2 |  #3]
+        -> [\/ #2 | (#1: #3)] ;
+  #1: [/\ #2 |  #3]
+        -> [/\ #2 | (#1: #3)] ;
+
+  #1: [\/ #2 \/ #3 | #4]
+        -> [\/ #2 | (#1: [\/ #3 | #4])] ;
+  #1: [\/ #2 /\ #3 | #4]
+        -> [\/ #2 | (#1: [/\ #3 | #4])] ;
+  #1: [/\ #2 \/ #3 | #4]
+        -> [/\ #2 | (#1: [\/ #3 | #4])] ;
+  #1: [/\ #2 /\ #3 | #4]
+        -> [/\ #2 | (#1: [/\ #3 | #4])] ;
+
+  #1: [\/ #2 \/ #3 \/ #4| #5]
+        -> [\/ #2 | (#1: [\/ #3 \/ #4 | #5])] ;
+  #1: [\/ #2 \/ #3 /\ #4| #5]
+        -> [\/ #2 | (#1: [\/ #3 /\ #4 | #5])] ;
+  #1: [\/ #2 /\ #3 \/ #4| #5]
+        -> [\/ #2 | (#1: [/\ #3 \/ #4 | #5])] ;
+  #1: [\/ #2 /\ #3 /\ #4| #5]
+        -> [\/ #2 | (#1: [/\ #3 /\ #4 | #5])] ;
+  #1: [/\ #2 \/ #3 \/ #4| #5]
+        -> [/\ #2 | (#1: [\/ #3 \/ #4 | #5])] ;
+  #1: [/\ #2 \/ #3 /\ #4| #5]
+        -> [/\ #2 | (#1: [\/ #3 /\ #4 | #5])] ;
+  #1: [/\ #2 /\ #3 \/ #4| #5]
+        -> [/\ #2 | (#1: [/\ #3 \/ #4 | #5])] ;
+  #1: [/\ #2 /\ #3 /\ #4| #5]
+        -> [/\ #2 | (#1: [/\ #3 /\ #4 | #5])] ;
+
+% The followings are counterpart of the aboves that are used in basic mode 
+%  in a causal rule that does not contain time stamps from the beginning
+
+  [\/ #2 \/ #3 | #4]
+        -> [\/ #2 | [\/ #3 | #4]] ;
+  [\/ #2 /\ #3 | #4]
+        -> [\/ #2 | [/\ #3 | #4]] ;
+  [/\ #2 \/ #3 | #4]
+        -> [/\ #2 | [\/ #3 | #4]] ;
+  [/\ #2 /\ #3 | #4]
+        -> [/\ #2 | [/\ #3 | #4]] ;
+
+  [\/ #2 \/ #3 \/ #4| #5]
+        -> [\/ #2 | [\/ #3 \/ #4 | #5]] ;
+  [\/ #2 \/ #3 /\ #4| #5]
+        -> [\/ #2 | [\/ #3 /\ #4 | #5]] ;
+  [\/ #2 /\ #3 \/ #4| #5]
+        -> [\/ #2 | [/\ #3 \/ #4 | #5]] ;
+  [\/ #2 /\ #3 /\ #4| #5]
+        -> [\/ #2 | [/\ #3 /\ #4 | #5]] ;
+  [/\ #2 \/ #3 \/ #4| #5]
+        -> [/\ #2 | [\/ #3 \/ #4 | #5]] ;
+  [/\ #2 \/ #3 /\ #4| #5]
+        -> [/\ #2 | [\/ #3 /\ #4 | #5]] ;
+  [/\ #2 /\ #3 \/ #4| #5]
+        -> [/\ #2 | [/\ #3 \/ #4 | #5]] ;
+  [/\ #2 /\ #3 /\ #4| #5]
+        -> [/\ #2 | [/\ #3 /\ #4 | #5]] .
+
+% determining what kind of equality is meant.
+
+:- macros
+  #1 = #2     -> #1 eq #2 where is_constant(#1), \+ is_constant(#2);
+  #2 = #1     -> #1 eq #2 where is_constant(#1), \+ is_constant(#2).
+
+:- macros
+  #1 \= #2 -> -(#1 = #2) ;
+  #1 <> #2 -> -(#1 = #2).
+
+% get rid of unnecessary (multiple) time stamps
+:- macros   
+  #1: #2: #3 -> #2: #3. 
+
+% Macros used in queries and in file 'history.std'
+
+:- macros 
+  anyFluentValues
+     -> ( var(step,-1): var(simpleFluentAtomicFormula,-1)
+                   <= var(step,-1): var(simpleFluentAtomicFormula,-1) ; 
+          var(step,-1): var(sdFluentAtomicFormula,-1)
+                   <= var(step,-1): var(sdFluentAtomicFormula,-1) ;
+          var(rigidAtomicFormula,-1)
+                   <= var(rigidAtomicFormula,-1) ) ;
+  anyActions
+     -> ( (var(astep,-1): var(actionAtomicFormula,-1)
+               <= var(astep,-1): var(actionAtomicFormula,-1)) ;
+          (var(astep,-1): var(attributeAtomicFormula,-1) 
+                  <= var(astep,-1): var(attributeAtomicFormula,-1)) ) ;
+  anyHistory
+     -> ( anyFluentValues ; anyActions ) ;
+  anyInitialState 
+     -> ( 0: var(simpleFluentAtomicFormula,-1) 
+                  <= 0: var(simpleFluentAtomicFormula,-1) ) ;
+  cwaActions 
+     -> ( var(astep,-1): -var(action(boolean),-1)
+                   <= var(astep,-1): -var(action(boolean),-1) ;
+          var(astep,-1): var(attributeAtomicFormula,-1)
+                   <= var(astep,-1): var(attributeAtomicFormula,-1) ) .
+
+% etc
+
+:- macros
+   noconcurrency -> 
+     (nonexecutable var(action(boolean),-1), var(action(boolean),-2)
+                   where var(action(boolean),-1) @< var(action(boolean),-2)) .
+
+% for logic program input
+:- macros  
+   not (#1) -> -(#1).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% main macros for translating static and dynamic laws into causal rules
+%  depending on an operation mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% basic mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- macros  
+
+% defeasible fluent dynamic laws
+
+% the first time used: need to declare ab an action constant
+
+  caused #1 if #2 after #3 unless #4
+        -> ( side_effect(process_dynamic_abLabel(#4)) ;
+	             (dynamic) )     where value(mode,basic), \+ ab(#4), 
+                                simpleFluent_formula(#1), fluent_formula(#2) ;
+
+% the second time or later: don't need to declare ab an action constant again
+
+  caused #1 if #2 after #3 unless #4
+        -> (dynamic)         where value(mode,basic), ab(#4), 
+                                simpleFluent_formula(#1), fluent_formula(#2) ;
+
+%--------------------------------------------------------------------------
+
+% defeasible action dynamic laws
+
+% the first time used: need to declare ab an action constant
+
+  caused #1 if #2 unless #3  
+        -> ( side_effect(process_dynamic_abLabel(#3)) ;
+                    (dynamic) )    where value(mode,basic), \+ ab(#3),
+                                   action_formula(#1) ;
+
+% the second time or later: don't need to declare ab an action constant again 
+
+  caused #1 if #2 unless #3  
+        -> (dynamic)         where value(mode,basic), ab(#3), 
+                                   action_formula(#1) ;
+
+%--------------------------------------------------------------------------
+
+% defeasible static laws
+
+% the first time used: need to declare ab an sdFluent constant
+
+  caused #1 if #2 unless #3  
+        -> ( side_effect(process_static_abLabel(#3)) ;
+             default (0: -(#3)) ;
+             caused #1 if #2 & -(#3) )
+                             where value(mode,basic), \+ ab(#3), 
+                                   fluent_formula(#1), fluent_formula(#2) ;
+
+% the second time or later: don't need to declare ab an sdFluent 
+% constant again 
+
+  caused #1 if #2 unless #3  
+        -> caused #1 if #2 & -(#3)
+                             where value(mode,basic), \+ ab(#3), 
+                                   fluent_formula(#1), fluent_formula(#2) ;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% fluent dynamic laws
+
+  caused #1 if #2 after #3 
+        -> (dynamic)         where value(mode,basic), 
+                                simpleFluent_formula(#1), fluent_formula(#2) ;
+% action dynamic laws
+
+  caused #1 if #2 
+        -> (dynamic)         where value(mode,basic),
+                                   action_formula(#1) ;
+
+% static laws
+
+  caused #1 if #2 
+        -> (0: #1 <= 0: #2)  where value(mode,basic),
+                                   fluent_formula(#1), fluent_formula(#2) .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% transition mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- macros
+
+% defeasible fluent dynamic laws
+
+% the first time used: postulate cwa
+
+  caused #1 if #2 after #3 unless #4
+        -> ( side_effect(assertz(ab_cwa_1(#4))) ;
+             default -(#4) ; 
+             caused #1 if #2 after #3 & -(#4) )
+                             where value(mode,transition), \+ ab_cwa_1(#4),
+                                simpleFluent_formula(#1), fluent_formula(#2) ;
+
+% the second time or later: don't need to postulate cwa again
+
+  caused #1 if #2 after #3 unless #4
+        -> caused #1 if #2 after #3 & -(#4)
+                             where value(mode,transition), ab_cwa_1(#4), 
+                                 simpleFluent_formula(#1), fluent_formula(#2) ;
+
+%------------------------------------------------------------------------
+
+% defeasible action dynamic laws
+
+% the first time used: postulate cwa
+
+  caused #1 if #2 unless #3
+        -> ( side_effect(assertz(ab_cwa_1(#3))) ;
+             default -(#3) ; 
+             caused #1 if #2 & -(#3) )
+                             where value(mode,transition), \+ ab_cwa_1(#3),
+                                   action_formula(#1) ;
+
+% the second time or later: don't need to postulate cwa again
+
+  caused #1 if #2 unless #3
+        -> caused #1 if #2 & -(#3)
+                             where value(mode,transition), ab_cwa_1(#3),
+                                   action_formula(#1) ;
+
+%------------------------------------------------------------------------
+
+% defeasible static laws
+
+% the first time used: postulate cwa
+
+  caused #1 if #2 unless #3
+        -> ( side_effect(assertz(ab_cwa_1(#3))) ;
+             default -(#3) ;
+             caused #1 if #2 & -(#3) )
+                            where value(mode,transition), 
+                                  fluent_formula(#1), fluent_formula(#2), 
+                                  \+ ab_cwa_1(#3) ;
+
+% the second time or later: don't need to postulate cwa again
+
+  caused #1 if #2 unless #3
+        -> caused #1 if #2 & -(#3)
+                            where value(mode,transition), 
+                                  fluent_formula(#1), fluent_formula(#2), 
+                                  ab_cwa_1(#3) ;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% fluent dynamic law
+
+  caused #1 if #2 after #3 
+        -> ( 1: #1  <=  (1: #2) & (0: #3))
+                            where value(mode,transition), 
+                                simpleFluent_formula(#1), fluent_formula(#2) ;
+
+% action dynamic law
+
+  caused #1 if #2 
+        -> (0: #1 <= 0: #2) where value(mode,transition),
+                                  action_formula(#1) ;
+
+% static law
+
+  caused #1 if #2 
+        -> (1: #1 <= 1: #2) where value(mode,transition),
+                                  fluent_formula(#1), fluent_formula(#2) .
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% history mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- macros
+
+% defeasible fluent dynamic laws
+
+% the first time used: need to declare ab an action constant 
+%                      and postulate cwa
+
+  caused #1 if #2 after #3 unless #4
+        -> ( side_effect(process_dynamic_abLabel(#4)) ;
+             default (var(astep,-1): -(#4)) ; 
+                % cannot omit time stamp here : when the default rule is
+                % expanded, (#4) is not known to be an action constant
+             caused #1 if #2 after #3 & -(#4) )
+                             where value(mode,history), \+ ab(#4),
+                               simpleFluent_formula(#1), fluent_formula(#3) ;
+
+% the second time or later: don't need to declare ab an action constant 
+%                           and don't need to postulate cwa
+
+  caused #1 if #2 after #3 unless #4
+        -> caused #1 if #2 after #3 & -(#4)
+                             where value(mode,history), ab(#4), 
+                               simpleFluent_formula(#1), fluent_formula(#3) ;
+
+%------------------------------------------------------------------------
+
+% defeasible action dynamic laws
+
+% the first time used: need to declare ab an action constant 
+%                      and postulate cwa
+                       
+  caused #1 if #2 unless #3
+        -> ( side_effect(process_dynamic_abLabel(#3)) ;
+             default (var(astep,-1): -(#3)) ; 
+                % cannot omit time stamp here : when the default rule is
+                % expanded, (#3) is not known to be an action constant
+             caused #1 if #2 & -(#3) )
+                             where value(mode,history), \+ ab(#3), 
+                                   action_formula(#1) ;
+
+% the second time or later: don't need to declare ab an action constant 
+%                           and don't need to postulate cwa
+
+  caused #1 if #2 unless #3
+        -> caused #1 if #2 & -(#3)
+                             where value(mode,history), ab(#4), 
+                                   action_formula(#1);
+
+%------------------------------------------------------------------------
+ 
+% defeasible static laws
+
+% the first time used: need to declare ab an sdFluent constant and 
+%                      postulate cwa
+
+  caused #1 if #2 unless #3
+        -> ( side_effect(process_static_abLabel(#3)) ;
+             default (var(step,-1): -(#3)) ;
+             caused #1 if #2 & -(#3) )
+                             where value(mode,history), \+ ab(#3),
+                                   fluent_formula(#1), fluent_formula(#2)  ; 
+
+% the second time or later: don't need to declare ab an sdFluent constant 
+%                           and don't need to postulate cwa
+
+  caused #1 if #2 unless #3
+        -> caused #1 if #2 & -(#3) 
+                             where value(mode,history), ab(#3), 
+                                   fluent_formula(#1), fluent_formula(#2) ;   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% fluent dynamic law
+
+  caused #1 if #2 after #3 
+        -> (var(astep,-1)+1: #1  
+                 <=  (var(astep,-1)+1: #2) & (var(astep,-1): #3))
+                             where value(mode,history), 
+                                  simpleFluent_formula(#1), fluent_formula(#2);
+
+%  action dynamic law
+
+  caused #1 if #2 
+        -> (var(astep,-1): #1 <= (var(astep,-1): #2) & (var(astep,-1): #3))
+                             where value(mode,history), 
+                                   action_formula(#1) ;
+
+% static law
+
+  caused #1 if #2 
+        -> (var(step,-1): #1 <= var(step,-1): #2) 
+                             where value(mode,history), 
+                                   fluent_formula(#1), fluent_formula(#2) .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- macros  
+  caused #1 
+        -> caused #1 if true. 
+
+:- macros
+  caused #1 if #2 after #3 
+        -> false   where fatal_error("Invalid causal law: ~w", 
+                                      (caused #1 if #2 after #3)) ;
+
+  caused #1 if #2 
+        -> false   where fatal_error("Invalid causal law: ~w", 
+                                      (caused #1 if #2)) .
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

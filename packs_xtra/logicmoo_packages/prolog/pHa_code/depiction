@@ -1,0 +1,83 @@
+
+% we first allow one to write the building blocks of explanations
+% area(X, land) means that the object X in the image depicts land in scene, etc
+% given that it is a region
+disjoint([ area(X, land):0.3, area(X, water):0.7]).
+disjoint([ linear(X, road):0.1, linear(X, river):0.4, linear(X, shore):0.5]).
+
+disjoint([ mouth(X, Y, 0):0.5, mouth(X, Y, 1):0.5]).
+disjoint([ docross(X, Y):0.2, dontcross(X, Y):0.8]). % numbers are irrelvant
+disjoint([beside(X, Y):0.1, notbeside(X, Y):0.9]). % numbers are irrelvant
+disjoint([ source(R, 1):0.5 , source(R, 0):0.5 ]).
+disjoint([petersout(X, Y):0.1, doesntpeterout(X, Y):0.9]).
+disjoint([ joins(X, Y, 0):0.5, joins(X, Y, 1):0.5 ]).
+disjoint([loop(X):0.1, notloop(X):0.9]). % numbers are irrelvant
+disjoint([inside(X, Y):0.1, outside(X, Y):0.1, noside(X, Y):0.8]). % numbers are irrelvant
+
+% the following give the mappings between image and scene
+rule((bounds(X, Y) :-  linear(X, XT), area(Y, YT), beside(X, Y), 
+  possbeside(XT, YT) )).
+rule((tee(X, Y, E) :- joins(X, Y, E), linear(X, road) )).
+rule((tee(X, Y, E) :- joins(X, Y, E), linear(X, river), 
+   linear(Y, road), source(X, E) )).
+rule((tee(X, Y, E) :- linear(X, river), canflowto(Y), mouth(X, Y, E) )).
+rule((chi(X, Y) :- crossable(X, Y), docross(X, Y) )).
+rule((open(X, N) :- linear(X, river), source(X, N) )).
+rule((open(X, N) :- linear(X, road), petersout(X, N) )).
+rule((closed(X) :- loop(X), loopable(X) )).
+rule((interior(X, Y) :- inside(X, Y) )).
+rule((exterior(X, Z) :- outside(X, Z), inside(X, Y), linear(X, XT), 
+   area(Y, YT), area(Z, ZT), possreg(YT, XT, ZT) )).
+% this relies on "inside" being functional.
+
+rule((region(X) :- area(X, T))).
+rule((chain(X) :- linear(X, T))).
+
+% the following gives domain constraints
+
+rule((canflowto(X) :- linear(X, river) )).
+rule((canflowto(X) :- linear(X, shore) )).
+
+rule((crossable(X, Y) :- linear(X, XT), linear(Y, YT), crosstype(XT, YT) )).
+rule(crosstype(road, road)).
+rule(crosstype(road, river)).
+rule(crosstype(river, road)).
+%rule(crosstype(road, shore)).
+%rule(crosstype(shore, road)).
+rule((sourceable(X) :- linear(X, road))).
+rule((sourceable(X) :- linear(X, river))).
+rule((loopable(X) :- linear(X, road))).
+rule((loopable(X) :- linear(X, shore))).
+
+rule(possreg(land, road, land)).
+rule(possreg(land, shore, water)).
+rule(possreg(water, shore, land)).
+
+rule(possbeside(road, land)).
+rule(possbeside(river, land)).
+rule(possbeside(shore, land)).
+rule(possbeside(shore, water)).
+
+% an example query is
+/*  explain(( chain(c1), chain(c2), region(r1), region(r2), tee(c2, c1, 1), 
+   bounds(c2, r2), bounds(c1, r1), bounds(c1, r2), exterior(c1, r2) ,
+   interior(c1, r1), open(c2, 0), closed(c1) )).
+*/
+/*  explain(( chain(c1), chain(c2), chain(c3), region(r1), region(r2), 
+  tee(c2, c1, 1), 
+   bounds(c2, r2), bounds(c1, r1), bounds(c1, r2), exterior(c1, r1), 
+   interior(c1, r2) , open(c2, 0), closed(c1), open(c3,0),
+   tee(c3, c2, 1), bounds(c3, r2) )).
+*/
+/* explain((  chain(c1), open(c1, 0), open(c1, 1), region(r1), bounds(c1, r1), 
+       chain(c2), tee(c2, c1, 0), bounds(c2, r1), 
+       chain(c3), open(c3, 1), tee(c2, c3, 1), bounds(c3, r1), 
+       region(r2), bounds(c3, r2), 
+       chain(c4), open(c4, 0), chi(c3, c4), chi(c4, c3), 
+       bounds(c4, r1), bounds(c4, r2), 
+       chain(c5), closed(c5), tee(c4, c5, 1), tee(c3, c5, 0), bounds(c5, r1), 
+       bounds(c5, r2), region(r3), 
+       bounds(c5, r3), interior(c5, r3), exterior(c5, r1), exterior(c5, r2), 
+       chain(c6), closed(c6), region(r4), bounds(c6, r3), bounds(c6, r4), 
+       interior(c6, r4), exterior(c6, r3) )).
+*/

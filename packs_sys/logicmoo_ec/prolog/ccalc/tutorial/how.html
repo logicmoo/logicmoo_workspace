@@ -1,0 +1,119 @@
+<head>
+   <title>CCalc Tutorial: How CCalc Does It</title>
+</head>
+
+<center>
+<h2>
+1.4. How CCalc Does It
+</h2>
+</center>
+
+The operation of CCalc in the example from
+<a href="running.html">Section 1.3</a> and in similar cases can be summarized
+as follows.  In response to the <tt>loadf</tt> command, CCalc produces a
+description of the given transition system in the form of a set of clauses.
+In response to the <tt>query</tt> command, CCalc turns the given query
+into a set of clauses and invokes a SAT solver to find a solution.<p>
+
+We will now discuss each of these two steps in some detail.<p>
+
+<i>Describing a transition system by a set of clauses</i>.
+Take, for instance, transition system
+<a href="transitionsystems.html#boolean"><i>TS1</i></a> from Section 0.1.
+If we create a file containing the
+<a href="input1.html#boolean">CCalc description</a> of this system given in
+Section 1.1 and <tt>loadf</tt> that file, then we'll able to display the
+clauses produced by CCalc using the command
+
+<pre>
+| ?- show_clauses.
+</pre>
+(Try it!)  We'll see 3 clauses on the screen:
+
+<pre>
+-(0:a) ++ 1:p.
+-(1:p) ++ 0:p ++ 0:a.
+-(0:p) ++ 1:p.
+</pre>
+
+(In the language of CCalc, <tt>-</tt> is negation and <tt>++</tt> is
+disjunction.)  The assignments of truth values to the atoms 0:<i>p</i>,
+0:<i>a</i> and 1:<i>p</i> that satisfy these clauses exactly correspond to
+the edges of the given
+transition system.  For instance, mapping 0:<i>p</i> to <b>f</b> and
+1:<i>p</i>, 0:<i>a</i> to <b>t</b> corresponds to the horizontal edge
+from <i>p</i>=<b>f</b> to <i>p</i>=<b>t</b> labeled <i>a</i>=<b>t</b>.<p>
+
+The clauses formed by CCalc are propositional, that is to say, their atoms
+do not contain variables.  The variables occurring in schematic propositions,
+such as <tt>I</tt> in file <a href="coins"><tt>coins</tt></a>, are eliminated
+by grounding -- substituting all possible values for each variable -- prior to
+turning propositions into clauses.<p>
+
+Generating the clauses is accomplished by translating propositions
+into causal rules and completing the rules, as described in Section&nbsp;2 of
+<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">NMCT</a>, and
+then clausifying the completion.
+Information on the number of causal rules that have been produced is displayed
+by CCalc in response to the <tt>loadf</tt> command, along with the number of
+atoms occurring in the rules and the number of clauses obtained after
+completion and clausification:
+
+<pre>
+% 3 atoms, 7 rules, 3 clauses
+</pre>
+
+The rules themselves can be displayed using the command
+
+<pre>
+| ?- show_rules.
+</pre>
+
+<i>Turning a query into a set of clauses</i>.  Once the value of
+<tt>maxstep</tt>
+is specified, CCalc generates a set of clauses representing the paths of
+length <tt>maxstep</tt>.  In the example above, if the value of
+<tt>maxstep</tt> in the query is 3, this set will consist of the clauses
+produced earlier
+
+<pre>
+-(0:a) ++ 1:p.
+-(1:p) ++ 0:p ++ 0:a.
+-(0:p) ++ 1:p.
+</pre>
+
+and two "copies" of these clauses, with the "time stamps" 0, 1 incremented
+first by 1 and then by 2:
+
+<pre>
+-(1:a) ++ 2:p.
+-(2:p) ++ 1:p ++ 1:a.
+-(1:p) ++ 2:p.
+
+-(2:a) ++ 3:p.
+-(3:p) ++ 2:p ++ 2:a.
+-(2:p) ++ 3:p.
+</pre>
+
+The assignments of truth values to atoms that satisfy all 9 clauses are in
+a 1-1 correspondence with the paths of length 3 in the given transition
+system.  The process of forming copies of the initially generated clauses
+by incrementing time stamps is called shifting.<p>
+
+When the shifting process is completed, the resulting set of clauses is
+extended by the conditions on the path that are included in the query, such
+as assumptions about the initial values of fluents in
+a prediction problem.   The assignments of truth values to atoms that satisfy
+the extended set of clauses represent the answers to the query.  This extended
+set is passed to a SAT solver to find an answer.<p>
+
+<hr><p>
+
+<address><a href="parameters.html">Forward</a>
+to Section 1.5: Setting Parameters</address>
+
+<address><a href="running.html">Back</a>
+to Section 1.3: Running CCalc</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>
+
