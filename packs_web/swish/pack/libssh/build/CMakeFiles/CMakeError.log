@@ -1,0 +1,23 @@
+Determining if files util.h exist failed with the following output:
+Change Dir: /opt/logicmoo_workspace/packs_web/swish/pack/libssh/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_f3e3f/fast && /usr/bin/make -f CMakeFiles/cmTC_f3e3f.dir/build.make CMakeFiles/cmTC_f3e3f.dir/build
+make[1]: Entering directory '/opt/logicmoo_workspace/packs_web/swish/pack/libssh/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_f3e3f.dir/HAVE_UTIL_H.c.o
+/usr/bin/cc -D_GNU_SOURCE   -o CMakeFiles/cmTC_f3e3f.dir/HAVE_UTIL_H.c.o   -c /opt/logicmoo_workspace/packs_web/swish/pack/libssh/build/CMakeFiles/CheckIncludeFiles/HAVE_UTIL_H.c
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/build/CMakeFiles/CheckIncludeFiles/HAVE_UTIL_H.c:2:10: fatal error: util.h: No such file or directory
+    2 | #include <util.h>
+      |          ^~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_f3e3f.dir/build.make:66: CMakeFiles/cmTC_f3e3f.dir/HAVE_UTIL_H.c.o] Error 1
+make[1]: Leaving directory '/opt/logicmoo_workspace/packs_web/swish/pack/libssh/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:121: cmTC_f3e3f/fast] Error 2
+
+
+Source:
+/* */
+#include <util.h>
+
+
+int main(void){return 0;}
+

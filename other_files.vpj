@@ -358,5 +358,17 @@
                                 </Folder>
                         </Folder>
                 </Folder>
+               <Folder Name="packs_sys">
+                        <Folder Name="logicmoo_ec">
+                                <Folder Name="ext">
+                                        <F
+                                                N="packs_sys/logicmoo_ec/ext/*.*"
+                                                Recurse="1"
+                                                Refilter="0"
+                                                Excludes=""/>
+                                </Folder>
+                        </Folder>
+                </Folder>
+
 	</Files>
 </Project>
