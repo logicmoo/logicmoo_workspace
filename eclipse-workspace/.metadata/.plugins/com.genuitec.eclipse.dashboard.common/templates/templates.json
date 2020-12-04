@@ -1,0 +1,230 @@
+{
+    "id":"com.genuitec.webtemplates",
+    "version":"1.0",
+    "templateList":[
+        {
+            "key":1,
+            "name":"SB Admin 2",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A free Bootstrap admin template.",
+            "text":"SB Admin 2 Bootstrap admin theme, dashboard template, or webapp UI starter. The theme features a variety of custom jQuery plugins to add extended functionality past the built in Bootstrap UI features.",
+            "features":"Responsive sidebar menu with multi-level dropdowns and active classes\nLESS files included for deeper customization\nResponsive top navigation menu with dropdown menu items\n3 custom panel styles: red, yellow, and green\nTwo Powerful jQuery charting plugins, Flot Charts and Morris.js\nSortable, searchable, multi-page Bootstrap tables using the DataTables jQuery plugin\nCustom circle icon buttons from Bootsnipp\nBuilt-in library of Bootstrap social buttons from Bootstrap Social\nResponsive Bootstrap timeline from Bootsnipp\nBootstrap chat widget from Bootsnipp\nLogin page by Bootsnipp",
+            "tags":"bootstrap, admin-dashboard, full-websites, unstyled",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/sb-admin-2.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/sb-admin-2/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-sb-admin-2/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/archive/v1.0.8.zip"
+            }
+        },
+        {
+            "key":2,
+            "name":"Modern Business",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A multipurpose website template.",
+            "text":"Modern Business is a fully loaded Bootstrap 3 website starter template. It includes 17 HTML pages along with a working PHP contact form. You can use this template to create larger, multipurpose websites using Bootstrap 3.",
+            "features":"17 HTML pages\nEasy to edit, working PHP contact form (just edit your email address in the included PHP file!)\nHomepage with full width image slider and captions\n4 portfolio page options with portfolio items\nBonus pages: pricing table, sidebar page, FAQ page, 404 page, and a blank full width page\nVarious custom styled elments, call to actions, and more",
+            "tags":"bootstrap, portfolios, full-websites, unstyled",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/modern-business.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/modern-business/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-modern-business/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-modern-business/archive/v1.0.5.zip"
+            }
+        },
+        {
+            "key":3,
+            "name":"Clean Blog",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A clean blog theme.",
+            "text":"Clean blog is a carefully styled Bootstrap blog theme that is perfect for personal or company blogs. This theme features four HTML pages including a blog index, an about page, a sample post, and a contact page.",
+            "features":"Fully responsive\nModern design with a subtle splash of color (which is easy to customize, especially with LESS!)\nDistraction free blog text optimized for legibility with a menu bar interface that conveniently appears when you scroll up!\nWorking PHP contact form with validation - just add your email address to the PHP file included\nFooter with social links and copyright information\nLESS files included for deeper customization options",
+            "tags":"bootstrap, landing-pages, full-websites, blogs",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/clean-blog.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/clean-blog/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-clean-blog/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-clean-blog/archive/v1.0.4.zip"
+            }
+        },
+        {
+            "key":4,
+            "name":"Business Casual",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A fully developed business website.",
+            "text":"Business Casual is a full website template for Bootstrap 3. It features four different HTML pages and a number of custom style components.",
+            "features":"Four pre-built HTML pages:\nHome page image slider\nStock photography by Death to the Stock Photo\nGoogle Maps enabled contact page\nContact form elements\nYou will need to get the contact form working on your own, this demo is a great start!\nUpdated design featuring custom fonts and other style changes",
+            "tags":"bootstrap, landing-pages, full-websites",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/business-casual.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/business-casual/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-business-casual/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-business-casual/archive/v1.0.4.zip"
+            }
+        },
+        {
+            "key":5,
+            "name":"Agency",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A one page agency theme.",
+            "text":"Agency is a stylish, one page Bootstrap theme for agencies and small businesses. The design of Agency is based off of the Golden PSD Theme by Mathavan Jaya. ",
+            "features":"Fully responsive\nCustom collapsing navigation with active classes, smooth page scrolling, and responsive fallback stylings\nServices section with CSS only circle icons by Font Awesome\nPortfolio grid with modal window popup previews for portfolio item details\nAbout section with a responsive timeline, special thanks to Bootsnipp\nTeam member section with circle profile images and social media links\nWorking PHP contact form with validation - just add your email address to the PHP file included\nFooter with social links, copyright information, and other links\nLESS files included for deeper customization options",
+            "tags":"bootstrap, landing-pages, one-page, portfolios",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/agency.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/agency/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-agency/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-agency/archive/v1.0.6.zip"
+            }
+        },
+        {
+            "key":6,
+            "name":"Freelancer",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A one page freelancer theme.",
+            "text":"Freelancer is a one page Bootstrap portfolio theme for freelancers. This theme is built using the Flatly theme by Bootswatch.",
+            "features":"Flat icons by flaticons.com\nLESS files and compiled CSS included\nFixed top navigation that collapses on scroll\nScrollspy on navigation items\nPerfectly responsive portfolio grid with hover effects\nResponsive, full screen modal windows for featuring project details\nCustom horizontal rules using Font Awesome icons\nCustom outline button style\nMobile friendly contact form with floating form labels\nEasy to edit PHP file to make the contact form send messages\nIncludes jqBootstrapValidation plugin for contact form validation",
+            "tags":"bootstrap, landing-pages, one-page, portfolios",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/freelancer.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/freelancer/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-freelancer/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-freelancer/archive/v1.0.5.zip"
+            }
+        },
+        {
+            "key":7,
+            "name":"Creative",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A one page creative theme.",
+            "text":"Creative is a one page Bootstrap theme for creatives, small businesses, and other multipurpose uses. The theme includes a number of rich features and plugins that you can use as a great boilerplate for your next Bootstrap based project!",
+            "features":"Fully responsive\nCustom fixed navigation menu with scrolling animations\nLESS files included for deeper customization options\nIncludes powerful plugins for added functionality:\nScrollReveal\nMagnific Popup\nFitText\nSemantic markup with nav, sections, and asides\nCustom button styles\nSubtle on page scroll reveal animations\nFull page image header banner with vertically centered content\nUnique, modern design\nFully functional portfolio image grid with hover effects and working lightbox gallery",
+            "tags":"bootstrap, landing-pages, one-page, portfolios",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/creative.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/creative/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-creative/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-creative/archive/v1.0.4.zip"
+            }
+        },
+        {
+            "key":9,
+            "name":"Simple Sidebar",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A Bootstrap sidebar template.",
+            "text":"Simple Sidebar is a basic sidebar menu page layout for Bootstrap websites with off canvas navigation on smaller screen sizes.",
+            "features":"RespoResponsive Bootstrap sidebar navigation\nOff-canvas navigation toggling on smaller screens\nResponsive page content areansive Bootstrap sidebar navigation",
+            "tags":"bootstrap, navigation-menus, unstyled",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/simple-sidebar.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/simple-sidebar/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-simple-sidebar/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/archive/v1.0.5.zip"
+            }
+        },
+        {
+            "key":10,
+            "name":"One Page Wonder",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A simple one page website template.",
+            "text":"One Page Wonder is an unstyled Bootstrap 3 starter template for quickly creating one page websites in Bootstrap.",
+            "features":"Fully responsive\nFixed top navigation menu\nHeader with repeating background image (editable in the CSS)\nResponsive content sections with images and text",
+            "tags":"bootstrap, landing-pages, one-page, portfolios, unstyled",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/one-page-wonder.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/one-page-wonder/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-one-page-wonder/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-one-page-wonder/archive/v1.0.4.zip"
+            }
+        },
+        {
+            "key":11,
+            "name":"Landing Page",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A clean, functional landing page theme.",
+            "text":"Landing Page is a responsive landing page theme for Bootstrap 3.",
+            "features":"Fixed top navigation menu\nCustom social buttons using Font Awesome icons\nPerfectly responsive content sections\nCall to action with a full page width background image\nStock photography from Death to the Stock Photo\nDevice mockups from PSDcovers",
+            "tags":"bootstrap, landing-pages, one-page, portfolios",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/landing-page.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/landing-page/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-landing-page/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-landing-page/archive/v1.0.5.zip"
+            }
+        },
+        {
+            "key":12,
+            "name":"Bare",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A Bootstrap HTML starter template.",
+            "text":"An unstlyed starter template for Bootstrap 3 with predefined file paths for easy development.",
+            "features":"Preset file paths\nFixed top navigation",
+            "tags":"bootstrap, one-page, unstyled, navigation-menus",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/bare.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/bare/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-bare/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-bare/archive/v1.0.4.zip"
+            }
+        },
+        {
+            "key":13,
+            "name":"Grayscale",
+            "targets":"jee",
+            "ternModules":"jquery, bootstrap",
+            "author":"Start Bootstrap",
+            "price":0,
+            "description":"A multipurpose one page theme.",
+            "text":"Grayscale is a multipurpose, one page website theme featuring a dark layout along with smooth scrolling page animations.",
+            "features":"LESS files and compiled CSS included\nFixed top navigation that collapses on scroll\nSmooth scrolling animations\nScrollspy that highlights active page sections\nCustom outline button style\nGoogle Maps API integration with a custom Google Maps skin by Snazzy Maps\nEasy to edit custom PNG map marker",
+            "tags":"bootstrap, landing-pages, one-page, portfolios",
+            "urls":{
+                "thumbnail":"http://sbootstrap.startbootstrapc.netdna-cdn.com/img/templates/grayscale.jpg",
+                "detail":"http://startbootstrap.com/template-overviews/grayscale/",
+                "preview":"http://blackrockdigital.github.io/startbootstrap-grayscale/",
+                "download":"https://github.com/BlackrockDigital/startbootstrap-grayscale/archive/v1.0.6.zip"
+            }
+        }
+    ],
+    "recommendations":{
+        "jee":[
+            1,
+            2,
+            10,
+            13
+        ]
+    }
+}

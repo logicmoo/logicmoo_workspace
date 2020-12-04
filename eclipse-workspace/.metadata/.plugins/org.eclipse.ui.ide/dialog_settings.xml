@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="NewWizardAction">
+		<item value="ar.com.tadp.prolog.newProject.wizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.ui.Basic"/>
+			<item value="angular.cli"/>
+			<item value="arden.plugin.editor.ui.wizard.category"/>
+			<item value="bndtools.wizardCategory"/>
+			<item value="org.eclipse.birt.report.designer.ui.wizard.category"/>
+			<item value="org.eclipse.cdt.ui.newCWizards"/>
+			<item value="org.jboss.tools.cdi.ui"/>
+			<item value="org.eclipse.team.cvs.ui.newWizards"/>
+			<item value="org.eclipse.emf.codegen.ecore.ui.wizardCategory"/>
+			<item value="org.eclipse.jst.ejb.ui"/>
+			<item value="org.eclipse.emf.parsley.wizards"/>
+			<item value="org.eclipse.gdt.wizards"/>
+			<item value="com.google.gdt.eclipse.suite.newWizards"/>
+			<item value="org.eclipse.buildship.ui.creationwizards"/>
+			<item value="pl.poznan.put.cs.gui4pddl"/>
+			<item value="net.sf.eclipsefp.haskell.ui.newWizardCategory"/>
+			<item value="org.jactr.eclipse.ui.wizards.actrCategory"/>
+			<item value="org.eclipse.jdt.ui.java"/>
+			<item value="ar.com.tadp.prolog.category"/>
+		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="628" key="DIALOG_X_ORIGIN"/>
+		<item value="359" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

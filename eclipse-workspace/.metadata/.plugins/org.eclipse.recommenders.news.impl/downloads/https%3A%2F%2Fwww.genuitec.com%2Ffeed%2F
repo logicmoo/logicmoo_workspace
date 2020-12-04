@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Genuitec</title>
+	<atom:link href="https://www.genuitec.com/feed/" rel="self" type="application/rss+xml" />
+	<link>https://www.genuitec.com</link>
+	<description>The Cloud Control Company</description>
+	<lastBuildDate>Wed, 04 Apr 2018 20:47:06 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=4.9.2</generator>
+	<item>
+		<title>CodeMix &#8211; Technical Preview Now Available</title>
+		<link>https://www.genuitec.com/codemix-technical-preview/</link>
+		<pubDate>Tue, 03 Apr 2018 16:49:09 +0000</pubDate>
+		<dc:creator><![CDATA[Brian Fernandes]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[codemix]]></category>
+		<category><![CDATA[codemix release]]></category>
+		<category><![CDATA[sneak peek release]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=577714</guid>
+		<description><![CDATA[<p>Today, we’ve shipped to the the Eclipse community our technical preview of CodeMix. What is CodeMix, how do you install it, what makes it so cool? Read on for the details.What is CodeMix?CodeMix is a technology that allows developers to take advantage of the wide array of tooling, language, and framework support that is available with [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/codemix-technical-preview/">CodeMix &#8211; Technical Preview Now Available</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>MyEclipse 2018 &#8211; Where Art Thou?</title>
+		<link>https://www.genuitec.com/myeclipse-2018-art-thou/</link>
+		<pubDate>Thu, 15 Mar 2018 13:37:06 +0000</pubDate>
+		<dc:creator><![CDATA[Brian Fernandes]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[codemix]]></category>
+		<category><![CDATA[eclipse extensions]]></category>
+		<category><![CDATA[eclipse plugins]]></category>
+		<category><![CDATA[myeclipse 2018]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=562545</guid>
+		<description><![CDATA[<p>MyEclipse 2017 was first released in January 2017, and its most recent release, 2017 CI 10, was in December 2017. We will probably have a couple additional 2017 releases to round off that stream as well … so where’s MyEclipse 2018?The short answer &#8211; MyEclipse 2018 is coming in May, with one game-changing addition, CodeMix! [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/myeclipse-2018-art-thou/">MyEclipse 2018 &#8211; Where Art Thou?</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>CodeMix &#8211; A Genesis</title>
+		<link>https://www.genuitec.com/codemix-a-genesis/</link>
+		<pubDate>Thu, 01 Mar 2018 15:57:31 +0000</pubDate>
+		<dc:creator><![CDATA[timwebb]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[codemix]]></category>
+		<category><![CDATA[VS code]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=559248</guid>
+		<description><![CDATA[<p>What if we could give Eclipse developers access to the rich catalog of VS Code extensions and advanced development that Code offers? And that’s when CodeMix was born. By providing VS Code smarts inside Eclipse, we no longer have to play catch-up, and our customers can realize the benefits and combined effect Code &#038; Eclipse provide with all the great advances in the technology world.</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/codemix-a-genesis/">CodeMix &#8211; A Genesis</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Angular Observables and Promises &#8211; How to Use Them</title>
+		<link>https://www.genuitec.com/angular-observables-and-promises/</link>
+		<pubDate>Wed, 21 Feb 2018 14:43:29 +0000</pubDate>
+		<dc:creator><![CDATA[dunebook7]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[observables]]></category>
+		<category><![CDATA[promises]]></category>
+		<category><![CDATA[RxJS]]></category>
+		<category><![CDATA[using promises and observables]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=556961</guid>
+		<description><![CDATA[<p>Angular, as we all know, is a JavaScript framework that makes it easy to build web applications. RxJS is really about bringing the principles of functional programming to JavaScript.Functional Programming in JavaScript?It all started with the rise of asynchronicity or asynchronous JavaScript,where we have data that is flowing through our application coming from different sources, [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/angular-observables-and-promises/">Angular Observables and Promises &#8211; How to Use Them</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Top Angular Courses &#8211; Our Ten Picks!</title>
+		<link>https://www.genuitec.com/top-angular-courses/</link>
+		<pubDate>Thu, 15 Feb 2018 18:21:33 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[Angular]]></category>
+		<category><![CDATA[angular 2]]></category>
+		<category><![CDATA[Angular 4]]></category>
+		<category><![CDATA[angular 5]]></category>
+		<category><![CDATA[angular courses]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=550821</guid>
+		<description><![CDATA[<p>You just know that frontend development is your cup of tea, but where do you start your adventure? Or perhaps you already have some skills and are wondering how to continue. Today we would like to share our choice of the top Angular courses, going from general, all-inclusive ones to area-specific.Angular &#8211; the Whole ThingAngular [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/top-angular-courses/">Top Angular Courses &#8211; Our Ten Picks!</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>2017 CI 11 &#8211; Sprucing up Your IDE</title>
+		<link>https://www.genuitec.com/2017-ci-11-sprucing-up-ide/</link>
+		<pubDate>Tue, 13 Feb 2018 15:57:32 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[2017 CI 11 release]]></category>
+		<category><![CDATA[new release]]></category>
+		<category><![CDATA[software updates]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=550554</guid>
+		<description><![CDATA[<p>2017 is over, but our commitment to improving our products continues, as we bring to you our 2017 CI 11 release. It comes with key fixes and improvements in the TypeScript space, as well as the new two-way theme sharing in DevStyle, among others.NOTE: This release does not include MyEclipse, which will be released shortly.Angular [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/2017-ci-11-sprucing-up-ide/">2017 CI 11 &#8211; Sprucing up Your IDE</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Angular 5 Authentication: Getting Started</title>
+		<link>https://www.genuitec.com/angular-5-authentication/</link>
+		<pubDate>Tue, 06 Feb 2018 15:05:21 +0000</pubDate>
+		<dc:creator><![CDATA[Bob at Genuitec]]></dc:creator>
+				<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[angular and firebase integration]]></category>
+		<category><![CDATA[authentication in Angular 5]]></category>
+		<category><![CDATA[firebase integration]]></category>
+		<category><![CDATA[firestore database]]></category>
+		<category><![CDATA[set up authentication]]></category>
+		<category><![CDATA[set up authentication in Angular 5]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=547349</guid>
+		<description><![CDATA[<p>In this tutorial, we are going to build an Angular 5 authentication system using Google’s Cloud Firestore. Most of the applications we build require some kind of authentication, and the simplest and fastest way to get started with that is by using the Firestore &#8211; a flexible, scalable database for mobile, web and server development. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/angular-5-authentication/">Angular 5 Authentication: Getting Started</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Eclipse — Still the Best IDE!</title>
+		<link>https://www.genuitec.com/eclipse-still-best-ide/</link>
+		<pubDate>Wed, 31 Jan 2018 07:07:38 +0000</pubDate>
+		<dc:creator><![CDATA[Brian Fernandes]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Planet Eclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[eclipse features]]></category>
+		<category><![CDATA[webclipse]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=548306</guid>
+		<description><![CDATA[<p>As a developer, you’ve probably grown to love using an IDE — but in the modern coding universe of choices, how do you choose the best IDE? While some might try to convince you that the &#8220;cool kids&#8221; are using IntelliJ, whether you’re looking for your first IDE, or being pressured into switching, here are some reasons [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/eclipse-still-best-ide/">Eclipse — Still the Best IDE!</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Angular 5, Firebase, and Angular Universal: Creating a Blog – Part 1</title>
+		<link>https://www.genuitec.com/angular-5-firebase-angular-universal/</link>
+		<pubDate>Wed, 24 Jan 2018 16:13:44 +0000</pubDate>
+		<dc:creator><![CDATA[Bob at Genuitec]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[angular 5]]></category>
+		<category><![CDATA[Angular Universal]]></category>
+		<category><![CDATA[creating a blog]]></category>
+		<category><![CDATA[Firebase]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=544600</guid>
+		<description><![CDATA[<p>We will be creating a blog using Angular 5, and Firebase in a 3 part series &#8211; our app will allow for easy creation and publishing of blog posts. A normal Angular application executes in the browser, rendering pages in the DOM in response to user actions. In order to improve the user experience, we want [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/angular-5-firebase-angular-universal/">Angular 5, Firebase, and Angular Universal: Creating a Blog – Part 1</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Maven Dependency Management &#8211; without Going Full Maven</title>
+		<link>https://www.genuitec.com/maven-dependency-management-without-full-maven/</link>
+		<pubDate>Thu, 11 Jan 2018 18:27:17 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[dependencies]]></category>
+		<category><![CDATA[dependency management]]></category>
+		<category><![CDATA[maven]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=533788</guid>
+		<description><![CDATA[<p>You may have already discovered the joys of managing your projects with Maven, thanks to a virtually endless range of features it has to offer. Whether you are a newbie or a pro, using it in MyEclipse will take it to a whole new level if you are looking for a better experience inside an [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/maven-dependency-management-without-full-maven/">Maven Dependency Management &#8211; without Going Full Maven</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Creating Twitter Clone Using HTML, CSS, jQuery</title>
+		<link>https://www.genuitec.com/creating-twitter-clone-using-html-css-jquery/</link>
+		<pubDate>Mon, 08 Jan 2018 13:38:09 +0000</pubDate>
+		<dc:creator><![CDATA[Bob at Genuitec]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[create twitter clone]]></category>
+		<category><![CDATA[twitter clone]]></category>
+		<category><![CDATA[webclipse]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=545434</guid>
+		<description><![CDATA[<p>In this project, we are going to create a Twitter clone using HTML, CSS and jQuery only. We will create the Registration screen and Twitter wall, where you can post tweets up to 250 characters in length. You can also retweet and like the tweets. However, since we are not using any server and database, [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/creating-twitter-clone-using-html-css-jquery/">Creating Twitter Clone Using HTML, CSS, jQuery</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Happy Holidays &#8211; from Our Family to Yours!</title>
+		<link>https://www.genuitec.com/happy-holidays-family/</link>
+		<pubDate>Sat, 23 Dec 2017 13:23:56 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[General]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[Happy Holidays]]></category>
+		<category><![CDATA[holiday greetings]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=545674</guid>
+		<description><![CDATA[<p>It’s that time of the year again &#8211; the time to enjoy a break from the everyday duties, accompanied by our loved ones! At Genuitec we would like to wish you a wonderful holiday season filled with great times and awesome food! We already got our party hats out (as you can see)! Our U.S. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/happy-holidays-family/">Happy Holidays &#8211; from Our Family to Yours!</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>MyEclipse 2017 Stable 2.0 is Ready for Your Holiday Table!</title>
+		<link>https://www.genuitec.com/myeclipse-2017-stable-2-0-is-ready/</link>
+		<pubDate>Fri, 22 Dec 2017 21:53:32 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[myeclipse 2017 stable 2.0]]></category>
+		<category><![CDATA[myeclipse release]]></category>
+		<category><![CDATA[myeclipse updates]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=545684</guid>
+		<description><![CDATA[<p>The long wait between the first stable release of the year and this one has definitely paid off: 2017 Stable 2.0 sums up the work done in the last six CI releases! Thus, you can fully enjoy this holiday season, knowing that when you jump back into your work, you can rely on Angular 5 [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/myeclipse-2017-stable-2-0-is-ready/">MyEclipse 2017 Stable 2.0 is Ready for Your Holiday Table!</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>2017 CI 10 &#8211; Our Holiday Gift is Here</title>
+		<link>https://www.genuitec.com/2017-ci-10-holiday-gift/</link>
+		<pubDate>Fri, 22 Dec 2017 13:18:37 +0000</pubDate>
+		<dc:creator><![CDATA[Wanda Muriy]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[2017 CI 10 release]]></category>
+		<category><![CDATA[new release]]></category>
+		<category><![CDATA[software updates]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=545604</guid>
+		<description><![CDATA[<p>We are getting more and more in the holiday mood! Need proof? Our 2017 CI 10 is out the door, bringing you the best present right before the holidays &#8211; a release focused on critical fixes across our products. And if you happened to experience a critical crash on macOS High Sierra, it won’t happen [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/2017-ci-10-holiday-gift/">2017 CI 10 &#8211; Our Holiday Gift is Here</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+		</item>
+		<item>
+		<title>Create a Note Taking App Using Angular</title>
+		<link>https://www.genuitec.com/create-note-taking-app-using-angular/</link>
+		<pubDate>Mon, 11 Dec 2017 12:51:59 +0000</pubDate>
+		<dc:creator><![CDATA[Bob at Genuitec]]></dc:creator>
+				<category><![CDATA[Eclipse]]></category>
+		<category><![CDATA[Genuitec]]></category>
+		<category><![CDATA[MyEclipse]]></category>
+		<category><![CDATA[Programming Tips]]></category>
+		<category><![CDATA[Webclipse]]></category>
+		<category><![CDATA[create a note taking app]]></category>
+		<category><![CDATA[note taking app]]></category>
+		<category><![CDATA[note taking app with Angular]]></category>
+		<category><![CDATA[write a note taking app]]></category>
+
+		<guid isPermaLink="false">https://www.genuitec.com/?p=542885</guid>
+		<description><![CDATA[<p>In this Angular tutorial, we are going to create a Note Taking App using Angular IDE.Create New Angular ProjectWe’re going to be using Angular IDE in this tutorial, though you can use Webclipse or MyEclipse, following exactly the same steps. Before beginning, do ensure you are in the Angular Perspective (Window &#62; Perspective &#62; Open Perspective [&#8230;]</p>
+<p>The post <a rel="nofollow" href="https://www.genuitec.com/create-note-taking-app-using-angular/">Create a Note Taking App Using Angular</a> appeared first on <a rel="nofollow" href="https://www.genuitec.com">Genuitec</a>.</p>
+]]></description>
+<enclosure url="https://resources.cloud.genuitec.com/wp-content/uploads/2017/11/note-taking-app-video-1.mp4" length="2433162" type="video/mp4" />
+<enclosure url="https://resources.cloud.genuitec.com/wp-content/uploads/2017/11/note-taking-app-video-2.mp4" length="378943" type="video/mp4" />
+		</item>
+	</channel>
+</rss>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.w3-edge.com/products/
+
+Page Caching using disk: enhanced (SSL caching disabled) 
+Content Delivery Network via resources.cloud.genuitec.com
+Database Caching 138/145 queries in 0.033 seconds using disk
+
+Served from: www.genuitec.com @ 2018-04-05 01:05:17 by W3 Total Cache
+-->

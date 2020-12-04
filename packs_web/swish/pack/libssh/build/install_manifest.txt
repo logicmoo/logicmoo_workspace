@@ -1,0 +1,1 @@
+/opt/logicmoo_workspace/packs_web/swish/pack/libssh/lib/x86_64-linux/sshd4pl.so

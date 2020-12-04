@@ -1,0 +1,1238 @@
+---------------------------------
+Sun Mar 25 13:31:44 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Action (h for help) ? ---------------------------------
+Sun Mar 25 14:08:46 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Action (h for help) ? ---------------------------------
+Sun Mar 25 15:18:31 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Mar 25 15:31:01 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Mar 25 15:34:55 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+[3;J[H[2Jreset: standard error: Inappropriate ioctl for device
+
+]50;ClearScrollbackc[3J---------------------------------
+Sun Mar 25 16:22:17 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Action (h for help) ? ---------------------------------
+Sun Mar 25 16:25:49 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Mar 25 16:32:07 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/eclipse-ide-java/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/eclipse-ide-java/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Failed to analyse:
+'<head>' :-
+	(   phrase(" ", A, _),
+	    append(B, A, D)
+	->  number_codes(C, B)
+	;   number_codes(C, D)
+	).
+% Found new meta-predicates in iteration 1 (1.771 sec)
+% :- meta_predicate ctc_lists:aformat(*,+,:).
+% :- meta_predicate ctc_lists:traverseList(*,*,0).
+% :- meta_predicate ctc_util_files:consult_if_not_yet(:,:).
+% :- meta_predicate ctc_util_files:with_input_from(*,0).
+% :- meta_predicate ctc_util_files:with_output_to_file(*,*,0).
+% :- meta_predicate ctc_util_files:predicate_loaded_from(:,*).
+% :- meta_predicate count:count_unique(0,*,*).
+% :- meta_predicate count:count_all_and_unique(0,*,*).
+% :- meta_predicate count:count(0,*).
+% :- meta_predicate count:count_and_print(0,*).
+% :- meta_predicate count:count_facts(:,*).
+% :- meta_predicate pdt_call_analysis:assert_result(*,:,*,*).
+% :- meta_predicate pdt_xref:find_unique(^).
+% :- meta_predicate pdt_xref:assert_result(*,*,:,*,*).
+% :- meta_predicate logging:do_with_logging_enabled(0).
+% :- meta_predicate logging:do_with_logging_disabled(0).
+% :- meta_predicate logging:consult_silent(:).
+% :- meta_predicate logging:assert_logging(database).
+% :- meta_predicate logging:consult_silent_if_logging_disabled(:).
+% :- meta_predicate logging:log(+,+,:).
+% :- meta_predicate logging:write_on_stdout(+,:).
+% :- meta_predicate database:assert_unique_fact([0,database]).
+% :- meta_predicate listing:listing_if_defined(:).
+% :- meta_predicate consult_server:iterate_solutions(*,*,0,*).
+% :- meta_predicate consult_server:call_save(*,0).
+% :- meta_predicate consult_server:my_format(+,:).
+% :- meta_predicate consult_server:one_solution(*,0,*).
+% :- meta_predicate consult_server:with_interrupts(*,0).
+% :- meta_predicate consult_server:solutions_until_cut(*,0,*).
+% :- meta_predicate consult_server:all_solutions(*,0,*).
+% :- meta_predicate consult_server:my_format(+,+,:).
+% :- meta_predicate properties:look_for_kind_and_property(:,*,?).
+% :- meta_predicate properties:entity_property(:,*,*).
+% :- meta_predicate properties:add_properties_to_list(:,*,*,*,*).
+% :- meta_predicate pdt_prolog_codewalk:pdt_prolog_walk_code(:).
+% :- meta_predicate pdt_prolog_codewalk:undefined(:,*,*).
+% :- meta_predicate pdt_prolog_codewalk:walk_called_by_pred(:,*).
+% :- meta_predicate ctc_time:ctc_time(0,*,*).
+% :- meta_predicate ctc_time:ctc_time(0,*).
+% :- meta_predicate utils4modules:assert_in_module(*,database).
+% :- meta_predicate utils4modules:retract_in_module(*,database).
+% :- meta_predicate utils4modules:retractall_in_module(*,database).
+% :- meta_predicate utils4modules:assert_in_module(*,database,*).
+% :- meta_predicate pl_to_graphML:hide_pdt_predicates(:).
+% :- meta_predicate pl_to_graphML:hide_swi_metapredicates(:).
+% :- meta_predicate pl_to_graphML:hide_pdt_metapredicates(:).
+% :- meta_predicate pl_to_graphML:hide_swi_predicates(:).
+% :- meta_predicate database_cache:retractall_generated_in_module(*,database).
+% :- meta_predicate database_cache:generate_in_module(*,database,0,*).
+% :- meta_predicate pdt_call_graph:assert_edge(:,:,*,*).
+% :- meta_predicate general:has_property(:,?,*).
+% :- meta_predicate general:prolog_iteration_via_backtracking(0).
+% :- meta_predicate general:built_in(:).
+% :- meta_predicate general:repeat_n_times_loop(0,*).
+% :- meta_predicate user:mapPredicate(has_arity(3,0),*,*,*).
+% :- meta_predicate user:retractT([0,database]).
+% :- meta_predicate user:my_call_cleanup(0,0).
+% :- meta_predicate user:printf(+,:).
+% :- meta_predicate user:assert1T([0,database]).
+% :- meta_predicate user:index_information(:,*).
+% :- meta_predicate pdt_search:find_lines(:,*,*,*).
+% Restarting analysis ...
+% Found new meta-predicates in iteration 1 (0.014 sec)
+% :- meta_predicate consult_server:all_solutions(+,0,*).
+% :- meta_predicate consult_server:iterate_solutions(*,+,0,*).
+% :- meta_predicate consult_server:one_solution(+,0,*).
+% :- meta_predicate consult_server:solutions_weak_until_cut(+,0,*).
+% :- meta_predicate ctc_time:performance(0,*,*).
+% :- meta_predicate ctc_time:performance(0,*,*,*).
+% :- meta_predicate ctc_time:performanceUnique(0,*,*,*).
+% :- meta_predicate ctc_util_files:export_goal_output(*,0).
+% :- meta_predicate ctc_util_files:with_output_to_file(*,0).
+% :- meta_predicate database:assert_unique([0,database]).
+% :- meta_predicate database:assert_unique_ground_fact([0,database]).
+% :- meta_predicate database_cache:generate_all_in_module(*,database,*,*).
+% :- meta_predicate database_cache:generate_in_module(*,database,0).
+% :- meta_predicate general:all(0).
+% :- meta_predicate general:repeat_n_times(0,*).
+% :- meta_predicate logging:ctc_error(*,:).
+% :- meta_predicate logging:log_on_stdout(+,:).
+% :- meta_predicate logging:silent(0).
+% :- meta_predicate logging:verbose(0).
+% :- meta_predicate pdt_call_graph:pdt_walk_code(:).
+% :- meta_predicate properties:get_property_list(:,*,*,*).
+% :- meta_predicate utils4modules:move_module_predicate(*,*,database).
+% :- meta_predicate utils4modules:replace_module_predicate(*,database,database).
+% Restarting analysis ...
+% Found new meta-predicates in iteration 1 (0.009 sec)
+% :- meta_predicate ctc_util_files:export_all_results(*,0).
+% :- meta_predicate ctc_util_files:with_output_to_folder(*,*,0).
+% :- meta_predicate database_cache:generate_all_in_module(*,database,*).
+% :- meta_predicate database_cache:generate_all_in_module(*,database,0,*).
+% :- meta_predicate logging:ctc_info(*,:).
+% :- meta_predicate logging:ctc_warning(*,:).
+% :- meta_predicate logging:log_once_to_file(*,0).
+% Restarting analysis ...
+% Found new meta-predicates in iteration 1 (0.001 sec)
+% :- meta_predicate ctc_util_files:report_to_file_in_ctchome(0,*).
+% :- meta_predicate ctc_util_files:with_output_to_folder(*,0).
+% :- meta_predicate database_cache:generate_all_in_module(*,database,0).
+% Restarting analysis ...
+% Found new meta-predicates in iteration 1 (0.000 sec)
+% :- meta_predicate ctc_util_files:report_to_file(*,0).
+% :- meta_predicate ctc_util_files:report_to_file_in_ctchome(0).
+% Restarting analysis ...
+% Found new meta-predicates in iteration 1 (0.000 sec)
+% :- meta_predicate ctc_util_files:report_to_file_ctc(0).
+% Restarting analysis ...
+---------------------------------
+Sun Mar 25 18:50:56 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Mar 25 18:58:18 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Mar 25 21:31:53 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+prologmud_server
+prologmud_server
+---------------------------------
+Wed Mar 28 02:08:49 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 19:12:48 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 20:56:09 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:18:12 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:37:48 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:40:35 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:50:00 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:50:21 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 21:50:52 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+[Thread 10 (pdt_console_client_0_Default Process) at Thu Mar 29 22:42:52 2018] pl-srcfile.c:1322: endReconsult: Assertion failed: reload->pred_access_count == popNPredicateAccess(0)
+C-stack trace labeled "assert_fail":
+  [0] save_backtrace() at :? [0x7fc6936a4264]
+  [1] __assert_fail() at ??:? [0x7fc693673227]
+  [2] endReconsult() at pl-srcfile.c:? [0x7fc693663cb7]
+  [3] pl_end_consult1_va() at pl-srcfile.c:? [0x7fc693664f35]
+  [4] PL_next_solution() at ??:? [0x7fc6935ebac2]
+  [5] callCleanupHandler.part.51() at pl-wam.c:? [0x7fc6935f3439]
+  [6] frameFinished() at pl-wam.c:? [0x7fc6935f3578]
+  [7] PL_next_solution() at ??:? [0x7fc6935ed734]
+  [8] callProlog() at :? [0x7fc69362bf8c]
+  [9] pl_notrace1_va() at pl-pro.c:? [0x7fc69362c16b]
+  [10] PL_next_solution() at ??:? [0x7fc6935ebac2]
+  [11] query_loop() at :? [0x7fc69362ba7f]
+  [12] pl_break() at :? [0x7fc69362bcbf]
+  [13] PL_next_solution() at ??:? [0x7fc6935ebba4]
+  [14] callProlog() at :? [0x7fc69362bf8c]
+  [15] start_thread() at pl-thread.c:? [0x7fc69365c4c2]
+  [16] start_thread() at ??:? [0x7fc6933996ba]
+  [17] clone() at /build/glibc-Cl5G7W/glibc-2.23/misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:111 [0x7fc6930cf41d]
+---------------------------------
+Thu Mar 29 22:51:51 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 22:52:30 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 22:52:32 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:26 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 22:57:38 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 23:00:42 PDT 2018
+---------------------------------
+ERROR: Prolog initialisation failed:
+ERROR: script_file `'$LOGTALKHOME/integration/logtalk_swi.pl'' does not exist
+---------------------------------
+Thu Mar 29 23:00:42 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:00:43 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:00:45 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:05:58 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:06:10 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:07:24 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:07:28 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:08:34 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Mar 29 23:11:06 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Thread 27 (client_localhost_inst_1@login_and_run_nodbg_3000): foreign predicate system:retractall/1 did not clear exception: 
+	error(io_error(write,user_error),context(system:format/3,Invalid argument))
+---------------------------------
+Thu Mar 29 23:33:06 PDT 2018
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+% There are no extra packages installed.
+% Please visit http://www.swi-prolog.org/pack/list.
+---------------------------------
+Sun Aug 18 01:43:31 PDT 2013
+---------------------------------
+% The graphical front-end will be used for subsequent tracing
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Sun Aug 18 04:10:46 PDT 2013
+---------------------------------
+ERROR: /tmp/socketProcess3962548717034862628.tmp:29:
+	'<meta-call>'/1: Undefined procedure: guitracer/0
+Warning: /tmp/socketProcess3962548717034862628.tmp:29:
+	Goal (directive) failed: user:(current_prolog_flag(dialect,swi)->guitracer;true)
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+Installed packages (68):
+
+i aleph@5                   - Aleph Inductive Logic Prorgramming system
+i arouter@1.1.1             - Alternative HTTP path router
+i assertions@0.0.1          - Assertion Reader for SWI-Prolog
+i auc@1.0                   - Library for computing Areas Under the Receiving Operating Charactersitics and Precision Recall curves
+i blog_core@1.1.1           - Blog/CMS framework
+i clause_attvars@1.1.118    - An alternate interface to the clause database to allow attributed variables to be asserted
+i cplint@3.1.0              - A suite of programs for reasoning with probabilistic logic programs
+i cplint_r@1.0.0            - R plotting predicates for cplint
+i dict_schema@0.0.2         - Dict converter and validator
+i dictoo@1.1.118            - Dict-like OO Syntax
+i docstore@2.0.1            - Document-oriented database for Prolog
+i each_call_cleanup@1.1.118 - Each Call Redo Setup and Cleanup
+i eggdrop@1.1.118           - Hook up to an existing IRC Client called an Eggdrop
+i ffi@0.1                   - Dynamically call C functions
+i file_scope@1.1.118        - File local scoped efects
+i func@0.4.2                - Function application and composition
+i function_expansion@0.1.2  - Help for writing function-like macros
+i gvar_syntax@1.1.118       - Global Variable Syntax
+i hdt@0.1                   - Access RDF HDT files
+i hook_hybrid@1.1.118       - Hook assert retract call of *specific* predicates
+i instant_prolog_docs@1.1.118 - Magically document prolog source files based on predicate and variable naming conventions
+i lambda@1.0.0              - Lambda expressions
+i lbfgs@1.0                 - An interface to call libLBFGS from within SWI-Prolog
+i lib_atts@1.1.118          - Common atts.pl interface like https://sicstus.sics.se/sicstus/docs/4.0.0/html/sicstus/lib_002datts.html
+i list_util@0.12.0          - Predicates for working with lists
+i logicmoo_base@1.1.118     - LogicMOO - Extends Prolog Programming to support Dynamic Epistemic Logic (DEL) with Constraints
+i logicmoo_experimental@1.1.118 - Various experimental packages - warning: HUGE amount of test data
+i logicmoo_nlu@1.1.114      - Various English to Logic Convertors - warning: HUGE amount of test data
+i logicmoo_packages@1.1.118 - Various packages - warning: HUGE amount of test data
+i logicmoo_planner@1.1.118  - Various PDDLish planners - warning: HUGE amount of test data
+i logicmoo_planners@1.1.118 - Various Hybrid HTN Planners speaking PDDLish and OCLh
+i logicmoo_utils@1.1.118    - Common predicates used by external Logicmoo Utils and Base
+i logtalk@3.14.0            - Logtalk - Object-Oriented Logic Programming Language
+i loop_check@1.1.118        - New simple loop checking
+i markdown@0.0.2            - Markdown parser for SWI-Prolog
+i matrix@1.0                - Operations with matrices
+i mpi@1.0                   - Porting of the LAMMPI library of Yap Prolog to SWI-Prolog
+i multimodal_dcg@1.1.118    - Reduce floundering of DCGs by constraining and narrowing search
+i multivar@1.1.118          - User defined datatypes
+i must_trace@1.1.118        - Trace with your eyeballs instead of your fingers
+i no_repeats@1.1.118        - New ways to avoid duplicate solutions
+i pcache@0.1.0              - Persistent answer cache
+i pfc@1.1.118               - Pfc -- a package for forward chaining in Prolog
+i predicate_streams@1.1.118 - Implement your own Abstract Predicate Streams
+i profile@0.1.0             - Manage user profiles
+i prologmud@1.1.118         - Online text adventure game - MUD Server
+i prologmud_samples@1.1.118 - Online text adventure game - Sample
+i real@2.0                  - Integrative statistics with R
+i rocksdb@0.7.0             - SWI-Prolog interface to RocksDB
+i rserve_client@1.1.0       - R Rserve client
+i rtchecks@0.0.1            - Run-Time Checker for Assertions
+i s_expression@1.1.118      - Utilities for Handling of S-Expression Lisp/Scheme-Like forms and parsing of KIF, GDL, PDDL, CLIF
+i simple_template@1.2.0     - Logic-free text (HTML) templates
+i slack_prolog@1.1.118      - Prolog interface to Slack http://www.slack.com
+i sldnfdraw@1.6             - SLDNF Draw is a Prolog program that draws SLDNF Trees in LaTeX
+i smtp@1.0.0                - An (E)SMTP client for sending mail
+i sort_dict@0.0.3           - Sorts dicts by key
+i subclause_expansion@1.1.118 - More use specific versions of term/goal expansion hooks
+i tabling_dra@1.1.118       - SWI-Prolog interface to Table-handling procedures for the "dra" interpreter. Written by Feliks Kluzniak at UTD (March 2009)
+i trill@5.0.0               - A tableau probabilistic reasoner in three different versions
+i wam_common_lisp@1.1.118   - ANSI Common Lisp implemented in Prolog
+i with_open_options@1.1.118 - Utilities to open various objects for read/write
+i with_thread_local@1.1.118 - Call a Goal with local assertions
+i wordnet@0.9.1             - Access to WordNet database
+i xlibrary@0.0.2            - Extended Libraries for Prolog
+i xlisting@1.1.118          - Selective Interactive Non-Deterministic Tracing
+i xlisting_web@1.1.118      - Manipulate and browse prolog runtime over www
+i xtools@0.0.2              - Extended Tools for SWI-Prolog
+---------------------------------
+Sun Aug 18 04:26:17 PDT 2013
+---------------------------------
+ERROR: /tmp/socketProcess2484568890693399486.tmp:29:
+	'<meta-call>'/1: Undefined procedure: guitracer/0
+Warning: /tmp/socketProcess2484568890693399486.tmp:29:
+	Goal (directive) failed: user:(current_prolog_flag(dialect,swi)->guitracer;true)
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+
+SWI-Prolog [thread 6 () at Sun Aug 18 05:57:44 2013]: received fatal signal 11 (segv)
+C-stack trace labeled "crash":
+  [0] save_backtrace() at :? [0x7f5237138264]
+  [1] print_c_backtrace() at :? [0x7f523713843e]
+  [2] sigCrashHandler() at :? [0x7f5237138531]
+  [3] dispatch_signal() at :? [0x7f52370d98fb]
+  [4] __restore_rt() at ??:? [0x7f5236e37390]
+  [5] __nss_passwd_lookup() at /build/glibc-Cl5G7W/glibc-2.23/string/../sysdeps/x86_64/multiarch/memcmp-sse4.S:1350 [0x7f5236bcb75b]
+  [6] SetTtyState() at pl-os.c:? [0x7f5237122ccc]
+  [7] PopTty() at ??:? [0x7f5237124559]
+  [8] raw_read() at pl-read.c:? [0x7f52370cc7d4]
+  [9] pl_raw_read2() at :? [0x7f52370d2958]
+  [10] PL_next_solution() at ??:? [0x7f523707fb44]
+  [11] query_loop() at :? [0x7f52370bfa7f]
+  [12] pl_break() at :? [0x7f52370bfcbf]
+  [13] PL_next_solution() at ??:? [0x7f523707fba4]
+  [14] callProlog() at :? [0x7f52370bff8c]
+  [15] start_thread() at pl-thread.c:? [0x7f52370f04c2]
+  [16] start_thread() at ??:? [0x7f5236e2d6ba]
+  [17] clone() at /build/glibc-Cl5G7W/glibc-2.23/misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:111 [0x7f5236b6341d]
+Running on_halt hooks with status 139
+Killing 21739 with default signal handlers
+---------------------------------
+Sun Aug 18 05:58:50 PDT 2013
+---------------------------------
+ERROR: /tmp/socketProcess8368484798262206667.tmp:29:
+	'<meta-call>'/1: Undefined procedure: guitracer/0
+Warning: /tmp/socketProcess8368484798262206667.tmp:29:
+	Goal (directive) failed: user:(current_prolog_flag(dialect,swi)->guitracer;true)
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+
+SWI-Prolog [thread 10 () at Sun Aug 18 05:59:03 2013]: received fatal signal 11 (segv)
+C-stack trace labeled "crash":
+  [0] save_backtrace() at :? [0x7f07664b7264]
+  [1] print_c_backtrace() at :? [0x7f07664b743e]
+  [2] sigCrashHandler() at :? [0x7f07664b7531]
+  [3] dispatch_signal() at :? [0x7f07664588fb]
+  [4] __restore_rt() at ??:? [0x7f07661b6390]
+  [5] __nss_passwd_lookup() at /build/glibc-Cl5G7W/glibc-2.23/string/../sysdeps/x86_64/multiarch/memcmp-sse4.S:1350 [0x7f0765f4a75b]
+  [6] SetTtyState() at pl-os.c:? [0x7f07664a1ccc]
+  [7] PopTty() at ??:? [0x7f07664a3559]
+  [8] raw_read() at pl-read.c:? [0x7f076644b7d4]
+  [9] pl_raw_read2() at :? [0x7f0766451958]
+  [10] PL_next_solution() at ??:? [0x7f07663feb44]
+  [11] query_loop() at :? [0x7f076643ea7f]
+  [12] pl_break() at :? [0x7f076643ecbf]
+  [13] PL_next_solution() at ??:? [0x7f07663feba4]
+  [14] callProlog() at :? [0x7f076643ef8c]
+  [15] start_thread() at pl-thread.c:? [0x7f076646f4c2]
+  [16] start_thread() at ??:? [0x7f07661ac6ba]
+  [17] clone() at /build/glibc-Cl5G7W/glibc-2.23/misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:111 [0x7f0765ee241d]
+Running on_halt hooks with status 139
+Killing 21826 with default signal handlers
+---------------------------------
+Sun Aug 18 05:59:43 PDT 2013
+---------------------------------
+ERROR: /tmp/socketProcess252406373170304081.tmp:29:
+	'<meta-call>'/1: Undefined procedure: guitracer/0
+Warning: /tmp/socketProcess252406373170304081.tmp:29:
+	Goal (directive) failed: user:(current_prolog_flag(dialect,swi)->guitracer;true)
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation
+---------------------------------
+Thu Apr 05 02:17:51 PDT 2018
+---------------------------------
+ERROR: /tmp/socketProcess2757814633706963862.tmp:29:
+	'<meta-call>'/1: Undefined procedure: guitracer/0
+Warning: /tmp/socketProcess2757814633706963862.tmp:29:
+	Goal (directive) failed: user:(current_prolog_flag(dialect,swi)->guitracer;true)
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl:15:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/metainference/pdt_prolog_metainference.pl':19:13: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules_visibility.pl':47:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl:17:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/lists.pl':17:50: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/utils4modules.pl':37:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl:19:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/logging.pl':25:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl:22:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/count.pl':29:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl:18:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database.pl':22:3: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl:450:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.common_3.1.2.201603251848/pl/xref/pdt_xref.pl':450:0: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl:25:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.prolog.library_3.1.2.201603251848/pl/database_cache.pl':31:2: Illegal UTF-8 continuation
+Warning: /opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl:20:
+	'/opt/logicmoo_workspace/ide/eclipse/plugins/org.cs3.pdt.editor_3.1.2.201603251848/pl/editor/load.pl':20:42: Illegal UTF-8 continuation

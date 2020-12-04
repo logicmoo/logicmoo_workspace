@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="Search">
+		<list key="Search.processedPageIds">
+			<item value="it.unibz.instasearch.ui.InstaSearchPage"/>
+			<item value="org.eclipse.rse.internal.files.ui.search.searchPage"/>
+			<item value="org.eclipse.search.internal.ui.text.TextSearchPage"/>
+			<item value="org.eclipse.mylyn.tasks.ui.search.page"/>
+			<item value="org.eclipse.cdt.ui.pdomSearchPage"/>
+			<item value="org.eclipse.egit.ui.commitSearchPage"/>
+			<item value="net.sf.eclipsefp.haskell.ui.HaskellSearchPage"/>
+			<item value="org.eclipse.jdt.ui.JavaSearchPage"/>
+			<item value="org.eclipse.wst.jsdt.ui.JavaSearchPage"/>
+			<item value="org.eclipse.papyrus.search.ui.pages.PapyrusSearchPage"/>
+			<item value="org.eclipse.pde.internal.ui.search.SearchPage"/>
+			<item value="ar.com.tadp.ui.PrologSearchPage"/>
+			<item value="org.cs3.pdt.prologSearchPage"/>
+			<item value="com.python.pydev.analysis.search_index.PySearchIndexPage"/>
+		</list>
+		<list key="Search.enabledPageIds">
+			<item value="it.unibz.instasearch.ui.InstaSearchPage"/>
+			<item value="org.eclipse.rse.internal.files.ui.search.searchPage"/>
+			<item value="org.eclipse.search.internal.ui.text.TextSearchPage"/>
+			<item value="org.eclipse.mylyn.tasks.ui.search.page"/>
+			<item value="org.eclipse.cdt.ui.pdomSearchPage"/>
+			<item value="org.eclipse.egit.ui.commitSearchPage"/>
+			<item value="net.sf.eclipsefp.haskell.ui.HaskellSearchPage"/>
+			<item value="org.eclipse.jdt.ui.JavaSearchPage"/>
+			<item value="org.eclipse.wst.jsdt.ui.JavaSearchPage"/>
+			<item value="org.eclipse.papyrus.search.ui.pages.PapyrusSearchPage"/>
+			<item value="org.eclipse.pde.internal.ui.search.SearchPage"/>
+			<item value="ar.com.tadp.ui.PrologSearchPage"/>
+			<item value="org.cs3.pdt.prologSearchPage"/>
+			<item value="com.python.pydev.analysis.search_index.PySearchIndexPage"/>
+		</list>
+	</section>
+	<section name="SearchDialog">
+		<item value="org.cs3.pdt.prologSearchPage" key="PREVIOUS_PAGE"/>
+	</section>
+	<section name="DialogBounds_SearchDialog">
+		<item value="1639" key="DIALOG_WIDTH"/>
+		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="495" key="DIALOG_HEIGHT"/>
+		<item value="100" key="DIALOG_X_ORIGIN"/>
+		<item value="147" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

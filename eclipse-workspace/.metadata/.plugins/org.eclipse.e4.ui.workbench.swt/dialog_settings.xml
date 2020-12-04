@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ShowViewDialog">
+		<item value="367" key="DIALOG_WIDTH"/>
+		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="org.eclipse.pde.runtime.LogView" key="ShowViewDialog.STORE_SELECTED_VIEW_ID"/>
+		<item value="413" key="DIALOG_HEIGHT"/>
+		<item value="747" key="DIALOG_X_ORIGIN"/>
+		<item value="281" key="DIALOG_Y_ORIGIN"/>
+		<list key="ShowViewDialog.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="Other"/>
+			<item value="Code Recommenders"/>
+			<item value="General"/>
+			<item value="C/C++"/>
+			<item value="Java Browsing"/>
+			<item value="JBoss Tools Web"/>
+			<item value="Jess Debugger"/>
+			<item value="OWL"/>
+			<item value="Prolog"/>
+			<item value="PyDev"/>
+			<item value="Report Design"/>
+			<item value="Sirius Profiler"/>
+			<item value="SystemTap"/>
+			<item value="Webclipse"/>
+		</list>
+	</section>
+</section>

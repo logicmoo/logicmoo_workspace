@@ -1,0 +1,12 @@
+:- module(pdt_mud,[
+
+	]).
+
+:- if(\+ exists_source(library(logicmoo_utils))).
+:- pack_list_installed.
+:- attach_packs.
+:- endif.
+
+:- use_module(library(logicmoo_utils)).
+
+:- reconsult(library(prologmud_sample_games/run_mud_server)).

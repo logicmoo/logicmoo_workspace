@@ -1,0 +1,10 @@
+:- module(pdt_mud,[
+
+	]).
+
+:- if(exists_soure(library(logicmoo_utils))).
+:- pack_list_installed.
+:- attach_packs.
+:- use_module(library(logicmoo_utils)).
+:- use_module(library(prologmud_sample_games/run_mud_server)).
+% -l run_mud_server.pl --all --world --repl --lisp --lispsock --sumo --planner --cliop --sigma --www --irc --swish --docs --plweb --elfinder

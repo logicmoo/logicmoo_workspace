@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cache:CacheIndex xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cache="http://eclipse.org/dltk/cache_model" lastIndex="61" environment="org.eclipse.dltk.core.environment.localEnvironment">
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpusworld-1.3.0.jar" timestamp="1522020725000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/.project" timestamp="1522020725000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/initGoals.pl" timestamp="1522020825000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/initBeliefs.pl" timestamp="1522020847000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/ProDTTest/src" timestamp="1522040995000" lastAccessTime="1522383485702">
+    <attributes name=".dltk.core.archive.cache.lastaccess" location="2838196607/558357641/9.idx"/>
+  </entries>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman" timestamp="1522009899000" lastAccessTime="1376815388561">
+    <attributes name=".dltk.core.archive.cache.lastaccess" location="2838196607/3673269186/11.idx"/>
+  </entries>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotEvents.mod2g" timestamp="1522009899000" lastAccessTime="1376824235882"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/message.mod2g" timestamp="1522009899000" lastAccessTime="1376824235882"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotInit.mod2g" timestamp="1522009899000" lastAccessTime="1376824235882"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotMain.mod2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/bw4t-client-3.9.1.jar" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotActions.act2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanEvent.mod2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/.project" timestamp="1522043016000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanMain.mod2g" timestamp="1522020357000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanInit.mod2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/BW4T3 Instructions.pdf" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanActions.act2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robot.test2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/bw4thuman.mas2g" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/BW4T3 Specification.pdf" timestamp="1522009899000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/facts.pl" timestamp="1522040172000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/prodt_test.pl" timestamp="1522039994000" lastAccessTime="1376815386783"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents" timestamp="1522039983000" lastAccessTime="1376815388619">
+    <attributes name=".dltk.core.archive.cache.lastaccess" location="2838196607/3673269186/25.idx"/>
+  </entries>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/ProDTTest/src/ProDT_test.pl" timestamp="1522382291000" lastAccessTime="1522383485702">
+    <attributes name="indexed" location="2838196607/2709741970/27.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/messageTranslation.pl" timestamp="1522020492788" lastAccessTime="1522572400153">
+    <attributes name="indexed" location="2838196607/3968664197/46.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman" timestamp="1522009899987" lastAccessTime="1522569703260">
+    <attributes name=".dltk.core.archive.cache.lastaccess" location="2838196607/2295551564/33.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/human.pl" timestamp="1522017587670" lastAccessTime="1522572400118">
+    <attributes name="indexed" location="2838196607/3968664197/35.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotEvents.mod2g" timestamp="1522009899987" lastAccessTime="1522569703099"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/message.mod2g" timestamp="1522009899987" lastAccessTime="1522569703102"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotInit.mod2g" timestamp="1522009899987" lastAccessTime="1522569703104"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotMain.mod2g" timestamp="1522009899987" lastAccessTime="1522569703106"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robot.pl" timestamp="1522020376673" lastAccessTime="1522572400142">
+    <attributes name="indexed" location="2838196607/3968664197/44.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/bw4t-client-3.9.1.jar" timestamp="1522009899959" lastAccessTime="1522569703109"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robotActions.act2g" timestamp="1522009899987" lastAccessTime="1522569703111"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanEvent.mod2g" timestamp="1522009899987" lastAccessTime="1522569703114"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/.project" timestamp="1522043016127" lastAccessTime="1522569703120"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanMain.mod2g" timestamp="1522020357333" lastAccessTime="1522569703125"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanInit.mod2g" timestamp="1522009899987" lastAccessTime="1522569703127"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/BW4T3 Instructions.pdf" timestamp="1522009899979" lastAccessTime="1522569703130"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/humanActions.act2g" timestamp="1522009899987" lastAccessTime="1522569703133"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robot.test2g" timestamp="1522009899987" lastAccessTime="1522569703136"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/bw4thuman.mas2g" timestamp="1522009899987" lastAccessTime="1522569703138"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/BW4T3 Specification.pdf" timestamp="1522009899987" lastAccessTime="1522569703140"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpus.act2g" timestamp="1522020725000" lastAccessTime="1376815388610"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpus.mas2g" timestamp="1522020725000" lastAccessTime="1376815388617"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/human.pl" timestamp="1522017587000" lastAccessTime="1376824235883">
+    <attributes name="indexed" location="2838196607/3342409815/39.idx"/>
+  </entries>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/messageTranslation.pl" timestamp="1522020492000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/BW4Thuman/robot.pl" timestamp="1522020376000" lastAccessTime="1376824235883"/>
+  <entries path="/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpus.mod2g" timestamp="1522020725000" lastAccessTime="1376815388619"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/events.mod2g" timestamp="1522020741952" lastAccessTime="1522572400228">
+    <attributes name="indexed" location="2838196607/92312367/48.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents" timestamp="1522039983644" lastAccessTime="1522572400292">
+    <attributes name=".dltk.core.archive.cache.lastaccess" location="2838196607/2295551564/41.idx"/>
+  </entries>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpus.mas2g" timestamp="1522020725344" lastAccessTime="1522572400292"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/facts.pl" timestamp="1522040172200" lastAccessTime="1522572400224"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/prodt_test.pl" timestamp="1522039994628" lastAccessTime="1522572400226"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/initGoals.pl" timestamp="1522020825248" lastAccessTime="1522572400228"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpus.act2g" timestamp="1522020725344" lastAccessTime="1522572400229"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/wumpusworld-1.3.0.jar" timestamp="1522020725348" lastAccessTime="1522572400232"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/.project" timestamp="1522020725276" lastAccessTime="1522572400236"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/initBeliefs.pl" timestamp="1522020847672" lastAccessTime="1522572400240"/>
+  <entries path="W:/opt/logicmoo_workspace/eclipse-workspace/WumpusAgents/WumpusWorlds" timestamp="1522020725348" lastAccessTime="1522572400241"/>
+</cache:CacheIndex>

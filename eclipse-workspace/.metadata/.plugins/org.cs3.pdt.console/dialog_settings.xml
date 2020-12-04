@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="history">
+		<list key="Default Process">
+			<item value="ls."/>
+			<item value="pwd."/>
+			<item value="threads."/>
+			<item value="version."/>
+			<item value="ls."/>
+			<item value="threads."/>
+			<item value="ls."/>
+			<item value="threads."/>
+			<item value="pwd."/>
+			<item value="pwd."/>
+			<item value="ls."/>
+			<item value="pwd."/>
+			<item value="shell(whoami)."/>
+			<item value="shell(whoami)."/>
+			<item value="threads."/>
+			<item value="listing(collect_pdt_startup_error_messages)."/>
+			<item value="source_file(A)."/>
+			<item value=";;;;;;;;;;;;;;;"/>
+			<item value="make."/>
+			<item value="listing(file_search_path)."/>
+			<item value="use_module(library(logicmoo_pdt))."/>
+			<item value="make."/>
+			<item value="console_thread_name(X)."/>
+			<item value="make."/>
+			<item value="threads."/>
+			<item value="tdebug(pdt_console_server)."/>
+			<item value="thread_signal(pdt_console_server,break)."/>
+			<item value="thread_signal(pdt_console_server,trace)."/>
+			<item value="ls."/>
+			<item value="threads."/>
+		</list>
+	</section>
+</section>

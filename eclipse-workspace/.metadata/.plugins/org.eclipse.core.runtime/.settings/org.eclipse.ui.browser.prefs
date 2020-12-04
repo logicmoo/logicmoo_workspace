@@ -1,0 +1,3 @@
+browsers=<?xml version\="1.0" encoding\="UTF-8"?>\n<web-browsers current\="0">\n<system/>\n<external location\="/usr/bin/firefox" name\="Firefox"/>\n<external location\="/usr/bin/chromium-browser" name\="Chromium"/>\n</web-browsers>
+eclipse.preferences.version=1
+internalWebBrowserHistory=https\://accounts.eclipse.org/oauth2/authorize|*|https\://accounts.eclipse.org/user/login?destination\=oauth2/authorize|*|http\://marketplace.eclipse.org/marketplace-client-intro?mpc_install\=1663595|*|http\://www.nodeclipse.org/updates/list|*|

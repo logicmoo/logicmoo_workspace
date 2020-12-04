@@ -1,0 +1,3 @@
+blockedTaskIds=[]
+eclipse.preferences.version=1
+mechanicSourceDirectories=["/opt/logicmoo_workspace/.eclipse/mechanic","/opt/logicmoo_workspace/ide/eclipse/configuration/com.google.eclipse.mechanic/mechanic"]

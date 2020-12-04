@@ -1,0 +1,68 @@
+{
+  "version": "v1",
+  "title": "JBoss Tools",
+  "timestamp": 1522391305970,
+  "ttl": 0,
+  "helpUrl": "https://aer.ctrlflow.com/redhat/help",
+  "feedbackUrl": "https://www.codetrails.com/error-analytics/",
+  "aboutUrl": "https://www.codetrails.com/error-analytics/",
+  "submitUrl": "https://aer.ctrlflow.com/redhat/community/new",
+  "maxReportSize": 262144,
+  "problemsUrl": "https://aer.ctrlflow.com/downloads/redhat/problems.zip",
+  "problemsTtl": 20160,
+  "interestUrl": "https://aer.ctrlflow.com/redhat/community/interest",
+  "connectTimeout": 5,
+  "socketTimeout": 10,
+  "acceptedProducts": [
+    "*"
+  ],
+  "acceptedPlugins": [
+    "*"
+  ],
+  "acceptedPackages": [
+    "ch.qos.*",
+    "com.ctrlflow.*",
+    "com.google.*",
+    "com.jboss.*",
+    "com.openshift.*",
+    "com.sun.*",
+    "java.*",
+    "javafx.*",
+    "javax.*",
+    "org.apache.*",
+    "org.drools.*",
+    "org.eclipse.*",
+    "org.fusesource.*",
+    "org.guvnor.*",
+    "org.hibernate.*",
+    "org.jboss.*",
+    "org.jbpm.*",
+    "org.kie.*",
+    "org.mozilla.xpcom.*",
+    "org.mozilla.xulrunner.*",
+    "org.osgi.*",
+    "org.slf4j.*",
+    "org.switchyard.*",
+    "sun.*",
+    "tern.*"
+  ],
+  "requiredPackages": [
+    "com.ctrlflow.aer.*",
+    "com.jboss.*",
+    "org.drools.*",
+    "org.fusesource.*",
+    "org.hibernate.*",
+    "org.jboss.*",
+    "org.jbpm.*",
+    "org.kie.*",
+    "org.switchyard.*",
+    "tern.*"
+  ],
+  "acceptOtherPackages": true,
+  "acceptUiFreezes": false,
+  "ignoredStatuses": [
+    ":java.net.*:",
+    ":org.eclipse.core.runtime.OperationCanceledException:"
+  ],
+  "problemsZipLastDownloadTimestamp": 0
+}

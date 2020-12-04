@@ -1,0 +1,5 @@
+:- module(pdt_mud,[
+
+	]).
+
+% -l run_mud_server.pl --all --world --repl --lisp --lispsock --sumo --planner --cliop --sigma --www --irc --swish --docs --plweb --elfinder

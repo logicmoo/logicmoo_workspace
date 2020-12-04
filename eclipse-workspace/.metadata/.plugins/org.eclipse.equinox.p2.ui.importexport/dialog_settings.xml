@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ImportFromInstallationWizard">
+		<list key="P2ImportExportPage.STORE_DESTINATION_NAMES_ID">
+			<item value="W:\opt\logicmoo_workspace\ide\eclipse"/>
+		</list>
+	</section>
+</section>

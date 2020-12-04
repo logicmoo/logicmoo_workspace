@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item value="63" key="DIALOG_X_ORIGIN"/>
+		<item value="-34" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.internal.QuickAccess">
+		<item value="-1" key="dialogHeight"/>
+		<item value="-1" key="dialogWidth"/>
+		<list key="textEntries">
+		</list>
+		<list key="orderedElements">
+		</list>
+		<list key="orderedProviders">
+		</list>
+		<list key="textArray">
+		</list>
+	</section>
+	<section name="NewWizardAction">
+		<item value="org.eclipse.ui.wizards.new.file" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.ui.Basic"/>
+			<item value="org.jboss.tools.batch.ui"/>
+			<item value="org.eclipse.cdt.ui.newCWizards"/>
+			<item value="org.jboss.tools.cdi.ui"/>
+			<item value="net.certiv.certivtools.wizards"/>
+			<item value="org.eclipse.gdt.wizards"/>
+			<item value="pl.poznan.put.cs.gui4pddl"/>
+			<item value="hibernatewizards"/>
+			<item value="org.apache.ivyde.eclipse.ui.new"/>
+			<item value="org.eclipse.jdt.ui.java"/>
+			<item value="org.eclipse.jdt.ui.java/org.eclipse.jdt.debug.ui.java"/>
+			<item value="org.eclipse.jwt.we"/>
+			<item value="org.eclipse.wst.jsdt.ui.java"/>
+			<item value="org.jboss.ide.eclipse.ui.wizards"/>
+			<item value="org.jboss.tools.jst.web"/>
+			<item value="org.eclipse.jpt.jpa"/>
+			<item value="de.defmacro.dandelion.newWizards.lispCategory"/>
+			<item value="jasko.tim.lisp.newWizards"/>
+			<item value="ocaml.wizards.Category"/>
+			<item value="org.eclipse.ocl.ui.wizards"/>
+			<item value="org.eclipse.pde.PDE"/>
+			<item value="org.scala-ide.sdt.core.wizards"/>
+			<item value="org.eclipse.sirius.category"/>
+			<item value="org.eclipse.linuxtools.systemtap.ui.ide"/>
+			<item value="typescriptCategoryWizard"/>
+			<item value="org.eclipse.pde.userAssistance"/>
+			<item value="org.eclipse.wst.web.ui"/>
+			<item value="org.eclipse.jst.ws.ui.new"/>
+			<item value="org.eclipse.wst.XMLCategory"/>
+			<item value="org.eclipse.ui.Examples"/>
+			<item value="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples"/>
+		</list>
+	</section>
+	<section name="InstallationDialogSettings">
+		<item value="584" key="DIALOG_WIDTH"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+		<item value="640" key="DIALOG_HEIGHT"/>
+		<item value="31" key="DIALOG_X_ORIGIN"/>
+		<item value="-62" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.equinox.p2.replication.importfrominstallation" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.equinox.p2.category"/>
+		</list>
+	</section>
+</section>

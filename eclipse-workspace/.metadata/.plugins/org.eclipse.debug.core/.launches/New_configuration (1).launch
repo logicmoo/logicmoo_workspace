@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="Ocaml.launchConfigurationType">
+<stringAttribute key="attr_ocaml_byte_full_path" value=""/>
+<booleanAttribute key="attr_ocaml_debugger_root_project" value="false"/>
+<stringAttribute key="attr_ocaml_launch_args" value=""/>
+<stringAttribute key="attr_ocaml_launch_project_name" value=""/>
+<booleanAttribute key="attr_ocaml_remote_debug_enable" value="false"/>
+<stringAttribute key="attr_ocaml_remote_debug_port" value="8000"/>
+<stringAttribute key="attr_ocaml_run_full_path" value=""/>
+<stringAttribute key="attr_ocaml_script_full_path" value=""/>
+</launchConfiguration>

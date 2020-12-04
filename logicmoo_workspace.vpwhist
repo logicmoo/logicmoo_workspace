@@ -2,7 +2,7 @@
 CurrentProject=packs_usr\wam_common_lisp\wamcl.vpj
 [ProjectDates]
 logicmoo_workspace.vpj=20201202150536371
-other_files.vpj=20201204070350433
+other_files.vpj=20201204081108022
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -796,17 +796,24 @@ packs_xtra\packs_xtra.vpj=Release
             + iris
             + trains
           + pl
-      - prolog
+      + prolog
+        + aiswi
+          + img
+          + project_template
+          + relazione
+          + sciff
+          + src
+            + icons
         + ccalc
         + code_icl
-        + dialect
+        - dialect
           + logicmoo
         + ec_planner
         + hyhtn_pddl
           + ptools
         + iwfms
         - lps_pddl
-        + PKnows-0.9.9
+        + pknows
           + vpdl
       + test
         + domains_ocl
@@ -3177,13 +3184,6 @@ packs_xtra\packs_xtra.vpj=Release
   - packs_xtra
     + logicmoo_packages
       + prolog
-        + aiswi
-          + img
-          + project_template
-          + relazione
-          + sciff
-          + src
-            + icons
         + BN-search
         + pHa_code
         + theorist
@@ -3312,6 +3312,26 @@ packs_xtra\packs_xtra.vpj=Release
   + packs_sys
     + logicmoo_ec
       + prolog
+        + aiswi
+          + dist
+            + javadoc
+              + index-files
+              + javasciff
+                + class-use
+              + resources
+              + test
+                + class-use
+          + img
+          + project_template
+          + relazione
+          + sciff
+          + src
+            + gamegui
+            + icons
+            + javasciff
+            + lib
+            + test
+          + xml
         + ccalc
           + CVS
           + examples
@@ -3335,7 +3355,7 @@ packs_xtra\packs_xtra.vpj=Release
           + ptools
         + iwfms
         + lps_pddl
-        + PKnows-0.9.9
+        + pknows
           + vpdl
   - packs_web
     + swish
@@ -3361,28 +3381,8 @@ packs_xtra\packs_xtra.vpj=Release
   - packs_xtra
     - logicmoo_packages
       - prolog
-        + aiswi
-          - dist
-            + javadoc
-              + index-files
-              + javasciff
-                + class-use
-              + resources
-              + test
-                + class-use
-          + img
-          + project_template
-          + relazione
-          + sciff
-          - src
-            + gamegui
-            + icons
-            + javasciff
-            + lib
-            + test
-          + xml
-        + BN-search
-        + pHa_code
+        - BN-search
+        - pHa_code
         + theorist
           - cilog_code
             - ch2
@@ -3400,17 +3400,74 @@ packs_xtra\packs_xtra.vpj=Release
             + iris
             + trains
           + pl
-scroll:0
+scroll:83
 [State]
 SCREEN: 1920 1200 170 183 1440 767 0 0 M 0 0 0 0 1432 672
 CWD: ..\logicmoo_workspace
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\app.tex"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\code.tex"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\load"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\README"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\bnet"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 208 208 1224 464 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=162 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\bnet"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=160 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\README"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=158 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1224 464 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\load"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=156 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1224 464 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\code.tex"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=154 BI=23 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\app.tex"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=152 BI=22 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=150 BI=21 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=3 ",,,"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=148 BI=20 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=147 BI=20 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1224 464 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=164 BI=28 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_xtra\logicmoo_packages\prolog\theorist\birdsfly
-packs_xtra\logicmoo_packages\prolog\theorist\cilog_code\ch2\west.pl
-packs_xtra\logicmoo_packages\prolog\theorist\README
-packs_xtra\logicmoo_packages\prolog\theorist\theorist.tex
-packs_xtra\logicmoo_packages\prolog\Tom\Src\tom.cfg
-packs_xtra\logicmoo_packages\prolog\Tom\Samples\non13.mat
-packs_xtra\logicmoo_packages\prolog\Tom\Samples\non18.mat
-packs_xtra\logicmoo_packages\prolog\theorist\snark_theorist.pl
-packs_xtra\logicmoo_packages\prolog\aiswi\sciff\r_solver.pl
+packs_sys\logicmoo_ec\prolog\dialect\pfc.pl
+packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex
+packs_xtra\logicmoo_packages\prolog\BN-search\app.tex
+packs_xtra\logicmoo_packages\prolog\BN-search\code.tex
+packs_xtra\logicmoo_packages\prolog\BN-search\load
+packs_xtra\logicmoo_packages\prolog\BN-search\README
+packs_xtra\logicmoo_packages\prolog\pHa_code\bnet
+packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe
+packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf

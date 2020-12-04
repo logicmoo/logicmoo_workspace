@@ -1,0 +1,4 @@
+#Thu Apr 05 02:30:54 PDT 2018
+process.hide_plwin=false
+prolog.connector.executable=W\:\\opt\\logicmoo_workspace\\lib\\swipl\\bin\\swipl-win.exe
+process.command.line.arguments=-f /opt/logicmoo_workspace/.swiplrc

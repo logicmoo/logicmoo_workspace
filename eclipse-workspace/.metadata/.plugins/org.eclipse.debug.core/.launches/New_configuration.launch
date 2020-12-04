@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="arden.plugin.compiler.launch.launchMLM">
+<booleanAttribute key="arden.plugin.compiler.launch.daemon" value="false"/>
+<stringAttribute key="arden.plugin.compiler.launch.dbDriver" value=""/>
+<booleanAttribute key="arden.plugin.compiler.launch.displayLogo" value="false"/>
+<booleanAttribute key="arden.plugin.compiler.launch.includeAll" value="true"/>
+<stringAttribute key="arden.plugin.compiler.launch.mlm" value=""/>
+<stringAttribute key="arden.plugin.compiler.launch.project" value=""/>
+<booleanAttribute key="arden.plugin.compiler.launch.verbose" value="false"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+</launchConfiguration>

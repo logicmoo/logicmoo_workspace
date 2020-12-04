@@ -1,0 +1,14 @@
+use robot as knowledge.
+use human as knowledge.
+use messageTranslation as knowledge.
+use humanActions.
+use message.
+
+module humanMain {
+	% Perform actions that are performed on GUI
+	if bel(performGoTo(X,Y)) then goTo(X,Y) + delete(performGoTo(X,Y)).
+	if bel(performGoTo(NavPoint)) then goTo(NavPoint) + delete(performGoTo(NavPoint)).
+	if bel(performGoToBlock(Block)) then goToBlock(Block) + delete(performGoToBlock(Block)).
+	if bel(performPickUp(BlockID)) then pickUp(BlockID) + delete(performPickUp(BlockID)).
+	if bel(performPutDown) then putDown + delete(performPutDown).
+}
