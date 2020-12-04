@@ -1,0 +1,28 @@
+% File 'go'
+% Going to Work ("Nonmonotonic Causal Theories," Figure 6)
+
+:- sorts
+  object;
+  location.
+
+:- objects
+  jack,car           :: object;
+  home,work          :: location.
+
+:- variables
+  L                  :: location.
+
+:- constants
+  loc(object)        :: inertialFluent(location);
+  go(location)       :: exogenousAction.
+
+
+go(L) causes loc(jack)=L.
+go(L) may cause loc(car)=L if loc(car)=loc(jack).
+nonexecutable go(L) if loc(jack)=L.
+
+
+:- query
+maxstep :: 1;
+0: loc(jack)=home, loc(car)=home;
+0: go(work).

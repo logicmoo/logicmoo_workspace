@@ -1,0 +1,23 @@
+% File 'bw-test': Planning problem in the blocks world
+%
+%        Initial state:             Goal:
+%     
+%                                   3   6
+%          1   3   5                2   5
+%          2   4   6                1   4
+%        -------------            ---------
+
+:- include bw.
+
+:- objects
+  1..6       :: block.
+
+:- show loc(L).
+
+:- query
+  maxstep :: 2..3;
+  0:       loc(1)=2, loc(2)=table, loc(3)=4,
+           loc(4)=table, loc(5)=6, loc(6)=table;
+  maxstep: loc(1)=table, loc(2)=1, loc(3)=2,
+           loc(4)=table, loc(5)=4, loc(6)=5.
+

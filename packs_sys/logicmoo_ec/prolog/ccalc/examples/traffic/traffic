@@ -1,0 +1,285 @@
+%%% TRAFFIC %%%
+
+:- sorts
+  integer;
+  node;
+  segment;
+  car.
+
+:- variables
+  Nd                         :: node;
+  Sg                         :: segment;
+  C,C1                       :: car;
+  Ds,Ds1                     :: integer;
+  Sp,Sp1                     :: integer.
+
+:- objects
+  0..maxInt                  :: integer.
+
+:- constants
+% If a car is pointing toward the end node of the segment on 
+%  which it currently is, its positiveOrientation is true
+  positiveOrientation(car)   ::  inertialFluent;
+
+% Each car has a position at each point in time. The position is
+%  indicated as a pair consisting of the segment where the car 
+%  is located, and the distance travelled along the segment 
+%  (lmw)
+  segment(car)               :: inertialFluent(segment);
+  distance(car)              :: simpleFluent(integer).
+
+:- macros
+  position(#1,#2,#3) -> (segment(#1)=(#2) & distance(#1)=(#3)).
+
+:- constants
+% Each segment has exactly one start node and exactly one end 
+%  node (lmw)
+  startNode(segment)         :: node;
+  endNode(segment)           :: node;
+
+% Each segment has a length, which is a real number (or rational
+%  number, if preferred). (lmw)  We assume it to be an integer
+  length(segment)            :: integer;
+
+% Each road segment has a speed limit (lmw)
+  speedLimit(segment)        :: integer;
+
+% Each car has a top speed (lmw)
+  topSpeed(car)              :: integer;
+
+% Actual speed of a car during the next time interval
+  speed(car)                 :: sdFluent(integer);
+
+% The new segment a car will continue on
+  nextSegment(car)           :: inertialFluent(segment+none);
+
+% A car will leave the segment on which it is currently 
+%  travelling
+  willLeave(car)             :: simpleFluent;
+
+% The node at which a car is
+  node(car)                  :: sdFluent(node+none).
+
+exogenous willLeave(C).
+
+% The position of a car determines whether it is at a node or 
+%  not and, if it is, which node it is at.
+caused node(C)=Nd
+   if positiveOrientation(C) & position(C,Sg,0) 
+      & startNode(Sg)=Nd.
+caused node(C)=Nd
+   if -positiveOrientation(C) & position(C,Sg,0) 
+      & endNode(Sg)=Nd.
+caused node(C)=Nd
+   if positiveOrientation(C) & position(C,Sg,length(Sg)) 
+      & endNode(Sg)=Nd.
+caused node(C)=Nd
+   if -positiveOrientation(C) & position(C,Sg,length(Sg)) 
+      & startNode(Sg)=Nd.
+
+default node(C)=none.
+
+% A car will have a positive orientation after leaving the 
+%  start node of the segment it is entering
+caused positiveOrientation(C)
+   after willLeave(C) & nextSegment(C)=Sg 
+         & node(C)=startNode(Sg).
+
+% A car will have a negative orientation after leaving the end 
+%  node of the segment it is entering
+caused -positiveOrientation(C)
+   after willLeave(C) & nextSegment(C)=Sg & node(C)=endNode(Sg).
+
+% Proceed to the next segment if the car was about to leave
+caused segment(C)=Sg after willLeave(C) & nextSegment(C)=Sg.
+
+% The distance covered by a car which remained on the same 
+%  segment
+caused distance(C)=Ds+Sp
+   after -willLeave(C) & distance(C)=Ds & speed(C)=Sp
+                                  where Ds+Sp=<maxInt.
+
+% The distance covered by a car right after it changed to a new 
+%  segment
+caused distance(C)=Sp after willLeave(C) & speed(C)=Sp.
+
+% The time when a car reaches a node is assumed to be an integer
+constraint position(C,Sg,Ds) ->> Ds=<length(Sg).
+
+% No two cars on the same segment and having the same 
+%  orientation can be closer than varsigma (lmw)
+constraint position(C,Sg,Ds) & position(C1,Sg,Ds1)
+      ->> positiveOrientation(C)\=positiveOrientation(C1)
+      where C@<C1 & abs(Ds1-Ds)<varsigma.
+
+% If a car is waiting at a node and there is a car too close on 
+%  the next segment it will travel on, the time at which the car
+%  in front will reach a distance of varsigma from the node is 
+%  assumed to be an integer
+constraint position(C1,Sg,Ds1) ->> Ds1=<varsigma
+   after position(C1,Sg,Ds) & Ds<varsigma & nextSegment(C)=Sg
+         & modifiedOrientation(C)=positiveOrientation(C1).
+
+:- constants
+% For any car in the middle of a segment, its modifiedOrienta-
+%  tion has the same value as its positiveOrientation.  If a car
+%  has selected a new segment, then modifiedOrientation has the 
+%  value that positiveOrientation would have if the car were at 
+%  the beginning of the new segment
+  modifiedOrientation(car)   :: sdFluent.
+
+caused modifiedOrientation(C)
+   if nextSegment(C)=none & positiveOrientation(C).
+caused modifiedOrientation(C)
+   if nextSegment(C)=Sg & node(C)=startNode(Sg).
+
+default -modifiedOrientation(C).
+
+:- constants
+% The relation between modifiedSegment and segment is similar
+  modifiedSegment(car)       :: sdFluent(segment).
+
+caused modifiedSegment(C)=Sg if nextSegment(C)=none 
+                                    & segment(C)=Sg.
+caused modifiedSegment(C)=Sg if nextSegment(C)=Sg.
+
+:- constants
+% The relation between modifiedDistance and distance is similar
+  modifiedDistance(car)      :: sdFluent(integer).
+
+caused modifiedDistance(C)=Ds if nextSegment(C)=none 
+                                    & distance(C)=Ds.
+caused modifiedDistance(C)=0 if nextSegment(C)\=none.
+
+:- constants
+% Maximum speed allowed by the top speed of a car and the speed 
+%  limit of the segment on which the car will be travelling
+  maxSpeed(car)             :: sdFluent(integer).
+
+caused maxSpeed(C)=min(Sp,Sp1)
+   if topSpeed(C)=Sp & nextSegment(C)=none 
+      & speedLimit(segment(C))=Sp1.
+
+caused maxSpeed(C)=min(Sp,Sp1)
+   if topSpeed(C)=Sp & nextSegment(C)=Sg 
+      & speedLimit(Sg)=Sp1.
+
+:- constants
+% Maximum distance a car can cover on the segment on which it 
+%  will be travelling
+  maxDistance(car)           :: sdFluent(integer).
+
+caused maxDistance(C)=Ds+Sp
+   if modifiedDistance(C)=Ds & maxSpeed(C)=Sp 
+                          where Ds+Sp=<maxInt.
+
+:- constants
+% The first car is ahead of the second
+  ahead(car,car)             :: sdFluent.
+
+caused ahead(C1,C)
+   if positiveOrientation(C1)=modifiedOrientation(C)
+      & segment(C1)=modifiedSegment(C)
+      & distance(C1)>=modifiedDistance(C) where C\=C1.
+default -ahead(C1,C).
+
+% No overtaking
+constraint -ahead(C,C1) after ahead(C1,C).
+
+:- constants
+% The first car is ahead of the second car and not farther 
+%  than varsigma from it
+  varsigmaAhead(car,car)           :: sdFluent.
+
+caused varsigmaAhead(C1,C)
+   if ahead(C1,C) & distance(C1)=Ds1 & modifiedDistance(C)=Ds
+                                       where Ds1-Ds=<varsigma.
+default -varsigmaAhead(C1,C).
+
+% The actual velocity of a car at each point in time is the max-
+%  imum velocity allowed by the following three conditions:
+%   - The speed limit of the road segment where it is driving
+%   - Its own top speed
+%   - Surrounding traffic restrictions (lmw)
+
+% If a car is in the middle of a segment and there is no other 
+%  car which is varsigma ahead of the car and which will not 
+%  leave, then it will travel at its maximum speed
+caused speed(C)=Sp
+   if nextSegment(C)=none & maxSpeed(C)=Sp
+      & [/\C1 | varsigmaAhead(C1,C) ->> willLeave(C1)].
+
+% If a car is in the middle of a segment and there is a car 
+%  varsigma ahead of it which will not leave, then its speed 
+%  will be the smaller of its maximum speed and the speed of 
+%  the car in front
+caused speed(C)=min(Sp,Sp1)
+   if nextSegment(C)=none & maxSpeed(C)=Sp
+      & varsigmaAhead(C1,C) & -willLeave(C1) & speed(C1)=Sp1.
+
+% If a car is at the end of a segment and will not leave then 
+%  it will stay where it is
+caused speed(C)=0 if nextSegment(C)\=none & -willLeave(C).
+
+% If a car is at the end of a segment and will enter a new seg-
+%  ment where there is no car within varsigma, then it will 
+%  travel at its maximum speed
+caused speed(C)=Sp
+   if willLeave(C) & maxSpeed(C)=Sp 
+      & [/\C1 | -varsigmaAhead(C1,C)].
+
+% If a car is at the end of a segment and will enter a new seg-
+%  ment where there is a car within varsigma, its speed will be 
+%  the smaller of its maximum speed and the speed of the car in 
+%  front
+caused speed(C)=min(Sp,Sp1)
+   if willLeave(C) & varsigmaAhead(C1,C) 
+      & maxSpeed(C)=Sp & speed(C1)=Sp1.
+
+:- constants
+% Choose a new segment for a car to proceed
+  chooseSegment(car,segment) :: exogenousAction.
+
+% Direct effect of choosing a new segment
+chooseSegment(C,Sg) causes nextSegment(C)=Sg.
+
+% Cannot choose the segment that is already chosen
+nonexecutable chooseSegment(C,Sg) if nextSegment(C)=Sg.
+
+% When a car arrives at a node ("intersection") then it may 
+%  continue on any segment that connects to that node... (lmw)
+constraint node(C)=startNode(Sg) ++ node(C)=endNode(Sg)
+   after chooseSegment(C,Sg).
+
+% ...except the one it is arriving at (lmw)
+constraint nextSegment(C)\=Sg after segment(C)=Sg.
+
+% A car cannot arrive at a node without choosing a new segment 
+%  on which to proceed
+constraint -[\/Nd | node(C)=Nd]
+   after [/\Sg | -chooseSegment(C,Sg)] & node(C)=none.
+
+% A car can't have a next segment unless it has travelled to the
+%  end of its current segment
+caused nextSegment(C)=none if node(C)=none.
+caused nextSegment(C)=none 
+   if node(C)=startNode(segment(C)) & positiveOrientation(C).
+caused nextSegment(C)=none 
+   if node(C)=endNode(segment(C)) & -positiveOrientation(C).
+
+% Only cars which have selected a new segment can leave
+constraint willLeave(C) ->> nextSegment(C)\=none.
+
+% At most one car will leave a node and enter a new segment at 
+%  each time
+constraint willLeave(C) & willLeave(C1) & node(C)=node(C1)
+           ->> nextSegment(C)\=nextSegment(C1) where C@<C1.
+
+% If there is a car at a node which has selected a new segment, 
+%  and there are no cars within varsigma from the node, then 
+%  there should be a car which will leave the node (i.e. no 
+%  unnecessary waiting is allowed)
+constraint nextSegment(C)=Sg & 
+           -[\/C1 | varsigmaAhead(C1,C) & distance(C1)<varsigma]
+    ->> [\/C1 | node(C1)=node(C) & nextSegment(C1)=Sg 
+                & willLeave(C1)].

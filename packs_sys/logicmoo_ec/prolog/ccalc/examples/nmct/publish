@@ -1,0 +1,36 @@
+% File 'publish'
+% Publishing Papers ("Nonmonotonic Causal Theories," Figure 9)
+
+:- sorts
+  class; number.
+
+:- objects
+  conference, journal      :: class;
+  1..100                   :: number. 
+
+:- variables
+  N                        :: number.
+
+:- constants
+  hasPublications,
+  hasJournalPublications,
+  hasLongPublications      :: inertialFluent;
+  publish                  :: exogenousAction;
+  kind                     :: attribute(class) of publish;
+  length                   :: attribute(number) of publish.
+
+
+constraint hasJournalPublications ->> hasPublications.
+constraint hasLongPublications ->> hasPublications.
+
+publish causes hasPublications.
+publish causes hasJournalPublications if kind=journal.
+publish causes hasLongPublications if length>30.
+
+
+:- query 
+maxstep :: 3;
+0: -hasPublications;
+0: publish, kind=conference, length=6;
+1: publish, kind=journal, length=20;
+2: publish, kind=journal, length=40.

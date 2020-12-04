@@ -1,0 +1,49 @@
+% File 'hanoi': Towers of Hanoi
+
+:- macros
+  num -> 4.        % number of disks
+:- sorts
+  location >> (disk; peg).
+
+:- objects
+  1..num           :: disk;
+  p1,p2,p3         :: peg.
+
+:- variables
+  D,D1             :: disk;
+  P,P1             :: peg;
+  L                :: location.
+
+:- constants
+  loc(disk)        :: inertialFluent(location);
+  base(location)   :: sdFluent(peg);
+  move(peg,peg)    :: exogenousAction.
+
+% different disks can't be in the same location
+constraint loc(D)\=loc(D1) where D<D1.
+
+% a disk is smaller than the disk under it
+constraint loc(D)\=D1 where D>=D1.
+
+:- macros
+  clear(#1) -> [ /\ D1 | loc(D1) \= #1].
+
+% definition of base
+caused base(P)=P.
+caused base(D)=P if loc(D)=L & base(L)=P.
+
+% effect and precondition of move
+move(P,P1) causes loc(D)=L if base(D)=P & clear(D) & base(L)=P1 & clear(L).
+nonexecutable move(P,P1) if clear(P).
+
+noconcurrency.
+
+:- show loc(D).
+
+:- query
+maxstep :: 14..15;
+0: clear(p2), clear(p3);
+maxstep: clear(p1), clear(p2).
+
+
+

@@ -1,0 +1,43 @@
+% File 'zoo-test6'
+
+:- sorts
+  animal >> (elephant; horse; dog).
+
+:- variables
+  SP                           :: species;
+  E                            :: elephant;
+  HR                           :: horse;
+  D                            :: dog.
+  
+:- objects
+  elephantSpecies, 
+  horseSpecies,
+  dogSpecies                   :: species.
+
+caused sp(E)=elephantSpecies.
+constraint sp(ANML)=elephantSpecies ->> [\/E | ANML=E].
+
+caused sp(HR)=horseSpecies.
+constraint sp(ANML)=horseSpecies ->> [\/HR | ANML=HR].
+
+caused sp(D)=dogSpecies.
+constraint sp(ANML)=dogSpecies ->> [\/D | ANML=D].
+
+default largeSpecies(SP). 
+caused -largeSpecies(dogSpecies).
+
+
+:- objects
+  homer                        :: human;
+  jumbo                        :: elephant.
+
+
+% In position 1, Jumbo throws off Homer. What are the possible positions 
+% of Jumbo and Homer after that? --- nondeterministic nature of throw off
+
+:- query
+maxstep :: 1;
+0: pos(jumbo)=1,
+   throwOff(jumbo,homer).
+
+

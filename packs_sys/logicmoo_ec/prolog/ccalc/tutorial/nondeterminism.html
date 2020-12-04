@@ -1,0 +1,167 @@
+<head>
+   <title>CCalc Tutorial: Nondeterministic Shooting</title>
+</head>
+
+<center>
+<h2>
+2.2. Nondeterministic Shooting
+</h2>
+</center>
+
+In the Yale Shooting Problem (<a href="ysp.html">Section 2.1</a>) the person
+is assumed to become dead any time he is shot with a loaded gun.  Let us
+relax this assumption now and take into account the possibility that the
+assailant can miss.  After shooting, the fluent <i>alive</i> can change its
+value from <b>t</b> to <b>f</b>, as before, but it can also keep the value
+<b>t</b>.  In terms of the transition system, this modification means that
+one more edge is added to the graph.  The edge starts at the vertex<p>
+
+<center>
+<i>alive</i>=<b>t</b>,&nbsp;<i>loaded</i>=<b>t</b>,
+</center>
+
+<p>is labeled<p>
+
+<center>
+<i>load</i>=<b>f</b>,&nbsp;<i>shoot</i>=<b>t</b>
+</center>
+
+<p>and goes to the vertex<p>
+
+<center>
+<i>alive</i>=<b>t</b>,&nbsp;<i>loaded</i>=<b>f</b>.
+</center>
+
+<p>The modified transition system is nondeterministic, in the sense that it
+contains a pair of different edges that start at the same vertex and have
+the same label.<p>
+
+This change can be reflected in the language of CCalc by replacing the
+proposition
+
+<pre>
+shoot causes -alive
+</pre>
+
+in the original formalization of the shooting domain with
+
+<pre>
+shoot may cause -alive.
+</pre>
+
+<tt>may cause</tt> propositions, like <tt>causes</tt> propositions, can be
+conditional (that is, followed by <tt>if</tt>...).<p>
+
+<b>Exercise 2.6.</b>
+In the modified domain, the assumptions of the Yale Shooting Problem
+(the person is initially alive, then the gun is loaded, then he waits, and
+then he is shot) entails neither that the fluent <i>alive</i> is true in
+the final state nor that it is false.  Verify this assertion using CCalc.<p>
+
+In the examples discussed so far in this tutorial we have seen CCalc
+propositions of three kinds: <tt>causes</tt> propositions,
+<tt>nonexecutable</tt> propositions and <tt>may cause</tt> propositions.
+The reader familiar with action language C+ knows
+that all these expressions are actually abbreviations for special kinds of
+"fluent dynamic laws" (see
+<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">NMCT</a>,
+Appendix B). The general form of a fluent dynamic law is<p>
+
+<center>
+<tt>caused</tt> <i>F</i> <tt>if</tt> <i>G</i> <tt>after</tt> <i>H</i>
+</center>
+
+<p>where <i>F</i>, <i>G</i> and <i>H</i> are formulas; <i>F</i> and <i>G</i>
+are not allowed to contain symbols for actions.  In particular,<p>
+
+<center>
+<i>A</i> <tt>causes</tt> <i>F</i> <tt>if</tt> <i>G</i>
+</center>
+
+<p>is shorthand for<p>
+
+<center>
+<tt>caused</tt> <i>F</i> <tt>if true</tt>
+                         <tt>after</tt> <i>A</i> <tt>&</tt> <i>G</i>
+</center>
+
+<p>("there is a cause for <i>F</i> to hold after the execution of action
+<i>A</i> in a state satisfying condition <i>G</i>").  The proposition<p>
+
+<center>
+<tt>nonexecutable</tt> <i>A</i> <tt>if</tt> <i>F</i>
+</center>
+
+<p>is shorthand for<p>
+
+<center>
+<tt>caused false if true after</tt> <i>A</i> <tt>&</tt> <i>F</i>.
+</center>
+
+<p>The proposition<p>
+
+<center>
+<i>A</i> <tt>may cause</tt> <i>F</i> <tt>if</tt> <i>G</i>
+</center>
+
+<p>is expanded into<p>
+
+<center>
+<tt>caused</tt> <i>F</i> <tt>if</tt> <i>F</i>
+                         <tt>after</tt> <i>A</i> <tt>&</tt> <i>G.</i>
+</center>
+
+<p>-- if <i>F</i> holds after the execution of action <i>A</i> in a state
+satisfying condition <i>G</i> then there is a cause for this.  In other
+words, <i>F</i> is a possible outcome of <i>A</i>; <i>F</i> is allowed to
+become true after executing <i>A</i>, but this outcome is not required.<p>
+
+The reader familiar with C+ knows also that there is no syntactic
+category of "inertial fluents" in that language.  The syntax of C+
+distinguishes between two kinds of fluent constants -- simple and
+statically determined.  If <i>C</i> is a simple fluent constant then<p>
+
+<center>
+<tt>inertial</tt> <i>C</i>
+</center>
+
+<p>is shorthand for the set of fluent dynamic laws<p>
+
+<center>
+<tt>caused</tt> <i>C=V</i> <tt>if</tt> <i>C=V</i> <tt>after</tt> <i>C=V</i>
+</center>
+
+<p>for all possible values <i>V</i> of <i>C</i>: if <i>C</i> has
+now the same value <i>V</i> that it had before then there
+is a cause for this.  (Intuitively, inertia is the cause; this is how
+fluent dynamic laws solve the frame problem.)  These fluent dynamic laws
+are similar to those obtained by expanding  <tt>may cause</tt> propositions:
+they also have the form
+<tt>caused</tt>&nbsp;<i>F</i>&nbsp;<tt>if</tt>&nbsp;<i>F</i>&nbsp;<tt>after</tt>&nbsp;...&nbsp;.<p>
+
+In accordance with this understanding of inertial fluents, an
+<tt>inertialFluent</tt> declaration in CCalc code is an abbreviation for a
+<tt>simpleFluent</tt> declaration combined with an <tt>inertial</tt>
+proposition.  For instance, the declaration
+
+<pre>
+:- constants
+ c :: inertialFluent(0..n).
+</pre>
+
+has the same meaning as
+
+<pre>
+:- constants
+ c :: simpleFluent(0..n).
+
+inertial c.
+</pre>
+
+<address><a href="bullets.html">Forward</a>
+to Section 2.3: Counting Bullets</address>
+
+<address><a href="ysp.html">Back</a>
+to Section 2.1: Basic Formulation</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

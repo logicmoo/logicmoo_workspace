@@ -1,0 +1,74 @@
+This direcory contains an implementation of the Bayesian network
+search algorithm described in "Probabilistic conflicts in a search
+algorithm for estimating posterior probabilities in Bayesian
+networks".
+
+The main code is in "app.tex" (this is both a Latex and Prolog file).
+
+To load the system do 
+[load]. 
+in Prolog. This will load the various files. To start the search do a
+start.
+
+The following is a trace of a session:
+
+sicstus
+SICStus 2.1 #2 : Wed Sep 23 14:14:58 PDT 1992
+| ?- [load].
+{consulting /David/abduction/search/conflict/load...}
+{compiling /David/abduction/search/conflict/app.tex...}
+{/David/abduction/search/conflict/app.tex compiled, 2969 msec 11798 bytes}
+{compiling /David/abduction/search/conflict/code.tex...}
+{/David/abduction/search/conflict/code.tex compiled, 718 msec 12914 bytes}
+{compiling /David/abduction/search/conflict/adder.tex...}
+{/David/abduction/search/conflict/adder.tex compiled, 2063 msec 9974 bytes}
+{/David/abduction/search/conflict/load consulted, 5765 msec 34772 bytes}
+
+yes
+| ?- start.
+looking for conflict: x2(500)=on
+*** Conflict found: [i2(500),i1(500),x1ok(500),x1(500),i2(499),i1(499),x1ok(499),x1(499),a2ok(499),a2(499),a1ok(499),a1(499),o1ok(499),o1(499),i3(500),x2ok(500),x2(500)]
+*** Heuristic value = 3.0e-5; Minvar=i1(499); Maxvar =x2(500)
+looking for conflict: x2(499)=off
+Observed x2(499)=off Conflict [x2ok(499),x2(499)] rejected. MP=1.99998500000000029
+looking for conflict: x2(499)=off
+Observed x2(499)=off Conflict [x2(499)] rejected. MP=1
+Runtime: 90329 msec.
+Prob found = 2.37809674769752025e-5
+Inconsistency mass = 0.99997487693921566
+Pruned mass =1.34209341440758436e-6
+Queue Mass = 1.34209330719605371e-6
+Error in posterior estimation = 0.0267103861015541017
+World #1
+   Prior Probability = 4.75619349539504051e-6
+   Posterior Probability = [0.189315845559378385,0.2]
+   Interesting Values:
+      x2ok(500)=stuck1
+World #2
+   Prior Probability = 4.75619349539504051e-6
+   Posterior Probability = [0.189315845559378385,0.2]
+   Interesting Values:
+      x1ok(500)=stuck1
+World #3
+   Prior Probability = 4.75619349539504051e-6
+   Posterior Probability = [0.189315845559378385,0.2]
+   Interesting Values:
+      o1ok(499)=stuck1
+World #4
+   Prior Probability = 4.75619349539504051e-6
+   Posterior Probability = [0.189315845559378385,0.2]
+   Interesting Values:
+      a2ok(499)=stuck1
+World #5
+   Prior Probability = 4.75619349539504051e-6
+   Posterior Probability = [0.189315845559378385,0.2]
+   Interesting Values:
+      a1ok(499)=stuck1
+
+yes
+| ?- 
+
+----------
+
+If there are any questions or problems please contact David Poole
+<poole@cs.ubc.ca>

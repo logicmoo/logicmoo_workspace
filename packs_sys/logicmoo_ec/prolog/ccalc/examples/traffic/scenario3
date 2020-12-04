@@ -1,0 +1,43 @@
+% File 'scenario3'
+
+:- macros
+  maxInt -> 4;
+  varsigma -> 2.
+
+:-macros
+  segNode(#1,#2,#3) -> (startNode(#1)=(#2) & endNode(#1)=(#3)).
+
+:- include 'traffic'.
+
+:- objects
+  a,b,c,d                   :: node;
+  seg_ac,seg_bc,seg_cd      :: segment;
+  car1,car2                 :: car.
+
+caused segNode(seg_ac,a,c).
+caused segNode(seg_bc,b,c).
+caused segNode(seg_cd,c,d).
+
+caused length(seg_ac)=3.
+caused length(seg_bc)=3.
+caused length(seg_cd)=4.
+
+caused speedLimit(seg_ac)=1.
+caused speedLimit(seg_bc)=1.
+caused speedLimit(seg_cd)=1.
+
+caused topSpeed(car1)=1.
+caused topSpeed(car2)=1.
+
+:- show segment(C); distance(C); speed(C);
+        nextSegment(C)=Sg; willLeave(C); node(C)=Nd.
+
+:- query
+label :: 0;
+maxstep :: 5;
+0: position(car1,seg_ac,1);
+0: position(car2,seg_bc,1);
+0: [/\C | positiveOrientation(C)];
+maxstep: [/\C | segment(C)=seg_cd].
+
+

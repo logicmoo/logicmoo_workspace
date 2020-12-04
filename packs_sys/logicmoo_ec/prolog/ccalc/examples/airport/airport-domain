@@ -1,0 +1,65 @@
+% File 'airport-domain'
+
+:- macros 
+  disjoint(#1,#2) -> (-((#1)=(#2)) & -at(#1,#2) & -at(#2,#1)).
+
+:- sorts
+  object >> region; 
+  mode.
+
+:- variables
+  X,Y,Z                    :: object;
+  U,V                      :: region;
+  M                        :: mode.
+   
+:- objects
+  i, car, desk             :: object;
+  home, airport, county    :: region;
+  walking, driving         :: mode.
+
+:- constants
+  at(object,object)        :: inertialFluent;
+  walkable(region), 
+  drivable(region)         :: boolean;
+  go(object,mode)          :: exogenousAction.
+
+exogenous walkable(U), drivable(U). 
+
+% Properties of at
+
+caused  at(X,Z) if at(X,Y) & at(Y,Z).
+caused -at(X,Z) if at(X,Y) & disjoint(Y,Z).
+caused -at(X,X).
+
+% Effects of actions
+
+go(X,M)       causes at(i,X).
+go(X,driving) causes at(car,X).
+
+% Action preconditions
+
+nonexecutable go(X,M) if at(i,X).
+
+nonexecutable go(X,driving) if -at(i,car).
+
+nonexecutable go(X,walking)
+    if -[\/U | walkable(U) & at(i,U) & at(X,U)].
+                            
+nonexecutable go(X,driving)
+    if -[\/U | drivable(U) & at(i,U) & at(X,U)].
+                            
+% Restrictions on the concurrent execution of actions
+
+nonexecutable go(X,walking), go(Y,driving).
+
+nonexecutable go(X,M), -go(Y,M) if at(X,Y) & -at(i,Y).
+
+% Sizes of objects
+
+constraint -at(car,desk).
+
+constraint walkable(home). 
+constraint -walkable(county).
+
+constraint -drivable(home). 
+constraint drivable(county).

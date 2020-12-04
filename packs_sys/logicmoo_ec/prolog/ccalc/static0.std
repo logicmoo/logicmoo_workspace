@@ -1,0 +1,40 @@
+% File 'static0.std'
+
+:- sorts
+  (boolean*) >> boolean.
+
+:- objects
+  true,false        :: boolean.
+
+
+:- sorts
+  simpleFluent(boolean) >> inertialFluent(boolean);
+  sdFluent(boolean);
+  action(boolean) >> exogenousAction(boolean);
+  attribute(boolean);
+  abAction(boolean);
+  rigid(boolean);
+
+  simpleFluentAtomicFormula ;
+  sdFluentAtomicFormula ;
+  actionAtomicFormula >> exogenousActionAtomicFormula ;
+  attributeAtomicFormula ;
+  abActionAtomicFormula ;
+  atomicFormula >> rigidAtomicFormula ;
+
+  step >> astep.
+
+% initial values are exogenous should be here.
+% the reason is for transition mode to use the macros for translating
+% causal laws at time 0.
+
+:- objects
+  (step : simpleFluentAtomicFormula), 
+  (step : sdFluentAtomicFormula),
+  (astep : actionAtomicFormula),
+  (astep : exogenousActionAtomicFormula),
+  (astep : attributeAtomicFormula), 
+  (astep : abActionAtomicFormula)     :: atomicFormula.
+
+anyInitialState.  
+

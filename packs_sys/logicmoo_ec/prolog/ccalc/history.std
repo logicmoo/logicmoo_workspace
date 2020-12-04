@@ -1,0 +1,16 @@
+% File 'history.std', to be included in history mode after the macro that
+%  specifies the value of maxstep
+
+:- objects
+  0..maxstep     :: step;
+  0..(maxstep)-1   :: astep.
+
+%anyActions.
+
+% actions are exogenous 
+(0: var(exogenousActionAtomicFormula,-1) 
+       <= 0: var(exogenousActionAtomicFormula,-1) ) ;
+
+% attributes are exogenous
+(0: var(attributeAtomicFormula,-1) 
+       <= 0: var(attributeAtomicFormula,-1) ).

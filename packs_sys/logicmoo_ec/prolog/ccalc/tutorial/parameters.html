@@ -1,0 +1,117 @@
+<head>
+   <title>CCalc Tutorial: Setting Parameters</title>
+</head>
+
+<center>
+<h2>
+1.5. Setting Parameters
+</h2>
+</center>
+
+CCalc can use several SAT solvers.  By default, it calls mChaff and
+instructs it to stop as soon as one solution has been computed.  Choices
+like these are determined by the values of parameters that can be changed by
+the user.  The default values of these parameters are stored in the file
+<tt>options.std</tt> in the CCalc directory.  To see their current values,
+type <tt>show_parameters</tt>:
+
+<pre>
+| ?- show_parameters.
+
+    solver = mchaff
+    solver_opts(mchaff) = ''
+    num = 1
+    file_io = true
+    timed = true
+    verbose = true
+    compact = false
+    optimize = true
+    eliminate_tautologies = true
+</pre>
+
+To see the list of solvers that can be called by CCalc, type
+<tt>help(solver)</tt>:
+
+<pre>
+| ?- help(solver).
+
+   The "solver" option establishes which satisfiability solver CCalc will
+   call.  Valid values are:
+
+   grasp      -- GRASP, Feb. 2000 version, by Joao Marques Silva
+   mchaff     -- mChaff version spelt3, by Matthew Moskewicz
+   relsat     -- relsat version 2.00, by Roberto Bayardo
+   relsat_old -- relsat version 1.1.2, by Roberto Bayardo
+   sato       -- SATO version 3.2, by Hantao Zhang
+   sato_old   -- SATO version 3.1.2, by Hantao Zhang
+   satz       -- Satz215.2, by Chu-Min Li
+   satz-rand  -- satz-rand 4.9, by Henry Kautz
+   walksat    -- WalkSAT version 41, by Henry Kautz and Bart Selman
+   zchaff     -- zChaff, by Lintao Zhang
+</pre>
+
+The values of parameters can be changed by the <tt>set</tt> command, for
+instance:
+
+<pre>
+| ?- set(solver,grasp).
+
+yes
+| ?- show_parameters.
+
+    solver = grasp
+    solver_opts = ''
+    num = 1
+
+| ?- set(num,all).
+
+yes
+| ?- show_parameters.
+
+    solver = grasp
+    solver_opts = ''
+    num = all
+</pre>
+
+By assigning value <tt>all</tt> to parameter <tt>num</tt>, the user instructs
+CCalc to find all answers to the query.  If a positive integer <i>n</i> is
+assigned to <tt>num</tt>, CCalc will stop after generating <i>n</i> answers.<p>
+
+Another parameter you may find useful is <tt>dir</tt>.  If you assign a
+value to it by typing<p>
+
+<tt>| ?- set(dir,</tt><i>path_name</i><tt>).</tt><p>
+
+then CCalc will <tt>loadf</tt> files from the directory specified by 
+<i>path_name</i>, instead of the directory from which you started CCalc.<p>
+
+Command <tt>reset_parameters</tt> restores all parameters to their default
+values.<p>
+
+Instead of changing the values of parameters by the <tt>set</tt> command,
+you can copy the <tt>options.std</tt> file to the directory from which you
+intend to start CCalc and modify that copy.<p>
+
+<b>Exercise 1.5.</b>  Consider transition system
+<a href="transitionsystems.html#boolean"><i>TS1</i></a>.  How many edges
+ending at the vertex <i>p</i>=<b>t</b> are there in this graph?  Instruct
+CCalc to calculate this
+number on the basis of the <a href="input1.html#boolean">CCalc description</a>
+of this transition system given in Section 1.1.<p>
+
+<b>Exercise 1.6.</b>  How can we tell CCalc to find all vertices and all
+edges of a given transition system?  Do this for the
+<a href="input1.html#coins">CCalc description</a> of
+<a href="transitionsystems.html#coins"><i>TS2</i></a>
+shown at the end of Section 1.1 for <i>N</i>=3.<p>
+
+<hr><p>
+
+<address><a href="ysp.html">Forward</a>
+to Section 2.1: Basic Formulation</address>
+
+<address><a href="how.html">Back</a>
+to Section 1.4: How CCalc Does It</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>
+

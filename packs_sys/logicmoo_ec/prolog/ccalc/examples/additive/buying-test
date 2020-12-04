@@ -1,0 +1,36 @@
+% File 'buying-test': "Describing Additive Fluents in C+", Section 6
+
+:- maxAdditive :: 7.
+
+:- include 'buying'.
+
+:- objects
+  newspaper,magazine          :: item.
+
+price(newspaper)=1. 
+price(magazine)=3.
+
+% I have $6 in my pocket. A newspaper costs $1, and a magazine
+% costs $3. Do I have enough money to buy 2 newspapers and a magazine?
+% A newspaper and 2 magazines?
+
+:- query 
+label :: 1;
+maxstep :: 1;
+0: has(buyer,money) = 6,
+   buy(newspaper),
+   howmany(newspaper) = 2,
+   buy(magazine),
+   howmany(magazine) = 1.
+
+:- query
+label :: 2;
+maxstep :: 1;
+0:  has(buyer,money) = 6,
+   buy(newspaper),
+   howmany(newspaper) = 1,
+   buy(magazine),
+   howmany(magazine) = 2.
+
+:- show has(buyer,money).
+

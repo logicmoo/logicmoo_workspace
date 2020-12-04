@@ -1,0 +1,22 @@
+disjoint([ fire(yes):0.01, fire(no):0.99 ]).
+rule((smoke(Sm) :- c_smoke(Sm,Fi), fire(Fi))).
+disjoint([ c_smoke(yes,yes):0.9, c_smoke(no,yes):0.1 ]).
+disjoint([ c_smoke(yes,no):0.01, c_smoke(no,no):0.99 ]).
+
+disjoint([ tampering(yes):0.02, tampering(no):0.98 ]).
+
+rule((alarm(Al) :- c_alarm(Al,Fi,Ta), fire(Fi), tampering(Ta))).
+disjoint([ c_alarm(yes,yes,yes):0.50, c_alarm(no,yes,yes):0.50 ]).
+disjoint([ c_alarm(yes,yes,no):0.99, c_alarm(no,yes,no):0.01 ]).
+disjoint([ c_alarm(yes,no,yes):0.85, c_alarm(no,no,yes):0.15 ]).
+disjoint([ c_alarm(yes,no,no):0.0001, c_alarm(no,no,no):0.9999 ]).
+
+rule((leaving(Le) :- c_leaving(Le,Al),alarm(Al)  )).
+
+disjoint([ c_leaving(yes,yes):0.88, c_leaving(no,yes):0.12 ]).
+disjoint([ c_leaving(yes,no):0.001, c_leaving(no,no):0.999 ]).
+
+rule((report(Le) :- c_report(Le,Al),leaving(Al) )).
+
+disjoint([ c_report(yes,yes):0.75, c_report(no,yes):0.25 ]).
+disjoint([ c_report(yes,no):0.01, c_report(no,no):0.99 ]).

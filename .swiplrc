@@ -119,7 +119,7 @@ qcompile_logicmoo:-
    flush_output,flush_output(Err),ttyflush,
    current_prolog_flag(stack_limit,Stack_limit),
    gensym('logicmoo_server_',Name),
-   atom_concat(Name,'.map',MapName),
+   %atom_concat(Name,'.map',MapName),
    qsave_program(Name,
    [   class(development), 
        verbose(true),

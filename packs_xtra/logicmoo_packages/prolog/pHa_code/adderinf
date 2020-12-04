@@ -1,0 +1,186 @@
+lemma(val(output(_),_,_)).
+
+rule(( val(output(G),off,T) :- 
+         gate(G,and),ok(G),val(input(1,G),off,T) )).
+rule(( val(output(G),off,T) :- 
+         gate(G,and),ok(G),val(input(1,G),on,T),val(input(2,G),off,T) )).
+rule(( val(output(G),on,T) :- 
+         gate(G,and),ok(G),val(input(1,G),on,T),val(input(2,G),on,T) )).
+
+rule(( val(output(G),on,T) :- 
+         gate(G,or),ok(G),val(input(1,G),on,T) )).
+rule(( val(output(G),off,T) :- 
+         gate(G,or),ok(G),val(input(1,G),off,T),val(input(2,G),off,T) )).
+rule(( val(output(G),on,T) :- 
+         gate(G,or),ok(G),val(input(1,G),off,T),val(input(2,G),on,T) )).
+
+rule(( val(output(G),off,T) :- 
+         gate(G,xor),ok(G),val(input(1,G),off,T),val(input(2,G),off,T) )).
+rule(( val(output(G),on,T) :- 
+         gate(G,xor),ok(G),val(input(1,G),off,T),val(input(2,G),on,T) )).
+rule(( val(output(G),on,T) :- 
+         gate(G,xor),ok(G),val(input(1,G),on,T),val(input(2,G),off,T) )).
+rule(( val(output(G),off,T) :- 
+         gate(G,xor),ok(G),val(input(1,G),on,T),val(input(2,G),on,T) )).
+
+
+rule((val(output(G),on,_) :- stuck1(G))).
+rule((val(output(G),off,_) :- stuck0(G))).
+rule((val(output(G),V,T) :- ab(G) , produced(G,V,T) )).
+
+rule((val(P,V,T) :- conn(Q,P), %connOK(Q,P), 
+           val(Q,V,T) )).
+
+disjoint([ok(X):0.999,ab(X):0.0000001,stuck1(X):0.0004999,stuck0(X):0.0005]).
+disjoint([produced(X,on,T):0.5,produced(X,off,T):0.5]).
+
+
+rule( conn(input(1,adder(N)), input(1,xor1(N))) ).
+rule( conn(input(1,adder(N)), input(1,and1(N))) ).
+rule( conn(input(2,adder(N)), input(2,xor1(N))) ).
+rule( conn(input(2,adder(N)), input(2,and1(N))) ).
+rule( conn(input(3,adder(N)), input(2,xor2(N))) ).
+rule( conn(input(3,adder(N)), input(1,and2(N))) ).
+rule( conn(output(xor1(N)), input(1,xor2(N))) ).
+rule( conn(output(xor1(N)), input(2,and2(N))) ).
+rule( conn(output(and1(N)), input(2,or1(N))) ).
+rule( conn(output(and2(N)), input(1,or1(N))) ).
+rule( conn(output(xor2(N)), output(1,adder(N))) ).
+rule( conn(output(or1(N)), output(2,adder(N))) ).
+
+rule(( conn(output(2,adder(N)),input(3,adder(N1))) :- succ(N,N1))).
+rule(( val(input(3,adder(1)),off,T) )).
+
+rule( gate(xor1(N),xor) ).
+rule( gate(xor2(N),xor) ).
+rule( gate(and1(N),and) ).
+rule( gate(and2(N),and) ).
+rule( gate(or1(N),or) ).
+
+rule(succ(X,s(X))).
+
+rule(val(input(1,adder(1)), off, t1)).
+rule(val(input(1,adder(s(1))),on, t1)).
+rule(val(input(1,adder(s(s(1)))), off, t1)). 
+rule(val(input(1,adder(s(s(s(1))))),on, t1)).
+rule(val(input(2,adder(1)), on, t1)). 
+rule(val(input(2,adder(s(1))), on, t1)).
+rule(val(input(2,adder(s(s(1)))), on, t1)). 
+rule(val(input(2,adder(s(s(s(1))))), on, t1)).
+
+rule(val(input(1,adder(1)), on, t2)).
+rule(val(input(1,adder(s(1))),off, t2)).
+rule(val(input(1,adder(s(s(1)))), on, t2)). 
+rule(val(input(1,adder(s(s(s(1))))),on, t2)).
+rule(val(input(2,adder(1)), on, t2)). 
+rule(val(input(2,adder(s(1))), on, t2)).
+rule(val(input(2,adder(s(s(1)))), on, t2)). 
+rule(val(input(2,adder(s(s(s(1))))), on, t2)).
+
+rule(val(input(1,adder(1)), off, t3)).
+rule(val(input(1,adder(s(1))),off, t3)).
+rule(val(input(1,adder(s(s(1)))), on, t3)). 
+rule(val(input(1,adder(s(s(s(1))))),off, t3)).
+rule(val(input(1,adder(s(s(s(s(1)))))),on, t3)).
+rule(val(input(2,adder(1)), on, t3)). 
+rule(val(input(2,adder(s(1))), on, t3)).
+rule(val(input(2,adder(s(s(1)))), on, t3)). 
+rule(val(input(2,adder(s(s(s(1))))), on, t3)).
+rule(val(input(2,adder(s(s(s(s(1)))))), on, t3)).
+
+rule(val(input(1,adder(1)), off, t8)).
+rule(val(input(1,adder(s(1))),off, t8)).
+rule(val(input(1,adder(s(s(1)))),off, t8)). 
+rule(val(input(1,adder(s(s(s(1))))),off, t8)).
+rule(val(input(1,adder(s(s(s(s(1)))))),off, t8)).
+rule(val(input(1,adder(s(s(s(s(s(1))))))), on, t8)). 
+rule(val(input(1,adder(s(s(s(s(s(s(1)))))))),off, t8)).
+rule(val(input(1,adder(s(s(s(s(s(s(s(1))))))))),on, t8)).
+rule(val(input(2,adder(1)), on, t8)). 
+rule(val(input(2,adder(s(1))), on, t8)).
+rule(val(input(2,adder(s(s(1)))), on, t8)). 
+rule(val(input(2,adder(s(s(s(1))))), on, t8)).
+rule(val(input(2,adder(s(s(s(s(1)))))), on, t8)).
+rule(val(input(2,adder(s(s(s(s(s(1))))))), on, t8)). 
+rule(val(input(2,adder(s(s(s(s(s(s(1)))))))), on, t8)).
+rule(val(input(2,adder(s(s(s(s(s(s(s(1))))))))), on, t8)).
+
+rule(val(input(1,adder(X)), off, td)).
+rule(val(input(2,adder(X)), off, td)).
+
+% | ?- explain(output([off,off,on],1)).
+/* explain(( val(output(1,adder(1)),on,t1),
+          val(output(2,adder(1)),on,t1) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t1),
+          val(output(1,adder(s(1))),off,t1),
+          val(output(2,adder(s(1))),off,t1) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t1),
+          val(output(1,adder(s(1))),on,t1),
+          val(output(2,adder(s(1))),on,t1) )).
+	  */
+/* explain(( val(output(1,adder(1)),off,t1),
+          val(output(1,adder(s(1))),off,t1),
+          val(output(2,adder(s(1))),off,t1) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t1),
+          val(output(1,adder(s(1))),off,t1),
+          val(output(1,adder(s(s(1)))),on,t1),
+          val(output(2,adder(s(s(1)))),on,t1) )).
+	  */
+% the next 3 are the same example, with bits added at the low end.
+/* explain(( val(output(1,adder(1)),off,t2),
+          val(output(1,adder(s(1))),off,t2),
+          val(output(1,adder(s(s(1)))),off,t2),
+          val(output(2,adder(s(s(1)))),on,t2) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t1),
+          val(output(1,adder(s(1))),off,t1),
+          val(output(1,adder(s(s(1)))),off,t1),
+          val(output(1,adder(s(s(s(1))))),off,t1),
+          val(output(2,adder(s(s(s(1))))),on,t1) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t3),
+          val(output(1,adder(s(1))),on,t3),
+          val(output(1,adder(s(s(1)))),off,t3),
+          val(output(1,adder(s(s(s(1))))),off,t3),
+          val(output(1,adder(s(s(s(s(1)))))),off,t3),
+          val(output(2,adder(s(s(s(s(1)))))),on,t3) )).
+	  */
+/* explain(( val(output(1,adder(1)),on,t8),
+          val(output(1,adder(s(1))),on,t8),
+          val(output(1,adder(s(s(1)))),on,t8),
+          val(output(1,adder(s(s(s(1))))),on,t8),
+          val(output(1,adder(s(s(s(s(1)))))),on,t8),
+          val(output(1,adder(s(s(s(s(s(1))))))),off,t8),
+          val(output(1,adder(s(s(s(s(s(s(1)))))))),off,t8),
+          val(output(1,adder(s(s(s(s(s(s(s(1))))))))),off,t8),
+          val(output(2,adder(s(s(s(s(s(s(s(1))))))))),on,t8) )).
+	  */
+/* explain(( val(output(1,adder(1)),off,td),
+          val(output(1,adder(s(1))),off,td),
+          val(output(1,adder(s(s(1)))),on,td),
+          val(output(1,adder(s(s(s(1))))),off,td),
+          val(output(1,adder(s(s(s(s(1)))))),off,td),
+          val(output(1,adder(s(s(s(s(s(1))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(1)))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(s(1))))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(s(s(1)))))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(s(s(s(1))))))))))),off,td),
+          val(output(2,adder(s(s(s(s(s(s(s(s(s(1))))))))))),off,td) )).
+	  */
+/* explain(( 
+          val(output(2,adder(s(s(s(s(s(s(s(s(s(1))))))))))),off,td), 
+          val(output(1,adder(s(s(s(s(s(s(s(s(s(1))))))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(s(s(1)))))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(s(1))))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(s(1)))))))),off,td),
+          val(output(1,adder(s(s(s(s(s(1))))))),off,td),
+          val(output(1,adder(s(s(s(s(1)))))),off,td),
+          val(output(1,adder(s(s(s(1))))),off,td),
+          val(output(1,adder(s(s(1)))),on,td),
+          val(output(1,adder(s(1))),off,td),
+          val(output(1,adder(1)),off,td)
+	  )).
+	  */

@@ -1,0 +1,16 @@
+tar cvfX /projects/tag/www/ccalc/ccalc.2.0/ccalc.tar release-excludes -C .. ccalc
+gzip /projects/tag/www/ccalc/ccalc.2.0/ccalc.tar
+chmod g+w /projects/tag/www/ccalc/ccalc.2.0/ccalc.tar.gz
+rm -rf /projects/tag/ccalc
+mkdir /projects/tag/ccalc
+cp -r * /projects/tag/ccalc
+foreach F (`cat release-excludes`)
+rm -rf /projects/tag/ccalc/$F
+end
+chmod -R g+w /projects/tag/ccalc
+echo
+echo Don\'t forget to change the text and links on the Web pages
+echo /projects/tag/www/ccalc/ccalc.2.0/index.html and
+echo /projects tag/www/ccalc/download.html.
+echo
+

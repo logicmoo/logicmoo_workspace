@@ -1,0 +1,3 @@
+:- compile('app.tex').
+:- compile('code.tex').
+:- compile('adder.tex').

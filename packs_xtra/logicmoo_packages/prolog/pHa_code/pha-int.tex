@@ -1,0 +1,812 @@
+% this is both a latex file and a Sicstus and Quintus Prolog file.
+% just compile it in Prolog or Latex it.
+% the only difference is that the Latex version comments out the following
+% line:
+/*
+\documentstyle[12pt,makeidx]{article}
+\pagestyle{myheadings}
+\markright{pHa interpreter}
+\makeindex
+\newtheorem{example}{Example}
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newenvironment{proof}{\begin{quote} {\bf Proof: }}{$\Box$\end{quote}}
+\newenvironment{prolog}{\begin{tabbing} \hbox{2cm}\=\hbox{1cm}\=\kill
+    }{\end{tabbing}}
+\newcommand{\IF}{\ $:-$\\\>}
+\newcommand{\AND}{,\\\>}
+\title{Simple, top-down probabilistic Horn abduction interpreter
+--- CODE\thanks{Copyright \copyright 1991 
+David Poole. All rights reserved.}}
+\author{David Poole\\
+Department of Computer Science,\\
+University of British Columbia,\\
+Vancouver, B.C. Canada V6T 1W5\\
+Phone: (604) 822-6254\\
+Fax: (604) 822-5485\\
+Email: poole@cs.ubc.ca}
+\begin{document}
+\maketitle
+\begin{abstract}
+This paper gives the code for a simple probabilistic Horn abduction
+interpreter. This is based on a branch and bound SLD resolution.
+There is one difference to the version described in my UAI-91 paper,
+and that has to do with the fact that there are no explicit integrity
+constraints or {\tt assumable} declarations; these are incorportated
+into a new {\tt disjoint} declaration.
+
+This code is designed to be simple rather
+than efficient. We have a more efficient version that implements
+priority queues in C; this about doubles the speed of moderately sized
+problems. We also have a version that saves partially computes results,
+and a bottom-up version. These are all less portable and/or less stable
+than this version. All the implementations should be seen as prototype
+implementations. 
+\end{abstract}
+
+\section{Introduction}
+\subsection{Syntax} \label{vocabulary}
+\begin{description}
+\item[{\tt rule$(R)$.}]
+The facts are
+given in the form of {\tt rule($R$)}, where $R$ is either a rule of
+the form {\tt H :- B} or is just an atom (similar to the use of
+$clause$ in many Prolog systems).
+\item[{\tt disjoint$([h_1:p:1,\cdots,h_n:p_n])$.}]declares
+the $p_i$ to be pairwise disjoint hypotheses, with $P(h_i)=p_i$. 
+\item[{\tt explain$(G)$.}] 
+\item[{\tt explain$(N,G)$.}] where $N$ is an integer asks to explain
+$G$ but stop after $N$ items have been taken off the priority queue. 
+\item[{\tt more.}] asks for more explanations of the goal.
+\item[{\tt more$(N)$.}] asks for more explanations of the goal, but stop
+after $N$ items have been taken off the priority queue.
+\item[{\tt cp$(X,O)$}.] enumerates sucessive estimates of $p(X|O)$.
+\item[{\tt cp$(N,X,O)$}.] enumerates sucessive estimates of $p(X|O)$, 
+but stops after $N$ items have been taken off the priority queue.
+\item[{\tt final.}] gives the final conditional probability once all 
+explanations have been found. 
+\item[{\tt reestimate.}] reestimates the probabilities given before
+based on new estimates of the probability mass. Can be done after any
+or all explanations are given. 
+\item[{\tt pq.}] gives statistics on the size and the top element of
+the priority queue.
+\item[{\tt nomore.}] clears the database for a new explanation.
+\item[{\tt thconsult$(\hbox{\em filename})$.}] loads a flile called
+{\em filename}. 
+\end{description}
+
+\section{Implementation Overview}
+\subsection{SLD-BF resolution}\label{implementation}
+In this section we outline an implementation based on 
+Logic programming technology. This are
+implemented by a branch and bound search where we consider the partial
+explanation with the least cost (highest probability) at any time.
+
+The implementations keep a priority queue of sets of
+hypotheses that could be extended into explanations (``partial
+explanations''). At any time the set of all the explanations is the
+set of already generated explanations, plus those explanations that
+can be generated from the partial explanations in the priority queue.
+
+Formally, a partial explanation is a pair
+\[\left<g \leftarrow C , D\right>\]
+where $g$ is an atom, $C$ is a conjunction of atoms and $D$ is a set
+of hypotheses. 
+
+\begin{figure} 
+\begin{tabbing}
+$\Phi := \{\left<q \leftarrow q , \{\}\right>\};$\\
+$\Pi := \{\};$\\
+repeat\=\\
+\>choose and remove best $\left<g \leftarrow C , D\right>$ from $\Phi$;\\
+\>if \=$C=true$\\
+\>\>then if $good(D)$ then $\Pi := \Pi \cup \{D\}$\\
+\>\>else \=$C =a\wedge R$\\
+\>\>\>for each \=$rule(h\leftarrow B)$ such that $mgu(a,h)=\theta$\\
+\>\>\>\>$\Phi := \Phi \cup \{\left<g \leftarrow B \wedge R ,
+D\right>\theta\}$ ;\\ 
+\>\>\>if $a \in H$ and $good(\{a\}\cup D)$\\
+\>\>\>\> then $\Phi := \Phi \cup \{\left<g \leftarrow R , \{a\}\cup
+D\right>\}$ \\ 
+until $\Phi = \{\}$\\
+where $good(D)\equiv \not \exists \{d_1,d_2\}\subseteq D$ such that $\forall \phi \ nogood(d_1\phi,d_2\phi).$
+\end{tabbing}
+\caption{SLD-BF Resolution to find explanations of $q$ in order.}
+\label{basic-top-down} 
+\end{figure}
+
+Figure \ref{basic-top-down} gives an algorithm for finding
+explanations of $q$ in order of probability (most likely first).
+At each step we choose an element
+\[\left<g \leftarrow C , D\right>\]
+of the priority queue $\Phi$ with maximum prior probability of $D$.
+
+We have an explanation when $C$ is the empty conjunction (represented
+here as $true$). In this case $D$ is added to the set $\Pi$ of all
+found explanations.
+
+Otherwise,
+suppose $C$ is conjunction $a \wedge R$.
+
+There are two operations that can be carried out. The first is a form of SLD
+resolution, where 
+for each rule
+\[h \leftarrow b_1 \wedge ... \wedge b_n\]
+in $F$, such that $h$ and $a$ have most general unifier $\theta$,  we
+generate the partial explanation 
+\[\left<g \leftarrow b_1 \wedge ... \wedge b_n \wedge R , D\right>\theta\]
+and add it to the priority queue.
+
+The second operation is used when $a \in H$. In this case we produce the
+partial explanation
+\[\left<g \leftarrow R , \{a\} \cup D\right>\]
+and add it to $\Phi$.
+
+The $nogoods$ are derived from the {\tt disjoint} declarations.
+Note that we cannot prune a subgaol due to $nogoods$ unless every instance is nogood. Further conjuctive subgoals may instantiate some of the variables.
+
+\section{Code}
+\subsection{Meta-interpreter}
+The meta-interpreter is implemented using the relation:
+\[prove(G,T0,T1,C0,C1,U)\]
+Where $G$ is an atom or conjunction of atoms,
+$T1-T0$ forms a difference list of assumptions needed to prove
+$G$.  $C0$ is the cost of $T0$. $C1$ is the cost of $T1$. $U$ is the
+conjunction of subgoals remaining to be proven (in particular it is
+the conjunction of rightmost ``uncles'' in the part of the proof tree
+generated so far).
+
+The partial explanations that we store and do not search for in a
+depth-first manner are represented as
+\[process(T,P,R)\]
+where $R$ is a set of remaining subgoals to prove. $P$ is the
+prior probability of the assumptions made so far. $T$ is the set
+of assumptions.
+
+The procedure is defined as follows\footnote{The verbatim code
+is the actual implementation code given in standard Edinburgh notation.
+I assume that the reader is familiar with such notation. Cuts are used
+purely to cut down on the search --- the programs do not rely on them
+for correctness.}:
+
+The main procedure is 
+\[prove(G,T0,T1,C0,C1,U)\]
+where
+\begin{description}
+\item $G$ is the goal to be proved.
+\item $T1-T0$ is a difference list of assumptions to prove $G$.
+\item $C0$ is the probability of $T0$, $C1$ is the probability of $T1$.
+\item $U$ is the conjunction of remaining subgoals to be proved after $G$.
+\end{description}
+The first rules defining $prove$ are the special purpose rules
+for commands that are defined in the system.
+\index{prove}
+\begin{verbatim} */
+prove(ans(A),T,T,C,C,_) :- !,
+   ans(A,T,C).
+prove(report_cp,T,T,C,C,_) :- !,
+   report_cp(T,C).
+prove(report_evidence,T,T,C,C,_) :- !,
+   report_evidence(T,C).
+/* \end{verbatim}
+
+The remaining rules are the real definition
+\begin{verbatim} */
+prove(true,T,T,C,C,_) :- !.
+prove((A,B),T0,T2,C0,C2,U) :- !,
+   prove(A,T0,T1,C0,C1,(B,U)),
+   prove(B,T1,T2,C1,C2,U).
+prove(H,T,T1,C,C1,U) :-
+   hypothesis(H,PH),
+   mergeinto(H,T,T1,T1,C,C1,U,PH,_).
+prove(G,T0,T1,C0,C1,U) :-
+   rul(G,B),
+   prove(B,T0,T1,C0,C1,U).
+/* \end{verbatim}
+
+$mergeinto$ is used to merge a hypothesis into a partial explanation.
+Note that a hypothesis may match a number of previous assumed instances;
+we assume here that the required one is one of the previously assumed ones.
+For example, trying to insert $h(X)$ into $[h(a),p(b),h(c),p(d)]$, could make
+$X=a$ or $X=d$; we do not allow for the case that this could form the 
+explanation $[h(a),p(b),h(c),p(d),h(e)]$ with $X=e$.
+
+\[mergeinto(H,T0,T1,TF,C0,C1,U,PH,Match)\]
+where
+\begin{description}
+\item $G$ is the goal to be proved.
+\item $T0$ is a list of assumptionsin which to insert $G$. $T1$ is $T0$
+with $G$ in its place or at the end.
+$TF$ is the list of all assumptions.
+\item $C0$ is the probability of $T0$, $C1$ is the probability of $T1$.
+\item $U$ is the conjunction of remaining subgoals to be proved after $G$.
+\item $PH$ is the probability of $H$.
+\item $Match$ is a flag the records whether there have been any assumed
+hypotheses with which $H$ can unify.
+\end{description}
+
+\index{mergeinto}
+\begin{verbatim} */
+mergeinto(H,[],[H],F,C,C1,U,PH,nomatch) :- !,
+   C1 is C*PH,
+   add_to_PQ(process(F,C1,U)),
+   fail.
+mergeinto(H,[A|R],[A|R],_,C,C,_,_,_) :-
+   H==A,!.
+mergeinto(A,[A|R],[A|R],_,C,C,_,_,_).
+mergeinto(H,[A|R],[A|R1],F,C,C1,U,PH,M) :-
+   \+ ((makeground((H,A)), nogood(H,A))),
+   \+ H=A ->
+   mergeinto(H,R,R1,F,C,C1,U,PH,M)
+   ; mergeinto(H,R,R1,F,C,C1,U,PH,match).
+/* \end{verbatim}
+
+\subsection{rule}
+
+$rule(R)$ where $R$ is the form of a Prolog rule. This asserts the
+rule produced.
+
+\index{rule}
+\begin{verbatim} */
+rule((H :- B)) :- !,
+   assert(rul(H,B)).
+rule(H) :-
+   assert(rul(H,true)).
+/* \end{verbatim}
+
+
+\subsection{Hypotheses}
+
+\[\hbox{\tt disjoint}([h_1:p:1,\cdots,h_n:p_n]).\]
+declares the $p_i$ to be pairwise disjoint hypotheses, with $P(h_i)=p_i$.
+It should be the case that 
+\[\sum_{i=1}^n p_i = 1\]
+
+This asserts $hypothesis(h_i,p_i)$ for each $i$ and asserts
+$ngood(h_i,h_j)$ for each $i \neq j$.
+
+\index{disjoint}
+\begin{verbatim} */
+:- op(  500, xfx,  : ).
+disjoint([]).
+disjoint([H:P|R]) :-
+   assert(hypothesis(H,P)),
+   make_disjoint(H,R),
+   disjoint(R).
+/* \end{verbatim}
+\index{processQ}
+\begin{verbatim} */
+make_disjoint(_,[]).
+make_disjoint(H,[H2 : _ | R]) :-
+   assert(nogood(H,H2)),
+   assert(nogood(H2,H)),
+   make_disjoint(H,R).
+/* \end{verbatim}
+
+\subsection{Lemma}
+
+The following is to make the program upwardly compatible with other
+versions that allow for lemmata. The lemma declaration is ignored.
+
+\begin{verbatim} */
+lemma(_).
+/* \end{verbatim}
+
+\subsection{Nogoods}
+We assume three relations for handling $nogoods$:
+\[good(A,L)\]
+fails if $[A|L]$ has a subset that has been declared nogood. We can
+assume that no subset of $L$ is nogood (this allows us to more
+efficiently index nogoods).
+\[allgood(L)\]
+fails if $L$ has a subset that has been declared nogood.
+\index{good}
+\begin{verbatim} */
+allgood([]).
+allgood([H|T]) :-
+   good(H,T),
+   allgood(T).
+
+good(A,T) :-
+   \+ ( makeground((A,T)), bad(A,T)).
+bad(A,[B|_]) :-
+   nogood(A,B).
+bad(A,[_|R]) :-
+   bad(A,R).
+/* \end{verbatim}
+
+
+\subsection{Explaining}
+To find an explanation for a subgoal $G$ we do an $explain(N,G)$. This
+adds a process to the priority that checks for nogoods, and then tries
+to prove $G$. This makes the assumption that the facts are consistent.
+\index{explain}
+\begin{verbatim} */
+explain(G) :-
+   explain(-1,G).
+
+explain(N,G) :-
+   assert(count(N)),
+   assert(qindex(1)),
+   assert(done([],0)),
+   assert(processQ(0,nil)),
+   statistics(runtime,_),
+   ex((G,ans(G)),[],1),!.
+:- dynamic false/6.
+/* \end{verbatim}
+
+$ex(G)$ tries to prove $G$, but if $G$ cannot be proven, a partial
+proof is taken from the priority queue and restarted. This means that
+$ex(G)$ succeeds if there is some proof that succeeds.
+\index{ex}
+\index{ans}
+\begin{verbatim} */
+ex(G,D,C) :- 
+   prove(G,D,_,C,_,true).
+ex(_,_,_) :-
+    retract(count(N)),
+    N1 is N-1,
+    assert(count(N1)),
+    N=0.
+ex(_,_,_) :-
+    remove_from_PQ(process(D,C,U)),!,
+    ex(U,D,C).
+ans(G,[],_) :-
+   writeln([G,'is a theorem (no assumptions needed).']),
+   statistics(runtime,[_,T]),
+   writeln(['Runtime: ',T,' msec.']),!.
+ans(G,D,C) :-
+   allgood(D),
+   processQ(QC,_),
+   retract(done(Done,DC)),
+   DC1 is DC+C,
+   assert(done([expl(G,D,C)|Done],DC1)),
+   TC is DC1 + QC,
+   writeln(['Probability mass = [',DC1,',',TC,']']),
+   report(D,C,TC,DC1),
+   statistics(runtime,[_,T]),
+   writeln(['Runtime: ',T,' msec.']).
+
+report(D,C,TC,DC1) :-
+   Prob1 is C / TC,
+   Prob2 is C / DC1,
+   writeln(['Explanation: ',D]),
+   writeln(['Prior = ',C]),
+   writeln(['Posterior = [',Prob1,',',Prob2,']']).
+/* \end{verbatim}
+
+$recap$ is a way to ask for a the final value of all probabilities
+once ``no'' is returned.
+\index{recap}
+\begin{verbatim} */
+recap :-
+   done(Done,DC),
+   writeln(['Probability mass = ',DC]),
+   reportall(Done,DC,DC).
+/* \end{verbatim}
+
+$reestimate$ is a way to ask for a reestimation of all probabilities
+based on the newly generated explanations.
+\index{reestimate}
+\index{reportall}
+\begin{verbatim} */
+reestimate :-
+   done(Done,DC),
+   processQ(QC,_),
+   writeln(['Queue mass = ',QC]),
+   TC is DC + QC,
+   writeln(['Probability mass = [',DC,',',TC,']']),
+   MPQ is QC/TC,
+   writeln(['Maximum prob not found = ',MPQ]),
+   reportall(Done,TC,DC).
+
+reportall([],_,_).
+reportall([expl(_,D,C)|R],TC,DC) :-
+   reportall(R,TC,DC),
+   nl,report(D,C,TC,DC).
+/* \end{verbatim}
+
+$more$ is a way to ask for more answers. It will take the top priority
+partial proof and continue with it.
+\index{more}
+\index{nomore}
+\begin{verbatim} */
+more :- ex(fail,_,_).
+
+more(N) :-
+    retract(count(_)),
+    assert(count(N)),
+    ex(fail,_,_).
+
+nomore :- 
+   retract(count(_)),
+   retactall(qindex(_)),
+   retractall(processQ(_,_)),
+   retractall(done(_,_)).
+/* \end{verbatim}
+
+
+\subsection{Conditional Probabilities}
+The preceeding section showed how to compute the prior probability and
+the posterior probability of explanations. To compute the conditional
+probability of an arbitrary query $X$ with respect to some other
+condition $O$ (often an observation, but it doesn't have to be), we
+use
+\begin{eqnarray*}
+P(X|O) &=& \frac{P(O \wedge X)}{P(O)}\\
+&=&\frac{\sum_{E\in expl(O \wedge X)}p(E)}{\sum_{E\in expl(O)}p(E)}
+\end{eqnarray*}
+where the explanations of $O \wedge X$ (i.e., $expl(O \wedge X)$) can
+be obtained from the explanations of $O$, and extending these to also
+be explanations of $X$.
+
+This is the idea behind the following code.
+
+$cp(X,O)$ finds repeated estimates of $P(X|O)$.
+
+
+$cp(N,X,O)$ finds repeated estimates of $P(X|O)$, but stops after $N$ steps.
+
+\index{cp}
+\begin{verbatim} */
+cp(X,O) :- cp(-1,X,O).
+
+cp(N,X,O) :-
+   assert(explobs([],0)),
+   explain(N,(O,report_evidence,X,report_cp)).
+
+final :-
+   retract(explobs(_,PO)),
+   retract(done(_,PX)),
+   Post is PX / PO,
+   writeln(['Posterior Probability: ',PX,' / ',PO,' = ',Post]).
+/* \end{verbatim}
+
+\index{pr}
+\begin{verbatim} */
+report_evidence(T,C) :- !,
+   allgood(T),
+   \+ already_found(T),
+   retract(explobs(EO,CO)),
+   NC is C+CO,
+   assert(explobs([T|EO],NC)).
+
+report_cp(T,C) :-
+   allgood(T),
+   done(_,DC),
+   PX is C+DC,
+   explobs(_,PO),
+   CE is PX/PO,
+   processQ(QM,_),
+   LB is PX / (PO+QM),
+   UB is (PX + QM) / PO,
+   OU is PO + QM,
+   writeln(['Current Estimate: ',CE]),
+   writeln(['Range: [',LB,', ',UB,']']),nl,
+   writeln(['Prior of the observations: [',PO,', ',OU,']']).
+/* \end{verbatim}
+
+\index{already\_found}
+\begin{verbatim} */
+already_found(T) :-
+   explobs(EO,_),
+   member(E,EO),
+   subset(T,E).
+/* \end{verbatim}
+
+\subsection{Process Priority Queue}
+We assume that there is a global priority queue into which one can put
+formulae with an associated cost and from which one can extract the
+least cost formulae. Both insertion and removal from the priority queue
+can be carried out in $log n$ time where $n$ is the number of elements
+of the priority queue.  We assume that priority queue persists
+over failure of subgoals. It can thus be implemented by asserting into
+a Prolog database\footnote{Unfortuneately asserting and retracting does not take a non-trivial time. It makes the $log n$ estimation wrong. We (well 
+Michael Horsch, actually) have implemented a version that uses a C 
+implementation of priority queues that does persist and uses $log n$ time, but 
+it is not as portable as this version.}, but cannot be implemented by carrying 
+it around as an extra argument in a meta-interpreter, for example.
+Two operations are defined:
+\[add\_to\_PQ(process(G,C,B))\]
+adds subgoal $B$, with cost $C$ (or probability) to prove goal $G$ to the
+priority queue.
+\[remove\_from\_PQ(process(G,C,B))\]
+if the priority queue is not empty, makes $B$ with cost $C$ the
+element of the priority queue with least cost, and removes it from the
+priority queue. This fails if the priority queue is empty.
+
+\index{remove\_from\_PQ}
+\begin{verbatim} */
+remove_from_PQ(process(G,C,B)) :-
+    retract(processQ(QC,Q)),
+    \+ emptyPQ(Q),    
+    removePQ(process(G,C,N),Q,Q1),
+    retract(process_ind(N,B)),
+    QC1 is QC - C,
+    assert(processQ(QC1,Q1)).  
+/* \end{verbatim}
+
+\index{add\_to\_PQ}
+\begin{verbatim} */
+add_to_PQ(process(G,C,B)) :-
+    get_index(N),
+    assert(process_ind(N,B)),
+    retract(processQ(QC,Q)),
+    insertPQ(process(G,C,N),Q,Q1),
+    QC1 is QC + C,
+    assert(processQ(QC1,Q1)).
+/* \end{verbatim}
+
+To minimise the size of the queues that need to be assertes and retracted, we
+store the remaining subgoals once, and only put an index on the priority queue.
+
+\index{get\_index}
+\begin{verbatim} */
+get_index(N1) :-
+   retract(qindex(N)),
+   N1 is N+1,
+   assert(qindex(N1)).
+/* \end{verbatim}
+
+\index{qindex}
+\begin{verbatim} */
+:- dynamic qindex/1.
+/* \end{verbatim}
+
+$pq$ gives statistics on the top of the queue.
+
+\index{pq}
+\begin{verbatim} */
+pq :-
+   processQ(QC,pq(process(T,P,N),L,R)),
+   process_ind(N,G),
+   writeln(['Prob mass =',QC]),
+   sizePQ(pq(process(T,P,G),L,R),S),
+   writeln(['Size of priority queue: ',S]),
+   writeln(['Most likely prob: ',P]),
+   writeln(['Goal:',T]),
+   writeln(['Remaining subgoals:']),
+   print_sub(G).
+
+print_sub((pr(G,[A|_]),R)) :- !,
+   writeln(['Assume: ',A]),
+   writeln([' and ',G]),
+   print_subs(R).
+print_sub(((A,B),C)) :- !,
+   print_sub((A,B,C)).
+print_sub((G,R)) :- !,
+   writeln([G]),
+   print_subs(R).
+print_sub(pr(G,[A|_])) :- !,
+   writeln(['Assume: ',A]),
+   writeln([' and ',G]).
+print_sub(G) :- !,
+   writeln([' also ',G]).
+
+print_subs((pr(G,_),R)) :- !,
+   writeln([' and ',G]),
+   print_subs(R).
+print_subs(((A,B),C)) :- !,
+   print_subs((A,B,C)).
+print_subs((G,R)) :- !,
+   writeln([' also ',G]),
+   print_subs(R).
+print_subs(pr(G,_)) :- !,
+   writeln([' and ',G]).
+print_subs(G) :- !,
+   writeln([' also ',G]).
+/* \end{verbatim}
+
+\subsection{Priority Queues}
+
+\index{priorityqueues}
+In this section, we implement priority queues as a variant of a heap,
+using Prolog-style trees.  The empty queue is represented by $nil$; 
+otherwise the queue is represented recursively as	
+\[pq(OBJ,LPQ,RPQ)\]
+where $OBJ$ is the data element, and $LPQ$ \& $RPQ$ are the left and
+right priority queues respectively.  Note that $OBJ$ is the data
+element with higher priority than any element in either of 
+$LPQ$ or $RPQ$.  
+
+In our priority queues, we maintain the following invariant: {\em The
+right subtree $RPQ$ has either the same number of data elements or
+exactly one more than the left subtree $LPQ$.}  This invariant assures
+that both the insert and delete operations have $O(\log n)$ time
+complexity, where $n$ is the number of elements in the queue.
+
+There are two operations on priority queues: insertion and deletion.
+
+The insertion operation behaves as follows: $insertPQ(X,Q1,Q2)$ is
+true if inserting $X$ into queue $Q1$ results in queue $Q2$.  The
+invariant is maintained by inserting data elements into the left 
+subtree of $Q1$, creating a new subtree.  The new subtree is made 
+the right subtree of $Q2$, and the right subtree of $Q1$ becomes 
+the new left subtree of $Q2$.  Note that if the new element has 
+higher piority than the element at the root of the queue, the new 
+element is made the root, and the old root element is inserted into 
+the queue.
+
+\index{insertPQ}
+\begin{verbatim} */
+insertPQ(NV, nil, pq(NV,nil,nil)).
+insertPQ(NV, pq(V,LPQ,RPQ), pq(V,RPQ,NLPQ)) :-
+   better(V,NV), !,
+   insertPQ(NV,LPQ,NLPQ).
+insertPQ(NV, pq(V,LPQ,RPQ), pq(NV,RPQ,NLPQ)) :-
+   insertPQ(V,LPQ,NLPQ).
+/* \end{verbatim}
+
+The deletion operation behaves as follows:  $removePQ(Val,Q1,Q2)$ is
+true if removing $Val$ from priority queue $Q1$ results in the
+priority queue $Q2$.  Recall that the data element $Val$ always has 
+higher priority than any element in its subtrees, and since it is
+being deleted, it must be replaced by the element of next highest
+priority.  The predicate $remany(Val,Q1,Q2)$ removes a node from the
+right subtree (since we always remove from the right to maintain the
+invariant) and puts it as the top element in the priority queue.  This
+value is pushed down through the queue with $pushPQ(Q1,Q2)$, which
+pushes the element down until the heap property is attained.
+Finally, we swap subtrees, so that the left subtree is always at most
+one element lighter than the right.
+\index{removePQ}
+\begin{verbatim} */
+
+removePQ(Val, pq(Val,nil,PQ),PQ) :- !.
+removePQ(Val, pq(Val,LPQ,RPQ),NPQ) 
+  :- remanyPQ(RMV,RPQ,NRPQ),
+     pushPQ(pq(RMV,NRPQ,LPQ),NPQ).
+
+/*
+\end{verbatim}
+
+The predicate $pushPQ(Q1,Q2)$ is true if $Q2$ is a heap given a
+"pseudo--heap" $Q1$.  If $LV$, the element in the left subtree, is of higher
+priority than both $RV$ and $Val$, we exchange $LV$ and $Val$, pushing
+$Val$ down the left subtree.  Otherwise, if  $Val$ is better than
+$RV$, then we exchange these two, pushing $Val$ down the right
+subtree.  Note that we are not adding or deleting elements, so we
+don't do any subtree swapping.  Finally, if $Val$ is of higher
+priority than either $RV$ or $LV$, we are finished.
+\index{pushPQ}
+\begin{verbatim} */
+pushPQ(pq(Val,pq(LV,PQLL,PQLR),pq(RV,PQRL,PQRR)), 
+       pq(LV,LPQ,pq(RV,PQRL,PQRR)) ) :-
+  better(LV,RV),
+  better(LV,Val), !,
+  pushPQ(pq(Val,PQLL,PQLR),LPQ).
+
+pushPQ(pq(Val,LPQ, pq(RV,PQRL,PQRR)), pq(RV,LPQ,RPQ))
+  :- better(RV,Val), !,
+     pushPQ(pq(Val,PQRL,PQRR),RPQ).
+
+pushPQ(PQ,PQ).
+/* \end{verbatim}
+
+We remove an element
+from a subtree using $remanyPQ(V,LQ,RQ)$.  This predicate
+finds the right--most element which either has only a right child, 
+or is itself the right leaf of a node with two children.  Swapping 
+occurs in the latter case. 
+\index{remanyPQ}
+\begin{verbatim} */
+remanyPQ(Val, pq(Val,nil,PQ),PQ) :- !.
+remanyPQ(V, pq(Val,LPQ,RPQ), pq(Val,NLPQ,LPQ)) :-
+   remanyPQ(V,RPQ,NLPQ).
+/* \end{verbatim}
+
+$better$ is used to order the priority queue. The first is used for the
+probabilistic Horn abduction implementation. The second is used for the
+heapsort.
+
+\index{better}
+\begin{verbatim} */
+better(process(_,X,_),process(_,Y,_)) :- !,
+   X > Y.
+better(X,Y) :- X < Y.
+/* \end{verbatim}
+
+$heapsort(L,S)$ is used here to test priority queues, but what the
+heck, I might as well leave it in.
+\index{heapsort}
+\begin{verbatim} */
+heapsort(L,S) :-
+   insertall(L,nil,PQ),
+   remall(PQ,S).
+insertall([],P,P).
+insertall([H|T],P1,P3) :-
+   insertPQ(H,P1,P2),
+   insertall(T,P2,P3).
+remall(nil,[]).
+remall(L1,[H|T]) :-
+   removePQ(H,L1,L2),
+   remall(L2,T).
+/* \end{verbatim}
+
+$emptyPQ(Q)$ is true if queue $Q$ is empty
+\index{emptyPQ}
+\begin{verbatim} */
+emptyPQ(nil).
+/* \end{verbatim}
+
+$sizePQ(Q,S)$ is true if queue $Q$ contains $S$ elements.
+\index{emptyPQ}
+\begin{verbatim} */
+sizePQ(nil,0).
+sizePQ(pq(_,L,R),S) :-
+   sizePQ(L,S1),
+   sizePQ(R,S2),
+   S is S1 + S2 + 1 .
+/* \end{verbatim}
+
+\subsection{Miscellanious}
+\subsubsection{File Handling}
+To consult a probabilistic Horn abduction file, you should do a,
+\begin{verse}
+{\bf thconsult}\em (filename).
+\end{verse}
+The following is the definition of {\em thconsult}. Basicly we just
+keep reading the file and executing the commands in it until we stop.
+\index{thconsult}
+\begin{verbatim} */
+thconsult(File) :-
+   current_input(OldFile),
+   open(File,read,Input),
+   set_input(Input),
+   read(T),
+   read_all(T),
+   set_input(OldFile).
+/* \end{verbatim}
+\index{read\_all}
+\begin{verbatim} */
+read_all(end_of_file) :- !.
+
+read_all(T) :-
+   (call(T);format('Warning: ~w failed~n',[T])),
+   read(T2),
+   read_all(T2).
+/* \end{verbatim}
+
+\subsection{Utility Functions}
+\subsubsection{List Predicates}
+$append(X,Y,Z)$ is the normal append function
+\index{append} 
+\begin{verbatim} */
+append([],L,L).
+
+append([H|X],Y,[H|Z]) :-
+   append(X,Y,Z).
+/* \end{verbatim}
+
+\index{member}
+\begin{verbatim} */
+member(A,[A|_]).
+member(A,[_|R]) :-
+   member(A,R).
+/* \end{verbatim}
+\index{subset}
+\begin{verbatim} */
+subset([],_).
+subset([H|T],L) :-
+   member(H,L),
+   subset(T,L).
+/* \end{verbatim}
+\index{makeground}
+\begin{verbatim} */
+makeground(T) :-
+   numbervars(T,0,_).
+/* \end{verbatim}
+
+\index{writeln}
+\begin{verbatim} */
+writeln([]) :- nl.
+writeln([H|T]) :-
+   write(H),
+   writeln(T).
+/* \end{verbatim}
+\printindex
+\end{document}
+*/

@@ -470,3 +470,6 @@ eggdrop
 ls
 df /
 df -h
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/
+cd conf/
+eggdrop

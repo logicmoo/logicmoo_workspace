@@ -1,0 +1,109 @@
+<head>
+   <title>CCalc Tutorial: Describing Actions</title>
+</head>
+
+<center>
+<h2>
+0.2. Describing Actions
+</h2>
+</center>
+
+Describing transition systems is one of the main uses of the input language
+of CCalc.  The CCalc approach to this task is based on action language C+
+from the paper
+"<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">Nonmonotonic
+Causal Theories" (NMCT)</a> by
+<a href="http://www.mrg.dist.unige.it/~enrico/">Enrico Giunchiglia</a>,
+<a href="http://www.cs.utexas.edu/users/appsmurf">Joohyung Lee</a>,
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>,
+Norman McCain and
+<a href="http://www.d.umn.edu/~hudson">Hudson Turner</a>
+(<i>Artificial Intelligence</i>, Vol.&nbsp;153, 2004).
+<p>
+
+C+ is an enhancement of action language A proposed by
+<a href="http://www.cs.ttu.edu/~mgelfond/">Michael Gelfond</a> and
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a> in 1993
+(<i>Journal of Logic Programming</i>, Vol. 17).  Both languages
+describe effects of actions by sets of propositions, such as
+
+<p>
+<i>a</i> <b>causes</b> <i>p</i>.
+<p>
+
+Language C+ is more expressive than A: it allows us to describe transition
+systems with concurrently executed actions, and also transition systems with
+non-Boolean fluents.  Here are some other differences.
+<p>
+
+<ul>
+
+<li>
+<i>A more flexible approach to inertia.</i>
+Proposition <i>a</i>&nbsp;<b>causes</b>&nbsp;<i>p</i> can be used to describe
+transition system <a href="transitionsystems.html#boolean"><i>TS1</i></a>:
+it tells us that every edge labeled <i>a=</i><b>t</b> leads to the state
+<i>p=</i><b>t</b>.  But how do we know that, in this example, the
+edges labeled
+<i>a=</i><b>f</b> are loops?  Such an edge represents an event in which
+action <i>a</i> is not executed, and we expect the value of <i>p</i> not to
+change after such an event "by inertia."  The problem of making this
+idea of inertia precise is known as the frame problem.  The semantics
+of A applies the inertia assumption automatically to every fluent.  In C+, on
+the other hand, "inertial fluents" are only a special case.  The possibility
+of not postulating inertia for a fluent is essential, for instance, when that
+fluent is characterized by its definition in terms of other fluents.<p>
+
+<li>
+<i>Causal dependencies between fluents.</i>  In C+ we can talk not only about
+the effect of an action on a fluent, but also about causal dependencies between
+fluents.  If a causal dependency between two fluents is postulated then an
+action affecting one fluent may indirectly affect the other.  The problem of
+making the idea of indirect effects precise is known as the ramification
+problem.<p>
+
+<li>
+<i>Causal dependencies between actions.</i> Propositions of C+ allow us to talk
+about causal dependencies between actions.  We will see later that this is
+useful when we want to state a proposition that is defeasible.  But in
+many cases this feature of C+ is not needed, and we simply assume every action
+to be "exogenous" -- any event is assumed to have an external cause, not
+described by the given propositions.
+</ul>
+
+A precise description of the syntax and semantics of C+ can be found in
+<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">NMCT</a>.
+This tutorial provides informal explanations and examples that will help you
+describe transition systems in the language of CCalc even if you are not
+familiar with that paper.<p>
+
+The fragment of the input language of CCalc that deals with describing
+actions is intended to be an elaboration tolerant
+formalism.  This idea is characterized by
+<a href="http://www-formal.stanford.edu/jmc/">John McCarthy</a> in the paper
+<i><a href="http://www-formal.stanford.edu/jmc/elaboration/elaboration.html">
+Elaboration Tolerance</a></i> (in progress) in these words:
+
+<blockquote>
+A formalism is elaboration tolerant to the extent that it is convenient to
+modify a set of facts expressed in the formalism to take into account new
+phenomena or changed circumstances. Representations of information in
+natural language have good elaboration tolerance when used with human
+background knowledge. Human-level AI will require representations with
+much more elaboration tolerance than those used by present AI programs,
+because human-level AI needs to be able to take new phenomena into account.<p>
+
+The simplest kind of elaboration is the addition of new formulas. We'll call
+these <i>additive elaborations</i>. Next comes changing the values of parameters.
+Adding new arguments to functions and predicates represents more of a change.
+</blockquote>
+
+<hr><p>
+
+<address><a href="queries.html">Forward</a>
+to Section 0.3: Queries</a><br></address>
+
+<address><a href="transitionsystems.html">Back</a>
+to Section 0.1: Transition Systems</a><br></address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

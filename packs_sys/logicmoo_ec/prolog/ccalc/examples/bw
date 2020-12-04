@@ -1,0 +1,43 @@
+% File 'bw': The blocks world
+
+:- sorts
+  location >> block.
+
+:- objects
+  table                         :: location.
+
+:- constants
+  loc(block)                    :: inertialFluent(location);
+  above(block,location)         :: sdFluent;
+  move(block)                   :: exogenousAction;
+  destination(block)            :: attribute(location) of move(block).
+
+:- variables
+  B,B1                          :: block;
+  L                             :: location.
+
+% two blocks can't be on the same block at the same time
+constraint loc(B)=loc(B1) ->> loc(B)=table where B @< B1.
+
+% definition of above
+
+caused above(B,L) if loc(B)=L.
+caused above(B,L) if loc(B)=B1 & above(B1,L).
+default -above(B,L).
+
+% a block cannot be above itself
+constraint -above(B,B).
+
+% effect of moving a block
+move(B) causes loc(B)=L if destination(B)=L.
+
+% a block can be moved only when it is clear
+nonexecutable move(B) if loc(B1)=B.
+
+% a block can't be moved onto a block that is being moved also
+nonexecutable move(B) & move(B1) if destination(B)=B1.
+
+% a block can't be moved to its current position
+nonexecutable move(B) if destination(B)=loc(B).
+
+

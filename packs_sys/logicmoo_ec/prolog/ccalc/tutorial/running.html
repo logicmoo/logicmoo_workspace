@@ -1,0 +1,141 @@
+<head>
+   <title>CCalc Tutorial: Running CCalc</title>
+</head>
+
+<center>
+<h2>
+1.3. Running CCalc
+</h2>
+</center>
+
+The CCalc input file <a href="coins"><tt>coins</tt></a> is essentially the
+action description shown at the end of <a href="input1.html">Section 1.1</a>
+followed by the three queries discussed in
+<a href="input2.html">Section 1.2</a>.  The file includes also several
+comments.  (In CCalc, everything between <tt>%</tt> and the end of the line
+is a comment.)   The value of the macro <tt>n</tt>
+is changed here from 3 to 10, as in the coin example
+(<a href="queries.html">Section 0.3</a>).  To distinguish between the
+queries, we attached a numerical label to each of them.  (A query without
+a label would be allowed in CCalc input as well; it would be considered
+to have label 0.)<p>
+
+The following sequence of steps will instruct CCalc to calculate the
+answer to Query 1.<p>
+
+1. <tt>cd</tt> to a directory where you want to keep CCalc input files and the
+temporary files that CCalc may create when it is run.<p>
+
+(The name of each of these temporary files is <tt>ccsat</tt> followed by
+an extension.  CCalc may also create an external database of rules, which,
+if it exists, resides in the subdirectory <tt>rule_db</tt>.)<p>
+
+2.  Copy the <a href="coins"><tt>coins</tt></a> file into that directory.<p>
+
+3.  Start SICStus Prolog or SWI-Prolog.<p>
+
+4.  In response to the Prolog prompt (<tt>| ?-</tt>), load <tt>ccalc.pl</tt>
+with the full pathname:<p>
+
+<pre>
+| ?- ['.../ccalc/ccalc.pl'].
+</pre>
+
+(Steps 3 and 4 can be combined into one using the Prolog load option:<p>
+
+<tt>unix% sicstus -l .../ccalc/ccalc.pl </tt>for SICStus Prolog,
+or<br>
+<tt>unix% pl -f .../ccalc/ccalc.pl&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</tt>for
+SWI-Prolog.<p>
+
+This command will start Prolog and then load CCalc.  You may find it
+convenient to introduce an alias for it.  For instance, in case of SISCtus
+Prolog, put the line
+
+<pre>
+alias ccalc 'sicstus -l .../ccalc/ccalc.pl'
+</pre>
+
+in file <tt>.cshrc</tt> under your home directory if you are using
+C shell (csh), or the line
+
+<pre>
+alias ccalc='sicstus -l .../ccalc/ccalc.pl'
+</pre>
+
+in file <tt>.kshrc</tt> if you are using Korn shell (ksh).)<p>
+
+5.  In response to the Prolog prompt, instruct CCalc to load the input file:
+
+<pre>
+| ?- loadf coins.
+</pre>
+
+(Generally, the file name after <tt>loadf</tt> needs to be enclosed in
+single quotes, but for simple names this is not necessary.)<p>
+
+6.  In response to the Prolog prompt, instruct CCalc to answer the query:
+
+<pre>
+| ?- query 1.
+</pre>
+
+(The <tt>query</tt> command without a label tells CCalc that a query will
+be entered from the terminal.  Accordingly, to instruct CCalc to answer the
+query that is specified in the input file but does not have a label, enter
+<tt>query&nbsp;0.</tt>)<p>
+
+Now you are done.  The lines
+
+<pre>
+0:  c=5  
+
+ACTIONS:  a  
+
+1:  c=6  
+
+ACTIONS:  a  
+
+2:  c=7  
+</pre>
+
+in the output of CCalc describe the path satisfying the given conditions:
+<i>v</i><sub>0</sub> is labeled <i>c</i>=5,
+<i>e</i><sub>0</sub> is labeled <i>a</i>=<b>t</b>, and so forth.<p>
+
+To exit Prolog, type ctrl-<tt>d</tt>.<p>
+
+<b>Exercise 1.1.</b>
+Perform steps 1-6.  Then repeat Step 6 with other labels to get
+answers to Queries 2 and 3.<p>
+
+<b>Exercise 1.2.</b>
+Use CCalc to determine whether this transition system has a path from
+<i>c</i>=4 to <i>c</i>=10 of length <i>exactly</i> 8.<p>
+
+<b>Exercise 1.3.</b>
+Use CCalc to verify that this transition system has no path of length <15
+from <i>c</i>=10 to <i>c</i>=4.<p>
+
+<a name="ex1.4">
+<b>Exercise 1.4.</b>
+Consider the following alternative interpretation of the intuitive meaning of
+<i>c</i> and <i>a</i>.
+There is one coin and 11 people around the table, numbered
+clockwise 0,...,10.  The value of <i>c</i> tells us which person has
+the coin.  To execute action <i>a</i>, that person passes the coin to his
+neighbor in the clockwise direction. (a)&nbsp;Modify the action description
+in file <a href="coins"><tt>coins</tt></a>
+in accordance with the new interpretation of <i>c</i> and
+<i>a</i>. (b)&nbsp;Use CCalc to find the shortest path from <i>c</i>=10 to
+<i>c</i>=4 in the modified transition system.<p>
+
+<hr><p>
+
+<address><a href="how.html">Forward</a>
+to Section 1.4: How CCalc Does It</address>
+
+<address><a href="input2.html">Back</a>
+to Section 1.2: CCalc Input: Queries</address>
+
+<address><a href="toc.html">Up</a> to the Table of Contents</address>

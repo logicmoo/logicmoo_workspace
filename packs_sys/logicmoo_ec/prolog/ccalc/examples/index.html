@@ -1,0 +1,106 @@
+<html>
+<head>
+   <title>Examples</title>
+</head>
+
+<body bgcolor=#eeeeee>
+<center>
+<h1>
+Examples of Action Domains<br>
+Described in the Language of CCalc
+</h1>
+</center>
+
+<ul>
+ <li> From the paper
+ "<a href="http://www.cs.utexas.edu/users/vl/papers/nmct.ps">Nonmonotonic
+  causal theories</a>" by
+<a href="http://www.mrg.dist.unige.it/~enrico/">Enrico Giunchiglia</a>,
+<a href="http://www.cs.utexas.edu/users/appsmurf">Joohyung Lee</a>,
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>,
+Norman McCain and
+<a href="http://www.d.umn.edu/~hudson">Hudson Turner</a>
+(<i>Artificial Intelligence</i>, Vol.&nbsp;153, 2004, pp.&nbsp;49-104)
+ <ul>
+  <li> <a href="nmct/mb">Monkey and Bananas</a> (Figures  10-12)
+  <li> <a href="nmct/mbpp"> Prediction and postdiction</a> in the Monkey
+       and Bananas domain (Section 3.3)
+  <li> <a href="nmct/defeasible"> Defeasible Rules</a> in the Monkey
+       and Bananas domain (Section 3.5)
+  <li> <a href="nmct/turkeys">Shooting Turkeys</a> (Figure 5)
+  <li> <a href="nmct/go">Going to Work</a> (Figure 6)
+  <li> <a href="nmct/lifting">Lifting the Ends of the Table</a> (Figure 7)
+  <li> <a href="nmct/pendulum">Holding the Pendulum</a> (Figure 8)
+  <li> <a href="nmct/publish">Publishing Papers</a> (Figure 9)
+ </ul>
+ <li> From the paper
+ "<a href="http://www.cs.utexas.edu/users/vl/papers/zt.ps">Representing the
+Zoo World and the Traffic World in the Language of the Causal Calculator</a>"
+ by
+<a href="http://www.cs.bilkent.edu.tr/~akman">Varol Akman</a>,
+<a href="http://www.cs.utexas.edu/users/selim">Selim Erdogan</a>,
+<a href="http://www.cs.utexas.edu/users/appsmurf">Joohyung Lee</a>,
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>
+and
+<a href="http://www.d.umn.edu/~hudson">Hudson Turner</a>
+(<i>Artificial Intelligence</i>, Vol.&nbsp;153, 2004, pp.&nbsp;105-140)
+ <ul>
+  <li>The <a href="zoo/zoo-landscape">landscape</a>,
+          <a href="zoo/zoo-animals">animals</a>,
+          <a href="zoo/zoo-movement">movement</a> and
+          <a href="zoo/zoo-actions">actions</a>
+      components of the Zoo World, and their <a href="zoo/zoo">union</a>
+  <li>The description of <a href="zoo/zoo-example">a little zoo</a>
+      and Test Queries <a href="zoo/zoo-test1">1</a>,
+      <a href="zoo/zoo-test2">2</a>,
+      <a href="zoo/zoo-test3">3</a>,
+      <a href="zoo/zoo-test4">4</a>,
+      <a href="zoo/zoo-test5">5</a> and
+      <a href="zoo/zoo-test6">6</a><br>
+      To run Test 1, type<br>
+      <tt>| ?- loadf[zoo,'zoo-example','zoo-test1'].</tt><br>
+      and then<br>
+      <tt>| ?- query 0.</tt>
+  <li>The description of the <a href="traffic/traffic">Traffic World</a>
+      and Test Scenarios <a href="traffic/scenario1">1</a>,
+      <a href="traffic/scenario2">2</a> and
+      <a href="traffic/scenario3">3</a><br>
+      To run Test 1, type<br>
+      <tt>| ?- loadf scenario1.</tt><br>
+      and then<br>
+      <tt>| ?- query 1.</tt><br>
+      or<br>
+      <tt>| ?- query 2.</tt>
+</ul>
+ <li> From the paper
+"<a href="http://www.cs.utexas.edu/users/vl/papers/airport.ps">Getting to the
+airport: the oldest planning problem in AI</a>" by
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>,
+Norman McCain, Emilio Remolina and
+<a href="http://www.mrg.dist.unige.it/~tac/">Armando Tacchella</a> (in
+<i>Logic-Based Artificial Intelligence</i>, 2000, pp.&nbsp;147-165),
+adapted to the syntax of CCalc Version 2: the
+<a href="airport/airport-domain">domain</a> and the
+<a href="airport/airport-problem">problem</a>
+ <li> From the paper
+"<a href="http://www.cs.utexas.edu/users/vl/papers/additive-ijcai.ps">Describing
+additive fluents in action language C+</a>" by
+<a href="http://www.cs.utexas.edu/users/appsmurf">Joohyung Lee</a> and
+<a href="http://www.cs.utexas.edu/users/vl">Vladimir Lifschitz</a>
+(in <i>Proc.&nbsp;IJCAI-03</i>,  2003, pp.&nbsp;1079-1084):
+ <ul>
+   <li>Buying and Selling (Section 6): <a href="additive/buying">domain</a>
+       and <a href="additive/buying-test">example</a>
+   <li>Spacecraft Integer (Section 7): <a href="additive/spacecraft">domain</a>
+       and <a href="additive/spacecraft-test">example</a>
+   <li>Missionaries and Cannibals with Two Boats (Section 8):
+       <a href="additive/mcp">domain</a>
+       and <a href="additive/mcp-test">example</a>
+ </ul>
+<li> Other domains:
+ <ul>
+   <li> <a href="hanoi">Towers of Hanoi</a>
+   <li> Blocks World: <a href="bw">description</a>
+        and a <a href="bw-test">planning problem</a>
+ </ul>
+</ul>

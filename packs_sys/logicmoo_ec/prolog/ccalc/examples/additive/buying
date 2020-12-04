@@ -1,0 +1,34 @@
+% File 'buying': "Describing Additive Fluents in C+", Section 6
+
+:- sorts
+  agent;
+  resource >> item.
+
+:- variables 
+  Ag                          :: agent;
+  Res                         :: resource;
+  It                          :: item;
+  M,N                         :: 0..maxAdditive.
+
+:- objects
+  buyer,seller                :: agent;
+  money                       :: resource.
+
+:- constants
+  price(item)                 :: 0..maxAdditive;
+  has(agent,resource)         :: additiveFluent(0..maxAdditive);
+  buy(item)                   :: exogenousAction;
+  howmany(item)               :: attribute(0..maxAdditive) of buy(item).
+
+
+buy(It) increments has(buyer,It) by N if howmany(It)=N. 
+
+buy(It) decrements has(seller,It) by N if howmany(It)=N.
+
+buy(It) increments has(seller,money) by M*N
+   if howmany(It)=N & price(It)=M  where M*N =< maxAdditive.
+
+buy(It) decrements has(buyer,money) by M*N
+   if howmany(It)=N & price(It)=M  where M*N =< maxAdditive.
+
+
