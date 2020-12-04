@@ -15,7 +15,7 @@ setup_dialect:-
 
 :- multifile(dialect_term_expansion/4).
 :- export(dialect_term_expansion/4).
-dialect_term_expansion(T,FP,O,FPO):- 
+dialect_term_expansion(T,FP,O,FPO):- T \== begin_of_file, (T \= (:- _)),
   notrace((
       nonvar(FP), 
      (prolog_load_context(dialect,D);current_prolog_flag(dialect,D)) ->      

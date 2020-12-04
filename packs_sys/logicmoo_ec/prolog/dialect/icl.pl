@@ -1,10 +1,13 @@
 :- module(icl, [on_icl_read/1,
           explain/1, explain/2, explain/3,
+          thconsult/1,
+          recap/0,
+          on_icl_read/1,
           op(1060, xfy, '&'),
           op(900,fy, ~),
-          op(700,xfx, \=),
-           op(1150, xfx, <- ),
-           op(0, fx, (table) ) ]).
+          op(700,xfx, '\\='),
+           op(1150, xfx, '<-' ),
+           op(0, fx, ('table') ) ]).
 % this is both a latex file and a Sicstus Prolog file.
 % just compile it in Prolog or Latex it.
 % the only difference is that the Latex version comments out the following
@@ -163,6 +166,7 @@ rule produced.
 (H <- B) :- rule((H :- B)).
 
 rule(H) :- expand_rule_term(H,HH), H \=@=HH, !, rule(HH).
+rule((H <- B)) :- !, rule((H :- B)).
 rule((H :- B)) :- !,
    assert_if_new(rul(H,B)).
 rule(H) :-
@@ -983,6 +987,7 @@ read_all(T) :-
    read_all(T2).
 
 :- module_transparent(on_icl_read/1).
+on_icl_read(T):- notrace(T == start_of_file), !.
 on_icl_read(T):- notrace(T == end_of_file), !, listing(example_query/1).
 on_icl_read(:- T):- must(T),!.
 on_icl_read(example_query(X)):- !,assertz(example_query(X)).
