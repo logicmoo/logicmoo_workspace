@@ -1,0 +1,34 @@
+% AILog representation of some rooms.
+
+% This is the code discussed in Section 12.3.3 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'before.ail'.
+
+% before(T1,T2) is true if time T1 is before time T2 in a day.
+
+before(am(H1,M1),pm(H2,M2)).
+before(am(12,M1),am(H2,M2)) <-
+    H2<12.
+before(am(H1,M1),am(H2,M2)) <-
+    H1<H2 &
+    H2<12.
+before(am(H,M1),am(H,M2)) <-
+    M1<M2.
+before(pm(12,M1),pm(H2,M2)) <-
+    H2<12.
+before(pm(H1,M1),pm(H2,M2)) <-
+    H1<H2 &
+    H2<12.
+before(pm(H,M1),pm(H,M2)) <-
+    M1<M2.
+
+% test cases:
+% ask before(am(2,30),am(3,10)).
+% ask before(am(3,30),am(3,10)).
+% ask before(am(3,30),pm(3,10)).
+% ask before(am(12,30),am(3,10)).

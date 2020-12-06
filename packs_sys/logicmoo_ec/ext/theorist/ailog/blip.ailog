@@ -1,0 +1,129 @@
+% This is the example from David Poole, "The Independent Choice Logic
+%    and Beyond", in Luc De Raedt, Paolo Frasconi, Kristian Kersting,
+%    and Stephen Muggleton (eds), Probabilistic Inductive Logic
+%    Programming: Theory and Application, LNAI 4911, 2008.  
+% This code is Copyright 2008, David Poole. All Rights reserved.  
+% ailog: load 'blip.ailog'.
+
+% numObj(T,N1,N2,P)
+% is true if there are N2 objects of type T given there are N1 and the
+% probability of another object existing is P. This assumes a
+% geometric distribution.
+numObj(T,N,N,P) <-
+     ~more(T,N,P).
+numObj(T,N,N2,P) <-
+     more(T,N,P) &
+     N1 is N+1 &
+     numObj(T,N1,N2,P).
+
+% more(T,N,P) is true if the Nth object of type to exists given the
+% N-1th object exists. P is the probability the Nth exists given N-1 exists.
+prob more(T,N,P):P.
+
+% numAircraft(N) is true if there are exactly N aircraft
+numAircraft(N) <-
+     numObj(aircraft,0,N,0.15).
+
+% aircraft(I) is true if the Ith aircraft I exists.
+aircraft(I) <-
+     numAircraft(N) &
+     between(1,N,I).
+
+% between(+Lower,+Upper,-N) is true if Lower =< N =< Uppper
+between(L,U,L) <- L =< U.
+between(L,U,N) <-
+     L1 is L+1 &
+     L1 =< U &
+     between(L1,U,N).
+     
+% xpos(I,T,X) is true if the x-position of plane I at time T is X
+prob xpos(I,0,0):0.1, xpos(I,0,1):0.1, xpos(I,0,2):0.1,
+     xpos(I,0,3):0.1, xpos(I,0,4):0.1, xpos(I,0,5):0.1,
+     xpos(I,0,6):0.1, xpos(I,0,7):0.1, xpos(I,0,8):0.1,
+     xpos(I,0,9):0.1.
+
+xpos(I,next(T),P) <-
+     xpos(I,T,PrevPos) &
+     direction(I,T,Dir) &
+     xDer(I,T,Dir,Deriv) &
+     P is PrevPos+Deriv &
+     P >= 0 &
+     P =< 9.
+
+% xDer(I,T,D,V) is true if V is the X-derivative of plane I at time T
+%   given the plane is travelling in direction D.
+prob xDer(I,T,north,-1):0.1,xDer(I,T,north,0):0.8,xDer(I,T,north,1):0.1.
+prob xDer(I,T,east,0):0.2,xDer(I,T,east,1):0.7,xDer(I,T,east,2):0.1.
+prob xDer(I,T,south,-1):0.1,xDer(I,T,south,0):0.8,xDer(I,T,south,1):0.1.
+prob xDer(I,T,west,0):0.2,xDer(I,T,west,-1):0.7,xDer(I,T,west,2):0.1.
+
+% ypos(I,T,X) is true if the x-position of plane I at time T is X
+prob ypos(I,0,0):0.1, ypos(I,0,1):0.1, ypos(I,0,2):0.1,
+     ypos(I,0,3):0.1, ypos(I,0,4):0.1, ypos(I,0,5):0.1,
+     ypos(I,0,6):0.1, ypos(I,0,7):0.1, ypos(I,0,8):0.1,
+     ypos(I,0,9):0.1.
+
+ypos(I,next(T),P) <-
+     ypos(I,T,PrevPos) &
+     direction(I,T,Dir) &
+     yDer(I,T,Dir,Deriv) &
+     P is PrevPos+Deriv &
+     P >= 0 &
+     P =< 9.
+
+% yDer(I,T,D,V) is true if V is the X-derivative of plane I at time T
+%   given the plane is travelling in direction D.
+prob yDer(I,T,north,0):0.2,yDer(I,T,north,1):0.7,yDer(I,T,north,2):0.1.
+prob yDer(I,T,east,-1):0.1,yDer(I,T,east,0):0.8,yDer(I,T,east,1):0.1.
+prob yDer(I,T,south,0):0.2,yDer(I,T,south,-1):0.7,yDer(I,T,south,2):0.1.
+prob yDer(I,T,west,-1):0.1,yDer(I,T,west,0):0.8,yDer(I,T,west,1):0.1.
+
+% direction(I,T,D) is true if plane I is travelling in direction D at
+% time T
+prob direction(I,0,north):0.25, direction(I,0,east):0.25,
+     direction(I,0,south):0.25, direction(I,0,west):0.25. 
+
+direction(I,next(T),D) <-
+   direction(I,T,D0) &
+   direction_changes(I,T,D0,D).
+
+% direction_changes(D0,D1) is true if the direction of plane I at time
+% T changes from D0 to D1
+prob direction_changes(I,T,north,west):0.2,
+     direction_changes(I,T,north,north):0.6,
+     direction_changes(I,T,north,east):0.2. 
+prob direction_changes(I,T,east,north):0.2,
+     direction_changes(I,T,east,east):0.6,
+     direction_changes(I,T,east,south):0.2. 
+prob direction_changes(I,T,south,west):0.2,
+     direction_changes(I,T,south,south):0.6,
+     direction_changes(I,T,south,east):0.2. 
+prob direction_changes(I,T,west,north):0.2,
+     direction_changes(I,T,west,west):0.6,
+     direction_changes(I,T,west,south):0.2. 
+
+
+% blip(X,Y,T) is true if there is a blip at position (X,Y) at time T.
+blip(X,Y,T) <-
+     blipRandomlyOccurs(X,Y,T).
+blip(X,Y,T) <-
+     aircraft(I) &
+     xpos(I,T,X) &
+     ypos(I,T,Y) &
+     producesBlip(I,T).
+
+prob blipRandomlyOccurs(X,Y,T):0.02.
+
+prob producesBlip(I,T):0.9.
+
+% try the following with 
+% prob_threshold 0.00001.
+% observe blip(3,3,0) & blip(3,4,next(0)).
+% prob_threshold 0.0000001.
+% observe blip(7,8,next(0)) & blip(3,5,next(next(0))).
+
+
+
+
+
+

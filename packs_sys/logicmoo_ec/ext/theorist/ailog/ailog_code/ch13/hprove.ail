@@ -1,0 +1,45 @@
+% AILog representation of a meta-interpreter that builds a proof tree.
+% This proof tree is what used to implement "how" (but this is not implemented here).
+
+% This is the code of Figure 13.13 in Section 13.5.5 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'hprove.ail'.
+
+% The base-level uses <= for "if" and true for the empty body.
+
+% hprove(G,T) means G is a consequence of the base-level knowledge
+% base, and T is a representation of the corresponding proof
+
+hprove(true,true).
+hprove((A & B),(L&R)) <-
+   hprove(A,L) &
+   hprove(B,R).
+hprove(H,if(H,built_in)) <-
+   built_in(H) &
+   call(H).
+hprove(H,if(H,T)) <-
+   (H <= B) &
+   hprove(B,T).
+
+% built_in(G) is true if G is to be proved in the underlying ailog system
+built_in(V is E).
+built_in(X < Y).
+built_in(X > Y).
+
+% Here is an example is the use of hprove:
+%   tell le(X,Y) <= X<Y.
+%   tell le(X,X) <= true.
+%   tell test(X) <= le(X,X).
+%   ask hprove(le(4,7),T).
+%   ask hprove(test(4),T).
+
+% load 'elect_base.ail'.
+% ask hprove(live(w3),T).
+% ask hprove(lit(L),T).
+

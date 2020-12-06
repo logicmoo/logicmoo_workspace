@@ -1,0 +1,118 @@
+% AILog code 
+% Copyright David Poole 2007
+% ailog: load 'addition.ail'.
+
+% Multi-digit addition
+
+%       ...  x2   x1   x0
+%    +  ...  y2   y1   y0
+%              c2    c1
+%      -------------------
+%       ...  z2   z1   z0
+
+% Parameters:
+%  D digit
+%  P problem
+%  S student
+%  T time
+
+z(D,P,S,T)=V <-
+     x(D,P)=Vx &
+     y(D,P)=Vy &
+     carry(D,P,S,T)=Vc &
+     knowsAddition(S,T) &
+     noMistake(D,P,S,T) &
+     V is  (Vx+Vy+Vc) mod 10 .
+
+z(D,P,S,T)=V <-
+     knowsAddition(S,T) &
+     mistake(D,P,S,T) &
+     selectDig(D,P,S,T) = V.
+
+z(D,P,S,T)=V <-
+     ~ knowsAddition(S,T) &
+     selectDig(D,P,S,T) = V.
+
+prob knowsAddition(S,T):0.95.
+
+prob noMistake(D,P,S,T):0.9, mistake(D,P,S,T):0.1.
+prob selectDig(D,P,S,T)=0 : 0.1, selectDig(D,P,S,T)=1 : 0.1, 
+     selectDig(D,P,S,T)=2 : 0.1, selectDig(D,P,S,T)=3 : 0.1, 
+     selectDig(D,P,S,T)=4 : 0.1, selectDig(D,P,S,T)=5 : 0.1, 
+     selectDig(D,P,S,T)=6 : 0.1, selectDig(D,P,S,T)=7 : 0.1, 
+     selectDig(D,P,S,T)=8 : 0.1, selectDig(D,P,S,T)=9 : 0.1.
+ 
+
+carry(0,P,S,T)=0.     % no carry into first digit
+carry(D,P,S,T)=V <-
+     D>0 &
+     D1 is D-1 &
+     x(D1,P)=Vx &
+     y(D1,P)=Vy &
+     carry(D1,P,S,T)=Vc &
+     knowsCarry(S,T) &
+     noCarryMistake(D,P,S,T) &
+     V is  (Vx+Vy+Vc) // 10 .
+
+carry(D,P,S,T)=V <-
+     D>0 &
+     knowsCarry(S,T) &
+     mistake(D,P,S,T) &
+     selectCarry(D,P,S,T) = V.
+
+% if they don't know how to carry, they use zero or act randomly
+carry(D,P,S,T)=0 <-
+     D > 0 &
+     carryZeroAlways(S,T).
+
+carry(D,P,S,T)=V <-
+     D > 0 &
+     carryRandom(S,T) &
+     selectCarry(D,P,S,T) = V.
+
+prob knowsCarry(S,T):0.9, carryZeroAlways(S,T):0.07, carryRandom(S,T):0.03.
+
+prob selectCarry(D,P,S,T)=0 : 0.5, selectCarry(D,P,S,T)=1 : 0.5.
+
+prob noCarryMistake(D,P,S,T):0.9, carryMistake(D,P,S,T):0.1.
+
+%% Ask the user interfaces
+%  if you want the system to ask you about the values you can use:
+% askable x(D,P)=V.
+% askable y(D,P)=V.
+
+% Problem interface. A problem is specified for example as:
+%  tell problem(prob1,[2,5]+[3,7]).  % problem prob1 is 25+37
+
+x(D,P)=V <- 
+     problem(P,X+_) &
+     countfromend(X,D,_,V).
+y(D,P)=V <- 
+     problem(P,_+Y) &
+     countfromend(Y,D,_,V).
+
+% countfromend(L,Pos,LL,V) is true if LL is the length of L and 
+%   V is at position Pos or 0 otherwise.
+countfromend([],_,0,0).
+countfromend([H|T],Pos,Len,Val) <-
+   countfromend(T,Pos,LT,V1) &
+   getValueIfFound(LT,Pos,H,V1,Val) &
+   Len is LT+1.
+getValueIfFound(Pos,Pos,H,_,H).
+getValueIfFound(LT,Pos,_,V1,V1) <- LT \= Pos.
+
+% answered(Problem,Student,Time,Ans)
+answered(P,S,T,Ans) <-
+  obsAnswers(Ans,P,S,T,LenAns).
+
+obsAnswers([],_,_,_,0).
+obsAnswers([V|Rest],P,S,T,Len) <-
+   obsAnswers(Rest,P,S,T,LR) &
+   z(LR,P,S,T)=V &
+   Len is LR+1.
+
+% Example
+% tell  problem(prob1,[2,5]+[3,7]).  % Problem #1 is 25+37.
+% observe answered(prob1,st1,1,[5,2]).
+% predict knowsAddition(st1,1).
+% predict knowsCarry(st1,1).

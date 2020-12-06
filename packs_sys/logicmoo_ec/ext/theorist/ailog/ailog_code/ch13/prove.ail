@@ -1,0 +1,28 @@
+% AILog representation of a vanilla meta-interpreter
+
+% This is slightly expanded code of Figure 13.9 in Section 13.5.2 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'prove.ail'.
+
+% The base-level uses <= for "if" and true for the empty body.
+
+% prove(G) means G is a consequence of the base-level knowledge base
+prove(true).
+prove((A & B)) <-
+   prove(A) &
+   prove(B).
+prove(H) <-
+   (H <= B) &
+   prove(B).
+
+% Here is an example is the use of prove:
+%   ailog: tell a <= b.
+%   ailog: tell b <= true.
+%   ailog: ask prove(a).
+%   Answer: prove(a).

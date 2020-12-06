@@ -44,7 +44,7 @@ mywhen(C,G) :-
 differ(X,Y) :- dif(X,Y).  % SWI version 5.3 and later
 % differ(X,Y) :- different(X,Y). % pre SWI version 5.3
 
-mywrite(T) :- write_term(T,[numbervars(true),portray(true)]). % SWI version 5.3 and later
+mywrite(T) :- write_term(T,[numbervars(true),portray(true)]), !. % SWI version 5.3 and later
 mywrite(T) :- write(T).  % pre SWI version 5.3
 
 %init :- writeallonline(['Type "start." to start CILog.']),nl.

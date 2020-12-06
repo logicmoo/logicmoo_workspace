@@ -1,0 +1,103 @@
+% AILog code for the electrical environment with abduction
+
+% This is the code discussed in Section 5.6 o fPoole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010. http://artint.info
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, put it in the same directory as AILog (or cd to its directory) and call
+% load 'elect_abd.ail'.
+% load 'ailog_code/ch05/elect_abd.ail'.
+
+lit_l1 <- live_w0 & ok_l1.
+dark_l1 <- broken_l1.
+dark_l1 <- dead_w0.
+assumable ok_l1.
+assumable broken_l1.
+false <- ok_l1 & broken_l1.
+
+live_w0 <- live_w1 & up_s2 & ok_s2.
+live_w0 <- live_w2 & down_s2 & ok_s2.
+dead_w0 <- broken_s2.
+dead_w0 <- up_s2 & dead_w1.
+dead_w0 <- down_s2 & dead_w2.
+assumable ok_s2.
+assumable broken_s2.
+false <- ok_s2 & broken_s2.
+
+live_w1 <- live_w3 & up_s1 & ok_s1.
+dead_w1 <- down_s1.
+dead_w1 <- broken_s1.
+dead_w1 <- up_s1 & dead_w3.
+assumable ok_s1.
+assumable broken_s1.
+false <- ok_s1 & broken_s1.
+
+
+live_w2 <- live_w3 & down_s1 & ok_s1.
+dead_w2 <- up_s1.
+dead_w2 <- broken_s1.
+dead_w2 <- down_s1 & dead_w3.
+
+lit_l2 <- live_l2 & ok_l2.
+dark_l2 <- broken_l2.
+dark_l2 <- dead_l2.
+assumable ok_l2.
+assumable broken_l2.
+false <- ok_l2 & broken_l2.
+
+live_l2 <- live_w4.
+dead_l2 <- dead_w4.
+
+live_w4 <- live_w3 & up_s3 & ok_s3.
+dead_w4 <- down_s3.
+dead_w4 <- broken_s3.
+dead_w4 <- up_s3 & dead_w3.
+assumable ok_s3.
+assumable broken_s3.
+false <- ok_s3 & broken_s3.
+
+live_p_1 <- live_w3.
+dead_p_1 <- dead_w3.
+
+live_w3 <- live_w5 & ok_cb1.
+dead_w3 <- broken_cb1.
+dead_w3 <- dead_w5.
+assumable ok_cb1.
+assumable broken_cb1.
+false <- ok_cb1 & broken_cb1.
+
+live_p2 <- live_w6.
+dead_p2 <- dead_w6.
+
+live_w6 <- live_w5 & ok_cb2.
+dead_w6 <- broken_cb2.
+dead_w6 <- dead_w5.
+assumable ok_cb2.
+assumable broken_cb2.
+false <- ok_cb2 & broken_cb2.
+
+live_w5 <- live_outside.
+dead_w5 <- outside_power_down.
+assumable live_outside.
+assumable outside_power_down.
+false <- live_outside & outside_power_down.
+
+assumable up_s1.
+assumable down_s1.
+false <- up_s1 & down_s1.
+assumable up_s2.
+assumable down_s2.
+false <- up_s2 & down_s2.
+assumable up_s3.
+assumable down_s3.
+false <- up_s3 & down_s3.
+
+% The following makes sure that only consistent explanations are found:
+create_nogoods.
+% You can then ask some queries such as:
+% ailog: ask lit_l1.
+% ailog: ask dark_l1.
+
+

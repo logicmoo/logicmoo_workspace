@@ -1,0 +1,47 @@
+% AILog code for the electrical environment, with ask-the-user
+
+% This is the code discussed in Section 5.3.2 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010.  http://artint.info
+
+% Copyright (c) David Poole and Alan Mackworth 2010. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this is AILog, you should 
+% load 'ailog_code/ch05/elect_design.ail'.
+% or put it in the same directory as
+% AILog, clear the knowledge base, and then call 
+% load 'elect_design.ail'.
+
+
+light_l1.
+light_l2.
+ok_l1.
+ok_l2.
+ok_cb1.
+ok_cb2.
+live_outside.
+live_l1 <- live_w0.
+live_w0 <- live_w1 & up_s2.
+live_w0 <- live_w2 & down_s2.
+live_w1 <- live_w3 & up_s1.
+live_w2 <- live_w3 & down_s1.
+live_l2 <- live_w4.
+live_w4 <- live_w3 & up_s3.
+live_p_1 <- live_w3.
+live_w3 <- live_w5 & ok_cb1.
+live_p_2 <- live_w6.
+live_w6 <- live_w5 & ok_cb2.
+live_w5 <- live_outside.
+lit_l1 <- light_l1 & live_l1 & ok_l1.
+lit_l2 <- light_l2 & live_l2 & ok_l2.
+
+assumable up_s1.
+assumable down_s1.
+assumable up_s2.
+assumable down_s2.
+assumable up_s3.
+assumable down_s3.
+
+% some queries:
+% ailog: ask lit_l1.
+% ailog: ask lit_l2.

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 4 Ask and Tell</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_3.html"><img class="previous" alt="3 Syntax" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_6.html"><img class="next" alt="5 Loading and Listing Knowledge Bases" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>4 Ask and Tell</h1>
+<p>The general interaction with AILog is to <b>tell</b> it clauses and to
+<b>ask</b> it queries (which are bodies). It replies with answers,
+which are instances of the query that are consequences of its
+knowledge base. The user can then either explore how the system
+derived an answer or why the system didn't find another answer.
+</p>
+<p>To add a clause to the knowledge base you issue the command:<a name="id1"></a>
+</p>
+<pre>
+ailog: <b>tell </b><i>clause</i>.
+</pre>
+<div class="quotation"><b>Example.</b>
+<i><a name="tell-ex">
+You</a> could tell the system some genealogy knowledge:
+<pre>
+ailog: <b>tell parent(X,Y) &lt;- mother(X,Y).</b>
+ailog: <b>tell parent(X,Y) &lt;- father(X,Y).</b>
+ailog: <b>tell grandfather(X,Y) &lt;- father(X,Z) &amp; parent(Z,Y).</b>
+ailog: <b>tell grandmother(X,Y) &lt;- mother(X,Z) &amp; parent(Z,Y).</b>
+ailog: <b>tell father(randy,sally).</b>
+ailog: <b>tell father(randy,joe).</b>
+ailog: <b>tell mother(sally,mary).</b>
+ailog: <b>tell father(joe,sue).</b>
+</pre>
+</i></i></i></div>
+<p>You can ask a query to determine if some body is a consequence of the knowledge base:<a name="id3"></a>
+</p>
+<pre>
+ailog: <b>ask </b><i>query</i>.
+</pre>
+<p>where <i>query</i> is a body.
+The system will respond with either an instance of the query  that is
+a consequence of the knowledge base or "No. query doesn't follow from the knowledge base" if there
+are no answers. When the system have given an answer you can
+reply with:
+</p>
+<dl><dt>ok.</dt><dd> to indicate that you don't want any more answers
+</dd><dt>more.</dt><dd> to ask for more answers
+</dd><dt>how.</dt><dd> to investigate how that answer was produced (see Section <a href="ailog_man_8.html">6.1</a>)
+</dd><dt>help.</dt><dd> to get a menu of available answers (this option is
+available at all points where the system is asking for a response)
+</dd></dl>
+<p>If you reply with <b>more</b>, the system either finds another answer or reports there are no more answers.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+Given the knowledge base after Example <a href="#tell-ex">4</a>, you can ask queries of the knowledge base:
+<pre>
+ailog: <b>ask grandfather(randy,mary).</b>
+Answer: grandfather(randy,mary).
+  [ok,more,how,help]: <b>ok.</b>
+</pre>
+<p>It has thus told you that grandfather(randy,mary) is a consequence of the knowledge base.
+</p>
+<pre>
+ailog: <b>ask grandfather(joe,mary).</b>
+No. grandfather(joe,mary) doesn't follow from the knowledge base.
+</pre>
+<p>which means grandfather(joe,mary) is not a consequence of the knowledge base.
+</p>
+<p>You can ask queries with free variables:
+</p>
+<pre>
+ailog: <b>ask grandfather(G,C).</b>
+Answer: grandfather(randy,mary).
+  [ok,more,how,help]: <b>more.</b>
+Answer: grandfather(randy,sue).
+  [ok,more,how,help]: <b>more.</b>
+No more answers.
+</pre>
+<p>This means there are two instances of the query grandfather(G,C) that are consequences of the knowledge base.
+</i></i></i></p>
+</div>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

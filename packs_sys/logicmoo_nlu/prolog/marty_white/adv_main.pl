@@ -29,6 +29,8 @@
 :- endif.
 */
 
+:- meta_predicate(aXiom(*,?,?)).
+
 must_security_of(Doer,Level):- security_of(Doer,Level).
 
 security_of(_, _Wiz).

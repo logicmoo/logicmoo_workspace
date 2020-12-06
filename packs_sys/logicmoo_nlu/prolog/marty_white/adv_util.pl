@@ -84,7 +84,7 @@ getter_to_setter(get_advstate, set_advstate).
 getter_to_setter(get_memory(A), set_memory(A)).
 
 asserta_if_undef(Mod, Head, _Body):- predicate_property(Mod:Head, defined), !.
-asserta_if_undef(Mod, Head, Body):- Mod:asserta((Head:-Body)).
+asserta_if_undef(Mod, Head, Body):- functor(Head,F,A), module_transparent(Mod:F/A), Mod:asserta((Head:-Body)),compile_predicates([Mod:F/A]).
 
 defn_state_none(P):- defn_state_pred(get_advstate, P, 0).
 defn_state_getter(P):- defn_state_pred(get_advstate, P, 1).

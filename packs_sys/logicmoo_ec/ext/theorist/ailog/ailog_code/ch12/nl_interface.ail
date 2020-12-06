@@ -1,0 +1,108 @@
+% AILog representation of a grammar to build a query for a database
+
+% This is slightly expanded code of Figures 12.10 and 12.11 in Section 12.6.6 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'nl_interface.ail'.
+
+% A noun phrase is a determiner followed by modifiers followed
+% by a noun followed by an optional prepositional phrase.
+noun_phrase(T0,T4,Obj,C0,C4) <-
+    det(T0,T1,Obj,C0,C1) &
+    modifiers(T1,T2,Obj,C1,C2) &
+    noun(T2,T3,Obj,C2,C3) &
+    pp(T3,T4,Obj,C3,C4).
+
+% Determiners are ignored in this oversimplified example.
+det(T,T,_,C,C).
+det([the | T],T,_,C,C).
+det([a | T],T,_,C,C).
+
+% Modifiers consist of a sequence of adjectives.
+modifiers(T,T,_,C,C).
+modifiers(T0,T2,Obj,C0,C2) <-
+    adjective(T0,T1,Obj,C0,C1) &
+    modifiers(T1,T2,Obj,C1,C2).
+
+% An optional prepositional phrase is either nothing or a prepositional phrase
+pp(T,T,_,C,C).
+pp(T1,T2,O,C0,C1) <-
+   prep_phrase(T1,T2,O,C0,C1).
+
+% A prepositional phrase is a preposition followed by a noun phrase
+prep_phrase(T0,T2,O1,C0,C2) <-
+    prep(T0,T1,O1,O2,C0,C1) &
+    noun_phrase(T1,T2,O2,C1,C2).
+
+% DICTIONARY
+adjective([computer, science | T],T,Obj,C,[dept(Obj,comp_sci)|C]).
+adjective([female | T],T,Obj,C,[female(Obj)|C]).
+
+noun([course | T],T,Obj,C,[course(Obj)|C]).
+noun([student | T],T,Obj,C,[student(Obj)|C]).
+noun([X | T],T,X,C,C) <- course(X).
+noun([X | T],T,X,C,C) <- student(X).
+
+prep([enrolled, in | T],T,O1,O2,C,[enrolled_in(O1,O2)|C]).
+
+% Some Example Queries
+% ask noun_phrase([a,computer,science,course],[],Obj,[],C).
+% ask noun_phrase([a,female,student,enrolled,in,a,computer,science,course],[],Obj,[],C).
+
+% question(Question,Object,Query) is true if Query provides an answer about Object to Question
+question([is | T0],Obj,C2) <-
+    noun_phrase(T0,T1,Obj,[],C1) &
+    prep_phrase(T1,[],Obj,C1,C2).
+question([who,is | T0],Obj,C1) <-
+    prep_phrase(T0,[],Obj,[],C1).
+question([who,is | T0],Obj,C1) <-
+    noun_phrase(T0,[],Obj,[],C1).
+
+% query(Q,A) gives answer A to question Q
+query(Q,A) <-
+    question(Q,A,C) &
+    prove_all(C).
+
+% prove_all(L) proves all elements of L against the database
+prove_all([]).
+prove_all([H|T]) <-
+    call(H) &
+    prove_all(T).
+
+
+%  The Database of Facts to be Queried
+course(cs312).
+course(cs322).
+course(cs315).
+
+dept(cs312,comp_sci).
+dept(cs322,comp_sci).
+dept(cs315,math).
+
+enrolled_in(john,cs312).
+enrolled_in(mary,cs312).
+enrolled_in(jane,cs315).
+enrolled_in(sally,cs322).
+
+female(mary).
+female(jane).
+female(sally).
+
+student(mary).
+student(jane).
+student(sally).
+student(john).
+
+
+/* Try the following queries
+ask query([is,john,enrolled,in,cs312],_).
+ask query([who,is,a,student],A).
+ask query([is,john,enrolled,in,a,computer,science,course],_).
+ask query([who,is,enrolled,in,a,computer,science,course],A).
+ask query([who,is,a,female,student,enrolled,in,a,computer,science,course],A).
+*/

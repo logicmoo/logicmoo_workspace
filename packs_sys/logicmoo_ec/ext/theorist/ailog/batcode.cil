@@ -1,0 +1,180 @@
+% ICL Example for the Bayesian Automated Taxi, copyright David Poole 2010.
+
+% This code is described in David Poole, ``The Independent Choice Logic for modelling
+% multiple agents under uncertainty'', Artificial Intelligence, 94(1-2), special 
+% issue on economic principles of multi-agent systems, pages 7-56, 1997. 
+
+% This is based on J. Forbes, T. Huang, K. Kanazawa, and S. Russell. 
+% The BATmobile: Towards a Bayesian automated taxi. In Proc. 14th
+% International Joint Conf. on Artificial Intelligence (IJCAI-95), pages 1878–1885, Montreal, August 1995.
+% The comments are based on their implementation.
+
+% this is a COMPLETE axiomatization of the nodes
+% engine_status, sensor_valid, ydot, and ydot_sens, for ALL times.
+% some bizarre things (bugs?) were also fixed for the initial T=0 cases.
+% there is a simplified version of fwd_action (as otherwise there was too
+% many other nodes I had to type in:  I think these are enough).
+
+% This assumes UNNORMALISED random declarations. To get probabilities,
+% divide each value by the sum of all values. This is just syntactic sugar.
+% [of course HUGIN does it because they never convert to probabilities until
+% the very end - this is the advance they have over 
+%  Lauritzen and Spiegelhalter.]
+
+
+% the engine_status is either OK or is not OK.
+engine_status(S,0) <- engine_status_init(S).
+
+prob engine_status_init(not_ok):1,engine_status_init(ok):999999.
+
+engine_status(V1,T+1) <- engine_status(V,T) & status_changes(V,V1,T).
+
+prob status_changes(ok,ok,T):999999, status_changes(ok,not_ok,T):1.
+prob status_changes(not_ok,ok,T):1, status_changes(not_ok,not_ok,T):9.
+
+ 
+% the (which?) sensor is either valid or invalid. [it is funny that the
+% sensor validity is independent for each time step]
+
+prob sensor_valid(T):1,sensor_invalid(T):9999.
+
+% One change we are making is that speeds are numbers to the nearest 10km/h.
+% this lets us do arithmetic and comparisons on them. [presumably it
+% was not done originally as there is no arithmetic on domain values in hugin]
+
+% ydot(V,T) is true if V is the y-velocity (to nearest 10 kmph) at time T
+
+% here is an example of propositional independence we exploit:
+% ydot only depends on fwd_action if engine_status is OK
+
+ydot(V,T) <- engine_status(not_ok,T)  
+           & broken_engine_produces(V,T).
+
+prob broken_engine_produces(0,T):100000, 
+          broken_engine_produces(10,T):10, 
+          broken_engine_produces(20,T):1, 
+          broken_engine_produces(30,T):1.
+
+% if you maintain speed there is a normal change to the next time step
+ydot(V1,T+1) <- engine_status(ok,T+1) 
+              & fwd_action(maintain,T+1)  
+              & ydot(V,T)  
+              & normal_ch(DV,T)  
+              & max(0,V+DV,V1).
+
+% if you slow down, then you tend to go at 10 km/h slower 
+% than the normal change
+ydot(V1,T+1) <- engine_status(ok,T+1)  
+              & fwd_action(slower,T+1)  
+              & ydot(V,T)  
+              & normal_ch(DV,T)  
+              & max(0,V+DV-10,V1).
+
+% if you speed up, then you tend to go at 10 km/h faster 
+% than the normal change
+ydot(V1,T+1) <- engine_status(ok,T+1)  
+              & fwd_action(faster,T+1)  
+              & ydot(V,T)  
+              & normal_ch(DV,T)  
+              & max(0,V+DV+10,V1).
+
+% normal_ch(V,T) means that V is a normal change in y-direction at time T,
+% modulo the change by the action.
+
+% these seem to be a bit strange, but they are essentailly the same as the ones
+% given.  The 10s at the extremes seem to high - but this is what was there!
+
+random(X,normal_ch(X,T),
+          [-50: 10,
+           -40: 10,
+           -30: 10,
+           -20: 100,
+           -10: 500,
+           0  : 1000,
+           10 : 500,
+           20 : 100,
+           30 : 10,
+           40 : 10,
+           50 : 10]).
+
+% it seems bizzare to me that ydot(V,0) should depend on fwd_action(_,0)
+% AND IF IT DOES IT SHOULD BE THE OPPOSITE RELATIONSHIP TO THE ONE GIVEN.
+% IE, I WOULD EXPECT IT TO BE MORE LIKELY THAT SLOW CARS ARE TRYING TO GO
+% FASTER AND FAST CARS ARE TRYING TO GO SLOWER!!!!!!!
+
+ydot(V,0) <- engine_status(ok,0) & expected_velocity(V,0).
+
+random(X,expected_velocity(X,0),
+          [0:5, 
+           10:20, 
+           20:40, 
+           30:70, 
+           40:100, 
+           50:100, 
+           60:100, 
+           70:100, 
+           80:100, 
+           90:100, 
+           100:100, 
+           110:50, 
+           120:10, 
+           130:5 ]).
+
+% the forward actions are to go slower, maintain speed or go faster:
+% here I have simplified it so that the forward action is independent
+% for each time step. - it means axiomatizing much more of the network,
+% and I am too lazy, even if it is just a mechanical excercise.
+
+prob fwd_action(slower,T):10, fwd_action(maintain,T):80, fwd_action(faster):10.
+
+% ydot_sens(V,T) means the velocoty sensor has a reading of V at time T.
+ydot_sens(V,T) <- sensor_invalid(T) 
+                & random_reading(V,T).
+
+% random_reading(V,T) is true if invalid sensor is producing value V at time T
+
+prob random_reading(0,T): 1, 
+           random_reading(10,T):1, 
+           random_reading(20,T):1, 
+           random_reading(30,T):1, 
+           random_reading(40,T):1, 
+           random_reading(50,T):1, 
+           random_reading(60,T):1, 
+           random_reading(70,T):1, 
+           random_reading(80,T):1, 
+           random_reading(90,T):1, 
+           random_reading(100,T):1, 
+           random_reading(110,T):1, 
+           random_reading(120,T):1, 
+           random_reading(130,T):1 .
+
+ydot_sens(V,T) <- sensor_valid(T) & ydot(V1,T) & sensor_error(E) & V is E+V1.
+
+% sensor_error(E,T) is true if valid sensor has error E at time T
+
+prob sensor_error(-50,T): 1,
+          sensor_error(-40,T): 1,
+          sensor_error(-30,T): 1,
+          sensor_error(-20,T): 10,
+          sensor_error(-10,T): 100,
+          sensor_error(0,T)  : 1000,
+          sensor_error(10,T) : 100,
+          sensor_error(20,T) : 10,
+          sensor_error(30,T) : 1,
+          sensor_error(40,T) : 1,
+          sensor_error(50,T) : 1 .
+
+
+% also: my guess is that this would look more elegant if we made the predicates
+% in the random sets simpler. you can tell my predicate names - they are
+% much longer!!!!
+
+max(X,Y,YV) <- Y>=X & YV is Y.
+max(X,Y,XV) <- X>Y & XV is X.
+
+% predict ydot(80,0)&ydot(60,0+1).
+% predict ydot(50,0)&ydot(20,0+1).
+% predict ydot(50,0)&ydot(20,0+1)&ydot(0,0+1+1).
+% observe ydot_sens(50,0)&ydot_sens(20,0+1)&ydot_sens(0,0+1+1).
+% predict ydot(50,0)&ydot(20,0+1)&ydot(0,0+1+1).
+

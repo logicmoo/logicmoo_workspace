@@ -176,8 +176,11 @@ memorize_edit(Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
 
 memorize_appending(Figment, M0, M2) :-  memorize_edit(append, Figment, M0, M2).
 
+inner_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Figment))),format('~N',[]))).
 % Manipulate memories (M stands for Memories)
-memorize(Figment, M0, M1) :- assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
+memorize(Figment, M0, M1) :-
+ inner_dialog(Figment),
+ assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
 % memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
 forget(Figment, M0, M1) :- select_from(Figment, M0, M1).
 forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).

@@ -1,0 +1,43 @@
+% AILog representation of a meta-interpreter that uses built-in calls and disjunction
+
+% This is the code of Figure 13.11 in Section 13.5.3 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'prove2.ail'.
+
+% The base-level uses <= for "if" and true for the empty body.
+
+% prove(G) means G is a consequence of the base-level knowledge base
+prove(true).
+prove((A & B)) <-
+   prove(A) &
+   prove(B).
+prove((A;B)) <-
+   prove(A).
+prove((A;B)) <-
+   prove(B).
+prove(H) <-
+   built_in(H) &
+   call(H).
+prove(H) <-
+   (H <= B) &
+   prove(B).
+
+% built_in(G) is true if G is to be proved in the underlying ailog system
+built_in(V is E).
+built_in(X < Y).
+built_in(X > Y).
+
+% Here is an example is the use of prove:
+%   ailog: tell le(X,Y) <= X<Y ; eq(X,Y).
+%   ailog: tell eq(X,X) <= true.
+%   ailog: ask prove(le(4,7)).
+%   ailog: ask prove(le(7,7)).
+%   ailog: ask prove(le(7,4)).
+%   ailog: ask prove(le(2+2,10-3)).
+

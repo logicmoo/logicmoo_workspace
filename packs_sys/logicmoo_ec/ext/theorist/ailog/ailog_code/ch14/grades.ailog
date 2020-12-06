@@ -1,0 +1,33 @@
+% Predicting the grades of students on courses they haven't taken
+% Example from CPSC 522, 2012
+% Copyright David Poole, 2012. This is released under the GLP
+
+% int(S) is true if student S is intelligent
+prob int(S):0.5.
+% diff(C) is true if course C is difficult
+prob diff(C):0.5.
+
+% grade(S,C,V) is true if student S has grade V in course C, where V is in {a,b,c}
+grade(S,C,V) <- int(S) & diff(C) & id(S,C,V).
+prob id(S,C,a):0.5, id(S,C,b):0.4, id(S,C,c):0.1.
+grade(S,C,V) <- int(S) & ~diff(C) & ind(S,C,V).
+prob ind(S,C,a):0.9, ind(S,C,b):0.09, ind(S,C,c):0.01.
+grade(S,C,V) <- ~int(S) & diff(C) & nid(S,C,V).
+prob nid(S,C,a):0.01, nid(S,C,b):0.09, nid(S,C,c):0.9.
+grade(S,C,V) <- ~int(S) & ~diff(C) & nind(S,C,V).
+prob nind(S,C,a):0.1, nind(S,C,b):0.4, nind(S,C,c):0.5.
+
+% load 'ailog_code/ch14/grades.ailog'.
+% prob_threshold 0.  % do exact reasoning
+% observe grade(s1,c1,a).
+% predict int(s1).
+% observe grade(s2,c1,c).
+% predict int(s2).
+% predict int(s1).
+% observe grade(s1,c2,b).
+% observe grade(s2,c3,b).
+% observe grade(s4,c3,b).
+% predict grade(s4,c4,G).
+% observe grade(s3,c2,b).
+% predict grade(s3,c4,G).
+% predict grade(s4,c4,G). % is this changed?

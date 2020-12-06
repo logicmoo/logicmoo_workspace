@@ -1,0 +1,36 @@
+% AILog representation of binary trees with labeled leaves and internal nodes.
+
+% This is the code discussed in Section 12.3.3 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'trees.ail'.
+
+% at_leaf(L,T) is true if label L is the label of a leaf in tree T.
+at_leaf(L,leaf(L)).
+at_leaf(L,node(N,LT,RT)) <-
+    at_leaf(L,LT).
+at_leaf(L,node(N,LT,RT)) <-
+    at_leaf(L,RT).
+
+% in_tree(L,T)  is true if label L is the label of an interior node of tree T
+in_tree(L,node(L,LT,RT)).
+in_tree(L,node(N,LT,RT)) <-
+    in_tree(L,LT).
+in_tree(L,node(N,LT,RT)) <-
+    in_tree(L,RT).
+
+% some example trees:
+% Figure 7.4 (a):
+tree1( node(length,leaf(skips),node(thread,leaf(reads),node(author,leaf(skips),leaf(reads)))) ).
+% Figure 7.4 (b):
+tree2( node(length,leaf(1.0),leaf(0.82)) ).
+
+% Some queries:
+% ask tree1(T) & at_leaf(L,T).
+% ask tree1(T) & in_tree(L,T).
+% ask tree2(T) & at_leaf(L,T).
+% ask tree2(T) & in_tree(L,T).

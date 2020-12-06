@@ -186,7 +186,7 @@ lstra :- forall(baseKB:how_virtualize_file(_,F,0),baseKB:ensure_loaded(F)).
 % :- add_game_dir(sample_games('src_game_sims'),prolog_repl).
 % :- add_game_dir(sample_games('src_game_nani'),prolog_repl).
 %:- add_game_dir(sample_games('src_game_startrek'),prolog_repl).
-:- declare_load_dbase(sample_games('src_game_startrek/?*.pfc*')).
+%:- declare_load_dbase(sample_games('src_game_startrek/?*.pfc*')).
 
 %:- check_clause_counts.
 

@@ -1,0 +1,23 @@
+
+% head tossing example of Buntine (JAIR vol 2. 1994) - taking
+% paramater out of the CPT.  discrete version.
+
+heads(E) <- prob_heads(P) & heads_happens(E,P).
+tails(E) <- prob_heads(P) & ~heads_happens(E,P).
+
+prob heads_happens(E,P):P.
+prob prob_heads(0):0.05, prob_heads(0.1):0.1, 
+      prob_heads(0.2):0.1,  prob_heads(0.3):0.1, 
+      prob_heads(0.4):0.1,  prob_heads(0.5):0.1, 
+      prob_heads(0.6):0.1,  prob_heads(0.7):0.1, 
+      prob_heads(0.8):0.1,  prob_heads(0.9):0.1, 
+      prob_heads(1.0):0.05.
+
+%%%% Try the following in ailog2
+% load 'plates.cil'.
+% observe heads(t1). 
+% predict heads(t0).
+% observe heads(t2). 
+% predict heads(t0).
+% observe tails(t3). 
+% predict heads(t0).

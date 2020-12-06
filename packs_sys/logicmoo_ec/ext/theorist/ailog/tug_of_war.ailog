@@ -1,0 +1,66 @@
+% AILog representation of the tug-of-war example
+% copyright 2013, David Poole 
+% released under the GPL, see http://www.gnu.org/licenses/gpl.html
+
+% winner(M)=T is true if team T is winner of match M
+winner(M)=Who <- team_strength(1,M)=S1 & team_strength(2,M)=S2 & 
+              win_given_strength(M,S1,S2)=Who.
+
+% win_given_strength(M,S1,S2,Who) is true if Who is the winner
+%    of match M given the strengths S1 and S2 as the two teams
+win_given_strength(M,S1,S2)=1 <- S1>S2.
+win_given_strength(M,S1,S2)=2 <- S2>S1.
+win_given_strength(M,S1,S2)=W <- same(S1,S2) & wins_by_chance(M)=W. % equal, winner is random
+
+% same(S1,S2) is true if S1 is approximately equal to S2
+same(S1,S2) <- abs(S1-S2) < 0.000000001.
+
+% wins_by_chance(M)=Who means Who wins match M by chance
+prob wins_by_chance(M)=1 : 0.5, 
+     wins_by_chance(M)=2 : 0.5. % equal probability for each match
+
+% team_strength(T,M)=S is S is the strength of team T in match M
+team_strength(T,M)=S <-
+   on_team(M,T,L) &
+   team_strength_list(M,L)=S.
+
+% team_strength_list(M,L)=S is true if S is the strength of list L of players in match M
+% this sums over the match_strengths of the players in L
+team_strength_list(M,[])=0.
+team_strength_list(M,[P|R])=S <-
+   match_strength(P,M)=S0 &
+   team_strength_list(M,R)=S1 &
+   S is S0+S1.
+
+% match_strength(P,M)=S is true if S is the strength of player P in match M
+match_strength(P,M)=S1 <-
+   lazy(P,M) &
+   strength(P)=S0 &
+   S1 is S0*0.5.
+match_strength(P,M)=S <-
+   ~ lazy(P,M) &
+   strength(P)=S.
+
+% lazy(P,M) is true if player P is lazy in match M
+prob lazy(P,M):0.1.
+
+% strength(P)=S  is true if player P has strength S
+% this should be a parametrized normal distribution.
+prob strength(P)=1 : 0.2, strength(P)=2 : 0.6, strength(P)=3 : 0.2.
+
+% on_team(Match,TeamNumber,ListOfMembers)
+on_team(1,1,[bob,mary]).
+on_team(1,2,[chris,sam]).
+on_team(2,1,[bob,sam]).
+on_team(2,2,[chris,mary]).
+on_team(3,1,[bob,sam]).
+on_team(3,2,[chris,mary]).
+
+%%%% Try the following in ailog2
+% load 'tug_of_war.ailog'.
+% observe winner(1)=1.    % team 1 won match 1
+% predict strength(bob)=S.
+% observe winner(2)=2.    % team 2 won match 2
+% predict strength(bob)=S.
+% predict strength(mary)=S.
+% predict winner(3)=T.

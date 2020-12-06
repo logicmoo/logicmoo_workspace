@@ -1,0 +1,41 @@
+% AILog representation of a meta-interpreter that delays goals
+
+% This is the code of Figure 13.13 in Section 13.5.5 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'dprove.ail'.
+
+% The base-level uses <= for "if" and true for the empty body.
+
+% dprove(G,D0,D1) means G is a consequence of the base-level knowledge
+% base, where D1 contains D0 and any extra delayables to prove G
+
+dprove(true,D,D).
+dprove((A & B),D1,D3) <-
+   dprove(A,D1,D2) &
+   dprove(B,D2,D3).
+dprove(H,D,D) <-
+   built_in(H) &
+   call(H).
+dprove(G,D,[G|D]) <-
+   delay(G).
+dprove(H,D1,D2) <-
+   (H <= B) &
+   dprove(B,D1,D2).
+
+% built_in(G) is true if G is to be proved in the underlying ailog system
+built_in(V is E).
+built_in(X < Y).
+built_in(X > Y).
+
+% Here is an example is the use of dprove:
+
+% load 'elect_delay.ail'.
+% ask dprove(live(w3),[],D).
+% ask dprove(lit(L),[],D).
+
