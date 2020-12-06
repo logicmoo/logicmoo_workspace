@@ -1,10 +1,13 @@
 @ECHO OFF
 
+pushd %~dp0
+
 REM Command file for Sphinx documentation
 
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
+set SOURCEDIR=.
 set BUILDDIR=_build
 set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% .
 set I18NSPHINXOPTS=%SPHINXOPTS% .
@@ -118,7 +121,7 @@ if "%1" == "qthelp" (
 	echo.^> qcollectiongenerator %BUILDDIR%\qthelp\complexity.qhcp
 	echo.To view the help file:
 	echo.^> assistant -collectionFile %BUILDDIR%\qthelp\complexity.ghc
-	goto end
+goto end
 )
 
 if "%1" == "devhelp" (
@@ -240,3 +243,4 @@ if "%1" == "pseudoxml" (
 )
 
 :end
+popd
