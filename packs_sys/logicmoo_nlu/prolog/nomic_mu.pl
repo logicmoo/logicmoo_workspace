@@ -153,6 +153,6 @@ or to run as single player use:
 :- initialization(usage_mu, program).
 %:- initialization(usage_mu, (program)).
 
-:- listing(aXiom/3).
-:- srv_mu.
-:- break.
+%:- listing(aXiom/3).
+%:- srv_mu.
+%:- break.
