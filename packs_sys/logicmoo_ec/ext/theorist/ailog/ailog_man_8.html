@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 6.1 How? Questions</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_7.html"><img class="up" alt="6 Explanation and Debugging" src="../images/arrow-up.gif"/></a><a href="ailog_man_9.html"><img class="next" alt="6.2 Whynot? Questions" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>6.1 How? Questions</h2>
+<p>When the system has derived an answer you can ask <b>how</b><a name="id1"> that</a>
+answer was produced. This provides a mechanism for interactively
+traversing a proof tree.  At each stage the system either says why
+the answer was produced immediately (e.g., if it was a fact or a
+built-in predicate -- see Section <a href="ailog_man_13.html">8</a>) or produces the
+instance of the top-level rule that was used to prove the goal.
+</p>
+<p>When you ask how atom h was proved, it produces the instance of the
+rule in the knowledge base with h as the head that succeeded:
+</p>
+<pre>
+h &lt;-
+   1: a&#95;1
+   2: a&#95;2
+   ...
+   k: a&#95;k
+</pre>
+<p>which indicates that the rule h  &lt;- a<sub>1</sub> &#38; a<sub>2</sub> &#38; ...&#38; a<sub>k</sub> was used to prove h. You can then give one of:
+</p>
+<dl><dt>how i.</dt><dd> where i is an integer 1  &lt;= i  &lt;= k. This means that you want to see how a<sub>i</sub> was proved.
+</dd><dt>up.</dt><dd> to go back to see the rule with h in the body. If h is the initial query it goes back to the answer interaction.
+</dd><dt>retry.</dt><dd> to ask for a different proof tree.
+</dd><dt>ok.</dt><dd> to exit the how traversal and go back to the answer prompt.
+</dd><dt>help.</dt><dd> for a list of the available commands.
+</dd></dl>
+<p>If a<sub>i</sub> was not proved via a rule (for example, if it was a fact or
+a built-in predicate), the reason that a<sub>i</sub> was proved is printed
+and then the rule with a<sub>i</sub> in the body is printed again.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+Given the knowledge base after Example <a href="ailog_man_5.html#tell-ex">4</a>, you can ask how a particular instance of the query was proved, as in:
+<pre>
+ailog: <b>ask grandfather(G,C).</b>
+Answer: grandfather(randy,mary).
+  [ok,more,how,help]: <b>how.</b>
+   grandfather(randy,mary) &lt;-
+      1: father(randy,sally)
+      2: parent(sally,mary)
+   How? [number,up,retry,ok,help]: <b>how 2.</b>
+   parent(sally,mary) &lt;-
+      1: mother(sally,mary)
+   How? [number,up,retry,ok,help]: <b>how 1.</b>
+   mother(sally,mary) is a fact
+   parent(sally,mary) &lt;-
+      1: mother(sally,mary)
+   How? [number,up,retry,ok,help]: <b>up.</b>
+   grandfather(randy,mary) &lt;-
+      1: father(randy,sally)
+      2: parent(sally,mary)
+   How? [number,up,retry,ok,help]: <b>how 1.</b>
+   father(randy,sally) is a fact
+   grandfather(randy,mary) &lt;-
+      1: father(randy,sally)
+      2: parent(sally,mary)
+   How? [number,up,retry,ok,help]: <b>up.</b>
+Answer: grandfather(randy,mary).
+  [ok,more,how,help]: <b>more.</b>
+Answer: grandfather(randy,sue).
+  [ok,more,how,help]: <b>ok.</b>
+ailog: 
+</pre>
+</i></i></i></div>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

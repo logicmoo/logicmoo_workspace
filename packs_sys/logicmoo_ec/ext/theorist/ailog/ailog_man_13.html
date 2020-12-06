@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:37 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 8 Built-in predicates</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_12.html"><img class="previous" alt="7 Ask-the-user" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_14.html"><img class="next" alt="9 Assumables" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>8 Built-in predicates</h1>
+<p>There are a few built-in predicates<a name="id1">.</a> These
+cannot be redefined. The following arithmetic predicates are predefined:
+</p>
+<ul><li><tt>X &lt; Y</tt>, where <tt>X</tt> and <tt>Y</tt> must be ground
+arithmetic expressions when called, is true if the value of <tt>X</tt> is
+less than the value of <tt>Y</tt>.<a name="id2"></a>
+</li><li><tt>X &gt; Y</tt>, where <tt>X</tt> and <tt>Y</tt> must be ground
+arithmetic expressions when called, is true if the value of <tt>X</tt> is
+greater than the value of <tt>Y</tt>.<a name="id3"></a>
+</li><li><tt>X =&lt; Y</tt>, where <tt>X</tt> and <tt>Y</tt> must be ground
+arithmetic expressions when called, is true if the value of <tt>X</tt> is
+less than or equal to the value of <tt>Y</tt>.<a name="id4"></a>
+</li><li><tt>X &gt;= Y</tt>, where <tt>X</tt> and <tt>Y</tt> must be ground
+arithmetic expressions when called, is true if the value of <tt>X</tt> is
+greater than or equal to the value of <tt>Y</tt>.<a name="id5"></a>
+</li><li><tt>X =\= Y</tt>, where <tt>X</tt> and <tt>Y</tt> must be ground
+arithmetic expressions when called, is true if the value of <tt>X</tt> is
+different to the value of <tt>Y</tt>.<a name="id6"></a>
+</li><li><tt>V is E</tt><a name="id7"> where</a> <tt>E</tt> must be a ground arithmetic
+expression when called. This is true if expression <tt>E</tt> evaluates
+to <tt>V</tt>.
+</li><li><tt>number(N)</tt><a name="id8">,</a> where <tt>N</tt> is ground is true
+if <tt>N</tt> is a number.
+</li></ul>
+<p>Arithmetic expressions can either be numbers or of the form
+(E<sub>1</sub>+E<sub>2</sub>), (E<sub>1</sub>-E<sub>2</sub>), (E<sub>1</sub>*E<sub>2</sub>), (E<sub>1</sub>/E<sub>2</sub>), sin(E),
+log(E), etc.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+The following shows a simple use of <tt>is</tt> and &gt;. It shows how we
+can use variables in the expressions, as long as they are bound before
+(to the left) they are used.
+<pre>
+ailog: <b>ask X is 3+4*5 &amp; X*2 &gt; 11*3.</b>
+Answer: 23 is 3+4*5 &amp; 23*2&gt;11*3.
+</pre>
+</i></i></i></div>
+<p>The restriction that the arithmetic expressions must be ground when
+called is severe, and probably won't be fixed in future
+implementations.
+</p>
+<p>There is one non-arithmetic comparison:
+</p>
+<ul><li><code>X \= Y</code> true if <tt>X</tt> and <tt>Y</tt> denote different
+objects under the unique names assumption.<a name="id9"></a> 
+</li></ul>
+<tt><p>X</tt> and
+<tt>Y</tt> must be bound enough to determine whether they can be unified.
+(Delaying is not implemented).
+This may be fixed in future versions.
+</p>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

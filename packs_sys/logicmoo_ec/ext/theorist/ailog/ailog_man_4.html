@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 3.1 Individuals and Relations</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_3.html"><img class="up" alt="3 Syntax" src="../images/arrow-up.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>3.1 Individuals and Relations</h2>
+<p>AILog can be used for propositional reasoning, but can also be used
+for relational reasoning.
+</p>
+<p>The syntax of variables and predicates is based on Prolog's syntax in its
+convention for variables, but uses a different syntax for operators
+(because Prolog's are so confusing and to emphasize AILog is not Prolog).
+</p>
+<p>A <b>variable</b> is a sequence of alphanumeric characters (possibly including
+"<code>_</code>") that starts with an upper case letter or "<code>_</code>".  For
+example, <code>X</code>, <code>Letter</code>, <code>Any_cat</code>, <code>A_big_dog</code> are all variables.
+The variable "<code>_</code>" in an anonymous variable which means that
+all occurrences are assumed to be different variables. If a variable
+occurs only once in a clause, it should probably be written as
+"<code>_</code>".
+</p>
+<p>A <b>constant</b> is either:
+</p>
+<ul><li>a sequence of alphanumeric characters (possibly including
+"<code>_</code>") starting
+with a lower case letter, such as: <code>david</code>, <code>comp_intell</code>, <code>ailog</code>, and <code>a45_23</code>
+</li><li>an integer or
+float, such as <code>123</code>, <code>-5</code>, <code>1.0</code>, <code>-3.14159</code>,
+<code>4.5E7</code>, <code>-0.12e+8</code>, and <code>12.0e-9</code>. There must be a
+decimal point in floats written with an 
+exponent and at least one digit before and after a decimal point.
+</li><li>any sequence of characters delimited by single quotes, such as
+<code>'X'</code>, <code>'2b~2b'</code>, <code>'../ch2/foo.pl'</code>, <code>'A Tall Person'</code>
+</li></ul>
+<p>A <b>term</b> is either a variable, a constant, of of the form
+f(t<sub>1</sub>,...,t<sub>n</sub>), where f, a
+function symbol, is a sequence of alphanumeric
+characters (possibly including "<code>_</code>") starting with a lower case letter and the t<sub>i</sub> are terms.
+</p>
+<p>An <b>atom</b> is either of the form p or p(t<sub>1</sub>,...,t<sub>n</sub>), where
+p, a predicate symbol, is a sequence of alphanumeric characters
+(including <code>_</code>)
+starting with a lower case letter and the t<sub>i</sub>
+are terms. Given this definition for atoms, the rest of the syntax
+is the same as the propositional case.
+Some predicate and function symbols can be written using infix
+notation. For example "<code>X is 4+3*Y</code>" means the same as
+"<code>is(X,+(4,*(3,Y)))</code>", where "<code>is</code>" is a predicate symbol
+and "<code>+</code>" and "<code>*</code>" are function symbols. The operator
+precedence follows Prolog's conventions. 
+</p>
+<p>The symbol "<code>&lt;=</code>" is
+defined to be infix, but there are no clauses defining it. 
+This is designed to be used for meta-programming where "<code>&lt;=</code>"
+can be used as a meta-level predicate symbol defining the object-level
+implication. (See <em>Artificial Intelligence</em> <a href="ailog_man_19.html#Poole:2009aa">[Poole and Mackworth (2010)]</a>, Chapter 13).
+</p>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

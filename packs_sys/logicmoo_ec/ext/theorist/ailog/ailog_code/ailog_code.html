@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>Artificial Intelligence: Foundations of Computational Agents
+  -- Q-learning for a grid agent</title>
+  <meta name="generator" content="amaya 9.3, see http://www.w3.org/Amaya/" />
+  <link rel="stylesheet" href="../../images/styleDemos.css" type="text/css" />
+</head>
+
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">
+		<h1 id="logo-text"><a href="../../../index.html" title="">Artificial <br/>Intelligence</a></h1>
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+		
+	<!-- navigation starts-->	
+	<div  id="nav">
+		<ul>
+			<li><a href="../../../index.html">Home</a></li>
+			<li><a href="../../../html/ArtInt.html">Complete Book</a></li>
+			<li id="current"><a href="../../../online.html">Resources</a></li>
+			<li><a href="../../../slides/slides.html">Slides</a></li>
+		</ul>
+	<!-- navigation ends-->	
+	</div>					
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>AILog Code</h1>
+
+<p>Here are some runnable examples for the book <a
+href="http://cs.ubc.ca/~poole/aibook/">Artificial Intelligence: foundations of
+computational agents</a> by David Poole and Alan Mackworth, Cambridge University
+Press, 2010 (forthcoming). All code is copyright by Poole and Mackworth
+2009 and released under the <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.</p>
+
+<p>This code runs in <a
+href="../ailog_man.html">AILog2</a>,
+a representation and reasoning system for definite clauses, with declarative
+debugging tools, assumbles, probabilities, etc.</p>
+
+<p>Either save the code to a file and load it into AILog, or cut and paste
+each clause and <code>tell</code> it to AILog.</p>
+
+<h2>Chapter 5</h2>
+<ul>
+  <li><a href="ch05/elect_prop.ail">elect_prop.ail</a> electrical wiring
+    example; Example 5.5 from Section 5.2</li>
+  <li><a href="ch05/elect_ask.ail">elect_ask.ail</a> electrical wiring example
+    with askables; Example 5.10 from Section 5.3.2</li>
+  <li><a href="ch05/elect_bug.ail">elect_bug.ail</a> the buggy electrical wiring
+    knowledge base from Example 5.14 in Section 5.3.4</li>
+  <li><a href="ch05/elect_bug2.ail">elect_bug2.ail</a> the buggy electrical wiring
+    example from Exercise 5.6</li>
+  <li><a href="ch05/elect_bug3.ail">elect_bug3.ail</a> a buggy electrical wiring
+    example, which fails to prove <code>lit_l2</code>, but should succeed</li>
+ <li><a href="ch05/elect_design.ail">elect_design.ail</a> electrical wiring example
+    with switch positions assumable (asking a query gives ways to make
+    it true) and <a
+    href="ch05/elect_design.ail">elect_design_all.ail</a> has
+    positions and statuses assumable. </li>
+ <li><a href="ch05/elect_cbd.ail">elect_cbd.ail</a> electrical wiring example
+    for consistency-based diagnosis; Example 5.20 in Section 5.4.3</li>
+  <li><a href="ch05/elect_naf.ail">elect_naf.ail</a> electrical wiring example
+    with negation as failure; Example 5.26 in Section 5.5</li>
+    <li><a href="ch05/beach.ail">beach.ail</a> default reasoning about
+    swimming at beaches; Example 5.27 in Section 5.5.1
+    </li>
+    <li><a href="ch05/bronchitis.ail">bronchitis.ail</a> diagnosis Example 5.30 in Section 5.6
+    </li>
+  <li><a href="ch05/elect_abd.ail">elect_abd.ail</a> electrical wiring example
+    with abduction;  Example 5.31 in Section 5.6</li>
+  <li><a href="ch05/plumbing.ail">plumbing.ail</a> plumbing domain
+    from Exercise 5.2</li>
+</ul>
+
+<h2>Chapter 12</h2>
+<ul>
+<li><a href="ch12/elect_relational.ail">elect_relational.ail</a> electrical wiring
+    example from Section 12.3.2</li>
+<li><a href="ch12/west.ail">west.ail</a> a knowledge base about rooms
+    from  Figure 12.2 in Section 12.3.3</li>
+<li><a href="ch12/before.ail">before.ail</a> the <code>before</code> relation of
+    Example 12.26 in Section 12.5</li>
+<li><a href="ch12/trees.ail">trees.ail</a> the tree code of
+    Example 12.27 in Section 12.5</li>
+<li><a href="ch12/cfg_simple.ail">cfg_simple.ail</a> a simple context
+free grammar and associated dictionary from
+    Figures 12.6 and 12.7 in Section 12.5</li>
+    <li><a href="ch12/trans.ail">trans.ail</a> 
+    generates canned English; from Figure 12.8 in Section 12.6.4
+    </li>
+    <li><a href="ch12/nl_numbera.ail">nl_numbera.ail</a> 
+    a simple grammar that enforces number agreement and builds a parse tree; from Figure 12.9 in Section 12.6.5
+    </li>
+    <li><a href="ch12/nl_interface.ail">nl_interface.ail</a> 
+    a simple natural language interface to a database; from Figures
+    12.10 and 12.11 in Section 12.6.6
+    </li>
+</ul>
+<h2>Chapter 13</h2>
+<ul>
+  <li><a href="ch13/prove.ail">prove.ail</a> a vanilla
+  meta-interpreter (Figure 13.9), which can be used with <a
+  href="ch13/elect_base.ail">elect_base.ail</a> a base-level
+  representation of the electrical domain (Figure 13.10).
+  </li>
+  <li><a href="ch13/prove2.ail">prove2.ail</a> a vanilla
+  meta-interpreter, with disjunctions and built-ins; Figure 13.11.
+  </li>
+  <li><a href="ch13/bprove.ail">bprove.ail</a> a
+  meta-interpreter for depth-bounded search; Figure 13.12.
+  </li>
+  <li><a href="ch13/hprove.ail">hprove.ail</a> a
+  meta-interpreter that builds a proof tree; Figure 13.13.
+  </li>
+  <li><a href="ch13/dprove.ail">dprove.ail</a> a
+  meta-interpreter that delays goals; Figure 13.16. This can be used
+  with <a
+  href="ch13/elect_delay.ail">elect_delay.ail</a> a base-level
+  representation of the electrical domain, with ok delayed.
+  </li>
+</ul>
+<h2>Chapter 14</h2>
+<ul>
+  <li><a href="ch14/delrob_sitc.ail">delrob_sitc.ail</a> the delivery
+  robot in the situation calculus, as described in Section 14.1.1.
+  </li>
+  <li><a href="ch14/leaving.ail">leaving.ail</a> ICL representation of
+  the belief network of Figure 6.1 and Example 6.10; this
+  representation is from Example 14.19 in Section 14.3.
+  </li>
+  <li><a href="ch14/movie.ailog">movie.ailog</a> ICL representation of
+  the belief network of Figure 6.1 and Example 6.10; this
+  representation is from Example 14.19 in Section 14.3.
+  </li>
+  <li><a href="ch14/grades.ailog">movie.ailog</a> ICL representation
+  to predict grades of students on courses they haven't taken.
+  </li>
+  <li><a href="ch14/addition.ail">addition.ail</a> ICL representation
+  of probabilistic diagnosis of
+  students who makes addition errors; Example 14.20 in Section 14.3.
+  </li>
+</ul>
+
+<hr />
+
+<p>Last updated, 2009-10-09 <a
+href="http://cs.ubc.ca/~poole/">David </a><a
+href="http://cs.ubc.ca/~poole/">Poole</a></p>
+</p>
+		</div>
+
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright © 2006-2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan Mackworth</a>
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+</body>
+</html>

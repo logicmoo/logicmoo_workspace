@@ -135,7 +135,7 @@ act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
 
 
 get_relation_list(Object, RelationSet, S1) :-
-  findall_set(At,
+  findall_set1(At,
      ((getprop(Object, has_rel(At, t), S1);
       (declared(h(At, _, Object), S1))),
      At\=exit(_)), RelationSet).
@@ -159,7 +159,7 @@ child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object)
  act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
 */
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):-
- findall_set(What,
+ findall_set1(What,
   (h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).

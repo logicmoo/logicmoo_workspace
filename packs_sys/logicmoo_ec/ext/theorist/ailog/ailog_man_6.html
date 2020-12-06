@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 5 Loading and Listing Knowledge Bases</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_5.html"><img class="previous" alt="4 Ask and Tell" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_7.html"><img class="next" alt="6 Explanation and Debugging" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>5 Loading and Listing Knowledge Bases</h1>
+<p>You can also tell the system a set of clauses from a file.
+The command:<a name="id1"></a>
+</p>
+<pre>
+ailog: <b>load </b><i>'filename'</i>.
+</pre>
+<p>where <i>'filename'</i> is the name (enclosed in single quotes) of a
+file that contains a sequence of clauses (each clause ending with a period),
+adds the clauses to the knowledge base as though they had been told
+to the system. Note that the file does <em>not</em> contain <b>tell</b>
+commands; it just contains the clauses.
+</p>
+<p>Within files (and at any prompt), <b>comments</b> <a name="id2"> can</a>
+be included between a "<code>%</code>" and the end of a line, or between
+"<code>/*</code>" and "<code>*/</code>".
+</p>
+<p>Loading a file adds the clauses to the database. It does not
+replace definitions. To clear the knowledge base you can issue the command:<a name="id3"></a>
+</p>
+<pre>
+ailog: <b>clear</b>.
+</pre>
+<p>To remove all clauses with head <em>atom</em> from the knowledge base, you issue the command:
+</p>
+<pre>
+ailog: <b>clear</b> <em>atom</em>.
+</pre>
+<p>To list the contents of the knowledge base you can issue the command:<a name="id4"></a>
+</p>
+<pre>
+ailog: <b>listing</b>.
+</pre>
+<p>This gives a listing of the whole knowledge base that is suitable for
+copying to a file and loading in a subsequent AILog session.
+</p>
+<p>To get a listing of all clauses in the knowledge base whose head
+unifies with <em>atom</em>, you can issue the command:
+</p>
+<pre>
+ailog: <b>listing</b> <em>atom</em>.
+</pre>
+<p>Note that in listings, and any time atoms with free variables are
+written, the variables are renamed. The system does not remember the
+names you gave the variables. It just calls them A, B, C, etc.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+Suppose the file "<a href="genealogy.pl">genealogy.cil</a>" contains
+the rules from Example <a href="ailog_man_5.html#tell-ex">4</a>. The following shows how the file
+can be loaded and listed.
+<pre>
+ailog: <b>load 'genealogy.cil'.</b>
+AILog theory genealogy.cil loaded.
+ailog: <b>listing.</b>
+parent(A,B) &lt;- mother(A,B).
+parent(A,B) &lt;- father(A,B).
+grandfather(A,B) &lt;- father(A,C) &amp; parent(C,B).
+grandmother(A,B) &lt;- mother(A,C) &amp; parent(C,B).
+father(randy,sally).
+father(randy,joe).
+mother(sally,mary).
+father(joe,sue).
+ailog: 
+</pre>
+</i></i></i></div>
+<p>To load a file that uses Prolog syntax, you can issue the command:<a name="id5"></a>
+</p>
+<pre>
+ailog: <b>prload </b><em>'filename'</em>.
+</pre>
+<p>This assumes the clauses in the file use the Prolog implication
+<code>:-</code> and use a comma for conjunction. This does not allow the
+use of Prolog extra-logical predicates.
+</p>
+<p>One useful command to check your knowledge base is the command:<a name="id6"></a>
+</p>
+<pre>
+ailog: <b>check.</b>
+</pre>
+<p>This lists the rules in the knowledge base with atoms in the body
+which don't unify with the head of any clause in the knowledge base
+(or any askable or assumable). This is a simple check that the rule
+can never be used in a proof. This is useful as this is usually an
+indication that there is a problem with the knowledge base.
+</p>
+<p>This static check
+replaces the dynamic "undefined predicate" exception of Prolog, but
+is more useful in that it can be done before asking any queries, it
+finds clauses that contain atoms that must immediately fail (even if there
+are other clauses with the same predicate symbol). The warning can be ignored
+if that is what you intended (for example if you intend to add
+appropriate clauses later).
+</p>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

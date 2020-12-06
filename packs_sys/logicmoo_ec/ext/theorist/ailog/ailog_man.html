@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3</title>
+<link rel="stylesheet" href="../../images/style.css" type="text/css" />
+</head>
+<body>
+<!-- wrap starts here -->
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">
+		<h1 id="logo-text"><a href="index.html" title="">Artificial <br/>Intelligence</a></h1>
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+		
+	<!-- navigation starts-->	
+	<div  id="nav">
+		<ul>
+			<li><a href="../../index.html">Home</a></li>
+			<li><a href="../../html/ArtInt.html">Complete Book</a></li>
+			<li id="current"><a href="../../online.html">Resources</a></li>
+			<li><a href="../../slides/slides.html">Slides</a></li>
+		</ul>
+	<!-- navigation ends-->	
+	</div>					
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+<a name="cicontents"></a>
+<div class="center">
+<h1 class="maketitle">AILog User Manual<br />Version 2.3</h1>
+<h2 class="maketitle"> <a href="http://www.cs.ubc.ca/spider/poole/">David Poole</a>
+</h2>
+<h3 class="maketitle">March 30, 2010</h3>
+</div>
+<div class="abstract"><h3 class="abstract"><p>Abstract</h3></p>
+<p>This manual describes AILog, (formerly CILog), a simple representation and
+reasoning system based on the books <a href="http://www.cs.ubc.ca/spider/poole/aibook/"><cite>Artificial Intelligence: foundations of computational agents</cite></a>
+<a href="ailog_man_19.html#Poole:2009aa">[Poole and Mackworth (2010)]</a> and
+<a href="http://www.cs.ubc.ca/spider/poole/ci.html"><cite>Computational Intelligence: A
+Logical Approach</cite></a>
+<a href="ailog_man_19.html#reason:PooMacGoe97a">[Poole, Mackworth, and Goebel (1998)]</a>, and the Independent Choice Logic <a href="ailog_man_19.html#Poole:2008aa">[Poole (2008)]</a> for the
+probabilistic reasoning. 
+AILog provides:
+</p>
+<ul><li>a definite clause representation and reasoning system
+</li><li>a simple tell-ask user interface, where the user can tell the
+system facts and ask questions of the system 
+</li><li>explanation facilities to explain how a goal was proved, why an
+answer couldn't be found, why a question was asked, why an
+error-producing goal was called, and why the depth-bound was reached 
+</li><li>knowledge-level debugging tools, that let the user debug
+incorrect answers, missing answers, why the system asks a question,
+system errors, and possible infinite loops
+</li><li>depth-bounded search, that can be used to investigate potential
+infinite loops and used to build an iterative-deepening search
+procedure 
+</li><li>sound negation-as-failure, that interacts appropriately with the
+depth-bound 
+</li><li>ask-the-user facilities
+</li><li>assumables for finding conflicts (e.g., in consistency based diagnosis) and for abduction
+</li><li>probabilistic reasoning, integrated with negation as failure.
+</li></ul>
+<p>Although it has similarities with Prolog, it should not be seen as
+"programming in logic", but as "representing in logic". The tools
+are designed for the case where you are trying to model a domain in
+logic and can ask the system questions about what follows. It can
+explain its reasoning in terms of the domain.
+</p>
+<p></div>
+AILog is a purely declarative representation and reasoning system.
+It is intended as a pedagogical tool to present a simple logic that
+can be used for AI problems. It is meant for programming in the small,
+where you can axiomatize a domain, ask questions and debug the
+knowledge base, without knowing how answers are produced.
+There may be sophisticated problem-solving techniques used in finding
+answers<sup><a href="ailog_man_21.html#footnote-1">1</a></sup>.
+</p>
+<p>We have many examples of <a href="ailog2.html">probabilistic reasoning in
+AILog2</a>, as well as of the <a href="ailog_code/ailog_code.html">examples from the new
+book</a> available. The examples from <a href="http://www.cs.ubc.ca/spider/poole/ci/code/cilog/cilog_code/cilog_code.html">cilog</a>
+should also work.
+</p>
+<p>This manual is also available in <a href="ailog_man.pdf">PDF format</a>.
+This is suitable for printing, but also contains hyperlinks.
+</p>
+<ul>
+<li><a href="ailog_man_1.html">1 Getting and Starting AILog</a></li>
+<li><a href="ailog_man_2.html">2 Help and Exiting</a></li>
+<li><a href="ailog_man_3.html">3 Syntax</a>
+<ul>
+<li><a href="ailog_man_4.html">3.1 Individuals and Relations</a></li>
+</ul>
+</li>
+<li><a href="ailog_man_5.html">4 Ask and Tell</a></li>
+<li><a href="ailog_man_6.html">5 Loading and Listing Knowledge Bases</a></li>
+<li><a href="ailog_man_7.html">6 Explanation and Debugging</a>
+<ul>
+<li><a href="ailog_man_8.html">6.1 How? Questions</a></li>
+<li><a href="ailog_man_9.html">6.2 Whynot? Questions</a></li>
+<li><a href="ailog_man_10.html">6.3 Depth Bound</a></li>
+<li><a href="ailog_man_11.html">6.4 Why? Questions</a></li>
+</ul>
+</li>
+<li><a href="ailog_man_12.html">7 Ask-the-user</a></li>
+<li><a href="ailog_man_13.html">8 Built-in predicates</a></li>
+<li><a href="ailog_man_14.html">9 Assumables</a></li>
+<li><a href="ailog_man_15.html">10 Negation-as-failure</a></li>
+<li><a href="ailog_man_16.html">11 Probabilities</a>
+<ul>
+<li><a href="ailog_man_17.html">11.1 Experimental Probabilistic Features</a></li>
+</ul>
+</li>
+<li><a href="ailog_man_18.html">12 Copyright</a></li>
+<li><a href="ailog_man_19.html">References</a></li>
+<li><a href="ailog_man_20.html">Index</a></li>
+<li><a href="ailog_man_21.html">Footnotes</a></li>
+</ul>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

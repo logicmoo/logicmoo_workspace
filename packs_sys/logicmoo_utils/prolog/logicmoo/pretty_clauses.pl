@@ -12,7 +12,7 @@
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_filestreams.pl
 :- module(pretty_clauses,
-   []).
+   [print_tree/1]).
 
 :- set_module(class(library)).
 
@@ -164,13 +164,14 @@ print_et_to_string(T,S,Options):-
                  write_options(WriteOpts)|PrintOpts]),
       ttyflush)]).
 
-
-to_ansi(e,[bold,fg(yellow)]).
-to_ansi(ec,[bold,fg(green)]).
-to_ansi(pl,[bold,fg(cyan)]).
-to_ansi([H|T],[H|T]).
-to_ansi(C, [bold,hfg(C)]):- assertion(nonvar(C)), is_color(C),!.
-to_ansi(H,[H]).
+to_ansi(A,B):- to_ansi0(A,B),!.
+to_ansi0(e,[bold,fg(yellow)]).
+to_ansi0(ec,[bold,fg(green)]).
+to_ansi0(pl,[bold,fg(cyan)]).
+to_ansi0(pink,[bold,fg('#FF69B4')]).
+to_ansi0([H|T],[H|T]).
+to_ansi0(C, [bold,hfg(C)]):- assertion(nonvar(C)), is_color(C),!.
+to_ansi0(H,[H]).
 
 is_color(white). is_color(black). is_color(yellow). is_color(cyan). 
 is_color(blue). is_color(red). is_color(green). is_color(magenta).
@@ -405,7 +406,7 @@ any_line_count(_,0).
 /* Print term as a tree */
 
 :- export(print_tree/1).
-:- export(print_tree/1).
+:- export(print_tree/2).
 :- export(prefix_spaces/1).
 
 
@@ -419,45 +420,117 @@ print_tree_cmt(Info,C,P):-
   to_ansi(C, C0),
   real_ansi_format(C0, '~s', [S]))).
 
+:- export(in_color/2).
+in_color(C,P):-
+ notrace((
+  with_output_to(string(S), ((    
+    call(P)))), to_ansi(C, C0),
+  real_ansi_format(C0, '~s', [S]))).
+
 
 pt_nl:- nl.
 
-:- dynamic(pretty_clauses:goal_expansion/2).
+%:- dynamic(pretty_clauses:goal_expansion/2).
 % pretty_clauses:goal_expansion(pt_nl,(write(S:L),nl)):- source_location(S,L).
 
-print_tree(Term) :- must_or_rtrace(( guess_pretty(Term),print_tree(Term, '.'))).
-print_tree(Term, Final) :- print_tree0(Final,Term).
+write_simple(A):- get_portrayal_vars(Vs), 
+  setup_call_cleanup(asserta(pretty_tl:in_pretty,Ref),
+    write_term(A,[quoted(true),partial(true), portrayed(true), variable_names(Vs)]),
+    erase(Ref)).
 
-portray_with_vars(A):- (nb_current('$variable_names',Vs)-> true ; Vs=[]), 
-  write_term(A, [partial(true),portrayed(true),quoted(true),variable_names(Vs)]).
+portray_with_vars(A):- get_portrayal_vars(Vs),  
+  simple_write_term(A,[quoted(true),partial(true), portrayed(true), variable_names(Vs)]),!.
 
-print_tree0(Final,Term) :-
-   output_line_position(Was), 
-   print_tree0(Final,Term, Was),
-   output_line_position(Now),
-   nop((Now==Was -> true ; (nl,format('~t~*|', [Was])))),
+:- thread_local(pretty_tl:in_pretty/0).
+
+prolog_pretty_print(A,Options):- 
+  prolog_pretty_print:print_term(A, [portray(true), output(current_output)|Options]).
+
+simple_write_term(A,Options):- fail, is_list(A), \+ pretty_tl:in_pretty, !,
+  setup_call_cleanup(asserta(pretty_tl:in_pretty,Ref),
+    prolog_pretty_print(A,Options),
+    erase(Ref)).
+simple_write_term(A,Options):-  write_term(A,Options),!.
+%simple_write_term(A,Options):-  write_term(A,[portray_goal(prolog_pretty_print:print_term)|Options]).
+
+get_portrayal_vars(Vs):- nb_current('$variable_names',Vs)-> true ; Vs=[].
+
+print_tree(Term) :- print_tree_with_final(Term,'.').
+print_tree(Term, Options) :- select(fullstop(true),Options,OptionsNew),!,print_tree_final_options(Term, '.', OptionsNew).
+print_tree(Term, Options) :- print_tree_final_options(Term, '', Options).
+
+
+print_tree_loop(Term,Options):- \+ pretty_tl:in_pretty,
+  setup_call_cleanup(asserta(pretty_tl:in_pretty,Ref),
+    print_tree(Term,Options),
+    erase(Ref)).
+print_tree_loop(Term, Options):- write_term(Term, Options).
+
+
+print_tree_with_final(Term, Final):- print_tree_final_options(Term, Final, []).
+
+print_tree_final_options(Term, Final, Options) :-
+   (\+ memberchk(variable_names(_),Options) -> guess_pretty(Term) ; true),
+   output_line_position(Tab), 
+   print_final_tree_options_tab(Final,Term,Options,Tab),   
+   nop(((output_line_position(Now), Now==Tab -> true) ; (nl,format('~t~*|', [Tab])))),
    !.
 
+:- thread_local(pretty_tl:write_opts_local/1).
+
 % print_tree0(Final,Term) :- as_is(Term),line_position(current_output,0),prefix_spaces(1),format('~N~p',[Term]),!.
-print_tree0(Final,Term,Tab) :- \+ as_is(Term), pt0([],Final, Term, Tab), !.
-print_tree0(Final,Term,Tab):- prefix_spaces(Tab), format('~@~w',[portray_with_vars(Term),Final]),!.
+print_final_tree_options_tab(Final,Term, Options,Tab):- 
+  setup_call_cleanup(asserta(pretty_tl:write_opts_local(Options),Ref),
+    print_final_term_tab(Final,Term,Tab),erase(Ref)).
+
+% print_final_term_tab(Final,Term,Tab):-  list_contains_sub_list(Term), prefix_spaces(Tab), mu_prolog_pprint(Tab,Term,[]), write(Final).
+print_final_term_tab(Final,Term,Tab):- \+ as_is(Term), pt0([],Final, Term, Tab),!.
+print_final_term_tab(Final,Term,Tab):-  prefix_spaces(Tab), format('~@~w',[portray_with_vars(Term),Final]),!.
 
 
-prefix_spaces(Tab):- output_line_position(Now), Now > Tab, !,nl, prefix_spaces(Tab).
+prefix_spaces(Tab):- output_line_position(Now), Now > Tab, !,nl,  format('~t~*|', [Tab]).
 prefix_spaces(Tab):- output_line_position(Now), Need is Tab - Now, format('~t~*|', [Need]).
 
 format_functor(F):- upcase_atom(F,U), ((F==U,current_op(_,_,F)) -> format("'~w'",[F]) ; format("~q",[F])).
 
 is_list_functor(F):- F == lf.
 
+write_using_pprint_recurse(_):- \+ current_module(mu),!,fail.
+write_using_pprint_recurse(Term):- write_using_pprint(Term),!,fail.
+write_using_pprint_recurse(Term):- is_list(Term),!, \+ (member(T,Term), \+ atomic(T)).
+write_using_pprint_recurse(Term):- compound(Term),!, \+ (arg(_,Term,T), \+ atomic(T)).
+
+
+mu_prolog_pprint(Term,Options):- output_line_position(Tab), mu_prolog_pprint(Tab,Term,Options).
+mu_prolog_pprint(Tab,Term,Options):- mu:prolog_pprint(Term,[left_margin(Tab)|Options]).
+
+is_simple_list(Term):- is_list(Term),!, \+ (member(T,Term), \+ atomic(T)).
+
+write_using_pprint(_):- \+ current_module(mu),!,fail.
+write_using_pprint(Term):- is_list(Term), !, member(L, Term), L\==[], is_list(L),!.
+write_using_pprint(Term):- compound(Term), functor(Term,_,1),!, arg(1,Term,Arg), \+ is_simple_list(Arg).
+%write_using_pprint(Term):- is_list(Term), arg(_,Term, L), contains_list(L),!.
+
+contains_list(Term):- \+ \+ ((compound(Term),arg(_,Term, Arg), sub_term(T,Arg), is_list(T),T\==[])).
+list_contains_sub_list(Term):- compound(Term),arg(_,Term, Arg),
+  sub_term(T,Arg),T\==Arg,is_list(T),T\==[],contains_list(T).
+ 
+
 inperent([F|_],TTs,Term,Ts):- fail, \+ is_list_functor(F),
       TTs=..[F,Term,Ts], 
       functor(TTsS,F,2),     
      ((nonvar(Term), Term=TTsS);(nonvar(Ts), Ts=TTsS)).
 
-pt0(_,Final,Term,Tab) :- %  \+ compound(Term),
+pt0(_,Final,Term,Tab) :- 
+   is_arity_lt1(Term), !,
+   prefix_spaces(Tab), portray_with_vars(Term),write(Final), nop(pt_nl).
+
+pt0(_,Final,Term,Tab) :- 
    as_is(Term), !,
-   prefix_spaces(Tab), write_simple(Term),write(Final), nop(pt_nl).
+   prefix_spaces(Tab), portray_with_vars(Term),write(Final), nop(pt_nl).
+
+pt0(FS,Final,[T|Ts],Tab):- !,
+   pt0_list(FS,Final,[T|Ts],Tab).
 
 /*
 pt0(FS,Final,TTs,Tab) :- 
@@ -467,12 +540,33 @@ pt0(FS,Final,TTs,Tab) :-
    pt0(FS,Final,Ts,Tab).
 */
 
-pt0(FS,Final,[T|Ts],Tab) :- !,
-  prefix_spaces(Tab),write('[ '),
-   I2 is Tab+2,
-   pt0(FS,'',T,I2),
-   format(atom(NLC),' ]~w',[Final]),   
-   pt_args([lf|FS],NLC,Ts,I2),!.
+pt0(FS, Final,T,Tab) :- 
+   T=..[F,A0,A|As], \+ major_conj(F), is_arity_lt1(A0), append(Left,[R|Rest],[A|As]), 
+    (\+ is_arity_lt1(R) ; Rest==[]), !,   
+   must_or_rtrace(pt0_functor(FS,Final,F,Tab,I0,LC2)),
+   write_simple(A0), write_simple_each(Left),
+   pt_args([F|FS],LC2,[R|Rest],I0).
+
+pt0(FS, Final,T,Tab) :- 
+   T=..[F,A0], !,   
+   must_or_rtrace(pt0_functor(FS,Final,F,Tab,_I0,LC2)),
+   print_tree_with_final(A0,LC2).
+   %pt_args([F|FS],LC2,[],I0).
+
+/*
+pt0(_, Final,Term,Tab) :- is_simple_list(Term),
+  prefix_spaces(Tab), mu_prolog_pprint(Tab,Term,[right_margin(6)]), write(Final).
+
+pt0(_, Final,Term,Tab) :- write_using_pprint(Term),!,
+  prefix_spaces(Tab), mu_prolog_pprint(Tab,Term,[right_margin(30)]), write(Final).
+
+pt0(_, Final,Term,Tab) :- fail, write_using_pprint_recurse(Term),
+  prefix_spaces(Tab), 
+   mu_prolog_pprint(Tab,Term,[portray_goal(print_tree_loop)]),
+   write(Final).
+
+*/
+
 
 pt0(FS,Final,q(E,V,G),Tab):- atom(E), !, T=..[E,V,G],!, pt0(FS,Final,T,Tab).
 
@@ -482,27 +576,40 @@ pt0([Fs|FS],Final,T,Tab0) :-
    major_conj(F),
    Tab is Tab0,
    prefix_spaces(Tab0),write(' '),
-   sformat(FinA, " ~w ",[F]), print_tree(A,FinA),
+   sformat(FinA, " ~w ",[F]), print_tree_with_final(A,FinA),
    format(atom(LC2),'~w',[Final]),
    pt0([F|FS],LC2,As,Tab).
+
 
 pt0(FS,Final,T,Tab0) :- 
    T=..[F,A,As], 
    major_conj(F),
    Tab is Tab0+1,
    prefix_spaces(Tab0),write('('),
-   sformat(FinA, " ~w ",[F]), print_tree(A,FinA),
+   sformat(FinA, " ~w ",[F]), print_tree_with_final(A,FinA),
    format(atom(LC2),')~w',[Final]),
    pt0([F|FS],LC2,As,Tab).
 
 pt0(FS,Final,T,Tab) :- !,
    T=..[F,A|As],   
-   (((FS==F, major_conj(F) )
-     -> (I0 is Tab+1,LCO='~w' )
-      ; (prefix_spaces(Tab), format_functor(F),format('(',[]), I0 is Tab+3, pt_nl, LCO=')~w'))),
-   format(atom(LC2),LCO,[Final]),
+   pt0_functor(FS,Final,F,Tab,I0,LC2),
    pt0([F|FS],'',A,I0),
    pt_args([F|FS],LC2,As,I0).
+
+pt0_functor(FS,Final,F,Tab,I0,LC2):-
+   (((FS==F, major_conj(F) )
+       -> (I0 is Tab+1,LCO='~w' )
+       ; (prefix_spaces(Tab), format_functor(F),format('(',[]), I0 is Tab+3, /*pt_nl,*/ LCO=')~w'))),
+     format(atom(LC2),LCO,[Final]).
+
+
+pt0_list(FS,Final,[T|Ts],Tab) :- !,
+  prefix_spaces(Tab),write('[ '),
+   I2 is Tab+2,
+   pt0(FS,'',T,I2),
+   format(atom(NLC),' ]~w',[Final]),   
+   pt_args([lf|FS],NLC,Ts,I2),!.
+
 /*
 
 pt0(FS,Final,T,Tab) :- fail,  T=..[F,A], !,
@@ -510,12 +617,6 @@ pt0(FS,Final,T,Tab) :- fail,  T=..[F,A], !,
    I0 is Tab+1, format(atom(LC2),')~w',[Final]),   
    pt_args([F|FS],LC2,[A],I0).
 
-pt0(FS, Final,T,Tab) :- fail,   
-   T=..[F,A0,A|As], is_arity_lt1(A0), append([L1|Left],[R|Rest],[A|As]), \+ is_arity_lt1(R), !,
-   prefix_spaces(Tab), format_functor(F),format('( ',[]),
-   write_simple(A0), write_simple_each([L1|Left]), format(', '), pt_nl,
-   I0 is Tab+3, format(atom(LC2),')~w',[Final]),   
-   pt_args([F|FS],LC2,[R|Rest],I0).
 
 
 pt0(FS,Final,T,Tab) :- fail,  T.=.[F,A,B|As], is_arity_lt1(A), !, 
@@ -532,6 +633,8 @@ splice_off([A0,A|As],[A0|Left],[R|Rest]):-
     Rest\==[] , %  is_list(Rest),
    ( (\+ is_arity_lt1(R)) ; (length(Left,Len),Len>=3)),!.
 
+%pt_args( [F|_], Final,[A|Args],_Tab) :- simple_f(F),!,write_simple(A), write_simple_each(Args), write(Final),!.
+pt_args( _, Final,[A],_Tab) :- number(A),  write(', '), write(A), write(Final),!.
 pt_args( In, Final,Var,Tab):- Var\==[],  \+ is_list(Var), !, /* is_arity_lt1(Var), */ write(' | '), pt0(In,Final,Var,Tab).
 pt_args(_In, Final,[],_) :- !, write(Final).
 pt_args( FS, Final,[A|R],Tab) :- R==[], write(', '), prefix_spaces(Tab), pt0(FS,Final,A,Tab), !.
@@ -550,35 +653,39 @@ pt_args( FS, Final,[A|As],Tab) :- !,  write(', '), prefix_spaces(Tab),
 
 is_arity_lt1(A) :- \+ compound(A),!.
 is_arity_lt1(A) :- compound_name_arity(A,_,0),!.
+is_arity_lt1(A) :- functor(A,'$VAR',_),!.
 is_arity_lt1(A) :- functor(A,'-',_),!.
 is_arity_lt1(A) :- functor(A,'+',_),!.
-is_arity_lt1(A) :- functor(A,'$VAR',_),!.
 is_arity_lt1(S) :- is_charlist(S),!.
 is_arity_lt1(S) :- is_codelist(S),!.
 
 as_is(V):- var(V).
 as_is(A) :- is_arity_lt1(A), !.
+as_is(A) :- functor(A,F,_), simple_f(F).
 as_is(A):- is_list(A), maplist(is_arity_lt1,A).
 as_is([A]) :- is_list(A),length(A,L),L<2,!.
-as_is(A) :- functor(A,F,_), simple_f(F).
 as_is(A) :- functor(A,F,2), simple_fs(F),arg(2,A,One),atomic(One),!.
 as_is('_'(_)) :- !.
-as_is(Q) :- is_quoted(Q).
+as_is(Q) :- is_quoted_pt(Q).
    
 as_is(not(A)) :- !,as_is(A).
-as_is(A) :- A=..[_|S], maplist(is_arity_lt1,S), !.
-as_is(A) :- A=..[_,_|S], maplist(is_arity_lt1,S), !.
+as_is(A) :- A=..[_|S], maplist(is_arity_lt1,S),length(S,SL),SL<4, !.
+as_is(A) :- A=..[_,B|S], fail, as_is(B), maplist(is_arity_lt1,S), !.
 % as_is(F):- simple_arg(F), !.
 
-is_quoted(Q):- nonvar(Q), fail, catch(call(call,quote80(Q)),_,fail),!.
+is_quoted_pt(Q):- nonvar(Q), fail, catch(call(call,quote80(Q)),_,fail),!.
 
 simple_fs(:).
 
 simple_f(denotableBy).
 simple_f(iza).
 simple_f(c).
+simple_f(ip).
 simple_f(p).
+simple_f(h).
+simple_f(sub__examine).
 simple_f(isa).
+simple_f(has_rel).
 simple_f(HasSpace):- atom_contains(HasSpace,' ').
 
 simple_arg(S):- (nvar(S) ; \+ compound(S)),!.
@@ -587,8 +694,6 @@ simple_arg(S):- \+ (arg(_,S,Var), compound(Var), \+ nvar(Var)).
 
 nvar(S):- \+ is_arity_lt1(S)-> functor(S,'$VAR',_); var(S).
 
-%write_simple(A):- is_arity_lt1(A),!, portray_with_vars(A).
-write_simple(A):- portray_with_vars(A).
 
 write_simple_each([]).
 write_simple_each([A0|Left]):-  format(', '), write_simple(A0), write_simple_each(Left).

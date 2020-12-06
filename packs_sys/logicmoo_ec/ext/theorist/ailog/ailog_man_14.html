@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:37 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 9 Assumables</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_13.html"><img class="previous" alt="8 Built-in predicates" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_15.html"><img class="next" alt="10 Negation-as-failure" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>9 Assumables</h1>
+<p>Assumables can be used for proof by contradiction or for
+abduction. Integrity constraints (rules that imply false) are handled
+specially in abduction. The
+interaction between assumables and negation as failure is
+not as general as it could be; for the goal <code>~</code>g, any proof or
+partial proof of g
+should not depend on any assumables.
+</p>
+<p>To to make an atom assumable, you can issue the command:<a name="id1"></a>
+</p>
+<pre>
+ailog: <b>assumable </b><em>atom</em>.
+</pre>
+<p>When the atom is encountered, it is assumed to be true. The assumptions
+used to make a proof go though are collected and presented to the user
+when the answer is returned. 
+</p>
+<pre>
+ailog: <b>tell a(X) &lt;- b(X) &amp; c(X).</b>
+ailog: <b>assumable c(X).</b>
+ailog: <b>tell b(X) &lt;- d(X) &amp; e(X).</b>
+ailog: <b>askable e(X).</b>
+ailog: <b>tell d(a).</b>
+ailog: <b>tell d(b).</b>
+ailog: <b>tell d(c).</b>
+ailog: <b>ask a(X).</b>
+Is e(a) true? [yes,no,unknown,why,help]: <b>yes.</b>
+Answer: a(a).
+Assuming: [c(a)].
+  [more,ok,how,help]: <b>more.</b>
+Is e(b) true? [yes,no,unknown,why,help]: <b>no.</b>
+Is e(c) true? [yes,no,unknown,why,help]: <b>yes.</b>
+Answer: a(c).
+Assuming: [c(c)].
+  [more,ok,how,help]: <b>more.</b>
+No more answers.
+ailog:
+</pre>
+<p>An explanation has to be consistent with the knowledge base. To say
+that some body is not true, you can use:
+</p>
+<pre>
+ailog: <b>tell </b>false &lt;- body.
+</pre>
+<p>Here false is a special atom that is false in all models. Thus, this
+clause provides a constraint specifying that the body is false.
+</p>
+<p>From the set of constraints, you need to create a set of nogoods to
+ensure that all explanations are consistent. To do this, you can issue the command:<a name="id2"></a>
+</p>
+<pre>
+ailog: <b>create_nogoods</b>.
+</pre>
+<p>The nogoods correspond to the sets of assumables that imply false.
+</p>
+<p>To list all of the nogoods, you can issue the command:<a name="id3"></a>
+</p>
+<pre>
+ailog: <b>nogoods</b>.
+</pre>
+<p>To debug the nogoods, you can ask to prove false or ask whynot false.
+</p>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

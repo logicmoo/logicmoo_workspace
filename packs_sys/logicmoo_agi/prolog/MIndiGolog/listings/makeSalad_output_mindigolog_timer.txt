@@ -1,0 +1,26 @@
+?- testsit1(S), ol_do(control,S).
+do [ring_timer(timer1)] at 5
+do
+[acquire_object(thomas,lettuce1),acquire_object(richard,tomato1),acquire_object(harriet,carrot1)]
+at 6
+do [acquire_object(thomas,board1),acquire_object(harriet,board2)] at 7
+do [place_in(thomas,lettuce1,board1),place_in(harriet,carrot1,board2)] at 8
+do [begin_task(thomas,chop(board1)),begin_task(harriet,chop(board2))] at 9
+do [end_task(thomas,chop(board1)),end_task(harriet,chop(board2))] at 12
+do [acquire_object(thomas,bowl1)] at 13
+do [transfer(thomas,board1,bowl1)] at 14
+do [release_object(thomas,board1)] at 15
+do [release_object(thomas,bowl1),acquire_object(richard,board1)] at 16
+do [place_in(richard,tomato1,board1),acquire_object(harriet,bowl1)] at 17
+do [begin_task(richard,chop(board1)),transfer(harriet,board2,bowl1)] at 18
+do [release_object(harriet,board2),end_task(richard,chop(board1))] at 23
+do [release_object(harriet,bowl1)] at 24
+do [acquire_object(richard,bowl1)] at 25
+do [transfer(richard,board1,bowl1)] at 26
+do [release_object(richard,board1)] at 27
+do [release_object(richard,bowl1)] at 28
+do [acquire_object(thomas,bowl1)] at 29
+do [begin_task(thomas,mix(bowl1,1))] at 30
+do [end_task(thomas,mix(bowl1,1))] at 31
+do [release_object(thomas,bowl1)] at 32
+SUCCEEDED!

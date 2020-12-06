@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 2 Help and Exiting</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_1.html"><img class="previous" alt="1 Getting and Starting AILog" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_3.html"><img class="next" alt="3 Syntax" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>2 Help and Exiting</h1>
+<p>The basic system prompt is:
+</p>
+<pre>
+ailog: 
+</pre>
+<p>This means that AILog is waiting for input from the user. All
+user inputs end with a period (".") and a return (enter).
+</p>
+<p>At any stage you can ask for help by issuing a help command<a name="id1">:</a>
+</p>
+<pre>
+ailog: <b>help.</b>
+</pre>
+<p>This gives a brief description of the available commands.
+</p>
+<p>To quit AILog, you can issue the command:
+<a name="id2"></a>
+</p>
+<pre>
+ailog: <b>quit.</b>
+</pre>
+<p>AILog is written in Prolog. To exit AILog to the underlying Prolog, you
+can use the command:
+<a name="id3">.</a>
+</p>
+<pre>
+ailog: <b>prolog.</b>
+</pre>
+<p>To restart AILog, you should use the command:
+</p>
+<pre>
+| ?- <b>start.</b>
+</pre>
+<p>at the prolog prompt. 
+Note that this does not clear the knowledge base.
+</p>
+<p>To turn on reporting the run time of queries, you can do
+</p>
+<pre>
+ailog: <b>stats runtime.</b>
+</pre>
+<p>On some
+systems, this is the elapsed time since the query was asked or the
+user asked for more answers, which may be a very inaccurate of run
+time if there was
+user interaction. To turn off reporting of run time, you can do:
+</p>
+<pre>
+ailog: <b>stats none.</b>
+</pre>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

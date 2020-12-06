@@ -37,7 +37,7 @@ adv_pretty_print(Level, Term):- \+ is_list(Term), Level>0, Level < 4,
 adv_pretty_print(Level, Term):- compound(Term),
   setup_call_cleanup(
     flag('$adv_pp_level', Level, Level-1),
-    prolog_pprint(Term, []),
+    prolog_pprint_tree(Term),
     flag('$adv_pp_level', Level, Level)), !.
 adv_pretty_print(_Level, Term):- fmt90(Term), !.
 

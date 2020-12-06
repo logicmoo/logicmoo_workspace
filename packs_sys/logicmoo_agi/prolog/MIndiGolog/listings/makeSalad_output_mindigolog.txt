@@ -1,0 +1,27 @@
+?- ol_do(control,s0).
+do
+[acquire_object(thomas,lettuce1),acquire_object(richard,tomato1),acquire_object(harriet,carrot1)]
+at 1
+do [acquire_object(thomas,board1),acquire_object(harriet,board2)] at 2
+do [place_in(thomas,lettuce1,board1),place_in(harriet,carrot1,board2)] at 3
+do [begin_task(thomas,chop(board1)),begin_task(harriet,chop(board2))] at 4
+do [end_task(thomas,chop(board1)),end_task(harriet,chop(board2))] at 7
+do [acquire_object(thomas,bowl1)] at 8
+do [transfer(thomas,board1,bowl1)] at 9
+do [release_object(thomas,board1)] at 10
+do [release_object(thomas,bowl1),acquire_object(richard,board1)] at 11
+do [place_in(richard,tomato1,board1),acquire_object(harriet,bowl1)] at 12
+do [begin_task(richard,chop(board1)),transfer(harriet,board2,bowl1)] at 13
+do [release_object(harriet,board2),end_task(richard,chop(board1))] at 18
+do [release_object(harriet,bowl1)] at 19
+do [acquire_object(richard,bowl1)] at 20
+do [transfer(richard,board1,bowl1)] at 21
+do [release_object(richard,board1)] at 22
+do [release_object(richard,bowl1)] at 23
+do [acquire_object(thomas,bowl1)] at 24
+do [begin_task(thomas,mix(bowl1,1))] at 25
+do [end_task(thomas,mix(bowl1,1))] at 26
+do [release_object(thomas,bowl1)] at 27
+SUCCEEDED!
+yes
+?-

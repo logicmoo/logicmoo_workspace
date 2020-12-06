@@ -1,0 +1,58 @@
+% Ailog code for a relational representation of the electrical environment (with ask-the-user, and ok)
+
+% This is the code discussed in Section 12.3.2 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010.  http://artint.info
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in Ailog, you should put it in the same directory as Ailog and then call
+% load 'elect_relational.ail'.
+% or in the standad distibution do
+% load 'ailog_code/ch12/elect_relational.ail'.
+
+% lit(L) is true if light L is lit.
+lit(L) <-
+   light(L) &
+   ok(L) &
+   live(L).
+
+% live(W) is true if W is live (i.e., current will flow through it if grounded)
+live(W) <-
+   connectedto(W,W1) &
+   live(W1).
+
+live(outside).
+
+% connectedto(W0,W1) is true if W0 is connnected to W1 such that current will
+% flow from W1 to W0.
+
+connectedto(l1,w0).
+connectedto(w0,w1) <- up(s2) & ok(s2).
+connectedto(w0,w2) <- down(s2) & ok(s2).
+connectedto(w1,w3) <- up(s1) & ok(s1).
+connectedto(w2,w3) <- down(s1) & ok(s1).
+connectedto(l2,w4).
+connectedto(w4,w3) <- up(s3) & ok(s3).
+connectedto(p1,w3).
+connectedto(w3,w5) <- ok(cb1).
+connectedto(p2,w6).
+connectedto(w6,w5) <- ok(cb2).
+connectedto(w5,outside) <- ok(outside_connection).
+
+% light(L) is true if L is a light
+light(l1).
+light(l2).
+
+% up(S) is true if switch S is up
+% down(S) is true if switch S is down
+
+askable up(S).
+askable down(S).
+
+% ok(G) is true if G is working
+% we state that everything is OK
+ok(X).
+
+% Example Queries:
+% ask lit(L).

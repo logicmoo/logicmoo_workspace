@@ -1,0 +1,40 @@
+% AILog representation for generating canned English.
+
+% This is the code discussed in Figure 12.8 in Section 12.6.4 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'trans.ail'.
+
+% trans(Term,T0,T1) is true if Term translates into the words
+% contained in the difference list T0-T1.
+
+trans(scheduled(S,C,T,R),T1,T8) <-
+   trans(session(S),T1,[of|T3]) &
+   trans(course(C),T3,[scheduled,at|T5]) &
+   trans(time(T),T5,[in|T7]) &
+   trans(room(R),T7,T8).
+
+trans(session(w11),[the,winter,2011,session|T],T).
+
+trans(course(cs422),[the,advanced,artificial,intelligence,course|T],T).
+trans(course(cs322),[the,introductory,artificial,intelligence,course|T],T).
+
+trans(time(pm(H,M)),[H,:,M,pm|T],T).
+trans(time(am(H,M)),[H,:,M,am|T],T).
+trans(time(clock(0,M)),[12,:,M,am|T],T).
+trans(time(clock(H,M)),[H,:,M,am|T],T) <- H>0 & H < 12.
+trans(time(clock(12,M)),[12,:,M,pm|T],T).
+trans(time(clock(H,M)),[H1,:,M,pm|T],T) <- H > 12 & H1 is H-12.
+trans(time(noon),[noon|T],T).
+
+trans(room(above(R)),[the,room,above|T1],T2) <-
+   trans(room(R),T1,T2).
+trans(room(csci333),[the,computer,science,department,office|T],T).
+
+% Some example queries:
+% ask trans(scheduled(w11,cs422,pm(1,30),above(csci333)),T,[]).
+% ask trans(scheduled(w11,cs422,clock(15,30),above(csci333)),T,[]).

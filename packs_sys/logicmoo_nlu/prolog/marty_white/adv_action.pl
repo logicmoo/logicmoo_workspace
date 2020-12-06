@@ -115,6 +115,7 @@ do_command(Agent, Action) ==>>
   {set_last_action(Agent, Action)},
  do_action(Agent, Action), !.
 do_command(Agent, Action) :-
+ event_failed(Agent, unknown_comand( Action)),
  player_format(Agent, 'Failed or No Such Command: ~w~n', Action).
 
 % --------
@@ -172,23 +173,24 @@ do_action(Agent, Action, S0, S3) :-
  declare(memories(Agent, Mem1), S1, S2))),
  once(show_failure(must_act( Action, S2, S3));S2=S3), !.
 
-memorize_doing(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
+%memorize_doing(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
 memorize_doing(Agent, Action, Mem0, Mem2):-
   copy_term(Action, ActionG),
   mw_numbervars(ActionG, 999, _),
   ( has_depth(Action)
     -> Mem0 = Mem1 ;
     (thought(timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), memorize(timestamp(T1, Now), Mem0, Mem1))),
-  memorize(attempts(Agent, ActionG), Mem1, Mem2).
+  DOES = attempts(Agent, ActionG),
+  memorize(DOES, Mem1, Mem2).
 
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-trival_act(sub__examine(_, _, _, _, _)).
-trival_act(Action):- has_depth(Action).
+%trival_act(sub__examine(_, _, _, _, _)).
+%trival_act(look(_)).
+%trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act(look(_)).
 trival_act(wait(_)).
 
 
@@ -312,22 +314,25 @@ act_prevented_by('open', 'locked', t).
 act_prevented_by('close', 'locked', t).
 
 
-:- meta_predicate maybe_when(0, 0).
+event_failed(Agent,CUZ):- simplify_reason(CUZ,Msg), 
+  internal_dialog(event_failed(Agent,CUZ)), player_format(Agent, '~N~p~n', [Msg]).
+
+:- meta_predicate maybe_when(0, 0).  
 maybe_when(If, Then):- If -> Then ; true.
 
 :- meta_predicate unless_reason(*, '//', *, ?, ?).
 unless_reason(_Agent, Then, _Msg) ==>> Then, !.
-unless_reason(Agent, _Then, Msg) ==>> {player_format(Agent, '~N~p~n', [Msg])}, !, {fail}.
+unless_reason(Agent, _Then, Msg) ==>> {event_failed(Agent, Msg)}, !, {fail}.
 
 :- meta_predicate unless(*, '//', '//', ?, ?).
 unless(_Agent, Required, Then) ==>> Required, !, Then.
-unless(Agent, Required, _Then) ==>> {simplify_reason(Required, CUZ), player_format(Agent, '~N~p~n', cant( cuz(\+ CUZ)))}, !.
+unless(Agent, Required, _Then) ==>> {simplify_reason(Required, CUZ), event_failed(Agent, cant( cuz(\+ CUZ)))}, !.
 
 :- meta_predicate required_reason(*, 0).
 required_reason(_Agent, Required):- Required, !.
-required_reason(Agent, Required):- simplify_reason(Required, CUZ), player_format(Agent, '~N~p~n', cant( cuz(CUZ))), !, fail.
+required_reason(Agent, Required):- simplify_reason(Required, CUZ), event_failed(Agent, cant( cuz(CUZ))), !, fail.
 
-simplify_reason(_:Required, CUZ):- !, simplify_dbug(Required, CUZ).
+simplify_reason(_:Required, CUZ):- !, simplify_reason(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
 reverse_dir(north, south, _).

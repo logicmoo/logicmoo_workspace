@@ -1,0 +1,20 @@
+% AILog code for the plumbing domain given in Figure 5.13
+
+% This is the code discussed in Exercise 5.2 of Poole and Mackworth, Artificial
+% Intelligence: foundations of computational agents, Cambridge, 2010. http://artint.info
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, put it in the same directory as AILog (or cd to its directory) and call
+% load 'plumbing.ail'.
+
+pressurised_p1.
+pressurised_p2 <- on_t1 & pressurised_p1.
+flow_shower <- on_t2 & pressurised_p2.
+wet_bath <- flow_shower.
+flow_d2 <- wet_bath & unplugged_bath.
+flow_d1 <- flow_d2.
+on_t1.
+on_t2.
+unplugged_bath.

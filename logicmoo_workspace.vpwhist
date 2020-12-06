@@ -711,7 +711,7 @@ packs_xtra\packs_xtra.vpj=Release
           + driverlog
           + letseat
         + images
-      + ext
+      - ext
         + aiswi
           + img
           + project_template
@@ -758,13 +758,250 @@ packs_xtra\packs_xtra.vpj=Release
               + PolicyPatterns
               + PolicySetPatterns
               + RulesPatterns
+        - epaths
         + flp
           + templates
             + flp
           + worlds
             + flp
+        + pgrad
+          + code
+            + Goloz
+            + MIndiGolog
+              + clpqr
+                + clpq
+                + clpqr
+                + clpr
+              + listings
+            + scratch
+              + epaths
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+          + conferences
+            + aamas07
+            + iat06
+            + ijcai07
+          + social
+            + cssepg06
+          + talks
+            + agentlab
+              + golog
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+            + pg_sem_06
+            + pg_sem_07
+            + rmit_agents
+          + writings
+            + application
+            + coop_golog
+              + aaai06
+                + listings
+              + aamas06
+                + listings
+              + iat06
+                + listings
+            + internal
+              + poster2005
+              + poster2007
+            + sc_knowledge
+              + aamas07
+                + poster
+            + thesis
         + PKnows-0.9.9
           + vpdl
+        + pknows-some
+        + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
+          + code
+            + Goloz
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog1
+              + MIndiGolog2
+          + social
+            + cssepg06
+          + talks
+            + agentlab
+              + golog
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + iat06
+                + admin
+                + listings
+              + ijcai07_2
+                + admin
+              + kr08
+            + internal
+              + poster2005
+              + poster2007
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+        + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
+          + code
+            + Goloz
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog0
+              + MIndiGolog1
+              + MIndiGolog2
+              + pknows
+                + vpdl
+          + social
+            + cssepg06
+          + talks
+            + agentlab
+              + golog
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + iat06
+                + admin
+                + listings
+              + ijcai07_2
+                + admin
+              + kr08
+            + internal
+              + poster2005
+              + poster2007
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+        + pknowsf678c543195c9af975d749981a79de810dcc98eb
+          + code
+            + Goloz
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog0
+              + MIndiGolog1
+              + MIndiGolog2
+              + PKnows
+                + vpdl
+          + social
+            + cssepg06
+          + talks
+            + agentlab
+              + golog
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + iat06
+                + admin
+                + listings
+              + ijcai07_2
+                + admin
+              + kr08
+            + internal
+              + poster2005
+              + poster2007
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
         + RTEC
           + examples
             + caviar
@@ -781,6 +1018,7 @@ packs_xtra\packs_xtra.vpj=Release
           + src
             + utilities
         + theorist
+          + ailog
           + cilog_code
             + ch2
             + ch3
@@ -797,13 +1035,6 @@ packs_xtra\packs_xtra.vpj=Release
             + trains
           + pl
       + prolog
-        + aiswi
-          + img
-          + project_template
-          + relazione
-          + sciff
-          + src
-            + icons
         + ccalc
         + code_icl
         - dialect
@@ -811,10 +1042,7 @@ packs_xtra\packs_xtra.vpj=Release
         + ec_planner
         + hyhtn_pddl
           + ptools
-        + iwfms
         - lps_pddl
-        + pknows
-          + vpdl
       + test
         + domains_ocl
           + assTaxi
@@ -1019,7 +1247,7 @@ packs_xtra\packs_xtra.vpj=Release
         + NetworkNAR
         + system_tests
         + unit_tests
-    + logicmoo_nlu
+    - logicmoo_nlu
       + data
         + WNprolog-1.6
           + prolog
@@ -1526,7 +1754,7 @@ packs_xtra\packs_xtra.vpj=Release
       - prolog
         + debuggery
         + lm_utils
-        + logicmoo
+        - logicmoo
         + multivar
           + t
         + xlisting
@@ -1580,7 +1808,7 @@ packs_xtra\packs_xtra.vpj=Release
     + predicate_streams
       + prolog
       + t
-    + prologmud
+    - prologmud
       + hMUD
         + bridge
         + flashpolicyd_v0.6
@@ -1589,14 +1817,14 @@ packs_xtra\packs_xtra.vpj=Release
           + Python_xinetd
           + Standalone
         + swfobject
-      + prolog
-        + prologmud
+      - prolog
+        - prologmud
           + actions
           + mobs
             + affordance
           + objs
-          + parsing
-          + server
+          - parsing
+          - server
           + vworld
         + prologmud_web
           + src_assets
@@ -3186,22 +3414,6 @@ packs_xtra\packs_xtra.vpj=Release
       + prolog
         + BN-search
         + pHa_code
-        + theorist
-          + cilog_code
-            + ch2
-            + ch3
-            + ch4
-            + ch6
-            + ch8
-        + Tom
-          + Samples
-          + Src
-        + xray
-        + yadlr
-          + examples
-            + iris
-            + trains
-          + pl
     - logicmoo_pldata
       + ext
         + plkb0988
@@ -3309,9 +3521,9 @@ packs_xtra\packs_xtra.vpj=Release
   - \etc
     - apache2
       - sites-enabled
-  + packs_sys
-    + logicmoo_ec
-      + prolog
+  - packs_sys
+    - logicmoo_ec
+      - ext
         + aiswi
           + dist
             + javadoc
@@ -3332,11 +3544,430 @@ packs_xtra\packs_xtra.vpj=Release
             + lib
             + test
           + xml
+        + dialog_test
+        + ec_sources
+          + ecnet
+          + examples
+            + AkmanEtAl2004
+            + Antoniou1997
+            + BrewkaDixKonolige1997
+            + Cassimatis2002
+            + ecasp
+            + ecasp-decreasoner
+            + FrankEtAl2003
+            + GiunchigliaEtAl2004
+            + Manual
+            + MillerShanahan2002
+            + Mueller2004a
+            + Mueller2004b
+            + Mueller2006
+              + Chapter10
+              + Chapter11
+              + Chapter12
+              + Chapter13
+              + Chapter14
+              + Chapter2
+              + Chapter3
+              + Chapter4
+              + Chapter6
+              + Chapter7
+              + Chapter8
+              + Chapter9
+              + Exercises
+            + ReiterCriscuolo1981
+            + Shanahan1997
+            + Shanahan1999
+          + foundations
+          + includes
+            + SaaSPatterns
+              + PolicyPatterns
+              + PolicySetPatterns
+              + RulesPatterns
+        + epaths
+        + flp
+          + templates
+            + flp
+          + worlds
+            + flp
+        + pgrad
+          + code
+            + Goloz
+              + FOF
+              + SitCalc
+              + Utils
+            + MIndiGolog
+              + clpqr
+                + clpq
+                + clpqr
+                + clpr
+              + listings
+            + scratch
+              + epaths
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+          + conferences
+            + aamas07
+            + iat06
+            + ijcai07
+              + ijcai07_latex
+          + library
+          + social
+            + cssepg06
+              + chess_comp
+              + correspondence
+            + openday06
+          + talks
+            + agentlab
+              + golog
+              + symposium06
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+            + lectures
+            + pg_sem_06
+            + pg_sem_07
+            + rmit_agents
+          + writings
+            + application
+            + coop_golog
+              + aaai06
+                + listings
+              + aaai08
+                + listings
+              + aamas06
+                + listings
+              + aamas08
+                + listings
+              + iat06
+                + listings
+            + internal
+              + poster2005
+              + poster2007
+              + progress_2006
+              + progress_2007
+              + progress_2008
+            + sc_knowledge
+              + aamas07
+                + poster
+              + ijcai07
+              + ijcai07_2
+                + IJCAI-KellyR-80
+              + jair07
+            + scratch
+            + thesis
+        - PKnows-0.9.9
+          - vpdl
+        + pknows-some
+        + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
+          + code
+            + Goloz
+              + FOF
+              + SitCalc
+              + Utils
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog1
+              + MIndiGolog2
+          + library
+          + social
+            + cssepg06
+              + chess_comp
+              + correspondence
+            + openday06
+          + talks
+            + agentlab
+              + golog
+              + symposium06
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + lectures
+              + agents07
+              + agents08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aaai08
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + aamas08
+                + listings
+              + iat06
+                + admin
+                + listings
+              + ijcai07
+              + ijcai07_2
+                + admin
+                  + ijcai07_latex
+                + IJCAI-KellyR-80
+              + kr08
+                + reimbursement
+            + internal
+              + poster2005
+              + poster2007
+              + progress_2006
+              + progress_2007
+              + progress_2008
+            + journals
+              + jair07
+            + scratch
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+        + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
+          + code
+            + Goloz
+              + FOF
+              + SitCalc
+              + Utils
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog0
+              + MIndiGolog1
+              + MIndiGolog2
+              + pknows
+                + vpdl
+          + library
+          + social
+            + cssepg06
+              + chess_comp
+              + correspondence
+            + openday06
+          + talks
+            + agentlab
+              + golog
+              + symposium06
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + lectures
+              + agents07
+              + agents08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aaai08
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + aamas08
+                + listings
+              + iat06
+                + admin
+                + listings
+              + ijcai07
+              + ijcai07_2
+                + admin
+                  + ijcai07_latex
+                + IJCAI-KellyR-80
+              + kr08
+                + reimbursement
+            + internal
+              + poster2005
+              + poster2007
+              + progress_2006
+              + progress_2007
+              + progress_2008
+            + journals
+              + jair07
+            + scratch
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+        + pknowsf678c543195c9af975d749981a79de810dcc98eb
+          + code
+            + Goloz
+              + FOF
+              + SitCalc
+              + Utils
+            + MIndiGolog
+              + listings
+            + pknows
+              + vpdl
+            + scratch
+              + fosg
+              + MIndiGolog_mercury
+              + pcond
+            + thesis
+              + MIndiGolog0
+              + MIndiGolog1
+              + MIndiGolog2
+              + PKnows
+                + vpdl
+          + library
+          + social
+            + cssepg06
+              + chess_comp
+              + correspondence
+            + openday06
+          + talks
+            + agentlab
+              + golog
+              + symposium06
+            + completion
+            + conferences
+              + iat06
+                + listings
+              + ijcai07
+              + kr08
+            + lectures
+              + agents07
+              + agents08
+            + MERIT_08
+            + pg_sem_06
+            + pg_sem_07
+            + pg_sem_08
+            + rmit_agents
+          + writings
+            + application
+            + confs
+              + aaai06
+                + listings
+              + aaai08
+                + listings
+              + aamas06
+                + listings
+              + aamas07
+                + admin
+                + poster
+              + aamas08
+                + listings
+              + iat06
+                + admin
+                + listings
+              + ijcai07
+              + ijcai07_2
+                + admin
+                  + ijcai07_latex
+                + IJCAI-KellyR-80
+              + kr08
+                + reimbursement
+            + internal
+              + poster2005
+              + poster2007
+              + progress_2006
+              + progress_2007
+              + progress_2008
+            + journals
+              + jair07
+            + scratch
+            + submitted-thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+            + thesis
+              + AHY9U3~9
+              + listings
+                + background
+                + jointexec
+                + mindigolog
+        + RTEC
+          + examples
+            + caviar
+              + CE patterns
+              + data
+                + complete caviar
+              + execution scripts
+                + complete caviar
+            + ctm
+              + CE patterns
+              + execution scripts
+                + 100_vehicles
+            + toy
+          + src
+            + utilities
+        + theorist
+          + ailog
+            + ailog_code
+              + ch05
+              + ch12
+              + ch13
+              + ch14
+          - cilog_code
+            - ch2
+            - ch3
+            - ch4
+            - ch6
+            - ch8
+        + Tom
+          + Doc
+          + Samples
+          + Src
+        + xray
+        + yadlr
+          + examples
+            + iris
+            + trains
+          + pl
+      - prolog
         + ccalc
           + CVS
           + examples
             + additive
-            + airport
+            - airport
             + nmct
             + traffic
             + zoo
@@ -3349,14 +3980,11 @@ packs_xtra\packs_xtra.vpj=Release
           + tutorial
         + code_icl
         + dialect
-          + logicmoo
+          - logicmoo
         + ec_planner
         + hyhtn_pddl
           + ptools
-        + iwfms
         + lps_pddl
-        + pknows
-          + vpdl
   - packs_web
     + swish
       - lib
@@ -3378,96 +4006,70 @@ packs_xtra\packs_xtra.vpj=Release
             + theme
           + render
           + tutorials
-  - packs_xtra
+  + packs_xtra
     - logicmoo_packages
       - prolog
         - BN-search
         - pHa_code
-        + theorist
-          - cilog_code
-            - ch2
-            + ch3
-            + ch4
-            + ch6
-            + ch8
-        + Tom
-          + Doc
-          - Samples
-          + Src
-        + xray
-        + yadlr
-          + examples
-            + iris
-            + trains
-          + pl
-scroll:83
+scroll:21
 [State]
-SCREEN: 1920 1200 170 183 1440 767 0 0 M 0 0 0 0 1432 672
-CWD: ..\logicmoo_workspace
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
+SCREEN: 1920 1200 150 143 1440 767 0 0 M 0 0 0 0 1432 672
+CWD: packs_sys\logicmoo_ec\prolog\code_icl
+BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\epath.pl"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\domain.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\app.tex"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\epath.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\code.tex"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\fluent.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\load"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\main.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\README"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pred_e.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\bnet"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pcond.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1224 464 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=162 BI=27 HT=0 HN=0 HF=0 HC=4
 WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\bnet"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pcond.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=160 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\README"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=158 BI=25 HT=0 HN=0 HF=0 HC=4
 WINDOW: 130 130 1224 464 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\load"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\main.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=156 BI=24 HT=0 HN=0 HF=0 HC=4
 WINDOW: 104 104 1224 464 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\code.tex"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\fluent.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=154 BI=23 HT=0 HN=0 HF=0 HC=4
 WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\app.tex"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\epath.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=152 BI=22 HT=0 HN=0 HF=0 HC=4
 WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\domain.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=150 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=3 ",,,"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=148 BI=20 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\prolog\dialect\cilog.pl"
+WINDOW: 26 26 832 242 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=148 BI=4 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 832 242 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\epath.pl"
 VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=147 BI=20 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1224 464 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=164 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1224 464 -1 -1 M  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pred_e.pl"
+VIEW: LN=.886 CL=7 LE=0 CX=6 CY=12 WI=158 BI=25 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\logicmoo_ec\prolog\dialect\pfc.pl
-packs_xtra\logicmoo_packages\prolog\BN-search\adder.tex
-packs_xtra\logicmoo_packages\prolog\BN-search\app.tex
-packs_xtra\logicmoo_packages\prolog\BN-search\code.tex
-packs_xtra\logicmoo_packages\prolog\BN-search\load
-packs_xtra\logicmoo_packages\prolog\BN-search\README
-packs_xtra\logicmoo_packages\prolog\pHa_code\bnet
-packs_xtra\logicmoo_packages\prolog\pHa_code\ReadMe
-packs_xtra\logicmoo_packages\prolog\pHa_code\adderinf
+packs_sys\logicmoo_ec\ext\PKnows-0.9.9\README.txt
+packs_sys\logicmoo_ec\ext\pknows-some\epath.pl
+packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl
+packs_sys\logicmoo_ec\ext\epaths\domain.pl
+packs_sys\logicmoo_ec\ext\epaths\epath.pl
+packs_sys\logicmoo_ec\ext\epaths\fluent.pl
+packs_sys\logicmoo_ec\ext\epaths\main.pl
+packs_sys\logicmoo_ec\ext\epaths\pcond.pl
+packs_sys\logicmoo_ec\ext\epaths\pred_e.pl

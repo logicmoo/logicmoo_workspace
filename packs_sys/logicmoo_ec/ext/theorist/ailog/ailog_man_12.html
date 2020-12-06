@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:37 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 7 Ask-the-user</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_7.html"><img class="previous" alt="6 Explanation and Debugging" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_13.html"><img class="next" alt="8 Built-in predicates" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>7 Ask-the-user</h1>
+<p>The ask-the-user facility exists for yes/no questions as well as for
+functional properties.
+The subgoals have to be ground before being asked of the user.
+This may be fixed in future implementations.
+</p>
+<p>To to make an atom askable, you can issue the command:<a name="id1"></a>
+</p>
+<pre>
+ailog:<b>askable </b><em>atom</em>.
+</pre>
+<p>Whenever a ground instance of the atom is attempted to be proved, the user is asked if it is true. The system may ask:
+</p>
+<pre>
+Is g true?
+</pre>
+<p>The user can reply with one of:
+</p>
+<dl><dt>yes.</dt><dd> if g is known to be true. The system will not ask this instance again.
+</dd><dt>no.</dt><dd> if g is known to be false.  The system will not ask this instance again.
+</dd><dt>unknown.</dt><dd> if g is unknown. In this case any applicable clauses
+for g can be used. 
+</dd><dt>fail.</dt><dd> to fail the subgoal (but not record an answer). This is only used to test you axiomatization.
+</dd><dt>why.</dt><dd> to see why the system was asking this question. This then
+enters the <b>why</b> interaction described in Section <a href="ailog_man_11.html">6.4</a>.
+</dd><dt>prompt.</dt><dd> to return to the ailog prompt.
+</dd><dt>help.</dt><dd> to get a menu of available answers.
+</dd></dl>
+<p>Note the assumption that AILog makes about the interaction between
+asking the user about g and using clauses for g.  It assumes that
+if the user knows whether g is true, the user's answer should be
+used. Any rules for g are used only if the user doesn't know whether
+g is true or not.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+The following gives the example of the <a href="ailog_code/ch07/elect_askable.pl">electrical example with
+askables</a> (see <a href="ailog_man_19.html#reason:PooMacGoe97a">[Poole, Mackworth, and Goebel (1998)]</a>, page 214):
+<pre>
+ailog: <b>load 'ailog_code/ch07/elect_askable.pl'.</b>
+Ailog theory ailog_code/ch07/elect_askable.pl loaded.
+ailog: <b>ask lit(L).</b>
+Is up(s2) true? [yes,no,unknown,why,help]: <b>yes.</b>
+Is up(s1) true? [yes,no,unknown,why,help]: <b>no.</b>
+Is down(s2) true? [yes,no,unknown,why,help]: <b>no.</b>
+Is up(s3) true? [yes,no,unknown,why,help]: <b>yes.</b>
+Answer: lit(l2).
+  [ok,more,how,help]: <b>ok.</b>
+</pre>
+</i></i></i></div>
+<p>If f is functional (i.e., if there can only be one value for f),
+you can use the special syntax f=V to mean that f has value V.
+Then when you issue the command:
+</p>
+<pre>
+ailog:<b>askable </b>$f=V$.
+</pre>
+<p>Then a goal of the form f=X will ask the user for the value of f
+once, and remember the value.
+For example:
+</p>
+<pre>
+ailog: <b>askable age(P)=V.</b>
+ailog: <b>tell young(P) &lt;- age(P)=A &amp; A&lt;13.</b>
+ailog: <b>ask young(sally) &amp; young(bruce).</b>
+What is the value of age(sally)? [value,unknown,why,help]: <b>3.</b>
+What is the value of age(bruce)? [value,unknown,why,help]: <b>87.</b>
+No. young(sally) &amp; young(bruce) doesn't follow from the knowledge base.
+ Runtime since last report: 0.0 secs.
+ailog: <b>ask young(al) &amp; young(sally).</b>
+What is the value of age(al)? [value,unknown,why,help]: <b>10.</b>
+Answer: young(al) &amp; young(sally).
+ Runtime since last report: 0.0 secs.
+  [ok,more,how,help]: <b>how.</b>
+   yes &lt;-
+      1: young(al)
+      2: young(sally)
+   How? [Number,up,retry,ok,prompt,help]: <b>1.</b>
+   young(al) &lt;-
+      1: age(al)=10
+      2: 10&lt;13
+   How? [Number,up,retry,ok,prompt,help]: <b>1.</b>
+   You told me age(al)=10 is true.
+</pre>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

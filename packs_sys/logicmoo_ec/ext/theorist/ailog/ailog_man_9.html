@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 6.2 Whynot? Questions</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_8.html"><img class="previous" alt="6.1 How? Questions" src="../images/arrow-left.gif"/></a><a href="ailog_man_7.html"><img class="up" alt="6 Explanation and Debugging" src="../images/arrow-up.gif"/></a><a href="ailog_man_10.html"><img class="next" alt="6.3 Depth Bound" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>6.2 Whynot? Questions</h2>
+<p>Just as how questions let you explore the proof tree for a particular
+derivation, <b>whynot</b><a name="id1"> questions</a> let you explore the
+search tree. This facility is mainly used for determining why there
+was no proof for a particular query. As such the documentation is
+written assuming that you are trying to determine why a query failed,
+when you thought that it should have succeeded.
+</p>
+<p>If a query fails when it should have succeeded, either there was
+a rule defining the query whose body fails when it should have
+succeeded, or else there is a missing rule for that query.
+</p>
+<p>You can ask a query to determine why some query failed using:<a name="id2"></a>
+</p>
+<pre>
+ailog: <b>whynot </b><em>query</em>.
+</pre>
+<p>where <i>query</i> is a body.
+</p>
+<p>If the query is an atom, you can examine each rule whose head unifies
+with the query. For each such rule, the system asks whether you want
+to trace this rule. You can reply with:
+</p>
+<dl><dt>yes.</dt><dd> to determine why this rule failed. You should give this
+answer when this rule should have succeeded for this query.
+</dd><dt>no.</dt><dd> to ask for another rule. You give this answer if this rule should have failed for this query.
+</dd><dt>up.</dt><dd> to return to a previous choice point (the rule in which the atom appears, or else the top-level if the atom was the initial query).
+</dd><dt>ok.</dt><dd> to return to the top-level.
+</dd><dt>help.</dt><dd> to get a menu of available answers.
+</dd></dl>
+<p>If you answer "<b>no</b>" to each rule, this means that all of the rules in the knowledge base should have failed, and so the appropriate rule for the query that should have succeeded is missing.
+</p>
+<p>To determine why a rule failed, we determine why the body failed. If
+the body is atomic, we use the above <em>whynot</em> mechanism to
+determine why the rule failed.  If the body of the rule is a
+conjunction, alpha<code>&amp;</code>beta, there are four cases:
+</p>
+<ul><li>alpha fails, in which case we should use recursively use
+the <em>whynot</em> mechanism to determine why it failed.
+</li><li>an instance of alpha succeeds, but should not have succeeded.
+In this case we can use the <em>how</em> mechanism to debug this proof.
+This case arises because beta may have rightfully failed on the
+instance of alpha that succeeded.
+</li><li>an instance of alpha succeeds, but this instance should have
+lead to failure of the conjunction. In this case we should look for
+another proof for alpha.
+</li><li>an instance of alpha succeeds that should lead to the success
+of the conjunction, in which case we need to determine why beta
+failed on this instance.
+</li></ul>
+<p>Thus, when there is a conjunctive body, we first try to prove the
+leftmost conjunct. If it fails, we use the above <em>whynot</em>
+mechanism to determine why it failed. If it succeeds, the user is
+asked <em>Should this answer lead to a successful proof?</em> The user
+can reply:
+</p>
+<dl><dt>yes.</dt><dd> this instance should have made the body succeed. Thus you need
+to debug the rest of the conjunction.
+</dd><dt>no.</dt><dd> this instance should lead to a failure of the body. Thus you need to try
+another proof for this atom.
+</dd><dt>debug.</dt><dd> this instance is false, debug it. This enters the
+<em>how</em> interaction.
+</dd><dt>ok.</dt><dd> to return to the top-level.
+</dd><dt>help.</dt><dd> to get a menu of available answers.
+</dd></dl>
+<div class="quotation"><b>Example.</b>
+<i>
+Suppose we had the knowledge base from Example <a href="ailog_man_5.html#tell-ex">4</a>. Suppose
+that, the user knew that Joe had a child called Jane, and wanted to
+know why the system didn't think that Randy was Jane's grandfather.
+We could imagine the following dialogue:
+<pre>
+ailog: <b>whynot grandfather(randy,jane). </b>
+  grandfather(randy,jane) &lt;- father(randy,A)&amp;parent(A,jane).
+    Trace this rule? [yes,no,up,help]: <b>yes.</b>
+  The proof for father(randy,sally) succeeded.
+   Should this answer lead to a successful proof? 
+               [yes,no,debug,help]: <b>no.</b>
+  The proof for father(randy,joe) succeeded.
+   Should this answer lead to a successful proof? 
+               [yes,no,debug,help]: <b>yes.</b>
+  parent(joe,jane) &lt;- mother(joe,jane).
+    Trace this rule? [yes,no,up,help]: <b>no.</b>
+  parent(joe,jane) &lt;- father(joe,jane).
+    Trace this rule? [yes,no,up,help]: <b>yes.</b>
+  There is no applicable rule for father(joe,jane).
+  parent(joe,jane) &lt;- father(joe,jane).
+    Trace this rule? [yes,no,up,help]: <b>up.</b>
+  grandfather(randy,jane) &lt;- father(randy,joe)&amp;parent(joe,jane).
+    Trace this rule? [yes,no,up,help]: <b>up.</b>
+ailog: 
+</pre>
+</i></i></i></div>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

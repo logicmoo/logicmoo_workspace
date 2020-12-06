@@ -17,8 +17,13 @@
 %
 */
 
+:- dynamic(mu_tmp:no_autostart/0).
+:- volatile(mu_tmp:no_autostart/0).
+
 :- dynamic(mu_global:wants_quit/3).
+
 :- dynamic(mu_global:console_tokens/2).
+:- volatile(mu_global:console_tokens/2).
 
 :- dynamic(mu_global:console_io_conn_history/7).
 :- dynamic(mu_global:console_io_player/3).
@@ -43,7 +48,13 @@ peer_alias(Prefix, Peer, Host, Alias):-
  format(string(S), '~w@~w_', [Host, Prefix]),
  gensym(S, Alias), !.
 
-adv_server_loop(Prefix, ServerSocket) :-
+adv_server_loop(Prefix, ServerSocket):-
+ setup_call_cleanup(
+      asserta(mu_tmp:no_autostart),
+      once(must(adv_server_loop_1(Prefix, ServerSocket))),
+      retractall(mu_tmp:no_autostart)).
+
+adv_server_loop_1(Prefix, ServerSocket) :-
  tcp_accept(ServerSocket, Slave, Peer),
  tcp_open_socket(Slave, InStream, OutStream),
  % set_stream(InStream, buffer(false)),

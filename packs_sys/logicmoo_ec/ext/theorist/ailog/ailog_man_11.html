@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 6.4 Why? Questions</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_10.html"><img class="previous" alt="6.3 Depth Bound" src="../images/arrow-left.gif"/></a><a href="ailog_man_7.html"><img class="up" alt="6 Explanation and Debugging" src="../images/arrow-up.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>6.4 Why? Questions</h2>
+<p>If you find yourself at a particular subgoal, it is often useful to find out <b>why</b><a name="id1"> that</a> subgoal is being proved.
+</p>
+<p>When you ask why an atom was being asked, AILog produces the instance of the
+rule in the knowledge base with the atom in the body, such that the head was trying to be proved. This is of the form:
+</p>
+<pre>
+h &lt;-
+   1: a&#95;1
+   2: a&#95;2
+   ...
+** j: a&#95;j
+   ...
+   k: a&#95;k
+</pre>
+<p>This means that a<sub>j</sub> is the atom that is being asked, the atoms a<sub>1</sub>...a<sub>j-1</sub> have been proved, and a<sub>j+1</sub>...a<sub>k</sub> have still to be proved.
+When this is presented you can ask one of:
+</p>
+<dl><dt>how i.</dt><dd> where i is an integer 1  &lt;= i &lt; j. This means that you want to see how a<sub>i</sub> was proved. This enters the how dialog.
+</dd><dt>how j.</dt><dd> This means that you want to see how AILog is trying to prove a<sub>j</sub> (the atom you have previously asked why about). This returns to the rule with a<sub>j</sub> in the body.
+</dd><dt>why.</dt><dd> to see the rule with h in the body.
+</dd><dt>prompt.</dt><dd> to return to the AILog prompt.
+</dd><dt>help.</dt><dd> for a list of the available commands.
+</dd></dl>
+<p>Note that you can't ask <b>how</b> i for i&gt;j as there is no
+proof tree for the atoms a<sub>j+1</sub>...a<sub>k</sub>. Also, AILog does not
+guarantee that the rule
+given will have the atoms in the body in the same order as in the
+knowledge base; AILog is free to change the order of atoms in a
+body as long as this doesn't introduce an error.
+</p>
+<div class="quotation"><b>Example.</b>
+<i>
+The following shows a trace of a looping program that reaches the
+depth bound. We first increase the depth-bound, and then explore where
+the depth-bound was reached.
+<pre>
+ailog: <b>tell a &lt;- b &amp; c &amp; d.</b>
+ailog: <b>tell b &lt;- e.</b>
+ailog: <b>tell e.</b>
+ailog: <b>tell c &lt;- f &amp; d &amp; g.</b>
+ailog: <b>tell f &lt;- b &amp; h.</b>
+ailog: <b>tell h.</b>
+ailog: <b>tell d &lt;- a.</b>
+ailog: <b>ask a.</b>
+Query failed due to depth-bound 30.
+     [New-depth-bound,where,ok,help]: <b>50.</b>
+Query failed due to depth-bound 50.
+     [New-depth-bound,where,ok,help]: <b>where.</b>
+  Depth-bound reached. Current subgoal: e
+     [fail,succeed,proceed,why,ok,help]: <b>why.</b>
+   e is used in the rule 
+   b &lt;-
+   ** 1: e
+   [Number,why,help,ok]: <b>why.</b>
+   b is used in the rule 
+   a &lt;-
+   ** 1: b
+      2: c
+      3: d
+   [Number,why,help,ok]: <b>why.</b>
+   a is used in the rule 
+   d &lt;-
+   ** 1: a
+   [Number,why,help,ok]: <b>why.</b>
+   d is used in the rule 
+   c &lt;-
+      1: f
+   ** 2: d
+      3: g
+   [Number,why,help,ok]: <b>how 1.</b>
+   f &lt;-
+      1: b
+      2: h
+   How? [Number,up,retry,ok,help]: <b>how 2.</b>
+   h is a fact
+   f &lt;-
+      1: b
+      2: h
+   How? [Number,up,retry,ok,help]: <b>up.</b>
+   d is used in the rule 
+   c &lt;-
+      1: f
+   ** 2: d
+      3: g
+   [Number,why,help,ok]: <b>why.</b>
+   c is used in the rule 
+   a &lt;-
+      1: b
+   ** 2: c
+      3: d
+   [Number,why,help,ok]: <b>ok.</b>
+  Depth-bound reached. Current subgoal:e
+     [fail,succeed,proceed,why,ok,help]: <b>fail.</b>
+No more answers.
+ailog: 
+</pre>
+</i></i></i></div>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

@@ -27,6 +27,7 @@
 
 :- defn_state_setter(aXiom//1
   ).
+
 :- defn_state_setter(eVent//2
   ).
 
@@ -40,6 +41,7 @@ eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
  aXiom(Event).
 
+aXiom(MAction, S0, S9):-  stripped_term(MAction,Action), !, trace, aXiom(Action, S0, S9).
 
 aXiom(Action, _S0, _S9)::= xnotrace(( \+ trival_act(Action), dbug1(aXiom(Action)))), xnotrace(fail).
 
@@ -342,9 +344,9 @@ aXiom(does_inventory(Agent)) ==>>
 % Agent looks
 aXiom(look(Agent)) ==>>
   % Agent is At Here
-  h(At, Agent, Here),
+  h(At, Agent, Here), 
   % Agent looks At Here
-  eVent(Agent, sub__examine(Agent, see, At, Here, 3)).
+  eVent(Agent,examine(Agent, see, At, Here)).
 
 aXiom(examine(Agent, Sense)) ==>> {is_sense(Sense)}, !,
    from_loc(Agent, Place),

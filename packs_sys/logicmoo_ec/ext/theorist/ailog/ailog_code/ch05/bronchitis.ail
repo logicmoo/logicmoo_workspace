@@ -1,0 +1,30 @@
+% AILog code to demonstrate default reasoning.
+
+% This is the code discussed in Example 5.30 of Section 5.5.1 of Poole
+% and Mackworth, Artificial Intelligence: foundations of computational
+% agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'bronchitis.ail'.
+
+bronchitis <- influenza & influenzaCausesBronchitis.
+bronchitis <- smokes & smokingCausesBronchitis.
+coughing <- bronchitis.
+wheezing <- bronchitis.
+fever <- influenza.
+soreThroat <- influenza.
+false <- smokes & nonsmoker.
+assumable smokes, nonsmoker, influenza.
+assumable influenzaCausesBronchitis,  smokingCausesBronchitis.
+
+% The following makes sure that only consistent explanations are found:
+create_nogoods.
+
+% Try the following queries:
+% ask wheezing.
+% ask wheezing & fever.
+% ask wheezing & nonsmoker.
+

@@ -1,0 +1,32 @@
+% AILog representation of a meta-interpreter for depth-bounded search
+
+% This is slightly expanded code of Figure 13.12 in Section 13.5.4 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'bprove.ail'.
+
+% The base-level uses <= for "if" and true for the empty body.
+
+% bprove(G,D) means G can be proved from the base-level knowledge base
+%  with a proof tree of size less than or equal to D
+bprove(true,D).
+bprove((A & B),D) <-
+   bprove(A,D) &
+   bprove(B,D).
+bprove(H,D) <-
+   D >= 0 &
+   D1 is D-1 &
+   (H <= B) &
+   bprove(B,D1).
+
+% Here is an example is the use of prove:
+%   ailog: tell a <= a.
+%   ailog: tell a <= b.
+%   ailog: tell b <= true.
+%   ailog: ask bprove(a,5).
+

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:37 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 11 Probabilities</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_15.html"><img class="previous" alt="10 Negation-as-failure" src="../images/arrow-left.gif"/></a><a href="ailog_man.html"><img class="up" alt="Top" src="../images/arrow-up.gif"/></a><a href="ailog_man_18.html"><img class="next" alt="12 Copyright" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h1>11 Probabilities</h1>
+<p>AILog contains support for first-order probabilistic reasoning. You
+can have probabilities associated with atoms that have no associated
+rules defining them. There atoms are grouped into disjoint sets that
+correspond to random variables.
+</p>
+<p>You can define these probabilistic assumptions using either:
+</p>
+<pre>
+ailog: <b>prob </b><em>atom</em>:<em>probability</em>.
+</pre>
+<p>where <em>atom</em> is a atomic symbol and <em>probability</em> is a
+number between 0 and 1. <em>atom</em> can contain variables, in which
+case every ground instance is a proposition with the corresponding
+probability. All instances of the same atom, and all atoms defined in
+different <em>prob</em> declarations are assumed to be probabilistically
+independent. 
+</p>
+<p>The alternative syntax is to write:
+</p>
+<div class="quotation">
+ailog: <b>prob </b>a<sub>1</sub>:p1, a<sub>2</sub>:p<sub>2</sub>, ..., a<sub>k</sub>:p<sub>k</sub>.
+</div>
+<p>Where the p<sub>i</sub> are non-negative numbers that sum to 1 and the a<sub>i</sub>
+are atoms that share the same variables. In this case every ground
+instantiation of the a<sub>i</sub>s forms a random variable: the a<sub>i</sub>s are
+mutually exclusive and covering.
+</p>
+<p>The atoms defined in a <em>prob</em> statement cannot be used in the
+head of rules, but can be used in the body. When called, the instance
+of these atoms must be ground.
+</p>
+<p>We also allow statements where the probability is free, for example
+in:
+</p>
+<pre>
+ailog: <b>prob </b>heads_happens(E,P):P.
+</pre>
+<p>This is useful when we want to learn parameters from
+observations. Note that when this is called, P must be bound.
+</p>
+<p>There are two main interfaces to the probabilistic reasoning:
+</p>
+<pre>
+ailog: <b>observe </b><em>obs</em>.
+</pre>
+<p>where <i>obs</i> is a body.
+This declares that <em>obs</em> has been observed. This returns the
+probability of <em>obs</em> conditioned on all previous
+observations. Observations accumulate, so that
+subsequent queries and observations are with respect to all previous
+observations. 
+</p>
+<p>You can ask the posterior probability of a query (this is the
+conditional probability given all of the current observations) using:
+</p>
+<pre>
+ailog: <b>predict </b><em>query</em>.
+</pre>
+<p>where <i>query</i> is a body.
+This gives the posterior probability of <em>query</em>, conditioned 
+on all previous observations.
+</p>
+<p>Given any prediction or observations you can inspect the explanations
+of the query. An explanation corresponds to a proof of the query based
+on a set of the probabilistic atoms. For each of these explanations
+you can examine the proof tree, and ask how that explanation was
+computed. This can either be done after a proof, or as a stand-alone
+command:
+</p>
+<pre>
+ailog: <b>explanations.</b>
+</pre>
+<p>which returns the explanations of all of the observations.
+</p>
+<p>You can also ask for the worlds in which the query and all of the
+previous explanations are true. This gives a set of descriptions of
+possible worlds where the possible worlds are described in terms of the
+probabilistic atoms that are true in them, and the descriptions are
+mutually exclusive. This can be used form computing the probability of
+the query (by summing over all of the worlds where it is true). The
+worlds are computed from the explanations by making sure that they are
+mutually exclusive. This can either be done after a prediction or
+observation or by issuing the command
+</p>
+<pre>
+ailog: <b>worlds.</b>
+</pre>
+<p>Which returns the worlds in which all of the observations are true.
+</p>
+<p>Note that the <b>ask</b> command ignores all previous
+observations. A future version may allow you to ask in the context of
+previous explanations.
+</p>
+<p>You can undo observations using
+</p>
+<pre>
+ailog: <b>unobserve.</b>
+</pre>
+<p>which undoes the last observation or using
+</p>
+<pre>
+ailog: <b>unobserve all.</b>
+</pre>
+<p>which undoes all observations.
+</p>
+<p>The command 
+</p>
+<pre>
+ailog: <b>probs.</b>
+</pre>
+<p>lists all probabilistic assertions.
+</p>
+<p>Note that probabilities integrates cleanly with negation as failure and
+naively with the depth-bounded search. (It fails if the probability
+cannot be computed due to the depth-bound. A more sophisticated
+version may give bounds on the probability.) Probabilistic hypotheses
+and non-probabilistic hypotheses (using <em>assumable</em>) are not
+integrated and should not be used together.
+</p>
+<div class="quotation"><b>Example.</b>
+<i><a name="tell-ex2">
+This</a> may seem like not a very powerful probabilistic inference system,
+however, arbitrary Bayesian belief nets can be represented. For example, a
+belief network with Boolean variable A as a parent of variable B
+can be represented as:
+<pre>
+ailog: <b>tell b &lt;- a &amp; bifa.</b>
+ailog: <b>tell b &lt;- ~a &amp; bifna.</b>
+ailog: <b>prob a:0.6.</b>
+ailog: <b>prob bifa:0.9.</b>
+ailog: <b>prob bifna:0.3.</b>
+</pre>
+<p>You can ask the prior on a using:
+</p>
+<pre>
+ailog: <b>predict a.</b>
+Answer: P(a|Obs)=0.6.
+ Runtime since last report: 0.03 secs.
+  [ok,more,explanations,worlds,help]: ok.
+</pre>
+<p>And conditioning on &nbsp;b.
+</p>
+<pre>
+ailog: <b>observe ~b.</b>
+Answer: P(~b|Obs)=0.34.
+ Runtime since last report: 0 secs.
+  [ok,more,explanations,worlds,help]: <b>ok.</b>
+ailog: <b>predict a.</b>
+Answer: P(a|Obs)=0.176471.
+ Runtime since last report: 0 secs.
+  [ok,more,explanations,worlds,help]:<b> ok.</b>
+ailog: 
+  </pre>
+<p>Thus P(a | &nbsp;b) = 0.176471.
+</i></i></i></p>
+</div>
+<p>Note that Ailog does not find all explanations, but only those within
+a threshold. This threshold can be queried and varied with the
+<code>prob_threshold</code> command. 
+</p>
+<ul>
+<li><a href="ailog_man_17.html">11.1 Experimental Probabilistic Features</a></li>
+</ul>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

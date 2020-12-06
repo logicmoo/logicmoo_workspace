@@ -1,0 +1,30 @@
+% AILog code to demonstrate default reasoning.
+
+% This is the code discussed in Example 5.27 of Section 5.5.1 of Poole
+% and Mackworth, Artificial Intelligence: foundations of computational
+% agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'beach.ail'.
+
+away_from_beach <- ~ on_beach.
+beach_access <- on_beach & ~ab_beach_access.
+swim_at_beach <- beach_access & ~ab_swim_at_beach.
+ab_swim_at_beach <- enclosed_bay & big_city & ~ab_no_swimming_near_city.
+ab_no_swimming_near_city <- in_BC & ~ab_BC_beaches.
+
+% some queries commands to try:
+% ask away_from_beach.
+% ask beach_access.
+% tell on_beach.
+% ask away_from_beach.
+% ask swim_at_beach.
+% tell enclosed_bay.
+% ask swim_at_beach.
+% tell big_city.
+% ask swim_at_beach.
+% tell in_BC.
+% ask swim_at_beach.

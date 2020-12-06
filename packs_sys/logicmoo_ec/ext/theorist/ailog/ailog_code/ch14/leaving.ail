@@ -1,0 +1,60 @@
+% AILog representation for the leaving belief network of Figure 6.1
+
+% This is slightly expanded code of Figure 14.19 in Section 14.3 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010.
+
+% Copyright (c) David Poole and Alan Mackworth 2009. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog,
+% load 'ailog_code/ch14/leaving.ail'.
+% Or put it in the same directory as AILog and then call
+% load 'leaving.ail'.
+
+
+prob tampering: 0.02.     % this means that {tampering,~tampering} is an alternative
+prob fire:0.01.
+
+%  P(Alarm | Fire, Tampering):
+alarm <- tampering & fire & alarmWhenTamperingFire.
+prob alarmWhenTamperingFire:0.5.            % alarmWhenTamperingFire is true when fire and tampering would make alarm true
+alarm <- ~tampering & fire & alarmWhenNoTamperingFire.
+prob alarmWhenNoTamperingFire:0.99.          % alarmWhenTamperingFire is true when fire and no tampering would make alarm true
+alarm <- tampering & ~fire & alarmWhenTamperingNoFire.
+prob alarmWhenTamperingNoFire:0.85.           % alarmWhenTamperingNoFire is true when no fire and tampering would make alarm true
+alarm <- ~tampering & ~fire & alarmWhenNoTamperingNoFire.
+prob alarmWhenNoTamperingNoFire:0.0001.         % alarmWhenNoTamperingNoFire is true when no fire and no tampering would make alarm true
+
+% P(Smoke | Fire):
+smoke <- fire & smokeWhenFire.
+prob smokeWhenFire: 0.9.            % smokeWhenFire is true if smoke would be true when there is fire
+smoke <- ~fire & smokeWhenNoFire.
+prob smokeWhenNoFire: 0.01.            % smokeWhenNoFire is true if smoke would be true when there is no fire
+
+% P(Leaving | Alarm):
+leaving <- alarm & leavingWhenAlarm.
+prob leavingWhenAlarm: 0.88.            % leavingWhenAlarm is true if leaving would be true when there is alarm
+leaving <- ~alarm & leavingWhenNoAlarm.
+prob leavingWhenNoAlarm: 0.001.            % leavingWhenNoAlarm is true if leaving would be true when there is no alarm
+
+% P(Report | Leaving):
+report <- leaving & reportWhenLeaving.
+prob reportWhenLeaving: 0.75.            % reportWhenLeaving is true if report would be true when there is leaving
+report <- ~leaving & reportWhenNoLeaving.
+prob reportWhenNoLeaving: 0.01.            % reportWhenNoLeaving is true if report would be true when there is no leaving
+
+
+% Example:  (This produces some of the probabilities of Example 6.13)
+% load 'leaving.ail'.
+% prob_threshold 0.    %exact reasoning
+% predict smoke.
+% predict report.
+% observe report.     % future predictions are conditioned on report
+% predict tampering.
+% predict fire.
+% predict smoke.
+% observe smoke.      % future predictions are conditioned on report&smoke.
+% predict tampering.
+% predict fire.
+

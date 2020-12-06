@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:37 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 11.1 Experimental Probabilistic Features</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_16.html"><img class="up" alt="11 Probabilities" src="../images/arrow-up.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>11.1 Experimental Probabilistic Features</h2>
+<p>The features in this section are only for specialized applications and
+may be changed in future applications. Do not use these unless you
+know what you are doing.
+</p>
+<p>Sometimes we may observe arbitrary choices that we don't want to model
+the probability of. For example, that the rooms in an apartment
+are r<sub>17</sub>, r<sub>53</sub> and r<sub>5</sub>. We may have a probability that there
+are three, but the names may be arbitrary. Once these have been
+observed, then queries about what are the rooms should return
+these. 
+</p>
+<p>As another example, we may want to count rooms. Which is the
+first room and which is the second room is arbitrary, but we have to
+record which ones we have already counted so we don't count them
+again. We don't want to search
+over the choices of which is first and which is second. 
+</p>
+<pre>
+ailog: <b>arbitrary </b>f=V.
+</pre>
+<p>means that the values V assigned to f are arbitrary, but f can
+only have one such value. Note that f=V can be used as any other
+atom.
+The command <code>arbitraries</code> list all of the arbitrary declarations.
+</p>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

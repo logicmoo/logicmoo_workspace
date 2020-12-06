@@ -1,0 +1,40 @@
+% AILog code for the electrical environment. This program has a bug. Use "how" to find it.
+% You should be able to find the bug without looking at the code!
+
+% This is the code discussed in Section 5.3.4 of Artificial
+% Intelligence: foundations of computational agents.  http://artint.info
+% Copyright (c) David Poole and Alan Mackworth 2010
+
+% To run this is AILog, you should 
+% load 'ailog_code/ch05/elect_bug.ail'.
+% or put it in the same directory as
+% AILog, clear the knowledge base, and then call 
+% load 'elect_bug.ail'.
+
+ok_cb2.
+live_outside.
+live_w6 <- live_w5 & ok_cb2.
+live_w0 <- live_w2 & down_s2.
+live_w2 <- live_w3 & down_s1.
+ok_l2.
+ok_cb1.
+live_l2 <- live_w4.
+live_w4 <- live_w3 & up_s3.
+live_p_1 <- live_w3.
+light_l1.
+light_l2.
+live_w3 <- live_w5 & ok_cb1.
+live_p_2 <- live_w6.
+live_w1 <- live_w3 & up_s3.
+live_w5 <- live_outside.
+lit_l1 <- light_l1 & live_l1 & ok_l1.
+ok_l1.
+lit_l2 <- light_l2 & live_l2 & ok_l2.
+live_l1 <- live_w0.
+live_w0 <- live_w1 & up_s2.
+down_s1.
+up_s2.
+up_s3.
+
+% a query that gives the wrong answer:
+% ailog: ask lit_l1.

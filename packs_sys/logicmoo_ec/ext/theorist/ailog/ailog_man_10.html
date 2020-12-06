@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- XML file produced from file: ailog_man.tex
+     using Hyperlatex v 2.9-in-waiting-rk (c) Otfried Cheong, Tom Sgouros, Ryszard Kubiak
+     on Emacs 22.3.1, Tue Mar 30 15:54:36 2010 -->
+<head>
+<title>AILog User Manual - Version 2.3 -- 6.3 Depth Bound</title>
+<link rel="stylesheet" href="../../images/styleBook.css" type="text/css" />
+</head>
+<body>
+
+<div id="wrap">
+
+	<!--header -->
+	<div id="header">			
+		<h1 id="logo-text"><a href="../index.html" title="">Artificial <br/>Intelligence</a></h1>		
+		<p id="logo-subtext">foundations of computational agents</p>
+	<!--header ends-->					
+	</div>
+	
+	<!-- navigation starts-->	
+	<div id="nav">		
+<a href="ailog_man_9.html"><img class="previous" alt="6.2 Whynot? Questions" src="../images/arrow-left.gif"/></a><a href="ailog_man_7.html"><img class="up" alt="6 Explanation and Debugging" src="../images/arrow-up.gif"/></a><a href="ailog_man_11.html"><img class="next" alt="6.4 Why? Questions" src="../images/arrow-right.gif"/></a><ul><li><a href="../index.html">Home</a></li><li><a href="ailog_man_20.html">Index</a></li><li><a href="ailog_man.html#cicontents">Contents</a></li></ul>
+	<!-- navigation ends-->	
+	</div>
+			
+	<!-- content starts -->
+	<div id="content">
+	
+		<div id="main">
+
+<h2>6.3 Depth Bound</h2>
+<p>The search strategy used by AILog is a depth-bounded depth-first search.
+The depth bound is set using the command:<a name="id1"></a>
+</p>
+<pre>
+ailog: <b>bound </b><em>n</em>.
+</pre>
+<p>where <em>n</em> is a positive integer. n is a bound on the depth of any proof tree. The default value is 30.
+</p>
+<p>When a goal is asked and
+no more answers can be found, if the depth-bound was not reached, the
+system reports there are no more answers. If the depth-bound was
+reached, there still may be some answers, although it is more
+likely that there is a bug in the knowledge base where some recursions
+do not terminate. AILog allows the user to interactively explore
+the places where the depth bound was reached.
+</p>
+<p>When no more answers can be found and the search was cut off due to
+hitting the depth-bound, the user is informed of this, as is given
+the option of
+one of:
+</p>
+<dl><dt>i.</dt><dd> where i is an integer bigger than the current
+depth-bound. This lets the user explore larger search trees.
+Repeatedly increasing the depth-bound lets the user simulate an
+iterative deepening search.
+</dd><dt>where.</dt><dd> to let the user explore the place where the depth-bound was reached.
+</dd><dt>ok.</dt><dd> to go back to the answer prompt.
+</dd><dt>help.</dt><dd> for a list of the available commands.
+</dd></dl>
+<p>When the user given the <b>where</b> command, the proof is retried,
+and it halts at a point where the depth-bound was reached, and shows
+the user the current subgoal, g. The user can give one of the
+following commands:
+</p>
+<dl><dt>fail.</dt><dd> to fail g, and explore other places where the depth-bound was reached.
+</dd><dt>succeed.</dt><dd> to say that g should succeed.
+</dd><dt>proceed.</dt><dd> to fail g and not explore any more subgoals where the depth-bound was reached.
+</dd><dt>why.</dt><dd> to let the user explore why g was called (see Section <a href="ailog_man_11.html">6.4</a>).
+</dd><dt>ok.</dt><dd> to go back to the answer prompt.
+</dd><dt>help.</dt><dd> for a list of the available commands.
+</dd></dl>
+
+		</div>
+		
+	<!-- content ends-->	
+	</div>
+		
+	<!-- footer starts -->		
+	<div id="footer">						
+		<p>	Copyright &copy; 2010, <a href="http://cs.ubc.ca/~poole/">David Poole</a> and 
+  			<a href="http://cs.ubc.ca/~mack/">Alan
+                        Mackworth</a>. <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/">Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License</a>.
+   		</p>	
+	<!-- footer ends-->
+	</div>
+
+<!-- wrap ends here -->
+</div>
+
+</body></html>

@@ -1,0 +1,34 @@
+% AILog representation for a simplified movie domain
+
+% This is code from the slides of lect3 in ch14 of
+% Poole and Mackworth, Artificial Intelligence: foundations of
+% computational agents, Cambridge, 2010. http://artint.info
+
+% Copyright (c) David Poole and Alan Mackworth 2012. This program
+% is released under GPL, version 3 or later; see http://www.gnu.org/licenses/gpl.html
+
+% To run this in AILog, you should put it in the same directory as AILog and then call
+% load 'movie.ailog'.
+
+prob young(P):0.4.
+prob genre(M)=action:0.4, genre(M)=romance:0.3, genre(M)=family:0.3.
+likes(P,M) <- young(P) & genre(M)=G & ly(P,M,G).
+likes(P,M) <- ~young(P) & genre(M)=G & lny(P,M,G).
+prob ly(P,M,action):0.7.
+prob ly(P,M,romance):0.3.
+prob ly(P,M,family):0.8.
+prob lny(P,M,action):0.2.
+prob lny(P,M,romance):0.9.
+prob lny(P,M,family):0.3.
+
+
+% Example: 
+% load 'ailog_code/ch14/movie.ailog'.
+% observe likes(sam,terminator).
+% predict young(sam).
+% observe genre(terminator)=action.
+% predict young(sam).
+% predict genre(rango)=G.
+% observe likes(sam,rango).
+% predict genre(rango)=G.
+
