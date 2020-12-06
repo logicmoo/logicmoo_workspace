@@ -705,13 +705,13 @@ packs_xtra\packs_xtra.vpj=Release
           + tests
         + synergy
           + cgifCharGer
-    - logicmoo_ec
+    + logicmoo_ec
       + docs
         + files
           + driverlog
           + letseat
         + images
-      - ext
+      + ext
         + aiswi
           + img
           + project_template
@@ -758,250 +758,318 @@ packs_xtra\packs_xtra.vpj=Release
               + PolicyPatterns
               + PolicySetPatterns
               + RulesPatterns
-        - epaths
         + flp
           + templates
             + flp
           + worlds
             + flp
-        + pgrad
-          + code
-            + Goloz
-            + MIndiGolog
-              + clpqr
-                + clpq
-                + clpqr
-                + clpr
-              + listings
-            + scratch
-              + epaths
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-          + conferences
-            + aamas07
-            + iat06
-            + ijcai07
-          + social
-            + cssepg06
-          + talks
-            + agentlab
-              + golog
-            + conferences
-              + iat06
-                + listings
-              + ijcai07
-            + pg_sem_06
-            + pg_sem_07
-            + rmit_agents
-          + writings
+        + PKnows
+          - epaths
+          - leantap
+            - application
+            - code
+              - scratch
+                - MIndiGolog_mercury
+            - social
+              - cssepg06
+            - talks
+              - agentlab
+              - pg_sem
+            - writings
+              - coop_golog
+                - aaai06
+                  - listings
+                - aamas06
+                  - listings
+                - ai06
+                  - listings
+                - code
+                  - MIndiGolog
+                    - listings
+                - iat06
+                  - listings
+              - poster2005
+          - otter
             + application
-            + coop_golog
-              + aaai06
-                + listings
-              + aamas06
-                + listings
-              + iat06
-                + listings
-            + internal
+            - code
+              - scratch
+                + MIndiGolog_mercury
+                - pcond
+            + social
+              + cssepg06
+            + talks
+              + agentlab
+              + pg_sem
+            - writings
+              - coop_golog
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + ai06
+                  + listings
+                - code
+                  - MIndiGolog
+                    + listings
+                + iat06
+                  + listings
               + poster2005
-              + poster2007
-            + sc_knowledge
-              + aamas07
-                + poster
-            + thesis
-        + PKnows-0.9.9
-          + vpdl
-        + pknows-some
-        + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
-          + code
-            + Goloz
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog1
-              + MIndiGolog2
-          + social
-            + cssepg06
-          + talks
-            + agentlab
-              + golog
-            + completion
-            + conferences
-              + iat06
+          + pgrad
+            - code
+              - Goloz
+              - MIndiGolog
+                - listings
+              - pknows
+                + vpdl
+              - scratch
+                - fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + PKnows
+                  + vpdl
+            + social
+              + cssepg06
+            + talks
+              + agentlab
+                + golog
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07_2
+                  + admin
+                + kr08
+              + internal
+                + poster2005
+                + poster2007
+              + journals
+                + joint_exec
+                  + listings
+                    + jointexec
+                    + mindigolog
+                    + oz-examples
+              + thesis
+                + AHY9U3~9
                 + listings
-              + ijcai07
-              + kr08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
-            + application
-            + confs
-              + aaai06
+                  + background
+                  + jointexec
+                  + mindigolog
+          + pknows-some
+          - pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
+            - code
+              - Goloz
+              - MIndiGolog
+                - listings
+              - pknows
+                + vpdl
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog1
+                + MIndiGolog2
+            - social
+              - cssepg06
+            - talks
+              + agentlab
+                + golog
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              - MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            - writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07_2
+                  + admin
+                + kr08
+              + internal
+                + poster2005
+                + poster2007
+              - submitted-thesis
+                + AHY9U3~9
+                - listings
+                  - background
+                  - jointexec
+                  - mindigolog
+              - thesis
+                + AHY9U3~9
+                - listings
+                  - background
+                  - jointexec
+                  - mindigolog
+          + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
+            + code
+              + Goloz
+              + MIndiGolog
                 + listings
-              + aamas06
-                + listings
-              + aamas07
-                + admin
-                + poster
-              + iat06
-                + admin
-                + listings
-              + ijcai07_2
-                + admin
-              + kr08
-            + internal
-              + poster2005
-              + poster2007
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-        + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
-          + code
-            + Goloz
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog0
-              + MIndiGolog1
-              + MIndiGolog2
               + pknows
                 + vpdl
-          + social
-            + cssepg06
-          + talks
-            + agentlab
-              + golog
-            + completion
-            + conferences
-              + iat06
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + pknows
+                  + vpdl
+            + social
+              + cssepg06
+            + talks
+              + agentlab
+                + golog
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07_2
+                  + admin
+                + kr08
+              + internal
+                + poster2005
+                + poster2007
+              + submitted-thesis
+                + AHY9U3~9
                 + listings
-              + ijcai07
-              + kr08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
-            + application
-            + confs
-              + aaai06
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
+                + AHY9U3~9
                 + listings
-              + aamas06
+                  + background
+                  + jointexec
+                  + mindigolog
+          + pknowsf678c543195c9af975d749981a79de810dcc98eb
+            + code
+              + Goloz
+              + MIndiGolog
                 + listings
-              + aamas07
-                + admin
-                + poster
-              + iat06
-                + admin
-                + listings
-              + ijcai07_2
-                + admin
-              + kr08
-            + internal
-              + poster2005
-              + poster2007
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-        + pknowsf678c543195c9af975d749981a79de810dcc98eb
-          + code
-            + Goloz
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog0
-              + MIndiGolog1
-              + MIndiGolog2
-              + PKnows
+              + pknows
                 + vpdl
-          + social
-            + cssepg06
-          + talks
-            + agentlab
-              + golog
-            + completion
-            + conferences
-              + iat06
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + PKnows
+                  + vpdl
+            + social
+              + cssepg06
+            + talks
+              + agentlab
+                + golog
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07_2
+                  + admin
+                + kr08
+              + internal
+                + poster2005
+                + poster2007
+              + submitted-thesis
+                + AHY9U3~9
                 + listings
-              + ijcai07
-              + kr08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
-            + application
-            + confs
-              + aaai06
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
+                + AHY9U3~9
                 + listings
-              + aamas06
-                + listings
-              + aamas07
-                + admin
-                + poster
-              + iat06
-                + admin
-                + listings
-              + ijcai07_2
-                + admin
-              + kr08
-            + internal
-              + poster2005
-              + poster2007
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
+                  + background
+                  + jointexec
+                  + mindigolog
+        + PKnows-0.9.9
+          + vpdl
         + RTEC
           + examples
             + caviar
@@ -1247,7 +1315,7 @@ packs_xtra\packs_xtra.vpj=Release
         + NetworkNAR
         + system_tests
         + unit_tests
-    - logicmoo_nlu
+    + logicmoo_nlu
       + data
         + WNprolog-1.6
           + prolog
@@ -1745,7 +1813,7 @@ packs_xtra\packs_xtra.vpj=Release
                       + 2019-ncov
                         + downloads
           + plugins
-        + logicmoo_nlu
+        - logicmoo_nlu
           + e2c
         - marty_white
       + test
@@ -1808,7 +1876,7 @@ packs_xtra\packs_xtra.vpj=Release
     + predicate_streams
       + prolog
       + t
-    - prologmud
+    + prologmud
       + hMUD
         + bridge
         + flashpolicyd_v0.6
@@ -1823,7 +1891,7 @@ packs_xtra\packs_xtra.vpj=Release
           + mobs
             + affordance
           + objs
-          - parsing
+          + parsing
           - server
           + vworld
         + prologmud_web
@@ -3044,7 +3112,7 @@ packs_xtra\packs_xtra.vpj=Release
                 + skins
                   + sam
       + Windows
-    - logicmoo_webui
+    + logicmoo_webui
       - etc
         - apache2
           - conf-available
@@ -3583,347 +3651,438 @@ packs_xtra\packs_xtra.vpj=Release
               + PolicyPatterns
               + PolicySetPatterns
               + RulesPatterns
-        + epaths
         + flp
           + templates
             + flp
           + worlds
             + flp
-        + pgrad
-          + code
-            + Goloz
-              + FOF
-              + SitCalc
-              + Utils
-            + MIndiGolog
-              + clpqr
-                + clpq
-                + clpqr
-                + clpr
-              + listings
-            + scratch
-              + epaths
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-          + conferences
-            + aamas07
-            + iat06
-            + ijcai07
-              + ijcai07_latex
-          + library
-          + social
-            + cssepg06
-              + chess_comp
-              + correspondence
-            + openday06
-          + talks
-            + agentlab
-              + golog
-              + symposium06
-            + conferences
-              + iat06
-                + listings
-              + ijcai07
-            + lectures
-            + pg_sem_06
-            + pg_sem_07
-            + rmit_agents
-          + writings
+        + PKnows
+          + epaths
+          + leantap
             + application
-            + coop_golog
-              + aaai06
-                + listings
-              + aaai08
-                + listings
-              + aamas06
-                + listings
-              + aamas08
-                + listings
-              + iat06
-                + listings
-            + internal
+            + code
+              + scratch
+                + MIndiGolog_mercury
+            + library
+            + social
+              + cssepg06
+                + correspondence
+            + talks
+              + agentlab
+              + pg_sem
+            + writings
+              + coop_golog
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + ai06
+                  + listings
+                + code
+                  + Goloz
+                  + MIndiGolog
+                    + listings
+                + iat06
+                  + listings
               + poster2005
-              + poster2007
               + progress_2006
-              + progress_2007
-              + progress_2008
-            + sc_knowledge
-              + aamas07
-                + poster
-              + ijcai07
-              + ijcai07_2
-                + IJCAI-KellyR-80
-              + jair07
-            + scratch
-            + thesis
-        - PKnows-0.9.9
-          - vpdl
-        + pknows-some
-        + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
-          + code
-            + Goloz
-              + FOF
-              + SitCalc
-              + Utils
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog1
-              + MIndiGolog2
-          + library
-          + social
-            + cssepg06
-              + chess_comp
-              + correspondence
-            + openday06
-          + talks
-            + agentlab
-              + golog
-              + symposium06
-            + completion
-            + conferences
-              + iat06
-                + listings
-              + ijcai07
-              + kr08
-            + lectures
-              + agents07
-              + agents08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
+              + sc_knowledge
+                + ijcai07
+                + ijcai07_2
+              + scratch
+              + thesis
+          + otter
             + application
-            + confs
-              + aaai06
-                + listings
-              + aaai08
-                + listings
-              + aamas06
-                + listings
-              + aamas07
-                + admin
-                + poster
-              + aamas08
-                + listings
-              + iat06
-                + admin
-                + listings
-              + ijcai07
-              + ijcai07_2
-                + admin
-                  + ijcai07_latex
-                + IJCAI-KellyR-80
-              + kr08
-                + reimbursement
-            + internal
+            + code
+              + scratch
+                + MIndiGolog_mercury
+                + pcond
+            + library
+            + social
+              + cssepg06
+                + correspondence
+            + talks
+              + agentlab
+              + pg_sem
+            + writings
+              + coop_golog
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + ai06
+                  + listings
+                + code
+                  + Goloz
+                  + MIndiGolog
+                    + listings
+                + iat06
+                  + listings
               + poster2005
-              + poster2007
               + progress_2006
-              + progress_2007
-              + progress_2008
-            + journals
-              + jair07
-            + scratch
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-        + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
-          + code
-            + Goloz
-              + FOF
-              + SitCalc
-              + Utils
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog0
-              + MIndiGolog1
-              + MIndiGolog2
+              + sc_knowledge
+                + ijcai07
+                + ijcai07_2
+              + scratch
+              + thesis
+          + pgrad
+            + code
+              + Goloz
+                + FOF
+                + SitCalc
+                + Utils
+              + MIndiGolog
+                + listings
               + pknows
                 + vpdl
-          + library
-          + social
-            + cssepg06
-              + chess_comp
-              + correspondence
-            + openday06
-          + talks
-            + agentlab
-              + golog
-              + symposium06
-            + completion
-            + conferences
-              + iat06
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + PKnows
+                  + vpdl
+            + library
+            + social
+              + cssepg06
+                + chess_comp
+                + correspondence
+              + openday06
+            + talks
+              + agentlab
+                + golog
+                + symposium06
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + lectures
+                + agents07
+                + agents08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aaai08
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + aamas08
+                  + listings
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07
+                + ijcai07_2
+                  + admin
+                    + ijcai07_latex
+                  + IJCAI-KellyR-80
+                + kr08
+                  + reimbursement
+              + internal
+                + poster2005
+                + poster2007
+                + progress_2006
+                + progress_2007
+                + progress_2008
+              + journals
+                + common_knowledge
+                  + jair07
+                  + jair09a
+                + joint_exec
+                  + listings
+                    + jointexec
+                    + mindigolog
+                    + oz-examples
+                + property_persisence
+              + scratch
+              + thesis
+                + AHY9U3~9
                 + listings
-              + ijcai07
-              + kr08
-            + lectures
-              + agents07
-              + agents08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
-            + application
-            + confs
-              + aaai06
+                  + background
+                  + jointexec
+                  + mindigolog
+          + pknows-some
+          + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
+            + code
+              + Goloz
+                + FOF
+                + SitCalc
+                + Utils
+              + MIndiGolog
                 + listings
-              + aaai08
-                + listings
-              + aamas06
-                + listings
-              + aamas07
-                + admin
-                + poster
-              + aamas08
-                + listings
-              + iat06
-                + admin
-                + listings
-              + ijcai07
-              + ijcai07_2
-                + admin
-                  + ijcai07_latex
-                + IJCAI-KellyR-80
-              + kr08
-                + reimbursement
-            + internal
-              + poster2005
-              + poster2007
-              + progress_2006
-              + progress_2007
-              + progress_2008
-            + journals
-              + jair07
-            + scratch
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-        + pknowsf678c543195c9af975d749981a79de810dcc98eb
-          + code
-            + Goloz
-              + FOF
-              + SitCalc
-              + Utils
-            + MIndiGolog
-              + listings
-            + pknows
-              + vpdl
-            + scratch
-              + fosg
-              + MIndiGolog_mercury
-              + pcond
-            + thesis
-              + MIndiGolog0
-              + MIndiGolog1
-              + MIndiGolog2
-              + PKnows
+              + pknows
                 + vpdl
-          + library
-          + social
-            + cssepg06
-              + chess_comp
-              + correspondence
-            + openday06
-          + talks
-            + agentlab
-              + golog
-              + symposium06
-            + completion
-            + conferences
-              + iat06
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog1
+                + MIndiGolog2
+            + library
+            + social
+              + cssepg06
+                + chess_comp
+                + correspondence
+              + openday06
+            + talks
+              + agentlab
+                + golog
+                + symposium06
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + lectures
+                + agents07
+                + agents08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aaai08
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + aamas08
+                  + listings
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07
+                + ijcai07_2
+                  + admin
+                    + ijcai07_latex
+                  + IJCAI-KellyR-80
+                + kr08
+                  + reimbursement
+              + internal
+                + poster2005
+                + poster2007
+                + progress_2006
+                + progress_2007
+                + progress_2008
+              + journals
+                + jair07
+              + scratch
+              + submitted-thesis
+                + AHY9U3~9
                 + listings
-              + ijcai07
-              + kr08
-            + lectures
-              + agents07
-              + agents08
-            + MERIT_08
-            + pg_sem_06
-            + pg_sem_07
-            + pg_sem_08
-            + rmit_agents
-          + writings
-            + application
-            + confs
-              + aaai06
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
+                + AHY9U3~9
                 + listings
-              + aaai08
+                  + background
+                  + jointexec
+                  + mindigolog
+          + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
+            + code
+              + Goloz
+                + FOF
+                + SitCalc
+                + Utils
+              + MIndiGolog
                 + listings
-              + aamas06
+              + pknows
+                + vpdl
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + pknows
+                  + vpdl
+            + library
+            + social
+              + cssepg06
+                + chess_comp
+                + correspondence
+              + openday06
+            + talks
+              + agentlab
+                + golog
+                + symposium06
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + lectures
+                + agents07
+                + agents08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aaai08
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + aamas08
+                  + listings
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07
+                + ijcai07_2
+                  + admin
+                    + ijcai07_latex
+                  + IJCAI-KellyR-80
+                + kr08
+                  + reimbursement
+              + internal
+                + poster2005
+                + poster2007
+                + progress_2006
+                + progress_2007
+                + progress_2008
+              + journals
+                + jair07
+              + scratch
+              + submitted-thesis
+                + AHY9U3~9
                 + listings
-              + aamas07
-                + admin
-                + poster
-              + aamas08
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
+                + AHY9U3~9
                 + listings
-              + iat06
-                + admin
+                  + background
+                  + jointexec
+                  + mindigolog
+          + pknowsf678c543195c9af975d749981a79de810dcc98eb
+            + code
+              + Goloz
+                + FOF
+                + SitCalc
+                + Utils
+              + MIndiGolog
                 + listings
-              + ijcai07
-              + ijcai07_2
-                + admin
-                  + ijcai07_latex
-                + IJCAI-KellyR-80
-              + kr08
-                + reimbursement
-            + internal
-              + poster2005
-              + poster2007
-              + progress_2006
-              + progress_2007
-              + progress_2008
-            + journals
-              + jair07
-            + scratch
-            + submitted-thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
-            + thesis
-              + AHY9U3~9
-              + listings
-                + background
-                + jointexec
-                + mindigolog
+              + pknows
+                + vpdl
+              + scratch
+                + fosg
+                + MIndiGolog_mercury
+                + pcond
+              + thesis
+                + MIndiGolog0
+                + MIndiGolog1
+                + MIndiGolog2
+                + PKnows
+                  + vpdl
+            + library
+            + social
+              + cssepg06
+                + chess_comp
+                + correspondence
+              + openday06
+            + talks
+              + agentlab
+                + golog
+                + symposium06
+              + completion
+              + conferences
+                + iat06
+                  + listings
+                + ijcai07
+                + kr08
+              + lectures
+                + agents07
+                + agents08
+              + MERIT_08
+              + pg_sem_06
+              + pg_sem_07
+              + pg_sem_08
+              + rmit_agents
+            + writings
+              + application
+              + confs
+                + aaai06
+                  + listings
+                + aaai08
+                  + listings
+                + aamas06
+                  + listings
+                + aamas07
+                  + admin
+                  + poster
+                + aamas08
+                  + listings
+                + iat06
+                  + admin
+                  + listings
+                + ijcai07
+                + ijcai07_2
+                  + admin
+                    + ijcai07_latex
+                  + IJCAI-KellyR-80
+                + kr08
+                  + reimbursement
+              + internal
+                + poster2005
+                + poster2007
+                + progress_2006
+                + progress_2007
+                + progress_2008
+              + journals
+                + jair07
+              + scratch
+              + submitted-thesis
+                + AHY9U3~9
+                + listings
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
+                + AHY9U3~9
+                + listings
+                  + background
+                  + jointexec
+                  + mindigolog
+        - PKnows-0.9.9
+          - vpdl
         + RTEC
           + examples
             + caviar
@@ -4011,65 +4170,107 @@ packs_xtra\packs_xtra.vpj=Release
       - prolog
         - BN-search
         - pHa_code
-scroll:21
+scroll:7
 [State]
 SCREEN: 1920 1200 150 143 1440 767 0 0 M 0 0 0 0 1432 672
-CWD: packs_sys\logicmoo_ec\prolog\code_icl
-BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\epath.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\domain.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\epath.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=22 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\fluent.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\main.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pred_e.pl"
+CWD: packs_sys\logicmoo_nlu\prolog\marty_white
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\nomic_mu.pl"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pcond.pl"
+VIEW: LN=.3718 CL=21 LE=0 CX=20 CY=7 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_examine.pl"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pcond.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=160 BI=26 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1224 464 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\main.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=156 BI=24 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1224 464 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\fluent.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=154 BI=23 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\epath.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=152 BI=22 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\domain.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=150 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 832 242 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=148 BI=4 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 832 242 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\pknows-some\epath.pl"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=147 BI=20 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1224 464 -1 -1 M  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_ec\ext\epaths\pred_e.pl"
-VIEW: LN=.886 CL=7 LE=0 CX=6 CY=12 WI=158 BI=25 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.5856 CL=2 LE=0 CX=1 CY=15 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_util.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1580 CL=29 LE=0 CX=28 CY=17 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_portray.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.895 CL=4 LE=0 CX=3 CY=9 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_eng2cmd.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.15884 CL=16 LE=0 CX=15 CY=14 WI=5 BI=73 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6958 CL=6 LE=0 CX=5 CY=20 WI=5 BI=75 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.17738 CL=28 LE=0 CX=27 CY=28 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.6662 CL=65 LE=0 CX=64 CY=6 WI=5 BI=74 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.5743 CL=25 LE=0 CX=24 CY=16 WI=5 BI=77 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.31827 CL=3 LE=0 CX=2 CY=14 WI=5 BI=70 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.76422 CL=1 LE=0 CX=0 CY=14 WI=5 BI=71 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.13121 CL=18 LE=0 CX=17 CY=14 WI=5 BI=69 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.12456 CL=4 LE=0 CX=3 CY=15 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.3266 CL=14 LE=0 CX=13 CY=13 WI=5 BI=76 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_io.pl"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.4969 CL=73 LE=2 CX=70 CY=18 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1224 464 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl"
+VIEW: LN=.15324 CL=57 LE=0 CX=56 CY=11 WI=183 BI=76 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
+VIEW: LN=.12456 CL=4 LE=0 CX=3 CY=15 WI=320 BI=21 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl"
+VIEW: LN=.13121 CL=18 LE=0 CX=17 CY=14 WI=222 BI=69 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro"
+VIEW: LN=.76422 CL=1 LE=0 CX=0 CY=14 WI=191 BI=71 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro"
+VIEW: LN=.31827 CL=3 LE=0 CX=2 CY=14 WI=216 BI=70 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
+VIEW: LN=.5743 CL=25 LE=0 CX=24 CY=16 WI=331 BI=77 HT=0 HN=0 HF=0 HC=4
+WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl"
+VIEW: LN=.6662 CL=65 LE=0 CX=64 CY=6 WI=267 BI=74 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl"
+VIEW: LN=.17738 CL=1 LE=0 CX=0 CY=28 WI=327 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl"
+VIEW: LN=.6948 CL=10 LE=0 CX=9 CY=20 WI=282 BI=75 HT=0 HN=0 HF=0 HC=4
+WINDOW: 208 208 1224 464 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_eng2cmd.pl"
+VIEW: LN=.15884 CL=36 LE=0 CX=35 CY=14 WI=300 BI=73 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_io.pl"
+VIEW: LN=.4384 CL=106 LE=2 CX=103 CY=9 WI=329 BI=28 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1224 464 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_portray.pl"
+VIEW: LN=.895 CL=4 LE=0 CX=3 CY=9 WI=253 BI=72 HT=0 HN=0 HF=0 HC=4
+WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_util.pl"
+VIEW: LN=.1580 CL=29 LE=0 CX=28 CY=17 WI=321 BI=4 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_examine.pl"
+VIEW: LN=.443 CL=2 LE=0 CX=1 CY=15 WI=325 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 208 208 1224 464 -1 -1 M  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\nomic_mu.pl"
+VIEW: LN=.4186 CL=11 LE=0 CX=10 CY=23 WI=323 BI=26 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\logicmoo_ec\ext\PKnows-0.9.9\README.txt
-packs_sys\logicmoo_ec\ext\pknows-some\epath.pl
-packs_sys\logicmoo_ec\ext\pknows-some\fluent.pl
-packs_sys\logicmoo_ec\ext\epaths\domain.pl
-packs_sys\logicmoo_ec\ext\epaths\epath.pl
-packs_sys\logicmoo_ec\ext\epaths\fluent.pl
-packs_sys\logicmoo_ec\ext\epaths\main.pl
-packs_sys\logicmoo_ec\ext\epaths\pcond.pl
-packs_sys\logicmoo_ec\ext\epaths\pred_e.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl
+packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
+packs_sys\logicmoo_nlu\prolog\nomic_mu.pl

@@ -67,6 +67,16 @@
 		</Folder>
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
+              <Folder Name="packs_sys">
+                        <Folder Name="logicmoo_agi">
+                                        <F
+                                                N="packs_sys/logicmoo_ec/*.*"
+                                                Recurse="1"
+                                                Refilter="0"
+                                                Excludes=""/>
+                        </Folder>
+                </Folder>
+
 		<Folder Name="/etc">
 			<Folder Name="apache2">
 				<Folder Name="sites-enabled">
