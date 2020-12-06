@@ -22,6 +22,11 @@
 % nohup websocket_redir.sh dbutterfly 4004 &
 :- use_module(library(logicmoo_common)).
 
+:- multifile aXiom/1.
+:- meta_predicate aXiom(+).
+:- multifile aXiom/3.
+:- meta_predicate aXiom(+,?,?).
+
 %:- pack_install(dictoo).
 
 %:- if(current_prolog_flag(argv,[])).
