@@ -466,7 +466,7 @@ generate_foreign_register(Module, Base, InitL) -->
     ["} /* install_"+Base+" */",
     ''].
 
-generate_init(Init) --> ["    "+Init+";"].
+generate_init(Init) --> ["    "+Init+"();"].
 
 foreign_import(fimport(_)).
 foreign_import(fimport(_, _)).
