@@ -636,21 +636,31 @@ implement_type_getter_union_end(cdef  ) --> [].
 implement_type_getter_union_end(struct) --> implement_type_end.
 implement_type_getter_union_end(enum  ) --> implement_type_end.
 
+enum_elem(Name, Term, Name+"_"+Suff) :- enum_suff(Term, Suff).
+
+enum_suff(Term, Elem) :-
+    functor(Term, Func, Arity),
+    ( Arity =:= 0
+    ->Elem = Func
+    ; Elem = Func+"_"+Arity
+    ).
+
 implement_type_getter(union_ini(SubType, Spec, _), Term, Name) -->
     implement_type_getter_union_ini(SubType, Spec, Term, Name).
 implement_type_getter(union_end(SubType), _, _) -->
     implement_type_getter_union_end(SubType).
 implement_type_getter(func_ini(SubType, Spec), Term, Name) -->
     ( {SubType = union}
-    ->{functor(Term, TName, _)},
-      ["    case "+Name+"_"+TName+":",
+    ->{enum_elem(Name, Term, Elem)},
+      ["    case "+Elem+":",
        '    {']
     ; {func_pcname(Name, PName, CName)},
       implement_type_getter_ini(PName, CName, Spec, Name)
     ).
 implement_type_getter(func_rec(SubType, N, Term, Name), Spec, Arg) -->
     { SubType = union
-    ->functor(Term, TName, _),
+    ->enum_suff(Term, Suff),
+      line_atom(Suff, TName),
       format(atom(CRecordName), '~w.~w', [TName, Arg]),
       format(atom(TNameArg), '~w_~w', [TName, Arg]),
       camel_snake(PRecordName, TNameArg),
@@ -674,13 +684,14 @@ implement_type_getter(func_end(SubType), _, _) -->
     ; []
     ).
 implement_type_getter(atomic(SubType, Name), Spec, Term) -->
-    {functor(Term, TName, _)},
+    {enum_elem(Name, Term, Elem)},
     ( {SubType = union}
     ->{ func_pcname(Name, PName, CName1),
-        CName = CName1+"->"+TName,
+        enum_suff(Term, Suff),
+        CName = CName1+"->"+Suff,
         Indent = '        '
       },
-      ["    case "+Name+"_"+TName+":"]
+      ["    case "+Elem+":"]
     ; { func_pcname(Name, PName, CName),
         Indent = '    '
       },
@@ -694,8 +705,8 @@ implement_type_getter(atomic(SubType, Name), Spec, Term) -->
     ).
 implement_type_getter(dict_ini(SubType, Name, M, _), Spec, Term) -->
     ( {SubType = union}
-    ->{functor(Term, TName, _)},
-      ["    case "+Name+"_"+TName+":",
+    ->{enum_elem(Name, Term, Elem)},
+      ["    case "+Elem+":",
        '    {']
     ; ["predicate_t __"+M+"_aux_keyid_index_"+Name+";"],
       {term_pcname(Term, Name, PName, CName)},
@@ -706,8 +717,8 @@ implement_type_getter(dict_key_value(Dict, _, N, _), Key, Value) -->
     {key_value_from_dict(Dict, N, Key, Value)}.
 implement_type_getter(dict_rec(SubType, _, Term, N, Name), Spec, Arg) -->
     { ( SubType = union
-      ->functor(Term, TName, _),
-        format(atom(CRecordName), '~w.~w', [TName, Arg]),
+      ->enum_suff(Term, Suff),
+        format(atom(CRecordName), '~w.~w', [Suff, Arg]),
         Indent = '        '
       ; CRecordName = Arg,
         Indent = '    '
@@ -774,13 +785,14 @@ valid_csym(Func) :-
     maplist(type_char(csym), Codes).
 
 implement_type_unifier(atomic(SubType, Name), Spec, Term) -->
-    {functor(Term, TName, _)},
+    {enum_elem(Name, Term, Elem)},
     ( {SubType = union}
     ->{ func_pcname(Name, PName, CName1),
-        CName = CName1+"->"+TName,
+        enum_suff(Term, Suff),
+        CName = CName1+"->"+Suff,
         Indent = '        '
       },
-      ["    case "+Name+"_"+TName+":"]
+      ["    case "+Elem+":"]
     ; { func_pcname(Name, PName, CName),
         Indent = '    '
       },
@@ -842,8 +854,8 @@ implement_type_unifier_union_end(enum  ) --> implement_type_end.
 implement_type_unifier(func_ini(SubType, Spec), Term, Name) -->
     {func_pcname(Name, PName, CName)},
     ( {SubType = union}
-    ->{functor(Term, TName, _)},
-      ["    case "+Name+"_"+TName+":",
+    ->{enum_elem(Name, Term, Elem)},
+      ["    case "+Elem+":",
        '    {']
     ; implement_type_unifier_ini(PName, CName, Name, Spec),
       {functor(Term, Func, Arity)},
@@ -857,7 +869,8 @@ implement_type_unifier(func_rec(SubType, N, Term, Name), Spec, Arg) -->
 type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNameArg) :-
     func_pcname(Name, PName, CName),
     ( SubType = union
-    ->functor(Term, TName, _),
+    ->enum_suff(Term, Suff),
+      line_atom(Suff, TName),
       format(atom(CRecordName), '~w.~w', [TName, Arg]),
       format(atom(TNameArg), '~w_~w', [TName, Arg]),
       camel_snake(PRecordName, TNameArg),
@@ -882,8 +895,8 @@ implement_type_unifier(func_end(SubType), _, _) -->
     ).
 implement_type_unifier(dict_ini(SubType, Name, _, _), Spec, Term) -->
     ( {SubType = union}
-    ->{functor(Term, TName, _)},
-      ["    case "+Name+"_"+TName+":",
+    ->{enum_elem(Name, Term, Elem)},
+      ["    case "+Elem+":",
        '    {']
     ; {func_pcname(Term, PName, CName)},
       implement_type_unifier_ini(PName, CName, Name, Spec)
@@ -988,11 +1001,12 @@ ds_union_ini_1(SubType, Name, Idx, t(Type, _, _)) -->
       ( SubType = enum
       ->format(codes(Codes), "~w", [Term]),
         sanitize_csym(Codes, [], CName, []),
-        atom_codes(TName, CName)
-      ; functor(Term, TName, _)
+        atom_codes(TName, CName),
+        Elem = Name+"_"+TName
+      ; enum_elem(Name, Term, Elem)
       )
     },
-    ["    "+Name+"_"+TName+" = "+Idx+","].
+    ["    "+Elem+" = "+Idx+","].
 
 sanitize_csym([],    _ ) --> [].
 sanitize_csym([C|L], S1) -->
@@ -1049,7 +1063,7 @@ declare_struct(func_ini(SubType, Spec), _, _) -->
     [Decl+" {"].
 declare_struct(func_end(SubType), Term, _) -->
     ( {SubType = union}
-    ->{functor(Term, TName, _)},
+    ->{enum_suff(Term, TName)},
       ["    } "+TName+";"]
     ; ["};"]
     ).
@@ -1169,12 +1183,18 @@ type_components_one(M, SubType, TSpec, Name, Call, Loc, t(Type, PropL, _)) -->
     { functor(Type, _, Arity),
       arg(Arity, Type, Term)
     },
-    ( {PropL = []}
+    ( { PropL = [],
+        SubType \= union
+      }
     ->[]
-    ; {compound(Term)}
+    ; { compound(Term)
+      ; atom(Term),
+        SubType = union  
+      }
     ->call(Call, func_ini(SubType, TSpec), Term, Name),
       findall(Lines,
-              ( arg(N, Term, Arg),
+              ( compound(Term),
+                arg(N, Term, Arg),
                 phrase(( { member(Prop, PropL),
                            match_known_type(Prop, M, Name, Spec, Arg)
                          },
