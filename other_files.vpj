@@ -74,9 +74,130 @@
 		</Folder>
 		<Folder Name="/etc">
 			<Folder Name="apache2">
+				<Folder Name="conf-available">
+					<F N="/etc/apache2/conf-available/apache2-doc.conf"/>
+					<F N="/etc/apache2/conf-available/charset.conf"/>
+					<F N="/etc/apache2/conf-available/cliopatria_swish.conf"/>
+					<F N="/etc/apache2/conf-available/dotclear.conf"/>
+					<F N="/etc/apache2/conf-available/hoogle.conf"/>
+					<F N="/etc/apache2/conf-available/javascript-common.conf"/>
+					<F N="/etc/apache2/conf-available/libapache2-mod-netcgi-apache.conf"/>
+					<F N="/etc/apache2/conf-available/localized-error-pages.conf"/>
+					<F N="/etc/apache2/conf-available/loolwsd.conf"/>
+					<F N="/etc/apache2/conf-available/other-vhosts-access-log.conf"/>
+					<F N="/etc/apache2/conf-available/php7.0-cgi.conf"/>
+					<F N="/etc/apache2/conf-available/php7.0-fpm.conf"/>
+					<F N="/etc/apache2/conf-available/php7.2-fpm.conf"/>
+					<F N="/etc/apache2/conf-available/proxy_gitlab.conf"/>
+					<F N="/etc/apache2/conf-available/security.conf"/>
+					<F N="/etc/apache2/conf-available/serve-cgi-bin.conf"/>
+					<F N="/etc/apache2/conf-available/servername.conf"/>
+					<F N="/etc/apache2/conf-available/shib.conf"/>
+					<F N="/etc/apache2/conf-available/ssl-params.conf"/>
+				</Folder>
+				<Folder Name="conf-enabled">
+					<F N="/etc/apache2/conf-enabled/apache2-doc.conf"/>
+					<F N="/etc/apache2/conf-enabled/charset.conf"/>
+					<F N="/etc/apache2/conf-enabled/dotclear.conf"/>
+					<F N="/etc/apache2/conf-enabled/localized-error-pages.conf"/>
+					<F N="/etc/apache2/conf-enabled/other-vhosts-access-log.conf"/>
+					<F N="/etc/apache2/conf-enabled/security.conf"/>
+					<F N="/etc/apache2/conf-enabled/serve-cgi-bin.conf"/>
+					<F N="/etc/apache2/conf-enabled/servername.conf"/>
+					<F N="/etc/apache2/conf-enabled/shib.conf"/>
+				</Folder>
+				<Folder Name="mods-available">
+					<F N="/etc/apache2/mods-available/actions.conf"/>
+					<F N="/etc/apache2/mods-available/alias.conf"/>
+					<F N="/etc/apache2/mods-available/auth_openidc.conf"/>
+					<F N="/etc/apache2/mods-available/autoindex.conf"/>
+					<F N="/etc/apache2/mods-available/cache_disk.conf"/>
+					<F N="/etc/apache2/mods-available/cgid.conf"/>
+					<F N="/etc/apache2/mods-available/dav_fs.conf"/>
+					<F N="/etc/apache2/mods-available/dav_svn.conf"/>
+					<F N="/etc/apache2/mods-available/deflate.conf"/>
+					<F N="/etc/apache2/mods-available/dir.conf"/>
+					<F N="/etc/apache2/mods-available/dnssd.conf"/>
+					<F N="/etc/apache2/mods-available/fastcgi.conf"/>
+					<F N="/etc/apache2/mods-available/fcgid.conf"/>
+					<F N="/etc/apache2/mods-available/info.conf"/>
+					<F N="/etc/apache2/mods-available/ldap.conf"/>
+					<F N="/etc/apache2/mods-available/log_slow.conf"/>
+					<F N="/etc/apache2/mods-available/lookup_identity.conf"/>
+					<F N="/etc/apache2/mods-available/mime.conf"/>
+					<F N="/etc/apache2/mods-available/mime_magic.conf"/>
+					<F N="/etc/apache2/mods-available/mod_mono.conf"/>
+					<F N="/etc/apache2/mods-available/mod_mono_auto.conf"/>
+					<F N="/etc/apache2/mods-available/mpm_event.conf"/>
+					<F N="/etc/apache2/mods-available/mpm_prefork.conf"/>
+					<F N="/etc/apache2/mods-available/mpm_worker.conf"/>
+					<F N="/etc/apache2/mods-available/musicindex.conf"/>
+					<F N="/etc/apache2/mods-available/negotiation.conf"/>
+					<F N="/etc/apache2/mods-available/neko.conf"/>
+					<F N="/etc/apache2/mods-available/nss.conf"/>
+					<F N="/etc/apache2/mods-available/passenger.conf"/>
+					<F N="/etc/apache2/mods-available/php7.0.conf"/>
+					<F N="/etc/apache2/mods-available/php7.2.conf"/>
+					<F N="/etc/apache2/mods-available/php7.3.conf"/>
+					<F N="/etc/apache2/mods-available/php7.4.conf"/>
+					<F N="/etc/apache2/mods-available/proxy.conf"/>
+					<F N="/etc/apache2/mods-available/proxy_balancer.conf"/>
+					<F N="/etc/apache2/mods-available/proxy_ftp.conf"/>
+					<F N="/etc/apache2/mods-available/proxy_html.conf"/>
+					<F N="/etc/apache2/mods-available/reqtimeout.conf"/>
+					<F N="/etc/apache2/mods-available/security2.conf"/>
+					<F N="/etc/apache2/mods-available/setenvif.conf"/>
+					<F N="/etc/apache2/mods-available/ssl.conf"/>
+					<F N="/etc/apache2/mods-available/status.conf"/>
+					<F N="/etc/apache2/mods-available/userdir.conf"/>
+				</Folder>
+				<Folder Name="mods-enabled">
+					<F N="/etc/apache2/mods-enabled/actions.conf"/>
+					<F N="/etc/apache2/mods-enabled/alias.conf"/>
+					<F N="/etc/apache2/mods-enabled/auth_openidc.conf"/>
+					<F N="/etc/apache2/mods-enabled/autoindex.conf"/>
+					<F N="/etc/apache2/mods-enabled/cache_disk.conf"/>
+					<F N="/etc/apache2/mods-enabled/cgid.conf"/>
+					<F N="/etc/apache2/mods-enabled/dav_fs.conf"/>
+					<F N="/etc/apache2/mods-enabled/dav_svn.conf"/>
+					<F N="/etc/apache2/mods-enabled/deflate.conf"/>
+					<F N="/etc/apache2/mods-enabled/dir.conf"/>
+					<F N="/etc/apache2/mods-enabled/dnssd.conf"/>
+					<F N="/etc/apache2/mods-enabled/fcgid.conf"/>
+					<F N="/etc/apache2/mods-enabled/info.conf"/>
+					<F N="/etc/apache2/mods-enabled/ldap.conf"/>
+					<F N="/etc/apache2/mods-enabled/lookup_identity.conf"/>
+					<F N="/etc/apache2/mods-enabled/mime.conf"/>
+					<F N="/etc/apache2/mods-enabled/mime_magic.conf"/>
+					<F N="/etc/apache2/mods-enabled/mpm_prefork.conf"/>
+					<F N="/etc/apache2/mods-enabled/negotiation.conf"/>
+					<F N="/etc/apache2/mods-enabled/passenger.conf"/>
+					<F N="/etc/apache2/mods-enabled/php7.4.conf"/>
+					<F N="/etc/apache2/mods-enabled/proxy.conf"/>
+					<F N="/etc/apache2/mods-enabled/proxy_balancer.conf"/>
+					<F N="/etc/apache2/mods-enabled/proxy_ftp.conf"/>
+					<F N="/etc/apache2/mods-enabled/proxy_html.conf"/>
+					<F N="/etc/apache2/mods-enabled/reqtimeout.conf"/>
+					<F N="/etc/apache2/mods-enabled/security2.conf"/>
+					<F N="/etc/apache2/mods-enabled/setenvif.conf"/>
+					<F N="/etc/apache2/mods-enabled/ssl.conf"/>
+					<F N="/etc/apache2/mods-enabled/status.conf"/>
+					<F N="/etc/apache2/mods-enabled/userdir.conf"/>
+				</Folder>
+				<Folder Name="sites-available">
+					<F N="/etc/apache2/sites-available/000-default-le-ssl.conf"/>
+					<F N="/etc/apache2/sites-available/000-default.conf"/>
+					<F N="/etc/apache2/sites-available/default-ssl.conf"/>
+					<F N="/etc/apache2/sites-available/logicmoo-https.conf"/>
+					<F N="/etc/apache2/sites-available/wordpress.conf"/>
+				</Folder>
 				<Folder Name="sites-enabled">
 					<F N="/etc/apache2/sites-enabled/000-default-le-ssl.conf"/>
 					<F N="/etc/apache2/sites-enabled/000-default.conf"/>
+					<F N="/etc/apache2/sites-enabled/000-default.conf-catted.oirg"/>
+					<F N="/etc/apache2/sites-enabled/000-default.conf.MODE"/>
+					<F N="/etc/apache2/sites-enabled/000-default.conf.zz"/>
+					<F N="/etc/apache2/sites-enabled/000-default.conf2"/>
 					<F N="/etc/apache2/sites-enabled/000-logicmoo.conf"/>
 					<F N="/etc/apache2/sites-enabled/wordpress.conf"/>
 				</Folder>
@@ -110,6 +231,23 @@
 			</Folder>
 		</Folder>
 		<Folder Name="packs_web">
+			<Folder Name="logicmoo_webui">
+				<Folder Name="etc">
+					<Folder Name="apache2">
+						<Folder Name="conf-available">
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/cliopatria_swish.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/doc_root.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/conf-available/doc_root_ssl.conf"/>
+						</Folder>
+						<Folder Name="sites-enabled">
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-default-le-ssl.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-default.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-logicmoo.conf"/>
+							<F N="packs_web/logicmoo_webui/etc/apache2/sites-enabled/000-logicmoo2.conf"/>
+						</Folder>
+					</Folder>
+				</Folder>
+			</Folder>
 			<Folder Name="swish">
 				<Folder Name="lib">
 					<Folder Name="data">
