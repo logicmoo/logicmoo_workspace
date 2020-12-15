@@ -638,12 +638,7 @@ implement_type_getter_union_end(enum  ) --> implement_type_end.
 
 enum_elem(Name, Term, Name+"_"+Suff) :- enum_suff(Term, Suff).
 
-enum_suff(Term, Elem) :-
-    functor(Term, Func, Arity),
-    ( Arity =:= 0
-    ->Elem = Func
-    ; Elem = Func+"_"+Arity
-    ).
+enum_suff(Term, Elem) :- functor(Term, Elem, _).
 
 implement_type_getter(union_ini(SubType, Spec, _), Term, Name) -->
     implement_type_getter_union_ini(SubType, Spec, Term, Name).
@@ -1055,17 +1050,27 @@ declare_struct(atomic(SubType, Name), Spec, Term) -->
       ["    "+Decl+" "+TName+Suff+";"]
     ; ["typedef "+Decl+" "+Name+Suff+";"]
     ).
-declare_struct(func_ini(SubType, Spec), _, _) -->
-    ( {SubType = union}
-    ->{Decl = "  struct"}
-    ; {ctype_decl(Spec, Decl)}
-    ),
-    [Decl+" {"].
+declare_struct(func_ini(SubType, Spec), Term, _) -->
+    ( {SubType = union,
+       atom(Term)
+      }
+    ->[]
+    ; ( {SubType = union}
+      ->{Decl = "  struct"}
+      ; {ctype_decl(Spec, Decl)}
+      ),
+      [Decl+" {"]
+    ).
 declare_struct(func_end(SubType), Term, _) -->
-    ( {SubType = union}
-    ->{enum_suff(Term, TName)},
-      ["    } "+TName+";"]
-    ; ["};"]
+    ( {SubType = union,
+       atom(Term)
+      }
+    ->[]
+    ; ( {SubType = union}
+      ->{enum_suff(Term, TName)},
+        ["    } "+TName+";"]
+      ; ["};"]
+      )
     ).
 declare_struct(func_rec(_, _, _, _), Spec, Name) -->
     { ctype_decl(Spec, Decl),
