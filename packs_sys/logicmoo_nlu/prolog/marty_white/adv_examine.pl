@@ -32,12 +32,10 @@ sub_objs(At, Here, What, S0):-
    Container\==Here, h(descended, Container, Here, S0))).
 
 prep_object_exitnames(in, Object, Exits, S0) :-
-  findall(Direction, h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-prep_object_exitnames(in, _Object, [escape], _S0) :- !.
-prep_object_exitnames(on, _Object, [escape], _S0) :- !.
-prep_object_exitnames(under, _Object, [escape], _S0) :- !.
-prep_object_exitnames(at, _Object, [escape], _S0) :- !.
-prep_object_exitnames(Other, _Object, [reverse(Other)], _S0).
+  findall(h(exit(Direction), Object, _), h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+prep_object_exitnames(InOnUnderAt, _Object, [h(exit(Direction), escape, _)], _S0) :- member(InOnUnderAt,[in,on,under,at]),!.
+prep_object_exitnames(Direction, _Object, [h(exit(Direction), reverse(Direction), _)], _S0) :- !.
+%prep_object_exitnames(Other, _Object, [reverse(Other)], _S0).
 
 
 is_prop_accessable(_, N, _):- N == 5, !.
@@ -158,6 +156,12 @@ child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object)
  getprop(Object, default_rel = Default, S0), Default\==At, !,
  act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
 */
+child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
+ findall_set1(h(At, What, Object),
+  (h(At, What, Object, S1),
+   nop(once(can_sense(Agent, Sense, What, S1)))),
+   Children).
+
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):-
  findall_set1(What,
   (h(At, What, Object, S1),

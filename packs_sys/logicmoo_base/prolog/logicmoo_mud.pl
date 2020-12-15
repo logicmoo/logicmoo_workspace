@@ -26,6 +26,7 @@ set_prologmud_home_dir:-
 :- assertion(exists_source(prologmud(mud_loader))).
 :- endif.
 
+ensure_mud_startup:- !.
 ensure_mud_startup:- 
    set_prologmud_home_dir,
    baseKB:ensure_loaded(prologmud(mud_loader)),
