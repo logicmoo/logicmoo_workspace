@@ -1173,7 +1173,7 @@ type_components_1(M, Call, Loc, Type-TypePropLDictL) -->
       ->SubType = enum,
         length(TypePropLDictL, N),
         Spec = enum(Name, N)
-      ; Spec = type(Name),
+      ; Spec = struct(Name),
         ( TypePropLDictL = [_, _|_]
         ->SubType = union
         ; SubType = struct
@@ -1194,7 +1194,7 @@ type_components_one(M, SubType, TSpec, Name, Call, Loc, t(Type, PropL, _)) -->
     ->[]
     ; { compound(Term)
       ; atom(Term),
-        SubType = union  
+        SubType = union
       }
     ->call(Call, func_ini(SubType, TSpec), Term, Name),
       findall(Lines,
@@ -1223,7 +1223,7 @@ type_components_one(M, SubType, TSpec, Name, Call, Loc, t(Type, PropL, _)) -->
       ; dict_create(Dict, Tag, Desc)
       },
       {ignore(Tag = Name)},
-      call(Call, dict_ini(SubType, Name, M, Dict), type(Name), Term),
+      call(Call, dict_ini(SubType, Name, M, Dict), struct(Name), Term),
       findall(Lines,
               phrase(( call(Call, dict_key_value(Dict, Desc, N, Name), Arg, Value),
                        ( { fetch_kv_prop_arg(Arg,  M, Value, PropL1, Prop),
@@ -1294,7 +1294,7 @@ declare_foreign_bind(CM) -->
            )).
 
 declare_impl_head(Head, M, CM, Comp, Call, Succ, Glob, Bind, Type+FHD) :-
-    ( member(RS, [returns_state(_), type(_)]),
+    ( member(RS, [returns_state(_), struct(_)]),
       memberchk(RS, Glob)
     ->Type = "int ",       % int to avoid SWI-Prolog.h dependency at this level
       CHead = Head
@@ -1373,7 +1373,7 @@ ctype_arg_decl(Spec, Mode, Decl) :-
 
 ctype_suff(array(Spec, Dim), CDim) --> "[", call(CDim, Dim), "]", ctype_suff(Spec, CDim).
 ctype_suff(Spec, _) -->
-    {member(Spec, [list(_), ptr(_), chrs(_), string(_), type(_), enum(_, _),
+    {member(Spec, [list(_), ptr(_), chrs(_), string(_), struct(_), enum(_, _),
                    term, tdef(_, _), setof(_, _), cdef(_), _-_])},
     neck.
 
@@ -1392,7 +1392,7 @@ is_ref(_, out).
 % languages --EMM
 
 % Types that are passed by reference
-ref_type(type(_)).
+ref_type(struct(_)).
 ref_type(tdef(_, Spec)) :- ref_type(Spec).
 
 ctype_decl(list(Spec))     --> ctype_decl(Spec), "*".
@@ -1400,7 +1400,7 @@ ctype_decl(array(Spec, _)) --> ctype_decl(Spec).
 ctype_decl(ptr(Spec))      --> ctype_decl(Spec), "*".
 ctype_decl(chrs(Name))     --> acodes(Name).
 ctype_decl(string(Name))   --> acodes(Name).
-ctype_decl(type(Name))     --> "struct ", acodes(Name).
+ctype_decl(struct(Name))   --> "struct ", acodes(Name).
 ctype_decl(enum(Name, _))  --> "enum ", acodes(Name).
 ctype_decl(term)           --> "term_t".
 ctype_decl(tdef(Name, _))  --> acodes(Name).
@@ -1587,7 +1587,7 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind) -->
 c_set_argument(list(S),     _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
 c_set_argument(array(S, D), _, C, A, L) :- c_set_argument_array(S, D, C, A, L).
 c_set_argument(ptr(S),      _, C, A, L) :- c_set_argument_rec(ptr, S, C, A, L).
-c_set_argument(type(T),     M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
+c_set_argument(struct(T),   M, C, A, L) :- c_set_argument_type(M, T, C, A, L).
 c_set_argument(enum(T, _),  M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(cdef(T),     M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
 c_set_argument(T-_,         M, C, A, L) :- c_set_argument_one(M, T, C, A, L).
@@ -1629,7 +1629,7 @@ c_set_argument_setof(Mode, Spec, CArg, Arg, "FI_unify_"+Mode+"_setof("+L+", "+Ty
 c_get_argument(list(S),     M, C, A, L) :- c_get_argument_rec(M, list, S, C, A, L).
 c_get_argument(array(S, D), _, C, A, L) :- c_get_argument_array(S, D, C, A, L).
 c_get_argument(ptr(S),      M, C, A, L) :- c_get_argument_rec(M, ptr,  S, C, A, L).
-c_get_argument(type(T),     M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
+c_get_argument(struct(T),   M, C, A, L) :- c_get_argument_type(M, T, C, A, L).
 c_get_argument(enum(T, _),  M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(cdef(T),     M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
 c_get_argument(T-_,         M, C, A, L) :- c_get_argument_one(M, T, C, A, L).
@@ -1996,12 +1996,12 @@ match_known_type(Type, M, _, Spec, A) -->
           extend_args(EType, [E], EProp)
         },
         match_type(EProp, M, known, Name, ESpec, E)
-      ; {Spec=type(Name)}
+      ; {Spec=struct(Name)}
       )
     ),
     !.
 
-match_known_type_dict(Prop, Tag, A, Name, type(TypeName)) -->
+match_known_type_dict(Prop, Tag, A, Name, struct(TypeName)) -->
     { atomic_list_concat([Name, '_', Tag], TypeName),
       Type =.. [TypeName, A]
     },
