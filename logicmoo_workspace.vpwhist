@@ -2,7 +2,7 @@
 CurrentProject=packs_usr\wam_common_lisp\wamcl.vpj
 [ProjectDates]
 logicmoo_workspace.vpj=20201202150536371
-other_files.vpj=20201206005602111
+other_files.vpj=20201208064419073
 [ActiveConfig]
 logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
@@ -367,9 +367,11 @@ packs_xtra\packs_xtra.vpj=Release
       + t
     + logicmoo_agi
       - ImportantDocs
-        + jmc
+        - jmc
       - prolog
         - agi_lib
+        + MIndiGolog
+          + listings
     + logicmoo_base
       + prolog
         + logicmoo
@@ -1904,7 +1906,7 @@ packs_xtra\packs_xtra.vpj=Release
             + model
             + mudconsole
       + t
-    + prologmud_samples
+    - prologmud_samples
       - prolog
         + prologmud_sample_games\.config
           + butterfly
@@ -3590,7 +3592,15 @@ packs_xtra\packs_xtra.vpj=Release
     - apache2
       - sites-enabled
   - packs_sys
+    + logicmoo_ec\.github
+      + ISSUE_TEMPLATE
+      + workflows
     - logicmoo_ec
+      + docs
+        + files
+          + driverlog
+          + letseat
+        + images
       - ext
         + aiswi
           + dist
@@ -4144,6 +4154,199 @@ packs_xtra\packs_xtra.vpj=Release
         + hyhtn_pddl
           + ptools
         + lps_pddl
+      + test
+        + domains_ocl
+          + assTaxi
+          + c0251943_WashingMachine
+          + chameleonWorld
+          + domains
+          + icons
+          + library
+          + ocl_files
+          + robot
+          + toasterWorldv2
+        + ec_planner
+          + asp
+          + bin
+          + ec2asp_linux_files
+            + page0001-2_files
+            + page0002_files
+            + page0003_files
+            + page0004_files
+          + ecasp-source
+          + ectest
+          + iwfms
+        + lps_user_examples
+          + SzaboContractExamples
+        + pddl_reader
+          + ipc2008-no-cybersec
+            + netben-opt
+              + crewplanning-numeric
+              + elevators-numeric
+              + elevators-strips
+              + openstacks-adl
+              + openstacks-numericadl
+              + openstacks-stripsneg
+              + pegsol-strips
+              + transport-numeric
+              + woodworking-numeric
+            + seq-opt
+              + elevators-strips
+              + openstacks-adl
+              + openstacks-strips
+              + parcprinter-strips
+              + pegsol-strips
+              + scanalyzer-strips
+              + sokoban-strips
+              + transport-strips
+              + woodworking-strips
+            + seq-sat
+              + elevators-strips
+              + openstacks-adl
+              + openstacks-strips
+              + parcprinter-strips
+              + pegsol-strips
+        + pddl_tests
+          + benchmarks
+            + airport
+            + airport-adl
+            + assembly
+            + barman-opt11-strips
+            + barman-sat11-strips
+            + blocks
+            + depot
+            + driverlog
+            + elevators-opt08-strips
+            + elevators-opt11-strips
+            + elevators-sat08-strips
+            + elevators-sat11-strips
+            + floortile-opt11-strips
+            + floortile-sat11-strips
+            + freecell
+            + grid
+            + gripper
+            + logistics00
+            + logistics98
+            + miconic
+            + miconic-fulladl
+            + miconic-simpleadl
+            + movie
+            + mprime
+            + mystery
+            + no-mprime
+            + no-mystery
+            + nomystery-opt11-strips
+            + nomystery-sat11-strips
+            + openstacks
+            + openstacks-opt08-adl
+            + openstacks-opt08-strips
+            + openstacks-opt11-strips
+            + openstacks-sat08-adl
+            + openstacks-sat08-strips
+            + openstacks-sat11-strips
+            + openstacks-strips
+            + optical-telegraphs
+            + parcprinter-08-strips
+            + parcprinter-opt11-strips
+            + parcprinter-sat11-strips
+            + parking-opt11-strips
+            + parking-sat11-strips
+            + pathways
+            + pathways-noneg
+            + pegsol-08-strips
+            + pegsol-opt11-strips
+            + pegsol-sat11-strips
+            + philosophers
+            + pipesworld-notankage
+            + pipesworld-tankage
+            + psr-large
+            + psr-middle
+            + psr-small
+            + rovers
+            + satellite
+            + scanalyzer-08-strips
+            + scanalyzer-opt11-strips
+            + scanalyzer-sat11-strips
+            + schedule
+            + sokoban-opt08-strips
+            + sokoban-opt11-strips
+            + sokoban-sat08-strips
+            + sokoban-sat11-strips
+            + storage
+            + tidybot-opt11-strips
+            + tidybot-sat11-strips
+            + tpp
+            + transport-opt08-strips
+            + transport-opt11-strips
+            + transport-sat08-strips
+            + transport-sat11-strips
+            + trucks
+            + trucks-strips
+            + visitall-opt11-strips
+            + visitall-sat11-strips
+            + woodworking-opt08-strips
+            + woodworking-opt11-strips
+            + woodworking-sat08-strips
+            + woodworking-sat11-strips
+            + zenotravel
+          + elearning
+          + failing_or_too_slow
+          + orig_pddl_parser
+            + charts
+            + docs
+            + output
+            + test
+              + blocks
+              + elevators
+              + gripper
+              + hanoi
+          + sanity
+          + sizes
+            + psr-large
+            + psr-middle
+            + psr-small
+          + ZenoTravel
+        + prolog_files
+          + delrob
+        + uw-yale-pddl
+          + doc
+          + domains
+            + transplan
+            + washington
+          + src
+          + strict-domains
+            + art
+            + art-1d
+            + art-1d-rd
+            + art-md
+            + art-md-ns
+            + art-md-ns-rd
+            + art-md-rd
+            + assembly
+            + blocks-world
+            + briefcase
+            + d1s1
+            + eight
+            + ferry
+            + fridge
+            + gripper
+            + homeowner
+            + logistics
+            + meet-pass
+            + molgen
+            + monkey
+            + montlake
+            + morris
+            + movie
+            + mystery
+            + occam
+            + safety-domain
+            + tire-world
+            + trains
+            + transplan
+            + travel
+            + truckworld
+            + woodshop
   - packs_web
     + swish
       - lib
@@ -4170,107 +4373,44 @@ packs_xtra\packs_xtra.vpj=Release
       - prolog
         - BN-search
         - pHa_code
-scroll:7
+scroll:95
 [State]
-SCREEN: 1920 1200 150 143 1440 767 0 0 M 0 0 0 0 1432 672
-CWD: packs_sys\logicmoo_nlu\prolog\marty_white
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\nomic_mu.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=96 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3718 CL=21 LE=0 CX=20 CY=7 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_examine.pl"
+SCREEN: 1920 1200 150 -8 1440 628 0 0 M 0 0 0 0 1432 207
+CWD: \
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
 BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.5856 CL=2 LE=0 CX=1 CY=15 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_util.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1580 CL=29 LE=0 CX=28 CY=17 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_portray.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.895 CL=4 LE=0 CX=3 CY=9 WI=5 BI=72 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_eng2cmd.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.15884 CL=16 LE=0 CX=15 CY=14 WI=5 BI=73 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6958 CL=6 LE=0 CX=5 CY=20 WI=5 BI=75 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.17738 CL=28 LE=0 CX=27 CY=28 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.6662 CL=65 LE=0 CX=64 CY=6 WI=5 BI=74 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.5743 CL=25 LE=0 CX=24 CY=16 WI=5 BI=77 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.31827 CL=3 LE=0 CX=2 CY=14 WI=5 BI=70 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.76422 CL=1 LE=0 CX=0 CY=14 WI=5 BI=71 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.13121 CL=18 LE=0 CX=17 CY=14 WI=5 BI=69 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.12456 CL=4 LE=0 CX=3 CY=15 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.3266 CL=14 LE=0 CX=13 CY=13 WI=5 BI=76 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_io.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.4969 CL=73 LE=2 CX=70 CY=18 WI=5 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1224 464 -1 -1 N  WF=0 WT=10 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl"
-VIEW: LN=.15324 CL=57 LE=0 CX=56 CY=11 WI=183 BI=76 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
-VIEW: LN=.12456 CL=4 LE=0 CX=3 CY=15 WI=320 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=16 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl"
-VIEW: LN=.13121 CL=18 LE=0 CX=17 CY=14 WI=222 BI=69 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=15 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro"
-VIEW: LN=.76422 CL=1 LE=0 CX=0 CY=14 WI=191 BI=71 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=14 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro"
-VIEW: LN=.31827 CL=3 LE=0 CX=2 CY=14 WI=216 BI=70 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=8 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl"
-VIEW: LN=.5743 CL=25 LE=0 CX=24 CY=16 WI=331 BI=77 HT=0 HN=0 HF=0 HC=4
-WINDOW: 156 156 1224 464 -1 -1 N  WF=0 WT=11 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl"
-VIEW: LN=.6662 CL=65 LE=0 CX=64 CY=6 WI=267 BI=74 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl"
-VIEW: LN=.17738 CL=1 LE=0 CX=0 CY=28 WI=327 BI=27 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=12 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl"
-VIEW: LN=.6948 CL=10 LE=0 CX=9 CY=20 WI=282 BI=75 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1224 464 -1 -1 N  WF=0 WT=13 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_eng2cmd.pl"
-VIEW: LN=.15884 CL=36 LE=0 CX=35 CY=14 WI=300 BI=73 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=7 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_io.pl"
-VIEW: LN=.4384 CL=106 LE=2 CX=103 CY=9 WI=329 BI=28 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1224 464 -1 -1 N  WF=0 WT=9 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_portray.pl"
-VIEW: LN=.895 CL=4 LE=0 CX=3 CY=9 WI=253 BI=72 HT=0 HN=0 HF=0 HC=4
-WINDOW: 182 182 1224 464 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_util.pl"
-VIEW: LN=.1580 CL=29 LE=0 CX=28 CY=17 WI=321 BI=4 HT=0 HN=0 HF=0 HC=4
-WINDOW: 0 0 1224 464 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_examine.pl"
-VIEW: LN=.443 CL=2 LE=0 CX=1 CY=15 WI=325 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 208 208 1224 464 -1 -1 M  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\nomic_mu.pl"
-VIEW: LN=.4186 CL=11 LE=0 CX=10 CY=23 WI=323 BI=26 HT=0 HN=0 HF=0 HC=4
+VIEW: LN=.21560 CL=14 LE=0 CX=13 CY=11 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.10341 CL=3 LE=0 CX=2 CY=13 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.1483 CL=19 LE=0 CX=18 CY=28 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
+WINDOW: 104 104 1198 469 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
+BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"
+VIEW: LN=.9395 CL=5 LE=0 CX=4 CY=4 WI=195 BI=20 HT=0 HN=0 HF=0 HC=4
+WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
+VIEW: LN=.21560 CL=14 LE=0 CX=13 CY=11 WI=193 BI=21 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=3 ",,,"
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=146 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
+VIEW: LN=.12415 CL=21 LE=0 CX=20 CY=25 WI=191 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 130 130 1198 469 -1 -1 M  WF=0 WT=6 "Default Fixed Font,14,0,1"
+BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"
+VIEW: LN=.1483 CL=59 LE=0 CX=58 CY=7 WI=176 BI=4 HT=0 HN=0 HF=0 HC=4
 FILEHIST: 9
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_agent.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_percept.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_state.pl
-packs_sys\logicmoo_utils\prolog\logicmoo\pretty_clauses.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv12.pro
 packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro
 packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
 packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
 packs_sys\logicmoo_nlu\prolog\nomic_mu.pl
+\foo.txt
+packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md
+packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl
+\etc\apache2\sites-enabled\000-logicmoo.conf
+\etc\apache2\conf-available\cliopatria_swish.conf

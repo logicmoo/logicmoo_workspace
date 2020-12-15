@@ -1,40 +1,112 @@
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
-[I 201206 09:07:17 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:371] Starting loop
+[I 201214 16:08:32 butterfly.server:371] Starting loop
+[I 201214 16:08:32 butterfly.server:371] Starting loop
+[I 201214 16:08:32 butterfly.server:363] Starting server
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3101/
-[I 201206 09:07:17 butterfly.server:371] Starting loop
-[I 201206 09:07:17 butterfly.server:363] Starting server
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3125/
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3100/
-[I 201206 09:07:17 butterfly.server:371] Starting loop
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3103/
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3401/
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3101/
+[I 201214 16:08:32 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3123/
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3123/
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:371] Starting loop
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3125/
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3102/
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3103/
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3100/
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3102/
-[I 201206 09:07:17 butterfly.server:363] Starting server
-[I 201206 09:07:17 butterfly.server:371] Starting loop
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3904/
+[I 201214 16:08:32 butterfly.server:363] Starting server
+[I 201214 16:08:32 butterfly.server:371] Starting loop
 /opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py:384: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
   log.warn('Butterfly is ready, open your browser to: %s' % url)
-[W 201206 09:07:17 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3904/
+[W 201214 16:08:32 butterfly.server:384] Butterfly is ready, open your browser to: http://0.0.0.0:3401/
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/opt/logicmoo_workspace/packs_web/butterfly/butterfly.server.py", line 386, in <module>
+    ioloop.start()
+  File "/usr/local/lib/python3.8/dist-packages/tornado/platform/asyncio.py", line 199, in start
+    self.asyncio_loop.run_forever()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 570, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 1823, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.8/selectors.py", line 468, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+KeyboardInterrupt

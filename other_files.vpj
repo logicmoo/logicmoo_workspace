@@ -67,16 +67,11 @@
 		</Folder>
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
-              <Folder Name="packs_sys">
-                        <Folder Name="logicmoo_agi">
-                                        <F
-                                                N="packs_sys/logicmoo_ec/*.*"
-                                                Recurse="1"
-                                                Refilter="0"
-                                                Excludes=""/>
-                        </Folder>
-                </Folder>
-
+		<Folder Name="bin">
+			<F N="bin/git-mv-with-history"/>
+			<F N="bin/git-submodules.sh"/>
+			<F N="bin/pandoc_xm"/>
+		</Folder>
 		<Folder Name="/etc">
 			<Folder Name="apache2">
 				<Folder Name="sites-enabled">
@@ -89,6 +84,29 @@
 				<F N="/etc/apache2/envvars"/>
 				<F N="/etc/apache2/magic"/>
 				<F N="/etc/apache2/ports.conf"/>
+			</Folder>
+		</Folder>
+		<Folder Name="packs_sys">
+			<Folder Name="logicmoo_ec">
+				<Folder Name="ext">
+					<F
+						N="packs_sys/logicmoo_ec/ext/*.*"
+						Recurse="1"
+						Refilter="0"
+						Excludes=""/>
+				</Folder>
+				<Folder Name="prolog">
+					<F
+						N="packs_sys/logicmoo_ec/prolog/*.*"
+						Recurse="1"
+						Refilter="0"
+						Excludes=""/>
+				</Folder>
+				<F
+					N="packs_sys/logicmoo_ec/*.*"
+					Recurse="1"
+					Refilter="0"
+					Excludes=""/>
 			</Folder>
 		</Folder>
 		<Folder Name="packs_web">
@@ -357,28 +375,5 @@
 				</Folder>
 			</Folder>
 		</Folder>
-                <Folder Name="packs_sys">
-                        <Folder Name="logicmoo_ec">
-                                <Folder Name="prolog">
-                                        <F
-                                                N="packs_sys/logicmoo_ec/prolog/*.*"
-                                                Recurse="1"
-                                                Refilter="0"
-                                                Excludes=""/>
-                                </Folder>
-                        </Folder>
-                </Folder>
-               <Folder Name="packs_sys">
-                        <Folder Name="logicmoo_ec">
-                                <Folder Name="ext">
-                                        <F
-                                                N="packs_sys/logicmoo_ec/ext/*.*"
-                                                Recurse="1"
-                                                Refilter="0"
-                                                Excludes=""/>
-                                </Folder>
-                        </Folder>
-                </Folder>
-
 	</Files>
 </Project>

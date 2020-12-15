@@ -473,3 +473,13 @@ df -h
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/
 cd conf/
 eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/
+cd conf/
+eggdrop
+cd /opt/logicmoo_workspace
+./StartLogicmoo.sh 
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+ls
+eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop

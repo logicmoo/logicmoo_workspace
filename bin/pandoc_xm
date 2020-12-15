@@ -1,0 +1,30 @@
+
+filename="${1}"
+into="${2}"
+#parentdir="${filename%/*}"
+parentdir="$(dirname "$filename")"
+localfile=$(echo "$filename" | sed "s/.*\///")
+fileext=`echo "$localfile" | cut -d'.' -f2`
+#stem=$(localfile -- "$filename"; echo .); stem=${stem%.}
+stem=`echo "$localfile" | cut -d'.' -f1`
+#localfile="$(localfile "$stem")"
+toext=$3
+mediadir=$parentdir/em/$stem/
+
+echo ""
+echo ""
+echo filename=\"$filename\"
+echo parentdir=\"$parentdir\"
+echo localfile=\"$localfile\"
+echo stem=\"$stem\"
+echo fileext=\"$fileext\"
+echo into=\"$into\"
+echo toext=\"$toext\"
+echo mediadir=\"$mediadir\"
+echo ""
+echo mkdir -p \"$mediadir\"
+echo pandoc -s \"$filename\" --toc \"${mediadir}toc.$toext\" --extract-media \"$mediadir\" -f $fileext -t $into -o \"$parentdir/$stem.$toext\"
+mkdir -p \"$mediadir\"
+echo pandoc \"$filename\" --extract-media \"$mediadir\" -f $fileext -t $into -o \"$parentdir/$stem.$toext\"
+echo $(pandoc \"$filename\" --extract-media \"$mediadir\" -f $fileext -t $into -o \"$parentdir/$stem.$toext\")
+
