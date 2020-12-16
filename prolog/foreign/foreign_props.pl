@@ -53,6 +53,8 @@
            size_t/1,
            dict_t/2,
            dict_t/3,
+           genfdef/1,
+           typedef/1,
            dict_join_t/4,
            dict_extend_t/4,
            join_dict_types/6,
@@ -69,6 +71,15 @@ foreign(G) :- call(G).
 
 :- global foreign/2.
 foreign(_, G) :- call(G).
+
+% Define the equivalent type in C
+:- global genfdef/1.
+genfdef(G) :- call(G).
+
+% Add a typedef to the definition in C
+:- global typedef/1.
+typedef(G) :- call(G).
+
 
 :- type namespec/1.
 
