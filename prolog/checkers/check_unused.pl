@@ -498,7 +498,9 @@ cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
       record_location_goal(Head, M, Type, CM, Comp, From)
     ; Caller = '<assertion>'(A:H),
       member(Goal, [foreign_props:fimport(_),
-                    foreign_props:fimport(_, _)])
+                    foreign_props:fimport(_, _),
+                    foreign_props:typedef(_),
+                    foreign_props:genfdef(_)])
     ->( A \= CM
       ->put_mark('<exported>'(A:H))
       ; put_mark(A:H)
