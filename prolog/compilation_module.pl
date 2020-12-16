@@ -61,7 +61,8 @@ term_expansion((:- compilation_module(Alias, Exports)),
                 '$compilation_module'(Alias, Exports),
                 (:- use_module(Alias, Exports))]).
 term_expansion((:- compilation_predicate(F/A)),
-               '$compilation_predicate'(F, A)).
+               [(:- discontiguous '$compilation_predicate'/2),
+                '$compilation_predicate'(F, A)]).
 
 term_expansion(end_of_file, end_of_file) :-
     prolog_load_context(module, Context),
