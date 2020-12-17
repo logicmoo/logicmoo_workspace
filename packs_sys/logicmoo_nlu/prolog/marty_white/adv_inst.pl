@@ -32,7 +32,7 @@ declare_inst_type(Inst, Type, S0, S2):-
   assertion(nonvar(Type)),
   object_props_or(Inst, PropList1, [], S0),
   undeclare_always(props(Inst, _), S0, S1),
-  (member(adjs(_), PropList1)-> PropList1=PropList;  [nouns([Type])|PropList1]=PropList),
+  (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,[Type])|PropList1]=PropList),
   list_to_set([shape=Type, inherit(Type, t)|PropList], Set),
   declare(props(Inst, Set), S1, S2).
 
@@ -155,7 +155,7 @@ create_objprop(_Why, _Object, inherit(Other, t), S0, S0):- direct_props(Other, P
 create_objprop(Why, Object, inherit(Other, t), S0, S9):-
  direct_props_or(Other, PropList0, [], S0),
  adv_subst(equivalent, $class, Other, PropList0, PropList1),
- (member(adjs(_), PropList1)-> PropList1=PropList;  [nouns(Other)|PropList1]=PropList),
+ (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,Other)|PropList1]=PropList),
  copy_term(PropList, PropListC), !,
  % must_mw1(updateprop_from_create(Object, inherit(Other, t), S5, S9)), !,
  %must_mw1(updateprop_from_create(Object, visited(Other), S0, S1)),
