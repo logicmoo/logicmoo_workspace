@@ -586,6 +586,8 @@ push_to_state(Info):- must_or_rtrace(push_2_state(Info)).
 
 %push_2_state(State):- push_to_obj(world, State).
 push_2_state(StateInfo):- end_of_list == StateInfo, !.
+%push_2_state(sp(Adjs,TypeS)):- is_list(TypeS),maplist([E]>>push_2_state(sp(Adjs,E)),TypeS).
+%push_2_state(sp(Adjs,Atom)):- push_2_state(type_props(Atom,[inherit(Adjs)])),push_2_state(inherit(Atom)).
 push_2_state(StateInfo):- is_codelist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- is_charlist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- string(StateInfo), parse_kind(state, StateInfo, Logic), push_2_state(Logic).
@@ -594,7 +596,11 @@ push_2_state(StateInfo):- \+ compound(StateInfo), trace_or_throw(unknown_push_to
 push_2_state(type(Type, Conj)):-  !, push_2_state(props(type(Type), Conj)).
 push_2_state(props(type(Type), Conj)):- !, props_to_list(Conj, List), push_2_state(type_props(Type, List)).
 push_2_state(props(Obj, Conj)):-  props_to_list(Conj, List) -> Conj\== List, !, push_2_state(props(Obj, List)).
-push_2_state(type_props(Obj, Conj)):-  props_to_list(Conj, List) -> Conj\== List, !, push_2_state(type_props(Obj, List)).
+push_2_state(type_props(Obj, Conj0)):-  
+  (adv_subst(equivalent, $class, Obj, Conj0, Conj)-> Conj0\==Conj),!, push_2_state(type_props(Obj, Conj)).
+push_2_state(type_props(Obj, Conj)):-
+  (props_to_list(Conj, List) -> Conj\== List), !, push_2_state(type_props(Obj, List)).
+
 push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !, StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
 push_2_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_2_state(StateInfo2).
 
@@ -602,7 +608,7 @@ push_2_state(assert_text(Text)):- must(eng2log(istate, Text, Translation, [])), 
 push_2_state(assert_text(Where, Text)):- !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
 
 push_2_state(StateInfo):- is_state_info(StateInfo), !, declare(StateInfo, istate, _), update_running(StateInfo).
-push_2_state(StateInfo):- forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
+push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))),trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
 
 correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
 
@@ -610,7 +616,7 @@ check_atom(Atom):- assertion(atom(Atom)).
 
 props_to_list(Nil, []):- assertion(\+ var(Nil)), Nil==[], !.
 props_to_list(end_of_list, []):- !.
-props_to_list(Before, [After]):- (correct_prop(Before, After) -> Before\==After), !.
+props_to_list(Before, AfterL):- (correct_prop(Before, After) -> Before\==After, listify(After,AfterL)), !.
 props_to_list(NC, [nc(NC)]):- \+ compound(NC), !.
 props_to_list(oper(_, _, _), []):- !.
 props_to_list([A|B], ABL):- !,
@@ -623,14 +629,53 @@ props_to_list((A, B), ABL):- !,
    append(AL, BL, ABL).
 props_to_list(Other, [Other]).
 
+
+make_class_desc_sp(adjs,Atom,Desc):- string_concat("normally ",Atom,Desc).
+make_class_desc_sp(nouns,Atom,Desc):- string_concat("refered to as a ",Atom,Desc).
+make_class_desc_sp(nominals,Atom,Desc):- string_concat("related to a ",Atom,Desc).
+
+pos_to_sp(adjs).
+pos_to_sp(nouns).
+%pos_to_sp(nominals).
+
+negated_boolean(Last,_NegLast):- \+ atomic(Last),!,fail.
+%negated_boolean(nil,t).
+negated_boolean(Yes,No):- true_2_false(Yes,No),!.
+negated_boolean(No,Yes):- true_2_false(Yes,No),!.
+
+true_2_false(t,f).
+true_2_false(1,0)
+true_2_false(true,false).
+true_2_false(y,n).
+true_2_false(yes,no).
+
+negate_prop(UnNegated,Negated):- \+ compound_gt(UnNegated,0),!,(negated_boolean(UnNegated,Negated)->true;UnNegated=Negated).
+negate_prop(UnNegated,Negated):-
+  functor(UnNegated,F,A),arg(A,UnNegated,Last),
+  negated_boolean(Last,NegLast),!,
+  UnNegated=..[F|Args],
+  append(Left,[_],Args),
+  append(Left,[NegLast],NewArgs),
+  Negated=..[F|NewArgs],!.
+
+
 correct_prop(NC, NO):- var(NC), !, NC = NO.
+correct_prop(NC, nc(NC)):- var(NC), throw(correct_prop(NC, nc(NC))), !.
 correct_prop(        (Type), inherit(Type, t)):- atom(Type).
 correct_prop(~inherit(Type), inherit(Type, f)):- atom(Type), !.
 correct_prop( inherit(Type), inherit(Type, t)):- check_atom(Type), !.
 correct_prop(     isa(Type), inherit(Type, t)):- check_atom(Type), !.
 correct_prop(    isnt(Type), inherit(Type, f)):- check_atom(Type), !.
-correct_prop(       ~(Type), inherit(Type, f)):- atom(Type), !.
 correct_prop(NC, nc(NC)):- \+ compound(NC), !.
+correct_prop(       ~(Type), Negated):- correct_prop( Type, UnNegated), negate_prop(UnNegated,Negated),!.
+correct_prop(       ~(Type), inherit(Type, f)):- atom(Type), !.
+correct_prop(AdjsInfo, sp(Adjs,Info)):- pos_to_sp(Adjs), compound_name_arguments(AdjsInfo,Adjs,[Info]).
+
+correct_prop(sp(Adjs,TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs),TypeS,Out).
+correct_prop(sp(Adjs,Atom), Out):-  check_atom(Atom),   
+  push_to_state(type_props(Atom,[nominals(Atom),sp=Adjs])),!,
+  % make_class_desc_sp(Adjs,Atom,ClassDesc), push_to_state(type_props(Atom,[class_desc([ClassDesc])])),
+  must(correct_prop(inherit(Atom),Out)).
 
 correct_prop(HPRED, h(FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
 correct_prop(HPRED, h(F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
@@ -645,6 +690,7 @@ correct_prop( (has_rel(Verb)), has_rel(Verb, t)):- nop(check_atom(Verb)).
 correct_prop(~(has_rel(Verb)), has_rel(Verb, f)):- nop(check_atom(Verb)).
 correct_prop(  Other, Other).
 
+correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
