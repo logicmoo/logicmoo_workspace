@@ -550,6 +550,7 @@ merge_value(_, 1, _, _, _):- !, fail.
 merge_value(_F, _, _B, A, R):- R = A.
 
 text_prop(nouns).
+text_prop(nominals).
 text_prop(adjs).
 text_prop(desc).
 
@@ -580,10 +581,10 @@ update_running(StateInfo):-
   ignore((get_advstate(S0), !, declare(StateInfo, S0, S1), !, set_advstate(S1))), !.
 % update_running(_StateInfo).
 
-%push_2_state(State):- push_to_obj(world, State).
 
 push_to_state(Info):- must_or_rtrace(push_2_state(Info)).
 
+%push_2_state(State):- push_to_obj(world, State).
 push_2_state(StateInfo):- end_of_list == StateInfo, !.
 push_2_state(StateInfo):- is_codelist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- is_charlist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).

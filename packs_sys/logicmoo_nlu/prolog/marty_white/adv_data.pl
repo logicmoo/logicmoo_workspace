@@ -220,8 +220,8 @@ props(screendoor, [
     effect(switch(on), true),
     effect(switch(off), true),
     can(switch),
-    adjs([dented]),
-    adjs($class)
+    adjs($class),
+    adjs([dented])
  ]),
 
  type_props(mushroom, [
@@ -229,7 +229,7 @@ props(screendoor, [
    name = ("speckled mushroom"),
    % singular,
    food,
-   nouns(eachOf([mushroom, fungus, toadstool])),
+   nouns(([mushroom, fungus, toadstool])),
    adjs([speckled]),
    % initial(description used until initial state changes)
    initial("A speckled mushroom grows out of the sodden earth, on a long stalk."),
@@ -258,7 +258,7 @@ props(screendoor, [
 
  type_props(thinkable, [
     can(examine),
-    nouns($self),
+    % nouns($self),
     adjs($class),
     class_desc(["kind is normally thinkable"])]),
 
@@ -294,7 +294,7 @@ props(screendoor, [
     can(examine),
     adjs(physical),
     adjs($class),
-    nouns(object),
+    nominals(object),
     can(move),
     inherit(fully_corporial),
     inherit(thinkable),
@@ -364,7 +364,7 @@ props(screendoor, [
         class_desc(["Nomicmu plugin"])]),
 
   type_props(decider_plugin, [
-        adjs(decider),
+        nominals(decider),
         inherit(nomicmu_plugin),
         class_desc(["plugins that contain decide_action hooks"])]),
 
@@ -411,7 +411,7 @@ props(screendoor, [
    desc("Your classic robot: metallic with glowing red eyes, enthusiastic but not very clever."),
    can(switch),
    inherit(memorizer),
-   nouns($class),
+   nouns(robot),
    inherit(shiny),
    inherit(character),
    powered = t,
@@ -447,8 +447,8 @@ props(screendoor, [
    desc = "this is a place",
    has_rel(in),
    nouns([here]),
-   nouns(($(self))),
-   adjs(locally),
+   %inherit(($(self))),
+   %adjs(local),
   ~can(move),
   ~can(take),
    oper(discard($agent, Thing),
