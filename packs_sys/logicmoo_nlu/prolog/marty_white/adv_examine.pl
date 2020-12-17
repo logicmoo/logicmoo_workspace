@@ -31,12 +31,26 @@ sub_objs(At, Here, What, S0):-
  \+ ((h(inside, What, Container, S0),
    Container\==Here, h(descended, Container, Here, S0))).
 
-prep_object_exitnames(in, Object, Exits, S0) :-
-  findall(h(exit(Direction), Object, _), h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-prep_object_exitnames(InOnUnderAt, _Object, [h(exit(Direction), escape, _)], _S0) :- member(InOnUnderAt,[in,on,under,at]),!.
-prep_object_exitnames(Direction, _Object, [h(exit(Direction), reverse(Direction), _)], _S0) :- !.
-%prep_object_exitnames(Other, _Object, [reverse(Other)], _S0).
 
+sense_object_exitnames(Sense, Depth, PrepIn, Object, 
+   exit_list(PrepIn, Object, Exits), S0):- 
+ Depth>2 ,!, prep_object_exitnames(Sense, Depth, PrepIn, Object, Exits, S0), !.
+sense_object_exitnames(_Sense,_Depth, _PrepIn, _Object, [], _S0):- !.
+
+prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
+  findall(Direction, h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+prep_object_exitnames(_Sense, _Depth, in, _Object, [escape], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, on, _Object, [escape], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, under, _Object, [escape], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, at, _Object, [escape], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
+/*
+prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
+  findall(h(exit(Direction), Object, _), h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(exit(escape), Object, _)], _S0) :- member(InOnUnderAt,[in,on,under,at]),!.
+prep_object_exitnames(_Sense, _Depth, Direction, _Object, [h(exit(reverse(Direction)), Object, _)], _S0) :- !.
+%prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
+*/
 
 is_prop_accessable(_, N, _):- N == 5, !.
 is_prop_accessable(_, N, _):- N == 4, admin, !.
@@ -73,6 +87,7 @@ is_prop_accessable_at(touch, 1, texture).
 is_prop_accessable_at(know, 1, name).
 is_prop_accessable_at(know, 1, adjs).
 is_prop_accessable_at(know, 1, nouns).
+is_prop_accessable_at(know, 1, nominals).
 is_prop_accessable_at(know, 1, default_rel).
 
 % dunno where to put eatable
@@ -126,10 +141,9 @@ act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
  object_props(Object, Sense, Depth, PropList, SA),
  maybe_send_sense((PropList\==[]), Agent, Sense, Depth, props(Object, PropList), S0, S1),
  add_child_percepts(Sense, Agent, PrepIn, Depth, Object, S1, S2),
- (Depth>2 ->
-   (prep_object_exitnames(PrepIn, Object, Exits, S0),
-       send_sense(Agent, Sense, Depth, exit_list(PrepIn, Object, Exits), S2, S3))
-    ; S2 = S3), !.
+ sense_object_exitnames(Sense, Depth, PrepIn, Object, SensedExits, S0),
+ maybe_send_sense((SensedExits\==[]),Agent, Sense, Depth, SensedExits, S2, S3).
+
 
 
 get_relation_list(Object, RelationSet, S1) :-

@@ -301,7 +301,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
-process_percept_list(Agent, Percept, Stamp,_,_):- fail,
+process_percept_list(_Agent, Percept, _Stamp,_,_):- fail,
   inner_dialog(Percept),fail.
   
 % process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.

@@ -189,7 +189,7 @@ type_functor(nv_of_any, propOf(term, term)).
 type_functor(nv, adjs(list(text))).
 type_functor(nv, nominals(list(text))).
 type_functor(nv, nouns(list(text))).
-
+type_functor(nv, sp(speech_part,list(text))).
 type_functor(nv, '<mystery>'(reason, preprel, inst2)).
 type_functor(nv, can_beyeah(actverb, tf)).
 type_functor(nv, knows_verbs(actverb, tf)).  % can use these actions

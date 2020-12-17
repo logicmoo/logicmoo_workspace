@@ -257,6 +257,7 @@ logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), es(E
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
 
 %logic2eng( Obj, effect(_, _), Out):- logic2eng(Obj, adjs(special), Out), !.
+%logic2eng( Obj, effect(_, _), Out):- logic2eng(Obj, sp(adjs,special), Out), !.
 
 logic2eng(Obj, timestamp(Ord, Time), [timestamp, is, Ord, '(', Ago, ')']):- logic2eng(Obj, ago(Time), Ago).
 
@@ -294,6 +295,7 @@ logic2eng( Obj, co(Desc), ['(Created as: ', Out, ')']):- list2eng( Obj, Desc, Ou
 
 %logic2eng(_Obj, adjs(Type), ['adjs:', Type]).
 %logic2eng(_Obj, nouns(Type), ['nouns:', Type]).
+%logic2eng(_Obj, sp(nouns,Type), ['nouns:', Type]).
 
 logic2eng(_Aobj, cant( sense(_Agent, Sense, It, Why)), [ 'can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
 logic2eng(_Aobj, cant( reach(_Agent, It)), [ 'can''t reach ', It]).
