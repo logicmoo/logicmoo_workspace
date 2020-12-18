@@ -165,7 +165,7 @@ parseForMWType(Frame, X, Type, ParseText, TextArg, Right):-
    parseForMWType(Frame, X, Type, [L|Eft], TextArg, RightL),
    append(RightL, [Prep|Rest], Right), !.
 parseForMWType(Frame, X, _Type, ParseText, TextArg, Right):-
-   noun_phrase(_SO, X, true, LFOut, ParseText, Right),
+   dcg_if_defined(noun_phrase(_SO, X, true, LFOut), ParseText, Right),
    push_frame(LFOut, Frame),
    append(TextArg, Right, ParseText).
 
@@ -173,7 +173,7 @@ parseForMWType(Frame, X, _Type, ParseText, TextArg, Right):-
 verb_tenses(Verb, VerbTensed, Tense):-
   List = [Verb, _Smooches, _Smoochered, _Smooching, _Smooched],
   %talkdb:talk_db(intransitive, give, gives, gived, giving, gived)
-  talkdb:talk_db([_|List]),
+  quietly_talk_db([_|List]),
   nth0(Nth0, List, VerbTensed),
   Key = [now, active, past, nowing, past],
   nth0(Nth0, Key, Tense).

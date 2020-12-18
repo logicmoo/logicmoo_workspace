@@ -191,7 +191,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  setup_console,
  ensure_has_prompt(Agent),
  read_line_to_tokens(Agent, In, [], Words0),
- (Words0==[]->(Words=[wait], notrace(makep));Words=Words0))),
+ (Words0==[]->(Words=[wait], notrace(makep));Words=Words0))), 
  eng2cmd(Agent, Words, Action, Mem0),
  !,
  if_tracing(dbug(telnet, 'Console TODO ~p~n', [Agent: Words->Action])),

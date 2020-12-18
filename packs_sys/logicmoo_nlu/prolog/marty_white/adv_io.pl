@@ -334,12 +334,13 @@ with_tty(In, Goal):-
 
 % -- Input from stdin, convert to a list of atom-tokens.
 
-read_line_to_tokens(_Agent, In, Prev, Tokens):-
+read_line_to_tokens(Agent, In, Prev, Tokens):-
  setup_console(In),
  with_tty(In,
             (read_line_to_codes(In, LineCodesR), read_pending_input(In, _, []))),
  append(Prev, LineCodesR, LineCodes),
  NegOne is -1,
+ overwrote_prompt(Agent),
  must_det(line_to_tokens(LineCodes, NegOne, Tokens0)), !,
  clean_tokens(Tokens0,Tokens1),
  must_det(Tokens1=Tokens).

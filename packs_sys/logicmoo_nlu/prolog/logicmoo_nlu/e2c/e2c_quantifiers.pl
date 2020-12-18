@@ -46,10 +46,10 @@ determiner( V, LF) --> theText1(W),{comparative_number([W|Words],Sign)},theText1
     add_traits(V, quantity(V, Sign , N),LF0, LF).
 :- add_e2c(noun_phrase("at most 50 percent of owners"), sanity).
 determiner( V, LF) --> dcg_peek(number_of(N)),theText1(percent), optionalText1([of]), {fail},
-   dcg_push([out,of,100,(','),N]),!, determiner( V, LF).
+   dcg_push_w2([out,of,100,(','),N]),!, determiner( V, LF).
 
 :- add_e2c(noun_phrase("no three owners"), [sanity,no_working]).
-determiner( V, LF) --> theText1(no), dcg_peek(number_of(_)), dcg_push([less,than]),!, determiner( V, LF).
+determiner( V, LF) --> theText1(no), dcg_peek(number_of(_)), dcg_push_w2([less,than]),!, determiner( V, LF).
 
 determiner( V, LF) --> determiner0(V, LFV), theText1(of), determiner0(G,LFG), add_traits(V, LFV,of(V,G),LF1),add_traits(G,LFG,LF1,LF).
 determiner( V, LF) --> determiner0(V, LF).
