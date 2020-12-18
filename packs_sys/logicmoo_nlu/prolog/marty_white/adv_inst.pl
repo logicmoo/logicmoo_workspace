@@ -19,12 +19,13 @@
 :- ensure_loaded(adv_naming).
 
 create_new_unlocated(Type, Inst, S0, S2):-
- create_new_suffixed_unlocated('~', Type, Inst, S0, S2),!.
+ inst_sep(Sep),
+ create_new_suffixed_unlocated(Sep, Type, Inst, S0, S2),!.
 
 inst_sep('~').
 current_suffix('~1').
 
-into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
+%into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
 into_inst_name(Suffix, Type, Inst):- atom_codes(Suffix,Codes),last(Codes,Code),
  code_type(Code,digit),!, atom_concat(Type, Suffix, Inst).
 into_inst_name(Suffix, Type, Inst):- atom_concat(Type, Suffix, Inst0), gensym(Inst0,Inst).
@@ -181,23 +182,21 @@ create_objprop(_Why, Object, Prop, S0, S2):-
   must_mw1(updateprop_from_create(Object, Prop, S0, S2)).
 
 
-create_1obj(Suffix, _Info, a(Type), Inst, S0, S2):- !, atom_concat(Suffix, 'a', NewSuffix),
- must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
-create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- !, atom_concat(Suffix, '*', NewSuffix),
- must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
 create_1obj(Suffix, _Info, the(Type), Inst, S0, S2):- !,
  must_mw1(create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2)).
+create_1obj(Suffix, _Info, a(Type), Inst, S0, S2):-  !, atom_concat(Suffix, '_A', NewSuffix),
+ must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
+create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix, '_S', NewSuffix),
+ must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
 
 create_1obj(Suffix, Info, the(Type), Inst, S0, S2):- find_recent(Suffix, Type, Inst, S0, S2)->true;create_1obj(Suffix, Info, Type, Inst, S0, S2).
-create_1obj(_Suffix, _Info, I, I, S0, S0):- atom_contains(I, '~').
+create_1obj(_Suffix, _Info, I, I, S0, S0):- inst_sep(Sep), atom_contains(I, Sep),!.
 create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).
 
 %inst_of(I, C, N):- compound(I), !, I=..[C, N|_], number(N).
-inst_of(I, C, N):- I\==[], (atom(C);var(C)), (integer(N);var(N)), atom(I), !, atomic_list_concat([C, NN], '~', I), atom_number(NN, N).
-%inst_of(I, C, N):- atom(C), atomic_list_concat([C, NN], '~', I), atom_number(NN, N).
-
+inst_of(I, C, N):- I\==[], (atom(C);var(C)), (integer(N);var(N)), atom(I), !, inst_sep(Sep),atomic_list_concat([C, NN], Sep, I), atom_number(NN, N).
 
 
 
