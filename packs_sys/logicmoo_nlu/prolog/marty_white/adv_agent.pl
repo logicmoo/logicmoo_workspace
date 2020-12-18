@@ -96,7 +96,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % [percept]  - received perceptions.
 % model([...]) - Agent's internal model of the world.
 %      Model is a collection of timestampped relations.
-% goals([...]) - states the agent would like to achieve, or
+% current_goals(Agent,[...]) - states the agent would like to achieve, or
 %      acts the agent would like to be able to do.
 % plan(S, O, B, L) - plans for achieving goals.
 % affect(...)  - Agent's current affect.
@@ -112,27 +112,27 @@ add_goal(Agent, Goal, Mem0, Mem2) :- is_list(Goal), !,
  apply_mapl_state(add_goal(Agent), Goal, Mem0, Mem2).
 add_goal(Agent, Goal, Mem0, Mem2) :-
  dbug(planner, 'adding ~w goal ~w~n', [Agent, Goal]),
- forget(goals(OldGoals), Mem0, Mem1),
+ forget( current_goals(Agent, OldGoals), Mem0, Mem1),
  append([Goal], OldGoals, NewGoals),
- memorize(goals(NewGoals), Mem1, Mem2).
+ memorize( current_goals(Agent, NewGoals), Mem1, Mem2).
 
 add_goals(_Agent, Goals, Mem0, Mem2) :-
- forget(goals(OldGoals), Mem0, Mem1),
+ forget( current_goals(Agent, OldGoals), Mem0, Mem1),
  append(Goals, OldGoals, NewGoals),
- memorize(goals(NewGoals), Mem1, Mem2).
+ memorize( current_goals(Agent, NewGoals), Mem1, Mem2).
 
 
-add_todo(Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
+add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
-add_todo(_Agent, Action, Mem0, Mem2) :-
- forget(todo(OldToDo), Mem0, Mem1),
+add_todo( _Agent, Action, Mem0, Mem2) :-
+ forget( todo(Agent, OldToDo), Mem0, Mem1),
  append(OldToDo, [Action], NewToDo),
- memorize(todo(NewToDo), Mem1, Mem2).
+ memorize( todo(Agent, NewToDo), Mem1, Mem2).
 
 add_todo_all(_Agent, [], Mem0, Mem0).
 add_todo_all(Agent, [Action|Rest], Mem0, Mem2) :-
- add_todo(Agent, Action, Mem0, Mem1),
+ add_todo( Agent, Action, Mem0, Mem1),
  add_todo_all(Agent, Rest, Mem1, Mem2).
 
 
@@ -195,7 +195,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  eng2cmd(Agent, Words, Action, Mem0),
  !,
  if_tracing(dbug(telnet, 'Console TODO ~p~n', [Agent: Words->Action])),
- add_todo(Agent, Action, Mem0, Mem1), ttyflush, !.
+ add_todo( Agent, Action, Mem0, Mem1), ttyflush, !.
 
 makep:-!.
 makep:- update_changed_files,!.
@@ -246,7 +246,7 @@ decide_action(Agent, Mem0, Mem9):- fail,
   decide_action(Agent, Mem1, Mem9).
 
 decide_action(Agent, Mem0, Mem0) :-
- thought(todo([Action|_]), Mem0),
+ thought( todo(Agent, [Action|_]), Mem0),
  (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
  (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
@@ -255,7 +255,7 @@ decide_action(Agent, Mem0, Mem1) :-
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),
- add_todo(Agent, Action, Mem0, Mem1))).
+ add_todo( Agent, Action, Mem0, Mem1))).
 
 % Telnet client (Covered by the above)
 decide_action(Agent, Mem0, Mem1) :-

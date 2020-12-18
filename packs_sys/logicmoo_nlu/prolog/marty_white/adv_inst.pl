@@ -136,11 +136,11 @@ create_objprop(_Why, Self, inherit(memorizer, t), S0, S2):- !, clock_time(Now),
   propOf(memories, Self),
  structure_label(mem(Self)),
  timestamp(0, Now),
- goals([]),
- goals_skipped([]),
- goals_satisfied([]),
+ current_goals(Agent,[]),
+ goals_skipped(Agent,[]),
+ goals_satisfied(Agent,[]),
  % model([]),
- todo([look(Self)]),
+  todo(Agent, [look(Self)]),
  inst(Self)]), S0, S2).
 
 

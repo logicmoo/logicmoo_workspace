@@ -61,7 +61,7 @@ flp_decide_action(Agent,Mem0,Mem1) :-
 	view([words,Words]),
 	eng2log(Agent, Words, Action, Mem0),
 	view([action,Action]),
-        add_todo(Agent, Action, Mem0, Mem1).
+        add_todo( Agent, Action, Mem0, Mem1).
 
 % Decide action hook
 % :- push_to_state(type_props(adv_flp,[inherit(nomic_plugin),prefix('flp_'), desc("FLP plugin that contains decide action")]).
@@ -79,7 +79,7 @@ flp_state :-
 flp_state_eng :-
 	get_advstate(State),print_english(world,State).
 
-:- defn_state_none(goals()).
+:- defn_state_none( goals()).
 goals :-
 	get_goals(Goals),
 	pprint(Goals,general).
@@ -88,7 +88,7 @@ get_goals(Goals) :-
 	get_advstate(S0),
         current_player(Player),
 	member(memories(Player,M),S0),
-	member(todo(Goals),M).
+	member( todo(Agent, Goals),M).
                   
 % TODO write this
 %aXiom(view(Item)) ==>>

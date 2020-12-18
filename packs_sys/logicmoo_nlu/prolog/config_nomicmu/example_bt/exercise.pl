@@ -2,7 +2,7 @@
 rest_dur(N) ==>> {N<0},!.
 rest_dur(N) ==>> {N>0, N2 is N-1}, rest_one_second,rest_dur(N2).
 
-rest_one_second ==>> add_todo($self, wait($self)).
+rest_one_second ==>> add_todo( $self, wait($self)).
   
 
 do_exercises ==>>

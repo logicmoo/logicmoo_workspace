@@ -181,6 +181,9 @@ inner_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner
 memorize(Figment, M0, M1) :-
  inner_dialog(Figment),
  assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
+memorize_l(Figment, M0, M1) :-
+ inner_dialog(Figment),
+ assertion(is_list(Figment)), notrace(append(Figment, M0, M1)).
 % memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
 forget(Figment, M0, M1) :- select_from(Figment, M0, M1).
 forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).

@@ -92,10 +92,10 @@ type_functor(dest, of(up, $here)).
 type_functor(dest, of(west, $here)).
 
 
-type_functor(memory, goals(list(goals))).
-type_functor(memory, goals_skipped(list(goals))).
-type_functor(memory, goals_satisfied(list(goals))).
-type_functor(memory, todo(list(action))).
+type_functor(memory, current_goals(agent,list(goals))).
+type_functor(memory, goals_skipped(agent,list(goals))).
+type_functor(memory, goals_satisfied(agent,list(goals))).
+type_functor(memory,  todo(agent, list(action))).
 %type_functor(memory, model(list(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
@@ -336,7 +336,7 @@ type_functor(unk, delprop_always_(A)).
 type_functor(unk, to_upper(A)).
 type_functor(unk, oper(A, do_nothing(A), [], [])).
 type_functor(unk, step(start, oper(A, do_nothing(A), [], []))).
-type_functor(unk, add_todo(A, {|i7||<action> A does goto loc walk pantry |})).
+type_functor(unk, add_todo( A, {|i7||<action> A does goto loc walk pantry |})).
 type_functor(unk, im(A)).
 type_functor(unk, log2eng(A, B, C)).
 type_functor(unk, add_goal(agent, {|i7||<action> A does take crate |})).
@@ -383,7 +383,7 @@ type_functor(unk, preCond(A)).
 type_functor(unk, listok(event)).
 type_functor(unk, queue_agent_percept(agent, listok(event))).
 type_functor(unk, queue_event(listok(event))).
-type_functor(unk, percept_todo(list(action))).
+type_functor(unk, percept_todo( list(action))).
 type_functor(unk, process_percept_list(agent, list(event), tstamp)).
 type_functor(unk, do_metacmd(agent, action)).
 type_functor(unk, listof(inst)).

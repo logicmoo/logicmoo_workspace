@@ -18,7 +18,7 @@
 */
 
 action_handle_goals(Agent, Mem0, Mem0):-
-  \+ thought(goals([_|_]), Mem0), !,
+  \+ thought( current_goals(Agent, [_|_]), Mem0), !,
  dbug(planner, '~w: no goals exist~n', [Agent]).
 
 action_handle_goals(Agent, Mem0, Mem1):-
@@ -28,30 +28,30 @@ action_handle_goals(Agent, Mem0, Mem1):-
  serialize_plan(Knower, Agent, NewPlan, Actions), !,
  dbug(planner, 'Planned actions are ~w~n', [Actions]),
  Actions = [Action|_],
- add_todo(Agent, Action, Mem0, Mem1).
+ add_todo( Agent, Action, Mem0, Mem1).
 
 % If goals exist, forget them (since the above failed)
 action_handle_goals(Agent, Mem0, Mem9) :-
- forget(goals([G0|GS]), Mem0, Mem1),
- memorize(goals([]), Mem1, Mem2),
+ forget( current_goals(Agent, [G0|GS]), Mem0, Mem1),
+ memorize( current_goals(Agent, []), Mem1, Mem2),
  dbug(planner, '~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]),
- memorize_appending(goals_skipped([G0|GS]), Mem2, Mem9), !.
+ memorize_appending(goals_skipped(Agent,[G0|GS]), Mem2, Mem9), !.
 
 
 forget_satisfied_goals(Agent, Mem0, Mem3):-
  Goals = [_G0|_GS],
- forget(goals(Goals), Mem0, Mem1),
+ forget( current_goals(Agent, Goals), Mem0, Mem1),
  agent_thought_model(Agent, ModelData, Mem0),
  select_unsatisfied_conditions(Goals, Unsatisfied, ModelData) ->
  subtract(Goals, Unsatisfied, Satisfied), !,
  Satisfied \== [],
- memorize(goals(Unsatisfied), Mem1, Mem2),
+ memorize( current_goals(Agent, Unsatisfied), Mem1, Mem2),
  dbug(planner, '~w Goals some Satisfied: ~p.  Unsatisfied: ~p.~n', [Agent, Satisfied, Unsatisfied]),
- memorize_appending(goals_satisfied(Satisfied), Mem2, Mem3), !.
+ memorize_appending(goals_satisfied(Agent,Satisfied), Mem2, Mem3), !.
 
 has_unsatisfied_goals(Agent, Mem0, Mem0):-
  agent_thought_model(Agent, ModelData, Mem0),
- thought(goals([_|_]), ModelData).
+ thought( current_goals(Agent, [_|_]), ModelData).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -75,7 +75,7 @@ Person think doing what explorers do will make persons goal satisfaction easier.
 Person thinks being an explorer means to find unexplored exits and travel to them.
 Person thinks exits are known by looking.
 Person goal is to have looked
-Person the way to satifiy the goal to have looked is to: add_todo(Person, look(Person))
+Person the way to satifiy the goal to have looked is to: add_todo( Person, look(Person))
 Person DOES look(Person)
 Person notices exits: north, south, east, west.
 Person thinks north is unexplored
@@ -627,7 +627,7 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
  agent_thought_model(Agent, ModelData, Mem0),
 
  %dbug(planner, 'CURRENT STATE is ~w~n', [Model0]),
- thought(goals(Goals), Mem0),
+ thought( current_goals(Agent, Goals), Mem0),
  new_plan(Agent, ModelData, Goals, SeedPlan),
  dbug(planner, 'SEED PLAN is:~n'), pprint(SeedPlan),
  !,

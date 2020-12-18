@@ -417,7 +417,7 @@ make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
 make_new_todos(Kind, Was, Level, [C|CRest], [P|PRest], In, Out):-
  make_new_todos(Kind, Was, Level, CRest, PRest, In, Mid),
  % wdmsg(adding_todo(Level, P, C)),
- add_if_new(Mid, todo(Level, P, C), Out), !.
+ add_if_new(Mid, todo(Agent,Level, P, C), Out), !.
 
 
 add_if_new(Done, Doing, NewDone):-
@@ -596,7 +596,7 @@ lex_info_impl(Kind, Level, [todo(Type, Value)| Todo], Done, Out):- !,
 
 lex_info_impl(Kind, _Lev__, [todo(Level, DoType, Value)| Todo], Done, Out):-
  doable_type(Level, DoType, Type),
- Doing = todo(Level, Type, Value),
+ Doing = todo(Agent,Level, Type, Value),
  add_if_new(Done, Doing, NewDone),
  findall(Info, get_info_about_type(Kind, Level, Type, Value, Info), More),
  add_do_more(More, Todo, NewDone, NewTodo),
