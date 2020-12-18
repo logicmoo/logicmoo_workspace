@@ -19,12 +19,15 @@
 :- ensure_loaded(adv_naming).
 
 create_new_unlocated(Type, Inst, S0, S2):-
- %atom_concat(Type, '~', TType), gensym(TType, TTypeT1), Inst = o(Type, TTypeT1), trace,
- atom_concat(Type, '~', TType), gensym(TType, TTypeT1), Inst = TTypeT1,
- declare_inst_type(Inst, Type, S0, S2).
+ create_new_suffixed_unlocated('~', Type, Inst, S0, S2),!.
+
+into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
+into_inst_name(Suffix, Type, Inst):- atom_codes(Suffix,Codes),last(Codes,Code),
+ code_type(Code,digit),!, atom_concat(Type, Suffix, Inst).
+into_inst_name(Suffix, Type, Inst):- atom_concat(Type, Suffix, Inst0), gensym(Inst0,Inst).
 
 create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2):-
- atom_concat(Type, Suffix, Inst),
+ into_inst_name(Suffix ,Type, Inst),
  declare_inst_type(Inst, Type, S0, S2).
 
 declare_inst_type(Inst, Type, S0, S2):-
