@@ -292,7 +292,13 @@ start_network:-
    webui_start_swish_and_clio,
    threads,statistics,
    !.
-   
+
+
+load_rest:-
+   nodebug,
+   load_nomic_mu,
+   load_before_compile,!.
+
 load_rest:-
    nodebug,
    load_nomic_mu,

@@ -360,6 +360,7 @@ props(screendoor, [
 
   type_props(nomicmu_plugin, [
         nouns(plugin),
+        nouns(unthinkable),
         prefix ='$error'("required config var"),
         class_desc(["Nomicmu plugin"])]),
 
