@@ -40,20 +40,20 @@ test_adv(N) :-
 adv_tst(0):- adv_reset.
 
 adv_tst(1):-
- nlu_assert("Player~1 is in the kitchen."),
+ nlu_assert("Player_X1 is in the kitchen."),
  nlu_assert("There are boxes on the floor.").
 
 adv_tst(2):-
- nlu_assert("Player~1 opens a box."),
+ nlu_assert("Player_X1 opens a box."),
  nlu_assert("There are books in the box.").
 
 adv_tst(3):-
- nlu_assert("Player~1 takes out the books."),
- nlu_assert("Player~1 puts the books on the bookshelf."),
- nlu_assert("Player~1 opens another box."),
+ nlu_assert("Player_X1 takes out the books."),
+ nlu_assert("Player_X1 puts the books on the bookshelf."),
+ nlu_assert("Player_X1 opens another box."),
  nlu_assert("There are plates in the box."),
- nlu_assert("Player~1 takes out the plates."),
- nlu_assert("Player~1 puts them in the kitchen cabinet.").
+ nlu_assert("Player_X1 takes out the plates."),
+ nlu_assert("Player_X1 puts them in the kitchen cabinet.").
 
 
 adv_tst(4):-

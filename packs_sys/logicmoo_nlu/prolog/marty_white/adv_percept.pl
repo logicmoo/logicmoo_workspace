@@ -324,129 +324,129 @@ process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :-
 
 end_of_file.
 
-player~1@[does]> s
+player_X1@[does]> s
 s
-inner_dialog(intend_todo([ go_dir('player~1',walk,south) ])).
+inner_dialog(intend_todo([ go_dir(player_X1,walk,south) ])).
 inner_dialog(intend_todo([])).
 inner_dialog(timestamp(63,653)).
-inner_dialog(attempts('player~1',
-                go_dir('player~1',walk,south))).
+inner_dialog(attempts(player_X1,
+                go_dir(player_X1,walk,south))).
 
-% aXiom(go_dir('player~1',walk,south)).
+% aXiom(go_dir(player_X1,walk,south)).
 
 player was in kitchen but left walking south
-inner_dialog(h(in,'player~1',garden)).
-inner_dialog(h(in,'player~1',garden)).
+inner_dialog(h(in,player_X1,garden)).
+inner_dialog(h(in,player_X1,garden)).
 player came walking north in garden
 ( Success: walk south )
-player~1@[does]> look
+player_X1@[does]> look
 look
-inner_dialog(intend_todo([ look('player~1') ])).
+inner_dialog(intend_todo([ look(player_X1) ])).
 inner_dialog(intend_todo([])).
 inner_dialog(timestamp(64,656.6)).
-inner_dialog(attempts('player~1',
-                look('player~1'))).
+inner_dialog(attempts(player_X1,
+                look(player_X1))).
 
-% aXiom(look('player~1')).
+% aXiom(look(player_X1)).
 
 player does examine see in garden
 
-% aXiom(examine('player~1', see, in,
+% aXiom(examine(player_X1, see, in,
 %          garden)).
 
 player does sub examine see in garden 3
 
-% aXiom(sub__examine('player~1',see,in,garden,3)).
+% aXiom(sub__examine(player_X1,see,in,garden,3)).
 
 (...verbose...: player sees the garden "this is the garden", is large , thus, has an interior and can have exits. )
-inner_dialog(h(in,'player~1',garden)).
-inner_dialog(h(in,'fountain~1',garden)).
-inner_dialog(h(in,'rock~1',garden)).
-inner_dialog(h(in,'rock~1a',garden)).
-inner_dialog(h(in,'mushroom~1',garden)).
+inner_dialog(h(in,player_X1,garden)).
+inner_dialog(h(in,fountain_X1,garden)).
+inner_dialog(h(in,rock_X1,garden)).
+inner_dialog(h(in,rock_X2,garden)).
+inner_dialog(h(in,mushroom_X1,garden)).
 inner_dialog(h(in,brklamp,garden)).
-Player~1 sees in garden: fountain , rock , rock , mushroom and brklamp.
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'fountain~1',2) ])).
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'fountain~1',2),
-                    sub__examine('player~1',see,child,'rock~1',2) ])).
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'fountain~1',2),
-                    sub__examine('player~1',see,child,'rock~1',2),
-                    sub__examine('player~1',see,child,'rock~1a',2) ])).
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'fountain~1',2),
-                    sub__examine('player~1',see,child,'rock~1',2),
-                    sub__examine('player~1',see,child,'rock~1a',2),
-                    sub__examine('player~1',see,child,'mushroom~1',2) ])).
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'fountain~1',2),
-                    sub__examine('player~1',see,child,'rock~1',2),
-                    sub__examine('player~1',see,child,'rock~1a',2),
-                    sub__examine('player~1',see,child,'mushroom~1',2),
-                    sub__examine('player~1',see,child,brklamp,2) ])).
+Player_X1 sees in garden: fountain , rock , rock , mushroom and brklamp.
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+                    sub__examine(player_X1,see,child,rock_X1,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+                    sub__examine(player_X1,see,child,rock_X1,2),
+                    sub__examine(player_X1,see,child,'rock_X2',2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+                    sub__examine(player_X1,see,child,rock_X1,2),
+                    sub__examine(player_X1,see,child,'rock_X2',2),
+                    sub__examine(player_X1,see,child,mushroom_X1,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+                    sub__examine(player_X1,see,child,rock_X1,2),
+                    sub__examine(player_X1,see,child,'rock_X2',2),
+                    sub__examine(player_X1,see,child,mushroom_X1,2),
+                    sub__examine(player_X1,see,child,brklamp,2) ])).
 Exits in garden are: north.
 
 
-% player~1 @ somewhere: already about todo: sub__examine(player~1,see,child,fountain~1,2)
+% player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,fountain_X1,2)
 
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'rock~1',2),
-                    sub__examine('player~1',see,child,'rock~1a',2),
-                    sub__examine('player~1',see,child,'mushroom~1',2),
-                    sub__examine('player~1',see,child,brklamp,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,rock_X1,2),
+                    sub__examine(player_X1,see,child,'rock_X2',2),
+                    sub__examine(player_X1,see,child,mushroom_X1,2),
+                    sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(65,656.7)).
-inner_dialog(attempts('player~1',
-                sub__examine('player~1',see,child,'fountain~1',2))).
+inner_dialog(attempts(player_X1,
+                sub__examine(player_X1,see,child,fountain_X1,2))).
 
-% aXiom(sub__examine('player~1',see,child,'fountain~1',2)).
+% aXiom(sub__examine(player_X1,see,child,fountain_X1,2)).
 
 (...verbose...: player sees the fountain can have exits , opened , thus, has an interior and has a surface. )
 (...verbose...: nothing in fountain )
 (...verbose...: nothing on fountain )
 
-% player~1 @ somewhere: already about todo: sub__examine(player~1,see,child,rock~1,2)
+% player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X1,2)
 
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'rock~1a',2),
-                    sub__examine('player~1',see,child,'mushroom~1',2),
-                    sub__examine('player~1',see,child,brklamp,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,'rock_X2',2),
+                    sub__examine(player_X1,see,child,mushroom_X1,2),
+                    sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(66,656.7)).
-inner_dialog(attempts('player~1',
-                sub__examine('player~1',see,child,'rock~1',2))).
+inner_dialog(attempts(player_X1,
+                sub__examine(player_X1,see,child,rock_X1,2))).
 
-% aXiom(sub__examine('player~1',see,child,'rock~1',2)).
+% aXiom(sub__examine(player_X1,see,child,rock_X1,2)).
 
 
 
-% player~1 @ somewhere: already about todo: sub__examine(player~1,see,child,rock~1a,2)
+% player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X2,2)
 
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,'mushroom~1',2),
-                    sub__examine('player~1',see,child,brklamp,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,mushroom_X1,2),
+                    sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(67,656.8)).
-inner_dialog(attempts('player~1',
-                sub__examine('player~1',see,child,'rock~1a',2))).
+inner_dialog(attempts(player_X1,
+                sub__examine(player_X1,see,child,'rock_X2',2))).
 
-% aXiom(sub__examine('player~1',see,child,'rock~1a',2)).
+% aXiom(sub__examine(player_X1,see,child,'rock_X2',2)).
 
 
 
-% player~1 @ somewhere: already about todo: sub__examine(player~1,see,child,mushroom~1,2)
+% player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,mushroom_X1,2)
 
-inner_dialog(intend_todo([ sub__examine('player~1',see,child,brklamp,2) ])).
+inner_dialog(intend_todo([ sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(68,656.8)).
-inner_dialog(attempts('player~1',
-                sub__examine('player~1',see,child,'mushroom~1',2))).
+inner_dialog(attempts(player_X1,
+                sub__examine(player_X1,see,child,mushroom_X1,2))).
 
-% aXiom(sub__examine('player~1',see,child,'mushroom~1',2)).
+% aXiom(sub__examine(player_X1,see,child,mushroom_X1,2)).
 
 
 
-% player~1 @ somewhere: already about todo: sub__examine(player~1,see,child,brklamp,2)
+% player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,brklamp,2)
 
 inner_dialog(intend_todo([])).
 inner_dialog(timestamp(69,656.9)).
-inner_dialog(attempts('player~1',
-                sub__examine('player~1',see,child,brklamp,2))).
+inner_dialog(attempts(player_X1,
+                sub__examine(player_X1,see,child,brklamp,2))).
 
-% aXiom(sub__examine('player~1',see,child,brklamp,2)).
+% aXiom(sub__examine(player_X1,see,child,brklamp,2)).
 
 (...verbose...: player sees the brklamp inherits shiny! and is glowing. )
-player~1@[does]>
+player_X1@[does]>
 % get2react([pubm,"cehteh_","~cehteh@i59F4B221.versanet.de","*","##prolog","but in practical/industry thats a big turn down "]).
 % irc_receive("cehteh_","~cehteh@i59F4B221.versanet.de","*","##prolog",say("but in practical/industry thats a big turn down ")).
 % ircEventNow("##prolog","cehteh_",say("but in practical/industry thats a big turn down ")).

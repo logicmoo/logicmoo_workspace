@@ -39,7 +39,7 @@ never_equal(Sense, Thing):-
 
 :- defn_state_getter(related_with_prop(domrel, inst, place, prop)).
 related_with_prop(At, Object, Place, Prop, S0) :-
-  h(At, Object, Place, S0),
+  g_h(At, Object, Place, S0),
   getprop(Object, Prop, S0).
 
 % getprop(Object, can_be(open, S0),
@@ -94,55 +94,60 @@ default_rel(At, X, S0) :-
 
 :- defn_state_getter(h(domrel, source, target)).
 
-h(At, X, Y, S0) :- in_model(h(At, X, Y), S0).
+h(At, X, Y, S0):- g_h(At, X, Y, S0).
 
-h(child, X, Y, S0) :- subrelation(At, child), h(At, X, Y, S0).
+:- defn_state_getter(g_h(domrel, source, target)).
 
-h(descended, X, Z, S0) :-
-  h(child, X, Z, S0).
-h(descended, X, Z, S0) :-
-  h(child, Y, Z, S0),
-  h(descended, X, Y, S0).
 
-h(open_traverse, X, Z, S0):-
-  h(descended, X, Z, S0),
-  \+ (h(inside, X, Z, S0), is_closed(in, Z, S0)).
+g_h(At, X, Y, S0) :- in_model(h(At, X, Y), S0).
 
-h(in_scope, X, Z, S0):-
-  h(child, X, Y, S0),
-  h(descended, Z, Y, S0).
-h(in_scope, X, Z, S0):-
-  h(descended, X, Z, S0).
+g_h(child, X, Y, S0) :- subrelation(At, child), g_h(At, X, Y, S0).
 
-h(touchable, X, Z, S0):-
-  h(in_scope, X, Z, S0),
-  \+ ((h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
-                          \+ h(inside, X, C, S0))). % ... we are inside of that something as well as well
+g_h(descended, X, Z, S0) :-
+  g_h(child, X, Z, S0).
+g_h(descended, X, Z, S0) :-
+  g_h(child, Y, Z, S0),
+  g_h(descended, X, Y, S0).
 
-h(takeable, X, Z, S0):-
-  h(touchable, X, Z, S0),
+g_h(open_traverse, X, Z, S0):-
+  g_h(descended, X, Z, S0),
+  \+ (g_h(inside, X, Z, S0), is_closed(in, Z, S0)).
+
+g_h(in_scope, X, Z, S0):-
+  g_h(child, X, Y, S0),
+  g_h(descended, Z, Y, S0).
+g_h(in_scope, X, Z, S0):-
+  g_h(descended, X, Z, S0).
+
+g_h(touchable, X, Z, S0):-
+  g_h(in_scope, X, Z, S0),
+  \+ ((g_h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
+                          \+ g_h(inside, X, C, S0))). % ... we are inside of that something as well as well
+
+g_h(takeable, X, Z, S0):-
+  g_h(touchable, X, Z, S0),
   X \= Z, % cant take self
   \+ getprop(Z, can_be(move, f)),
   \+ getprop(Z, can_be(take, f)),
-  \+ h(inside, X, Z, S0), % cant take outer object
-  \+ h(held_by, Z, X, S0). % cant take what already have
+  \+ g_h(inside, X, Z, S0), % cant take outer object
+  \+ g_h(held_by, Z, X, S0). % cant take what already have
 
 
-h(inside, X, Z, S0) :- h(in, X, Z, S0).
-h(inside, X, Z, S0) :- h(in, Y, Z, S0),
-          h(descended, X, Y, S0).
+g_h(inside, X, Z, S0) :- g_h(in, X, Z, S0).
+g_h(inside, X, Z, S0) :- g_h(in, Y, Z, S0),
+          g_h(descended, X, Y, S0).
 
-h(exit(Out), Inner, Outer, S0) :- in_out(In, Out),
-  h(child, Inner, Outer, S0),
+g_h(exit(Out), Inner, Outer, S0) :- in_out(In, Out),
+  g_h(child, Inner, Outer, S0),
   has_rel(In, Inner, S0),
   has_rel(child, Outer, S0),
   \+ is_closed(In, Inner, S0), !.
-h(exit(Off), Inner, Outer, S0) :- on_off(On, Off),
-  h(child, Inner, Outer, S0),
+g_h(exit(Off), Inner, Outer, S0) :- on_off(On, Off),
+  g_h(child, Inner, Outer, S0),
   has_rel(On, Inner, S0),
   has_rel(child, Outer, S0), !.
-h(exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
-  h(child, Inner, Outer, S0),
+g_h(exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
+  g_h(child, Inner, Outer, S0),
   has_rel(child, Inner, S0),
   has_rel(child, Outer, S0), !.
 
@@ -169,18 +174,18 @@ is_closed(At, Object, S0) :-
 :- defn_state_getter(from_loc(inst, place)).
 
 from_loc(Thing, Here, S0):-
-   h(child, Thing, Here, S0), !.
+   g_h(child, Thing, Here, S0), !.
 from_loc(Thing, Here, S0):-
-   h(open_traverse, Thing, Here, S0), !.
+   g_h(open_traverse, Thing, Here, S0), !.
 from_loc(Thing, Here, S0):-
-   h(_, Thing, Here, S0), !.
+   g_h(_, Thing, Here, S0), !.
 
 :- defn_state_getter(open_traverse(inst, here)).
 
 open_traverse(Thing, Here, S0):-
-   h(open_traverse, Thing, Here, S0).
+   g_h(open_traverse, Thing, Here, S0).
 open_traverse(Thing, Here, S0):-
-   h(open_traverse, Here, Thing, S0).
+   g_h(open_traverse, Here, Thing, S0).
 
 
 
@@ -193,8 +198,8 @@ open_traverse(Thing, Here, S0):-
 
 :- defn_state_getter(applied_direction(start, source, prep, domrel, target)).
 applied_direction(Start, Here, Dir, Relation, End, S0):-
- h(_Relation, Start, Here, S0),
- h(exit(Dir), Here, End, S0),
+ g_h(_Relation, Start, Here, S0),
+ g_h(exit(Dir), Here, End, S0),
  has_rel(Relation, End, S0).
 
 

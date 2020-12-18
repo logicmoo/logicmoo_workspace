@@ -106,10 +106,10 @@ exit(west, kitchen, living_room),
 
 in(the(shelf), the(pantry)),  % the shelf is in the pantry
 in(the(locker), the(pantry)), % the locker is in the  pantry
-in(the(rock), garden),   % xformed:  in('rock~1', garden).
+in(the(rock), garden),   % xformed:  in(rock_X1, garden).
 % there are rocks in the garden
-in(a(rock), garden),     % xformed:  in('rock~11', garden).
-%in(s(rock), garden),     % in('rock~21', garden).
+in(a(rock), garden),     % xformed:  in(rock_X2, garden).
+%in(s(rock), garden),     % in(rock_X3, garden).
 % in({atLeast(2)}/in(a(rock), garden)).
                          % 
 in(the(fountain), garden),

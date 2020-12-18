@@ -289,7 +289,7 @@ verb_frame1(Action, Give,
 
 % write name in book with pen
 % etch name on tree [with] knife
-% player~1 etches name onto the tree's bark with a knife
+% player_X1 etches name onto the tree's bark with a knife
 %
 % surface
 %    tree

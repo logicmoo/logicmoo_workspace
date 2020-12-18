@@ -196,11 +196,11 @@ logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_logic(notices
 logic2eng(Context, percept(Agent, How, _, Info), notices(Agent, How, What)):-
  \+ same_agent(Context, Agent), logic2eng(Agent, Info, What).
 
-% (...verbose...: percept('player~1', see, 2, props('shovel~1', [shape=shovel])) )
-% {{ percept('player~1', see, 2, props('cabinate~1', [shape=cabinate, opened=f, has rel(in, t), has rel(on, t)])) }}
-% {{ percept('player~1', see, 3, props(kitchen, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t), desc='cooking happens here'])) }}
-% {{ percept('player~1', see, 2, props('crate~1', [shape=crate, opened=f, has rel(in, t)])) }}
-% {{ percept('player~1', see, 3, props(living room, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t)])) }}
+% (...verbose...: percept(player_X1, see, 2, props(shovel_X1, [shape=shovel])) )
+% {{ percept(player_X1, see, 2, props(cabinate_X1, [shape=cabinate, opened=f, has rel(in, t), has rel(on, t)])) }}
+% {{ percept(player_X1, see, 3, props(kitchen, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t), desc='cooking happens here'])) }}
+% {{ percept(player_X1, see, 2, props(crate_X1, [shape=crate, opened=f, has rel(in, t)])) }}
+% {{ percept(player_X1, see, 3, props(living room, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t)])) }}
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, es(How), What])):- (Depth == 2;Depth == 3),
   logic2eng(Context, Info, What).
 
@@ -382,7 +382,7 @@ logic2eng(_, V, [String]):- (string(V);(atom(V), atom_needs_quotes(V))), !, form
 logic2eng( Obj, Prop, ['(', cap(N), ':', Value, ')']):- Prop =..[N, V], list2eng(Obj, V, Value).
 %logic2eng(_Obj, Prop, [String]):- compound(Prop), !, String=''. % format(atom(String), ' \n {{ ~q. }}\n ', [Prop]), !.
 %
-% sub__examine('player~1', see, in, living_room, 3)
+% sub__examine(player_X1, see, in, living_room, 3)
 
 
 
