@@ -118,7 +118,7 @@ noun_post_mod(SO, X, LF, Out) --> near_noun_mod(SO, X, LF, Out).
 pos_or_neg(-) --> theText1(not), plt, !, optionalText1('a'), optionalText1('an').
 pos_or_neg(-) --> theText1(not).
 pos_or_neg(-) --> theText1(non), optionalText1('-').
-pos_or_neg(-) --> theText1(Neg), {atomic(Neg), neg_to_pos(Neg, Pos)}, !, dcg_push(Pos).
+pos_or_neg(-) --> theText1(Neg), {atomic(Neg), neg_to_pos(Neg, Pos)}, !, dcg_push_w2(Pos).
 pos_or_neg(+) --> [].
 
 neg_to_pos(UnHappy, Happy) :- atom_concat('un', Happy, UnHappy).
@@ -137,8 +137,8 @@ maybe_negated_dcg(DCGGoal1, LF) -->
   pos_or_neg(Did), !, DCGGoal0,
  {maybe_did_hack(PosLF, Did, LF)}.
 
-has_suffix(Ly, Ly) --> theText1(DasterdLy), {atom_concat(Dasterd, Ly, DasterdLy)}, dcg_push(Dasterd).
-has_suffix('ly', 'ly') --> theText1(Happily), {atom_concat(Happ, 'ily', Happily), atom_concat(Happ, 'y', Happy)}, dcg_push(Happy).
+has_suffix(Ly, Ly) --> theText1(DasterdLy), {atom_concat(Dasterd, Ly, DasterdLy)}, dcg_push_w2(Dasterd).
+has_suffix('ly', 'ly') --> theText1(Happily), {atom_concat(Happ, 'ily', Happily), atom_concat(Happ, 'y', Happy)}, dcg_push_w2(Happy).
 has_suffix(_Ly, skipped) --> [].
 
 dcg_maybe_suffixed(DCGGoal1, Suffix, LF) -->
@@ -163,7 +163,7 @@ whpron(X, LF, Out) --> theText1(WH), {whpron_dict(WH, Type)}, !, add_traits(X, [
 % pers_pron_db
 %pronoun(_SO, X, _LF, _Out) --> determiner(X, _), !, {fail}.
 
-pronoun(SO, X, LF, Out) --> theText1(noone), dcg_push(nobody), !, pronoun(SO, X, LF, Out).
+pronoun(SO, X, LF, Out) --> theText1(noone), dcg_push_w2(nobody), !, pronoun(SO, X, LF, Out).
 
 pronoun(_SO, X, LF, Out) --> theText1(none), add_traits(X, [pronounQFn("none"), quant(no)], LF, Out), !.
 pronoun(_SO, X, LF, Out) --> theText1(one), add_traits(X, [pronounQFn("one"), numberOf(1), quant(exists)], LF, Out), !.
@@ -171,7 +171,7 @@ pronoun(_SO, X, LF, Out) --> theText1(some), add_traits(X, [pronounQFn("some"), 
 
 pronoun(SO, X, LF, Out) --> theText1(WH), {WH=him;WH=he}, !, add_traits(X, [pronounSubjFn(WH), varnamedFn('He'), v_arg(SO), gender(masc)], LF, Out).
 
-%pronoun(SO, X, LF, Out) --> theText1(one), dcg_push(someone), !, pronoun(SO, X, LF, Out).
+%pronoun(SO, X, LF, Out) --> theText1(one), dcg_push_w2(someone), !, pronoun(SO, X, LF, Out).
 
 pronoun(SO, X, LF, Out) --> theText1(Nobody), {nl_call(quantifier_pron_db, Nobody, No, Body), pronoun_ok(_Subj, SO)},
  {pronoun_var(Body, VarFn, X)},

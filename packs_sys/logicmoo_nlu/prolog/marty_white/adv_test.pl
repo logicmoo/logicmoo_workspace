@@ -27,7 +27,7 @@ adv_reset:-
 
 test_adv :- test_adv(1).
 
-test_adv(M-N) :- !,
+test_adv(M-N) :- integer(N),!,
  forall(
  between(M, N, O),
  test_adv(O)).

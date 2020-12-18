@@ -51,8 +51,9 @@ def_nl_pred(M,F,A):-
 nl_call([F|Rest]):- !, nlfac:is_nl_pred(M,F,N),/*var(Rest)->*/length(Rest,N),M:apply(F,Rest).
 nl_call(M:P):-!,nl_call_mp(M,P).
 nl_call(P):- nl_call_mp(_,P).
+
 nl_call_mp(M,P):- (nl_pred(P,M,F,A),nl_call_entr(M,F,A,P),      
-   on_x_rtrace((nl_pred(P,M,F,A),M:P)),nl_call_exit(M,F,A,P))*->true;
+   (nl_pred(P,M,F,A),on_x_rtrace((M:P))),nl_call_exit(M,F,A,P))*->true;
   (current_predicate(_,M:P),call(M:P)).
 
 nl_pred(M,F,A):- var(F),!,nlfac:is_nl_pred(M,F,A).
@@ -62,6 +63,23 @@ nl_pred(P,M,F,A):- (var(F),var(P)),!,nlfac:is_nl_pred(M,F,A),functor(P,F,A).
 nl_pred(P,M,F,A):- var(F),!,functor(P,F,A),ignore(nlfac:is_nl_pred(M,F,A)).
 nl_pred(P,M,F,A):- var(P),!,nl_pred(M,F,A),functor(P,F,A).
 nl_pred(P,M,F,A):- functor(P,F,A),!,nl_pred(M,F,A).
+
+
+nl_call_trusted([F|Rest]):- !, nlfac:is_nl_pred(M,F,N),/*var(Rest)->*/length(Rest,N),M:apply(F,Rest).
+nl_call_trusted(M:P):-!,nl_call_trusted_mp(M,P).
+nl_call_trusted(P):- nl_call_trusted_mp(_,P).
+
+nl_call_trusted_mp(M,P):- (nl_pred_trusted(P,M,F,A),nl_call_entr(M,F,A,P),      
+   (nl_pred_trusted(P,M,F,A),on_x_rtrace((M:P))),nl_call_exit(M,F,A,P))*->true;
+  (current_predicate(_,M:P),call(M:P)).
+nl_pred_trusted(M,F,A):- var(F),!,nlfac:is_nl_pred(M,F,A).
+nl_pred_trusted(M,F,A):- (nlfac:is_nl_pred(M,F,A))*->true;(((current_predicate(M:F/A)),def_nl_pred(M,F,A)),!).
+
+nl_pred_trusted(P,M,F,A):- (var(F),var(P)),!,nlfac:is_nl_pred(M,F,A),functor(P,F,A).
+nl_pred_trusted(P,M,F,A):- var(F),!,functor(P,F,A),ignore(nlfac:is_nl_pred(M,F,A)).
+nl_pred_trusted(P,M,F,A):- var(P),!,nl_pred_trusted(M,F,A),functor(P,F,A).
+nl_pred_trusted(P,M,F,A):- functor(P,F,A),!,nl_pred_trusted(M,F,A).
+
 
 
 make_nl_call_stubs:- forall((between(1,7,A),length(List,A),Head =.. [nl_call,F|List], Body =.. [call,M:F|List],   

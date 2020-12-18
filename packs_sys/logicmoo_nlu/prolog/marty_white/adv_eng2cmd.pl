@@ -51,7 +51,9 @@ adv_load_parsers2 :-
   parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)),
   !.
 
-% :- adv_load_parsers.
+:- use_module(library(logicmoo/dcg_must)).
+% :- parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)).
+%:- adv_load_parsers2.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -390,10 +392,14 @@ acdb(F, A, B):- munl_call(acnl(F, A, B, _)).
 
 :- set_prolog_flag(debug_on_error, true).
 %munl_call(G):- !, nl_call(G).
-munl_call(G):- 
+munl_call(G):- fail,
  catch(G,_,
    catch(nl_call(G), _,
       catch(rtrace(nl_call(G)), _, fail))).
+munl_call(G):- 
+ catch(G,_,
+   catch(nl_call_trusted(G), Err,
+       (wdmsg(G=Err),!,fail))).
 
 
 two_adjs(W1, W2, W3):- var(W1), nonvar(W2), !, two_adjs(W2, W1, W3).
@@ -523,7 +529,7 @@ same_prop(X, Y):- X=@=Y, X=Y.
 args2logical(TheArgs, [Thing], M):- parse2object(TheArgs, Thing, M), !. % TheArgs\==[Thing], !.
 args2logical(TheArgs, TheArgs, _M).
 
-quietly_talk_db(L):- quietly(munl_call(talk_db(L))).
+quietly_talk_db(L):- quietly(munl_call(talk_db:talk_db(L))).
 
 mu_is_kind(Thing, inst):- get_advstate(M), member(props(Thing, _), M).
 mu_is_kind(Thing, type):- get_advstate(M), member(type_props(Thing, _), M).
@@ -556,7 +562,8 @@ call_lf(X, LFOut):- freeze(X, ignore(LFOut)).
 coerce_text_to_args(X, []):- []==X, !.
 coerce_text_to_args(List, [X|Args]):- is_list(List),
    to_wordlist_atoms_adv(List, WL),
-   noun_phrase(_SO, X, true, LFOut, WL, Rest), !,
+   current_predicate(noun_phrase/6),
+   dcg_if_defined(noun_phrase(_SO, X, true, LFOut),WL, Rest), !,
    must((call_lf(X, LFOut),
    from_wordlist_atoms(Rest, More),
    coerce_text_to_args(More, Args))).

@@ -6,41 +6,16 @@
 % iterative deeping flag
 plt(A, A):- notrace(plt).
 
-quietly(DCG, S, E):- setup_call_cleanup(quietly(phrase(DCG, S, E)),true,true).
-% quietly(DCG,S,E):- quietly(phrase(DCG,S,E)).
-notrace(DCG,S,E):- quietly(DCG,S,E). %notrace(phrase(DCG,S,E)).
-must(DCG,S,E):- must(phrase(DCG,S,E)).
-ignore_must(DCG,S,E):- ignore_must(phrase(DCG,S,E)).
-
-dcg_peek(DCG,S,S):- phrase(DCG,S,_).
 
 tag(Frame, Tag, iza(Frame, TAG)) --> {atomic(Tag)}, !, [$, TAG], {atom(TAG),downcase_atom(TAG, Start), atom_concat(Tag, _, Start)}.
 tag(Frame, Cmp, N) --> {compound(Cmp),functor(Cmp, F, _)}, tag(Frame, F, N).
 
-%dcg_must_each_det(G, S, E):- phrase(G, S, E), !.
 
-dcg_must_each_det(_, S, _):- S == [], !, fail.
-dcg_must_each_det((G1, G2), S, E):- !, must(phrase(G1, S, M)), !, dcg_must_each_det(G2, M, E), !.
-dcg_must_each_det(G, S, E):- !, must(phrase(G, S, E)), !.
-
-dcg_and(DCG1, DCG2, S, E) :- dcg_condition(DCG1, S, E), phrase(DCG2, S, E), !.
-dcg_unless(DCG1, DCG2, S, E) :- \+ dcg_condition(DCG1, S, _), !, phrase(DCG2, S, E).
-dcg_when(DCG1, DCG2, S, E) :- dcg_condition(DCG1, S, _),!, phrase(DCG2, S, E).
-dcg_length(Len,S,E):- \+ var(Len) -> (length(L,Len), append(L,E,S)); 
-   (length(S,Full),between(Full,0,Len),length(L,Len), append(L,E,S)).
-dcg_from_right(DCG1, DCG2, S, E) :- length(S,Full), between(Full,0,Start), dcg_scan(DCG1,Start,DCG2,S,E).
-dcg_from_left(DCG1,  DCG2, S, E) :- length(S,Full), between(0,Full,Start), dcg_scan(DCG1,Start,DCG2,S,E).
-
-dcg_scan(DCG1,Start2,DCG2,S,E):- 
-  length(Before,Start2), append(Before,Mid,S), \+ \+ phrase(DCG2, Mid, _), 
-  phrase(DCG1, Before, []), phrase(DCG2, Mid, E).
-
-dcg_condition([], S, _):- S \== [], !, fail.
-dcg_condition(DCG, S, E):- phrase(DCG, S, E).
+:- use_module(library(logicmoo/dcg_must)).
 
 % Push a new term onto DCG stack
-dcg_push(List, S, ListS):- is_list(List), !, t_to_w2(List,ListO), append(ListO, S, ListS).
-dcg_push(A, S, [B|S]):- t_to_w2(A,B).
+dcg_push_w2(List, S, ListS):- is_list(List), !, t_to_w2(List,ListO), append(ListO, S, ListS).
+dcg_push_w2(A, S, [B|S]):- t_to_w2(A,B).
 
 theText1(IC)-->notrace(theText11(IC)).
 
