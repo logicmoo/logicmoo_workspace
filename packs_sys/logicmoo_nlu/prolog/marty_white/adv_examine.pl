@@ -144,10 +144,10 @@ act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
  sense_object_exitnames(Sense, Depth, PrepIn, Object, SensedExits, S0),
  maybe_send_sense((SensedExits\==[]),Agent, Sense, Depth, SensedExits, S2, S3).
 
-
+findall_set2(T,G,L):-findall(T,G,S),list_to_set(S,L).
 
 get_relation_list(Object, RelationSet, S1) :-
-  findall_set1(At,
+  findall_set2(At,
      ((getprop(Object, has_rel(At, t), S1);
       (declared(h(At, _, Object), S1))),
      At\=exit(_)), RelationSet).
@@ -171,13 +171,13 @@ child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object)
  act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
 */
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
- findall_set1(h(At, What, Object),
+ findall_set2(h(At, What, Object),
   (g_h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).
 
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):-
- findall_set1(What,
+ findall_set2(What,
   (g_h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).

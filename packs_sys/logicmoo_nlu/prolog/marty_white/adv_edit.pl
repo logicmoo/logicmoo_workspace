@@ -35,8 +35,13 @@ include_functor(List, P):- compound(P), safe_functor(P, F, _), member(F, List), 
 
 :- defn_state_setter(do_metacmd(agent, action)).
 
-do_metacmd(Doer, in_world(Agent,World,Cmd), S0, S1):- !, find_world(World,W0,W1),
-  do_metacmd(Agent, Cmd, W0, W1),!.
+find_world(World,W0,W1,S0):- wdmsg(warn(find_world(World,W0,W1,S0))), W0=S0.
+
+save_world(World,W1,S0,S1):- wdmsg(warn(save_world(World,W1,S0,S1))), S1=W1.
+
+do_metacmd(_Doer, in_world(Agent,World,Cmd), S0, S1):- !, find_world(World,W0,W1,S0),
+  do_metacmd(Agent, Cmd, W0, W1),!,
+  save_world(World,W1,S0,S1).
  
 do_metacmd(Doer, quit(Agent)) -->
  declare(wishes(Agent, quit)),
