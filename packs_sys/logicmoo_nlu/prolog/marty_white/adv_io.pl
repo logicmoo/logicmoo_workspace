@@ -211,7 +211,7 @@ pprint_2(_, _).
 stdio_player(Agent):- nonvar(Agent), !, stdio_player(AgentWas), !, AgentWas == Agent.
 stdio_player(Agent):- stream_property(InStream, fileno(0)), mu_global:console_io_player(InStream, _, Agent), !.
 stdio_player(Agent):-
-  Agent = 'player~1',
+ current_player(Agent),
  ignore(( \+ mu_global:console_io_player(_, _, Agent))).
 
 :- thread_local(mu_global:current_agent_tl/1).

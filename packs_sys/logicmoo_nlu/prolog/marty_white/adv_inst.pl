@@ -21,6 +21,9 @@
 create_new_unlocated(Type, Inst, S0, S2):-
  create_new_suffixed_unlocated('~', Type, Inst, S0, S2),!.
 
+inst_sep('~').
+current_suffix('~1').
+
 into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
 into_inst_name(Suffix, Type, Inst):- atom_codes(Suffix,Codes),last(Codes,Code),
  code_type(Code,digit),!, atom_concat(Type, Suffix, Inst).

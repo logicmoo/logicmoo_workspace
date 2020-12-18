@@ -94,7 +94,8 @@ compile_eng(Context, [First|Rest], [First2|Rest2]) :-
  compile_eng(Context, First, First2),
  compile_eng(Context, Rest, Rest2), !.
 
-compile_eng(_Context, Object, Text) :- atom(Object), atom_contains(Object, "~"), atomic_list_concat([Wo, _Rds], '~', Object),
+compile_eng(_Context, Object, Text) :- 
+ atom(Object), inst_sep(Sep), atom_contains(Object, Sep), atomic_list_concat([Wo, _Rds], Sep, Object),
  atomic_list_concat([Wo/*, '#', Rds*/], Text).
 
 

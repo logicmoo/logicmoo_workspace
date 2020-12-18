@@ -39,15 +39,19 @@
 :- use_module(library('logicmoo_nlu/parser_tokenize')).
 
 
-%:- parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)).
-%:- parser_pldata:use_module(library(logicmoo_nlu/parser_pldata)).
-%:- parser_chat80:use_module(library(logicmoo_nlu/parser_chat80)).
+adv_load_parsers :- 
+  parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)),
+  parser_pldata:use_module(library(logicmoo_nlu/parser_pldata)),
+  parser_chat80:use_module(library(logicmoo_nlu/parser_chat80)),
+  !.
 
-% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_utility)).
-% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_commands)).
-% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)).
+adv_load_parsers2 :- 
+  parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_utility)),
+  parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_commands)),
+  parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)),
+  !.
 
-
+% :- adv_load_parsers.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -321,7 +325,9 @@ parse_for_kind(place, Target) --> !, parse_for_kind(object, Target).
 parse_for_kind(inst, Target) --> !, parse_for_kind(object, Target).
 parse_for_kind(agnt2, Target) --> !, parse_for_kind(object, Target).
 
-parse_for_kind(object, Target) --> !, {list_len_between(3, 1, List)}, List, {parse2object(List, Target, inst('player~1'))}.
+parse_for_kind(object, Target) --> 
+  {current_player(Agent)},!,
+  {list_len_between(3, 1, List)}, List, {parse2object(List, Target, inst(Agent))}.
 %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, _, Dest)).
 %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, Dest, _)).
 parse_for_kind([H|T], [TargetH|TargetT]) --> {nonvar(T), !}, parse_for_kind(H, TargetH), parse_for_kind(T, TargetT).
@@ -561,7 +567,7 @@ coerce_text_to_args(Atomic, Arg):- \+ atom(Atomic), !, any_to_atom(Atomic, Atom)
 
 is_already_an_arg(Var):- is_ftVar(Var), !, fail.
 is_already_an_arg(NonAtomic):- compound(NonAtomic), !.
-is_already_an_arg(Atom):- atom_contains(Atom, "~"), !.
+is_already_an_arg(Atom):- inst_sep(Sep), atom_contains(Atom, Sep), !.
 is_already_an_arg(Atom):- atom_chars(Atom, [_|Chars]), member(C, Chars),
   (char_type(C, digit); ((char_type(C, to_upper(UC)), C==UC))), !.
 
