@@ -21,7 +21,7 @@
 :- defn_state_none(update_flp(agent,term,term,term)).
 
 update_flp(Agent,Name,Plan,Step) :-
-	Agent = 'player_X1',
+	current_player(Agent),
 	view([query_agent(flp,'127.0.0.1',flp_update([current(name,Name),current(plan,Plan),current(step,Step)],Result1),Result2)]),
 	(   query_agent(flp,'127.0.0.1',flp_update([current(name,Name),current(plan,Plan),current(step,Step)],Result1),Result2) -> true ; true).
 
@@ -34,7 +34,7 @@ flp_nomicmu_query(Input,Result) :-
      with_output_to(string(Result),
        (convert_input_to_words(Input,Words0),
 	set_flp_words0(Words0),
-	Agent = 'player_X1',
+	current_player(Agent),
 	advstate_db(S0),
 	undeclare(memories(Agent, Mem0), S0, S1),
 	set_advstate(S1),
@@ -86,7 +86,8 @@ goals :-
 
 get_goals(Goals) :-
 	get_advstate(S0),
-	member(memories('player_X1',M),S0),
+        current_player(Player),
+	member(memories(Player,M),S0),
 	member(todo(Goals),M).
                   
 % TODO write this

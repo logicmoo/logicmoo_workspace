@@ -22,8 +22,8 @@ create_new_unlocated(Type, Inst, S0, S2):-
  inst_sep(Sep),
  create_new_suffixed_unlocated(Sep, Type, Inst, S0, S2),!.
 
-inst_sep('~').
-current_suffix('~1').
+inst_sep('_X').
+current_world_adv_suffix('_X1').
 
 %into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
 into_inst_name(Suffix, Type, Inst):- atom_codes(Suffix,Codes),last(Codes,Code),
@@ -62,11 +62,10 @@ init_objects_in_mutex :-
 
 
 create_missing_instances(S0, S2):-
- %gensym('~', Sym),
- Sym='~1',
+ current_world_adv_suffix(Suffix),
  Info = S0,
  TODO = S0,
- create_instances(Sym, Info, TODO, S0, S2), !.
+ create_instances(Suffix, Info, TODO, S0, S2), !.
 
 may_contain_insts(h).
 % may_contain_insts(holds_at).

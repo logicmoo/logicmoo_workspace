@@ -223,7 +223,7 @@ current_agent_(Agent):- mu_global:current_agent_tl(Agent), !.
 current_agent_(Agent):- current_input(InStream), mu_global:console_io_player(InStream, _, Agent).
 current_agent_(Agent):- current_output(OutStream), mu_global:console_io_player(_, OutStream, Agent).
 %current_agent_(Agent):- thread_self(Id), mu_global:console_host_io_history_unused(Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent).
-current_agent_('player~1').
+current_agent_('player_X1').
 
 :- dynamic(mu_global:need_redraw/1).
 overwrote_prompt(Agent):-
@@ -503,7 +503,7 @@ add_prepended_input_assert(Agent, Chars):- into_real_stream(Agent, In),
   assert(mu_global:already_consumed_input(In, New)).
 
 % showing debug info for Agent's IO streams
-user:ci:- ci('telnet~1').
+user:ci:- ci('telnet_X1').
 ci(Agent):-
  agent_to_input(Agent, In), forall(stream_property(In, P), dbug(ci, ins(P))),
  % line_position(In, LIn), dbug(ci, ins(line_position(In, LIn))),
