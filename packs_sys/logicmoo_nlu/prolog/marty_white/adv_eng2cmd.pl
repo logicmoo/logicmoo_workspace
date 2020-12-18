@@ -39,12 +39,13 @@
 :- use_module(library('logicmoo_nlu/parser_tokenize')).
 
 
-:- parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)).
-:- parser_pldata:use_module(library(logicmoo_nlu/parser_pldata)).
-:- parser_chat80:use_module(library(logicmoo_nlu/parser_chat80)).
-%:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_utility)).
-%:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_commands)).
-%:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)).
+%:- parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)).
+%:- parser_pldata:use_module(library(logicmoo_nlu/parser_pldata)).
+%:- parser_chat80:use_module(library(logicmoo_nlu/parser_chat80)).
+
+% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_utility)).
+% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_commands)).
+% %:- parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)).
 
 
 
@@ -597,8 +598,8 @@ parse_imperative_movement(Doer, [ExitName], go_dir(Doer, walk, ExitName), M) :-
 
 parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
 
-% x shelf~1
-% go on shelf~1
+% x shelf_X1
+% go on shelf_X1
 
 txt2goto(Doer, run, [], go_dir(Doer, run, escape), _Mem) :- !.
 txt2goto(Doer, Walk, [to, Prep| More], Logic, M) :- !, txt2goto(Doer, Walk, [Prep| More], Logic, M).

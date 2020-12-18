@@ -644,7 +644,7 @@ negated_boolean(Yes,No):- true_2_false(Yes,No),!.
 negated_boolean(No,Yes):- true_2_false(Yes,No),!.
 
 true_2_false(t,f).
-true_2_false(1,0)
+true_2_false(1,0).
 true_2_false(true,false).
 true_2_false(y,n).
 true_2_false(yes,no).

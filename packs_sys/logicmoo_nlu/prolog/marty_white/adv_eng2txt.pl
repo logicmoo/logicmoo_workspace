@@ -89,7 +89,7 @@ compile_eng(Context, [AN, Apple|More], Text) :-
  name(TxtApple, [A|_]),
  char_type(A, to_lower(Vowel)),
  (adv_vowel(Vowel) -> atom_concat('an ', TxtApple, Text);atom_concat('a ', TxtApple, Text)).
-% mu:compile_eng([agent('player~1'), person('player~1')], a(floyd), _64404)
+% mu:compile_eng([agent(player_X1), person(player_X1)], a(floyd), _64404)
 compile_eng(Context, [First|Rest], [First2|Rest2]) :-
  compile_eng(Context, First, First2),
  compile_eng(Context, Rest, Rest2), !.

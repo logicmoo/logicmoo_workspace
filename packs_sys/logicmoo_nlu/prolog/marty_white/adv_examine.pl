@@ -19,17 +19,17 @@
 
 /*
 nearby_objs(Agent, Here, Nearby, S0):-
- ignore(h(At, Agent, Here, S0)),
+ ignore(g_h(At, Agent, Here, S0)),
  findall_set(What,
-   (h(At, What, Here, S0),
+   (g_h(At, What, Here, S0),
     sub_objs(descended, Here, What, S0)),
    Nearby).
 */
 
 sub_objs(At, Here, What, S0):-
-  h(At, What, Here, S0),
- \+ ((h(inside, What, Container, S0),
-   Container\==Here, h(descended, Container, Here, S0))).
+  g_h(At, What, Here, S0),
+ \+ ((g_h(inside, What, Container, S0),
+   Container\==Here, g_h(descended, Container, Here, S0))).
 
 
 sense_object_exitnames(Sense, Depth, PrepIn, Object, 
@@ -38,7 +38,7 @@ sense_object_exitnames(Sense, Depth, PrepIn, Object,
 sense_object_exitnames(_Sense,_Depth, _PrepIn, _Object, [], _S0):- !.
 
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
-  findall(Direction, h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+  findall(Direction, g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
 prep_object_exitnames(_Sense, _Depth, in, _Object, [escape], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, on, _Object, [escape], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, under, _Object, [escape], _S0) :- !.
@@ -46,7 +46,7 @@ prep_object_exitnames(_Sense, _Depth, at, _Object, [escape], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
 /*
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
-  findall(h(exit(Direction), Object, _), h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+  findall(h(exit(Direction), Object, _), g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
 prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(exit(escape), Object, _)], _S0) :- member(InOnUnderAt,[in,on,under,at]),!.
 prep_object_exitnames(_Sense, _Depth, Direction, _Object, [h(exit(reverse(Direction)), Object, _)], _S0) :- !.
 %prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
@@ -172,13 +172,13 @@ child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object)
 */
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
  findall_set1(h(At, What, Object),
-  (h(At, What, Object, S1),
+  (g_h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).
 
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):-
  findall_set1(What,
-  (h(At, What, Object, S1),
+  (g_h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).
 

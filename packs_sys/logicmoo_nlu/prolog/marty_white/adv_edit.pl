@@ -35,6 +35,9 @@ include_functor(List, P):- compound(P), safe_functor(P, F, _), member(F, List), 
 
 :- defn_state_setter(do_metacmd(agent, action)).
 
+do_metacmd(Doer, in_world(Agent,World,Cmd), S0, S1):- !, find_world(World,W0,W1),
+  do_metacmd(Agent, Cmd, W0, W1),!.
+ 
 do_metacmd(Doer, quit(Agent)) -->
  declare(wishes(Agent, quit)),
  {player_format(Doer, 'logging off~w ~n', [Agent]),
@@ -161,7 +164,7 @@ do_metacmd(Doer, inspect(Self, getprop(Target, NamedProperty)), S0, S0) :-
 do_metacmd(Doer, rez(Type), S0, S9) :-
  must_security_of(Doer, wizard),
  must_mw1((mu_current_agent(Agent),
- h(Prep, Agent, Here, S0),
+ g_h(Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
  declare(h(Prep, Object, Here), S1, S9),
  player_format(Doer, 'You now see a ~w.~n', [Object]))).
