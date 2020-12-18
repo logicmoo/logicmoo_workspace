@@ -2,7 +2,8 @@
           
 area_test1 :-
 	get_advstate(S0),
-	Action = goto_loc('player_X1', walk, pantry),
+        current_player(Player),
+	Action = goto_loc(Player, walk, pantry),
 	action_doer(Action,Agent),
 	pprint(Agent,general),
 	must_act(Action,S0,S2),
@@ -12,7 +13,8 @@ area_test1 :-
 
 area_test1a :-
 	get_advstate(S0),
-	Action = go_dir('player_X1', walk, north),
+        current_player(Player),
+	Action = go_dir(Player, walk, north),
 	action_doer(Action,Agent),
 	pprint(Agent,general),
 	must_act(Action,S0,S2),
@@ -45,7 +47,8 @@ area_test5 :-
 	api_invoke(add_todo(Agent, goto_loc(Agent, walk, pantry))).
 
 area_test6 :-	
-	add_agent_todo('player_X1',goto_loc('player_X1',walk,basement)),
+        current_player(Player),
+	add_agent_todo(Player,goto_loc(Player,walk,basement)),
         get_advstate(S2),
 	view(S2).
 
