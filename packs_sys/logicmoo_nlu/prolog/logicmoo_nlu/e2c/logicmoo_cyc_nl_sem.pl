@@ -101,7 +101,7 @@ throwOnFailure(X):-trace, not(X).
 :- endif.
 
 
-todo(X):-notrace(noteFmt('~q', todo(X))).
+todo(X):-notrace(noteFmt('~q', todo(Agent,X))).
 
 
 printAndThrow(F, A):-sformat(S, F, A), write(user, S), nl(user), flush_output(user), trace, throw(error(representation_error(S), context(printAndThrow/2, S))).

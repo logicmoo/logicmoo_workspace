@@ -76,7 +76,7 @@ aXiom( Action) ==>>
 :- defn_state_getter(eng2cmd(agent, english, action)).
 aXiom(do_english(Agent, English)) ==>>
  eng2cmd(Agent, English, Action),
- add_todo(Agent, Action).
+ add_todo( Agent, Action).
 
 aXiom(todo_english(Agent, English)) ==>> !,
   {assertz(mu_global:console_tokens(Agent, English))}.
@@ -181,8 +181,8 @@ aXiom(make_true(Doer, h(in, Agent, There))) ==>>
 aXiom(make_true(Agent, FACT)) ==>>
   add_agent_goal(Agent, FACT).
 
-aXiom(add_todo(Agent, TODO)) ==>>
-  add_agent_todo(Agent, TODO).
+aXiom(add_todo( Agent, TODO)) ==>>
+  add_agent_todo( Agent, TODO).
 
 aXiom(follow_plan(Agent, Name, [])) ==>> !,
   send_1percept(Agent, [success(followed_plan(Agent, Name))]).

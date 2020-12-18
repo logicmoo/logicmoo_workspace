@@ -59,13 +59,13 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
 realize_model_exit(At, From, _Timestamp, M0, M2) :-
  forget((h(exit(At), From, To)), M0, M1),
- append([(h(exit(At), From, To))], M1, M2).
+ memorize_l([(h(exit(At), From, To))], M1, M2).
 realize_model_exit(At, From, _Timestamp, M0, M1) :-
- append([(h(exit(At), From, '<mystery>'(exit, At, From)))], M0, M1).
+ memorize_l([(h(exit(At), From, '<mystery>'(exit, At, From)))], M0, M1).
 
 update_model_exit(At, From, To, _Timestamp, M0, M2) :-
- select_always((h(exit(At), From, _To)), M0, M1),
- append([(h(exit(At), From, To))], M1, M2).
+ forget_always((h(exit(At), From, _To)), M0, M1),
+ memorize_l([(h(exit(At), From, To))], M1, M2).
 
 
 % Model exits from Here.
@@ -85,7 +85,7 @@ update_model(Knower, arriving(Agent, In, Here, Walk, ExitNameReversed), Timestam
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
 % copy_term(Figment, FreshFigment),
-% append(RecentMemory, [Figment|_Tail], Memory),
+% memorize(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
 update_model(Knower, arriving(Agent, At, Here, _, ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower == Agent,
@@ -170,7 +170,7 @@ well_remembered(none).
 
 maybe_remember(Percept, M0, M0):- safe_functor(Percept, F, _), well_remembered(F), !.
 %maybe_remember(percept_props(Whom, see, What, Depth, _List), M0, M1):- maybe_remember(percept_props(Whom, see, WhatDepth, ), M0, M1), !.
-maybe_remember(Percept, M0, M1):- append([Percept], M0, M1).
+maybe_remember(Percept, M0, M1):- memorize(Percept, M0, M1).
 
 each_update_model(_Agent, [], _Timestamp, _Memory, M, M).
 each_update_model( Agent, [Percept|Tail], Timestamp, Memory, M0, M3) :-

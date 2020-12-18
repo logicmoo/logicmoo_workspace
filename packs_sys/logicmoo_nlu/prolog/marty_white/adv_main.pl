@@ -218,7 +218,7 @@ create_agent_conn(Agent, Named, Info):-
 :- dynamic(mu_global:console_tokens/2).
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
- thought(todo([Action|_]), Mem0),
+ thought( todo(Agent, [Action|_]), Mem0),
  (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  dbug(telnet, '~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action]).
 
@@ -227,7 +227,7 @@ telnet_decide_action(Agent, Mem0, Mem1) :-
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(telnet, 'Telnet TODO ~p~n', [Agent: Words->Action])),
- add_todo(Agent, Action, Mem0, Mem1))), !.
+ add_todo( Agent, Action, Mem0, Mem1))), !.
 telnet_decide_action(Agent, Mem, Mem) :-
  nop(dbug(telnet, '~w: Can\'t think of anything to do.~n', [Agent])),
  fail.

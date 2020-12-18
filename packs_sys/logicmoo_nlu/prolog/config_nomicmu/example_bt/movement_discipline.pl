@@ -7,7 +7,7 @@ person_leave_house(Person) ==>>
        (   sick_with_illness(Person,Illness) ;
      exhibiting_any_symptoms_of_illness(Person,Illness)) ->
        (   abort(leave_house(Person)),
-     add_todo(Person,stay_home(Person))) ;
+     add_todo( Person,stay_home(Person))) ;
        true
       )).
 

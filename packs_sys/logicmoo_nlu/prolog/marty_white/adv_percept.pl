@@ -200,9 +200,9 @@ problem_solution(stinky, smell, purity).
 problem_solution(noisy, hear, quiet).
 
 
-:- defn_mem_setter(percept_todo(agent, list(action))).
-percept_todo(Agent, Actions, Mem0, Mem2):- add_todo_all(Agent, Actions, Mem0, Mem2), !.
-%percept_todo(Agent, Actions, Mem0, Mem2):- apply_mapl_state(add_goal(Agent), Actions, Mem0, Mem2).
+:- defn_mem_setter(percept_todo( agent, list(action))).
+percept_todo( Agent, Actions, Mem0, Mem2):- add_todo_all(Agent, Actions, Mem0, Mem2), !.
+%percept_todo( Agent, Actions, Mem0, Mem2):- apply_mapl_state(add_goal(Agent), Actions, Mem0, Mem2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -232,7 +232,7 @@ process_percept_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
- percept_todo(Agent, Actions, Mem0, Mem2).
+ percept_todo( Agent, Actions, Mem0, Mem2).
 
 process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
@@ -326,8 +326,8 @@ end_of_file.
 
 player_X1@[does]> s
 s
-inner_dialog(intend_todo([ go_dir(player_X1,walk,south) ])).
-inner_dialog(intend_todo([])).
+inner_dialog(intend_todo( [ go_dir(player_X1,walk,south) ])).
+inner_dialog(intend_todo( [])).
 inner_dialog(timestamp(63,653)).
 inner_dialog(attempts(player_X1,
                 go_dir(player_X1,walk,south))).
@@ -341,8 +341,8 @@ player came walking north in garden
 ( Success: walk south )
 player_X1@[does]> look
 look
-inner_dialog(intend_todo([ look(player_X1) ])).
-inner_dialog(intend_todo([])).
+inner_dialog(intend_todo( [ look(player_X1) ])).
+inner_dialog(intend_todo( [])).
 inner_dialog(timestamp(64,656.6)).
 inner_dialog(attempts(player_X1,
                 look(player_X1))).
@@ -366,17 +366,17 @@ inner_dialog(h(in,rock_X2,garden)).
 inner_dialog(h(in,mushroom_X1,garden)).
 inner_dialog(h(in,brklamp,garden)).
 Player_X1 sees in garden: fountain , rock , rock , mushroom and brklamp.
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2) ])).
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2) ])).
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2) ])).
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2) ])).
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2) ])).
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,fountain_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
@@ -386,7 +386,7 @@ Exits in garden are: north.
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,fountain_X1,2)
 
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,rock_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
@@ -402,7 +402,7 @@ inner_dialog(attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X1,2)
 
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,'rock_X2',2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(66,656.7)).
@@ -415,7 +415,7 @@ inner_dialog(attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X2,2)
 
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,mushroom_X1,2),
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(67,656.8)).
 inner_dialog(attempts(player_X1,
@@ -427,7 +427,7 @@ inner_dialog(attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,mushroom_X1,2)
 
-inner_dialog(intend_todo([ sub__examine(player_X1,see,child,brklamp,2) ])).
+inner_dialog(intend_todo( [ sub__examine(player_X1,see,child,brklamp,2) ])).
 inner_dialog(timestamp(68,656.8)).
 inner_dialog(attempts(player_X1,
                 sub__examine(player_X1,see,child,mushroom_X1,2))).
@@ -438,7 +438,7 @@ inner_dialog(attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,brklamp,2)
 
-inner_dialog(intend_todo([])).
+inner_dialog(intend_todo( [])).
 inner_dialog(timestamp(69,656.9)).
 inner_dialog(attempts(player_X1,
                 sub__examine(player_X1,see,child,brklamp,2))).

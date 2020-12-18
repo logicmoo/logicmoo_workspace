@@ -121,31 +121,31 @@ do_command(Agent, Action) :-
 % --------
 
 /*
-new_do_todo(Agent):-
+new_do_todo( Agent):-
  get_advstate(S0),
- do_todo(Agent, S0, S9),
+ do_todo( Agent, S0, S9),
  set_advstate(S9), !.
 */
-:- defn_state_setter(do_todo(+agent)).
+:- defn_state_setter(do_todo( +agent)).
 
-do_todo(Agent) ==>>
+do_todo( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
- {member(todo([]), Mem0)}, !.
-do_todo(Agent, S0, S9) :-
+ {member( todo(Agent, []), Mem0)}, !.
+do_todo( Agent, S0, S9) :-
  undeclare(memories(Agent, Mem0), S0, S1),
- forget(todo(OldToDo), Mem0, Mem1),
+ forget( todo(Agent, OldToDo), Mem0, Mem1),
  append([Action], NewToDo, OldToDo),
- memorize(todo(NewToDo), Mem1, Mem2),
+ memorize( todo(Agent, NewToDo), Mem1, Mem2),
  declare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  do_command(Agent, Action, S2, S9).
-do_todo(_Agent, S0, S0).
+do_todo( _Agent, S0, S0).
 
 
 
 %do_todo_while(Agent, S0, S9) :-
 % declared(memories(Agent, Mem0), S0),
-% thought(todo(ToDo), Mem0),
+% thought( todo(Agent, ToDo), Mem0),
 % append([Action], NewToDo, OldToDo),
 
 
@@ -349,16 +349,16 @@ reverse_dir(Dir, reverse(Dir), _).
 /* 
 creates:
 
-add_agent_todo(Agent, Action):-
+add_agent_todo( Agent, Action):-
  get_advstate(S0),
- add_agent_todo(Agent, Action, S0, S9),
+ add_agent_todo( Agent, Action, S0, S9),
  get_advstate(S9).
 */
-:- defn_state_setter(add_agent_todo(agent, action)).
+:- defn_state_setter(add_agent_todo( agent, action)).
 
-add_agent_todo(Agent, Action, S0, S9) :-
+add_agent_todo( Agent, Action, S0, S9) :-
   undeclare(memories(Agent, Mem0), S0, S1),
-  add_todo(Agent, Action, Mem0, Mem1),
+  add_todo( Agent, Action, Mem0, Mem1),
   declare(memories(Agent, Mem1), S1, S9).
 
 add_agent_goal(Agent, Action, S0, S9) :-
@@ -368,7 +368,7 @@ add_agent_goal(Agent, Action, S0, S9) :-
 
 add_look(Agent) ==>>
   h(inside, Agent, _Somewhere),
-  add_agent_todo(Agent, look(Agent)).
+  add_agent_todo( Agent, look(Agent)).
 
 
 :- defn_state_none(action_doer(action, -agent)).
