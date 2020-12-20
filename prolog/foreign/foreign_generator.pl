@@ -1955,6 +1955,7 @@ match_known_type(string(A),         _, _, string('char*'), A) --> [].
 match_known_type(ptr(A),            _, _, pointer-'void*', A) --> [].
 match_known_type(long(A),           _, _, long-long,       A) --> [].
 match_known_type(int(A),            _, _, integer-int,     A) --> [].
+match_known_type(int64(A),          _, _, int64-int64_t,   A) --> [].
 match_known_type(nnegint(A),        _, _, integer-'unsigned int', A) --> [].
 match_known_type(integer(A),        _, _, integer-int,     A) --> [].
 match_known_type(character_code(A), _, _, char_code-char,  A) --> [].

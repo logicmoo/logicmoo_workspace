@@ -40,6 +40,7 @@
            (native)/2,
            fimport/1,
            fimport/2,
+           int64/1,
            long/1,
            returns/2,
            parent/2,
@@ -131,6 +132,9 @@ long(Long) :- int(Long).
 
 :- type size_t/1 # "Defines a size".
 size_t(Size) :- nnegint(Size).
+
+:- type int64/1 # "Defines a 64 bits integer".
+int64(I) :- int(I).
 
 %!  array(:Type, Dimensions:list(nnegint), Array)
 %
