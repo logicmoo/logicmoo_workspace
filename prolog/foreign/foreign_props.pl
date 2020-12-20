@@ -35,11 +35,14 @@
 :- module(foreign_props,
           [foreign/1,
            foreign/2,
-           namespec/1,
+           foreign_spec/1,
            (native)/1,
            (native)/2,
+           normalize_ftype/2,
            fimport/1,
            fimport/2,
+           nimport/1,
+           nimport/2,
            int64/1,
            long/1,
            returns/2,
@@ -66,12 +69,7 @@
 :- use_module(library(plprops)).
 :- use_module(library(extend_args)).
 :- use_module(library(mapargs)).
-
-:- global foreign/1.
-foreign(G) :- call(G).
-
-:- global foreign/2.
-foreign(_, G) :- call(G).
+:- use_module(library(neck)).
 
 % Define the equivalent type in C
 :- global genfdef/1.
@@ -81,33 +79,52 @@ genfdef(G) :- call(G).
 :- global typedef/1.
 typedef(G) :- call(G).
 
+:- type foreign_spec/1.
 
-:- type namespec/1.
+foreign_spec(name(  Name  )) :- atm(Name).
+foreign_spec(prefix(Prefix)) :- atm(Prefix).
+foreign_spec(suffix(Suffix)) :- atm(Suffix).
+foreign_spec(lang(Lang)) :- lang(Lang).
 
-namespec(name(  Name  )) :- atm(Name).
-namespec(prefix(Prefix)) :- atm(Prefix).
-namespec(suffix(Suffix)) :- atm(Suffix).
+:- type lang/1.
+lang(prolog).
 
-%!  native(+NameSpec, :Predicate)
+normalize_ftype(native( O, G), native( O, G)).
+normalize_ftype(foreign(O, G), foreign(O, G)).
+normalize_ftype(fimport(O, G), foreign([lang(prolog), O], G)).
+normalize_ftype(native(    G), native( [prefix(pl_)], G)).
+normalize_ftype(foreign(   G), foreign([prefix('')], G)).
+normalize_ftype(fimport(   G), foreign([lang(prolog), prefix('')], G)).
+normalize_ftype(nimport(O, G), native( [lang(prolog), O], G)).
+normalize_ftype(nimport(   G), native( [lang(prolog), prefix('')], G)).
+
+%!  native(+ForeignSpec, :Predicate)
 %
-%   Predicate is implemented in C as specified by NameSpec.
-
-:- global native(namespec, callable).
-native(_, G) :- call(G).
+%   Predicate is implemented in C as specified by ForeignSpec.
 
 %!  native(:Predicate)
 %
 %   Predicate is implemented in C with a pl_ prefix.
 
-:- global declaration (native)/1.
+:- global native( nlist(foreign_spec), callable).
+:- global foreign(nlist(foreign_spec), callable).
+:- global fimport(nlist(foreign_spec), callable).
+:- global nimport(nlist(foreign_spec), callable).
+:- global native( callable).
+:- global foreign(callable).
+:- global fimport(callable).
+:- global nimport(callable).
 
-native(X) :- native(prefix(pl_), X).
-
-:- global fimport/1.
-fimport(G) :- call(G).
-
-:- global fimport/2.
-fimport(_, G) :- call(G).
+H :-
+    normalize_ftype(H, N),
+    ( H == N
+    ->functor(H, _, A),
+      arg(A, H, G),
+      B = call(G)
+    ; B = N
+    ),
+    necki,
+    B.
 
 :- global returns/2.
 returns(_, G) :- call(G).
