@@ -21,7 +21,7 @@ test_trill:-
 
 :- begin_tests(trill_brca, []).
 
-:- ensure_loaded(library('examples/BRCA.pl')).
+:- consult(library('examples/BRCA.pl')).
 
 test(p_wlbrcr_h):-
   run((prob_instanceOf('WomanUnderLifetimeBRCRisk','Helen',Prob),close_to(Prob,0.123))).
@@ -37,7 +37,7 @@ test(ne_wa_wulbrcr):-
 
 :- begin_tests(trill_vicodi, []).
 
-:-ensure_loaded(library(examples/vicodi)).
+:- consult(library(examples/vicodi)).
 
 test(p_r_avdpf):-
   run((prob_instanceOf('vicodi:Role','vicodi:Anthony-van-Dyck-is-Painter-in-Flanders',Prob),close_to(Prob,0.27540000000000003))).
@@ -49,7 +49,7 @@ test(p_p_r):-
 
 :- begin_tests(trill_commander, []).
 
-:-ensure_loaded(library(examples/commander)).
+:- consult(library(examples/commander)).
 
 test(e_c_j):-
   run((instanceOf(commander,john,Expl),
@@ -61,7 +61,7 @@ test(e_c_j):-
 
 :- begin_tests(trill_peoplePets, []).
 
-:-ensure_loaded(library(examples/peoplePets)).
+:- consult(library(examples/peoplePets)).
 
 test(p_nl_k):-
   run((prob_instanceOf('natureLover','Kevin',Prob),close_to(Prob,0.8696))).
@@ -73,7 +73,7 @@ test(ne_nl_k):-
 
 :- begin_tests(trill_biopax, []).
 
-:-ensure_loaded(library(examples/biopaxLevel3)).
+:- consult(library(examples/biopaxLevel3)).
 
 test(p_twbr_e):-
   run((prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
@@ -98,7 +98,7 @@ test(ae_twbr_e):-
 
 :- begin_tests(trill_biopax_rdf, []).
 
-:-ensure_loaded(library(trill)).
+:- ensure_loaded(library(trill)).
 
 test(p_twbr_e):-
   run((init_trill(trill),load_owl_kb('../examples/biopaxLevel3_rdf.owl'),prob_sub_class('biopax:TransportWithBiochemicalReaction','biopax:Entity',Prob),close_to(Prob,0.98))).
@@ -124,7 +124,7 @@ test(ae_twbr_e):-
 
 :- begin_tests(trill_dbpedia, []).
 
-:-ensure_loaded(library('examples/DBPedia.pl')).
+:- consult(library('examples/DBPedia.pl')).
 
 test(p_p_pp):-
   run((prob_sub_class('dbpedia:Place','dbpedia:PopulatedPlace',Prob),close_to(Prob,0.8273765902816))).
@@ -138,7 +138,7 @@ test(ae_p_pp):-
 
 :- begin_tests(trill_johnEmployee, []).
 
-:-ensure_loaded(library(examples/johnEmployee)).
+:- consult(library(examples/johnEmployee)).
 
 test(e_p_j):-
   run((instanceOf('johnEmployee:person','johnEmployee:john',Expl),
@@ -150,7 +150,7 @@ test(e_p_j):-
 
 :- begin_tests(trill_pizza, []).
 
-:- ensure_loaded(library(examples/pizza)).
+:- consult(library(examples/pizza)).
 
 test(p_inc_kb):-
   run((prob_inconsistent_theory(Prob),close_to(Prob,0.0))).
@@ -165,7 +165,7 @@ test(e_uns_tof):-
 
 :- begin_tests(non_det, []).
 
-:-ensure_loaded(library(examples/example_or_rule)).
+:- consult(library(examples/example_or_rule)).
 
 test(p_u_a):-
   run((prob_unsat(a,Prob),close_to(Prob,0.03393568))).
@@ -185,7 +185,7 @@ test(e_u_a):-
 
 :- begin_tests(non_det_max, []).
 
-:-ensure_loaded(library(examples/example_max_rule)).
+:- consult(library(examples/example_max_rule)).
 
 test(e_i):-
   run((all_inconsistent_theory(Expl),
@@ -200,7 +200,7 @@ test(e_i):-
 
 :- begin_tests(local_cons, []).
 
-:-ensure_loaded(library(examples/local_inconsistent_kb)).
+:- consult(library(examples/local_inconsistent_kb)).
 
 
 %test(p_in):-
