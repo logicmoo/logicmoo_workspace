@@ -483,3 +483,26 @@ ls
 eggdrop
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
+cd /opt
+cd /opt/logicmoo_workspace
+ls
+cd packs_sys/eggdrop/conf/
+eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
+ls
+./StartMUD.sh 
+./StartMUD.sh -v
+./StartMUD.sh -
+sh --help
+bash --help
+source --help
+source --debug ./StartMUD.sh 
+source ./StartMUD.sh --debug
+pip3 install dbus
+pip -vvv install numpy
+pip download nump
+pip download numpy
+pip3 download numpy
+rm -Rf ~/.cache/pip/
+pip3 download numpy

@@ -32,7 +32,7 @@ export OLDPWD="`pwd`"
 export NEWPWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #export SWIPL=/usr/local/lib/swipl-7.1.11/bin/x86_64-linux/swipl
 
-pip3 install tornado asyncio butterfly
+#pip3 install tornado asyncio butterfly
 
 # export LD_LIBRARY_PATH=/usr/lib/jvm/java-8-oracle/jre/lib/amd64/server/
 export LD_LIBRARY_PATH=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server

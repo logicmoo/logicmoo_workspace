@@ -88,7 +88,7 @@ get_goals(Goals) :-
 	get_advstate(S0),
         current_player(Player),
 	member(memories(Player,M),S0),
-	member( todo(Agent, Goals),M).
+	member( todo(Player, Goals),M).
                   
 % TODO write this
 %aXiom(view(Item)) ==>>
