@@ -8,20 +8,26 @@ logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
 packs_xtra\packs_xtra.vpj=Release
 [TreeExpansion2]
-- logicmoo_workspace.vpj
-  + eclipse-workspace\.sonarlint
-    + modules
-      + BW4Thuman
-        + issues
-      + External Prolog Files
-        + issues
-      + ProDTTest
-        + issues
-      + WumpusAgents
-        + issues
+-@ logicmoo_workspace.vpj
   + bin
     + old-scripts
+  + docs
+    + _build
+      + doctrees
+      + html
+        + _sources
+        + _static
   + eclipse-workspace
+    + .sonarlint
+      + modules
+        + BW4Thuman
+          + issues
+        + External Prolog Files
+          + issues
+        + ProDTTest
+          + issues
+        + WumpusAgents
+          + issues
     + BW4Thuman
     + External Prolog Files
     + logicmoo_pfc_example
@@ -30,8 +36,8 @@ packs_xtra\packs_xtra.vpj=Release
     + RemoteSystemsTempFiles
     + sdfasd
     + WumpusAgents
-  - etc
-    - profile.d
+  + etc
+    + profile.d
   + lib
     + cmake
       + swipl
@@ -130,6 +136,23 @@ packs_xtra\packs_xtra.vpj=Release
             + swi
             + trace
             + xref
+  + node_modules
+    + axios
+      + dist
+      + lib
+        + adapters
+        + core
+        + helpers
+    + contentful
+      + dist
+    + contentful-resolve-response
+    + contentful-sdk-core
+    + fast-copy
+      + dist
+    + follow-redirects
+    + json-stringify-safe
+    + qs
+      + test
   + packs_lib
     + aleph
       + prolog
@@ -155,32 +178,32 @@ packs_xtra\packs_xtra.vpj=Release
       + tests
         + foreign
           + include
-    - auc
+    + auc
       + prolog
         + examples
     + bddem
       + cudd-3.0.0
-        + cplusplus\.deps
-        + cudd\.deps
-        + dddmp\.deps
-        + epd\.deps
-        + mtr\.deps
-        + nanotrav\.deps
-        + st\.deps
-        + util\.deps
         + build-aux
         + cplusplus
+          + .deps
         + cudd
+          + .deps
         + dddmp
+          + .deps
           + doc
           + exp
         + doc
         + epd
+          + .deps
         + m4
         + mtr
+          + .deps
         + nanotrav
+          + .deps
         + st
+          + .deps
         + util
+          + .deps
       + prolog
     + cplint
       + docs
@@ -345,10 +368,8 @@ packs_xtra\packs_xtra.vpj=Release
         + checkers
       + tests
   - packs_sys
-    + logicmoo_ec\.github
-      + ISSUE_TEMPLATE
     + body_reordering
-      - prolog
+      + prolog
       + t
     + dictoo
       + prolog
@@ -357,7 +378,7 @@ packs_xtra\packs_xtra.vpj=Release
       + JanWielemaker-rserve_client-1965cf2
     + eggdrop
       + conf
-      - prolog
+      + prolog
       + t
     + gvar_syntax
       + prolog
@@ -366,10 +387,10 @@ packs_xtra\packs_xtra.vpj=Release
       + prolog
       + t
     + logicmoo_agi
-      - ImportantDocs
-        - jmc
-      - prolog
-        - agi_lib
+      + ImportantDocs
+        + jmc
+      + prolog
+        + agi_lib
         + MIndiGolog
           + listings
     + logicmoo_base
@@ -378,20 +399,6 @@ packs_xtra\packs_xtra.vpj=Release
           + common_logic
           + motel
           + pdt_server
-            + pdt.analysis\.settings
-            + pdt.builder\.settings
-            + pdt.common\.settings
-            + pdt.connector.tests\.settings
-            + pdt.connector\.settings
-            + pdt.console\.settings
-            + pdt.editor\.settings
-            + pdt.graphicalviews\.settings
-            + pdt.navigator\.settings
-            + pdt.plunit\.settings
-            + pdt.refactoring\.settings
-            + prolog.connector.tests\.settings
-            + prolog.connector\.settings
-            + PrologBenchmarkTool\.settings
             + PDT Examples
               + CTeditorTests
               + editor
@@ -406,9 +413,11 @@ packs_xtra\packs_xtra.vpj=Release
               + outline
               + search
             + pdt.analysis
+              + .settings
               + META-INF
               + pl
             + pdt.builder
+              + .settings
               + example_files
                 + meta_finder_examples
               + META-INF
@@ -417,6 +426,7 @@ packs_xtra\packs_xtra.vpj=Release
                 + analyzer
                 + util
             + pdt.common
+              + .settings
               + icons
               + META-INF
               + pl
@@ -426,6 +436,7 @@ packs_xtra\packs_xtra.vpj=Release
                 + xref
                   + testcase
             + pdt.connector
+              + .settings
               + META-INF
                 + maven
                   + org.cs3.roots
@@ -441,12 +452,15 @@ packs_xtra\packs_xtra.vpj=Release
               + pl
                 + lgt
             + pdt.connector.tests
+              + .settings
               + META-INF
             + pdt.console
+              + .settings
               + icons
               + META-INF
               + pl
             + pdt.editor
+              + .settings
               + doc
               + icons
               + META-INF
@@ -472,6 +486,7 @@ packs_xtra\packs_xtra.vpj=Release
               + META-INF
             + pdt.feature
             + pdt.graphicalviews
+              + .settings
               + icons
                 + help
               + lib
@@ -479,12 +494,14 @@ packs_xtra\packs_xtra.vpj=Release
               + pl
                 + lgt
             + pdt.navigator
+              + .settings
               + icons
               + META-INF
                 + maven
                   + org.cs3.roots
                     + org.cs3.pdt.navigator
             + pdt.plunit
+              + .settings
               + META-INF
               + src
                 + org
@@ -492,9 +509,11 @@ packs_xtra\packs_xtra.vpj=Release
                     + plunit
                       + framework
             + pdt.refactoring
+              + .settings
               + META-INF
             + pdt.updatesite
             + prolog.connector
+              + .settings
               + META-INF
                 + maven
                   + org.cs3.roots
@@ -517,6 +536,7 @@ packs_xtra\packs_xtra.vpj=Release
                             + socket
                         + process
             + prolog.connector.tests
+              + .settings
               + META-INF
             + prolog.library
               + META-INF
@@ -525,6 +545,7 @@ packs_xtra\packs_xtra.vpj=Release
                     + org.cs3.prolog.library
               + pl
             + PrologBenchmarkTool
+              + .settings
               + example
               + resources
           + pfc
@@ -569,11 +590,11 @@ packs_xtra\packs_xtra.vpj=Release
           + cyc
         + KBs
     + logicmoo_cg
-      - prolog
+      + prolog
         + cgp_lib
         + cgt
           + cge
-        - dialect
+        + dialect
       + test
         + cg
           + cgifCharGer
@@ -708,6 +729,8 @@ packs_xtra\packs_xtra.vpj=Release
         + synergy
           + cgifCharGer
     + logicmoo_ec
+      + .github
+        + ISSUE_TEMPLATE
       + docs
         + files
           + driverlog
@@ -766,65 +789,65 @@ packs_xtra\packs_xtra.vpj=Release
           + worlds
             + flp
         + PKnows
-          - epaths
-          - leantap
-            - application
-            - code
-              - scratch
-                - MIndiGolog_mercury
-            - social
-              - cssepg06
-            - talks
-              - agentlab
-              - pg_sem
-            - writings
-              - coop_golog
-                - aaai06
-                  - listings
-                - aamas06
-                  - listings
-                - ai06
-                  - listings
-                - code
-                  - MIndiGolog
-                    - listings
-                - iat06
-                  - listings
-              - poster2005
-          - otter
+          + epaths
+          + leantap
             + application
-            - code
-              - scratch
+            + code
+              + scratch
                 + MIndiGolog_mercury
-                - pcond
             + social
               + cssepg06
             + talks
               + agentlab
               + pg_sem
-            - writings
-              - coop_golog
+            + writings
+              + coop_golog
                 + aaai06
                   + listings
                 + aamas06
                   + listings
                 + ai06
                   + listings
-                - code
-                  - MIndiGolog
+                + code
+                  + MIndiGolog
+                    + listings
+                + iat06
+                  + listings
+              + poster2005
+          + otter
+            + application
+            + code
+              + scratch
+                + MIndiGolog_mercury
+                + pcond
+            + social
+              + cssepg06
+            + talks
+              + agentlab
+              + pg_sem
+            + writings
+              + coop_golog
+                + aaai06
+                  + listings
+                + aamas06
+                  + listings
+                + ai06
+                  + listings
+                + code
+                  + MIndiGolog
                     + listings
                 + iat06
                   + listings
               + poster2005
           + pgrad
-            - code
-              - Goloz
-              - MIndiGolog
-                - listings
-              - pknows
+            + code
+              + Goloz
+              + MIndiGolog
+                + listings
+              + pknows
                 + vpdl
-              - scratch
-                - fosg
+              + scratch
+                + fosg
                 + MIndiGolog_mercury
                 + pcond
               + thesis
@@ -881,12 +904,12 @@ packs_xtra\packs_xtra.vpj=Release
                   + jointexec
                   + mindigolog
           + pknows-some
-          - pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
-            - code
-              - Goloz
-              - MIndiGolog
-                - listings
-              - pknows
+          + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
+            + code
+              + Goloz
+              + MIndiGolog
+                + listings
+              + pknows
                 + vpdl
               + scratch
                 + fosg
@@ -895,9 +918,9 @@ packs_xtra\packs_xtra.vpj=Release
               + thesis
                 + MIndiGolog1
                 + MIndiGolog2
-            - social
-              - cssepg06
-            - talks
+            + social
+              + cssepg06
+            + talks
               + agentlab
                 + golog
               + completion
@@ -906,12 +929,12 @@ packs_xtra\packs_xtra.vpj=Release
                   + listings
                 + ijcai07
                 + kr08
-              - MERIT_08
+              + MERIT_08
               + pg_sem_06
               + pg_sem_07
               + pg_sem_08
               + rmit_agents
-            - writings
+            + writings
               + application
               + confs
                 + aaai06
@@ -930,18 +953,18 @@ packs_xtra\packs_xtra.vpj=Release
               + internal
                 + poster2005
                 + poster2007
-              - submitted-thesis
+              + submitted-thesis
                 + AHY9U3~9
-                - listings
-                  - background
-                  - jointexec
-                  - mindigolog
-              - thesis
+                + listings
+                  + background
+                  + jointexec
+                  + mindigolog
+              + thesis
                 + AHY9U3~9
-                - listings
-                  - background
-                  - jointexec
-                  - mindigolog
+                + listings
+                  + background
+                  + jointexec
+                  + mindigolog
           + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
             + code
               + Goloz
@@ -1107,12 +1130,12 @@ packs_xtra\packs_xtra.vpj=Release
       + prolog
         + ccalc
         + code_icl
-        - dialect
+        + dialect
           + logicmoo
         + ec_planner
         + hyhtn_pddl
           + ptools
-        - lps_pddl
+        + lps_pddl
       + test
         + domains_ocl
           + assTaxi
@@ -1304,20 +1327,20 @@ packs_xtra\packs_xtra.vpj=Release
       + nal-tests
         + multi_step
         + single_step
-      - prolog
+      + prolog
         + miles
           + doc
           + examples
           + gencon_instances
-        - multagnt
-        - nars
+        + multagnt
+        + nars
         + sldr_dl
         + sre_dna
       + unused
         + NetworkNAR
         + system_tests
         + unit_tests
-    + logicmoo_nlu
+    - logicmoo_nlu
       + data
         + WNprolog-1.6
           + prolog
@@ -1341,8 +1364,8 @@ packs_xtra\packs_xtra.vpj=Release
           + tests
             + ace
             + acewiki_aceowl
-            + Geography
             + geo
+            + Geography
             + no
             + ontograph_40
             + ontograph_ext
@@ -1353,8 +1376,8 @@ packs_xtra\packs_xtra.vpj=Release
           + words
             + acewiki_aceowl
             + clex
-            + Geography
             + geo
+            + Geography
             + ontograph_40
             + Simple
             + test
@@ -1815,16 +1838,18 @@ packs_xtra\packs_xtra.vpj=Release
                       + 2019-ncov
                         + downloads
           + plugins
-        - logicmoo_nlu
+        + logicmoo_nlu
           + e2c
         - marty_white
+        + marty_white.sav2
       + test
         + logicmoo_nlu
     + logicmoo_utils
-      - prolog
+      + prolog
+        + cpviz
         + debuggery
         + lm_utils
-        - logicmoo
+        + logicmoo
         + multivar
           + t
         + xlisting
@@ -1887,14 +1912,14 @@ packs_xtra\packs_xtra.vpj=Release
           + Python_xinetd
           + Standalone
         + swfobject
-      - prolog
-        - prologmud
+      + prolog
+        + prologmud
           + actions
           + mobs
             + affordance
           + objs
           + parsing
-          - server
+          + server
           + vworld
         + prologmud_web
           + src_assets
@@ -1906,46 +1931,36 @@ packs_xtra\packs_xtra.vpj=Release
             + model
             + mudconsole
       + t
-    - prologmud_samples
-      - prolog
-        + prologmud_sample_games\.config
-          + butterfly
-          + swi-prolog
-            + xpce
-        + prologmud_sample_games\.local
-          + bin
-          + lib
-            + python3.8
-              + site-packages
-                + asyncio
-                + asyncio-3.4.3.dist-info
-                + butterfly
-                  + bin
-                  + static
-                    + fonts
-                    + images
-                  + themes
-                    + C64
-                      + font
-                    + DOS
-                    + old-school
-                + butterfly-3.2.5.dist-info
-        - prologmud_sample_games
+    + prologmud_samples
+      + prolog
+        + prologmud_sample_games
+          + .config
+            + butterfly
+            + swi-prolog
+              + xpce
+          + .local
+            + bin
+            + lib
+              + python3.8
+                + site-packages
+                  + asyncio
+                  + asyncio-3.4.3.dist-info
+                  + butterfly
+                    + bin
+                    + static
+                      + fonts
+                      + images
+                    + themes
+                      + C64
+                        + font
+                      + DOS
+                      + old-school
+                  + butterfly-3.2.5.dist-info
           + attic
           + btepisode
-          + cache
-            + url
-              + 66
-                + 3f
-              + e4
-                + 4a
           + circlemuddata
           + config-enabled-swish
             + gitty
-          + data
-            + avatars
-          + logtalk-scratch
-          + pack
           + src_game_nani
             + web
               + css
@@ -1989,11 +2004,11 @@ packs_xtra\packs_xtra.vpj=Release
             + Values
         + ikvm-native
         + PlConsole
+        + swicli
         + Swicli.Library
           + cmake
             + Modules
           + mindtouch.reflection
-        + swicli
         + swicliYap
     + wam_common_lisp
       + prolog
@@ -2014,7 +2029,7 @@ packs_xtra\packs_xtra.vpj=Release
           + lisp_8500
           + r6rs-plt-redex-model
   + packs_usr
-  - packs_web
+  + packs_web
     + butterfly
       + bin
       + butterfly
@@ -3036,11 +3051,11 @@ packs_xtra\packs_xtra.vpj=Release
         + python-wheels
     + ClioPatria
       + api
-      - applications
+      + applications
         + help
       + client
         + Java
-      - components
+      + components
       + config-available
       + cpack
       + entailment
@@ -3115,18 +3130,18 @@ packs_xtra\packs_xtra.vpj=Release
                   + sam
       + Windows
     + logicmoo_webui
-      - etc
-        - apache2
-          - conf-available
-          - sites-enabled
+      + etc
+        + apache2
+          + conf-available
+          + sites-enabled
       + prolog
       + var
         + www
           + html
             + docs
             + ef
-              + files\.tmb
               + files
+                + .tmb
               + img
               + js
                 + extras
@@ -3160,17 +3175,17 @@ packs_xtra\packs_xtra.vpj=Release
         + lemur
         + logicmoo
         + phil
-        - prologmud
+        + prologmud
         + trill
-      - lib
+      + lib
         + data
         + plugin
-        - render
+        + render
       + pack
         + chat80
           + prolog
-            + chat80\.xpce
             + chat80
+              + .xpce
         + hdt
           + hdt-cpp
             + hdt-it
@@ -3217,14 +3232,14 @@ packs_xtra\packs_xtra.vpj=Release
                 + CompilerIdCXX
               + CheckIncludeFiles
               + sshd4pl.dir
+          + c
+          + cmake
           + CMakeFiles
             + 3.13.4
               + CompilerIdC
               + CompilerIdCXX
             + CheckIncludeFiles
             + sshd4pl.dir
-          + c
-          + cmake
           + examples
           + prolog
         + pcache
@@ -3277,9 +3292,6 @@ packs_xtra\packs_xtra.vpj=Release
               + prolog
           + tutorials
         + node_modules
-          + c3\.github
-          + printthis\.github
-            + ISSUE_TEMPLATE
           + ace
             + build
               + demo
@@ -3321,6 +3333,7 @@ packs_xtra\packs_xtra.vpj=Release
                 + vendor
             + nuget
           + c3
+            + .github
             + design
             + docs
               + css
@@ -3451,6 +3464,8 @@ packs_xtra\packs_xtra.vpj=Release
                 + editor
           + opencollective-postinstall
           + printthis
+            + .github
+              + ISSUE_TEMPLATE
             + assets
               + images
           + requirejs
@@ -3479,12 +3494,12 @@ packs_xtra\packs_xtra.vpj=Release
             + doc
               + migration
         + patches
-  - packs_xtra
+  + packs_xtra
     + logicmoo_packages
       + prolog
         + BN-search
         + pHa_code
-    - logicmoo_pldata
+    + logicmoo_pldata
       + ext
         + plkb0988
       + prolog
@@ -3578,834 +3593,249 @@ packs_xtra\packs_xtra.vpj=Release
           + logicmoo
       + temp
       + test
-  + patch
+  + Patch
     + lib
       + swipl
         + boot
         + library
   + share
     + pkgconfig
+  + wiki
+    + .circleci
+    + .github
+      + ISSUE_TEMPLATE
+    + docs
+      + _build
+        + doctrees
+        + html
+          + _images
+          + _static
+            + css
+              + fonts
+            + doxygen
+              + cSharp
+                + search
+              + narrative
+                + search
+              + theoretic
+                + search
+            + fonts
+              + Lato
+              + RobotoSlab
+            + js
+        + htmlhelp
+          + _images
+          + _static
+            + css
+              + fonts
+            + doxygen
+              + cSharp
+                + search
+              + narrative
+                + search
+              + theoretic
+                + search
+            + fonts
+              + Lato
+              + RobotoSlab
+            + js
+      + _image
+      + _static
+        + doxygen
+          + cSharp
+            + search
+          + narrative
+            + search
+          + theoretic
+            + search
+      + TO
+        + AnAnimatoryLogicApproachtoArtificialIntelligence
+          + media
+        + ArithmeticExample
+          + media
+        + OvercompleteYepPartialDraft
+          + media
+        + TechnicalOverview
+          + media
+    + img
+      + screenshots
+        + DLVEdu
+        + DLVfit
+        + GuessAndCheckers
+        + LoIDE
+        + PacMan
   + wikis
     + logicmoo_workspace.wiki
-- other_files.vpj
-  - \etc
-    - apache2
-      - sites-enabled
-  - packs_sys
-    + logicmoo_ec\.github
-      + ISSUE_TEMPLATE
-      + workflows
-    - logicmoo_ec
-      + docs
-        + files
-          + driverlog
-          + letseat
-        + images
-      - ext
-        + aiswi
-          + dist
-            + javadoc
-              + index-files
-              + javasciff
-                + class-use
-              + resources
-              + test
-                + class-use
-          + img
-          + project_template
-          + relazione
-          + sciff
-          + src
-            + gamegui
-            + icons
-            + javasciff
-            + lib
-            + test
-          + xml
-        + dialog_test
-        + ec_sources
-          + ecnet
-          + examples
-            + AkmanEtAl2004
-            + Antoniou1997
-            + BrewkaDixKonolige1997
-            + Cassimatis2002
-            + ecasp
-            + ecasp-decreasoner
-            + FrankEtAl2003
-            + GiunchigliaEtAl2004
-            + Manual
-            + MillerShanahan2002
-            + Mueller2004a
-            + Mueller2004b
-            + Mueller2006
-              + Chapter10
-              + Chapter11
-              + Chapter12
-              + Chapter13
-              + Chapter14
-              + Chapter2
-              + Chapter3
-              + Chapter4
-              + Chapter6
-              + Chapter7
-              + Chapter8
-              + Chapter9
-              + Exercises
-            + ReiterCriscuolo1981
-            + Shanahan1997
-            + Shanahan1999
-          + foundations
-          + includes
-            + SaaSPatterns
-              + PolicyPatterns
-              + PolicySetPatterns
-              + RulesPatterns
-        + flp
-          + templates
-            + flp
-          + worlds
-            + flp
-        + PKnows
-          + epaths
-          + leantap
-            + application
-            + code
-              + scratch
-                + MIndiGolog_mercury
-            + library
-            + social
-              + cssepg06
-                + correspondence
-            + talks
-              + agentlab
-              + pg_sem
-            + writings
-              + coop_golog
-                + aaai06
-                  + listings
-                + aamas06
-                  + listings
-                + ai06
-                  + listings
-                + code
-                  + Goloz
-                  + MIndiGolog
-                    + listings
-                + iat06
-                  + listings
-              + poster2005
-              + progress_2006
-              + sc_knowledge
-                + ijcai07
-                + ijcai07_2
-              + scratch
-              + thesis
-          + otter
-            + application
-            + code
-              + scratch
-                + MIndiGolog_mercury
-                + pcond
-            + library
-            + social
-              + cssepg06
-                + correspondence
-            + talks
-              + agentlab
-              + pg_sem
-            + writings
-              + coop_golog
-                + aaai06
-                  + listings
-                + aamas06
-                  + listings
-                + ai06
-                  + listings
-                + code
-                  + Goloz
-                  + MIndiGolog
-                    + listings
-                + iat06
-                  + listings
-              + poster2005
-              + progress_2006
-              + sc_knowledge
-                + ijcai07
-                + ijcai07_2
-              + scratch
-              + thesis
-          + pgrad
-            + code
-              + Goloz
-                + FOF
-                + SitCalc
-                + Utils
-              + MIndiGolog
-                + listings
-              + pknows
-                + vpdl
-              + scratch
-                + fosg
-                + MIndiGolog_mercury
-                + pcond
-              + thesis
-                + MIndiGolog0
-                + MIndiGolog1
-                + MIndiGolog2
-                + PKnows
-                  + vpdl
-            + library
-            + social
-              + cssepg06
-                + chess_comp
-                + correspondence
-              + openday06
-            + talks
-              + agentlab
-                + golog
-                + symposium06
-              + completion
-              + conferences
-                + iat06
-                  + listings
-                + ijcai07
-                + kr08
-              + lectures
-                + agents07
-                + agents08
-              + MERIT_08
-              + pg_sem_06
-              + pg_sem_07
-              + pg_sem_08
-              + rmit_agents
-            + writings
-              + application
-              + confs
-                + aaai06
-                  + listings
-                + aaai08
-                  + listings
-                + aamas06
-                  + listings
-                + aamas07
-                  + admin
-                  + poster
-                + aamas08
-                  + listings
-                + iat06
-                  + admin
-                  + listings
-                + ijcai07
-                + ijcai07_2
-                  + admin
-                    + ijcai07_latex
-                  + IJCAI-KellyR-80
-                + kr08
-                  + reimbursement
-              + internal
-                + poster2005
-                + poster2007
-                + progress_2006
-                + progress_2007
-                + progress_2008
-              + journals
-                + common_knowledge
-                  + jair07
-                  + jair09a
-                + joint_exec
-                  + listings
-                    + jointexec
-                    + mindigolog
-                    + oz-examples
-                + property_persisence
-              + scratch
-              + thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-          + pknows-some
-          + pknowsb5adba44eeeacca72991ef8159e880d5b0e9974c
-            + code
-              + Goloz
-                + FOF
-                + SitCalc
-                + Utils
-              + MIndiGolog
-                + listings
-              + pknows
-                + vpdl
-              + scratch
-                + fosg
-                + MIndiGolog_mercury
-                + pcond
-              + thesis
-                + MIndiGolog1
-                + MIndiGolog2
-            + library
-            + social
-              + cssepg06
-                + chess_comp
-                + correspondence
-              + openday06
-            + talks
-              + agentlab
-                + golog
-                + symposium06
-              + completion
-              + conferences
-                + iat06
-                  + listings
-                + ijcai07
-                + kr08
-              + lectures
-                + agents07
-                + agents08
-              + MERIT_08
-              + pg_sem_06
-              + pg_sem_07
-              + pg_sem_08
-              + rmit_agents
-            + writings
-              + application
-              + confs
-                + aaai06
-                  + listings
-                + aaai08
-                  + listings
-                + aamas06
-                  + listings
-                + aamas07
-                  + admin
-                  + poster
-                + aamas08
-                  + listings
-                + iat06
-                  + admin
-                  + listings
-                + ijcai07
-                + ijcai07_2
-                  + admin
-                    + ijcai07_latex
-                  + IJCAI-KellyR-80
-                + kr08
-                  + reimbursement
-              + internal
-                + poster2005
-                + poster2007
-                + progress_2006
-                + progress_2007
-                + progress_2008
-              + journals
-                + jair07
-              + scratch
-              + submitted-thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-              + thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-          + pknowscd04ce1a174160d9dbf37245d31b6ef2e04c1fd8
-            + code
-              + Goloz
-                + FOF
-                + SitCalc
-                + Utils
-              + MIndiGolog
-                + listings
-              + pknows
-                + vpdl
-              + scratch
-                + fosg
-                + MIndiGolog_mercury
-                + pcond
-              + thesis
-                + MIndiGolog0
-                + MIndiGolog1
-                + MIndiGolog2
-                + pknows
-                  + vpdl
-            + library
-            + social
-              + cssepg06
-                + chess_comp
-                + correspondence
-              + openday06
-            + talks
-              + agentlab
-                + golog
-                + symposium06
-              + completion
-              + conferences
-                + iat06
-                  + listings
-                + ijcai07
-                + kr08
-              + lectures
-                + agents07
-                + agents08
-              + MERIT_08
-              + pg_sem_06
-              + pg_sem_07
-              + pg_sem_08
-              + rmit_agents
-            + writings
-              + application
-              + confs
-                + aaai06
-                  + listings
-                + aaai08
-                  + listings
-                + aamas06
-                  + listings
-                + aamas07
-                  + admin
-                  + poster
-                + aamas08
-                  + listings
-                + iat06
-                  + admin
-                  + listings
-                + ijcai07
-                + ijcai07_2
-                  + admin
-                    + ijcai07_latex
-                  + IJCAI-KellyR-80
-                + kr08
-                  + reimbursement
-              + internal
-                + poster2005
-                + poster2007
-                + progress_2006
-                + progress_2007
-                + progress_2008
-              + journals
-                + jair07
-              + scratch
-              + submitted-thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-              + thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-          + pknowsf678c543195c9af975d749981a79de810dcc98eb
-            + code
-              + Goloz
-                + FOF
-                + SitCalc
-                + Utils
-              + MIndiGolog
-                + listings
-              + pknows
-                + vpdl
-              + scratch
-                + fosg
-                + MIndiGolog_mercury
-                + pcond
-              + thesis
-                + MIndiGolog0
-                + MIndiGolog1
-                + MIndiGolog2
-                + PKnows
-                  + vpdl
-            + library
-            + social
-              + cssepg06
-                + chess_comp
-                + correspondence
-              + openday06
-            + talks
-              + agentlab
-                + golog
-                + symposium06
-              + completion
-              + conferences
-                + iat06
-                  + listings
-                + ijcai07
-                + kr08
-              + lectures
-                + agents07
-                + agents08
-              + MERIT_08
-              + pg_sem_06
-              + pg_sem_07
-              + pg_sem_08
-              + rmit_agents
-            + writings
-              + application
-              + confs
-                + aaai06
-                  + listings
-                + aaai08
-                  + listings
-                + aamas06
-                  + listings
-                + aamas07
-                  + admin
-                  + poster
-                + aamas08
-                  + listings
-                + iat06
-                  + admin
-                  + listings
-                + ijcai07
-                + ijcai07_2
-                  + admin
-                    + ijcai07_latex
-                  + IJCAI-KellyR-80
-                + kr08
-                  + reimbursement
-              + internal
-                + poster2005
-                + poster2007
-                + progress_2006
-                + progress_2007
-                + progress_2008
-              + journals
-                + jair07
-              + scratch
-              + submitted-thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-              + thesis
-                + AHY9U3~9
-                + listings
-                  + background
-                  + jointexec
-                  + mindigolog
-        - PKnows-0.9.9
-          - vpdl
-        + RTEC
-          + examples
-            + caviar
-              + CE patterns
-              + data
-                + complete caviar
-              + execution scripts
-                + complete caviar
-            + ctm
-              + CE patterns
-              + execution scripts
-                + 100_vehicles
-            + toy
-          + src
-            + utilities
-        + theorist
-          + ailog
-            + ailog_code
-              + ch05
-              + ch12
-              + ch13
-              + ch14
-          - cilog_code
-            - ch2
-            - ch3
-            - ch4
-            - ch6
-            - ch8
-        + Tom
-          + Doc
-          + Samples
-          + Src
-        + xray
-        + yadlr
-          + examples
-            + iris
-            + trains
-          + pl
-      - prolog
-        + ccalc
-          + CVS
-          + examples
-            + additive
-            - airport
-            + nmct
-            + traffic
-            + zoo
-          + solvers
-            + CVS
-            + Linux
-              + CVS
-            + SunOS
-              + CVS
-          + tutorial
-        + code_icl
-        + dialect
-          - logicmoo
-        + ec_planner
-        + hyhtn_pddl
-          + ptools
-        + lps_pddl
-      + test
-        + domains_ocl
-          + assTaxi
-          + c0251943_WashingMachine
-          + chameleonWorld
-          + domains
-          + icons
-          + library
-          + ocl_files
-          + robot
-          + toasterWorldv2
-        + ec_planner
-          + asp
-          + bin
-          + ec2asp_linux_files
-            + page0001-2_files
-            + page0002_files
-            + page0003_files
-            + page0004_files
-          + ecasp-source
-          + ectest
-          + iwfms
-        + lps_user_examples
-          + SzaboContractExamples
-        + pddl_reader
-          + ipc2008-no-cybersec
-            + netben-opt
-              + crewplanning-numeric
-              + elevators-numeric
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-numericadl
-              + openstacks-stripsneg
-              + pegsol-strips
-              + transport-numeric
-              + woodworking-numeric
-            + seq-opt
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-strips
-              + parcprinter-strips
-              + pegsol-strips
-              + scanalyzer-strips
-              + sokoban-strips
-              + transport-strips
-              + woodworking-strips
-            + seq-sat
-              + elevators-strips
-              + openstacks-adl
-              + openstacks-strips
-              + parcprinter-strips
-              + pegsol-strips
-        + pddl_tests
-          + benchmarks
-            + airport
-            + airport-adl
-            + assembly
-            + barman-opt11-strips
-            + barman-sat11-strips
-            + blocks
-            + depot
-            + driverlog
-            + elevators-opt08-strips
-            + elevators-opt11-strips
-            + elevators-sat08-strips
-            + elevators-sat11-strips
-            + floortile-opt11-strips
-            + floortile-sat11-strips
-            + freecell
-            + grid
-            + gripper
-            + logistics00
-            + logistics98
-            + miconic
-            + miconic-fulladl
-            + miconic-simpleadl
-            + movie
-            + mprime
-            + mystery
-            + no-mprime
-            + no-mystery
-            + nomystery-opt11-strips
-            + nomystery-sat11-strips
-            + openstacks
-            + openstacks-opt08-adl
-            + openstacks-opt08-strips
-            + openstacks-opt11-strips
-            + openstacks-sat08-adl
-            + openstacks-sat08-strips
-            + openstacks-sat11-strips
-            + openstacks-strips
-            + optical-telegraphs
-            + parcprinter-08-strips
-            + parcprinter-opt11-strips
-            + parcprinter-sat11-strips
-            + parking-opt11-strips
-            + parking-sat11-strips
-            + pathways
-            + pathways-noneg
-            + pegsol-08-strips
-            + pegsol-opt11-strips
-            + pegsol-sat11-strips
-            + philosophers
-            + pipesworld-notankage
-            + pipesworld-tankage
-            + psr-large
-            + psr-middle
-            + psr-small
-            + rovers
-            + satellite
-            + scanalyzer-08-strips
-            + scanalyzer-opt11-strips
-            + scanalyzer-sat11-strips
-            + schedule
-            + sokoban-opt08-strips
-            + sokoban-opt11-strips
-            + sokoban-sat08-strips
-            + sokoban-sat11-strips
-            + storage
-            + tidybot-opt11-strips
-            + tidybot-sat11-strips
-            + tpp
-            + transport-opt08-strips
-            + transport-opt11-strips
-            + transport-sat08-strips
-            + transport-sat11-strips
-            + trucks
-            + trucks-strips
-            + visitall-opt11-strips
-            + visitall-sat11-strips
-            + woodworking-opt08-strips
-            + woodworking-opt11-strips
-            + woodworking-sat08-strips
-            + woodworking-sat11-strips
-            + zenotravel
-          + elearning
-          + failing_or_too_slow
-          + orig_pddl_parser
-            + charts
-            + docs
-            + output
-            + test
-              + blocks
-              + elevators
-              + gripper
-              + hanoi
-          + sanity
-          + sizes
-            + psr-large
-            + psr-middle
-            + psr-small
-          + ZenoTravel
-        + prolog_files
-          + delrob
-        + uw-yale-pddl
-          + doc
-          + domains
-            + transplan
-            + washington
-          + src
-          + strict-domains
-            + art
-            + art-1d
-            + art-1d-rd
-            + art-md
-            + art-md-ns
-            + art-md-ns-rd
-            + art-md-rd
-            + assembly
-            + blocks-world
-            + briefcase
-            + d1s1
-            + eight
-            + ferry
-            + fridge
-            + gripper
-            + homeowner
-            + logistics
-            + meet-pass
-            + molgen
-            + monkey
-            + montlake
-            + morris
-            + movie
-            + mystery
-            + occam
-            + safety-domain
-            + tire-world
-            + trains
-            + transplan
-            + travel
-            + truckworld
-            + woodshop
-  - packs_web
-    + swish
-      - lib
-        + data
-        + plugin
-        + render
-      + rdf
-        + cpack
-      + web
-        + css
-        + help
-        + js
-          + codemirror
-            + addon
-              + hint
-              + hover
-            + mode
-              + prolog
-            + theme
-          + render
-          + tutorials
-  + packs_xtra
-    - logicmoo_packages
-      - prolog
-        - BN-search
-        - pHa_code
-scroll:95
++@ other_files.vpj
+scroll:0
 [State]
-SCREEN: 1920 1200 150 -8 1440 628 0 0 M 0 0 0 0 1432 207
-CWD: \
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
-BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=pl	HM=0 MF=32 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.21560 CL=14 LE=0 CX=13 CY=11 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.10341 CL=3 LE=0 CX=2 CY=13 WI=5 BI=20 HT=0 HN=0 HF=0 HC=4
-BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"
-BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
-VIEW: LN=.1483 CL=19 LE=0 CX=18 CY=28 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4
-WINDOW: 104 104 1198 469 -1 -1 N  WF=0 WT=5 "Default Fixed Font,14,0,1"
-BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"
-VIEW: LN=.9395 CL=5 LE=0 CX=4 CY=4 WI=195 BI=20 HT=0 HN=0 HF=0 HC=4
-WINDOW: 78 78 1224 464 -1 -1 N  WF=0 WT=4 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"
-VIEW: LN=.21560 CL=14 LE=0 CX=13 CY=11 WI=193 BI=21 HT=0 HN=0 HF=0 HC=4
-WINDOW: 52 52 1224 464 -1 -1 N  WF=0 WT=3 ",,,"
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
-VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=146 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 26 26 1224 464 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"
-VIEW: LN=.12415 CL=21 LE=0 CX=20 CY=25 WI=191 BI=25 HT=0 HN=0 HF=0 HC=4
-WINDOW: 130 130 1198 469 -1 -1 M  WF=0 WT=6 "Default Fixed Font,14,0,1"
-BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"
-VIEW: LN=.1483 CL=59 LE=0 CX=58 CY=7 WI=176 BI=4 HT=0 HN=0 HF=0 HC=4
+MONITOR_CONFIGS: 129
+MONITOR_CONFIG: 127 1920 -960 1920 1080,0 -1080 1920 1080,1920 120 1920 1080,0 0 1920 1200
+SCREEN: 1920 1200 360 76 1201 924 0 0 M 0 0 0 0 1535 744 0
+MDISTATE: 1
+AAAAAwAAAAIAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAuoAAAROAAAAAvsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPwAAABxAAAAAGQANQA6ADoAOgBUADoAXABlAHQAYwBcAGEAcABhAGMAaABlADIAXABzAGkAdABlAHMALQBlAG4AYQBiAGwAZQBkAFwAMAAwADAALQBsAG8AZwBpAGMAbQBvAG8ALgBjAG8AbgBmAAD/////AAD8AAAAuQAAAACsADcAOgA6ADoAVAA6AFwAbwBwAHQAXABsAG8AZwBpAGMAbQBvAG8AXwB3AG8AcgBrAHMAcABhAGMAZQBcAHAAYQBjAGsAcwBfAHMAeQBzAFwAbABvAGcAaQBjAG0AbwBvAF8AbgBsAHUAXABwAHIAbwBsAG8AZwBcAG0AYQByAHQAeQBfAHcAaABpAHQAZQBcAGEAZAB2AF8AYwBvAG4AdAByAG8AbAAuAHAAbAEA/////wAB/AAAALMAAAAApgAzADoAOgA6AFQAOgBcAG8AcAB0AFwAbABvAGcAaQBjAG0AbwBvAF8AdwBvAHIAawBzAHAAYQBjAGUAXABwAGEAYwBrAHMAXwBzAHkAcwBcAGwAbwBnAGkAYwBtAG8AbwBfAGEAZwBpAFwASQBtAHAAbwByAHQAYQBuAHQARABvAGMAcwBcAGoAbQBjAFwAYQBzAGMAcgBpAGIAaQBuAGcALgBtAGQAAP////8AAPwAAACzAAAAAKYAMgA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABsAG8AZwBpAGMAbQBvAG8AXwBhAGcAaQBcAEkAbQBwAG8AcgB0AGEAbgB0AEQAbwBjAHMAXABqAG0AYwBcAGEAcwBjAHIAaQBiAGkAbgBnAC4AbQBkAAD/////AAD8AAAAewAAAABuADYAOgA6ADoAVAA6AFwAZQB0AGMAXABhAHAAYQBjAGgAZQAyAFwAYwBvAG4AZgAtAGEAdgBhAGkAbABhAGIAbABlAFwAYwBsAGkAbwBwAGEAdAByAGkAYQBfAHMAdwBpAHMAaAAuAGMAbwBuAGYAAP////8AAPwAAADfAAAAANIANAA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABwAHIAbwBsAG8AZwBtAHUAZABfAHMAYQBtAHAAbABlAHMAXABwAHIAbwBsAG8AZwBcAHAAcgBvAGwAbwBnAG0AdQBkAF8AcwBhAG0AcABsAGUAXwBnAGEAbQBlAHMAXAByAHUAbgBfAG0AdQBkAF8AcwBlAHIAdgBlAHIALgBwAGwAAP////8AAAAAAAA=
+STANDARD_LAYOUT: 61 1 44 12 4 M 0
+_tbbufftabs_form F=11
+_tbprojects_form F=8
+_tbdebug_watches_form F=64
+_tbbaseclasses_form F=40
+_tbdeltasave_form F=0
+_tbdebug_regs_form F=64
+_tbFTPOpen_form F=0
+_tbdebug_threads_form F=64
+_tbclipboard_form F=44
+_tbopen_form F=40
+_tbterminal_form F=8
+_tbdebug_exceptions_form F=384
+_tbdebug_classes_form F=64
+_tbtagwin_form F=8
+_tbdebug_autovars_form F=64
+_tbsymbolcallers_form F=40
+_tbFTPClient_form F=0
+_tbtagrefs_form F=8
+_tbfind_symbol_form F=32
+_tbdebug_locals_form F=64
+_tbdebug_members_form F=64
+_tbdebug_memory_form F=64
+_tbsymbol_args_form F=8
+_tbdebug_stack_form F=64
+_tbsymbolcalls_form F=40
+_tbsymbol_props_form F=8
+_tbfilelist_form F=44
+_tboutputwin_form F=8
+_tbclass_form F=8
+_tbunittest_form F=0
+_tbfind_form F=36
+_tbmessages_browser_form F=8
+_tbannotations_browser_form F=0
+_tbdebug_breakpoints_form F=384
+_tbnotification_form F=36
+_tbinteractive_form F=8
+_tbproctree_form F=8
+_tbbookmarks_form F=8
+_tbregex_form F=40
+_tbslickc_stack_form F=8
+_tbderivedclasses_form F=40
+_tbshell_form F=8
+_tbcbrowser_form F=8
+_tbsearch_form F=8
+_tboutputwin_form T=0
+_tbclass_form T=0
+_tbtagwin_form T=0
+_tbterminal_form T=0
+_tbtagrefs_form T=0
+_tbmessages_browser_form T=0
+_tbshell_form T=0
+_tbopen_form T=0
+_tbprojects_form T=0
+_tbsearch_form T=0
+_tbcbrowser_form T=0
+_tbproctree_form T=0
+AAAAAwAAAAEAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAesAAAS6AAAAAPsAAAACAAAAAgAAAAEAAAAA+wAAAAIAAAACAAAAAAAAAAH9AAABoQAAAAAaADoAOgA6AC8AdgBEAG8AYwBrAEEAcgBlAGEBAAAAAXwAAAAAAAL7AAAABQAAAAUAAAAAAAAABAAAAAEAAAACAAAAA/sAAAAFAAAABQAAAAAAAAABAAAAAgAAAAMAAAAE/AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGoAZQBjAHQAcwBfAGYAbwByAG0BAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGMAdAByAGUAZQBfAGYAbwByAG0AAP////8AAP///////////AAAADcAAAAAIgAwADoAOgA6AF8AdABiAGMAbABhAHMAcwBfAGYAbwByAG0AAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAGMAYgByAG8AdwBzAGUAcgBfAGYAbwByAG0AAP////8AAP///////////AAAADUAAAAAIAAwADoAOgA6AF8AdABiAG8AcABlAG4AXwBmAG8AcgBtAAD/////AAD///////////0AAALFAAAAABoAOgA6ADoALwB2AEQAbwBjAGsAQQByAGUAYQEAAAADNAABAAAAAfsAAAACAAAAAgAAAAAAAAAB+wAAAAIAAAACAAAAAQAAAAD8AAAAKQAAAAAcADoAOgA6AE0ARABJAEEAUgBFAEEAVABJAEwARQEAAAADTwAB/QAAAkUAAAAAGgA6ADoAOgAvAHYARABvAGMAawBBAHIAZQBhAQAAAADmAAAAAAAC+wAAAAcAAAAHAAAAAwAAAAUAAAAEAAAAAgAAAAEAAAAAAAAABvsAAAAHAAAABwAAAAAAAAABAAAAAgAAAAMAAAAEAAAABQAAAAb8AAAAOQAAAAAkADAAOgA6ADoAXwB0AGIAcwBlAGEAcgBjAGgAXwBmAG8AcgBtAAD/////AAD///////////wAAAA5AAAAACQAMAA6ADoAOgBfAHQAYgB0AGEAZwB3AGkAbgBfAGYAbwByAG0AAP////8AAP///////////AAAADsAAAAAJgAwADoAOgA6AF8AdABiAHQAYQBnAHIAZQBmAHMAXwBmAG8AcgBtAAD/////AAD///////////wAAAA3AAAAACIAMAA6ADoAOgBfAHQAYgBzAGgAZQBsAGwAXwBmAG8AcgBtAQD/////AAD///////////wAAABNAAAAADgAMAA6ADoAOgBfAHQAYgBtAGUAcwBzAGEAZwBlAHMAXwBiAHIAbwB3AHMAZQByAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPQAAAAAoADAAOgA6ADoAXwB0AGIAdABlAHIAbQBpAG4AYQBsAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPwAAAAAqADAAOgA6ADoAXwB0AGIAbwB1AHQAcAB1AHQAdwBpAG4AXwBmAG8AcgBtAAD/////AAD//////////wAAAADbAAAAAAAAAALbAAAAAAAAAAHbAAAAAAAAAAPbAAAAAAAAAAA=
+QTOOLBAR 2 0
+AAAA/wAAAAD9AAAAAAAAB4AAAAPTAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAQAFMAdABhAG4AZABhAHIAZAEAAAAA/////wAAAAAAAAAAAAAAHgBDAHUAcgByAGUAbgB0ACAAQwBvAG4AdABlAHgAdAEAAAJx/////wAAAAAAAAAA
+_tbstandard_form 1
+_tbcontext_form 1
+APP_LAYOUT: 61 1 44 12 4 M 0
+_tbbufftabs_form F=11
+_tbprojects_form F=8
+_tbdebug_watches_form F=64
+_tbbaseclasses_form F=40
+_tbdeltasave_form F=0
+_tbdebug_regs_form F=64
+_tbFTPOpen_form F=0
+_tbdebug_threads_form F=64
+_tbclipboard_form F=44
+_tbopen_form F=40
+_tbterminal_form F=8
+_tbdebug_exceptions_form F=384
+_tbdebug_classes_form F=64
+_tbtagwin_form F=8
+_tbdebug_autovars_form F=64
+_tbsymbolcallers_form F=40
+_tbFTPClient_form F=0
+_tbtagrefs_form F=8
+_tbfind_symbol_form F=32
+_tbdebug_locals_form F=64
+_tbdebug_members_form F=64
+_tbdebug_memory_form F=64
+_tbsymbol_args_form F=8
+_tbdebug_stack_form F=64
+_tbsymbolcalls_form F=40
+_tbsymbol_props_form F=8
+_tbfilelist_form F=44
+_tboutputwin_form F=8
+_tbclass_form F=8
+_tbunittest_form F=0
+_tbfind_form F=36
+_tbmessages_browser_form F=8
+_tbannotations_browser_form F=0
+_tbdebug_breakpoints_form F=384
+_tbnotification_form F=36
+_tbinteractive_form F=8
+_tbproctree_form F=8
+_tbbookmarks_form F=8
+_tbregex_form F=40
+_tbslickc_stack_form F=8
+_tbderivedclasses_form F=40
+_tbshell_form F=8
+_tbcbrowser_form F=8
+_tbsearch_form F=8
+_tboutputwin_form T=0
+_tbclass_form T=0
+_tbtagwin_form T=0
+_tbterminal_form T=0
+_tbtagrefs_form T=0
+_tbmessages_browser_form T=0
+_tbshell_form T=0
+_tbopen_form T=0
+_tbprojects_form T=0
+_tbsearch_form T=0
+_tbcbrowser_form T=0
+_tbproctree_form T=0
+AAAAAwAAAAEAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAesAAAS6AAAAAPsAAAACAAAAAgAAAAEAAAAA+wAAAAIAAAACAAAAAAAAAAH9AAABoQAAAAAaADoAOgA6AC8AdgBEAG8AYwBrAEEAcgBlAGEBAAAAAXwAAAAAAAL7AAAABQAAAAUAAAAAAAAABAAAAAEAAAACAAAAA/sAAAAFAAAABQAAAAAAAAABAAAAAgAAAAMAAAAE/AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGoAZQBjAHQAcwBfAGYAbwByAG0BAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGMAdAByAGUAZQBfAGYAbwByAG0AAP////8AAP///////////AAAADcAAAAAIgAwADoAOgA6AF8AdABiAGMAbABhAHMAcwBfAGYAbwByAG0AAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAGMAYgByAG8AdwBzAGUAcgBfAGYAbwByAG0AAP////8AAP///////////AAAADUAAAAAIAAwADoAOgA6AF8AdABiAG8AcABlAG4AXwBmAG8AcgBtAAD/////AAD///////////0AAALFAAAAABoAOgA6ADoALwB2AEQAbwBjAGsAQQByAGUAYQEAAAADNAABAAAAAfsAAAACAAAAAgAAAAAAAAAB+wAAAAIAAAACAAAAAQAAAAD8AAAAKQAAAAAcADoAOgA6AE0ARABJAEEAUgBFAEEAVABJAEwARQEAAAADTwAB/QAAAkUAAAAAGgA6ADoAOgAvAHYARABvAGMAawBBAHIAZQBhAQAAAADmAAAAAAAC+wAAAAcAAAAHAAAAAwAAAAUAAAAEAAAAAgAAAAEAAAAAAAAABvsAAAAHAAAABwAAAAAAAAABAAAAAgAAAAMAAAAEAAAABQAAAAb8AAAAOQAAAAAkADAAOgA6ADoAXwB0AGIAcwBlAGEAcgBjAGgAXwBmAG8AcgBtAAD/////AAD///////////wAAAA5AAAAACQAMAA6ADoAOgBfAHQAYgB0AGEAZwB3AGkAbgBfAGYAbwByAG0AAP////8AAP///////////AAAADsAAAAAJgAwADoAOgA6AF8AdABiAHQAYQBnAHIAZQBmAHMAXwBmAG8AcgBtAAD/////AAD///////////wAAAA3AAAAACIAMAA6ADoAOgBfAHQAYgBzAGgAZQBsAGwAXwBmAG8AcgBtAQD/////AAD///////////wAAABNAAAAADgAMAA6ADoAOgBfAHQAYgBtAGUAcwBzAGEAZwBlAHMAXwBiAHIAbwB3AHMAZQByAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPQAAAAAoADAAOgA6ADoAXwB0AGIAdABlAHIAbQBpAG4AYQBsAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPwAAAAAqADAAOgA6ADoAXwB0AGIAbwB1AHQAcAB1AHQAdwBpAG4AXwBmAG8AcgBtAAD/////AAD//////////wAAAADbAAAAAAAAAALbAAAAAAAAAAHbAAAAAAAAAAPbAAAAAAAAAAA=
+QTOOLBAR 2 0
+AAAA/wAAAAD9AAAAAAAAB4AAAAPTAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAQAFMAdABhAG4AZABhAHIAZAEAAAAA/////wAAAAAAAAAAAAAAHgBDAHUAcgByAGUAbgB0ACAAQwBvAG4AdABlAHgAdAEAAAJx/////wAAAAAAAAAA
+_tbstandard_form 1
+_tbcontext_form 1
+END_MONITOR_CONFIGS:
+CWD: ..\logicmoo_workspace
+BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"""""
+BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
+VIEW: LN=.6700 CL=5 LE=0 CX=6 CY=4 WI=5 BI=3 HT=0 HN=0 HF=0 HC=4 HB=4
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"""""
+BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
+VIEW: LN=.21560 CL=14 LE=0 CX=15 CY=11 WI=5 BI=2 HT=0 HN=0 HF=0 HC=4 HB=4
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
+BI: MA=1 74 1  TABS= WWS=1 IWT= ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Plain Text	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
+VIEW: LN=.12415 CL=21 LE=0 CX=22 CY=25 WI=5 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
+BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"""""
+BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=51380224 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
+VIEW: LN=.903 CL=59 LE=0 CX=60 CY=7 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4 HB=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl"""""
+BI: MA=1 74 1  TABS= WWS=9 IWT= ST=8 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=119538208 TL=0 MLL=0 ASE=0 LNL=1 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
+VIEW: LN=.0 CL=1 LE=0 CX=2 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 813 591 0 0 N  WF=0 WT=5 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
+BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"""""
+VIEW: LN=.6700 CL=5 LE=0 CX=5 CY=4 WI=331 BI=3 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 813 591 0 0 N  WF=0 WT=4 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
+BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"""""
+VIEW: LN=.21560 CL=14 LE=0 CX=14 CY=11 WI=320 BI=2 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 813 591 0 0 N  WF=0 WT=3 "Default Unicode Font,10,0,1" DID=1 MI="*,,,"
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
+VIEW: LN=.0 CL=1 LE=0 CX=2 CY=0 WI=327 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 813 591 0 0 N  WF=0 WT=2 "Default Fixed Font,14,0,1" DID=2 MI="*,,,"
+BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
+VIEW: LN=.12415 CL=21 LE=0 CX=21 CY=25 WI=325 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 813 591 0 0 N  WF=0 WT=6 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
+BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"""""
+VIEW: LN=.903 CL=59 LE=0 CX=59 CY=7 WI=321 BI=4 HT=0 HN=0 HF=0 HC=4 HB=4
+WINDOW: 1 22 1533 721 0 0 N  WF=0 WT=7 "Consolas,20,0,1" DID=0 MI="*,,,"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl"""""
+VIEW: LN=.0 CL=1 LE=0 CX=1 CY=0 WI=282 BI=5 HT=0 HN=0 HF=0 HC=4 HB=4
+MDISTATE: 1
+AAAAAwAAAAIAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAuoAAAROAAAAAvsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPwAAABxAAAAAGQANQA6ADoAOgBUADoAXABlAHQAYwBcAGEAcABhAGMAaABlADIAXABzAGkAdABlAHMALQBlAG4AYQBiAGwAZQBkAFwAMAAwADAALQBsAG8AZwBpAGMAbQBvAG8ALgBjAG8AbgBmAAD/////AAD8AAAAuQAAAACsADcAOgA6ADoAVAA6AFwAbwBwAHQAXABsAG8AZwBpAGMAbQBvAG8AXwB3AG8AcgBrAHMAcABhAGMAZQBcAHAAYQBjAGsAcwBfAHMAeQBzAFwAbABvAGcAaQBjAG0AbwBvAF8AbgBsAHUAXABwAHIAbwBsAG8AZwBcAG0AYQByAHQAeQBfAHcAaABpAHQAZQBcAGEAZAB2AF8AYwBvAG4AdAByAG8AbAAuAHAAbAEA/////wAB/AAAALMAAAAApgAzADoAOgA6AFQAOgBcAG8AcAB0AFwAbABvAGcAaQBjAG0AbwBvAF8AdwBvAHIAawBzAHAAYQBjAGUAXABwAGEAYwBrAHMAXwBzAHkAcwBcAGwAbwBnAGkAYwBtAG8AbwBfAGEAZwBpAFwASQBtAHAAbwByAHQAYQBuAHQARABvAGMAcwBcAGoAbQBjAFwAYQBzAGMAcgBpAGIAaQBuAGcALgBtAGQAAP////8AAPwAAACzAAAAAKYAMgA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABsAG8AZwBpAGMAbQBvAG8AXwBhAGcAaQBcAEkAbQBwAG8AcgB0AGEAbgB0AEQAbwBjAHMAXABqAG0AYwBcAGEAcwBjAHIAaQBiAGkAbgBnAC4AbQBkAAD/////AAD8AAAAewAAAABuADYAOgA6ADoAVAA6AFwAZQB0AGMAXABhAHAAYQBjAGgAZQAyAFwAYwBvAG4AZgAtAGEAdgBhAGkAbABhAGIAbABlAFwAYwBsAGkAbwBwAGEAdAByAGkAYQBfAHMAdwBpAHMAaAAuAGMAbwBuAGYAAP////8AAPwAAADfAAAAANIANAA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABwAHIAbwBsAG8AZwBtAHUAZABfAHMAYQBtAHAAbABlAHMAXABwAHIAbwBsAG8AZwBcAHAAcgBvAGwAbwBnAG0AdQBkAF8AcwBhAG0AcABsAGUAXwBnAGEAbQBlAHMAXAByAHUAbgBfAG0AdQBkAF8AcwBlAHIAdgBlAHIALgBwAGwAAP////8AAAAAAAA=
 FILEHIST: 9
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro
 packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
 packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
 packs_sys\logicmoo_nlu\prolog\nomic_mu.pl
@@ -4414,3 +3844,16 @@ packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md
 packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl
 \etc\apache2\sites-enabled\000-logicmoo.conf
 \etc\apache2\conf-available\cliopatria_swish.conf
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl
+ALLFILEHIST: 10
+packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl
+packs_sys\logicmoo_nlu\prolog\nomic_mu.pl
+\foo.txt
+\etc\apache2\conf-available\cliopatria_swish.conf
+packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
+\etc\apache2\sites-enabled\000-logicmoo.conf
+TBCLASS: 0 0

@@ -200,7 +200,7 @@ wldmsg_1(List):- is_list(List),!,maplist(wldmsg_1,List).
 wldmsg_1(Info):- compound(Info),compound_name_arguments(Info,F,[A]),!,wldmsg_1(F=A).
 wldmsg_1(Info):- compound(Info),compound_name_arguments(Info,(-),[F,A]),!,wldmsg_1(F=A).
 wldmsg_1(Info):- 
-  stream_property(O,file_no(1)),flush_output(O),format(O,'~N',[]),flush_output(O),
+  stream_property(O,file_no(1)),flush_output(O),smart_format(O,'~N',[]),flush_output(O),
   wldmsg_2(Info),!.
 
 same_streams(X,Y):- dzotrace((into_stream(X,XX),into_stream(Y,YY),!,XX==YY)).
@@ -217,7 +217,7 @@ wldmsg_2(Info):- output_to_x(current_output,Info), stream_property(X,file_no(2))
 
 output_to_x(S,Info):- ignore(dzotrace(catch(output_to_x_0(S,Info),_,true))).
 output_to_x_0(S,Info):- into_stream(S,X),!, flush_output(X),
-  catch(format(X,'~N% ~p~n',[Info]),_,format(X,'~N% DMSGQ: ~q~n',[Info])),flush_output(X).
+  catch(smart_format(X,'~N% ~p~n',[Info]),_,smart_format(X,'~N% DMSGQ: ~q~n',[Info])),flush_output(X).
 
 dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(dmsg:wldmsg_0(CM,Spec))).
 % system:dmsgln(List):-!,dzotrace(dmsg:wldmsg_0(user,List)).
@@ -528,9 +528,9 @@ catchvvnt(T,E,F):-catchv(quietly(T),E,F).
 %
 % Format Primary Helper.
 %
-%fmt0(user_error,F,A):-!,get_main_error_stream(Err),!,format(Err,F,A).
-%fmt0(current_error,F,A):-!,get_thread_current_error(Err),!,format(Err,F,A).
-fmt0(X,Y,Z):-catchvvnt((format(X,Y,Z),flush_output_safe(X)),E,dfmt(E:format(X,Y))).
+%fmt0(user_error,F,A):-!,get_main_error_stream(Err),!,smart_format(Err,F,A).
+%fmt0(current_error,F,A):-!,get_thread_current_error(Err),!,smart_format(Err,F,A).
+fmt0(X,Y,Z):-catchvvnt((smart_format(X,Y,Z),flush_output_safe(X)),E,dfmt(E:smart_format(X,Y))).
 
 %= 	 	 
 
@@ -538,7 +538,21 @@ fmt0(X,Y,Z):-catchvvnt((format(X,Y,Z),flush_output_safe(X)),E,dfmt(E:format(X,Y)
 %
 % Format Primary Helper.
 %
-fmt0(X,Y):-catchvvnt((format(X,Y),flush_output_safe),E,dfmt(E:format(X,Y))).
+
+is_regular_format_args(X,_):- \+ atomic(X),!,fail.
+is_regular_format_args(X,Y):- (string(X);atom(Y)), atom_contains(X,'~').
+is_regular_format_args(_,Y):- is_list(Y),!.
+
+smart_format(X,Y,Z):- format(X,Y,Z).
+smart_format(X,Y):- smart_format([X,Y]).
+
+smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
+
+smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(format(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
+smart_format([X|More]):- (compound(X);is_output(X)),!,with_output_to(X,smart_format(More)),!.
+smart_format([X,Y]):- smart_format(X-Y),!.
+
+fmt0(X,Y):-catchvvnt((smart_format(X,Y),flush_output_safe),E,dfmt(E:smart_format(X,Y))).
 
 %= 	 	 
 
@@ -547,8 +561,8 @@ fmt0(X,Y):-catchvvnt((format(X,Y),flush_output_safe),E,dfmt(E:format(X,Y))).
 % Format Primary Helper.
 %
 fmt0(X):- (atomic(X);is_list(X)), dmsg_text_to_string_safe(X,S),!,format('~w',[S]),!.
-fmt0(X):- (atom(X) -> catchvvnt((format(X,[]),flush_output_safe),E,dmsg(E)) ; 
-  (lmconf:term_to_message_string(X,M) -> 'format'('~q~N',[M]);fmt_or_pp(X))).
+fmt0(X):- (atom(X) -> catchvvnt((smart_format(X,[]),flush_output_safe),E,dmsg(E)) ; 
+  (lmconf:term_to_message_string(X,M) -> 'smart_format'('~q~N',[M]);fmt_or_pp(X))).
 
 %= 	 	 
 
@@ -580,8 +594,8 @@ fmt(X,Y,Z):- fmt_ansi(fmt0(X,Y,Z)),!.
 
 format_to_message(Format,Args,Info):- 
   on_xf_cont(((( sanity(is_list(Args))-> 
-     format(string(Info),Format,Args);
-     (format(string(Info),'~N~n~p +++++++++++++++++ ~p~n',[Format,Args])))))).
+     smart_format(string(Info),Format,Args);
+     (smart_format(string(Info),'~N~n~p +++++++++++++++++ ~p~n',[Format,Args])))))).
 
 
 new_line_if_needed:- flush_output,format('~N',[]),flush_output.
@@ -595,7 +609,7 @@ new_line_if_needed:- flush_output,format('~N',[]),flush_output.
 fmt9(Msg):- new_line_if_needed, must(fmt90(Msg)),!,new_line_if_needed.
 
 fmt90(fmt0(F,A)):-on_x_fail(fmt0(F,A)),!.
-fmt90(Msg):- dzotrace(on_x_fail(((string(Msg)),format(Msg,[])))),!.
+fmt90(Msg):- dzotrace(on_x_fail(((string(Msg)),smart_format(Msg,[])))),!.
 
 fmt90(V):- mesg_color(V,C), !, catch(pprint_ecp(C, V),_,fail),!.
 fmt90(Msg):- 
@@ -992,7 +1006,7 @@ mesg_color(:- T,C):-nonvar(T),!,mesg_color(T,C).
 mesg_color((H :- T), [bold|C]):-nonvar(T),!,mesg_color(H,C).
 mesg_color(T,C):-cfunctor(T,F,_),member(F,[color,ansi]),compound(T),arg(1,T,C),nonvar(C).
 mesg_color(T,C):-cfunctor(T,F,_),member(F,[succeed,must,mpred_op_prolog]),compound(T),arg(1,T,E),nonvar(E),!,mesg_color(E,C).
-mesg_color(T,C):-cfunctor(T,F,_),member(F,[fmt0,msg,format,fmt]),compound(T),arg(2,T,E),nonvar(E),!,mesg_color(E,C).
+mesg_color(T,C):-cfunctor(T,F,_),member(F,[fmt0,msg,smart_format,fmt]),compound(T),arg(2,T,E),nonvar(E),!,mesg_color(E,C).
 mesg_color(T,C):-predef_functor_color(F,C),mesg_arg1(T,F).
 mesg_color(T,C):-nonvar(T),defined_message_color(F,C),matches_term(F,T),!.
 mesg_color(T,C):-cfunctor(T,F,_),!,functor_color(F,C),!.
@@ -1066,7 +1080,7 @@ color_line(C,N):-
 %
 dmsg(C):- dzotrace((tlbugger:no_slow_io,!,stream_property(X,file_no(2)),writeln(X,dmsg(C)))).
 dmsg(V):- dzotrace((locally(set_prolog_flag(retry_undefined,none), if_defined_local(dmsg0(V),logicmoo_util_catch:ddmsg(V))))),!.
-%dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
+%dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(smart_format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
 
 :- system:import(dmsg/1).
 % system:dmsg(O):-logicmoo_util_dmsg:dmsg(O).
@@ -1193,7 +1207,7 @@ dmsg0(V):-dzotrace(locally(local_override(no_kif_var_coroutines,true),
 %
 dmsg00(V):-cyclic_term(V),!,writeln(cyclic_term),flush_output,writeln(V),!.
 dmsg00(call(Code)):- callable(Code), !, with_output_to(string(S),catch((dzotrace(Code)->TF=true;TF=failed),TF,true)), 
-  (TF=true->dmsg(S);(format(string(S2),'~Ndmsg(call(Code)) of ~q~n~q: ~s ~n',[Code,TF,S]),wdmsg(S2),!,fail)).
+  (TF=true->dmsg(S);(smart_format(string(S2),'~Ndmsg(call(Code)) of ~q~n~q: ~s ~n',[Code,TF,S]),wdmsg(S2),!,fail)).
 dmsg00(V):- catch(dumpst:simplify_goal_printed(V,VV),_,fail),!,dmsg000(VV),!.
 dmsg00(V):- dmsg000(V),!.
 
@@ -1205,7 +1219,7 @@ dmsg00(V):- dmsg000(V),!.
 
 dmsg000(V):-
  with_output_to_main_error(
-   (dzotrace(format(string(K),'~p',[V])),
+   (dzotrace(smart_format(string(K),'~p',[V])),
    (tlbugger:in_dmsg(K)-> dmsg5(dmsg5(V));  % format_to_error('~N% ~q~n',[dmsg0(V)]) ;
       asserta(tlbugger:in_dmsg(K),Ref),call_cleanup(dmsg1(V),erase(Ref))))),!.
 
@@ -1301,7 +1315,7 @@ get_indent_level(2):-!.
 
 /*
 ansifmt(+Attributes, +Format, +Args) is det
-Format text with ANSI attributes. This predicate behaves as format/2 using Format and Args, but if the current_output is a terminal, it adds ANSI escape sequences according to Attributes. For example, to print a text in bold cyan, do
+Format text with ANSI attributes. This predicate behaves as smart_format/2 using Format and Args, but if the current_output is a terminal, it adds ANSI escape sequences according to Attributes. For example, to print a text in bold cyan, do
 ?- ansifmt([bold,fg(cyan)], 'Hello ~w', [world]).
 Attributes is either a single attribute or a list thereof. The attribute names are derived from the ANSI specification. See the source for sgr_code/2 for details. Some commonly used attributes are:
 
@@ -1326,11 +1340,11 @@ ansifmt(Stream, Ctrl, Format, Args) :-
 	    atomic_list_concat(Codes, (';'), OnCode)
 	;   ansi_term:sgr_code_ex(Ctrl, OnCode)
 	),
-	'format'(string(Fmt), '\e[~~wm~w\e[0m', [Format]),
+	'smart_format'(string(Fmt), '\e[~~wm~w\e[0m', [Format]),
         retractall(tlbugger:last_used_color(Ctrl)),asserta(tlbugger:last_used_color(Ctrl)),
-	'format'(Stream, Fmt, [OnCode|Args]),
+	'smart_format'(Stream, Fmt, [OnCode|Args]),
 	flush_output,!.
-ansifmt(Stream, _Attr, Format, Args) :- 'format'(Stream, Format, Args).
+ansifmt(Stream, _Attr, Format, Args) :- 'smart_format'(Stream, Format, Args).
 
 */
 
@@ -1353,7 +1367,7 @@ ansifmt(Ctrl,Fmt):- colormsg(Ctrl,Fmt).
 %
 % Ansifmt.
 %
-ansifmt(Ctrl,F,A):- colormsg(Ctrl,(format(F,A))).
+ansifmt(Ctrl,F,A):- colormsg(Ctrl,(smart_format(F,A))).
 
 
 
@@ -1467,17 +1481,17 @@ ansicall0(Out,Ctrl,Goal):-if_color_debug(ansicall1(Out,Ctrl,Goal),keep_line_pos_
 %
 ansicall1(Out,Ctrl,Goal):-
    dzotrace((must(sgr_code_on_off(Ctrl, OnCode, OffCode)),!,
-     keep_line_pos_w_w(Out, (format(Out, '\e[~wm', [OnCode]))),
+     keep_line_pos_w_w(Out, (smart_format(Out, '\e[~wm', [OnCode]))),
 	call_cleanup(Goal,
-           keep_line_pos_w_w(Out, (format(Out, '\e[~wm', [OffCode])))))).
+           keep_line_pos_w_w(Out, (smart_format(Out, '\e[~wm', [OffCode])))))).
 /*
 ansicall(S,Set,Goal):-
      call_cleanup((
          stream_property(S, tty(true)), current_prolog_flag(color_term, true), !,
 	(is_list(Ctrl) ->  maplist(sgr_code_on_off, Ctrl, Codes, OffCodes),
           atomic_list_concat(Codes, (';'), OnCode) atomic_list_concat(OffCodes, (';'), OffCode) ;   sgr_code_on_off(Ctrl, OnCode, OffCode)),
-        keep_line_pos_w_w(S, (format(S,'\e[~wm', [OnCode])))),
-	call_cleanup(Goal,keep_line_pos_w_w(S, (format(S, '\e[~wm', [OffCode]))))).
+        keep_line_pos_w_w(S, (smart_format(S,'\e[~wm', [OnCode])))),
+	call_cleanup(Goal,keep_line_pos_w_w(S, (smart_format(S, '\e[~wm', [OffCode]))))).
 
 
 */
@@ -1779,7 +1793,7 @@ msg_to_string(Var,Str):-var(Var),!,sformat(Str,'~q',[Var]),!.
 msg_to_string(portray(Msg),Str):- with_output_to_each(string(Str),(current_output(Out),portray_clause_w_vars(Out,Msg,[],[]))),!.
 msg_to_string(pp(Msg),Str):- sformat(Str,Msg,[],[]),!.
 msg_to_string(fmt(F,A),Str):-sformat(Str,F,A),!.
-msg_to_string(format(F,A),Str):-sformat(Str,F,A),!.
+msg_to_string(smart_format(F,A),Str):-sformat(Str,F,A),!.
 msg_to_string(Msg,Str):-atomic(Msg),!,sformat(Str,'~w',[Msg]).
 msg_to_string(m2s(Msg),Str):-message_to_string(Msg,Str),!.
 msg_to_string(Msg,Str):-sformat(Str,Msg,[],[]),!.
