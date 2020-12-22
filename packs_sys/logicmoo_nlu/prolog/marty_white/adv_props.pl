@@ -145,8 +145,8 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
  (upmerge_prop(F, A, Old, Prop, Merged) ->
      ((Old==Merged, fail) -> replace_declare(props(Object, PropList), S0, S2) ; % no update
        (append([Merged], PropList2, PropList3), replace_declare(props(Object, PropList3), S0, S2)));
- append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2));
- (append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2))).
+           append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2));
+          (append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2))).
 
 
 

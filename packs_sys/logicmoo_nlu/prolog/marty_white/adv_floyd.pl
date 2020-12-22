@@ -36,7 +36,8 @@ do_autonomous_cycle(Agent):-
  time_since_last_action(Other, When),
  Other \== Agent, When < 1, !,
  retractall(mu_global:agent_last_action(Other, _, _)),
- nop(dbug1(time_since_last_action_for(Other, When, Agent))).
+ nop(dbug1(time_since_last_action_for(Other, When, Agent))),
+ must_det((stdio_player(Player), overwrote_prompt(Player))).
 
 
 % If actions are queued, no further thinking required.
