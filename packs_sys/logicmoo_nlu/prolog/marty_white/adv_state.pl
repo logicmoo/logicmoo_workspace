@@ -191,6 +191,8 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 % select_default(Figment, Default, M0, M1).
 thought(Figment, M) :- declared(Figment, M).
 
+unlistify(Figment0,Figment):- is_list(Figment0),!,must(Figment0=[Figment]).
+unlistify(Figment,Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
@@ -272,16 +274,26 @@ declare_0(Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   NewArg=Object,
   asserta(Call).
 
+merge_proplists(AddPropList, OldPropList, NewPropList):-
+  append(AddPropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),!.
+
 declare_list(Fact, State, NewState) :- assertion(compound(Fact)), assertion(var(NewState)), Fact==[], !, NewState = State.
 declare_list((Fact1, Fact2), State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list([Fact1|Fact2], State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list(HasList, State, [NewFront|NewState]) :-
+  HasList=..[F,Object,AddPropList],
+  Old=..[F,Object,OldPropList],
+  select_from(Old, State, NewState), !,
+  assertion(is_list(OldPropList)),
+  merge_proplists(AddPropList, OldPropList, NewPropList),
+  NewFront=..[F, Object, NewPropList].
+declare_list(HasList, State, [NewFront|NewState]) :- 
   safe_functor(HasList, F, A), arg(A, HasList, PropList), is_list(PropList),
-  safe_functor(Functor, F, A), \+ \+ type_functor(state, Functor),
-  arg(1, HasList, Object), arg(1, Functor, Object),
-  select_from(Functor, State, NewState), !,
-  arg(A, Functor, OldPropList), assertion(is_list(OldPropList)),
-  append(PropList, OldPropList, NewPropList),
+  safe_functor(Old, F, A), \+ \+ type_functor(state, Old),
+  arg(1, HasList, Object), arg(1, Old, Object),
+  select_from(Old, State, NewState), !,
+  arg(A, Old, OldPropList), assertion(is_list(OldPropList)),
+  append(PropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),
   assertion(A=2;A=3), NewFront=..[F, Object, NewPropList].
 declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 
@@ -358,6 +370,7 @@ get_object_props(Obj, ObjectProps, M0):-  declared_link(get_object_props(Obj), O
 
 get_object_props_list(Obj, ObjectProps, M0):- memberchk(propOf(_, Obj), M0), ObjectProps = M0, !.
 get_object_props_list(Obj, ObjectProps, M0):- member(props(Obj, ObjectProps), M0), !.
+get_object_props_list(Obj, ObjectProps, M0):- member(type_props(Obj, ObjectProps), M0), !.
 
 
 get_objects(Spec, Set, State):-
@@ -486,7 +499,6 @@ updateprop_(Object, Prop, S0, S2) :-
   \+ member(props(Object,_), S0),
   declare(props(Object,[]), S0, S1), !,
   updateprop_(Object, Prop, S1, S2).
-
 updateprop_(Object, Prop, S0, S2) :-
  assertion(compound(Prop)),
  direct_props_or(Object, PropList, [], S0),
@@ -502,8 +514,8 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
 
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
-  ((Old==Merged, fail) -> declare(props(Object, PropList), S0, S2) ; % no update
-  (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S0, S2)));
+     ((Old==Merged, fail) -> declare(props(Object, PropList), S0, S2) ; % no update
+       (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S0, S2)));
  append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2));
  (append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2))).
 
@@ -554,6 +566,7 @@ single_valued_prop(desc).
 single_valued_prop(prefix).
 single_valued_prop(mass).
 single_valued_prop(volume).
+single_valued_prop(sp).
 
 
 :- export(is_state_info/1).
@@ -686,6 +699,9 @@ correct_prop(~(has_rel(Verb)), has_rel(Verb, f)):- nop(check_atom(Verb)).
 correct_prop(  Other, Other).
 
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
+
+inner_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
+inner_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
