@@ -62,7 +62,7 @@ autonomous_decide_action(Agent, Mem0, Mem2):-
 
 % If actions are queued, no further thinking required.
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- thought( todo(Agent, [Action|_]), Mem0),
+ thought(Agent, todo(Agent, [Action|_]), Mem0),
  (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  (trival_act(Action)->true;dbug(autonomous, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
@@ -76,7 +76,7 @@ autonomous_decide_action(Agent, Mem0, _) :-
 
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
- thought( current_goals(Agent, [_|_]), Mem0),
+ thought(Agent, current_goals(Agent, [_|_]), Mem0),
  action_handle_goals(Agent, Mem0, Mem1), !.
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
@@ -159,10 +159,10 @@ consider_request(Requester, Agent, Query, M0, M1) :-
  %add_todo( Agent, print_(Answer), M0, M1).
  add_todo( Agent, emote(Agent, say, Requester, Answer), M0, M1).
 
-consider_request(_Speaker, Agent, forget(goals), M0, M2) :-
+consider_request(_Speaker, Agent, forget(Agent,goals), M0, M2) :-
  dbug(autonomous, '~w: forgetting goals.~n', [Agent]),
- forget_always( current_goals(Agent, _), M0, M1),
- memorize( current_goals(Agent, []), M1, M2).
+ forget_always(Agent, current_goals(Agent, _), M0, M1),
+ memorize(Agent, current_goals(Agent, []), M1, M2).
 % Bring object back to Speaker.
 consider_request(Speaker, Agent, fetch(Object), M0, M1) :-
  add_goal(Agent, h(held_by, Object, Speaker), M0, M1).
