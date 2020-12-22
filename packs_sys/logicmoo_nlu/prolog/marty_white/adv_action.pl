@@ -132,11 +132,9 @@ do_todo( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
  {member( todo(Agent, []), Mem0)}, !.
 do_todo( Agent, S0, S9) :-
- undeclare(memories(Agent, Mem0), S0, S1),
- thought_check(Agent, todo(Agent, OldToDo), Mem0),
- append([Action], NewToDo, OldToDo),
- replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2),
- declare(memories(Agent, Mem2), S1, S2),
+ maybe_undeclare(memories(Agent, Mem0), S0, S1),
+ thought_check(Agent, todo(Agent, OldToDo), Mem0),append([Action], NewToDo, OldToDo),replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2),
+ replace_declare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  do_command(Agent, Action, S2, S9).
 do_todo( _Agent, S0, S0).
@@ -168,9 +166,9 @@ do_todo( _Agent, S0, S0).
 
 do_action(Agent, Action, S0, S3) :-
  quietly_must((
- undeclare(memories(Agent, Mem0), S0, S1),
+ maybe_undeclare(memories(Agent, Mem0), S0, S1),
  memorize_doing(Agent, Action, Mem0, Mem1),
- declare(memories(Agent, Mem1), S1, S2))),
+ replace_declare(memories(Agent, Mem1), S1, S2))),
  once(show_failure(must_act( Action, S2, S3));S2=S3), !.
 
 %memorize_doing(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
@@ -209,9 +207,9 @@ satisfy_each(Context, List) ==>> {is_list(List)}, !,
 satisfy_each(_Ctx, A \= B) ==>> {dif(A, B)}, !.
 
 satisfy_each(Context, believe(Beliver, Cond)) ==>>
-   undeclare(memories(Beliver, Memory)),
+   maybe_undeclare(memories(Beliver, Memory)),
    {satisfy_each(Context, Cond, Memory, NewMemory)}, !,
-   declare(memories(Beliver, NewMemory)).
+   replace_declare(memories(Beliver, NewMemory)).
 
 satisfy_each(postCond(_Action), event(Event), S0, S9) :-  must_act(Event, S0, S9).
 
@@ -363,14 +361,14 @@ add_agent_todo( Agent, Action):-
 :- defn_state_setter(add_agent_todo( agent, action)).
 
 add_agent_todo( Agent, Action, S0, S9) :-
-  undeclare(memories(Agent, Mem0), S0, S1),
+  maybe_undeclare(memories(Agent, Mem0), S0, S1),
   add_todo( Agent, Action, Mem0, Mem1),
-  declare(memories(Agent, Mem1), S1, S9).
+  replace_declare(memories(Agent, Mem1), S1, S9).
 
 add_agent_goal(Agent, Action, S0, S9) :-
-  undeclare(memories(Agent, Mem0), S0, S1),
+  maybe_undeclare(memories(Agent, Mem0), S0, S1),
   add_goal(Agent, Action, Mem0, Mem1),
-  declare(memories(Agent, Mem1), S1, S9).
+  replace_declare(memories(Agent, Mem1), S1, S9).
 
 add_look(Agent) ==>>
   h(inside, Agent, _Somewhere),

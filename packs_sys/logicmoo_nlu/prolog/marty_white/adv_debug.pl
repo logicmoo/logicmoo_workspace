@@ -78,6 +78,7 @@ get_structure_owner(KB, Name):- declared(propOf(_, Name), KB), !.
 
 get_structure_label(KB, Name):- \+ is_list(KB), !, Name=KB.
 get_structure_label(KB, Name):- sub_compound(structure_label(Name), KB), !.
+get_structure_label(KB, propOf(_,Name)):- sub_compound(inst(Name), KB), !.
 get_structure_label(KB, inst(Name)):- sub_compound(inst(Name), KB), !.
 
 

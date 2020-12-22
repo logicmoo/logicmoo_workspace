@@ -105,10 +105,10 @@ send_percept(Agent, Event, S0, S2) :-
 
 :- defn_state_setter(do_percept_list(agent,list(event))).
 do_percept_list(Agent, Events, S0, S2) :-
-  undeclare(memories(Agent, Mem0), S0, S1),
+  maybe_undeclare(memories(Agent, Mem0), S0, S1),
   thought_check(Agent,timestamp(Stamp, _OldNow), Mem0),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
-  declare(memories(Agent, Mem3), S1, S2).
+  replace_declare(memories(Agent, Mem3), S1, S2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -126,9 +126,9 @@ queue_agent_percept(Agent, Events, S0, S2) :-
  do_percept_list(Agent, Events, S0, S2).
 queue_agent_percept(Agent, Events, S0, S2) :-
  must_mw1((
- undeclare(perceptq(Agent, Queue), S0, S1),
+ maybe_undeclare(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
- declare(perceptq(Agent, NewQueue), S1, S2))).
+ replace_declare(perceptq(Agent, NewQueue), S1, S2))).
 
 
 :- defn_state_setter(queue_event(listok(event))).
