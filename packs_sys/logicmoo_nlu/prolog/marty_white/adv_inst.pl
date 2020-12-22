@@ -166,8 +166,8 @@ create_objprop(Why, Object, inherit(Other, t), S0, S9):-
  % must_mw1(updateprop_from_create(Object, inherit(Other, t), S5, S9)), !,
  %must_mw1(updateprop_from_create(Object, visited(Other), S0, S1)),
  must_mw1(updateprop_from_create(Object, inherited(Other), S0, S2)),
-
- must_mw1(create_objprop(Why, Object, PropListC, S2, S9)),
+ select_always( inherited(Other), PropListC, PropListD),
+ must_mw1(create_objprop(Why, Object, PropListD, S2, S9)),
  %must_mw1(setprop_from_create(Object, inherited(Other), S3, S9)),
  !.
 

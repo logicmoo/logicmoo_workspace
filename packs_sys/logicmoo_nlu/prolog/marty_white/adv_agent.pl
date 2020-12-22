@@ -251,7 +251,7 @@ decide_action(Agent, Mem0, Mem0) :-
  (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
 decide_action(Agent, Mem0, Mem1) :-
- %must_mw1(thought(Agent,timestamp(T0), Mem0)),
+ %must_mw1(thought(timestamp(T0), Mem0)),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),

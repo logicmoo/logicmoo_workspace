@@ -213,13 +213,16 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 % select_default(Figment, Default, M0, M1).
 thought(Figment, M) :- declared(Figment, M).
 
-unlistify(Figment0,Figment):- is_list(Figment0),!,must(Figment0=[Figment]).
-unlistify(Figment,Figment).
-
-agent_mem(_Agent,Mem0,Mem1,AMem0,AMem1):- Mem0=AMem0,Mem1=AMem1.
-agent_mem(_Agent,Mem0,AMem0):- Mem0=AMem0.
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
+
+in_model(E, L):- quietly(in_model0(E, L)).
+in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
+in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
+in_model0(E, L):- member(EE, L), same_element(EE, E).
+same_element(E, E) :- !.
+same_element(holds_at(E, T), E):- nonvar(T).
+
 
 
 :- defn_state_getter(agent_thought_model(agent, model)).
@@ -718,8 +721,8 @@ correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 inner_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
 inner_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
 
-internal_dialog(Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
-internal_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
+inner_dialog(Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
+inner_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 

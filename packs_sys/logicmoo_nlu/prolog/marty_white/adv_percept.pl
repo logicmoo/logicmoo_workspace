@@ -44,15 +44,15 @@ get_some_agents(Precond, LiveAgents, S0):-
 
 
 
-sense_here0(_Sense, _In, _Here, _S0):-!.
-sense_here0(Sense, _In, Here, S0):-
+sense_here(_Sense, _In, _Here, _S0):-!.
+sense_here(Sense, _In, Here, S0):-
  getprop(Here, TooDark, S0),
  (sensory_problem_solution(Sense, TooDark, EmittingLight) ->
    related_with_prop(Sense, _Obj, Here, EmittingLight, S0) ; true).
 
 can_sense_here(Agent, Sense, S0) :-
  from_loc(Agent, Here, S0),
- sense_here0(Sense, in, Here, S0), !.
+ sense_here(Sense, in, Here, S0), !.
 can_sense_here(_Agent, _Sense, _State) .
 
 is_star(Star):- Star == '*'.
@@ -64,7 +64,7 @@ can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
 can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
 can_sense(_Agent, Sense, Here, S0) :-
   getprop(Here, has_rel(exit(_), t), S0),
-  sense_here0(Sense, in, Here, S0), !.
+  sense_here(Sense, in, Here, S0), !.
 
 can_sense(Agent, Sense, Thing, S0) :-
   can_sense_here(Agent, Sense, S0),
@@ -106,7 +106,7 @@ send_percept(Agent, Event, S0, S2) :-
 :- defn_state_setter(do_percept_list(agent,list(event))).
 do_percept_list(Agent, Events, S0, S2) :-
   undeclare(memories(Agent, Mem0), S0, S1),
-  thought(Agent,timestamp(Stamp, _OldNow), Mem0),
+  thought(timestamp(Stamp, _OldNow), Mem0),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
   declare(memories(Agent, Mem3), S1, S2).
 
@@ -301,8 +301,8 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
-process_percept_list(Agent, Percept, _Stamp,_,_):- fail,
-  inner_dialog(Agent,Percept),fail.
+process_percept_list(_Agent, Percept, _Stamp,_,_):- fail,
+  inner_dialog(Percept),fail.
   
 % process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.
 
