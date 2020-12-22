@@ -106,7 +106,7 @@ send_percept(Agent, Event, S0, S2) :-
 :- defn_state_setter(do_percept_list(agent,list(event))).
 do_percept_list(Agent, Events, S0, S2) :-
   undeclare(memories(Agent, Mem0), S0, S1),
-  thought(Agent,timestamp(Stamp, _OldNow), Mem0),
+  thought_check(Agent,timestamp(Stamp, _OldNow), Mem0),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
   declare(memories(Agent, Mem3), S1, S2).
 
