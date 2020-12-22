@@ -506,3 +506,38 @@ pip download numpy
 pip3 download numpy
 rm -Rf ~/.cache/pip/
 pip3 download numpy
+pip install dbus
+pip3 install dbus
+export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
+pip3 install dbus
+pip3 install numpy
+pip3 install numpy --no-cache-dir
+cat ~/.pip/pip.log
+pip3 install numpy --no-cache-dir
+apt install python3-dvdvideo 
+apt install python3-dvdvideo 
+ps axf
+ps axf
+cls
+ps axf
+source ./StartMUD.sh --debug
+vi ./StartMUD.sh 
+source ./StartMUD.sh --debug
+git status
+ls -l ../../../../logicmoo_workspace.vtg
+mv -l ../../../../logicmoo_workspace.vtg ../../../../logicmoo_workspace.vtg~
+mv  ../../../../logicmoo_workspace.vtg ../../../../logicmoo_workspace.vtg~
+ln -s  ../../../../logicmoo_workspace.vtg ../../../../logicmoo_workspace.vtg~
+mv  ../../../../logicmoo_workspace.vtg ../../../../logicmoo_workspace.vtg~
+ln -s  ../../../../logicmoo_workspace.vtg~ ../../../../logicmoo_workspace.vtg
+git status
+cd  ../../../../
+ls
+cd /opt/logicmoo_workspace
+ls
+ls -l logicmoo_workspace.vtg
+rm logicmoo_workspace.vtg
+ln -s logicmoo_workspace.vtg~ logicmoo_workspace.vtg
+ls
+ls
+ls -l

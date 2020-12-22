@@ -308,9 +308,19 @@ declare_0(Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   NewArg=Object,
   asserta(Call).
 
+merge_proplists(AddPropList, OldPropList, NewPropList):-
+  append(AddPropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),!.
+
 declare_list(Fact, State, NewState) :- assertion(compound(Fact)), assertion(var(NewState)), Fact==[], !, NewState = State.
 declare_list((Fact1, Fact2), State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list([Fact1|Fact2], State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
+declare_list(HasList, State, [NewFront|NewState]) :-
+  HasList=..[F,Object,AddPropList],
+  Old=..[F,Object,OldPropList],
+  select_from(Old, State, NewState), !,
+  assertion(is_list(OldPropList)),
+  merge_proplists(AddPropList, OldPropList, NewPropList),
+  NewFront=..[F, Object, NewPropList].
 declare_list(HasList, State, [NewFront|NewState]) :-
   safe_functor(HasList, F, A), arg(A, HasList, PropList), is_list(PropList),
   safe_functor(Functor, F, A), \+ \+ type_functor(state, Functor),

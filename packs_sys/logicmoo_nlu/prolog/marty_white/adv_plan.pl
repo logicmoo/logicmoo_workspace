@@ -18,7 +18,7 @@
 */
 
 action_handle_goals(Agent, Mem0, Mem0):-
-  \+ thought( current_goals(Agent, [_|_]), Mem0), !,
+  \+ thought(Agent, current_goals(Agent, [_|_]), Mem0), !,
  dbug(planner, '~w: no goals exist~n', [Agent]).
 
 action_handle_goals(Agent, Mem0, Mem1):-
@@ -32,26 +32,26 @@ action_handle_goals(Agent, Mem0, Mem1):-
 
 % If goals exist, forget them (since the above failed)
 action_handle_goals(Agent, Mem0, Mem9) :-
- forget( current_goals(Agent, [G0|GS]), Mem0, Mem1),
- memorize( current_goals(Agent, []), Mem1, Mem2),
+ forget(Agent, current_goals(Agent, [G0|GS]), Mem0, Mem1),
+ memorize(Agent, current_goals(Agent, []), Mem1, Mem2),
  dbug(planner, '~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]),
- memorize_appending(goals_skipped(Agent,[G0|GS]), Mem2, Mem9), !.
+ memorize_appending(Agent,goals_skipped(Agent,[G0|GS]), Mem2, Mem9), !.
 
 
 forget_satisfied_goals(Agent, Mem0, Mem3):-
  Goals = [_G0|_GS],
- forget( current_goals(Agent, Goals), Mem0, Mem1),
+ forget(Agent, current_goals(Agent, Goals), Mem0, Mem1),
  agent_thought_model(Agent, ModelData, Mem0),
  select_unsatisfied_conditions(Goals, Unsatisfied, ModelData) ->
  subtract(Goals, Unsatisfied, Satisfied), !,
  Satisfied \== [],
- memorize( current_goals(Agent, Unsatisfied), Mem1, Mem2),
+ memorize(Agent, current_goals(Agent, Unsatisfied), Mem1, Mem2),
  dbug(planner, '~w Goals some Satisfied: ~p.  Unsatisfied: ~p.~n', [Agent, Satisfied, Unsatisfied]),
- memorize_appending(goals_satisfied(Agent,Satisfied), Mem2, Mem3), !.
+ memorize_appending(Agent,goals_satisfied(Agent,Satisfied), Mem2, Mem3), !.
 
 has_unsatisfied_goals(Agent, Mem0, Mem0):-
  agent_thought_model(Agent, ModelData, Mem0),
- thought( current_goals(Agent, [_|_]), ModelData).
+ thought(Agent, current_goals(Agent, [_|_]), ModelData).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -628,7 +628,7 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
  agent_thought_model(Agent, ModelData, Mem0),
 
  %dbug(planner, 'CURRENT STATE is ~w~n', [Model0]),
- thought( current_goals(Agent, Goals), Mem0),
+ thought(Agent, current_goals(Agent, Goals), Mem0),
  new_plan(Agent, ModelData, Goals, SeedPlan),
  dbug(planner, 'SEED PLAN is:~n'), pprint(SeedPlan),
  !,
