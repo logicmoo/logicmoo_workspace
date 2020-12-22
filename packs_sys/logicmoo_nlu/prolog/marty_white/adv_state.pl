@@ -218,6 +218,7 @@ unlistify(Figment,Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
+
 in_model(E, L):- quietly(in_model0(E, L)).
 
 in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).

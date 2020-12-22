@@ -68,7 +68,7 @@ The Pantry is North of Kitchen
 
 
 Person wants goal satification to be easy.
-Person thinks to know their environment, goal satisfiation will be easier.
+Person thinks if they know their environment, goal satisfiation will become easier.
 Person goal is to know environment.
 Person thinks if one is being an explorer, they will know their environment.
 Person think doing what explorers do will make persons goal satisfaction easier.
@@ -84,14 +84,15 @@ Person goal is to go north
 Person makes plan to go north.. the plan is very simple: [go_dir(Person, walk, north)]
 Person DOES go_dir(Person, walk, north)
 Person leaves kitchen to the north
-Kitchen(thus Person) sees Person departing kitchen to the north
+In Kitchen, thus Person, sees Person departing kitchen to the north
 Person enters pantry from the south
-Pantry(thus Floyed and Person) sees Person enter pantry arriving from the south
+In Pantry, thus Floyed and Person, sees Person enter pantry arriving from the south
 Floyd belives Person was somewhere other than pantry before
 Floyd belives Person traveled north and there might be an exit in the opposite dirrection (south) leading somewhere other than pantry
 Person belives pantry is where they end up if they go north from kitchen
 Person belives kitchen is where they end up if they go south from pantry
 
+'
 
 look(Person) is a cheap and effective strategy
 
@@ -416,23 +417,23 @@ protect_link(Link, StepID, [Cond|Effects], Order0, Order2):-
  protect(Link, StepID, Cond, Order0, Order1),
  protect_link(Link, StepID, Effects, Order1, Order2).
 
-% Protect all links from 1 step's multiple effects
+% Protect all links from 1 step''s multiple effects
 % protect_links(links_to_protect, threatening_step, threatening_cond, ...)
 protect_links([], _StepID, _Effects, Order0, Order0).
 protect_links([Link|Tail], StepID, Effects, Order0, Order2) :-
  protect_link(Link, StepID, Effects, Order0, Order1),
  protect_links(Tail, StepID, Effects, Order1, Order2).
 
-% Protect 1 link from all steps' multiple effects
+% Protect 1 link from all steps'' multiple effects
 protect_link_all(_Link, [], Order0, Order0).
 protect_link_all(Link, [step(StepID, oper(_Self, _, _, Effects))|Steps], Order0, Order2) :-
  protect_link(Link, StepID, Effects, Order0, Order1),
  protect_link_all(Link, Steps, Order1, Order2).
 
 %add_binding((X\=Y), Bindings0, Bindings) :-
-% X \= Y, % if they can't bind, don't bother to add them.
+% X \= Y, % if they can''t bind, don''t bother to add them.
 add_binding((X\=Y), Bindings, [(X\=Y)|Bindings]) :-
- X \== Y, % if they're distinct,
+ X \== Y, % if they''re distinct,
  % \+ \+ X=Y, % but could bind
  bindings_valid(Bindings).
 
