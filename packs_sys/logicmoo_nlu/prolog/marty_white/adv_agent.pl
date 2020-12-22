@@ -112,14 +112,14 @@ add_goal(Agent, Goal, Mem0, Mem2) :- is_list(Goal), !,
  apply_mapl_state(add_goal(Agent), Goal, Mem0, Mem2).
 add_goal(Agent, Goal, Mem0, Mem2) :-
  dbug(planner, 'adding ~w goal ~w~n', [Agent, Goal]),
- thought2(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
+ thought_check(Agent, current_goals(Agent, OldGoals), Mem0),
  append([Goal], OldGoals, NewGoals),
- replace_thought(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
+ replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
 add_goals(_Agent, Goals, Mem0, Mem2) :-
- thought2(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
+ thought_check(Agent, current_goals(Agent, OldGoals), Mem0),
  append(Goals, OldGoals, NewGoals),
- replace_thought(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
+ replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
 
 add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
@@ -127,14 +127,14 @@ add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 
 add_todo( _Agent, Action, Mem0, Mem2) :-
- forget(Agent, todo(Agent, OldToDo), Mem0, Mem1),
+ thought_check(Agent, todo(Agent, OldToDo), Mem0),
  append(OldToDo, [Action], NewToDo),
- memorize(Agent, todo(Agent, NewToDo), Mem1, Mem2).
+ replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2),!.
 
 add_todo_all(_Agent, [], Mem0, Mem0).
 add_todo_all(Agent, [Action|Rest], Mem0, Mem2) :-
  add_todo( Agent, Action, Mem0, Mem1),
- add_todo_all(Agent, Rest, Mem1, Mem2).
+ add_todo_all(Agent, Rest, Mem1, Mem2),!.
 
 
 
@@ -178,8 +178,9 @@ recall_whereis(_S0, Agent, _WHQ, There, Answer, _ModelData) :-
  Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
    'recall a "', There, '".'].
 
-get_agent_prompt(Agent, Prompt):- get_agent_memory(Agent, Mem),
-  thought(Agent,prompt(Prompt), Mem).
+get_agent_prompt(Agent, Prompt):- 
+ must_mw1((get_object_props(Agent, Mem))),
+  declared(prompt(Prompt), Mem),!.
 
 console_decide_action(Agent, Mem0, Mem1):-
  %thought(Agent,timestamp(T0), Mem0),
@@ -247,7 +248,7 @@ decide_action(Agent, Mem0, Mem9):- fail,
   decide_action(Agent, Mem1, Mem9).
 
 decide_action(Agent, Mem0, Mem0) :-
- thought(Agent, todo(Agent, [Action|_]), Mem0),
+ thought_check(Agent, todo(Agent, [Action|_]), Mem0),
  (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
  (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 

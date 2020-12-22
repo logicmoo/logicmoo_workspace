@@ -77,10 +77,6 @@ is_pred1_state(statest).
 is_pred1_state(parseFrame(_)).
 
 
-get_agent_memory(Agent, Mem):-
-   get_advstate(State),
-   declared(props(Agent, Mem), State).
-
 :- nb_setval(advstate_var, []).
 :- thread_initialization(nb_setval(advstate_var, [])).
 
@@ -173,39 +169,52 @@ update_agent_model_props(Agent,Figment, M0, M1) :-  agent_mem(Agent,M0,M1,A0,A1)
   memorize_edit_0(Agent,append, Figment, A0, A1).
 
 :- meta_predicate(memorize_edit(+,3, *, *, *)).
-memorize_edit_0(Agent,Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
+memorize_edit_0(_Agent,Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
+ must_mw1((
    Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
-   (forget(Agent,OldFigment, M0, M1)
+   (select(OldFigment, M0, M1)
      -> ( call(Pred3, OldValue, Value, NewValue), NewFigment =.. [Name, NewValue])
      ; (NewFigment=Figment, M0=M1)),
-   memorize(Agent,NewFigment, M1, M2).
+    append([NewFigment], M1, M2))).
    
-memorize_appending(Agent,Figment, M0, M1) :-  agent_mem(Agent,M0,M1,A0,A1),  
-  memorize_edit_0(Agent,append, Figment, A0, A1).
+memorize_appending(Agent,Figment0, M0, M1) :-  
+ must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
+  listify(Figment0,Figment),
+  internal_dialog(Agent,memorize_appending(Figment)),
+  memorize_edit_0(Agent,append, Figment, A0, A1))).
 
-memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1),!.
 % Manipulate memories (M stands for Memories)
-memorize_prepending(Agent, Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1), 
- listify(Figment0,Figment),
- internal_dialog(Agent,Figment),
- notrace(append(Figment, A0, A1)).
+memorize_prepending(Agent, Figment0, M0, M1) :- must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
+  listify(Figment0,Figment),
+  internal_dialog(Agent,memorize_prepending(Figment)),
+  notrace(append(Figment, A0, A1)))).
 
-replace_thought(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
+replace_thought(Agent,Figment0, M0, M1) :-    must_mw1((agent_mem(Agent,M0,M1,A0,A3),
+  var(A3),
   must_unlistify(Figment0,Figment),
   old_figment(Figment,_F,_A,FigmentErased),
-  select_always(FigmentErased, A0, A1),
-  internal_dialog(Agent,replace(FigmentErased,Figment)),
-  notrace(append(Figment, A0, A1)).
-  !.
+  select(FigmentErased, A0, A1),
+  % internal_dialog(Agent,replace(FigmentErased,Figment)),  
+  append([Figment], A1, A3))),!.
+ 
+thought(Agent,Figment0, M) :-           
+ must_mw1(( agent_mem(Agent,M,A),
+  must_unlistify(Figment0,Figment))),!,
+  (declared(Figment, A) -> internal_dialog(Agent,thought(Figment)); (internal_dialog(Agent,considered(Figment)),fail)),!.  
 
-forget(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
-  must_unlistify(Figment0,Figment),  
-  select_from(Figment, A0, A1),
-  nop(internal_dialog(Agent,forget(Figment))),
-  !.
+thought_check(Agent,Figment0, M) :-
+  must_mw1(( agent_mem(Agent,M,A),
+   must_unlistify(Figment0,Figment))),!,
+  declared(Figment, A).
 
 /*
+memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1),!.
 
+
+forge t(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
+  must_unlistify(Figment0,Figment), !, 
+  select_from(Figment, A0, A1),
+  nop(internal_dialog(Agent,forget(Figment))).
 
 forget_ always(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
   must_unlistify(Figment0,Figment),  
@@ -213,10 +222,6 @@ forget_ always(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
   nop(internal_dialog(Agent,forget(Figment))).
 */
 
-thought2(Agent,Figment0, M,M):-  thought(Agent,Figment0, M).
-thought(Agent,Figment0, M) :-            agent_mem(Agent,M,A),
-  must_unlistify(Figment0,Figment),
-  declared(Figment, A).
 
 
   
@@ -404,6 +409,11 @@ filter_spec( Spec, PropList):- declared(Spec, PropList).
 % TODO:
 % store initial state as clauses which are collected up and put into a list,
 % like the operators are, to provide proper prolog variable management.
+
+get_object_props(Agent, Mem):-
+   get_advstate(State),
+   declared(props(Agent, Mem), State).
+
 :- defn_state_getter(get_object_props(agent, model)).
 get_object_props(Obj, ObjectProps, M0):- var(M0), get_advstate(M0), !, get_object_props(Obj, ObjectProps, M0).
 get_object_props(Obj, ObjectProps, M0):- is_list(M0), get_object_props_list(Obj, ObjectProps, M0), !.

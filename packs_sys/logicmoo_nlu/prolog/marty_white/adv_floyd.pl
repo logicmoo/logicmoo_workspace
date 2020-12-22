@@ -55,14 +55,14 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :-
 
 
 
-% If actions are queued, no further thinking required.
+% If cleanup old goals
 autonomous_decide_action(Agent, Mem0, Mem2):-
   forget_satisfied_goals(Agent, Mem0, Mem1), !,
   autonomous_decide_action(Agent, Mem1, Mem2).
 
 % If actions are queued, no further thinking required.
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- thought(Agent, todo(Agent, [Action|_]), Mem0),
+ thought_check(Agent, todo(Agent, [Action|_]), Mem0),
  (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
  (trival_act(Action)->true;dbug(autonomous, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
@@ -76,16 +76,21 @@ autonomous_decide_action(Agent, Mem0, _) :-
 
 % If goals exist, try to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
- thought(Agent, current_goals(Agent, [_|_]), Mem0),
+ thought_check(Agent, current_goals(Agent, [_|_]), Mem0),
  action_handle_goals(Agent, Mem0, Mem1), !.
 
 autonomous_decide_action(Agent, Mem0, Mem1) :-
- once((autonomous_create_new_goal(Agent, Mem0, Mem1);
+ once((
 % If no actions or goals, but there's an unexplored exit here, go that way.
- autonomous_decide_unexplored_object(Agent, Mem0, Mem1);
- autonomous_decide_unexplored_exit(Agent, Mem0, Mem1);
- autonomous_decide_follow_player(Agent, Mem0, Mem1);
- autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1))).
+ random_permutation([
+ autonomous_create_new_goal(Agent, Mem0, Mem1),
+ autonomous_decide_unexplored_object(Agent, Mem0, Mem1),
+ autonomous_decide_unexplored_exit(Agent, Mem0, Mem1),
+ autonomous_decide_follow_player(Agent, Mem0, Mem1),
+ autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1)
+ ], Premute),
+ member(Try,Premute),
+ call(Try))).
 
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),

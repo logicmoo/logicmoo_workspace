@@ -269,7 +269,7 @@ eng2cmd4(Doer, Words, Action, M) :- fail,
  % If not talking to someone else, substitute Agent for 'self'.
  append(Before, [Doer|After], Words),
  reflexive_self(Doer),
- once(thought(Agent,propOf(memories, Agent), M);thought(Agent,inst(Agent), M)),
+ once(thought_check(Agent,propOf(memories, Agent), M);thought_check(Agent,inst(Agent), M)),
  append(Before, [Agent|After], NewWords),
  reframed_call(eng2cmd4, Doer, NewWords, Action, M).
 
@@ -472,7 +472,7 @@ verbatum_anon_n_args(Verb):- member(Verb, [getprops, setprop, path, delprop, rez
 
 
 parse2object(List, Agent, M):- append(LList, [R], List), member(R, [(?), (.)]), !, parse2object(LList, Agent, M).
-parse2object([am, i], Agent, M):- once(thought(Agent,propOf(_, Agent), M);thought(Agent,inst(Agent), M)), !.
+parse2object([am, i], Agent, M):- once(thought_check(Agent,propOf(_, Agent), M);thought_check(Agent,inst(Agent), M)), !.
 
 parse2object([BE| List], Agent, M):- fail, quietly_talk_db([_, BE, is|_More]), parse2object(List, Agent, M), !.
 parse2object([HAS| List], Agent, M):- fail, quietly_talk_db([_, have|HASHAVE]), member(HAS, HASHAVE), !, parse2object(List, Agent, M).
