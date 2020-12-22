@@ -166,6 +166,28 @@ declared_advstate(Fact):- get_advstate(State), declared(Fact, State).
 % perception:
 % memory: memorize/forget/thought
 
+:- meta_predicate(memorize_edit(+,3, *, *, *)).
+memorize_edit(Agent,Pred3, Figment, A0, A2) :- assertion(\+ is_list(Figment)),
+   agent_mem(Agent,A0,A2,M0,M2), 
+   Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
+   (forget(Agent,OldFigment, M0, M1)
+     -> ( call(Pred3, OldValue, Value, NewValue), NewFigment =.. [Name, NewValue])
+     ; (NewFigment=Figment, M0=M1)),
+   memorize(Agent,NewFigment, M1, M2).
+
+memorize_appending(Agent,Figment, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),   memorize_edit(Agent,append, Figment, A0, A1).
+
+% Manipulate memories (M stands for Memories)
+memorize(Agent, Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1), 
+ listify(Figment0,Figment),
+ inner_dialog(Agent,Figment),
+ notrace(append(Figment, A0, A1)).
+forget(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_from(Figment, A0, A1).
+forget_always(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_always(Figment, A0, A1).
+%forget_default(Figment, Default, M0, M1) :-
+% select_default(Figment, Default, M0, M1).
+thought(Agent,Figment0, M) :- unlistify(Figment0,Figment), agent_mem(Agent,M,A), declared(Figment, A).
+
 :- meta_predicate(memorize_edit(3, *, *, *)).
 memorize_edit(Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
    Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
@@ -191,10 +213,16 @@ forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
 % select_default(Figment, Default, M0, M1).
 thought(Figment, M) :- declared(Figment, M).
 
-unlistify(Figment0,Figment):- is_list(Figment0),!,must(Figment0=[Figment]).
-unlistify(Figment,Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
+
+in_model(E, L):- quietly(in_model0(E, L)).
+in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
+in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
+in_model0(E, L):- member(EE, L), same_element(EE, E).
+same_element(E, E) :- !.
+same_element(holds_at(E, T), E):- nonvar(T).
+
 
 
 :- defn_state_getter(agent_thought_model(agent, model)).
@@ -274,26 +302,16 @@ declare_0(Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   NewArg=Object,
   asserta(Call).
 
-merge_proplists(AddPropList, OldPropList, NewPropList):-
-  append(AddPropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),!.
-
 declare_list(Fact, State, NewState) :- assertion(compound(Fact)), assertion(var(NewState)), Fact==[], !, NewState = State.
 declare_list((Fact1, Fact2), State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list([Fact1|Fact2], State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list(HasList, State, [NewFront|NewState]) :-
-  HasList=..[F,Object,AddPropList],
-  Old=..[F,Object,OldPropList],
-  select_from(Old, State, NewState), !,
-  assertion(is_list(OldPropList)),
-  merge_proplists(AddPropList, OldPropList, NewPropList),
-  NewFront=..[F, Object, NewPropList].
-declare_list(HasList, State, [NewFront|NewState]) :- 
   safe_functor(HasList, F, A), arg(A, HasList, PropList), is_list(PropList),
-  safe_functor(Old, F, A), \+ \+ type_functor(state, Old),
-  arg(1, HasList, Object), arg(1, Old, Object),
-  select_from(Old, State, NewState), !,
-  arg(A, Old, OldPropList), assertion(is_list(OldPropList)),
-  append(PropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),
+  safe_functor(Functor, F, A), \+ \+ type_functor(state, Functor),
+  arg(1, HasList, Object), arg(1, Functor, Object),
+  select_from(Functor, State, NewState), !,
+  arg(A, Functor, OldPropList), assertion(is_list(OldPropList)),
+  append(PropList, OldPropList, NewPropList),
   assertion(A=2;A=3), NewFront=..[F, Object, NewPropList].
 declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 
@@ -499,6 +517,7 @@ updateprop_(Object, Prop, S0, S2) :-
   \+ member(props(Object,_), S0),
   declare(props(Object,[]), S0, S1), !,
   updateprop_(Object, Prop, S1, S2).
+
 updateprop_(Object, Prop, S0, S2) :-
  assertion(compound(Prop)),
  direct_props_or(Object, PropList, [], S0),
@@ -699,9 +718,11 @@ correct_prop(~(has_rel(Verb)), has_rel(Verb, f)):- nop(check_atom(Verb)).
 correct_prop(  Other, Other).
 
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
-
 inner_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
 inner_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
+
+inner_dialog(Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
+inner_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
