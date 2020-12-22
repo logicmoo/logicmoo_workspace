@@ -133,9 +133,9 @@ do_todo( Agent) ==>>
  {member( todo(Agent, []), Mem0)}, !.
 do_todo( Agent, S0, S9) :-
  undeclare(memories(Agent, Mem0), S0, S1),
- forget( todo(Agent, OldToDo), Mem0, Mem1),
+ forget(Agent, todo(Agent, OldToDo), Mem0, Mem1),
  append([Action], NewToDo, OldToDo),
- memorize( todo(Agent, NewToDo), Mem1, Mem2),
+ memorize(Agent, todo(Agent, NewToDo), Mem1, Mem2),
  declare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  do_command(Agent, Action, S2, S9).
@@ -179,9 +179,9 @@ memorize_doing(Agent, Action, Mem0, Mem2):-
   mw_numbervars(ActionG, 999, _),
   ( has_depth(Action)
     -> Mem0 = Mem1 ;
-    (thought(timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), memorize(timestamp(T1, Now), Mem0, Mem1))),
+    (thought(Agent,timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), memorize(Agent,timestamp(T1, Now), Mem0, Mem1))),
   DOES = attempts(Agent, ActionG),
-  memorize(DOES, Mem1, Mem2).
+  memorize(Agent,DOES, Mem1, Mem2).
 
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 

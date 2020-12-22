@@ -30,13 +30,6 @@ model_recent(X,List,List):-
   member(XNew,List),!,
   XNew=X.
 
-in_model(E, L):- quietly(in_model0(E, L)), !.
-in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
-in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
-in_model0(E, L):- member(EE, L), same_element(EE, E).
-
-same_element(E, E) :- !.
-same_element(holds_at(E, T), E):- nonvar(T).
 
 % -------- Model updating predicates (here M stands for ModelData)
 

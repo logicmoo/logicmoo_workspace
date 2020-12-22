@@ -112,23 +112,23 @@ add_goal(Agent, Goal, Mem0, Mem2) :- is_list(Goal), !,
  apply_mapl_state(add_goal(Agent), Goal, Mem0, Mem2).
 add_goal(Agent, Goal, Mem0, Mem2) :-
  dbug(planner, 'adding ~w goal ~w~n', [Agent, Goal]),
- forget( current_goals(Agent, OldGoals), Mem0, Mem1),
+ forget(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
  append([Goal], OldGoals, NewGoals),
- memorize( current_goals(Agent, NewGoals), Mem1, Mem2).
+ memorize(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
 
 add_goals(_Agent, Goals, Mem0, Mem2) :-
- forget( current_goals(Agent, OldGoals), Mem0, Mem1),
+ forget(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
  append(Goals, OldGoals, NewGoals),
- memorize( current_goals(Agent, NewGoals), Mem1, Mem2).
+ memorize(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
 
 
 add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 add_todo( _Agent, Action, Mem0, Mem2) :-
- forget( todo(Agent, OldToDo), Mem0, Mem1),
+ forget(Agent, todo(Agent, OldToDo), Mem0, Mem1),
  append(OldToDo, [Action], NewToDo),
- memorize( todo(Agent, NewToDo), Mem1, Mem2).
+ memorize(Agent, todo(Agent, NewToDo), Mem1, Mem2).
 
 add_todo_all(_Agent, [], Mem0, Mem0).
 add_todo_all(Agent, [Action|Rest], Mem0, Mem2) :-
@@ -178,10 +178,10 @@ recall_whereis(_S0, Agent, _WHQ, There, Answer, _ModelData) :-
    'recall a "', There, '".'].
 
 get_agent_prompt(Agent, Prompt):- get_agent_memory(Agent, Mem),
-  thought(prompt(Prompt), Mem).
+  thought(Agent,prompt(Prompt), Mem).
 
 console_decide_action(Agent, Mem0, Mem1):-
- %thought(timestamp(T0), Mem0),
+ %thought(Agent,timestamp(T0), Mem0),
  %dbug1(read_pending_codes(In, Codes, Found, Missing)),
  % repeat,
  xnotrace((
@@ -246,12 +246,12 @@ decide_action(Agent, Mem0, Mem9):- fail,
   decide_action(Agent, Mem1, Mem9).
 
 decide_action(Agent, Mem0, Mem0) :-
- thought( todo(Agent, [Action|_]), Mem0),
+ thought(Agent, todo(Agent, [Action|_]), Mem0),
  (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
  (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
 decide_action(Agent, Mem0, Mem1) :-
- %must_mw1(thought(timestamp(T0), Mem0)),
+ %must_mw1(thought(Agent,timestamp(T0), Mem0)),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),

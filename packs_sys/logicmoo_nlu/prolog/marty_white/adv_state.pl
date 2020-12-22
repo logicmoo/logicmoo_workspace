@@ -224,9 +224,9 @@ in_model(E, L):- quietly(in_model0(E, L)).
 in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
 in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
 in_model0(E, L):- member(EE, L), same_element(EE, E).
+
 same_element(E, E) :- !.
 same_element(holds_at(E, T), E):- nonvar(T).
-
 
 agent_mem(_Agent,Mem0,Mem1,AMem0,AMem1):- Mem0=AMem0,Mem1=AMem1.
 agent_mem(_Agent,Mem0,AMem0):- Mem0=AMem0.
