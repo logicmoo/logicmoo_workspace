@@ -145,7 +145,7 @@ do_todo( _Agent, S0, S0).
 
 %do_todo_while(Agent, S0, S9) :-
 % declared(memories(Agent, Mem0), S0),
-% thought(Agent, todo(Agent, ToDo), Mem0),
+% th ought(Agent, todo(Agent, ToDo), Mem0),
 % append([Action], NewToDo, OldToDo),
 
 
@@ -179,9 +179,9 @@ memorize_doing(Agent, Action, Mem0, Mem2):-
   mw_numbervars(ActionG, 999, _),
   ( has_depth(Action)
     -> Mem0 = Mem1 ;
-    (thought(Agent,timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), memorize(Agent,timestamp(T1, Now), Mem0, Mem1))),
+    (thought(Agent,timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), memorize_prepending(Agent,timestamp(T1, Now), Mem0, Mem1))),
   DOES = attempts(Agent, ActionG),
-  memorize(Agent,DOES, Mem1, Mem2).
+  memorize_prepending(Agent,DOES, Mem1, Mem2).
 
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 

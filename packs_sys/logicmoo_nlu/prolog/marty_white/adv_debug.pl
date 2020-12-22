@@ -181,7 +181,7 @@ must_mw(G):- G*->true;(mwmsg(fail(must_mw):-G), fail).
 :- export(must_mw1/1).
 :- meta_predicate(must_mw1(*)).
 must_mw1(G):- notrace((assertion(callable(G)), fail)).
-must_mw1((G1, G2)):- !, must_mw1(G1), must_mw1(G2).
+%must_mw1((G1, G2)):- !, must_mw1(G1), must_mw1(G2).
 must_mw1((G1;G2)):- !, (G1;must_mw1(G2)).
 must_mw1(G):- G*->!;(notrace((mwmsg(fail(must_mw1):-G), dumpST)),break, fail).
 % must_mw1(G):- G*->true;(mwmsg(fail(must_mw1):-G), rtrace(G), fail).

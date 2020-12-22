@@ -16,6 +16,8 @@
 % Main file.
 %
 */
+:- ensure_loaded('adv_props').
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
 :- nop(ensure_loaded('adv_main_states')).
@@ -166,31 +168,61 @@ declared_advstate(Fact):- get_advstate(State), declared(Fact, State).
 % perception:
 % memory: memorize/forget/thought
 
+:- meta_predicate(update_agent_model_props(+, *, *, *)).
+update_agent_model_props(Agent,Figment, M0, M1) :-  agent_mem(Agent,M0,M1,A0,A1),  
+  memorize_edit_0(Agent,append, Figment, A0, A1).
+
 :- meta_predicate(memorize_edit(+,3, *, *, *)).
-memorize_edit(Agent,Pred3, Figment, A0, A2) :- assertion(\+ is_list(Figment)),
-   agent_mem(Agent,A0,A2,M0,M2), 
+memorize_edit_0(Agent,Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
    Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
    (forget(Agent,OldFigment, M0, M1)
      -> ( call(Pred3, OldValue, Value, NewValue), NewFigment =.. [Name, NewValue])
      ; (NewFigment=Figment, M0=M1)),
    memorize(Agent,NewFigment, M1, M2).
+   
+memorize_appending(Agent,Figment, M0, M1) :-  agent_mem(Agent,M0,M1,A0,A1),  
+  memorize_edit_0(Agent,append, Figment, A0, A1).
 
-memorize_appending(Agent,Figment, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),   memorize_edit(Agent,append, Figment, A0, A1).
-
+memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1),!.
 % Manipulate memories (M stands for Memories)
-memorize(Agent, Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1), 
+memorize_prepending(Agent, Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1), 
  listify(Figment0,Figment),
  internal_dialog(Agent,Figment),
  notrace(append(Figment, A0, A1)).
-forget(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_from(Figment, A0, A1).
-forget_always(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_always(Figment, A0, A1).
-%forget_default(Figment, Default, M0, M1) :-
-% select_default(Figment, Default, M0, M1).
-thought(Agent,Figment0, M) :- unlistify(Figment0,Figment), agent_mem(Agent,M,A), declared(Figment, A).
+
+replace_thought(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
+  must_unlistify(Figment0,Figment),
+  old_figment(Figment,_F,_A,FigmentErased),
+  select_always(FigmentErased, A0, A1),
+  internal_dialog(Agent,replace(FigmentErased,Figment)),
+  notrace(append(Figment, A0, A1)).
+  !.
+
+forget(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
+  must_unlistify(Figment0,Figment),  
+  select_from(Figment, A0, A1),
+  nop(internal_dialog(Agent,forget(Figment))),
+  !.
+
+/*
 
 
-unlistify(Figment0,Figment):- is_list(Figment0),!,must(Figment0=[Figment]).
-unlistify(Figment,Figment).
+forget_ always(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
+  must_unlistify(Figment0,Figment),  
+  select_always(Figment, A0, A1),
+  nop(internal_dialog(Agent,forget(Figment))).
+*/
+
+thought2(Agent,Figment0, M,M):-  thought(Agent,Figment0, M).
+thought(Agent,Figment0, M) :-            agent_mem(Agent,M,A),
+  must_unlistify(Figment0,Figment),
+  declared(Figment, A).
+
+
+  
+
+must_unlistify(Figment0,Figment):- is_list(Figment0),!,must_mw1(Figment0=[Figment]).
+must_unlistify(Figment,Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
@@ -379,7 +411,7 @@ get_object_props(Obj, ObjectProps, M0):-  declared_link(get_object_props(Obj), O
 
 get_object_props_list(Obj, ObjectProps, M0):- memberchk(propOf(_, Obj), M0), ObjectProps = M0, !.
 get_object_props_list(Obj, ObjectProps, M0):- member(props(Obj, ObjectProps), M0), !.
-get_object_props_list(Obj, ObjectProps, M0):- member(type_props(Obj, ObjectProps), M0), !.
+% get_object_props_list(Obj, ObjectProps, M0):- member(type_props(Obj, ObjectProps), M0), !.
 
 
 get_objects(Spec, Set, State):-
@@ -402,150 +434,9 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 
-
 as_first_arg(Object, Prop, Element):-
   callable(Prop), Prop=..[Name| Value], Element =..[Name, Object| Value].
 
-
-% get_all_props(Object, AllProps, S0):- findall(Prop, getprop(Object, Prop, S0), AllProps).
-:- defn_state_getter(getprop(thing, nv)).
-getprop(Object, Prop, S0) :- quietly((correct_prop(Prop, PropList), getprop0(Object, PropList, S0))).
-
-getprop0(Object, Prop, S0):-
-  ((as_first_arg(Object, Prop, Element), declared(Element, S0))
-     *-> true ; getprop1(Object, [], Object, Prop, S0)).
-
-getprop1(Orig, AlreadyUsed, Object, Prop, S0) :-
- direct_props(Object, PropList, S0),
- ( declared(Prop, PropList)*-> true ;
- inherited_prop1(Orig, AlreadyUsed, Object, Prop, PropList, S0)).
-
-inherited_prop1(Orig, AlreadyUsed, _Object, Prop, PropList, S0):-
- member(inherit(Delegate, t), PropList),
- \+ member(inherit(Delegate, t), AlreadyUsed),
- \+ member(inherit(Delegate, f), PropList),
- \+ member(inherited(Delegate), AlreadyUsed),
- append(AlreadyUsed, PropList, AllPropList),
- \+ member(isnt(Delegate), AllPropList),
- getprop1(Orig, AllPropList, Delegate, Prop, S0).
-
-inherited_prop1(_Orig, AlreadyUsed, _Object, Prop, PropList, _S0):-
- member(link(Delegate), PropList),
- \+ member(link(Delegate), AlreadyUsed),
- nb_current(Delegate, NewProps),
- member(Prop, NewProps).
-
-
-direct_props(Object, PropList, State):-
- (var(State)->get_advstate(State); true),
- (declared(props(Object, PropList), State)
- *-> true
- ; ( declared(type_props(Object, PropList), State)
- *-> true
-  ; extra_decl(Object, PropList))).
-
-direct_props_or(Object, PropList, Default, S0) :-
- direct_props(Object, PropList, S0)*->true; PropList=Default.
-
-object_props_or(Object, PropList, Default, S0) :-
- declared(props(Object, PropList), S0)*->true; PropList=Default.
-
- :- meta_predicate each_prop(3, ?, ?, ?).
-each_prop(_, [], S0, S0) :-!.
-each_prop(Pred, [Prop|List], S0, S2) :- !,
-  each_prop(Pred, Prop, S0, S1),
-  each_prop(Pred, List, S1, S2).
-each_prop(Pred, Prop, S0, S1):- assertion(compound(Prop)), call(Pred, Prop, S0, S1), !.
-
-
-% Remove Prop.  @TODO @BUG may not undo side-effects 
-:- defn_state_setter(delprop(thing, nv)).
-delprop(Object, Prop, S0, S2) :- notrace(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_(Object), PropList, S0, S2)))).
-delprop_(Object, Prop, S0, S2) :-
- undeclare(props(Object, PropList), S0, S1),
- select_from(Prop, PropList, NewPropList),
- declare(props(Object, NewPropList), S1, S2).
-
-% Remove Prop Always. @TODO @BUG may not undo side-effects 
-:- defn_state_setter(delprop_always(thing, nv)).
-delprop_always(Object, Prop, S0, S2) :- notrace(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))).
-delprop_always_(Object, Prop, S0, S2) :-  delprop_(Object, Prop, S0, S2), !.
-delprop_always_(_Object, _Prop, S0, S0).
-
-% Replace or create Prop.
-:- defn_state_setter(setprop(thing, nv)).
-setprop(Object, Prop, S0, S2):- create_objprop(setprop, Object, Prop, S0, S2),!.
-setprop_from_create(Object, Prop, S0, S2) :- notrace((correct_props(Object, Prop, PropList), each_prop(setprop_(Object), PropList, S0, S2))).
-
-setprop_(Object, Prop, S0, S2) :- 
-  assertion(is_list(S0)),
-  \+ member(props(Object,_), S0),
-  declare(props(Object,[]), S0, S1), !,
-  setprop_(Object, Prop, S1, S2).
-setprop_(Object, [P|PropS], S0, S2) :- !, setprop_(Object, P, S0, S1), setprop_(Object, PropS, S1, S2).
-setprop_(Object, Prop, S0, S2) :-
- direct_props_or(Object, PropList, [], S0),
- undeclare_always(props(Object, _), S0, S1),
- safe_functor(Prop, F, A),
- duplicate_term(Prop, Old),
- nb_setarg(A, Old, _),
- (select_from(Old, PropList, PropList2) ->
- (upmerge_prop(F, A, Old, Prop, Merged) ->
-  ((Old==Merged, fail) -> S2=S0; % no update
-  (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S1, S2)));
- append([Prop], PropList, PropList3), declare(props(Object, PropList3), S1, S2));
- (append([Prop], PropList, PropList3), declare(props(Object, PropList3), S1, S2))).
-
-% Update or create Prop.
-:- defn_state_setter(updateprop(thing, nv)).
-updateprop(Object, Prop, S0, S2):- create_objprop(updateprop, Object, Prop, S0, S2).
-
-updateprop_from_create(Object, Prop, S0, S2) :- notrace((correct_props(Object, Prop, PropList), 
-  must(each_prop(updateprop_(Object), PropList, S0, S2)))).
-
-updateprop_(Object, Prop, S0, S2) :- 
-  assertion(is_list(S0)),
-  \+ member(props(Object,_), S0),
-  declare(props(Object,[]), S0, S1), !,
-  updateprop_(Object, Prop, S1, S2).
-
-updateprop_(Object, Prop, S0, S2) :-
- assertion(compound(Prop)),
- direct_props_or(Object, PropList, [], S0),
- (member(Prop, PropList)
- -> S0=S2;  % no update
- (undeclare_always(props(Object, _), S0, S1),
- updateprop_1(Object, Prop, PropList, S1, S2))).
-
-updateprop_1(Object, Prop, PropList, S0, S2) :-
- safe_functor(Prop, F, A),
- duplicate_term(Prop, Old),
- nb_setarg(A, Old, _),
-
- (select_from(Old, PropList, PropList2) ->
- (upmerge_prop(F, A, Old, Prop, Merged) ->
-     ((Old==Merged, fail) -> declare(props(Object, PropList), S0, S2) ; % no update
-       (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S0, S2)));
- append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2));
- (append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2))).
-
-
-/*
-
-setprop(Object, Prop, S0, S2) :-
- %must_mw1((
- %assertion(\+ atom(Prop)),
- (undeclare(props(Object, PropList), S0, S1),
- select_always(Prop, PropList, PropList2),
- append([Prop], PropList2, PropList3),
- declare(props(Object, PropList3), S1, S2)))
- ->true;
- declare(props(Object, [Prop]), S0, S2)).
-*/
-
-upmerge_prop(_, _, Before, After, Result):- Before==After, !, Result=Before.
-upmerge_prop(F, N, Before, After, Result):- arg(N, Before, B), arg(N, After, A), !,
- merge_value(F, N, B, A, R), duplicate_term(After, Result), nb_setarg(N, Result, R).
 
 merge_value(F, N, B, A, RO):- text_prop(F), \+ is_list(B), !, merge_value(F, N, [B], A, RO).
 merge_value(F, N, B, A, RO):- text_prop(F), \+ is_list(A), !, merge_value(F, N, B, [A], RO).
@@ -566,17 +457,7 @@ merge_value(_, 1, _, A, R):- number(A), !, A=R.
 merge_value(_, 1, _, _, _):- !, fail.
 merge_value(_F, _, _B, A, R):- R = A.
 
-text_prop(nouns).
-text_prop(nominals).
-text_prop(adjs).
-text_prop(desc).
 
-single_valued_prop(name).
-single_valued_prop(desc).
-single_valued_prop(prefix).
-single_valued_prop(mass).
-single_valued_prop(volume).
-single_valued_prop(sp).
 
 
 :- export(is_state_info/1).

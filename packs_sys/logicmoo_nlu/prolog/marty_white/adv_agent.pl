@@ -112,19 +112,20 @@ add_goal(Agent, Goal, Mem0, Mem2) :- is_list(Goal), !,
  apply_mapl_state(add_goal(Agent), Goal, Mem0, Mem2).
 add_goal(Agent, Goal, Mem0, Mem2) :-
  dbug(planner, 'adding ~w goal ~w~n', [Agent, Goal]),
- forget(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
+ thought2(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
  append([Goal], OldGoals, NewGoals),
- memorize(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
+ replace_thought(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
 
 add_goals(_Agent, Goals, Mem0, Mem2) :-
- forget(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
+ thought2(Agent, current_goals(Agent, OldGoals), Mem0, Mem1),
  append(Goals, OldGoals, NewGoals),
- memorize(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
+ replace_thought(Agent, current_goals(Agent, NewGoals), Mem1, Mem2).
 
 
 add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
+
 add_todo( _Agent, Action, Mem0, Mem2) :-
  forget(Agent, todo(Agent, OldToDo), Mem0, Mem1),
  append(OldToDo, [Action], NewToDo),

@@ -18,15 +18,16 @@
 */
 
 must_be_same(X,Y):- must(X==Y).
+model_prepend(X,Y,Z):- append(X,Y,Z).
+model_select(X,Y,Z):- select(X,Y,Z).
+model_select_always(X,Y,Z):- select_always(X,Y,Z).
 %:- ensure_loaded(adv_main).
 
 % TODO: change agent storage into a term:
 % mind(DoerName, DoerType, History, ModelData, Goals /*, ToDo*/)
 
-varify_last_arg(X,XNew):- functor(X,F,A),duplicate_term(X,XNew),nb_setarg(A,F,_),!.
-
 model_recent(X,List,List):-
-  varify_last_arg(X,XNew),
+  old_figment(X,_F,_A,XNew),
   member(XNew,List),!,
   XNew=X.
 
@@ -190,10 +191,6 @@ each_update_model( Knower, [Percept|Tail], Timestamp, Memory, M0, M3) :-
  maybe_store(Percept, M0, M1),
  map_apply_findall(update_model(Knower, Percept, Timestamp, Memory), M1, M2),
  each_update_model( Knower, Tail, Timestamp, Memory, M2, M3).
-
-model_prepend(X,Y,Z):- append(X,Y,Z).
-model_select(X,Y,Z):- select(X,Y,Z).
-model_select_always(X,Y,Z):- select_always(X,Y,Z).
 
 
 
