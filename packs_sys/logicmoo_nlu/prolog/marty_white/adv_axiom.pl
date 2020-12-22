@@ -393,10 +393,14 @@ aXiom(Action, S0, S9) ::=
  eVent(Agent, change_state(Agent, Action, Thing, Opened=TF), S0, S9), !.
 
 
-aXiom(Action,S,E) ::= 
-  current_predicate(_,mu:Action), !,
+aXiom(Action,S,E) ::=
+  append_term_l(Action,[S,E],ActionSE),
+  current_predicate(_,mu:ActionSE), !,
   call(Action,S,E).
 
+aXiom(Action,S,E) ::= 
+  current_predicate(_,mu:Action), !,
+  call(Action),S=E.
 
 :- add_bt_meta_processing(aXiom).
 
