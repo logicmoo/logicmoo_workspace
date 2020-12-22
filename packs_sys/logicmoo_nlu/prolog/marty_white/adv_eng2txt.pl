@@ -67,6 +67,8 @@ context_agent(Agent, Context):- atom(Context), !, Context=Agent.
 context_agent(Agent, Context):-
  declared(agent(Agent), Context), !.
 context_agent(Agent, Context):-
+ declared(propOf(_, Agent), Context), !.
+context_agent(Agent, Context):-
  declared(inst(Agent), Context), !.
 context_agent(Agent, Context):- \+ is_list(Context),
  action_doer(Context, Agent).

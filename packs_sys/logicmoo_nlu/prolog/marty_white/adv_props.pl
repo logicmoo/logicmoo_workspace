@@ -73,9 +73,9 @@ each_prop(Pred, Prop, S0, S1):- assertion(compound(Prop)), call(Pred, Prop, S0, 
 :- defn_state_setter(delprop(thing, nv)).
 delprop(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_(Object), PropList, S0, S2)))),!.
 delprop_(Object, Prop, S0, S2) :-
- undeclare(props(Object, PropList), S0, S1),
+ must_mw1(declared(props(Object, PropList), S0, S1)),
  select_from(Prop, PropList, NewPropList),
- declare(props(Object, NewPropList), S1, S2).
+ replace_declare(props(Object, NewPropList), S1, S2).
 
 % Remove Prop Always. @TODO @BUG may not undo side-effects 
 :- defn_state_setter(delprop_always(thing, nv)).
@@ -100,14 +100,15 @@ setprop_(Object, Prop, S0, S2) :-
 setprop_(Object, [P|PropS], S0, S2) :- !, setprop_(Object, P, S0, S1), setprop_(Object, PropS, S1, S2).
 setprop_(Object, Prop, S0, S2) :-
  direct_props_or(Object, PropList, [], S0),
- undeclare_always(props(Object, _), S0, S1),
+ %undeclare_always(props(Object, _), S0, S1),
+ S0=S1,
  old_figment(Prop,F,A,Old),
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
   ((Old==Merged, fail) -> S2=S0; % no update
-  (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S1, S2)));
- append([Prop], PropList, PropList3), declare(props(Object, PropList3), S1, S2));
- (append([Prop], PropList, PropList3), declare(props(Object, PropList3), S1, S2))).
+  (append([Merged], PropList2, PropList3), replace_declare(props(Object, PropList3), S1, S2)));
+      append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S1, S2));
+ (    append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S1, S2))).
 
 
 old_figment(Prop,F, A, Old):- 
@@ -142,10 +143,10 @@ updateprop_1(Object, Prop, PropList, S0, S2) :-
  old_figment(Prop,F,A,Old),
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
-     ((Old==Merged, fail) -> declare(props(Object, PropList), S0, S2) ; % no update
-       (append([Merged], PropList2, PropList3), declare(props(Object, PropList3), S0, S2)));
- append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2));
- (append([Prop], PropList, PropList3), declare(props(Object, PropList3), S0, S2))).
+     ((Old==Merged, fail) -> replace_declare(props(Object, PropList), S0, S2) ; % no update
+       (append([Merged], PropList2, PropList3), replace_declare(props(Object, PropList3), S0, S2)));
+ append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2));
+ (append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S0, S2))).
 
 
 

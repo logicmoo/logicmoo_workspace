@@ -38,10 +38,10 @@ declare_inst_type(Inst, Type, S0, S2):-
   assertion(nonvar(Inst)),
   assertion(nonvar(Type)),
   object_props_or(Inst, PropList1, [], S0),
-  undeclare_always(props(Inst, _), S0, S1),
   (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,[Type])|PropList1]=PropList),
   list_to_set([shape=Type, inherit(Type, t)|PropList], Set),
-  declare(props(Inst, Set), S1, S2).
+  %undeclare_always(props(Inst, _), S0, S1),
+  replace_declare(props(Inst, Set), S0, S2).
 
 init_objects :-
   with_mutex(get_advstate,
@@ -99,8 +99,8 @@ mu_create_object(Object, S0, S0) :- declared(props(Object, PropList), S0), membe
 mu_create_object(Object, S0, S9) :-
  object_props_or(Object, PropList, [], S0), !,
  dbug1(mu_create_object(Object, PropList)),
- undeclare_always(props(Object, _), S0, S2),
- declare(props(Object, [co(PropList)]), S2, S3),
+ % undeclare_always(props(Object, _), S0, S2),
+ replace_declare(props(Object, [co(PropList)]), S0, S3),
  create_objprop(creation, Object, PropList, S3, S4),
  create_objprop(instance, Object, PropList, S4, S9).
 /*
@@ -132,7 +132,7 @@ create_objprop(_Why, Object, inherit(perceptq, t), S0, S1):- !,
  % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(_Why, Object, inherit(memorizer, t), S0, S0):- declared(memories(Object, _), S0), !.
 create_objprop(_Why, Self, inherit(memorizer, t), S0, S2):- !, clock_time(Now),
- declare(memories(Self, [
+ replace_declare(memories(Self, [
   propOf(memories, Self),
  structure_label(mem(Self)),
  timestamp(0, Now),

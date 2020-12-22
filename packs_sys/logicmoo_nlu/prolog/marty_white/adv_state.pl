@@ -246,7 +246,7 @@ agent_mem(_Agent,Mem0,AMem0):- Mem0=AMem0.
 :- defn_state_getter(agent_thought_model(agent, model)).
 agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
 agent_thought_model(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
-agent_thought_model(Agent, ModelData, M0) :- memberchk(inst(Agent), M0), ModelData = M0, !.
+agent_thought_model(Agent, ModelData, M0) :- memberchk(propOf(memories, Agent), M0), ModelData = M0, !.
 agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !,
   agent_thought_model(Agent, ModelData, M1).
 
@@ -345,7 +345,14 @@ declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 
 
 
+maybe_undeclare(Fact, State, NewState):- declared(Fact, State), NewState=State.
+%maybe_undeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
 
+replace_declare(Fact, State, NewState):-
+ must_mw1((old_figment(Fact, _F, A, Old),
+ (undeclare(Old, State, MidState);(State=MidState,ignore(arg(A,Old,[])))),
+ nop(internal_dialog($agent,replace(Old,Fact))),
+ declare(Fact, MidState, NewState))).
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
 undeclare(Fact, State, NewState):- notrace(undeclare_list(Fact, State, NewState)).
@@ -355,7 +362,7 @@ undeclare_list(Fact, State, NewState) :- assertion(is_list(State)), copy_term(St
 %undeclare_always(Fact, State):- player_local(Fact, Player), !, undeclare_always(wishes(Player, Fact), State).
 undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 
-%declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
+% declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
 
 declared(State) :- % dumpST,throw
   (with_mutex(get_advstate, advstate_db(State))).
@@ -369,7 +376,7 @@ declared_0(Fact, State) :-
 
 declared_list(Fact, State) :- assertion(is_list(State)), member(Fact, State).
 declared_list(Fact, State) :- member(link(VarName), State), declared_link(declared, Fact, VarName).
-declared_list(Fact, State) :- member(inst(Object), State), declared_link(declared, Fact, Object).
+declared_list(Fact, State) :- member(propOf(_, Object), State), declared_link(declared, Fact, Object).
 
 :- meta_predicate(declared_link(2, ?, *)).
 declared_link(Pred2, Fact, VarName):- strip_module(Pred2, _, Var), var(Var), !, declared_link(declared, Fact, VarName).
