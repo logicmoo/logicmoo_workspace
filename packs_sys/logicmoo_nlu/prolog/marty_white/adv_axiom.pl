@@ -376,8 +376,8 @@ aXiom(sub__examine(Agent, Sense, Prep, Object, Depth)) ==>> must_mw1(act_examine
 % used mainly to debug if things are locally accessable
 aXiom(touch(Agent, Thing)) ==>> !,
  unless_reason(Agent, will_touch(Agent, Thing),
-   cant( reach(Agent, Thing))),
- send_1percept(Agent, [success(touch(Agent, Thing), 'Ok.')]).
+                      cant( reach(Agent, Thing)),
+                      send_1percept(Agent, [success(touch(Agent, Thing), 'Ok.')])).
 
 
 aXiom(change_state(Agent, Action, Thing, Prop)) ==>> !,
