@@ -161,8 +161,8 @@ consider_request(Requester, Agent, Query, M0, M1) :-
 
 consider_request(_Speaker, Agent, forget(Agent,goals), M0, M2) :-
  dbug(autonomous, '~w: forgetting goals.~n', [Agent]),
- forget_always(Agent, current_goals(Agent, _), M0, M1),
- memorize(Agent, current_goals(Agent, []), M1, M2).
+ update_agent_model_props(Agent, current_goals(Agent, []), M0, M2),!.
+
 % Bring object back to Speaker.
 consider_request(Speaker, Agent, fetch(Object), M0, M1) :-
  add_goal(Agent, h(held_by, Object, Speaker), M0, M1).

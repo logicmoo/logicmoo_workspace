@@ -32,20 +32,20 @@ action_handle_goals(Agent, Mem0, Mem1):-
 
 % If goals exist, forget them (since the above failed)
 action_handle_goals(Agent, Mem0, Mem9) :-
- forget(Agent, current_goals(Agent, [G0|GS]), Mem0, Mem1),
- memorize(Agent, current_goals(Agent, []), Mem1, Mem2),
- dbug(planner, '~w: Can\'t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]),
+ thought2(Agent, current_goals(Agent, [G0|GS]), Mem0),
+ replace_thought(Agent, current_goals(Agent, []), Mem0, Mem2),
+ dbug(planner, '~w: Can`t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]), 
  memorize_appending(Agent,goals_skipped(Agent,[G0|GS]), Mem2, Mem9), !.
 
 
 forget_satisfied_goals(Agent, Mem0, Mem3):-
  Goals = [_G0|_GS],
- forget(Agent, current_goals(Agent, Goals), Mem0, Mem1),
+ thought(Agent, current_goals(Agent, Goals), Mem0),
  agent_thought_model(Agent, ModelData, Mem0),
  select_unsatisfied_conditions(Goals, Unsatisfied, ModelData) ->
  subtract(Goals, Unsatisfied, Satisfied), !,
  Satisfied \== [],
- memorize(Agent, current_goals(Agent, Unsatisfied), Mem1, Mem2),
+ replace_thought(Agent, current_goals(Agent, Unsatisfied), Mem0, Mem2),
  dbug(planner, '~w Goals some Satisfied: ~p.  Unsatisfied: ~p.~n', [Agent, Satisfied, Unsatisfied]),
  memorize_appending(Agent,goals_satisfied(Agent,Satisfied), Mem2, Mem3), !.
 

@@ -388,8 +388,8 @@ props(screendoor, [
    mass = 50, volume = 50, % liters  (water is 1 kilogram per liter)
    has_sense(see),
    
-    %inherit(perceptq),
-    inherit(no_perceptq),
+    inherit(perceptq),
+    %inherit(no_perceptq),
       
    inherit(memorizer),
    inherit(actor),
@@ -427,7 +427,7 @@ props(screendoor, [
    ~has_rel(held_by),
    ~has_rel(worn_by),
     has_sense(see),
-    inherit(no_perceptq),
+    % inherit(no_perceptq),
     inherit(noncorporial),
     inherit(actor)
    ]),

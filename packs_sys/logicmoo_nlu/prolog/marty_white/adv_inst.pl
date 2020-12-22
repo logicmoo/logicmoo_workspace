@@ -120,7 +120,7 @@ create_objprop(Why, Object, [Prop|List], S0, S2):- !,
  create_objprop(Why, Object, List, S0, S1),
  create_objprop(Why, Object, Prop, S1, S2).
 
-create_objprop(Why, Object, Prop, S0, S1):- xnotrace((correct_props(Object, Prop, PropList),[Prop]\==PropList,!)),
+create_objprop(Why, Object, Prop, S0, S1):- /*notrace*/((correct_props(Object, Prop, PropList),[Prop]\==PropList,!)),
   create_objprop(Why, Object, PropList, S0, S1).
   
  % As events happen, percepts are entered in the percept queue of each agent.

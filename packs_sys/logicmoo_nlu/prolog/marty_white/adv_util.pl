@@ -130,7 +130,7 @@ apply_all(List, Goal, S0, S2) :- xnotrace((list_to_set(List, Set),
 apply_all([Arg|ArgTail], Goal, S0, S2) :-
  runnable_goal(Goal, Runnable),
  apply_first_arg_state(Arg, Runnable, S0, S1),
- !, % Don't allow future failure to redo successful agents.
+ !, % Don''t allow future failure to redo successful agents.
  apply_all(ArgTail, Goal, S1, S2).
 
 
