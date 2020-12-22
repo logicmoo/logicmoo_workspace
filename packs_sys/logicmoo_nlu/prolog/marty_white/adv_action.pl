@@ -145,7 +145,7 @@ do_todo( _Agent, S0, S0).
 
 %do_todo_while(Agent, S0, S9) :-
 % declared(memories(Agent, Mem0), S0),
-% thought( todo(Agent, ToDo), Mem0),
+% thought(Agent, todo(Agent, ToDo), Mem0),
 % append([Action], NewToDo, OldToDo),
 
 
