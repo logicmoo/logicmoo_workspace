@@ -99,7 +99,7 @@ h(At, X, Y, S0):- g_h(At, X, Y, S0).
 :- defn_state_getter(g_h(domrel, source, target)).
 
 
-g_h(At, X, Y, S0) :- in_model(h(At, X, Y), S0).
+g_h(At, X, Y, S0) :- in_model( h(At, X, Y), S0).
 
 g_h(child, X, Y, S0) :- subrelation(At, child), g_h(At, X, Y, S0).
 

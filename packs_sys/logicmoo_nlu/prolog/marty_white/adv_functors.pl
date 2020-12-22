@@ -573,7 +573,7 @@ type_functor(unk, make(reload(A))).
 type_functor(unk, make_hook(before, A)).
 type_functor(unk, modified_file(A)).
 type_functor(unk, fetch(A)).
-type_functor(unk, forget(goals)).
+type_functor(unk, forget(agent,goals)).
 type_functor(unk, msg_from(A, B)).
 type_functor(unk, change_state(A, B, C, D, E)).
 type_functor(unk, will_touch(A, B)).

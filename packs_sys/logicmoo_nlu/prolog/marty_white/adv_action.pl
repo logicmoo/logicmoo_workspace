@@ -315,7 +315,8 @@ act_prevented_by('close', 'locked', t).
 
 
 event_failed(Agent,CUZ):- simplify_reason(CUZ,Msg), 
-  internal_dialog(event_failed(Agent,CUZ)), player_format(Agent, '~N~p~n', [Msg]).
+  inner_dialog(Agent,event_failed(Agent,CUZ)), 
+  player_format(Agent, '~N~p~n', [Msg]).
 
 :- meta_predicate maybe_when(0, 0).  
 maybe_when(If, Then):- If -> Then ; true.
@@ -323,6 +324,10 @@ maybe_when(If, Then):- If -> Then ; true.
 :- meta_predicate unless_reason(*, '//', *, ?, ?).
 unless_reason(_Agent, Then, _Msg) ==>> Then, !.
 unless_reason(Agent, _Then, Msg) ==>> {event_failed(Agent, Msg)}, !, {fail}.
+
+:- meta_predicate unless_reason(*, '//', *, '//', ?, ?).
+unless_reason(_Agent, Unless, _Msg, Then) ==>> Unless, !, Then.
+unless_reason(Agent, _Unless, Msg, _Then) ==>> {event_failed(Agent, Msg)}, !.
 
 :- meta_predicate unless(*, '//', '//', ?, ?).
 unless(_Agent, Required, Then) ==>> Required, !, Then.

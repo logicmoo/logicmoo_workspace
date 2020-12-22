@@ -456,9 +456,9 @@ verbatum_anon(Verb):- verbatum_anon_one_or_zero_arg(Verb).
 
 verbatum_anon_one_or_zero_arg(Verb):- member(Verb, [
  prolog, make, update_changed_files, cls,
- mem, types, props, debug,
- ls, cd, pwd,
+ ls, cd, pwd, debug,
  useragent, echo, halt, english,
+ mem, types, props, 
  memory, model, properties, state, status, perceptq, help, threads,
  spy, nospy, call,
  rtrace, nortrace,

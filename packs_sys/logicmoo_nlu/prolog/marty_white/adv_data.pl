@@ -505,9 +505,9 @@ props(screendoor, [
    inherit(moveable),
    volume_capacity = 2,
    breaks_into = shards,
-   cleanliness = dirty,
-   name($class)
-  ]),
+   
+   %name($class),
+  cleanliness = dirty]),
 
  type_props(fireplace, [
   ~has_rel(on),
