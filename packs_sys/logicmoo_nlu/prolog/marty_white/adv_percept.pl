@@ -44,7 +44,7 @@ get_some_agents(Precond, LiveAgents, S0):-
 
 
 
-sense_here0(_Sense, _In, _Here, _S0):-!.
+%sense_here0(_Sense, _In, _Here, _S0):-!.
 sense_here0(Sense, _In, Here, S0):-
  getprop(Here, TooDark, S0),
  (sensory_problem_solution(Sense, TooDark, EmittingLight) ->
@@ -53,7 +53,7 @@ sense_here0(Sense, _In, Here, S0):-
 can_sense_here(Agent, Sense, S0) :-
  from_loc(Agent, Here, S0),
  sense_here0(Sense, in, Here, S0), !.
-can_sense_here(_Agent, _Sense, _State) .
+% can_sense_here(_Agent, _Sense, _State) .
 
 is_star(Star):- Star == '*'.
 is_star('*'(Star)):- nonvar(Star).
@@ -62,7 +62,7 @@ can_sense(Agent, Sense, Thing, S0, S9):- can_sense(Agent, Sense, Thing, S0), S9=
 :- defn_state_getter(can_sense(agent, sense, thing)).
 can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
 can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
-can_sense(_Agent, Sense, Here, S0) :-
+can_sense(_Agent, Sense, Here, S0) :- fail,
   getprop(Here, has_rel(exit(_), t), S0),
   sense_here0(Sense, in, Here, S0), !.
 
@@ -76,7 +76,7 @@ can_sense(Agent, Sense, Thing, S0) :-
  h(Sense, Agent, Here, S0),
  (Thing=Here; h(Sense, Thing, Here, S0)).
 */
-can_sense(Agent, Sense, Thing, _State):-
+can_sense(Agent, Sense, Thing, _State):- fail, 
  dbug1(pretending_can_sense(Agent, Sense, Thing, Agent)), !.
 
 as_single_event([Event], SEvent):- !, as_single_event(Event, SEvent).
@@ -104,9 +104,11 @@ send_percept(Agent, Event, S0, S2) :-
   do_percept_list(Agent, Event, S0, S2).
 
 :- defn_state_setter(do_percept_list(agent,list(event))).
+do_percept_list(_Agent, [], S0, S0):-!.
+do_percept_list(Agent, Events,_S0,_S2) :- dmsg(do_percept_list(Agent, Events)),fail.
 do_percept_list(Agent, Events, S0, S2) :-
   maybe_undeclare(memories(Agent, Mem0), S0, S1),
-  thought_check(Agent,timestamp(Stamp, _OldNow), Mem0),
+  agent_clock_time_prev(Agent,timestamp(Stamp, _OldNow), Events),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
   replace_declare(memories(Agent, Mem3), S1, S2).
 
@@ -121,14 +123,15 @@ queue_agent_percept(Agent, Event, S0, S2) :-
  \+ is_list(Event), !,
  queue_agent_percept(Agent, [Event], S0, S2).
 % Agent process event list now
+
+queue_agent_percept(_Agent, [], S0, S0):-!.
+%queue_agent_percept(Agent, Events,_S0,_S2) :- dmsg(queue_agent_percept(Agent, Events)), player_X1\==Agent,dumpST,fail.
 queue_agent_percept(Agent, Events, S0, S2) :-
  getprop(Agent, inherited(no_perceptq), S0), !,
  do_percept_list(Agent, Events, S0, S2).
-queue_agent_percept(Agent, Events, S0, S2) :-
- must_mw1((
- maybe_undeclare(perceptq(Agent, Queue), S0, S1),
- append(Queue, Events, NewQueue),
- replace_declare(perceptq(Agent, NewQueue), S1, S2))).
+queue_agent_percept(Agent, Events, S0, S2) :- 
+ agent_clock_time_now(Agent,timestamp(Stamp, OldNow), S0),
+ append_toplevel_props(perceptq(Agent, [timestamp(Stamp, OldNow)|Events]),S0,S2).
 
 
 :- defn_state_setter(queue_event(listok(event))).
@@ -136,7 +139,7 @@ queue_event(Event, S0, S2) :-
  each_sensing_thing(_All, queue_agent_percept(Event), S0, S2).
 
 
-locally__agent_percept__(Agent, Event, Places, S0, S1) :-
+locally__agent_percept__(Agent, Event, Places, S0, S1) :- assertion(is_list(Places)),
  member(Where, Places), can_sense(Agent, _, Where, S0), !,
  queue_agent_percept(Agent, Event, S0, S1), !.
 locally__agent_percept__(_Agent, _Event, _Places, S0, S0).
@@ -303,9 +306,9 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
-process_percept_list(Agent, Percept, _Stamp,_,_):- fail,
-  internal_dialog(Agent,Percept),fail.
-  
+process_percept_list(Agent, PerceptList, _Stamp,_,_):- 
+  internal_dialog(Agent, PerceptList), fail.
+
 % process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.
 
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
@@ -319,7 +322,7 @@ process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  append(Percept, Mem0, PerceptMem),
  each_update_model(Agent, Percept, Stamp, PerceptMem, Mem0, Mem2),
  process_percept_main(Agent, Percept, Stamp, Mem2, Mem3))), !.
-process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :-
+process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :- dumpST,
  dbug(todo, 'process_percept_list(~w) FAILED!~n', [Percept]), !.
 
 

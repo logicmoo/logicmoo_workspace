@@ -318,7 +318,7 @@ props(screendoor, [
 
 
  % People
- props(floyd, [name = ("Floyd the robot"), powered = f, inherit(autonomous), inherit(robot)]),
+ props(floyd, [name = ("Floyd the robot"), powered = t, inherit(autonomous), inherit(robot)]),
 
  type_props(telnet, [adjs(remote), inherit(player), nouns([player])]),
  type_props(player, [name = ($self),

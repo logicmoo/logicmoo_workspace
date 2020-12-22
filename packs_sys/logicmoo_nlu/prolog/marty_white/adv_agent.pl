@@ -254,6 +254,7 @@ decide_action(Agent, Mem0, Mem0) :-
 
 decide_action(Agent, Mem0, Mem1) :-
  %must_mw1(thought(Agent,timestamp(T0), Mem0)),
+ ensure_has_prompt(Agent),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),
@@ -261,6 +262,7 @@ decide_action(Agent, Mem0, Mem1) :-
 
 % Telnet client (Covered by the above)
 decide_action(Agent, Mem0, Mem1) :-
+ ensure_has_prompt(Agent),
  fail,
  xnotrace(declared(inherited(telnet), Mem0)), !,
  must_mw1(telnet_decide_action(Agent, Mem0, Mem1)).

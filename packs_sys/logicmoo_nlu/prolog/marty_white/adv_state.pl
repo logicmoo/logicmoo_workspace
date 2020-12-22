@@ -348,6 +348,14 @@ declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 maybe_undeclare(Fact, State, NewState):- declared(Fact, State), NewState=State.
 %maybe_undeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
 
+append_toplevel_props(perceptq(Agent, Events),S0,S2):- 
+ must_mw1((
+ maybe_undeclare(perceptq(Agent, Queue), S0, S1),
+ append(Queue, Events, NewQueue),
+ replace_declare(perceptq(Agent, NewQueue), S1, S2),
+ declared(perceptq(Agent, RQueue), S0, _),
+ is_list(RQueue))).
+
 replace_declare(Fact, State, NewState):-
  must_mw1((old_figment(Fact, _F, A, Old),
  (undeclare(Old, State, MidState);(State=MidState,ignore(arg(A,Old,[])))),
@@ -610,7 +618,8 @@ correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 
 internal_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),internal_dialog(Agent,F)).
-internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))).
+internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))),
+  must_det((stdio_player(Player), overwrote_prompt(Player))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 

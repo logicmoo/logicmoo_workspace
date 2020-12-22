@@ -127,6 +127,22 @@ aXiom(terminates(h(Prep, Object, Here))) ==>> !,% {fail},
  %ignore(sg(declared(h(Prep, Object, Here)))),
  undeclare(h(Prep, Object, Here)).
 
+ % ==============
+%  WALK ON TABLE
+% ==============
+aXiom(goto_prep_obj(Agent, Walk, At, Object)) ==>>
+  will_touch(Agent, Object),
+  has_rel(At, Object),
+  \+ is_closed(At, Object),
+  eVent(Agent, arriving(Agent, Walk, Object, At)).
+
+aXiom(arriving(Agent, Walk, Object, At)) ==>>
+  from_loc(Object, Here),
+  moveto(Agent, Walk, Agent, At, Object, [Here],
+    [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
+  add_look(Agent),!.
+
+/*
 aXiom(arriving(Agent, Here, Walk, ReverseDir)) ==>>  !,% {fail},
   queue_local_event( arriving(Agent, Here, Walk, ReverseDir), [Here]),
   %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
@@ -134,6 +150,7 @@ aXiom(arriving(Agent, Here, Walk, ReverseDir)) ==>>  !,% {fail},
   % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir]
   must_mw1(eVent(Agent, initiates(h(PrepIn, Agent, Here)))),
   must_mw1(add_look(Agent)).
+*/
 
 aXiom(initiates(h(Prep, Object, Dest))) ==>> !,% {fail},
  declare(h(Prep, Object, Dest)).
@@ -150,20 +167,7 @@ aXiom(goto_obj(Agent, Walk, Object)) ==>>
   eVent(Agent, goto_prep_obj(Agent, Walk, At, Object)).
 
 
-% ==============
-%  WALK ON TABLE
-% ==============
-aXiom(goto_prep_obj(Agent, Walk, At, Object)) ==>>
-  will_touch(Agent, Object),
-  has_rel(At, Object),
-  \+ is_closed(At, Object),
-  eVent(Agent, arriving(Agent, Walk, Object, At)).
 
-aXiom(arriving(Agent, Walk, Object, At)) ==>>
-  from_loc(Object, Here),
-  moveto(Agent, Walk, Agent, At, Object, [Here],
-    [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
-  add_look(Agent).
 
 % ==============
 %  GOTO PANTRY

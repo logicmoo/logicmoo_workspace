@@ -109,7 +109,7 @@ update_model(Knower, arriving(Doer, At, Here, _, ExitNameReversed), Timestamp, M
   % How did I get Here?
   model_prepend(RecentMem, [attempts(Doer, go_dir(Doer, _, ExitName))|OlderMem], Mem),
     % find figment
-  \+ member(attempts(Doer, go_dir(Doer, _, _)), RecentMem), % guarrantee recentness
+  \+ member(attempts(Doer, go_dir(Doer, _, _)), RecentMem), % guarrantee recentness  
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp
   %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n',
   %       [Doer, AtGo, Dest, There, Here]),

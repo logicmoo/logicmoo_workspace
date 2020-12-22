@@ -177,11 +177,36 @@ memorize_doing(Agent, Action, Mem0, Mem2):-
   mw_numbervars(ActionG, 999, _),
   ( has_depth(Action)
     -> Mem0 = Mem1 ;
-    (thought_check(Agent,timestamp(T0, _OldNow), Mem0), T1 is T0 + 1, clock_time(Now), 
-     memorize_prepending(Agent,timestamp(T1, Now), Mem0, Mem1))),
+    (agent_clock_time_now(Agent,Timestamp, Mem0),
+     memorize_prepending(Agent,Timestamp, Mem0, Mem1))),
   DOES = attempts(Agent, ActionG),
   memorize_prepending(Agent,DOES, Mem1, Mem2).
 
+
+
+
+agent_clock_time_prev(Agent, timestamp(T0, OldNow), Mem0):- 
+ find_clock_time(Agent, T0, OldNow, Mem0),!.
+
+agent_clock_time_now(Agent, timestamp(T1, Now), Mem0):-
+  agent_clock_time_prev(Agent, timestamp(T0,_OldNow), Mem0),
+  T1 is T0 + 1, clock_time(Now),!.
+
+some_agent_clock_time(Agent, T0, OldNow, Mem):- nonvar(Mem),
+  thought_check(Agent,timestamp(T0, OldNow), Mem), !.
+   
+find_clock_time(Agent, T0, OldNow, _UMem):- 
+   get_advstate(State), declared(preceptq(Agent, Mem), State),
+   some_agent_clock_time(Agent, T0, OldNow, Mem).
+find_clock_time(Agent, T0, OldNow, Mem0):- some_agent_clock_time(Agent, T0, OldNow, Mem0).
+find_clock_time(Agent, T0, OldNow, _UMem):-
+   get_advstate(State), declared(memories(Agent, Mem), State),
+   some_agent_clock_time(Agent, T0, OldNow, Mem).
+find_clock_time(Agent, T0, OldNow, _UMem):-
+   get_advstate(State), declared(props(Agent, Mem), State),
+   some_agent_clock_time(Agent, T0, OldNow, Mem).
+
+     
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
