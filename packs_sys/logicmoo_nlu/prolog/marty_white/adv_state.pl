@@ -194,14 +194,6 @@ thought(Figment, M) :- declared(Figment, M).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
-in_model(E, L):- quietly(in_model0(E, L)).
-in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
-in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
-in_model0(E, L):- member(EE, L), same_element(EE, E).
-same_element(E, E) :- !.
-same_element(holds_at(E, T), E):- nonvar(T).
-
-
 
 :- defn_state_getter(agent_thought_model(agent, model)).
 agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).

@@ -191,7 +191,7 @@ must_mw1(Goal, S0, S2):- apply_state(must_mw1, Goal, S0, S2).
 
 :- meta_predicate(dmust_tracing(*)).
 dmust_tracing(G):- notrace((tracing, cls)), !, must_mw1(G).
-dmust_tracing(G):- G*->true;notrace((mwmsg(fail(dmust_tracing):-G)), fail).
+dmust_tracing(G):- G*->true;notrace((mwmsg(fail(dmust_tracing):-G), fail)).
 
 :- meta_predicate(dmust_tracing(*, +, -)).
 dmust_tracing(G, S, E):- apply_state(dmust_tracing, (G), S, E).
