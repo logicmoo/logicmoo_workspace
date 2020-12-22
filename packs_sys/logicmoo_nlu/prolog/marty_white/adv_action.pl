@@ -315,7 +315,7 @@ act_prevented_by('close', 'locked', t).
 
 
 event_failed(Agent,CUZ):- simplify_reason(CUZ,Msg), 
-  inner_dialog(Agent,event_failed(Agent,CUZ)), 
+  internal_dialog(Agent,event_failed(Agent,CUZ)), 
   player_format(Agent, '~N~p~n', [Msg]).
 
 :- meta_predicate maybe_when(0, 0).  

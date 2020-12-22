@@ -180,7 +180,7 @@ memorize_appending(Agent,Figment, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),   mem
 % Manipulate memories (M stands for Memories)
 memorize(Agent, Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1), 
  listify(Figment0,Figment),
- inner_dialog(Agent,Figment),
+ internal_dialog(Agent,Figment),
  notrace(append(Figment, A0, A1)).
 forget(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_from(Figment, A0, A1).
 forget_always(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(Figment0,Figment),select_always(Figment, A0, A1).
@@ -188,36 +188,11 @@ forget_always(Agent,Figment0, M0, M1) :- agent_mem(Agent,M0,M1,A0,A1),unlistify(
 % select_default(Figment, Default, M0, M1).
 thought(Agent,Figment0, M) :- unlistify(Figment0,Figment), agent_mem(Agent,M,A), declared(Figment, A).
 
-:- meta_predicate(memorize_edit(3, *, *, *)).
-memorize_edit(Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
-   Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
-   (forget(OldFigment, M0, M1)
-     -> ( call(Pred3, OldValue, Value, NewValue), NewFigment =.. [Name, NewValue])
-     ; (NewFigment=Figment, M0=M1)),
-   memorize(NewFigment, M1, M2).
-
-memorize_appending(Figment, M0, M2) :-  memorize_edit(append, Figment, M0, M2).
-
-inner_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Figment))),format('~N',[]))).
-% Manipulate memories (M stands for Memories)
-memorize(Figment, M0, M1) :-
- inner_dialog(Figment),
- assertion(\+ is_list(Figment)), notrace(append([Figment], M0, M1)).
-memorize_l(Figment, M0, M1) :-
- inner_dialog(Figment),
- assertion(is_list(Figment)), notrace(append(Figment, M0, M1)).
-% memorize(Figment, M0, M1) :- notrace(append([Figment], M0, M1)).
-forget(Figment, M0, M1) :- select_from(Figment, M0, M1).
-forget_always(Figment, M0, M1) :- select_always(Figment, M0, M1).
-%forget_default(Figment, Default, M0, M1) :-
-% select_default(Figment, Default, M0, M1).
-thought(Figment, M) :- declared(Figment, M).
 
 unlistify(Figment0,Figment):- is_list(Figment0),!,must(Figment0=[Figment]).
 unlistify(Figment,Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
-
 
 in_model(E, L):- quietly(in_model0(E, L)).
 
@@ -735,14 +710,9 @@ correct_prop(  Other, Other).
 
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
-internal_dialog(A, Figment):-inner_dialog(A, Figment).
 
-inner_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
-inner_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
-
-inner_dialog(Figment) :- internal_dialog(Figment). 
-internal_dialog(Figment) :- is_list(Figment),!,forall(member(F,Figment),inner_dialog(Agent,F)).
-internal_dialog(Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(inner_dialog(Agent,Figment))),format('~N',[]))).
+internal_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),internal_dialog(Agent,F)).
+internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
