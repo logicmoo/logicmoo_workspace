@@ -44,7 +44,7 @@ do_metacmd(_Doer, in_world(Agent,World,Cmd), S0, S1):- !, find_world(World,W0,W1
   save_world(World,W1,S0,S1).
  
 do_metacmd(Doer, quit(Agent)) -->
- declare(wishes(Agent, quit)),
+ replace_declare(wishes(Agent, quit)),
  {player_format(Doer, 'logging off~w ~n', [Agent]),
   player_format(Agent, 'Bye! (from ~w)~n', [Doer])}.
 

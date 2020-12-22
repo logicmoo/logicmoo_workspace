@@ -48,8 +48,8 @@ run_perceptq(_Agent) :- !.
 :- defn_state_setter(run_perceptq(+agent)).
 run_perceptq(Agent, S0, S9) :-
  % get_advstate(S0),
- undeclare(perceptq(Agent, PerceptQ), S0, S1), PerceptQ \==[],
- declare(perceptq(Agent, []), S1, S2),
+ undecla re(perceptq(Agent, PerceptQ), S0, S1), PerceptQ \==[],
+ decl are(perceptq(Agent, []), S1, S2),
  %set_advstate(S9),
  do_percept_list(Agent, PerceptQ, S2, S9), !.
 run_perceptq(_Agent, S0, S0).
