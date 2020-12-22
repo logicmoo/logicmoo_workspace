@@ -94,8 +94,8 @@ setprop_from_create(Object, Prop, S0, S2) :-
 
 setprop_(Object, Prop, S0, S2) :- 
   assertion(is_list(S0)),
-  \+ member(props(Object,_), S0),
-  declare(props(Object,[]), S0, S1), !,
+  \+ declared(props(Object,_), S0),
+  replace_declare(props(Object,[]), S0, S1), !,
   setprop_(Object, Prop, S1, S2).
 setprop_(Object, [P|PropS], S0, S2) :- !, setprop_(Object, P, S0, S1), setprop_(Object, PropS, S1, S2).
 setprop_(Object, Prop, S0, S2) :-
@@ -127,8 +127,8 @@ updateprop_from_create(Object, Prop, S0, S2) :- /*notrace*/((correct_props(Objec
 
 updateprop_(Object, Prop, S0, S2) :- 
   assertion(is_list(S0)),
-  \+ member(props(Object,_), S0),
-  declare(props(Object,[]), S0, S1), !,
+  \+ declared(props(Object,_), S0),
+  replace_declare(props(Object,[]), S0, S1), !,
   updateprop_(Object, Prop, S1, S2).
 
 updateprop_(Object, Prop, S0, S2) :-
@@ -136,7 +136,7 @@ updateprop_(Object, Prop, S0, S2) :-
  direct_props_or(Object, PropList, [], S0),
  (member(Prop, PropList)
  -> S0=S2;  % no update
- (undeclare_always(props(Object, _), S0, S1),
+ (S0=S1,% undeclare_always(props(Object, _), S0, S1),
  updateprop_1(Object, Prop, PropList, S1, S2))).
 
 updateprop_1(Object, Prop, PropList, S0, S2) :-

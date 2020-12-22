@@ -289,11 +289,11 @@ select_always(Item, List, ListWithoutItem) :- select_from(Item, List, ListWithou
 %select_default(DefaultItem, DefaultItem, ListWithoutItem, ListWithoutItem).
 
 % Manipulate simulation state
-%declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
+% declare(Fact, State):- player_local(Fact, Player), !, declare(wishes(Player, Fact), State).
 :- export(declare/3).
 :- defn_state_setter(declare(fact)).
 
-declare(Fact, State, NewState):- declare_0(Fact, State, NewState).
+declare(Fact, State, NewState):- must_mw1(declare_0(Fact, State, NewState)).
 
 declare_0(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, notrace(declare_list(Fact, State, NewState)).
 declare_0(Fact, inst(Object), inst(Object)):- !,

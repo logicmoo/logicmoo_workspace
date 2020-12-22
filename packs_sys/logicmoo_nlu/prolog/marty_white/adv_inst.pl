@@ -40,7 +40,7 @@ declare_inst_type(Inst, Type, S0, S2):-
   object_props_or(Inst, PropList1, [], S0),
   (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,[Type])|PropList1]=PropList),
   list_to_set([shape=Type, inherit(Type, t)|PropList], Set),
-  %undeclare_always(props(Inst, _), S0, S1),
+  %undeclare_alw ays(props(Inst, _), S0, S1),
   replace_declare(props(Inst, Set), S0, S2).
 
 init_objects :-
@@ -99,7 +99,7 @@ mu_create_object(Object, S0, S0) :- declared(props(Object, PropList), S0), membe
 mu_create_object(Object, S0, S9) :-
  object_props_or(Object, PropList, [], S0), !,
  dbug1(mu_create_object(Object, PropList)),
- % undeclare_always(props(Object, _), S0, S2),
+ %  undeclare_al ways(props(Object, _), S0, S2),
  replace_declare(props(Object, [co(PropList)]), S0, S3),
  create_objprop(creation, Object, PropList, S3, S4),
  create_objprop(instance, Object, PropList, S4, S9).
@@ -127,7 +127,7 @@ create_objprop(Why, Object, Prop, S0, S1):- /*notrace*/((correct_props(Object, P
  % Each agent empties their percept queue as they see fit.
 create_objprop(_Why, Object, inherit(perceptq, t), S0, S0):- declared(perceptq(Object, _), S0), !.
 create_objprop(_Why, Object, inherit(perceptq, t), S0, S1):- !,
- declare(perceptq(Object, []), S0, S1).
+ replace_declare(perceptq(Object, []), S0, S1).
 
  % Most agents store memories of percepts, world model, goals, etc.
 create_objprop(_Why, Object, inherit(memorizer, t), S0, S0):- declared(memories(Object, _), S0), !.

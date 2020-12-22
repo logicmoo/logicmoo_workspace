@@ -220,7 +220,7 @@ satisfy_each(Context, (C1, C2), S0, S9) :- !,
 satisfy_each(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
 satisfy_each(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
 satisfy_each(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
-satisfy_each(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond).
+satisfy_each(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
 satisfy_each(postCond(_Action), Cond) ==>> !, declare(Cond).
 satisfy_each(Context, ~(Cond)) ==>> !, (( \+ satisfy_each(Context, Cond)) ; [failed(Cond)] ).
 satisfy_each(_, Cond) ==>> declared(Cond).
