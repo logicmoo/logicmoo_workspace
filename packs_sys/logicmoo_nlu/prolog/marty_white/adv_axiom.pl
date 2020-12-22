@@ -60,10 +60,12 @@ aXiom(wait(Agent)) ==>>
  queue_local_event(time_passes(Agent), Here).
 
 aXiom(Action) ==>>
- {implications(_DoesEvent, (Action), Preconds, Postconds), action_doer(Action, Agent) },
+ {implications(DoesEvent, Action, Preconds, Postconds), action_doer(Action, Agent) },
  /*dmust_tracing*/(satisfy_each(preCond(_1), Preconds)),
  (((sg(member(failed(Why))), send_1percept(Agent, failed(Action, Why))))
-    ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, (Action)))), !.
+    ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, (Action)))),
+ {internal_dialog(Agent, implications(DoesEvent, Action, Preconds, Postconds))},
+ !.
 
 aXiom( Action) ==>>
  {oper_splitk(Agent, Action, Preconds, Postconds)},

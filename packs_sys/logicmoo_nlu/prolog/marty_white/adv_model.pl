@@ -124,12 +124,13 @@ update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp
 update_model(_Knower, moved(_Doer, _How, Object, _From, At, To), Timestamp, _Mem, M0, M1) :-
   update_relation(At, Object, To, Timestamp, M0, M1).
 
+/*
 update_model(Knower, Event, Timestamp, Memory, M0, M2) :- fail,
-  implications(event , ( Event), Preconds, Postconds),
+  implications(event , Event, Preconds, Postconds),
     (satisfy_each(preCond(_), Preconds, M0, _)  ->
       satisfy_each(postCond(_), Postconds, M0, M1) -> M0\=@= M1), !,
     update_model(Knower, Event, Timestamp, Memory, M1, M2).
-
+*/
 
 update_model(_Knower, carrying(Doer, Objects), Timestamp, _Memory, M0, M1) :- 
  update_relations( held_by, Objects, Doer, Timestamp, M0, M1).

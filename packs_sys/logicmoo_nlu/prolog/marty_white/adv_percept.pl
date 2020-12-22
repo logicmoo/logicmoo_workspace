@@ -302,7 +302,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
 process_percept_list(Agent, Percept, _Stamp,_,_):- fail,
-  inner_dialog(Agent,Percept),fail.
+  internal_dialog(Agent,Percept),fail.
   
 % process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.
 
@@ -326,25 +326,25 @@ end_of_file.
 
 player_X1@[does]> s
 s
-inner_dialog(Agent,intend_todo( [ go_dir(player_X1,walk,south) ])).
-inner_dialog(Agent,intend_todo( [])).
-inner_dialog(Agent,timestamp(63,653)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,intend_todo( [ go_dir(player_X1,walk,south) ])).
+internal_dialog(Agent,intend_todo( [])).
+internal_dialog(Agent,timestamp(63,653)).
+internal_dialog(Agent,attempts(player_X1,
                 go_dir(player_X1,walk,south))).
 
 % aXiom(go_dir(player_X1,walk,south)).
 
 player was in kitchen but left walking south
-inner_dialog(Agent,h(in,player_X1,garden)).
-inner_dialog(Agent,h(in,player_X1,garden)).
+internal_dialog(Agent,h(in,player_X1,garden)).
+internal_dialog(Agent,h(in,player_X1,garden)).
 player came walking north in garden
 ( Success: walk south )
 player_X1@[does]> look
 look
-inner_dialog(Agent,intend_todo( [ look(player_X1) ])).
-inner_dialog(Agent,intend_todo( [])).
-inner_dialog(Agent,timestamp(64,656.6)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,intend_todo( [ look(player_X1) ])).
+internal_dialog(Agent,intend_todo( [])).
+internal_dialog(Agent,timestamp(64,656.6)).
+internal_dialog(Agent,attempts(player_X1,
                 look(player_X1))).
 
 % aXiom(look(player_X1)).
@@ -359,24 +359,24 @@ player does sub examine see in garden 3
 % aXiom(sub__examine(player_X1,see,in,garden,3)).
 
 (...verbose...: player sees the garden "this is the garden", is large , thus, has an interior and can have exits. )
-inner_dialog(Agent,h(in,player_X1,garden)).
-inner_dialog(Agent,h(in,fountain_X1,garden)).
-inner_dialog(Agent,h(in,rock_X1,garden)).
-inner_dialog(Agent,h(in,rock_X2,garden)).
-inner_dialog(Agent,h(in,mushroom_X1,garden)).
-inner_dialog(Agent,h(in,brklamp,garden)).
+internal_dialog(Agent,h(in,player_X1,garden)).
+internal_dialog(Agent,h(in,fountain_X1,garden)).
+internal_dialog(Agent,h(in,rock_X1,garden)).
+internal_dialog(Agent,h(in,rock_X2,garden)).
+internal_dialog(Agent,h(in,mushroom_X1,garden)).
+internal_dialog(Agent,h(in,brklamp,garden)).
 Player_X1 sees in garden: fountain , rock , rock , mushroom and brklamp.
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2) ])).
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2) ])).
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2) ])).
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2) ])).
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2) ])).
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,fountain_X1,2),
                     sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
@@ -386,12 +386,12 @@ Exits in garden are: north.
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,fountain_X1,2)
 
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,rock_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,rock_X1,2),
                     sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
-inner_dialog(Agent,timestamp(65,656.7)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,timestamp(65,656.7)).
+internal_dialog(Agent,attempts(player_X1,
                 sub__examine(player_X1,see,child,fountain_X1,2))).
 
 % aXiom(sub__examine(player_X1,see,child,fountain_X1,2)).
@@ -402,11 +402,11 @@ inner_dialog(Agent,attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X1,2)
 
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,'rock_X2',2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,'rock_X2',2),
                     sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
-inner_dialog(Agent,timestamp(66,656.7)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,timestamp(66,656.7)).
+internal_dialog(Agent,attempts(player_X1,
                 sub__examine(player_X1,see,child,rock_X1,2))).
 
 % aXiom(sub__examine(player_X1,see,child,rock_X1,2)).
@@ -415,10 +415,10 @@ inner_dialog(Agent,attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,rock_X2,2)
 
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,mushroom_X1,2),
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,mushroom_X1,2),
                     sub__examine(player_X1,see,child,brklamp,2) ])).
-inner_dialog(Agent,timestamp(67,656.8)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,timestamp(67,656.8)).
+internal_dialog(Agent,attempts(player_X1,
                 sub__examine(player_X1,see,child,'rock_X2',2))).
 
 % aXiom(sub__examine(player_X1,see,child,'rock_X2',2)).
@@ -427,9 +427,9 @@ inner_dialog(Agent,attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,mushroom_X1,2)
 
-inner_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,brklamp,2) ])).
-inner_dialog(Agent,timestamp(68,656.8)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,intend_todo( [ sub__examine(player_X1,see,child,brklamp,2) ])).
+internal_dialog(Agent,timestamp(68,656.8)).
+internal_dialog(Agent,attempts(player_X1,
                 sub__examine(player_X1,see,child,mushroom_X1,2))).
 
 % aXiom(sub__examine(player_X1,see,child,mushroom_X1,2)).
@@ -438,9 +438,9 @@ inner_dialog(Agent,attempts(player_X1,
 
 % player_X1 @ somewhere: already about todo: sub__examine(player_X1,see,child,brklamp,2)
 
-inner_dialog(Agent,intend_todo( [])).
-inner_dialog(Agent,timestamp(69,656.9)).
-inner_dialog(Agent,attempts(player_X1,
+internal_dialog(Agent,intend_todo( [])).
+internal_dialog(Agent,timestamp(69,656.9)).
+internal_dialog(Agent,attempts(player_X1,
                 sub__examine(player_X1,see,child,brklamp,2))).
 
 % aXiom(sub__examine(player_X1,see,child,brklamp,2)).
