@@ -3,7 +3,7 @@
   one/2,zero/2,and/4,or/4,bdd_not/3,
   ret_prob/3,equality/4,add_var/4,
   add_abd_var/4,ret_abd_prob/4,
-  add_query_var/4,ret_map_prob/4,ret_vit_prob/4,
+  add_query_var/4,ret_map_prob/4,
   onec/2,zeroc/2,andc/4,andcnf/4,bdd_notc/3,
   orc/3,
   ret_probc/3,equalityc/4,
@@ -141,9 +141,9 @@ It contains programs for building BDDs, for computing probabilities and for perf
  */
 
 /**
- * ret_vit_prob(++Environment:int,++BDD:int,-Probability:float,-MPEState:list) is det
+ * ret_mpe_prob(++Environment:int,++BDD:int,-Probability:float,-MPEState:list) is det
  *
- * Returns the MPE (Viterbi) state MPEState of BDD and its Probability.
+ * Returns the MPE state MPEState of BDD and its Probability.
  * BDD belongs to environment Environment.
  */
 
