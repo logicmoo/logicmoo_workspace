@@ -18,11 +18,11 @@
 :- include_foreign_dir(include).
 :- foreign_dependency(include/'includedf.for').
 :- use_foreign_source('foreign_test.for').
-:- gen_foreign_library(.(foreign_test_i)).
+:- gen_foreign_library(plbin(foreign_test_i)).
 
-:- type negative_t/1 is foreign(is_negative_t).
+:- type negative_t/1 is (foreign(is_negative_t), tgen([gett, unif])).
 
-:- type enum_example_t/1 + typedef.
+:- type enum_example_t/1 + tgen.
 enum_example_t(element(1)).
 enum_example_t(element(a)).
 enum_example_t(element_3).
@@ -30,53 +30,53 @@ enum_example_t(element(f(g(h)))).
 
 :- pred f_enum_example(+enum_example_t, enum_example_t, -enum_example_t, -int) is foreign(c_enum_example).
 
-:- type setof_enum_s/1 + genfdef.
+:- type setof_enum_s/1 + sgen.
 
 setof_enum_s(S) :- setof(enum_example_t, S).
 
 :- pred f_setof_enum(+setof_enum_s, setof_enum_s, -setof_enum_s, -long) is foreign(c_setof_enum).
 
-:- type setof_body_s/1 + genfdef.
+:- type setof_body_s/1 + sgen.
 setof_body_s(setof_body(Label, Set)) :-
     atm(Label),
     setof(enum_example_t, Set).
 
-:- type enum32_s/1 + genfdef.
+:- type enum32_s/1 + sgen.
 enum32_s(X) :-
     between(1, 32, X),
     neck.
 
-:- type setof_enum32_s/1 + genfdef.
+:- type setof_enum32_s/1 + sgen.
 setof_enum32_s(S) :- setof(enum32_s, S).
 
-:- type enum64_s/1 + genfdef.
+:- type enum64_s/1 + sgen.
 enum64_s(X) :-
     between(1, 64, X),
     neck.
 
-:- type setof_enum64_s/1 + genfdef.
+:- type setof_enum64_s/1 + sgen.
 setof_enum64_s(S) :- setof(enum64_s, S).
 
-:- type enum128_s/1 + genfdef.
+:- type enum128_s/1 + sgen.
 enum128_s(X) :-
     between(1, 128, X),
     neck.
 
-:- type setof_enum128_s/1 + genfdef.
+:- type setof_enum128_s/1 + sgen.
 setof_enum128_s(S) :- setof(enum128_s, S).
 
-:- type enum256_s/1 + genfdef.
+:- type enum256_s/1 + sgen.
 enum256_s(X) :-
     between(1, 256, X),
     neck.
 
-:- type setof_enum256_s/1 + genfdef.
+:- type setof_enum256_s/1 + sgen.
 setof_enum256_s(S) :- setof(enum256_s, S).
 
-:- type temperature_t/1 + genfdef.
+:- type temperature_t/1 + sgen.
 temperature_t(T) :- num(T).
 
-:- type nw_stream_s/1 + genfdef.
+:- type nw_stream_s/1 + sgen.
 nw_stream_s(NwStream) :-
     dict_t(nw_stream,
            [p:atm,
@@ -88,7 +88,7 @@ nw_stream_s(NwStream) :-
            ],
           NwStream).
 
-:- type nw_stream_t/1 + genfdef.
+:- type nw_stream_t/1 + sgen.
 nw_stream_t(S) :- nw_stream_s(S).
 
 this_dir(Dir) :-
@@ -102,7 +102,7 @@ this_dir(Dir) :-
     ; true
     ).
 
-:- type d_t/1 + genfdef.
+:- type d_t/1 + sgen.
 
 d_t(Dict) :-
     dict_t(d{value1:atm,
@@ -118,10 +118,10 @@ d_t(Dict) :-
          fd4(list(atm))+memory_root
         ] is foreign.
 
-:- type positive_t/1 + genfdef.
+:- type positive_t/1 + sgen.
 positive_t(N) :- int(N).
 
-:- type union_s/1 + genfdef.
+:- type union_s/1 + sgen.
 union_s(u(First, Second)) :-
     int(First),
     int(Second).
@@ -130,7 +130,7 @@ union_s(num(Number)) :-
 union_s(positive(T)) :-
     positive_t(T).
 
-:- type uniond_t/1 + typedef.
+:- type uniond_t/1 + tgen.
 
 % :- type uniond_s_d/1.
 % uniond_s_d(Dict) :- 
@@ -155,22 +155,22 @@ uniond_t(positive(T)) :-
 
 :- pred f_union_example(+ptr(uniond_t), uniond_t, -uniond_t, -int) is foreign(c_union_example).
 
-:- type contain_extern_t/1 + genfdef.
+:- type contain_extern_t/1 + sgen.
 contain_extern_t(contain_extern(Idx, Value)) :-
     int(Idx),
     positive_t(Value).
 
-:- type contain_opaque_t/1 + genfdef.
+:- type contain_opaque_t/1 + sgen.
 contain_opaque_t(contain_opaque(Idx, Value)) :-
     int(Idx),
     negative_t(Value).
 
-:- type example_t/1 + genfdef.
+:- type example_t/1 + sgen.
 example_t(example(Name, Value)) :-
     atm(Name),
     num(Value).
 
-:- type compound_t/1 + genfdef.
+:- type compound_t/1 + sgen.
 compound_t(compound(Idx, Value, Example, Name, PExample)) :-
     int(Idx),
     ptr(int, Value),
@@ -182,19 +182,19 @@ compound_t(compound(Idx, Value, Example, Name, PExample)) :-
 
 :- pred fco(+contain_opaque_t, -contain_opaque_t) is foreign.
 
-:- type flag_t/1 + genfdef.
+:- type flag_t/1 + sgen.
 
 flag_t(Value) :- int(Value).
 
-:- type field_t/1 + genfdef.
+:- type field_t/1 + sgen.
 
 field_t(field(A, B, Sum)) :- int(A), int(B), ptr(flag_t, Sum).
 
-:- type position_t/1 + genfdef.
+:- type position_t/1 + sgen.
 
 position_t(position(X, Y)) :- int(X), int(Y).
 
-:- type geometry_t/1 + genfdef.
+:- type geometry_t/1 + sgen.
 
 geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 

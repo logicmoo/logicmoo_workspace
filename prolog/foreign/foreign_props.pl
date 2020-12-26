@@ -39,6 +39,7 @@
            (native)/1,
            (native)/2,
            normalize_ftype/2,
+           normalize_ftgen/2,
            fimport/1,
            fimport/2,
            nimport/1,
@@ -55,10 +56,11 @@
            setof/2,
            float_t/1,
            size_t/1,
+           sgen/1,
+           tgen/1,
+           tgen/2,
            dict_t/2,
            dict_t/3,
-           genfdef/1,
-           typedef/1,
            dict_join_t/4,
            dict_extend_t/4,
            join_dict_types/6,
@@ -70,14 +72,6 @@
 :- use_module(library(extend_args)).
 :- use_module(library(mapargs)).
 :- use_module(library(neck)).
-
-% Define the equivalent type in C
-:- global genfdef/1.
-genfdef(G) :- call(G).
-
-% Add a typedef to the definition in C
-:- global typedef/1.
-typedef(G) :- call(G).
 
 :- type foreign_spec/1.
 
@@ -98,6 +92,17 @@ normalize_ftype(fimport(   G), foreign([lang(prolog), prefix('')], G)).
 normalize_ftype(nimport(O, G), native( [lang(prolog), O], G)).
 normalize_ftype(nimport(   G), native( [lang(prolog), prefix('')], G)).
 
+:- type ftype_spec/1.
+
+ftype_spec(tdef). % Use typedef to implement the type
+ftype_spec(decl). % Generate the equivalent struct/enum declaration for the given type
+ftype_spec(gett). % Generate the getter of the given type
+ftype_spec(unif). % Generate the unifier of the given type
+
+normalize_ftgen(tgen(   G), tgen([tdef, decl, gett, unif], G)).
+normalize_ftgen(sgen(   G), tgen([decl, gett, unif], G)).
+normalize_ftgen(tgen(O, G), tgen(O, G)).
+
 %!  native(+ForeignSpec, :Predicate)
 %
 %   Predicate is implemented in C as specified by ForeignSpec.
@@ -105,6 +110,10 @@ normalize_ftype(nimport(   G), native( [lang(prolog), prefix('')], G)).
 %!  native(:Predicate)
 %
 %   Predicate is implemented in C with a pl_ prefix.
+
+%!  tgen(:FTypeSpec, :Predicate)
+%
+%   Type is implemented in C as specified by FTypeSpec.
 
 :- global native( nlist(foreign_spec), callable).
 :- global foreign(nlist(foreign_spec), callable).
@@ -114,9 +123,14 @@ normalize_ftype(nimport(   G), native( [lang(prolog), prefix('')], G)).
 :- global foreign(callable).
 :- global fimport(callable).
 :- global nimport(callable).
+:- global sgen(callable).
+:- global tgen(callable).
+:- global tgen(nlist(ftype_spec), callable).
 
 H :-
-    normalize_ftype(H, N),
+    ( normalize_ftype(H, N)
+    ; normalize_ftgen(H, N)
+    ),
     ( H == N
     ->functor(H, _, A),
       arg(A, H, G),
