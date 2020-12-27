@@ -342,7 +342,7 @@ print_children(M:G,_,F,Length,Depth,_,ListName):-
     print_fail(M,F,Depth,Length),
     fail.
 
-print_builtin_children(M:G,M:R,F,Length,Depth,OpenCuts,ListName):-
+print_builtin_children(G,M:R,F,Length,Depth,OpenCuts,ListName):-
 %    Depth1 is Depth-1,
     term_variables(G,Vars),
     vars_names(Vars,VarNames,ListName),
