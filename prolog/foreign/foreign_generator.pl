@@ -179,7 +179,7 @@ generate_library(M, AliasSO, AliasSOPl, InitL, File) :-
                                                relative_to(File)])),
              is_newer(FileSO, Dep))
     ->print_message(informational,
-                    format('Skipping generation of ~w interface: is up to date', [File])),
+                    format("Skipping generation of ~w interface: is up to date", [File])),
       compile_library(M, FileSO, File, FSourceL)
     ; do_generate_library(M, FileSO, File, InitL),
       do_generate_wrapper(M, AliasSO, AliasSOPl, File),
@@ -196,7 +196,7 @@ compile_library(M, FileSO, File, FSourceL) :-
              ),
              is_newer(FileSO, Dep))
     ->print_message(informational,
-                    format('Skipping compilation of ~w: is up to date', [FileSO]))
+                    format("Skipping compilation of ~w: is up to date", [FileSO]))
     ; do_compile_library(M, FileSO, File, FSourceL)
     ).
 
@@ -225,7 +225,7 @@ do_generate_wrapper(M, AliasSO, AliasSOPl, File) :-
                  phrase(( add_autogen_note(M),
                           [(:- module(IModule, IntfPIL))],
                           generate_aux_clauses(M),
-                          ['',
+                          ["",
                            (:- use_foreign_library(AliasSO)),
                            % make these symbols public:
                            (:- shlib:current_library(AliasSO, _, F1, IModule, _),
@@ -317,7 +317,7 @@ compile_2(Command-ArgL) :-
               close(Out),
               ( SOut = "",
                 SErr = ""
-              ->print_message(informational, format('~s', [CommandS]))
+              ->print_message(informational, format("~s", [CommandS]))
               ; print_message(warning, format("~s~s~nCommand: ~s", [SOut, SErr, CommandS]))
               )),
           Error,
@@ -395,20 +395,20 @@ generate_foreign_intf_h(Module, FileImpl_h) -->
     add_autogen_note(Module),
     ["#ifndef __"+Module+"_INTF_H",
      "#define __"+Module+"_INTF_H",
-     '',
-     '',
-     '#include <foreign_swipl.h>',
+     "",
+     "",
+     "#include <foreign_swipl.h>",
      "#include \""+FileImpl_h+"\"",
-     '',
+     "",
      "extern module_t __"+Module+"_impl;"],
     findall_tp(Module, type_props_nft(gett), declare_type(gett)),
     findall_tp(Module, type_props_nft(unif), declare_type(unif)),
-    findall('extern '+Decl+';',
+    findall("extern "+Decl+";",
             ( current_foreign_prop(Head, _, Module, _, _, _, _, Dict, FuncName, _, BindName, _, Type),
               apply_dict(Head, Dict),
               declare_intf_head(Type, FuncName, BindName, Head, Decl)
             )),
-    ['',
+    ["",
      "#endif /* __"+Module+"_INTF_H */"].
 
 declare_intf_head(foreign(Opts, _), _, BindName, _, Decl) :-
@@ -432,15 +432,15 @@ generate_foreign_impl_h(Module) -->
     add_autogen_note(Module),
     ["#ifndef __"+Module+"_IMPL_H",
      "#define __"+Module+"_IMPL_H",
-     '',
-     '#include <foreign_interface.h>'],
+     "",
+     "#include <foreign_interface.h>"],
     findall_tp(Module, type_props_nf(decl), declare_struct),
     declare_foreign_bind(Module),
     ["#endif /* __"+Module+"_IMPL_H */"].
 
 add_autogen_note(Module) -->
     ["/* NOTE: File generated automatically from "+Module+" */",
-     ''].
+     ""].
 
 generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
     add_autogen_note(Module),
@@ -451,7 +451,7 @@ generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
                                                   relative_to(FilePl)])
             )),
     ["#include \""+FileIntf_h+"\"",
-     '',
+     "",
      "module_t __"+Module+";",
      "module_t __"+Module+"_impl;"
     ],
@@ -462,11 +462,11 @@ generate_foreign_c(Module, Base, InitL, FilePl, FileIntf_h) -->
 
 generate_foreign_register(Module, Base, InitL) -->
     ["install_t install_"+Base+"() {",
-     '    __system_dict_create        =PL_predicate("dict_create", 3, "system");',
-     '    __system_get_dict           =PL_predicate("get_dict",    3, "system");',
-     '    __system_put_dict           =PL_predicate("put_dict",    4, "system");',
-     '    __foreign_generator_call_idx=PL_predicate("call_idx",    2, "foreign_generator");',
-     '    __foreign_generator_idx_call=PL_predicate("idx_call",    2, "foreign_generator");',
+     "    __system_dict_create        =PL_predicate(\"dict_create\", 3, \"system\");",
+     "    __system_get_dict           =PL_predicate(\"get_dict\",    3, \"system\");",
+     "    __system_put_dict           =PL_predicate(\"put_dict\",    4, \"system\");",
+     "    __foreign_generator_call_idx=PL_predicate(\"call_idx\",    2, \"foreign_generator\");",
+     "    __foreign_generator_idx_call=PL_predicate(\"idx_call\",    2, \"foreign_generator\");",
      "    __"+Module+"     =PL_new_module(PL_new_atom(\""+Module+"\"));",
      "    __"+Module+"_impl=PL_new_module(PL_new_atom(\""+Module+"$impl\"));"],
     findall_tp(Module, type_props_nft([gett, unif]), define_aux_variables),
@@ -475,7 +475,7 @@ generate_foreign_register(Module, Base, InitL) -->
               write_register_sentence(Type, M, Module, PredName, Arity, BindName, Line))),
     foldl(generate_init, InitL),
     ["} /* install_"+Base+" */",
-    ''].
+     ""].
 
 generate_init(Init) --> ["    "+Init+"();"].
 
@@ -615,14 +615,14 @@ implement_type_getter_union_ini_join(SubType, Spec, Term, Name, UType) -->
       '$current_source_module'(CM)
     },
     implement_type_getter_ini(PName, CName, Spec, Name),
-    ['    term_t __args = PL_new_term_refs(2);',
-     '    int __utype;',
+    ["    term_t __args = PL_new_term_refs(2);",
+     "    int __utype;",
      "    __rtcheck(PL_unify_functor(__args, PL_new_functor(PL_new_atom(\""+Func+"\"), 1)));",
      "    __rtcheck(PL_unify_arg(1, __args, "+PName+"));",
      "    __rtcheck(__rtctype(PL_call_predicate(__"+CM+", PL_Q_NORMAL,",
-     '                                          __foreign_generator_call_idx, __args),',
+     "                                          __foreign_generator_call_idx, __args),",
      "                        __args, "+Name+"));",
-     '    __rtcheck(PL_get_integer(__args + 1, &__utype));',
+     "    __rtcheck(PL_get_integer(__args + 1, &__utype));",
      "    "+UType+"=__utype;"
     ].
 
@@ -635,9 +635,9 @@ implement_type_getter_union_ini(enum, Spec, Term, Name) -->
     implement_type_getter_union_ini_join(enum, Spec, Term, Name, _).
 
 implement_type_getter_union_end(union) -->
-    ['    default:',
-     '        return FALSE;',
-     '    };'],
+    ["    default:",
+     "        return FALSE;",
+     "    };"],
     implement_type_end.
 implement_type_getter_union_end(cdef  ) --> [].
 implement_type_getter_union_end(struct) --> implement_type_end.
@@ -655,7 +655,7 @@ implement_type_getter(func_ini(SubType, Spec), Term, Name) -->
     ( {SubType = union}
     ->{enum_elem(Name, Term, Elem)},
       ["    case "+Elem+":",
-       '    {']
+       "    {"]
     ; {func_pcname(Name, PName, CName)},
       implement_type_getter_ini(PName, CName, Spec, Name)
     ).
@@ -663,26 +663,26 @@ implement_type_getter(func_rec(SubType, N, Term, Name), Spec, Arg) -->
     { SubType = union
     ->enum_suff(Term, Suff),
       line_atom(Suff, TName),
-      format(atom(CRecordName), '~w.~w', [TName, Arg]),
-      format(atom(TNameArg), '~w_~w', [TName, Arg]),
+      format(atom(CRecordName), "~w.~w", [TName, Arg]),
+      format(atom(TNameArg), "~w_~w", [TName, Arg]),
       camel_snake(PRecordName, TNameArg),
-      Indent = '        '
+      Indent = "        "
     ; CRecordName = Arg,
       camel_snake(PRecordName, Arg),
-      Indent = '    '
+      Indent = "    "
     },
     { func_pcname(Name, PName, CName),
       CNameArg="&"+CName+"->"+CRecordName+"",
       PNameArg=PName+"_"+PRecordName
     },
-    [Indent+'term_t '+PNameArg+'=PL_new_term_ref();',
-     Indent+'__rtcheck(PL_get_arg('+N+','+PName+','+PNameArg+'));'],
+    [Indent+"term_t "+PNameArg+"=PL_new_term_ref();",
+     Indent+"__rtcheck(PL_get_arg("+N+","+PName+","+PNameArg+"));"],
     {c_get_argument_getter(Spec, CNameArg, PNameArg, GetArg)},
-    [Indent+GetArg+';'].
+    [Indent+GetArg+";"].
 implement_type_getter(func_end(SubType, _), _, _) -->
     ( {SubType = union}
-    ->['        break;',
-       '    }']
+    ->["        break;",
+       "    }"]
     ; []
     ).
 implement_type_getter(atomic(SubType, Name), Spec, Term) -->
@@ -691,25 +691,25 @@ implement_type_getter(atomic(SubType, Name), Spec, Term) -->
     ->{ func_pcname(Name, PName, CName1),
         enum_suff(Term, Suff),
         CName = CName1+"->"+Suff,
-        Indent = '        '
+        Indent = "        "
       },
       ["    case "+Elem+":"]
     ; { func_pcname(Name, PName, CName),
-        Indent = '    '
+        Indent = "    "
       },
       implement_type_getter_ini(PName, CName, Spec, Name)
     ),
     {c_get_argument_getter(Spec, CName, PName, GetArg)},
-    [Indent+GetArg+';'],
+    [Indent+GetArg+";"],
     ( {SubType = union}
-    ->[Indent+'break;']
+    ->[Indent+"break;"]
     ; []
     ).
 implement_type_getter(dict_ini(SubType, Name, M, _), Spec, Term) -->
     ( {SubType = union}
     ->{enum_elem(Name, Term, Elem)},
       ["    case "+Elem+":",
-       '    {']
+       "    {"]
     ; ["predicate_t __"+M+"_aux_keyid_index_"+Name+";"],
       {term_pcname(Term, Name, PName, CName)},
       %% TBD: This will fail for structures with dict_t
@@ -720,43 +720,43 @@ implement_type_getter(dict_key_value(Dict, _, N, _), Key, Value) -->
 implement_type_getter(dict_rec(SubType, _, Term, N, Name), Spec, Arg) -->
     { ( SubType = union
       ->enum_suff(Term, Suff),
-        format(atom(CRecordName), '~w.~w', [Suff, Arg]),
-        Indent = '        '
+        format(atom(CRecordName), "~w.~w", [Suff, Arg]),
+        Indent = "        "
       ; CRecordName = Arg,
-        Indent = '    '
+        Indent = "    "
       ),
       term_pcname(Term, Name, PName, CName),
       CNameArg = "&"+CName+"->"+CRecordName,
       c_get_argument_getter(Spec, CNameArg, PName, GetArg)
     },
-    [Indent+'    case '+N+': '+GetArg+'; break;'].
+    [Indent+"    case "+N+": "+GetArg+"; break;"].
 implement_type_getter(dict_end(SubType, _, _), _, _) -->
-    ['        }'],
+    ["        }"],
     ( {SubType = union}
-    ->['        break;',
-       '    }']
+    ->["        break;",
+       "    }"]
     ; []
     ).
 
 implement_type_getter_dict_ini(Module, PName, CName, Spec, Name) -->
     {ctype_decl(Spec, Decl)},
     ["static int get_pair_"+Name+"(root_t __root, term_t __keyid, term_t "+PName+", "+Decl+"* "+CName+");",
-     ''],
+     ""],
     implement_type_getter_ini(PName, CName, Spec, Name),
     ["    memset("+CName+", 0, sizeof("+Decl+"));",
      "    FI_get_dict_t("+Name+", "+PName+", "+CName+");"
     ],
     implement_type_end,
     ["static int get_pair_"+Name+"(root_t __root, term_t __keyid, term_t "+PName+", "+Decl+"* "+CName+") {",
-     '    int __index;',
+     "    int __index;",
      "    FI_get_keyid_index(__"+Module+"_aux_keyid_index_"+Name
      +", __keyid, __index);",
-     '    switch (__index) {'].
+     "    switch (__index) {"].
 
 implement_type_end -->
-    ['    return TRUE;',
-     '}',
-     ''].
+    ["    return TRUE;",
+     "}",
+     ""].
 
 term_pcname(Term, NameL, Name) :-
     ( compound(Term)
@@ -792,11 +792,11 @@ implement_type_unifier(atomic(SubType, Name), Spec, Term) -->
     ->{ func_pcname(Name, PName, CName1),
         enum_suff(Term, Suff),
         CName = CName1+"->"+Suff,
-        Indent = '        '
+        Indent = "        "
       },
       ["    case "+Elem+":"]
     ; { func_pcname(Name, PName, CName),
-        Indent = '    '
+        Indent = "    "
       },
       implement_type_unifier_ini(PName, CName, Name, Spec)
     ),
@@ -806,9 +806,9 @@ implement_type_unifier(atomic(SubType, Name), Spec, Term) -->
       ),
       c_set_argument(Spec, Mode, CName, PName, SetArg)
     },
-    [Indent+SetArg+';'],
+    [Indent+SetArg+";"],
     ( {SubType = union}
-    ->[Indent+'break;']
+    ->[Indent+"break;"]
     ; []
     ).
 implement_type_unifier(union_ini(SubType, Spec, _), Term, Name) -->
@@ -829,7 +829,7 @@ implement_type_unifier_union_ini_join(SubType, Spec, Term, Name, UType) -->
      "    __rtcheck(PL_unify_functor(__args + 1, PL_new_functor(PL_new_atom(\""+Func+"\"), 1)));",
      "    __rtcheck(PL_unify_arg(1, __args + 1, "+PName+"));",
      "    __rtcheck(__rtctype(PL_call_predicate(__"+CM+", PL_Q_NORMAL,",
-     '                                          __foreign_generator_idx_call, __args),',
+     "                                          __foreign_generator_idx_call, __args),",
      "                        __args, "+Name+"));"
     ].
 
@@ -845,9 +845,9 @@ implement_type_unifier(union_end(SubType, _), _, _) -->
     implement_type_unifier_union_end(SubType).
 
 implement_type_unifier_union_end(union) -->
-    ['    default:',
-     '        return FALSE;',
-     '    };'],
+    ["    default:",
+     "        return FALSE;",
+     "    };"],
     implement_type_end.
 implement_type_unifier_union_end(cdef  ) --> [].
 implement_type_unifier_union_end(struct) --> implement_type_end.
@@ -858,7 +858,7 @@ implement_type_unifier(func_ini(SubType, Spec), Term, Name) -->
     ( {SubType = union}
     ->{enum_elem(Name, Term, Elem)},
       ["    case "+Elem+":",
-       '    {']
+       "    {"]
     ; implement_type_unifier_ini(PName, CName, Name, Spec),
       {functor(Term, Func, Arity)},
       ["        __rtcheck(PL_unify_functor("+PName+", PL_new_functor(PL_new_atom(\""+Func+"\"), "+Arity+")));"]
@@ -866,45 +866,45 @@ implement_type_unifier(func_ini(SubType, Spec), Term, Name) -->
 implement_type_unifier(func_rec(SubType, N, Term, Name), Spec, Arg) -->
     {type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNameArg)},
     type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
-    [Indent+'__rtcheck(PL_unify_arg('+N+','+PName+','+PNameArg+'));'].
+    [Indent+"__rtcheck(PL_unify_arg("+N+","+PName+","+PNameArg+"));"].
 
 type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, PName, CNameArg, PNameArg) :-
     func_pcname(Name, PName, CName),
     ( SubType = union
     ->enum_suff(Term, Suff),
       line_atom(Suff, TName),
-      format(atom(CRecordName), '~w.~w', [TName, Arg]),
-      format(atom(TNameArg), '~w_~w', [TName, Arg]),
+      format(atom(CRecordName), "~w.~w", [TName, Arg]),
+      format(atom(TNameArg), "~w_~w", [TName, Arg]),
       camel_snake(PRecordName, TNameArg),
-      Indent = '        '
+      Indent = "        "
     ; CRecordName = Arg,
       camel_snake(PRecordName, Arg),
-      Indent = '    '
+      Indent = "    "
     ),
     CNameArg = CName+"->"+CRecordName,
     PNameArg = PName+"_"+PRecordName.
 
 type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg) -->
-    [Indent+'term_t '+PNameArg+'=PL_new_term_ref();'],
+    [Indent+"term_t "+PNameArg+"=PL_new_term_ref();"],
     {c_set_argument(Spec, out, CNameArg, PNameArg, SetArg)},
-    [Indent+SetArg+';'].
+    [Indent+SetArg+";"].
 
 implement_type_unifier(func_end(SubType, _), _, _) -->
     ( {SubType = union}
-    ->['        break;',
-       '    }']
+    ->["        break;",
+       "    }"]
     ; []
     ).
 implement_type_unifier(dict_ini(SubType, Name, _, _), Spec, Term) -->
     ( {SubType = union}
     ->{enum_elem(Name, Term, Elem)},
       ["    case "+Elem+":",
-       '    {']
+       "    {"]
     ; {func_pcname(Term, PName, CName)},
       implement_type_unifier_ini(PName, CName, Name, Spec)
     ),
-    ['    term_t __desc=PL_new_term_ref();',
-     '    term_t __tail=PL_copy_term_ref(__desc);'].
+    ["    term_t __desc=PL_new_term_ref();",
+     "    term_t __tail=PL_copy_term_ref(__desc);"].
 implement_type_unifier(dict_key_value(Dict, _, N, _), Key, Value) -->
     {key_value_from_dict(Dict, N, Key, Value)}. % Placed in 'dict' order
 implement_type_unifier(dict_rec(SubType, _, Term, _N, NameL), Spec, Arg) -->
@@ -912,15 +912,15 @@ implement_type_unifier(dict_rec(SubType, _, Term, _N, NameL), Spec, Arg) -->
     {type_unifiers_elem_names(SubType, Term, Name, Arg, Indent, _, CNameArg, PNameArg)},
     ( {spec_pointer(Spec)}
     ->with_wrapper(
-          Indent+'if('+CNameArg+') {',
-          type_unifiers_elem_dict_settle(Spec, Arg, Indent+'    ', CNameArg, PNameArg),
-          Indent+'}')
+          Indent+"if("+CNameArg+") {",
+          type_unifiers_elem_dict_settle(Spec, Arg, Indent+"    ", CNameArg, PNameArg),
+          Indent+"}")
     ; type_unifiers_elem_dict_settle(Spec, Arg, Indent, CNameArg, PNameArg)
     ).
 
 type_unifiers_elem_dict_settle(Spec, Arg, Indent, CNameArg, PNameArg) -->
     type_unifiers_elem_settle(Spec, Indent, CNameArg, PNameArg),
-    [Indent+'FI_put_desc(__tail, "'+Arg+'", '+PNameArg+');'].
+    [Indent+"FI_put_desc(__tail, \""+Arg+"\", "+PNameArg+");"].
 
 with_wrapper(Ini, Goal, End) -->
     [Ini],
@@ -966,7 +966,7 @@ apply_dict(Head, Dict) :-
 
 fg_numbervars([], _, _).
 fg_numbervars([V|Vs], N, Dict) :-
-    format(atom(T), 'var_~d', [N]),
+    format(atom(T), "var_~d", [N]),
     succ(N, N1),
     ( memberchk(_=T, Dict)
     ->fg_numbervars([V|Vs], N1, Dict)
@@ -1022,13 +1022,13 @@ sanitize_csym([C|L], S1) -->
     sanitize_csym(L, S).
 
 declare_struct_union_ini(union, Spec, TPDL, Name) -->
-    ['typedef enum {'],
+    ["typedef enum {"],
     foldnl(ds_union_ini_1(union, Name), 0, TPDL),
     ["} "+Name+"_utype;"],
     {ctype_ini(Spec, Decl)},
     [Decl+" {",
      "  "+Name+"_utype utype;",
-     '  union {'
+     "  union {"
     ].
 declare_struct_union_ini(cdef, _, _, _) --> [].
 declare_struct_union_ini(struct, _, _, _) --> [].
@@ -1172,7 +1172,7 @@ prolog:message(ignored_type(Name, Arg)) -->
     ["~w->~w ignored"-[Name, Arg]].
 
 prolog:message(failed_binding(TypeComponents)) -->
-    ['~w failed'-[TypeComponents]].
+    ["~w failed"-[TypeComponents]].
 
 :- meta_predicate type_components(+,+,5,+,?,?).
 
@@ -1374,7 +1374,7 @@ extra_arg_decl(array(Spec, Dim), KeyLine) :-
 curr_arg_decl(_, Spec, Mode, KeyLine) :-
     memberchk(Mode, [in, inout]),
     extra_arg_decl(Spec, KeyLine).
-curr_arg_decl(Arg, Spec, Mode, Arg-(Decl+' '+Arg+Suff)) :-
+curr_arg_decl(Arg, Spec, Mode, Arg-(Decl+" "+Arg+Suff)) :-
     ctype_barg_decl(Spec, Mode, Decl),
     ctype_barg_suff(Spec, Suff).
 
@@ -1581,8 +1581,8 @@ declare_fimp_impl(prolog, Head, M, CM, Comp, Call, Succ, Glob, Bind, ImplHead) -
     { Bind = (_/A as PN/BN + _),
       declare_intf_fimp_head(BN, BNHead)
     },
-    [BNHead+'=NULL;'],
-    [ImplHead+' {',
+    [BNHead+"=NULL;"],
+    [ImplHead+" {",
      "    term_t "+BN+"_args = PL_new_term_refs("+A+");"],
     ( {memberchk(parent(Var, _), Glob)}
     ->["    __leaf_t *__root = LF_ROOT(LF_PTR(FI_array_ptr("+Var+")));"]
@@ -1590,27 +1590,26 @@ declare_fimp_impl(prolog, Head, M, CM, Comp, Call, Succ, Glob, Bind, ImplHead) -
     ),
     bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind),
     ["} /* "+PN/A+" */",
-     ''].
-
+     ""].
 declare_fimp_impl(native, Head, _, CM, _, _, _, Glob, Bind, ImplHead) -->
     { Bind = (FN/A as _/BN + _),
       declare_intf_fimp_head(BN, BNHead)
     },
-    [BNHead+'=NULL;'],
-    [ImplHead+' {',
+    [BNHead+"=NULL;"],
+    [ImplHead+" {",
      "    term_t "+BN+"_args = PL_new_term_refs("+A+");"],
     findall(["    __rtcheck(PL_unify_arg("+Idx+","+BN+"_args,"+Arg+"));"], arg(Idx, Head, Arg)),
     bind_call_predicate(CM, Glob, BN),
     ["} /* "+FN/A+" */",
-     ''].
+     ""].
 
 bind_call_predicate(CM, Glob, BN) -->
     {CallPred = "PL_call_predicate(__"+CM+", PL_Q_NORMAL, "+BN+", "+BN+"_args)"},
     ( { member(RS, [returns_state(_), type(_)]),
         memberchk(RS, Glob)
       }
-    ->['    int __result = '+CallPred+';']
-    ; ['    __rtcwarn('+CallPred+');']
+    ->["    int __result = "+CallPred+";"]
+    ; ["    __rtcwarn("+CallPred+");"]
     ).
 
 declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind, _ImplHead) -->
@@ -1619,7 +1618,7 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind, _ImplHead) -->
       Bind = (PI as _/PCN + CheckMode),
       declare_intf_head(PCN, Head, PCNH)
     },
-    [PCNH+' {'],
+    [PCNH+" {"],
     ( { functor(Head, _, Arity),
         Arity > MaxFLIArgs
       }
@@ -1633,12 +1632,12 @@ declare_forg_impl(Head, M, Module, Comp, Call, Succ, Glob, Bind, _ImplHead) -->
             ( CheckMode==(type),
               arg(_, Head, Arg)
             )),
-    ['    __mkroot(__root);'],
+    ["    __mkroot(__root);"],
     bind_arguments(Head, M, Module, Comp, Call, Succ, Glob, Bind, Return),
-    ['    __delroot(__root);',
+    ["    __delroot(__root);",
      "    return "+Return+";",
      "} /* "+PI+" */",
-     ''].
+     ""].
 
 c_set_argument(list(S),     _, C, A, L) :- c_set_argument_rec(list, S, C, A, L).
 c_set_argument(array(S, D), _, C, A, L) :- c_set_argument_array(S, D, C, A, L).
@@ -1795,7 +1794,7 @@ bind_arguments(Head, M, CM, Comp, Call, Succ, Glob, Bind, Return) -->
     {generate_foreign_call(Bind-Head, M, CM, Comp, Call, Succ, Glob, Return, ForeignCall)},
     [ForeignCall],
     ( {compound(Head)}
-    ->findall('    '+SetArg+';',
+    ->findall("    "+SetArg+";",
               ( arg(_, Head, Arg),
                 bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
                 memberchk(Mode, [out, inout]),
@@ -1831,7 +1830,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
                   Spec \= struct(_),
                   Spec \= tdfstr(_)
                 ->CArg = Arg
-                ; CArg = '*'+Arg
+                ; CArg = "*"+Arg
                 ),
                 PArg = "_p_"+Arg,
                 invert_mode(Mode, InvM),
@@ -1842,7 +1841,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
     bind_call_predicate(CM, Glob, BN),
     ( {compound(Head)}
     ->findall(["    term_t "+PArg+"="+BN+"_args + "+Idx1+";",
-               '    '+SetArg+';'],
+               "    "+SetArg+";"],
               ( arg(Idx, Head, Arg),
                 succ(Idx1, Idx),
                 bind_argument(Head, M, CM, Comp, Call, Succ, Glob, Arg, Spec, Mode),
@@ -1857,7 +1856,7 @@ bind_outs_arguments(Head, M, CM, Comp, Call, Succ, Glob, (_ as _/BN +_)) -->
               )),
       ( { memberchk(returns(Arg, _), Glob)
         ; memberchk(returns_state(_), Glob),
-          Arg = '__result'
+          Arg = "__result"
         }
       ->["    return "+Arg+";"]
       ; []
