@@ -228,11 +228,15 @@ geometry_t(geometry(P, W, H)) :- position_t(P), int(W), int(H).
 :- pred [ireverse1(     +list(int), -list(int)) is (fimport, returns_state, memory_root),
          test_ireverse1(+list(int), -list(int)) is (foreign, memory_root),
          ireverse2(+list(int):LIn,  -list(int)) is (fimport, returns_state, parent(LIn)),
-         test_ireverse2(+list(int), -list(int)) is (foreign)].
+         test_ireverse2(+list(int), -list(int)) is (foreign),
+         ireverse3(     +list(int), -list(int)) is (nimport)
+        ].
 
-ireverse1(X,Y) :- reverse(X, Y).
+ireverse1(X, Y) :- reverse(X, Y).
 
-ireverse2(X,Y) :- reverse(X, Y).
+ireverse2(X, Y) :- reverse(X, Y).
+
+ireverse3(X, Y) :- reverse(X, Y).
 
 % :- pred u(list(list(list(num))), list(list(int)), list(int), int)
 %     is foreign(c_u).

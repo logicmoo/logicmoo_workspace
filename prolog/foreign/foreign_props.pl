@@ -45,6 +45,7 @@
            nimport/1,
            nimport/2,
            int64/1,
+           lang/1,
            long/1,
            returns/2,
            parent/2,
@@ -82,6 +83,7 @@ foreign_spec(lang(Lang)) :- lang(Lang).
 
 :- type lang/1.
 lang(prolog).
+lang(native).
 
 normalize_ftype(native( O, G), native( O, G)).
 normalize_ftype(foreign(O, G), foreign(O, G)).
@@ -89,8 +91,8 @@ normalize_ftype(fimport(O, G), foreign([lang(prolog), O], G)).
 normalize_ftype(native(    G), native( [prefix(pl_)], G)).
 normalize_ftype(foreign(   G), foreign([prefix('')], G)).
 normalize_ftype(fimport(   G), foreign([lang(prolog), prefix('')], G)).
-normalize_ftype(nimport(O, G), native( [lang(prolog), O], G)).
-normalize_ftype(nimport(   G), native( [lang(prolog), prefix('')], G)).
+normalize_ftype(nimport(O, G), foreign([lang(native), O], G)).
+normalize_ftype(nimport(   G), foreign([lang(native), prefix('')], G)).
 
 :- type ftype_spec/1.
 
