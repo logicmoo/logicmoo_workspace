@@ -529,10 +529,8 @@ match_head_body(MGoal, CMBody, From) :-
 extra_clauses(Goal, CM, I:Goal, _From) :-
     predicate_property(CM:Goal, implementation_module(M)),
     functor(Goal, F, A),
-    ( interface:'$interface'(M, DIL, IIL),
-      ( memberchk(F/A, DIL)
-      ; memberchk(F/A, IIL)
-      )
+    ( interface:'$interface'(M, DIL),
+      memberchk(F/A, DIL)
     ->interface:'$implementation'(I, M)
     ).
 

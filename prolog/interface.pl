@@ -39,26 +39,19 @@
 :- use_module(library(lists)).
 :- use_module(library(apply)).
 :- use_module(library(error)).
+:- use_module(library(compound_expand)).
 
 :- multifile
-    '$interface'/3,
+    '$interface'/2,
     '$implementation'/2.
 
 :- meta_predicate implements(:).
 implements(Implementation:Alias) :-
     Implementation:use_module(Alias, []), % Ensure that the module is loaded
-    absolute_file_name(Alias, File,
-                       [file_type(prolog), access(read)]),
+    absolute_file_name(Alias, File, [file_type(prolog), access(read)]),
     module_property(Interface, file(File)),
-    module_property(Interface, exports(PIL)),
-    phrase(( [interface:'$implementation'(Implementation, Interface)],
-              findall((:- meta_predicate Implementation:Spec),
-                      ( member(F/A, PIL),
-                        functor(Pred, F, A),
-                        predicate_property(Interface:Pred, meta_predicate(Spec))
-                      ))
-           ), Clauses),
-    compile_aux_clauses(Clauses),
+    '$interface'(Interface, PIL),
+    compile_aux_clauses(interface:'$implementation'(Implementation, Interface)),
     maplist(Implementation:export, PIL).
 
 direct_interface(M, F/A) :-
@@ -71,33 +64,28 @@ direct_interface(M, F/A) :-
 :- module_transparent end_interface/0.
 end_interface :-
     context_module(Interface),
-    end_interface(Interface).
+    end_interface(Interface, Clauses),
+    compile_aux_clauses(Clauses).
 
-end_interface(Interface) :-
+end_interface(Interface, Clauses) :-
     module_property(Interface, exports(PIL)),
-    partition(interface:direct_interface(Interface), PIL, DIL, IIL),
-    compile_aux_clauses(interface:'$interface'(Interface, DIL, IIL)),
-    forall(( member(F/A, DIL),
-             functor(H, F, A)),
-           compile_aux_clauses([(Interface:H
-                                :- existence_error(binding, Interface:F/A))])).
+    include(direct_interface(Interface), PIL, DIL),
+    phrase(( [interface:'$interface'(Interface, DIL)],
+             findall((:- dynamic Interface:F/A),
+                     member(F/A, DIL))
+           ), Clauses).
 
 prolog:called_by(Pred, Interface, _, PredL) :-
-    '$interface'(Interface, DIL, _),
+    '$interface'(Interface, DIL),
     member(F/A, DIL),
     functor(Pred, F, A),
     findall(Implementation:Pred,
             interface:'$implementation'(Implementation, Interface),
             PredL),
     PredL \= [].
-prolog:called_by(Pred, Interface, _, [II:Pred]) :-
-    '$interface'(Interface, _, IIL),
-    member(F/A, IIL),
-    functor(Pred, F, A),
-    atom_concat(Interface, '$impl', II).
 
 bind_interface(Interface, Implementation) :-
-    ( '$interface'(Interface, DIL, IIL)
+    ( '$interface'(Interface, DIL)
     ->true
     ; existence_error(interface, Interface)
     ),
@@ -108,8 +96,8 @@ bind_interface(Interface, Implementation) :-
       ; existence_error(binding, Interface->Implementation)
       )
     ),
-    maplist(Interface:abolish, DIL),
-    '$import_from_loaded_module'(Implementation, Interface, [imports(DIL)]),
-    atom_concat(Interface, '$impl', II),
-    maplist(II:abolish, IIL),
-    '$import_from_loaded_module'(Implementation, II, [imports(IIL)]).
+    forall(( member(F/A, DIL),
+             functor(H, F, A)
+           ),
+           ( retractall(Interface:H),
+             Implementation:assertz((Interface:H :- H)))).
