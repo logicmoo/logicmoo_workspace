@@ -81,6 +81,7 @@ hide_var_dynamic_hook(det_clause(_, _), check_useless_cuts).
 hide_var_dynamic_hook(dyn_rtcheck_record(_, _), rtchecks).
 hide_var_dynamic_hook(unrtcheck2(_, _), rtchecks).
 hide_var_dynamic_hook(do_ac_head_prop_idx(_, _, _, _, _), assrt_comment).
+hide_var_dynamic_hook(bind_interface(_, _), interface).
 
 :- dynamic
     wrong_dynamic_db/4,
