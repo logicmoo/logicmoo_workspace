@@ -109,7 +109,7 @@ psubsetof(A, C) :-
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
 do_command(Agent, Action) ==>>
-  do_metacmd(Agent, Action),
+ invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
 do_command(Agent, Action) ==>>
   {set_last_action(Agent, Action)},
@@ -451,13 +451,13 @@ moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
   queue_local_event([moved(Doer, Verb, Object, From, At, Dest), Msg], Vicinity).
 
 
-event_props(thrown(Agent, Thing, _Target, Prep, Here, Vicinity),
+event_props( did_throw(Agent, Thing, _Target, Prep, Here, Vicinity),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
  undeclare(h(_, Thing, _)),
  declare(h(Prep, NewBrokenType, Here)),
  queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
- disgorge(Agent, throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
+ disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
 
 
 setloc_silent(Prep, Object, Dest) ==>>

@@ -81,12 +81,12 @@ Person notices exits: north, south, east, west.
 Person thinks north is unexplored
 Person thinks going north will be acting like an explorer
 Person goal is to go north
-Person makes plan to go north.. the plan is very simple: [go_dir(Person, walk, north)]
-Person DOES go_dir(Person, walk, north)
+Person makes plan to go north.. the plan is very simple: [ do_go_dir(Person, walk, north)]
+Person DOESdo_go_dir(Person, walk, north)
 Person leaves kitchen to the north
-In Kitchen, thus Person, sees Person departing kitchen to the north
+In Kitchen, thus Person, sees Person did_depart kitchen to the north
 Person enters pantry from the south
-In Pantry, thus Floyed and Person, sees Person enter pantry arriving from the south
+In Pantry, thus Floyed and Person, sees Person enter pantry did_arrive from the south
 Floyd belives Person was somewhere other than pantry before
 Floyd belives Person traveled north and there might be an exit in the opposite dirrection (south) leading somewhere other than pantry
 Person belives pantry is where they end up if they go north from kitchen
@@ -97,7 +97,7 @@ Person belives kitchen is where they end up if they go south from pantry
 look(Person) is a cheap and effective strategy
 
 
-event(trys(go_dir(Person, walk, north)))
+event( trys( do_go_dir(Person, walk, north)))
 
 
 
@@ -131,7 +131,7 @@ sequenced(_Self,
   reverse_dir(Dir, RDir),
   h(exit(Dir), Here, There), % path(Here, There)
   % %Action:
-  did(go_dir(Self, Walk, Dir)),
+ did( do_go_dir(Self, Walk, Dir)),
   %PostConds:
   ~h(WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
@@ -647,9 +647,9 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2dir1(Doer, Here, There, go_dir(Doer, _Walk, Dir), ModelData):-
+path2dir1(Doer, Here, There, do_go_dir(Doer, _Walk, Dir), ModelData):-
  in_model(h(exit(Dir), Here, There), ModelData).
-path2dir1(Doer, Here, There, goto_obj(Doer, _Walk, There), ModelData) :-
+path2dir1(Doer, Here, There, do_go_obj(Doer, _Walk, There), ModelData) :-
  in_model(h(descended, Here, There), ModelData).
 
 path2directions(Doer, [Here, There], [GOTO], ModelData):-

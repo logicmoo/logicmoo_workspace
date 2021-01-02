@@ -96,7 +96,7 @@ aXiom(say(Agent, Message)) ==>>          % undirected message
 
 aXiom(emote(Agent, EmoteType, Object, Message)) ==>> !, % directed message
  from_loc(Agent, Here),
- queue_local_event([emoted(Agent, EmoteType, Object, Message)], [Here]).
+ queue_local_event([ did_emote(Agent, EmoteType, Object, Message)], [ Here]).
 
 
 
@@ -105,23 +105,23 @@ aXiom(emote(Agent, EmoteType, Object, Message)) ==>> !, % directed message
 %  WALK WEST
 % ==============
 
-aXiom(go_dir(Agent, Walk, ExitName)) ==>> !,  %{fail}, % go n/s/e/w/u/d/in/out
-  must_act(status_msg(vBegin, go_dir(Agent, Walk, ExitName))),
+aXiom( do_go_dir(Agent, Walk, ExitName)) ==>> !, %{fail}, % go n/s/e/w/u/d/in/out
+ must_act( status_msg( vBegin, do_go_dir(Agent, Walk, ExitName))),
   % {break},
   must_mw1(from_loc(Agent, Here)),
   %must_mw1(h(exit(ExitName), Here, _There)),
   unless(Agent, h(exit(ExitName), Here, _There),
-  (eVent(Agent, departing(Agent, in, Here, Walk, ExitName)),
-   must_act(status_msg(vDone, go_dir(Agent, Walk, ExitName))))).
+ ( eVent(Agent, did_depart(Agent, in, Here, Walk, ExitName)),
+ must_act( status_msg( vDone, do_go_dir(Agent, Walk, ExitName))))).
 
-aXiom(departing(Agent, in, Here, Walk, ExitName)) ==>> !,% {fail},
+aXiom( did_depart(Agent, in, Here, Walk, ExitName)) ==>> !, % {fail},
   %member(At, [*, to, at, through, thru]),
   h(exit(ExitName), Here, There),
   eVent(Agent, terminates(h(_, Agent, Here))),
-  queue_local_event( departing(Agent, Here, Walk, ExitName), [Here]),
+ queue_local_event( did_depart(Agent, Here, Walk, ExitName), [ Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
   sg(reverse_dir(ExitName, ExitNameR)),
-  must_mw1(eVent(Agent, arriving(Agent, There, Walk, ExitNameR))).
+ must_mw1( eVent(Agent, did_arrive(Agent, There, Walk, ExitNameR))).
 
 aXiom(terminates(h(Prep, Object, Here))) ==>> !,% {fail},
  %ignore(sg(declared(h(Prep, Object, Here)))),
@@ -130,21 +130,21 @@ aXiom(terminates(h(Prep, Object, Here))) ==>> !,% {fail},
  % ==============
 %  WALK ON TABLE
 % ==============
-aXiom(goto_prep_obj(Agent, Walk, At, Object)) ==>>
+aXiom( do_go_prep_obj(Agent, Walk, At, Object)) ==>>
   will_touch(Agent, Object),
   has_rel(At, Object),
   \+ is_closed(At, Object),
-  eVent(Agent, arriving(Agent, Walk, Object, At)).
+ eVent(Agent, did_arrive(Agent, Walk, Object, At)).
 
-aXiom(arriving(Agent, Walk, Object, At)) ==>>
+aXiom( did_arrive(Agent, Walk, Object, At)) ==>>
   from_loc(Object, Here),
   moveto(Agent, Walk, Agent, At, Object, [Here],
     [subj(Agent), person(Walk, es(Walk)), At, the, Object, .]),
   add_look(Agent),!.
 
 /*
-aXiom(arriving(Agent, Here, Walk, ReverseDir)) ==>>  !,% {fail},
-  queue_local_event( arriving(Agent, Here, Walk, ReverseDir), [Here]),
+aXiom( did_arrive(Agent, Here, Walk, ReverseDir)) ==>> !, % {fail},
+ queue_local_event( did_arrive(Agent, Here, Walk, ReverseDir), [ Here]),
   %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
   {PrepIn = in},
   % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir]
@@ -162,9 +162,9 @@ aXiom(status_msg(_Begin, _End)) ==>> [].
 % ==============
 %  WALK TABLE
 % ==============
-aXiom(goto_obj(Agent, Walk, Object)) ==>>
+aXiom( do_go_obj(Agent, Walk, Object)) ==>>
   has_rel(At, Object),
-  eVent(Agent, goto_prep_obj(Agent, Walk, At, Object)).
+ eVent(Agent, do_go_prep_obj(Agent, Walk, At, Object)).
 
 
 
@@ -172,7 +172,7 @@ aXiom(goto_obj(Agent, Walk, Object)) ==>>
 % ==============
 %  GOTO PANTRY
 % ==============
-aXiom(goto_loc(Agent, _Walk, There)) ==>>           % go some room
+aXiom( do_go_loc(Agent, _Walk, There)) ==>> % go some room
   has_rel(exit(_), There),
   eVent(Agent, make_true(Agent, h(in, Agent, There))).
 
@@ -182,7 +182,7 @@ aXiom(make_true(Doer, h(in, Agent, There))) ==>>
   from_loc(Agent, Here),
   agent_thought_model(Agent, ModelData),
   {find_path(Doer, Here, There, Route, ModelData)}, !,
-  eVent(Agent, follow_plan(Agent, goto_loc(Agent, walk, There), Route)).
+ eVent(Agent, follow_plan(Agent, do_go_loc(Agent, walk, There), Route)).
 
 aXiom(make_true(Agent, FACT)) ==>>
   add_agent_goal(Agent, FACT).
@@ -219,64 +219,64 @@ aXiom(follow_step(Agent, Name, Step)) ==>>
 %    moveto(Agent, Put, Thing, Relation, Where, [Here],
 %      [cap(subj(Agent)), person('put the', 'puts a'),
 %        Thing, Relation, the, Where, '.'])).
-aXiom(does_put(Agent, Put, Thing1, At, Thing2)) ==>>
+aXiom( doing_put(Agent, Put, Thing1, At, Thing2)) ==>>
   from_loc(Agent, Here),
   % moveto(Agent, Put, Thing1, held_by, Recipient, [Here], [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
   moveto(Agent, Put, Thing1, At, Thing2, [Here],
     [cap(subj(Agent)), person(Put, es(Put)), Thing1, At, Thing2, '.']).
 
-aXiom(take(Agent, Thing)) ==>> !,
+aXiom( do_take(Agent, Thing)) ==>> !,
   % [silent(subj(Agent)), person('Taken.', [cap(Doer), 'grabs the', Thing, '.'])]
   dshow_failure(will_touch(Agent, Thing)),
-  eVent(Agent, does_put(Agent, take, Thing, held_by, Agent)).
+ eVent(Agent, doing_put(Agent, take, Thing, held_by, Agent)).
 
-aXiom(drop(Agent, Thing)) ==>> !,
+aXiom( do_drop(Agent, Thing)) ==>> !,
   will_touch(Agent, Thing),
   h(At, Agent, Here),
   % has_rel(At, Here),
-  eVent(Agent, does_put(Agent, drop, Thing, At, Here)).
+ eVent(Agent, doing_put(Agent, drop, Thing, At, Here)).
 
-aXiom(put(Agent, Thing1, Prep, Thing2)) ==>>
+aXiom( do_put(Agent, Thing1, Prep, Thing2)) ==>>
   has_rel(At, Thing2),
   prep_to_rel(Thing2, Prep, At),
   (At \= in ; \+ is_closed(At, Thing2)),
   will_touch(Agent, Thing2), % what if "under" an "untouchable" thing?
   % OK, put it
-  must_act( does_put(Agent, put, Thing1, At, Thing2)).
+ must_act( doing_put(Agent, put, Thing1, At, Thing2)).
 
-aXiom(give(Agent, Thing, Recipient)) ==>>
+aXiom( do_give(Agent, Thing, Recipient)) ==>>
   has_rel(held_by, Recipient),
   will_touch(Agent, Thing),
   will_touch(Recipient, Agent),
   % OK, give it
-  must_act( does_put(Agent, give, Thing, held_by, Recipient)).
+ must_act( doing_put(Agent, give, Thing, held_by, Recipient)).
 
-% throw ball up
-aXiom(throw_dir(Agent, Thing, ExitName)) ==>>
+% do_throw ball up
+aXiom( do_throw_dir(Agent, Thing, ExitName)) ==>>
   from_loc(Agent, Here),
-  eVent(Agent, throw_prep_obj(Agent, Thing, ExitName, Here)).
+ eVent(Agent, do_throw_prep_obj(Agent, Thing, ExitName, Here)).
 
-% throw ball at catcher
-aXiom(throw_at(Agent, Thing, Target)) ==>>
-  eVent(Agent, throw_prep_obj(Agent, Thing, at, Target)).
+% do_throw ball at catcher
+aXiom( do_throw_at(Agent, Thing, Target)) ==>>
+ eVent(Agent, do_throw_prep_obj(Agent, Thing, at, Target)).
 
-% throw ball over homeplate
-aXiom(throw_prep_obj(Agent, Thing, Prep, Target)) ==>>
+% do_throw ball over homeplate
+aXiom( do_throw_prep_obj(Agent, Thing, Prep, Target)) ==>>
   prep_to_rel(Target, Prep, Rel),
-  eVent(Agent, throwing(Agent, Thing, Rel, Target)).
+ eVent(Agent, doing_throw(Agent, Thing, Rel, Target)).
 
 % is throwing the ball...
-aXiom(throwing(Agent, Thing, At, Target)) ==>>
+aXiom( doing_throw(Agent, Thing, At, Target)) ==>>
   will_touch(Agent, Thing),
   can_sense(Agent, see, Target),
-  eVent(Agent, thrown(Agent, Thing, At, Target)).
+ eVent(Agent, did_throw(Agent, Thing, At, Target)).
 
 % has thrown the ball...
-aXiom(thrown(Agent, Thing, AtTarget, Target)) ==>>
+aXiom( did_throw(Agent, Thing, AtTarget, Target)) ==>>
   ignore((getprop(Thing, breaks_into(Broken)),
   dbug(general, 'object ~p is breaks_into~n', [Thing]),
   eVent(Agent, thing_transforms(Thing, Broken)))),
-  eVent(Agent, disgorge(Agent, throw, Target, AtTarget, Target, [Target], 'Something falls out.')).
+ eVent(Agent, disgorge(Agent, do_throw, Target, AtTarget, Target, [ Target], 'Something falls out.')).
 
 aXiom(thing_transforms(Thing, Broken))  ==>>
   undeclare(h(At, Thing, Here)),
@@ -337,9 +337,9 @@ aXiom(switch(Agent, OnOff, Thing)) ==>>
 
 aXiom(inventory(Agent)) ==>>
   can_sense(Agent, see, Agent),
-  must_act( does_inventory(Agent)).
+ must_act( doing_inventory(Agent)).
 
-aXiom(does_inventory(Agent)) ==>>
+aXiom( doing_inventory(Agent)) ==>>
   eVent(Agent, examine(Agent, Agent)).
   %findall(What, h(child, What, Agent), Inventory),
   %send_1percept(Agent, [rel_to(held_by, Inventory)]).
@@ -456,7 +456,7 @@ aXiom( Action) ==>> fail,
   from_loc(Agent, Here, S0),
   % queue_local_event(spatial, [attempts(Agent, Action)], [Here], S0, S1),
   act( Action), !,
-  queue_local_event([emoted(Agent, aXiom, '*'(Here), ActionG)], [Here], S0, S9).
+ queue_local_event([ did_emote(Agent, aXiom, '*'(Here), ActionG)], [ Here], S0, S9).
 */
 
 
