@@ -81,8 +81,8 @@
 */
 
 
-:- ensure_loaded('./marty_white/adv_main').
-:- ensure_loaded('./marty_white/adv_telnet').
+:- ensure_loaded(library(episodic_memory/adv_main)).
+:- ensure_loaded(library(episodic_memory/adv_telnet)).
 :- if(\+ current_prolog_flag(ec_loader,false)).
 %  :- use_module(library(ec_planner/ec_loader)).
 :- endif.

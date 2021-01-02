@@ -1,5 +1,5 @@
-% init_why(after('/opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/marty_white/planner/ec_reader.pl')).
-% init_why(after('/opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/marty_white/planner/ec_reader.pl')).
+% init_why(after('/opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/episodic_memory/planner/ec_reader.pl')).
+% init_why(after('/opt/logicmoo_workspace/packs_sys/small_adventure_games/prolog/episodic_memory/planner/ec_reader.pl')).
 % init_why(program).
 % ec_to_pl(do_ec_load, current_output, 'ectest/TestBoxRoom.e').
 % ectest/TestBoxRoom.e:1
