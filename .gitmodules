@@ -115,3 +115,6 @@
 [submodule "packs_xtra/logicmoo_pldata"]
 	path = packs_xtra/logicmoo_pldata
 	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_pldata.git
+[submodule "wiki"]
+	path = wiki
+	url = https://logicmoo.org/gitlab/logicmoo/logicmoo_wiki.git

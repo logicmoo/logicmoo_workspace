@@ -411,7 +411,7 @@ props(screendoor, [
    adjs([metallic]),
    desc("Your classic robot: metallic with glowing red eyes, enthusiastic but not very clever."),
    can(switch),
-   inherit(memorizer),
+   iza(memorizer),
    nouns(robot),
    inherit(shiny),
    inherit(character),

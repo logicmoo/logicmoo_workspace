@@ -398,7 +398,7 @@ aXiom(Action, S0, S9) ::=
 
 
 aXiom(Action,S,E) ::=
-  append_term_l(Action,[S,E],ActionSE),
+  append_termlist(Action,[S,E],ActionSE),
   current_predicate(_,mu:ActionSE), !,
   call(Action,S,E).
 

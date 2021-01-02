@@ -231,7 +231,7 @@ makep:-
 decide_action(Agent) :-
  %pprint(decide_action(Agent)),
  %get_advstate(State),
-  declared(memories(Agent, Mem0)),
+ declared(memories(Agent, Mem0)),
  must_mw1(decide_action(Agent, Mem0, Mem2)),
  Mem0 \== Mem2, !,
  set_advstate(memories(Agent, Mem2)).

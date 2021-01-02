@@ -187,7 +187,7 @@ bugout4(Prefix, Fmt, Args, DebugDest) :-
  bug(DebugDest),
  !,
  ansi_format([fg(cyan)], '~N~w', [Prefix]), ansi_format([fg(cyan)], Fmt, Args),
- must_det((stdio_player(Player), overwrote_prompt(Player))), !.
+ overwrote_prompt, !.
 bugout4(_, _, _, _).
 
 
@@ -228,6 +228,7 @@ current_agent_('player_X1').
 :- dynamic(mu_global:need_redraw/1).
 overwrote_prompt(Agent):-
   retractall(mu_global:need_redraw(Agent)), asserta(mu_global:need_redraw(Agent)), !.
+overwrote_prompt:- retractall(mu_global:need_redraw(player_X1)), asserta(mu_global:need_redraw(player_X1)), !.
 
 ensure_has_prompt(Agent):-
  ignore((retract(mu_global:need_redraw(Agent)),

@@ -541,3 +541,27 @@ ln -s logicmoo_workspace.vtg~ logicmoo_workspace.vtg
 ls
 ls
 ls -l
+ls
+ls -l
+cd /opt/logicmoo_workspace/packs_sys/
+cd eggdrop/
+cd conf/
+ls
+eggdrop
+ping 10.0.0.122
+ping 10.0.0.122
+telnet localhost 3334
+telnet localhost 3334
+telnet localhost 3334
+telnet localhost 3334
+telnet localhost 3334
+shutdown -h now
+exit
+cd /opt/logicmoo_workspace/packs_sys/eggdrop
+cd conf
+eggdrop
+free
+free
+free
+ps axfuw
+top
