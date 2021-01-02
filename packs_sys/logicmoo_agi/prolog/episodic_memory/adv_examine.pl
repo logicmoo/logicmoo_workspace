@@ -87,7 +87,7 @@ is_prop_accessable_at(touch, 1, texture).
 is_prop_accessable_at(know, 1, name).
 is_prop_accessable_at(know, 1, adjs).
 is_prop_accessable_at(know, 1, nouns).
-is_prop_accessable_at(know, 1, nominals).
+is_prop_accessable_at(know, 1, traits).
 is_prop_accessable_at(know, 1, default_rel).
 
 % dunno where to put eatable

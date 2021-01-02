@@ -190,7 +190,7 @@ type_props(living_room, [inherit(place)]).
 type_props(pantry, [
    volume_capacity = 1000,
    nouns(closet),
-   nominals(kitchen),
+   traits(kitchen),
    desc("You're in a dark kitchen pantry."),
    dark = t,
    inherit(place)
@@ -295,7 +295,7 @@ type_props(screendoor, [
     can(examine),
     adjs(physical),
     adjs($class),
-    nominals(object),
+    traits(object),
     can(move),
     inherit(fully_corporial),
     inherit(thinkable),
@@ -333,7 +333,7 @@ type_props(screendoor, [
    user_mode = 2, % 1 = fun-only, normal, debug
    access_level = admin, % guest, user, admin, wizard
    inherit(console), inherit(humanoid)]),
- type_props(console, [adjs(physical), nominals([console]), nouns([player])]),
+ type_props(console, [adjs(physical), traits([console]), nouns([player])]),
 
  % p(a, b, c).
  % c1_p_a1(a), c1_p_a1(b), c1_p_a1(c):-
@@ -366,7 +366,7 @@ type_props(screendoor, [
         class_desc(["Nomicmu plugin"])]),
 
   type_props(decider_plugin, [
-        nominals(decider),
+        traits(decider),
         inherit(nomicmu_plugin),
         class_desc(["plugins that contain decide_action hooks"])]),
 
@@ -600,7 +600,7 @@ type_props(screendoor, [
    powered = t,
    can(switch),
    nouns(light),
-   nominals(brass),
+   traits(brass),
    inherit(shiny),
    inherit(moveable),
    emitting(see, light),
@@ -613,7 +613,7 @@ type_props(screendoor, [
    name = ("dented brass lamp"),
    % TODO: prevent user from referring to "broken_lamp"
    nouns(light),
-   nominals(brass),
+   traits(brass),
    adjs(dented),
    can(switch),
    effect(switch(on), true),

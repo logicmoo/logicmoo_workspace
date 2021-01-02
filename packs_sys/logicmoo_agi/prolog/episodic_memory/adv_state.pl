@@ -463,8 +463,8 @@ as_first_arg(Object, Prop, Element):-
   callable(Prop), Prop=..[Name| Value], Element =..[Name, Object| Value].
 
 
-merge_value(F, N, B, A, RO):- text_prop(F), \+ is_list(B), !, merge_value(F, N, [B], A, RO).
-merge_value(F, N, B, A, RO):- text_prop(F), \+ is_list(A), !, merge_value(F, N, B, [A], RO).
+merge_value(F, N, B, A, RO):- collector_prop(F), \+ is_list(B), !, merge_value(F, N, [B], A, RO).
+merge_value(F, N, B, A, RO):- collector_prop(F), \+ is_list(A), !, merge_value(F, N, B, [A], RO).
 merge_value(F, _, _, A, R):- single_valued_prop(F), !, A=R.
 
 merge_value(=, 2, _, V, R):- !, R = V.
@@ -556,11 +556,11 @@ props_to_list(Other, [Other]).
 
 make_class_desc_sp(adjs,Atom,Desc):- string_concat("normally ",Atom,Desc).
 make_class_desc_sp(nouns,Atom,Desc):- string_concat("refered to as a ",Atom,Desc).
-make_class_desc_sp(nominals,Atom,Desc):- string_concat("related to a ",Atom,Desc).
+make_class_desc_sp(traits,Atom,Desc):- string_concat("related to a ",Atom,Desc).
 
 pos_to_sp(adjs).
 pos_to_sp(nouns).
-%pos_to_sp(nominals).
+%pos_to_sp(traits).
 
 negated_boolean(Last,_NegLast):- \+ atomic(Last),!,fail.
 %negated_boolean(nil,t).
@@ -597,7 +597,7 @@ correct_prop(AdjsInfo, sp(Adjs,Info)):- pos_to_sp(Adjs), compound_name_arguments
 
 correct_prop(sp(Adjs,TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs),TypeS,Out).
 correct_prop(sp(Adjs,Atom), Out):-  check_atom(Atom),   
-  push_to_state(type_props(Atom,[nominals(Atom),sp=Adjs])),!,
+  push_to_state(type_props(Atom,[traits(Atom),sp=Adjs])),!,
   % make_class_desc_sp(Adjs,Atom,ClassDesc), push_to_state(type_props(Atom,[class_desc([ClassDesc])])),
   must(correct_prop(inherit(Atom),Out)).
 
@@ -619,8 +619,11 @@ correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 episodic_mem(x(floyd,_),_Figment) :-!.
 episodic_mem(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),episodic_mem(Agent,F)).
-episodic_mem(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(episodic_mem(Agent,Figment))),format('~N',[]))),
-  overwrote_prompt.
+episodic_mem(Agent,Figment):- compound(Figment), arg(1,Figment,Ag), Ag==Agent,!, note_episodic_mem(Figment).
+episodic_mem(Agent,Figment) :- note_episodic_mem(episodic_mem(Agent,Figment)),!.
+
+note_episodic_mem(Figment):-
+  notrace((format('~N',[]),in_color(pink,print_tree(Figment)),format('~N',[]),overwrote_prompt)).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
