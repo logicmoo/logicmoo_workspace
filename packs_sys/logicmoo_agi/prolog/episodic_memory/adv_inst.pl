@@ -35,9 +35,9 @@ is_non_instance(Obj):- var(Obj),!,fail.
 is_non_instance(Obj):- is_x_instance(Obj),!,fail.
 is_non_instance(_):-!.
 
-into_inst_name(Suffix, Obj, Inst):- is_x_instance(Obj), !, Inst=Obj.
+into_inst_name(_Suffix, Obj, Inst):- is_x_instance(Obj), !, Inst=Obj.
 into_inst_name(Suffix, Obj, Inst):- atom(Obj), !, Inst = x(Obj,Suffix).
-into_inst_name(Suffix, Obj, Inst):- ignore(arg(2,Obj,Suffix)),!.
+into_inst_name(Suffix, Obj, Inst):- ignore(arg(2,Obj,Suffix)),!,Inst=Obj.
 /*
 
 into_inst_name(Suffix, Type, Inst):- instatom_codes(Suffix,Codes),last(Codes,Code),
