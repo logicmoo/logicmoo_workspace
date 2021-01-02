@@ -565,3 +565,6 @@ free
 free
 ps axfuw
 top
+ls
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
