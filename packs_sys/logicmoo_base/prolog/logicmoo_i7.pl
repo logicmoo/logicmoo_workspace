@@ -13,9 +13,9 @@
 % ==============================================
 :- ensure_loaded(library(logicmoo_lib)).
 
-:- if( \+ exists_source(library(nomic_mu)) ;  \+ exists_source(library(marty_white/adv_main))).
+:- if( \+ exists_source(library(nomic_mu)) ;  \+ exists_source(library(episodic_memory/adv_main))).
 :- add_pack_path(packs_sys).
-:- if( \+ exists_source(library(nomic_mu)) ;  \+ exists_source(library(marty_white/adv_main))).
+:- if( \+ exists_source(library(nomic_mu)) ;  \+ exists_source(library(episodic_memory/adv_main))).
 % :- pack_install(prologmud_I7).
 :- endif.
 :- endif.

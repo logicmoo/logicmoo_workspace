@@ -47,9 +47,9 @@ save_term_exists(Filename, _) :-
 
 record_saved(State) :- is_list(State),!,
   sort(State,Term),  
-  with_mutex(save_advstate, must_mw1(save_term(library('marty_white/adv_state_db.pl'), write ,Term))),!.
+  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), write ,Term))),!.
 record_saved(State):- 
-  with_mutex(save_advstate, must_mw1(save_term(library('marty_white/adv_state_db.pl'), append ,State))).
+  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append ,State))).
 
 save_term(Filename, How, Term) :- 
   is_list(Term),sort(Term,STerm),Term\==STerm,!,
@@ -105,7 +105,7 @@ get_advstate_0(State):- with_mutex(get_advstate,
 
 /*add_advstate(State):- from_ref(State,State0),
   with_mutex(get_advstate, must_mw1(set_advstate_db_1(State0))),
-  nop(with_mutex(save_advstate, must_mw1(save_term(library('marty_white/adv_state_db.pl'), append ,State0)))),!.
+  nop(with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append ,State0)))),!.
 */
 
 

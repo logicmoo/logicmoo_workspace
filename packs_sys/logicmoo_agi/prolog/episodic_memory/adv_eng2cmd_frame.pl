@@ -627,7 +627,7 @@ NP armed NP NP
 
 
 
-% /mnt/gggg/c/Users/logicmoo/AppData/Local/swi-prolog/pack/logicmoo_nlu/prolog/marty_white/adv_eng2cmd compiled into mu 0.26 sec, -4 clauses
+% /mnt/gggg/c/Users/logicmoo/AppData/Local/swi-prolog/pack/logicmoo_nlu/prolog/episodic_memory/adv_eng2cmd compiled into mu 0.26 sec, -4 clauses
 % ?-eng2flogic("give sally love joe").
 [ cmd( give, now,
     [ do=Give,
