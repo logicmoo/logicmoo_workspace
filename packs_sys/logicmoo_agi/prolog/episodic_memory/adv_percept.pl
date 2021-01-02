@@ -242,9 +242,9 @@ process_percept_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep
 process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
 % Auto Answer
-process_percept_auto(Agent, emoted(Speaker, EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
+process_percept_auto(Agent, did_emote(Speaker, EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
  trace, consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, emoted(Speaker, EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
+process_percept_auto(Agent, did_emote(Speaker, EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
@@ -257,7 +257,7 @@ process_percept_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList)
  dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
- add_todo_all([take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
+ add_todo_all([ do_take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
 process_percept_auto(_Agent, _Percept, _Stamp, M0, M0).
@@ -268,7 +268,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, emote(Agent, _, _Targ, _)).
-was_own_self(Agent, emoted(Agent, _, _Targ, _)).
+was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
 :- defn_mem_setter(process_percept_player//3).

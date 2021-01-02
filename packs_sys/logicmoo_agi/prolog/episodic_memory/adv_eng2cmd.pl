@@ -259,7 +259,7 @@ eng2cmd4(Doer, Words, Action, M) :- parse_imperative_movement(Doer, Words, Actio
 % Take
 % %%%%%%%%%%%%%%
 
-eng2cmd4(Doer, [take| ObjectSpec], take(Doer, Object), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
+eng2cmd4(Doer, [ take| ObjectSpec], do_take(Doer, Object), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
 
 eng2cmd4(Doer, Tokens, Logic, Mem) :-
   with_parse_mem(Mem, phrase(parse_cmd(Doer, Logic), Tokens, [])), !.
@@ -593,7 +593,7 @@ flee_run_escape(run).
 flee_run_escape(escape).
 
 % get [out, in, ..] Object
-parse_imperative_movement(Doer, [get, Prep, Object], goto_prep_obj(Doer, walk, Prep, Object), _Mem) :- preposition(spatial, Prep).
+parse_imperative_movement(Doer, [ get, Prep, Object], do_go_prep_obj(Doer, walk, Prep, Object), _Mem) :- preposition( spatial, Prep).
 % n/s/e/w/u/d
 parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir, Actual), !, must_mw1(txt2goto(Doer, walk, [Actual], Logic, M)).
 % escape/flee/run ..
@@ -605,7 +605,7 @@ parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
-parse_imperative_movement(Doer, [ExitName], go_dir(Doer, walk, ExitName), M) :-
+parse_imperative_movement(Doer, [ ExitName], do_go_dir(Doer, walk, ExitName), M) :-
   in_agent_model(Doer, h(exit(ExitName), _Place, _), M).
 
 
@@ -614,26 +614,26 @@ parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spat
 % x shelf
 % go on shelf
 
-txt2goto(Doer, run, [], go_dir(Doer, run, escape), _Mem) :- !.
+txt2goto(Doer, run, [ ], do_go_dir(Doer, run, escape), _Mem) :- !.
 txt2goto(Doer, Walk, [to, Prep| More], Logic, M) :- !, txt2goto(Doer, Walk, [Prep| More], Logic, M).
 txt2goto(Doer, Walk, [Alias| More], Logic, M) :- cmdalias(Alias, Dir), !, txt2goto(Doer, Walk, [Dir| More], Logic, M).
 
 % go in kitchen
 % go in car
-txt2goto(Doer, Walk, [ Prep, Dest], goto_prep_obj(Doer, Walk, Prep, Where), M) :-
+txt2goto(Doer, Walk, [ Prep, Dest], do_go_prep_obj(Doer, Walk, Prep, Where), M) :-
  preposition(spatial, Prep), !,
  must_mw1(txt2place(Dest, Where, M)).
 
 % go north
-txt2goto(Doer, Walk, [ ExitName], go_dir(Doer, Walk, ExitName), M) :-
+txt2goto(Doer, Walk, [ ExitName], do_go_dir(Doer, Walk, ExitName), M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M).
 % go escape
-txt2goto(Doer, Walk, [ Dir], go_dir(Doer, Walk, Dir), _Mem) :- (compass_direction(Dir);Dir==escape), !.
-txt2goto(Doer, Walk, [ Dir], go_dir(Doer, Walk, Dir), _Mem) :- (Dir=down;Dir==up), !.
+txt2goto(Doer, Walk, [ Dir], do_go_dir(Doer, Walk, Dir), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
+txt2goto(Doer, Walk, [ Dir], do_go_dir(Doer, Walk, Dir), _Mem) :- (Dir=down;Dir==up), !.
 % go [out, in, ..]
-txt2goto(Doer, Walk, [ Prep], go_dir(Doer, Walk, Prep), _Mem) :- preposition(spatial, Prep).
+txt2goto(Doer, Walk, [ Prep], do_go_dir(Doer, Walk, Prep), _Mem) :- preposition( spatial, Prep).
 % go kitchen
-txt2goto(Doer, Walk, Dest, goto_loc(Doer, Walk, Where), M) :-
+txt2goto(Doer, Walk, Dest, do_go_loc(Doer, Walk, Where), M) :-
  txt2place(Dest, Where, M).
 
 

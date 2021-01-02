@@ -160,7 +160,7 @@ dining_room type_props place.
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, "You lack the ability to fly."),
-   oper(/*garden, */ go_dir($agent, _, south),
+   oper(/*garden, */ do_go_dir($agent, _, south),
    % precond(Test, FailureMessage)
      precond(getprop(screendoor, (opened = t)), ["you must_mw open the door first"]),
    % body(clause)
@@ -453,9 +453,9 @@ type_props(screendoor, [
    %adjs(local),
   ~can(move),
   ~can(take),
-   oper(discard($agent, Thing),
+   oper(do_discard($agent, Thing),
     precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
-    body(take($agent, Thing, in, $self))), % body(clause)
+    body(do_take($agent, Thing, in, $self))), % body(clause)
    % inherit(container),
    has_rel(exit(_))
   ]),
@@ -465,9 +465,9 @@ type_props(screendoor, [
    opened = f,
    can(open),
    has_rel(in),
-  oper(put($agent, Thing, in, $self),
+  oper(do_put($agent, Thing, in, $self),
    precond(~getprop(Thing, inherit(liquid)), ["liquids would spill out"]), % precond(Test, FailureMessage)
-   body(take($agent, Thing, in, $self)))  % body(clause)
+   body(do_take($agent, Thing, in, $self)))  % body(clause)
   ]),
 
 
@@ -481,11 +481,11 @@ type_props(screendoor, [
 
  type_props(flask, [
    adjs(physical),
-  oper(put($agent, Thing, in, $self),
+  oper(do_put($agent, Thing, in, $self),
    % precond(Test, FailureMessage)
    precond(getprop(Thing, inherit(fully_corporial)), ["non-physical would spill out"]),
    % body(clause)
-   body(take($agent, Thing, in, $self))),
+   body(do_take($agent, Thing, in, $self))),
    inherit(container),
    (opened = t),
    inherit(moveable)

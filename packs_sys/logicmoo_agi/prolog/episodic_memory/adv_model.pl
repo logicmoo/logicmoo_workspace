@@ -90,10 +90,10 @@ update_model_exits([Exit|Tail], From, Timestamp, M0, M2) :-
 
 dumpST_break:- dumpST, break.
 
-update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-
+update_model(Knower, did_arrive(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-
    \+ in_model(h(exit(ExitNameReversed), Here, _There), M0),
    realize_model_exit(ExitNameReversed, Here, Timestamp, M0, M1),
-   update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
+ update_model(Knower, did_arrive(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -101,15 +101,15 @@ update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp
 % model_prepend(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
-update_model(Knower, arriving(Doer, At, Here, _, ExitNameReversed), Timestamp, Mem, M0, M2) :-  Knower == Doer,
+update_model(Knower, did_arrive(Doer, At, Here, _, ExitNameReversed), Timestamp, Mem, M0, M2) :- Knower == Doer,
   % According to model, where was I?
   must_mw(in_model(h(_Was, Doer, There), M0)),
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
-  model_prepend(RecentMem, [attempts(Doer, go_dir(Doer, _, ExitName))|OlderMem], Mem),
+ model_prepend(RecentMem, [ attempts(Doer, do_go_dir(Doer, _, ExitName))| OlderMem], Mem),
     % find figment
-  \+ member(attempts(Doer, go_dir(Doer, _, _)), RecentMem), % guarrantee recentness  
+ \+ member( attempts(Doer, do_go_dir(Doer, _, _)), RecentMem), % guarrantee recentness
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp
   %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n',
   %       [Doer, AtGo, Dest, There, Here]),
@@ -117,10 +117,10 @@ update_model(Knower, arriving(Doer, At, Here, _, ExitNameReversed), Timestamp, M
   update_model_exit(ExitNameReversed, Here, There, Timestamp, M11, M1),
   update_relation(At, Doer, Here, Timestamp, M1, M2), !. % And update location.
 
-update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-
+update_model(Knower, did_arrive(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M0, M2) :-
    \+ in_model(h(In, Doer, Here), M0),
    update_relations( In, [Doer], Here, Timestamp, M0, M1),
-   update_model(Knower, arriving(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
+ update_model(Knower, did_arrive(Doer, In, Here, Walk, ExitNameReversed), Timestamp, Mem, M1, M2).
 
 update_model(_Knower, moved(_Doer, _How, Object, _From, At, To), Timestamp, _Mem, M0, M1) :-
   update_relation(At, Object, To, Timestamp, M0, M1).
@@ -169,7 +169,7 @@ update_model(Knower, [Percept|Tail], Timestamp, Memory, M0, M2) :-
 update_model(_Knower, failure(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, success(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, failure(_), _Timestamp, _Mem, M0, M0) :- !.
-update_model(_Knower, emoted(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Knower, did_emote(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, emote(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 
