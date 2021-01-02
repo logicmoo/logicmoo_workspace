@@ -8,7 +8,20 @@ logicmoo_workspace.vpj=Release
 packs_usr\wam_common_lisp\wamcl.vpj=,Release
 packs_xtra\packs_xtra.vpj=Release
 [TreeExpansion2]
--@ logicmoo_workspace.vpj
+- logicmoo_workspace.vpj
+  + wiki\.circleci
+  + wiki\.github
+    + ISSUE_TEMPLATE
+  + eclipse-workspace\.sonarlint
+    + modules
+      + BW4Thuman
+        + issues
+      + External Prolog Files
+        + issues
+      + ProDTTest
+        + issues
+      + WumpusAgents
+        + issues
   + bin
     + old-scripts
   + docs
@@ -18,16 +31,6 @@ packs_xtra\packs_xtra.vpj=Release
         + _sources
         + _static
   + eclipse-workspace
-    + .sonarlint
-      + modules
-        + BW4Thuman
-          + issues
-        + External Prolog Files
-          + issues
-        + ProDTTest
-          + issues
-        + WumpusAgents
-          + issues
     + BW4Thuman
     + External Prolog Files
     + logicmoo_pfc_example
@@ -183,27 +186,27 @@ packs_xtra\packs_xtra.vpj=Release
         + examples
     + bddem
       + cudd-3.0.0
+        + cplusplus\.deps
+        + cudd\.deps
+        + dddmp\.deps
+        + epd\.deps
+        + mtr\.deps
+        + nanotrav\.deps
+        + st\.deps
+        + util\.deps
         + build-aux
         + cplusplus
-          + .deps
         + cudd
-          + .deps
         + dddmp
-          + .deps
           + doc
           + exp
         + doc
         + epd
-          + .deps
         + m4
         + mtr
-          + .deps
         + nanotrav
-          + .deps
         + st
-          + .deps
         + util
-          + .deps
       + prolog
     + cplint
       + docs
@@ -368,6 +371,8 @@ packs_xtra\packs_xtra.vpj=Release
         + checkers
       + tests
   - packs_sys
+    + logicmoo_ec\.github
+      + ISSUE_TEMPLATE
     + body_reordering
       + prolog
       + t
@@ -399,6 +404,20 @@ packs_xtra\packs_xtra.vpj=Release
           + common_logic
           + motel
           + pdt_server
+            + pdt.analysis\.settings
+            + pdt.builder\.settings
+            + pdt.common\.settings
+            + pdt.connector.tests\.settings
+            + pdt.connector\.settings
+            + pdt.console\.settings
+            + pdt.editor\.settings
+            + pdt.graphicalviews\.settings
+            + pdt.navigator\.settings
+            + pdt.plunit\.settings
+            + pdt.refactoring\.settings
+            + prolog.connector.tests\.settings
+            + prolog.connector\.settings
+            + PrologBenchmarkTool\.settings
             + PDT Examples
               + CTeditorTests
               + editor
@@ -413,11 +432,9 @@ packs_xtra\packs_xtra.vpj=Release
               + outline
               + search
             + pdt.analysis
-              + .settings
               + META-INF
               + pl
             + pdt.builder
-              + .settings
               + example_files
                 + meta_finder_examples
               + META-INF
@@ -426,7 +443,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + analyzer
                 + util
             + pdt.common
-              + .settings
               + icons
               + META-INF
               + pl
@@ -436,7 +452,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + xref
                   + testcase
             + pdt.connector
-              + .settings
               + META-INF
                 + maven
                   + org.cs3.roots
@@ -452,15 +467,12 @@ packs_xtra\packs_xtra.vpj=Release
               + pl
                 + lgt
             + pdt.connector.tests
-              + .settings
               + META-INF
             + pdt.console
-              + .settings
               + icons
               + META-INF
               + pl
             + pdt.editor
-              + .settings
               + doc
               + icons
               + META-INF
@@ -486,7 +498,6 @@ packs_xtra\packs_xtra.vpj=Release
               + META-INF
             + pdt.feature
             + pdt.graphicalviews
-              + .settings
               + icons
                 + help
               + lib
@@ -494,14 +505,12 @@ packs_xtra\packs_xtra.vpj=Release
               + pl
                 + lgt
             + pdt.navigator
-              + .settings
               + icons
               + META-INF
                 + maven
                   + org.cs3.roots
                     + org.cs3.pdt.navigator
             + pdt.plunit
-              + .settings
               + META-INF
               + src
                 + org
@@ -509,11 +518,9 @@ packs_xtra\packs_xtra.vpj=Release
                     + plunit
                       + framework
             + pdt.refactoring
-              + .settings
               + META-INF
             + pdt.updatesite
             + prolog.connector
-              + .settings
               + META-INF
                 + maven
                   + org.cs3.roots
@@ -536,7 +543,6 @@ packs_xtra\packs_xtra.vpj=Release
                             + socket
                         + process
             + prolog.connector.tests
-              + .settings
               + META-INF
             + prolog.library
               + META-INF
@@ -545,7 +551,6 @@ packs_xtra\packs_xtra.vpj=Release
                     + org.cs3.prolog.library
               + pl
             + PrologBenchmarkTool
-              + .settings
               + example
               + resources
           + pfc
@@ -729,8 +734,6 @@ packs_xtra\packs_xtra.vpj=Release
         + synergy
           + cgifCharGer
     + logicmoo_ec
-      + .github
-        + ISSUE_TEMPLATE
       + docs
         + files
           + driverlog
@@ -1364,8 +1367,8 @@ packs_xtra\packs_xtra.vpj=Release
           + tests
             + ace
             + acewiki_aceowl
-            + geo
             + Geography
+            + geo
             + no
             + ontograph_40
             + ontograph_ext
@@ -1376,8 +1379,8 @@ packs_xtra\packs_xtra.vpj=Release
           + words
             + acewiki_aceowl
             + clex
-            + geo
             + Geography
+            + geo
             + ontograph_40
             + Simple
             + test
@@ -1841,7 +1844,10 @@ packs_xtra\packs_xtra.vpj=Release
         + logicmoo_nlu
           + e2c
         - marty_white
+        + marty_white.sav
         + marty_white.sav2
+        + marty_white.sav6
+        + marty_white.sav7
       + test
         + logicmoo_nlu
     + logicmoo_utils
@@ -1933,34 +1939,44 @@ packs_xtra\packs_xtra.vpj=Release
       + t
     + prologmud_samples
       + prolog
+        + prologmud_sample_games\.config
+          + butterfly
+          + swi-prolog
+            + xpce
+        + prologmud_sample_games\.local
+          + bin
+          + lib
+            + python3.8
+              + site-packages
+                + asyncio
+                + asyncio-3.4.3.dist-info
+                + butterfly
+                  + bin
+                  + static
+                    + fonts
+                    + images
+                  + themes
+                    + C64
+                      + font
+                    + DOS
+                    + old-school
+                + butterfly-3.2.5.dist-info
         + prologmud_sample_games
-          + .config
-            + butterfly
-            + swi-prolog
-              + xpce
-          + .local
-            + bin
-            + lib
-              + python3.8
-                + site-packages
-                  + asyncio
-                  + asyncio-3.4.3.dist-info
-                  + butterfly
-                    + bin
-                    + static
-                      + fonts
-                      + images
-                    + themes
-                      + C64
-                        + font
-                      + DOS
-                      + old-school
-                  + butterfly-3.2.5.dist-info
           + attic
           + btepisode
+          + cache
+            + url
+              + 66
+                + 3f
+              + e4
+                + 4a
           + circlemuddata
           + config-enabled-swish
             + gitty
+          + data
+            + avatars
+          + logtalk-scratch
+          + pack
           + src_game_nani
             + web
               + css
@@ -2004,11 +2020,11 @@ packs_xtra\packs_xtra.vpj=Release
             + Values
         + ikvm-native
         + PlConsole
-        + swicli
         + Swicli.Library
           + cmake
             + Modules
           + mindtouch.reflection
+        + swicli
         + swicliYap
     + wam_common_lisp
       + prolog
@@ -3140,8 +3156,8 @@ packs_xtra\packs_xtra.vpj=Release
           + html
             + docs
             + ef
+              + files\.tmb
               + files
-                + .tmb
               + img
               + js
                 + extras
@@ -3184,8 +3200,8 @@ packs_xtra\packs_xtra.vpj=Release
       + pack
         + chat80
           + prolog
+            + chat80\.xpce
             + chat80
-              + .xpce
         + hdt
           + hdt-cpp
             + hdt-it
@@ -3232,14 +3248,14 @@ packs_xtra\packs_xtra.vpj=Release
                 + CompilerIdCXX
               + CheckIncludeFiles
               + sshd4pl.dir
-          + c
-          + cmake
           + CMakeFiles
             + 3.13.4
               + CompilerIdC
               + CompilerIdCXX
             + CheckIncludeFiles
             + sshd4pl.dir
+          + c
+          + cmake
           + examples
           + prolog
         + pcache
@@ -3292,6 +3308,9 @@ packs_xtra\packs_xtra.vpj=Release
               + prolog
           + tutorials
         + node_modules
+          + c3\.github
+          + printthis\.github
+            + ISSUE_TEMPLATE
           + ace
             + build
               + demo
@@ -3333,7 +3352,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + vendor
             + nuget
           + c3
-            + .github
             + design
             + docs
               + css
@@ -3464,8 +3482,6 @@ packs_xtra\packs_xtra.vpj=Release
                 + editor
           + opencollective-postinstall
           + printthis
-            + .github
-              + ISSUE_TEMPLATE
             + assets
               + images
           + requirejs
@@ -3601,9 +3617,6 @@ packs_xtra\packs_xtra.vpj=Release
   + share
     + pkgconfig
   + wiki
-    + .circleci
-    + .github
-      + ISSUE_TEMPLATE
     + docs
       + _build
         + doctrees
@@ -3666,194 +3679,34 @@ packs_xtra\packs_xtra.vpj=Release
         + PacMan
   + wikis
     + logicmoo_workspace.wiki
-+@ other_files.vpj
++ other_files.vpj
 scroll:0
 [State]
-MONITOR_CONFIGS: 129
-MONITOR_CONFIG: 127 1920 -960 1920 1080,0 -1080 1920 1080,1920 120 1920 1080,0 0 1920 1200
-SCREEN: 1920 1200 360 76 1201 924 0 0 M 0 0 0 0 1535 744 0
-MDISTATE: 1
-AAAAAwAAAAIAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAuoAAAROAAAAAvsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPwAAABxAAAAAGQANQA6ADoAOgBUADoAXABlAHQAYwBcAGEAcABhAGMAaABlADIAXABzAGkAdABlAHMALQBlAG4AYQBiAGwAZQBkAFwAMAAwADAALQBsAG8AZwBpAGMAbQBvAG8ALgBjAG8AbgBmAAD/////AAD8AAAAuQAAAACsADcAOgA6ADoAVAA6AFwAbwBwAHQAXABsAG8AZwBpAGMAbQBvAG8AXwB3AG8AcgBrAHMAcABhAGMAZQBcAHAAYQBjAGsAcwBfAHMAeQBzAFwAbABvAGcAaQBjAG0AbwBvAF8AbgBsAHUAXABwAHIAbwBsAG8AZwBcAG0AYQByAHQAeQBfAHcAaABpAHQAZQBcAGEAZAB2AF8AYwBvAG4AdAByAG8AbAAuAHAAbAEA/////wAB/AAAALMAAAAApgAzADoAOgA6AFQAOgBcAG8AcAB0AFwAbABvAGcAaQBjAG0AbwBvAF8AdwBvAHIAawBzAHAAYQBjAGUAXABwAGEAYwBrAHMAXwBzAHkAcwBcAGwAbwBnAGkAYwBtAG8AbwBfAGEAZwBpAFwASQBtAHAAbwByAHQAYQBuAHQARABvAGMAcwBcAGoAbQBjAFwAYQBzAGMAcgBpAGIAaQBuAGcALgBtAGQAAP////8AAPwAAACzAAAAAKYAMgA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABsAG8AZwBpAGMAbQBvAG8AXwBhAGcAaQBcAEkAbQBwAG8AcgB0AGEAbgB0AEQAbwBjAHMAXABqAG0AYwBcAGEAcwBjAHIAaQBiAGkAbgBnAC4AbQBkAAD/////AAD8AAAAewAAAABuADYAOgA6ADoAVAA6AFwAZQB0AGMAXABhAHAAYQBjAGgAZQAyAFwAYwBvAG4AZgAtAGEAdgBhAGkAbABhAGIAbABlAFwAYwBsAGkAbwBwAGEAdAByAGkAYQBfAHMAdwBpAHMAaAAuAGMAbwBuAGYAAP////8AAPwAAADfAAAAANIANAA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABwAHIAbwBsAG8AZwBtAHUAZABfAHMAYQBtAHAAbABlAHMAXABwAHIAbwBsAG8AZwBcAHAAcgBvAGwAbwBnAG0AdQBkAF8AcwBhAG0AcABsAGUAXwBnAGEAbQBlAHMAXAByAHUAbgBfAG0AdQBkAF8AcwBlAHIAdgBlAHIALgBwAGwAAP////8AAAAAAAA=
-STANDARD_LAYOUT: 61 1 44 12 4 M 0
-_tbbufftabs_form F=11
-_tbprojects_form F=8
-_tbdebug_watches_form F=64
-_tbbaseclasses_form F=40
-_tbdeltasave_form F=0
-_tbdebug_regs_form F=64
-_tbFTPOpen_form F=0
-_tbdebug_threads_form F=64
-_tbclipboard_form F=44
-_tbopen_form F=40
-_tbterminal_form F=8
-_tbdebug_exceptions_form F=384
-_tbdebug_classes_form F=64
-_tbtagwin_form F=8
-_tbdebug_autovars_form F=64
-_tbsymbolcallers_form F=40
-_tbFTPClient_form F=0
-_tbtagrefs_form F=8
-_tbfind_symbol_form F=32
-_tbdebug_locals_form F=64
-_tbdebug_members_form F=64
-_tbdebug_memory_form F=64
-_tbsymbol_args_form F=8
-_tbdebug_stack_form F=64
-_tbsymbolcalls_form F=40
-_tbsymbol_props_form F=8
-_tbfilelist_form F=44
-_tboutputwin_form F=8
-_tbclass_form F=8
-_tbunittest_form F=0
-_tbfind_form F=36
-_tbmessages_browser_form F=8
-_tbannotations_browser_form F=0
-_tbdebug_breakpoints_form F=384
-_tbnotification_form F=36
-_tbinteractive_form F=8
-_tbproctree_form F=8
-_tbbookmarks_form F=8
-_tbregex_form F=40
-_tbslickc_stack_form F=8
-_tbderivedclasses_form F=40
-_tbshell_form F=8
-_tbcbrowser_form F=8
-_tbsearch_form F=8
-_tboutputwin_form T=0
-_tbclass_form T=0
-_tbtagwin_form T=0
-_tbterminal_form T=0
-_tbtagrefs_form T=0
-_tbmessages_browser_form T=0
-_tbshell_form T=0
-_tbopen_form T=0
-_tbprojects_form T=0
-_tbsearch_form T=0
-_tbcbrowser_form T=0
-_tbproctree_form T=0
-AAAAAwAAAAEAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAesAAAS6AAAAAPsAAAACAAAAAgAAAAEAAAAA+wAAAAIAAAACAAAAAAAAAAH9AAABoQAAAAAaADoAOgA6AC8AdgBEAG8AYwBrAEEAcgBlAGEBAAAAAXwAAAAAAAL7AAAABQAAAAUAAAAAAAAABAAAAAEAAAACAAAAA/sAAAAFAAAABQAAAAAAAAABAAAAAgAAAAMAAAAE/AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGoAZQBjAHQAcwBfAGYAbwByAG0BAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGMAdAByAGUAZQBfAGYAbwByAG0AAP////8AAP///////////AAAADcAAAAAIgAwADoAOgA6AF8AdABiAGMAbABhAHMAcwBfAGYAbwByAG0AAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAGMAYgByAG8AdwBzAGUAcgBfAGYAbwByAG0AAP////8AAP///////////AAAADUAAAAAIAAwADoAOgA6AF8AdABiAG8AcABlAG4AXwBmAG8AcgBtAAD/////AAD///////////0AAALFAAAAABoAOgA6ADoALwB2AEQAbwBjAGsAQQByAGUAYQEAAAADNAABAAAAAfsAAAACAAAAAgAAAAAAAAAB+wAAAAIAAAACAAAAAQAAAAD8AAAAKQAAAAAcADoAOgA6AE0ARABJAEEAUgBFAEEAVABJAEwARQEAAAADTwAB/QAAAkUAAAAAGgA6ADoAOgAvAHYARABvAGMAawBBAHIAZQBhAQAAAADmAAAAAAAC+wAAAAcAAAAHAAAAAwAAAAUAAAAEAAAAAgAAAAEAAAAAAAAABvsAAAAHAAAABwAAAAAAAAABAAAAAgAAAAMAAAAEAAAABQAAAAb8AAAAOQAAAAAkADAAOgA6ADoAXwB0AGIAcwBlAGEAcgBjAGgAXwBmAG8AcgBtAAD/////AAD///////////wAAAA5AAAAACQAMAA6ADoAOgBfAHQAYgB0AGEAZwB3AGkAbgBfAGYAbwByAG0AAP////8AAP///////////AAAADsAAAAAJgAwADoAOgA6AF8AdABiAHQAYQBnAHIAZQBmAHMAXwBmAG8AcgBtAAD/////AAD///////////wAAAA3AAAAACIAMAA6ADoAOgBfAHQAYgBzAGgAZQBsAGwAXwBmAG8AcgBtAQD/////AAD///////////wAAABNAAAAADgAMAA6ADoAOgBfAHQAYgBtAGUAcwBzAGEAZwBlAHMAXwBiAHIAbwB3AHMAZQByAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPQAAAAAoADAAOgA6ADoAXwB0AGIAdABlAHIAbQBpAG4AYQBsAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPwAAAAAqADAAOgA6ADoAXwB0AGIAbwB1AHQAcAB1AHQAdwBpAG4AXwBmAG8AcgBtAAD/////AAD//////////wAAAADbAAAAAAAAAALbAAAAAAAAAAHbAAAAAAAAAAPbAAAAAAAAAAA=
-QTOOLBAR 2 0
-AAAA/wAAAAD9AAAAAAAAB4AAAAPTAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAQAFMAdABhAG4AZABhAHIAZAEAAAAA/////wAAAAAAAAAAAAAAHgBDAHUAcgByAGUAbgB0ACAAQwBvAG4AdABlAHgAdAEAAAJx/////wAAAAAAAAAA
-_tbstandard_form 1
-_tbcontext_form 1
-APP_LAYOUT: 61 1 44 12 4 M 0
-_tbbufftabs_form F=11
-_tbprojects_form F=8
-_tbdebug_watches_form F=64
-_tbbaseclasses_form F=40
-_tbdeltasave_form F=0
-_tbdebug_regs_form F=64
-_tbFTPOpen_form F=0
-_tbdebug_threads_form F=64
-_tbclipboard_form F=44
-_tbopen_form F=40
-_tbterminal_form F=8
-_tbdebug_exceptions_form F=384
-_tbdebug_classes_form F=64
-_tbtagwin_form F=8
-_tbdebug_autovars_form F=64
-_tbsymbolcallers_form F=40
-_tbFTPClient_form F=0
-_tbtagrefs_form F=8
-_tbfind_symbol_form F=32
-_tbdebug_locals_form F=64
-_tbdebug_members_form F=64
-_tbdebug_memory_form F=64
-_tbsymbol_args_form F=8
-_tbdebug_stack_form F=64
-_tbsymbolcalls_form F=40
-_tbsymbol_props_form F=8
-_tbfilelist_form F=44
-_tboutputwin_form F=8
-_tbclass_form F=8
-_tbunittest_form F=0
-_tbfind_form F=36
-_tbmessages_browser_form F=8
-_tbannotations_browser_form F=0
-_tbdebug_breakpoints_form F=384
-_tbnotification_form F=36
-_tbinteractive_form F=8
-_tbproctree_form F=8
-_tbbookmarks_form F=8
-_tbregex_form F=40
-_tbslickc_stack_form F=8
-_tbderivedclasses_form F=40
-_tbshell_form F=8
-_tbcbrowser_form F=8
-_tbsearch_form F=8
-_tboutputwin_form T=0
-_tbclass_form T=0
-_tbtagwin_form T=0
-_tbterminal_form T=0
-_tbtagrefs_form T=0
-_tbmessages_browser_form T=0
-_tbshell_form T=0
-_tbopen_form T=0
-_tbprojects_form T=0
-_tbsearch_form T=0
-_tbcbrowser_form T=0
-_tbproctree_form T=0
-AAAAAwAAAAEAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAesAAAS6AAAAAPsAAAACAAAAAgAAAAEAAAAA+wAAAAIAAAACAAAAAAAAAAH9AAABoQAAAAAaADoAOgA6AC8AdgBEAG8AYwBrAEEAcgBlAGEBAAAAAXwAAAAAAAL7AAAABQAAAAUAAAAAAAAABAAAAAEAAAACAAAAA/sAAAAFAAAABQAAAAAAAAABAAAAAgAAAAMAAAAE/AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGoAZQBjAHQAcwBfAGYAbwByAG0BAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAHAAcgBvAGMAdAByAGUAZQBfAGYAbwByAG0AAP////8AAP///////////AAAADcAAAAAIgAwADoAOgA6AF8AdABiAGMAbABhAHMAcwBfAGYAbwByAG0AAP////8AAP///////////AAAAD0AAAAAKAAwADoAOgA6AF8AdABiAGMAYgByAG8AdwBzAGUAcgBfAGYAbwByAG0AAP////8AAP///////////AAAADUAAAAAIAAwADoAOgA6AF8AdABiAG8AcABlAG4AXwBmAG8AcgBtAAD/////AAD///////////0AAALFAAAAABoAOgA6ADoALwB2AEQAbwBjAGsAQQByAGUAYQEAAAADNAABAAAAAfsAAAACAAAAAgAAAAAAAAAB+wAAAAIAAAACAAAAAQAAAAD8AAAAKQAAAAAcADoAOgA6AE0ARABJAEEAUgBFAEEAVABJAEwARQEAAAADTwAB/QAAAkUAAAAAGgA6ADoAOgAvAHYARABvAGMAawBBAHIAZQBhAQAAAADmAAAAAAAC+wAAAAcAAAAHAAAAAwAAAAUAAAAEAAAAAgAAAAEAAAAAAAAABvsAAAAHAAAABwAAAAAAAAABAAAAAgAAAAMAAAAEAAAABQAAAAb8AAAAOQAAAAAkADAAOgA6ADoAXwB0AGIAcwBlAGEAcgBjAGgAXwBmAG8AcgBtAAD/////AAD///////////wAAAA5AAAAACQAMAA6ADoAOgBfAHQAYgB0AGEAZwB3AGkAbgBfAGYAbwByAG0AAP////8AAP///////////AAAADsAAAAAJgAwADoAOgA6AF8AdABiAHQAYQBnAHIAZQBmAHMAXwBmAG8AcgBtAAD/////AAD///////////wAAAA3AAAAACIAMAA6ADoAOgBfAHQAYgBzAGgAZQBsAGwAXwBmAG8AcgBtAQD/////AAD///////////wAAABNAAAAADgAMAA6ADoAOgBfAHQAYgBtAGUAcwBzAGEAZwBlAHMAXwBiAHIAbwB3AHMAZQByAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPQAAAAAoADAAOgA6ADoAXwB0AGIAdABlAHIAbQBpAG4AYQBsAF8AZgBvAHIAbQAA/////wAA///////////8AAAAPwAAAAAqADAAOgA6ADoAXwB0AGIAbwB1AHQAcAB1AHQAdwBpAG4AXwBmAG8AcgBtAAD/////AAD//////////wAAAADbAAAAAAAAAALbAAAAAAAAAAHbAAAAAAAAAAPbAAAAAAAAAAA=
-QTOOLBAR 2 0
-AAAA/wAAAAD9AAAAAAAAB4AAAAPTAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAQAFMAdABhAG4AZABhAHIAZAEAAAAA/////wAAAAAAAAAAAAAAHgBDAHUAcgByAGUAbgB0ACAAQwBvAG4AdABlAHgAdAEAAAJx/////wAAAAAAAAAA
-_tbstandard_form 1
-_tbcontext_form 1
-END_MONITOR_CONFIGS:
-CWD: ..\logicmoo_workspace
-BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"""""
-BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
-VIEW: LN=.6700 CL=5 LE=0 CX=6 CY=4 WI=5 BI=3 HT=0 HN=0 HF=0 HC=4 HB=4
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"""""
-BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
-VIEW: LN=.21560 CL=14 LE=0 CX=15 CY=11 WI=5 BI=2 HT=0 HN=0 HF=0 HC=4 HB=4
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
-BI: MA=1 74 1  TABS= WWS=1 IWT= ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Plain Text	HM=0 MF=33554432 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=70 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
-VIEW: LN=.12415 CL=21 LE=0 CX=22 CY=25 WI=5 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
-BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"""""
-BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=51380224 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
-VIEW: LN=.903 CL=59 LE=0 CX=60 CY=7 WI=5 BI=4 HT=0 HN=0 HF=0 HC=4 HB=4
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl"""""
-BI: MA=1 74 1  TABS= WWS=9 IWT= ST=8 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=	HM=0 MF=119538208 TL=0 MLL=0 ASE=0 LNL=1 LCF=0 CAPS=0 E=0 ESBU2=-1 CL="Default" SC="" SCE= SCU= ALM=0 FWRM=0 HMRE=0 HMRBW=0 SPCWT= SWF=2 SM= STAT=
-VIEW: LN=.0 CL=1 LE=0 CX=2 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 813 591 0 0 N  WF=0 WT=5 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
-BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"""""
-VIEW: LN=.6700 CL=5 LE=0 CX=5 CY=4 WI=331 BI=3 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 813 591 0 0 N  WF=0 WT=4 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
-BUFFER: BN="packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl"""""
-VIEW: LN=.21560 CL=14 LE=0 CX=14 CY=11 WI=320 BI=2 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 813 591 0 0 N  WF=0 WT=3 "Default Unicode Font,10,0,1" DID=1 MI="*,,,"
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
-VIEW: LN=.0 CL=1 LE=0 CX=2 CY=0 WI=327 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 813 591 0 0 N  WF=0 WT=2 "Default Fixed Font,14,0,1" DID=2 MI="*,,,"
-BUFFER: BN="packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md"""""
-VIEW: LN=.12415 CL=21 LE=0 CX=21 CY=25 WI=325 BI=1 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 813 591 0 0 N  WF=0 WT=6 "Default Fixed Font,14,0,1" DID=0 MI="*,,,"
-BUFFER: BN="\etc\apache2\conf-available\cliopatria_swish.conf"""""
-VIEW: LN=.903 CL=59 LE=0 CX=59 CY=7 WI=321 BI=4 HT=0 HN=0 HF=0 HC=4 HB=4
-WINDOW: 1 22 1533 721 0 0 N  WF=0 WT=7 "Consolas,20,0,1" DID=0 MI="*,,,"
-BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl"""""
-VIEW: LN=.0 CL=1 LE=0 CX=1 CY=0 WI=282 BI=5 HT=0 HN=0 HF=0 HC=4 HB=4
-MDISTATE: 1
-AAAAAwAAAAIAAAAB2gAAAAIAMAAAAAAAAAA1AAAHfwAABAcAAAAAAAAAAAAAB38AAAQzAAAAAuoAAAROAAAAAvsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPsAAAAGAAAABgAAAAEAAAAEAAAAAwAAAAIAAAAFAAAAAPwAAABxAAAAAGQANQA6ADoAOgBUADoAXABlAHQAYwBcAGEAcABhAGMAaABlADIAXABzAGkAdABlAHMALQBlAG4AYQBiAGwAZQBkAFwAMAAwADAALQBsAG8AZwBpAGMAbQBvAG8ALgBjAG8AbgBmAAD/////AAD8AAAAuQAAAACsADcAOgA6ADoAVAA6AFwAbwBwAHQAXABsAG8AZwBpAGMAbQBvAG8AXwB3AG8AcgBrAHMAcABhAGMAZQBcAHAAYQBjAGsAcwBfAHMAeQBzAFwAbABvAGcAaQBjAG0AbwBvAF8AbgBsAHUAXABwAHIAbwBsAG8AZwBcAG0AYQByAHQAeQBfAHcAaABpAHQAZQBcAGEAZAB2AF8AYwBvAG4AdAByAG8AbAAuAHAAbAEA/////wAB/AAAALMAAAAApgAzADoAOgA6AFQAOgBcAG8AcAB0AFwAbABvAGcAaQBjAG0AbwBvAF8AdwBvAHIAawBzAHAAYQBjAGUAXABwAGEAYwBrAHMAXwBzAHkAcwBcAGwAbwBnAGkAYwBtAG8AbwBfAGEAZwBpAFwASQBtAHAAbwByAHQAYQBuAHQARABvAGMAcwBcAGoAbQBjAFwAYQBzAGMAcgBpAGIAaQBuAGcALgBtAGQAAP////8AAPwAAACzAAAAAKYAMgA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABsAG8AZwBpAGMAbQBvAG8AXwBhAGcAaQBcAEkAbQBwAG8AcgB0AGEAbgB0AEQAbwBjAHMAXABqAG0AYwBcAGEAcwBjAHIAaQBiAGkAbgBnAC4AbQBkAAD/////AAD8AAAAewAAAABuADYAOgA6ADoAVAA6AFwAZQB0AGMAXABhAHAAYQBjAGgAZQAyAFwAYwBvAG4AZgAtAGEAdgBhAGkAbABhAGIAbABlAFwAYwBsAGkAbwBwAGEAdAByAGkAYQBfAHMAdwBpAHMAaAAuAGMAbwBuAGYAAP////8AAPwAAADfAAAAANIANAA6ADoAOgBUADoAXABvAHAAdABcAGwAbwBnAGkAYwBtAG8AbwBfAHcAbwByAGsAcwBwAGEAYwBlAFwAcABhAGMAawBzAF8AcwB5AHMAXABwAHIAbwBsAG8AZwBtAHUAZABfAHMAYQBtAHAAbABlAHMAXABwAHIAbwBsAG8AZwBcAHAAcgBvAGwAbwBnAG0AdQBkAF8AcwBhAG0AcABsAGUAXwBnAGEAbQBlAHMAXAByAHUAbgBfAG0AdQBkAF8AcwBlAHIAdgBlAHIALgBwAGwAAP////8AAAAAAAA=
-FILEHIST: 9
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
-packs_sys\logicmoo_nlu\prolog\nomic_mu.pl
-\foo.txt
-packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md
-packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl
+SCREEN: 1920 1200 156 156 1440 788 0 0 M 0 0 0 0 1614 759
+CWD: C:\Windows\system32
+BUFFER: BN="\etc\apache2\sites-enabled\000-logicmoo.conf"
+BI: MA=1 74 1  TABS= WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Config	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=5 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=544 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo_id.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=0 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
+BI: MA=1 174 1  TABS=1 3  WWS=1 IWT=0 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Prolog	HM=0 MF=544 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0 E=0 ESBU2=-1
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 26 26 1380 525 -1 -1 N  WF=0 WT=3 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo_id.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=312 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 1380 525 -1 -1 N  WF=0 WT=2 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo.pl"
+VIEW: LN=.0 CL=1 LE=0 CX=0 CY=0 WI=159 BI=24 HT=0 HN=0 HF=0 HC=4
+WINDOW: 52 52 1380 525 -1 -1 M  WF=0 WT=1 "Default Fixed Font,14,0,1"
+BUFFER: BN="packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl"
+VIEW: LN=.5760 CL=1 LE=0 CX=0 CY=23 WI=314 BI=29 HT=0 HN=0 HF=0 HC=4
+FILEHIST: 4
 \etc\apache2\sites-enabled\000-logicmoo.conf
-\etc\apache2\conf-available\cliopatria_swish.conf
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl
-ALLFILEHIST: 10
-packs_sys\prologmud_samples\prolog\prologmud_sample_games\run_mud_server.pl
-packs_sys\logicmoo_nlu\prolog\nomic_mu.pl
-\foo.txt
-\etc\apache2\conf-available\cliopatria_swish.conf
-packs_sys\logicmoo_agi\ImportantDocs\jmc\ascribing.md
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_unused.pro
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_log2eng.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_control.pl
-packs_sys\logicmoo_nlu\prolog\marty_white\adv_action.pl
-\etc\apache2\sites-enabled\000-logicmoo.conf
-TBCLASS: 0 0
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_abdemo_id.pl
+packs_sys\logicmoo_nlu\prolog\marty_white\adv_axiom.pl
