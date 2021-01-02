@@ -443,7 +443,7 @@ get_objects(Spec, Set, State):-
  quietly((must_input_state(State),
   get_objects_(Spec, List, State, im(State)), !,
   list_to_set(List, Set))).
-%get_objects(_Spec, [player1, floyd], _State):-!.
+%get_objects(_Spec, [player_X1, floyd_X1], _State):-!.
 
 get_objects_(_Spec, [], [], im(_)) :- !.
 get_objects_(Spec, OutList, [Store|StateList], im(S0)):-
@@ -617,7 +617,7 @@ correct_prop(  Other, Other).
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 
-internal_dialog(floyd,_Figment) :-!.
+internal_dialog(floyd_X1,_Figment) :-!.
 internal_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),internal_dialog(Agent,F)).
 internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))),
   overwrote_prompt.

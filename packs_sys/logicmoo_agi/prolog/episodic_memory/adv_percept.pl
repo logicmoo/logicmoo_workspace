@@ -290,7 +290,7 @@ process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format(Agent, '~N~q~n', [Agent:Percept]).
 
 is_player(Agent):- \+ is_non_player(Agent).
-is_non_player(Agent):- Agent == floyd.
+is_non_player(Agent):- Agent == floyd_X1.
 
 
 :- defn_mem_setter(process_percept_main//3).

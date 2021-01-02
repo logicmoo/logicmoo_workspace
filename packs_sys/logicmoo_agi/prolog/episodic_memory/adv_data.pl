@@ -59,7 +59,7 @@
 % check preconditions for acting on a candidate object
 
 
-:- op(1199, xfx, props).
+:- op(1199, xfx, type_props).
 :- op(1199, xfx, type).
 :- op(900, fx, ~).
 
@@ -80,20 +80,20 @@ dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 
 % Relationships
 
-in(floyd, the(pantry)),
-in(the(player), kitchen),
-worn_by(the(watch), the(player)),
-held_by(the(bag), the(player)),
+in(floyd, pantry),
+in(player, kitchen),
+worn_by(watch, player),
+held_by(bag, player),
 
-in(the(coins), the(bag)),
-held_by(the(wrench), floyd),
+in(coins, bag),
+held_by(wrench, floyd),
 
 % eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
 % add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
-exit(south, the(pantry), kitchen),
-exit(north, kitchen, the(pantry)),
-exit(down, the(pantry), basement),
-exit(up, basement, the(pantry)),
+exit(south, pantry, kitchen),
+exit(north, kitchen, pantry),
+exit(down, pantry, basement),
+exit(up, basement, pantry),
 exit(south, kitchen, garden),
 exit(north, garden, kitchen),
 exit(east, kitchen, dining_room),
@@ -104,23 +104,24 @@ exit(south, living_room, kitchen),
 exit(west, kitchen, living_room),
 
 
-in(the(shelf), the(pantry)),  % the shelf is in the pantry
-in(the(locker), the(pantry)), % the locker is in the  pantry
-in(the(rock), garden),   % xformed:  in(rock_X1, garden).
+in(shelf, pantry),  % the shelf is in the pantry
+in(locker, pantry), % the locker is in the  pantry
+in(rock, garden),   % xformed:  in(rock_X1, garden).
 % there are rocks in the garden
-in(a(rock), garden),     % xformed:  in(rock_X2, garden).
-%in(s(rock), garden),     % in(rock_X3, garden).
+in( rock_X2, garden),     % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),     % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),     % in(rock_X3, garden).
 % in({atLeast(2)}/in(a(rock), garden)).
                          % 
-in(the(fountain), garden),
-in(the(mushroom), garden),
-in(the(shovel), basement), % FYI shovel has no props (this is a lttle test to see what happens)
-in(the(videocamera), living_room),
-in(the(fireplace), living_room),
-in(the(screendoor), kitchen),
-in(the(crate), kitchen),
-in(the(apple), the(crate)),
-in(the(screendoor), garden),
+in(fountain, garden),
+in(mushroom, garden),
+in(shovel, basement), % FYI shovel has no type_props (this is a lttle test to see what happens)
+in(videocamera, living_room),
+in(fireplace, living_room),
+in(screendoor, kitchen),
+in(crate, kitchen),
+in(apple, crate),
+in(screendoor, garden),
 in(brklamp, garden)
 
 ]).
@@ -146,16 +147,16 @@ food type
    moveable, % xformed:  inherits(moveable)
    measurable.  % xformed:  inherits(measurable)
 
-basement props place,
+basement type_props place,
    desc("This is a very dark basement."),
    (dark= t).
 
-dining_room props place.
+dining_room type_props place.
 
 
 :- push_to_state([
 
-   props(garden,
+   type_props(garden,
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, "You lack the ability to fly."),
@@ -168,25 +169,25 @@ dining_room props place.
    desc = "this is the garden",
    cant_go($agent, _Dir, "The fence surrounding the garden is too tall and solid to pass.")]),
 
-   props(kitchen, [inherit(place), desc("cooking happens here")]),
+   type_props(kitchen, [inherit(place), desc("cooking happens here")]),
 
-   h(reverse(on), the(table), the(table_leg)),
-   on(the(box), the(table)),
-   in(the(bowl), the(box)),
-   in(the(flour), the(bowl)),
-   in(the(table), kitchen), % a table is in kitchen
-   on(the(lamp), the(table)), % a lamp is on the table
+   h(reverse(on), table, table_leg),
+   on(box, table),
+   in(bowl, box),
+   in(flour, bowl),
+   in(table, kitchen), % a table is in kitchen
+   on(lamp, table), % a lamp is on the table
 
-   in(the(sink), kitchen),
-   in(the(plate), the(sink)),
-   in(the(cabinate), kitchen),
-   in(the(cup), the(cabinate)),
+   in(sink, kitchen),
+   in(plate, sink),
+   in(cabinate, kitchen),
+   in(cup, cabinate),
 
 end_of_list]).
 
-props(living_room, [inherit(place)]).
+type_props(living_room, [inherit(place)]).
 
-props(pantry, [
+type_props(pantry, [
    volume_capacity = 1000,
    nouns(closet),
    nominals(kitchen),
@@ -197,7 +198,7 @@ props(pantry, [
 
 % Things
 
-props(brklamp,
+type_props(brklamp,
    inherit(broken),
    name = ("possibly broken lamp"),
    effect(switch(on), print_(_Agent, "Switch is flipped")),
@@ -205,7 +206,7 @@ props(brklamp,
    inherit(lamp)).
 
 
-props(screendoor, [
+type_props(screendoor, [
    % see DM4
    door_to(kitchen),
    door_to(garden),
@@ -318,7 +319,7 @@ props(screendoor, [
 
 
  % People
- props(floyd, [name = ("Floyd the robot"), powered = t, inherit(autonomous), inherit(robot)]),
+ type_props(floyd, [name = ("Floyd the robot"), powered = t, inherit(autonomous), inherit(robot)]),
 
  type_props(telnet, [adjs(remote), inherit(player), nouns([player])]),
  type_props(player, [name = ($self),
@@ -326,7 +327,7 @@ props(screendoor, [
    model_depth = 3, % how much of the model to get
    % 5 = save game |  4 = debug | 3 = look at Obj | 2 =  | 1 = basic fun info
    % prop_depth = 3, % what prop level to get
-   % Basic fun props
+   % Basic fun type_props
    inherit(autoscan),
    look_depth = 2,
    user_mode = 2, % 1 = fun-only, normal, debug
@@ -651,7 +652,7 @@ extra_decl(T, PP):- extra_decl0(T, P), correct_props(T, P, PP).
 extra_decl0(_T, _P):-  fail.
 % extra_decl0(T, P):-  member(type_props(T, P), [  ]).
 
-:- op(0, xfx, props).
+:- op(0, xfx, type_props).
 
 %:- listing(istate).
 %:- istate(IState), sort(IState, SIState), reverse(SIState, RIState), pprint(RIState, always).

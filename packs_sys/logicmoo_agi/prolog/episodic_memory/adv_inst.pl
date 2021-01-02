@@ -68,11 +68,16 @@ create_missing_instances(S0, S2):-
  create_instances(Suffix, Info, TODO, S0, S2), !.
 
 may_contain_insts(h).
+% may_contain_insts(props).
 % may_contain_insts(holds_at).
+
+is_non_instance(Obj):- compound(Obj),!.
+is_non_instance(Obj):- atom(Obj), inst_sep(Sep), 
+  \+ atom_contains(Obj,Sep).
 
 create_instances(Suffix, Info, [Prop|TODO], S0, S3):-
  Prop =.. [F, Pred | Objs],
- may_contain_insts(F), member(Obj, Objs), compound(Obj), !,
+ may_contain_insts(F), member(Obj, Objs), is_non_instance(Obj), !,
  must_mw1((select_from(Prop, S0, S1))),
  must_mw1((create_objs(Objs, NewObjs, Suffix, Info, S1, S2),
  NewProp =.. [F, Pred | NewObjs],
@@ -190,6 +195,7 @@ create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix
 
 create_1obj(Suffix, Info, the(Type), Inst, S0, S2):- find_recent(Suffix, Type, Inst, S0, S2)->true;create_1obj(Suffix, Info, Type, Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- inst_sep(Sep), atom_contains(I, Sep),!.
+create_1obj(Suffix, Info, Type, Inst, S0, S2):- atom(Type),!,create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).
