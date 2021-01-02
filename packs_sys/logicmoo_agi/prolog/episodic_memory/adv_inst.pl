@@ -23,12 +23,27 @@ create_new_unlocated(Type, Inst, S0, S2):-
  create_new_suffixed_unlocated(Sep, Type, Inst, S0, S2),!.
 
 inst_sep('_X').
-current_world_adv_suffix('_X1').
+current_world_adv_suffix('i1').
 
-%into_inst_name(Suffix, Type, Inst):- atom_contains(Type,Suffix),!,Inst=Type.
-into_inst_name(Suffix, Type, Inst):- atom_codes(Suffix,Codes),last(Codes,Code),
+inst_of(x(C,N), C, N):- (nonvar(C);nonvar(N)),!.
+inst_of(x(C,N), C, N):- !.
+
+is_x_instance(Obj):- var(Obj),!,break.
+is_x_instance(x(_,_)).
+
+is_non_instance(Obj):- var(Obj),!,fail.
+is_non_instance(Obj):- is_x_instance(Obj),!,fail.
+is_non_instance(_):-!.
+
+into_inst_name(Suffix, Obj, Inst):- is_x_instance(Obj), !, Inst=Obj.
+into_inst_name(Suffix, Obj, Inst):- atom(Obj), !, Inst = x(Obj,Suffix).
+into_inst_name(Suffix, Obj, Inst):- ignore(arg(2,Obj,Suffix)),!.
+/*
+
+into_inst_name(Suffix, Type, Inst):- instatom_codes(Suffix,Codes),last(Codes,Code),
  code_type(Code,digit),!, atom_concat(Type, Suffix, Inst).
 into_inst_name(Suffix, Type, Inst):- atom_concat(Type, Suffix, Inst0), gensym(Inst0,Inst).
+*/
 
 create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2):-
  into_inst_name(Suffix ,Type, Inst),
@@ -71,9 +86,6 @@ may_contain_insts(h).
 % may_contain_insts(props).
 % may_contain_insts(holds_at).
 
-is_non_instance(Obj):- compound(Obj),!.
-is_non_instance(Obj):- atom(Obj), inst_sep(Sep), 
-  \+ atom_contains(Obj,Sep).
 
 create_instances(Suffix, Info, [Prop|TODO], S0, S3):-
  Prop =.. [F, Pred | Objs],
@@ -194,14 +206,11 @@ create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix
  must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
 
 create_1obj(Suffix, Info, the(Type), Inst, S0, S2):- find_recent(Suffix, Type, Inst, S0, S2)->true;create_1obj(Suffix, Info, Type, Inst, S0, S2).
-create_1obj(_Suffix, _Info, I, I, S0, S0):- inst_sep(Sep), atom_contains(I, Sep),!.
+create_1obj(_Suffix, _Info, I, I, S0, S0):- is_x_instance(I),!.
 create_1obj(Suffix, Info, Type, Inst, S0, S2):- atom(Type),!,create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).
-
-%inst_of(I, C, N):- compound(I), !, I=..[C, N|_], number(N).
-inst_of(I, C, N):- I\==[], (atom(C);var(C)), (integer(N);var(N)), atom(I), !, inst_sep(Sep),atomic_list_concat([C, NN], Sep, I), atom_number(NN, N).
 
 
 

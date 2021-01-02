@@ -125,7 +125,7 @@ queue_agent_percept(Agent, Event, S0, S2) :-
 % Agent process event list now
 
 queue_agent_percept(_Agent, [], S0, S0):-!.
-%queue_agent_percept(Agent, Events,_S0,_S2) :- dmsg(queue_agent_percept(Agent, Events)), player_X1\==Agent,dumpST,fail.
+%queue_agent_percept(Agent, Events,_S0,_S2) :- dmsg(queue_agent_percept(Agent, Events)), _Player_1\==Agent,dumpST,fail.
 queue_agent_percept(Agent, Events, S0, S2) :-
  getprop(Agent, inherited(no_perceptq), S0), !,
  do_percept_list(Agent, Events, S0, S2).
@@ -290,7 +290,7 @@ process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format(Agent, '~N~q~n', [Agent:Percept]).
 
 is_player(Agent):- \+ is_non_player(Agent).
-is_non_player(Agent):- Agent == floyd_X1.
+is_non_player(Agent):- inst_of(Agent,floyd,_).
 
 
 :- defn_mem_setter(process_percept_main//3).
@@ -307,7 +307,7 @@ process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
 process_percept_list(Agent, PerceptList, _Stamp,_,_):- 
-  internal_dialog(Agent, PerceptList), fail.
+  episodic_mem(Agent, PerceptList), fail.
 
 % process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.
 

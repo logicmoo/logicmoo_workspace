@@ -58,15 +58,15 @@ some_hell_example:- forall(permutation([
    by(Doer-men), with(MoreDoers, "and women"), own(Instr-"knife"), VrtuhValue, did(Action-), toward(Vector-up), to(Doee), of(
 */
 % to sally give love
-% to sally does player_X1 give love
-% did player_X1 give love to sally?
+% to sally does _Player_1 give love
+% did _Player_1 give love to sally?
 % give sally love
 % give love to sally
 %    From    GIVE    To      That
-% player_X1   give    sally    love
+% _Player_1   give    sally    love
 /*
 
-player_X1   give    [to sally]    [That] love
+_Player_1   give    [to sally]    [That] love
 
 
 
@@ -82,36 +82,36 @@ player_X1   give    [to sally]    [That] love
 
 
 
-O = [[ player_X1], [did, give], [that, love], [to, sally]] ;
-O = [[ player_X1], [to, sally], [did, give], [that, love]] ;
-O = [[player_X1], [to, sally], [that, love], [did, give]] ;
-O = [[player_X1], [that, love], [did, give], [to, sally]] ;
-O = [[player_X1], [that, love], [ sally], [did, give]] ;
-O = [[was, given], [from, player_X1], [ sally], [ love]] ;
-O = [[did, give], [from, player_X1], [that, love], [to, sally]] ;
-O = [[did, give], [to, sally], [from, player_X1], [ love]] ;
-O = [[did, give], [to, sally], [that, love], [from, player_X1]] ;
-O = [[did, give], [that, love], [from, player_X1], [to, sally]] ;
-O = [[did, give], [that, love], [to, sally], [from, player_X1]] ;
-O = [[to, sally], [from, player_X1], [did, give], [that, love]] ;
-O = [[to, sally], [from, player_X1], [that, love], [did, give]] ;
-O = [[to, sally], [did, give], [from, player_X1], [ love]] ;
-O = [[to, sally], [did, give], [that, love], [from, player_X1]] ;
-O = [[to, sally], [that, love], [from, player_X1], [did, give]] ;
-O = [[to, sally], [that, love], [did, give], [from, player_X1]] ;
-O = [[that, love], [from, player_X1], [did, give], [to, sally]] ;
-O = [[that, love], [from, player_X1], [to, sally], [did, give]] ;
-O = [[that, love], [did, give], [from, player_X1], [to, sally]] ;
-O = [[that, love], [did, give], [to, sally], [from, player_X1]] ;
-O = [[that, love], [to, sally], [from, player_X1], [did, give]] ;
-O = [[that, love], [to, sally], [did, give], [from, player_X1]] ;
+O = [[ _Player_1], [did, give], [that, love], [to, sally]] ;
+O = [[ _Player_1], [to, sally], [did, give], [that, love]] ;
+O = [[_Player_1], [to, sally], [that, love], [did, give]] ;
+O = [[_Player_1], [that, love], [did, give], [to, sally]] ;
+O = [[_Player_1], [that, love], [ sally], [did, give]] ;
+O = [[was, given], [from, _Player_1], [ sally], [ love]] ;
+O = [[did, give], [from, _Player_1], [that, love], [to, sally]] ;
+O = [[did, give], [to, sally], [from, _Player_1], [ love]] ;
+O = [[did, give], [to, sally], [that, love], [from, _Player_1]] ;
+O = [[did, give], [that, love], [from, _Player_1], [to, sally]] ;
+O = [[did, give], [that, love], [to, sally], [from, _Player_1]] ;
+O = [[to, sally], [from, _Player_1], [did, give], [that, love]] ;
+O = [[to, sally], [from, _Player_1], [that, love], [did, give]] ;
+O = [[to, sally], [did, give], [from, _Player_1], [ love]] ;
+O = [[to, sally], [did, give], [that, love], [from, _Player_1]] ;
+O = [[to, sally], [that, love], [from, _Player_1], [did, give]] ;
+O = [[to, sally], [that, love], [did, give], [from, _Player_1]] ;
+O = [[that, love], [from, _Player_1], [did, give], [to, sally]] ;
+O = [[that, love], [from, _Player_1], [to, sally], [did, give]] ;
+O = [[that, love], [did, give], [from, _Player_1], [to, sally]] ;
+O = [[that, love], [did, give], [to, sally], [from, _Player_1]] ;
+O = [[that, love], [to, sally], [from, _Player_1], [did, give]] ;
+O = [[that, love], [to, sally], [did, give], [from, _Player_1]] ;
 
 
 
-|[That love] player_X1   gave    [to sally]
-[That love] [to sally]  player_X1   gave
-[to sally]  [That love]  player_X1   gave
- player_X1   gave   [That love]    [to sally]
+|[That love] _Player_1   gave    [to sally]
+[That love] [to sally]  _Player_1   gave
+[to sally]  [That love]  _Player_1   gave
+ _Player_1   gave   [That love]    [to sally]
 
 */
 
@@ -139,9 +139,9 @@ eng2flogic_test([give, sally, love, joe]).
 eng2flogic_test([give, sally, it]).
 eng2flogic_test([give, to, sally]).
 eng2flogic_test([give | English]):-
-   permutation([[by, player_X1], [to, sally], [love]], P), flatten(P, English).
+   permutation([[by, _Player_1], [to, sally], [love]], P), flatten(P, English).
 eng2flogic_test(English):- fail,
-  permutation([[by, player_X1], gave, [to, sally], [love]], P), flatten(P, English).
+  permutation([[by, _Player_1], gave, [to, sally], [love]], P), flatten(P, English).
 eng2flogic_test([some, love, we, gave, to, sally]).
 
 eng2flogic_test([to, sally, we, gave, some, love]).
@@ -262,7 +262,7 @@ cont_parse_dataframe([FrameArg| FrameArgS], Text, Action, Frame):-
 
 
 
-% player_X1 give sally love
+% _Player_1 give sally love
 verb_frame1(Action, Give,
 [ (+default(Give))+var(Action)+isa(actGiving)+prep(do),
    default(them)+var(Recipient)+prep(to)+isa(tAnimate)+pred(recipient),
@@ -289,7 +289,7 @@ verb_frame1(Action, Give,
 
 % write name in book with pen
 % etch name on tree [with] knife
-% player_X1 etches name onto the tree's bark with a knife
+% _Player_1 etches name onto the tree's bark with a knife
 %
 % surface
 %    tree
@@ -763,7 +763,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally18))  ]
 
 
-% ?-eng2flogic("give by player_X1 to sally love").
+% ?-eng2flogic("give by _Player_1 to sally love").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally19,
@@ -789,7 +789,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1,
+     _Player_1,
      love  ]),
   pre( cntrls(Someone, It)),
   pre( ~( cntrls(Sally19, It))),
@@ -800,7 +800,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally19))  ]
 
 
-% ?-eng2flogic("give by player_X1 love to sally").
+% ?-eng2flogic("give by _Player_1 love to sally").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally20,
@@ -826,7 +826,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1,
+     _Player_1,
      love  ]),
   pre( cntrls(Someone, It)),
   pre( ~( cntrls(Sally20, It))),
@@ -837,7 +837,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally20))  ]
 
 
-% ?-eng2flogic("give to sally by player_X1 love").
+% ?-eng2flogic("give to sally by _Player_1 love").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally21,
@@ -863,7 +863,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1,
+     _Player_1,
      love  ]),
   pre( cntrls(Someone, It)),
   pre( ~( cntrls(Sally21, It))),
@@ -874,7 +874,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally21))  ]
 
 
-% ?-eng2flogic("give to sally love by player_X1").
+% ?-eng2flogic("give to sally love by _Player_1").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally22,
@@ -902,7 +902,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1  ]),
+     _Player_1  ]),
   pre( cntrls(Someone, Love8)),
   pre( ~( cntrls(Sally22, Love8))),
   post( cntrls(Sally22, Love8)),
@@ -912,7 +912,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally22))  ]
 
 
-% ?-eng2flogic("give love by player_X1 to sally").
+% ?-eng2flogic("give love by _Player_1 to sally").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally23,
@@ -940,7 +940,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1  ]),
+     _Player_1  ]),
   pre( cntrls(Someone, Love9)),
   pre( ~( cntrls(Sally23, Love9))),
   post( cntrls(Sally23, Love9)),
@@ -950,7 +950,7 @@ NP armed NP NP
   normally( can_reach(HandOf, Sally23))  ]
 
 
-% ?-eng2flogic("give love to sally by player_X1").
+% ?-eng2flogic("give love to sally by _Player_1").
 [ cmd( give, now,
     [ do=Give,
       recipient=Sally24,
@@ -978,7 +978,7 @@ NP armed NP NP
   instrument(Give, HandOf),
   done_by(Give, Someone),
   zexistsLeftOverText( [ by,
-     player_X1  ]),
+     _Player_1  ]),
   pre( cntrls(Someone, Love10)),
   pre( ~( cntrls(Sally24, Love10))),
   post( cntrls(Sally24, Love10)),
