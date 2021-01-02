@@ -339,7 +339,7 @@ act_prevented_by('close', 'locked', t).
 
 
 event_failed(Agent,CUZ):- simplify_reason(CUZ,Msg), 
-  internal_dialog(Agent,event_failed(Agent,CUZ)), 
+  episodic_mem(Agent,event_failed(Agent,CUZ)), 
   player_format(Agent, '~N~p~n', [Msg]).
 
 :- meta_predicate maybe_when(0, 0).  
@@ -400,10 +400,13 @@ add_look(Agent) ==>>
   add_agent_todo( Agent, look(Agent)).
 
 
+uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
+uses_default_doer(Action):- \+ compound(Action).
 :- defn_state_none(action_doer(action, -agent)).
-action_doer(Action, Agent):- \+ compound(Action), !, must_mw(mu_current_agent(Agent)), !.
-action_doer(Action, Agent):- safe_functor(Action, Verb, _), verbatum_anon(Verb), mu_current_agent(Agent), !.
-action_doer(Action, Agent):- arg(1, Action, Agent), nonvar(Agent), \+ preposition(_, Agent), !.
+action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw(mu_current_agent(Agent)), !.
+action_doer(Action, Agent):- arg(1, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
+action_doer(Action, Agent):- arg(_, Action, Agent), is_x_instance(Agent),!.
+action_doer(Action, Agent):- mu_current_agent(Agent),!, must_mw(Action == Agent). 
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 
 action_verb_agent_thing(Action, Verb, Agent, Thing):-

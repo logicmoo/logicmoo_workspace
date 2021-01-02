@@ -71,7 +71,7 @@ context_agent(Agent, Context):-
 context_agent(Agent, Context):-
  declared(inst(Agent), Context), !.
 context_agent(Agent, Context):- \+ is_list(Context),
- action_doer(Context, Agent).
+ action_doer(Context, Likely),Agent=Likely.
 
 
 % compile_eng(Context, Atom/Term/List, TextAtom).
@@ -91,14 +91,13 @@ compile_eng(Context, [AN, Apple|More], Text) :-
  name(TxtApple, [A|_]),
  char_type(A, to_lower(Vowel)),
  (adv_vowel(Vowel) -> atom_concat('an ', TxtApple, Text);atom_concat('a ', TxtApple, Text)).
-% mu:compile_eng([agent(player_X1), person(player_X1)], a(floyd), _64404)
+% mu:compile_eng([agent(_Player_1), person(_Player_1)], a(floyd), _64404)
 compile_eng(Context, [First|Rest], [First2|Rest2]) :-
  compile_eng(Context, First, First2),
  compile_eng(Context, Rest, Rest2), !.
 
 compile_eng(_Context, Object, Text) :- 
- atom(Object), inst_sep(Sep), atom_contains(Object, Sep), atomic_list_concat([Wo, _Rds], Sep, Object),
- atomic_list_concat([Wo/*, '#', Rds*/], Text).
+ is_x_instance(Object),inst_of(Object,Text,_).
 
 
 compile_eng(_Context, aux(be), 'is') :- !.

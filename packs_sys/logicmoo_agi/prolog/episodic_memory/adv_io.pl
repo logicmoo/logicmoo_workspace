@@ -223,12 +223,12 @@ current_agent_(Agent):- mu_global:current_agent_tl(Agent), !.
 current_agent_(Agent):- current_input(InStream), mu_global:console_io_player(InStream, _, Agent).
 current_agent_(Agent):- current_output(OutStream), mu_global:console_io_player(_, OutStream, Agent).
 %current_agent_(Agent):- thread_self(Id), mu_global:console_host_io_history_unused(Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent).
-current_agent_('player_X1').
+current_agent_(x(player,'i1')).
 
 :- dynamic(mu_global:need_redraw/1).
 overwrote_prompt(Agent):-
   retractall(mu_global:need_redraw(Agent)), asserta(mu_global:need_redraw(Agent)), !.
-overwrote_prompt:- retractall(mu_global:need_redraw(player_X1)), asserta(mu_global:need_redraw(player_X1)), !.
+overwrote_prompt:- retractall(mu_global:need_redraw(x(player,'i1'))), asserta(mu_global:need_redraw(x(player,'i1'))), !.
 
 ensure_has_prompt(Agent):-
  ignore((retract(mu_global:need_redraw(Agent)),

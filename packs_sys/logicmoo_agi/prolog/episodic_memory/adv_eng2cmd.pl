@@ -574,7 +574,7 @@ coerce_text_to_args(Atomic, Arg):- \+ atom(Atomic), !, any_to_atom(Atomic, Atom)
 
 is_already_an_arg(Var):- is_ftVar(Var), !, fail.
 is_already_an_arg(NonAtomic):- compound(NonAtomic), !.
-is_already_an_arg(Atom):- inst_sep(Sep), atom_contains(Atom, Sep), !.
+is_already_an_arg(Obj):- is_x_instance(Obj), !.
 is_already_an_arg(Atom):- atom_chars(Atom, [_|Chars]), member(C, Chars),
   (char_type(C, digit); ((char_type(C, to_upper(UC)), C==UC))), !.
 
@@ -611,8 +611,8 @@ parse_imperative_movement(Doer, [ExitName], go_dir(Doer, walk, ExitName), M) :-
 
 parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
 
-% x shelf_X1
-% go on shelf_X1
+% x shelf
+% go on shelf
 
 txt2goto(Doer, run, [], go_dir(Doer, run, escape), _Mem) :- !.
 txt2goto(Doer, Walk, [to, Prep| More], Logic, M) :- !, txt2goto(Doer, Walk, [Prep| More], Logic, M).

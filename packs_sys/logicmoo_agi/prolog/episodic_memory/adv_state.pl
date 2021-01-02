@@ -180,13 +180,13 @@ memorize_edit_0(_Agent,Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment))
 memorize_appending(Agent,Figment0, M0, M1) :-  
  must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
   listify(Figment0,Figment),
-  internal_dialog(Agent,memorize_appending(Figment)),
+  episodic_mem(Agent,memorize_appending(Figment)),
   memorize_edit_0(Agent,append, Figment, A0, A1))).
 
 % Manipulate memories (M stands for Memories)
 memorize_prepending(Agent, Figment0, M0, M1) :- must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
   listify(Figment0,Figment),
-  internal_dialog(Agent,memorize_prepending(Figment)),
+  episodic_mem(Agent,memorize_prepending(Figment)),
   notrace(append(Figment, A0, A1)))).
 
 replace_thought(Agent,Figment0, M0, M1) :-    must_mw1((agent_mem(Agent,M0,M1,A0,A3),
@@ -194,13 +194,13 @@ replace_thought(Agent,Figment0, M0, M1) :-    must_mw1((agent_mem(Agent,M0,M1,A0
   must_unlistify(Figment0,Figment),
   old_figment(Figment,_F,_A,FigmentErased),
   select(FigmentErased, A0, A1),
-  % internal_dialog(Agent,replace(FigmentErased,Figment)),  
+  % episodic_mem(Agent,replace(FigmentErased,Figment)),  
   append([Figment], A1, A3))),!.
  
 thought(Agent,Figment0, M) :-           
  must_mw1(( agent_mem(Agent,M,A),
   must_unlistify(Figment0,Figment))),!,
-  (declared(Figment, A) -> internal_dialog(Agent,thought(Figment)); (internal_dialog(Agent,considered(Figment)),fail)),!.  
+  (declared(Figment, A) -> episodic_mem(Agent,thought(Figment)); (episodic_mem(Agent,considered(Figment)),fail)),!.  
 
 thought_check(Agent,Figment0, M) :-
   must_mw1(( agent_mem(Agent,M,A),
@@ -214,12 +214,12 @@ memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1)
 forge t(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
   must_unlistify(Figment0,Figment), !, 
   select_from(Figment, A0, A1),
-  nop(internal_dialog(Agent,forget(Figment))).
+  nop(episodic_mem(Agent,forget(Figment))).
 
 forget_ always(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
   must_unlistify(Figment0,Figment),  
   select_always(Figment, A0, A1),
-  nop(internal_dialog(Agent,forget(Figment))).
+  nop(episodic_mem(Agent,forget(Figment))).
 */
 
 
@@ -359,7 +359,7 @@ append_toplevel_props(perceptq(Agent, Events),S0,S2):-
 replace_declare(Fact, State, NewState):-
  must_mw1((old_figment(Fact, _F, A, Old),
  (undeclare(Old, State, MidState);(State=MidState,ignore(arg(A,Old,[])))),
- nop(internal_dialog($agent,replace(Old,Fact))),
+ nop(episodic_mem($agent,replace(Old,Fact))),
  declare(Fact, MidState, NewState))).
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
@@ -443,7 +443,7 @@ get_objects(Spec, Set, State):-
  quietly((must_input_state(State),
   get_objects_(Spec, List, State, im(State)), !,
   list_to_set(List, Set))).
-%get_objects(_Spec, [player_X1, floyd_X1], _State):-!.
+%get_objects(_Spec, [_Player_1, floyd_X1], _State):-!.
 
 get_objects_(_Spec, [], [], im(_)) :- !.
 get_objects_(Spec, OutList, [Store|StateList], im(S0)):-
@@ -617,9 +617,9 @@ correct_prop(  Other, Other).
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 
-internal_dialog(floyd_X1,_Figment) :-!.
-internal_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),internal_dialog(Agent,F)).
-internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))),
+episodic_mem(x(floyd,_),_Figment) :-!.
+episodic_mem(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),episodic_mem(Agent,F)).
+episodic_mem(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(episodic_mem(Agent,Figment))),format('~N',[]))),
   overwrote_prompt.
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)

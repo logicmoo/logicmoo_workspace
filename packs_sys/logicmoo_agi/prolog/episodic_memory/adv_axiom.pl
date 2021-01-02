@@ -64,7 +64,7 @@ aXiom(Action) ==>>
  /*dmust_tracing*/(satisfy_each(preCond(_1), Preconds)),
  (((sg(member(failed(Why))), send_1percept(Agent, failed(Action, Why))))
     ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, (Action)))),
- {internal_dialog(Agent, implications(DoesEvent, Action, Preconds, Postconds))},
+ {episodic_mem(Agent, implications(DoesEvent, Action, Preconds, Postconds))},
  !.
 
 aXiom( Action) ==>>

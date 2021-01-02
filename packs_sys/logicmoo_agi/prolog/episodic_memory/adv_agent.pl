@@ -29,9 +29,10 @@ with_agent_console(Agent, Goal):-
  setup_call_cleanup(set_input(InStream), with_agent_console(Agent, Goal), set_input(WasIn)).
 */
 with_agent_console(Agent, Goal):-
+ term_to_atom(Agent,Mutex),
  setup_call_cleanup(
   asserta(mu_global:current_agent_tl(Agent), E),
-   with_mutex(get_advstate, with_mutex(Agent, Goal)), erase(E)), !.
+   with_mutex(get_advstate, with_mutex(Mutex, Goal)), erase(E)), !.
 
 with_agents(_Pred1, []):-!.
 with_agents( Pred1, [Agent|More]) :- !, with_agents(Pred1, Agent), !, with_agents(Pred1, More).

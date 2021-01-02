@@ -108,7 +108,7 @@ in(shelf, pantry),  % the shelf is in the pantry
 in(locker, pantry), % the locker is in the  pantry
 in(rock, garden),   % xformed:  in(rock_X1, garden).
 % there are rocks in the garden
-in( rock_X2, garden),     % xformed:  in(rock_X2, garden).
+in( x(rock,2), garden),     % xformed:  in(rock_X2, garden).
 %in( a(rock), garden),     % xformed:  in(rock_X2, garden).
 %in( a(rock), garden),     % in(rock_X3, garden).
 % in({atLeast(2)}/in(a(rock), garden)).
