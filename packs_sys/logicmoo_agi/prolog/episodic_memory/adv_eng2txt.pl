@@ -62,6 +62,8 @@ capitalize(Atom, Capitalized) :-
  atom_chars(Lower, [First|Rest]),
  upcase_atom(First, Upper),
  atom_chars(Capitalized, [Upper|Rest]).
+capitalize(Atom, Capitalized) :-
+ inst_of(Atom,Type,_),!,capitalize(Type, Capitalized).
 
 context_agent(Agent, Context):- atom(Context), !, Context=Agent.
 context_agent(Agent, Context):-

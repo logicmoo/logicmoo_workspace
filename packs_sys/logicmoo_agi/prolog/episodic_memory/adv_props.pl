@@ -154,10 +154,10 @@ upmerge_prop(_, _, Before, After, Result):- Before==After, !, Result=Before.
 upmerge_prop(F, N, Before, After, Result):- arg(N, Before, B), arg(N, After, A), !,
  merge_value(F, N, B, A, R), duplicate_term(After, Result), nb_setarg(N, Result, R).
 
-text_prop(nouns).
-text_prop(nominals).
-text_prop(adjs).
-text_prop(desc).
+collector_prop(nouns).
+collector_prop(traits).
+collector_prop(adjs).
+collector_prop(desc).
 
 single_valued_prop(name).
 single_valued_prop(desc).
