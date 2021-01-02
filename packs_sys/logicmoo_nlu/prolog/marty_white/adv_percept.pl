@@ -105,7 +105,7 @@ send_percept(Agent, Event, S0, S2) :-
 
 :- defn_state_setter(do_percept_list(agent,list(event))).
 do_percept_list(_Agent, [], S0, S0):-!.
-do_percept_list(Agent, Events,_S0,_S2) :- dmsg(do_percept_list(Agent, Events)),fail.
+% do_percept_list(Agent, Events,_S0,_S2) :- dmsg(do_percept_list(Agent, Events)),fail.
 do_percept_list(Agent, Events, S0, S2) :-
   maybe_undeclare(memories(Agent, Mem0), S0, S1),
   agent_clock_time_prev(Agent,timestamp(Stamp, _OldNow), Events),

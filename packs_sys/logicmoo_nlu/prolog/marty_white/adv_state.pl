@@ -617,9 +617,10 @@ correct_prop(  Other, Other).
 correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
 
 
+internal_dialog(floyd,_Figment) :-!.
 internal_dialog(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),internal_dialog(Agent,F)).
 internal_dialog(Agent,Figment) :- notrace((format('~N',[]),in_color(pink,print_tree(internal_dialog(Agent,Figment))),format('~N',[]))),
-  must_det((stdio_player(Player), overwrote_prompt(Player))).
+  overwrote_prompt.
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 
