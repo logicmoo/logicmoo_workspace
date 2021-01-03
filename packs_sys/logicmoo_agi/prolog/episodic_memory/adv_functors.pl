@@ -92,10 +92,10 @@ type_functor(dest, of(up, $here)).
 type_functor(dest, of(west, $here)).
 
 
-type_functor(memory, current_goals(agent,list(goals))).
-type_functor(memory, goals_skipped(agent,list(goals))).
-type_functor(memory, goals_satisfied(agent,list(goals))).
-type_functor(memory,  todo(agent, list(action))).
+type_functor(memory, current_goals(agent, list(goals))).
+type_functor(memory, goals_skipped(agent, list(goals))).
+type_functor(memory, goals_satisfied(agent, list(goals))).
+type_functor(memory, todo(agent, list(action))).
 %type_functor(memory, model(list(state_with_stamps))).
 type_functor(event, timestamp(ordinal, timept)).
 
@@ -109,24 +109,24 @@ type_functor(state, perceptq(inst, list(event))).
 type_functor(state, h(domrel, inst, inst)).
 
 
-type_functor(action, inventory(agent)).
-type_functor(action, look(agent)).
-type_functor(action, examine(agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
+
 type_functor(event, percept_props(agent, sense, inst, depth, list(nv))).
 
 type_functor(event, time_passes(agent)).
 type_functor(event, attempts(agent, action)).
 
-type_functor(action, dig(agent, holetype, prep, dest, inst)).
-
-type_functor(action, eat(agent, inst)).
-type_functor(action, hit(agent, inst, with)).
-
 type_functor(action, rez(type)).
 type_functor(action, derez(inst)).
 
-type_functor(action, switch(agent, tfstate, tf, inst)).
-type_functor(action, touch(agent, inst)).
+type_functor(action, dO('dig', agent, holetype, prep, dest, inst)).
+type_functor(action, dO('inventory', agent)).
+type_functor(action, dO('look', agent)).
+type_functor(action, dO('examine', agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
+type_functor(action, dO('eat', agent, inst)).
+type_functor(action, dO('hit', agent, inst, with)).
+
+type_functor(action, does('switch', agent, tfstate, tf, inst)).
+type_functor(action, dO('touch', agent, inst)).
 
 
 
@@ -134,13 +134,13 @@ type_functor(action, touch(agent, inst)).
 
 
 %type_functor(action, say(Message)).  % undirected message
-type_functor(action, emote(agent, emotype, dest, statement)).
+type_functor(action, dO('emote', agent, emotype, dest, statement)).
 type_functor( event, did_emote( agent, emotype, dest, statement)).
 
 
-type_functor(action, auto(agent)).
+type_functor(action, dO('auto', agent)).
 
-type_functor(action, wait(agent)).
+type_functor(action, dO('wait', agent)).
 type_functor(event, time_passes(agent)).
 
 
@@ -150,20 +150,19 @@ type_functor(action, inspect(agent, getprop(inst, nv))).
 type_functor(action, setprop(inst, nv)).
 type_functor(action, print_(agent, msg)). % for debug and agent feedback
 
-type_functor(action, sub__examine(agent, sense, preprel, inst, depth)).
+type_functor(action, sub__do_examine(agent, sense, preprel, inst, depth)).
 
-type_functor( action, do_give( agent, inst, agnt2)).
-type_functor( action, do_take( agent, inst)).
-type_functor( action, do_drop( agent, inst)).
+type_functor(action, dO('give', agent, inst, agnt2)).
+type_functor(action, dO('take', agent, inst)).
+type_functor(action, dO('drop', agent, inst)).
+type_functor( action, dO('throw', agent, inst, dest)).
+type_functor( action, dO('put', agent, inst, dest)).
 
-type_functor( action, do_go_dir( agent, movetype, dir)).
-type_functor( action, do_go_obj( agent, movetype, obj)).
-type_functor( action, do_go_prep_obj( agent, movetype, domrel, obj)).
+type_functor(action, dO('go_dir', agent, movetype, dir)).
+type_functor(action, dO('go_obj', agent, movetype, obj)).
+type_functor( action, dO('go_prep_obj', agent, movetype, domrel, obj)).
+type_functor( action, dO('go_loc', agent, movetype, dest)).
 
-type_functor( action, do_go_loc( agent, movetype, dest)).
-
-type_functor( action, do_throw( agent, inst, dest)).
-type_functor( action, do_put( agent, inst, dest)).
 
 % Access ot planner ops
 %type_functor(prolog, oper_db(agent, action, list(nv), list(nv)).
@@ -189,7 +188,7 @@ type_functor(nv_of_any, propOf(term, term)).
 type_functor(nv, adjs(list(text))).
 type_functor(nv, traits(list(text))).
 type_functor(nv, nouns(list(text))).
-type_functor(nv, sp(speech_part,list(text))).
+type_functor(nv, sp(speech_part, list(text))).
 type_functor(nv, '<mystery>'(reason, preprel, inst2)).
 type_functor(nv, can_beyeah(actverb, tf)).
 type_functor(nv, knows_verbs(actverb, tf)).  % can use these actions
@@ -264,7 +263,7 @@ remember_functor( P, F, A):- asserta(new_type_functor(F, A, P)), !, dmsg(new_typ
 /*
 type_functor(unk, exists(A)).
 type_functor(unk, the(cup)).
-type_functor( unk, do_tell(A, B, [ please, give, C, the(D)])).
+type_functor( unk, dO('tell', A, B, [ please, give, C, the(D)])).
 type_functor(unk, k(takeable, A, B)).
 type_functor(unk, put(A, B, C, D)).
 type_functor(unk, moves(A, B, C, take, held_by, B, D)).
@@ -279,7 +278,7 @@ type_functor(unk, prop(A, {|i7||<nv> inherits perceptq |})).
 type_functor(unk, handle_events(A)).
 type_functor(unk, looky(A)).
 type_functor(unk, b(exit(A), B, C)).
-type_functor(unk, do_nothing(A)).
+type_functor(unk, dO('wait', A)).
 type_functor(unk, reverse(on)).
 type_functor(unk, A+2).
 type_functor(unk, no_copy(t)).
@@ -334,13 +333,13 @@ type_functor(unk, updateprop_(A)).
 type_functor(unk, moving_in_dir(A, B, C, D, E, D, F)).
 type_functor(unk, delprop_always_(A)).
 type_functor(unk, to_upper(A)).
-type_functor(unk, oper(A, do_nothing(A), [], [])).
-type_functor(unk, step(start, oper(A, do_nothing(A), [], []))).
+type_functor(unk, oper(A, dO('wait', A), [], [])).
+type_functor(unk, step(start, oper(A, dO('wait', A), [], []))).
 type_functor(unk, add_todo( A, {|i7||<action> A does goto loc walk pantry |})).
 type_functor(unk, im(A)).
 type_functor(unk, log2eng(A, B, C)).
 type_functor(unk, add_goal(agent, {|i7||<action> A does take crate |})).
-type_functor(unk, switch(on)).
+type_functor(unk, does('switch', on)).
 type_functor(unk, enters(A, B, C)).
 type_functor(unk, to(place(A))).
 type_functor(unk, via(exit(A))).
@@ -517,7 +516,7 @@ type_functor(unk, tense(A, past)).
 type_functor(unk, can_be(A)).
 type_functor(unk, cantdothat(A)).
 type_functor(unk, move(A, B)).
-type_functor( unk, mustdo_drop(A)).
+type_functor( unk, must_drop(A)).
 type_functor(unk, moibeus_relation(A, B)).
 type_functor(unk, self_relation(A)).
 type_functor(unk, mustgetout(A)).
@@ -531,7 +530,7 @@ type_functor(unk, round((A-B*60)*10)).
 type_functor(unk, (A-B*60)*10).
 type_functor(unk, round(A)//60).
 type_functor(unk, ago(A)).
-type_functor(unk, do_props(A, [])).
+type_functor(unk, dO('props', A, [])).
 type_functor(unk, notices(A, B, C)).
 type_functor(unk, notices(A, B, C, D)).
 type_functor(unk, extra_verbose_eng(percept(A, see, B, {|i7||<state> the C D shaped. |}))).
@@ -573,41 +572,41 @@ type_functor(unk, make(reload(A))).
 type_functor(unk, make_hook(before, A)).
 type_functor(unk, modified_file(A)).
 type_functor(unk, fetch(A)).
-type_functor(unk, forget(agent,goals)).
+type_functor(unk, forget(agent, goals)).
 type_functor(unk, msg_from(A, B)).
 type_functor(unk, change_state(A, B, C, D, E)).
-type_functor(unk, will_touch(A, B)).
-type_functor(unk, act_examine(A, B, C, D, E)).
-type_functor(unk, examine(A, B, C, D, E)).
+type_functor(unk, will_need_touch(A, B)).
+type_functor(unk, act_do_examine(A, B, C, D, E)).
+type_functor(unk, dO('examine', A, B, C, D, E)).
 type_functor(unk, can_sense_here(A, B)).
-type_functor(unk, examine(A, see, B)).
-type_functor(unk, examine(A, A)).
-type_functor( unk, doing_inventory(A)).
-type_functor(unk, switch(A, B, C)).
+type_functor(unk, dO('examine', A, see, B)).
+type_functor(unk, dO('examine', A, A)).
+type_functor( unk, dOing('inventory',A)).
+type_functor(unk, does('switch', A, B, C)).
 type_functor(unk, eat(A)).
 type_functor(unk, created(A, B)).
-type_functor(unk, dig(A, B, C, D)).
-type_functor(unk, hit(A, B)).
+type_functor(unk, dO('dig', A, B, C, D)).
+type_functor(unk, dO('hit', A, B)).
 type_functor(unk, hit_with(A, B, C)).
 type_functor(unk, thing_transforms(A, B)).
 type_functor(unk, eVent(A, thing_transforms(B, C))).
 type_functor( unk, did_throw(A, B, C, D)).
-type_functor( unk, doing_throw(A, B, C, D)).
-type_functor( unk, do_throw_prep_obj(A, B, at, C)).
-type_functor( unk, do_throw_at(A, B, C)).
-type_functor( unk, do_throw_dir(A, B, C)).
-type_functor( unk, doing_put(A, take, B, held_by, A)).
+type_functor( unk, dOing('throw',A, B, C, D)).
+type_functor( unk, dO('throw_prep_obj', A, B, at, C)).
+type_functor( unk, dO('throw_at', A, B, C)).
+type_functor( unk, dO('throw_dir', A, B, C)).
+type_functor( unk, dOing('put',A, take, B, held_by, A)).
 type_functor(unk, follow_step(A, B, C)).
 type_functor(unk, follow_plan(A, {|i7||<action> A does goto loc walk B |}, [])).
 type_functor(unk, followed_plan(A, B)).
 type_functor(unk, make_true(A, ~h(B, C, {|i7||<nv> a mystery because "D E" , is closed |}))).
 type_functor( unk, did_arrive(A, B, C, D)).
 type_functor(unk, status_msg(A, B)).
-type_functor(unk, talk(A, B, *, C)).
+type_functor(unk, dO('talk', A, B, *, C)).
 type_functor(unk, say(A, B)).
-type_functor(unk, talk(A, B, C)).
+type_functor(unk, dO('talk', A, B, C)).
 type_functor(unk, todo_english(A, B)).
-type_functor(unk, do_english(A, B)).
+type_functor(unk, dO('english', A, B)).
 type_functor(unk, answer(A)).
 type_functor(unk, aXiom(A)).
 type_functor(unk, status(A, B)).

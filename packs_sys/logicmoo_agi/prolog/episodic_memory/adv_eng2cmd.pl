@@ -21,7 +21,7 @@
 % % %:- listing(user:file_search_path/2).
 % % %:- listing(user:library_directory/1).
 %:- abolish(user:prolog_load_file/2).
-%:- retractall(user:prolog_load_file(_,_)).
+%:- retractall(user:prolog_load_file(_, _)).
 % :- trace(sub_string/5).
 %:- trace(sub_atom/5).
 %:- trace('$expanded_term'/10).
@@ -39,13 +39,13 @@
 :- use_module(library('logicmoo_nlu/parser_tokenize')).
 
 
-adv_load_parsers :- 
+adv_load_parsers :-
   parser_e2c:use_module(library(logicmoo_nlu/parser_e2c)),
   parser_pldata:use_module(library(logicmoo_nlu/parser_pldata)),
   parser_chat80:use_module(library(logicmoo_nlu/parser_chat80)),
   !.
 
-adv_load_parsers2 :- 
+adv_load_parsers2 :-
   parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_utility)),
   parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_commands)),
   parser_e2c:ensure_loaded(library(logicmoo_nlu/e2c/e2c_noun_phrase)),
@@ -82,10 +82,10 @@ cmdalias(whois, who).
 cmdalias(turn, switch).
 cmdalias(flip, switch).
 
-is_prep(P):- parser_chat80:prep(prep(PP),_,_,_,_), PP==P.
+is_prep(P):- munl_call(parser_chat80:prep(prep(PP), _, _, _, _)), PP==P.
 is_prep(P):- preposition(_, P).
 
-is_prep_for_type(P,tObject):- is_prep(P).
+is_prep_for_type(P, tObject):- is_prep(P).
 
 preposition(_, P) :- xnotrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
 
@@ -167,8 +167,8 @@ eng2action(Term, Logic)  :- reframed_call(eng2action, Term, Logic).
 eng2state(Term, Logic):- reframed_call(eng2state, Term, Logic).
 eng2query(Term, Logic):- reframed_call(eng2state, Term, Logic).
 
-eng2action(Doer, Cmd, Action, M) :- 
-  eng2cmd4(Doer, Cmd, Action, M),!.
+eng2action(Doer, Cmd, Action, M) :-
+  eng2cmd4(Doer, Cmd, Action, M), !.
 eng2action(Doer, Cmd, Action, M) :- ( \+ Cmd = [Doer|_] ),
   eng2logic4(Doer, [Doer|Cmd], Action, M).
 
@@ -181,12 +181,12 @@ eng2logic(Self, Words, Logic, Mem):- append([Self, wonders], Words, Decl), show_
 
 
 
-reframed_call(_Pred, Text, _Logic):- var(Text),dumpST,break.
+reframed_call(_Pred, Text, _Logic):- var(Text), dumpST, break.
 reframed_call(Pred, Text, Logic):-
    nl_context(current_frame, Frame, parseFrame(e2l), istate),
    nl_context(current_subject, Self, vSpeaker, Frame),
    set_nl_context(current_subject, Self, Frame),
-   %set_nl_context(current_frame, Mem, Frame),   
+   %set_nl_context(current_frame, Mem, Frame), 
    into_text80(Text, Term),
    reframed_call(Pred, Self, Term, Logic, Frame), !.
 
@@ -199,7 +199,7 @@ reframed_call(Pred, Self, Logic, NewLogic, Mem) :- compound(Logic), \+ is_list(L
 
 reframed_call( Pred, Self, NonText, Logic, Mem) :- \+ is_list(NonText), munl_call(into_text80(NonText, Text)), !, reframed_call( Pred, Self, Text, Logic, Mem).
 reframed_call( Pred, Self, Words0, Logic, Mem):-
-  exclude(=(' '),Words0,Words),Words0\==Words,!,
+  exclude(=(' '), Words0, Words), Words0\==Words, !,
   reframed_call( Pred, Self, Words, Logic, Mem).
 reframed_call( Pred, Self, [NonText], Logic, Mem) :- \+ atom(NonText), !, reframed_call( Pred, Self, NonText, Logic, Mem) .
 reframed_call( Pred, Doer, [rtrace|Args], Logic, M) :- Args\==[], !, rtrace(reframed_call( Pred, Doer, Args, Logic, M)).
@@ -236,20 +236,20 @@ user:parse_chat80(Text, Q):-
    try_maybe_p(parser_chat80:clausify80, S, C),
    try_maybe_p(parser_chat80:qplan, C, Q))).
 */
-
+eng2cmd4(_Self, Logic, Logic, _M):- \+ is_list(Logic),!.
 eng2cmd4(_Self, [Verb|Args], Logic, _M) :- atom(Verb), verbatum_anon_one_or_zero_arg(Verb), !,
-  (Args =[_,_|_] ->
+  (Args =[_, _|_] ->
      Logic =.. [Verb, Args];
      Logic =.. [Verb |Args]).
 
 eng2cmd4(_Self, [Verb|Args], Logic, _M) :-  atom(Verb), verbatum_anon_n_args(Verb), !,
-  (Args =[_,_|_] ->
+  (Args =[_, _|_] ->
       Logic =.. [Verb |Args];
       Logic =.. [Verb |Args]).
 
 
-eng2cmd4(Self, Words, frame(Cmd), Mem):- 
-  length(Words,L), L > 3, eng2logic_frame( Self, Words, Cmd, Mem), !.
+eng2cmd4(Self, Words, frame(Cmd), Mem):-
+  length(Words, L), L > 3, eng2logic_frame( Self, Words, Cmd, Mem), !.
 
 
 eng2cmd4(Self, [Alias|Args], Logic, Mem):- cmdalias(Alias, Cmd), !, eng2cmd4(Self, [Cmd|Args], Logic, Mem).
@@ -259,7 +259,7 @@ eng2cmd4(Doer, Words, Action, M) :- parse_imperative_movement(Doer, Words, Actio
 % Take
 % %%%%%%%%%%%%%%
 
-eng2cmd4(Doer, [ take| ObjectSpec], do_take(Doer, Object), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
+eng2cmd4(Doer, [ take| ObjectSpec], dO('take', Doer, Object), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
 
 eng2cmd4(Doer, Tokens, Logic, Mem) :-
   with_parse_mem(Mem, phrase(parse_cmd(Doer, Logic), Tokens, [])), !.
@@ -269,18 +269,18 @@ eng2cmd4(Doer, Words, Action, M) :- fail,
  % If not talking to someone else, substitute Agent for 'self'.
  append(Before, [Doer|After], Words),
  reflexive_self(Doer),
- once(thought_check(Agent,propOf(memories, Agent), M);thought_check(Agent,inst(Agent), M)),
+ once(thought_check(Agent, propOf(memories, Agent), M);thought_check(Agent, inst(Agent), M)),
  append(Before, [Agent|After], NewWords),
  reframed_call(eng2cmd4, Doer, NewWords, Action, M).
 
 
 
-eng2cmd4(Doer, [TheVerb|Args], Action, M) :- 
+eng2cmd4(Doer, [TheVerb|Args], Action, M) :-
  (F==intransitive;F==transitive),
  (TheVerb = Verb ; Verb = _),
  quietly_talk_db([F, Verb, THE|Forms]),
  member(TheVerb, [Verb, THE|Forms]),
- 
+
  eng2cmd4(Doer, [Verb|Args], Action, M).
 
 eng2cmd4( Self, Words, Logic, Mem):-  fail,
@@ -327,8 +327,8 @@ parse_for_kind(place, Target) --> !, parse_for_kind(object, Target).
 parse_for_kind(inst, Target) --> !, parse_for_kind(object, Target).
 parse_for_kind(agnt2, Target) --> !, parse_for_kind(object, Target).
 
-parse_for_kind(object, Target) --> 
-  {current_player(Agent)},!,
+parse_for_kind(object, Target) -->
+  {current_player(Agent)}, !,
   {list_len_between(3, 1, List)}, List, {parse2object(List, Target, inst(Agent))}.
 %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, _, Dest)).
 %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, Dest, _)).
@@ -355,10 +355,10 @@ oneOf(List, S, E):-member(I, List), (is_list(I)->phrase(I, S, E);phrase([I], S, 
 % %%%%%%%%%%%%%%
 % Communication
 % %%%%%%%%%%%%%%
-parse_cmd(Doer, emote(Doer, say, Dest, Emoted)) --> dcg_from_right(parse_for_kind(agent, Dest), [', ']), eng2assert_text(Emoted).
-parse_cmd(Doer, emote(Doer, Say, Dest, Emoted)) --> [Ask], {ask_to_say(Ask, Say)},
+parse_cmd(Doer, dO('emote', Doer, say, Dest, Emoted)) --> dcg_from_right(parse_for_kind(agent, Dest), [', ']), eng2assert_text(Emoted).
+parse_cmd(Doer, dO('emote', Doer, Say, Dest, Emoted)) --> [Ask], {ask_to_say(Ask, Say)},
   oneOf([to, from, :, (', '), []]), ignore(parse_for_kind(agent, Dest);parse2object(Dest)), oneOf([to, :, []]), eng2assert_text(Emoted).
-%parse_cmd(Doer, emote(Doer, Emoted)) --> [emote], eng2assert_text(Emoted), !.
+%parse_cmd(Doer, dO('emote', Doer, Emoted)) --> [emote], eng2assert_text(Emoted), !.
 %parse_cmd(Doer, say(Doer, Emoted)) --> [say], eng2assert_text(Emoted).
 
 parse_cmd( Self, Logic, [F|Words], []):-
@@ -393,13 +393,14 @@ acdb(F, A, B):- munl_call(acnl(F, A, B, _)).
 :- set_prolog_flag(debug_on_error, true).
 %munl_call(G):- !, nl_call(G).
 munl_call(G):- fail,
- catch(G,_,
+ catch(G, _,
    catch(nl_call(G), _,
       catch(rtrace(nl_call(G)), _, fail))).
-munl_call(G):- 
- catch(G,_,
+munl_call(G):- tracing, notrace, !, call_cleanup(munl_call(G),notrace).
+munl_call(G):-
+ catch(G, E, true), 
    catch(nl_call_trusted(G), Err,
-       (wdmsg(G=Err),!,fail))).
+       (wdmsg(G=Err), !, fail))).
 
 
 two_adjs(W1, W2, W3):- var(W1), nonvar(W2), !, two_adjs(W2, W1, W3).
@@ -458,7 +459,7 @@ verbatum_anon_one_or_zero_arg(Verb):- member(Verb, [
  prolog, make, update_changed_files, cls,
  ls, cd, pwd, debug,
  useragent, echo, halt, english,
- mem, types, props, 
+ mem, types, props,
  memory, model, properties, state, status, perceptq, help, threads,
  spy, nospy, call,
  rtrace, nortrace,
@@ -472,7 +473,7 @@ verbatum_anon_n_args(Verb):- member(Verb, [getprops, setprop, path, delprop, rez
 
 
 parse2object(List, Agent, M):- append(LList, [R], List), member(R, [(?), (.)]), !, parse2object(LList, Agent, M).
-parse2object([am, i], Agent, M):- once(thought_check(Agent,propOf(_, Agent), M);thought_check(Agent,inst(Agent), M)), !.
+parse2object([am, i], Agent, M):- once(thought_check(Agent, propOf(_, Agent), M);thought_check(Agent, inst(Agent), M)), !.
 
 parse2object([BE| List], Agent, M):- fail, quietly_talk_db([_, BE, is|_More]), parse2object(List, Agent, M), !.
 parse2object([HAS| List], Agent, M):- fail, quietly_talk_db([_, have|HASHAVE]), member(HAS, HASHAVE), !, parse2object(List, Agent, M).
@@ -497,7 +498,7 @@ as1object(TheThing, Thing, M):- get_advstate(Mem2), Mem2\=M, as1object(TheThing,
 to_string_lc(A, S):- var(A), !, freeze(A, to_string_lc(A, S)).
 to_string_lc([], ""):- !.
 to_string_lc(S, L):- atomic(S), S\=[], !, string_lower(S, L).
-to_string_lc(S, L):- compound_name_arguments(S,'s',SS), !, to_string_lc(SS, L).
+to_string_lc(S, L):- compound_name_arguments(S, 's', SS), !, to_string_lc(SS, L).
 to_string_lc(S, L):- catch(text_to_string(L, S), _, fail), !, string_lower(S, L).
 to_string_lc(S, L):- is_list(S), !, maplist(to_string_lc, S, W), atomics_to_string(W, ' ', L).
 to_string_lc(A, S):- format(string(S), '~w', [A]).
@@ -563,7 +564,7 @@ coerce_text_to_args(X, []):- []==X, !.
 coerce_text_to_args(List, [X|Args]):- is_list(List),
    to_wordlist_atoms_adv(List, WL),
    current_predicate(noun_phrase/6),
-   dcg_if_defined(noun_phrase(_SO, X, true, LFOut),WL, Rest), !,
+   dcg_if_defined(noun_phrase(_SO, X, true, LFOut), WL, Rest), !,
    must((call_lf(X, LFOut),
    from_wordlist_atoms(Rest, More),
    coerce_text_to_args(More, Args))).
@@ -593,7 +594,7 @@ flee_run_escape(run).
 flee_run_escape(escape).
 
 % get [out, in, ..] Object
-parse_imperative_movement(Doer, [ get, Prep, Object], do_go_prep_obj(Doer, walk, Prep, Object), _Mem) :- preposition( spatial, Prep).
+parse_imperative_movement(Doer, [ get, Prep, Object], dO('go_prep_obj', Doer, walk, Prep, Object), _Mem) :- preposition( spatial, Prep).
 % n/s/e/w/u/d
 parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir, Actual), !, must_mw1(txt2goto(Doer, walk, [Actual], Logic, M)).
 % escape/flee/run ..
@@ -605,7 +606,7 @@ parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
-parse_imperative_movement(Doer, [ ExitName], do_go_dir(Doer, walk, ExitName), M) :-
+parse_imperative_movement(Doer, [ ExitName], dO('go_dir', Doer, walk, ExitName), M) :-
   in_agent_model(Doer, h(exit(ExitName), _Place, _), M).
 
 
@@ -614,26 +615,26 @@ parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spat
 % x shelf
 % go on shelf
 
-txt2goto(Doer, run, [ ], do_go_dir(Doer, run, escape), _Mem) :- !.
+txt2goto(Doer, run, [ ], dO('go_dir', Doer, run, escape), _Mem) :- !.
 txt2goto(Doer, Walk, [to, Prep| More], Logic, M) :- !, txt2goto(Doer, Walk, [Prep| More], Logic, M).
 txt2goto(Doer, Walk, [Alias| More], Logic, M) :- cmdalias(Alias, Dir), !, txt2goto(Doer, Walk, [Dir| More], Logic, M).
 
 % go in kitchen
 % go in car
-txt2goto(Doer, Walk, [ Prep, Dest], do_go_prep_obj(Doer, Walk, Prep, Where), M) :-
+txt2goto(Doer, Walk, [ Prep, Dest], dO('go_prep_obj', Doer, Walk, Prep, Where), M) :-
  preposition(spatial, Prep), !,
  must_mw1(txt2place(Dest, Where, M)).
 
 % go north
-txt2goto(Doer, Walk, [ ExitName], do_go_dir(Doer, Walk, ExitName), M) :-
+txt2goto(Doer, Walk, [ ExitName], dO('go_dir', Doer, Walk, ExitName), M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M).
 % go escape
-txt2goto(Doer, Walk, [ Dir], do_go_dir(Doer, Walk, Dir), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
-txt2goto(Doer, Walk, [ Dir], do_go_dir(Doer, Walk, Dir), _Mem) :- (Dir=down;Dir==up), !.
+txt2goto(Doer, Walk, [ Dir], dO('go_dir', Doer, Walk, Dir), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
+txt2goto(Doer, Walk, [ Dir], dO('go_dir', Doer, Walk, Dir), _Mem) :- (Dir=down;Dir==up), !.
 % go [out, in, ..]
-txt2goto(Doer, Walk, [ Prep], do_go_dir(Doer, Walk, Prep), _Mem) :- preposition( spatial, Prep).
+txt2goto(Doer, Walk, [ Prep], dO('go_dir', Doer, Walk, Prep), _Mem) :- preposition( spatial, Prep).
 % go kitchen
-txt2goto(Doer, Walk, Dest, do_go_loc(Doer, Walk, Where), M) :-
+txt2goto(Doer, Walk, Dest, dO('go_loc', Doer, Walk, Where), M) :-
  txt2place(Dest, Where, M).
 
 
@@ -643,7 +644,7 @@ txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(_, Dest, _), M), Dest 
 txt2place(Dest, Place, M):- parse2object(Dest, Place, M).
 
 
-            
+          
 :- discontiguous(verb_frame1/4).
 :- discontiguous(eng2flogic_test/1).
 :- include(adv_eng2cmd_frame).
@@ -700,7 +701,7 @@ nlac(preferredBaseForm, nartR(xWordWithSuffixFn, xGiveTheWord, xEr_AgentTheSuffi
 
 nlac(agentiveSg, xGiveTheWord, "giver", 638995).
 
-% posForms,derivedUsingSuffix,
+% posForms, derivedUsingSuffix,
 
 nlac(baseForm, xGiveTheWord, "give", 3338279).
 nlac(preferredBaseForm, xGiveTheWord, "give", 4561025).

@@ -22,22 +22,26 @@
 
 random_noise(Agent, [cap(subj(Agent)), Msg]) :-
  random_member(Msg, [
- 'hums quietly to themself.',
- 'inspects their inspection cover.',
- 'buffs their chestplate.',
+ 'hums quietly to themself.', 
+ 'inspects their inspection cover.', 
+ 'buffs their chestplate.', 
  'fidgets uncomfortably.'
  ]).
 
 :- dynamic(mu_global:agent_last_action/3).
 
+:- dynamic(mu_global:auto_pause/1).
 
-do_autonomous_cycle(Agent):- time_since_last_action(Agent, When), When > 10, !.
-do_autonomous_cycle(Agent):-
- time_since_last_action(Other, When),!,
+mu_global:auto_pause(30).
+
+handle_autonomous_cycle(Agent):-   
+  time_since_last_action(Agent, When), mu_global:auto_pause(Seconds), When > Seconds, !.
+handle_autonomous_cycle(Agent):-
+ time_since_last_action(Other, When), !,
  Other \== Agent, When < 1, !,
  retractall(mu_global:agent_last_action(Other, _, _)),
  nop(dbug1(time_since_last_action_for(Other, When, Agent))),
- overwrote_prompt,!.
+ overwrote_prompt, !.
 
 
 % If actions are queued, no further thinking required.
@@ -49,10 +53,10 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
  get_advstate(State), getprop(Agent, (powered = f), State), !.
 % is not yet time to do something
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
- notrace( \+ do_autonomous_cycle(Agent)), !.
-% try to run the auto(Agent) command
+ notrace( \+ handle_autonomous_cycle(Agent)), !.
+% try to run the dO('auto', Agent) command
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :-
- add_todo( Agent, auto(Agent), Mem0, Mem1).
+ add_todo( Agent, dO('auto', Agent), Mem0, Mem1).
 
 
 
@@ -80,6 +84,10 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_check(Agent, current_goals(Agent, [_|_]), Mem0),
  action_handle_goals(Agent, Mem0, Mem1), !.
 
+
+autonomous_decide_action(Agent, Mem0, Mem1) :- 
+  autonomous_decide_unexplored_object(Agent, Mem0, Mem1), !.
+
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  once((
 % If no actions or goals, but there's an unexplored exit here, go that way.
@@ -90,7 +98,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  autonomous_decide_follow_player(Agent, Mem0, Mem1),
  autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1)
  ], Premute),
- member(Try,Premute),
+ member(Try, Premute),
  call(Try))).
 
 autonomous_decide_action(Agent, Mem0, Mem0) :-
@@ -105,13 +113,13 @@ autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  in_agent_model(Agent, h(exit(Prev), There, '<mystery>'(exit, _, _)), ModelData),
  in_agent_model(Agent, h(exit(Dir), Here, There), ModelData),
  in_agent_model(Agent, h(in, Agent, Here), ModelData),
- add_todo(Agent, do_go_dir(Agent, walk, Dir), Mem0, Mem1),
- add_todo(Agent, do_go_dir(Agent, walk, Prev), Mem1, Mem2).
+ add_todo(Agent, dO('go_dir', Agent, walk, Dir), Mem0, Mem1),
+ add_todo(Agent, dO('go_dir', Agent, walk, Prev), Mem1, Mem2).
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent, ModelData, Mem0),
  in_agent_model(Agent, h(in, Agent, Here), ModelData),
  in_agent_model(Agent, h(exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
- add_todo(Agent, do_go_dir(Agent, walk, Dir), Mem0, Mem1).
+ add_todo(Agent, dO('go_dir', Agent, walk, Dir), Mem0, Mem1).
 
 % An unexplored object!
 autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
@@ -119,13 +127,13 @@ autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
  in_agent_model(Agent, h(_, '<mystery>'(closed, _, _), Object), ModelData),
  in_agent_model(Agent, h(Prep, Object, Here), ModelData),
  in_agent_model(Agent, h(Prep, Agent, Here), ModelData),
- add_todo( Agent, open(Agent, Object), Mem0, Mem1),
- add_todo( Agent, examine(Agent, see, Object), Mem1, Mem2).
+ add_todo( Agent, dO('open', Agent, Object), Mem0, Mem1),
+ add_todo( Agent, dO('examine', Agent, see, Object), Mem1, Mem2).
 
 autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :-  fail,
  agent_thought_model(Agent, ModelData, Mem0),
  in_agent_model(Agent, h(A, '<mystery>'(W, B, C), Object), ModelData),
- add_todo( Agent, make_true(Agent, ~(h(A, '<mystery>'(W, B, C), Object))), Mem0, Mem1).
+ add_todo( Agent, dO('make_true', Agent, ~(h(A, '<mystery>'(W, B, C), Object))), Mem0, Mem1).
 
 
 % Follow Player to adjacent rooms.
@@ -136,15 +144,15 @@ autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
  dif(Agent, Player), mu_current_agent(Player),
  in_agent_model(Agent, h(_, Player, There), ModelData),
  in_agent_model(Agent, h(exit(Dir), Here, There), ModelData),
- add_todo(Agent, do_go_dir(Agent, walk, Dir), Mem0, Mem1).
+ add_todo(Agent, dO('go_dir', Agent, walk, Dir), Mem0, Mem1).
 
 autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-
  1 is random(5), % fail_feature,
  random_noise(Agent, Msg),
- add_todo( Agent, emote(Agent, act, *, Msg), Mem0, Mem1).
+ add_todo( Agent, dO('emote', Agent, act, *, Msg), Mem0, Mem1).
 
 
-always_action( do_go_dir(_, _, _)).
+always_action( dO('go_dir', _, _, _)).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -161,22 +169,22 @@ consider_request(Requester, Agent, Action, _M0, _M1) :-
  fail.
 
 consider_request(Requester, Agent, Query, M0, M1) :-
- do_introspect(Agent, Query, Answer, M0),
+ handle_introspect(Agent, Query, Answer, M0),
  %add_todo( Agent, print_(Answer), M0, M1).
- add_todo( Agent, emote(Agent, say, Requester, Answer), M0, M1).
+ add_todo( Agent, dO('emote', Agent, say, Requester, Answer), M0, M1).
 
-consider_request(_Speaker, Agent, forget(Agent,goals), M0, M2) :-
+consider_request(_Speaker, Agent, forget(Agent, goals), M0, M2) :-
  dbug(autonomous, '~w: forgetting goals.~n', [Agent]),
- update_agent_model_props(Agent, current_goals(Agent, []), M0, M2),!.
+ update_agent_model_props(Agent, current_goals(Agent, []), M0, M2), !.
 
 % Bring object back to Speaker.
 consider_request(Speaker, Agent, fetch(Object), M0, M1) :-
  add_goal(Agent, h(held_by, Object, Speaker), M0, M1).
-consider_request(_Speaker, Agent, do_put(Agent, Thing, Relation, Where), M0, M) :-
+consider_request(_Speaker, Agent, dO('put', Agent, Thing, Relation, Where), M0, M) :-
  add_goal(Agent, h(Relation, Thing, Where), M0, M).
-consider_request(_Speaker, Agent, do_take(Agent, Thing), M0, M) :-
+consider_request(_Speaker, Agent, dO('take', Agent, Thing), M0, M) :-
  add_goal(Agent, h(held_by, Thing, Agent), M0, M).
-consider_request(_Speaker, Agent, do_drop(Agent, Object), M0, M1) :-
+consider_request(_Speaker, Agent, dO('drop', Agent, Object), M0, M1) :-
  add_goal(Agent, ~(h(held_by, Object, Agent)), M0, M1).
 
 consider_request(_Speaker, Agent, AlwaysAction, M0, M1) :-

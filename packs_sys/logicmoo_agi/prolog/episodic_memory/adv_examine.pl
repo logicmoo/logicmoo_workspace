@@ -32,10 +32,10 @@ sub_objs(At, Here, What, S0):-
    Container\==Here, g_h(descended, Container, Here, S0))).
 
 
-sense_object_exitnames(Sense, Depth, PrepIn, Object, 
-   exit_list(PrepIn, Object, Exits), S0):- 
- Depth>2 ,!, prep_object_exitnames(Sense, Depth, PrepIn, Object, Exits, S0), !.
-sense_object_exitnames(_Sense,_Depth, _PrepIn, _Object, [], _S0):- !.
+sense_object_exitnames(Sense, Depth, PrepIn, Object,
+   exit_list(PrepIn, Object, Exits), S0):-
+ Depth>2 , !, prep_object_exitnames(Sense, Depth, PrepIn, Object, Exits, S0), !.
+sense_object_exitnames(_Sense, _Depth, _PrepIn, _Object, [], _S0):- !.
 
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
   findall(Direction, g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
@@ -47,7 +47,7 @@ prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
 /*
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
   findall(h(exit(Direction), Object, _), g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(exit(escape), Object, _)], _S0) :- member(InOnUnderAt,[in,on,under,at]),!.
+prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(exit(escape), Object, _)], _S0) :- member(InOnUnderAt, [in, on, under, at]), !.
 prep_object_exitnames(_Sense, _Depth, Direction, _Object, [h(exit(reverse(Direction)), Object, _)], _S0) :- !.
 %prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
 */
@@ -135,16 +135,16 @@ maybe_send_sense(IF, Agent, Sense, Depth, Data, S0, S1):-
 send_sense(Agent, Sense, Depth, Data, S0, S1):-
    queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1).
 
-act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
+act_do_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
  object_props(Object, know, Depth, KPropList, SA),
  maybe_send_sense((KPropList\==[]), Agent, know, Depth, props(Object, KPropList), SA, S0 ),
  object_props(Object, Sense, Depth, PropList, SA),
  maybe_send_sense((PropList\==[]), Agent, Sense, Depth, props(Object, PropList), S0, S1),
  add_child_percepts(Sense, Agent, PrepIn, Depth, Object, S1, S2),
  sense_object_exitnames(Sense, Depth, PrepIn, Object, SensedExits, S0),
- maybe_send_sense((SensedExits\==[]),Agent, Sense, Depth, SensedExits, S2, S3).
+ maybe_send_sense((SensedExits\==[]), Agent, Sense, Depth, SensedExits, S2, S3).
 
-findall_set2(T,G,L):-findall(T,G,S),list_to_set(S,L).
+findall_set2(T, G, L):-findall(T, G, S), list_to_set(S, L).
 
 get_relation_list(Object, RelationSet, S1) :-
   findall_set2(At,
@@ -166,9 +166,9 @@ child_percepts(Agent, Sense, Object, At, Depth, Children, S0):-  At == at,
  getprop(Object, default_rel = Default, S0), Default\==At, !,
  child_percepts(Agent, Sense, Object, Default, Depth, Children, S0).
 child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object), S1):- is_closed(At, Object, S1), !.
-/*act_examine(Agent, Sense, At, Here, Depth, S0, S9):-  At == at,
+/*act_do_examine(Agent, Sense, At, Here, Depth, S0, S9):-  At == at,
  getprop(Object, default_rel = Default, S0), Default\==At, !,
- act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
+ act_do_examine(Agent, Sense, Default, Here, Depth, S0, S9).
 */
 child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
  findall_set2(h(At, What, Object),

@@ -32,9 +32,9 @@
 :- multifile aXiom/1.
 :- meta_predicate aXiom(+).
 :- multifile aXiom/3.
-:- meta_predicate aXiom(+,?,?).
+:- meta_predicate aXiom(+, ?, ?).
 
-must_security_of(Doer,Level):- security_of(Doer,Level).
+must_security_of(Doer, Level):- security_of(Doer, Level).
 
 security_of(_, _Wiz).
 admin :- true. % Potential security hazzard.
@@ -148,17 +148,17 @@ run_player_console:-
 
 mainloop :-
  repeat,
- call_cleanup(once(main_once),set_prolog_flag(gc,true)),
+ call_cleanup(once(main_once), set_prolog_flag(gc, true)),
  (get_advstate(S1)->declared(quit, S1)),
  stop_logging,
  !. % Don't allow future failure to redo mainloop.
 
-flush_output_s(S):- notrace(ignore(catch(flush_output(S),_,true))).
-my_ttyflush:- 
+flush_output_s(S):- notrace(ignore(catch(flush_output(S), _, true))).
+my_ttyflush:-
  notrace((
   ttyflush,
-   ignore((stream_property(User_Out,file_no(1)), flush_output_s(User_Out))),
-   ignore((stream_property(User_Err,file_no(2)), flush_output_s(User_Err))),
+   ignore((stream_property(User_Out, file_no(1)), flush_output_s(User_Out))),
+   ignore((stream_property(User_Err, file_no(2)), flush_output_s(User_Err))),
    flush_output_s(user_error),
    flush_output_s(user_output),
    flush_output_s(current_output),
@@ -168,12 +168,12 @@ my_ttyflush:-
 main_once:-
   nop(( my_ttyflush,
    sleep(0.005),
-   set_prolog_flag(gc,true),
+   set_prolog_flag(gc, true),
    % gc_heap,
    garbage_collect_atoms,
    garbage_collect_clauses,
    garbage_collect,
-   set_prolog_flag(gc,false),
+   set_prolog_flag(gc, false),
    my_ttyflush)),
    update_network_connections,
    get_live_agents(LiveAgents),
@@ -181,7 +181,7 @@ main_once:-
    % ignore((LiveAgents\=[_], dbug1(liveAgents = LiveAgents))),
    with_agents(run_perceptq, LiveAgents),
    with_agents(decide_action, LiveAgents),
-   with_agents(do_todo, LiveAgents),
+   with_agents( handle_intents, LiveAgents),
    %notrace((set_advstate(S9))),
    !. % Don't allow future failure to redo main.
 main_once:-
@@ -223,7 +223,7 @@ telnet_decide_action(Agent, Mem0, Mem0):-
  dbug(telnet, '~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action]).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
- %must_mw1(thought(Agent,timestamp(T0), Mem0)),
+ %must_mw1(thought(Agent, timestamp(T0), Mem0)),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(telnet, 'Telnet TODO ~p~n', [Agent: Words->Action])),

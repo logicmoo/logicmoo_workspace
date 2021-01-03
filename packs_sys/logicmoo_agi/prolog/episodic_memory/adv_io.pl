@@ -132,10 +132,10 @@ bug(_) :- debugging(adv(unknown), YN), !, YN.
 :- thread_local(pretty_tl:in_pretty_tree_rec/0).
 
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree, !,
-  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree,Ref),print_tree(Term),erase(Ref)).
+  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), print_tree(Term), erase(Ref)).
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree_rec, !,
-  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec,Ref),prolog_pprint(Term,[portray_goal(print_tree)]),erase(Ref)).
-prolog_pprint_tree(Term):-  prolog_pprint(Term),!.
+  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec, Ref), prolog_pprint(Term, [portray_goal(print_tree)]), erase(Ref)).
+prolog_pprint_tree(Term):-  prolog_pprint(Term), !.
 
 term_to_pretty_string(L, LinePrefix, SO):-
   string_concat("\n", LinePrefix, SC),
@@ -147,16 +147,16 @@ term_to_pretty_string(L, LinePrefix, SO):-
 :- export(prolog_pprint/2).
 prolog_pprint(Term):- prolog_pprint(Term, []).
 prolog_pprint(Term, Options):-
-   \+ \+ (portray_vars:pretty_numbervars(Term, Term2), 
-     prolog_pprint_0(Term2,Options)),!.
+   \+ \+ (portray_vars:pretty_numbervars(Term, Term2),
+     prolog_pprint_0(Term2, Options)), !.
 
 
-% prolog_pprint_0(Term, Options):- Options ==[],pprint_ecp_cmt(blue, Term),!.
+% prolog_pprint_0(Term, Options):- Options ==[], pprint_ecp_cmt(blue, Term), !.
 
-% prolog_pprint_0(Term, Options):- memberchk(portray(true),Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree(Term, Options),!.
+% prolog_pprint_0(Term, Options):- memberchk(portray(true), Options), \+ is_list(Term), \+ memberchk(portray_goal(_), Options), print_tree(Term, Options), !.
 prolog_pprint_0(Term, Options):-    \+ memberchk(right_margin(_), Options), !, prolog_pprint_0(Term, [right_margin(60)|Options]).
 prolog_pprint_0(Term, Options):-    \+ memberchk(portray(_), Options), !, prolog_pprint_0(Term, [portray(true)|Options]).
-prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term,  [output(current_output)|Options]).
+prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term, [output(current_output)|Options]).
 
 :- thread_local(t_l:no_english/0).
 
@@ -173,7 +173,7 @@ dbug1(Fmt) :-
 dbug(DebugDest, Fmt) :-
   xnotrace((compound(Fmt) -> dbug_3(DebugDest, '~p', Fmt) ; dbug_3(DebugDest, Fmt, []))).
 
-dbug(DebugDest, Fmt, Args0):- 
+dbug(DebugDest, Fmt, Args0):-
  xnotrace(dbug_3(DebugDest, Fmt, Args0)).
 
 dbug_3(DebugDest, Fmt, Args0) :-
@@ -223,12 +223,12 @@ current_agent_(Agent):- mu_global:current_agent_tl(Agent), !.
 current_agent_(Agent):- current_input(InStream), mu_global:console_io_player(InStream, _, Agent).
 current_agent_(Agent):- current_output(OutStream), mu_global:console_io_player(_, OutStream, Agent).
 %current_agent_(Agent):- thread_self(Id), mu_global:console_host_io_history_unused(Id, _Alias, _InStream, _OutStream, _Host, _Peer, Agent).
-current_agent_(x(player,'i1')).
+current_agent_(x(player, 'i1')).
 
 :- dynamic(mu_global:need_redraw/1).
 overwrote_prompt(Agent):-
   retractall(mu_global:need_redraw(Agent)), asserta(mu_global:need_redraw(Agent)), !.
-overwrote_prompt:- retractall(mu_global:need_redraw(x(player,'i1'))), asserta(mu_global:need_redraw(x(player,'i1'))), !.
+overwrote_prompt:- retractall(mu_global:need_redraw(x(player, 'i1'))), asserta(mu_global:need_redraw(x(player, 'i1'))), !.
 
 ensure_has_prompt(Agent):-
  ignore((retract(mu_global:need_redraw(Agent)),
@@ -343,11 +343,11 @@ read_line_to_tokens(Agent, In, Prev, Tokens):-
  NegOne is -1,
  overwrote_prompt(Agent),
  must_det(line_to_tokens(LineCodes, NegOne, Tokens0)), !,
- clean_tokens(Tokens0,Tokens1),
+ clean_tokens(Tokens0, Tokens1),
  must_det(Tokens1=Tokens).
 
-clean_tokens(Tokens0,Tokens1):- is_list(Tokens0),exclude(=(' '),Tokens0,Tokens1),!.
-clean_tokens(Tokens0,Tokens0).
+clean_tokens(Tokens0, Tokens1):- is_list(Tokens0), exclude(=(' '), Tokens0, Tokens1), !.
+clean_tokens(Tokens0, Tokens0).
 
 line_to_tokens([], _, []):-!.
 line_to_tokens(NegOne, NegOne, end_of_file):-!.
@@ -475,7 +475,7 @@ agent_to_output0( Agent, Stream):- mu_global:console_io_player(InStream, _, Agen
 agent_to_output0(_Agent, Stream):- current_output(Stream), \+ using_stream(Stream, _Other), !.
 agent_to_output0(_Agent, Stream):- stream_property(Stream, file_no(1)), \+ using_stream(Stream, _Other), !.
 agent_to_output0( Agent, Stream):- fail, agent_to_input(Agent, In), stream_property(In, file_no(F)), F > 2, stream_property(Stream, file_no(F)), stream_property(Stream, write), !.
-agent_to_output0( Agent, Stream):- break,dmsg(throw(agent_io(Agent, agent_to_output(Agent, Stream)))), stream_property(Stream, file_no(2)),!.
+agent_to_output0( Agent, Stream):- break, dmsg(throw(agent_io(Agent, agent_to_output(Agent, Stream)))), stream_property(Stream, file_no(2)), !.
 %agent_to_output(Agent, Stream):- mu_global:console_host_io_history_unused(_Id, _Alias, _In, Stream, _Host, _Peer, Agent), !.
 
 % agent_to_input(Agent, In):- mu_global:already_consumed_input(Agent, _SoFar), In=Agent,
@@ -486,7 +486,7 @@ agent_to_input0( Agent, Stream):- using_stream_in(Stream, Agent), !.
 agent_to_input0(_Agent, Stream):- current_input(Stream), \+ using_stream(Stream, _Other), !.
 agent_to_input0(_Agent, Stream):- stream_property(Stream, file_no(0)), \+ using_stream(Stream, _Other), !.
 agent_to_input0( Agent, Stream):- fail, agent_to_output(Agent, Stream), stream_property(Stream, file_no(F)), stream_property(Stream, file_no(F)), stream_property(Stream, read), !.
-agent_to_input0( Agent, Stream):- break,dmsg(throw(agent_io(Agent, agent_to_input(Agent, Stream)))).
+agent_to_input0( Agent, Stream):- break, dmsg(throw(agent_io(Agent, agent_to_input(Agent, Stream)))).
 %agent_to_input( OtherAgent, Stream):- agent_to_input( Agent, Stream).
 %agent_to_input(Agent, Stream):- mu_global:console_host_io_history_unused(_Id, _Alias, Stream, _Out, _Host, _Peer, Agent), !.
 

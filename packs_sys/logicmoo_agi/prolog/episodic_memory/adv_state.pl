@@ -37,7 +37,7 @@ save_term_exists(Filename, Term) :-
 save_term_exists(Filename, Term) :-
  \+ access_file(Filename, exist),
  save_term(Filename, write, Term),
- player_format('Saved to file "~w".~n', [Filename]),!.
+ player_format('Saved to file "~w".~n', [Filename]), !.
 save_term_exists(Filename, _) :-
  access_file(Filename, exist),
  player_format('Save FAILED! Does file "~w" already exist?~n', [Filename]).
@@ -45,22 +45,22 @@ save_term_exists(Filename, _) :-
  player_format('Failed to open file "~w" for saving.~n', [Filename]).
 
 
-record_saved(State) :- is_list(State),!,
-  sort(State,Term),  
-  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), write ,Term))),!.
-record_saved(State):- 
-  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append ,State))).
+record_saved(State) :- is_list(State), !,
+  sort(State, Term),
+  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), write , Term))), !.
+record_saved(State):-
+  with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append , State))).
 
-save_term(Filename, How, Term) :- 
-  is_list(Term),sort(Term,STerm),Term\==STerm,!,
+save_term(Filename, How, Term) :-
+  is_list(Term), sort(Term, STerm), Term\==STerm, !,
   save_term(Filename, How, STerm).
 save_term(Filename, How, Term) :-
  absolute_file_name(Filename, AbsFilename),
  setup_call_cleanup(open(AbsFilename, How, FH),
-  format(FH, '~N~@.~N', [mu:adv_pretty_print(Term)]), 
-  close(FH)),!.
+  format(FH, '~N~@.~N', [mu:adv_pretty_print(Term)]),
+  close(FH)), !.
 save_term(Filename, How, _) :-
- player_format('Failed to ~w file "~w" for saving.~n', [How, Filename]),!.
+ player_format('Failed to ~w file "~w" for saving.~n', [How, Filename]), !.
 
 
 
@@ -83,41 +83,41 @@ is_pred1_state(parseFrame(_)).
 get_advstate_varname(Varname):- nb_current(advstate_var, Varname), Varname\==[], !.
 % get_advstate_varname(advstate_db).
 
-get_advstate_db(State):- var(State), !, findall(State1, advstate_db(State1), StateL), flatten([structure_label(cur_state),StateL], State).
+get_advstate_db(State):- var(State), !, findall(State1, advstate_db(State1), StateL), flatten([structure_label(cur_state), StateL], State).
 get_advstate_db(State):- advstate_db(State).
 
-into_ref(State,State):-!.
-into_ref(State,StateRef):- notrace(get_attr(State,refValue,_)->StateRef=State;put_attr(StateRef,refValue,State)).
-from_ref(State,State):-!.
-from_ref(StateRef,State):- (var(State)->get_attr(StateRef,refValue,State);StateRef=State).
+into_ref(State, State):-!.
+into_ref(State, StateRef):- notrace(get_attr(State, refValue, _)->StateRef=State;put_attr(StateRef, refValue, State)).
+from_ref(State, State):-!.
+from_ref(StateRef, State):- (var(State)->get_attr(StateRef, refValue, State);StateRef=State).
 
-refValue_unify_hook(State,Value):-  State=Value.
-refValue:attr_unify_hook(State,Value):- refValue_unify_hook(State,Value).
-refValue:attribute_goals(Var)--> 
-  {get_attr(Var,refValue,Value),gensym(store_at_,Store),nb_setval(Store,Value)},
-  [restore_refValue(Var,Store)].
+refValue_unify_hook(State, Value):-  State=Value.
+refValue:attr_unify_hook(State, Value):- refValue_unify_hook(State, Value).
+refValue:attribute_goals(Var)-->
+  {get_attr(Var, refValue, Value), gensym(store_at_, Store), nb_setval(Store, Value)},
+  [restore_refValue(Var, Store)].
 
-restore_refValue(Var,Store):- nb_getval(Store,Value),put_attr(Var,refValue,Value). 
+restore_refValue(Var, Store):- nb_getval(Store, Value), put_attr(Var, refValue, Value).
 
-get_advstate(StateRef):- notrace((get_advstate_0(State), into_ref(State,StateRef))).
+get_advstate(StateRef):- notrace((get_advstate_0(State), into_ref(State, StateRef))).
 get_advstate_0(State):- with_mutex(get_advstate,
   ((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) -> State=PreState ; get_advstate_db(State))).
 
-/*add_advstate(State):- from_ref(State,State0),
+/*add_advstate(State):- from_ref(State, State0),
   with_mutex(get_advstate, must_mw1(set_advstate_db_1(State0))),
-  nop(with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append ,State0)))),!.
+  nop(with_mutex(save_advstate, must_mw1(save_term(library('episodic_memory/adv_state_db.pl'), append , State0)))), !.
 */
 
 
-set_advstate(StateRef):- notrace((from_ref(StateRef,State), set_advstate_0(State))).
+set_advstate(StateRef):- notrace((from_ref(StateRef, State), set_advstate_0(State))).
 
-set_advstate_0(State):- 
-  with_mutex(get_advstate,((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) -> 
+set_advstate_0(State):-
+  with_mutex(get_advstate, ((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) ->
    nb_setval(Var, State) ; set_advstate_db(State))).
 
-set_advstate_db(State):- from_ref(State,State0),
+set_advstate_db(State):- from_ref(State, State0),
   notrace((set_advstate_db_1(State0),
-  nop(record_saved(State0)))),!.
+  nop(record_saved(State0)))), !.
 
 
 set_advstate_db_1(Nil):- Nil==[], !.
@@ -137,7 +137,7 @@ set_advstate_db_1(State):-
    PreState =.. [Pred, Object|PreStateL],
    forall(clause(advstate_db(PreState), true, Ref), erase(Ref)),
    asserta(advstate_db(State)), !.
-  
+
 set_advstate_db_1(State):- dumpST, dmsg(set_advstate_db(State)), break.
 
 get_advstate_fork(StateC):- get_advstate(State), duplicate_term(State, StateC).
@@ -165,69 +165,69 @@ declared_advstate(Fact):- get_advstate(State), declared(Fact, State).
 % memory: memorize/forget/thought
 
 :- meta_predicate(update_agent_model_props(+, *, *, *)).
-update_agent_model_props(Agent,Figment, M0, M1) :-  agent_mem(Agent,M0,M1,A0,A1),  
-  memorize_edit_0(Agent,append, Figment, A0, A1).
+update_agent_model_props(Agent, Figment, M0, M1) :-  agent_mem(Agent, M0, M1, A0, A1),
+  memorize_edit_0(Agent, append, Figment, A0, A1).
 
-:- meta_predicate(memorize_edit(+,3, *, *, *)).
-memorize_edit_0(_Agent,Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
+:- meta_predicate(memorize_edit(+, 3, *, *, *)).
+memorize_edit_0(_Agent, Pred3, Figment, M0, M2) :- assertion(\+ is_list(Figment)),
  must_mw1((
    Figment =.. [Name, Value], OldFigment =.. [Name, OldValue],
    (select(OldFigment, M0, M1)
      -> ( call(Pred3, OldValue, Value, NewValue), NewFigment =.. [Name, NewValue])
      ; (NewFigment=Figment, M0=M1)),
     append([NewFigment], M1, M2))).
-   
-memorize_appending(Agent,Figment0, M0, M1) :-  
- must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
-  listify(Figment0,Figment),
-  episodic_mem(Agent,memorize_appending(Figment)),
-  memorize_edit_0(Agent,append, Figment, A0, A1))).
+ 
+memorize_appending(Agent, Figment0, M0, M1) :-
+ must_mw1((agent_mem(Agent, M0, M1, A0, A1),
+  listify(Figment0, Figment),
+  episodic_mem(Agent, memorize_appending(Figment)),
+  memorize_edit_0(Agent, append, Figment, A0, A1))).
 
 % Manipulate memories (M stands for Memories)
-memorize_prepending(Agent, Figment0, M0, M1) :- must_mw1((agent_mem(Agent,M0,M1,A0,A1), 
-  listify(Figment0,Figment),
-  episodic_mem(Agent,memorize_prepending(Figment)),
+memorize_prepending(Agent, Figment0, M0, M1) :- must_mw1((agent_mem(Agent, M0, M1, A0, A1),
+  listify(Figment0, Figment),
+  episodic_mem(Agent, memorize_prepending(Figment)),
   notrace(append(Figment, A0, A1)))).
 
-replace_thought(Agent,Figment0, M0, M1) :-    must_mw1((agent_mem(Agent,M0,M1,A0,A3),
+replace_thought(Agent, Figment0, M0, M1) :-    must_mw1((agent_mem(Agent, M0, M1, A0, A3),
   var(A3),
-  must_unlistify(Figment0,Figment),
-  old_figment(Figment,_F,_A,FigmentErased),
+  must_unlistify(Figment0, Figment),
+  old_figment(Figment, _F, _A, FigmentErased),
   select(FigmentErased, A0, A1),
-  % episodic_mem(Agent,replace(FigmentErased,Figment)),  
-  append([Figment], A1, A3))),!.
- 
-thought(Agent,Figment0, M) :-           
- must_mw1(( agent_mem(Agent,M,A),
-  must_unlistify(Figment0,Figment))),!,
-  (declared(Figment, A) -> episodic_mem(Agent,thought(Figment)); (episodic_mem(Agent,considered(Figment)),fail)),!.  
+  % episodic_mem(Agent, replace(FigmentErased, Figment)),
+  append([Figment], A1, A3))), !.
 
-thought_check(Agent,Figment0, M) :-
-  must_mw1(( agent_mem(Agent,M,A),
-   must_unlistify(Figment0,Figment))),!,
+thought(Agent, Figment0, M) :-         
+ must_mw1(( agent_mem(Agent, M, A),
+  must_unlistify(Figment0, Figment))), !,
+  (declared(Figment, A) -> episodic_mem(Agent, thought(Figment)); (episodic_mem(Agent, considered(Figment)), fail)), !.
+
+thought_check(Agent, Figment0, M) :-
+  must_mw1(( agent_mem(Agent, M, A),
+   must_unlistify(Figment0, Figment))), !,
   declared(Figment, A).
 
 /*
-memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1),!.
+memorize(Agent, Figment0, M0, M1):- memorize_prepending(Agent, Figment0, M0, M1), !.
 
 
-forge t(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
-  must_unlistify(Figment0,Figment), !, 
+forge t(Agent, Figment0, M0, M1) :-   agent_mem(Agent, M0, M1, A0, A1),
+  must_unlistify(Figment0, Figment), !,
   select_from(Figment, A0, A1),
-  nop(episodic_mem(Agent,forget(Figment))).
+  nop(episodic_mem(Agent, forget(Figment))).
 
-forget_ always(Agent,Figment0, M0, M1) :-   agent_mem(Agent,M0,M1,A0,A1),
-  must_unlistify(Figment0,Figment),  
+forget_ always(Agent, Figment0, M0, M1) :-   agent_mem(Agent, M0, M1, A0, A1),
+  must_unlistify(Figment0, Figment),
   select_always(Figment, A0, A1),
-  nop(episodic_mem(Agent,forget(Figment))).
+  nop(episodic_mem(Agent, forget(Figment))).
 */
 
 
 
-  
 
-must_unlistify(Figment0,Figment):- is_list(Figment0),!,must_mw1(Figment0=[Figment]).
-must_unlistify(Figment,Figment).
+
+must_unlistify(Figment0, Figment):- is_list(Figment0), !, must_mw1(Figment0=[Figment]).
+must_unlistify(Figment, Figment).
 
 in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
@@ -240,8 +240,8 @@ in_model0(E, L):- member(EE, L), same_element(EE, E).
 same_element(E, E) :- !.
 same_element(holds_at(E, T), E):- nonvar(T).
 
-agent_mem(_Agent,Mem0,Mem1,AMem0,AMem1):- Mem0=AMem0,Mem1=AMem1.
-agent_mem(_Agent,Mem0,AMem0):- Mem0=AMem0.
+agent_mem(_Agent, Mem0, Mem1, AMem0, AMem1):- Mem0=AMem0, Mem1=AMem1.
+agent_mem(_Agent, Mem0, AMem0):- Mem0=AMem0.
 
 :- defn_state_getter(agent_thought_model(agent, model)).
 agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
@@ -253,7 +253,7 @@ agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !
 
 :- export(declare/3).
 %:- defn_state_setter(declare(fact)).
-select_from(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, 
+select_from(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !,
    notrace(select_from_list(Fact, State, NewState)).
 select_from(Fact, inst(Object), inst(Object)):- !,
    get_advstate(State),
@@ -321,14 +321,14 @@ declare_0(Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   asserta(Call).
 
 merge_proplists(AddPropList, OldPropList, NewPropList):-
-  append(AddPropList, OldPropList, NewPropListL), list_to_set(NewPropListL,NewPropList),!.
+  append(AddPropList, OldPropList, NewPropListL), list_to_set(NewPropListL, NewPropList), !.
 
 declare_list(Fact, State, NewState) :- assertion(compound(Fact)), assertion(var(NewState)), Fact==[], !, NewState = State.
 declare_list((Fact1, Fact2), State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list([Fact1|Fact2], State, NewState) :- !, declare_list(Fact1, State, MidState), declare_list(Fact2, MidState, NewState).
 declare_list(HasList, State, [NewFront|NewState]) :-
-  HasList=..[F,Object,AddPropList],
-  Old=..[F,Object,OldPropList],
+  HasList=..[F, Object, AddPropList],
+  Old=..[F, Object, OldPropList],
   select_from(Old, State, NewState), !,
   assertion(is_list(OldPropList)),
   merge_proplists(AddPropList, OldPropList, NewPropList),
@@ -348,7 +348,7 @@ declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 maybe_undeclare(Fact, State, NewState):- declared(Fact, State), NewState=State.
 %maybe_undeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
 
-append_toplevel_props(perceptq(Agent, Events),S0,S2):- 
+append_toplevel_props(perceptq(Agent, Events), S0, S2):-
  must_mw1((
  maybe_undeclare(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
@@ -358,8 +358,8 @@ append_toplevel_props(perceptq(Agent, Events),S0,S2):-
 
 replace_declare(Fact, State, NewState):-
  must_mw1((old_figment(Fact, _F, A, Old),
- (undeclare(Old, State, MidState);(State=MidState,ignore(arg(A,Old,[])))),
- nop(episodic_mem($agent,replace(Old,Fact))),
+ (undeclare(Old, State, MidState);(State=MidState, ignore(arg(A, Old, [])))),
+ nop(episodic_mem($agent, replace(Old, Fact))),
  declare(Fact, MidState, NewState))).
 
 %undeclare(Fact, State):- player_local(Fact, Player), !, undeclare(wishes(Player, Fact), State).
@@ -372,7 +372,7 @@ undeclare_always(Fact, State, NewState) :- select_always(Fact, State, NewState).
 
 % declared(Fact, State) :- player_local(Fact, Player), !, declared(wishes(Player, Fact), State).
 
-declared(State) :- % dumpST,throw
+declared(State) :- % dumpST, throw
   (with_mutex(get_advstate, advstate_db(State))).
 
 :- export(declared/2).
@@ -394,7 +394,7 @@ declared_link(Pred2, Fact, type(Type)):- declared_advstate(type_props(Type, Prop
 % declared_link(Pred2, Fact, inst_model(Obj, Type)):- declared_advstate(props(Type, PropList)), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- nonvar(Object), extra_decl(Object, PropList), call(Pred2, Fact, PropList).
 declared_link(Pred2, Fact, Object):- get_advstate(State), direct_props(Object, PropList, State), call(Pred2, Fact, PropList), !.
-declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], 
+declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List],
   current_predicate(_, Call), call(Call), !.
 declared_link(declared, Fact, Object):- callable(Fact), Fact=..[F|List], Call=..[F, Object|List], advstate_db(Call), !.
 declared_link(Pred2, Fact, Object):- var(Object), get_advstate(State), member(Prop, State), arg(1, Prop, Object), arg(2, Prop, PropList),
@@ -501,7 +501,7 @@ is_spatial_rel(in).
 is_spatial_rel(on).
 is_spatial_rel(exit).
 
-update_running(StateInfo):- 
+update_running(StateInfo):-
   ignore((get_advstate(S0), !, declare(StateInfo, S0, S1), !, set_advstate(S1))), !.
 % update_running(_StateInfo).
 
@@ -510,8 +510,8 @@ push_to_state(Info):- must_or_rtrace(push_2_state(Info)).
 
 %push_2_state(State):- push_to_obj(world, State).
 push_2_state(StateInfo):- end_of_list == StateInfo, !.
-%push_2_state(sp(Adjs,TypeS)):- is_list(TypeS),maplist([E]>>push_2_state(sp(Adjs,E)),TypeS).
-%push_2_state(sp(Adjs,Atom)):- push_2_state(type_props(Atom,[inherit(Adjs)])),push_2_state(inherit(Atom)).
+%push_2_state(sp(Adjs, TypeS)):- is_list(TypeS), maplist([E]>>push_2_state(sp(Adjs, E)), TypeS).
+%push_2_state(sp(Adjs, Atom)):- push_2_state(type_props(Atom, [inherit(Adjs)])), push_2_state(inherit(Atom)).
 push_2_state(StateInfo):- is_codelist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- is_charlist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- string(StateInfo), parse_kind(state, StateInfo, Logic), push_2_state(Logic).
@@ -520,8 +520,8 @@ push_2_state(StateInfo):- \+ compound(StateInfo), trace_or_throw(unknown_push_to
 push_2_state(type(Type, Conj)):-  !, push_2_state(props(type(Type), Conj)).
 push_2_state(props(type(Type), Conj)):- !, props_to_list(Conj, List), push_2_state(type_props(Type, List)).
 push_2_state(props(Obj, Conj)):-  props_to_list(Conj, List) -> Conj\== List, !, push_2_state(props(Obj, List)).
-push_2_state(type_props(Obj, Conj0)):-  
-  (adv_subst(equivalent, $class, Obj, Conj0, Conj)-> Conj0\==Conj),!, push_2_state(type_props(Obj, Conj)).
+push_2_state(type_props(Obj, Conj0)):-
+  (adv_subst(equivalent, $class, Obj, Conj0, Conj)-> Conj0\==Conj), !, push_2_state(type_props(Obj, Conj)).
 push_2_state(type_props(Obj, Conj)):-
   (props_to_list(Conj, List) -> Conj\== List), !, push_2_state(type_props(Obj, List)).
 
@@ -532,7 +532,7 @@ push_2_state(assert_text(Text)):- must(eng2log(istate, Text, Translation, [])), 
 push_2_state(assert_text(Where, Text)):- !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
 
 push_2_state(StateInfo):- is_state_info(StateInfo), !, declare(StateInfo, istate, _), update_running(StateInfo).
-push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))),trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
+push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))), trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
 
 correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
 
@@ -540,7 +540,7 @@ check_atom(Atom):- assertion(atom(Atom)).
 
 props_to_list(Nil, []):- assertion(\+ var(Nil)), Nil==[], !.
 props_to_list(end_of_list, []):- !.
-props_to_list(Before, AfterL):- (correct_prop(Before, After) -> Before\==After, listify(After,AfterL)), !.
+props_to_list(Before, AfterL):- (correct_prop(Before, After) -> Before\==After, listify(After, AfterL)), !.
 props_to_list(NC, [nc(NC)]):- \+ compound(NC), !.
 props_to_list(oper(_, _, _), []):- !.
 props_to_list([A|B], ABL):- !,
@@ -554,33 +554,33 @@ props_to_list((A, B), ABL):- !,
 props_to_list(Other, [Other]).
 
 
-make_class_desc_sp(adjs,Atom,Desc):- string_concat("normally ",Atom,Desc).
-make_class_desc_sp(nouns,Atom,Desc):- string_concat("refered to as a ",Atom,Desc).
-make_class_desc_sp(traits,Atom,Desc):- string_concat("related to a ",Atom,Desc).
+make_class_desc_sp(adjs, Atom, Desc):- string_concat("normally ", Atom, Desc).
+make_class_desc_sp(nouns, Atom, Desc):- string_concat("refered to as a ", Atom, Desc).
+make_class_desc_sp(traits, Atom, Desc):- string_concat("related to a ", Atom, Desc).
 
 pos_to_sp(adjs).
 pos_to_sp(nouns).
 %pos_to_sp(traits).
 
-negated_boolean(Last,_NegLast):- \+ atomic(Last),!,fail.
-%negated_boolean(nil,t).
-negated_boolean(Yes,No):- true_2_false(Yes,No),!.
-negated_boolean(No,Yes):- true_2_false(Yes,No),!.
+negated_boolean(Last, _NegLast):- \+ atomic(Last), !, fail.
+%negated_boolean(nil, t).
+negated_boolean(Yes, No):- true_2_false(Yes, No), !.
+negated_boolean(No, Yes):- true_2_false(Yes, No), !.
 
-true_2_false(t,f).
-true_2_false(1,0).
-true_2_false(true,false).
-true_2_false(y,n).
-true_2_false(yes,no).
+true_2_false(t, f).
+true_2_false(1, 0).
+true_2_false(true, false).
+true_2_false(y, n).
+true_2_false(yes, no).
 
-negate_prop(UnNegated,Negated):- \+ compound_gt(UnNegated,0),!,(negated_boolean(UnNegated,Negated)->true;UnNegated=Negated).
-negate_prop(UnNegated,Negated):-
-  functor(UnNegated,F,A),arg(A,UnNegated,Last),
-  negated_boolean(Last,NegLast),!,
+negate_prop(UnNegated, Negated):- \+ compound_gt(UnNegated, 0), !, (negated_boolean(UnNegated, Negated)->true;UnNegated=Negated).
+negate_prop(UnNegated, Negated):-
+  functor(UnNegated, F, A), arg(A, UnNegated, Last),
+  negated_boolean(Last, NegLast), !,
   UnNegated=..[F|Args],
-  append(Left,[_],Args),
-  append(Left,[NegLast],NewArgs),
-  Negated=..[F|NewArgs],!.
+  append(Left, [_], Args),
+  append(Left, [NegLast], NewArgs),
+  Negated=..[F|NewArgs], !.
 
 
 correct_prop(NC, NO):- var(NC), !, NC = NO.
@@ -591,15 +591,15 @@ correct_prop( inherit(Type), inherit(Type, t)):- check_atom(Type), !.
 correct_prop(     isa(Type), inherit(Type, t)):- check_atom(Type), !.
 correct_prop(    isnt(Type), inherit(Type, f)):- check_atom(Type), !.
 correct_prop(NC, nc(NC)):- \+ compound(NC), !.
-correct_prop(       ~(Type), Negated):- correct_prop( Type, UnNegated), negate_prop(UnNegated,Negated),!.
+correct_prop(       ~(Type), Negated):- correct_prop( Type, UnNegated), negate_prop(UnNegated, Negated), !.
 correct_prop(       ~(Type), inherit(Type, f)):- atom(Type), !.
-correct_prop(AdjsInfo, sp(Adjs,Info)):- pos_to_sp(Adjs), compound_name_arguments(AdjsInfo,Adjs,[Info]).
+correct_prop(AdjsInfo, sp(Adjs, Info)):- pos_to_sp(Adjs), compound_name_arguments(AdjsInfo, Adjs, [Info]).
 
-correct_prop(sp(Adjs,TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs),TypeS,Out).
-correct_prop(sp(Adjs,Atom), Out):-  check_atom(Atom),   
-  push_to_state(type_props(Atom,[traits(Atom),sp=Adjs])),!,
-  % make_class_desc_sp(Adjs,Atom,ClassDesc), push_to_state(type_props(Atom,[class_desc([ClassDesc])])),
-  must(correct_prop(inherit(Atom),Out)).
+correct_prop(sp(Adjs, TypeS), Out):- is_list(TypeS), must_maplist(correct_some(Adjs), TypeS, Out).
+correct_prop(sp(Adjs, Atom), Out):-  check_atom(Atom), 
+  push_to_state(type_props(Atom, [traits(Atom), sp=Adjs])), !,
+  % make_class_desc_sp(Adjs, Atom, ClassDesc), push_to_state(type_props(Atom, [class_desc([ClassDesc])])),
+  must(correct_prop(inherit(Atom), Out)).
 
 correct_prop(HPRED, h(FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
 correct_prop(HPRED, h(F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
@@ -614,16 +614,16 @@ correct_prop( (has_rel(Verb)), has_rel(Verb, t)):- nop(check_atom(Verb)).
 correct_prop(~(has_rel(Verb)), has_rel(Verb, f)):- nop(check_atom(Verb)).
 correct_prop(  Other, Other).
 
-correct_some(Adjs,E,O):- check_atom(Adjs), must(correct_prop(sp(Adjs,E),O)).
+correct_some(Adjs, E, O):- check_atom(Adjs), must(correct_prop(sp(Adjs, E), O)).
 
 
-episodic_mem(x(floyd,_),_Figment) :-!.
-episodic_mem(Agent,Figment) :- is_list(Figment),!,forall(member(F,Figment),episodic_mem(Agent,F)).
-episodic_mem(Agent,Figment):- compound(Figment), arg(1,Figment,Ag), Ag==Agent,!, note_episodic_mem(Figment).
-episodic_mem(Agent,Figment) :- note_episodic_mem(episodic_mem(Agent,Figment)),!.
+episodic_mem(x(floyd, _), _Figment) :-!.
+episodic_mem(Agent, Figment) :- is_list(Figment), !, forall(member(F, Figment), episodic_mem(Agent, F)).
+episodic_mem(Agent, Figment):- compound(Figment), arg(1, Figment, Ag), Ag==Agent, !, note_episodic_mem(Figment).
+episodic_mem(Agent, Figment) :- note_episodic_mem(episodic_mem(Agent, Figment)), !.
 
 note_episodic_mem(Figment):-
-  notrace((format('~N',[]),in_color(pink,print_tree(Figment)),format('~N',[]),overwrote_prompt)).
+  notrace((format('~N', []), in_color(pink, print_tree(Figment)), format('~N', []), overwrote_prompt)).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 

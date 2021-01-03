@@ -106,7 +106,7 @@ adv_serve_client(InStream, OutStream, Host, Peer, Alias) :-
  set_stream(user_output, close_on_abort(false)),
 
  format(OutStream,
-  'Welcome to the SWI-Prolog Adventure Server!~n~q~n~n',
+  'Welcome to the SWI-Prolog Adventure Server!~n~q~n~n', 
   [adv_serve_client(Id, Alias, InStream, OutStream, Host, Peer)]), !,
  call_cleanup(srv_catch(adventure_client_process(Id, Alias, InStream, OutStream, Host, Peer)),
    adventure_client_cleanp(Id, Alias, InStream, OutStream)).
@@ -172,7 +172,7 @@ accept_agent(Id, Alias, InStream, OutStream, Host, Peer, Agent, Name):-
    retractall(mu_global:console_io_player(_, OutStream, _)),
    retractall(mu_global:console_io_player(_, _, Agent)),
 
-   retractall(mu_global:console_tokens(Agent, _)),   
+   retractall(mu_global:console_tokens(Agent, _)), 
    retractall(mu_global:wants_quit( _, _, Agent)),
    retractall(mu_global:agent_discon(Agent)),
    asserta(mu_global:console_io_player(InStream, OutStream, Agent)),
@@ -227,7 +227,7 @@ adv_tlnet_readloop(Id, InStream, OutStream, Agent):-
 
 
 adv_tlnet_words(Id, InStream, Agent, Words0):-
-  exclude(=(' '),Words0,Words),Words0\==Words,!,
+  exclude(=(' '), Words0, Words), Words0\==Words, !,
   adv_tlnet_words(Id, InStream, Agent, Words).
 adv_tlnet_words(Id, InStream, Agent, []):-
   adv_tlnet_words( Id, InStream, Agent, [wait]).
@@ -235,7 +235,7 @@ adv_tlnet_words(Id, InStream, Agent, [quit]):-
   adv_tlnet_words(Id, InStream, Agent, end_of_file).
 adv_tlnet_words(Id, InStream, Agent, end_of_file):-
   asserta(mu_global:wants_quit(Id, InStream, Agent)),
-  dbug(always, '~q~n', [mu_global:wants_quit(Id, InStream, Agent)]),!.
+  dbug(always, '~q~n', [mu_global:wants_quit(Id, InStream, Agent)]), !.
 
 adv_tlnet_words(_Id, _InStream, _Agent, [prolog]):- !, prolog.
 adv_tlnet_words(Id, InStream, Agent, Words):-

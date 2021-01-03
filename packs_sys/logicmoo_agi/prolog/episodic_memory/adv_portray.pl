@@ -19,9 +19,9 @@ get_current_portray_level(Level) :- flag('$adv_pp_level', Level, Level), Level=L
 % adv_pretty_print(Term):- format(current_output, '~w', [Term]).
 adv_pretty_print(Term):-
    notrace((setup_call_cleanup(
-        (flag('$adv_pp_level', Level, Level+1),push_operators([op(0, xfx, props),op(0, xfx, type)],Undo)),
+        (flag('$adv_pp_level', Level, Level+1), push_operators([op(0, xfx, props), op(0, xfx, type)], Undo)),
            \+ \+ (portray_vars:pretty_numbervars(Term, Term2), adv_pretty_print(Level, Term2)),
-          (pop_operators(Undo),flag('$adv_pp_level', _, Level))))), !.
+          (pop_operators(Undo), flag('$adv_pp_level', _, Level))))), !.
 
 adv_pretty_print(Level, Term):-
   (is_list(Term) ; (Level ==0)), !,
@@ -109,9 +109,23 @@ portray_string(Type, Term):- current_prolog_flag(double_quotes, Type), format('"
 :- thread_local(t_l:no_english/0).
 
 adv_prolog_portray_hook(Term) :- \+ tracing, \+ t_l:no_english, adv_prolog_portray(Term), !.
-adv_prolog_portray_hook(Term) :- tracing, is_list(Term),member(E,Term),compound(E),
-  ((E = inst(Some), format('[~w|...]',[inst(Some)]));(E = structure_label(Some), format('[~w|...]',[Some]))),!.
+adv_prolog_portray_hook(Term) :- tracing, is_list(Term), member(E, Term), compound(E),
+  ((E = inst(Some), format('[~w|...]', [inst(Some)]));(E = structure_label(Some), format('[~w|...]', [Some]))), !.
 
-user:portray(Term):- notrace(adv_prolog_portray_hook(Term)),!.
+user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
 
+no_memlists(Term):- simplify_dbug(Term,Term1), map_tree_pred(simplify_memlists,Term1,Term2),!, Term\=@=Term2, writeq(Term2),!.
+
+map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2), Arg1\==Arg2,!.
+map_tree_pred(_ ,Arg1,Arg2):- \+ compound(Arg1), !, Arg2=Arg1.
+map_tree_pred(Pred,Arg1,Arg2):- 
+  compound_name_arguments(Arg1,F1,ArgS1),
+  maplist(map_tree_pred(Pred),ArgS1,ArgS2),
+  compound_name_arguments(Arg2,F1,ArgS2).
+
+simplify_memlists(Term,E):- is_list(Term),member(E,Term),compound(E), member(E,[inst(_),memlist_for(_)]),!.
+
+user:portray(Term):- notrace(no_memlists(Term)), !.
+
+:- set_prolog_flag(debugger_write_options,[quoted(true),portray(true),max_depth(5000),attributes(dots)]).
 

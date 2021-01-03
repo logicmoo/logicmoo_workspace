@@ -35,14 +35,14 @@ include_functor(List, P):- compound(P), safe_functor(P, F, _), member(F, List), 
 
 :- defn_state_setter( invoke_metacmd( agent, action)).
 
-find_world(World,W0,W1,S0):- wdmsg(warn(find_world(World,W0,W1,S0))), W0=S0.
+find_world(World, W0, W1, S0):- wdmsg(warn(find_world(World, W0, W1, S0))), W0=S0.
 
-save_world(World,W1,S0,S1):- wdmsg(warn(save_world(World,W1,S0,S1))), S1=W1.
+save_world(World, W1, S0, S1):- wdmsg(warn(save_world(World, W1, S0, S1))), S1=W1.
 
 invoke_metacmd(_Doer, in_world(Agent, World, Cmd), S0, S1):- !, find_world(World, W0, W1, S0),
  invoke_metacmd(Agent, Cmd, W0, W1), !,
-  save_world(World,W1,S0,S1).
- 
+  save_world(World, W1, S0, S1).
+
 invoke_metacmd(Doer, quit(Agent)) -->
  replace_declare(wishes(Agent, quit)),
  {player_format(Doer, 'logging off~w ~n', [Agent]),
@@ -183,21 +183,21 @@ invoke_metacmd(Doer, PropCmd, S0, S1) :-
  action_verb_agent_args(PropCmd, setprop, _, [Object | Args]), Prop =.. Args,
  must_security_of(Doer, wizard),
  setprop(Object, Prop, S0, S1),
- player_format(Doer, 'Set ~p ~p.~n', [Object,Prop]),
+ player_format(Doer, 'Set ~p ~p.~n', [Object, Prop]),
  invoke_metacmd(Doer, properties(Object), S1, S1).
 
 invoke_metacmd(Doer, PropCmd, S0, S1) :-
  action_verb_agent_args(PropCmd, updateprop, _, [Object | Args]), Prop =.. Args,
  must_security_of(Doer, wizard),
  updateprop(Object, Prop, S0, S1),
- player_format(Doer, 'Update ~p ~p.~n', [Object,Prop]),
+ player_format(Doer, 'Update ~p ~p.~n', [Object, Prop]),
  invoke_metacmd(Doer, properties(Object), S1, S1).
 
 invoke_metacmd(Doer, DelProp, S0, S1) :-
  action_verb_agent_args(DelProp, delprop, _, [Object | Args]), Prop =.. Args,
  must_security_of(Doer, wizard),
  delprop(Object, Prop, S0, S1),
- player_format(Doer, 'Deleted ~p ~p.~n', [Object,Prop]),
+ player_format(Doer, 'Deleted ~p ~p.~n', [Object, Prop]),
  invoke_metacmd(Doer, properties(Object), S1, S1).
 
 invoke_metacmd(Doer, Properties, S0, S0) :-

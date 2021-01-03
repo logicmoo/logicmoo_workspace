@@ -22,7 +22,7 @@
 
 :- discontiguous(implications/4).
 
-implications( does, do_go_dir(Agent, Walk, ExitName),
+implications( does, dO('go_dir', Agent, Walk, ExitName),
      [ h(In, Agent, Here), h(exit(ExitName), Here, There) ],
      [ event(moving_in_dir(Agent, Walk, ExitName, In, Here, In, There)) ]):- fail.
 
@@ -48,9 +48,9 @@ oper_db(Self, Action, Preconds, Effects):- fail, % Hooks to KR above
   sequenced(Self, Whole),
  append(Preconds, [did(Action)|Effects], Whole).
 
-oper_db(Agent, do_nothing(Agent), [], []).
+oper_db(Agent, dO('wait', Agent), [], []).
 
-oper_db(Agent, do_go_dir(Agent, Walk, ExitName),
+oper_db(Agent, dO('go_dir', Agent, Walk, ExitName),
    [ Here \= Agent, There \= Agent, Here \= There,
     k(In, Agent, Here),
     b(exit(ExitName), Here, _),
@@ -73,7 +73,7 @@ oper_db(Agent, do_go_dir(Agent, Walk, ExitName),
 
 
 % Return an operator after substituting Agent for Agent.
-oper_db(Agent, do_go_dir(Agent, _Walk, ExitName),
+oper_db(Agent, dO('go_dir', Agent, _Walk, ExitName),
      [ b(in, Agent, Here),
        b(exit(ExitName), Here, There),
        Here \= Agent, There \= Agent, Here \= There
@@ -84,7 +84,7 @@ oper_db(Agent, do_go_dir(Agent, _Walk, ExitName),
 
 % equiv( percept_local(Here, did_depart(Agent, In, Here, Walk, ExitName))) ~h( in, Agent, Here)
 
-oper_db(Agent, do_go_dir(Agent, Walk, Escape),
+oper_db(Agent, dO('go_dir', Agent, Walk, Escape),
      [ Object \= Agent, Here \= Agent,
        k(OldIn, Agent, Object),
        h(NewIn, Object, Here),
@@ -121,7 +121,7 @@ oper_db(world, handle_events(Here),
 
 % deducer Agents who preceive leavers from some exit believe the did_depart point is an exit
 oper_db(Agent, percept(Agent, did_depart(Someone, In, Here, Walk, ExitName)),
- [ did( do_go_dir(Someone, Walk, ExitName)),
+ [ did( dO('go_dir', Someone, Walk, ExitName)),
        prop(Agent, inherited(deducer)),
        h(In, Agent, Here) ],
      [ believe(Agent, h(exit(ExitName), Here, _)),
@@ -129,25 +129,25 @@ oper_db(Agent, percept(Agent, did_depart(Someone, In, Here, Walk, ExitName)),
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
 oper_db(Agent, percept(Agent, did_arrive(Someone, In, Here, Walk, ExitName)),
- [ did( do_go_dir(Someone, Walk, ExitName)),
+ [ did( dO('go_dir', Someone, Walk, ExitName)),
        prop(Agent, inherited(deducer)),
        believe(Agent, h(In, Agent, Here)) ],
 
      [ believe(Agent, h(exit(ExitName), Here, _)),
- believe(Agent, did( do_go_dir(Someone, Walk, ExitName))), % also belive someone did soething to make it happen
+ believe(Agent, did( dO('go_dir', Someone, Walk, ExitName))), % also belive someone did soething to make it happen
        believe(Agent, h(In, Someone, Here)),
        believe(Agent, prop(Someone, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
 oper_db(Agent, percept(Agent, did_arrive(Someone, In, Here, Walk, ExitName)),
- [ did( do_go_dir(Someone, Walk, ExitName)),
+ [ did( dO('go_dir', Someone, Walk, ExitName)),
        isa(Agent, deducer),
        b(Agent,
  [ percept_local(There, did_depart(Someone, In, There, Walk, EnterName)),
                 in(Agent, Here)]) ],
      [ b(Agent,
                 [exit(ExitName, Here, There),
- did( do_go_dir(Someone, Walk, EnterName)),
+ did( dO('go_dir', Someone, Walk, EnterName)),
                 in(Someone, Here),
                 isa(Someone, actor)])]):- \+ only_goto.
 
@@ -156,7 +156,7 @@ oper_db(Agent, percept(Agent, did_arrive(Someone, In, Here, Walk, ExitName)),
 % h = is really true
 % b = is belived
 % k = is belived and really true
-oper_db(Agent, do_take(Agent, Thing), % from same room
+oper_db(Agent, dO('take', Agent, Thing), % from same room
   [ Thing \= Agent, exists(Thing),
     There \= Agent,
    k(takeable, Agent, Thing),
@@ -166,7 +166,7 @@ oper_db(Agent, do_take(Agent, Thing), % from same room
       moves( At, Thing, There, take, held_by, Thing, Agent),
       k(held_by, Thing, Agent)]):- \+ only_goto.
 
-oper_db(Agent, do_drop(Agent, Thing),
+oper_db(Agent, dO('drop', Agent, Thing),
   [ Thing \= Agent, exists(Thing),
       k(held_by, Thing, Agent),
       k(At, Agent, Where)],
@@ -174,7 +174,7 @@ oper_db(Agent, do_drop(Agent, Thing),
       moves(held_by, Thing, Agent, drop, At, Thing, Where),
       k(At, Thing, Where)] ):- \+ only_goto.
 
-oper_db(Agent, do_put(Agent, Thing, Relation, Where), % in somewhere
+oper_db(Agent, dO('put', Agent, Thing, Relation, Where), % in somewhere
   [ Thing \= Agent, exists(Thing), exists(Where),
       k(held_by, Thing, Agent),
       k(touchable, Agent, Where),
@@ -185,7 +185,7 @@ oper_db(Agent, do_put(Agent, Thing, Relation, Where), % in somewhere
       k(Relation, Thing, Where)] ):- \+ only_goto.
 
 
-oper_db(Agent, do_give(Agent, Thing, Recipient), % in somewhere
+oper_db(Agent, dO('give', Agent, Thing, Recipient), % in somewhere
   [ Thing \= Agent, Recipient \= Agent,
       exists(Thing), exists(Recipient),
       k(held_by, Thing, Agent),
@@ -195,7 +195,7 @@ oper_db(Agent, do_give(Agent, Thing, Recipient), % in somewhere
       moves(held_by, Thing, Agent, give, held_by, Thing, Recipient),
       k(held_by, Thing, Recipient)] ):- \+ only_goto.
 
-oper_db(Agent, do_tell(Agent, Player, [ please, give, Recipient, the(Thing)]),
+oper_db(Agent, dO('tell', Agent, Player, [ please, give, Recipient, the(Thing)]),
     [   Recipient \= Player, Agent \= Player,
         Thing \= Agent, Thing \= Recipient, Thing \= Player,
         exists(Thing), exists(Recipient), exists(Player),

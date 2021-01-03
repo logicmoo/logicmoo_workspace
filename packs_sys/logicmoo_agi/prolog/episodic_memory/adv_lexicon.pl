@@ -13,7 +13,7 @@ thetaRole(acceep, acceep_0, finally_accept_tt, 1, subj_tt, human_tt, "", "", 0).
 
 thetaRole(acceep, acceep_1, accept_tt, 1, subj_tt, human_tt, "", "", 0).
 
-% joe accept from  f by subj 
+% joe accept from  f by subj
 thetaRole(acceep, acceep_2, accept_from_tt, 1, subj_tt, animal_tt, "", "", 0).
 thetaRole(acceep, acceep_2, accept_from_tt, 2, iobj_tt, animal_tt, "from", "", 1).
 thetaRole(acceep, acceep_2, accept_from_tt, 3, obj_tt, object_tt, "", "", 0).

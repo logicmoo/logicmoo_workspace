@@ -36,7 +36,7 @@
  "Substitute the end of seq."
  (let ((len1 (length seq))
        (len2 (length from)))
-  (when (and (>= len1 len2) 
+  (when (and (>= len1 len2)
              (equal (subseq seq (- len1 len2)) from))
    (concatenate 'string (subseq seq 0 (- len1 len2)) to)))) ;'
 
@@ -146,11 +146,11 @@
     (ends-with fe ?NOUN) (cut) (replace-end ?NOUN fe ves ?PLURAL))
 
 (*- (plural ?NOUN ?PLURAL) (noun ?NOUN) (cut) (concat ?NOUN s ?PLURAL))
- 
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Articles and Similar  ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
+
 (*- (article a))
 (*- (article an))
 (*- (article the))
@@ -188,7 +188,7 @@
  ;; Punctuation ;;
  ;;;;;;;;;;;;;;;;;
 
-(*- (comma |,|))
+(*- (comma |, |))
 (*- (dot |.|))
 
 (defparameter punctuations '(#\. #\, #\! #\? #\;)
@@ -203,7 +203,7 @@
 	     (symbol-name word)
 	     word)))
 
-(*- (punctuation |,|))
+(*- (punctuation |, |))
 (*- (punctuation |.|))
 (*- (punctuation ?PUNCT) (lop (punctuation ?PUNCT)))
 
@@ -263,17 +263,17 @@
 	    (run1 (gensym))
 	    (run2 (gensym))
 	    (result (gensym)))
-    `(let* ((,real1 (get-internal-real-time))  ; `
-	      (,run1 (get-internal-run-time))
-	      (,result (progn ,@forms))
-	      (,run2 (get-internal-run-time))
-	      (,real2 (get-internal-real-time)))
+    `(let* ((, real1 (get-internal-real-time))  ; `
+	      (, run1 (get-internal-run-time))
+	      (, result (progn , @forms))
+	      (, run2 (get-internal-run-time))
+	      (, real2 (get-internal-real-time)))
 	 (format *debug-io* ";;; Computation took:~%")
 	 (format *debug-io* ";;;  ~f seconds of real time~%"
-		 (/ (- ,real2 ,real1) internal-time-units-per-second))
+		 (/ (- , real2 , real1) internal-time-units-per-second))
 	 (format t ";;;  ~f seconds of run time~%"
-		 (/ (- ,run2 ,run1) internal-time-units-per-second))
-	 ,result)))
+		 (/ (- , run2 , run1) internal-time-units-per-second))
+	 , result)))
 
  ;;;;;;;;;;;;;;;;;;;;;;
  ;; Syntagms Parsers ;;
@@ -292,7 +292,7 @@
     (is ?RES (lop (add-tag ?SYNTAGM ?TAG))))
 
 (defun add-tag-word (word tag)
-  (cons (intern (symbol-name tag) :keyword) 
+  (cons (intern (symbol-name tag) :keyword)
 	(cons word nil)))
 
 (*- (add-tag-word ?WORD ?TAG ?RES)
@@ -319,7 +319,7 @@
 (defun not-in-options (if-not-opts in-opts)
   "Check if every if-not-option is NOT satisfied."
   (every (lambda (opt)
-	   (not (find opt in-opts)))	 
+	   (not (find opt in-opts)))	
 	 if-not-opts))
 
 (*- (not-in-options () ?IN-OPTS) (cut))
@@ -368,19 +368,19 @@
 	(ends (remove-if-not (lambda (el) (eq (car el) :end))
 			     opts-and-arcs)))
 
-    `(progn (quote (,name ,docstr))  ; `
+    `(progn (quote (, name , docstr))  ; `
 
-            (push ',name detectors) ; add to known detectors 
-	    
-	    ,@(mapcar (lambda (state) ; start states
+            (push ', name detectors) ; add to known detectors
+	  
+	    , @(mapcar (lambda (state) ; start states
 			(list '*- (list start-name state)))
 		      (cdar starts))
-	    
-	    ,@(mapcar (lambda (state) ; valid end states
+	  
+	    , @(mapcar (lambda (state) ; valid end states
 			(list '*- (list end-name state)))
 		      (cdar ends))
 
-	    ,@(mapcar (lambda (arc) ; arcs
+	    , @(mapcar (lambda (arc) ; arcs
 			
 			(let* ((type  (first arc))
 			       (from  (second arc))
@@ -392,62 +392,62 @@
 			       (set-opt    (cdr (assoc :set    (remove-if-not #'listp arc))))
 			       (unset-opt  (cdr (assoc :unset  (remove-if-not #'listp arc))))
 			       (label      (cdr (assoc :label  (remove-if-not #'listp arc)))))
-			  
+			
 			  (cond ((eq type :jump)        ; a jump arc
-				 `(*- (,arc-name ,from ,to ?PHRASE ,label ?PHRASE ?IN-OPT ?OUT-OPT)				     
-				      ,@(when if-opt     (list `(in-options     ,if-opt     ?IN-OPT))) 
-				      ,@(when if-not-opt (list `(not-in-options ,if-not-opt ?IN-OPT)))
-				      ,@(if (or unset-opt set-opt)
-					    (list `(unset-set-options ,unset-opt ,set-opt ?IN-OPT ?OUT-OPT))
+				 `(*- (, arc-name , from , to ?PHRASE , label ?PHRASE ?IN-OPT ?OUT-OPT)				   
+				      , @(when if-opt     (list `(in-options     , if-opt     ?IN-OPT)))
+				      , @(when if-not-opt (list `(not-in-options , if-not-opt ?IN-OPT)))
+				      , @(if (or unset-opt set-opt)
+					    (list `(unset-set-options , unset-opt , set-opt ?IN-OPT ?OUT-OPT))
 					    (list `(= ?IN-OPT ?OUT-OPT)))))
 				
 				((find cat detectors)   ; arc based on a detector
-				 `(*- (,arc-name ,from ,to ?PHRASE ?SYNTAGM ?REST ?IN-OPT ?OUT-OPT)
-				      ,@(when if-opt     (list `(in-options     ,if-opt     ?IN-OPT))) 
-				      ,@(when if-not-opt (list `(not-in-options ,if-not-opt ?IN-OPT)))
+				 `(*- (, arc-name , from , to ?PHRASE ?SYNTAGM ?REST ?IN-OPT ?OUT-OPT)
+				      , @(when if-opt     (list `(in-options     , if-opt     ?IN-OPT)))
+				      , @(when if-not-opt (list `(not-in-options , if-not-opt ?IN-OPT)))
 
 				      (lop (not-eq ?PHRASE nil))
-				      (,(symbol-concat cat '-detector) ?PHRASE ?SYNTAGM ?REST ?IN-OPT ?TEMP-OPT)
-				      
-				      ,@(if (or unset-opt set-opt)
-					    (list `(unset-set-options ,unset-opt ,set-opt ?TEMP-OPT ?OUT-OPT))
+				      (, (symbol-concat cat '-detector) ?PHRASE ?SYNTAGM ?REST ?IN-OPT ?TEMP-OPT)
+				    
+				      , @(if (or unset-opt set-opt)
+					    (list `(unset-set-options , unset-opt , set-opt ?TEMP-OPT ?OUT-OPT))
 					    (list `(= ?TEMP-OPT ?OUT-OPT)))))
 				
 				(t                      ; arc based on a simple prolog fact
-				 `(*- (,arc-name ,from ,to ?PHRASE ?TAGGED-WORD ?REST ?IN-OPT ?OUT-OPT)
-				      ,@(when if-opt     (list `(in-options     ,if-opt     ?IN-OPT))) 
-				      ,@(when if-not-opt (list `(not-in-options ,if-not-opt ?IN-OPT)))
-				      
+				 `(*- (, arc-name , from , to ?PHRASE ?TAGGED-WORD ?REST ?IN-OPT ?OUT-OPT)
+				      , @(when if-opt     (list `(in-options     , if-opt     ?IN-OPT)))
+				      , @(when if-not-opt (list `(not-in-options , if-not-opt ?IN-OPT)))
+				    
 				      (first-rest ?PHRASE ?WORD ?REST)
-				      
-				      ,@(mapcar (lambda (fact)        ; for this type of arc 
+				    
+				      , @(mapcar (lambda (fact)        ; for this type of arc
 						  (list fact '?WORD)) ; multiple facts are permitted
 						facts)
-				      
-				      (add-tag-word ?WORD ,(first facts) ?TAGGED-WORD)
-				      
-				      ,@(if (or unset-opt set-opt) 
-					    (list `(unset-set-options ,unset-opt ,set-opt ?IN-OPT ?OUT-OPT))
+				    
+				      (add-tag-word ?WORD , (first facts) ?TAGGED-WORD)
+				    
+				      , @(if (or unset-opt set-opt)
+					    (list `(unset-set-options , unset-opt , set-opt ?IN-OPT ?OUT-OPT))
 					    (list `(= ?IN-OPT ?OUT-OPT))))))))
-			  
+			
 			  arcs)
 
-	    (*- (,detector-name ?PHRASE ?FINAL-SYNTAGM ?REST ?IN-OPT ?OUT-OPT)  ; used directly by the user
-	    	(,start-name ?STATE)                                            ; start from a valid state
-	    	(,detector-name ?PHRASE ?STATE ?SYNTAGM ?REST ?END-STATE ?IN-OPT ?OUT-OPT)
+	    (*- (, detector-name ?PHRASE ?FINAL-SYNTAGM ?REST ?IN-OPT ?OUT-OPT)  ; used directly by the user
+	    	(, start-name ?STATE)                                            ; start from a valid state
+	    	(, detector-name ?PHRASE ?STATE ?SYNTAGM ?REST ?END-STATE ?IN-OPT ?OUT-OPT)
 		(add-tag ?SYNTAGM  ?END-STATE    ?SYNTAGM2)                     ; add the state tag (only if the state is a tag)
-		(add-tag ?SYNTAGM2 ,key-name ?FINAL-SYNTAGM))                   ; add the tag to the syntagm
+		(add-tag ?SYNTAGM2 , key-name ?FINAL-SYNTAGM))                   ; add the tag to the syntagm
 
-	    (*- (,detector-name ?PHRASE ?STATE ?SYNTAGM ?REST ?END-STATE ?IN-OPT ?OUT-OPT)
-	    	(,arc-name ?STATE ?NEW-STATE ?PHRASE ?HEAD-SYNTAGM ?REST-PHRASE ?IN-OPT ?NEW-IN-OPT)
-	    	(,detector-name ?REST-PHRASE ?NEW-STATE ?REST-SYNTAGM ?REST ?END-STATE ?NEW-IN-OPT ?OUT-OPT)
+	    (*- (, detector-name ?PHRASE ?STATE ?SYNTAGM ?REST ?END-STATE ?IN-OPT ?OUT-OPT)
+	    	(, arc-name ?STATE ?NEW-STATE ?PHRASE ?HEAD-SYNTAGM ?REST-PHRASE ?IN-OPT ?NEW-IN-OPT)
+	    	(, detector-name ?REST-PHRASE ?NEW-STATE ?REST-SYNTAGM ?REST ?END-STATE ?NEW-IN-OPT ?OUT-OPT)
 	    	(prepend-not-null-one ?HEAD-SYNTAGM ?REST-SYNTAGM ?SYNTAGM))
 
-	    (*- (,detector-name ?PHRASE ?STATE () ?PHRASE ?STATE ?IN-OPT ?IN-OPT) ; no more arcs:
-		(,end-name ?STATE))                                ; are we in a valid end state?
-	    	    
+	    (*- (, detector-name ?PHRASE ?STATE () ?PHRASE ?STATE ?IN-OPT ?IN-OPT) ; no more arcs:
+		(, end-name ?STATE))                                ; are we in a valid end state?
+	    	  
 	    ; no more arcs, not in valid end state: fail miserably...
-	    
+	  
 	    )
     ))
 
@@ -466,7 +466,7 @@
 
   (:arc 1 2 adj)
   (:arc 2 2 adj) ;one or more adjectives
-  
+
   (:arc 2 3 conj)
   (:arc 2 3 comma)
   (:arc 3 3 conj)
@@ -480,7 +480,7 @@
   (:start 0) (:end 1)
   (:arc 0 1 adjectivable)
   (:arc 0 1 possible-noun)
-  (:arc 1 1 adjectivable) 
+  (:arc 1 1 adjectivable)
   (:arc 1 1 possible-noun))
 
 (detector comparatival
@@ -498,7 +498,7 @@
   "Recognize prepositional syntagms."
   (:start 0) (:end 2)
   (:arc 0 1 prep (:set :nested-nominal))
-  
+
   (:jump 1 2 (:if :gap) (:unset :gap :nested-nominal) (:label :gap))
 
   (:arc 1 2 nominal))
@@ -672,7 +672,7 @@
   ; transitive
 
   (:jump 22 23 (:if :gap) (:unset :gap) (:label :gap))
-  
+
   (:arc 22 23 nominal) ; the nominal part is NOT optional
 
   (:arc 23 24 adverbal)
@@ -724,17 +724,17 @@
   "Dump the sentence in dot format."
   (labels ((dot-output-inner (sentence &optional (coord '()))
 	     (cond ((keywordp sentence)
-		    (format t "~&\"~a ~a\" [style=filled,color=yellow]" sentence (reverse coord)))
-		   
+		    (format t "~&\"~a ~a\" [style=filled, color=yellow]" sentence (reverse coord)))
+		 
 		   ((symbolp sentence)
-		    (format t "~&\"~a ~a\" [shape=box,style=filled,color=\".7 .3 1.0\"]~%~%" sentence (reverse coord)))
+		    (format t "~&\"~a ~a\" [shape=box, style=filled, color=\".7 .3 1.0\"]~%~%" sentence (reverse coord)))
 
 		   ((equal sentence '(:gap))
-		    (format t "~&\"~a ~a\" [style=filled,color=red]" (first sentence) (reverse coord)))
+		    (format t "~&\"~a ~a\" [style=filled, color=red]" (first sentence) (reverse coord)))
 	
 		   ((listp sentence)
-		    (loop for i from 1 below (length sentence) 
-		       do (progn (format t "~&\"~a ~a\" -> \"~a ~a\"~%" 
+		    (loop for i from 1 below (length sentence)
+		       do (progn (format t "~&\"~a ~a\" -> \"~a ~a\"~%"
 					 (first sentence) (reverse coord)
 					 (if (listp (nth i sentence))
 					     (first (nth i sentence))
@@ -766,26 +766,26 @@
       (cdr (assoc '?RES (pl-solve-one (list (list 'parse sentence '?RES)))))))  ; '
 
 
-(defun repl () 
+(defun repl ()
   "Interface."
-  
+
   #+SBCL (sb-ext:gc :full t)
 
   (format t "~&input> ")
   (finish-output nil)
-  
+
   (let ((sentence (read-sentence)))
-    
+  
     (cond ((equal sentence '(dot output))     ; enable/disable dot output mode
 	   (setf dot-output-trigger (not dot-output-trigger)))
 
 	  ((equal sentence '(multiple trees)) ; enable/disable multiple parsing trees
 	   (setf multiple-trees-trigger (not multiple-trees-trigger)))
-	  
+	
 	  (t (if dot-output-trigger           ; parse sentence
 		 (dot-output (parse-sentence sentence))
-		 (print (parse-sentence sentence)))))) 
-  
+		 (print (parse-sentence sentence))))))
+
   (finish-output nil)
   (repl))
 

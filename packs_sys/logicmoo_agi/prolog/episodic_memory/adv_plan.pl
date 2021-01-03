@@ -34,8 +34,8 @@ action_handle_goals(Agent, Mem0, Mem1):-
 action_handle_goals(Agent, Mem0, Mem9) :-
  thought_check(Agent, current_goals(Agent, [G0|GS]), Mem0),
  replace_thought(Agent, current_goals(Agent, []), Mem0, Mem2),
- dbug(planner, '~w: Can`t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]), 
- memorize_appending(Agent,goals_skipped(Agent,[G0|GS]), Mem2, Mem9), !.
+ dbug(planner, '~w: Can`t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]),
+ memorize_appending(Agent, goals_skipped(Agent, [G0|GS]), Mem2, Mem9), !.
 
 
 forget_satisfied_goals(Agent, Mem0, Mem3):-
@@ -47,7 +47,7 @@ forget_satisfied_goals(Agent, Mem0, Mem3):-
  Satisfied \== [],
  replace_thought(Agent, current_goals(Agent, Unsatisfied), Mem0, Mem2),
  dbug(planner, '~w Goals some Satisfied: ~p.  Unsatisfied: ~p.~n', [Agent, Satisfied, Unsatisfied]),
- memorize_appending(Agent,goals_satisfied(Agent,Satisfied), Mem2, Mem3), !.
+ memorize_appending(Agent, goals_satisfied(Agent, Satisfied), Mem2, Mem3), !.
 
 has_unsatisfied_goals(Agent, Mem0, Mem0):-
  agent_thought_model(Agent, ModelData, Mem0),
@@ -75,13 +75,13 @@ Person think doing what explorers do will make persons goal satisfaction easier.
 Person thinks being an explorer means to find unexplored exits and travel to them.
 Person thinks exits are known by looking.
 Person goal is to have looked
-Person the way to satifiy the goal to have looked is to: add_todo( Person, look(Person))
-Person DOES look(Person)
+Person the way to satifiy the goal to have looked is to: add_todo( Person, dO('look', Person))
+Person DOES dO('look', Person)
 Person notices exits: north, south, east, west.
 Person thinks north is unexplored
 Person thinks going north will be acting like an explorer
 Person goal is to go north
-Person makes plan to go north.. the plan is very simple: [ do_go_dir(Person, walk, north)]
+Person makes plan to go north.. the plan is very simple: [ dO('go_dir', Person, walk, north)]
 Person DOESdo_go_dir(Person, walk, north)
 Person leaves kitchen to the north
 In Kitchen, thus Person, sees Person did_depart kitchen to the north
@@ -94,10 +94,10 @@ Person belives kitchen is where they end up if they go south from pantry
 
 '
 
-look(Person) is a cheap and effective strategy
+do_look(Person) is a cheap and effective strategy
 
 
-event( trys( do_go_dir(Person, walk, north)))
+event( trys( dO('go_dir', Person, walk, north)))
 
 
 
@@ -131,7 +131,7 @@ sequenced(_Self,
   reverse_dir(Dir, RDir),
   h(exit(Dir), Here, There), % path(Here, There)
   % %Action:
- did( do_go_dir(Self, Walk, Dir)),
+ did( dO('go_dir', Self, Walk, Dir)),
   %PostConds:
   ~h(WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
@@ -197,8 +197,8 @@ new_plan_newver(Self, CurrentState, GoalState, Plan) :-
  convert_state_to_goalstate(CurrentState, CurrentStateofGoals),
  gensym(ending_step_1, End),
  Plan =
- plan([step(start , oper(Self, do_nothing(Self), [], CurrentStateofGoals)),
-       step(completeFn(End), oper(Self, do_nothing(Self), GoalState, []))],
+ plan([step(start , oper(Self, dO('wait', Self), [], CurrentStateofGoals)),
+       step(completeFn(End), oper(Self, dO('wait', Self), GoalState, []))],
       [before(start, completeFn(End))],
       [],
       []).
@@ -394,7 +394,7 @@ protect(causes(_StepI, Cond0, _StepJ), _StepK, Cond1, Order0, Order0) :-
  \+ cond_negates(Cond0, Cond1),
  !.
 protect(causes(StepI, Cond0, StepJ), StepK, _Cond1, Order0, Order0) :-
- dbug(planner, ' THREAT: ~w <> causes(~w, ~w, ~w)~n',
+ dbug(planner, ' THREAT: ~w <> causes(~w, ~w, ~w)~n', 
    [StepK, StepI, Cond0, StepJ]),
  fail.
 protect(causes(StepI, _Cond0, StepJ), StepK, _Cond1, Order0, Order1) :-
@@ -405,7 +405,7 @@ protect(causes(StepI, _Cond0, StepJ), StepK, _Cond1, Order0, Order1) :-
  add_ordering(before(StepJ, StepK), Order0, Order1),
  dbug(planner, ' RESOLVED with ~w~n', [before(StepJ, StepK)]).
 protect(causes(StepI, Cond0, StepJ), StepK, _Cond1, Order0, Order0) :-
- dbug(planner, ' FAILED to resolve THREAT ~w <> causes(~w, ~w, ~w)~n',
+ dbug(planner, ' FAILED to resolve THREAT ~w <> causes(~w, ~w, ~w)~n', 
    [StepK, StepI, Cond0, StepJ]),
  once(pick_ordering(Order0, Serial)),
  dbug(planner, ' ORDERING is ~w~n', [Serial]),
@@ -552,7 +552,7 @@ choose_operator([goal(_GoalID, GoalCond)|G0], G2, Op, P0, P2, D, D) :- GoalCond 
 
 
 choose_operator([goal(GoalID, GoalCond)|G0], _G2, _Op, _P0, _P2, D, D) :-
- dbug(planner, ' CHOOSE_OPERATOR FAILED on goal:~n goal(~w, ~w):~w~n',
+ dbug(planner, ' CHOOSE_OPERATOR FAILED on goal:~n goal(~w, ~w):~w~n', 
    [GoalID, GoalCond, G0]),
  !, fail.
 choose_operator(G0, _G2, _Op, _P0, _P2, D, D) :-
@@ -579,7 +579,7 @@ planning_loop(Goals0, Operators, Plan0, Plan2, Depth0, Timeout) :-
 serialize_plan(_Knower, _Agent, plan([], _Orderings, _B, _L), []) :- !.
 
 serialize_plan(Knower, Agent, plan(Steps, Orderings, B, L), Tail) :-
- select_from(step(_, oper(Agent, do_nothing(_), _, _)), Steps, RemainingSteps),
+ select_from(step(_, oper(Agent, dO('wait', _), _, _)), Steps, RemainingSteps),
  !,
  serialize_plan(Knower, Agent, plan(RemainingSteps, Orderings, B, L), Tail).
 
@@ -647,9 +647,9 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2dir1(Doer, Here, There, do_go_dir(Doer, _Walk, Dir), ModelData):-
+path2dir1(Doer, Here, There, dO('go_dir', Doer, _Walk, Dir), ModelData):-
  in_model(h(exit(Dir), Here, There), ModelData).
-path2dir1(Doer, Here, There, do_go_obj(Doer, _Walk, There), ModelData) :-
+path2dir1(Doer, Here, There, dO('go_obj', Doer, _Walk, There), ModelData) :-
  in_model(h(descended, Here, There), ModelData).
 
 path2directions(Doer, [Here, There], [GOTO], ModelData):-
@@ -664,7 +664,7 @@ find_path1([First|_Rest], Dest, First, _ModelData) :-
 find_path1([[Last|Trail]|Others], Dest, Route, ModelData) :-
  findall([Z, Last|Trail],
    (in_model(h(_Prep, Last, Z), ModelData), \+ member(Z, Trail)),
-   List),
+    List),
  append(Others, List, NewRoutes),
  find_path1(NewRoutes, Dest, Route, ModelData).
 

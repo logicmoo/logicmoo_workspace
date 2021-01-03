@@ -62,7 +62,7 @@ simplify_dbug_3(_, G, G).
 
 
 mwmsg(G):- notrace(mwmsg_3(G)).
-mwmsg_3(G):- compound(G), compound_name_arity(G,_,2),G=..[F, GG], !, dmsg(F:-GG).
+mwmsg_3(G):- compound(G), compound_name_arity(G, _, 2), G=..[F, GG], !, dmsg(F:-GG).
 mwmsg_3(G):- simplify_dbug(G, GG)->guess_pretty(GG)->dmsg(GG).
 
 %:- system:import(simplify_dbug/2).
@@ -78,7 +78,7 @@ get_structure_owner(KB, Name):- declared(propOf(_, Name), KB), !.
 
 get_structure_label(KB, Name):- \+ is_list(KB), !, Name=KB.
 get_structure_label(KB, Name):- sub_compound(structure_label(Name), KB), !.
-get_structure_label(KB, propOf(_,Name)):- sub_compound(inst(Name), KB), !.
+get_structure_label(KB, propOf(_, Name)):- sub_compound(inst(Name), KB), !.
 get_structure_label(KB, inst(Name)):- sub_compound(inst(Name), KB), !.
 
 
@@ -184,7 +184,7 @@ must_mw(G):- G*->true;(mwmsg(fail(must_mw):-G), fail).
 must_mw1(G):- notrace((assertion(callable(G)), fail)).
 must_mw1((G1, G2)):- !, must_mw1(G1), must_mw1(G2).
 must_mw1((G1;G2)):- !, (G1;must_mw1(G2)).
-must_mw1(G):- G*->!;(notrace((mwmsg(fail(must_mw1):-G), dumpST)),break, fail).
+must_mw1(G):- G*->!;(notrace((mwmsg(fail(must_mw1):-G), dumpST)), break, fail).
 % must_mw1(G):- G*->true;(mwmsg(fail(must_mw1):-G), rtrace(G), fail).
 
 :- meta_predicate(must_mw1(*, +, -)).
@@ -202,7 +202,7 @@ dmust_tracing(G, S, E):- apply_state(dmust_tracing, (G), S, E).
 % '$hide'(Pred) :- '$set_predicate_attribute'(Pred, trace, false).
 never_trace(_Spec):- prolog_load_context(reloading, true), !.
 never_trace(M:F/A):- !, '$hide'(M:F/A), '$iso'(M:F/A), ignore(trace(M:F/A, -all)).
-never_trace(M:Spec):- functor(Spec,F,A),!,never_trace(M:F/A).
+never_trace(M:Spec):- functor(Spec, F, A), !, never_trace(M:F/A).
 :- call(ensure_loaded, library(lists)).
 :- never_trace(lists:append(_, _, _)).
 :- never_trace(lists:list_to_set/2).
@@ -232,22 +232,5 @@ dshow_success(G, S, E):- dshow_success(apply_state(call, G, S, E)).
 dshow_failure('\\+'(G1)):- !, \+ dshow_success(G1).
 dshow_failure(G):- (G*->true;(mwmsg(dshow_failure(G)), !, fail)).
 dshow_failure(G, S, E):- dshow_failure(apply_state(call, G, S, E)).
-
-
-
-:- multifile(user:portray/1).
-:- dynamic(user:portray/1).
-:- discontiguous(user:portray/1).
-% user:portray
-
-
-
-
-
-%:- set_prolog_flag(verbose_load, full).
-:- set_prolog_flag(verbose, normal).
-%:- set_prolog_flag(verbose_autoload, true).
-
-
 
 

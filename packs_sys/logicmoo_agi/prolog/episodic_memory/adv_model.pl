@@ -17,18 +17,18 @@
 %
 */
 
-must_be_same(X,Y):- must(X==Y).
-model_prepend(X,Y,Z):- append(X,Y,Z).
-model_select(X,Y,Z):- select(X,Y,Z).
-model_select_always(X,Y,Z):- select_always(X,Y,Z).
+must_be_same(X, Y):- must(X==Y).
+model_prepend(X, Y, Z):- append(X, Y, Z).
+model_select(X, Y, Z):- select(X, Y, Z).
+model_select_always(X, Y, Z):- select_always(X, Y, Z).
 %:- ensure_loaded(adv_main).
 
 % TODO: change agent storage into a term:
 % mind(DoerName, DoerType, History, ModelData, Goals /*, ToDo*/)
 
-model_recent(X,List,List):-
-  old_figment(X,_F,_A,XNew),
-  member(XNew,List),!,
+model_recent(X, List, List):-
+  old_figment(X, _F, _A, XNew),
+  member(XNew, List), !,
   XNew=X.
 
 
@@ -107,11 +107,11 @@ update_model(Knower, did_arrive(Doer, At, Here, _, ExitNameReversed), Timestamp,
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
- model_prepend(RecentMem, [ attempts(Doer, do_go_dir(Doer, _, ExitName))| OlderMem], Mem),
+ model_prepend(RecentMem, [ attempts(Doer, dO('go_dir', Doer, _, ExitName))| OlderMem], Mem),
     % find figment
- \+ member( attempts(Doer, do_go_dir(Doer, _, _)), RecentMem), % guarrantee recentness
+ \+ member( attempts(Doer, dO('go_dir', Doer, _, _)), RecentMem), % guarrantee recentness
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp
-  %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n',
+  %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n', 
   %       [Doer, AtGo, Dest, There, Here]),
   update_model_exit(ExitName, There, Here, Timestamp, M0, M11), % Model the path.
   update_model_exit(ExitNameReversed, Here, There, Timestamp, M11, M1),
@@ -133,7 +133,7 @@ update_model(Knower, Event, Timestamp, Memory, M0, M2) :- fail,
     update_model(Knower, Event, Timestamp, Memory, M1, M2).
 */
 
-update_model(_Knower, carrying(Doer, Objects), Timestamp, _Memory, M0, M1) :- 
+update_model(_Knower, carrying(Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Doer, Timestamp, M0, M1).
 update_model(_Knower, wearing(Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Doer, Timestamp, M0, M1).
@@ -148,29 +148,29 @@ update_model(_Knower, props(Object, PropList), _Stamp, _Mem, M0, M2) :-
 % Wrong Doer !
 update_model(Knower, percept(Doer2, _, _, _Info), _Timestamp, _Mem, M0, M0):- Knower \=@= Doer2, !.
 % Model exits from Here.
-update_model(Knower, percept(Doer, _, _, exit_list(in, Here, ExitRelations)), Timestamp, _Mem, M0, M4) :- must_be_same(Knower,Doer),
+update_model(Knower, percept(Doer, _, _, exit_list(in, Here, ExitRelations)), Timestamp, _Mem, M0, M4) :- must_be_same(Knower, Doer),
   update_model_exits(ExitRelations, Here, Timestamp, M0, M4).
 % Model objects seen Here.. This is no longer used right?
-update_model(Knower, percept(Doer, _Sense, child_list(_Depth, There, Prep, Objects)), Timestamp, _Mem, M0, M3):- must_be_same(Knower,Doer),
+update_model(Knower, percept(Doer, _Sense, child_list(_Depth, There, Prep, Objects)), Timestamp, _Mem, M0, M3):- must_be_same(Knower, Doer),
    dumpST_break, !,
    update_relations(Prep, Objects, There, Timestamp, M0, M3).
 % Model objects seen Here ... this replaces the above code
-update_model(Knower, percept(Doer, _Sense, _Depth, child_list(Object, At, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower,Doer),
+update_model(Knower, percept(Doer, _Sense, _Depth, child_list(Object, At, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
  must_mw1((remove_children( At, Children, Object, Timestamp, M0, M1),
    update_relations( At, Children, Object, Timestamp, M1, M2))).
 % Copy objects props Here
-update_model(Knower, percept(Doer, _Sense, _Depth, props(Object, PropList)), _Stamp, _Mem, M0, M2) :- must_be_same(Knower,Doer),
+update_model(Knower, percept(Doer, _Sense, _Depth, props(Object, PropList)), _Stamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
   apply_mapl_rest_state(updateprop_from_create(Object), PropList, [], M0, M2).
 
 update_model(_Knower, [], _Timestamp, _Memory, M, M).
-update_model(Knower, [Percept|Tail], Timestamp, Memory, M0, M2) :-
+update_model( Knower, [Percept|Tail], Timestamp, Memory, M0, M2) :-
  update_model(Knower, Percept, Timestamp, Memory, M0, M1),
  update_model(Knower, Tail, Timestamp, Memory, M1, M2), !.
 update_model(_Knower, failure(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, success(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, did_emote(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
-update_model(_Knower, emote(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Knower, dO('emote', _, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Knower, time_passes(Target), Timestamp, _Memory, M, M):-

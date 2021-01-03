@@ -63,7 +63,7 @@ capitalize(Atom, Capitalized) :-
  upcase_atom(First, Upper),
  atom_chars(Capitalized, [Upper|Rest]).
 capitalize(Atom, Capitalized) :-
- inst_of(Atom,Type,_),!,capitalize(Type, Capitalized).
+ inst_of(Atom, Type, _), !, capitalize(Type, Capitalized).
 
 context_agent(Agent, Context):- atom(Context), !, Context=Agent.
 context_agent(Agent, Context):-
@@ -73,7 +73,7 @@ context_agent(Agent, Context):-
 context_agent(Agent, Context):-
  declared(inst(Agent), Context), !.
 context_agent(Agent, Context):- \+ is_list(Context),
- action_doer(Context, Likely),Agent=Likely.
+ action_doer(Context, Likely), Agent=Likely.
 
 
 % compile_eng(Context, Atom/Term/List, TextAtom).
@@ -98,8 +98,8 @@ compile_eng(Context, [First|Rest], [First2|Rest2]) :-
  compile_eng(Context, First, First2),
  compile_eng(Context, Rest, Rest2), !.
 
-compile_eng(_Context, Object, Text) :- 
- is_x_instance(Object),inst_of(Object,Text,_).
+compile_eng(_Context, Object, Text) :-
+ is_x_instance(Object), inst_of(Object, Text, _).
 
 
 compile_eng(_Context, aux(be), 'is') :- !.
@@ -312,8 +312,8 @@ grammar_check(_Context, A, A).
 
 the(State, Object, Text) :-
  getprop(Object, name(D), State),
- % name(Object,D), 
- % props(Object,List),member(name(D),List). 
+ % name(Object, D),
+ % props(Object, List), member(name(D), List).
  compile_eng_txt(State, D, AD),
  atom_concat('the ', AD, Text).
 
