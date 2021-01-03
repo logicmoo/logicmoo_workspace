@@ -76,7 +76,7 @@ can_sense(Agent, Sense, Thing, S0) :-
  h(Sense, Agent, Here, S0),
  (Thing=Here; h(Sense, Thing, Here, S0)).
 */
-can_sense(Agent, Sense, Thing, _State):- fail, 
+can_sense(Agent, Sense, Thing, _State):- fail,
  dbug1(pretending_can_sense(Agent, Sense, Thing, Agent)), !.
 
 as_single_event([Event], SEvent):- !, as_single_event(Event, SEvent).
@@ -84,9 +84,9 @@ as_single_event([E1, E2|More], single_event([E1, E2|More])).
 % as_single_event([E1, E2|More], SEvent):- dumpST, break, !, as_single_event(Event, SEvent).
 as_single_event(Event, Event).
 
-stripped_term(MAction,Action):- strip_module(MAction,_,Action),MAction\==Action.
+stripped_term(MAction, Action):- strip_module(MAction, _, Action), MAction\==Action.
 
-send_1percept(Agent, MAction, S0, S9):-  stripped_term(MAction,Action), !, send_1percept(Agent, Action, S0, S9).
+send_1percept(Agent, MAction, S0, S9):-  stripped_term(MAction, Action), !, send_1percept(Agent, Action, S0, S9).
 send_1percept(Agent, Event, S0, S2) :- as_single_event(Event, SEvent) -> Event\==SEvent, !,
  send_1percept(Agent, SEvent, S0, S2).
 
@@ -95,20 +95,20 @@ send_1percept(Agent, Event, S0, S2) :-
   queue_agent_percept(Agent, [Event], S0, S2).
 
 send_1percept(Agent, Event, S0, S2) :-
-  do_percept_list(Agent, [Event], S0, S2).
+  handle_percept_list(Agent, [Event], S0, S2).
 
 send_percept(Agent, Event, S0, S2) :-
   declared(perceptq(Agent, _Q), S0), !,
   queue_agent_percept(Agent, Event, S0, S2).
 send_percept(Agent, Event, S0, S2) :-
-  do_percept_list(Agent, Event, S0, S2).
+  handle_percept_list(Agent, Event, S0, S2).
 
-:- defn_state_setter(do_percept_list(agent,list(event))).
-do_percept_list(_Agent, [], S0, S0):-!.
-% do_percept_list(Agent, Events,_S0,_S2) :- dmsg(do_percept_list(Agent, Events)),fail.
-do_percept_list(Agent, Events, S0, S2) :-
+:- defn_state_setter( handle_percept_list(agent, list(event))).
+handle_percept_list(_Agent, [], S0, S0):-!.
+% handle_percept_list(Agent, Events, _S0, _S2) :- dmsg( handle_percept_list(Agent, Events)), fail.
+handle_percept_list(Agent, Events, S0, S2) :-
   maybe_undeclare(memories(Agent, Mem0), S0, S1),
-  agent_clock_time_prev(Agent,timestamp(Stamp, _OldNow), Events),
+  agent_clock_time_prev(Agent, timestamp(Stamp, _OldNow), Events),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
   replace_declare(memories(Agent, Mem3), S1, S2).
 
@@ -125,13 +125,13 @@ queue_agent_percept(Agent, Event, S0, S2) :-
 % Agent process event list now
 
 queue_agent_percept(_Agent, [], S0, S0):-!.
-%queue_agent_percept(Agent, Events,_S0,_S2) :- dmsg(queue_agent_percept(Agent, Events)), _Player_1\==Agent,dumpST,fail.
+%queue_agent_percept(Agent, Events, _S0, _S2) :- dmsg(queue_agent_percept(Agent, Events)), _Player_1\==Agent, dumpST, fail.
 queue_agent_percept(Agent, Events, S0, S2) :-
  getprop(Agent, inherited(no_perceptq), S0), !,
- do_percept_list(Agent, Events, S0, S2).
-queue_agent_percept(Agent, Events, S0, S2) :- 
- agent_clock_time_now(Agent,timestamp(Stamp, OldNow), S0),
- append_toplevel_props(perceptq(Agent, [timestamp(Stamp, OldNow)|Events]),S0,S2).
+ handle_percept_list(Agent, Events, S0, S2).
+queue_agent_percept(Agent, Events, S0, S2) :-
+ agent_clock_time_now(Agent, timestamp(Stamp, OldNow), S0),
+ append_toplevel_props(perceptq(Agent, [timestamp(Stamp, OldNow)|Events]), S0, S2).
 
 
 :- defn_state_setter(queue_event(listok(event))).
@@ -216,58 +216,58 @@ percept_todo( Agent, Actions, Mem0, Mem2):- add_todo_all(Agent, Actions, Mem0, M
 
 
 % Autonomous logical percept processing.
-%process_percept_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !,
-% process_percept_auto(Agent, Percept, Timestamp, M0, M2).
+%process_percept_do_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !,
+% process_percept_do_auto(Agent, Percept, Timestamp, M0, M2).
 
 :- defn_mem_setter(process_percept_auto//3).
-process_percept_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
-process_percept_auto(_Agent, [], _Stamp, M0, M0) :- !.
-process_percept_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
- process_percept_auto(Agent, Percept, Stamp, M0, M1),
- process_percept_auto(Agent, Tail, Stamp, M1, M9).
+process_percept_do_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
+process_percept_do_auto(_Agent, [], _Stamp, M0, M0) :- !.
+process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
+ process_percept_do_auto(Agent, Percept, Stamp, M0, M1),
+ process_percept_do_auto(Agent, Tail, Stamp, M1, M9).
 
-process_percept_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
+process_percept_do_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
 
 % Auto examine room items
-process_percept_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
- findall( sub__examine(Agent, Sense, child, Obj, DepthLess),
+ findall( sub__do_examine(Agent, Sense, child, Obj, DepthLess),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
  percept_todo( Agent, Actions, Mem0, Mem2).
 
-process_percept_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
+process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
 % Auto Answer
-process_percept_auto(Agent, did_emote(Speaker, EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
+process_percept_do_auto(Agent, did_emote(Speaker, EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
  trace, consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
-process_percept_auto(Agent, did_emote(Speaker, EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
+process_percept_do_auto(Agent, did_emote(Speaker, EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
 
 % Auto take
-process_percept_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
   Depth > 1,
  (member(inherited(shiny), PropList)),
  Object \== Agent,
  dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
- add_todo_all([ do_take(Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
+ add_todo_all([ dO('take', Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
-process_percept_auto(_Agent, _Percept, _Stamp, M0, M0).
+process_percept_do_auto(_Agent, _Percept, _Stamp, M0, M0):- !.
 
 addressing_whom(List, Agent, Words):- Words = [_|_], append(Words, [Agent], List).
 addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], List).
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, emote(Agent, _, _Targ, _)).
+was_own_self(Agent, dO('emote', Agent, _, _Targ, _)).
 was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
@@ -290,7 +290,7 @@ process_percept_player(Agent, Percept, _Stamp, M0, M0) :-
  player_format(Agent, '~N~q~n', [Agent:Percept]).
 
 is_player(Agent):- \+ is_non_player(Agent).
-is_non_player(Agent):- inst_of(Agent,floyd,_).
+is_non_player(Agent):- inst_of(Agent, floyd, _).
 
 
 :- defn_mem_setter(process_percept_main//3).
@@ -299,17 +299,17 @@ process_percept_main(_Agent, [], _Stamp, Mem0, Mem0) :- !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem2) :-
  % dbug(always, '~N1 percept ~q !~n', [percept(Percept)]),
  quietly(process_percept_player(Agent, Percept, Stamp, Mem0, Mem1)),
- process_percept_auto(Agent, Percept, Stamp, Mem1, Mem2), !.
+ process_percept_do_auto(Agent, Percept, Stamp, Mem1, Mem2), !.
 process_percept_main(Agent, Percept, Stamp, Mem0, Mem0):-
  dbug(perceptq, '~q FAILED!~n', [bprocess_percept(Agent, Percept, Stamp)]), !.
 
 
 :- defn_mem_setter(process_percept_list(agent, list(event), tstamp)).
 
-process_percept_list(Agent, PerceptList, _Stamp,_,_):- 
+process_percept_list(Agent, PerceptList, _Stamp, _, _):-
   episodic_mem(Agent, PerceptList), fail.
 
-% process_percept_list(Agent, Percept, Stamp,_,_):- notrace((format('~N',[]),prolog_pprint(p2(Agent, Percept, Stamp)),format('~N',[]))),fail.
+% process_percept_list(Agent, Percept, Stamp, _, _):- notrace((format('~N', []), prolog_pprint(p2(Agent, Percept, Stamp)), format('~N', []))), fail.
 
 process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  \+ is_list(Percept), !, process_percept_list(Agent, [Percept], Stamp, Mem0, Mem3).

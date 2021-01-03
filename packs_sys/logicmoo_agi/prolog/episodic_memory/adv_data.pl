@@ -72,7 +72,7 @@ dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 :- dynamic(istate/1).
 % empty intial state
 :- retractall(istate(_)).
-:- asserta(istate([ structure_label(istate),propOf(istate, world) ])).
+:- asserta(istate([ structure_label(istate), propOf(istate, world) ])).
 
 % this hacks the state above
 :- push_to_state([
@@ -104,15 +104,15 @@ exit(south, living_room, kitchen),
 exit(west, kitchen, living_room),
 
 
-in(shelf, pantry),  % the shelf is in the pantry
+in(shelf, pantry), % the shelf is in the pantry
 in(locker, pantry), % the locker is in the  pantry
-in(rock, garden),   % xformed:  in(rock_X1, garden).
+in(rock, garden),  % xformed:  in(rock_X1, garden).
 % there are rocks in the garden
-in( x(rock,2), garden),     % xformed:  in(rock_X2, garden).
-%in( a(rock), garden),     % xformed:  in(rock_X2, garden).
-%in( a(rock), garden),     % in(rock_X3, garden).
+in( x(rock, 2), garden),    % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),    % xformed:  in(rock_X2, garden).
+%in( a(rock), garden),    % in(rock_X3, garden).
 % in({atLeast(2)}/in(a(rock), garden)).
-                         % 
+                         %
 in(fountain, garden),
 in(mushroom, garden),
 in(shovel, basement), % FYI shovel has no type_props (this is a lttle test to see what happens)
@@ -160,7 +160,7 @@ dining_room type_props place.
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, "You lack the ability to fly."),
-   oper(/*garden, */ do_go_dir($agent, _, south),
+   oper(/*garden, */ dO('go_dir', $agent, _, south),
    % precond(Test, FailureMessage)
      precond(getprop(screendoor, (opened = t)), ["you must_mw open the door first"]),
    % body(clause)
@@ -201,7 +201,7 @@ type_props(pantry, [
 type_props(brklamp,
    inherit(broken),
    name = ("possibly broken lamp"),
-   effect(switch(on), print_(_Agent, "Switch is flipped")),
+   effect( does('switch', on), print_(_Agent, "Switch is flipped")),
    effect(hit, [print_("Hit brklamp"), setprop($self, inherit(broken))]),
    inherit(lamp)).
 
@@ -218,8 +218,8 @@ type_props(screendoor, [
 :- push_to_state([
  type_props(broken, [
     name = ("definately broken"),
-    effect(switch(on), true),
-    effect(switch(off), true),
+    effect( does('switch', on), true),
+    effect( does('switch', off), true),
     can(switch),
     adjs($class),
     adjs([dented])
@@ -349,7 +349,7 @@ type_props(screendoor, [
 
 
    % players use power but cant be powered down
-   can(switch(off), f), powered = t
+   can( does('switch', off), f), powered = t
   ]),
 
  type_props(autonomous, [inherit(autoscan), inherit(impulsive),
@@ -388,10 +388,10 @@ type_props(screendoor, [
    model_depth = 3,
    mass = 50, volume = 50, % liters  (water is 1 kilogram per liter)
    has_sense(see),
-   
+ 
     inherit(perceptq),
     %inherit(no_perceptq),
-      
+    
    inherit(memorizer),
    inherit(actor),
    inherit(autoscan),
@@ -417,9 +417,9 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(character),
    powered = t,
-   % TODO: floyd should `look($agent)` when turned back on.
-   effect(switch(on), setprop($self, powered = t)),
-   effect(switch(off), setprop($self, (powered= f)))
+   % TODO: floyd should `do_look($agent)` when turned back on.
+   effect( does('switch', on), setprop($self, powered = t)),
+   effect( does('switch', off), setprop($self, (powered= f)))
   ]),
 
   type_props(natural_force, [
@@ -453,9 +453,9 @@ type_props(screendoor, [
    %adjs(local),
   ~can(move),
   ~can(take),
-   oper(do_discard($agent, Thing),
+   oper( dO('discard', $agent, Thing),
     precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
-    body(do_take($agent, Thing, in, $self))), % body(clause)
+    body( dO('take', $agent, Thing, in, $self))), % body(clause)
    % inherit(container),
    has_rel(exit(_))
   ]),
@@ -465,9 +465,9 @@ type_props(screendoor, [
    opened = f,
    can(open),
    has_rel(in),
-  oper(do_put($agent, Thing, in, $self),
+  oper( dO('put', $agent, Thing, in, $self),
    precond(~getprop(Thing, inherit(liquid)), ["liquids would spill out"]), % precond(Test, FailureMessage)
-   body(do_take($agent, Thing, in, $self)))  % body(clause)
+   body( dO('take', $agent, Thing, in, $self)))  % body(clause)
   ]),
 
 
@@ -481,11 +481,11 @@ type_props(screendoor, [
 
  type_props(flask, [
    adjs(physical),
-  oper(do_put($agent, Thing, in, $self),
+  oper( dO('put', $agent, Thing, in, $self),
    % precond(Test, FailureMessage)
    precond(getprop(Thing, inherit(fully_corporial)), ["non-physical would spill out"]),
    % body(clause)
-   body(do_take($agent, Thing, in, $self))),
+   body( dO('take', $agent, Thing, in, $self))),
    inherit(container),
    (opened = t),
    inherit(moveable)
@@ -506,7 +506,7 @@ type_props(screendoor, [
    inherit(moveable),
    volume_capacity = 2,
    breaks_into = shards,
-   
+ 
    %name($class),
   cleanliness = dirty]),
 
@@ -604,8 +604,8 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(moveable),
    emitting(see, light),
-   effect(switch(on), setprop($self, emitting(see, light))),
-   effect(switch(off), delprop($self, emitting(see, light))),
+   effect( does('switch', on), setprop($self, emitting(see, light))),
+   effect( does('switch', off), delprop($self, emitting(see, light))),
    breaks_into = (broken_lamp)
   ]),
 
@@ -616,8 +616,8 @@ type_props(screendoor, [
    traits(brass),
    adjs(dented),
    can(switch),
-   effect(switch(on), true),
-   effect(switch(off), true) % calls true(S0, S1) !
+   effect( does('switch', on), true),
+   effect( does('switch', off), true) % calls true(S0, S1) !
   ]),
 
  type_props(surface, [has_rel(on), default_rel = on, adjs(physical), cleanliness=clean]),
@@ -634,8 +634,8 @@ type_props(screendoor, [
    inherit(perceptq),
    inherit(memorize_perceptq),
    can(switch),
-   effect(switch(on), setprop($self, powered = t)),
-   effect(switch(off), setprop($self, (powered= f))),
+   effect( does('switch', on), setprop($self, powered = t)),
+   effect( does('switch', off), setprop($self, (powered= f))),
    powered = t,
    has_sense(see),
    breaks_into = (broken_videocam)

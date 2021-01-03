@@ -33,7 +33,7 @@
  restore_overwritten_chars/1,
  %setup_console/0,
  setup_console/1,
- current_error/1 % ,  set_error/1
+ current_error/1 % , set_error/1
  ]).
 
 :- dumpST.
@@ -48,10 +48,10 @@ int_or_var(V):- integer(V);var(V).
 
 :- dynamic(adv_io_temp:adv_flag_val/2).
 
-adv_flag(N, O, V):- int_or_var(O),int_or_var(V),!, flag(N, O, V).
-adv_flag(N, O, V):- clause(adv_io_temp:adv_flag_val(N,W),true,Ref),!,O=W,
-  erase(Ref),assert(adv_io_temp:adv_flag_val(N,V)).
-adv_flag(N, _, V):- assert(adv_io_temp:adv_flag_val(N,V)).
+adv_flag(N, O, V):- int_or_var(O), int_or_var(V), !, flag(N, O, V).
+adv_flag(N, O, V):- clause(adv_io_temp:adv_flag_val(N, W), true, Ref), !, O=W,
+  erase(Ref), assert(adv_io_temp:adv_flag_val(N, V)).
+adv_flag(N, _, V):- assert(adv_io_temp:adv_flag_val(N, V)).
 
 adv_flag(N, V):-
  adv_flag(N, _, V).

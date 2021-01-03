@@ -29,7 +29,7 @@ with_agent_console(Agent, Goal):-
  setup_call_cleanup(set_input(InStream), with_agent_console(Agent, Goal), set_input(WasIn)).
 */
 with_agent_console(Agent, Goal):-
- term_to_atom(Agent,Mutex),
+ term_to_atom(Agent, Mutex),
  setup_call_cleanup(
   asserta(mu_global:current_agent_tl(Agent), E),
    with_mutex(get_advstate, with_mutex(Mutex, Goal)), erase(E)), !.
@@ -42,8 +42,8 @@ with_agents( Pred1, Agent):- with_agent_console(Agent, must(call(Pred1, Agent)))
 run_perceptq(Agent) :-
  declared(perceptq(Agent, PerceptQ)),
  set_advstate(perceptq(Agent, [])),
- do_percept_list(Agent, PerceptQ),!.
-run_perceptq(_Agent) :- !. 
+ handle_percept_list(Agent, PerceptQ), !.
+run_perceptq(_Agent) :- !.
 
 /*
 :- defn_state_setter(run_perceptq(+agent)).
@@ -52,7 +52,7 @@ run_perceptq(Agent, S0, S9) :-
  undecla re(perceptq(Agent, PerceptQ), S0, S1), PerceptQ \==[],
  decl are(perceptq(Agent, []), S1, S2),
  %set_advstate(S9),
- do_percept_list(Agent, PerceptQ, S2, S9), !.
+ handle_percept_list(Agent, PerceptQ, S2, S9), !.
 run_perceptq(_Agent, S0, S0).
 
 */
@@ -97,7 +97,7 @@ each_agent(Precond, NewGoal, S0, S2) :-
 % [percept]  - received perceptions.
 % model([...]) - Agent's internal model of the world.
 %      Model is a collection of timestampped relations.
-% current_goals(Agent,[...]) - states the agent would like to achieve, or
+% current_goals(Agent, [...]) - states the agent would like to achieve, or
 %      acts the agent would like to be able to do.
 % plan(S, O, B, L) - plans for achieving goals.
 % affect(...)  - Agent's current affect.
@@ -123,52 +123,50 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
 
-add_todo( Agent, Auto, Mem0, Mem3) :- Auto = auto(Agent), !,
+add_todo( Agent, Auto, Mem0, Mem3) :- Auto = dO('auto', Agent), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 
 add_todo( _Agent, Action, Mem0, Mem2) :-
  thought_check(Agent, todo(Agent, OldToDo), Mem0),
  append(OldToDo, [Action], NewToDo),
- replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2),!.
+ replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2), !.
 
 add_todo_all(_Agent, [], Mem0, Mem0).
 add_todo_all(Agent, [Action|Rest], Mem0, Mem2) :-
  add_todo( Agent, Action, Mem0, Mem1),
- add_todo_all(Agent, Rest, Mem1, Mem2),!.
+ add_todo_all(Agent, Rest, Mem1, Mem2), !.
 
 
 
 % -----------------------------------------------------------------------------
-% do_introspect(Agent, Query, Answer, Memory)
+% handle_introspect(Agent, Query, Answer, Memory)
 
-:- defn_state_getter(do_introspect(agent, action, result)).
+:- defn_state_getter( handle_introspect(agent, action, result)).
 
 
-do_introspect(Agent, path(There), Answer, M0) :- !,
+handle_introspect(Agent, path(There), Answer, M0) :- !,
    declared(h(_, _, There), M0),
    declared(h(_, Agent, Here), M0),
-  do_introspect(Agent, path(Here, There), Answer, M0).
+  handle_introspect(Agent, path(Here, There), Answer, M0).
 
-do_introspect(Agent, path(Here, There), Answer, M0) :-
+handle_introspect(Agent, path(Here, There), Answer, M0) :-
  agent_thought_model(Agent, ModelData, M0),
  find_path(Agent, Here, There, Route, ModelData), !,
  get_structure_label(ModelData, Name),
  Answer = msg(['Model is:', Name, 'Shortest path is:\n', Route]).
 
-do_introspect(Agent, path(Here, There), Answer, ModelData) :-
+handle_introspect(Agent, path(Here, There), Answer, ModelData) :-
  find_path(Agent, Here, There, Route, ModelData), !,
  get_structure_label(ModelData, Name),
  Answer = msg(['Model is:', Name, 'Shortest path was:', nl, list(Route)]).
 
-do_introspect(Agent1, recall(Agent, WHQ, Target), Answer, M0) :-
+handle_introspect(Agent1, recall(Agent, WHQ, Target), Answer, M0) :-
  agent_thought_model(Agent, ModelData, M0),
  recall_whereis(M0, Agent1, WHQ, Target, Answer, ModelData).
 
-do_introspect(Agent1, recall(Agent, Target), Answer, M0) :- !,
-  do_introspect(Agent1, recall(Agent, what, Target), Answer, M0).
-
-:- set_prolog_flag(debugger_write_options, [quoted(true), portray(false), max_depth(50), attributes(portray)]).
+handle_introspect(Agent1, recall(Agent, Target), Answer, M0) :- !,
+  handle_introspect(Agent1, recall(Agent, what, Target), Answer, M0).
 
 recall_whereis(_S0, _Self, _WHQ, There, Answer, ModelData) :-
  findall(Data, (member(Data, ModelData), nonvar_subterm(There, Data)), Memories),
@@ -179,12 +177,12 @@ recall_whereis(_S0, Agent, _WHQ, There, Answer, _ModelData) :-
  Answer = [subj(Agent), person('don\'t', 'doesn\'t'),
    'recall a "', There, '".'].
 
-get_agent_prompt(Agent, Prompt):- 
+get_agent_prompt(Agent, Prompt):-
  must_mw1((get_object_props(Agent, Mem))),
-  declared(prompt(Prompt), Mem),!.
+  declared(prompt(Prompt), Mem), !.
 
 console_decide_action(Agent, Mem0, Mem1):-
- %thought(Agent,timestamp(T0), Mem0),
+ %thought(Agent, timestamp(T0), Mem0),
  %dbug1(read_pending_codes(In, Codes, Found, Missing)),
  % repeat,
  xnotrace((
@@ -194,19 +192,19 @@ console_decide_action(Agent, Mem0, Mem1):-
  setup_console,
  ensure_has_prompt(Agent),
  read_line_to_tokens(Agent, In, [], Words0),
- (Words0==[]->(Words=[wait], notrace(makep));Words=Words0))), 
+ (Words0==[]->(Words=[wait], notrace(makep));Words=Words0))),
  eng2cmd(Agent, Words, Action, Mem0),
  !,
  if_tracing(dbug(telnet, 'Console TODO ~p~n', [Agent: Words->Action])),
  add_todo( Agent, Action, Mem0, Mem1), ttyflush, !.
 
 makep:-!.
-makep:- update_changed_files,!.
+makep:- update_changed_files, !.
 makep:-
  locally(set_prolog_flag(verbose_load, true),
  with_no_dmsg(make:((
 
-  '$update_library_index',
+  '$update_library_index', 
  findall(File, make:modified_file(File), Reload0),
  list_to_set(Reload0, Reload),
  ( prolog:make_hook(before, Reload)
@@ -254,7 +252,7 @@ decide_action(Agent, Mem0, Mem0) :-
  (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
 
 decide_action(Agent, Mem0, Mem1) :-
- %must_mw1(thought(Agent,timestamp(T0), Mem0)),
+ %must_mw1(thought(Agent, timestamp(T0), Mem0)),
  ensure_has_prompt(Agent),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
@@ -278,7 +276,7 @@ decide_action(Agent, Mem0, Mem1) :-
  ttyflush,
  (tracing->catch(wait_for_input_safe([In], Found, 20.0), _, (nortrace, xnotrace, break));
                  wait_for_input_safe([In], Found, 0.0)),
- Found \==[], 
+ Found \==[],
  console_decide_action(Agent, Mem0, Mem1), !.
 
 decide_action(Agent, Mem0, Mem3) :-
@@ -294,7 +292,7 @@ decide_action(_Agent, Mem, Mem) :-
 decide_action(_Agent, Mem0, Mem0) :- !.
 
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent, [auto(Agent)]),
+ set_last_action(Agent, [ dO('auto', Agent)]),
  nop(dbug(decide_action, 'decide_action(~w) FAILED!~n', [Agent])).
 
 

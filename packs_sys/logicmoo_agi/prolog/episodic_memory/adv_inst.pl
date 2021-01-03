@@ -20,40 +20,40 @@
 
 create_new_unlocated(Type, Inst, S0, S2):-
  inst_sep(Sep),
- create_new_suffixed_unlocated(Sep, Type, Inst, S0, S2),!.
+ create_new_suffixed_unlocated(Sep, Type, Inst, S0, S2), !.
 
 inst_sep('_X').
 current_world_adv_suffix('i1').
 
-inst_of(x(C,N), C, N):- (nonvar(C);nonvar(N)),!.
-inst_of(x(C,N), C, N):- !.
+inst_of(x(C, N), C, N):- (nonvar(C);nonvar(N)), !.
+inst_of(x(C, N), C, N):- !.
 
-is_x_instance(Obj):- var(Obj),!,break.
-is_x_instance(x(_,_)).
+is_x_instance(Obj):- var(Obj), !, break.
+is_x_instance(x(_, _)).
 
-is_non_instance(Obj):- var(Obj),!,fail.
-is_non_instance(Obj):- is_x_instance(Obj),!,fail.
+is_non_instance(Obj):- var(Obj), !, fail.
+is_non_instance(Obj):- is_x_instance(Obj), !, fail.
 is_non_instance(_):-!.
 
 into_inst_name(_Suffix, Obj, Inst):- is_x_instance(Obj), !, Inst=Obj.
-into_inst_name(Suffix, Obj, Inst):- atom(Obj), !, Inst = x(Obj,Suffix).
-into_inst_name(Suffix, Obj, Inst):- ignore(arg(2,Obj,Suffix)),!,Inst=Obj.
+into_inst_name(Suffix, Obj, Inst):- atom(Obj), !, Inst = x(Obj, Suffix).
+into_inst_name(Suffix, Obj, Inst):- ignore(arg(2, Obj, Suffix)), !, Inst=Obj.
 /*
 
-into_inst_name(Suffix, Type, Inst):- instatom_codes(Suffix,Codes),last(Codes,Code),
- code_type(Code,digit),!, atom_concat(Type, Suffix, Inst).
-into_inst_name(Suffix, Type, Inst):- atom_concat(Type, Suffix, Inst0), gensym(Inst0,Inst).
+into_inst_name(Suffix, Type, Inst):- instatom_codes(Suffix, Codes), last(Codes, Code),
+ code_type(Code, digit), !, atom_concat(Type, Suffix, Inst).
+into_inst_name(Suffix, Type, Inst):- atom_concat(Type, Suffix, Inst0), gensym(Inst0, Inst).
 */
 
 create_new_suffixed_unlocated(Suffix, Type, Inst, S0, S2):-
- into_inst_name(Suffix ,Type, Inst),
+ into_inst_name(Suffix , Type, Inst),
  declare_inst_type(Inst, Type, S0, S2).
 
 declare_inst_type(Inst, Type, S0, S2):-
   assertion(nonvar(Inst)),
   assertion(nonvar(Type)),
   object_props_or(Inst, PropList1, [], S0),
-  (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,[Type])|PropList1]=PropList),
+  (member(sp(adjs, _), PropList1)-> PropList1=PropList;  [sp(nouns, [Type])|PropList1]=PropList),
   list_to_set([shape=Type, inherit(Type, t)|PropList], Set),
   %undeclare_alw ays(props(Inst, _), S0, S1),
   replace_declare(props(Inst, Set), S0, S2).
@@ -137,9 +137,9 @@ create_objprop(Why, Object, [Prop|List], S0, S2):- !,
  create_objprop(Why, Object, List, S0, S1),
  create_objprop(Why, Object, Prop, S1, S2).
 
-create_objprop(Why, Object, Prop, S0, S1):- /*notrace*/((correct_props(Object, Prop, PropList),[Prop]\==PropList,!)),
+create_objprop(Why, Object, Prop, S0, S1):- /*notrace*/((correct_props(Object, Prop, PropList), [Prop]\==PropList, !)),
   create_objprop(Why, Object, PropList, S0, S1).
-  
+
  % As events happen, percepts are entered in the percept queue of each agent.
  % Each agent empties their percept queue as they see fit.
 create_objprop(_Why, Object, inherit(perceptq, t), S0, S0):- declared(perceptq(Object, _), S0), !.
@@ -153,11 +153,11 @@ create_objprop(_Why, Self, inherit(memorizer, t), S0, S2):- !, clock_time(Now),
   propOf(memories, Self),
  structure_label(mem(Self)),
  timestamp(0, Now),
- current_goals(Agent,[]),
- goals_skipped(Agent,[]),
- goals_satisfied(Agent,[]),
+ current_goals(Agent, []),
+ goals_skipped(Agent, []),
+ goals_satisfied(Agent, []),
  % model([]),
-  todo(Agent, [look(Self)]),
+  todo(Agent, [dO('look', Self)]),
  inst(Self)]), S0, S2).
 
 
@@ -178,7 +178,7 @@ create_objprop(_Why, _Object, inherit(Other, t), S0, S0):- direct_props(Other, P
 create_objprop(Why, Object, inherit(Other, t), S0, S9):-
  direct_props_or(Other, PropList0, [], S0),
  adv_subst(equivalent, $class, Other, PropList0, PropList1),
- (member(sp(adjs,_), PropList1)-> PropList1=PropList;  [sp(nouns,Other)|PropList1]=PropList),
+ (member(sp(adjs, _), PropList1)-> PropList1=PropList;  [sp(nouns, Other)|PropList1]=PropList),
  copy_term(PropList, PropListC), !,
  % must_mw1(updateprop_from_create(Object, inherit(Other, t), S5, S9)), !,
  %must_mw1(updateprop_from_create(Object, visited(Other), S0, S1)),
@@ -206,8 +206,8 @@ create_1obj(Suffix, _Info, s(Type), Inst, S0, S2):- trace, !, atom_concat(Suffix
  must_mw1(create_new_suffixed_unlocated(NewSuffix, Type, Inst, S0, S2)).
 
 create_1obj(Suffix, Info, the(Type), Inst, S0, S2):- find_recent(Suffix, Type, Inst, S0, S2)->true;create_1obj(Suffix, Info, Type, Inst, S0, S2).
-create_1obj(_Suffix, _Info, I, I, S0, S0):- is_x_instance(I),!.
-create_1obj(Suffix, Info, Type, Inst, S0, S2):- atom(Type),!,create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
+create_1obj(_Suffix, _Info, I, I, S0, S0):- is_x_instance(I), !.
+create_1obj(Suffix, Info, Type, Inst, S0, S2):- atom(Type), !, create_1obj(Suffix, Info, the(Type), Inst, S0, S2).
 create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).

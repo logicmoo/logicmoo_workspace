@@ -69,40 +69,40 @@ each_prop(Pred, [Prop|List], S0, S2) :- !,
 each_prop(Pred, Prop, S0, S1):- assertion(compound(Prop)), call(Pred, Prop, S0, S1), !.
 
 
-% Remove Prop.  @TODO @BUG may not undo side-effects 
+% Remove Prop.  @TODO @BUG may not undo side-effects
 :- defn_state_setter(delprop(thing, nv)).
-delprop(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_(Object), PropList, S0, S2)))),!.
+delprop(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_(Object), PropList, S0, S2)))), !.
 delprop_(Object, Prop, S0, S2) :-
  must_mw1(declared(props(Object, PropList), S0, S1)),
  select_from(Prop, PropList, NewPropList),
  replace_declare(props(Object, NewPropList), S1, S2).
 
-% Remove Prop Always. @TODO @BUG may not undo side-effects 
+% Remove Prop Always. @TODO @BUG may not undo side-effects
 :- defn_state_setter(delprop_always(thing, nv)).
-delprop_always(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))),!.
+delprop_always(Object, Prop, S0, S2) :- /*notrace*/(must_mw1((correct_props(Object, Prop, PropList), each_prop(delprop_always_(Object), PropList, S0, S2)))), !.
 delprop_always_(Object, Prop, S0, S2) :-  delprop_(Object, Prop, S0, S2), !.
 delprop_always_(_Object, _Prop, S0, S0).
 
 % Replace or create Prop.
 :- defn_state_setter(setprop(thing, nv)).
-setprop(Object, Prop, S0, S2):- create_objprop(setprop, Object, Prop, S0, S2),!.
+setprop(Object, Prop, S0, S2):- create_objprop(setprop, Object, Prop, S0, S2), !.
 
 :- defn_state_setter(setprop_from_create(thing, nv)).
-setprop_from_create(Object, Prop, S0, S2) :- 
- /*notrace*/((correct_props(Object, Prop, PropList), 
+setprop_from_create(Object, Prop, S0, S2) :-
+ /*notrace*/((correct_props(Object, Prop, PropList),
     each_prop(setprop_(Object), PropList, S0, S2))).
 
-setprop_(Object, Prop, S0, S2) :- 
+setprop_(Object, Prop, S0, S2) :-
   assertion(is_list(S0)),
-  \+ declared(props(Object,_), S0),
-  replace_declare(props(Object,[]), S0, S1), !,
+  \+ declared(props(Object, _), S0),
+  replace_declare(props(Object, []), S0, S1), !,
   setprop_(Object, Prop, S1, S2).
 setprop_(Object, [P|PropS], S0, S2) :- !, setprop_(Object, P, S0, S1), setprop_(Object, PropS, S1, S2).
 setprop_(Object, Prop, S0, S2) :-
  direct_props_or(Object, PropList, [], S0),
  %undeclare_always(props(Object, _), S0, S1),
  S0=S1,
- old_figment(Prop,F,A,Old),
+ old_figment(Prop, F, A, Old),
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
   ((Old==Merged, fail) -> S2=S0; % no update
@@ -111,24 +111,24 @@ setprop_(Object, Prop, S0, S2) :-
  (    append([Prop], PropList, PropList3), replace_declare(props(Object, PropList3), S1, S2))).
 
 
-old_figment(Prop,F, A, Old):- 
+old_figment(Prop, F, A, Old):-
  (var(A)-> safe_functor(Prop, F, A); true),
  duplicate_term(Prop, Old),
  assertion(integer(A)),
- nb_setarg(A, Old, _),!.
+ nb_setarg(A, Old, _), !.
 
 % Update or create Prop.
 :- defn_state_setter(updateprop(thing, nv)).
 updateprop(Object, Prop, S0, S2):- create_objprop(updateprop, Object, Prop, S0, S2).
 
 :- defn_state_setter(updateprop_from_create(thing, nv)).
-updateprop_from_create(Object, Prop, S0, S2) :- /*notrace*/((correct_props(Object, Prop, PropList), 
+updateprop_from_create(Object, Prop, S0, S2) :- /*notrace*/((correct_props(Object, Prop, PropList),
   must(each_prop(updateprop_(Object), PropList, S0, S2)))).
 
-updateprop_(Object, Prop, S0, S2) :- 
+updateprop_(Object, Prop, S0, S2) :-
   assertion(is_list(S0)),
-  \+ declared(props(Object,_), S0),
-  replace_declare(props(Object,[]), S0, S1), !,
+  \+ declared(props(Object, _), S0),
+  replace_declare(props(Object, []), S0, S1), !,
   updateprop_(Object, Prop, S1, S2).
 
 updateprop_(Object, Prop, S0, S2) :-
@@ -136,11 +136,11 @@ updateprop_(Object, Prop, S0, S2) :-
  direct_props_or(Object, PropList, [], S0),
  (member(Prop, PropList)
  -> S0=S2;  % no update
- (S0=S1,% undeclare_always(props(Object, _), S0, S1),
+ (S0=S1, % undeclare_always(props(Object, _), S0, S1),
  updateprop_1(Object, Prop, PropList, S1, S2))).
 
 updateprop_1(Object, Prop, PropList, S0, S2) :-
- old_figment(Prop,F,A,Old),
+ old_figment(Prop, F, A, Old),
  (select_from(Old, PropList, PropList2) ->
  (upmerge_prop(F, A, Old, Prop, Merged) ->
      ((Old==Merged, fail) -> replace_declare(props(Object, PropList), S0, S2) ; % no update
