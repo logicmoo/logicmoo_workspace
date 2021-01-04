@@ -27,6 +27,10 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 :- set_prolog_flag(pfc_version,2.0).
 :- set_prolog_flag(dmsg_level,always).
 
+:- discontiguous rdf11:'$exported_op'/3. 
+:- discontiguous phil:'$exported_op'/3.
+:- discontiguous lemur:'$exported_op'/3.
+
 attach_packs_relative(Rel):-
    once(((
     (working_directory(Dir,Dir);prolog_load_context(directory,Dir)),
@@ -265,11 +269,10 @@ expose_all:-
 load_before_compile:- 
    %set_prolog_flag(verbose_file_search,true), 
    use_module(library(sandbox)),
+
    use_module(library(lps_corner)),
    use_module(library(logicmoo_webui)),      
    use_module(library(logicmoo_lps)),
-   use_module('/opt/logicmoo_workspace/packs_sys/lps_corner/swish/lps_2d_renderer.pl'),
-   use_module('/opt/logicmoo_workspace/packs_sys/lps_corner/swish/lps_2d_renderer.pl'),
    %set_prolog_flag(verbose_file_search,false),
    
    %:- use_module(library(logicmoo_nlu)).
