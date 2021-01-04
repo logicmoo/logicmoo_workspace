@@ -102,15 +102,31 @@ name_to_files_(Spec, Files, Exists) :-
     ).
 
 
-with_abs_paths(Pred1, Path):- is_list(Path),!,maplist(with_abs_paths(Pred1),Path).
+with_abs_paths(Pred1, Path):- is_list(Path),!, maplist(with_abs_paths(Pred1),Path).
 with_abs_paths(Pred1, Path):- 
- ((atom(Path), is_absolute_file_name(Path)) -> 
- (wdmsg(with_abs_paths(Pred1,Path)),
- call(Pred1,Path));
+ ( \+ atom(Path); \+ is_absolute_file_name(Path); \+ exists_file_or_dir(Path)), !,
+ wdmsg(resolve(with_abs_paths(Pred1,Path))), 
  (must((forall((
      (name_to_files(Path, MatchesL)*-> member(Matches,MatchesL) ; Path = Matches),
     spec_to_files(Matches,AbsPath)),
+    with_abs_paths(Pred1,AbsPath))))).
+
+with_abs_paths(Pred1, Path):- 
+  wdmsg(with_abs_paths(Pred1,Path)), 
+  call(Pred1,Path).
+
+/*
+with_abs_paths(Pred1, Path):- 
+atom(Path), is_absolute_file_name(Path), show_failure(exists_file_or_dir(Path))
+ -> 
+  (wdmsg(with_abs_paths(Pred1,Path)),
+ call(Pred1,Path))
+  ;
+  (must((forall((
+     (name_to_files(Path, MatchesL)*-> member(Matches,MatchesL) ; Path = Matches),
+    spec_to_files(Matches,AbsPath)),
     with_abs_paths(Pred1,AbsPath)))))).
+*/
 
 ain_file_search_path(Name,Path):- 
  (user:file_search_path(Name,Path) -> true ; asserta(user:file_search_path(Name,Path))).

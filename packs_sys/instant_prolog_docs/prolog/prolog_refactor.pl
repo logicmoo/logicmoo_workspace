@@ -124,15 +124,6 @@ finish_in( Out,In):- get0(In,C),put_code(Out,C),finish_in( Out,In).
 open_source(Id, Stream) :- prolog:xref_open_source(Id, Stream), !.
 open_source(File, Stream) :- open(File, read, Stream).
 
-is_meta(skin).
-
-
-
-skin_hook(Out, Where, Options) :-
-    option(skin(Skin), Options),
-    call(Skin, Where, Out),
-    !.
-skin_hook(_, _, _).
 
 
 %!  doc_fragments(+Fragments, +In, +Out, +State, +Options) is det.
@@ -182,15 +173,22 @@ clause_fragment(fragment(Start, End, Class,Sub), In, Out, State2, State, Options
 
 sub_clause_fragment(fragment(Start, End, Class, Sub), In, Out, StateP, State, Options) :-
     copy_to(In, Start, Out, StateP, State1), flush_output(Out),
-    member(Class,[neck(_),head(_,_),
-    goal(_,_),singleton,fullstop,control,comment(_)]),        
+    member(Class,[neck(_),head(_,_), goal(_,_),singleton,fullstop,control,comment(_)]),        
     start_fragment(Class, In, Out, State1, State2),
     sub_clause_fragments(Sub, In, Out, State2, State3, Options),
     copy_to(In, End, Out, State3, State4),  % TBD: pop-to?
     end_fragment(Out, In, State4, State),!.
 
-sub_clause_fragment(fragment(Start, End, Class, Sub), In, Out, State1, State, Options) :- % member(Class,[functor,goal_term(_,_),head_term(_,_)]),        
-    functor(Class,F,_),atom_codes(F,[C|_]), format(Out,'/*~s*/ ',[[C]]),
+sub_clause_fragment(fragment(Start, End, Class, Sub), In, Out, State, State, Options) :-
+    member(Class,[functor,goal_term(_,_),head_term(_,_)]),        
+    % functor(Class,F,_),atom_codes(F,[C|_]),  format(Out,'/*~s*/ ',[[C]]),
+    grab_term(In,Start,End, Term, _Source),
+    transformed_term(Term,NewTerm), 
+    write_trans_term(Out,NewTerm),!.
+
+sub_clause_fragment(fragment(Start, End, Class, Sub), In, Out, State1, State, Options) :-
+    member(Class,[functor,goal_term(_,_),head_term(_,_)]),        
+    % functor(Class,F,_),atom_codes(F,[C|_]),  format(Out,'/*~s*/ ',[[C]]),
     start_fragment(Class, In, Out, State1, State2),
     sub_clause_fragments(Sub, In, Out, State2, State3, Options),
     copy_to(In, End, Out, State3, State4),  % TBD: pop-to?
@@ -202,7 +200,8 @@ sub_clause_fragment(fragment(_Start, End, Class, Sub), In, Out, State1, State, O
     copy_to(In, End, Out, State3, State4),  % TBD: pop-to?
     end_fragment(Out, In, State4, State),!.
 
-
+grab_term(In,Start,End, Term, _Source):- 
+ seek(In, Start, +Method, -NewLocation).
 start_fragment(atom, In, Out, State0, State) :-
     !,
     (   peek_code(In, C),
@@ -449,41 +448,6 @@ read_n_codes(N, C, In, [C|T]) :-
     get_code(In, C2),
     N2 is N - 1,
     read_n_codes(N2, C2, In, T).
-
-
-%!  element(+Class, -HTMLElement, -CSSClass) is nondet.
-%
-%   Map classified objects to an  HTML   element  and CSS class. The
-%   actual  clauses  are  created   from    the   1st   argument  of
-%   prolog_src_style/2.
-
-term_expansion(element(_,_,_), Clauses) :-
-    findall(C, element_clause(C), Clauses).
-
-%element_tag(directive, div) :- !.
-element_tag(_, span).
-
-element_clause(element(Term, Tag, CSS)) :-
-    span_term(Term, CSS),
-    element_tag(Term, Tag).
-
-span_term(Classification, Class) :-
-    syntax_colour(Classification, _Attributes),
-    css_class(Classification, Class).
-
-css_class(Class, Class) :-
-    atom(Class),
-    !.
-css_class(Term, Class) :-
-    Term =.. [P1,A|_],
-    (   var(A)
-    ->  Class = P1
-    ;   css_class(A, P2),
-        atomic_list_concat([P1, -, P2], Class)
-    ).
-
-element(_,_,_).                         % term expanded
-
 
 
 

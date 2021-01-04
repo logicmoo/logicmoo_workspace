@@ -42,7 +42,7 @@ with_agents( Pred1, Agent):- with_agent_console(Agent, must(call(Pred1, Agent)))
 run_perceptq(Agent) :-
  declared(perceptq(Agent, PerceptQ)),
  set_advstate(perceptq(Agent, [])),
- handle_percept_list(Agent, PerceptQ), !.
+ invoke_percept_list(Agent, PerceptQ), !.
 run_perceptq(_Agent) :- !.
 
 /*
@@ -52,7 +52,7 @@ run_perceptq(Agent, S0, S9) :-
  undecla re(perceptq(Agent, PerceptQ), S0, S1), PerceptQ \==[],
  decl are(perceptq(Agent, []), S1, S2),
  %set_advstate(S9),
- handle_percept_list(Agent, PerceptQ, S2, S9), !.
+ invoke_percept_list(Agent, PerceptQ, S2, S9), !.
 run_perceptq(_Agent, S0, S0).
 
 */
@@ -123,50 +123,50 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
 
-add_todo( Agent, Auto, Mem0, Mem3) :- Auto = dO('auto', Agent), !,
+add_intent( Agent, Auto, Mem0, Mem3) :- Auto = intend('auto', Agent), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 
-add_todo( _Agent, Action, Mem0, Mem2) :-
- thought_check(Agent, todo(Agent, OldToDo), Mem0),
+add_intent( _Agent, Action, Mem0, Mem2) :-
+ thought_check(Agent, intent(Agent, OldToDo), Mem0),
  append(OldToDo, [Action], NewToDo),
- replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2), !.
+ replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2), !.
 
-add_todo_all(_Agent, [], Mem0, Mem0).
-add_todo_all(Agent, [Action|Rest], Mem0, Mem2) :-
- add_todo( Agent, Action, Mem0, Mem1),
- add_todo_all(Agent, Rest, Mem1, Mem2), !.
+add_intent_all(_Agent, [], Mem0, Mem0).
+add_intent_all(Agent, [Action|Rest], Mem0, Mem2) :-
+ add_intent( Agent, Action, Mem0, Mem1),
+ add_intent_all(Agent, Rest, Mem1, Mem2), !.
 
 
 
 % -----------------------------------------------------------------------------
-% handle_introspect(Agent, Query, Answer, Memory)
+% invoke_introspect(Agent, Query, Answer, Memory)
 
-:- defn_state_getter( handle_introspect(agent, action, result)).
+:- defn_state_getter( invoke_introspect(agent, action, result)).
 
 
-handle_introspect(Agent, path(There), Answer, M0) :- !,
+invoke_introspect(Agent, path(There), Answer, M0) :- !,
    declared(h(_, _, There), M0),
    declared(h(_, Agent, Here), M0),
-  handle_introspect(Agent, path(Here, There), Answer, M0).
+  invoke_introspect(Agent, path(Here, There), Answer, M0).
 
-handle_introspect(Agent, path(Here, There), Answer, M0) :-
+invoke_introspect(Agent, path(Here, There), Answer, M0) :-
  agent_thought_model(Agent, ModelData, M0),
  find_path(Agent, Here, There, Route, ModelData), !,
  get_structure_label(ModelData, Name),
  Answer = msg(['Model is:', Name, 'Shortest path is:\n', Route]).
 
-handle_introspect(Agent, path(Here, There), Answer, ModelData) :-
+invoke_introspect(Agent, path(Here, There), Answer, ModelData) :-
  find_path(Agent, Here, There, Route, ModelData), !,
  get_structure_label(ModelData, Name),
  Answer = msg(['Model is:', Name, 'Shortest path was:', nl, list(Route)]).
 
-handle_introspect(Agent1, recall(Agent, WHQ, Target), Answer, M0) :-
+invoke_introspect(Agent1, recall(Agent, WHQ, Target), Answer, M0) :-
  agent_thought_model(Agent, ModelData, M0),
  recall_whereis(M0, Agent1, WHQ, Target, Answer, ModelData).
 
-handle_introspect(Agent1, recall(Agent, Target), Answer, M0) :- !,
-  handle_introspect(Agent1, recall(Agent, what, Target), Answer, M0).
+invoke_introspect(Agent1, recall(Agent, Target), Answer, M0) :- !,
+  invoke_introspect(Agent1, recall(Agent, what, Target), Answer, M0).
 
 recall_whereis(_S0, _Self, _WHQ, There, Answer, ModelData) :-
  findall(Data, (member(Data, ModelData), nonvar_subterm(There, Data)), Memories),
@@ -196,7 +196,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  eng2cmd(Agent, Words, Action, Mem0),
  !,
  if_tracing(dbug(telnet, 'Console TODO ~p~n', [Agent: Words->Action])),
- add_todo( Agent, Action, Mem0, Mem1), ttyflush, !.
+ add_intent( Agent, Action, Mem0, Mem1), ttyflush, !.
 
 makep:-!.
 makep:- update_changed_files, !.
@@ -247,9 +247,9 @@ decide_action(Agent, Mem0, Mem9):- fail,
   decide_action(Agent, Mem1, Mem9).
 
 decide_action(Agent, Mem0, Mem0) :-
- thought_check(Agent, todo(Agent, [Action|_]), Mem0),
+ thought_check(Agent, intent(Agent, [Action|_]), Mem0),
  (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
- (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about todo: ~w~n', [Agent, Here, Action])).
+ (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about intent: ~w~n', [Agent, Here, Action])).
 
 decide_action(Agent, Mem0, Mem1) :-
  %must_mw1(thought(Agent, timestamp(T0), Mem0)),
@@ -257,7 +257,7 @@ decide_action(Agent, Mem0, Mem1) :-
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
  if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),
- add_todo( Agent, Action, Mem0, Mem1))).
+ add_intent( Agent, Action, Mem0, Mem1))).
 
 % Telnet client (Covered by the above)
 decide_action(Agent, Mem0, Mem1) :-
@@ -292,7 +292,7 @@ decide_action(_Agent, Mem, Mem) :-
 decide_action(_Agent, Mem0, Mem0) :- !.
 
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent, [ dO('auto', Agent)]),
+ set_last_action(Agent, [ intend('auto', Agent)]),
  nop(dbug(decide_action, 'decide_action(~w) FAILED!~n', [Agent])).
 
 

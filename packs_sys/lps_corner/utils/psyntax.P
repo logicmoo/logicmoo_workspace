@@ -21,6 +21,7 @@
    
    LIMITATION regarding lps.js files: they must NOT use # line comments; please use Prolog's % comments instead
 */
+
 :- module(psyntax,[ 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1, dumpjs/2, dumpjs/1,
 	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
@@ -165,7 +166,7 @@ spec_for_one(_/_,SC,delimiter-[SC,classify]) :- !.
 spec_for_one(One,SC,SC) :- atom(One), !.
 spec_for_one(_One,SC,SC-classify).
 
-% functor_arityze(+TemplatesOrFA,-TemplatesList) replaces term unswi_functor/arities by their templates; 
+% functor_arityze(+TemplatesOrFA,-TemplatesList) replaces term functor/arities by their templates; 
 % bidirectional (albeit losing information of course)
 functor_arityze([F/A|TOFAL],[G|FAL]) :- unswi_functor(G,F,A), !, functor_arityze(TOFAL,FAL).
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
@@ -492,7 +493,7 @@ syntax2p(Surface,Vars,Tran,lps_delimiter-[SpecHead,SpecBody],PT) :-
 	(ToWei==true -> syntax2p_literal(Head,Vars,Tran,[T1,T2],ETH,SpecHead,NH); true),
 	( 
 		PT = l_events(NH,NB), NH=happens(_,_,_);
-		PT = l_int(NH,NB), NH = holds(_,_)
+		PT = l_int(NH,NB), NH = holds(_,_), remember_fluent_hint(Head)
 		%TODO: make the processor look ahead at the rule body and decide correctly when the head has no explicit time, but events or fluents are in the body;
 	),
 	!,

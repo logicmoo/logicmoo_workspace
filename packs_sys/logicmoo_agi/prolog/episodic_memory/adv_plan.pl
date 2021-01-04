@@ -17,21 +17,21 @@
 %
 */
 
-action_handle_goals(Agent, Mem0, Mem0):-
+action_invoke_goals(Agent, Mem0, Mem0):-
   \+ thought_check(Agent, current_goals(Agent, [_|_]), Mem0), !,
  dbug(planner, '~w: no goals exist~n', [Agent]).
 
-action_handle_goals(Agent, Mem0, Mem1):-
+action_invoke_goals(Agent, Mem0, Mem1):-
  dbug(planner, '~w: goals exist: generating a plan...~n', [Agent]),
  Knower = Agent,
  generate_plan(Knower, Agent, NewPlan, Mem0), !,
  serialize_plan(Knower, Agent, NewPlan, Actions), !,
  dbug(planner, 'Planned actions are ~w~n', [Actions]),
  Actions = [Action|_],
- add_todo( Agent, Action, Mem0, Mem1).
+ add_intent( Agent, Action, Mem0, Mem1).
 
 % If goals exist, forget them (since the above failed)
-action_handle_goals(Agent, Mem0, Mem9) :-
+action_invoke_goals(Agent, Mem0, Mem9) :-
  thought_check(Agent, current_goals(Agent, [G0|GS]), Mem0),
  replace_thought(Agent, current_goals(Agent, []), Mem0, Mem2),
  dbug(planner, '~w: Can`t solve goals ~p. Forgetting them.~n', [Agent, [G0|GS]]),
@@ -75,13 +75,13 @@ Person think doing what explorers do will make persons goal satisfaction easier.
 Person thinks being an explorer means to find unexplored exits and travel to them.
 Person thinks exits are known by looking.
 Person goal is to have looked
-Person the way to satifiy the goal to have looked is to: add_todo( Person, dO('look', Person))
-Person DOES dO('look', Person)
+Person the way to satifiy the goal to have looked is to: add_intent( Person, intend('look', Person))
+Person DOES intend('look', Person)
 Person notices exits: north, south, east, west.
 Person thinks north is unexplored
 Person thinks going north will be acting like an explorer
 Person goal is to go north
-Person makes plan to go north.. the plan is very simple: [ dO('go_dir', Person, walk, north)]
+Person makes plan to go north.. the plan is very simple: [ intend('go_dir', Person, walk, north)]
 Person DOESdo_go_dir(Person, walk, north)
 Person leaves kitchen to the north
 In Kitchen, thus Person, sees Person did_depart kitchen to the north
@@ -97,7 +97,7 @@ Person belives kitchen is where they end up if they go south from pantry
 do_look(Person) is a cheap and effective strategy
 
 
-event( trys( dO('go_dir', Person, walk, north)))
+event( trys( intend('go_dir', Person, walk, north)))
 
 
 
@@ -131,7 +131,7 @@ sequenced(_Self,
   reverse_dir(Dir, RDir),
   h(exit(Dir), Here, There), % path(Here, There)
   % %Action:
- did( dO('go_dir', Self, Walk, Dir)),
+ did( intend('go_dir', Self, Walk, Dir)),
   %PostConds:
   ~h(WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
@@ -197,8 +197,8 @@ new_plan_newver(Self, CurrentState, GoalState, Plan) :-
  convert_state_to_goalstate(CurrentState, CurrentStateofGoals),
  gensym(ending_step_1, End),
  Plan =
- plan([step(start , oper(Self, dO('wait', Self), [], CurrentStateofGoals)),
-       step(completeFn(End), oper(Self, dO('wait', Self), GoalState, []))],
+ plan([step(start , oper(Self, intend('wait', Self), [], CurrentStateofGoals)),
+       step(completeFn(End), oper(Self, intend('wait', Self), GoalState, []))],
       [before(start, completeFn(End))],
       [],
       []).
@@ -579,7 +579,7 @@ planning_loop(Goals0, Operators, Plan0, Plan2, Depth0, Timeout) :-
 serialize_plan(_Knower, _Agent, plan([], _Orderings, _B, _L), []) :- !.
 
 serialize_plan(Knower, Agent, plan(Steps, Orderings, B, L), Tail) :-
- select_from(step(_, oper(Agent, dO('wait', _), _, _)), Steps, RemainingSteps),
+ select_from(step(_, oper(Agent, intend('wait', _), _, _)), Steps, RemainingSteps),
  !,
  serialize_plan(Knower, Agent, plan(RemainingSteps, Orderings, B, L), Tail).
 
@@ -647,9 +647,9 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2dir1(Doer, Here, There, dO('go_dir', Doer, _Walk, Dir), ModelData):-
+path2dir1(Doer, Here, There, intend('go_dir', Doer, _Walk, Dir), ModelData):-
  in_model(h(exit(Dir), Here, There), ModelData).
-path2dir1(Doer, Here, There, dO('go_obj', Doer, _Walk, There), ModelData) :-
+path2dir1(Doer, Here, There, intend('go_obj', Doer, _Walk, There), ModelData) :-
  in_model(h(descended, Here, There), ModelData).
 
 path2directions(Doer, [Here, There], [GOTO], ModelData):-

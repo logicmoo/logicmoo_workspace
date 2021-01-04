@@ -194,7 +194,7 @@ do_setup_history:-
    import_some,
    expose_all,
    %baseKB:start_runtime_mud,
-   %run_setup_now,  
+   run_setup_now,  
    %baseKB:start_mud_telnet, 
    % adventure,
    % lar,
@@ -263,8 +263,13 @@ expose_all:-
 
 */
 load_before_compile:- 
-   %set_prolog_flag(verbose_file_search,true),
-   use_module(library(logicmoo_webui)),
+   %set_prolog_flag(verbose_file_search,true), 
+   use_module(library(sandbox)),
+   use_module(library(lps_corner)),
+   use_module(library(logicmoo_webui)),      
+   use_module(library(logicmoo_lps)),
+   use_module('/opt/logicmoo_workspace/packs_sys/lps_corner/swish/lps_2d_renderer.pl'),
+   use_module('/opt/logicmoo_workspace/packs_sys/lps_corner/swish/lps_2d_renderer.pl'),
    %set_prolog_flag(verbose_file_search,false),
    
    %:- use_module(library(logicmoo_nlu)).
@@ -294,9 +299,10 @@ start_network:-
    !.
 
 
-load_rest:-
+load_rest:- 
+   % fail,
    nodebug,
-   load_nomic_mu,
+   load_nomic_mu,   
    load_before_compile,!.
 
 load_rest:-
@@ -359,6 +365,7 @@ import_some:-
          (predicate_property(M:P,imported_from(RM))->true;RM=M)),
          (RM:export(RM:F/A),rtrace:import(RM:F/A))), !.
 
+start_rest:- !.
 start_rest:- 
    load_rest,
    mud_baseKB,
@@ -434,7 +441,7 @@ start_all :- start_network, start_rest.
 :- volatile(http_log:log_stream/2).
 :- volatile(prolog_listing:opened_source/3).
 %:- abolish( yall:(?)/0 ).
-:- delete_import_module(user,pfc_lib).
+%:- delete_import_module(user,pfc_lib).
 
 :- meta_predicate aleph:abgen(*,*,*,0).
 :- meta_predicate aleph:abgen(*,*,0).

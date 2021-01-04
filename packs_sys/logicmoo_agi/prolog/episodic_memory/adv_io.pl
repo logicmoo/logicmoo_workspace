@@ -162,9 +162,9 @@ prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term, [output(cu
 
 % :- mu:ensure_loaded(adv_debug).
 
-dbug1(_):- xnotrace(current_prolog_flag(dmsg_level, never)), !.
+dbug1(_):- notrace(current_prolog_flag(dmsg_level, never)), !.
 dbug1(Fmt) :-
- xnotrace(( \+ \+
+ notrace(( \+ \+
    ((mu:simplify_dbug(Fmt, FmtSS),
      portray_vars:pretty_numbervars(FmtSS, FmtS),
      locally(t_l:no_english, term_to_pretty_string(FmtS, "% ", SSS)),

@@ -6,6 +6,9 @@
 
 :- multifile sandbox:safe_primitive/1.
  
+% For debugging:
+% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses; uncomment the following for a log:
 
 /*
@@ -17,8 +20,6 @@ sandbox:safe_primitive(user:mylog(_M)).
 :- use_module(library(settings)).
 %:- use_module(library(http/http_log)). % uncomment to produce httpd.log
 %:- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
-
-
 
 :- multifile swish_config:config/2.
 :- dynamic swish_config:config/2.
@@ -370,8 +371,8 @@ sandbox:safe_primitive(interpreter:uretract(_)).
 sandbox:safe_primitive(interpreter:uretractall(_)). 
 
 % For debugging:
-sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
-sandbox:safe_primitive(swish_highlight:show_mirror(_)).
+% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 
 
 /** 

@@ -44,10 +44,10 @@ cmd_workarround_l([Verb, Relation|ObjS], [Verb|ObjS]):- is_ignorable(Relation), 
 cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
- append(Left, [Atom, [M|More], ObjS2).
-% dO('look', Agent, Spatial) at screen door
+ append(Left, [Atom, M|More], ObjS2).
+% intend('look', Agent, Spatial) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
-cmd_workarround_l( [Verb|ObjS], [dO,Verb|ObjS]):-  Verb\==dO.
+cmd_workarround_l( [Verb|ObjS], [intend,Verb|ObjS]):-  Verb\==intend.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
@@ -109,42 +109,42 @@ psubsetof(A, C) :-
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
-handle_command(Agent, Action) ==>>
+invoke_command(Agent, Action) ==>>
  invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
-handle_command(Agent, Action) ==>>
+invoke_command(Agent, Action) ==>>
   {set_last_action(Agent, Action)},
- handle_action(Agent, Action), !.
-handle_command(Agent, Action) :-
+ invoke_action(Agent, Action), !.
+invoke_command(Agent, Action) :-
  event_failed(Agent, unknown_comand( Action)),
  player_format(Agent, 'Failed or No Such Command: ~w~n', Action).
 
 % --------
 
 /*
-new_do_todo( Agent):-
+new_do_intent( Agent):-
  get_advstate(S0),
- handle_intents( Agent, S0, S9),
+ invoke_intents( Agent, S0, S9),
  set_advstate(S9), !.
 */
-:- defn_state_setter( handle_intents( +agent)).
+:- defn_state_setter( invoke_intents( +agent)).
 
-handle_intents( Agent) ==>>
+invoke_intents( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
- {member( todo(Agent, []), Mem0)}, !.
-handle_intents( Agent, S0, S9) :-
+ {member( intent(Agent, []), Mem0)}, !.
+invoke_intents( Agent, S0, S9) :-
  maybe_undeclare(memories(Agent, Mem0), S0, S1),
- thought_check(Agent, todo(Agent, OldToDo), Mem0), append([Action], NewToDo, OldToDo), replace_thought(Agent, todo(Agent, NewToDo), Mem0, Mem2),
+ thought_check(Agent, intent(Agent, OldToDo), Mem0), append([Action], NewToDo, OldToDo), replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
  replace_declare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
- handle_command(Agent, Action, S2, S9).
-handle_intents( _Agent, S0, S0).
+ invoke_command(Agent, Action, S2, S9).
+invoke_intents( _Agent, S0, S0).
 
 
 
-%do_todo_while(Agent, S0, S9) :-
+%do_intent_while(Agent, S0, S9) :-
 % declared(memories(Agent, Mem0), S0),
-% th ought(Agent, todo(Agent, ToDo), Mem0),
+% th ought(Agent, intent(Agent, ToDo), Mem0),
 % append([Action], NewToDo, OldToDo),
 
 
@@ -165,7 +165,7 @@ handle_intents( _Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-handle_action(Agent, Action, S0, S3) :-
+invoke_action(Agent, Action, S0, S3) :-
  quietly_must((
  maybe_undeclare(memories(Agent, Mem0), S0, S1),
  memorize_doing(Agent, Action, Mem0, Mem1),
@@ -211,12 +211,12 @@ find_clock_time(Agent, T0, OldNow, _UMem):-
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-%trival_act(sub__do_examine(_, _, _, _, _)).
-%trival_act( dO('look', _)).
+%trival_act(intend('sub__examine',_, _, _, _, _)).
+%trival_act( intend('look', _)).
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( dO('wait', _)).
+trival_act( intend('wait', _)).
 
 
 satisfy_each_cond(Ctxt, [], success(Ctxt)) ==>> !.
@@ -314,9 +314,9 @@ act_change_state(Auto, _, _):- parsed_as_simple(Auto), !, fail.
 act_change_state(Open, Opened, Value):- nonvar(Value), !, act_change_state(Open, Opened, Val), !, Value=Val.
 act_change_state('lock', 'locked', t).
 act_change_state('open', 'opened', t).
-act_change_state( does('switch', on), 'powered', t).
-act_change_state( does('switch', off), 'powered', f).
-act_change_state( does('switch', Open), Opened, TF):- nonvar(Open), !, act_change_state(Open, Opened, TF).
+act_change_state( did('switch', on), 'powered', t).
+act_change_state( did('switch', off), 'powered', f).
+act_change_state( did('switch', Open), Opened, TF):- nonvar(Open), !, act_change_state(Open, Opened, TF).
 
 act_change_state(Close, Opened, Value):-
    act_change_state_0(Close, UnOpened, Val), nonvar(Val), as_true(UnOpened, Opened, TF),
@@ -325,7 +325,7 @@ act_change_state(Close, Opened, Value):-
 as_true(UnOpen, Open, f):- atom(UnOpen), var(Open), atom_concat('un', Open, UnOpen), !.
 as_true( Opened, Opened, t).
 
-act_change_state_0(Light, Lit, t):- bpart_contol(Light, Lit), !.
+act_change_state_0(Light, Lit, t):- control_changed(Light, Lit), !.
 act_change_state_0(Unlock, Locked, FT):-
   act_change_opposite(Unlock, Lock),
   act_change_state(Lock, Locked, TF), act_change_opposite(TF, FT).
@@ -379,16 +379,16 @@ reverse_dir(Dir, reverse(Dir), _).
 /*
 creates:
 
-add_agent_todo( Agent, Action):-
+add_agent_intent( Agent, Action):-
  get_advstate(S0),
- add_agent_todo( Agent, Action, S0, S9),
+ add_agent_intent( Agent, Action, S0, S9),
  get_advstate(S9).
 */
-:- defn_state_setter(add_agent_todo( agent, action)).
+:- defn_state_setter(add_agent_intent( agent, action)).
 
-add_agent_todo( Agent, Action, S0, S9) :-
+add_agent_intent( Agent, Action, S0, S9) :-
   maybe_undeclare(memories(Agent, Mem0), S0, S1),
-  add_todo( Agent, Action, Mem0, Mem1),
+  add_intent( Agent, Action, Mem0, Mem1),
   replace_declare(memories(Agent, Mem1), S1, S9).
 
 add_agent_goal(Agent, Action, S0, S9) :-
@@ -396,9 +396,9 @@ add_agent_goal(Agent, Action, S0, S9) :-
   add_goal(Agent, Action, Mem0, Mem1),
   replace_declare(memories(Agent, Mem1), S1, S9).
 
-add_do_look(Agent) ==>>
+add_intent_look(Agent) ==>>
   h(inside, Agent, _Somewhere),
-  add_agent_todo( Agent, dO('look', Agent)).
+  add_agent_intent( Agent, intend('look', Agent)).
 
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
@@ -412,6 +412,11 @@ action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
+
+action_verb_agent_args(Action, Verb, Agent, Args):-
+  univ_safe(Action, [intend, Verb, Agent|Args]), nonvar(Verb), !,
+  univ_safe(VAction, [Verb, Agent|Args]),
+  action_verb_agent_args(VAction, Verb, Agent, Args).
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),
