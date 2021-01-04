@@ -418,7 +418,7 @@ verb_frame1(Action, Put, % to-region, of-container
 % Dig
 % %%%%%%%%%%%%%%
 /*
-reframed_call( Pred, Agent, [dig, ShapeHole], dO('dig', Agent, ShapeHole, Where, Instr), M) :- fail,
+reframed_call( Pred, Agent, [dig, ShapeHole], intend('dig', Agent, ShapeHole, Where, Instr), M) :- fail,
  in_agent_model(Agent, inst(Agent), M),
  in_agent_model(Agent, h(_, Agent, Where), M),
  Instr=shovel.
@@ -489,13 +489,13 @@ verb_frame1(Action, want,
 
 
 % %%%%%%%%%%%%%%
-bpart_contol(break, broken).
-bpart_contol(repair, unbroken).
-bpart_contol(Smooch, Smooched):-
+control_changed(break, broken).
+control_changed(repair, unbroken).
+control_changed(Smooch, Smooched):-
   munl_call(talkdb:talk_db(_, Smooch, _Smooches, Smooched, _Smooching, Smooched)).
-bpart_contol(light, lit).
-bpart_contol(unlight, unlit).
-%bpart_contol(Open, Opened):- munl_call(clex:tv_pp(Opened, Open)).
+control_changed(light, lit).
+control_changed(unlight, unlit).
+%control_changed(Open, Opened):- munl_call(clex:tv_pp(Opened, Open)).
 
 % %%%%%%%%%%%%%%
 verb_frame1(Action, Light,
@@ -513,7 +513,7 @@ verb_frame1(Action, Light,
   pre(~status(Object, Lit)),
   post(~status(Object, Unlit)),
   post(status(Object, Lit)),
-  end_of_list]):- bpart_contol(Light, Lit).
+  end_of_list]):- control_changed(Light, Lit).
 
 
 

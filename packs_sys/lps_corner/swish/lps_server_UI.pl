@@ -37,6 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 % :- meta_predicate any_call(0).
 
+:- multifile(lps_server_UI:term_rendering/5).
+
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
 :- use_module(library(http/js_write)).
@@ -59,7 +61,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- discontiguous(lps_server_UI:term_rendering/5).
 
-term_rendering(lpsServer(LPS_ID,Has2d,MinCT), _Vars, _Options) -->
+
+lps_server_UI:term_rendering(lpsServer(LPS_ID,Has2d,MinCT), _Vars, _Options) -->
 	{Has2d==true-> twoDviewElements(LPS_ID,MinCT,false,_,Script,Canvas), Displayer=[Canvas,Script] ; Displayer=[]},
 	html(div(['data-render'('As LPS Server')],[
 		p('See this LPS server\'s status, state and inject events from:'),
@@ -505,7 +508,7 @@ twoD(Request) :-
 % twoDviewElements(+LPS_ID,+WaitForWindowLoading,-CommonResources,-Script,-Canvas)
 twoDviewElements(LPS_ID, MinCT, WaitForWindow, [
 	script(src("/node_modules/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
-	script(src("/bower_components/jquery/dist/jquery.min.js"),[]),
+	% script(src("/bower_components/jquery/dist/jquery.min.js"),[]),
 	script(src("/lps/2dWorld.js"),[]), 
 	script(src("/lps/2dWorld_lazy.js"),[]) ], 
 	\js_script({|javascript(LPS_ID,MY_SELECTOR,MinCT,WaitForWindow)||

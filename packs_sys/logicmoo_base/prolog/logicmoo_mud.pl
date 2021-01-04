@@ -27,7 +27,9 @@ set_prologmud_home_dir:-
 :- endif.
 
 start_runtime_mud:-!.
-ensure_mud_startup:- !.
+start_runtime_mud:- lst, listing(mudAtLoc).
+
+% ensure_mud_startup:- !.
 ensure_mud_startup:- 
    set_prologmud_home_dir,
    baseKB:ensure_loaded(prologmud(mud_loader)),

@@ -160,7 +160,7 @@ dining_room type_props place.
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, "You lack the ability to fly."),
-   oper(/*garden, */ dO('go_dir', $agent, _, south),
+   oper(/*garden, */ intend('go_dir', $agent, _, south),
    % precond(Test, FailureMessage)
      precond(getprop(screendoor, (opened = t)), ["you must_mw open the door first"]),
    % body(clause)
@@ -201,7 +201,7 @@ type_props(pantry, [
 type_props(brklamp,
    inherit(broken),
    name = ("possibly broken lamp"),
-   effect( does('switch', on), print_(_Agent, "Switch is flipped")),
+   effect( did('switch', on), print_(_Agent, "Switch is flipped")),
    effect(hit, [print_("Hit brklamp"), setprop($self, inherit(broken))]),
    inherit(lamp)).
 
@@ -218,8 +218,8 @@ type_props(screendoor, [
 :- push_to_state([
  type_props(broken, [
     name = ("definately broken"),
-    effect( does('switch', on), true),
-    effect( does('switch', off), true),
+    effect( did('switch', on), true),
+    effect( did('switch', off), true),
     can(switch),
     adjs($class),
     adjs([dented])
@@ -349,7 +349,7 @@ type_props(screendoor, [
 
 
    % players use power but cant be powered down
-   can( does('switch', off), f), powered = t
+   can( did('switch', off), f), powered = t
   ]),
 
  type_props(autonomous, [inherit(autoscan), inherit(impulsive),
@@ -417,9 +417,9 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(character),
    powered = t,
-   % TODO: floyd should `do_look($agent)` when turned back on.
-   effect( does('switch', on), setprop($self, powered = t)),
-   effect( does('switch', off), setprop($self, (powered= f)))
+   % TODO: floyd should `intend('look',$agent)` when turned back on.
+   effect( did('switch', on), setprop($self, powered = t)),
+   effect( did('switch', off), setprop($self, (powered= f)))
   ]),
 
   type_props(natural_force, [
@@ -453,9 +453,9 @@ type_props(screendoor, [
    %adjs(local),
   ~can(move),
   ~can(take),
-   oper( dO('discard', $agent, Thing),
+   oper( intend('discard', $agent, Thing),
     precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
-    body( dO('take', $agent, Thing, in, $self))), % body(clause)
+    body( intend('take', $agent, Thing, in, $self))), % body(clause)
    % inherit(container),
    has_rel(exit(_))
   ]),
@@ -465,9 +465,9 @@ type_props(screendoor, [
    opened = f,
    can(open),
    has_rel(in),
-  oper( dO('put', $agent, Thing, in, $self),
+  oper( intend('put', $agent, Thing, in, $self),
    precond(~getprop(Thing, inherit(liquid)), ["liquids would spill out"]), % precond(Test, FailureMessage)
-   body( dO('take', $agent, Thing, in, $self)))  % body(clause)
+   body( intend('take', $agent, Thing, in, $self)))  % body(clause)
   ]),
 
 
@@ -481,11 +481,11 @@ type_props(screendoor, [
 
  type_props(flask, [
    adjs(physical),
-  oper( dO('put', $agent, Thing, in, $self),
+  oper( intend('put', $agent, Thing, in, $self),
    % precond(Test, FailureMessage)
    precond(getprop(Thing, inherit(fully_corporial)), ["non-physical would spill out"]),
    % body(clause)
-   body( dO('take', $agent, Thing, in, $self))),
+   body( intend('take', $agent, Thing, in, $self))),
    inherit(container),
    (opened = t),
    inherit(moveable)
@@ -604,8 +604,8 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(moveable),
    emitting(see, light),
-   effect( does('switch', on), setprop($self, emitting(see, light))),
-   effect( does('switch', off), delprop($self, emitting(see, light))),
+   effect( did('switch', on), setprop($self, emitting(see, light))),
+   effect( did('switch', off), delprop($self, emitting(see, light))),
    breaks_into = (broken_lamp)
   ]),
 
@@ -616,8 +616,8 @@ type_props(screendoor, [
    traits(brass),
    adjs(dented),
    can(switch),
-   effect( does('switch', on), true),
-   effect( does('switch', off), true) % calls true(S0, S1) !
+   effect( did('switch', on), true),
+   effect( did('switch', off), true) % calls true(S0, S1) !
   ]),
 
  type_props(surface, [has_rel(on), default_rel = on, adjs(physical), cleanliness=clean]),
@@ -634,8 +634,8 @@ type_props(screendoor, [
    inherit(perceptq),
    inherit(memorize_perceptq),
    can(switch),
-   effect( does('switch', on), setprop($self, powered = t)),
-   effect( does('switch', off), setprop($self, (powered= f))),
+   effect( did('switch', on), setprop($self, powered = t)),
+   effect( did('switch', off), setprop($self, (powered= f))),
    powered = t,
    has_sense(see),
    breaks_into = (broken_videocam)

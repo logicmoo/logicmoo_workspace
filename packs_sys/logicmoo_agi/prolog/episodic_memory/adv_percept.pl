@@ -95,18 +95,18 @@ send_1percept(Agent, Event, S0, S2) :-
   queue_agent_percept(Agent, [Event], S0, S2).
 
 send_1percept(Agent, Event, S0, S2) :-
-  handle_percept_list(Agent, [Event], S0, S2).
+  invoke_percept_list(Agent, [Event], S0, S2).
 
 send_percept(Agent, Event, S0, S2) :-
   declared(perceptq(Agent, _Q), S0), !,
   queue_agent_percept(Agent, Event, S0, S2).
 send_percept(Agent, Event, S0, S2) :-
-  handle_percept_list(Agent, Event, S0, S2).
+  invoke_percept_list(Agent, Event, S0, S2).
 
-:- defn_state_setter( handle_percept_list(agent, list(event))).
-handle_percept_list(_Agent, [], S0, S0):-!.
-% handle_percept_list(Agent, Events, _S0, _S2) :- dmsg( handle_percept_list(Agent, Events)), fail.
-handle_percept_list(Agent, Events, S0, S2) :-
+:- defn_state_setter( invoke_percept_list(agent, list(event))).
+invoke_percept_list(_Agent, [], S0, S0):-!.
+% invoke_percept_list(Agent, Events, _S0, _S2) :- dmsg( invoke_percept_list(Agent, Events)), fail.
+invoke_percept_list(Agent, Events, S0, S2) :-
   maybe_undeclare(memories(Agent, Mem0), S0, S1),
   agent_clock_time_prev(Agent, timestamp(Stamp, _OldNow), Events),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
@@ -128,7 +128,7 @@ queue_agent_percept(_Agent, [], S0, S0):-!.
 %queue_agent_percept(Agent, Events, _S0, _S2) :- dmsg(queue_agent_percept(Agent, Events)), _Player_1\==Agent, dumpST, fail.
 queue_agent_percept(Agent, Events, S0, S2) :-
  getprop(Agent, inherited(no_perceptq), S0), !,
- handle_percept_list(Agent, Events, S0, S2).
+ invoke_percept_list(Agent, Events, S0, S2).
 queue_agent_percept(Agent, Events, S0, S2) :-
  agent_clock_time_now(Agent, timestamp(Stamp, OldNow), S0),
  append_toplevel_props(perceptq(Agent, [timestamp(Stamp, OldNow)|Events]), S0, S2).
@@ -205,9 +205,9 @@ problem_solution(stinky, smell, purity).
 problem_solution(noisy, hear, quiet).
 
 
-:- defn_mem_setter(percept_todo( agent, list(action))).
-percept_todo( Agent, Actions, Mem0, Mem2):- add_todo_all(Agent, Actions, Mem0, Mem2), !.
-%percept_todo( Agent, Actions, Mem0, Mem2):- apply_mapl_state(add_goal(Agent), Actions, Mem0, Mem2).
+:- defn_mem_setter(percept_intent( agent, list(action))).
+percept_intent( Agent, Actions, Mem0, Mem2):- add_intent_all(Agent, Actions, Mem0, Mem2), !.
+%percept_intent( Agent, Actions, Mem0, Mem2):- apply_mapl_state(add_goal(Agent), Actions, Mem0, Mem2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -233,11 +233,11 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _P
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
- findall( sub__do_examine(Agent, Sense, child, Obj, DepthLess),
+ findall( intend('sub__examine',Agent, Sense, child, Obj, DepthLess),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
- percept_todo( Agent, Actions, Mem0, Mem2).
+ percept_intent( Agent, Actions, Mem0, Mem2).
 
 process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
@@ -257,7 +257,7 @@ process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropLi
  dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
- add_todo_all([ dO('take', Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
+ add_intent_all([ intend('take', Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
 process_percept_do_auto(_Agent, _Percept, _Stamp, M0, M0):- !.
@@ -267,7 +267,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, dO('emote', Agent, _, _Targ, _)).
+was_own_self(Agent, intend('emote', Agent, _, _Targ, _)).
 was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
@@ -323,7 +323,7 @@ process_percept_list(Agent, Percept, Stamp, Mem0, Mem3) :-
  each_update_model(Agent, Percept, Stamp, PerceptMem, Mem0, Mem2),
  process_percept_main(Agent, Percept, Stamp, Mem2, Mem3))), !.
 process_percept_list(_Agent, Percept, _Stamp, Mem0, Mem0) :- dumpST,
- dbug(todo, 'process_percept_list(~w) FAILED!~n', [Percept]), !.
+ dbug(intent, 'process_percept_list(~w) FAILED!~n', [Percept]), !.
 
 
 

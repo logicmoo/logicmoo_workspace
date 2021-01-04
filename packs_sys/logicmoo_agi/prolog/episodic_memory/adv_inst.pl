@@ -157,7 +157,7 @@ create_objprop(_Why, Self, inherit(memorizer, t), S0, S2):- !, clock_time(Now),
  goals_skipped(Agent, []),
  goals_satisfied(Agent, []),
  % model([]),
-  todo(Agent, [dO('look', Self)]),
+  intent(Agent, [intend('look', Self)]),
  inst(Self)]), S0, S2).
 
 

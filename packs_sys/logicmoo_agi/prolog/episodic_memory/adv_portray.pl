@@ -114,16 +114,16 @@ adv_prolog_portray_hook(Term) :- tracing, is_list(Term), member(E, Term), compou
 
 user:portray(Term):- notrace(adv_prolog_portray_hook(Term)), !.
 
-no_memlists(Term):- simplify_dbug(Term,Term1), map_tree_pred(simplify_memlists,Term1,Term2),!, Term\=@=Term2, writeq(Term2),!.
+no_memlists(Term):- fail, simplify_dbug(Term,Term1), map_tree_pred(simplify_memlists,Term1,Term2),!, Term\=@=Term2, writeq(Term2),!.
 
-map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2), Arg1\==Arg2,!.
+map_tree_pred(Pred,Arg1,Arg2):- call(Pred,Arg1,Arg2),!.
 map_tree_pred(_ ,Arg1,Arg2):- \+ compound(Arg1), !, Arg2=Arg1.
 map_tree_pred(Pred,Arg1,Arg2):- 
   compound_name_arguments(Arg1,F1,ArgS1),
   maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
-simplify_memlists(Term,E):- is_list(Term),member(E,Term),compound(E), member(E,[inst(_),memlist_for(_)]),!.
+simplify_memlists(Term,E):- is_list(Term),member(E,Term),compound(E), member(E,[inst(_),structure_label(_),memlist_for(_)]),!.
 
 user:portray(Term):- notrace(no_memlists(Term)), !.
 

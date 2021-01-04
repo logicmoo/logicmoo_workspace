@@ -2569,10 +2569,10 @@ thetaRole(hand, hand_1, hand_to_tt, 3, obj_tt, object_tt, "", "", 0).
 thetaRole(hand, hand_2, hand_to_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(hand, hand_2, hand_to_tt, 2, iobj_tt, human_tt, "to", "", 0).
 thetaRole(hand, hand_2, hand_to_tt, 3, obj_tt, object_tt, "", "", 0).
-thetaRole(handle, handle_3, handle_proposal_tt, -1, expl_tt, concept_tt, "proposals", "v_o", 0).
-thetaRole(handle, handle_3, handle_proposal_tt, 1, subj_tt, human_tt, "", "", 0).
-thetaRole(handle, handle_4, action_handle_tt, 1, subj_tt, animal_tt, "", "", 0).
-thetaRole(handle, handle_4, action_handle_tt, 2, obj_tt, object_tt, "", "", 0).
+thetaRole(handle, invoke_3, invoke_proposal_tt, -1, expl_tt, concept_tt, "proposals", "v_o", 0).
+thetaRole(handle, invoke_3, invoke_proposal_tt, 1, subj_tt, human_tt, "", "", 0).
+thetaRole(handle, invoke_4, action_invoke_tt, 1, subj_tt, animal_tt, "", "", 0).
+thetaRole(handle, invoke_4, action_invoke_tt, 2, obj_tt, object_tt, "", "", 0).
 thetaRole(hang, hang_0, bar_stay_tt, -1, expl_tt, concept_tt, s("out", "at", "the", "bar"), "v_o", 0).
 thetaRole(hang, hang_0, bar_stay_tt, 1, subj_tt, concept_tt, "", "", 0).
 thetaRole(hang, hang_1, hang_up_tt, -1, expl_tt, concept_tt, "up", "v_o", 0).
@@ -3868,8 +3868,8 @@ thetaRole(phone, phone_3, call_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(phone, phone_3, call_tt, 2, obj_tt, human_tt, "", "", 0).
 thetaRole(phone, phone_4, call_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(phone, phone_4, call_tt, 2, obj_tt, human_tt, "", "", 0).
-thetaRole(pick, pick_0, handle_call_tt, -1, expl_tt, concept_tt, "up", "v_o", 0).
-thetaRole(pick, pick_0, handle_call_tt, 1, subj_tt, human_tt, "", "", 0).
+thetaRole(pick, pick_0, invoke_call_tt, -1, expl_tt, concept_tt, "up", "v_o", 0).
+thetaRole(pick, pick_0, invoke_call_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(pick, pick_1, pick_up_tt, -1, expl_tt, concept_tt, "up", "v_o", 0).
 thetaRole(pick, pick_1, pick_up_tt, 1, subj_tt, animal_tt, "", "", 0).
 thetaRole(pick, pick_1, pick_up_tt, 2, obj_tt, object_tt, "", "", 0).
@@ -5500,8 +5500,8 @@ thetaRole(take, take_18, take_train_tt, 2, iobj_tt, concept_tt, "from", "", 1).
 thetaRole(take, take_18, take_train_tt, 3, iobj_tt, concept_tt, "to", "", 1).
 thetaRole(take, take_19, pleasure_drive_tt, -1, expl_tt, concept_tt, s("the", "car", "for", "a", "drive"), "v_o", 0).
 thetaRole(take, take_19, pleasure_drive_tt, 1, subj_tt, concept_tt, "", "", 0).
-thetaRole(take, take_2, handle_call_tt, -1, expl_tt, concept_tt, s("a", "phone", "call"), "v_o", 0).
-thetaRole(take, take_2, handle_call_tt, 1, subj_tt, human_tt, "", "", 0).
+thetaRole(take, take_2, invoke_call_tt, -1, expl_tt, concept_tt, s("a", "phone", "call"), "v_o", 0).
+thetaRole(take, take_2, invoke_call_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(take, take_20, pleasure_drive_tt, -1, expl_tt, concept_tt, s("for", "a", "drive"), "vo_", 0).
 thetaRole(take, take_20, pleasure_drive_tt, 1, subj_tt, concept_tt, "", "", 0).
 thetaRole(take, take_20, pleasure_drive_tt, 2, obj_tt, concept_tt, "", "", 0).
@@ -5525,8 +5525,8 @@ thetaRole(take, take_28, take_final_exam_tt, -1, expl_tt, concept_tt, s("final",
 thetaRole(take, take_28, take_final_exam_tt, 1, subj_tt, concept_tt, "", "", 0).
 thetaRole(take, take_29, take_midterm_tt, -1, expl_tt, concept_tt, s("a", "mid", "term"), "v_o", 0).
 thetaRole(take, take_29, take_midterm_tt, 1, subj_tt, concept_tt, "", "", 0).
-thetaRole(take, take_3, handle_proposal_tt, -1, expl_tt, concept_tt, s("care", "of", "proposals"), "v_o", 0).
-thetaRole(take, take_3, handle_proposal_tt, 1, subj_tt, human_tt, "", "", 0).
+thetaRole(take, take_3, invoke_proposal_tt, -1, expl_tt, concept_tt, s("care", "of", "proposals"), "v_o", 0).
+thetaRole(take, take_3, invoke_proposal_tt, 1, subj_tt, human_tt, "", "", 0).
 thetaRole(take, take_30, take_midterm_tt, -1, expl_tt, concept_tt, s("a", "midterm"), "v_o", 0).
 thetaRole(take, take_30, take_midterm_tt, 1, subj_tt, concept_tt, "", "", 0).
 thetaRole(take, take_31, take_test_tt, -1, expl_tt, concept_tt, s("a", "test"), "v_o", 0).
