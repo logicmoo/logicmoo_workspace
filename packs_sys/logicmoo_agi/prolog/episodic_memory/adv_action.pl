@@ -413,10 +413,9 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
-action_verb_agent_args(Action, Verb, Agent, Args):-
-  univ_safe(Action, [intend, _Intender, act3(Verb, Agent, Args)]), nonvar(Verb), !,
-  univ_safe(VAction, [Verb, Agent|Args]),
-  action_verb_agent_args(VAction, Verb, Agent, Args).
+action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
+
+action_verb_agent_args(intend(_,Act3), Verb, Agent, Args):- action_verb_agent_args(Act3, Verb, Agent, Args), !.
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),
