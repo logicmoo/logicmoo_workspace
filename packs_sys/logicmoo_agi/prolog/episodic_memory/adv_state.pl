@@ -67,7 +67,7 @@ save_term(Filename, How, _) :-
 :- multifile(extra_decl/2).
 :- dynamic(extra_decl/2).
 :- dynamic(undo/2).
-%undo([u, u, u, u, u, u, u, u]).
+%undO([u, u, u, u, u, u, u, u])).
 :- dynamic(advstate_db/1).
 advstate_db([]).
 
