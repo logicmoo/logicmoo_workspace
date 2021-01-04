@@ -107,9 +107,9 @@ update_model(Knower, did_arrive(Doer, At, Here, _, ExitNameReversed), Timestamp,
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
- model_prepend(RecentMem, [ attempts(Doer, intend('go_dir', Doer, _, ExitName))| OlderMem], Mem),
+ model_prepend(RecentMem, [ attempts(Doer, intend(Doer, act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
     % find figment
- \+ member( attempts(Doer, intend('go_dir', Doer, _, _)), RecentMem), % guarrantee recentness
+ \+ member( attempts(Doer, intend(Doer, act3('go__dir',Doer,[ _, _]))), RecentMem), % guarrantee recentness
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp
   %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n', 
   %       [Doer, AtGo, Dest, There, Here]),
@@ -170,7 +170,7 @@ update_model(_Knower, failure(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, success(_, _), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, failure(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, did_emote(_, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
-update_model(_Knower, intend('emote', _, _, _, _), _Timestamp, _Mem, M0, M0) :- !.
+update_model(_Knower, intend(_, act3('emote',_,[ _, _, _])), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, msg(_), _Timestamp, _Mem, M0, M0) :- !.
 
 update_model(Knower, time_passes(Target), Timestamp, _Memory, M, M):-

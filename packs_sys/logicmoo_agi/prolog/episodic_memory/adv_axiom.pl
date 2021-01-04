@@ -59,7 +59,7 @@ aXiom(print_(Agent, Msg)) ==>>
   h(descended, Agent, Here),
   queue_local_event(msg_from(Agent, Msg), [Here]).
 
-aXiom( intend('wait', Agent)) ==>>
+aXiom( intend(Agent, act3('wait',Agent,[]))) ==>>
  from_loc(Agent, Here),
  queue_local_event(time_passes(Agent), Here).
 
@@ -80,7 +80,7 @@ aXiom( Action) ==>>
 
 
 :- defn_state_getter(eng2cmd(agent, english, action)).
-aXiom( intend('english', Agent, English)) ==>>
+aXiom( intend(Agent, act3('english',Agent,[ English]))) ==>>
  eng2cmd(Agent, English, Action),
  add_intent( Agent, Action).
 
@@ -88,17 +88,17 @@ aXiom(intent_english(Agent, English)) ==>> !,
   {assertz(mu_global:console_tokens(Agent, English))}.
 
 
-aXiom( intend('talk', Agent, Object, Message)) ==>>  % directed message
+aXiom( intend(Agent, act3('talk',Agent,[ Object, Message]))) ==>>  % directed message
   can_sense(Agent, audio, Object),
   from_loc(Agent, Here),
-  queue_local_event([intend('talk', Agent, Here, Object, Message)], [Here]).
+  queue_local_event([intend(Agent, act3('talk',Agent,[ Here, Object, Message]))], [Here]).
 
 aXiom(say(Agent, Message)) ==>>          % undirected message
   from_loc(Agent, Here),
-  queue_local_event([intend('talk', Agent, Here, *, Message)], [Here]).
+  queue_local_event([intend(Agent, act3('talk',Agent,[ Here, *, Message]))], [Here]).
 
 
-aXiom( intend('emote', Agent, EmoteType, Object, Message)) ==>> !, % directed message
+aXiom( intend(Agent, act3('emote',Agent,[ EmoteType, Object, Message]))) ==>> !, % directed message
  from_loc(Agent, Here),
  queue_local_event([ did_emote(Agent, EmoteType, Object, Message)], [ Here]).
 
@@ -109,14 +109,14 @@ aXiom( intend('emote', Agent, EmoteType, Object, Message)) ==>> !, % directed me
 %  WALK WEST
 % ==============
 
-aXiom( intend('go_dir', Agent, Walk, ExitName)) ==>> !, %{fail}, % go n/s/e/w/u/d/in/out
- must_act( status_msg( vBegin, intend('go_dir', Agent, Walk, ExitName))),
+aXiom( intend(Agent, act3('go__dir',Agent,[ Walk, ExitName]))) ==>> !, %{fail}, % go n/s/e/w/u/d/in/out
+ must_act( status_msg( vBegin, intend(Agent, act3('go__dir',Agent,[ Walk, ExitName])))),
   % {break},
   must_mw1(from_loc(Agent, Here)),
   %must_mw1(h(exit(ExitName), Here, _There)),
   unless(Agent, h(exit(ExitName), Here, _There),
  ( eVent(Agent, did_depart(Agent, in, Here, Walk, ExitName)),
- must_act( status_msg( vDone, intend('go_dir', Agent, Walk, ExitName))))).
+ must_act( status_msg( vDone, intend(Agent, act3('go__dir',Agent,[ Walk, ExitName])))))).
 
 aXiom( did_depart(Agent, in, Here, Walk, ExitName)) ==>> !, % {fail},
   %member(At, [*, to, at, through, thru]),
@@ -134,7 +134,7 @@ aXiom(terminates(h(Prep, Object, Here))) ==>> !, % {fail},
  % ==============
 %  WALK ON TABLE
 % ==============
-aXiom( intend('go_prep_obj', Agent, Walk, At, Object)) ==>>
+aXiom( intend(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))) ==>>
   will_need_touch(Agent, Object),
   has_rel(At, Object),
   \+ is_closed(At, Object),
@@ -166,9 +166,9 @@ aXiom(status_msg(_Begin, _End)) ==>> [].
 % ==============
 %  WALK TABLE
 % ==============
-aXiom( intend('go_obj', Agent, Walk, Object)) ==>>
+aXiom( intend(Agent, act3('go__obj',Agent,[ Walk, Object]))) ==>>
   has_rel(At, Object),
- eVent(Agent, intend('go_prep_obj', Agent, Walk, At, Object)).
+ eVent(Agent, intend(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
 
 
 
@@ -176,7 +176,7 @@ aXiom( intend('go_obj', Agent, Walk, Object)) ==>>
 % ==============
 %  GOTO PANTRY
 % ==============
-aXiom( intend('go_loc', Agent, _Walk, There)) ==>> % go some room
+aXiom( intend(Agent, act3('go__loc',Agent,[ _Walk, There]))) ==>> % go some room
   has_rel(exit(_), There),
   eVent(Agent, make_true(Agent, h(in, Agent, There))).
 
@@ -186,7 +186,7 @@ aXiom(make_true(Doer, h(in, Agent, There))) ==>>
   from_loc(Agent, Here),
   agent_thought_model(Agent, ModelData),
   {find_path(Doer, Here, There, Route, ModelData)}, !,
- eVent(Agent, follow_plan(Agent, intend('go_loc', Agent, walk, There), Route)).
+ eVent(Agent, follow_plan(Agent, intend(Agent, act3('go__loc',Agent,[ walk, There])), Route)).
 
 aXiom(make_true(Agent, FACT)) ==>>
   add_agent_goal(Agent, FACT).
@@ -223,56 +223,56 @@ aXiom(follow_step(Agent, Name, Step)) ==>>
 %    moveto(Agent, Put, Thing, Relation, Where, [Here],
 %      [cap(subj(Agent)), person('put the', 'puts a'),
 %        Thing, Relation, the, Where, '.'])).
-aXiom( began('put',Agent, Put, Thing1, At, Thing2)) ==>>
+aXiom( begaN(Agent, 'put', [ Put, Thing1, At, Thing2])) ==>>
   from_loc(Agent, Here),
   % moveto(Agent, Put, Thing1, held_by, Recipient, [Here], [cap(subj(Agent)), person([give, Recipient, the], 'gives you a'), Thing, '.'],
   moveto(Agent, Put, Thing1, At, Thing2, [Here],
     [cap(subj(Agent)), person(Put, es(Put)), Thing1, At, Thing2, '.']).
 
-aXiom( intend('take', Agent, Thing)) ==>> !,
+aXiom( intend(Agent, act3('take',Agent,[ Thing]))) ==>> !,
   % [silent(subj(Agent)), person('Taken.', [cap(Doer), 'grabs the', Thing, '.'])]
   dshow_failure(will_need_touch(Agent, Thing)),
- eVent(Agent, began('put',Agent, take, Thing, held_by, Agent)).
+ eVent(Agent, begaN(Agent, 'put', [ take, Thing, held_by, Agent])).
 
-aXiom( intend('drop', Agent, Thing)) ==>> !,
+aXiom( intend(Agent, act3('drop',Agent,[ Thing]))) ==>> !,
   will_need_touch(Agent, Thing),
   h(At, Agent, Here),
   % has_rel(At, Here),
- eVent(Agent, intend('put',Agent, drop, Thing, At, Here)).
+ eVent(Agent, intend(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
 
-aXiom( intend('put', Agent, Thing1, Prep, Thing2)) ==>>
+aXiom( intend(Agent, act3('put',Agent,[ Thing1, Prep, Thing2]))) ==>>
   has_rel(At, Thing2),
   prep_to_rel(Thing2, Prep, At),
   (At \= in ; \+ is_closed(At, Thing2)),
   will_need_touch(Agent, Thing2), % what if "under" an "untouchable" thing?
   % OK, put it
- must_act( began('put',Agent, put, Thing1, At, Thing2)).
+ must_act( begaN(Agent, 'put', [ put, Thing1, At, Thing2])).
 
-aXiom( intend('give', Agent, Thing, Recipient)) ==>>
+aXiom( intend(Agent, act3('give',Agent,[ Thing, Recipient]))) ==>>
   has_rel(held_by, Recipient),
   will_need_touch(Agent, Thing),
   will_need_touch(Recipient, Agent),
   % OK, give it
- must_act( began('put',Agent, give, Thing, held_by, Recipient)).
+ must_act( begaN(Agent, 'put', [ give, Thing, held_by, Recipient])).
 
 
 
 % do_throw ball up
-aXiom( intend('throw_dir', Agent, Thing, ExitName)) ==>>
+aXiom( intend(Agent, act3('throw_dir',Agent,[ Thing, ExitName]))) ==>>
   from_loc(Agent, Here),
- eVent(Agent, intend('throw_prep_obj', Agent, Thing, ExitName, Here)).
+ eVent(Agent, intend(Agent, act3('throw_prep_obj',Agent,[ Thing, ExitName, Here]))).
 
 % throw ball at catcher
-aXiom( intend('throw_at', Agent, Thing, Target)) ==>>
- eVent(Agent, intend('throw_prep_obj', Agent, Thing, at, Target)).
+aXiom( intend(Agent, act3('throw_at',Agent,[ Thing, Target]))) ==>>
+ eVent(Agent, intend(Agent, act3('throw_prep_obj',Agent,[ Thing, at, Target]))).
 
 % do_throw ball over homeplate
-aXiom( intend('throw_prep_obj', Agent, Thing, Prep, Target)) ==>>
+aXiom( intend(Agent, act3('throw_prep_obj',Agent,[ Thing, Prep, Target]))) ==>>
   prep_to_rel(Target, Prep, Rel),
- eVent(Agent, began('throw',Agent, Thing, Rel, Target)).
+ eVent(Agent, intend(Agent, act3('throw',Agent,[ Thing, Rel, Target]))).
 
 % is throwing the ball...
-aXiom( began('throw',Agent, Thing, At, Target)) ==>>
+aXiom( intend(Agent, act3('throw',Agent,[ Thing, At, Target]))) ==>>
   will_need_touch(Agent, Thing),
   can_sense(Agent, see, Target),
  eVent(Agent, did_throw(Agent, Thing, At, Target)).
@@ -290,12 +290,12 @@ aXiom(thing_transforms(Thing, Broken))  ==>>
   queue_local_event([transformed(Thing, Broken)], Here).
 
 
-aXiom( intend('hit_with', Agent, Thing, With)) ==>>
+aXiom( intend(Agent, act3('hit_with',Agent,[ Thing, With]))) ==>>
   from_loc(Agent, Here),
-  intend('hit', Agent, Thing, With, [Here]),
+  intend(Agent, act3('hit',Agent,[ Thing, With, [Here]])),
   send_1percept(Agent, [true, 'OK.']).
 
-aXiom( intend('hit', Agent, Thing)) ==>>
+aXiom( intend(Agent, act3('hit',Agent,[ Thing]))) ==>>
   from_loc(Agent, Here),
   invoke_hit(Agent, Thing, Agent, [Here]),
   send_1percept(Agent, [true, 'OK.']).
@@ -310,7 +310,7 @@ invoke_hit(Doer, Target, _With, Vicinity) ==>>
   disgorge(Doer, hit, Target, Prep, Here, Vicinity, 'Something falls out.'))).
 
 
-aXiom( intend('dig', Agent, Hole, Where, Tool)) ==>>
+aXiom( intend(Agent, act3('dig',Agent,[ Hole, Where, Tool]))) ==>>
   {memberchk(Hole, [hole, trench, pit, ditch]),
   memberchk(Where, [garden]),
   memberchk(Tool, [shovel, spade])},
@@ -327,13 +327,13 @@ aXiom( intend('dig', Agent, Hole, Where, Tool)) ==>>
     [ created(Hole, Where),
       [cap(subj(Agent)), person(dig, digs), 'a', Hole, 'in the', Where, '.']]).
 
-aXiom( intend('eat', Agent, Thing)) ==>>
+aXiom( intend(Agent, act3('eat',Agent,[ Thing]))) ==>>
   (getprop(Thing, can_be(eat, t)) ->
   (undeclare(h(_1, Thing, _2)), send_1percept(Agent, [destroyed(Thing), 'Mmmm, good!'])) ;
-  send_1percept(Agent, [failure(intend('eat', Agent, Thing)), 'It''s inedible!'])).
+  send_1percept(Agent, [failure(intend(Agent, act3('eat',Agent,[ Thing]))), 'It''s inedible!'])).
 
 
-aXiom( intend('switch', Agent, OnOff, Thing)) ==>>
+aXiom( intend(Agent, act3('switch',Agent,[ OnOff, Thing]))) ==>>
   will_need_touch(Agent, Thing),
   getprop(Thing, can_be( did('switch', OnOff), t)),
   getprop(Thing, effect( did('switch', OnOff), Term0)),
@@ -342,12 +342,12 @@ aXiom( intend('switch', Agent, OnOff, Thing)) ==>>
   send_1percept(Agent, [success(true, 'OK')]).
  
   
-aXiom( intend('inventory', Agent)) ==>>
+aXiom( intend(Agent, act3('inventory',Agent,[]))) ==>>
   can_sense(Agent, see, Agent),
- must_act( began('inventory',Agent)).
+ must_act( begaN(Agent, 'inventory', [])).
 
-aXiom( began('inventory', Agent)) ==>>
-  eVent(Agent, intend('examine', Agent, Agent)).
+aXiom( begaN( Agent, 'inventory', [])) ==>>
+  eVent(Agent, intend(Agent, act3('examine',Agent,[ Agent]))).
   %findall(What, h(child, What, Agent), Inventory),
   %send_1percept(Agent, [rel_to(held_by, Inventory)]).
 
@@ -355,19 +355,19 @@ aXiom( began('inventory', Agent)) ==>>
 
 
 % Agent looks
-aXiom( intend('look', Agent)) ==>>
+aXiom( intend(Agent, act3('look',Agent,[]))) ==>>
   % Agent is At Here
   h(At, Agent, Here),
   % Agent looks At Here
-  eVent(Agent, intend('examine', Agent, see, At, Here)).
+  eVent(Agent, intend(Agent, act3('examine',Agent,[ see, At, Here]))).
 
-aXiom( intend('examine', Agent, Sense)) ==>> {is_sense(Sense)}, !,
+aXiom( intend(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !,
    from_loc(Agent, Place),
-   eVent(Agent, intend('sub__examine',Agent, see, in, Place, 3)).
+   eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ see, in, Place, 3]))).
 
-aXiom( intend('examine', Agent, Object)) ==>> eVent(Agent, intend('sub__examine',Agent, see, at, Object, 3)).
-aXiom( intend('examine', Agent, Sense, Object)) ==>> eVent(Agent, intend('sub__examine',Agent, Sense, at, Object, 3)), !.
-aXiom( intend('examine', Agent, Sense, Prep, Object)) ==>> eVent(Agent, intend('sub__examine',Agent, Sense, Prep, Object, 3)), !.
+aXiom( intend(Agent, act3('examine',Agent,[ Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ see, at, Object, 3]))).
+aXiom( intend(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, at, Object, 3]))), !.
+aXiom( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
 
 % listen, smell ...
 aXiom(Action) ==>>
@@ -377,20 +377,20 @@ aXiom(Action) ==>>
  eVent(Agent, NewAction).
 
 % Here does not allow Sense?
-aXiom(intend('sub__examine',Agent, Sense, Prep, Object, Depth)) ==>>
+aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>>
   \+ sg(can_sense_here(Agent, Sense)), !,
-  must_act( failed( intend('examine', Agent, Sense, Prep, Object, Depth), \+ can_sense_here(Agent, Sense))).
-aXiom(intend('sub__examine',Agent, Sense, Prep, Object, Depth)) ==>>
+  must_act( failed( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth])), \+ can_sense_here(Agent, Sense))).
+aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>>
   \+ can_sense(Agent, Sense, Object), !,
-  must_act( failed( intend('examine', Agent, Sense, Prep, Object, Depth), \+ can_sense(Agent, Sense, Object))).
-aXiom(intend('sub__examine',Agent, Sense, Prep, Object, Depth)) ==>> must_mw1(act_examine(Agent, Sense, Prep, Object, Depth)), !.
+  must_act( failed( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth])), \+ can_sense(Agent, Sense, Object))).
+aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>> must_mw1(act_examine(Agent, Sense, Prep, Object, Depth)), !.
 
 
 % used mainly to debug if things are locally accessable
-aXiom( intend('touch', Agent, Thing)) ==>> !,
+aXiom( intend(Agent, act3('touch',Agent,[ Thing]))) ==>> !,
  unless_reason(Agent, will_need_touch(Agent, Thing),
                       cant( reach(Agent, Thing)),
-                      send_1percept(Agent, [success( intend('touch', Agent, Thing), 'Ok.')])).
+                      send_1percept(Agent, [success( intend(Agent, act3('touch',Agent,[ Thing])), 'Ok.')])).
 
 
 aXiom(change_state(Agent, Action, Thing, Prop)) ==>> !,

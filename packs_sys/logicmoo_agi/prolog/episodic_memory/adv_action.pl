@@ -45,9 +45,9 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
  append(Left, [Atom, M|More], ObjS2).
-% intend('look', Agent, Spatial) at screen door
+% intend(Agent, act3('look',Agent,[ Spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
-cmd_workarround_l( [Verb|ObjS], [intend,Verb|ObjS]):-  Verb\==intend.
+cmd_workarround_l( [Verb|ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==intend.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
@@ -211,12 +211,12 @@ find_clock_time(Agent, T0, OldNow, _UMem):-
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-%trival_act(intend('sub__examine',_, _, _, _, _)).
-%trival_act( intend('look', _)).
+%trival_act(intend(_, act3('examine__D5',_,[ _, _, _, _]))).
+%trival_act( intend(_, act3('look',_,[]))).
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( intend('wait', _)).
+trival_act( intend(_, act3('wait',_,[]))).
 
 
 satisfy_each_cond(Ctxt, [], success(Ctxt)) ==>> !.
@@ -398,7 +398,7 @@ add_agent_goal(Agent, Action, S0, S9) :-
 
 add_intent_look(Agent) ==>>
   h(inside, Agent, _Somewhere),
-  add_agent_intent( Agent, intend('look', Agent)).
+  add_agent_intent( Agent, intend(Agent, act3('look',Agent,[]))).
 
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
@@ -414,7 +414,7 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
-  univ_safe(Action, [intend, Verb, Agent|Args]), nonvar(Verb), !,
+  univ_safe(Action, [intend, _Intender, act3(Verb, Agent, Args)]), nonvar(Verb), !,
   univ_safe(VAction, [Verb, Agent|Args]),
   action_verb_agent_args(VAction, Verb, Agent, Args).
 

@@ -233,7 +233,7 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _P
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
- findall( intend('sub__examine',Agent, Sense, child, Obj, DepthLess),
+ findall( intend(Agent, act3('examine__D5',Agent,[ Sense, child, Obj, DepthLess])),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
@@ -257,7 +257,7 @@ process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropLi
  dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
- add_intent_all([ intend('take', Agent, Object), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
+ add_intent_all([ intend(Agent, act3('take',Agent,[ Object])), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
 process_percept_do_auto(_Agent, _Percept, _Stamp, M0, M0):- !.
@@ -267,7 +267,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 
 %was_own_self(Agent, say(Agent, _)).
-was_own_self(Agent, intend('emote', Agent, _, _Targ, _)).
+was_own_self(Agent, intend(Agent, act3('emote',Agent,[ _, _Targ, _]))).
 was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 

@@ -118,15 +118,15 @@ type_functor(event, attempts(agent, action)).
 type_functor(action, rez(type)).
 type_functor(action, derez(inst)).
 
-type_functor(action, intend('dig', agent, holetype, prep, dest, inst)).
-type_functor(action, intend('inventory', agent)).
-type_functor(action, intend('look', agent)).
-type_functor(action, intend('examine', agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
-type_functor(action, intend('eat', agent, inst)).
-type_functor(action, intend('hit', agent, inst, with)).
+type_functor(action, intend(agent, act3('dig',agent,[ holetype, prep, dest, inst]))).
+type_functor(action, intend(agent, act3('inventory',agent,[]))).
+type_functor(action, intend(agent, act3('look',agent,[]))).
+type_functor(action, intend(agent, act3('examine',agent,[ optional(sense, see), optional(inst, here), optional(depth, 1)]))).
+type_functor(action, intend(agent, act3('eat',agent,[ inst]))).
+type_functor(action, intend(agent, act3('hit',agent,[ inst, with]))).
 
 type_functor(action, did('switch', agent, tfstate, tf, inst)).
-type_functor(action, intend('touch', agent, inst)).
+type_functor(action, intend(agent, act3('touch',agent,[ inst]))).
 
 
 
@@ -134,13 +134,13 @@ type_functor(action, intend('touch', agent, inst)).
 
 
 %type_functor(action, say(Message)).  % undirected message
-type_functor(action, intend('emote', agent, emotype, dest, statement)).
+type_functor(action, intend(agent, act3('emote',agent,[ emotype, dest, statement]))).
 type_functor( event, did_emote( agent, emotype, dest, statement)).
 
 
-type_functor(action, intend('auto', agent)).
+type_functor(action, intend(agent, act3('auto',agent,[]))).
 
-type_functor(action, intend('wait', agent)).
+type_functor(action, intend(agent, act3('wait',agent,[]))).
 type_functor(event, time_passes(agent)).
 
 
@@ -150,18 +150,18 @@ type_functor(action, inspect(agent, getprop(inst, nv))).
 type_functor(action, setprop(inst, nv)).
 type_functor(action, print_(agent, msg)). % for debug and agent feedback
 
-type_functor(action, intend('sub__examine',agent, sense, preprel, inst, depth)).
+type_functor(action, intend(agent, act3('examine__D5',agent,[ sense, preprel, inst, depth]))).
 
-type_functor(action, intend('give', agent, inst, agnt2)).
-type_functor(action, intend('take', agent, inst)).
-type_functor(action, intend('drop', agent, inst)).
-type_functor( action, intend('throw', agent, inst, dest)).
-type_functor( action, intend('put', agent, inst, dest)).
+type_functor(action, intend(agent, act3('give',agent,[ inst, agnt2]))).
+type_functor(action, intend(agent, act3('take',agent,[ inst]))).
+type_functor(action, intend(agent, act3('drop',agent,[ inst]))).
+type_functor( action, intend(agent, act3('throw',agent,[ inst, dest]))).
+type_functor( action, intend(agent, act3('put',agent,[ inst, dest]))).
 
-type_functor(action, intend('go_dir', agent, movetype, dir)).
-type_functor(action, intend('go_obj', agent, movetype, obj)).
-type_functor( action, intend('go_prep_obj', agent, movetype, domrel, obj)).
-type_functor( action, intend('go_loc', agent, movetype, dest)).
+type_functor(action, intend(agent, act3('go__dir',agent,[ movetype, dir]))).
+type_functor(action, intend(agent, act3('go__obj',agent,[ movetype, obj]))).
+type_functor( action, intend(agent, act3('go__prep_obj',agent,[ movetype, domrel, obj]))).
+type_functor( action, intend(agent, act3('go__loc',agent,[ movetype, dest]))).
 
 
 % Access ot planner ops

@@ -243,15 +243,15 @@ telnet_decide_action(Agent, Mem, Mem) :-
 main_loop(State) :-
  declared(undo, State),
  mu_current_agent(Player),
- retract(undo(Player, [_, Prev|Tail])),
+ retract(undO(Player, [_, Prev|Tail]))),
  assertz(undo(Player, Tail)),
  !,
  main_loop(Prev).
 main_loop(S0) :-
  %repeat,
  mu_current_agent(Player),
- retract(undo(Player, [U1, U2, U3, U4, U5, U6|_])),
- assertz(undo(Player, [S0, U1, U2, U3, U4, U5, U6])),
+ retract(undO(Player, [U1, U2, U3, U4, U5, U6|_]))),
+ assertz(undO(Player, [S0, U1, U2, U3, U4, U5, U6]))),
  run_agent(Player, S0, S4),
  run_agent(floyd, S4, S5),
  %user_interact(S3, S4), !,
