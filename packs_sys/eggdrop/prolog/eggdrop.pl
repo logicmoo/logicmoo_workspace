@@ -667,8 +667,8 @@ tg_name_text(StringIn, Name, Value) :-
         name_value_split(String, "> ", NameA, Value),
         filter_tg_name(NameA, Name).
 
-filter_tg_name(StringIn, Name):- replace_in_string("[d]"," ",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
-filter_tg_name(StringIn, Name):- replace_in_string("[m]"," ",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
+filter_tg_name(StringIn, Name):- replace_in_string("[d]","",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
+filter_tg_name(StringIn, Name):- replace_in_string("[m]","",StringIn,String),StringIn\==String,!,filter_tg_name(String, Name).
 filter_tg_name(NameString, Name):- filter_chars(is_printing_alpha_char,NameString, Name).
 
 filter_chars(How,NameString, Name):- get_text_restore_pred(NameString,DataPred),!,
@@ -688,12 +688,12 @@ is_printing_alpha_char(X):- char_type(X,digit),!.
 %
 
 ircEvent(Channel,User,Method):-  my_wdmsg((ircEventNow(Channel,User,Method))),fail.
-
 ircEvent(Channel,Agent,Event) :- format(codes(Codes),"~w",[ircEvent(Channel,Agent,Event)]),
    member(E,Codes),integer(E),
    E > 127, !,
    wdmsg(ircEvent(Channel,Agent,Event)),!.
 
+ircEvent(Channel,Agent,Event):- filter_tg_name(Agent, Name), Agent\=@=Name,!,ircEvent(Channel,Name,Event).
 ircEvent(DEST,User,Stuff):- string(User),string_lower(User,DUser),User\=@=DUser,!,ircEvent(DEST,DUser,Stuff).
 ircEvent(DEST,User,Stuff):- atom(User),downcase_atom(User,DUser),User\=@=DUser,!,ircEvent(DEST,DUser,Stuff).
 ircEvent(DEST,User,say(W)):- \+ string(W), if_catch_fail(text_to_string(W,S)),!,ircEvent(DEST,User,say(S)).
@@ -1774,9 +1774,11 @@ privmsg2(Channel,Text):- egg_to_string(Channel,CS),escape_quotes(Text,N),
   put_egg(S),!.
 % privmsg2(Channel,Text):- escape_quotes(Text,N),ignore(catch(format(OutStream,'\n.tcl putserv "PRIVMSG ~s :~s" ;  return "noerror ."\n',[Channel,N]),_,fail)),!.
 */
+escape_channel_name(C0,D):- text_to_string(C0,C), replace_in_string("[","\\[",C,CD),replace_in_string("]","\\]",CD,D).
+
 
 %privmsg3(EChannel, EText):- put_egg('\n.msg ~s ~s\n',[EChannel, EText]),!.
-privmsg3(EChannel,  Text):- sleep(0.2), escape_quotes(Text, EText), put_egg('\n.tcl putquick "PRIVMSG ~s :~s"\n',[EChannel, EText]),!.
+privmsg3(Channel,  Text):- sleep(0.2), escape_quotes(Text, EText), escape_channel_name(Channel, EChannel), put_egg('\n.tcl putquick "PRIVMSG ~s :~s"\n',[EChannel, EText]),!.
 %privmsg3(EChannel,  Text):- escape_quotes(Text, EText), put_egg('\n.tcl putserv "PRIVMSG ~s :~s"\n',[EChannel, EText]),!.
 
 
