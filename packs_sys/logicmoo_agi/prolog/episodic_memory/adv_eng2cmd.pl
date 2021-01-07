@@ -82,7 +82,7 @@ cmdalias(whois, who).
 cmdalias(turn, switch).
 cmdalias(flip, switch).
 
-is_prep(P):- munl_call(parser_chat80:prep(prep(PP), _, _, _, _)), PP==P.
+is_prep(P):- munl_call(parser_chat80:prep(prep(PP), _, _, _, _)), PP==P, !.
 is_prep(P):- preposition(_, P).
 
 is_prep_for_type(P, tObject):- is_prep(P).
@@ -186,7 +186,7 @@ reframed_call(Pred, Text, Logic):-
    nl_context(current_frame, Frame, parseFrame(e2l), istate),
    nl_context(current_subject, Self, vSpeaker, Frame),
    set_nl_context(current_subject, Self, Frame),
-   %set_nl_context(current_frame, Mem, Frame), 
+   %set_nl_context(current_frame, Mem, Frame),
    into_text80(Text, Term),
    reframed_call(Pred, Self, Term, Logic, Frame), !.
 
@@ -236,7 +236,7 @@ user:parse_chat80(Text, Q):-
    try_maybe_p(parser_chat80:clausify80, S, C),
    try_maybe_p(parser_chat80:qplan, C, Q))).
 */
-eng2cmd4(_Self, Logic, Logic, _M):- \+ is_list(Logic),!.
+eng2cmd4(_Self, Logic, Logic, _M):- \+ is_list(Logic), !.
 eng2cmd4(_Self, [Verb|Args], Logic, _M) :- atom(Verb), verbatum_anon_one_or_zero_arg(Verb), !,
   (Args =[_, _|_] ->
      Logic =.. [Verb, Args];
@@ -259,7 +259,7 @@ eng2cmd4(Doer, Words, Action, M) :- parse_imperative_movement(Doer, Words, Actio
 % Take
 % %%%%%%%%%%%%%%
 
-eng2cmd4(Doer, [ take| ObjectSpec], intend(Doer, act3('take',Doer,[ Object])), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
+eng2cmd4(Doer, [ take| ObjectSpec], (act3('take', Doer, [ Object])), Mem) :- parse2object(ObjectSpec, Object, Mem), !.
 
 eng2cmd4(Doer, Tokens, Logic, Mem) :-
   with_parse_mem(Mem, phrase(parse_cmd(Doer, Logic), Tokens, [])), !.
@@ -294,14 +294,8 @@ eng2cmd4(Doer, [TheVerb|Args], Action, M) :-
  eng2cmd4(Doer, [Verb|Args], Action, M).
 
 
-% %%%%%%%%%%%%%%
-% Simple
-% %%%%%%%%%%%%%%
-
-parsed_as_simple(X):- arg(_, v(look, wait, auto, inventory), X).
 
 %parse_cmd(Agent, Logic) --> [X], {parsed_as_simple(X0), same_verb(X0, X), !, Logic=..[X0, Agent]}.
-parse_cmd(Agent, Logic) --> [X|Args], {parsed_as_simple(X0), same_verb(X0, X), !, Logic=..[X0, Agent|Args]}.
 
 
 parse_cmd(Agent, Cmd) --> [Alias], {cmdalias(Alias, Cmd), flatten([Cmd], Flat)}, dcg_push(Flat), parse_cmd(Agent, Cmd).
@@ -321,19 +315,68 @@ parse_for_optional(Type, Target, _Else) --> parse_for_kind(Type, Target).
 parse_for_optional(_Type, Else, Else) --> [].
 
 %parse_for_kind(_, _) --> [], !, {fail}.
-parse_for_kind(agent, floyd) --> [floyd], !.
-parse_for_kind(agent, Target) --> !, parse_for_kind(object, Target).
-parse_for_kind(place, Target) --> !, parse_for_kind(object, Target).
-parse_for_kind(inst, Target) --> !, parse_for_kind(object, Target).
-parse_for_kind(agnt2, Target) --> !, parse_for_kind(object, Target).
+call_dcg_ensure_leftover_parse_for_kind(optional(H,_), TargetH, T, Words, LeftOver):-
+  phrase(call_dcg_ensure_leftover(parse_for_kind(H, TargetH), T), Words, LeftOver), !.
+call_dcg_ensure_leftover_parse_for_kind(optional(_,Else), Else, _, Words, Words):- !.
+call_dcg_ensure_leftover_parse_for_kind(H, TargetH, T, Words, LeftOver):-
+  phrase(call_dcg_ensure_leftover(parse_for_kind(H, TargetH), T), Words, LeftOver), !.
 
-parse_for_kind(object, Target) -->
-  {current_player(Agent)}, !,
-  {list_len_between(3, 1, List)}, List, {parse2object(List, Target, inst(Agent))}.
-%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, _, Dest)).
-%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, Dest, _)).
-parse_for_kind([H|T], [TargetH|TargetT]) --> {nonvar(T), !}, parse_for_kind(H, TargetH), parse_for_kind(T, TargetT).
-parse_for_kind(_Any, Target) --> !, parse_for_kind(object, Target).
+parse_for_args_1([], Words, Args):- !, Words =[], Args = [].
+parse_for_args_1([optional(H)|T], Words, [TargetH|TargetT]):-
+  call_dcg_ensure_leftover_parse_for_kind(H, TargetH, T, Words, LeftOver),
+  parse_for_args_1(T, LeftOver, TargetT), !.
+parse_for_args_1([optional(_)|T], Words, TargetT):- !, parse_for_args_1(T, Words, TargetT), !.
+parse_for_args_1([H|T], Words, [TargetH|TargetT]):-
+  call_dcg_ensure_leftover_parse_for_kind(H, TargetH, T, Words, LeftOver),
+  parse_for_args_1(T, LeftOver, TargetT), !.
+parse_for_args_1([Type], Words, [TargetH]):- parse2object(Type, Words, TargetH, _Ctx).
+
+parse_for_args(ArgTypes, Words, Args):- show_failure(parse_for_args_1(ArgTypes, Words, Args)), !.
+parse_for_args(ArgTypes, Words, Args):- fail, (parse_for_args_0(ArgTypes, Words, Args)),
+  must((Args\==[Words], length(ArgTypes, L), length(Args, L))), !.
+
+
+parse_for_args_0(ArgTypes, Words, Args):- phrase(parse_for_kind(ArgTypes, Args), Words, Out), Out==[], !.
+parse_for_args_0(_ArgTypes, Text, Args):- coerce_text_to_args(Text, Args), !.
+
+no_more(S, E):- ignore((E=[], S==[])).
+
+parse_for_kind([], []) --> [], !, no_more.
+parse_for_kind([H|T], [TargetH|TargetT]) --> {nonvar(T), !},
+  call_dcg_ensure_leftover_parse_for_kind(H, TargetH, T),
+  parse_for_kind(T, TargetT), !.
+
+parse_for_kind(tfstate, X) --> [X], !.
+parse_for_kind(string, X, S, []) :- maplist(any_to_string,S,SX),atomics_to_string(SX,' ',X).
+parse_for_kind(text, X, S, E) :- parse_for_kind(string, X, S, E).
+parse_for_kind(optional(Kind, Value), Target) --> !, (parse_for_kind(Kind, Target); {Value=Target}).
+parse_for_kind(or(X, _), Target) --> parse_for_kind(X, Target).
+parse_for_kind(or(_, Y), Target) --> !, parse_for_kind(Y, Target).
+
+parse_for_kind(agent, Target) --> !, parse1object(Target).
+parse_for_kind(place, Target) --> !, parse1object(Target).
+parse_for_kind(inst, Target) --> !, parse1object(Target).
+parse_for_kind(agnt2, Target) --> !, parse1object(Target).
+parse_for_kind(object, Target) --> !, parse1object(Target).
+%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, Dest, _)).
+parse_for_kind(Type, Target) --> !, parse1object(Target), !, {is_adv_type(Target,Type)}.
+
+
+parse1object(Target) --> {list_len_between(3, 1, List)}, List, {parse2object(List, Target, _)}.
+parse1object(Target) --> [Target], no_more, !.
+
+%parse_for_kind([_], X) --> [X], no_more, !.
+% parse_for_kind(_Any, Target) --> !, parse1object(Target).
+
+optional_length(T, Len):- assertion(is_list(T)),length(T,Max),
+   include( =(optional(_,_)), T, Opts),length(Opts,Less),
+   optional_n_length(Less,Max,Len).
+optional_n_length(0,Max,Len):-!,Max=Len.
+optional_n_length(Less,Max,Len):-!,Min is Max-Less,between(Min,Max,Len).
+
+call_dcg_ensure_leftover(DCG, [], S, E):- !, call(DCG, S, E).
+call_dcg_ensure_leftover(DCG, N, S, E):- number(N),!, length(R, N), append(L, R, S), phrase(DCG, L, Rem), append(Rem, R, E).
+call_dcg_ensure_leftover(DCG, T, S, E):- optional_length(T, Len), call_dcg_ensure_leftover(DCG, Len, S, E).
 
 list_len_between(N, M, List):- length(List, N) ;
   (N\=M , (N<M -> N2 is N+1 ; N2 is N-1), list_len_between(N2, M, List)).
@@ -355,20 +398,28 @@ oneOf(List, S, E):-member(I, List), (is_list(I)->phrase(I, S, E);phrase([I], S, 
 % %%%%%%%%%%%%%%
 % Communication
 % %%%%%%%%%%%%%%
-parse_cmd(Doer, intend(Doer, act3('emote',Doer,[ say, Dest, Emoted]))) --> dcg_from_right(parse_for_kind(agent, Dest), [', ']), eng2assert_text(Emoted).
-parse_cmd(Doer, intend(Doer, act3('emote',Doer,[ Say, Dest, Emoted]))) --> [Ask], {ask_to_say(Ask, Say)},
+parse_cmd(Doer, (act3('emote', Doer, [ say, Dest, Emoted]))) --> dcg_from_right(parse_for_kind(agent, Dest), [', ']), eng2assert_text(Emoted).
+parse_cmd(Doer, (act3('emote', Doer, [ Say, Dest, Emoted]))) --> [Ask], {ask_to_say(Ask, Say)},
   oneOf([to, from, :, (', '), []]), ignore(parse_for_kind(agent, Dest);parse2object(Dest)), oneOf([to, :, []]), eng2assert_text(Emoted).
-%parse_cmd(Doer, intend(Doer, act3('emote',Doer,[ Emoted]))) --> [emote], eng2assert_text(Emoted), !.
+%parse_cmd(Doer, (act3('emote', Doer, [ Emoted]))) --> [emote], eng2assert_text(Emoted), !.
 %parse_cmd(Doer, say(Doer, Emoted)) --> [say], eng2assert_text(Emoted).
 
 parse_cmd( Self, Logic, [F|Words], []):-
-    type_functor(action, P), P =..[Fun, Ag|_Rest],
+    type_functor(action, P),
+    action_verb_agent_args(P, Fun, Ag, ArgTypes),
     same_verb(F, Fun),
     % @TODO start using coerce(...).
-    coerce_text_to_args(Words, Args),
+    show_call(parse_for_args(ArgTypes, Words, Args)), !,
      (Ag==agent ->
        Logic =..[Fun, Self|Args];
        Logic =..[Fun|Args]).
+
+% %%%%%%%%%%%%%%
+% Simple
+% %%%%%%%%%%%%%%
+
+parsed_as_simple(X):- arg(_, v(look, wait, auto, inventory), X).
+parse_cmd(Agent, Logic) --> [X|Args], {parsed_as_simple(X0), same_verb(X0, X), !, Logic=..[X0, Agent|Args]}.
 
 ask_to_say(Ask, say):- arg(_, v(ask, say, tell, talk), Ask).
 ask_to_say(Ask, say):- arg(_, v(request, tell), Ask).
@@ -392,15 +443,19 @@ acdb(F, A, B):- munl_call(acnl(F, A, B, _)).
 
 :- set_prolog_flag(debug_on_error, true).
 %munl_call(G):- !, nl_call(G).
-munl_call(G):- fail,
+munl_call_hide(G):- notrace(fail),
  catch(G, _,
    catch(nl_call(G), _,
       catch(rtrace(nl_call(G)), _, fail))).
-munl_call(G):- tracing, notrace, !, call_cleanup(munl_call(G),notrace).
-munl_call(G):-
- catch(G,_, 
+
+munl_call(G):- notrace(\+ current_predicate(_, G)), !, fail.
+munl_call(G):- notrace(t_l:rtracing) , notrace, !, (munl_call_1(G)*->trace;(start_rtrace, fail)).
+munl_call(G):- tracing , notrace, !, (munl_call_1(G)*->trace;(trace, fail)).
+munl_call(G):- munl_call_1(G).
+munl_call_1(G):-
+ quietly(catch(G, _,
    catch(nl_call_trusted(G), Err,
-       (wdmsg(G=Err), !, fail))).
+       (wdmsg(G=Err), !, fail)))).
 
 
 two_adjs(W1, W2, W3):- var(W1), nonvar(W2), !, two_adjs(W2, W1, W3).
@@ -472,28 +527,46 @@ verbatum_anon_n_args(Verb):- member(Verb, [getprops, setprop, path, delprop, rez
  ]).
 
 
-parse2object(List, Agent, M):- append(LList, [R], List), member(R, [(?), (.)]), !, parse2object(LList, Agent, M).
-parse2object([am, i], Agent, M):- once(thought_check(Agent, propOf(_, Agent), M);thought_check(Agent, inst(Agent), M)), !.
+parse2object(NonList, Target, M):- \+ is_list(NonList), into_text80(NonList,Text80),parse2object(Text80, Target, M).
+parse2object(List, Result, M):- append(LList, [R], List), member(R, [(?), (.)]), !, parse2object(LList, Result, M).
+parse2object([am, i], Result, M):- once(thought_check(Result, propOf(_, Result), M);thought_check(Result, inst(Result), M)), !.
 
-parse2object([BE| List], Agent, M):- fail, quietly_talk_db([_, BE, is|_More]), parse2object(List, Agent, M), !.
-parse2object([HAS| List], Agent, M):- fail, quietly_talk_db([_, have|HASHAVE]), member(HAS, HASHAVE), !, parse2object(List, Agent, M).
+parse2object([BE| List], Result, M):- fail, quietly_talk_db([_, BE, is|_More]), parse2object(List, Result, M), !.
+parse2object([HAS| List], Result, M):- fail, quietly_talk_db([_, have|HASHAVE]), member(HAS, HASHAVE), !, parse2object(List, Result, M).
 parse2object([Det| Type], TheThing, M):-
- (nth0(_N, [(unknown), the, thee, old, some, a], Det)), !,
+ notrace(nth0(_N, [(unknown), the, thee, old, some, a], Det)), !,
  parse2object(Type, TheThing, M).
 
-parse2object(Type, TheThing, M):-
- show_call(as1object(Type, TheThing, M)), !.
+parse2object(Requirements0, Thing, Ctx):-
+  listify(Requirements0,Requirements),
+  guess_req_type(Requirements,Type,NewRequirements),!,
+  show_call(parse2object(Type,NewRequirements, Thing, Ctx)).
 
+guess_req_type(Requirements,Type,NewRequirements):-
+  append(NewRequirements,[Type],Requirements).
 
-as1object(TheThing, Thing, Ctx):- var(Ctx), !, get_advstate(Ctx), as1object(TheThing, Thing, Ctx).
-as1object([TheThing], Thing, M):- !, nonvar(TheThing), as1object(TheThing, Thing, M).
-as1object(TheThing, Thing, _Mem):- atom(TheThing), atom_number(TheThing, Thing), !.
-as1object(TheThing, Thing, M):-  obj_props(M, Thing, Props),
-  (same_word(TheThing, Thing)->true;(sub_term(Sub, Props), (atom(Sub);string(Sub)), same_word(TheThing, Sub))).
-as1object(TheThing, Thing, _Mem):- \+ atom(TheThing), !, TheThing=Thing.
-as1object(TheThing, Thing, M):- atom_of(inst, TheThing, Thing, M), !.
-as1object(TheThing, Thing, M):- get_advstate(Mem2), Mem2\=M, as1object(TheThing, Thing, Mem2).
-% as1object(Thing, Thing, _Mem).
+parse2object(Type, Requirements, Thing, Ctx):-
+  notrace((as1object_0(Type, Requirements, Thing, Ctx))), !, \+ is_list(Thing).
+
+as1object_0( Type, Requirements, Thing, Ctx):- var(Ctx), !, get_advstate(Ctx), as1object_0(Type, Requirements, Thing, Ctx).
+as1object_0(_Type, Requirements, Thing, _Mem):- atom(Requirements), atom_number(Requirements, Thing), !.
+as1object_0( Type, Requirements, Thing, M):-  obj_props(M, Thing, Props),
+  (same_word(Type, Thing)->true;(match_props(Requirements, Props))),
+  is_adv_type(Thing,Type).
+as1object_0( Type, [Requirements|More], Thing, M):- !, nonvar(Requirements), as1object_0(Type, Requirements, Thing, M),!,as1object_0(Type, More, Thing, M).
+as1object_0(_Type, Requirements, _Thing, _Mem):- \+ atom(Requirements), !, fail. %Requirements=Thing.
+as1object_0(_Type, Requirements, Thing, M):- atom_of(inst, Requirements, Thing, M), !.
+as1object_0( Type, Requirements, Thing, M):- get_advstate(Mem2), Mem2\=M, as1object_0(Type, Requirements, Thing, Mem2).
+% parse2object(Type, Thing, Thing, _Mem).
+
+is_adv_type(I,C):- is_adv_type_0(I,C).
+is_adv_type_0(Target,Type):- obj_props(_Both, Target, Props), match_props(Props, Type).
+is_adv_type_0(x(Type,_),Type).
+
+match_props(Props, WordSearch):- is_list(WordSearch), !, WordSearch\==[], maplist(match_props(Props), WordSearch).
+
+match_props(_, Word):- is_prep(Word), !, fail.
+match_props(Props, Word):- sub_term(Sub, Props), (string(Sub);(atom(Sub))), same_word(Word, Sub), !.
 
 to_string_lc(A, S):- var(A), !, freeze(A, to_string_lc(A, S)).
 to_string_lc([], ""):- !.
@@ -503,10 +576,13 @@ to_string_lc(S, L):- catch(text_to_string(L, S), _, fail), !, string_lower(S, L)
 to_string_lc(S, L):- is_list(S), !, maplist(to_string_lc, S, W), atomics_to_string(W, ' ', L).
 to_string_lc(A, S):- format(string(S), '~w', [A]).
 
-same_word(T1, T2):- xnotrace((to_string_lc(T1, S1), to_string_lc(T2, S2), !, S1=S2)).
+adv_to_string_lc(A, LC):- is_x_instance(A), inst_of(A, Type, _), A\=@=Type, !, adv_to_string_lc(Type, LC).
+adv_to_string_lc(A, LC):- notrace(to_string_lc(A, LC)), !.
 
+
+same_word(T1, T2):- notrace((adv_to_string_lc(T1, S1), adv_to_string_lc(T2, S2), !, S1=S2)).
 % same_verb(T1, T2):- ground(T1), ground(T2), to_upcase_name(T1, N1), to_upcase_name(T2, N2), !, (atom_concat(N1, _, N2);atom_concat(N2, _, N1)).
-same_verb(Verb, Text):-  to_string_lc(Verb, LVerb), to_string_lc(Text, LText), atom_concat(LVerb, _, LText).
+same_verb(T1, T2):- notrace((adv_to_string_lc(T1, S1), adv_to_string_lc(T2, S2), !, atom_concat(S2, _, S1))).
 
 same_props(Props1, Props1):- !.
 same_props(Props1, Props2):- each_prop(Props1, Prop1), each_prop(Props2, Prop2), same_prop(Prop1, Prop2).
@@ -514,10 +590,15 @@ each_prop(Props, Prop):- is_list(Props), !, member(PropsZ, Props), each_prop(Pro
 each_prop(PropC, Prop):- compound(PropC), PropC=Prop.
 
 
-obj_props(M, Obj, Props):- var(M), !, get_advstate(Mem2), obj_props(Mem2, Obj, Props).
-obj_props(M, Obj, Props):- nonvar(Obj), !, obj_props(M, Obj2, Props), Obj=@=Obj2.
-obj_props(M, Obj, Props):- nonvar(Props), !, obj_props_v(M, Obj, Props2), same_props(Props, Props2).
-obj_props(M, Obj, Props):- obj_props_v(M, Obj, Props).
+obj_props(M, Obj, Props):- quietly(obj_props_0(M, Obj, Props)).
+
+get_obj_search(Mem2):- get_advstate(Mem2).
+get_obj_search(inst(Agent)):- current_player(Agent).
+
+obj_props_0(M, Obj, Props):- var(M), !, get_obj_search(Mem2), obj_props_0(Mem2, Obj, Props).
+obj_props_0(M, Obj, Props):- nonvar(Obj), !, obj_props_0(M, Obj2, Props), Obj=@=Obj2.
+obj_props_0(M, Obj, Props):- nonvar(Props), !, obj_props_v(M, Obj, Props2), same_props(Props, Props2).
+obj_props_0(M, Obj, Props):- obj_props_v(M, Obj, Props).
 
 obj_props_v(M, _, _):- \+ compound(M), !, fail.
 obj_props_v(M, Obj, Props):- is_list(M), !, member(E, M), obj_props_v(E, Obj, Props).
@@ -560,22 +641,28 @@ to_wordlist_atoms_adv(Sentence, WordsA):- into_text80(Sentence, WordsA), !.
 
 call_lf(X, LFOut):- freeze(X, ignore(LFOut)).
 
-coerce_text_to_args(X, []):- []==X, !.
-coerce_text_to_args(List, [X|Args]):- is_list(List),
-   to_wordlist_atoms_adv(List, WL),
+
+coerce_text_to_args(Text, Args):- quietly(coerce_text_to_args_0(Text, Args)).
+
+coerce_text_to_args_0(X, []):- []==X, !.
+coerce_text_to_args_0(Var, [Arg]):- is_ftVar(Var), Arg=Var, !.
+coerce_text_to_args_0(Atom, [Arg]):- is_already_an_arg(Atom), !, Atom=Arg.
+coerce_text_to_args_0(Word, [Thing]):- parse2object(Word, Thing, _Mem), !.
+coerce_text_to_args_0(Atomic, Arg):- \+ atom(Atomic), !, any_to_atom(Atomic, Atom), !, notrace(coerce_text_to_args_0(Atom, Arg)).
+coerce_text_to_args_0(List, [X|Args]):-
    current_predicate(noun_phrase/6),
+   is_list(List),
+   notrace(to_wordlist_atoms_adv(List, WL)),
    dcg_if_defined(noun_phrase(_SO, X, true, LFOut), WL, Rest), !,
    must((call_lf(X, LFOut),
    from_wordlist_atoms(Rest, More),
-   coerce_text_to_args(More, Args))).
-coerce_text_to_args(Var, [Arg]):- is_ftVar(Var), Arg=Var, !.
-coerce_text_to_args(Atom, [Arg]):- is_already_an_arg(Atom), !, Atom=Arg.
-coerce_text_to_args(Word, [Thing]):- as1object(Word, Thing, _Mem), !.
-coerce_text_to_args(Atomic, Arg):- \+ atom(Atomic), !, any_to_atom(Atomic, Atom), !, coerce_text_to_args(Atom, Arg).
+   coerce_text_to_args_0(More, Args))).
 
 is_already_an_arg(Var):- is_ftVar(Var), !, fail.
-is_already_an_arg(NonAtomic):- compound(NonAtomic), !.
+is_already_an_arg(Var):- is_list(Var), !, fail.
 is_already_an_arg(Obj):- is_x_instance(Obj), !.
+is_already_an_arg(Obj):- number(Obj), !.
+is_already_an_arg(NonAtomic):- compound(NonAtomic), !.
 is_already_an_arg(Atom):- atom_chars(Atom, [_|Chars]), member(C, Chars),
   (char_type(C, digit); ((char_type(C, to_upper(UC)), C==UC))), !.
 
@@ -594,7 +681,7 @@ flee_run_escape(run).
 flee_run_escape(escape).
 
 % get [out, in, ..] Object
-parse_imperative_movement(Doer, [ get, Prep, Object], intend(Doer, act3('go__prep_obj',Doer,[ walk, Prep, Object])), _Mem) :- preposition( spatial, Prep).
+parse_imperative_movement(Doer, [ get, Prep, Object], (act3('go__prep_obj', Doer, [ walk, Prep, Object])), _Mem) :- preposition( spatial, Prep).
 % n/s/e/w/u/d
 parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir, Actual), !, must_mw1(txt2goto(Doer, walk, [Actual], Logic, M)).
 % escape/flee/run ..
@@ -606,7 +693,7 @@ parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
-parse_imperative_movement(Doer, [ ExitName], intend(Doer, act3('go__dir',Doer,[ walk, ExitName])), M) :-
+parse_imperative_movement(Doer, [ ExitName], (act3('go__dir', Doer, [ walk, ExitName])), M) :-
   in_agent_model(Doer, h(exit(ExitName), _Place, _), M).
 
 
@@ -615,26 +702,26 @@ parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spat
 % x shelf
 % go on shelf
 
-txt2goto(Doer, run, [ ], intend(Doer, act3('go__dir',Doer,[ run, escape])), _Mem) :- !.
+txt2goto(Doer, run, [ ], (act3('go__dir', Doer, [ run, escape])), _Mem) :- !.
 txt2goto(Doer, Walk, [to, Prep| More], Logic, M) :- !, txt2goto(Doer, Walk, [Prep| More], Logic, M).
 txt2goto(Doer, Walk, [Alias| More], Logic, M) :- cmdalias(Alias, Dir), !, txt2goto(Doer, Walk, [Dir| More], Logic, M).
 
 % go in kitchen
 % go in car
-txt2goto(Doer, Walk, [ Prep, Dest], intend(Doer, act3('go__prep_obj',Doer,[ Walk, Prep, Where])), M) :-
+txt2goto(Doer, Walk, [ Prep, Dest], (act3('go__prep_obj', Doer, [ Walk, Prep, Where])), M) :-
  preposition(spatial, Prep), !,
  must_mw1(txt2place(Dest, Where, M)).
 
 % go north
-txt2goto(Doer, Walk, [ ExitName], intend(Doer, act3('go__dir',Doer,[ Walk, ExitName])), M) :-
+txt2goto(Doer, Walk, [ ExitName], (act3('go__dir', Doer, [ Walk, ExitName])), M) :-
  in_agent_model(Doer, h(exit(ExitName), _, _), M).
 % go escape
-txt2goto(Doer, Walk, [ Dir], intend(Doer, act3('go__dir',Doer,[ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
-txt2goto(Doer, Walk, [ Dir], intend(Doer, act3('go__dir',Doer,[ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.
+txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
+txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.
 % go [out, in, ..]
-txt2goto(Doer, Walk, [ Prep], intend(Doer, act3('go__dir',Doer,[ Walk, Prep])), _Mem) :- preposition( spatial, Prep).
+txt2goto(Doer, Walk, [ Prep], (act3('go__dir', Doer, [ Walk, Prep])), _Mem) :- preposition( spatial, Prep).
 % go kitchen
-txt2goto(Doer, Walk, Dest, intend(Doer, act3('go__loc',Doer,[ Walk, Where])), M) :-
+txt2goto(Doer, Walk, Dest, (act3('go__loc', Doer, [ Walk, Where])), M) :-
  txt2place(Dest, Where, M).
 
 
@@ -644,7 +731,7 @@ txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(_, Dest, _), M), Dest 
 txt2place(Dest, Place, M):- parse2object(Dest, Place, M).
 
 
-          
+
 :- discontiguous(verb_frame1/4).
 :- discontiguous(eng2flogic_test/1).
 :- include(adv_eng2cmd_frame).

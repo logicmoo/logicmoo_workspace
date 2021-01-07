@@ -369,13 +369,6 @@ aXiom( intend(Agent, act3('examine',Agent,[ Object]))) ==>> eVent(Agent, intend(
 aXiom( intend(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, at, Object, 3]))), !.
 aXiom( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
 
-% listen, smell ...
-aXiom(Action) ==>>
- {xnotrace((Action=..[Verb, Agent|Args],
- sensory_verb(Sense, Verb)))}, !,
- {NewAction=..[examine, Agent, Sense|Args]},
- eVent(Agent, NewAction).
-
 % Here does not allow Sense?
 aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>>
   \+ sg(can_sense_here(Agent, Sense)), !,
