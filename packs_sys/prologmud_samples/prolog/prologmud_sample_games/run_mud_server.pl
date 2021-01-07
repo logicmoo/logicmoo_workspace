@@ -303,15 +303,13 @@ start_network:-
 
 
 load_rest:- 
-   % fail,
    nodebug,
    load_nomic_mu,   
-   load_before_compile,!.
-
-load_rest:-
-   nodebug,
-   load_nomic_mu,
    load_before_compile,
+   % load_rest2,
+   !.
+
+load_rest2:-
    baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(narsese)),
    baseKB:ensure_loaded(library(logicmoo_clif)),

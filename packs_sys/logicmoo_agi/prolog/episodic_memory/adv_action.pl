@@ -37,6 +37,7 @@ cmd_workarround(VerbObj, VerbObj2):-
  quietly(cmd_workarround_l(VerbObjL, VerbObjL2)),
  VerbObj2=..VerbObjL2.
 
+
 cmd_workarround_l([Verb|ObjS], [Verb|ObjS2]):- append(ObjS2, ['.'], ObjS).
 % look at screendoor -> look screendoor 
 cmd_workarround_l([Verb, Relation|ObjS], [Verb|ObjS]):- is_ignorable(Relation), !.
@@ -47,7 +48,12 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [Atom, M|More], ObjS2).
 % intend(Agent, act3('look',Agent,[ Spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
-cmd_workarround_l( [Verb|ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==intend.
+
+cmd_workarround_l([Verb, Agent,ObjS], WA ):- is_list(ObjS),flatten([Verb, Agent,ObjS],WA).
+cmd_workarround_l([act3, Verb, Agent, ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):- !.
+% look listen, smell ...
+cmd_workarround_l([Verb, Agent|ObjS], [intend,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
+cmd_workarround_l([Verb, Agent|ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==intend.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
