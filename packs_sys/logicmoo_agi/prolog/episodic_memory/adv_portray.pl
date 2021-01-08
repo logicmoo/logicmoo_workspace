@@ -123,8 +123,6 @@ map_tree_pred(Pred,Arg1,Arg2):-
   maplist(map_tree_pred(Pred),ArgS1,ArgS2),
   compound_name_arguments(Arg2,F1,ArgS2).
 
-simplify_memlists(Term,E):- is_list(Term),member(E,Term),compound(E), member(E,[inst(_),structure_label(_),memlist_for(_)]),!.
-
 user:portray(Term):- notrace(no_memlists(Term)), !.
 
 :- set_prolog_flag(debugger_write_options,[quoted(true),portray(true),max_depth(5000),attributes(dots)]).

@@ -198,7 +198,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  if_tracing(dbug(telnet, 'Console TODO ~p~n', [Agent: Words->Action])),
  add_intent( Agent, Action, Mem0, Mem1), ttyflush, !.
 
-makep:-!.
+makep:-!, mmake.
 makep:- update_changed_files, !.
 makep:-
  locally(set_prolog_flag(verbose_load, true),

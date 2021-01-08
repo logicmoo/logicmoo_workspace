@@ -54,6 +54,7 @@ related_with_prop(At, Object, Place, Prop, S0) :-
 
 % -----------------------------------------------------------------------------
 
+subrelation(child, at).
 subrelation(in, child).
 subrelation(on, child).
 subrelation(worn_by, child).

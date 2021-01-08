@@ -117,37 +117,49 @@ type_functor(event, time_passes(agent)).
 type_functor(event, did_emote( agent, emotype, dest, statement)).
 
 type_functor(action,X):- type_functor(maction,X).
-type_functor(maction, derez(inst)).
-type_functor(maction, inspect(agent, getprop(inst, nv))).
-type_functor(maction, intend(agent, act3)).
-type_functor(maction, print_(agent, msg)). % for debug and agent feedback
-type_functor(maction, properties(inst)).
-type_functor(maction, recall(agent, prop, inst2)).
+
 type_functor(maction, rez(type)).
+type_functor(maction, derez(inst)).
+type_functor(maction, properties(inst)).
 type_functor(maction, setprop(inst, nv)).
 
+type_functor(maction, recall(agent, prop, inst2)).
+type_functor(maction, print_(agent, msg)). % for debug and agent feedback
+type_functor(maction, auto(agent)).
+type_functor(maction, inspect(agent, getprop(inst, nv))).
+type_functor(maction, intend(agent, act3)).
+
+
 type_functor(action,X):- type_functor(act3,X).
-type_functor(act3, dig(agent, holetype, prep, dest, inst)).
-type_functor(act3, eat(agent, inst)).
-type_functor(act3, examine(agent, optional(sense, see), optional(inst, here), optional(depth, 1))).
-type_functor(act3, hit(agent, inst, with)).
-type_functor(act3,auto(agent)).
-type_functor(act3,drop(agent, inst)).
-type_functor(act3,emote(agent, emotype, dest, statement)).
-type_functor(act3,give(agent, inst, agnt2)).
 
+type_functor(act3, emote(agent, emotype, dest, statement)).
 
-type_functor(act3, put(agent, inst, dest)).
-type_functor(act3, take(agent, inst)).
-type_functor(act3, open(agent, inst)).
-type_functor(act3, throw(agent, inst, dest)).
-type_functor(act3, wait(agent)).
+type_functor(act3, examine__D5(agent, sense, preprel, inst, depth)).
+type_functor(act3, examine(agent, optional(sense, see), optional(prep, at), optional(inst, $(here)), optional(depth, 3))).
 type_functor(act3, inventory(agent)).
 type_functor(act3, look(agent)).
-type_functor(act3, switch(agent, tfstate, inst)).
-type_functor(act3, touch(agent, inst)).
 
-type_functor(act3,examine__D5(agent, sense, preprel, inst, depth)).
+type_functor(act3, consume(agent, optional(consume__type, eat), inst)).
+type_functor(act3, eat(agent, inst)).
+type_functor(act3, drink(agent, inst)).
+
+type_functor(act3, toggle(agent, nv, inst)).
+type_functor(act3, open(agent, inst)).
+type_functor(act3, close(agent, inst)).
+type_functor(act3, switch(agent, tfstate, inst)).
+
+type_functor(act3, wait(agent)).
+
+type_functor(act3, touch(agent, inst)).
+type_functor(act3, hit(agent, inst, with)).
+type_functor(act3, throw(agent, inst, dest)).
+type_functor(act3, dig(agent, holetype, prep, dest, inst)).
+
+type_functor(act3, drop(agent, inst)).
+type_functor(act3, give(agent, inst, agnt2)).
+type_functor(act3, put(agent, inst, dest)).
+type_functor(act3, take(agent, inst)).
+
 type_functor(act3,Mact):- type_functor(mact3,Mact).
 type_functor(mact3,go__dir(agent, movetype, dir)).
 type_functor(mact3,go__loc(agent, movetype, dest)).
@@ -176,6 +188,7 @@ type_functor(nv_of_any, propOf(term, term)).
 
 type_functor(nv, adjs(list(text))).
 type_functor(nv, traits(list(text))).
+type_functor(nv, nominals(list(text))).
 type_functor(nv, nouns(list(text))).
 type_functor(nv, sp(speech_part, list(text))).
 type_functor(nv, '<mystery>'(reason, preprel, inst2)).

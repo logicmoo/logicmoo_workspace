@@ -480,19 +480,26 @@ state_value(NamedValue, Named, Value):-
   append(NamedL, [Value], NamedValueL),
   univ_safe(Named, NamedL).
 
+expected_truth(G) :- ignore(dshow_failure(G)).
+  
 change_state(Agent, Action, Thing, OpenedTF, S0, S):-
  action_verb_agent_thing(Action, Open, _, _),
  % must_mw1
  ((
- maybe_when(psubsetof(Open, touch),
-   required_reason(Agent, will_need_touch(Agent, Thing, S0, _))),
+
+ expected_truth(getprop(Thing, can_be(Open, t), S0)),
+
+ expected_truth(required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0))),
+
+ (
+   maybe_when(psubsetof(Open, touch), 
+     required_reason(Agent, 
+       will_need_touch(Agent, Thing, S0, _)))),
+
+ required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
 
  %getprop(Thing, can_be(open, S0),
- %\+ getprop(Thing, =(open, t), S0),
-
- required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0)),
-
- ignore(dshow_failure(getprop(Thing, can_be(Open, t), S0))),
+ %\+ getprop(Thing, =(open, t), S0),  
 
  forall(act_prevented_by(Open, Locked, Prevented),
    required_reason(Agent, \+ getprop(Thing, =(Locked, Prevented), S0))),

@@ -33,31 +33,42 @@
 :- reexport(library(logicmoo_utils_all)).
 ludef:- list_undefined([module_class([user, system, library, test, development])]).
 
+
+simplify_memlists(Term,E):- has_list_functor(Term), 
+  member(F,[propOf(_, _),memlist_for(_),structure_label(_),inst(_)]),member_unopen(E,Term),compound(E),F=E,!.
+
+member_unopen(_,Var):- var(Var),!,fail.
+member_unopen(E,[E|_]).
+member_unopen(E,[_|T]):- member_unopen(E,T).
+
+has_list_functor(C):- compound(C),compound_name_arity([_|_],F,A),compound_name_arity(C,F,A).
+
+
 :- export(simplify_dbug/2).
 
 simply_debug_opts([len=5]).
 
 get_zoption(Z, N, V, E):- member(N=V, Z)->true;V=E.
 
-simplify_dbug(G, GG):- notrace(simplify_dbug_3(G, GG)).
-simplify_dbug(Z, G, GG):- notrace(simplify_dbug_3(Z, G, GG)).
+simplify_dbug(G, GG):- notrace((simply_debug_opts(Z),simplify_dbug(Z, G, GG))).
 
-simplify_dbug_3(G, GG):- is_list(G), must_det(maplist(simplify_dbug_3, G, GG)), !.
-simplify_dbug_3(G, GG):- simply_debug_opts(Z), simplify_dbug_3(Z, G, GG).
+simplify_dbug(Z, G, GG):- notrace((simplify_dbug_3(Z, G, GP),simplify_goal_printed(GP,GG))).
 
 simplify_dbug_3(_, G, GG):- \+ compound(G), !, GG=G.
-simplify_dbug_3(_, {O}, {O}):- !.
-
+simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(X), debug_var(['Not', X], Y),!.
+simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(Y), debug_var(['Not', X], Y),!.
+simplify_dbug_3(_, List, '.|.|.'(O)):-  simplify_memlists(List, O),!.
 simplify_dbug_3(Z, List, O):-
  ( is_list(List) -> clip_cons(Z, List, '...'(Clipped), O) ;
  ( List = [_|_], append(LeftSide, Open, List),
   ((var(Open);Open \= [_|_])), !, assertion(is_list(LeftSide)),
  clip_cons(Z, LeftSide, '...'(Open), O))), debug_var('CO', Open), debug_var('OC', Clipped).
-
-simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(X), debug_var(['Not', X], Y).
-simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(Y), debug_var(['Not', X], Y).
-simplify_dbug_3(Z, G, GG):- compound_name_arguments(G, F, GL), F\==percept_props, !,
- maplist(simplify_dbug_3(Z), GL, GGL), !, compound_name_arguments(GG, F, GGL).
+simplify_dbug_3(Z, G, GG):- is_list(G), must_det(maplist(simplify_dbug_3(Z), G, GG)), !.
+simplify_dbug_3(_, {O}, {O}):- !.
+simplify_dbug_3(Z, G, GG):- 
+ compound_name_arguments(G, F, GL), % F\==percept_props, !,
+ maplist(simplify_dbug_3(Z), GL, GGL), !, 
+ compound_name_arguments(GG, F, GGL).
 simplify_dbug_3(_, G, G).
 
 
