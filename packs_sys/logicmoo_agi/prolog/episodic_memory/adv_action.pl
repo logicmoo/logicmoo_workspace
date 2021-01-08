@@ -183,7 +183,7 @@ agent_try_action(Agent, Action, S0, S3) :-
  into_attempt(Agent, Action, AgentAction),
  once(show_failure(raise_aXiom_events( AgentAction, S2, S3));(S2=S3, dumpST)), !.
 
-%into_attempt(Agent, Action, try(Agent,Action)):-!.
+into_attempt(Agent, Action, try(Agent,Action)):- \+ functor(Action, try, 2), !.
 into_attempt(_Agent, Action, AgentAction):- Action = AgentAction.
 
 %memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
