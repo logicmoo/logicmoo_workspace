@@ -78,14 +78,18 @@ aXiom(Action) ==>>
  (((sg(member(failed(Why))), send_1percept(Agent, failed(Action, Why))))
     ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, (Action)))),
  {episodic_mem(Agent, implications(DoesEvent, Action, Preconds, Postconds))},
+ {wdmsg(used_implications(DoesEvent, Action, Preconds, Postconds))},
  !.
 
 aXiom( Action) ==>>
  {oper_splitk(Agent, Action, Preconds, Postconds)},
  /*dmust_tracing*/
- (satisfy_each(preCond(_1), Preconds)),
+ ((satisfy_each(preCond(_1), Preconds)),
  (((sg(member(failed(Why))), send_1percept(Agent, failed(Action, Why))))
-    ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, success(Action)))), !.
+    ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, success(Action))))), 
+  !,
+  {wdmsg(used_oper_splitk(Agent, Action, Preconds, Postconds)}).
+    
 
 
 :- defn_state_getter(eng2cmd(agent, english, action)).
