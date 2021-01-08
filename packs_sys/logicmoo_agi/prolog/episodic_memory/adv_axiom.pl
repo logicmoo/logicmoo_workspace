@@ -47,7 +47,7 @@ will_need_touch(Agent, Thing) ==>>
 
 :- listing(will_need_touch).
 
-recalc_eVent(Agent, Event,S,E):- eVent(Agent, Event,S,E).
+recalc_eVent( Event,S,E):- aXiom( Event,S,E).
 
 eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
@@ -178,7 +178,7 @@ aXiom(status_msg(_Begin, _End)) ==>> [].
 % ==============
 recalc_aXiom( try(Agent, act3('go__obj',Agent,[ Walk, Object]))) ==>>
   has_rel(At, Object),
- recalc_eVent(Agent, try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
+ recalc_eVent( try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
 
 
 
@@ -248,7 +248,7 @@ recalc_aXiom( try(Agent, act3('drop',Agent,[ Thing]))) ==>> !,
   will_need_touch(Agent, Thing),
   h(At, Agent, Here),
   % has_rel(At, Here),
- recalc_eVent(Agent, try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
+ recalc_eVent( try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
 
 aXiom( try(Agent, act3('put',Agent,[ Thing1, Prep, Thing2]))) ==>>
   has_rel(At, Thing2),
@@ -270,16 +270,16 @@ aXiom( try(Agent, act3('give',Agent,[ Thing, Recipient]))) ==>>
 % do_throw ball up
 recalc_aXiom( try(Agent, act3('throw_dir',Agent,[ Thing, ExitName]))) ==>>
   from_loc(Agent, Here),
- recalc_eVent(Agent, try(Agent, act3('throw_prep_obj',Agent,[ Thing, ExitName, Here]))).
+ recalc_eVent( try(Agent, act3('throw_prep_obj',Agent,[ Thing, ExitName, Here]))).
 
 % throw ball at catcher
 recalc_aXiom( try(Agent, act3('throw_at',Agent,[ Thing, Target]))) ==>>
- recalc_eVent(Agent, try(Agent, act3('throw_prep_obj',Agent,[ Thing, at, Target]))).
+ recalc_eVent( try(Agent, act3('throw_prep_obj',Agent,[ Thing, at, Target]))).
 
 % do_throw ball over homeplate
 recalc_aXiom( try(Agent, act3('throw_prep_obj',Agent,[ Thing, Prep, Target]))) ==>>
   prep_to_rel(Target, Prep, Rel),
- recalc_eVent(Agent, try(Agent, act3('throw',Agent,[ Thing, Rel, Target]))).
+ recalc_eVent( try(Agent, act3('throw',Agent,[ Thing, Rel, Target]))).
 
 % is throwing the ball...
 aXiom( try(Agent, act3('throw',Agent,[ Thing, At, Target]))) ==>>
@@ -357,7 +357,7 @@ aXiom( try(Agent, act3('inventory',[]))) ==>>
  recalc_eVent( begaN(Agent, 'inventory', [])).
 
 recalc_aXiom( begaN( Agent, 'inventory', [])) ==>>
-  recalc_eVent(Agent, try(Agent, act3('examine',Agent,[ Agent]))).
+  recalc_eVent( try(Agent, act3('examine',Agent,[ Agent]))).
   %findall(What, h(child, What, Agent), Inventory),
   %send_1percept(Agent, [rel_to(held_by, Inventory)]).
 
@@ -369,17 +369,17 @@ recalc_aXiom( try(Agent, act3('look',Agent,[]))) ==>>
   % Agent is At Here
   h(At, Agent, Here),
   % Agent looks At Here
-  recalc_eVent(Agent, try(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
+  recalc_eVent( try(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
 
-recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !, from_loc(Agent, Place), recalc_eVent(Agent, try(Agent, act3('examine__D3',Agent,[ see, in, Place]))).
-recalc_aXiom( try(Agent, act3('examine',Agent,[ Object]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D3',Agent,[ see, at, Object]))).
-recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D3',Agent,[ Sense, at, Object]))), !.
-recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D3', Agent, [ Sense, Prep, Object]))), !.
-recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
+recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !, from_loc(Agent, Place), recalc_eVent( try(Agent, act3('examine__D3',Agent,[ see, in, Place]))).
+recalc_aXiom( try(Agent, act3('examine',Agent,[ Object]))) ==>> recalc_eVent( try(Agent, act3('examine__D3',Agent,[ see, at, Object]))).
+recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> recalc_eVent( try(Agent, act3('examine__D3',Agent,[ Sense, at, Object]))), !.
+recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> recalc_eVent( try(Agent, act3('examine__D3', Agent, [ Sense, Prep, Object]))), !.
+recalc_aXiom( try(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalc_eVent( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
-recalc_aXiom( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
-recalc_aXiom( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalc_eVent(Agent, try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
+recalc_aXiom( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> recalc_eVent( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
+recalc_aXiom( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalc_eVent( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
 % Here does not allow Sense?
