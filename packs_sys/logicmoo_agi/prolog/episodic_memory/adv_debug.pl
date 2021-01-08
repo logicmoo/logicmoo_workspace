@@ -108,13 +108,16 @@ clip_cons(Z, List, ClipTail, {Len, LeftS, ClipTail}):- fail,
 clip_cons(Z, Left, _, List):-maplist(simplify_dbug(Z), Left, List).
 
 
-found_bug(S0, open_list(Open)) :- \+is_list(S0),
+found_bug(S0, Bug):- has_list_functor(S0), !, found_list_bug(S0, Bug).
+found_bug(_S0, _Bug):- fail.
+
+found_list_bug(S0, open_list(Open)) :- \+ is_list(S0),
   get_open_segement(S0, Open).
-found_bug(S0, duplicated_object(X, R, L)) :-
+found_list_bug(S0, duplicated_object(X, R, L)) :-
  append(Left, [prop(X, R)|_], S0),
  member(prop(X, L), Left).
 
-get_open_segement(S0, Open):- append(Left, _, S0), is_list(Left), length(Left, N), N>2, !, append([_, _], S1, S0), get_open_segement(S1, Open).
+get_open_segement(S0, Open):-  append(Left, _, S0), is_list(Left), length(Left, N), N>2, !, append([_, _], S1, S0), get_open_segement(S1, Open).
 get_open_segement(S0, S0).
 
 

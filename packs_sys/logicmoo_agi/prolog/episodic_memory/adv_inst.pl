@@ -213,9 +213,3 @@ create_1obj(_Suffix, _Info, I, I, S0, S0):- assertion(atom(I)), !.
 find_recent(_Suffix, Type, Inst, S0, S0):- declared(props(Inst, PropList), S0), declared(instance(Type), PropList).
 
 
-
-
-
-
-
-
