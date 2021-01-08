@@ -54,7 +54,7 @@ declare_inst_type(Inst, Type, S0, S2):-
   assertion(nonvar(Type)),
   object_props_or(Inst, PropList1, [], S0),
   (member(sp(adjs, _), PropList1)-> PropList1=PropList;  [sp(nouns, [Type])|PropList1]=PropList),
-  list_to_set([shape=Type, inherit(Type, t)|PropList], Set),
+  list_to_set([shape=Type, traits([Type]), inherit(Type, t)|PropList], Set),
   %undeclare_alw ays(props(Inst, _), S0, S1),
   replace_declare(props(Inst, Set), S0, S2).
 

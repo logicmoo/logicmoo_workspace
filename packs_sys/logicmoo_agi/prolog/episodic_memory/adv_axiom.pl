@@ -35,11 +35,17 @@ aXiom(X):-
  get_advstate(State),
  aXiom(X,State,_),!.
 
+%:- defn_state_getter(will_need_touch(agent,inst)).
+%:- defn_state_setter(will_need_touch(agent,inst)).
+
 :- expand_term((will_need_touch(Agent, Thing) ==>>
-  h(touchable, Agent, Thing)), _).
+  h(touchable, Agent, Thing)), Dmsg), dmsg(Dmsg).
+
 % :- trace.
 will_need_touch(Agent, Thing) ==>>
   h(touchable, Agent, Thing).
+
+:- listing(will_need_touch).
 
 eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
@@ -359,24 +365,27 @@ aXiom( intend(Agent, act3('look',Agent,[]))) ==>>
   % Agent is At Here
   h(At, Agent, Here),
   % Agent looks At Here
-  eVent(Agent, intend(Agent, act3('examine',Agent,[ see, At, Here]))).
+  eVent(Agent, intend(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
 
-aXiom( intend(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !,
-   from_loc(Agent, Place),
-   eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ see, in, Place, 3]))).
+aXiom( intend(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !, from_loc(Agent, Place), eVent(Agent, intend(Agent, act3('examine__D3',Agent,[ see, in, Place]))).
+aXiom( intend(Agent, act3('examine',Agent,[ Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D3',Agent,[ see, at, Object]))).
+aXiom( intend(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D3',Agent,[ Sense, at, Object]))), !.
+aXiom( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D3', Agent, [ Sense, Prep, Object]))), !.
+aXiom( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth]))) ==>> eVent(Agent, intend(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
 
-aXiom( intend(Agent, act3('examine',Agent,[ Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ see, at, Object, 3]))).
-aXiom( intend(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, at, Object, 3]))), !.
-aXiom( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
+aXiom( intend(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
+aXiom( intend(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))) ==>> eVent(Agent, intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
+
 
 % Here does not allow Sense?
 aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>>
   \+ sg(can_sense_here(Agent, Sense)), !,
   must_act( failed( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth])), \+ can_sense_here(Agent, Sense))).
 aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>>
-  \+ can_sense(Agent, Sense, Object), !,
+  \+ sg(can_sense(Agent, Sense, Object)), !,
   must_act( failed( intend(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth])), \+ can_sense(Agent, Sense, Object))).
-aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) ==>> must_mw1(act_examine(Agent, Sense, Prep, Object, Depth)), !.
+aXiom(intend(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))) 
+   ==>> must_mw1(act_examine(Agent, Sense, Prep, Object, Depth)), !.
 
 
 % used mainly to debug if things are locally accessable

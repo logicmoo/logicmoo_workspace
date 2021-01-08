@@ -190,7 +190,7 @@ type_props(living_room, [inherit(place)]).
 type_props(pantry, [
    volume_capacity = 1000,
    nouns(closet),
-   traits(kitchen),
+   nominals(kitchen),
    desc("You're in a dark kitchen pantry."),
    dark = t,
    inherit(place)
@@ -221,6 +221,7 @@ type_props(screendoor, [
     effect( did('switch', on), true),
     effect( did('switch', off), true),
     can(switch),
+    nominals(broken),
     adjs($class),
     adjs([dented])
  ]),
@@ -319,7 +320,7 @@ type_props(screendoor, [
 
 
  % People
- type_props(floyd, [name = ("Floyd the robot"), powered = t, inherit(autonomous), inherit(robot)]),
+ type_props(floyd, [name = ("Floyd the robot"), powered = f, inherit(autonomous), inherit(robot)]),
 
  type_props(telnet, [adjs(remote), inherit(player), nouns([player])]),
  type_props(player, [name = ($self),
@@ -600,7 +601,7 @@ type_props(screendoor, [
    powered = t,
    can(switch),
    nouns(light),
-   traits(brass),
+   adjs(brass),
    inherit(shiny),
    inherit(moveable),
    emitting(see, light),
@@ -614,6 +615,7 @@ type_props(screendoor, [
    % TODO: prevent user from referring to "broken_lamp"
    nouns(light),
    traits(brass),
+   inherit(broken),
    adjs(dented),
    can(switch),
    effect( did('switch', on), true),

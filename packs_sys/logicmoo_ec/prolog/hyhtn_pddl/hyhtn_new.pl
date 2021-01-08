@@ -2496,16 +2496,16 @@ post_header:- dmsg(post_header),fail, forall(clause(post_header_hook,G),G).
 
 :- discontiguous(header_tests/0).
 
-run_tests(Call) :- 
+hyhtn_run_tests(Call) :- 
   statistics_runtime(InTime),  
-  locally(doing(run_tests(Call)),
+  locally(doing(hyhtn_run_tests(Call)),
    call_cleanup(Call, 
   ((
  statistics_runtime(OutTime),
   Time is OutTime - InTime,
   banner_party(informational,runtests(Call) = time(Time)))))).
  
-run_header_tests :- run_tests(forall(clause(header_tests,G),run_tests(G))).
+run_header_tests :- hyhtn_run_tests(forall(clause(header_tests,G),hyhtn_run_tests(G))).
 
 
 

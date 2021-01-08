@@ -156,6 +156,7 @@ upmerge_prop(F, N, Before, After, Result):- arg(N, Before, B), arg(N, After, A),
 
 collector_prop(nouns).
 collector_prop(traits).
+collector_prop(nominals).
 collector_prop(adjs).
 collector_prop(desc).
 
