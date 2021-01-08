@@ -46,14 +46,14 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
  append(Left, [Atom, M|More], ObjS2).
-% intend(Agent, act3('look',Agent,[ Spatial])) at screen door
+% try(Agent, act3('look',Agent,[ Spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
 
 cmd_workarround_l([Verb, Agent,ObjS], WA ):- is_list(ObjS),flatten([Verb, Agent,ObjS],WA).
-cmd_workarround_l([act3, Verb, Agent, ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):- !.
+cmd_workarround_l([act3, Verb, Agent, ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):- !.
 % look listen, smell ...
-cmd_workarround_l([Verb, Agent|ObjS], [intend,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
-cmd_workarround_l([Verb, Agent|ObjS], [intend,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==intend.
+cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
+cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==try.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
@@ -115,15 +115,15 @@ psubsetof(A, C) :-
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
+invoke_command(_Requester, try(Agent, Action)) ==>>  
+ agent_try_action(Agent, Action), !.
+
 invoke_command(Agent, Action) ==>>
  invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
+
 invoke_command(Agent, Action) ==>>
-  {set_last_action(Agent, Action)},
- invoke_action(Agent, Action), !.
-invoke_command(Agent, Action) :-
- event_failed(Agent, unknown_comand( Action)),
- player_format(Agent, 'Failed or No Such Command: ~w~n', Action).
+ agent_try_action(Agent, Action), !.
 
 % --------
 
@@ -155,7 +155,7 @@ invoke_intents( _Agent, S0, S0).
 
 
 
-% ---- apply_act( Action, S0, S9)
+% ---- apply_aXioms( Action, S0, S9)
 % where the states also contain Percepts.
 % In Inform, actions work in the following order:
 % game-wide preconditions
@@ -171,15 +171,17 @@ invoke_intents( _Agent, S0, S0).
 % In TADS:
 % "verification" methods perferm tests only
 
-invoke_action(Agent, Action, S0, S3) :-
+agent_try_action(Agent, Action, S0, S3) :-
  quietly_must((
+ set_last_action(Agent, Action),
  maybe_undeclare(memories(Agent, Mem0), S0, S1),
- memorize_doing(Agent, Action, Mem0, Mem1),
+ memorize_attempting(Agent, Action, Mem0, Mem1),
  replace_declare(memories(Agent, Mem1), S1, S2))),
- once(show_failure(must_act( Action, S2, S3));S2=S3), !.
+ once(show_failure(raise_aXiom_events( try(Agent, Action), S2, S3))),!.
 
-%memorize_doing(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
-memorize_doing(Agent, Action, Mem0, Mem2):-
+
+%memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
+memorize_attempting(Agent, Action, Mem0, Mem2):-
   copy_term(Action, ActionG),
   mw_numbervars(ActionG, 999, _),
   ( has_depth(Action)
@@ -217,12 +219,12 @@ find_clock_time(Agent, T0, OldNow, _UMem):-
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-%trival_act(act3('examine__D5',_,[ _, _, _, _])).
+trival_act(act3('examine__D5',_,_)).
 %trival_act(act3('look',_,[])).
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( intend(_, X)):- !, trival_act( X).
+trival_act( try(_, X)):- !, trival_act( X).
 trival_act( act3('wait',_,[])).
 
 
@@ -244,7 +246,7 @@ satisfy_each(Context, believe(Beliver, Cond)) ==>>
    {satisfy_each(Context, Cond, Memory, NewMemory)}, !,
    replace_declare(memories(Beliver, NewMemory)).
 
-satisfy_each(postCond(_Action), event(Event), S0, S9) :-  must_act(Event, S0, S9).
+satisfy_each(postCond(_Action), event(Event), S0, S9) :-  raise_aXiom_events(Event, S0, S9).
 
 satisfy_each(Context, (C1, C2), S0, S9) :- !,
   satisfy_each(Context, C1, S0, S1),
@@ -287,18 +289,18 @@ split_k(Agent, [Cond|PrecondsK], [Cond|Preconds]):-
 
 api_invoke( Action) :- get_advstate(S), api_invoke( Action, S, E), set_advstate(E).
 
-api_invoke( Action) ==>> apply_act( Action).
+api_invoke( Action) ==>> apply_aXioms( Action).
 
-apply_act( Action) ==>> aXiom(Action), !.
-apply_act( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_act( NewAct, S0, S9).
-apply_act( Action, S0, S0) :-
+apply_aXioms( Action) ==>> aXiom(Action), !.
+apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
+apply_aXioms( Action, S0, S0) :-
   notrace((dbug(general, failed_aXiom( Action)))), !, fail, \+ tracing.
 
 
-must_act( Action , S0, S9) :-
-  (apply_act( Action, S0, S9)) *-> ! ; fail.
-must_act( Action, S0, S1) :- debugging(apply_act), !, rtrace(apply_act( Action, S0, S1)), !.
-must_act( Action) ==>>
+raise_aXiom_events( Action , S0, S9) :-
+  (apply_aXioms( Action, S0, S9)) *-> ! ; fail.
+raise_aXiom_events( Action, S0, S1) :- debugging(apply_aXioms), !, rtrace(apply_aXioms( Action, S0, S1)), !.
+raise_aXiom_events( Action) ==>>
  action_doer(Action, Agent),
  send_1percept(Agent, [failure(Action, unknown_to(Agent, Action))]).
 
@@ -405,7 +407,7 @@ add_agent_goal(Agent, Action, S0, S9) :-
 
 add_intent_look(Agent) ==>>
   h(inside, Agent, _Somewhere),
-  add_agent_intent( Agent, intend(Agent, act3('look',Agent,[]))).
+  add_agent_intent( Agent, try(Agent, act3('look',Agent,[]))).
 
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
@@ -422,7 +424,10 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
 
 action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
 
-action_verb_agent_args(intend(_,Act3), Verb, Agent, Args):- action_verb_agent_args(Act3, Verb, Agent, Args), !.
+action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
+  arg(_, MetaAction, Action), compound(Action), 
+  functor(Action, act3, 3), !, 
+  action_verb_agent_args(Action, Verb, Agent, Args).
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),

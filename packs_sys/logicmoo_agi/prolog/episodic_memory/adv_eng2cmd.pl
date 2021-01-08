@@ -411,7 +411,7 @@ parse_cmd( Self, Logic, [F|Words], []):-
     % @TODO start using coerce(...).
     show_call(parse_for_args(ArgTypes, Words, Args)), !,
      (Ag==agent ->
-       Logic =..[Fun, Self|Args];
+       Logic = act3(Fun, Self,Args);
        Logic =..[Fun|Args]).
 
 % %%%%%%%%%%%%%%
@@ -419,7 +419,7 @@ parse_cmd( Self, Logic, [F|Words], []):-
 % %%%%%%%%%%%%%%
 
 parsed_as_simple(X):- arg(_, v(look, wait, auto, inventory), X).
-parse_cmd(Agent, Logic) --> [X|Args], {parsed_as_simple(X0), same_verb(X0, X), !, Logic=..[X0, Agent|Args]}.
+parse_cmd(Agent, Logic) --> [X|Args], {parsed_as_simple(X0), same_verb(X0, X), !, Logic= act3(X0, Agent,Args)}.
 
 ask_to_say(Ask, say):- arg(_, v(ask, say, tell, talk), Ask).
 ask_to_say(Ask, say):- arg(_, v(request, tell), Ask).

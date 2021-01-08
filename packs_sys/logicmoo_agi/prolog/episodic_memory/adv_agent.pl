@@ -123,7 +123,7 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
 
-add_intent( Agent, Auto, Mem0, Mem3) :- Auto = intend(Agent, act3('auto',Agent,[])), !,
+add_intent( Agent, Auto, Mem0, Mem3) :- Auto = act3('auto',Agent,[]), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 
@@ -292,7 +292,7 @@ decide_action(_Agent, Mem, Mem) :-
 decide_action(_Agent, Mem0, Mem0) :- !.
 
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent, [ intend(Agent, act3('auto',Agent,[]))]),
+ set_last_action(Agent, [ try(Agent, act3('auto',Agent,[]))]),
  nop(dbug(decide_action, 'decide_action(~w) FAILED!~n', [Agent])).
 
 

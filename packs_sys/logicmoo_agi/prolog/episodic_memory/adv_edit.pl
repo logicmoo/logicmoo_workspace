@@ -43,6 +43,9 @@ invoke_metacmd(_Doer, in_world(Agent, World, Cmd), S0, S1):- !, find_world(World
  invoke_metacmd(Agent, Cmd, W0, W1), !,
   save_world(World, W1, S0, S1).
 
+invoke_metacmd(Doer, try(Agent, Command)) --> !, {Doer\==Agent},
+  invoke_metacmd(Agent, Command).
+
 invoke_metacmd(Doer, quit(Agent)) -->
  replace_declare(wishes(Agent, quit)),
  {player_format(Doer, 'logging off~w ~n', [Agent]),
