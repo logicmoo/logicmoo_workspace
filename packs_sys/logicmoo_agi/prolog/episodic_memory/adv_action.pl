@@ -425,7 +425,7 @@ uses_default_doer(Action):- \+ compound(Action).
 :- defn_state_none(action_doer(action, -agent)).
 action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw1(mu_current_agent(Agent)), !.
 action_doer(Action, Agent):- arg(_, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
-action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, _Agent, _Thing),!.
+action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, Agent, _Thing),!.
 action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 
