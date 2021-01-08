@@ -623,7 +623,7 @@ episodic_mem(Agent, Figment):- compound(Figment), arg(1, Figment, Ag), Ag==Agent
 episodic_mem(Agent, Figment) :- note_episodic_mem(episodic_mem(Agent, Figment)), !.
 
 note_episodic_mem(Figment):-
-  notrace((format('~N', []), in_color(pink, print_tree(Figment)), format('~N', []), overwrote_prompt)).
+  nop((notrace((format('~N', []), in_color(pink, print_tree(Figment)), format('~N', []), overwrote_prompt)))).
 
 % for  the "TheSims" bot AI which will make the bots do what TheSims characters do... (they dont use the planner they use a simple priority routine)
 

@@ -76,19 +76,23 @@ prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, exit(Prep),
 prep_to_rel(Target, _Prep, Rel, S0):- default_rel(Rel, Target, S0).
 
 :- defn_state_getter(has_rel(domrel, inst)).
-has_rel(At, X, S0) :- default_rel(At, X, S0).
+has_rel(At, X, S0) :- hrel(At, X, S0).
+has_rel(At, X, S0) :- sub_hrel(At, X, S0).
 
 :- defn_state_getter(default_rel(domrel, inst)).
-default_rel(At, X, S0) :-
-  getprop(X, default_rel = (At), S0).
-default_rel(At, X, S0) :-
-  getprop(X, has_rel(At, TF), S0), TF \== f.
+default_rel(At, X, S0) :- hrel(At, X, S0).
+default_rel(At, X, S0) :- sub_hrel(At, X, S0).
 default_rel(in, _, _S0) :- !.
 
-default_rel(At, X, S0) :-
+hrel(At, X, S0) :-
+  getprop(X, default_rel = (At), S0).
+hrel(At, X, S0) :-
+  getprop(X, has_rel(At, TF), S0), TF \== f.
+
+sub_hrel(At, X, S0) :-
   getprop(X, default_rel = (Specific), S0),
   subrelation(Specific, At).
-default_rel(At, X, S0) :-
+sub_hrel(At, X, S0) :-
   getprop(X, has_rel(Specific, TF), S0), TF \== f,
   subrelation(Specific, At).
 
