@@ -51,7 +51,7 @@ recalc_eVent(Agent, Event,S,E):- eVent(Agent, Event,S,E).
 
 eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
- aXiom(Event).
+ must_mw1(aXiom(Event)).
 
 aXiom(MAction, S0, S9):-  stripped_term(MAction, Action), !, trace, aXiom(Action, S0, S9).
 

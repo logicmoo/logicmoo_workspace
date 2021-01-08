@@ -115,15 +115,18 @@ psubsetof(A, C) :-
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
-invoke_command(_Requester, try(Agent, Action)) ==>>  
- agent_try_action(Agent, Action), !.
-
+invoke_command(Requester, try(Agent, Action)) ==>>  
+ {Requester==Agent},
+ invoke_command(Agent, Action), !.
 invoke_command(Agent, Action) ==>>
  invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
-
 invoke_command(Agent, Action) ==>>
+  {set_last_action(Agent, Action)},
  agent_try_action(Agent, Action), !.
+invoke_command(Agent, Action) :-
+ event_failed(Agent, unknown_comand( Action)),
+ player_format(Agent, 'ERRROR Failed or No Such Command: ~w~n', Action).
 
 % --------
 
@@ -177,8 +180,11 @@ agent_try_action(Agent, Action, S0, S3) :-
  maybe_undeclare(memories(Agent, Mem0), S0, S1),
  memorize_attempting(Agent, Action, Mem0, Mem1),
  replace_declare(memories(Agent, Mem1), S1, S2))),
- once(show_failure(raise_aXiom_events( try(Agent, Action), S2, S3))),!.
+ into_try(Agent, Action, AgentAction),
+ once(show_failure(raise_aXiom_events( AgentAction, S2, S3));(S2=S3, dumpST)), !.
 
+% into_try(Agent, Action, try(Agent,Action)):-!.
+into_try(_Agent, Action, AgentAction):- Action = AgentAction.
 
 %memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
 memorize_attempting(Agent, Action, Mem0, Mem2):-
@@ -219,7 +225,7 @@ find_clock_time(Agent, T0, OldNow, _UMem):-
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-trival_act(act3('examine__D5',_,_)).
+%trival_act(act3('examine__D5',_,[ _, _, _, _])).
 %trival_act(act3('look',_,[])).
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
@@ -291,11 +297,15 @@ api_invoke( Action) :- get_advstate(S), api_invoke( Action, S, E), set_advstate(
 
 api_invoke( Action) ==>> apply_aXioms( Action).
 
+% apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
+
 apply_aXioms( Action) ==>> aXiom(Action), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
   notrace((dbug(general, failed_aXiom( Action)))), !, fail, \+ tracing.
 
+
+% must_act( Action , S0, S9) :- raise_aXiom_events( Action , S0, S9).
 
 raise_aXiom_events( Action , S0, S9) :-
   (apply_aXioms( Action, S0, S9)) *-> ! ; fail.
@@ -413,9 +423,10 @@ add_intent_look(Agent) ==>>
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
 uses_default_doer(Action):- \+ compound(Action).
 :- defn_state_none(action_doer(action, -agent)).
-action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw(mu_current_agent(Agent)), !.
+action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw1(mu_current_agent(Agent)), !.
 action_doer(Action, Agent):- arg(_, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
-action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw(Action == Agent).
+action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, _Agent, _Thing),!.
+action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
@@ -428,6 +439,10 @@ action_verb_agent_args(MetaAction, Verb, Agent, Args):-
   arg(_, MetaAction, Action), compound(Action), 
   functor(Action, act3, 3), !, 
   action_verb_agent_args(Action, Verb, Agent, Args).
+
+action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
+  arg(_, MetaAction, Action), compound(Action), \+ is_x_instance(Action),
+    action_verb_agent_args(Action, Verb, Agent, Args), !.
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
   univ_safe(Action, [Verb, Agent|Args]),

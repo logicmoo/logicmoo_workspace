@@ -122,12 +122,17 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  append(Goals, OldGoals, NewGoals),
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
+add_intent( Agent, try(Doer, Action), Mem0, Mem2):-  Agent==Doer,
+  add_intent( Agent, Action, Mem0, Mem2).
+  
+add_intent( Agent, Action, Mem0, Mem2):- 
+  add_intent0( Agent, Action, Mem0, Mem2).
 
-add_intent( Agent, Auto, Mem0, Mem3) :- Auto = act3('auto',Agent,[]), !,
+add_intent0( Agent, Auto, Mem0, Mem3) :- Auto = act3('auto',Agent,[]), !,
  %must_mw1(member(inst(Agent), Mem0)),
  autonomous_decide_action(Agent, Mem0, Mem3), !.
 
-add_intent( _Agent, Action, Mem0, Mem2) :-
+add_intent0( _Agent, Action, Mem0, Mem2) :-
  thought_check(Agent, intent(Agent, OldToDo), Mem0),
  append(OldToDo, [Action], NewToDo),
  replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2), !.

@@ -268,7 +268,8 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, (act3('emote',Agent,[ _, _Targ, _]))).
-% was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
+was_own_self(Agent, try(Agent, act3('emote',Agent,[ _, _Targ, _]))).
+was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
 :- defn_mem_setter(process_percept_player//3).
