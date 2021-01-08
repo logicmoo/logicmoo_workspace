@@ -217,12 +217,13 @@ find_clock_time(Agent, T0, OldNow, _UMem):-
 has_depth(Action):- compound(Action), safe_functor(Action, _, A), arg(A, Action, E), compound(E), E=depth(_), !.
 
 trival_act(V):- \+ callable(V), !, fail.
-%trival_act(intend(_, act3('examine__D5',_,[ _, _, _, _]))).
-%trival_act( intend(_, act3('look',_,[]))).
+%trival_act(act3('examine__D5',_,[ _, _, _, _])).
+%trival_act(act3('look',_,[])).
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( intend(_, act3('wait',_,[]))).
+trival_act( intend(_, X)):- !, trival_act( X).
+trival_act( act3('wait',_,[])).
 
 
 satisfy_each_cond(Ctxt, [], success(Ctxt)) ==>> !.

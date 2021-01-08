@@ -110,6 +110,21 @@ list2eng_e(Punct, Obj, Some, English) :-
 
 timestamped_pred(holds_at).
 
+
+reason_to_english(_Aobj, cant( sense(_Agent, Sense, It, Why)), [ 'can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
+reason_to_english(_Aobj, cant( reach(_Agent, It)), [ 'can''t reach ', It]).
+reason_to_english(_Aobj, cant( manipulate(self)), [ 'can''t manipulate yourself like that']).
+reason_to_english(_Aobj, alreadyhave(It), ['already have', the(It)]).
+reason_to_english(_Aobj, mustgetout(It), ['must_mw get out/off ', It, ' first.']).
+reason_to_english(_Aobj, self_relation(It), ['can\'t put ', It, ' inside itself!']).
+reason_to_english(_Aobj, moibeus_relation( _, _), ['Topological error!']).
+reason_to_english(_Aobj, =(Dark, t), ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
+reason_to_english(_Aobj, must_drop(It), [ 'will have to drop', It, ' first.']).
+reason_to_english(_Aobj, cant( act3('move',_Agent,[ It])), [ It, aux( be), 'immobile']).
+reason_to_english(_Aobj, cant( act3('take',_Agent,[ It])), [ It, aux( be), 'untakeable']).
+reason_to_english(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
+
+
 logic2eng( Obj, Prop, English):-
  \+ ground(Prop), copy_term(Prop, Prop2), !,
  mw_numbervars(Prop2, 55, _), logic2eng(Obj, Prop2, English).
@@ -134,6 +149,8 @@ logic2eng( Obj, Prop, [cap(N), Value, aux(be), English]):- Prop =..[N, V| Range]
 */
 
 %logic2eng(Obj, Var, [Text]):- var(Var), !, format(atom(Text), '{{~q}}', [logic2eng(Obj, Var)]).
+logic2eng( Obj, Logic, English):- reason_to_english( Obj, Logic, English),!.
+
 logic2eng(_Obj, '$VAR'(Prop), English):- format(atom(English), ' ?VAR-~w', [Prop]), !.
 logic2eng(_Obj, English, English):- english_directve(English), !.
 logic2eng(_Obj, [English|Rest], [English|Rest]):- english_directve(English), !.
@@ -296,19 +313,6 @@ logic2eng( Obj, co(Desc), ['(Created as: ', Out, ')']):- list2eng( Obj, Desc, Ou
 %logic2eng(_Obj, adjs(Type), ['adjs:', Type]).
 %logic2eng(_Obj, nouns(Type), ['nouns:', Type]).
 %logic2eng(_Obj, sp(nouns, Type), ['nouns:', Type]).
-
-logic2eng(_Aobj, cant( sense(_Agent, Sense, It, Why)), [ 'can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
-logic2eng(_Aobj, cant( reach(_Agent, It)), [ 'can''t reach ', It]).
-logic2eng(_Aobj, cant( manipulate(self)), [ 'can''t manipulate yourself like that']).
-logic2eng(_Aobj, alreadyhave(It), ['already have', the(It)]).
-logic2eng(_Aobj, mustgetout(It), ['must_mw get out/off ', It, ' first.']).
-logic2eng(_Aobj, self_relation(It), ['can\'t put ', It, ' inside itself!']).
-logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
-logic2eng(_Aobj, =(Dark, t), ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
-logic2eng(_Aobj, must_drop(It), [ 'will have to drop', It, ' first.']).
-logic2eng(_Aobj, cant( act3('move',Agent,[ It])), [ It, aux( be), 'immobile']).
-logic2eng(_Aobj, cant( act3('take',Agent,[ It])), [ It, aux( be), 'untakeable']).
-logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %logic2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
 

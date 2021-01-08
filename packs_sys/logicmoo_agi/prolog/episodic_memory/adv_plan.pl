@@ -75,13 +75,13 @@ Person think doing what explorers do will make persons goal satisfaction easier.
 Person thinks being an explorer means to find unexplored exits and travel to them.
 Person thinks exits are known by looking.
 Person goal is to have looked
-Person the way to satifiy the goal to have looked is to: add_intent( Person, intend(Person, act3('look',Person,[])))
-Person DOES intend(Person, act3('look',Person,[]))
+Person the way to satifiy the goal to have looked is to: add_intent( Person, ( act3('look',Person,[])))
+Person DOES ( act3('look',Person,[]))
 Person notices exits: north, south, east, west.
 Person thinks north is unexplored
 Person thinks going north will be acting like an explorer
 Person goal is to go north
-Person makes plan to go north.. the plan is very simple: [ intend(Person, act3('go__dir',Person,[ walk, north]))]
+Person makes plan to go north.. the plan is very simple: [ ( act3('go__dir',Person,[ walk, north]))]
 Person DOESdo_go_dir(Person, walk, north)
 Person leaves kitchen to the north
 In Kitchen, thus Person, sees Person did_depart kitchen to the north
@@ -97,7 +97,7 @@ Person belives kitchen is where they end up if they go south from pantry
 do_look(Person) is a cheap and effective strategy
 
 
-event( trys( intend(Person, act3('go__dir',Person,[ walk, north]))))
+event( trys( ( act3('go__dir',Person,[ walk, north]))))
 
 
 
@@ -131,7 +131,7 @@ sequenced(_Self,
   reverse_dir(Dir, RDir),
   h(exit(Dir), Here, There), % path(Here, There)
   % %Action:
- did( intend(Self, act3('go__dir',Self,[ Walk, Dir]))),
+ did( Self, act3('go__dir',Self,[ Walk, Dir])),
   %PostConds:
   ~h(WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
@@ -197,8 +197,8 @@ new_plan_newver(Self, CurrentState, GoalState, Plan) :-
  convert_state_to_goalstate(CurrentState, CurrentStateofGoals),
  gensym(ending_step_1, End),
  Plan =
- plan([step(start , oper(Self, intend(Self, act3('wait',Self,[])), [], CurrentStateofGoals)),
-       step(completeFn(End), oper(Self, intend(Self, act3('wait',Self,[])), GoalState, []))],
+ plan([step(start , oper(Self, act3('wait',Self,[]), [], CurrentStateofGoals)),
+       step(completeFn(End), oper(Self,  act3('wait',Self,[]), GoalState, []))],
       [before(start, completeFn(End))],
       [],
       []).
@@ -579,7 +579,7 @@ planning_loop(Goals0, Operators, Plan0, Plan2, Depth0, Timeout) :-
 serialize_plan(_Knower, _Agent, plan([], _Orderings, _B, _L), []) :- !.
 
 serialize_plan(Knower, Agent, plan(Steps, Orderings, B, L), Tail) :-
- select_from(step(_, oper(Agent, intend(_, act3('wait',_,[])), _, _)), Steps, RemainingSteps),
+ select_from(step(_, oper(Agent,  act3('wait',_,[]), _, _)), Steps, RemainingSteps),
  !,
  serialize_plan(Knower, Agent, plan(RemainingSteps, Orderings, B, L), Tail).
 
@@ -647,9 +647,9 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 % ----
 
 
-path2dir1(Doer, Here, There, intend(Doer, act3('go__dir',Doer,[ _Walk, Dir])), ModelData):-
+path2dir1(Doer, Here, There,  act3('go__dir',Doer,[ _Walk, Dir]), ModelData):-
  in_model(h(exit(Dir), Here, There), ModelData).
-path2dir1(Doer, Here, There, intend(Doer, act3('go__obj',Doer,[ _Walk, There])), ModelData) :-
+path2dir1(Doer, Here, There,  act3('go__obj',Doer,[ _Walk, There]), ModelData) :-
  in_model(h(descended, Here, There), ModelData).
 
 path2directions(Doer, [Here, There], [GOTO], ModelData):-
