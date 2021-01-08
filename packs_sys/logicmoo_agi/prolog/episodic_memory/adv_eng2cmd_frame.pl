@@ -418,7 +418,7 @@ verb_frame1(Action, Put, % to-region, of-container
 % Dig
 % %%%%%%%%%%%%%%
 /*
-reframed_call( Pred, Agent, [dig, ShapeHole], intend(Agent, act3('dig',Agent,[ ShapeHole, Where, Instr])), M) :- fail,
+reframed_call( Pred, Agent, [dig, ShapeHole],  act3('dig',Agent,[ ShapeHole, Where, Instr]), M) :- fail,
  in_agent_model(Agent, inst(Agent), M),
  in_agent_model(Agent, h(_, Agent, Where), M),
  Instr=shovel.

@@ -233,7 +233,7 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _P
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
- findall( intend(Agent, act3('examine__D5',Agent,[ Sense, at, Obj, DepthLess])),
+ findall( act3('examine__D5',Agent,[ Sense, at, Obj, DepthLess]),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
@@ -257,7 +257,7 @@ process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropLi
  dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
- add_intent_all([ intend(Agent, act3('take',Agent,[ Object])), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
+ add_intent_all([ act3('take',Agent,[ Object]), print_(Agent, 'My shiny precious!')], Mem0, Mem2).
 
 
 process_percept_do_auto(_Agent, _Percept, _Stamp, M0, M0):- !.

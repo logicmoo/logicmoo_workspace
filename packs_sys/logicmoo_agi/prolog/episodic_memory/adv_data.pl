@@ -160,7 +160,7 @@ dining_room type_props place.
      [place,
    % goto($agent, Prep, Dir, dir, result) provides special handling for going in a direction.
    cant_go($agent, up, "You lack the ability to fly."),
-   oper(/*garden, */ intend($agent, act3('go__dir', $agent ,[ _, south])),
+   oper(/*garden, */ ( act3('go__dir', $agent ,[ _, south])),
    % precond(Test, FailureMessage)
      precond(getprop(screendoor, (opened = t)), ["you must_mw open the door first"]),
    % body(clause)
@@ -418,7 +418,7 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(character),
    powered = t,
-   % TODO: floyd should `intend($agent, act3('look', $agent ,[]))` when turned back on.
+   % TODO: floyd should `( act3('look', $agent ,[]))` when turned back on.
    effect( did('switch', on), setprop($self, powered = t)),
    effect( did('switch', off), setprop($self, (powered= f)))
   ]),
@@ -454,9 +454,9 @@ type_props(screendoor, [
    %adjs(local),
   ~can(move),
   ~can(take),
-   oper( intend($agent, act3('discard', $agent ,[ Thing])),
+   oper( ( act3('discard', $agent ,[ Thing])),
     precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
-    body( intend($agent, act3('take', $agent,[ Thing, in, $self])))), % body(clause)
+    body( ( act3('take', $agent,[ Thing, in, $self])))), % body(clause)
    % inherit(container),
    has_rel(exit(_))
   ]),
@@ -466,9 +466,9 @@ type_props(screendoor, [
    opened = f,
    can(open),
    has_rel(in),
-  oper( intend($agent, act3('put', $agent ,[ Thing, in, $self])),
+  oper( ( act3('put', $agent ,[ Thing, in, $self])),
    precond(~getprop(Thing, inherit(liquid)), ["liquids would spill out"]), % precond(Test, FailureMessage)
-   body( intend($agent, act3('take', $agent,[ Thing, in, $self]))))  % body(clause)
+   body( ( act3('take', $agent,[ Thing, in, $self]))))  % body(clause)
   ]),
 
 
@@ -482,11 +482,11 @@ type_props(screendoor, [
 
  type_props(flask, [
    adjs(physical),
-  oper( intend($agent, act3('put', $agent ,[ Thing, in, $self])),
+  oper( ( act3('put', $agent ,[ Thing, in, $self])),
    % precond(Test, FailureMessage)
    precond(getprop(Thing, inherit(fully_corporial)), ["non-physical would spill out"]),
    % body(clause)
-   body( intend($agent, act3('take', $agent,[ Thing, in, $self])))),
+   body( ( act3('take', $agent,[ Thing, in, $self])))),
    inherit(container),
    (opened = t),
    inherit(moveable)
