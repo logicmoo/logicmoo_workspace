@@ -115,7 +115,7 @@ logic2eng( Obj, Prop, English):-
  mw_numbervars(Prop2, 55, _), logic2eng(Obj, Prop2, English).
 
 logic2eng(_Obj, desc = (Out), [' "', Out, '"']):- !.
-logic2eng(_Obj, setprop(Obj,Prop), [Obj, setprop, Prop]):- !.
+logic2eng(_Obj, setprop(Obj, Prop), [Obj, setprop, Prop]):- !.
 logic2eng(Obj, Some, English):- \+ attvar(English), \+ pretty, dif(English, []), !, logic2eng(Obj, Some, English).
 logic2eng(Context, Inst, TheThing):- atom(Inst), inst_of(Inst, Type, N), !,
  (nth0(N, [(unknown), '', thee, old, some, a], Det) -> true; atom_concat('#', N, Det)),
@@ -167,8 +167,8 @@ logic2eng( Obj, ~(Type), ['(', 'logically', 'not', '(', Out, '))']):- must_mw1(l
 
 logic2eng(_Context, time_passes(Agent), ['Time passes for', Agent, '']).
 logic2eng(_Context, attempts(Agent, Doing), [anglify(Agent, Agent), 'attempts to', anglify(Agent, Doing)]).
-logic2eng(Context, do_go_dir(Agent, How, Dir), [ How, Dir]):- Context=Agent.
-logic2eng(_Context, do_go_dir(Agent, How, Dir), [ Agent, How, Dir]).
+logic2eng(Context, act3('go__dir',Agent,[ How, Dir]), [ How, Dir]):- Context=Agent.
+logic2eng(_Context,act3('go__dir',Agent,[ How, Dir]), [ Agent, How, Dir]).
 logic2eng(_Context, Doing, [Agent, does, Did|More]):- is_type_functor(action, Doing), Doing=..[Did, Agent|More].
 
 logic2eng(_Context, percept(_Agent, How, _, _), ''):- How == know, !.
@@ -245,19 +245,19 @@ logic2eng(_Context, did_arrive(Actor, In, Where, How, Dir), [ Actor, came, ing(H
 logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
 
 logic2eng(Context, did_emote(Speaker, EmoteType, Audience, Eng), [ 'happened: '| Rest]) :- !,
- logic2eng(Context, emote(Speaker, EmoteType, Audience, Eng), Rest).
+ logic2eng(Context, act3('emote',Speaker,[ EmoteType, Audience, Eng]), Rest).
 
-logic2eng(_, emote(Speaker, act, '*'(Place), Eng), [the(Speaker), at, Place, Text]) :- !,
+logic2eng(_, act3('emote',Speaker,[ act, '*'(Place), Eng]), [the(Speaker), at, Place, Text]) :- !,
  eng2txt(Speaker, Speaker, Eng, Text).
-logic2eng(_, emote(Speaker, act, Audience, Eng), [Audience, notices, the(Speaker), Text]) :-
+logic2eng(_, act3('emote',Speaker,[ act, Audience, Eng]), [Audience, notices, the(Speaker), Text]) :-
  eng2txt(Speaker, Speaker, Eng, Text).
-logic2eng(_, emote(Speaker, EmoteType, Audience, Eng), [cap(subj(Speaker)), es(EmoteType), 'to', Audience, ', "', Text, '"']) :-
+logic2eng(_, act3('emote',Speaker,[ EmoteType, Audience, Eng]), [cap(subj(Speaker)), es(EmoteType), 'to', Audience, ', "', Text, '"']) :-
  eng2txt(Speaker, 'I', Eng, Text).
 
 logic2eng(_Agent, failure(Action), ['Action failed:', Action]).
 
 %logic2eng( Obj, effect(_, _), Out):- logic2eng(Obj, adjs(special), Out), !.
-%logic2eng( Obj, effect(_, _), Out):- logic2eng(Obj, sp(adjs,special), Out), !.
+%logic2eng( Obj, effect(_, _), Out):- logic2eng(Obj, sp(adjs, special), Out), !.
 
 logic2eng(Obj, timestamp(Ord, Time), [timestamp, is, Ord, '(', Ago, ')']):- logic2eng(Obj, ago(Time), Ago).
 
@@ -295,7 +295,7 @@ logic2eng( Obj, co(Desc), ['(Created as: ', Out, ')']):- list2eng( Obj, Desc, Ou
 
 %logic2eng(_Obj, adjs(Type), ['adjs:', Type]).
 %logic2eng(_Obj, nouns(Type), ['nouns:', Type]).
-%logic2eng(_Obj, sp(nouns,Type), ['nouns:', Type]).
+%logic2eng(_Obj, sp(nouns, Type), ['nouns:', Type]).
 
 logic2eng(_Aobj, cant( sense(_Agent, Sense, It, Why)), [ 'can''t sense', It, ' ', ly(Sense), ' here', cuz(Why)]).
 logic2eng(_Aobj, cant( reach(_Agent, It)), [ 'can''t reach ', It]).
@@ -305,9 +305,9 @@ logic2eng(_Aobj, mustgetout(It), ['must_mw get out/off ', It, ' first.']).
 logic2eng(_Aobj, self_relation(It), ['can\'t put ', It, ' inside itself!']).
 logic2eng(_Aobj, moibeus_relation( _, _), ['Topological error!']).
 logic2eng(_Aobj, =(Dark, t), ['It''s too ', Dark, ' to ', Sense, in, '!']):- problem_solution(Dark, Sense, _Light).
-logic2eng(_Aobj, mustdo_drop(It), [ 'will have to drop', It, ' first.']).
-logic2eng(_Aobj, cant( do_move(_Agent, It)), [ It, aux( be), 'immobile']).
-logic2eng(_Aobj, cant( do_take(_Agent, It)), [ It, aux( be), 'untakeable']).
+logic2eng(_Aobj, must_drop(It), [ 'will have to drop', It, ' first.']).
+logic2eng(_Aobj, cant( act3('move',Agent,[ It])), [ It, aux( be), 'immobile']).
+logic2eng(_Aobj, cant( act3('take',Agent,[ It])), [ It, aux( be), 'untakeable']).
 logic2eng(_Aobj, cantdothat(EatCmd), [ 'can\'t do: ', EatCmd]).
 
 %logic2eng(_Obj, oper(OProp, [cap(N), aux(be), V]):- Prop =..[N, V].
@@ -369,7 +369,7 @@ logic2eng( Obj, oper(Act, Precond, PostCond), OUT) :-
 
 % logic2eng( Obj, Prop, English):- Prop =..[N, Obj1, A| VRange], Obj1==Obj, Prop2 =..[N, A| VRange], logic2eng( Obj, Prop2, English).
 logic2eng( Obj, Prop, English):- Prop =..[N, V, T| VRange], T==t, Prop2 =..[N, V| VRange], logic2eng( Obj, Prop2, English).
-logic2eng(_Obj, sub__examine(Who, Sense, Prep, Where, 3), [cap(subj(Who)), es(Sense), Prep, Where]):-!.
+logic2eng(_Obj, act3('examine__D5',Who,[ Sense, Prep, Where, 3]), [cap(subj(Who)), es(Sense), Prep, Where]):-!.
 
 logic2eng(_, V, [V]):- (string(V);(atom(V), atom_needs_quotes(V))), !.
 logic2eng(_, V, [String]):- (string(V);(atom(V), atom_needs_quotes(V))), !, format(atom(String), ' "~w" ', [V]), !.
