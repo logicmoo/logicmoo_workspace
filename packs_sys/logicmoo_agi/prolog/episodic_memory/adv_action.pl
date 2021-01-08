@@ -180,11 +180,11 @@ agent_try_action(Agent, Action, S0, S3) :-
  maybe_undeclare(memories(Agent, Mem0), S0, S1),
  memorize_attempting(Agent, Action, Mem0, Mem1),
  replace_declare(memories(Agent, Mem1), S1, S2))),
- into_try(Agent, Action, AgentAction),
+ into_attempt(Agent, Action, AgentAction),
  once(show_failure(raise_aXiom_events( AgentAction, S2, S3));(S2=S3, dumpST)), !.
 
-% into_try(Agent, Action, try(Agent,Action)):-!.
-into_try(_Agent, Action, AgentAction):- Action = AgentAction.
+% into_attempt(Agent, Action, try(Agent,Action)):-!.
+into_attempt(_Agent, Action, AgentAction):- Action = AgentAction.
 
 %memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
 memorize_attempting(Agent, Action, Mem0, Mem2):-
