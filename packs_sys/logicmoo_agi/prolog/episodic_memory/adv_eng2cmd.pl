@@ -409,7 +409,7 @@ parse_cmd( Self, Logic, [F|Words], []):-
     action_verb_agent_args(P, Fun, Ag, ArgTypes),
     same_verb(F, Fun),
     % @TODO start using coerce(...).
-    show_call(parse_for_args(ArgTypes, Words, Args)), !,
+    show_failure(parse_for_args(ArgTypes, Words, Args)), !,
      (Ag==agent ->
        Logic = act3(Fun, Self,Args);
        Logic =..[Fun|Args]).

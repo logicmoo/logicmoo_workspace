@@ -233,7 +233,7 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _P
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
- findall( act3('examine__D5',Agent,[ Sense, at, Obj, DepthLess]),
+ findall( act3('examine__D5',Agent,[ Sense, child, Obj, DepthLess]),
    ( member(Obj, Objects),
       Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
    Actions),
