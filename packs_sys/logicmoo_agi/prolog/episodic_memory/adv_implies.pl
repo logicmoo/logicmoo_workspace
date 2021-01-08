@@ -44,6 +44,8 @@ only_goto:- fail, true.
 
 :- discontiguous(oper_db/4).
 % oper_db(_Self, Action, Preconds, Effects)
+
+oper_db(Self, try(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
 oper_db(Self, Action, Preconds, Effects):- fail, % Hooks to KR above
   sequenced(Self, Whole),
  append(Preconds, [did(Action)|Effects], Whole).
