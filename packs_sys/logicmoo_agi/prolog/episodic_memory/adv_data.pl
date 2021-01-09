@@ -201,7 +201,7 @@ type_props(pantry, [
 type_props(brklamp,
    inherit(broken),
    name = ("possibly broken lamp"),
-   effect( did('switch', on), print_(_Agent, "Switch is flipped")),
+   effect( switch(on), print_(_Agent, "Switch is flipped")),
    effect(hit, [print_("Hit brklamp"), setprop($self, inherit(broken))]),
    inherit(lamp)).
 
@@ -218,8 +218,8 @@ type_props(screendoor, [
 :- push_to_state([
  type_props(broken, [
     name = ("definately broken"),
-    effect( did('switch', on), true),
-    effect( did('switch', off), true),
+    effect( switch(on), true),
+    effect( switch(off), true),
     can(switch),
     nominals(broken),
     adjs($class),
@@ -350,7 +350,7 @@ type_props(screendoor, [
 
 
    % players use power but cant be powered down
-   can( did('switch', off), f), powered = t
+   can( switch(off), f), powered = t
   ]),
 
  type_props(autonomous, [inherit(autoscan), inherit(impulsive),
@@ -419,8 +419,8 @@ type_props(screendoor, [
    inherit(character),
    powered = t,
    % TODO: floyd should `( act3('look', $agent ,[]))` when turned back on.
-   effect( did('switch', on), setprop($self, powered = t)),
-   effect( did('switch', off), setprop($self, (powered= f)))
+   effect( switch(on), setprop($self, powered = t)),
+   effect( switch(off), setprop($self, (powered= f)))
   ]),
 
   type_props(natural_force, [
@@ -605,8 +605,8 @@ type_props(screendoor, [
    inherit(shiny),
    inherit(moveable),
    emitting(see, light),
-   effect( did('switch', on), setprop($self, emitting(see, light))),
-   effect( did('switch', off), delprop($self, emitting(see, light))),
+   effect( switch(on), setprop($self, emitting(see, light))),
+   effect( switch(off), delprop($self, emitting(see, light))),
    breaks_into = (broken_lamp)
   ]),
 
@@ -618,8 +618,8 @@ type_props(screendoor, [
    inherit(broken),
    adjs(dented),
    can(switch),
-   effect( did('switch', on), true),
-   effect( did('switch', off), true) % calls true(S0, S1) !
+   effect( switch(on), true),
+   effect( switch(off), true) % calls true(S0, S1) !
   ]),
 
  type_props(surface, [has_rel(on), default_rel = on, adjs(physical), cleanliness=clean]),
@@ -636,8 +636,8 @@ type_props(screendoor, [
    inherit(perceptq),
    inherit(memorize_perceptq),
    can(switch),
-   effect( did('switch', on), setprop($self, powered = t)),
-   effect( did('switch', off), setprop($self, (powered= f))),
+   effect( switch(on), setprop($self, powered = t)),
+   effect( switch(off), setprop($self, (powered= f))),
    powered = t,
    has_sense(see),
    breaks_into = (broken_videocam)

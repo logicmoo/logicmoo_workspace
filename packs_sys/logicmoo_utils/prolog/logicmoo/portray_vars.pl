@@ -364,6 +364,9 @@ arg_type_decl_name(EC23,2,2,time_at):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,2,time_from):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,3,time_until):- ec_timed(EC23).
 arg_type_decl_name(at,2,2,tloc).
+arg_type_decl_name(h,3,1,prep).
+arg_type_decl_name(h,3,2,source).
+arg_type_decl_name(h,3,3,target).
 
 :- meta_predicate(maplist_not_tail(1,*)).
 maplist_not_tail(_,ArgS):- var(ArgS),!.

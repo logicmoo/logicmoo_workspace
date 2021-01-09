@@ -55,7 +55,8 @@ some_hell_example:- forall(permutation([
 
 /*
    at(Place-London), when(Time-2pm), because(Reason-protesting),
-   by(Doer-men), with(MoreDoers, "and women"), own(Instr-"knife"), VrtuhValue, did(Action-), toward(Vector-up), to(Doee), of(
+   by(Doer-men), with(MoreDoers, "and women"), own(Instr-"knife"), VrtuhValue, did(
+    Action-), toward(Vector-up), to(Doee), of(
 */
 % to sally give love
 % to sally does _Player_1 give love
