@@ -227,7 +227,7 @@ logic2eng(Context, carrying(Agent, Items),
  list2eng(Context, Items, Text).
 
 
-logic2eng(_Agent, moved(_Doer, _Verb, What, From, Prep, To),
+logic2eng(_Agent, act3('move', _Doer, [ _Verb, What, From, Prep, To]),
    [cap(subj(What)), 'moves', ' from', From, 'to' , Prep, To]).
 
 
@@ -256,12 +256,13 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :-
  list2eng([', '=', \n'], Object, PropList, English).
 
-logic2eng(_Context, did_depart(Actor, In, Where, How, Dir), [ Actor, was, In, Where, but, left, ing(How), Dir] ) :- !.
-logic2eng(_Context, did_arrive(Actor, In, Where, How, Dir), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
+logic2eng(_Context, act3('depart', Actor,[ In, Where, How, Dir]), [ Actor, was, In, Where, but, left, ing(How), Dir] ) :- !.
+logic2eng(_Context, act3('arrive',Actor,[ In, Where, How, Dir]), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
 
-logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
+logic2eng(Context, did(Action
+ ), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
 
-logic2eng(Context, did_emote(Speaker, EmoteType, Audience, Eng), [ 'happened: '| Rest]) :- !,
+logic2eng(Context, act3('emote',Speaker,[ EmoteType, Audience, Eng]), [ 'happened: '| Rest]) :- !,
  logic2eng(Context, act3('emote',Speaker,[ EmoteType, Audience, Eng]), Rest).
 
 logic2eng(_, act3('emote',Speaker,[ act, '*'(Place), Eng]), [the(Speaker), at, Place, Text]) :- !,

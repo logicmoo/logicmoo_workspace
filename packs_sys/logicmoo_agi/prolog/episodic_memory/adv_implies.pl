@@ -22,6 +22,10 @@
 
 :- discontiguous(implications/4).
 
+implications(Self, try(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
+implications(Self, did(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
+implications(Self, doing(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
+
 implications( does, ( act3('go__dir',Agent,[ Walk, ExitName])),
      [ h(In, Agent, Here), h(exit(ExitName), Here, There) ],
      [ event(moving_in_dir(Agent, Walk, ExitName, In, Here, In, There)) ]):- fail.
@@ -29,14 +33,14 @@ implications( does, ( act3('go__dir',Agent,[ Walk, ExitName])),
 
 implications(event, moving_in_dir(Object, Manner, ExitName, From, Here, To, There),
      [ Here \= There, h(exit(ExitName), Here, There), h(exit(ReverseExit), There, Here) ],
- [ event( did_depart(Object, From, Here, Manner, ExitName)),
- event( did_arrive(Object, To, There, Manner, ReverseExit))
+ [ event( act3('depart', Object,[ From, Here, Manner, ExitName])),
+ event( act3('arrive',Object,[ To, There, Manner, ReverseExit]))
         ]).
 
-implications( event, did_depart(Agent, In, There, _Walk, ExitName),
+implications( event, act3('depart', Agent,[ In, There, _Walk, ExitName]),
     [ h(In, Agent, There), h(exit(ExitName), There, _)], [~h(In, Agent, There)]).
 
-implications( event, did_arrive(Agent, In, Here, _Walk, ReverseExit),
+implications( event, act3('arrive', Agent,[ In, Here, _Walk, ReverseExit]),
     [~h(In, Agent, Here), h(exit(ReverseExit), Here, _)], [ h(In, Agent, Here)]).
 
 
@@ -47,6 +51,8 @@ only_goto:- fail, true.
 
 % used by oper_splitk/4
 oper_db(Self, try(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
+oper_db(Self, did(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
+oper_db(Self, doing(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
 
 oper_db(Self, Action, Preconds, Effects):- fail, % Hooks to KR above
   sequenced(Self, Whole),
@@ -63,13 +69,13 @@ oper_db(Agent, ( act3('go__dir',Agent,[ Walk, ExitName])),
     h(exit(ReverseExit), There, Here)],
    [
      % implies believe(Agent, ~h(in, Agent, Here)),
- percept_local(Here, did_depart(Agent, In, Here, Walk, ExitName)),
+ percept_local(Here, act3('depart', Agent,[ In, Here, Walk, ExitName])),
    ~h(In, Agent, Here),
     h(In, Agent, There),
    %b(exit(ExitName), Here, There),
    %b(exit(ReverseExit), There, Here),
    % implies, believe(Agent, h(in, Agent, There)),
- percept_local(There, did_arrive(Agent, In, There, Walk, ReverseExit))
+ percept_local(There, act3('arrive',Agent,[ In, There, Walk, ReverseExit]))
    %  ~b(In, Agent, Here),
    %   b(In, Agent, There),
      % There \= Here
@@ -86,7 +92,7 @@ oper_db(Agent, ( act3('go__dir',Agent,[ _Walk, ExitName])),
         b(in, Agent, There)
      ]):- fail.
 
-% equiv( percept_local(Here, did_depart(Agent, In, Here, Walk, ExitName))) ~h( in, Agent, Here)
+% equiv( percept_local(Here, act3('depart', Agent,[ In, Here, Walk, ExitName]))) ~h( in, Agent, Here)
 
 oper_db(Agent, ( act3('go__dir',Agent,[ Walk, Escape])),
      [ Object \= Agent, Here \= Agent,
@@ -95,11 +101,11 @@ oper_db(Agent, ( act3('go__dir',Agent,[ Walk, Escape])),
        Object \= Here
      ],
      [
- percept_local(Object, did_depart(Agent, OldIn, Object, Walk, Escape)),
+ percept_local(Object, act3('depart', Agent,[ OldIn, Object, Walk, Escape])),
         % implies believe(Agent, ~h(in, Agent, Object)),
        ~k(OldIn, Agent, Object),
         k(NewIn, Agent, Here),
- percept_local(Here, did_arrive(Agent, NewIn, Here, Walk, EscapedObject))
+ percept_local(Here, act3('arrive',Agent,[ NewIn, Here, Walk, EscapedObject]))
         % implies, believe(Agent, h(in, Agent, Here))
      ]) :- Escape = escape, EscapedObject = escaped, \+ only_goto.
 
@@ -124,34 +130,34 @@ oper_db(world, invoke_events(Here),
 
 
 % deducer Agents who preceive leavers from some exit believe the did_depart point is an exit
-oper_db(Agent, percept(Agent, did_depart(Someone, In, Here, Walk, ExitName)),
- [ did( Someone , ( act3('go__dir',Someone,[ Walk, ExitName]))),
+oper_db(Agent, percept(Agent, act3('depart', Someone,[ In, Here, Walk, ExitName])),
+ [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        prop(Agent, inherited(deducer)),
        h(In, Agent, Here) ],
      [ believe(Agent, h(exit(ExitName), Here, _)),
        believe(Agent, prop(Someone, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
-oper_db(Agent, percept(Agent, did_arrive(Someone, In, Here, Walk, ExitName)),
- [ did( Someone , ( act3('go__dir',Someone,[ Walk, ExitName]))),
+oper_db(Agent, percept(Agent, act3('arrive',Someone,[ In, Here, Walk, ExitName])),
+ [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        prop(Agent, inherited(deducer)),
        believe(Agent, h(In, Agent, Here)) ],
 
      [ believe(Agent, h(exit(ExitName), Here, _)),
- believe(Agent, did( Someone , ( act3('go__dir',Someone,[ Walk, ExitName])))), % also belive someone did soething to make it happen
+ believe(Agent, did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName])))), % also belive someone did soething to make it happen
        believe(Agent, h(In, Someone, Here)),
        believe(Agent, prop(Someone, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
-oper_db(Agent, percept(Agent, did_arrive(Someone, In, Here, Walk, ExitName)),
- [ did( Someone , ( act3('go__dir',Someone,[ Walk, ExitName]))),
+oper_db(Agent, percept(Agent, act3('arrive',Someone,[ In, Here, Walk, ExitName])),
+ [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        isa(Agent, deducer),
        b(Agent,
- [ percept_local(There, did_depart(Someone, In, There, Walk, EnterName)),
+ [ percept_local(There, act3('depart', Someone,[ In, There, Walk, EnterName])),
                 in(Agent, Here)]) ],
      [ b(Agent,
                 [exit(ExitName, Here, There),
- did( Someone , ( act3('go__dir',Someone,[ Walk, EnterName]))),
+      did(Someone, ( act3('go__dir', Someone, [ Walk, EnterName]))),
                 in(Someone, Here),
                 isa(Someone, actor)])]):- \+ only_goto.
 

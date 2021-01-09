@@ -114,7 +114,7 @@ type_functor(state, type_props(type, list(nv))).
 type_functor(event, attempts(agent, action)).
 type_functor(event, percept_props(agent, sense, inst, depth, list(nv))).
 type_functor(event, time_passes(agent)).
-type_functor(event, did_emote( agent, emotype, dest, statement)).
+type_functor(event, act3('emote', agent,[ emotype, dest, statement])).
 
 type_functor(action,X):- type_functor(maction,X).
 
@@ -172,7 +172,7 @@ type_functor(mact3,go__prep_obj(agent, movetype, domrel, obj)).
 % Data representing planner midway state
 %type_functor(prolog, oper_in_step(agent, action, list(nv)).
 
-type_functor(event, moved(agent, how, inst, from, prop, to)).
+type_functor(event, move(agent, how, inst, from, prop, to)).
 
 type_functor(event, carrying(agent, list(inst))).
 type_functor(event, destroyed(inst)).

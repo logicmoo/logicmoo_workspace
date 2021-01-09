@@ -333,9 +333,9 @@ act_change_state(Auto, _, _):- parsed_as_simple(Auto), !, fail.
 act_change_state(Open, Opened, Value):- nonvar(Value), !, act_change_state(Open, Opened, Val), !, Value=Val.
 act_change_state('lock', 'locked', t).
 act_change_state('open', 'opened', t).
-act_change_state( did('switch', on), 'powered', t).
-act_change_state( did('switch', off), 'powered', f).
-act_change_state( did('switch', Open), Opened, TF):- nonvar(Open), !, act_change_state(Open, Opened, TF).
+act_change_state( switch(on), 'powered', t).
+act_change_state( switch(off), 'powered', f).
+act_change_state( switch(Open), Opened, TF):- nonvar(Open), !, act_change_state(Open, Opened, TF).
 
 act_change_state(Close, Opened, Value):-
    act_change_state_0(Close, UnOpened, Val), nonvar(Val), as_true(UnOpened, Opened, TF),
@@ -479,10 +479,10 @@ moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) ==>> {is_list(List)}, !,
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
   undeclare(h(_, Object, From)),
   declare(h(At, Object, Dest)),
-  queue_local_event([moved(Doer, Verb, Object, From, At, Dest), Msg], Vicinity).
+  queue_local_event([act3('move', Doer, [Verb, Object, From, At, Dest]), Msg], Vicinity).
 
 
-event_props( did_throw(Agent, Thing, _Target, Prep, Here, Vicinity),
+event_props( act3('throw',Agent,[ Thing, _Target, Prep, Here, Vicinity]),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
  undeclare(h(_, Thing, _)),

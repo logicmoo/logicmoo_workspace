@@ -242,9 +242,9 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _P
 process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 
 % Auto Answer
-process_percept_do_auto(Agent, did_emote(Speaker, EmoteType, Agent, Words), _Stamp, Mem0, Mem1) :-
+process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Agent, Words]), _Stamp, Mem0, Mem1) :-
  trace, consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
-process_percept_do_auto(Agent, did_emote(Speaker, EmoteType, Star, WordsIn), _Stamp, Mem0, Mem1) :- is_star(Star),
+process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Star, WordsIn]), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
@@ -269,7 +269,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, (act3('emote',Agent,[ _, _Targ, _]))).
 was_own_self(Agent, try(Agent, act3('emote',Agent,[ _, _Targ, _]))).
-was_own_self(Agent, did_emote(Agent, _, _Targ, _)).
+was_own_self(Agent, act3('emote',Agent,[ _, _Targ, _])).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 
 :- defn_mem_setter(process_percept_player//3).
