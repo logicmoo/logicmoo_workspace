@@ -37,23 +37,24 @@ test_adv(N) :-
  adv_tst(N),
  mainloop.
 
+
 adv_tst(0):- adv_reset.
 
 adv_tst(1):-
- nlu_assert("A player is in the kitchen."),
+ nlu_assert("He is in the kitchen."),
  nlu_assert("There are boxes on the floor.").
 
 adv_tst(2):-
- nlu_assert("A player opens a box."),
+ nlu_assert("He opens a box."),
  nlu_assert("There are books in the box.").
 
 adv_tst(3):-
- nlu_assert("A player takes out the books."),
- nlu_assert("A player puts the books on the bookshelf."),
- nlu_assert("A player opens another box."),
+ nlu_assert("He takes out the books."),
+ nlu_assert("He puts the books on the bookshelf."),
+ nlu_assert("He opens another box."),
  nlu_assert("There are plates in the box."),
- nlu_assert("A player takes out the plates."),
- nlu_assert("A player puts them in the kitchen cabinet.").
+ nlu_assert("He takes out the plates."),
+ nlu_assert("He puts them in the kitchen cabinet.").
 
 
 adv_tst(4):-
@@ -155,6 +156,21 @@ adv_tst(11):-
  nlu_assert("The other part is a file."),
  nlu_assert("The file is two inches long."),
  nlu_assert("He files his nails with the file."), !.
+
+
+adv_tst(12):- 
+  nlu_assert("He blows air into the flute."),
+  nlu_assert("A sound is heard by all in the room").
+adv_tst(13):- 
+  nlu_assert("He blows air into the flute."),
+  nlu_assert("No sound is heard by all in the room").
+
+adv_tst(14):- 
+  nlu_assert("He tries to walk north from here."),
+  nlu_assert("A northward path is able to accomidate his body walking."),
+  nlu_assert("The northward path leads to a differnt place."),
+  nlu_assert("He is seen leaving northward from here."),
+  nlu_assert("He arrives at a different place coming from the south").
 
 
 :- initialization(test_adv, main).

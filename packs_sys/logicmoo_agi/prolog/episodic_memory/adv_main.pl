@@ -87,6 +87,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 :- ensure_loaded(adv_plugins).
 
+:- ensure_loaded(adv_mindi).
 %:- ensure_loaded(adv_test).
 %:- ensure_loaded(adv_telnet).
 
