@@ -190,24 +190,35 @@ reframed_call(Pred, Text, Logic):-
    into_text80(Text, Term),
    reframed_call(Pred, Self, Term, Logic, Frame), !.
 
+reframed_call( Pred, Self, NonText, Logic, Mem):- 
+ reframed_call5( Pred, Self, NonText, PreLogic, Mem), !,
+ map_tree_pred(each_logic_var(Mem),PreLogic, Logic).
+
+% expand_logic_vars(PreLogic,Logic, Mem):- ....
+each_logic_var(Mem, PreLogic, Here):- 
+  (compound(PreLogic), PreLogic= '$'(here);
+   PreLogic==here),
+  context_agent(Agent, Mem),
+  from_loc(Agent, Here, Mem),!.
+
 % -- parse(Doer, WordList, ActionOrQuery, Memory)
 
-reframed_call(_Pred, _Self, [], [], _Mem) :-!.
-reframed_call(Pred, Self, Logic, NewLogic, Mem) :- compound(Logic), \+ is_list(Logic), is_logic(Logic),
+reframed_call5(_Pred, _Self, [], [], _Mem) :-!.
+reframed_call5(Pred, Self, Logic, NewLogic, Mem) :- compound(Logic), \+ is_list(Logic), is_logic(Logic),
   (Logic = NewLogic -> true;
-  (logic2eng(Self, Logic, Words), reframed_call(Pred, Self, Words, NewLogic, Mem))), !.
+  (logic2eng(Self, Logic, Words), reframed_call_resolve(Pred, Self, Words, NewLogic, Mem))), !.
 
-reframed_call( Pred, Self, NonText, Logic, Mem) :- \+ is_list(NonText), munl_call(into_text80(NonText, Text)), !, reframed_call( Pred, Self, Text, Logic, Mem).
-reframed_call( Pred, Self, Words0, Logic, Mem):-
+reframed_call5( Pred, Self, NonText, Logic, Mem) :- \+ is_list(NonText), munl_call(into_text80(NonText, Text)), !, reframed_call5( Pred, Self, Text, Logic, Mem).
+reframed_call5( Pred, Self, Words0, Logic, Mem):-
   exclude(=(' '), Words0, Words), Words0\==Words, !,
-  reframed_call( Pred, Self, Words, Logic, Mem).
-reframed_call( Pred, Self, [NonText], Logic, Mem) :- \+ atom(NonText), !, reframed_call( Pred, Self, NonText, Logic, Mem) .
-reframed_call( Pred, Doer, [rtrace|Args], Logic, M) :- Args\==[], !, rtrace(reframed_call( Pred, Doer, Args, Logic, M)).
-reframed_call( Pred, Doer, [xnotrace|Args], Logic, M) :- Args\==[], !, xnotrace(reframed_call( Pred, Doer, Args, Logic, M)).
-reframed_call( Pred, Doer, [notrace|Args], Logic, M) :- Args\==[], !, notrace(reframed_call( Pred, Doer, Args, Logic, M)).
-reframed_call( Pred, Doer, [cls|Args], Logic, M) :- Args\==[], !, cls, reframed_call( Pred, Doer, Args, Logic, M).
+  reframed_call5( Pred, Self, Words, Logic, Mem).
+reframed_call5( Pred, Self, [NonText], Logic, Mem) :- \+ atom(NonText), !, reframed_call5( Pred, Self, NonText, Logic, Mem) .
+reframed_call5( Pred, Doer, [rtrace|Args], Logic, M) :- Args\==[], !, rtrace(reframed_call5( Pred, Doer, Args, Logic, M)).
+reframed_call5( Pred, Doer, [xnotrace|Args], Logic, M) :- Args\==[], !, xnotrace(reframed_call5( Pred, Doer, Args, Logic, M)).
+reframed_call5( Pred, Doer, [notrace|Args], Logic, M) :- Args\==[], !, notrace(reframed_call5( Pred, Doer, Args, Logic, M)).
+reframed_call5( Pred, Doer, [cls|Args], Logic, M) :- Args\==[], !, cls, reframed_call5( Pred, Doer, Args, Logic, M).
 
-reframed_call( Pred, Self, Words, Logic, Mem):- call( Pred, Self, Words, Logic, Mem).
+reframed_call5( Pred, Self, Words, Logic, Mem):- call( Pred, Self, Words, Logic, Mem).
 
 
 /*
@@ -405,9 +416,9 @@ parse_cmd(Doer, (act3('emote', Doer, [ Say, Dest, Emoted]))) --> [Ask], {ask_to_
 %parse_cmd(Doer, say(Doer, Emoted)) --> [say], eng2assert_text(Emoted).
 
 parse_cmd( Self, Logic, [F|Words], []):-
-    type_functor(action, P),
+  quietly((type_functor(action, P),
     action_verb_agent_args(P, Fun, Ag, ArgTypes),
-    same_verb(F, Fun),
+    same_verb(F, Fun))),
     % @TODO start using coerce(...).
     show_failure(parse_for_args(ArgTypes, Words, Args)), !,
      (Ag==agent ->

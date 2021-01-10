@@ -256,8 +256,8 @@ logic2eng(_Agent, memories(Object, PropList), ['\n\n', the(Object), ' remembers:
 logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n'|English] ) :-
  list2eng([', '=', \n'], Object, PropList, English).
 
-logic2eng(_Context, act3('depart', Actor,[ In, Where, How, Dir]), [ Actor, was, In, Where, but, left, ing(How), Dir] ) :- !.
-logic2eng(_Context, act3('arrive',Actor,[ In, Where, How, Dir]), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
+logic2eng(_Context, event3('depart', Actor,[ In, Where, How, Dir]), [ Actor, was, In, Where, but, left, ing(How), Dir] ) :- !.
+logic2eng(_Context, event3('arrive',Actor,[ In, Where, How, Dir]), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
 
 logic2eng(Context, did(Action
  ), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
@@ -331,7 +331,7 @@ logic2eng( Obj, Prop=T, English):- T==t, !, logic2eng( Obj, Prop, English).
 logic2eng(_Obj, =(Opened, f), [currently, not, Opened]).
 logic2eng(_Obj, =(Statused), [aux(be), Statused ]).
 logic2eng(_Obj, =(Statused, f), [aux(be), 'not', Statused ]).
-logic2eng(_Obj, =(Name, Value), [Name, aux(be), Value]).
+logic2eng(_Obj, =(Name, Value), [Name, 'of', Value]).
 
 logic2eng(_Obj, PredF, [currently, not, N]):- PredF=..[N, f].
 
