@@ -149,6 +149,8 @@ add_intent_all(Agent, [Action|Rest], Mem0, Mem2) :-
 
 :- defn_state_getter( invoke_introspect(agent, action, result)).
 
+invoke_introspect(Agent, try(Other,Command), Answer, M0) :- Other == Agent, !,
+  invoke_introspect(Agent, Command, Answer, M0).
 
 invoke_introspect(Agent, path(There), Answer, M0) :- !,
    declared(h(_, _, There), M0),

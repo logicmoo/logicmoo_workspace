@@ -329,6 +329,10 @@ act_change_opposite_0(Auto, _):- parsed_as_simple(Auto), !, fail.
 act_change_opposite_0(UnOpen, Open):- (atom(Open) -> \+ atom_concat('un', _, Open) ; atom(UnOpen)),
     atom_concat('un', Open, UnOpen).
 
+act_change_can(X,Y):- var(X),!, Y=X.
+act_change_can(X,Y):- act_change_opposite_0(X,Y),!.
+act_change_can(X,Y):-  Y=X.
+
 act_change_state(Auto, _, _):- parsed_as_simple(Auto), !, fail.
 act_change_state(Open, Opened, Value):- nonvar(Value), !, act_change_state(Open, Opened, Val), !, Value=Val.
 act_change_state('lock', 'locked', t).
@@ -429,19 +433,24 @@ action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, Agent, _Thing
 action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 
+is_funct3(Action):- \+ compound(Action), !, fail.
+is_funct3(Action):- \+ compound_name_arity(Action,_,3), !, fail.
+is_funct3(Action):- functor(Action, act3, 3).
+is_funct3(Action):- functor(Action, event3, 3).
+
 action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
+action_verb_agent_args(event3(Verb, Agent, Args), Verb, Agent, Args):-!.
 action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
 
 action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
-  arg(_, MetaAction, Action), compound(Action), 
-  functor(Action, act3, 3), !, 
+  arg(_, MetaAction, Action), is_funct3(Action), !, 
   action_verb_agent_args(Action, Verb, Agent, Args).
 
 action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
-  arg(_, MetaAction, Action), compound(Action), \+ is_x_instance(Action),
+  arg(_, MetaAction, Action), is_funct3(Action),
     action_verb_agent_args(Action, Verb, Agent, Args), !.
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
@@ -449,7 +458,7 @@ action_verb_agent_args(Action, Verb, Agent, Args):-
   act_change_state(Verb, _, _), !.
 
 action_verb_agent_args(Action, Verb, Agent, Args):-
-  show_failure(get_functor_types(action, Action, Types)),
+  get_functor_types(action, Action, Types),
   univ_safe(Action, [Verb|Rest]), !,
   ((Types = [agent|_]) -> Rest = [Agent|Args] ; Args=Rest).
 %action_verb_agent_args(Action, Verb, Agent, Args):-
@@ -502,13 +511,18 @@ state_value(NamedValue, Named, Value):-
   univ_safe(Named, NamedL).
 
 expected_truth(G) :- ignore(dshow_failure(G)).
-  
+
 change_state(Agent, Action, Thing, OpenedTF, S0, S):-
+ change_state_0(Agent, Action, Thing, OpenedTF, S0, S), !.
+change_state(Agent, Action, Thing, OpenedTF, S0, S):-
+ ignore(rtrace(change_state_0(Agent, Action, Thing, OpenedTF, S0, S))), !.
+
+change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
  action_verb_agent_thing(Action, Open, _, _),
  % must_mw1
  ((
 
- expected_truth(getprop(Thing, can_be(Open, t), S0)),
+ (act_change_can(Open,OpenClose)-> expected_truth(getprop(Thing, can_be(OpenClose, t), S0));true),
 
  expected_truth(required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0))),
 
@@ -516,8 +530,7 @@ change_state(Agent, Action, Thing, OpenedTF, S0, S):-
    maybe_when(psubsetof(Open, touch), 
      required_reason(Agent, 
        will_need_touch(Agent, Thing, S0, _)))),
-
- required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
+   required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),
 
  %getprop(Thing, can_be(open, S0),
  %\+ getprop(Thing, =(open, t), S0),  
@@ -528,7 +541,7 @@ change_state(Agent, Action, Thing, OpenedTF, S0, S):-
  %delprop(Thing, =(Open, f), S0, S1),
  %setprop(Thing, =(Open, t), S0, S1),
 
-  open_traverse(Agent, Here, S0),
+ expected_truth(open_traverse(Agent, Here, S0)),
 
  apply_forall(
   (getprop(Thing, effect(Open, Term0), S0),

@@ -136,6 +136,7 @@ type_functor(act3, emote(agent, emotype, dest, statement)).
 
 type_functor(act3, examine__D5(agent, sense, preprel, inst, depth)).
 type_functor(act3, examine(agent, optional(sense, see), optional(prep, at), optional(inst, $(here)), optional(depth, 3))).
+% type_functor(act3, look(agent, optional(prep, at), optional(inst, $(here)))).
 type_functor(act3, inventory(agent)).
 type_functor(act3, look(agent)).
 

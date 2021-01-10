@@ -115,7 +115,12 @@ g_h(descended, X, Z, S0) :-
   g_h(child, Y, Z, S0),
   g_h(descended, X, Y, S0).
 
+g_h(open_traverse, X1, Z1, S0):- nonvar(X1), nonvar(Z1),
+ ((X1=X,Z1=Z);(X1=Z,Z1=X)),
+   ((g_h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
+                          \+ g_h(inside, X, C, S0))), !, fail.
 g_h(open_traverse, X, Z, S0):-
+  %g_h(touchable, X, Z, S0),
   g_h(descended, X, Z, S0),
   \+ (g_h(inside, X, Z, S0), is_closed(in, Z, S0)).
 
@@ -128,7 +133,7 @@ g_h(in_scope, X, Z, S0):-
 g_h(touchable, X, Z, S0):-
   g_h(in_scope, X, Z, S0),
   \+ ((g_h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
-                          \+ g_h(inside, X, C, S0))). % ... we are inside of that something as well as well
+                          \+ g_h(inside, X, C, S0))). % ... we are inside of that something as well
 
 g_h(takeable, X, Z, S0):-
   g_h(touchable, X, Z, S0),

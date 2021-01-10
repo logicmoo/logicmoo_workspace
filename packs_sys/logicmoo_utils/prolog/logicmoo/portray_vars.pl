@@ -114,7 +114,10 @@ atom_concat_some_left(L,R,LR):- upcase_atom(L,L0),L\==L0,atom_concat_w_blobs(L0,
 atom_concat_some_left(L,R,LR):- downcase_atom(L,L0),L\==L0,atom_concat_w_blobs(L0,R,LR),atom_length(R,Len),Len>0.
 
 
-reduce_atomLR(L,L):- \+ atom(L).
+reduce_atomLR(L,L):- \+ atom(L), !.
+reduce_atomLR(L,R):- name(L,[LC1,UC,LC2|Rest]),char_type(UC,upper),char_type(LC1,lower),char_type(LC2,lower),!,
+  name(LL,[UC,LC2|Rest]), reduce_atomLR(LL,R).
+reduce_atomLR(L,R):- atom_concat_some_left('v',LL,L),name(LL,[UC,LC|_]),char_type(UC,upper),char_type(LC,lower),reduce_atomLR(LL,R).
 reduce_atomLR(L,R):- atom_concat_some_left('Cl_',LL,L),reduce_atomLR(LL,R).
 reduce_atomLR(L,R):- atom_concat_some_left('U_',LL,L),reduce_atomLR(LL,R).
 reduce_atomLR(L,R):- atom_concat_some_left('F_',LL,L),reduce_atomLR(LL,R).
@@ -124,11 +127,11 @@ reduce_atomLR(L,R):- atom_concat_some_left('Sys_',LL,L),reduce_atomLR(LL,R).
 reduce_atomLR(L,L).
 
 %p_n_atom0(Atom,UP):- simpler_textname(Atom,M),Atom\==M,!,p_n_atom0(M,UP).
-p_n_atom0(Atom,UP):- atom(Atom),!,
-  reduce_atomLR(Atom,AtomR),
-  name(AtomR,[C|Was]),to_upper(C,U),filter_var_chars([U|Was],CS),name(UP,CS).
+p_n_atom0(Atom,UP):- atom(Atom),!, reduce_atomLR(Atom,AtomR), p_n_atom_filter_var_chars(AtomR,UP).
 p_n_atom0(String,UP):- string(String),!,string_to_atom(String,Atom),!,p_n_atom0(Atom,UP).
 p_n_atom0([C|S],UP):- !,notrace(catch(atom_codes_w_blobs(Atom,[C|S]),_,fail)),!,p_n_atom0(Atom,UP).
+
+p_n_atom_filter_var_chars(AtomR,UP):- name(AtomR,[C|Was]),to_upper(C,U),filter_var_chars([U|Was],CS),name(UP,CS).
 
 atom_codes_w_blobs(Atom,Codes):-atom(Atom)->atom_codes(Atom,Codes);format(codes(Codes),"~w",[Atom]).
 

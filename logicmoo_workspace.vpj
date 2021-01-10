@@ -68,63 +68,54 @@
 		</Folder>
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
-                <F
-                        N=".*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.*nb"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.*f"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.lp*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.*h"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.*r"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.*c"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="READ*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="INSTALL*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*Make*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
-                <F
-                        N="*.p*"
-                        Recurse="1"
-                        Refilter="0"
-                        Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<Folder Name="packs_sys">
+			<Folder Name="logicmoo_agi">
+				<Folder Name="prolog">
+					<Folder Name="episodic_memory">
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/test_cake.dom"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/test_party.dom"/>
+						<F N="packs_sys/logicmoo_agi/prolog/episodic_memory/test_wumpus.dom"/>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+		<F
+			N="*.*c"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.*f"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.*h"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.*nb"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.*r"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.lp*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
 		<F
 			N="*.m*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="*.p*"
 			Recurse="1"
 			Refilter="0"
 			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
@@ -133,5 +124,25 @@
 			Recurse="1"
 			Refilter="0"
 			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.htm"/>
+		<F
+			N="*Make*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N=".*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="INSTALL*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
+		<F
+			N="READ*"
+			Recurse="1"
+			Refilter="0"
+			Excludes=".git/;.svn/;CVS/;*.class;*.o;*.a;*.gif;*.zip;.metadata/;elFinder/;.HIDE~/;HIDE~/;pldata/;*.qlf;*.class;.git/;~*;*~;~*/;*~/;*.jar;*.tar;*.so;*.dll;*.gz;*.tgz;*.rar;*.exe;*.bak;*.jpg;*.xp*;*.gif;*.b?*;*.html;*.pdf"/>
 	</Files>
 </Project>
