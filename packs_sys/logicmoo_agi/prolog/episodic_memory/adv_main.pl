@@ -89,7 +89,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 
 %:- ensure_loaded(adv_test).
 %:- ensure_loaded(adv_telnet).
-mindi:- ensure_loaded(library(episodic_memory/adv_mindi)).
+mindi:- reconsult(library(episodic_memory/adv_mindi)),call(testsit_all).
 mindi2:- ensure_loaded(library(episodic_memory/adv_mindi2)).
 
 

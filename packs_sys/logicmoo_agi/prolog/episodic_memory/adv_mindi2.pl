@@ -2267,5 +2267,5 @@ term_with_ground_args(Type, Term) :-
     maplist(call, ArgTypes, Args),
     Term =.. [Functor|Args].
 
-%:- [(domain_party)].
-:- [(domain_wumpus)].
+:- [(domain_party)].
+% :- [(domain_wumpus)].
