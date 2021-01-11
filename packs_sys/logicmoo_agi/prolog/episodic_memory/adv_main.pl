@@ -90,7 +90,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 %:- ensure_loaded(adv_test).
 %:- ensure_loaded(adv_telnet).
 mindi:- reconsult(library(episodic_memory/adv_mindi)),call(testsit_all).
-mindi2:- ensure_loaded(library(episodic_memory/adv_mindi2)).
+mindi2:- reconsult(library(episodic_memory/adv_mindi2)).
 
 
 adventure_reset :-

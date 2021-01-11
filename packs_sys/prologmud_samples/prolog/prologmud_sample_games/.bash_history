@@ -570,3 +570,5 @@ cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
