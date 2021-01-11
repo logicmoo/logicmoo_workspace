@@ -6,8 +6,11 @@ packs_sys/prologmud_samples/prolog/prologmud_sample_games/nohup.out
 ./packs_web/butterfly/results.txt
 #.gitignore
 ~~*~~
-packs_sys/logicmoo_ec/ext/PKnows/
-/node_modules/
+#packs_sys/logicmoo_ec/ext/PKnows/
 /DEAD
 *.sav*/
+*.sav
+/~html~/
+./logicmoo_workspace.vtg~
+
 
