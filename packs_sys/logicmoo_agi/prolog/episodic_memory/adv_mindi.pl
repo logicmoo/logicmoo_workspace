@@ -163,7 +163,7 @@ final(choice(D1,D2),S) :-
 
 %%  Nondeterministic choice of arguments may terminate if there is some
 %%  choice of arguments for which the program will terminate.
-final(pi(V,D),S) :-
+final(exists(V,D),S) :-
     sub(V,_,D,Dr), final(Dr,S).
 
 %%  Iteration of a program may always terminate, as it can legally be
@@ -306,7 +306,7 @@ trans(choice(D1,D2),S,Dp,Sp) :-
 
 %%  Nondeterministic choice of arguments may transition if there is an
 %%  appropriate binding of the arguments for which the program may transition.
-trans(pi(V,D),S,Dp,Sp) :-
+trans(exists(V,D),S,Dp,Sp) :-
     sub(V,_,D,Dr), step(Dr,S,Dp,Sp).
 
 %%  Iteration of a program may transition to the program followed by further
@@ -934,6 +934,8 @@ super_type(Type,container) :-
     member(Type,[bowl,board,cooking_appliance]).
 super_type(Type,ingredient) :-
     member(Type,[flour,egg,tomato,lettuce,sugar]).
+super_type(Type,makable) :-
+    member(Type,[salad,cake]).
 
 %%
 %%  obj_is_type(Obj,Type):  check object types
@@ -1129,10 +1131,10 @@ used(Obj,do(C,_,S)) :-
 %%  the amount of time remaining.
 %%
 timer_set(ID,Dur,do(C,T,S)) :-
-    member(actT(set_timer,_,ID,Dur),C)
+    happens(actT(set_timer,_,ID,Dur),C)
     ;
     timer_set(ID,OldDur,S), start(S,SStart), {Dur = OldDur-(T-SStart)},
-    \+ member(event_ring_timer(ID),C).
+    \+ happens(event_ring_timer(ID),C).
 
 %%
 %%  contents(Obj,Conts,S):  object contents in a situation
@@ -1315,7 +1317,7 @@ proc(doPlaceIn(Agt,Obj,Dest),
 %%  Nondeterministically select an object of a given type, gain control
 %%  of it, and place it inside a container object.
 proc(ensure_place_type_in(Agt,Type,Dest),
-     pi(obj,?and(obj_is_type(obj,Type),not(used(obj,now)))
+     exists(obj,?and(obj_is_type(obj,Type),not(used(obj,now)))
             : actT(acquire_object,Agt,obj)
             : doPlaceIn(Agt,obj,Dest))
     ).
@@ -1331,32 +1333,33 @@ proc(ensure_xfrd(Agt,Source,Dest),
 %%  Make a simple cake mixture in the specified container.
 %%  The agents to perform the various steps are selected
 %%  nondeterministically.
-proc(actT(make,_Doer,mixFor(cake),Dest),
-     pi(agt,?agent(agt) : ensure_place_type_in(agt,egg,Dest))
-     : pi(agt,?agent(agt) : ensure_place_type_in(agt,flour,Dest))
-     : pi(agt,?agent(agt) : ensure_place_type_in(agt,sugar,Dest))
-     : pi(agt, ?agent(agt) : actT(acquire_object,agt,Dest)
+proc(actT(make,Doer,mixFor(Cake,Doer),Dest),
+     exists(agt,?agent(agt) : ensure_place_type_in(agt,egg,Dest))
+     : exists(agt,?agent(agt) : ensure_place_type_in(agt,flour,Dest))
+     : exists(agt,?agent(agt) : ensure_place_type_in(agt,sugar,Dest))
+     : exists(agt, ?agent(agt) : actT(acquire_object,agt,Dest)
                            : actT(begin_task,agt,actT(mix,agt,Dest,5))
 %                           : event_end_task(agt,actT(mix,agt,Dest,5))
                            : actT(release_object,agt,Dest))
-    ).
+     ) :- super_type(Cake,makable).
 
 %%  Make a cake in the specified container.  This involves
 %%  making cake mix in the container, then baking it in an oven.
-proc(actT(make,_Doer,cake,Dest),
-pi(agt,actT(make,agt,mixFor(cake),Dest))
-     : pi(myOven, ?obj_is_type(myOven,oven)
-                  : pi(agt, ensure_agent_has_object(agt,myOven)
+proc(actT(make,Doer,Cake,Dest),
+exists(agt,actT(make,agt,mixFor(Cake,Doer),Dest))
+     : exists(myOven, ?obj_is_type(myOven,oven)
+                  : exists(agt, ensure_agent_has_object(agt,myOven)
                             : ensure_agent_has_object(agt,Dest)
                             : actT(place_in,agt,Dest,myOven)
-                            : actT(set_timer,agt,timerFor(cake),35)
+                            : actT(set_timer,agt,timerFor(Cake,Doer),35)
                       )
-                  : event_ring_timer(timerFor(cake))
-                  : pi(agt,pi(myBoard, ?obj_is_type(myBoard,board)
+                  : event_ring_timer(timerFor(Cake,Doer))
+                  : exists(agt,exists(myBoard, ?obj_is_type(myBoard,board)
                                        : ensure_xfrd(agt,myOven,myBoard)
                       ))
          )
-    ).
+     ) :- super_type(Cake,makable).
+
 
 
 %%  Chop the given item then place it in the given container.
@@ -1364,7 +1367,7 @@ pi(agt,actT(make,agt,mixFor(cake),Dest))
 %%  board is selected nondeterministically.
 proc(ensure_chop_into(Agt,Obj,Dest),
      ensure_agent_has_object(Agt,Obj)
-     : pi(myBoard, ?and(obj_is_type(myBoard,board),neg(contents(myBoard,_,now)))
+     : exists(myBoard, ?and(obj_is_type(myBoard,board),neg(contents(myBoard,_,now)))
                    : ensure_agent_has_object(Agt,myBoard)
                    : actT(place_in,Agt,Obj,myBoard)
                    : actT(begin_task,Agt,actT(chop,Agt,myBoard))
@@ -1380,24 +1383,24 @@ proc(ensure_chop_into(Agt,Obj,Dest),
 %%  appropriate vegetables, chopping them, placing them in the container,
 %%  and mixing briefly.
 proc(actT(make,Agt,salad,Dest),
-       pi(agt,pi(obj, ?obj_is_type(obj,lettuce)
+       exists(agt,exists(obj, ?obj_is_type(obj,lettuce)
                       : actT(acquire_object,agt,obj)
                       : ensure_chop_into(agt,obj,Dest)
                 )
          )
        >>
-       pi(agt,pi(obj, ?obj_is_type(obj,tomato)
+       exists(agt,exists(obj, ?obj_is_type(obj,tomato)
                       : actT(acquire_object,agt,obj)
                       : ensure_chop_into(agt,obj,Dest)
                 )
          )
       //
-      pi(agt,pi(obj, ?obj_is_type(obj,carrot)
+      exists(agt,exists(obj, ?obj_is_type(obj,carrot)
                       : actT(acquire_object,agt,obj)
                       : ensure_chop_into(agt,obj,Dest)
                 )
         )
-    : pi(agt, ensure_agent_has_object(agt,Dest)
+    : exists(agt, ensure_agent_has_object(agt,Dest)
               : actT(begin_task,agt,actT(mix,agt,Dest,1))
 %              : event_end_task(agt,actT(mix,agt,Dest,1))
               : actT(release_object,agt,Dest)
@@ -1429,7 +1432,7 @@ proc(concTest,
 %%  Test the operation of nondeterministic argument selection
 proc(piTest,
      actT(acquire_object,thomas,egg1)
-     : pi(obj, ?and(obj_is_type(obj,egg),neg(state_agent_has_object(_,obj,now)))
+     : exists(obj, ?and(obj_is_type(obj,egg),neg(state_agent_has_object(_,obj,now)))
                : actT(acquire_object,richard,board1)
                : actT(acquire_object,richard,obj)
          )
@@ -1437,7 +1440,7 @@ proc(piTest,
 
 %%  A simple little program for testing purposes
 proc(simple(Agt),
-     pi(obj, ?and(obj_is_type(obj,lettuce),not(used(obj,now)))
+     exists(obj, ?and(obj_is_type(obj,lettuce),not(used(obj,now)))
              : actT(acquire_object,Agt,obj))).
 
 
