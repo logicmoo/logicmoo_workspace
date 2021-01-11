@@ -1,0 +1,2 @@
+*.o filter=lfs diff=lfs merge=lfs -text
+logicmoo_workspace.vtg~ filter=lfs diff=lfs merge=lfs -text
