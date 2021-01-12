@@ -160,9 +160,12 @@ adv_tst(11):-
 
 adv_tst(12):- 
   nlu_assert("He blows air into the flute."),
+  % ....
   nlu_assert("A sound is heard by all in the room").
+
 adv_tst(13):- 
   nlu_assert("He blows air into the flute."),
+  % ....
   nlu_assert("No sound is heard by all in the room").
 
 adv_tst(14):- 

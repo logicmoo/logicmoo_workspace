@@ -78,6 +78,64 @@
 					</Folder>
 				</Folder>
 			</Folder>
+			<Folder Name="logicmoo_nlu">
+				<Folder Name="test">
+					<Folder Name="logicmoo_nlu">
+						<F N="packs_sys/logicmoo_nlu/test/logicmoo_nlu/parser_e2c.plt"/>
+					</Folder>
+					<Folder Name="superglue">
+						<Folder Name="AX-b">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/AX-b/AX-b.jsonl"/>
+						</Folder>
+						<Folder Name="AX-g">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/AX-g/AX-g.jsonl"/>
+						</Folder>
+						<Folder Name="BoolQ">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/BoolQ/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/BoolQ/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/BoolQ/val.jsonl"/>
+						</Folder>
+						<Folder Name="CB">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/CB/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/CB/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/CB/val.jsonl"/>
+						</Folder>
+						<Folder Name="COPA">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/COPA/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/COPA/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/COPA/val.jsonl"/>
+						</Folder>
+						<Folder Name="MultiRC">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/MultiRC/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/MultiRC/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/MultiRC/val.jsonl"/>
+						</Folder>
+						<Folder Name="ReCoRD">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/ReCoRD/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/ReCoRD/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/ReCoRD/val.jsonl"/>
+						</Folder>
+						<Folder Name="RTE">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/RTE/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/RTE/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/RTE/val.jsonl"/>
+						</Folder>
+						<Folder Name="WiC">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WiC/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WiC/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WiC/val.jsonl"/>
+						</Folder>
+						<Folder Name="WSC">
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WSC/test.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WSC/train.jsonl"/>
+							<F N="packs_sys/logicmoo_nlu/test/superglue/WSC/val.jsonl"/>
+						</Folder>
+					</Folder>
+					<F N="packs_sys/logicmoo_nlu/test/fracas-problems.dtd"/>
+					<F N="packs_sys/logicmoo_nlu/test/fracas.xml"/>
+					<F N="packs_sys/logicmoo_nlu/test/sanity_tests.pl"/>
+				</Folder>
+			</Folder>
 		</Folder>
 		<F
 			N="*.*c"
