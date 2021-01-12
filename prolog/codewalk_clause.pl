@@ -37,7 +37,6 @@
 :- use_module(library(prolog_xref), []).
 :- use_module(library(apply)).
 :- use_module(library(lists)).
-:- use_module(library(thread)).
 :- use_module(library(option)).
 :- use_module(library(ordsets)).
 :- use_module(library(prolog_metainference)).
@@ -47,7 +46,7 @@
 :- use_module(library(from_utils)).
 :- use_module(library(meta_args)).
 :- use_module(library(option_utils)).
-% :- use_module(library(concurrent_forall)).
+:- use_module(library(condconc)).
 
 :- multifile
     codewalk:walk_code/2.
@@ -59,6 +58,7 @@ codewalk:walk_code(clause, Options1) :-
            trace_reference(To)-To,
            undefined(Undefined)-ignore,
            trace_variables(TraceVars)-[],
+           concurrent(Concurrent)-true,
            walkextras(Extras)-[initialization,
                                declaration,
                                asrparts([body])],
@@ -70,8 +70,9 @@ codewalk:walk_code(clause, Options1) :-
                 on_head:OnHead,
                 trace_variables:TraceVars,
                 trace_reference:To,
+                concurrent:Concurrent,
                 undefined:Undefined},
-    concurrent_maplist(walk_extras_c(FileD, Data), [clause|Extras]).
+    cond_maplist(Concurrent, walk_extras_c(FileD, Data), [clause|Extras]).
 
 walk_extras_c(FileD, Opts, Extra) :-
     walk_extras_(Extra, FileD, Opts).
@@ -127,8 +128,10 @@ assertion_goal(AsrPart, Asr, Prop, PM, From) :-
 walk_clause(FileD, Opts) :-
     option(trace_variables(TraceVars), Opts),
     option(from(From), Opts),
+    option(concurrent(Concurrent), Opts),
     Head = M:_,
-    concurrent_forall(
+    cond_forall(
+        Concurrent,
         current_module(M),
         forall(( current_head(Head),
                  current_head_body(FileD, Head, Body, From)

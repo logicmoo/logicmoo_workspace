@@ -58,7 +58,7 @@
 :- use_module(library(option_utils)).
 :- use_module(library(ungroup_keys_values)).
 :- use_module(library(compact_goal)).
-:- use_module(library(concurrent_forall)).
+:- use_module(library(condconc)).
 
 :- multifile
     prolog:message//1.
@@ -105,7 +105,8 @@ check_unused(Options1, Pairs) :-
     option_module_files(Options, MFileD),
     option_files([module_files(MFileD)], FileD),
     walk_code([module_files(MFileD)|Options]),
-    mark,
+    option(concurrent(Concurrent), Options, true),
+    mark(Concurrent),
     sweep(FileD, Pairs),
     cleanup_unused.
 
@@ -154,8 +155,8 @@ entry_point(Caller) :-
     calls_to(Caller, _, _),
     is_entry_caller(Caller).
 
-mark :-
-    concurrent_forall(entry_point(Caller), put_mark(Caller)).
+mark(Concurrent) :-
+    cond_forall(Concurrent, entry_point(Caller), put_mark(Caller)).
 
 resolve_meta_goal(H, M, G) :-
     ( ( predicate_property(M:H, meta_predicate(Meta))
@@ -499,8 +500,8 @@ cu_caller_hook(Caller, Head, CM, Type, Goal, _, From) :-
     ; Caller = '<assertion>'(A:H),
       member(Goal, [foreign_props:fimport(_),
                     foreign_props:fimport(_, _),
-                    foreign_props:typedef(_),
-                    foreign_props:genfdef(_)])
+                    foreign_props:tgen(_),
+                    foreign_props:sgen(_)])
     ->( A \= CM
       ->put_mark('<exported>'(A:H))
       ; put_mark(A:H)
