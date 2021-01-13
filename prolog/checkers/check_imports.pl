@@ -146,7 +146,7 @@ ignore_import(M, IM) :-
     succ(A2, A),
     functor(H, Name, A),
     predicate_property(M:H, implementation_module(IM)).
-                       
+
 collect_usemods(MFileD, Pairs, Tail) :-
     findall(warning-(c(module, use_module, M)-(Loc/U)),
             ( current_used_use_module(MFileD, U, M, From),

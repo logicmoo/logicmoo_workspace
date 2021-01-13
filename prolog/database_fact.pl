@@ -112,6 +112,12 @@ database_fact(M:G, F) :- database_fact_ort(_, G, M, F).
 
 database_def_fact(M:H, F) :- database_def_fact(H, M, F).
 
+database_def_fact(bind_interface(Intf, Impl), interface, Intf:H) :-
+    interface:'$interface'(Intf, DIL),
+    interface:'$implementation'(Impl, Intf),
+    member(F/A, DIL),
+    functor(H, F, A).
+
 database_def_fact(asserta_with_names(A, _),  ifprolog,   F) :- clause_head(A, F).
 database_def_fact(assertz_with_names(A, _),  ifprolog,   F) :- clause_head(A, F).
 database_def_fact(lasserta(A),               pce_config, F) :- clause_head(A, F).
