@@ -62,7 +62,7 @@ oper_db(Agent, ( act3('wait',Agent,[])), [], []).
 
 oper_db(Agent, ( act3('go__dir',Agent,[ Walk, ExitName])),
    [ Here \= Agent, There \= Agent, Here \= There,
-    k(In, Agent, Here),
+    h(In, Agent, Here), % must be h/3 ?
     b(exit(ExitName), Here, _),
     h(exit(ExitName), Here, There),
     ReverseExit \= ExitName,

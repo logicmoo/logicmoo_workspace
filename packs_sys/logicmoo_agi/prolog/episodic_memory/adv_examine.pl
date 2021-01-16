@@ -38,13 +38,14 @@ add_exit_percepts(Sense, Agent, PrepFrom, Depth, Object, S2, S3):-
 
 sense_object_exitnames_new(_Sense, _Depth, child, _Object, [], _S0) :-!.
 sense_object_exitnames_new(_Sense, _Depth, in, Object, Exits, S0) :-
-  findall(h(exit(Dir), Object,'<mystery>'(exit,Dir,Object)), 
-        g_h(exit(Dir), Object,           _               , S0), Exits), Exits\==[], !.
+  Info = h(exit(Dir), Object,'<mystery>'(exit,Dir,Object)),
+  % Info = has_rel(exit(Dir), t),
+  findall(Info, g_h(exit(Dir), Object, _, S0), Exits), Exits\==[], !.
 
 sense_object_exitnames_new(_Sense, _Depth, In, Object, [Escape], _S0) :-Dir = escape(In), !,
   Escape = h(exit(Dir),Object,'<mystery>'(exit,Dir,Object)).
  
-  
+/*  
 
 sense_object_exitnames(Sense, Depth, PrepFrom, Object,
    exit_list(PrepFrom, Object, Exits), S0):-
@@ -59,7 +60,7 @@ prep_object_exitnames(_Sense, _Depth, on, _Object, [exit(escape)], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, under, _Object, [exit(escape)], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, at, _Object, [exit(escape)], _S0) :- !.
 prep_object_exitnames(_Sense, _Depth, Other, _Object, [exit(reverse(Other))], _S0).
-
+*/
 /*
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
   findall(h(exit(Direction), Object, _), g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
