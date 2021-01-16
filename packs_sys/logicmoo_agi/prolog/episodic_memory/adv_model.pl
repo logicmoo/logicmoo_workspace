@@ -67,6 +67,8 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 % If dynamic topology needs storing, use
 %  h(exit(E), Here, [There1|ThereTail], Timestamp)
 
+realize_model_exit(exit(At), From, Timestamp, M0, M2) :- nonvar(At),
+  realize_model_exit(At, From, Timestamp, M0, M2), !.
 realize_model_exit(At, From, _Timestamp, M0, M2) :-
  model_recent(h(exit(At), From, _To), M0, M2), !.
 /*realize_model_exit(At, From, _Timestamp, M0, M2) :-
@@ -133,29 +135,27 @@ update_model(Knower, Event, Timestamp, Memory, M0, M2) :- fail,
     update_model(Knower, Event, Timestamp, Memory, M1, M2).
 */
 
-update_model(_Knower, held_by(Doer, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(_Knower, h(held_by,Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Doer, Timestamp, M0, M1).
-update_model(_Knower, worn_by(Doer, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(_Knower, h(worn_by,Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Doer, Timestamp, M0, M1).
-
-
-update_model(_Knower, percept_props(_Doer, _Sense, Object, _Depth, PropList), _Stamp, _Mem, M0, M2) :-
- apply_mapl_rest_state(updateprop_from_create(Object), PropList, [], M0, M2).
 
 update_model(_Knower, props(Object, PropList), _Stamp, _Mem, M0, M2) :-
   apply_mapl_rest_state(updateprop(Object), PropList, [], M0, M2).
 
 % Wrong Doer !
 update_model(Knower, percept(Doer2, _, _, _Info), _Timestamp, _Mem, M0, M0):- Knower \=@= Doer2, !.
+
 % Model exits from Here.
 update_model(Knower, percept(Doer, _, _, exit_list(in, Here, ExitRelations)), Timestamp, _Mem, M0, M4) :- must_be_same(Knower, Doer),
   update_model_exits(ExitRelations, Here, Timestamp, M0, M4).
+
 % Model objects seen Here.. This is no longer used right?
-update_model(Knower, percept(Doer, _Sense, child_list(_Depth, There, Prep, Objects)), Timestamp, _Mem, M0, M3):- must_be_same(Knower, Doer),
+update_model(Knower, percept(Doer, _Sense, h(Prep, There, Objects)), Timestamp, _Mem, M0, M3):- must_be_same(Knower, Doer),
    dumpST_break, !,
    update_relations(Prep, Objects, There, Timestamp, M0, M3).
 % Model objects seen Here ... this replaces the above code
-update_model(Knower, percept(Doer, _Sense, _Depth, child_list(Object, At, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
+update_model(Knower, percept(Doer, _Sense, _Depth, h(At, Object, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
  must_mw1((remove_children( At, Children, Object, Timestamp, M0, M1),
    update_relations( At, Children, Object, Timestamp, M1, M2))).
 % Copy objects props Here
@@ -183,7 +183,7 @@ update_model(Knower, Percept, Timestamp, _Memory, M, M):-
 is_stored_at_all(none).
 
 maybe_store(Percept, M0, M0):- safe_functor(Percept, F, _), is_stored_at_all(F), !.
-%maybe_store(percept_props(Whom, see, What, Depth, _List), M0, M1):- maybe_store(percept_props(Whom, see, WhatDepth, ), M0, M1), !.
+%maybe_store(unused_percept_props(Whom, see, What, Depth, _List), M0, M1):- maybe_store(unused_percept_props(Whom, see, WhatDepth, ), M0, M1), !.
 maybe_store(Percept, M0, M1):- model_prepend([Percept], M0, M1).
 
 each_update_model(_Knower, [], _Timestamp, _Memory, M, M).

@@ -614,7 +614,7 @@ obj_props_0(M, Obj, Props):- obj_props_v(M, Obj, Props).
 obj_props_v(M, _, _):- \+ compound(M), !, fail.
 obj_props_v(M, Obj, Props):- is_list(M), !, member(E, M), obj_props_v(E, Obj, Props).
 obj_props_v(props(Obj, Props), Obj, Props):- !.
-obj_props_v(percept_props(_, _, Obj, _, Props), Obj, Props):- !.
+obj_props_v(unused_percept_props(_, _, Obj, _, Props), Obj, Props):- !.
 obj_props_v(Term, Obj, Props):- arg(_, Term, M), obj_props_v(M, Obj, Props).
 
 same_prop(X, Y):- X=@=Y, X=Y.

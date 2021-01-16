@@ -199,19 +199,19 @@ logic2eng(_Context, percept(_Agent, see, Depth, props(Object, [shape=What])), []
 logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), 
    extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
 
-logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
+logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Object, Prep, '<mystery>'(Closed, _, _))), 
+logic2eng(_Context, percept(_Agent, Sense, Depth, h(Prep, Object, '<mystery>'(Closed, _, _))), 
    extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 
-logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), 
+logic2eng(_Context, percept(_Agent, _Sense, Depth, h(Prep, Object, [])), 
    extra_verbose_eng([nothing, Prep, Object]) ):- Depth \= 1.
 
-logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)),
+logic2eng(Context, percept( Agent, Sense, _Depth, h(Prep, Here, Nearby)),
     [cap(subj(Agent)), es(Sense), Prep, Here, ':'  | SeeText]):-
  select_from(Agent, Nearby, OthersNearby), !, list2eng(Context, OthersNearby, SeeText).
 
-logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)),
+logic2eng(Context, percept( Agent, Sense, _Depth, h(Prep, Here, Nearby)),
  [cap(subj(Agent)), person(Sense, es(Sense)), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_logic(notices(Agent, How, Depth, What))):-  Depth=1,
@@ -229,7 +229,7 @@ logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, e
   logic2eng(Context, Info, What).
 
 
-logic2eng(Context, held_by(Agent, Items),
+logic2eng(Context, h(held_by,Agent, Items),
    [cap(subj(Agent)), 'held_by:'|Text]) :-
  list2eng(Context, Items, Text).
 
@@ -242,10 +242,10 @@ logic2eng(_Agent, transformed(Before, After), [Before, 'turns into', After, .]).
 
 logic2eng(_Agent, destroyed(Thing), [Thing, aux(be), 'destroyed.']).
 
-logic2eng(_Context, percept_props(_Agent, _Sense, _Object, _Depth, []), [] ) :- !.
-logic2eng(Context, percept_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), sees | English ] ) :-
+logic2eng(_Context, unused_percept_props(_Agent, _Sense, _Object, _Depth, []), [] ) :- !.
+logic2eng(Context, unused_percept_props(Agent, see, Object, _Depth, PropList), [cap(subj(Agent)), sees | English ] ) :-
  logic2eng(Context, do_props(Object, PropList), English).
-logic2eng(Context, percept_props(Agent, Sense, Object, _Depth, PropList),
+logic2eng(Context, unused_percept_props(Agent, Sense, Object, _Depth, PropList),
    [cap(subj(Agent)),
     person(Sense, es(Sense))| English] ) :-
  logic2eng(Context, do_props(Object, PropList), English ).

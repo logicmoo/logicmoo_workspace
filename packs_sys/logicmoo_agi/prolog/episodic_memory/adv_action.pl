@@ -211,7 +211,7 @@ some_agent_clock_time(Agent, T0, OldNow, Mem):- nonvar(Mem),
   thought_check(Agent, timestamp(T0, OldNow), Mem), !.
  
 find_clock_time(Agent, T0, OldNow, _UMem):-
-   get_advstate(State), declared(preceptq(Agent, Mem), State),
+   get_advstate(State), declared(percept(Agent, Mem), State),
    some_agent_clock_time(Agent, T0, OldNow, Mem).
 find_clock_time(Agent, T0, OldNow, Mem0):- some_agent_clock_time(Agent, T0, OldNow, Mem0).
 find_clock_time(Agent, T0, OldNow, _UMem):-

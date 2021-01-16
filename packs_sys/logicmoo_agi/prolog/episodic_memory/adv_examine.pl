@@ -31,19 +31,35 @@ sub_objs(At, Here, What, S0):-
  \+ ((g_h(inside, What, Container, S0),
    Container\==Here, g_h(descended, Container, Here, S0))).
 
+add_exit_percepts(Sense, Agent, PrepFrom, Depth, Object, S2, S3):-
+   sense_object_exitnames_new(Sense, Depth, PrepFrom, Object, SensedExits, S2),
+   % sense_object_exitnames(Sense, Depth, PrepFrom, Object, SensedExits, S2),
+   maybe_send_sense((SensedExits\==[]), Agent, Sense, Depth, SensedExits, S2, S3).
 
-sense_object_exitnames(Sense, Depth, PrepIn, Object,
-   exit_list(PrepIn, Object, Exits), S0):-
- Depth>2 , !, prep_object_exitnames(Sense, Depth, PrepIn, Object, Exits, S0), !.
+sense_object_exitnames_new(_Sense, _Depth, child, _Object, [], _S0) :-!.
+sense_object_exitnames_new(_Sense, _Depth, in, Object, Exits, S0) :-
+  findall(h(exit(Dir), Object,'<mystery>'(exit,Dir,Object)), 
+        g_h(exit(Dir), Object,           _               , S0), Exits), Exits\==[], !.
+
+sense_object_exitnames_new(_Sense, _Depth, In, Object, [Escape], _S0) :-Dir = escape(In), !,
+  Escape = h(exit(Dir),Object,'<mystery>'(exit,Dir,Object)).
+ 
+  
+
+sense_object_exitnames(Sense, Depth, PrepFrom, Object,
+   exit_list(PrepFrom, Object, Exits), S0):-
+ Depth>2 , !, 
+ prep_object_exitnames(Sense, Depth, PrepFrom, Object, Exits, S0), !.
+
 sense_object_exitnames(_Sense, _Depth, _PrepIn, _Object, [], _S0):- !.
-
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
-  findall(Direction, g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-prep_object_exitnames(_Sense, _Depth, in, _Object, [escape], _S0) :- !.
-prep_object_exitnames(_Sense, _Depth, on, _Object, [escape], _S0) :- !.
-prep_object_exitnames(_Sense, _Depth, under, _Object, [escape], _S0) :- !.
-prep_object_exitnames(_Sense, _Depth, at, _Object, [escape], _S0) :- !.
-prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
+  findall(exit(Direction), g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
+prep_object_exitnames(_Sense, _Depth, in, _Object, [exit(escape)], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, on, _Object, [exit(escape)], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, under, _Object, [exit(escape)], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, at, _Object, [exit(escape)], _S0) :- !.
+prep_object_exitnames(_Sense, _Depth, Other, _Object, [exit(reverse(Other))], _S0).
+
 /*
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
   findall(h(exit(Direction), Object, _), g_h(exit(Direction), Object, _, S0), Exits), Exits\==[], !.
@@ -135,14 +151,14 @@ maybe_send_sense(IF, Agent, Sense, Depth, Data, S0, S1):-
 send_sense(Agent, Sense, Depth, Data, S0, S1):-
    queue_agent_percept(Agent, percept(Agent, Sense, Depth, Data), S0, S1).
 
-act_examine(Agent, Sense, PrepIn, Object, Depth, SA, S3):-
+act_examine(Agent, Sense, PrepFrom, Object, Depth, SA, S3):-
  object_props(Object, know, Depth, KPropList, SA),
  maybe_send_sense((KPropList\==[]), Agent, know, Depth, props(Object, KPropList), SA, S0 ),
  object_props(Object, Sense, Depth, PropList, SA),
  maybe_send_sense((PropList\==[]), Agent, Sense, Depth, props(Object, PropList), S0, S1),
- add_child_percepts(Sense, Agent, PrepIn, Depth, Object, S1, S2),
- sense_object_exitnames(Sense, Depth, PrepIn, Object, SensedExits, S0),
- maybe_send_sense((SensedExits\==[]), Agent, Sense, Depth, SensedExits, S2, S3).
+ add_child_percepts(Sense, Agent, PrepFrom, Depth, Object, S1, S2),
+ add_exit_percepts(Sense, Agent, PrepFrom, Depth, Object, S2, S3), !.
+
 
 findall_set2(T, G, L):-findall(T, G, S), list_to_set(S, L).
 
@@ -153,11 +169,11 @@ get_relation_list(Object, RelationSet, S1) :-
      At\=exit(_)), RelationSet).
 
 % add_child_percepts(_Sense, _Agent, _PrepIn, Depth, _Object, S1, S1):- Depth > 2, !.
-add_child_percepts(Sense, Agent, PrepIn, Depth, Object, S1, S2):-
+add_child_percepts(Sense, Agent, PrepFrom, Depth, Object, S1, S2):-
  get_relation_list(Object, RelationSet, S1),
- (member(PrepIn, RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
+ (member(PrepFrom, RelationSet) -> UseRelationSet = [PrepFrom] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
- findall(percept(Agent, Sense, Depth, child_list(Object, At, Children)),
+ findall(percept(Agent, Sense, Depth, h(At, Object, Children)),
      ((member(At, UseRelationSet),
        child_percepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent, PreceptS, S1, S2).

@@ -66,7 +66,7 @@ simplify_dbug_3(Z, List, O):-
 simplify_dbug_3(Z, G, GG):- is_list(G), must_det(maplist(simplify_dbug_3(Z), G, GG)), !.
 simplify_dbug_3(_, {O}, {O}):- !.
 simplify_dbug_3(Z, G, GG):- 
- compound_name_arguments(G, F, GL), % F\==percept_props, !,
+ compound_name_arguments(G, F, GL), % F\==unused_percept_props, !,
  maplist(simplify_dbug_3(Z), GL, GGL), !, 
  compound_name_arguments(GG, F, GGL).
 simplify_dbug_3(_, G, G).

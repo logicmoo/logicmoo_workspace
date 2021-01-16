@@ -229,7 +229,7 @@ process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 process_percept_do_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
 
 % Auto examine room items
-process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept(Agent, Sense, Depth, h(_Prep, _Here, Objects)), _Stamp, Mem0, Mem2) :-
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
@@ -250,11 +250,11 @@ process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Star, WordsIn])
  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
 
 % Auto take
-process_percept_do_auto(Agent, percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, unused_percept_props(Agent, Sense, Object, Depth, PropList), _Stamp, Mem0, Mem2) :-
   Depth > 1,
  (member(inherited(shiny), PropList)),
  Object \== Agent,
- dbug(autonomous, '~w: ~p~n', [Agent, percept_props(Agent, Sense, Object, Depth, PropList)]),
+ dbug(autonomous, '~w: ~p~n', [Agent, unused_percept_props(Agent, Sense, Object, Depth, PropList)]),
  agent_thought_model(Agent, ModelData, Mem0),
  \+ h(descended, Object, Agent, ModelData), % Not holding it?
  add_intent_all([ act3('take',Agent,[ Object]), print_(Agent, 'My shiny precious!')], Mem0, Mem2).

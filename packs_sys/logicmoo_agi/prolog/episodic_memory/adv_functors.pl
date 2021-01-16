@@ -112,7 +112,7 @@ type_functor(state, props(inst, list(nv))).
 type_functor(state, type_props(type, list(nv))).
 
 type_functor(event, attempts(agent, action)).
-type_functor(event, percept_props(agent, sense, inst, depth, list(nv))).
+type_functor(event, unused_percept_props(agent, sense, inst, depth, list(nv))).
 type_functor(event, time_passes(agent)).
 type_functor(event, act3('emote', agent,[ emotype, dest, statement])).
 
@@ -175,12 +175,12 @@ type_functor(mact3,go__prep_obj(agent, movetype, domrel, obj)).
 
 type_functor(event, move(agent, how, inst, from, prop, to)).
 
-type_functor(event, held_by(agent, list(inst))).
+type_functor(event, h(held_by,agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
 type_functor(event, percept(agent, sense, depth, props)).
 type_functor(event, percept(agent, exit_list(in, dest, list(exit)))). % paths noticable
-type_functor(event, percept(agent, child_list(sense, dest, domrel, depth, list(inst)))).
+%type_functor(event, percept(agent, child_l ist(sense, dest, domrel, depth, list(inst)))).
 type_functor(event, failed(action, msg)). % some action has failed
 type_functor(event, transformed(inst, inst2)). % inst1 got derezed and rerezed as inst2
 

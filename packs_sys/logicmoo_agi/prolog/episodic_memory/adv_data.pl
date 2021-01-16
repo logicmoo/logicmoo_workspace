@@ -82,11 +82,11 @@ dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 
 in(floyd, pantry),
 in(player, kitchen),
-worn_by(watch, player),
-held_by(bag, player),
+h(worn_by,watch, player),
+h(held_by,bag, player),
 
 in(coins, bag),
-held_by(wrench, floyd),
+h(held_by,wrench, floyd),
 
 % eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
 % add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
