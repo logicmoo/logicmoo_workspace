@@ -22,9 +22,9 @@
 
 :- discontiguous(implications/4).
 
-implications(Self, try(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
-implications(Self, did(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
-implications(Self, doing(Agent, Action), Preconds, Effects):- nonvar(Agent), !, implications(Self, Action, Preconds, Effects).
+implications(Self, try(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Self, Action, Preconds, Effects).
+implications(Self, did(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Self, Action, Preconds, Effects).
+implications(Self, doing(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Self, Action, Preconds, Effects).
 
 implications( does, ( act3('go__dir',Agent,[ Walk, ExitName])),
      [ h(In, Agent, Here), h(exit(ExitName), Here, There) ],
@@ -34,7 +34,7 @@ implications( does, ( act3('go__dir',Agent,[ Walk, ExitName])),
 implications(event, event3('moving_in_dir',Object, [Manner, ExitName, From, Here, To, There]),
      [ Here \= There, h(exit(ExitName), Here, There), h(exit(ReverseExit), There, Here) ],
  [ event( event3('depart', Object,[ From, Here, Manner, ExitName])),
- event( event3('arrive',Object,[ To, There, Manner, ReverseExit]))
+   event( event3('arrive',Object,[ To, There, Manner, ReverseExit]))
         ]).
 
 implications( event, event3('depart', Agent,[ In, There, _Walk, ExitName]),
@@ -50,9 +50,9 @@ only_goto:- fail, true.
 % oper_db(_Self, Action, Preconds, Effects)
 
 % used by oper_splitk/4
-oper_db(Self, try(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
-oper_db(Self, did(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
-oper_db(Self, doing(Agent, Action), Preconds, Effects):- nonvar(Agent), !, oper_db(Self, Action, Preconds, Effects).
+oper_db(_Self, try(Agent, Action), Preconds, Effects):- nonvar(Action), !, oper_db(Agent, Action, Preconds, Effects).
+oper_db(_Self, did(Agent, Action), Preconds, Effects):- nonvar(Action), !, oper_db(Agent, Action, Preconds, Effects).
+oper_db(_Self, doing(Agent, Action), Preconds, Effects):- nonvar(Action), !, oper_db(Agent, Action, Preconds, Effects).
 
 oper_db(Self, Action, Preconds, Effects):- fail, % Hooks to KR above
   sequenced(Self, Whole),
@@ -126,7 +126,9 @@ oper_db(Agent, looky(Agent),
 oper_db(world, invoke_events(Here),
      [ percept_local(Here, Event)],
      [ ~percept_local(Here, Event),
-       foreach((h(in, Agent, Here), prop(Agent, inherited(perceptq))), percept(Agent, Event))]):- \+ only_goto.
+       foreach((h(in, Agent, Here), 
+          prop(Agent, inherited(perceptq))),
+       percept(Agent, Event))]):- \+ only_goto.
 
 
 % deducer Agents who preceive leavers from some exit believe the did_depart point is an exit
@@ -166,7 +168,7 @@ oper_db(Agent, percept(Agent, event3('arrive',Someone,[ In, Here, Walk, ExitName
 % h = is really true
 % b = is belived
 % k = is belived and really true
-oper_db(Agent, ( act3('take',Agent,[ Thing])), % from same room
+oper_db(Agent, ( act3('take',Agent,[ Thing ])), % from same room
   [ Thing \= Agent, exists(Thing),
     There \= Agent,
    k(takeable, Agent, Thing),

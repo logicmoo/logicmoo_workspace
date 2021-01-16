@@ -1,81 +1,3 @@
-apt install libssh-dev
-butterfly help
-butterfly.server.py
-cat  /opt/logicmoo_workspace/packs_web/swish-friguzzi/config-enabled/gitty_files.pl
-cat ../composer.json 
-cat /opt/logicmoo_workspace/packs_web/ClioPatria/user/user_db.pl
-cat /opt/logicmoo_workspace/packs_web/swish-friguzzi/config-enabled/sshd.pl
-cat /opt/logicmoo_workspace/packs_web/swish-friguzzi/pack/wordnet/README.md 
-cat /usr/lib/swi-prolog/library/pengines_io.pl
-cat 2
-cat compile_mud_server.pl 
-cat composer.json 
-cat config-available/chat80.pl 
-cat config-available/r_serve.pl 
-cat config-enabled/r_serve.pl 
-cat ide.pl 
-cat myswish.pl 
-cat nohup.out
-cat nohup.out 
-cat README.md 
-cat run_mud_server.pl 
-cat run_swish_and_clio.pl 
-cat vi
-cat ~prologmud_server/compile_mud_server.pl 
-cat ~prologmud_server/StartMUD.sh
-cd  /opt/logicmoo_workspace/packs_sys/logicmoo_utils/
-cd  /opt/logicmoo_workspace/packs_web/swish-FSI-R
-cd  /opt/logicmoo_workspace/packs_web/swish-FSI-R/
-cd -
-cd .
-cd ..
-cd ../
-cd ../..
-cd /opt/logicmoo_workspace/html/elFinder
-cd /opt/logicmoo_workspace/packs_sys
-cd /opt/logicmoo_workspace/packs_sys/prologmud_samples/prolog/prologmud_sample_games
-cd /opt/logicmoo_workspace/packs_web/butterfly/
-cd /opt/logicmoo_workspace/packs_web/swish
-cd /opt/logicmoo_workspace/packs_web/swish-friguzzi
-cd /opt/logicmoo_workspace/packs_web/swish-TryIT2
-cd /opt/logicmoo_workspace/packs_web/swish/web/js
-cd build/
-cd cmake/
-cd conf/
-cd config-enabled/
-cd eggdrop
-cd eggdrop/conf/
-cd hdt/
-cd libssh/
-cd lps_corner
-cd pack/
-cd pack/rserve_client/
-cd packs_sys/
-cd php
-cd swish
-cd swish-TryIT2/
-cd swish/
-cd web
-cd web/
-cd web/js
-cd ~
-cd ~prologmud_server/eggdrop/conf/
-chmod +x run.pl
-chmod +x run.pl 
-chmod 755 /var/run/screen 
-cls
-cls ;  swipl --signals=true --pce=false --stack_limit=16g run_mud_server.pl
-cls ;  swipl --signals=true --stack_limit=32g -g "[run_mud_server]"
-cls ;  swipl --signals=true --stack_limit=32g -g "baseKB:[run_mud_server]"
-cls ;  swipl --signals=true --stack_limit=32g -l "run_mud_server"
-cls ;  swipl --signals=true --stack_limit=32g -l baseKB:run_mud_server.pl
-cls ;  swipl --signals=true --stack_limit=32g -l run_mud_server.pl
-cls ; ./StartMUD.sh
-cls ; gdb --args swipl --signals=true --stack_limit=64g -l run_mud_server.pl
-cls ; gdb -x gdbinit -return-child-result --args swipl --signals=true --stack_limit=16g -l run_mud_server.pl
-cls ; gdb -x gdbinit -return-child-result --args swipl --signals=true --stack_limit=64g -l run_mud_server.pl
-cls ; grep content_type . -r --include="*.pl"
-cls ; swipl   --signals=false --stack_limit=6G  -o run_mud_server.pl 
 cls ; swipl --signals=false --stack_limit=6g -o -l run_mud_server.pl 
 cls ; swipl --signals=false --stack_limit=6g -o run_mud_server.pl 
 cls ; swipl --signals=true --pce=false --stack_limit=16g run_mud_server.pl
@@ -566,6 +488,10 @@ free
 ps axfuw
 top
 ls
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/

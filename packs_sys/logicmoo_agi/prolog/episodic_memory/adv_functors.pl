@@ -175,7 +175,7 @@ type_functor(mact3,go__prep_obj(agent, movetype, domrel, obj)).
 
 type_functor(event, move(agent, how, inst, from, prop, to)).
 
-type_functor(event, carrying(agent, list(inst))).
+type_functor(event, held_by(agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
 type_functor(event, percept(agent, sense, depth, props)).

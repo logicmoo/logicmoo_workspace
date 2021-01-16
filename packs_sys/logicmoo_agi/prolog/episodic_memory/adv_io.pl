@@ -163,6 +163,7 @@ prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term, [output(cu
 % :- mu:ensure_loaded(adv_debug).
 
 dbug1(_):- notrace(current_prolog_flag(dmsg_level, never)), !.
+dbug1(Fmt) :- compound(Fmt), compound_name_arity(Fmt,F,_), debugging(F,false), !.
 dbug1(Fmt) :-
  notrace(( \+ \+
    ((guess_varnames(Fmt),

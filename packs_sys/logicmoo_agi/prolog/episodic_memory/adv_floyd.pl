@@ -69,7 +69,7 @@ autonomous_decide_action(Agent, Mem0, Mem2):-
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
  (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
- (trival_act(Action)->true;dbug(autonomous, '~w @ ~w: already about intent: ~w~n', [Agent, Here, Action])).
+ (trival_act(Action)->true;dbug1(autonomous(Agent, Here, Action))).
 
 % notices bugs
 autonomous_decide_action(Agent, Mem0, _) :-

@@ -155,8 +155,11 @@ logic2eng(_Obj, '$VAR'(Prop), English):- format(atom(English), ' ?VAR-~w', [Prop
 logic2eng(_Obj, English, English):- english_directve(English), !.
 logic2eng(_Obj, [English|Rest], [English|Rest]):- english_directve(English), !.
 logic2eng(_Obj, [], []).
-logic2eng(Context, extra_verbose_eng(Eng), '...verbose...'(Compiled) ):-
+logic2eng(Context, extra_verbose_eng(Eng), '...extra_verbose_eng...'(Compiled) ):-
  compile_eng_txt(Context, Eng, Compiled).
+
+logic2eng(Context, extra_verbose(Logic), '...extra_verbose...'(Compiled) ):-
+ logic2eng(Context, Logic, Compiled).
 
 logic2eng(Context, single_event(Evt), Eng):- !, logic2eng(Context, Evt, Eng).
 logic2eng(_Context, '<mystery>'(Why, Prep, About), [a, (mystery), because, quoted([Prep, About]), (', '), aux(be), (Why)]):- !.
@@ -193,12 +196,16 @@ logic2eng(_Context, percept(_Agent, How, _, _), ''):- How == know, !.
 logic2eng(_Context, percept(_Agent, see, Depth, props(Object, [shape=What])), []):-
   (Depth == 1;Depth == 2), atom(Object), atom_contains(Object, What), !.
 
-logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
+logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), 
+   extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
 
 logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Object, Prep, '<mystery>'(Closed, _, _))), extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
-logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), extra_verbose_eng([nothing, Prep, Object]) ):- Depth \= 1.
+logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Object, Prep, '<mystery>'(Closed, _, _))), 
+   extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+
+logic2eng(_Context, percept(_Agent, _Sense, Depth, child_list(Object, Prep, [])), 
+   extra_verbose_eng([nothing, Prep, Object]) ):- Depth \= 1.
 
 logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)),
     [cap(subj(Agent)), es(Sense), Prep, Here, ':'  | SeeText]):-
@@ -222,8 +229,8 @@ logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, e
   logic2eng(Context, Info, What).
 
 
-logic2eng(Context, carrying(Agent, Items),
-   [cap(subj(Agent)), 'carrying:'|Text]) :-
+logic2eng(Context, held_by(Agent, Items),
+   [cap(subj(Agent)), 'held_by:'|Text]) :-
  list2eng(Context, Items, Text).
 
 

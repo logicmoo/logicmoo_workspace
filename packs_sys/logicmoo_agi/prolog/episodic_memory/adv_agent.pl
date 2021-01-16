@@ -256,14 +256,14 @@ decide_action(Agent, Mem0, Mem9):- fail,
 decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
  (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
- (trival_act(Action)->true;dbug(planner, '~w @ ~w: already about intent: ~w~n', [Agent, Here, Action])).
+ (trival_act(Action)->true;dbug1(planner(Agent, Here, Action))).
 
 decide_action(Agent, Mem0, Mem1) :-
  %must_mw1(thought(Agent, timestamp(T0), Mem0)),
  ensure_has_prompt(Agent),
  retract(mu_global:console_tokens(Agent, Words)), !,
  must_mw1((eng2cmd(Agent, Words, Action, Mem0),
- if_tracing(dbug(planner, 'Agent TODO ~p~n', [Agent: Words->Action])),
+ if_tracing(dbug1(add_intent(Agent: Words->Action))),
  add_intent( Agent, Action, Mem0, Mem1))).
 
 % Telnet client (Covered by the above)

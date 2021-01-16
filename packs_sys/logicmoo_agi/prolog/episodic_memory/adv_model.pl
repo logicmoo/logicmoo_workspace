@@ -19,8 +19,8 @@
 
 must_be_same(X, Y):- must(X==Y).
 model_prepend(X, Y, Z):- append(X, Y, Z).
-model_select(X, Y, Z):- select(X, Y, Z).
-model_select_always(X, Y, Z):- select_always(X, Y, Z).
+model_remove_if(X, Y, Z):- select(X, Y, Z).
+model_remove_always(X, Y, Z):- select_always(X, Y, Z).
 %:- ensure_loaded(adv_main).
 
 % TODO: change agent storage into a term:
@@ -41,13 +41,13 @@ update_relation( NewHow, Item, NewParent, Timestamp, M0, M2) :-
 
 remove_old_info( _NewHow, '<mystery>'(_, _, _), _NewParent, _Timestamp, M0, M0) :- !.
 remove_old_info( _NewHow, Item, _NewParent, _Timestamp, M0, M2) :-
- model_select_always(h(_OldHow, Item, _OldWhere), M0, M1),
- model_select_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
+ model_remove_always(h(_OldHow, Item, _OldWhere), M0, M1),
+ model_remove_always(h(_OldHow2, Item, _OldWhere2), M1, M2).
 
 
 remove_children(_At, '<mystery>'(_, _, _), _Object, _Timestamp, M0, M0):- !.
 remove_children( At, _, Object, Timestamp, M0, M2):-
-  model_select((h(At, _, Object)), M0, M1), !,
+  model_remove_if((h(At, _, Object)), M0, M1), !,
   remove_children( At, _, Object, Timestamp, M1, M2).
 remove_children( _At, _, _Object, _Timestamp, M0, M0).
 
@@ -70,7 +70,7 @@ update_relations( NewHow, [Item|Tail], NewParent, Timestamp, M0, M2) :-
 realize_model_exit(At, From, _Timestamp, M0, M2) :-
  model_recent(h(exit(At), From, _To), M0, M2), !.
 /*realize_model_exit(At, From, _Timestamp, M0, M2) :-
- model_select((h(exit(At), From, To)), M0, M1), !,
+ model_remove_if((h(exit(At), From, To)), M0, M1), !,
  model_prepend([(h(exit(At), From, To))], M1, M2).
 */
 realize_model_exit(At, From, _Timestamp, M0, M1) :-
@@ -133,9 +133,9 @@ update_model(Knower, Event, Timestamp, Memory, M0, M2) :- fail,
     update_model(Knower, Event, Timestamp, Memory, M1, M2).
 */
 
-update_model(_Knower, carrying(Doer, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(_Knower, held_by(Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( held_by, Objects, Doer, Timestamp, M0, M1).
-update_model(_Knower, wearing(Doer, Objects), Timestamp, _Memory, M0, M1) :-
+update_model(_Knower, worn_by(Doer, Objects), Timestamp, _Memory, M0, M1) :-
  update_relations( worn_by, Objects, Doer, Timestamp, M0, M1).
 
 
