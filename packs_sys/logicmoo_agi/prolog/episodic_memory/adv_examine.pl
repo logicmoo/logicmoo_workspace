@@ -160,6 +160,16 @@ add_child_percepts(Sense, Agent, PrepFrom, Depth, Object, S1, S2):-
  get_relation_list(Object, RelationSet, S1),
  (member(PrepFrom, RelationSet) -> UseRelationSet = [PrepFrom] ; UseRelationSet= RelationSet),
  % dmsg(get_relation_list(Object, RelationSet)),
+ findall(percept(Agent, Sense, Depth, h(At, Object, Children)),
+     ((member(At, UseRelationSet),
+       child_percepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
+ queue_agent_percept(Agent, PreceptS, S1, S2).
+
+% add_child_percepts(_Sense, _Agent, _PrepIn, Depth, _Object, S1, S1):- Depth > 2, !.
+add_child_percepts_new(Sense, Agent, PrepFrom, Depth, Object, S1, S2):-
+ get_relation_list(Object, RelationSet, S1),
+ (member(PrepFrom, RelationSet) -> UseRelationSet = [PrepFrom] ; UseRelationSet= RelationSet),
+ % dmsg(get_relation_list(Object, RelationSet)),
  findall(percept(Agent, Sense, Depth, Children),
      ((member(At, UseRelationSet),
        child_percepts_h(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
@@ -181,6 +191,27 @@ child_percepts_h(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
 
 child_percepts_h(Agent, Sense, Object, At, _Depth, Children, S1):-
  findall_set2(h(At, Object, What),
+  (g_h(At, What, Object, S1),
+   nop(once(can_sense(Agent, Sense, What, S1)))),
+   Children).
+
+
+child_percepts(Agent, Sense, Object, At, Depth, Children, S0):-  At == at,
+ getprop(Object, default_rel = Default, S0), Default\==At, !,
+ child_percepts(Agent, Sense, Object, Default, Depth, Children, S0).
+child_percepts(_Agent, _All, Object, At, _Depth, '<mystery>'(closed, At, Object), S1):- is_closed(At, Object, S1), !.
+/*act_examine(Agent, Sense, At, Here, Depth, S0, S9):-  At == at,
+ getprop(Object, default_rel = Default, S0), Default\==At, !,
+ act_examine(Agent, Sense, Default, Here, Depth, S0, S9).
+*/
+child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):- fail, !,
+ findall_set2(h(At, What, Object),
+  (g_h(At, What, Object, S1),
+   nop(once(can_sense(Agent, Sense, What, S1)))),
+   Children).
+
+child_percepts(Agent, Sense, Object, At, _Depth, Children, S1):-
+ findall_set2(What,
   (g_h(At, What, Object, S1),
    nop(once(can_sense(Agent, Sense, What, S1)))),
    Children).

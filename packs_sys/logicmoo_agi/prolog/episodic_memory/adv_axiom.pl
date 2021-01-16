@@ -385,7 +385,7 @@ axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> rec
 axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalcAx( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
-axiom_Recalc( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> recalcAx( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 4]))), !.
+axiom_Recalc( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> recalcAx( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
 axiom_Recalc( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalcAx( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
