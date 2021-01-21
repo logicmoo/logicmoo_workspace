@@ -26,8 +26,8 @@ set_prologmud_home_dir:-
 :- assertion(exists_source(prologmud(mud_loader))).
 :- endif.
 
-start_runtime_mud:-!.
-start_runtime_mud:- lst, listing(mudAtLoc).
+% start_runtime_mud:-!.
+% start_runtime_mud:- baseKB:lst, listing(mudAtLoc).
 
 % ensure_mud_startup:- !.
 ensure_mud_startup:- 

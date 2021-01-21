@@ -1031,12 +1031,12 @@ poss(actT(transfer_now,Agt,Source,Dest),_,S) :-
     state_agent_has_object(Agt,Source,S), state_agent_has_object(Agt,Dest,S),
     \+ doing_task(Agt,_,_,S).
 
-%  Agents may begin the actT(mix,Agt,) task as long as they arent doing another
+%  Agents may begin the actT(mix,Agt,...) task as long as they arent doing another
 %  task, and have possession of the container to be mixed in
 poss(actT(begin_task,Agt,actT(mix,Agt,Obj,_)),_,S) :-
     state_agent_has_object(Agt,Obj,S), \+ doing_task(Agt,_,_,S).
 
-%  Agents may begin the actT(chop,Agt,) task as long as they arent doing another
+%  Agents may begin the actT(chop,Agt,...) task as long as they arent doing another
 %  task, and have possession of the container whose contents to chop
 poss(actT(begin_task,Agt,actT(chop,Agt,Obj)),_,S) :-
     state_agent_has_object(Agt,Obj,S), \+ doing_task(Agt,_,_,S).

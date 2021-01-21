@@ -315,3 +315,4 @@ onSpawn mudAreaConnected(tBedRoom, tClosetRoom).
 onSpawn mudAreaConnected(tKitchen, tBackYard).
 onSpawn mudAreaConnected(iArea1008, tBackYard).
 
+

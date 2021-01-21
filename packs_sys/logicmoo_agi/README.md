@@ -1,13 +1,9 @@
-# Narsese on Prolog (NP)
+# Logicmoo AGI for LM489
 
-This is a SWI-Prolog pack that runs Narsese like AGI
+This is a SWI-Prolog pack that runs LM489
 
-AGI for Prolog is a completely new platform and not branched from the existing AGI codebase. The Narsese in Prolog (NP) system takes the logic and conceptual ideas of AGI, and will be doing event handling and procedural learning much like ANSNA.
- 
 - LOGICMOO IRC channel #logicmoo on [freenode.net](irc://irc.freenode.net:+6697/logicmoo).
 - LOGICMOO Telegram at [https://t.me/LogicMoo](https://t.me/LogicMoo)
-- NARS mailing list at https://groups.google.com/forum/?fromgroups#!forum/open-nars
-- NARS on IRC channel #nars on freenode.net.
 
 
 
@@ -20,7 +16,7 @@ Using SWI-Prolog 7.1 or later:
 
 
 Source code available and pull requests accepted at
-http://github.com/logicmoo/narsese
+https://logicmoo.org/gitlab/logicmoo/logicmoo_workspace/-/tree/master/packs_sys/logicmoo_agi
 
 ```prolog
 ?- use_module(library(logicmoo_agi)).

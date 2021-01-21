@@ -113,9 +113,9 @@ solution_file(fred).
 
 %:-set_prolog_flag(unknown,fail).
 
-:- discontiguous solve/1.
+:- discontiguous hyhtn_new_solve/1.
 
-solve(Id) :-
+hyhtn_new_solve(Id) :-
 	htn_task(Id,Goal,Init),
 	pprint_ecp(red,htn_task(Id,Goal,Init)),
 	once(solve_once(Id,Goal,Init)).
@@ -139,7 +139,7 @@ solve_once(Id,Goal,Init) :-
 	write('END FILE'),nl,nl,
 	clean_problem.
 
-solve(Id) :- 
+hyhtn_new_solve(Id) :- 
     !,
     planner_task(Id,Goal,Init),
 	pprint_ecp(cyan,planner_task(Id,Goal,Init)),
@@ -147,7 +147,7 @@ solve(Id) :-
         show_result_and_clean(_,Id,Sol,[Id]).
         		
 
-solve(Id) :-
+hyhtn_new_solve(Id) :-
 	planner_task(Id,Goal,Init),
 	pprint_ecp(green,planner_task(Id,Goal,Init)),
 	once(time(solve_once_pt(Id,Goal,Init))).
@@ -172,10 +172,10 @@ tell(user),
 	write('END FILE'),nl,nl,
 	clean_problem.
 
-solve(_Id) :- !.
+hyhtn_new_solve(_Id) :- !.
 		
 
-solve(Id) :- 
+hyhtn_new_solve(Id) :- 
 	htn_task(Id,Goal,Init),
 	once(planner_interface(Goal,Init,Sol,_)),
 %	solution_file(F),
@@ -2096,24 +2096,24 @@ list(A) :-
 :- assert(soln_size(0)).
 :- assert(plan_used(0)).
 
-solve(N,FN):-
+hyhtn_new_solve(N,FN):-
    N < FN,
    tell(user),
    nl,write('task '), write(N),write(': '),nl,
    solution_file(F),
    tell(F),
    nl,write('task '), write(N),write(': '),nl,
-   solve(N),
+   hyhtn_new_solve(N),
    Ni is N+1,
-   solve(Ni,FN).
-solve(FN,FN):-
+   hyhtn_new_solve(Ni,FN).
+hyhtn_new_solve(FN,FN):-
    tell(user),nl,write('task '),
    write(FN),write(': '),nl,
    solution_file(F),
    tell(F),
    nl,write('task '),
    write(FN),write(': '),nl,
-   solve(FN),
+   hyhtn_new_solve(FN),
    retractall(sum(_)),
    assert(sum(0)),
    sum_time(CP),
@@ -2179,8 +2179,8 @@ l_file(F):-
    if_defined(/*ocluser*/ocl:force_reload_mpred_file(F),
               if_defined(/*ocluser*/ocl:with_mpred_consult(/*ocluser*/ocl:consult(F)),/*ocluser*/ocl:consult(F))).
 
-solve_file(F):-with_filematch(l_file(wfm(F))), doall(solve(_)).
-solve:- solve_file(test_hyhtn).
+solve_file(F):-with_filematch(l_file(wfm(F))), doall(hyhtn_new_solve(_)).
+hyhtn_new_solve:- solve_file(test_hyhtn).
 
 
 :- multifile htn_task/3.
@@ -2498,7 +2498,7 @@ post_header:- dmsg(post_header),fail, forall(clause(post_header_hook,G),G).
 
 hyhtn_run_tests(Call) :- 
   statistics_runtime(InTime),  
-  locally(doing(hyhtn_run_tests(Call)),
+  locally(doing(hyhtn_run_tests(Call)),
    call_cleanup(Call, 
   ((
  statistics_runtime(OutTime),
@@ -2559,7 +2559,7 @@ time_as(Name,Goal):-
    format(user_error,'~N~n~w: ~f (wall ~f)~n',[Name,RTIM,WTIM]),!.
 
 test_ocl:- update_changed_files,   
-   forall(time(solve(_N)),nl).
+   forall(time(hyhtn_new_solve(_N)),nl).
 
 test_ocl(File):- forall(filematch(File,FM),test_ocl0(FM)).
 
