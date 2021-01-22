@@ -170,7 +170,8 @@ walk_head_body(Head, Body, _) :-
     fail.
 
 walk_called_mod(G, C, M, CM, Opts) :-
-    ( atom(M)
+    ( atom(M),
+      atom(CM)
     ->setup_call_cleanup(
           ( '$current_source_module'(OldM),
             '$set_source_module'(CM)

@@ -37,23 +37,8 @@
 :- use_module(library(implemented_in_base)).
 :- use_module(library(dynamic_locations)).
 
-:- dynamic prepared/0.
-
-prepare :-
-    dynamic_locations([source(false),
-                       infer_meta_predicates(false),
-                       autoload(false),
-                       evaluate(false),
-                       trace_reference(_),
-                       module_class([user, system, library])]),
-    retractall(prepared),
-    assertz(prepared).
-
 implemented_in(MGoal) :-
-    ( prepared
-    ->true
-    ; prepare
-    ),
+    infer_dynl_if_required,
     forall(implemented_in(MGoal, From, Args),
            print_message(information, at_location(From,
                                                   implemented_in(Args)))).

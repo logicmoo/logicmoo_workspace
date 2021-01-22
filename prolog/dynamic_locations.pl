@@ -33,11 +33,19 @@
 */
 
 :- module(dynamic_locations,
-          [dynamic_locations/1]).
+          [dynamic_locations/1,
+           infer_dynl_if_required/0,
+           infer_location_dynamic/3,
+           inferred_dynl/0,
+           cleanup_dynl_db/0
+          ]).
 
 :- use_module(library(option)).
 :- use_module(library(location_utils)).
 :- use_module(library(codewalk)).
+
+:- dynamic
+    inferred_dynl/0.
 
 dynamic_locations(Options) :-
     option(module(M), Options, M), % Be careful, this is required to let M be
@@ -48,3 +56,26 @@ dynamic_locations(Options) :-
 :- public collect_dynamic_locations/4.
 collect_dynamic_locations(M, MGoal, _, From) :-
     record_location_dynamic(MGoal, M, From).
+
+infer_dynl_if_required :-
+    with_mutex(infer_dynl,
+               ( \+ inferred_dynl
+               ->dynamic_locations([source(false),
+                                    infer_meta_predicates(false),
+                                    autoload(false),
+                                    evaluate(false),
+                                    trace_reference(_),
+                                    module_class([user, system, library])]),
+                 assertz(inferred_dynl)
+               ; true
+               )).
+
+cleanup_dynl_db :-
+    cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
+    retractall(inferred_dynl).
+
+infer_location_dynamic(MGoal, M, From) :-
+    ( \+ inferred_dynl
+    ->record_location_dynamic(MGoal, M, From)
+    ; true
+    ).

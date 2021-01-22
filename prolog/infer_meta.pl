@@ -49,9 +49,10 @@ cleanup_inferred_meta :-
     retractall(prolog_metainference:inferred_meta_pred(_, _, _)).
 
 infer_meta_if_required :-
-    ( predicate_property(prolog_metainference:inferred_meta_pred(_, _, _),
-                         number_of_clauses(0 ))
-    ->infer_meta_assertions,
-      infer_meta_predicates
-    ; true
-    ).
+    with_mutex(infer_meta,
+               ( predicate_property(prolog_metainference:inferred_meta_pred(_, _, _),
+                                    number_of_clauses(0 ))
+               ->infer_meta_assertions,
+                 infer_meta_predicates
+               ; true
+               )).

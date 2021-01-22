@@ -51,6 +51,7 @@
 :- use_module(library(codewalk)).
 :- use_module(library(extra_location)).
 :- use_module(library(location_utils)).
+:- use_module(library(dynamic_locations)).
 :- use_module(library(from_utils)).
 
 :- multifile
@@ -69,7 +70,7 @@ called_from(Ref, Caller) :-
     ( called_from(Ref, _CM, Caller, [], Sorted),
       maplist(print_call_point, Sorted),
       fail
-    ; cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
+    ; cleanup_dynl_db,
       retractall(called_from_db(_, _, _, _, _))
     ).
 
@@ -88,7 +89,6 @@ collect_called_from(H, M, CM, Caller, Options, Sorted) :-
     sort(Pairs, Sorted).
 
 collect_called_from(Ref, M, CM, Caller, Options1) :-
-    cleanup_loc_dynamic(_, _, dynamic(_, _, _), _),
     retractall(called_from_db(_, _, _, _, _)),
     merge_options([source(true),
                    infer_meta_predicates(false),

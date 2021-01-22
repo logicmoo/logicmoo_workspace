@@ -33,16 +33,18 @@
 */
 
 :- module(checker,
-          [showcheck/1, showcheck/2, checkall/0, checkall/1, checkallc/1,
-           checkeach/2, check_results/2, check_results/3, available_checker/1,
-           head_report/1, body_report/1, body_report/2, full_report/1]).
+          [check_wrapper/1, showcheck/1, showcheck/2, checkallc/1, checkeach/2,
+           checkall/0, checkall/1, body_report/1, body_report/2, full_report/1,
+           check/3, check_results/2, check_results/3, available_checker/1,
+           head_report/1
+          ]).
 
 :- use_module(library(lists)).
 :- use_module(library(atomics_atom)).
 :- use_module(library(thread)).
 :- use_module(library(group_pairs_or_sort)).
 :- use_module(library(infer_meta)).
-:- use_module(library(location_utils)).
+:- use_module(library(dynamic_locations)).
 % This provides extra information to prolog_codewalk but will not be required if
 % you use source_codewalk instead:
 :- use_module(library(ai_extra_clauses), []).
@@ -96,9 +98,6 @@ user:prolog_clause_name(Ref, Name) :-
     Name = erased(M:PI).
 user:prolog_clause_name(_, '<meta-call>').
 */
-
-cleanup_db :-
-    cleanup_loc_dynamic(_, _, dynamic(_, _, _), _).
 
 showcheck(Checker) :-
     showcheck(Checker, []).
@@ -176,6 +175,8 @@ checkall(Mapper, Options) :-
     findall(C, available_checker(C), CL),
     check_wrapper(call(Mapper, checkeach(Options), CL)).
 
+:- meta_predicate check_wrapper(0 ).
+
 check_wrapper(Goal) :-
     with_prolog_flag(
         check_database_preds, true,
@@ -184,7 +185,7 @@ check_wrapper(Goal) :-
             setup_call_cleanup(
                 infer_meta_if_required,
                 Goal,
-                cleanup_db))).
+                cleanup_dynl_db))).
 
 checkeach(Options, Checker) :-
     infocheck(Checker, T),

@@ -55,6 +55,7 @@ checker:check(trivial_fails, Result, Options) :-
     check_trivial_fails(Options, Result).
 
 check_trivial_fails(Options1, Pairs) :-
+    infer_dynl_if_required,
     select_option(match_ai(MatchAI), Options1, Options2, match_head),
     merge_options(Options2,
                   [infer_meta_predicates(false),
@@ -63,7 +64,6 @@ check_trivial_fails(Options1, Pairs) :-
                    trace_reference(_),
                    module_class([user, system, library])
                   ], Options),
-    dynamic_locations(Options),
     walk_code([on_trace(collect_trivial_fails(MatchAI))|Options]),
     findall(warning-(Loc-Args),
             ( retract(trivial_fail(Args, From)),
