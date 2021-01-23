@@ -356,9 +356,8 @@ aXiom( try(Agent, act3('switch',Agent,[ OnOff, Thing]))) ==>>
   send_1percept(Agent, [success(true, 'OK')]).
  
   
-axiom_Recalc_e( try(Agent, act3('inventory',[])), RECALC) ==>> 
-  can_sense(Agent, see, Agent),
-  RECALC = ( try(Agent, act3('examine',Agent,[ Agent]))).
+axiom_Recalc_e( try(Agent, act3('inventory',Who,[])), RECALC) ==>> 
+  RECALC = ( try(Agent, act3('examine',Agent,[ Who]))).
 
 
 
