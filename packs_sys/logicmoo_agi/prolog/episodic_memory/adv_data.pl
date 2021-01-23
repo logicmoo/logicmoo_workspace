@@ -75,18 +75,19 @@ dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 :- asserta(istate([ structure_label(istate), propOf(istate, world) ])).
 
 % this hacks the state above
+:- rtrace(push_to_state([in(floyd, pantry)])).
+
 :- push_to_state([
 
 
 % Relationships
 
-in(floyd, pantry),
 in(player, kitchen),
-h(worn_by,watch, player),
-h(held_by,bag, player),
+worn_by(watch, player),
+held_by(bag, player),
 
 in(coins, bag),
-h(held_by,wrench, floyd),
+held_by(wrench, floyd),
 
 % eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
 % add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
@@ -171,7 +172,7 @@ dining_room type_props place.
 
    type_props(kitchen, [inherit(place), desc("cooking happens here")]),
 
-   h(reverse(on), table, table_leg),
+   h(spatial, reverse(on), table, table_leg),
    on(box, table),
    in(bowl, box),
    in(flour, bowl),
@@ -455,7 +456,7 @@ type_props(screendoor, [
   ~can(move),
   ~can(take),
    oper( ( act3('discard', $agent ,[ Thing])),
-    precond(h(child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
+    precond(h(spatial, child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
     body( ( act3('take', $agent,[ Thing, in, $self])))), % body(clause)
    % inherit(container),
    has_rel(exit(_))

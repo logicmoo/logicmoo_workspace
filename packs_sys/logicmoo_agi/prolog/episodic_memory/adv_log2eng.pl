@@ -201,17 +201,17 @@ logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])),
 
 logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
 
-logic2eng(_Context, percept(_Agent, Sense, Depth, h(Prep, Object, '<mystery>'(Closed, _, _))), 
+logic2eng(_Context, percept(_Agent, Sense, Depth, h(spatial, Prep, Object, '<mystery>'(Closed, _, _))), 
    extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 
-logic2eng(_Context, percept(_Agent, _Sense, Depth, h(Prep, Object, [])), 
+logic2eng(_Context, percept(_Agent, _Sense, Depth, h(spatial, Prep, Object, [])), 
    extra_verbose_eng([nothing, Prep, Object]) ):- Depth \= 1.
 
-logic2eng(Context, percept( Agent, Sense, _Depth, h(Prep, Here, Nearby)),
+logic2eng(Context, percept( Agent, Sense, _Depth, h(spatial, Prep, Here, Nearby)),
     [cap(subj(Agent)), es(Sense), Prep, Here, ':'  | SeeText]):-
  select_from(Agent, Nearby, OthersNearby), !, list2eng(Context, OthersNearby, SeeText).
 
-logic2eng(Context, percept( Agent, Sense, _Depth, h(Prep, Here, Nearby)),
+logic2eng(Context, percept( Agent, Sense, _Depth, h(spatial, Prep, Here, Nearby)),
  [cap(subj(Agent)), person(Sense, es(Sense)), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_logic(notices(Agent, How, Depth, What))):-  Depth=1,
@@ -229,7 +229,7 @@ logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, e
   logic2eng(Context, Info, What).
 
 
-logic2eng(Context, h(held_by,Agent, Items),
+logic2eng(Context, h(spatial, held_by,Agent, Items),
    [cap(subj(Agent)), 'held_by:'|Text]) :-
  list2eng(Context, Items, Text).
 
@@ -250,7 +250,7 @@ logic2eng(Context, unused_percept_props(Agent, Sense, Object, _Depth, PropList),
     person(Sense, es(Sense))| English] ) :-
  logic2eng(Context, do_props(Object, PropList), English ).
 
-logic2eng(Context, props(Object, PropList), [the(Object) |English] ) :-
+logic2eng(Context, props(Object, PropList), [the(Object),aux( be) |English] ) :-
   logic2eng(Context, do_props(Object, PropList), English ).
 
 logic2eng(_Agent, do_props(_Object, []), '<..>' ) :- !.
@@ -299,11 +299,11 @@ logic2eng(_Obj, ago(Time), [MinutesSecs, ago]):-
   ; format(atom(MinutesSecs), '~ws', [USecs])).
 
 
-logic2eng(_Obj, h(exit(West), From , To), [To, 'is', West, 'of', From]):- !.
-logic2eng(_Obj, h(ExitDown, Object, Speaker), [the(Object), 'has', Exit, Down, 'to', Speaker]):-
+logic2eng(_Obj, h(spatial,exit(West), From , To), [To, 'is', West, 'of', From]):- !.
+logic2eng(_Obj, h(spatial, ExitDown, Object, Speaker), [the(Object), 'has', Exit, Down, 'to', Speaker]):-
  compound(ExitDown),
  ExitDown=..[Exit, Down].
-logic2eng(_Obj, h(Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Speaker]).
+logic2eng(_Obj, h(spatial, Held_by , Object, Speaker), [the(Object), aux(be), Held_by, Speaker]).
 
 
 logic2eng(_Obj, EmittingLight, [aux(be), 'glowing']):- EmittingLight == emitting(see, light), !.

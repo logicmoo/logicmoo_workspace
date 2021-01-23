@@ -39,12 +39,12 @@ aXiom(X):-
 %:- defn_state_setter(will_need_touch(agent,inst)).
 
 :- expand_term((will_need_touch(Agent, Thing) ==>>
-  h(touchable, Agent, Thing)), Dmsg), dmsg(Dmsg).
+  h(spatial, touchable, Agent, Thing)), Dmsg), dmsg(Dmsg).
 
 % :- trace.
 will_need_touch(Agent, Thing) ==>>
   can_sense(Agent, _, Thing),
-  h(touchable, Agent, Thing).
+  h(spatial, touchable, Agent, Thing).
 
 :- listing(will_need_touch).
 
@@ -64,7 +64,7 @@ aXiom( Action) ==>>
  send_1percept(Agent, [answer(Answer), Answer]), !.
 
 aXiom(print_(Agent, Msg)) ==>>
-  h(descended, Agent, Here),
+  h(spatial, descended, Agent, Here),
   queue_local_event(msg_from(Agent, Msg), [Here]).
 
 aXiom( try(Agent, act3('wait',Agent,[]))) ==>>
@@ -125,23 +125,23 @@ aXiom( try(Agent, act3('go__dir',Agent,[ Walk, ExitName]))) ==>> !, %{fail}, % g
  raise_aXiom_events( status_msg( vBegin, did(Agent, act3('go__dir',Agent,[ Walk, ExitName])))),
   % {break},
   must_mw1(from_loc(Agent, Here)),
-  %must_mw1(h(exit(ExitName), Here, _There)),
-  unless(Agent, h(exit(ExitName), Here, _There),
+  %must_mw1(h(spatial,exit(ExitName), Here, _There)),
+  unless(Agent, h(spatial,exit(ExitName), Here, _There),
  ( eVent(Agent, event3('depart', Agent,[ in, Here, Walk, ExitName])),
  raise_aXiom_events( status_msg( vDone, did(Agent, act3('go__dir',Agent,[ Walk, ExitName])))))).
 
 aXiom( event3('depart', Agent,[ in, Here, Walk, ExitName])) ==>> !, % {fail},
   %member(At, [*, to, at, through, thru]),
-  h(exit(ExitName), Here, There),
-  eVent(Agent, terminates(h(_, Agent, Here))),
+  h(spatial,exit(ExitName), Here, There),
+  eVent(Agent, terminates(h(spatial, _, Agent, Here))),
  queue_local_event( event3('depart', Agent,[ Here, Walk, ExitName]), [ Here]),
    % queue_local_event( msg([cap(subj(Agent)), leaves, Here, ing(Walk), to, the, ExitName]), [Here]).
   sg(reverse_dir(ExitName, ExitNameR)),
  must_mw1( eVent(Agent, event3('arrive',Agent,[ There, Walk, ExitNameR]))).
 
-aXiom(terminates(h(Prep, Object, Here))) ==>> !, % {fail},
- %ignore(sg(declared(h(Prep, Object, Here)))),
- undeclare(h(Prep, Object, Here)).
+aXiom(terminates(h(Spatial, Prep, Object, Here))) ==>> !, % {fail},
+ %ignore(sg(declared(h(spatial, Prep, Object, Here)))),
+ undeclare(h(Spatial, Prep, Object, Here)).
 
  % ==============
 %  WALK ON TABLE
@@ -164,12 +164,12 @@ aXiom( event3('arrive',Agent,[ Here, Walk, ReverseDir])) ==>> !, % {fail},
   %sg(default_rel(PrepIn, Here)), {atom(PrepIn)},
   {PrepIn = in},
   % [cap(subj(Agent)), arrives, PrepIn, Here, ing(Walk), from, the, ReverseDir]
-  must_mw1(eVent(Agent, initiates(h(PrepIn, Agent, Here)))),
+  must_mw1(eVent(Agent, initiates(h(spatial, PrepIn, Agent, Here)))),
   must_mw1(add_intent_look(Agent)).
 */
 
-aXiom(initiates(h(Prep, Object, Dest))) ==>> !, % {fail},
- declare(h(Prep, Object, Dest)).
+aXiom(initiates(h(Spatial, Prep, Object, Dest))) ==>> !, % {fail},
+ declare(h(Spatial, Prep, Object, Dest)).
 
 
 aXiom(status_msg(_Begin, _End)) ==>> [].
@@ -191,9 +191,9 @@ axiom_Recalc( try(Agent, act3('go__obj',Agent,[ Walk, Object]))) ==>>
 % ==============
 aXiom( try(Agent, act3('go__loc',Agent,[ _Walk, There]))) ==>> % go some room
   has_rel(exit(_), There),
-  eVent(Agent, make_true(Agent, h(in, Agent, There))).
+  eVent(Agent, make_true(Agent, h(spatial, in, Agent, There))).
 
-aXiom(make_true(Doer, h(in, Agent, There))) ==>>
+aXiom(make_true(Doer, h(spatial, in, Agent, There))) ==>>
   {Doer==Agent},
   has_rel(exit(_), There),
   from_loc(Agent, Here),
@@ -229,10 +229,10 @@ aXiom(follow_step(Agent, Name, Step)) ==>>
 %    actor/agent, verb/action, direct-object/obj1, indirect-object/obj2,
 %      preposition-introducing-obj2
 %sim(put(Obj1, Obj2),
-%    (  h(descended, Thing, Agent),
+%    (  h(spatial, descended, Thing, Agent),
 %      can_sense(Agent, Sense, Agent, Where),
 %      has_rel(Relation, Where),
-%      h(descended, Agent, Here)),
+%      h(spatial, descended, Agent, Here)),
 %    moveto(Agent, Put, Thing, Relation, Where, [Here],
 %      [cap(subj(Agent)), person('put the', 'puts a'),
 %        Thing, Relation, the, Where, '.'])).
@@ -250,7 +250,7 @@ aXiom( try(Agent, act3('take',Agent,[ Thing]))) ==>> !,
 
 axiom_Recalc( try(Agent, act3('drop',Agent,[ Thing]))) ==>> !,
   will_need_touch(Agent, Thing),
-  h(At, Agent, Here),
+  h(spatial, At, Agent, Here),
   % has_rel(At, Here),
  recalcAx( try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
 
@@ -301,8 +301,8 @@ aXiom( act3('throw', Agent,[ Thing, AtTarget, Target])) ==>>
  eVent(Agent, disgorge(Agent, do_throw, Target, AtTarget, Target, [ Target], 'Something falls out.')).
 
 aXiom(thing_transforms(Thing, Broken))  ==>>
-  undeclare(h(At, Thing, Here)),
-  declare(h(At, Broken, Here)),
+  undeclare(h(spatial, At, Thing, Here)),
+  declare(h(spatial, At, Broken, Here)),
   queue_local_event([transformed(Thing, Broken)], Here).
 
 
@@ -320,9 +320,9 @@ invoke_hit(Doer, Target, _With, Vicinity) ==>>
  ignore(( % Only brittle items use this
   getprop(Target, breaks_into(Broken)),
   dbug(general, 'target ~p is breaks_into~n', [Target]),
-  undeclare(h(Prep, Target, Here)),
+  undeclare(h(spatial, Prep, Target, Here)),
   queue_local_event([transformed(Target, Broken)], Vicinity),
-  declare(h(Prep, Broken, Here)),
+  declare(h(spatial, Prep, Broken, Here)),
   disgorge(Doer, hit, Target, Prep, Here, Vicinity, 'Something falls out.'))).
 
 
@@ -331,21 +331,21 @@ aXiom( try(Agent, act3('dig',Agent,[ Hole, Where, Tool]))) ==>>
   memberchk(Where, [garden]),
   memberchk(Tool, [shovel, spade])},
   open_traverse(Tool, Agent),
-  h(in, Agent, Where),
-  \+  h(_At, Hole, Where),
+  h(spatial, in, Agent, Where),
+  \+  h(spatial, _At, Hole, Where),
   % OK, dig the hole.
-  declare(h(in, Hole, Where)),
+  declare(h(spatial, in, Hole, Where)),
   setprop(Hole, default_rel = in),
   setprop(Hole, can_be(move, f)),
   setprop(Hole, can_be(take, f)),
-  declare(h(in, dirt, Where)),
+  declare(h(spatial, in, dirt, Where)),
   queue_event(
     [ created(Hole, Where),
       [cap(subj(Agent)), person(dig, digs), 'a', Hole, 'in the', Where, '.']]).
 
 aXiom( try(Agent, act3('eat',Agent,[ Thing]))) ==>>
   (getprop(Thing, can_be(eat, t)) ->
-  (undeclare(h(_1, Thing, _2)), send_1percept(Agent, [destroyed(Thing), 'Mmmm, good!'])) ;
+  (undeclare(h(spatial, _1, Thing, _2)), send_1percept(Agent, [destroyed(Thing), 'Mmmm, good!'])) ;
   send_1percept(Agent, [failure(try(Agent, act3('eat',Agent,[ Thing]))), 'It''s inedible!'])).
 
 
@@ -364,7 +364,7 @@ aXiom( try(Agent, act3('inventory',[]))) ==>>
 
 axiom_Recalc( begaN( Agent, 'inventory', [])) ==>>
   recalcAx( try(Agent, act3('examine',Agent,[ Agent]))).
-  %findall(What, h(child, What, Agent), Inventory),
+  %findall(What, h(spatial, child, What, Agent), Inventory),
   %send_1percept(Agent, [rel_to(held_by, Inventory)]).
 
 
@@ -373,7 +373,7 @@ axiom_Recalc( begaN( Agent, 'inventory', [])) ==>>
 % Agent looks
 axiom_Recalc( try(Agent, act3('look',Agent,[]))) ==>>
   % Agent is At Here
-  h(At, Agent, Here),
+  h(spatial, At, Agent, Here),
   % Agent looks At Here
   recalcAx( try(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
 
@@ -457,7 +457,7 @@ aXiom( switch(Open, Thing)) ==>>
  %delprop(Thing, =(Open, f)),
  %setprop(Thing, =(open, t)),
  setprop(Thing, =(Open, TF)),
- h(Sense, Agent, Here),
+ h(spatial, Sense, Agent, Here),
  queue_local_event([setprop(Thing, =(Open, TF)), [Open, is, TF]], [Here, Thing]).
 
 aXiom( switch(OnOff, Thing)) ==>>

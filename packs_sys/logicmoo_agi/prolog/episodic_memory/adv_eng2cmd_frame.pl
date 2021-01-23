@@ -411,8 +411,8 @@ verb_frame1(Action, Put, % to-region, of-container
  [done_by(Action, Doer),
   cntrls(Doer, Instr), can_reach(Instr, Place),
   part_of(Place, Container),
-  or(h(How, Place, Container), h(How, Container, Place)),
-  post(h(How, Container, Object))]):- arg(_, v(put, place), Put).
+  or(h(spatial, How, Place, Container), h(spatial, How, Container, Place)),
+  post(h(spatial, How, Container, Object))]):- arg(_, v(put, place), Put).
 
 
 % %%%%%%%%%%%%%%
@@ -421,7 +421,7 @@ verb_frame1(Action, Put, % to-region, of-container
 /*
 reframed_call( Pred, Agent, [dig, ShapeHole],  act3('dig',Agent,[ ShapeHole, Where, Instr]), M) :- fail,
  in_agent_model(Agent, inst(Agent), M),
- in_agent_model(Agent, h(_, Agent, Where), M),
+ in_agent_model(Agent, h(spatial, _, Agent, Where), M),
  Instr=shovel.
 */
 

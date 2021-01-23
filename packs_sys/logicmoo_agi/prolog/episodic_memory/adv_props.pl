@@ -236,6 +236,7 @@ stores_props(props(Object, PropList), Object, PropList).
 
 
 
+push_to_state(Info):- push_2_state(Info), !.
 push_to_state(Info):- must_or_rtrace(push_2_state(Info)).
 
 
@@ -246,7 +247,7 @@ push_2_state(StateInfo):- end_of_list == StateInfo, !.
 push_2_state(StateInfo):- is_codelist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- is_charlist(StateInfo), any_to_string(StateInfo, SStateInfo), !, push_2_state(SStateInfo).
 push_2_state(StateInfo):- string(StateInfo), parse_kind(state, StateInfo, Logic), push_2_state(Logic).
-push_2_state(StateInfo):- is_list(StateInfo), !, maplist(push_2_state, StateInfo).
+push_2_state(StateInfo):- is_list(StateInfo), !, must_maplist(push_2_state, StateInfo).
 push_2_state(StateInfo):- \+ compound(StateInfo), trace_or_throw(unknown_push_to_state(StateInfo)), !.
 push_2_state(type(Type, Conj)):-  !, push_2_state(props(type(Type), Conj)).
 push_2_state(props(type(Type), Conj)):- !, props_to_list(Conj, List), push_2_state(type_props(Type, List)).
@@ -256,13 +257,14 @@ push_2_state(type_props(Obj, Conj0)):-
 push_2_state(type_props(Obj, Conj)):-
   (props_to_list(Conj, List) -> Conj\== List), !, push_2_state(type_props(Obj, List)).
 
-push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !, StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
+push_2_state(StateInfo):- StateInfo=..[F, Obj, E1, E2|More], functor_arity_state(F, 2), !,
+  StateInfoNew=..[F, Obj, [E1, E2|More]], !, push_2_state(StateInfoNew).
 push_2_state(StateInfo):- props_to_list(StateInfo, StateInfo2)->StateInfo2\=[StateInfo], !, push_2_state(StateInfo2).
 
 push_2_state(assert_text(Text)):- must(eng2log(istate, Text, Translation, [])), push_2_state(Translation).
 push_2_state(assert_text(Where, Text)):- !, must(eng2log(Where, Text, Translation, [])), push_2_state(Translation).
 
-push_2_state(StateInfo):- is_state_info(StateInfo), !, declare(StateInfo, istate, _), update_running(StateInfo).
+push_2_state(StateInfo):- is_state_info(StateInfo), !, must_or_rtrace(declare(StateInfo, istate, _)), must_or_rtrace(update_running(StateInfo)).
 push_2_state(StateInfo):- wdmsg(warn(push_2_state(StateInfo))), trace, forall(arg(_, StateInfo, Sub), push_2_state(Sub)).
 
 correct_props(_Obj, PropsIn, PropsOut):- props_to_list(PropsIn, PropsOut), !.
@@ -332,8 +334,9 @@ correct_prop(sp(Adjs, Atom), Out):-  check_atom(Atom),
   % make_class_desc_sp(Adjs, Atom, ClassDesc), push_to_state(type_props(Atom, [class_desc([ClassDesc])])),
   must(correct_prop(inherit(Atom), Out)).
 
-correct_prop(HPRED, h(FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
-correct_prop(HPRED, h(F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
+correct_prop(h(FS, X, Y),h(spatial, FS, X, Y)):- !.
+correct_prop(HPRED, h(spatial, FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
+correct_prop(HPRED, h(spatial, F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
 correct_prop(          SV, N=V):- SV=..[N, V], single_valued_prop(N), !.
 
 correct_prop( (can(Verb)), can_be(Verb, t)):- nop(check_atom(Verb)).

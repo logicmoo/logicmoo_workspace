@@ -205,13 +205,13 @@ update_network_connections_in_mutex:-
  %create_new_unlocated('watch', Watch),
     %create_new_unlocated('bag', Bag),
     %create_new_unlocated('coins', Coins),
-     % h(worn_by, Watch, Agent),
-    %h(in, Bag, Coins),
-    %h(held_by, Bag, Agent),
+     % h(spatial, worn_by, Watch, Agent),
+    %h(spatial, in, Bag, Coins),
+    %h(spatial, held_by, Bag, Agent),
 create_agent_conn(Agent, Named, Info):-
   set_advstate(props(Agent,
         [name(Named), inherit(telnet, t), inherit(humanoid, t), inherit(player, t), info(Info)])),
-  set_advstate(h(in, Agent, kitchen)),
+  set_advstate(h(spatial, in, Agent, kitchen)),
   get_advstate(S0),
   mu_create_object(Agent, S0, S9),
   set_advstate(S9).
@@ -221,7 +221,7 @@ create_agent_conn(Agent, Named, Info):-
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
+ (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
  dbug(telnet, '~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action]).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-

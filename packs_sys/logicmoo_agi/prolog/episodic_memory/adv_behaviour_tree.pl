@@ -47,7 +47,7 @@ add_bt_meta_processing(Ax):-
 is_wrap_bt(_, Var):- var(Var), !.
 is_wrap_bt(_, !):- !, fail.
 is_wrap_bt(_, Atom):- \+ compound(Atom), !.
-is_wrap_bt(h, G):- is_bt_metacall(G).
+is_wrap_bt(t, G):- is_bt_metacall(G).
 is_bt_metacall(H):- compound(H), safe_functor(H, F, A), is_metacall_bt(F, A).
 is_metacall_bt(F, _):- is_metacall_bt(F).
 is_metacall_bt(', ').

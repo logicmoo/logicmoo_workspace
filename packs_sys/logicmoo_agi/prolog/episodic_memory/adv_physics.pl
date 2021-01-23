@@ -39,7 +39,7 @@ never_equal(Sense, Thing):-
 
 :- defn_state_getter(related_with_prop(domrel, inst, place, prop)).
 related_with_prop(At, Object, Place, Prop, S0) :-
-  g_h(At, Object, Place, S0),
+  g_h(spatial, At, Object, Place, S0),
   getprop(Object, Prop, S0).
 
 % getprop(Object, can_be(open, S0),
@@ -71,8 +71,8 @@ same_rel(Rel, Prep):- subrelation(Rel, Prep).
 
 :- defn_state_getter(prep_to_rel(target, preprel, -domrel)).
 prep_to_rel(Target, Prep, Rel, S0):- has_rel(Rel, Target, S0), same_rel(Rel, Prep), !.
-prep_to_rel(Target, Prep, Rel, S0):- in_model(h(Rel, Target, _), S0), same_rel(Rel, Prep), !.
-prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, exit(Prep), Rel, S0), !.
+prep_to_rel(Target, Prep, Rel, S0):- in_model(h(spatial, Rel, Target, _), S0), same_rel(Rel, Prep), !.
+prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target,exit(Prep), Rel, S0), !.
 prep_to_rel(Target, _Prep, Rel, S0):- default_rel(Rel, Target, S0).
 
 :- defn_state_getter(has_rel(domrel, inst)).
@@ -98,67 +98,67 @@ sub_hrel(At, X, S0) :-
   subrelation(Specific, At).
 
 
-:- defn_state_getter(h(domrel, source, target)).
+:- defn_state_getter(h(spatial, domrel, source, target)).
 
-h(At, X, Y, S0):- g_h(At, X, Y, S0).
+h(spatial, At, X, Y, S0):- g_h(spatial, At, X, Y, S0).
 
-:- defn_state_getter(g_h(domrel, source, target)).
+:- defn_state_getter(g_h(spatial, domrel, source, target)).
 
 
-g_h(At, X, Y, S0) :- in_model( h(At, X, Y), S0).
+g_h(spatial, At, X, Y, S0) :- in_model( h(spatial, At, X, Y), S0).
 
-g_h(child, X, Y, S0) :- subrelation(At, child), g_h(At, X, Y, S0).
+g_h(spatial, child, X, Y, S0) :- subrelation(At, child), g_h(spatial, At, X, Y, S0).
 
-g_h(descended, X, Z, S0) :-
-  g_h(child, X, Z, S0).
-g_h(descended, X, Z, S0) :-
-  g_h(child, Y, Z, S0),
-  g_h(descended, X, Y, S0).
+g_h(spatial, descended, X, Z, S0) :-
+  g_h(spatial, child, X, Z, S0).
+g_h(spatial, descended, X, Z, S0) :-
+  g_h(spatial, child, Y, Z, S0),
+  g_h(spatial, descended, X, Y, S0).
 
-g_h(open_traverse, X1, Z1, S0):- nonvar(X1), nonvar(Z1),
+g_h(spatial, open_traverse, X1, Z1, S0):- nonvar(X1), nonvar(Z1),
  ((X1=X,Z1=Z);(X1=Z,Z1=X)),
-   ((g_h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
-                          \+ g_h(inside, X, C, S0))), !, fail.
-g_h(open_traverse, X, Z, S0):-
-  %g_h(touchable, X, Z, S0),
-  g_h(descended, X, Z, S0),
-  \+ (g_h(inside, X, Z, S0), is_closed(in, Z, S0)).
+   ((g_h(spatial, inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
+                          \+ g_h(spatial, inside, X, C, S0))), !, fail.
+g_h(spatial, open_traverse, X, Z, S0):-
+  %g_h(spatial, touchable, X, Z, S0),
+  g_h(spatial, descended, X, Z, S0),
+  \+ (g_h(spatial, inside, X, Z, S0), is_closed(in, Z, S0)).
 
-g_h(in_scope, X, Z, S0):-
-  g_h(child, X, Y, S0),
-  g_h(descended, Z, Y, S0).
-g_h(in_scope, X, Z, S0):-
-  g_h(descended, X, Z, S0).
+g_h(spatial, in_scope, X, Z, S0):-
+  g_h(spatial, child, X, Y, S0),
+  g_h(spatial, descended, Z, Y, S0).
+g_h(spatial, in_scope, X, Z, S0):-
+  g_h(spatial, descended, X, Z, S0).
 
-g_h(touchable, X, Z, S0):-
-  g_h(in_scope, X, Z, S0),
-  \+ ((g_h(inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
-                          \+ g_h(inside, X, C, S0))). % ... we are inside of that something as well
+g_h(spatial, touchable, X, Z, S0):-
+  g_h(spatial, in_scope, X, Z, S0),
+  \+ ((g_h(spatial, inside, Z, C, S0), is_closed(in, C, S0), % cant reach what is inside of something closed unless...
+                          \+ g_h(spatial, inside, X, C, S0))). % ... we are inside of that something as well
 
-g_h(takeable, X, Z, S0):-
-  g_h(touchable, X, Z, S0),
+g_h(spatial, takeable, X, Z, S0):-
+  g_h(spatial, touchable, X, Z, S0),
   X \= Z, % cant take self
   \+ getprop(Z, can_be(move, f)),
   \+ getprop(Z, can_be(take, f)),
-  \+ g_h(inside, X, Z, S0), % cant take outer object
-  \+ g_h(held_by, Z, X, S0). % cant take what already have
+  \+ g_h(spatial, inside, X, Z, S0), % cant take outer object
+  \+ g_h(spatial, held_by, Z, X, S0). % cant take what already have
 
 
-g_h(inside, X, Z, S0) :- g_h(in, X, Z, S0).
-g_h(inside, X, Z, S0) :- g_h(in, Y, Z, S0),
-          g_h(descended, X, Y, S0).
+g_h(spatial, inside, X, Z, S0) :- g_h(spatial, in, X, Z, S0).
+g_h(spatial, inside, X, Z, S0) :- g_h(spatial, in, Y, Z, S0),
+          g_h(spatial, descended, X, Y, S0).
 
-g_h(exit(Out), Inner, Outer, S0) :- in_out(In, Out),
-  g_h(child, Inner, Outer, S0),
+g_h(spatial,exit(Out), Inner, Outer, S0) :- in_out(In, Out),
+  g_h(spatial, child, Inner, Outer, S0),
   has_rel(In, Inner, S0),
   has_rel(child, Outer, S0),
   \+ is_closed(In, Inner, S0), !.
-g_h(exit(Off), Inner, Outer, S0) :- on_off(On, Off),
-  g_h(child, Inner, Outer, S0),
+g_h(spatial,exit(Off), Inner, Outer, S0) :- on_off(On, Off),
+  g_h(spatial, child, Inner, Outer, S0),
   has_rel(On, Inner, S0),
   has_rel(child, Outer, S0), !.
-g_h(exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
-  g_h(child, Inner, Outer, S0),
+g_h(spatial,exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
+  g_h(spatial, child, Inner, Outer, S0),
   has_rel(child, Inner, S0),
   has_rel(child, Outer, S0), !.
 
@@ -185,18 +185,18 @@ is_closed(At, Object, S0) :-
 :- defn_state_getter(from_loc(inst, place)).
 
 from_loc(Thing, Here, S0):-
-   g_h(child, Thing, Here, S0), !.
+   g_h(spatial, child, Thing, Here, S0), !.
 from_loc(Thing, Here, S0):-
-   g_h(open_traverse, Thing, Here, S0), !.
+   g_h(spatial, open_traverse, Thing, Here, S0), !.
 from_loc(Thing, Here, S0):-
-   g_h(_, Thing, Here, S0), !.
+   g_h(spatial, _, Thing, Here, S0), !.
 
 :- defn_state_getter(open_traverse(inst, here)).
 
 open_traverse(Thing, Here, S0):-
-   g_h(open_traverse, Thing, Here, S0).
+   g_h(spatial, open_traverse, Thing, Here, S0).
 open_traverse(Thing, Here, S0):-
-   g_h(open_traverse, Here, Thing, S0).
+   g_h(spatial, open_traverse, Here, Thing, S0).
 
 
 
@@ -209,8 +209,8 @@ open_traverse(Thing, Here, S0):-
 
 :- defn_state_getter(applied_direction(start, source, prep, domrel, target)).
 applied_direction(Start, Here, Dir, Relation, End, S0):-
- g_h(_Relation, Start, Here, S0),
- g_h(exit(Dir), Here, End, S0),
+ g_h(spatial, _Relation, Start, Here, S0),
+ g_h(spatial,exit(Dir), Here, End, S0),
  has_rel(Relation, End, S0).
 
 

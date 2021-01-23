@@ -278,17 +278,17 @@ split_k(_Agent, [], []) :- !.
 split_k(Agent, [b(P, [V|VS])|PrecondsK], Preconds):- !,
   split_k(Agent, [b(P, V), b(P, VS)|PrecondsK], Preconds).
 
-split_k(Agent, [~(k(P, X, Y))|PrecondsK], [believe(Agent, ~(h(P, X, Y))), ~(h(P, X, Y))|Preconds]):- !,
+split_k(Agent, [~(k(P, X, Y))|PrecondsK], [believe(Agent, ~(h(spatial, P, X, Y))), ~(h(spatial, P, X, Y))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [k(P, X, Y)|PrecondsK], [believe(Agent, h(P, X, Y)), h(P, X, Y)|Preconds]):- !,
+split_k(Agent, [k(P, X, Y)|PrecondsK], [believe(Agent, h(spatial, P, X, Y)), h(spatial, P, X, Y)|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [~(b(P, X, Y))|PrecondsK], [believe(Agent, ~(h(P, X, Y)))|Preconds]):- !,
+split_k(Agent, [~(b(P, X, Y))|PrecondsK], [believe(Agent, ~(h(spatial, P, X, Y)))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [b(P, X, Y)|PrecondsK], [believe(Agent, h(P, X, Y))|Preconds]):- !,
+split_k(Agent, [b(P, X, Y)|PrecondsK], [believe(Agent, h(spatial, P, X, Y))|Preconds]):- !,
   split_k(Agent, PrecondsK, Preconds).
 split_k(Agent, [isa(X, Y)|PrecondsK], [getprop(X, inherited(Y))|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
-split_k(Agent, [in(X, Y)|PrecondsK], [h(in, X, Y)|Preconds]):-
+split_k(Agent, [in(X, Y)|PrecondsK], [h(spatial, in, X, Y)|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
 split_k(Agent, [Cond|PrecondsK], [Cond|Preconds]):-
   split_k(Agent, PrecondsK, Preconds).
@@ -391,11 +391,11 @@ simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 reverse_dir(north, south, _).
 reverse_dir(reverse(ExitName), ExitName, _) :- nonvar(ExitName), !.
 reverse_dir(Dir, RDir, S0):-
- h(exit(Dir), Here, There, S0),
- h(exit(RDir), There, Here, S0), !.
+ h(spatial,exit(Dir), Here, There, S0),
+ h(spatial,exit(RDir), There, Here, S0), !.
 reverse_dir(Dir, RDir, S0):-
- h(Dir, Here, There, S0),
- h(RDir, There, Here, S0), !.
+ h(spatial, Dir, Here, There, S0),
+ h(spatial, RDir, There, Here, S0), !.
 reverse_dir(Dir, reverse(Dir), _).
 
 
@@ -420,7 +420,7 @@ add_agent_goal(Agent, Action, S0, S9) :-
   replace_declare(memories(Agent, Mem1), S1, S9).
 
 add_intent_look(Agent) ==>>
-  h(inside, Agent, _Somewhere),
+  h(spatial, inside, Agent, _Somewhere),
   add_agent_intent( Agent, try(Agent, act3('look',Agent,[]))).
 
 
@@ -472,13 +472,13 @@ action_verb_agent_args(Action, Verb, Agent, Args):-
 
 /*
 disgorge(Doer, How, Container, At, Here, Vicinity, Msg) :-
-  findall(Inner, h(child, Inner, Container), Contents),
+  findall(Inner, h(spatial, child, Inner, Container), Contents),
   dbug(general, '~p contained ~p~n', [Container, Contents]),
   moveto(Doer, How, Contents, At, Here, Vicinity, Msg).
 disgorge(Doer, How, _Container, _At, _Here, _Vicinity, _Msg).
 */
 disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) ==>>
-  findall(Inner, h(child, Inner, Container), Contents),
+  findall(Inner, h(spatial, child, Inner, Container), Contents),
    {dbug(general, '~p contained ~p~n', [Container, Contents])},
   moveto(Doer, How, Contents, Prep, Here, Vicinity, Msg).
 
@@ -486,23 +486,23 @@ disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) ==>>
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) ==>> {is_list(List)}, !,
  apply_mapl_rest_state(moveto(Doer, Verb), List, [At, Dest, Vicinity, Msg]).
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
-  undeclare(h(_, Object, From)),
-  declare(h(At, Object, Dest)),
+  undeclare(h(spatial, _, Object, From)),
+  declare(h(spatial, At, Object, Dest)),
   queue_local_event([act3('move', Doer, [Verb, Object, From, At, Dest]), Msg], Vicinity).
 
 
 event_props( act3('throw',Agent,[ Thing, _Target, Prep, Here, Vicinity]),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
- undeclare(h(_, Thing, _)),
- declare(h(Prep, NewBrokenType, Here)),
+ undeclare(h(spatial, _, Thing, _)),
+ declare(h(spatial, Prep, NewBrokenType, Here)),
  queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
  disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
 
 
 setloc_silent(Prep, Object, Dest) ==>>
- undeclare(h(_, Object, _)),
- declare(h(Prep, Object, Dest)).
+ undeclare(h(spatial, _, Object, _)),
+ declare(h(spatial, Prep, Object, Dest)).
 
 state_value(Opened=TF, Opened, TF):-!.
 state_value(NamedValue, Named, Value):-

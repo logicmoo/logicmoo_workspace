@@ -109,6 +109,7 @@ get_advstate_0(State):- with_mutex(get_advstate,
 */
 
 update_running(StateInfo):-
+ % dbug1(update_running(StateInfo)),
   ignore((get_advstate(S0), !, declare(StateInfo, S0, S1), !, set_advstate(S1))), !.
 % update_running(_StateInfo).
 
@@ -297,6 +298,7 @@ select_always(Item, List, ListWithoutItem) :- select_from(Item, List, ListWithou
 :- export(declare/3).
 :- defn_state_setter(declare(fact)).
 
+declare(h(A,B,C), State, NewState):- dbug1(declare(h(A,B,C), State, NewState)),!,dumpST,break.
 declare(Fact, State, NewState):- must_mw1(declare_0(Fact, State, NewState)).
 
 declare_0(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, notrace(declare_list(Fact, State, NewState)).
@@ -428,6 +430,8 @@ is_state_info(StateInfo):- safe_functor(StateInfo, F, A),
 
 functor_arity_state(F, A):- is_type_functor(state, F, A).
 functor_arity_state(type, 2).
+%functor_arity_state(F, A):- is_spatial_rel(F).
+%functor_arity_state(F, A):- is_spatial_rel(F).
 
 episodic_mem(x(floyd, _), _Figment) :-!.
 episodic_mem(Agent, Figment) :- is_list(Figment), !, forall(member(F, Figment), episodic_mem(Agent, F)).

@@ -172,14 +172,14 @@ invoke_metacmd(Doer, inspect(Self, getprop(Target, NamedProperty)), S0, S0) :-
 invoke_metacmd(Doer, rez(Type), S0, S9) :-
  must_security_of(Doer, wizard),
  must_mw1((mu_current_agent(Agent),
- g_h(Prep, Agent, Here, S0),
+ g_h(spatial, Prep, Agent, Here, S0),
  create_new_unlocated(Type, Object, S0, S1),
- declare(h(Prep, Object, Here), S1, S9),
+ declare(h(spatial, Prep, Object, Here), S1, S9),
  player_format(Doer, 'You now see a ~w.~n', [Object]))).
 
 invoke_metacmd(Doer, derez(Object), S0, S1) :-
  must_security_of(Doer, wizard),
- undeclare(h(_, Object, _), S0, S1),
+ undeclare(h(spatial, _, Object, _), S0, S1),
  player_format(Doer, 'It vanishes instantly.~n', []).
 
 invoke_metacmd(Doer, PropCmd, S0, S1) :-

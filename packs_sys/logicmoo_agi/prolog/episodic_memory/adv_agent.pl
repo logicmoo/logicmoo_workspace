@@ -153,8 +153,8 @@ invoke_introspect(Agent, try(Other,Command), Answer, M0) :- Other == Agent, !,
   invoke_introspect(Agent, Command, Answer, M0).
 
 invoke_introspect(Agent, path(There), Answer, M0) :- !,
-   declared(h(_, _, There), M0),
-   declared(h(_, Agent, Here), M0),
+   declared(h(spatial, _, _, There), M0),
+   declared(h(spatial, _, Agent, Here), M0),
   invoke_introspect(Agent, path(Here, There), Answer, M0).
 
 invoke_introspect(Agent, path(Here, There), Answer, M0) :-
@@ -255,7 +255,7 @@ decide_action(Agent, Mem0, Mem9):- fail,
 
 decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared(h(in, Agent, Here), advstate)->true;Here=somewhere),
+ (declared(h(spatial, in, Agent, Here), advstate)->true;Here=somewhere),
  (trival_act(Action)->true;dbug1(planner(Agent, Here, Action))).
 
 decide_action(Agent, Mem0, Mem1) :-

@@ -27,21 +27,21 @@ implications(Self, did(_Agent, Action), Preconds, Effects):- nonvar(Action), !, 
 implications(Self, doing(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Self, Action, Preconds, Effects).
 
 implications( does, ( act3('go__dir',Agent,[ Walk, ExitName])),
-     [ h(In, Agent, Here), h(exit(ExitName), Here, There) ],
+     [ h(spatial, In, Agent, Here), h(spatial,exit(ExitName), Here, There) ],
      [ event(event3('moving_in_dir',Agent, [Walk, ExitName, In, Here, In, There])) ]):- fail.
 
 
 implications(event, event3('moving_in_dir',Object, [Manner, ExitName, From, Here, To, There]),
-     [ Here \= There, h(exit(ExitName), Here, There), h(exit(ReverseExit), There, Here) ],
+     [ Here \= There, h(spatial,exit(ExitName), Here, There), h(spatial,exit(ReverseExit), There, Here) ],
  [ event( event3('depart', Object,[ From, Here, Manner, ExitName])),
    event( event3('arrive',Object,[ To, There, Manner, ReverseExit]))
         ]).
 
 implications( event, event3('depart', Agent,[ In, There, _Walk, ExitName]),
-    [ h(In, Agent, There), h(exit(ExitName), There, _)], [~h(In, Agent, There)]).
+    [ h(spatial, In, Agent, There), h(spatial,exit(ExitName), There, _)], [~h(spatial, In, Agent, There)]).
 
 implications( event, event3('arrive', Agent,[ In, Here, _Walk, ReverseExit]),
-    [~h(In, Agent, Here), h(exit(ReverseExit), Here, _)], [ h(In, Agent, Here)]).
+    [~h(spatial, In, Agent, Here), h(spatial,exit(ReverseExit), Here, _)], [ h(spatial, In, Agent, Here)]).
 
 
 only_goto:- fail, true.
@@ -62,19 +62,19 @@ oper_db(Agent, ( act3('wait',Agent,[])), [], []).
 
 oper_db(Agent, ( act3('go__dir',Agent,[ Walk, ExitName])),
    [ Here \= Agent, There \= Agent, Here \= There,
-    h(In, Agent, Here), % must be h/3 ?
+    h(spatial, In, Agent, Here), % must be hhh/3 ?
     b(exit(ExitName), Here, _),
-    h(exit(ExitName), Here, There),
+    h(spatial,exit(ExitName), Here, There),
     ReverseExit \= ExitName,
-    h(exit(ReverseExit), There, Here)],
+    h(spatial,exit(ReverseExit), There, Here)],
    [
-     % implies believe(Agent, ~h(in, Agent, Here)),
+     % implies believe(Agent, ~h(spatial, in, Agent, Here)),
  percept_local(Here, event3('depart', Agent,[ In, Here, Walk, ExitName])),
-   ~h(In, Agent, Here),
-    h(In, Agent, There),
+   ~h(spatial, In, Agent, Here),
+    h(spatial, In, Agent, There),
    %b(exit(ExitName), Here, There),
    %b(exit(ReverseExit), There, Here),
-   % implies, believe(Agent, h(in, Agent, There)),
+   % implies, believe(Agent, h(spatial, in, Agent, There)),
  percept_local(There, event3('arrive',Agent,[ In, There, Walk, ReverseExit]))
    %  ~b(In, Agent, Here),
    %   b(In, Agent, There),
@@ -92,33 +92,33 @@ oper_db(Agent, ( act3('go__dir',Agent,[ _Walk, ExitName])),
         b(in, Agent, There)
      ]):- fail.
 
-% equiv( percept_local(Here, event3('depart', Agent,[ In, Here, Walk, ExitName]))) ~h( in, Agent, Here)
+% equiv( percept_local(Here, event3('depart', Agent,[ In, Here, Walk, ExitName]))) ~h(spatial,  in, Agent, Here)
 
 oper_db(Agent, ( act3('go__dir',Agent,[ Walk, Escape])),
      [ Object \= Agent, Here \= Agent,
        k(OldIn, Agent, Object),
-       h(NewIn, Object, Here),
+       h(spatial, NewIn, Object, Here),
        Object \= Here
      ],
      [
  percept_local(Object, event3('depart', Agent,[ OldIn, Object, Walk, Escape])),
-        % implies believe(Agent, ~h(in, Agent, Object)),
+        % implies believe(Agent, ~h(spatial, in, Agent, Object)),
        ~k(OldIn, Agent, Object),
         k(NewIn, Agent, Here),
  percept_local(Here, event3('arrive',Agent,[ NewIn, Here, Walk, EscapedObject]))
-        % implies, believe(Agent, h(in, Agent, Here))
+        % implies, believe(Agent, h(spatial, in, Agent, Here))
      ]) :- Escape = escape, EscapedObject = escaped, \+ only_goto.
 
 
 % Looking causes Percepts
 oper_db(Agent, looky(Agent),
      [ Here \= Agent,
-       % believe(Agent, h(_, Agent, _)),
-       h(Sub, Agent, Here)
+       % believe(Agent, h(spatial, _, Agent, _)),
+       h(spatial, Sub, Agent, Here)
        ],
      [ foreach(
-         (h(Sub, Child, Here), must_mw1(h(At, Child, Where))),
-             percept(Agent, h(At, Child, Where))) ] ) :- \+ only_goto.
+         (h(spatial, Sub, Child, Here), must_mw1(h(spatial, At, Child, Where))),
+             percept(Agent, h(spatial, At, Child, Where))) ] ) :- \+ only_goto.
 
 
 
@@ -126,7 +126,7 @@ oper_db(Agent, looky(Agent),
 oper_db(world, invoke_events(Here),
      [ percept_local(Here, Event)],
      [ ~percept_local(Here, Event),
-       foreach((h(in, Agent, Here), 
+       foreach((h(spatial, in, Agent, Here), 
           prop(Agent, inherited(perceptq))),
        percept(Agent, Event))]):- \+ only_goto.
 
@@ -135,19 +135,19 @@ oper_db(world, invoke_events(Here),
 oper_db(Agent, percept(Agent, event3('depart', Someone,[ In, Here, Walk, ExitName])),
  [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        prop(Agent, inherited(deducer)),
-       h(In, Agent, Here) ],
-     [ believe(Agent, h(exit(ExitName), Here, _)),
+       h(spatial, In, Agent, Here) ],
+     [ believe(Agent, h(spatial,exit(ExitName), Here, _)),
        believe(Agent, prop(Someone, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
 oper_db(Agent, percept(Agent, event3('arrive',Someone,[ In, Here, Walk, ExitName])),
  [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        prop(Agent, inherited(deducer)),
-       believe(Agent, h(In, Agent, Here)) ],
+       believe(Agent, h(spatial, In, Agent, Here)) ],
 
-     [ believe(Agent, h(exit(ExitName), Here, _)),
+     [ believe(Agent, h(spatial,exit(ExitName), Here, _)),
  believe(Agent, did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName])))), % also belive someone did soething to make it happen
-       believe(Agent, h(In, Someone, Here)),
+       believe(Agent, h(spatial, In, Someone, Here)),
        believe(Agent, prop(Someone, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
@@ -155,7 +155,7 @@ oper_db(Agent, percept(Agent, event3('arrive',Someone,[ In, Here, Walk, ExitName
  [ did(Someone, ( act3('go__dir', Someone, [ Walk, ExitName]))),
        isa(Agent, deducer),
        b(Agent,
- [ percept_local(There, event3('depart', Someone,[ In, There, Walk, EnterName])),
+ [ percept_local(There, event3('depart', Someone, [In, There, Walk, EnterName])),
                 in(Agent, Here)]) ],
      [ b(Agent,
                 [exit(ExitName, Here, There),
@@ -163,16 +163,16 @@ oper_db(Agent, percept(Agent, event3('arrive',Someone,[ In, Here, Walk, ExitName
                 in(Someone, Here),
                 isa(Someone, actor)])]):- \+ only_goto.
 
-% ~h(Prep, '<mystery>'(closed, Prep, Object), Object)
+% ~h(spatial, Prep, '<mystery>'(closed, Prep, Object), Object)
 
-% h = is really true
+% hhh = is really true
 % b = is belived
 % k = is belived and really true
 oper_db(Agent, ( act3('take',Agent,[ Thing ])), % from same room
   [ Thing \= Agent, exists(Thing),
     There \= Agent,
    k(takeable, Agent, Thing),
-   h(At, Thing, There)
+   h(spatial, At, Thing, There)
   ],
   [ ~ k(At, Thing, There),
       moves( At, Thing, There, take, held_by, Thing, Agent),
@@ -182,7 +182,7 @@ oper_db(Agent, ( act3('drop',Agent,[ Thing])),
   [ Thing \= Agent, exists(Thing),
       k(held_by, Thing, Agent),
       k(At, Agent, Where)],
-  [ ~ h(held_by, Thing, Agent),
+  [ ~ h(spatial, held_by, Thing, Agent),
       moves(held_by, Thing, Agent, drop, At, Thing, Where),
       k(At, Thing, Where)] ):- \+ only_goto.
 

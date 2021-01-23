@@ -500,3 +500,11 @@ cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
 cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
 eggdrop
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
+eggdrop
+eggdrop -m
+mkdir foo
+eggdrop -m
+git checkout .
+eggdrop -m

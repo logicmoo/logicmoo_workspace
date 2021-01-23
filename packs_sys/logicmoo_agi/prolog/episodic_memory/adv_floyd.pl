@@ -68,14 +68,14 @@ autonomous_decide_action(Agent, Mem0, Mem2):-
 % If actions are queued, no further thinking required.
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
+ (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
  (trival_act(Action)->true;dbug1(autonomous(Agent, Here, Action))).
 
 % notices bugs
 autonomous_decide_action(Agent, Mem0, _) :-
  once((agent_thought_model(Agent, ModelData, Mem0),
- (\+ in_agent_model(Agent, h(_, Agent, _), ModelData) -> (pprint(Mem0, always), pprint(ModelData, always)) ; true),
- must_mw1(in_agent_model(Agent, h(_Prep, Agent, Here), ModelData)),
+ (\+ in_agent_model(Agent, h(spatial, _, Agent, _), ModelData) -> (pprint(Mem0, always), pprint(ModelData, always)) ; true),
+ must_mw1(in_agent_model(Agent, h(spatial, _Prep, Agent, Here), ModelData)),
  nonvar(Here))),
  fail.
 
@@ -102,7 +102,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  call(Try))).
 
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- (declared_advstate(h(in, Agent, Here))->true;Here=somewhere),
+ (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
  (dbug(autonomous+verbose, '~w: Can\'t think of anything to do.~n', [Agent-Here])), fail.% trace.
 
 autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
@@ -110,40 +110,40 @@ autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 % An unexplored exit here, go that way.
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(exit(Prev), There, '<mystery>'(exit, _, _)), ModelData),
- in_agent_model(Agent, h(exit(Dir), Here, There), ModelData),
- in_agent_model(Agent, h(in, Agent, Here), ModelData),
+ in_agent_model(Agent, h(spatial,exit(Prev), There, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial,exit(Dir), Here, There), ModelData),
+ in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Prev])), Mem1, Mem2).
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(in, Agent, Here), ModelData),
- in_agent_model(Agent, h(exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
+ in_agent_model(Agent, h(spatial,exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
 
 % An unexplored object!
 autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(_, '<mystery>'(closed, _, _), Object), ModelData),
- in_agent_model(Agent, h(Prep, Object, Here), ModelData),
- in_agent_model(Agent, h(Prep, Agent, Here), ModelData),
+ in_agent_model(Agent, h(spatial, _, '<mystery>'(closed, _, _), Object), ModelData),
+ in_agent_model(Agent, h(spatial, Prep, Object, Here), ModelData),
+ in_agent_model(Agent, h(spatial, Prep, Agent, Here), ModelData),
  add_intent( Agent, ( act3('open',Agent,[ Object])), Mem0, Mem1),
  add_intent( Agent, ( act3('examine',Agent,[ see, Object])), Mem1, Mem2).
 
 autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :-  fail,
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(A, '<mystery>'(W, B, C), Object), ModelData),
- add_intent( Agent, ( act3('make_true',Agent,[ ~(h(A, '<mystery>'(W, B, C), Object))])), Mem0, Mem1).
+ in_agent_model(Agent, h(spatial, A, '<mystery>'(W, B, C), Object), ModelData),
+ add_intent( Agent, ( act3('make_true',Agent,[ ~(h(spatial, A, '<mystery>'(W, B, C), Object))])), Mem0, Mem1).
 
 
 % Follow Player to adjacent rooms.
 autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
  must_mw1((
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(_, Agent, Here), ModelData))),
+ in_agent_model(Agent, h(spatial, _, Agent, Here), ModelData))),
  dif(Agent, Player), mu_current_agent(Player),
- in_agent_model(Agent, h(_, Player, There), ModelData),
- in_agent_model(Agent, h(exit(Dir), Here, There), ModelData),
+ in_agent_model(Agent, h(spatial, _, Player, There), ModelData),
+ in_agent_model(Agent, h(spatial,exit(Dir), Here, There), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
 
 autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-
@@ -179,13 +179,13 @@ consider_request(_Speaker, Agent, forget(Agent, goals), M0, M2) :-
 
 % Bring object back to Speaker.
 consider_request(Speaker, Agent, fetch(Object), M0, M1) :-
- add_goal(Agent, h(held_by, Object, Speaker), M0, M1).
+ add_goal(Agent, h(spatial, held_by, Object, Speaker), M0, M1).
 consider_request(_Speaker, Agent, ( act3('put',Agent,[ Thing, Relation, Where])), M0, M) :-
- add_goal(Agent, h(Relation, Thing, Where), M0, M).
+ add_goal(Agent, h(spatial, Relation, Thing, Where), M0, M).
 consider_request(_Speaker, Agent, ( act3('take',Agent,[ Thing])), M0, M) :-
- add_goal(Agent, h(held_by, Thing, Agent), M0, M).
+ add_goal(Agent, h(spatial, held_by, Thing, Agent), M0, M).
 consider_request(_Speaker, Agent, ( act3('drop',Agent,[ Object])), M0, M1) :-
- add_goal(Agent, ~(h(held_by, Object, Agent)), M0, M1).
+ add_goal(Agent, ~(h(spatial, held_by, Object, Agent)), M0, M1).
 
 consider_request(_Speaker, Agent, AlwaysAction, M0, M1) :-
  always_action(AlwaysAction),

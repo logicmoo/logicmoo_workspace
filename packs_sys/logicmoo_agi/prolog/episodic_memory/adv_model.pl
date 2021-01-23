@@ -36,7 +36,7 @@ model_recent(X, List, List):-
 
 % Fundamental predicate that actually modifies the list:
 update_relation(Prep, Object, '<mystery>'(How, What, Object2), _Timestamp, M0, M1):- !,
-  \+ in_model(h(What, Object, _), M0) -> model_prepend([h(Prep, Object, '<mystery>'(How, What, Object2))], M0, M1) ; M0 = M1.
+  \+ in_model(h(spatial, What, Object, _), M0) -> model_prepend([h(spatial, Prep, Object, '<mystery>'(How, What, Object2))], M0, M1) ; M0 = M1.
 
 
 update_relation( _PrepNew, _NewParent, [], _Timestamp, M0, M0):- !.
@@ -47,34 +47,34 @@ update_relation( PrepNew, NewParent, [Item|Tail], Timestamp, M0, M2) :-
 
 update_relation( PrepNew, Item, NewChild, Timestamp, M0, M2) :-
  remove_old_info( PrepNew, _, NewChild, Timestamp, M0, M1),
- model_prepend([h(PrepNew, Item, NewChild)], M1, M2).
+ model_prepend([h(spatial, PrepNew, Item, NewChild)], M1, M2).
 
 remove_old_info( _PrepNew, _NewParent, '<mystery>'(_, _, _), _Timestamp, M0, M0) :- !.
 remove_old_info( PrepNew, Item, NewChild, _Timestamp, M0, M2) :-
- model_remove_always(h(_, _, NewChild), M0, M1),
- model_remove_always(h(PrepNew, Item, NewChild), M1, M2).
+ model_remove_always(h(spatial, _, _, NewChild), M0, M1),
+ model_remove_always(h(spatial, PrepNew, Item, NewChild), M1, M2).
 
 
 
 % Batch-update relations.
 
 % If dynamic topology needs storing, use
-%  h(exit(E), Here, [There1|ThereTail], Timestamp)
+%  h(spatial,exit(E), Here, [There1|ThereTail], Timestamp)
 
 
 realize_model_exit(exit(At), From, Timestamp, M0, M2) :- nonvar(At),
   realize_model_exit(At, From, Timestamp, M0, M2), !.
 realize_model_exit(At, From, _Timestamp, M0, M2) :-
- model_recent(h(exit(At), From, _To), M0, M2), !.
+ model_recent(h(spatial,exit(At), From, _To), M0, M2), !.
 /*realize_model_exit(At, From, _Timestamp, M0, M2) :-
- model_remove_if((h(exit(At), From, To)), M0, M1), !,
- model_prepend([(h(exit(At), From, To))], M1, M2).
+ model_remove_if((h(spatial,exit(At), From, To)), M0, M1), !,
+ model_prepend([(h(spatial,exit(At), From, To))], M1, M2).
 */
 
 dumpST_break:- dumpST, break.
 
 update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
-   \+ in_model(h(exit(ExitNameReversed), Here, _There), M0),
+   \+ in_model(h(spatial,exit(ExitNameReversed), Here, _There), M0),
    realize_model_exit(ExitNameReversed, Here, Timestamp, M0, M1),
  update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
@@ -86,7 +86,7 @@ update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), 
 
 update_model(Knower, event3('arrive',Doer,[ At, Here, _, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
   % According to model, where was I?
-  %must_mw(in_model(h(_Was, Doer, There), M0)),
+  %must_mw(in_model(h(spatial, _Was, Doer, There), M0)),
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
@@ -101,7 +101,7 @@ update_model(Knower, event3('arrive',Doer,[ At, Here, _, ExitNameReversed]), Tim
   update_relation(At, Doer, Here, Timestamp, M1, M2), !. % And update location.
 
 update_model(Knower, event3('arrive', Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
-   \+ in_model(h(In, Doer, Here), M0),
+   \+ in_model(h(spatial, In, Doer, Here), M0),
    update_relation( In, [Doer], Here, Timestamp, M0, M1),
  update_model(Knower, event3('arrive', Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
@@ -127,7 +127,7 @@ update_model(Knower, percept(Doer, Sense, Depth, [First|List]), Timestamp,  Mem,
   update_model(Knower, percept(Doer, Sense, Depth,  List), Timestamp,  Mem, M1, M2).
 
 % Model objects seen Here ... this replaces the above code
-update_model(Knower, percept(Doer, _Sense, _Depth, h(At, Object, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
+update_model(Knower, percept(Doer, _Sense, _Depth, h(spatial, At, Object, Children)), Timestamp, _Mem, M0, M2) :- must_be_same(Knower, Doer),
  must_mw1((% remove_children( At, Children, Object, Timestamp, M0, M1),
    M0=M1,
    update_relation( At, Object, Children, Timestamp, M1, M2))).
@@ -150,7 +150,7 @@ update_model(_Knower, success(_), _Timestamp, _Mem, M0, M0) :- !.
 update_model(_Knower, timestamp(_,_), _Timestamp, _Mem, M0, M0) :- !.
 
 % Model objects seen Here ... this replaces the above code
-update_model(_Knower, h(At, Object, Children), Timestamp, _Mem, M0, M2) :- 
+update_model(_Knower, h(spatial, At, Object, Children), Timestamp, _Mem, M0, M2) :- 
  must_mw1((% remove_children( At, Children, Object, Timestamp, M0, M1),
    M0=M1,
    update_relation( At, Object, Children, Timestamp, M1, M2))), !.
@@ -176,8 +176,8 @@ each_update_model( Knower, [Percept|Tail], Timestamp, Memory, M0, M3) :-
 
 
 update_model_exit(At, From, To, _Timestamp, M0, M2) :-
- model_recent((h(exit(At), From, _To)), M0, M1),
- model_prepend([(h(exit(At), From, To))], M1, M2), !.
+ model_recent((h(spatial,exit(At), From, _To)), M0, M1),
+ model_prepend([(h(spatial,exit(At), From, To))], M1, M2), !.
 update_model_exit(At, From, To, _Timestamp, M0, M2) :-
- model_prepend([(h(exit(At), From, To))], M0, M2).
+ model_prepend([(h(spatial,exit(At), From, To))], M0, M2).
 

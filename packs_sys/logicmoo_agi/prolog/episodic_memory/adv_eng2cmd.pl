@@ -369,7 +369,7 @@ parse_for_kind(place, Target) --> !, parse1object(Target).
 parse_for_kind(inst, Target) --> !, parse1object(Target).
 parse_for_kind(agnt2, Target) --> !, parse1object(Target).
 parse_for_kind(object, Target) --> !, parse1object(Target).
-%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(_, Dest, _)).
+%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, Dest, _)).
 parse_for_kind(Type, Target) --> !, parse1object(Target), !, {is_adv_type(Target,Type)}.
 
 
@@ -703,9 +703,9 @@ parse_imperative_movement(Doer, [Prep], Logic, M) :- preposition(spatial, Prep),
 parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer, walk, Info, Logic, M)).
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :-
- in_agent_model(Doer, h(exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
+ in_agent_model(Doer, h(spatial,exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
 parse_imperative_movement(Doer, [ ExitName], (act3('go__dir', Doer, [ walk, ExitName])), M) :-
-  in_agent_model(Doer, h(exit(ExitName), _Place, _), M).
+  in_agent_model(Doer, h(spatial,exit(ExitName), _Place, _), M).
 
 
 parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
@@ -725,7 +725,7 @@ txt2goto(Doer, Walk, [ Prep, Dest], (act3('go__prep_obj', Doer, [ Walk, Prep, Wh
 
 % go north
 txt2goto(Doer, Walk, [ ExitName], (act3('go__dir', Doer, [ Walk, ExitName])), M) :-
- in_agent_model(Doer, h(exit(ExitName), _, _), M).
+ in_agent_model(Doer, h(spatial,exit(ExitName), _, _), M).
 % go escape
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.
@@ -737,8 +737,8 @@ txt2goto(Doer, Walk, Dest, (act3('go__loc', Doer, [ Walk, Where])), M) :-
 
 
 txt2place(List, Place, M):- is_list(List), parse2object(List, Object, M), txt2place(Object, Place, M), !.
-txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(_, _, Dest), M), Dest = Place.
-txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(_, Dest, _), M), Dest = Place.
+txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(spatial, _, _, Dest), M), Dest = Place.
+txt2place(Dest, Place, M):- in_agent_model(advstate_db, h(spatial, _, Dest, _), M), Dest = Place.
 txt2place(Dest, Place, M):- parse2object(Dest, Place, M).
 
 

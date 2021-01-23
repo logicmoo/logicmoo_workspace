@@ -221,7 +221,7 @@ process_buffer([K|T]):-
  nop(log_stuff('got key ~w.~n', [K])), global_key_hook(K), !, process_buffer(T).
 /*
 global_key_hook(redraw):-!, request_screen_update(redraw).
-global_key_hook(meta(h)):-!,
+global_key_hook(meta(hhh)):-!,
  attribute(player-hit_points, H),
  HH is H+random(6)+1,
  attribute(player-hit_points, _, HH),

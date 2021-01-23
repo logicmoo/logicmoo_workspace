@@ -72,13 +72,13 @@ is_m_type_functor(_, Type, Term):-
   is_type_functor(Type, F, A).
 
 
+is_type_functor(Type, F, A):- var(A), !,
+   type_functor(Type, Skel),
+   safe_functor(Skel, F, A).
 is_type_functor(Type, F, A):-
    safe_functor(Skel, F, A),
    type_functor(Type, Skel).
 
-%functor_arity_state(F, A):- is_spatial_rel(F).
-
-%functor_arity_state(F, A):- is_spatial_rel(F).
 
 
 %type_functor(state, holds_at(state, time)).
@@ -100,12 +100,12 @@ type_functor(memory, intent(agent, list(action))).
 type_functor(event, timestamp(ordinal, timept)).
 
 
-%type_functor(state_with_stamps, holds_at(h(domrel, inst, inst), timept)).
+%type_functor(state_with_stamps, holds_at(h(spatial, domrel, inst, inst), timept)).
 
 
 type_functor(action, say(text)).  % undirected message
 %type_functor(action, touchable(agent, instance)).
-type_functor(state, h(domrel, inst, inst)).
+type_functor(state, h(spatial, domrel, inst, inst)).
 type_functor(state, memories(inst, list(event))).
 type_functor(state, perceptq(inst, list(event))).
 type_functor(state, props(inst, list(nv))).
@@ -175,7 +175,7 @@ type_functor(mact3,go__prep_obj(agent, movetype, domrel, obj)).
 
 type_functor(event, move(agent, how, inst, from, prop, to)).
 
-type_functor(event, h(held_by,agent, list(inst))).
+type_functor(event, h(spatial, held_by,agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
 type_functor(event, percept(agent, sense, depth, props)).
