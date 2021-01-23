@@ -73,10 +73,10 @@ realize_model_exit(At, From, _Timestamp, M0, M2) :-
 
 dumpST_break:- dumpST, break.
 
-update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
+update_model(Knower, event3('arrive', [ In, Doer, Here],[Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
    \+ in_model(h(spatial,exit(ExitNameReversed), Here, _There), M0),
    realize_model_exit(ExitNameReversed, Here, Timestamp, M0, M1),
- update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
+ update_model(Knower, event3('arrive', [ In, Doer, Here], [Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -84,7 +84,7 @@ update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), 
 % model_prepend(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
-update_model(Knower, event3('arrive',Doer,[ At, Here, _, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
+update_model(Knower, event3('arrive', [At, Doer, Here], [_, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
   % According to model, where was I?
   %must_mw(in_model(h(spatial, _Was, Doer, There), M0)),
   % TODO: Handle goto(Doer, walk, on, table)
@@ -100,10 +100,10 @@ update_model(Knower, event3('arrive',Doer,[ At, Here, _, ExitNameReversed]), Tim
   must_mw(update_model_exit(ExitNameReversed, Here, There, Timestamp, M11, M1)),
   update_relation(At, Doer, Here, Timestamp, M1, M2), !. % And update location.
 
-update_model(Knower, event3('arrive', Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
+update_model(Knower, event3('arrive', [ In,  Doer, Here],[ Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
    \+ in_model(h(spatial, In, Doer, Here), M0),
    update_relation( In, [Doer], Here, Timestamp, M0, M1),
- update_model(Knower, event3('arrive', Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
+ update_model(Knower, event3('arrive', [ In,  Doer, Here],[ Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
 update_model(_Knower, act3('move', _Doer, [ _How, Object, _From, At, To]), Timestamp, _Mem, M0, M1) :-
   update_relation(At, Object, To, Timestamp, M0, M1).

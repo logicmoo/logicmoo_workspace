@@ -310,7 +310,6 @@ apply_aXioms( Action, S0, S0) :-
 
 raise_aXiom_events( Action , S0, S9) :-
   (apply_aXioms( Action, S0, S9)) *-> ! ; fail.
-
 raise_aXiom_events( Action, S0, S1) :- debugging(apply_aXioms), !, rtrace(apply_aXioms( Action, S0, S1)), !.
 raise_aXiom_events( Action) ==>>
  action_doer(Action, Agent),
@@ -453,7 +452,7 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
 action_verb_agent_args(Atom, Verb, Agent, _):- atom(Atom),!,Atom = Verb, mu_current_agent(Agent),!.
-action_verb_agent_args(event3(Verb, Agent, Args), Verb, Agent, Args):-!.
+action_verb_agent_args(event3(Verb, [Agent|Args], _), Verb, Agent, Args):-!.
 action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
 
 action_verb_agent_args(MetaAction, Verb, Agent, Args):- 
@@ -482,16 +481,17 @@ action_verb_agent_args(Action, Verb, Agent, Args):-
 
 
 /*
-disgorge(Doer, How, Container, At, Here, Vicinity, Msg) :-
-  findall(Inner, h(spatial, child, Inner, Container), Contents),
+disgorge(Doer, Verb, Container, At, Here, Vicinity, Msg) :-
+  findall(Inner, h(Spatial, child, Inner, Container), Contents),
   dbug(general, '~p contained ~p~n', [Container, Contents]),
-  moveto(Doer, How, Contents, At, Here, Vicinity, Msg).
-disgorge(Doer, How, _Container, _At, _Here, _Vicinity, _Msg).
+  moveto(Doer, Verb, Contents, At, Here, Vicinity, Msg).
+disgorge(Doer, Verb, _Container, _At, _Here, _Vicinity, _Msg).
 */
-disgorge(Doer, How, Container, Prep, Here, Vicinity, Msg) ==>>
-  findall(Inner, h(spatial, child, Inner, Container), Contents),
-   {dbug(general, '~p contained ~p~n', [Container, Contents])},
-  moveto(Doer, How, Contents, Prep, Here, Vicinity, Msg).
+disgorge(Doer, Verb, Container, Prep, Here, Vicinity, Msg) ==>>
+  verb_domain( Verb, Spatial),
+  findall(Inner, h(Spatial, child, Inner, Container), Contents),
+   {dbug(general, '~p childs: ~p~n', [Container, Contents])},
+  moveto(Doer, Verb, Contents, Prep, Here, Vicinity, Msg).
 
 :- defn_state_setter(moveto(agent, verb, listof(inst), domrel, dest, list(dest), msg)).
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) ==>> {is_list(List)}, !,
