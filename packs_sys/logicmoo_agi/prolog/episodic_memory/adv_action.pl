@@ -299,7 +299,7 @@ api_invoke( Action) ==>> apply_aXioms( Action).
 
 % apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
 
-apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1), !, apply_aXioms(RECALC, S1, S9).
+apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1),!, apply_aXioms(RECALC, S1, S9), !.
 apply_aXioms( Action) ==>> aXiom(Action), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
@@ -310,6 +310,7 @@ apply_aXioms( Action, S0, S0) :-
 
 raise_aXiom_events( Action , S0, S9) :-
   (apply_aXioms( Action, S0, S9)) *-> ! ; fail.
+
 raise_aXiom_events( Action, S0, S1) :- debugging(apply_aXioms), !, rtrace(apply_aXioms( Action, S0, S1)), !.
 raise_aXiom_events( Action) ==>>
  action_doer(Action, Agent),

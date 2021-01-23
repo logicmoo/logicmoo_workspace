@@ -51,7 +51,7 @@ will_need_touch(Agent, Thing) ==>>
 
 eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
- must_mw1(aXiom(Event)).
+ must_mw1(apply_aXioms(Event)).
 
 aXiom(MAction, S0, S9):-  stripped_term(MAction, Action), !, trace, aXiom(Action, S0, S9).
 aXiom(Action, S0, S9):- axiom_Recalc_e(Action, RECALC, S0, S9), !, apply_aXioms(RECALC, S0, S9).
@@ -247,16 +247,16 @@ aXiom( try(Agent, act3('take',Agent,[ Thing]))) ==>> !,
  eVent(Agent, begaN(Agent, 'put', [ take, Thing, held_by, Agent])).
 
 axiom_Recalc_e( try(Agent, act3('drop',Agent,[ Thing])), RECALC) ==>> !,
-  will_need_touch(Agent, Thing),
-  h(spatial, At, Agent, Here),
+  dshow_failure(will_need_touch(Agent, Thing)),
+  dshow_failure(h(spatial, At, Agent, Here)),
   % has_rel(At, Here),
  RECALC = ( try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
 
 aXiom( try(Agent, act3('put',Agent,[ Thing1, Prep, Thing2]))) ==>>
-  has_rel(At, Thing2),
-  prep_to_rel(Thing2, Prep, At),
-  (At \= in ; \+ is_closed(At, Thing2)),
-  will_need_touch(Agent, Thing2), % what if "under" an "untouchable" thing?
+  dshow_failure(has_rel(At, Thing2)),
+  dshow_failure(prep_to_rel(Thing2, Prep, At)),
+  dshow_failure((At \= in ; \+ is_closed(At, Thing2))),
+  dshow_failure(will_need_touch(Agent, Thing2)), % what if "under" an "untouchable" thing?
   % OK, put it
  raise_aXiom_events( begaN(Agent, 'put', [ put, Thing1, At, Thing2])).
 
