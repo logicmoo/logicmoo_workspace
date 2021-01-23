@@ -48,15 +48,13 @@ will_need_touch(Agent, Thing) ==>>
 
 :- listing(will_need_touch).
 
-recalcAx( Event,S,E):- aXiom( Event,S,E).
 
 eVent(Agent, Event) ==>>
  send_1percept(Agent, Event),
  must_mw1(aXiom(Event)).
 
 aXiom(MAction, S0, S9):-  stripped_term(MAction, Action), !, trace, aXiom(Action, S0, S9).
-aXiom(Action, S0, S9):- axiom_Recalc_e(Action, RECALC, S0, S9), !, aXiom(RECALC, S0, S9).
-aXiom(Action, S0, S9):- axiom_Recalc(Action, S0, S9).
+aXiom(Action, S0, S9):- axiom_Recalc_e(Action, RECALC, S0, S9), !, apply_aXioms(RECALC, S0, S9).
 
 aXiom( Action) ==>>
  action_doer(Action, Agent),
@@ -179,9 +177,9 @@ aXiom(status_msg(_Begin, _End)) ==>> [].
 % ==============
 %  WALK TABLE
 % ==============
-axiom_Recalc( try(Agent, act3('go__obj',Agent,[ Walk, Object]))) ==>>
+axiom_Recalc_e( try(Agent, act3('go__obj',Agent,[ Walk, Object])), RECALC) ==>>
   has_rel(At, Object),
- recalcAx( try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
+ RECALC = ( try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
 
 
 
@@ -270,22 +268,22 @@ aXiom( try(Agent, act3('give',Agent,[ Thing, Recipient]))) ==>>
  raise_aXiom_events( begaN(Agent, 'put', [ give, Thing, held_by, Recipient])).
 
 % do_throw ball up
-axiom_Recalc( try(Agent, act3('throw_dir',Agent,[ Thing, ExitName]))) ==>>
+axiom_Recalc_e( try(Agent, act3('throw_dir',Agent,[ Thing, ExitName])), RECALC) ==>>
   from_loc(Agent, Here),
- recalcAx( try(Agent, act3('throw_prep_obj',Agent,[ Thing, ExitName, Here]))).
+ RECALC = ( try(Agent, act3('throw_prep_obj',Agent,[ Thing, ExitName, Here]))).
 
 % throw ball at catcher
-axiom_Recalc( try(Agent, act3('throw_at',Agent,[ Thing, Target]))) ==>>
- recalcAx( try(Agent, act3('throw_prep_obj',Agent,[ Thing, at, Target]))).
+axiom_Recalc_e( try(Agent, act3('throw_at',Agent,[ Thing, Target])), RECALC) ==>>
+ RECALC = ( try(Agent, act3('throw_prep_obj',Agent,[ Thing, at, Target]))).
 
 % do_throw ball over homeplate
-axiom_Recalc( try(Agent, act3('throw_prep_obj',Agent,[ Thing, Prep, Target]))) ==>>
+axiom_Recalc_e( try(Agent, act3('throw_prep_obj',Agent,[ Thing, Prep, Target])), RECALC) ==>>
   prep_to_rel(Target, Prep, Rel),
- recalcAx( try(Agent, act3('put',Agent,['throw', Thing, Rel, Target]))).
+ RECALC = ( try(Agent, act3('put',Agent,['throw', Thing, Rel, Target]))).
 
-axiom_Recalc( try(Agent, act3('throw',Agent,[ Thing, Prep, Target]))) ==>>
+axiom_Recalc_e( try(Agent, act3('throw',Agent,[ Thing, Prep, Target])), RECALC) ==>>
  (prep_to_rel(Target, Prep, Rel);Prep=Rel),
- recalcAx( try(Agent, act3('put',Agent,['throw', Thing, Rel, Target]))).
+ RECALC = ( try(Agent, act3('put',Agent,['throw', Thing, Rel, Target]))).
 
 % is throwing the ball...
 aXiom( try(Agent, act3('throw',Agent,[ Thing, At, Target]))) ==>>
@@ -358,29 +356,31 @@ aXiom( try(Agent, act3('switch',Agent,[ OnOff, Thing]))) ==>>
   send_1percept(Agent, [success(true, 'OK')]).
  
   
-axiom_Recalc( try(Agent, act3('inventory',[])), RECALC) ==>> 
+axiom_Recalc_e( try(Agent, act3('inventory',[])), RECALC) ==>> 
   can_sense(Agent, see, Agent),
   RECALC = ( try(Agent, act3('examine',Agent,[ Agent]))).
 
 
 
+
 % Agent looks
-axiom_Recalc( try(Agent, act3('look',Agent,[]))) ==>>
+axiom_Recalc_e( try(Agent, act3('look',Agent,[])), RECALC) ==>>
   % Agent is At Here
+  % from_loc(Agent, Here),
   h(spatial, At, Agent, Here),
   % Agent looks At Here
-  recalcAx( try(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
+  RECALC = ( try(Agent, act3('examine__D3',Agent,[ see, At, Here]))).
 
-axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense]))) ==>> {is_sense(Sense)}, !, from_loc(Agent, Place), recalcAx( try(Agent, act3('examine__D3',Agent,[ see, in, Place]))).
-axiom_Recalc( try(Agent, act3('examine',Agent,[ Object]))) ==>> recalcAx( try(Agent, act3('examine__D3',Agent,[ see, at, Object]))).
-axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense, Object]))) ==>> recalcAx( try(Agent, act3('examine__D3',Agent,[ Sense, at, Object]))), !.
-axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense, Prep, Object]))) ==>> recalcAx( try(Agent, act3('examine__D3', Agent, [ Sense, Prep, Object]))), !.
+axiom_Recalc_e( try(Agent, act3('examine',Agent,[ Sense])), RECALC) ==>> {is_sense(Sense)}, !, from_loc(Agent, Place), RECALC = ( try(Agent, act3('examine__D3',Agent,[ see, in, Place]))).
+axiom_Recalc_e( try(Agent, act3('examine',Agent,[ Object])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D3',Agent,[ see, at, Object]))).
+axiom_Recalc_e( try(Agent, act3('examine',Agent,[ Sense, Object])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D3',Agent,[ Sense, at, Object]))), !.
+axiom_Recalc_e( try(Agent, act3('examine',Agent,[ Sense, Prep, Object])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D3', Agent, [ Sense, Prep, Object]))), !.
 
-axiom_Recalc( try(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalcAx( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
+axiom_Recalc_e( try(Agent, act3('examine',Agent,[ Sense, Prep, Object, Depth])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
-axiom_Recalc( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object]))) ==>> recalcAx( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
-axiom_Recalc( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth]))) ==>> recalcAx( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
+axiom_Recalc_e( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, 3]))), !.
+axiom_Recalc_e( try(Agent, act3('examine__D3',Agent,[ Sense, Prep, Object, Depth])), RECALC) ==>> RECALC = ( try(Agent, act3('examine__D5',Agent,[ Sense, Prep, Object, Depth]))), !.
 
 
 % Here does not allow Sense?

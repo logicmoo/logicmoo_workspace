@@ -299,7 +299,7 @@ api_invoke( Action) ==>> apply_aXioms( Action).
 
 % apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
 
-apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S9), !, apply_aXioms(RECALC, S0, S9).
+apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1), !, apply_aXioms(RECALC, S1, S9).
 apply_aXioms( Action) ==>> aXiom(Action), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
@@ -501,13 +501,14 @@ moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
   queue_local_event([act3('move', Doer, [Verb, Object, From, At, Dest]), Msg], Vicinity).
 
 
-event_props( act3('throw',Agent,[ Thing, _Target, Prep, Here, Vicinity]),
+event_props( act3(Verb,Agent,[ Thing, _Target, Prep, Here, Vicinity]),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
- undeclare(h(spatial, _, Thing, _)),
- declare(h(spatial, Prep, NewBrokenType, Here)),
+  verb_domain( Verb, Spatial),
+  undeclare(h(Spatial, _, Thing, _)),
+  declare(h(Spatial, Prep, NewBrokenType, Here)),
  queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
- disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]).
+  disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]):- Verb = 'throw'.
 
 
 setloc_silent(Prep, Object, Dest) ==>>
