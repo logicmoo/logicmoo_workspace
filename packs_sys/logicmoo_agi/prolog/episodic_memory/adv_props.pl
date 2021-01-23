@@ -163,15 +163,19 @@ collector_prop(desc).
 single_valued_prop(name).
 single_valued_prop(desc).
 single_valued_prop(prefix).
-single_valued_prop(mass).
-single_valued_prop(volume).
 single_valued_prop(sp).
 
+single_valued_prop(mass).
+single_valued_prop(volume).
 
+pred_to_domain_type(P, Spatial):- is_spatial_rel(P),!, spatial_domain(Spatial).
 
+:- defn_state_none(spatial_domain(-domain)).
+spatial_domain(spatial).
+
+is_spatial_rel(in).
 is_spatial_rel(worn_by).
 is_spatial_rel(held_by).
-is_spatial_rel(in).
 is_spatial_rel(on).
 is_spatial_rel(exit).
 
@@ -334,9 +338,9 @@ correct_prop(sp(Adjs, Atom), Out):-  check_atom(Atom),
   % make_class_desc_sp(Adjs, Atom, ClassDesc), push_to_state(type_props(Atom, [class_desc([ClassDesc])])),
   must(correct_prop(inherit(Atom), Out)).
 
-correct_prop(h(FS, X, Y),h(spatial, FS, X, Y)):- !.
-correct_prop(HPRED, h(spatial, FS, X, Y)):- HPRED=..[F, S, X, Y], is_spatial_rel(F), !, FS=..[F, S].
-correct_prop(HPRED, h(spatial, F, X, Y)):- HPRED=..[F, X, Y], is_spatial_rel(F), !.
+correct_prop(h(F, X, Y), h(Spatial, F, X, Y)):- must(pred_to_domain_type(F, Spatial)), !.
+correct_prop(HPRED, h(Spatial, FS, X, Y)):- HPRED=..[F, S, X, Y], pred_to_domain_type(F, Spatial), !, FS=..[F, S].
+correct_prop(HPRED, h(Spatial, F, X, Y)):- HPRED=..[F, X, Y], pred_to_domain_type(F, Spatial), !.
 correct_prop(          SV, N=V):- SV=..[N, V], single_valued_prop(N), !.
 
 correct_prop( (can(Verb)), can_be(Verb, t)):- nop(check_atom(Verb)).

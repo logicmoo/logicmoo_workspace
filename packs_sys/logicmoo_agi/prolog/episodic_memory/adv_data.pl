@@ -75,7 +75,7 @@ dest_target(loc(_, _, _, Target), Target):- nonvar(Target), !.
 :- asserta(istate([ structure_label(istate), propOf(istate, world) ])).
 
 % this hacks the state above
-:- rtrace(push_to_state([in(floyd, pantry)])).
+:- push_to_state([in(floyd, pantry)]).
 
 :- push_to_state([
 
@@ -172,7 +172,7 @@ dining_room type_props place.
 
    type_props(kitchen, [inherit(place), desc("cooking happens here")]),
 
-   h(spatial, reverse(on), table, table_leg),
+   on(table, table_leg),
    on(box, table),
    in(bowl, box),
    in(flour, bowl),
@@ -331,7 +331,7 @@ type_props(screendoor, [
    % prop_depth = 3, % what prop level to get
    % Basic fun type_props
    inherit(autoscan),
-   look_depth = 2,
+   look_depth = 3,
    user_mode = 2, % 1 = fun-only, normal, debug
    access_level = admin, % guest, user, admin, wizard
    inherit(console), inherit(humanoid)]),

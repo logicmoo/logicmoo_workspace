@@ -46,7 +46,7 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
  append(Left, [Atom, M|More], ObjS2).
-% try(Agent, act3('look',Agent,[ Spatial])) at screen door
+% try(Agent, act3('look',Agent,[ spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
 
 cmd_workarround_l([Verb, Agent,ObjS], WA ):- is_list(ObjS),flatten([Verb, Agent,ObjS],WA).
@@ -63,54 +63,54 @@ verb_alias(look, examine) :- fail.
 
 
 % drop -> move -> touch
-subsetof(touch, touch).
-subsetof(move, touch).
-subsetof(drop, move).
-subsetof(eat, touch).
-subsetof(hit, touch).
-subsetof(put, drop).
-subsetof(give, drop).
-subsetof(take, move).
-subsetof(throw, drop).
-subsetof(open, touch).
-subsetof(close, touch).
-subsetof(lock, touch).
-subsetof(unlock, touch).
-subsetof(switch, touch).
+requires_verb(touch, touch).
+requires_verb(move, touch).
+requires_verb(drop, move).
+requires_verb(eat, touch).
+requires_verb(hit, touch).
+requires_verb(put, drop).
+requires_verb(give, drop).
+requires_verb(take, move).
+requires_verb(throw, drop).
+requires_verb(open, touch).
+requires_verb(close, touch).
+requires_verb(lock, touch).
+requires_verb(unlock, touch).
+requires_verb(switch, touch).
 
-subsetof(walk, goto).
+requires_verb(walk, goto).
 
 % feel <- taste <- smell <- look <- listen (by distance)
-subsetof(listen, examine).
-% subsetof(examine, examine).
-subsetof(look, examine).
+requires_verb(listen, examine).
+% requires_verb(examine, examine).
+requires_verb(look, examine).
 % in order to smell it you have to at least be in sight distance
-subsetof(smell, look).
-subsetof(eat, taste).
-subsetof(taste, smell).
-subsetof(taste, feel).
-subsetof(feel, examine).
-subsetof(feel, touch).
-subsetof(X, Y):- ground(subsetof(X, Y)), X=Y.
+requires_verb(smell, look).
+requires_verb(eat, taste).
+requires_verb(taste, smell).
+requires_verb(taste, feel).
+requires_verb(feel, examine).
+requires_verb(feel, touch).
+requires_verb(X, Y):- ground(requires_verb(X, Y)), X=Y.
 
-subsetof(SpatialVerb1, SpatialVerb2):- compound(SpatialVerb1), compound(SpatialVerb2), !,
+requires_verb(SpatialVerb1, SpatialVerb2):- compound(SpatialVerb1), compound(SpatialVerb2), !,
  SpatialVerb1=..[Verb1, Arg1|_],
  SpatialVerb2=..[Verb2, Arg2|_],
- subsetof(Verb1, Verb2),
- subsetof(Arg1, Arg2).
+ requires_verb(Verb1, Verb2),
+ requires_verb(Arg1, Arg2).
 
-subsetof(SpatialVerb, Verb2):- compound(SpatialVerb), safe_functor(SpatialVerb, Verb, _), !,
- subsetof(Verb, Verb2).
+requires_verb(SpatialVerb, Verb2):- compound(SpatialVerb), safe_functor(SpatialVerb, Verb, _), !,
+ requires_verb(Verb, Verb2).
 
-subsetof(Verb, SpatialVerb2):- compound(SpatialVerb2), safe_functor(SpatialVerb2, Verb2, _), !,
- subsetof(Verb, Verb2).
+requires_verb(Verb, SpatialVerb2):- compound(SpatialVerb2), safe_functor(SpatialVerb2, Verb2, _), !,
+ requires_verb(Verb, Verb2).
 
 % proper subset - C may not be a subset of itself.
-psubsetof(A, B):- A==B, !, fail.
-psubsetof(A, B) :- subsetof(A, B).
-psubsetof(A, C) :-
- subsetof(A, B),
- subsetof(B, C).
+proper_requires_spatially(A, B):- A==B, !, fail.
+proper_requires_spatially(A, B) :- requires_verb(A, B).
+proper_requires_spatially(A, C) :-
+ requires_verb(A, B),
+ requires_verb(B, C).
 
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
@@ -388,14 +388,18 @@ required_reason(Agent, Required):- simplify_reason(Required, CUZ), event_failed(
 simplify_reason(_:Required, CUZ):- !, simplify_reason(Required, CUZ).
 simplify_reason(Required, CUZ):- simplify_dbug(Required, CUZ).
 
-reverse_dir(north, south, _).
+reverse_dir(north, south, _):-!.
+reverse_dir(south, north, _):-!.
 reverse_dir(reverse(ExitName), ExitName, _) :- nonvar(ExitName), !.
+reverse_dir(Dir, RDir, S0):- 
+ spatial_domain(Spatial),
+ h(Spatial,exit(Dir), Here, There, S0),
+ h(Spatial,exit(RDir), There, Here, S0), !.
+
 reverse_dir(Dir, RDir, S0):-
- h(spatial,exit(Dir), Here, There, S0),
- h(spatial,exit(RDir), There, Here, S0), !.
-reverse_dir(Dir, RDir, S0):-
- h(spatial, Dir, Here, There, S0),
- h(spatial, RDir, There, Here, S0), !.
+ h(Spatial, Dir, Here, There, S0),
+ h(Spatial, RDir, There, Here, S0), !.
+
 reverse_dir(Dir, reverse(Dir), _).
 
 
@@ -442,6 +446,7 @@ action_verb_agent_thing(Action, Verb, Agent, Thing):-
   action_verb_agent_args(Action, Verb, Agent, Args),
   (Args=[[Thing]]->true;Args=[Thing]->true;Thing=_), !.
 
+action_verb_agent_args(Atom, Verb, Agent, _):- atom(Atom),!,Atom = Verb, mu_current_agent(Agent),!.
 action_verb_agent_args(event3(Verb, Agent, Args), Verb, Agent, Args):-!.
 action_verb_agent_args(act3(Verb, Agent, Args), Verb, Agent, Args):-!.
 
@@ -527,7 +532,7 @@ change_state_0(Agent, Action, Thing, OpenedTF, S0, S):-
  expected_truth(required_reason(Agent, \+ getprop(Thing, can_be(Open, f), S0))),
 
  (
-   maybe_when(psubsetof(Open, touch), 
+   maybe_when(proper_requires_spatially(Open, touch), 
      required_reason(Agent, 
        will_need_touch(Agent, Thing, S0, _)))),
    required_reason(Agent, \+ getprop(Thing, OpenedTF, S0)),

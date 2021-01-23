@@ -76,7 +76,7 @@ extra :- true. % Fuller, but questionable if needed yet.
 :- ensure_loaded(adv_log2eng).
 :- ensure_loaded(adv_eng2cmd).
 
-:- ensure_loaded(adv_lexicon).
+%:- ensure_loaded(adv_lexicon).
 
 :- ensure_loaded(adv_quasiquote).
 
@@ -205,9 +205,9 @@ update_network_connections_in_mutex:-
  %create_new_unlocated('watch', Watch),
     %create_new_unlocated('bag', Bag),
     %create_new_unlocated('coins', Coins),
-     % h(spatial, worn_by, Watch, Agent),
-    %h(spatial, in, Bag, Coins),
-    %h(spatial, held_by, Bag, Agent),
+     % h(Spatial, worn_by, Watch, Agent),
+    %h(Spatial, in, Bag, Coins),
+    %h(Spatial, held_by, Bag, Agent),
 create_agent_conn(Agent, Named, Info):-
   set_advstate(props(Agent,
         [name(Named), inherit(telnet, t), inherit(humanoid, t), inherit(player, t), info(Info)])),
@@ -221,7 +221,7 @@ create_agent_conn(Agent, Named, Info):-
 telnet_decide_action(Agent, Mem0, Mem0):-
  % If actions are queued, no further thinking required.
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
+ agent_somewhere(Agent,Here),
  dbug(telnet, '~w @ ~w telnet: Already about to: ~w~n', [Agent, Here, Action]).
 
 telnet_decide_action(Agent, Mem0, Mem1) :-
