@@ -55,7 +55,7 @@ eVent(Agent, Event) ==>>
  must_mw1(aXiom(Event)).
 
 aXiom(MAction, S0, S9):-  stripped_term(MAction, Action), !, trace, aXiom(Action, S0, S9).
-
+aXiom(Action, S0, S9):- axiom_Recalc_e(Action, RECALC, S0, S9), !, aXiom(RECALC, S0, S9).
 aXiom(Action, S0, S9):- axiom_Recalc(Action, S0, S9).
 
 aXiom( Action) ==>>
@@ -248,11 +248,11 @@ aXiom( try(Agent, act3('take',Agent,[ Thing]))) ==>> !,
   dshow_failure(will_need_touch(Agent, Thing)),
  eVent(Agent, begaN(Agent, 'put', [ take, Thing, held_by, Agent])).
 
-axiom_Recalc( try(Agent, act3('drop',Agent,[ Thing]))) ==>> !,
+axiom_Recalc_e( try(Agent, act3('drop',Agent,[ Thing])), RECALC) ==>> !,
   will_need_touch(Agent, Thing),
   h(spatial, At, Agent, Here),
   % has_rel(At, Here),
- recalcAx( try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
+ RECALC = ( try(Agent, act3('put',Agent,[ drop, Thing, At, Here]))).
 
 aXiom( try(Agent, act3('put',Agent,[ Thing1, Prep, Thing2]))) ==>>
   has_rel(At, Thing2),
@@ -358,15 +358,9 @@ aXiom( try(Agent, act3('switch',Agent,[ OnOff, Thing]))) ==>>
   send_1percept(Agent, [success(true, 'OK')]).
  
   
-aXiom( try(Agent, act3('inventory',[]))) ==>>
+axiom_Recalc( try(Agent, act3('inventory',[])), RECALC) ==>> 
   can_sense(Agent, see, Agent),
- recalcAx( begaN(Agent, 'inventory', [])).
-
-axiom_Recalc( begaN( Agent, 'inventory', [])) ==>>
-  recalcAx( try(Agent, act3('examine',Agent,[ Agent]))).
-  %findall(What, h(spatial, child, What, Agent), Inventory),
-  %send_1percept(Agent, [rel_to(held_by, Inventory)]).
-
+  RECALC = ( try(Agent, act3('examine',Agent,[ Agent]))).
 
 
 

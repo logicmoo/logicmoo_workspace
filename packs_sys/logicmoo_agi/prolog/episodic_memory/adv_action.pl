@@ -299,6 +299,7 @@ api_invoke( Action) ==>> apply_aXioms( Action).
 
 % apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
 
+apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S9), !, apply_aXioms(RECALC, S0, S9).
 apply_aXioms( Action) ==>> aXiom(Action), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
@@ -318,6 +319,10 @@ raise_aXiom_events( Action) ==>>
 act_required_posses('lock', 'key', $agent).
 act_required_posses('unlock', 'key', $agent).
 
+:- defn_state_none(verb_domain(action, -domain)).
+%verb_domain(touch, spatial).
+verb_domain(Verb, spatial):- requires_spatially(Verb, touch),!.
+verb_domain(_, spatial):-!.
 
 act_change_opposite(f, t):-!.
 act_change_opposite(t, f):-!.

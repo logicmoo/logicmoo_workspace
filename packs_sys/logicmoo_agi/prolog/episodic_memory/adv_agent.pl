@@ -232,6 +232,8 @@ makep:-
 % CODE FILE SECTION
 %:- dbug1(ensure_loaded('adv_agents')).
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+agent_somewhere( Agent, Here):- declared(h(spatial, in, Agent, Here), advstate),!.
+agent_somewhere(_Agent, "somewhere").
 
 
 decide_action(Agent) :-
@@ -255,7 +257,7 @@ decide_action(Agent, Mem0, Mem9):- fail,
 
 decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared(h(spatial, in, Agent, Here), advstate)->true;Here=somewhere),
+ agent_somewhere(Agent,Here),
  (trival_act(Action)->true;dbug1(planner(Agent, Here, Action))).
 
 decide_action(Agent, Mem0, Mem1) :-

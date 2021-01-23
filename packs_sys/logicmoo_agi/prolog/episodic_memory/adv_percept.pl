@@ -189,7 +189,7 @@ verb_sensory(eat, taste).
 verb_sensory(feel, touch).
 verb_sensory(goto, see).
 verb_sensory(Verb, Sense):- nonvar(Verb), is_sense(Verb), Sense=Verb.
-verb_sensory(Verb, Sense):- subsetof(Verb, Verb2), Verb\=Verb2,
+verb_sensory(Verb, Sense):- requires_spatially(Verb, Verb2), Verb\=Verb2,
  verb_sensory(Verb2, Sense), \+ is_sense(Verb).
 verb_sensory(Verb, Sense):- verb_alias(Verb, Verb2), Verb\=Verb2,
  verb_sensory(Verb2, Sense), \+ is_sense(Verb).
