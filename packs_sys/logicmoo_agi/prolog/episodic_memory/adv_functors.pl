@@ -100,12 +100,10 @@ type_functor(memory, intent(agent, list(action))).
 type_functor(event, timestamp(ordinal, timept)).
 
 
-%type_functor(state_with_stamps, holds_at(h(spatial, domrel, inst, inst), timept)).
-
 
 type_functor(action, say(text)).  % undirected message
 %type_functor(action, touchable(agent, instance)).
-type_functor(state, h(spatial, domrel, inst, inst)).
+type_functor(state, h(domain, domrel, inst, inst)).
 type_functor(state, memories(inst, list(event))).
 type_functor(state, perceptq(inst, list(event))).
 type_functor(state, props(inst, list(nv))).

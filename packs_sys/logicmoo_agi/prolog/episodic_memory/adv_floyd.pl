@@ -68,7 +68,7 @@ autonomous_decide_action(Agent, Mem0, Mem2):-
 % If actions are queued, no further thinking required.
 autonomous_decide_action(Agent, Mem0, Mem0) :-
  thought_check(Agent, intent(Agent, [Action|_]), Mem0),
- (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
+ agent_somewhere(Agent,Here),
  (trival_act(Action)->true;dbug1(autonomous(Agent, Here, Action))).
 
 % notices bugs
@@ -102,7 +102,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  call(Try))).
 
 autonomous_decide_action(Agent, Mem0, Mem0) :-
- (declared_advstate(h(spatial, in, Agent, Here))->true;Here=somewhere),
+ agent_somewhere(Agent,Here),
  (dbug(autonomous+verbose, '~w: Can\'t think of anything to do.~n', [Agent-Here])), fail.% trace.
 
 autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.

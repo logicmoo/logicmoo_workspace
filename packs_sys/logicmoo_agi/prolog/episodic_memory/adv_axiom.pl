@@ -331,7 +331,7 @@ aXiom( try(Agent, act3('dig',Agent,[ Hole, Where, Tool]))) ==>>
   memberchk(Where, [garden]),
   memberchk(Tool, [shovel, spade])},
   open_traverse(Tool, Agent),
-  h(spatial, in, Agent, Where),
+  from_loc(Agent, Where),
   \+  h(spatial, _At, Hole, Where),
   % OK, dig the hole.
   declare(h(spatial, in, Hole, Where)),

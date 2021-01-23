@@ -83,13 +83,12 @@ cmdalias(turn, switch).
 cmdalias(flip, switch).
 
 is_prep(P):- munl_call(parser_chat80:prep(prep(PP), _, _, _, _)), PP==P, !.
-is_prep(P):- preposition(_, P).
+is_prep(P):- domain_prep(_, P).
 
 is_prep_for_type(P, tObject):- is_prep(P).
 
-preposition(_, P) :- xnotrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
-
-preposition(_Other, P) :-
+domain_prep(_, P) :- xnotrace(member(P, [at, down, in, inside, into, of, off, on, onto, out, over, to, under, up, with])).
+domain_prep(_Other, P) :-
  member(P, [of, beside]).
 
 compass_direction(D) :-
@@ -369,7 +368,7 @@ parse_for_kind(place, Target) --> !, parse1object(Target).
 parse_for_kind(inst, Target) --> !, parse1object(Target).
 parse_for_kind(agnt2, Target) --> !, parse1object(Target).
 parse_for_kind(object, Target) --> !, parse1object(Target).
-%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, Dest, _)).
+%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(Spatial, _, Dest, _)).
 parse_for_kind(Type, Target) --> !, parse1object(Target), !, {is_adv_type(Target,Type)}.
 
 
@@ -692,13 +691,13 @@ flee_run_escape(run).
 flee_run_escape(escape).
 
 % get [out, in, ..] Object
-parse_imperative_movement(Doer, [ get, Prep, Object], (act3('go__prep_obj', Doer, [ walk, Prep, Object])), _Mem) :- preposition( spatial, Prep).
+parse_imperative_movement(Doer, [ get, Prep, Object], (act3('go__prep_obj', Doer, [ walk, Prep, Object])), _Mem) :- domain_prep( spatial, Prep).
 % n/s/e/w/u/d
 parse_imperative_movement(Doer, [Dir], Logic, M):- maybe_compass_direction(Dir, Actual), !, must_mw1(txt2goto(Doer, walk, [Actual], Logic, M)).
 % escape/flee/run ..
 parse_imperative_movement(Doer, [Escape|Info], Logic, M):- flee_run_escape(Escape), !, must_mw1(txt2goto(Doer, run, Info, Logic, M)).
 % out/into
-parse_imperative_movement(Doer, [Prep], Logic, M) :- preposition(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep], Logic, M)).
+parse_imperative_movement(Doer, [Prep], Logic, M) :- domain_prep(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep], Logic, M)).
 % go ..
 parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer, walk, Info, Logic, M)).
 % outside
@@ -708,7 +707,7 @@ parse_imperative_movement(Doer, [ ExitName], (act3('go__dir', Doer, [ walk, Exit
   in_agent_model(Doer, h(spatial,exit(ExitName), _Place, _), M).
 
 
-parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- preposition(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
+parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- domain_prep(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
 
 % x shelf
 % go on shelf
@@ -720,7 +719,7 @@ txt2goto(Doer, Walk, [Alias| More], Logic, M) :- cmdalias(Alias, Dir), !, txt2go
 % go in kitchen
 % go in car
 txt2goto(Doer, Walk, [ Prep, Dest], (act3('go__prep_obj', Doer, [ Walk, Prep, Where])), M) :-
- preposition(spatial, Prep), !,
+ domain_prep(spatial, Prep), !,
  must_mw1(txt2place(Dest, Where, M)).
 
 % go north
@@ -730,7 +729,7 @@ txt2goto(Doer, Walk, [ ExitName], (act3('go__dir', Doer, [ Walk, ExitName])), M)
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.
 % go [out, in, ..]
-txt2goto(Doer, Walk, [ Prep], (act3('go__dir', Doer, [ Walk, Prep])), _Mem) :- preposition( spatial, Prep).
+txt2goto(Doer, Walk, [ Prep], (act3('go__dir', Doer, [ Walk, Prep])), _Mem) :- domain_prep(spatial, Prep).
 % go kitchen
 txt2goto(Doer, Walk, Dest, (act3('go__loc', Doer, [ Walk, Where])), M) :-
  txt2place(Dest, Where, M).
