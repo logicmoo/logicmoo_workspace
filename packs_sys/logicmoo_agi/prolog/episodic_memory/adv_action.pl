@@ -233,6 +233,12 @@ trival_act(_):- !, fail.
 trival_act( try(_, X)):- !, trival_act( X).
 trival_act( act3('wait',_,[])).
 
+exclude_failures(X,Y):- apply:exclude((=(failed(_))),X,Y).
+
+satisfy_each_always(Context, Cond, Memory, NewMemory):-
+  satisfy_each(Context, Cond, Memory, NewMemory0), 
+  exclude_failures(NewMemory0,NewMemory),!.
+satisfy_each_always(_Context, _Cond, Memory, NewMemory):- exclude_failures(Memory,NewMemory).
 
 satisfy_each_cond(Ctxt, [], success(Ctxt)) ==>> !.
 satisfy_each_cond(Context, [Cond|CondList], Out) ==>>
@@ -240,32 +246,51 @@ satisfy_each_cond(Context, [Cond|CondList], Out) ==>>
   ((sg(member(failed(Why))) -> Out=failed(Why) ; satisfy_each_cond(Context, CondList, Out))), !.
 % satisfy_each_cond(_Context, [Cond|_CondList], failed(Cond)) ==>> !.
 
+satisfy_each(Ctx, Cond, S0, S9) :- 
+     exclude_failures(S0, S1), S0\==S1,!,
+     satisfy_each2(Ctx, Cond, S1, S9),!.
+satisfy_each(Ctx, Cond, S0, S9) :- 
+     satisfy_each2(Ctx, Cond, S0, S9),!.
 
-satisfy_each(Context, List) ==>> {is_list(List)}, !,
+satisfy_each2(Ctx, Cond) ==>> satisfy_each1(Ctx, Cond).
+satisfy_each2(_, Cond) ==>> [failed(Cond)].
+
+satisfy_each1(_Context, h(spatial, P, _X, _Y)) ==>> {P==takeable} !.
+
+satisfy_each1(Context, List) ==>> {is_list(List)}, !,
   satisfy_each_cond(Context, List, Out), !,
   {dmust_tracing(Out\=failed(_))}.
 
-satisfy_each(_Ctx, A \= B) ==>> {dif(A, B)}, !.
+satisfy_each1(_Ctx, A \= B) ==>> {dif(A, B)}, !.
 
-satisfy_each(Context, believe(Beliver, Cond)) ==>>
+satisfy_each1(_Ctxt, exists(Ex)) ==>> !, {ground(Ex)}.
+
+
+satisfy_each1(Context, believe(Beliver, Cond)) ==>>
    maybe_undeclare(memories(Beliver, Memory)),
-   {satisfy_each(Context, Cond, Memory, NewMemory)}, !,
+   {satisfy_each_always(Context, Cond, Memory, NewMemory)}, !,
    replace_declare(memories(Beliver, NewMemory)).
 
-satisfy_each(postCond(_Action), event(Event), S0, S9) :-  raise_aXiom_events(Event, S0, S9).
+satisfy_each1(Context, believe(_Beliver, Cond)) ==>> !, satisfy_each(Context, Cond), !.
+   
 
-satisfy_each(Context, (C1, C2), S0, S9) :- !,
+satisfy_each1(postCond(_Action), event(Event), S0, S9) :-  raise_aXiom_events(Event, S0, S9).
+
+satisfy_each1(Context, (C1, C2), S0, S9) :- !,
   satisfy_each(Context, C1, S0, S1),
   satisfy_each(Context, C2, S1, S9).
+satisfy_each1(Context, (C1 ; C2), S0, S9) :- !,
+  (satisfy_each1(Context, C1, S0, S9);
+   satisfy_each(Context, C2, S0, S9)).
 
-satisfy_each(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
-satisfy_each(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
-satisfy_each(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
-satisfy_each(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
-satisfy_each(postCond(_Action), Cond) ==>> !, declare(Cond).
-satisfy_each(Context, ~(Cond)) ==>> !, (( \+ satisfy_each(Context, Cond)) ; [failed(Cond)] ).
-satisfy_each(_, Cond) ==>> declared(Cond).
-satisfy_each(_, Cond) ==>> [failed(Cond)].
+satisfy_each1(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
+satisfy_each1(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
+satisfy_each1(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
+satisfy_each1(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
+satisfy_each1(Context, ~(Cond)) ==>> !, (( \+ satisfy_each1(Context, Cond)) ; [failed(Cond)] ).
+satisfy_each1(_, call(Event)) ==>> !, raise_aXiom_events(Event).
+satisfy_each1(_, Cond) ==>> declared(Cond), !.
+satisfy_each1(postCond(_Action), Cond) ==>> !, declare(Cond).
 
 
 oper_splitk(Agent, Action, Preconds, Postconds):-
@@ -299,8 +324,8 @@ api_invoke( Action) ==>> apply_aXioms( Action).
 
 % apply_act( Action , S0, S9) :- apply_aXioms( Action , S0, S9).
 
-apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1),!, apply_aXioms(RECALC, S1, S9), !.
 apply_aXioms( Action) ==>> aXiom(Action), !.
+apply_aXioms( Act, S0, S9):- axiom_Recalc_e(Act, RECALC, S0, S1),!, apply_aXioms(RECALC, S1, S9), !.
 apply_aXioms( Act, S0, S9) :- ((cmd_workarround(Act, NewAct) -> Act\==NewAct)), !, apply_aXioms( NewAct, S0, S9).
 apply_aXioms( Action, S0, S0) :-
   notrace((dbug(general, failed_aXiom( Action)))), !, fail, \+ tracing.

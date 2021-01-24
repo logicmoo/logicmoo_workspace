@@ -73,24 +73,28 @@ realize_model_exit(At, From, _Timestamp, M0, M2) :-
 
 dumpST_break:- dumpST, break.
 
+update_model(_Knower, event3(_,_,_), _Timestamp, _Mem, M0, M0):-!.
+
 update_model(Knower, event3('arrive', [ In, Doer, Here],[Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
-   \+ in_model(h(spatial,exit(ExitNameReversed), Here, _There), M0),
-   realize_model_exit(ExitNameReversed, Here, Timestamp, M0, M1),
- update_model(Knower, event3('arrive', [ In, Doer, Here], [Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
+   reverse_dir(ExitNameReversed, ExitName, _),!,
+   \+ in_model(h(spatial,exit(ExitName), Here, _There), M0),
+   realize_model_exit(ExitName, Here, Timestamp, M0, M2),!.
+   
+% update_model(Knower, event3('arrive', [ In, Doer, Here], [Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
 % copy_term(Figment, FreshFigment),
 % model_prepend(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
-
 update_model(Knower, event3('arrive', [At, Doer, Here], [_, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
   % According to model, where was I?
   %must_mw(in_model(h(spatial, _Was, Doer, There), M0)),
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
- model_prepend(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
+ %model_prepend(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
+  reverse_dir(ExitNameReversed, ExitName, _),
     % find figment
  \+ member( attempts(Doer,  act3('go__dir',Doer,[ _, _])), RecentMem), % guarrantee recentness
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp

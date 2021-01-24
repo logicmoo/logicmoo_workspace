@@ -91,18 +91,12 @@ held_by(wrench, floyd),
 
 % eng2log("A pantry exits south to a kitchen", exit(south, pantry, kitchen)),
 % add_e2c_trans("?NP1 exits ?DIR to ?NP2", exit(DIR, NP1, NP2)),
-exit(south, pantry, kitchen),
-exit(north, kitchen, pantry),
-exit(down, pantry, basement),
-exit(up, basement, pantry),
-exit(south, kitchen, garden),
-exit(north, garden, kitchen),
-exit(east, kitchen, dining_room),
-exit(west, dining_room, kitchen),
-exit(north, dining_room, living_room),
-exit(east, living_room, dining_room),
-exit(south, living_room, kitchen),
-exit(west, kitchen, living_room),
+exit(north, kitchen, pantry), exit(south, pantry, kitchen),
+exit(down, pantry, basement), exit(up, basement, pantry),
+exit(south, kitchen, garden), exit(north, garden, kitchen),
+exit(west, kitchen, dining_room), exit(east, dining_room, kitchen),
+exit(west, dining_room, living_room), exit(east, living_room, dining_room), 
+
 
 
 in(shelf, pantry), % the shelf is in the pantry

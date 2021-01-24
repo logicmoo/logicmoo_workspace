@@ -92,7 +92,7 @@ aXiom_p2(Action) ==>>
  {dbug1(used_implications(DoesEvent, Action, Preconds, Postconds))},
  !.
 
-aXiom_p2( Action) ==>>
+aXiom_p1( Action) ==>>
  ({oper_splitk(Agent, Action, Preconds, Postconds)},
   {dbug1(using_oper_splitk(Agent, Action, Preconds, Postconds))},
  /*dmust_tracing*/
@@ -100,6 +100,7 @@ aXiom_p2( Action) ==>>
  (((sg(member(failed(Why))), send_1percept(Agent, failed(Action, Why))))
     ; (satisfy_each(postCond(_2), Postconds), send_1percept(Agent, success(Action))))),
   {dbug1(used_oper_splitk(Agent, Action, Preconds, Postconds))},!.
+
 aXiom_p2(Action, S, E) ::=
   append_termlist(Action, [S, E], ActionSE),
   current_predicate(_, mu:ActionSE), !,
