@@ -3015,16 +3015,18 @@ candidateAction([L| Ls], Result) :-
 	;  Result = CLs ).
 
 % must be called after structured date processing!
-mustBeDelayed(holds(_,T)) :- ground(T), current_time(Now),  T>Now, !.
-mustBeDelayed(happens(_,T1,T2)) :- current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
+mustBeDelayed(holds(_,T_)) :- 
+	expression_to_time(T_,T), ground(T), current_time(Now),  T>Now, !.
+mustBeDelayed(happens(_,T1_,T2_)) :- 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), current_time(Now),  (ground(T1),T1>Now;ground(T2),T2>Now+1), !.
 
 % must be called after structured date processing!
 % mustBeProcessedNow(L) is used when unfolding atoms in antecedents of rules.
 % true if L is extensional fluent or basic event with known time, intensional fluent/composite event or timeless/Prolog
-mustBeProcessedNow(holds(_, T)) :-
-	ground(T), current_time(Now),  T =< Now, !.
-mustBeProcessedNow(happens(_, _, T)) :-
-	ground(T), current_time(Now),  T =< Now, !.
+mustBeProcessedNow(holds(_, T_)) :-
+	expression_to_time(T_,T), ground(T), current_time(Now),  T =< Now, !.
+mustBeProcessedNow(happens(_, _, T_)) :-
+	expression_to_time(T_,T), ground(T), current_time(Now),  T =< Now, !.
 %mustBeProcessedNow(holds(P, _)) :-
 %	intensional(P), \+ fluent_(P),!.
 	% Not necessary if extensional and intentional predicates are disjoint.
@@ -3323,9 +3325,9 @@ dc_process([Rule | Rs], AccRi, NRi, AccG, NGi):-
 	current_time(Now), Next is Now+1,
 	member(L,A),
 	(
-		L = holds(_, T), ground(T), T<Now
+		L = holds(_, T_), expression_to_time(T_,T), ground(T), T<Now
 		; 
-		L = happens(_,T1, T2), (ground(T1),T1<Now-1;ground(T2),T2<Next-1)
+		L = happens(_,T1_, T2_), expression_to_time(T1_,T1), expression_to_time(T2_,T2), (ground(T1),T1<Now-1;ground(T2),T2<Next-1)
 	),
 	!,
 	dc_process(Rs, AccRi, NRi, AccG, NGi).
@@ -3365,7 +3367,7 @@ split_goals_and_events([],[],[]).
 
 % lpsClause(+Head, Body) This has some overlap with query/1... TODO: this should be refactored
 lpsClause(happens(X, Y, Z), Body) :-  l_events(happens(X, Y, Z), Body).
-lpsClause(happens(X, Y, Z), Body) :- !, happens(X, Y, Z), Body=[].
+lpsClause(happens(X, T1_, T2_), Body) :- !, expression_to_time(T1_,T1), expression_to_time(T2_,T2), happens(X, T1, T2), Body=[].
 lpsClause(holds(H,T),Body) :- nonvar(H), H=not(X), !, check_time_expression(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
 lpsClause(holds(H,T),Body) :- nonvar(H), H=findall(X,G,L), !, check_time_expression(T), findall(X,evaluate(G),L), Body=[].
 lpsClause(holds(P,T),[]) :- nonvar(P), external_predicate_for_lps(P), !, check_time_expression(T), callprolog(P).
