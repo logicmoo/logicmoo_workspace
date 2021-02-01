@@ -575,16 +575,21 @@ syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2
 	 % 'single' too strict, should probably reflect into a tc(...) ???
 	( (ETL == (false), ETS == (false)) -> ET= (false) ; ET = true),
 
-	(IT==single -> 
+	(IT==single ->  % this sequence must span over a single transition, two consecutive cycles (e.g post condition, precondition)
 		(
 			% we need to be careful inadvertently binding event end times with fluents bound to a previous time 
-			((T2==T3,ETL==false) /* fluent or timeless */ -> T2=T1 ; PT1=happens(_,_,_) -> T1=T2,T6=T3 ; true /* fluent with explicit time */),
-			((T4==T5,ETL==false) -> T4=T1, (T2==T3 -> T5=T6; true) ; memberchk(happens(_,_,_),PT2) -> T1=T4,T6=T5 ; true)
-			% (PT1=happens(_,_,_),ETL==true) -> T3=T6 ; T1=T4,T3=T6
+			((T2==T3,ETL==false) /* L1 is a fluent without explicit time, or a timeless */ -> T1=T2 ; 
+				PT1=happens(_,_,_) -> (T1=T2,T6=T3) /* ..an event */ ; 
+				true /* ...a fluent with explicit time */),
+			((T4==T5,ETS==false) -> (T4=T1, (T2==T3 -> T5=T6; true)) /* L2 is a fluent without explicit time, or a timeless*/ ; 
+				memberchk(happens(_,_,_),PT2) -> (T1=T4,T6=T5) /* ..an event */ ;
+			 	true /* ...a fluent with explicit time */)
 		)
-		; 
-		( (ETL == (false), ETS == (false)) -> T4=T3 ; true),
-		T1=T2, T6=T5
+		; (
+			( ET== (false) -> T4=T3 ; % no explicit time and no single transition imposed: make the two literals adjacent in time 
+				true),
+			T1=T2, T6=T5
+		)
 	).
 syntax2p_sequence(true,_,_TT,[T,T],_,false,classify,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,ET,Spec,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,ET,Spec,PT).
