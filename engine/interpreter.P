@@ -398,7 +398,7 @@ resolveUntilAction(happens(E,T1_,T2_),_Ancestors,_B,true) :-
 	% Maybe not: causes failure of SzaboLanguage_insurance_irrelevant_events.pl and does NOT fix prospectiveGoat.pl...
 	% findall(happens(E,T1,T2),happens(E,T1,T2),Answers), Answers\=[],
 	% (Answers=[happens(E,T1,T2)] -> true ; B=disjunction(happens(E,T1,T2),Answers,Ancestors)).
-	happens(E,T1,T2). 
+	((nonvar(E),E=not(RealE))-> \+ happens(RealE,T1,T2) ; happens(E,T1,T2)). 
 resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), \+ ground(T1), \+ ground(T2),
 	!, % hack to (also) delay the action
@@ -406,6 +406,7 @@ resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
 resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :- 
 	% select and execute system action; 
 	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
+	\+ ((nonvar(E),E=not(_))),
 	\+ happens(E,T1,T2), system_action(E), 
 	\+ functor(E,lps_terminate,_), % this will be handled in next clause: selection and "execution" elsewhere, at the beginning of the next cycle
 	!, % system actions can not be delayed below...
@@ -418,6 +419,7 @@ resolveUntilAction(happens(E,T1_,T2_),A,_,Cont) :-
 	( callprolog(E), uassertz(happens(E,T1,T2)), fail ; happens(E,T1,T2) ; uretractall(happens(E,T1,T2)), fail).
 resolveUntilAction(happens(E,T1_,T2_),A,_,true) :- % select action:
 	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), 
+	\+ ((nonvar(E),E=not(_))),
 	\+ happens(E,T1,T2), 
 	T2 is T1+1,
 	action_(E), 
@@ -434,7 +436,8 @@ resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- !,
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), 
 	(\+ ground(T1), \+ ground(T2)), % worth delaying; 
 	% Possible TODO: are the free variables... time variables...? complicated to find out; the LPS developer should worry about this
-	\+ happens(E,T1,T2) /*, action_(E)*/. 
+	((nonvar(E),E=not(RealE))-> \+ \+ happens(RealE,T1,T2) ; \+ happens(E,T1,T2)). 
+	% \+ happens(E,T1,T2) /*, action_(E)*/. 
 
 %deal with mixed time comparisons, involving both structured time and cycle time
 resolveUntilAction(G,A,Ball,Cont) :- mixed_time_comparison(G,NewG), !, 
@@ -3370,7 +3373,9 @@ split_goals_and_events([],[],[]).
 
 % lpsClause(+Head, Body) This has some overlap with query/1... TODO: this should be refactored
 lpsClause(happens(X, Y, Z), Body) :-  l_events(happens(X, Y, Z), Body).
-lpsClause(happens(X, T1_, T2_), Body) :- !, expression_to_time(T1_,T1), expression_to_time(T2_,T2), happens(X, T1, T2), Body=[].
+lpsClause(happens(X, T1_, T2_), Body) :- !, 
+	expression_to_time(T1_,T1), expression_to_time(T2_,T2), Body=[],
+	((nonvar(X),X=not(E)) -> \+ happens(E,T1,T2); happens(X, T1, T2)). % should we ground time for the negation..?
 lpsClause(holds(H,T),Body) :- nonvar(H), H=not(X), !, check_time_expression(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
 lpsClause(holds(H,T),Body) :- nonvar(H), H=findall(X,G,L), !, check_time_expression(T), findall(X,evaluate(G),L), Body=[].
 lpsClause(holds(P,T),[]) :- nonvar(P), external_predicate_for_lps(P), !, check_time_expression(T), callprolog(P).

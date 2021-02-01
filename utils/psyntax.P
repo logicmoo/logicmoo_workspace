@@ -642,23 +642,26 @@ syntax2p_literal(update(in(to(Old,New),LT)),_Vars,lps2p,[T1,T2],ET,event-[delimi
 	NL=L, 
 	simple_fluent_colour(L,EF),
 	remember_fluent_hint(L). 
-syntax2p_literal(LT,_Vars,_Tran,[T1,T2],true,delimiter-[EC,classify],happens(NL,T1,T2)) :- 
+syntax2p_literal(LT,_Vars,_Tran,[T1,T2],true,delimiter-[RealEC,classify],happens(RealNL,T1,T2)) :- 
 	nonvar(LT), 
 	% tricky handling to avoid infinite terms in the first branch:
 	( LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_; LT = (L to T2), (var(T2);is_some_time(T2)); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	nonvar(L),
-	!,
-	simple_event_colour(L,EC),
-	remember_event_hint(L),
+	!, 
+	(L=not(RealL) -> (RealNL=not(NL), RealEC=lps_delimiter-[EC]) ; (L=RealL, RealNL=NL, RealEC=EC)),
+	simple_event_colour(RealL,EC),
+	remember_event_hint(RealL),
 	NL=L.
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allow "meta eventing"
 	nonvar(LT), LT=happens(NL,T1,T2), 
 	!,
 	simple_event_colour(LT,EC).
-syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- 
-	nonvar(LT), ( head_hint(LT,event) ; head_hint(LT,action) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,RealEC,happens(NL,T1,T2)) :- 
+	nonvar(LT), 
+	(LT=not(RealLT) -> RealEC=lps_delimiter-[EC]; (LT=RealLT,RealEC=EC)),
+	( head_hint(RealLT,event) ; head_hint(RealLT,action) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
 	!,
-	simple_event_colour(LT,EC),
+	simple_event_colour(RealLT,EC),
 	NL=LT.
 syntax2p_literal(LT_,_Vars,js2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	nonvar(LT_), LT_=..[F|Args_], append(Args,[T1,T2],Args_), LT=..[F|Args],
