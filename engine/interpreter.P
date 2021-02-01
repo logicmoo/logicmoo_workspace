@@ -350,7 +350,6 @@ resolveUntilAction(Fl,Ancestors,B,C) :- % special fluent
 resolveUntilAction(holds(F,T),Ancestors,B,C) :- % spawn a new disjunctive goal for each extensional fluent answer:
 	\+ option(no_parallel),
 	findall(holds(F,T),query(holds(F,T)),Answers), Answers\=[],
-	% !,
 	((ground(T),Answers = [holds(F,T)]) -> C=true ; 
 	% eternally changing fluents... handled in dc_resolve_goals_suspended below:
 		(B=disjunction(holds(F,T),Answers,Ancestors), C=true 
@@ -393,8 +392,13 @@ resolveUntilAction(happens(E,T1,T2),A,B,C) :- macroaction(E), !, % general case,
 		resolveUntilAction(Body,[happens(E,T1,T2)|A],B,C) 
 		; B = l_events_disjunction(l_events(happens(E,T1,T2),Body),Alternatives,A), C=true
 	).
-resolveUntilAction(happens(E,T1_,T2_),_A,_,true) :- 
-	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), happens(E,T1,T2).
+resolveUntilAction(happens(E,T1_,T2_),_Ancestors,_B,true) :- 
+	expression_to_time(T1_,T1), current_time(T1), expression_to_time(T2_,T2), T2 is T1+1,
+	%TODO: should we handle disjunctions/multiple solutions like this, as for fluents? 
+	% Maybe not: causes failure of SzaboLanguage_insurance_irrelevant_events.pl and does NOT fix prospectiveGoat.pl...
+	% findall(happens(E,T1,T2),happens(E,T1,T2),Answers), Answers\=[],
+	% (Answers=[happens(E,T1,T2)] -> true ; B=disjunction(happens(E,T1,T2),Answers,Ancestors)).
+	happens(E,T1,T2). 
 resolveUntilAction(happens(E,T1_,T2_),A,Ball,Cont) :- option(more_actions),
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), \+ ground(T1), \+ ground(T2),
 	!, % hack to (also) delay the action
@@ -2108,7 +2112,7 @@ set_paused(false) :- retractall(engine_paused).
 
 
 %  cycle(PartialReactiveRules,GoalState,PendingResponses,StateFlag)
-%  GoalState is a list (conjunction) of goal(Id,Discard,Failure,DisjunctionFailures,SharedVars,EventAncestors,Tree)
+%  GoalState is a list (conjunction) of goal(ID,Discard,MyFailure,AllFailures,SharedVars,EventAncestors,G)
 %  Tree is a list representing the current branch of the tree.
 %  PendingResponses is a goal to execute as soon as the state is "stable", to report answers back to waiting clients
 cycle(Ri, Gi, StateFlag) :- cycle(Ri, Gi, true, StateFlag).
