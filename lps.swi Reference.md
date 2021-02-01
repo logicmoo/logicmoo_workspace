@@ -310,7 +310,9 @@ if polling then callprolog(P), P.
 ```
 Again, the Prolog generated events are injected/checked/etc with observations and web events at each LPS cycle.
 
-# Other misc LPS engine improvements #
+**NOTE**: internal observations and prolog_events are checked together against preconditions, and rejected or accepted altogether; web events are injected afterwards, and are accepted/rejected altogether but independently of the previous.
+
+# Other misc LPS engine improvements 
 
 * Generic replace/update post conditions, e.g. transfer(From, To, Amount) updates Old to New in balance(From, Old) if New is Old – Amount. Old/New can be (structurally similar) lists of variables.
 * More flexible preconditions/constraints, referring both the current and the next states. For example, the goat cannot be left alone with the cabbage and the goat cannot be left alone with the wolf.
