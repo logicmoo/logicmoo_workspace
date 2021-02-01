@@ -45,10 +45,10 @@ dumploaded(External,Translator) :-
 	check_translator(Translator),
 	% TODO: warn about generated clauses (e.g. from English) than will not appear here
 	lps_swish_clause(H,Body,Vars),
-	(External -> 
+	(External==true -> (
 		(Body==true -> InternalTerm=H ; InternalTerm=(H:-Body)),
 		catch( syntax2p(Clause,Vars,Translator,_,InternalTerm), Ex, (print_message(error,Ex),fail))
-		; 
+		) ; 
 		Clause = (H:-Body)),
 	% bindAllVars(Vars),
 	% term_variables((H:-Body),VarValues),    _Vars: [Name1=VarValue1,...]

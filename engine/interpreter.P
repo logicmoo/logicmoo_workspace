@@ -1017,7 +1017,7 @@ lps_program_clause_file(Pred,Body,File) :-
 	% exception(error(permission_error(access,private_procedure,read_util:read_line_to_codes/2),context(system:clause/3,_4882))) 
 	catch(clause(M:Pred,Body,Ref),_,fail), 
 	(prolog_clause:clause_info(Ref, File, _TermPos, _VarOffsets, _) -> true ; File=asserted),
-	File \== asserted,
+	% ?? File \== asserted,
 	\+ excluded_file(File).
 
 user_prolog_clause(Pred,Body) :- 
