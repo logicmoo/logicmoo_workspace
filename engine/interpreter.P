@@ -2179,8 +2179,7 @@ cycle(Ri, Gi, PendingResponses, StateFlag) :-
 				; do_write([nl, '----- time is now ',Time,' -----',nl])
 				),
 		
-			do_write([nl, ' Events and actions from ', Previous, ' to ', Time,' are ',Actions,nl])
-			;
+			do_write([nl, ' Events from ', Previous, ' to ', Time,' were ',Actions,nl])			;
 			(0 is Time mod 10 -> 
 				do_write([Time,'...']),
 				(0 is Time mod 200 -> do_write([nl]); true)

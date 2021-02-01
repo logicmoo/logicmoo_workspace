@@ -1,5 +1,3 @@
-# docker build -t logicalcontracts/swish-june2020 -f Dockerfile-SWISH-June2020 .
-# docker run -it -p 3051:3050 -v ~/git/lps_corner/swish/data:/data logicalcontracts/swish-june2020 
 FROM swipl as base
 
 RUN apt-get update && apt-get install -y \
