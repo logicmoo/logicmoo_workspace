@@ -3374,7 +3374,8 @@ split_goals_and_events([],[],[]).
 lpsClause(happens(X, Y, Z), Body) :-  l_events(happens(X, Y, Z), Body).
 lpsClause(happens(X, T1_, T2_), Body) :- !, 
 	expression_to_time(T1_,T1), expression_to_time(T2_,T2), Body=[],
-	((nonvar(X),X=not(E)) -> \+ happens(E,T1,T2); happens(X, T1, T2)). % should we ground time for the negation..?
+	check_time_expression(T2), T1 is T2-1, % events vs fluents...
+	((nonvar(X),X=not(E)) -> \+ happens(E,T1,T2); happens(X, T1, T2)). 
 lpsClause(holds(H,T),Body) :- nonvar(H), H=not(X), !, check_time_expression(T), (is_list(X) -> Xs=X ; Xs=[holds(X,T)]), \+ evaluate(Xs), Body=[].
 lpsClause(holds(H,T),Body) :- nonvar(H), H=findall(X,G,L), !, check_time_expression(T), findall(X,evaluate(G),L), Body=[].
 lpsClause(holds(P,T),[]) :- nonvar(P), external_predicate_for_lps(P), !, check_time_expression(T), callprolog(P).

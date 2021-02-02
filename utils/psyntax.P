@@ -658,7 +658,7 @@ syntax2p_literal(LT,_Vars,_Tran,[T1,T2],true,delimiter-[RealEC,classify],happens
 	( LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_; LT = (L to T2), (var(T2);is_some_time(T2)); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	nonvar(L),
 	!, 
-	(L=not(RealL) -> (RealNL=not(NL), RealEC=lps_delimiter-[EC]) ; (L=RealL, RealNL=NL, RealEC=EC)),
+	(L=not(RealL) -> (RealNL=not(RealL), RealEC=lps_delimiter-[EC]) ; (L=RealL, RealNL=NL, RealEC=EC)),
 	simple_event_colour(RealL,EC),
 	remember_event_hint(RealL),
 	NL=L.
