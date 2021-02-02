@@ -201,7 +201,8 @@ functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
 functor_arityze([],[]).
 
-:- thread_local assume_untimed_adjacent/0.
+:- dynamic assume_untimed_adjacent/0.
+assume_untimed_adjacent.
 
 % Convert a file in LPS (new syntax) into Wei syntax and execute it 
 golps(LPSP_file,Options,Results) :-
@@ -209,13 +210,13 @@ golps(LPSP_file,Options,Results) :-
 		gensym('_f',ID), concat_atom([LPSP_file,ID, '_.P'],Pfile)
 	; concat_atom([LPSP_file,'_.P'],Pfile)),
 	cleanup_program, %  head_hints depend on l_events etc declarations, so we need to clear any previous program
-	(select(assume_untimed_adjacent,Options,Options_) -> assert(assume_untimed_adjacent) ; (retractall(assume_untimed_adjacent), Options=Options_)),
 	syntax2p_file(LPSP_file,Pfile,lps2p,true),
-	go(Pfile,Options_,Results).
+	go(Pfile,Options,Results).
 
-golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
+golps(LPSP_file,Options) :- 
+	golps(LPSP_file,Options,[]).
 
-golps(LPSP_file) :- golps(LPSP_file,[dc,assume_untimed_adjacent]).
+golps(LPSP_file) :- golps(LPSP_file,[dc]).
 
 % Support for lps.js
 dumpjs(F,Options) :- 
@@ -236,15 +237,13 @@ dumpjs(F) :- dumpjs(F,[dc]).
 % [46,108,112,115,119] .lpsw
 % [95,46,80] _.P
 % [46,108,112,115] .lps
-% generate_file(FilenameCodes)
-generate_file(Fcodes) :- 
-	% _.P or .lpsw?
-	(append(SourceCodes,[95,46,80],Fcodes) ; append(SourceCodes,[46,108,112,115,119],Fcodes)),
+% generate_file(Filename)
+generate_file(F) :- 
+	(sub_atom(F,_,Nchars,0,'_.P') ; sub_atom(F,_,Nchars,0,'.lpsw')),
 	!,
-	(append(_,[46,108,112,115],SourceCodes) ; append(_,[46,112,108],SourceCodes)), % a LPS or pl file
-	atom_codes(Source,SourceCodes),
+	sub_atom(F,0,_,Nchars,Source),
+	(sub_atom(Source,_,_,0,'.lps'); sub_atom(Source,_,_,0,'.pl')),
 	file_exists(Source),
-	atom_codes(F,Fcodes),
 	syntax2p_file(Source,F,lps2p,true).
 
 file_generator_name(F,FG) :- atom_codes(F,Codes), file_generator_name_(Codes,FG).

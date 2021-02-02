@@ -2045,8 +2045,7 @@ test_examples(Options) :-
 	do_test_suite(Files,[run_test|Options]).
 
 regenerate([F|Files]) :- !, 
-	atom_codes(F,Fcodes), 
-	(regenerate_file(Fcodes)->true;true), regenerate(Files).
+	(regenerate_file(F)->true;true), regenerate(Files).
 regenerate([]).
 
 :- multifile regenerate_file/1.
