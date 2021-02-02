@@ -1,3 +1,7 @@
+% this must be the FIRST directoive in the file:
+% :- relax_untimed_literals.  % uncomment this to let implicit time vars in rules and composite events stay unbound; 
+
+
 % First, "environmental" information
 initial_state([available(fork(0)),available(fork(1)),available(fork(2)),available(fork(3)),available(fork(4))]).
 

@@ -11,12 +11,12 @@
 % sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses; uncomment the following for a log:
 
-/*
+
 :- open('mylog.txt',write,S), assert(mylogFile(S)).
 mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
 % :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
 sandbox:safe_primitive(user:mylog(_M)). 
-*/
+
 :- use_module(library(settings)).
 %:- use_module(library(http/http_log)). % uncomment to produce httpd.log
 %:- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
@@ -341,6 +341,8 @@ sandbox:safe_primitive(interpreter:uretractall(_)).
 
 sandbox:safe_primitive(psyntax:relax_untimed_literals). 
 sandbox:safe_primitive(psyntax:untimed_literals_are_adjacent). 
+
+relax_untimed_literals :- psyntax:relax_untimed_literals.
 
 /** 
 	system_fluent(Fluent) is det 

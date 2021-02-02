@@ -202,13 +202,13 @@ functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
 functor_arityze([],[]).
 
-:- dynamic assume_untimed_adjacent/0.
+:- thread_local untimed_are_relaxed/0.
 
 relax_untimed_literals :-  % Bob's favorite
-	retractall(assume_untimed_adjacent), 
+	assert(untimed_are_relaxed), 
 	print_message(informational,"untimed literals have free times").
 untimed_literals_are_adjacent :-  % Miguel's favorite
-	retractall(assume_untimed_adjacent), assert(assume_untimed_adjacent), 
+	retractall(untimed_are_relaxed), 
 	print_message(informational,"untimed literals are adjacent in time").
 
 :- untimed_literals_are_adjacent.
@@ -596,7 +596,7 @@ syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2
 			 	true /* ...a fluent with explicit time */)
 		)
 		; (
-			( (ET== (false),assume_untimed_adjacent) -> T4=T3 ; % no explicit time and no single transition imposed: make the two literals adjacent in time 
+			( (ET== (false),\+ catch(untimed_are_relaxed,_,fail) ) -> T4=T3 ; % no explicit time and no single transition imposed: make the two literals adjacent in time 
 				true),
 			T1=T2, T6=T5
 		)
