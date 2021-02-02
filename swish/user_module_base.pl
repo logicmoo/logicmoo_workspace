@@ -58,6 +58,8 @@ pengines:prepare_module(_Module, swish, _Options) :-
 	]).
 :- use_module('../utils/states_explorer.pl',[explore/2]).
 :- use_module('../utils/redis-client.pl').
+:- use_module('../utils/explanator').
+
 
 % This will be useful below, as file searching handling of relative paths differs from what's used
 % by use_module and friends.
