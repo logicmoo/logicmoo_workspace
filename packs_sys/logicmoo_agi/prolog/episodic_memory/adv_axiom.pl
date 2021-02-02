@@ -149,9 +149,9 @@ aXiom_p1( try(Agent, act3('emote',Agent,[ EmoteType, Object, Message]))) ==>> !,
 
 
 
-aXiom_p1(terminates(h(Spatial, Prep, Object, Here))) ==>> !, % {fail},
+aXiom_p1(terminates(h(Spatially, Prep, Object, Here))) ==>> !, % {fail},
  %ignore(sg(declared(h(spatial, Prep, Object, Here)))),
- undeclare(h(Spatial, Prep, Object, Here)).
+ undeclare(h(Spatially, Prep, Object, Here)).
 
  % ==============
 %  WALK ON TABLE
@@ -163,8 +163,8 @@ aXiom_p1( try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))) ==>>
  eVent(Agent, event3('arrive', [At, Agent, Object], [ Walk, At])).
 
 
-aXiom_p1(initiates(h(Spatial, Prep, Object, Dest))) ==>> !, % {fail},
- declare(h(Spatial, Prep, Object, Dest)).
+aXiom_p1(initiates(h(Spatially, Prep, Object, Dest))) ==>> !, % {fail},
+ declare(h(Spatially, Prep, Object, Dest)).
 
 
 aXiom_p1(status_msg(_Begin, _End)) ==>> [].
@@ -177,9 +177,6 @@ aXiom_p1(status_msg(_Begin, _End)) ==>> [].
 axiom_Recalc_e( try(Agent, act3('go__obj',Agent,[ Walk, Object])), RECALC) ==>>
   has_rel(At, Object),
  RECALC = ( try(Agent, act3('go__prep_obj',Agent,[ Walk, At, Object]))).
-
-
-
 
 % ==============
 %  GOTO PANTRY
@@ -239,8 +236,8 @@ axiom_Recalc_e( try(Agent, act3('drop',Agent,[ Thing])), RECALC) ==>> !,
   dshow_failure(h(spatial, At, Agent, Here)),
  RECALC = ( try(Agent, act3('put__via', Agent,[ drop, Thing, At, Here]))).
 
-axiom_Recalc_e( try(Agent, act3('put', Agent,[ Thing1, Prep, Thing2])), RECALC) ==>>
- RECALC = ( try(Agent, act3('put__via', Agent,[ put, Thing1, At, Thing2]))).
+axiom_Recalc_e( try(Agent, act3('put', Agent,[ Thing1, PrepAt, Thing2])), RECALC) ==>>
+ RECALC = ( try(Agent, act3('put__via', Agent,[ put, Thing1, PrepAt, Thing2]))).
 
 axiom_Recalc_e( try(Agent, act3('give', Agent,[ Thing, Recipient])), RECALC) ==>>
  RECALC = ( try(Agent, act3('put__via', Agent,[ give, Thing, held_by, Recipient]))).
@@ -248,12 +245,13 @@ axiom_Recalc_e( try(Agent, act3('give', Agent,[ Thing, Recipient])), RECALC) ==>
 
 aXiom_p1( try(Agent, act3('put__via', Agent, [How, Thing1, Prep, Thing2]))) ==>> {fail}, !,
   dshow_failure(prep_to_rel(Thing2, Prep, At)),
+  from_loc(Agent, Here),
   % dshow_failure((At \= in ; \+ is_closed(At, Thing2))),
   dshow_failure(has_rel(At, Thing2)),
   dshow_failure(will_need_touch(Agent, Thing2)), % what if "under" an "untouchable" thing?
   % OK, put it
-  moveto(Agent, Put, Thing1, At, Thing2, [Here],
-    [cap(subj(Agent)), person(Put, es(Put)), Thing1, At, Thing2, '.']).
+  moveto(Agent, How, Thing1, At, Thing2, [Here],
+    [cap(subj(Agent)), person(How, es(How)), Thing1, At, Thing2, '.']).
 
 
 % do_throw ball up

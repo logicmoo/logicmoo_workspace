@@ -43,7 +43,7 @@
 
 :- op(200,fy,(-)).
 
-:- set_prolog_flag(verbose_load,true).
+%:- set_prolog_flag(verbose_load,true).
 
 
 

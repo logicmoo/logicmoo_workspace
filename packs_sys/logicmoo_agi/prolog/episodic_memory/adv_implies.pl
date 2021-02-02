@@ -38,6 +38,10 @@ oper_db(Knower, try(Agent, Action), Preconds, Effects):- nonvar(Action), !, igno
 oper_db(Knower, did(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
 oper_db(Knower, doing(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
 
+oper_db(Knower, act3(Verb, Agent, Args),  Preconds, Effects):- Knower \== Agent, (var(Knower) ; var(Agent)),  
+  must_or_rtrace((Knower = Agent, Knower \== Agent)), !,
+  oper_db(Knower, act3(Verb, Agent, Args),  Preconds, Effects).
+
 oper_db(Knower, Action, Preconds, Effects):- fail, % Hooks to KR above
   sequenced(Knower, Whole),
  append(Preconds, [did(Action)|Effects], Whole).
@@ -55,13 +59,14 @@ oper_db(_Knower, ( act3('put__via', Doer, [Manner, Mover, IntoDest, Dest])),
   %dshow_failure(will_need_touch(Agent, Thing2)), % what if "under" an "untouchable" thing?
 
    [ FromLoc \= Mover, Dest \= Mover, % FromLoc \= Dest,
-    h(spatial, FromPrep, Mover, FromLoc), % must be hhh/3 ?
+    h(spatial, FromPrep, Mover, FromLoc) % must be hhh/3 ?
     %h(spatial,exit(ExitName), FromLoc, Dest), h(spatial,exit(ReverseExit), Dest, FromLoc),
     %b(exit(ExitName), FromLoc, _),    
     %ReverseExit \= ExitName,
-    []],
+    ],
    [ event( event3('depart', [ FromPrep, Mover, FromLoc], [Manner, Doer])),
      event( event3('arrive', [ IntoDest, Mover, Dest], [Manner, Doer]))]).
+     % ~h(spatial, FromPrep, Mover, FromLoc)).
 
 
 oper_db(_Knower, event3('depart', [ IntoDest, Mover, FromLoc], Details),
@@ -71,7 +76,9 @@ oper_db(_Knower, event3('depart', [ IntoDest, Mover, FromLoc], Details),
 
 oper_db(_Knower, event3('arrive', [ IntoDest, Mover, Dest], Details), 
  [],
- [ h(spatial, IntoDest, Mover, Dest),
+ [ 
+  ~h(spatial, _, Mover, _),
+   h(spatial, IntoDest, Mover, Dest),
    percept_local(Dest, event3('arrive', [ IntoDest, Mover, Dest], Details))]).
 
 oper_db(_Knower, ( act3('go__dir',Mover,[ Manner, ExitName])),
@@ -97,7 +104,7 @@ oper_db(_Knower, ( act3('go__dir',Mover,[ Manner, ExitName])),
      ]):- dif(ExitName, escape).
 
 % Return an operator after substituting Agent for Agent.
-oper_db(Knower, ( act3('go__dir',Agent,[ _Manner, ExitName])),
+oper_db(_Knower, ( act3('go__dir',Agent,[ _Manner, ExitName])),
      [ b(in, Agent, FromLoc),
        b(exit(ExitName), FromLoc, Dest),
        FromLoc \= Agent, Dest \= Agent, FromLoc \= Dest
@@ -107,7 +114,7 @@ oper_db(Knower, ( act3('go__dir',Agent,[ _Manner, ExitName])),
      ]):- fail.
 
 
-oper_db(Knower, ( act3('go__dir',Agent,[ Manner, Escape])),
+oper_db(_Knower, ( act3('go__dir',Agent,[ Manner, Escape])),
      [ Object \= Agent, FromLoc \= Agent,
        k(FromPrep, Agent, Object),
        h(spatial, IntoDest, Object, FromLoc),
@@ -122,7 +129,7 @@ oper_db(Knower, ( act3('go__dir',Agent,[ Manner, Escape])),
 
 
 % Looking causes Percepts
-oper_db(Knower, looky(Agent),
+oper_db(_Knower, looky(Agent),
      [ FromLoc \= Agent,
        % believe(Agent, h(spatial, _, Agent, _)),
        h(spatial, Sub, Agent, FromLoc)
@@ -143,7 +150,7 @@ oper_db(world, invoke_events(FromLoc),
 
 
 % deducer Agents who preceive leavers from some exit believe the did_depart point is an exit
-oper_db(Knower, percept(Agent, event3('depart',[ IntoDest, Mover, FromLoc], [Manner, ExitName])),
+oper_db(_Knower, percept(Agent, event3('depart',[ IntoDest, Mover, FromLoc], [Manner, ExitName])),
  [ did(Mover, ( act3('go__dir', Mover, [ Manner, ExitName]))),
        prop(Agent, inherited(deducer)),
        h(spatial, IntoDest, Agent, FromLoc) ],
@@ -151,7 +158,7 @@ oper_db(Knower, percept(Agent, event3('depart',[ IntoDest, Mover, FromLoc], [Man
        believe(Agent, prop(Mover, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
-oper_db(Knower, percept(Agent, event3('arrive',[ IntoDest, Mover, FromLoc], [Manner, ExitName])),
+oper_db(_Knower, percept(Agent, event3('arrive',[ IntoDest, Mover, FromLoc], [Manner, ExitName])),
  [ did(Mover, ( act3('go__dir', Mover, [ Manner, ExitName]))),
        prop(Agent, inherited(deducer)),
        believe(Agent, h(spatial, IntoDest, Agent, FromLoc)) ],
@@ -162,7 +169,7 @@ oper_db(Knower, percept(Agent, event3('arrive',[ IntoDest, Mover, FromLoc], [Man
        believe(Agent, prop(Mover, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
-oper_db(Knower, percept(Agent, event3('arrive', [ IntoDest, Mover, FromLoc],[ Manner, ExitName])),
+oper_db(_Knower, percept(Agent, event3('arrive', [ IntoDest, Mover, FromLoc],[ Manner, ExitName])),
  [ did(Mover, ( act3('go__dir', Mover, [ Manner, ExitName]))),
        isa(Agent, deducer),
        b(Agent,
@@ -179,7 +186,7 @@ oper_db(Knower, percept(Agent, event3('arrive', [ IntoDest, Mover, FromLoc],[ Ma
 % hhh = is really true
 % b = is belived
 % k = is belived and really true
-oper_db(Knower, ( act3('take',Agent,[ Thing ])), % from same room
+oper_db(_Knower, ( act3('take',Agent,[ Thing ])), % from same room
   [ Thing \= Agent, exists(Thing),
     Dest \= Agent,
    % TODO k(takeable, Agent, Thing),
@@ -189,7 +196,7 @@ oper_db(Knower, ( act3('take',Agent,[ Thing ])), % from same room
       moves( At, Thing, Dest, take, held_by, Thing, Agent),
       k(held_by, Thing, Agent)]):- \+ only_goto.
 
-oper_db(Knower, ( act3('drop',Agent,[ Thing])),
+oper_db(_Knower, ( act3('drop',Agent,[ Thing])),
   [ Thing \= Agent, exists(Thing),
       k(held_by, Thing, Agent),
       k(At, Agent, Where)],
@@ -197,10 +204,10 @@ oper_db(Knower, ( act3('drop',Agent,[ Thing])),
       moves(held_by, Thing, Agent, drop, At, Thing, Where),
       k(At, Thing, Where)] ):- \+ only_goto.
 
-oper_db(Knower, ( act3('put',Agent,[ Thing, Relation, Where])), % in somewhere
+oper_db(_Knower, ( act3('put',Agent,[ Thing, Relation, Where])), % in somewhere
   [ Thing \= Agent, exists(Thing), exists(Where),
       k(held_by, Thing, Agent),
-      k(touchable, Agent, Where),
+      h(touchable, Agent, Where),
       has_rel(Relation, Where),
     ~ is_closed(Relation, Where)],
   [ ~ k(held_by, Thing, Agent),
@@ -208,23 +215,23 @@ oper_db(Knower, ( act3('put',Agent,[ Thing, Relation, Where])), % in somewhere
       k(Relation, Thing, Where)] ):- \+ only_goto.
 
 
-oper_db(Knower, ( act3('give',Agent,[ Thing, Recipient])), % in somewhere
+oper_db(_Knower, ( act3('give',Agent,[ Thing, Recipient])), % in somewhere
   [ Thing \= Agent, Recipient \= Agent,
       exists(Thing), exists(Recipient),
       k(held_by, Thing, Agent),
-      k(touchable, Agent, Recipient),
-      k(touchable, Recipient, Agent)],
+      h(touchable, Agent, Recipient),
+      h(touchable, Recipient, Agent)],
   [ ~ k(held_by, Thing, Agent),
       moves(held_by, Thing, Agent, give, held_by, Thing, Recipient),
       k(held_by, Thing, Recipient)] ):- \+ only_goto.
 
-oper_db(Knower, ( act3('tell',Agent,[ Player, [ please, give, Recipient, the(Thing)]])),
+oper_db(_Knower, ( act3('tell',Agent,[ Player, [ please, give, Recipient, the(Thing)]])),
     [   Recipient \= Player, Agent \= Player,
         Thing \= Agent, Thing \= Recipient, Thing \= Player,
         exists(Thing), exists(Recipient), exists(Player),
         k(held_by, Thing, Player),
-        k(touchable, Player, Recipient),
-        k(touchable, Recipient, Player)],
+        h(touchable, Player, Recipient),
+        h(touchable, Recipient, Player)],
     [ ~ k(held_by, Thing, Player),
         moves(held_by, Thing, Player, give, held_by, Thing, Recipient),
         k(held_by, Thing, Recipient)] ):- \+ only_goto.

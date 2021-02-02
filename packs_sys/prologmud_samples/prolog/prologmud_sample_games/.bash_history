@@ -508,3 +508,12 @@ mkdir foo
 eggdrop -m
 git checkout .
 eggdrop -m
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop
+eggdrop -m
+git checkout .
+eggdrop -m
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop -m
+cd /opt/logicmoo_workspace/packs_sys/eggdrop/conf/
+eggdrop -m

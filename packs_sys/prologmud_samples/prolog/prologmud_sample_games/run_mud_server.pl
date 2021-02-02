@@ -21,9 +21,25 @@ W:\opt\logicmoo_workspace\packs_sys\logicmoo_utils\prolog;W:\opt\logicmoo_worksp
 
 
 */
+:- discontiguous rdf11:'$exported_op'/3.
+:- discontiguous phil:'$exported_op'/3.
+:- discontiguous lemur:'$exported_op'/3. 
+
+:- multifile rdf11:'$exported_op'/3.
+:- multifile phil:'$exported_op'/3.
+:- multifile lemur:'$exported_op'/3. 
+
+:- multifile swish_help:help_files/1.
+
+
+:- multifile(cp_label:rdf_link/4).
+:- dynamic(cp_label:rdf_link/4).
+:- multifile(swish_render_rdf:rdf_link/4).
+:- dynamic(swish_render_rdf:rdf_link/4).
+
 :- getenv('DISPLAY',_)->true;setenv('DISPLAY', '10.0.0.122:0.0').
 %:- (notrace(gtrace),nodebug).
-:- set_prolog_flag(verbose_load,true).
+%:- set_prolog_flag(verbose_load,true).
 :- set_prolog_flag(pfc_version,2.0).
 :- set_prolog_flag(dmsg_level,always).
 
@@ -306,7 +322,7 @@ load_rest:-
    nodebug,
    load_nomic_mu,   
    load_before_compile,
-   % load_rest2,
+   load_rest2,
    !.
 
 load_rest2:-
@@ -366,7 +382,6 @@ import_some:-
          (predicate_property(M:P,imported_from(RM))->true;RM=M)),
          (RM:export(RM:F/A),rtrace:import(RM:F/A))), !.
 
-start_rest:- !.
 start_rest:- 
    load_rest,
    mud_baseKB,
@@ -374,6 +389,11 @@ start_rest:-
    %load_nomic_mu,% autoload_all([verbose(true)]), 
    import_some,
    expose_all,
+   start_rest2,
+   !.
+
+start_rest2:- \+ current_predicate(baseKB:start_runtime_mud/0), !.
+start_rest2:- 
    baseKB:start_runtime_mud,
    run_setup_now,  
    baseKB:start_mud_telnet, 

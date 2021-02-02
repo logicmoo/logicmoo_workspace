@@ -205,9 +205,9 @@ update_network_connections_in_mutex:-
  %create_new_unlocated('watch', Watch),
     %create_new_unlocated('bag', Bag),
     %create_new_unlocated('coins', Coins),
-     % h(Spatial, worn_by, Watch, Agent),
-    %h(Spatial, in, Bag, Coins),
-    %h(Spatial, held_by, Bag, Agent),
+     % h(Spatially, worn_by, Watch, Agent),
+    %h(Spatially, in, Bag, Coins),
+    %h(Spatially, held_by, Bag, Agent),
 create_agent_conn(Agent, Named, Info):-
   set_advstate(props(Agent,
         [name(Named), inherit(telnet, t), inherit(humanoid, t), inherit(player, t), info(Info)])),

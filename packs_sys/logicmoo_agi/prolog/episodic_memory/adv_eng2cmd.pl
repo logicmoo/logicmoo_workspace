@@ -368,7 +368,7 @@ parse_for_kind(place, Target) --> !, parse1object(Target).
 parse_for_kind(inst, Target) --> !, parse1object(Target).
 parse_for_kind(agnt2, Target) --> !, parse1object(Target).
 parse_for_kind(object, Target) --> !, parse1object(Target).
-%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(Spatial, _, Dest, _)).
+%parse_for_kind(place, Dest)--> in_agent_model(Dest, h(spatial, _, _, Dest)). %parse_for_kind(place, Dest)--> in_agent_model(Dest, h(Spatially, _, Dest, _)).
 parse_for_kind(Type, Target) --> !, parse1object(Target), !, {is_adv_type(Target,Type)}.
 
 

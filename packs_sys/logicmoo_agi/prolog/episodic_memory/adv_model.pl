@@ -75,7 +75,7 @@ dumpST_break:- dumpST, break.
 
 update_model(_Knower, event3(_,_,_), _Timestamp, _Mem, M0, M0):-!.
 
-update_model(Knower, event3('arrive', [ In, Doer, Here],[Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
+update_model(_Knower, event3('arrive', [ _In, _Doer, Here],[_Walk, ExitNameReversed]), Timestamp, _Mem, M0, M2) :-
    reverse_dir(ExitNameReversed, ExitName, _),!,
    \+ in_model(h(spatial,exit(ExitName), Here, _There), M0),
    realize_model_exit(ExitName, Here, Timestamp, M0, M2),!.
@@ -93,7 +93,7 @@ update_model(Knower, event3('arrive', [At, Doer, Here], [_, ExitNameReversed]), 
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
- %model_prepend(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
+  model_prepend(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
   reverse_dir(ExitNameReversed, ExitName, _),
     % find figment
  \+ member( attempts(Doer,  act3('go__dir',Doer,[ _, _])), RecentMem), % guarrantee recentness

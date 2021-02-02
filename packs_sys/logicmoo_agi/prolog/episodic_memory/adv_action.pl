@@ -246,16 +246,18 @@ satisfy_each_cond(Context, [Cond|CondList], Out) ==>>
   ((sg(member(failed(Why))) -> Out=failed(Why) ; satisfy_each_cond(Context, CondList, Out))), !.
 % satisfy_each_cond(_Context, [Cond|_CondList], failed(Cond)) ==>> !.
 
+satisfy_each(Ctx, MCond, S0, S9) :-  stripped_term(MCond, Cond), !, trace, satisfy_each(Ctx, Cond, S0, S9).
 satisfy_each(Ctx, Cond, S0, S9) :- 
      exclude_failures(S0, S1), S0\==S1,!,
      satisfy_each2(Ctx, Cond, S1, S9),!.
 satisfy_each(Ctx, Cond, S0, S9) :- 
      satisfy_each2(Ctx, Cond, S0, S9),!.
 
+satisfy_each2(Ctx, MCond, S0, S9) :-  stripped_term(MCond, Cond), !, trace, satisfy_each2(Ctx, Cond, S0, S9).
 satisfy_each2(Ctx, Cond) ==>> satisfy_each1(Ctx, Cond).
 satisfy_each2(_, Cond) ==>> [failed(Cond)].
 
-satisfy_each1(_Context, h(spatial, P, _X, _Y)) ==>> {P==takeable} !.
+satisfy_each1(_Context, h(spatial, P, _X, _Y)) ==>> {P==takeable}, !.
 
 satisfy_each1(Context, List) ==>> {is_list(List)}, !,
   satisfy_each_cond(Context, List, Out), !,
@@ -283,14 +285,15 @@ satisfy_each1(Context, (C1 ; C2), S0, S9) :- !,
   (satisfy_each1(Context, C1, S0, S9);
    satisfy_each(Context, C2, S0, S9)).
 
+satisfy_each1(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
 satisfy_each1(Context, foreach(Cond, Event), S0, S9) :- findall(Event, phrase(Cond, S0, _), TODO), satisfy_each(Context, TODO, S0, S9).
 satisfy_each1(_, percept_local(Where, Event)) ==>> !, queue_local_event([Event], [Where]).
 satisfy_each1(_, percept(Agent, Event)) ==>> !, send_1percept(Agent, Event).
-satisfy_each1(postCond(_Action), ~(Cond)) ==>> !, undeclare_always(Cond). % select_always//1
 satisfy_each1(Context, ~(Cond)) ==>> !, (( \+ satisfy_each1(Context, Cond)) ; [failed(Cond)] ).
-satisfy_each1(_, call(Event)) ==>> !, raise_aXiom_events(Event).
+satisfy_each1(_, call(Cond)) ==>> (declared(Cond)*-> true; apply_aXioms(Cond)).
 satisfy_each1(_, Cond) ==>> declared(Cond), !.
-satisfy_each1(postCond(_Action), Cond) ==>> !, declare(Cond).
+satisfy_each1(postCond(_Action), Cond) ==>> must(({old_figment(Cond, _F, _A, Old)},
+  undeclare_always(Old))), !, declare(Cond).
 
 
 oper_splitk(Agent, Action, Preconds, Postconds):-
@@ -422,13 +425,13 @@ reverse_dir(north, south, _):-!.
 reverse_dir(south, north, _):-!.
 reverse_dir(reverse(ExitName), ExitName, _) :- nonvar(ExitName), !.
 reverse_dir(Dir, RDir, S0):- 
- spatial_domain(Spatial),
- h(Spatial,exit(Dir), Here, There, S0),
- h(Spatial,exit(RDir), There, Here, S0), !.
+ spatial_domain(Spatially),
+ h(Spatially,exit(Dir), Here, There, S0),
+ h(Spatially,exit(RDir), There, Here, S0), !.
 
 reverse_dir(Dir, RDir, S0):-
- h(Spatial, Dir, Here, There, S0),
- h(Spatial, RDir, There, Here, S0), !.
+ h(Spatially, Dir, Here, There, S0),
+ h(Spatially, RDir, There, Here, S0), !.
 
 reverse_dir(Dir, reverse(Dir), _).
 
@@ -507,20 +510,21 @@ action_verb_agent_args(Action, Verb, Agent, Args):-
 
 /*
 disgorge(Doer, Verb, Container, At, Here, Vicinity, Msg) :-
-  findall(Inner, h(Spatial, child, Inner, Container), Contents),
+  findall(Inner, h(Spatially, child, Inner, Container), Contents),
   dbug(general, '~p contained ~p~n', [Container, Contents]),
   moveto(Doer, Verb, Contents, At, Here, Vicinity, Msg).
 disgorge(Doer, Verb, _Container, _At, _Here, _Vicinity, _Msg).
 */
 disgorge(Doer, Verb, Container, Prep, Here, Vicinity, Msg) ==>>
-  verb_domain( Verb, Spatial),
-  findall(Inner, h(Spatial, child, Inner, Container), Contents),
+  verb_domain( Verb, Spatially),
+  findall(Inner, h(Spatially, child, Inner, Container), Contents),
    {dbug(general, '~p childs: ~p~n', [Container, Contents])},
   moveto(Doer, Verb, Contents, Prep, Here, Vicinity, Msg).
 
 :- defn_state_setter(moveto(agent, verb, listof(inst), domrel, dest, list(dest), msg)).
 moveto(Doer, Verb, List, At, Dest, Vicinity, Msg) ==>> {is_list(List)}, !,
  apply_mapl_rest_state(moveto(Doer, Verb), List, [At, Dest, Vicinity, Msg]).
+
 moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
   undeclare(h(spatial, _, Object, From)),
   declare(h(spatial, At, Object, Dest)),
@@ -530,9 +534,9 @@ moveto(Doer, Verb, Object, At, Dest, Vicinity, Msg) ==>>
 event_props( act3(Verb,Agent,[ Thing, _Target, Prep, Here, Vicinity]),
  [getprop(Thing, breaks_into(NewBrokenType)),
  dbug(general, 'object ~p is breaks_into~n', [Thing]),
-  verb_domain( Verb, Spatial),
-  undeclare(h(Spatial, _, Thing, _)),
-  declare(h(Spatial, Prep, NewBrokenType, Here)),
+  verb_domain( Verb, Spatially),
+  undeclare(h(Spatially, _, Thing, _)),
+  declare(h(Spatially, Prep, NewBrokenType, Here)),
  queue_local_event([transformed(Thing, NewBrokenType)], Vicinity),
   disgorge(Agent, do_throw, Thing, Prep, Here, Vicinity, 'Something falls out.')]):- Verb = 'throw'.
 

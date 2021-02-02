@@ -2498,7 +2498,7 @@ post_header:- dmsg(post_header),fail, forall(clause(post_header_hook,G),G).
 
 hyhtn_run_tests(Call) :- 
   statistics_runtime(InTime),  
-  locally(doing(hyhtn_run_tests(Call)),
+  locally(doing(hyhtn_run_tests(Call)),
    call_cleanup(Call, 
   ((
  statistics_runtime(OutTime),
