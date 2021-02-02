@@ -288,7 +288,7 @@ Sometimes it's useful to poll some state (or call some builtin function) in the 
 Example:
 
 ```
-events random(X).
+prolog_events random(X).
 fluents dice(_Turn,_Face).
 random(X) from _ to T2 initiates dice(T2,Face) if Face is round(X*6+0.5).
 ```
