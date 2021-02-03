@@ -34,9 +34,9 @@ fluent(available(_)).
 dine(philosopher(N)) if
     think(philosopher(N)) during _,
     adjacent(F1,philosopher(N),F2),
-    pickup_forks(F1,philosopher(N),F2),
-    eat(philosopher(N)),
-    putdown_forks(F1,philosopher(N),F2).
+    pickup_forks(F1,philosopher(N),F2) to T2,
+    eat(philosopher(N)) from T2 to T3,
+    putdown_forks(F1,philosopher(N),F2) from T3.
 
 pickup_forks(F1,philosopher(_N),_F2) terminates available(F1).
 pickup_forks(_F1,philosopher(_N),F2) terminates available(F2).

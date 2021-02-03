@@ -13,6 +13,7 @@ mother(bob, mum).
 parent(X,Y) :- father(X,Y).
 parent(X,Y) :- mother(X,Y).
 
-if party(bob), not money(bob) then 
+if party(bob) to T, not money(bob) at T then 
 	parent(bob,X), money(X), askMoney(bob, X).
+
 

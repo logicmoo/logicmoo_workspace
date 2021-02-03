@@ -8,8 +8,8 @@ if true then
 	(if bin(Container) at 3 then 
 		dispose(garbage, Container) else keep(garbage) ).
 
-if true then
+	if true then
 	keep(uhuh) from 5,
-	terminate bin(bucket),
-	(if bin(Container)  then 
+	terminate bin(bucket) to T,
+	(if bin(Container) at T then 
 		dispose(garbage, Container) ).

@@ -24,8 +24,7 @@
 
 :- module(psyntax,[ 
 	lps2p_file/2, lps2p/3, syntax2p_file/4, syntax2p/4, syntax2p_literal/7, golps/2, golps/1, dumpjs/2, dumpjs/1,
-	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2,
-	relax_untimed_literals/0, untimed_literals_are_adjacent/0
+	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
 	]).
 
 :- if(\+ current_prolog_flag(dialect, swi)).
@@ -202,16 +201,8 @@ functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
 functor_arityze([],[]).
 
-:- thread_local untimed_are_relaxed/0.
-
-relax_untimed_literals :-  % Bob's favorite
-	assert(untimed_are_relaxed), 
-	print_message(informational,"untimed literals have free times").
-untimed_literals_are_adjacent :-  % Miguel's favorite
-	retractall(untimed_are_relaxed), 
-	print_message(informational,"untimed literals are adjacent in time").
-
-:- untimed_literals_are_adjacent.
+:- dynamic untimed_are_relaxed/0.
+untimed_are_relaxed. % Bob's preference
 
 % Convert a file in LPS (new syntax) into Wei syntax and execute it 
 golps(LPSP_file,Options,Results) :-

@@ -341,11 +341,6 @@ sandbox:safe_primitive(interpreter:uassertz(_)).
 sandbox:safe_primitive(interpreter:uretract(_)). 
 sandbox:safe_primitive(interpreter:uretractall(_)). 
 
-sandbox:safe_primitive(psyntax:relax_untimed_literals). 
-sandbox:safe_primitive(psyntax:untimed_literals_are_adjacent). 
-
-relax_untimed_literals :- psyntax:relax_untimed_literals.
-
 /** 
 	system_fluent(Fluent) is det 
 

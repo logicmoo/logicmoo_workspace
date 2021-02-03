@@ -38,8 +38,8 @@ false player_input(_Sender,_Choice,Value), Value\==1000.
 false player_input(Sender,Choice,Value), played(Sender,_).
 % false player_input(Sender,Choice,Value) from T1 to T2, num_players(N) at T1, N>1.
 
-if num_players(2), reward(R), R>0 % Removing R>0 would still produce the same actions, but new goals ad eternu,
-then finalize from _.
+if num_players(2) at T, reward(R) at T, R>0 % Removing R>0 would still produce the same actions, but new goals ad eternu,
+then finalize from T.
 
 finalize if 
 	played(P0,Choice0) at T1, played(P1,Choice1) at T1, P0\==P1, P0 @< P1,

@@ -1,4 +1,6 @@
 :- include(example('loanAgreementPostConditionsRTbase.pl')).
+%NOTE: this example is taking too long to run for the web (it takes about 90 seconds on barebones lps.swi), likely due to unconstrained times
+%   the example worked prior to the Feb 3 2021 'untimed_are_relaxed' change; TODO: revise loanAgreementPostConditionsRTbase.pl
 % Borrower pays early. Against the contract.
 % Fortunately, the lender does not complain.
 initially exceed_assets_liabilities.
