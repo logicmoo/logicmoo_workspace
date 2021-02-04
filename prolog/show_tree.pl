@@ -34,29 +34,31 @@
 
 :- module(show_tree, [show_tree/1]).
 
-show_tree(Tree) :- show_tree(Tree, [], []).
+show_tree(Tree) :- show_tree(Tree, [], [0' ], [0'─]).
 
-show_tree(Node-List, Pre1, _Pos) :-
+show_tree(Node-List, Pre1, Mid, Pos) :-
     !,
     length(List, N),
-    length(Mid,  N),
-    show_node(Node, Pre1, Mid, []),
-    foldl(show_tree_(Pre1), List, Mid-[], _).
+    show_node(Node, Pre1, Pos, N),
+    ( List = []
+    ->true
+    ; List = [Elem|Tail],
+      append(Pre1, Mid, Pre2),
+      foldl(show_tree(Pre2, [0'├]), Tail, Elem, Last),
+      show_tree(Last, Pre2, [0' ], [0'└])
+    ).
 show_tree(Leaf, Pre, Pos) :-
-    show_node(Leaf, Pre, [], Pos).
+    show_node(Leaf, Pre, 0, Pos).
 
-show_node(Node, Pre1, Mid, Pos) :-
-    ignore(( maplist(put_char, Pre1),
-             put_char(0'└),
-             maplist(=(0'┬), Mid),
-             maplist(put_char, Mid),
-             fail
-           )),
-    maplist(=(0'│), Mid),
+show_node(Node, Pre, Pos, N) :-
+    maplist(put_char, Pre),
     maplist(put_char, Pos),
-    write('─ '),
+    ( N = 0
+    ->put_char(0'─)
+    ; put_char(0'┬)
+    ),
+    put_char(0' ),
     writeln(Node).
 
-show_tree_(Pre1, Tree, [_|Pre2]-Pre3, Pre2-[0'─|Pre3]) :-
-    append(Pre1, [0' |Pre2], Pre),
-    show_tree(Tree, Pre, Pre3).
+show_tree(Pre, Pos, Tree, Tree1, Tree) :-
+    show_tree(Tree1, Pre, [0'│], Pos).
