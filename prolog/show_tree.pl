@@ -47,7 +47,7 @@ show_tree(Node-List, Pre1, Mid, Pos) :-
       foldl(show_tree(Pre2, [0'├]), Tail, Elem, Last),
       show_tree(Last, Pre2, [0' ], [0'└])
     ).
-show_tree(Leaf, Pre, Pos) :-
+show_tree(Leaf, Pre, _, Pos) :-
     show_node(Leaf, Pre, 0, Pos).
 
 show_node(Node, Pre, Pos, N) :-
