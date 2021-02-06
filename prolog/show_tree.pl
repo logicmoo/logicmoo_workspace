@@ -32,9 +32,13 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-:- module(show_tree, [show_tree/1]).
+:- module(show_tree, [show_tree/1, show_trees/1]).
 
-show_tree(Tree) :- show_tree(Tree, [], [0' ], [0'─]).
+show_trees(TreeL) :-
+    maplist(show_tree, TreeL).
+
+show_tree(Tree) :-
+    show_tree(Tree, [], [0' ], [0'─]).
 
 show_tree(Node-List, Pre1, Mid, Pos) :-
     !,
