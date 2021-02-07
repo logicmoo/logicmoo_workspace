@@ -363,7 +363,7 @@ prepare_events(Query,ServerUser,Events) :-
 		-> throw('LPS servers can be killed only by their creator user')
 		; true).
 
-% respond to a request for a sample of the current fluents and events covered by d/2 (2d display) declarations
+% respond to a request for a sample of the current fluents and events covered by display/2 (2d display) declarations
 % also accepts a posted list of events (e.g. originated in the GUI based on a sample at some cycle S) to insert into the interpreter ASAP
 :- http_handler('/lps_server/d_sample/', lps_server_UI:display_sample, [prefix]).  % .../lps_server/d_sample/lps1?timeless=true (timeless is optional)
 display_sample(Request) :- 
@@ -401,7 +401,7 @@ prepare_events_for_lps([],[]).
 % (GUI) Events injected here will be "posted" via asserted facts. TODO: unify event handling...
 provide_events_get_fluents_events_actions(InputEvents,Timeless,Ops) :-
 	% mylog(inputEvents-InputEvents),
-	Cond = (interpreter:lps_program_module(M), M:clause(d(X,_),_)), % Peek into d/2 clause heads, without depending on body arithmetic
+	Cond = (interpreter:lps_program_module(M), M:clause(display(X,_),_)), % Peek into display/2 clause heads, without depending on body arithmetic
 	MaxTime = 0.01, % seconds
 	catch( call_with_time_limit(MaxTime,(
 		interpreter:findall_variants(X,Cond,Templates),

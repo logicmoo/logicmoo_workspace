@@ -108,7 +108,7 @@ mayToggleSpeed(DC,DD,S,NS) :- DD>=DC, !, (S>=0->  NS=S;NS is -S).
 mayToggleSpeed(_DC,_DD,S,NS) :- S>0-> NS is -S; NS = S.  
 
 	
-d(conveyor(C,point(SX,SY_),point(EX,EY_),_Working,Speed),[
+display(conveyor(C,point(SX,SY_),point(EX,EY_),_Working,Speed),[
 %	type:line, strokeWidth: 2, strokeColor:black, from:[SX,SY], to:[EX, EY] ] ).
 	type:Type, arrow:Speed, headLength:10, strokeWidth: 2, strokeColor:black, from:[RSX,RSY], to:[REX, REY]|Label ] ) :-
     SY is SY_-5, EY is EY_-5, % hack to draw our line a bit under the conveyed objects
@@ -130,7 +130,7 @@ createContainer(Name,Level,Ob) from T1 to T2 if
 container(C,Level,Where) at T if % visualisation helper
 	container(C,Level) at T, location(C,Where) at T.
 
-d(container(C,Level,point(X,Y)),[from:[X,Y], to:[RightX,RightY], label:(Name:Level), type:rectangle,  fontSize:13, fillColor:'#85bb65']) :-
+display(container(C,Level,point(X,Y)),[from:[X,Y], to:[RightX,RightY], label:(Name:Level), type:rectangle,  fontSize:13, fillColor:'#85bb65']) :-
     RightX is X+10, RightY is Y+Level, C=..[_,Name].
 
 %%% Heater; transfers its temperature instantaneously to all heatable(Ob,_Temperature) objects inside its rectangle
@@ -155,7 +155,7 @@ if heater(H,BL,TR,_) at T, working(H,on) at T, heatable(Ob,Temp) at T,
 	location(Ob,L1) at T, inside(L1,BL,TR), location(Ob,L2) at T+1, \+ inside(L2,BL,TR), initialTemperature(H,Ob,InitialTemp)
 then terminate initialTemperature(H,Ob,InitialTemp) from T+1, update Temp to InitialTemp in heatable(Ob,Temp) from T+1.
 
-d(heater(ID,point(BLX,BLY),point(TRX,TRY),Temp),[
+display(heater(ID,point(BLX,BLY),point(TRX,TRY),Temp),[
     type:rectangle,label:TS,from:[BLX,BLY],to:[TRX,TRY],strokeColor:red ]) :-
     format(string(TS),"~wo",[Temp]).
 
@@ -177,7 +177,7 @@ then NewD is D+(Current-Initial)*0.01, update D to NewD in cookable(Ob,Initial,D
 cookable(Ob,InitialTemp,Doneness,Where) at T if % visualisation helper
 	cookable(Ob,InitialTemp,Doneness) at T, location(Ob,Where) at T.
 
-d(cookable(C,_,D,point(X,Y)),[type:circle,center:[X,Y], radius:5, label:Ds, fontSize:13, fillColor:red]) :- format(string(Ds),"~2f",[D]).
+display(cookable(C,_,D,point(X,Y)),[type:circle,center:[X,Y], radius:5, label:Ds, fontSize:13, fillColor:red]) :- format(string(Ds),"~2f",[D]).
 
 
 %%% Pump, a generic version of valve, with a flow and ways to impact it
@@ -249,13 +249,13 @@ drop([],_).
 dropper(D,Speed,Where) at T if % helper for displaying
 	dropper(D,Speed,_Proto,_,_) at T, location(D,Where) at T.
 
-d(dropper(dropper(Name),Speed,point(X,Y)),[
+display(dropper(dropper(Name),Speed,point(X,Y)),[
     [type:line,from:[X,Y],to:[TLX,TY],strokeColor:black], [type:line,from:[X,Y],to:[TRX,TY],strokeColor:black]
     ]) :- TLX is X-10, TY is Y+15, TRX is X+10.
 
 %% geometry and other utilities
 
-%d(timeless,Props) :- findall(P,timeless_element(P),Props). % TODO: some other scene elements?
+%display(timeless,Props) :- findall(P,timeless_element(P),Props). % TODO: some other scene elements?
 
 % interpolate(+StartPoint,+EndPoint,+DistanceFromStart,-Point)
 interpolate(point(SX,Y),point(EX,Y),D,point(X,Y)) :- !, (EX>=SX ->   X is SX+D ; X is SX-D).

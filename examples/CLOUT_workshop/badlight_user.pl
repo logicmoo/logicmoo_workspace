@@ -34,13 +34,13 @@ lps_mousedown(Where,_X,_Y) updates Old to 'on' in light(Where,Old) if atomic(Whe
 false goto(dad, Place1), goto(dad, Place2), Place1 \= Place2.
 false goto(Person,_), switch(Person, _, _).
 
-d(light(Place,on),[
+display(light(Place,on),[
   	type:raster, scale:0.2,
     source:'http://www.clker.com/cliparts/O/Y/B/C/t/1/light-bulb-on-md.png',
     position:[X,Y]
   ]) :- locationXY(Place,RX,RY), X is RX+75, Y is RY+120.
 
-d(location(P,L),[type:ellipse,label:P,point:[PX,PY],size:[20,40],fillColor:green]) :-
+display(location(P,L),[type:ellipse,label:P,point:[PX,PY],size:[20,40],fillColor:green]) :-
     locationXY(L,X,Y), PY is Y+10,
     (P=dad ->  PX is X + 25 ; PX is X+50).
 
@@ -49,7 +49,7 @@ locationXY(kitchen,150,0).
 locationXY(bedroom,150,150).
 locationXY(bathroom,0,150).
 
-d(timeless,Divisions) :- findall(
+display(timeless,Divisions) :- findall(
    	[type:rectangle, label:D, id:D, from:[X,Y], to:[TX,TY], strokeColor:black ],
   	( locationXY(D,X,Y), TX is X+150, TY is Y+150), 
    	Divisions).

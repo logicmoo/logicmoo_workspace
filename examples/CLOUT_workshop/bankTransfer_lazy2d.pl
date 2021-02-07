@@ -21,16 +21,16 @@ false	transfer(From, To, Amount), balance(From, Old),  Old < Amount.
 false	transfer(From, To1, Amount1), transfer(From, To2, Amount2),  To1 \=To2.
 false	transfer(From1, To, Amount1), transfer(From2, To, Amount2),  From1 \= From2.
 
-d(balance(Person,V), 
+display(balance(Person,V), 
 	[from:[X,0], to:[RightX,V], label:(Person:V), type:rectangle,  fontSize:13, fillColor:'#85bb65'/* USD:-)*/ ]
 	) :- 
     (Person=bob,X=50;Person=fariba,X=200),
     RightX is X+70.
     
-d(transfer(From,To,Amount),[type:arrow, label:Amount, from:[FX,20], to:[TX,20]]) :- 
+display(transfer(From,To,Amount),[type:arrow, label:Amount, from:[FX,20], to:[TX,20]]) :- 
     (From=bob,FX=120,TX=200 ; From=fariba,FX=200,TX=120).
 
-d(timeless,[ 
+display(timeless,[ 
     % a display spec can be a list of properties (for one object) or a list of lists (4 objects here:)
     [type:star, center:[250,150], points:9, radius1:20, radius2:25, fillColor:yellow, sendToBack],
     [type:rectangle, from:[0,0], to:[320,200], sendToBack, fillColor:[0,0.746,1]], % R,G,B

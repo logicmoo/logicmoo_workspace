@@ -76,9 +76,9 @@ check_js_compliance(Notices) :-
 		buildError(Lit,Vars,' an event or fluent cannot be a free variable ',ET)
 		),
 		Meta),	
-	% warn about ignored d/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
+	% warn about ignored display/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
 	findall( notice(warning,ET,Pos), (
-		Head=d(_,_),
+		Head=display(_,_),
 		interpreter:user_prolog_clause(Head,Body),
 		(Body==true -> Clause=Head; Clause=(Head:-Body)),
 		source_position(Clause,F,Pos,Vars),

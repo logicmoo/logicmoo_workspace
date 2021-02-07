@@ -35,7 +35,7 @@ a conveyor method...
 
  */
     
-d(timeless, [[type:rectangle,from:[0,0],to:[600,350],strokeColor:green]]). % bounds for our display
+display(timeless, [[type:rectangle,from:[0,0],to:[600,350],strokeColor:green]]). % bounds for our display
 
 maxTime(70). % minCycleTime(0).
 /** <examples> 

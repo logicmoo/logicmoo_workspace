@@ -53,11 +53,11 @@ kitchenSummary(CookableCount,AvgDoneness ,Min,Max) at _ if
 	sum_list(L,Total), AvgDoneness is Total/CookableCount, 
 	min_list(L,Min), max_list(L,Max).
 
-d(kitchenSummary(Count,Avg,Min,Max),[
+display(kitchenSummary(Count,Avg,Min,Max),[
     from:[400,300], to:[600,350], label:S, type:rectangle,  fillColor:salmon]) :- 
 	format(string(S),"~w items, ~ndoneness ~2f (~2f-~2f)",[Count,Avg,Min,Max]).
     
-d(timeless, [[type:rectangle,from:[0,0],to:[600,350],strokeColor:green]]). % bounds for our display
+display(timeless, [[type:rectangle,from:[0,0],to:[600,350],strokeColor:green]]). % bounds for our display
 
 maxTime(100). % minCycleTime(0).
 /** <examples> 

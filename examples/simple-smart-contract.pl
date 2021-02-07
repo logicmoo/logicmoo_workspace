@@ -26,13 +26,13 @@ if	account(Giver, Amount1), Amount2 is Amount1 - Amount.
 transfers(Giver, Amount, Receiver) terminates account(Receiver, _).
 transfers(Giver, Amount, Receiver) terminates account(Giver, _).
 
-d(account(Person,V),
+display(account(Person,V),
 	[from:[X,0], to:[RightX,V], label:(Person:V), type:rectangle,  fontSize:13, fillColor:'#85bb65'/* USD:-)*/ ]
 	) :-
     (Person=bob,X=50;Person=fariba,X=200),
     RightX is X+70.
 
-d(timeless,[
+display(timeless,[
     % a display spec can be a list of properties (for one object) or a list of lists (4 objects here:)
     [type:star, center:[250,150], points:9, radius1:20, radius2:25, fillColor:yellow, sendToBack],
     [type:rectangle, from:[0,0], to:[320,200], sendToBack, fillColor:[0,0.746,1]], % R,G,B

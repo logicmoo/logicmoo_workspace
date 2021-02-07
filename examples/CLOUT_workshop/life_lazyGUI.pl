@@ -48,14 +48,14 @@ events lps_mousedown(_,_,_).
 % rather than detect a click on a fluent, detect a click anywhere:
 lps_mousedown(_,XX,YY) initiates X-Y if X is round(XX/10), Y is round(YY/10).
 
-d(X-Y,[center:[XX,YY], radius:5, type:circle, fillColor:green]) :- 
+display(X-Y,[center:[XX,YY], radius:5, type:circle, fillColor:green]) :- 
     XX is X*10, YY is Y*10.
-d(live(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:red]) :- 
+display(live(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:red]) :- 
     XX is X*10, YY is Y*10.
-d(die(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:black]) :- 
+display(die(X-Y),[type:star, center:[XX,YY], points:7, radius1:4, radius2:7, fillColor:black]) :- 
     XX is X*10, YY is Y*10.
 
-d(timeless,[[type:raster,position:[50,120], scale:0.08, % more complicated: transform:[-0.1,0,0,0.1,0,0],
+display(timeless,[[type:raster,position:[50,120], scale:0.08, % more complicated: transform:[-0.1,0,0,0.1,0,0],
              source:'https://upload.wikimedia.org/wikipedia/commons/0/04/John_H_Conway_2005_%28cropped%29.jpg'],
      [type:text, point:[0,5], content:'Conway\'s Game of Life']]).
 

@@ -12,8 +12,8 @@ then
 false ignite(X,Y), burning(X,Y).
 observe ignite(5,5) from 1 to 2. % events are not admissible earlier
 
-/* When a LPS program defines the d/2 ("display") predicate, a 2D world animation is show
-d(T,Props) specifies the appearance of fluent or event T; Props is a list of 
+/* When a LPS program defines the display/2 ("display") predicate, a 2D world animation is show
+display(T,Props) specifies the appearance of fluent or event T; Props is a list of 
 display properties (or a list of such lists, thus defining a composite display object)
 A props list must contain a type property (e.g. line, circle, and all other 
 shaped paths referred in http://paperjs.org/reference/path/ ), plus enough properties
@@ -25,17 +25,17 @@ Use the video controls to pause or step through the animation.
 Clicking the top left corner of the animation lets you still see the timeline as usual */
 
 % Visualize a burning spot, converting our model coordinates to screen pixels:
-d(burning(X,Y), [type:circle,center:[CX,CY],radius:10,fillColor:yellow] ):- 
+display(burning(X,Y), [type:circle,center:[CX,CY],radius:10,fillColor:yellow] ):- 
 	pixels(X,Y,CX,CY).
 
 % Events are displayed only briefly during state transitions
 % Center a translucid star on the spot:
-d(ignite(X,Y), [type:star,fillColor:red,center:[CX,CY],points:6,radius1:10,radius2:6,opacity:0.5]) :-
+display(ignite(X,Y), [type:star,fillColor:red,center:[CX,CY],points:6,radius1:10,radius2:6,opacity:0.5]) :-
     pixels(X,Y,CX,CY).
 
 % Screen size is based on fluents visible in the first cycle, so let's display a visual
 % boundary from the start, for all time (ergo 'timeless'):
-d(timeless, [
+display(timeless, [
 	[type:rectangle,from:[0,0],to:[200,200],strokeColor:green],
 	[type:pointText, fillColor:black, point:[10,10], content:'Burning example', fontSize:14] 
 	]).
