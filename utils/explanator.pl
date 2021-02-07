@@ -79,10 +79,10 @@ lps_program_module(M) :- interpreter:lps_program_module(M).
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
 :- use_module('../../swish/lib/render').
-:- register_renderer(explanator, "Textual LPS explanation").
+:- register_renderer(explanator, "Indented LPS explanation").
 :- discontiguous(term_rendering/5).
-term_rendering(lpsExplanation(Tree), _Vars, _Options) --> 
-	html(div(['data-render'('As LPS Explanation')],[ \explanationNarrative(Tree) ])).
+term_rendering(lpsExplanation(HTML), _Vars, _Options) --> 
+	html(div(['data-render'('As LPS Explanation')],[ div([],HTML) ])).
 
 explanationNarrative([]) --> {!}.
 explanationNarrative(Leaf) --> {atomic(Leaf), !}, html(li(Leaf)).
@@ -146,27 +146,63 @@ set_lazy_mode(false) :- retractall(lazy).
 expandE(G,_,G) :- lazy, !.
 expandE(G,E,E) :- G.
 
+/* OLD implementation:
 expl_tree(Type,X,lpsExplanation(Tree)) :- 
 	init_lps_swish, Node =..[Type,X,[],_,_], 
 	generate_explanation_tree_relation(Node),
 	retractall(explanation_tree_used(_)),
 	explanation_tree(Node,Tree).
+*/
 
-:- thread_local(explanation_tree_used/1). % detect repeated subtrees
+% NEW implementation:
+expl_tree(Type,X,lpsExplanation(HTML)) :- 
+	init_lps_swish, Node =..[Type,X,[],_,_], 
+	generate_explanation_tree_relation(Node),
+	retractall(explanation_tree_used(_)),
+	explanationTreeHTML(Node,HTML).
 
-explanation_tree(Node,Atom) :- explanation_tree_used(Node_), variant(Node,Node_), !,
-	once((explanation_tree_relation(Node_,Label,_), variant(Node,Node_))), 
-	format(atom(Atom),'REPEATED: ~w',[Label]).
+% explanationTreeHTML(+Node,-HTMLlist)
+explanationTreeHTML([C1|Cn],CH) :- !, 
+	explanationTreeHTML(C1,C1_), explanationTreeHTML(Cn,Cn_), append(C1_,Cn_,CH).
+explanationTreeHTML([],[]) :- !.
+explanationTreeHTML(Node,[]) :-
+	node_type(Node,Type,X,_), 
+	%TODO: explanation_tree_used is keeping useless term arguments
+	explanation_tree_used(Node_), node_type(Node_,Type,X_,_), variant(X,X_),
+	!.
+explanationTreeHTML(Node,Tree) :- 
+	%???? Used=..[Type,X], assert(explanation_tree_used(Used)),
+	node_type(Node,Type,_,RelaxedNode),
+	once( explanation_tree_relation(RelaxedNode,Label,Children) ), % pick the first, TODO: should pick the smallest
+	assert(explanation_tree_used(Node)),
+	Tree = [li([],"~a: ~w"-[Type,Label]) | UL],
+	explanationTreeHTML(Children,CH),
+	(CH==[]->UL=[];UL=[ul(CH)]).
+
+% node_type(+Node,-Type,-Term,-RelaxedNode)
+node_type(Node,Type,X,RelaxedNode) :- Node=..[Type,X,_,_,_], member(Type,[w,i,m]), !,RelaxedNode=..[Type,X,_,_,_].
+node_type(calledBy-X,caller,X,calledBy-X) :- !.
+node_type(X,clause,X,X).
+
+node_type(Node,Type) :- node_type(Node,Type,_,_).
+
+:- thread_local(explanation_tree_used/1). % Node; detect repeated subtrees
+explanation_tree(Node,_Atom) :- explanation_tree_used(Node_), variant(Node,Node_), !,
+	fail. % we really don't care to see repeated nodes
+	% once((explanation_tree_relation(Node_,Label,_), variant(Node,Node_))), 
+	% format(atom(Atom),'REPEATED: ~w',[Label]).
 explanation_tree(Node,Tree) :- explanation_tree_relation(Node_,Label,Children), variant(Node,Node_), !,
 	assert(explanation_tree_used(Node)),
 	(Children=[] -> Tree=Label ; explanation_trees(Children,Trees), Tree=..[Label|Trees]).
 
-explanation_trees([C1|Cn],[T1|Tn]) :- !, explanation_tree(C1,T1), explanation_trees(Cn,Tn).
+explanation_trees([C1|Cn],Trees) :- !, 
+	(explanation_tree(C1,T1) -> Trees=[T1|Tn] ; Trees=Tn), 
+	explanation_trees(Cn,Tn).
 explanation_trees([],[]).
 
 % explanation_tree_relation(?Node,-Label,-Children)   
 % Node will be either:
-% - a explanator call of the form Type(+X,+Ancestors,-Explanation,-Interval), where Type=w/i/m
+% - Type(+X,[],_,_), where Type=w/i/m
 % - a LPS clause instance C, in internal syntax form
 % - a calledBy-C term, meaning that LPS clause instance C "called" or selected the action or macro action being explained
 :- thread_local(explanation_tree_relation/3).
@@ -178,21 +214,38 @@ generate_explanation_tree_relation(Node) :-
 	generate_explanation_tree_relation_(Node).
 
 generate_explanation_tree_relation_(Repeated) :- 
-	explanation_tree_relation(Node,_Label,_Children), variant(Node,Repeated), !.
+	node_type(Repeated,Type,X,_),
+	explanation_tree_relation(Node,_Label,_Children), node_type(Node,Type,XX,_),
+	variant(XX,X), !.
 generate_explanation_tree_relation_(Node) :- 
-	tree_node(Node,Label,Children), assert(explanation_tree_relation(Node,Label,Children)), 
-	generate_explanation_trees_(Children).
+	tree_node(Node,Label,Children), 
+	expand_children_lists(Children,Children_),
+	assert(explanation_tree_relation(Node,Label,Children_)), 
+	generate_explanation_trees_(Children_).
 
 generate_explanation_trees_([C1|Cn]) :- !, generate_explanation_tree_relation_(C1), generate_explanation_trees_(Cn).
 generate_explanation_trees_([]).
 
+expand_children_lists([C1|Cn],Expanded) :- C1=..[Type,L,Ancestors,_,_], is_list(L), !,
+	findall(C,(member(X,L), C=..[Type,X,Ancestors,_,_]), C1_),
+	expand_children_lists(Cn,En),
+	append(C1_,En,Expanded).
+expand_children_lists([C1|Cn],[C1|En]) :- !, expand_children_lists(Cn,En).
+expand_children_lists([],[]).
+
+
+
+
+
 % tree_node(+Node,-Label,-Children)
 tree_node(Node,Label,Children) :-  Node =..[Type,X,_Anc,Expl,_I], member(Type,[w,i,m]), !,
-	pretty_explanation(X,PX), format(atom(Label),'~w: ~w',[Type,PX]),
+	pretty_explanation(X,PX), 
+	%format(atom(Label),'~w: ~w',[Type,PX]),
+	format(atom(Label),'~w',[PX]),
 	findall(Expl,Node,Children_), 
 	% avoid trivial goal conjunctions: TODO: missing treatment negated fluent goals?? perhaps not
 	findall(Child,( member(C,Children_), (is_list(C)->member(Child,C);C=Child) ),Children). 
-tree_node(calledBy-C,Label,[]) :- !, pretty_explanation(C,PC), format(atom(Label),'Caller: ~w',[PC]).
+tree_node(calledBy-C,Label,[]) :- !, pretty_explanation(C,PC), format(atom(Label),'~w',[PC]). % format(atom(Label),'Caller: ~w',[PC]).
 tree_node(C,Label,[]) :- !, pretty_explanation(C,PC), format(atom(Label),'~w',[PC]).
 
 % Top level predicate:
@@ -225,7 +278,7 @@ pretty_explanation(E,PE) :- once(syntax2p(PE,[],lps2p,E)).
 
 
 % w(+Goal,+Ancestors,-Explanation,-Interval) Why is (ground) Fluent true. Or why is the answer "wrong". 
-% For background on "wrong", "inadmissible" etc. see http://www.declarativa.com/people/mc/mcstuff/CalejoPhDThesis1992.pdf
+% For background on "wrong", "inadmissible" etc. see https://www.researchgate.net/publication/269696225_A_Framework_for_Declarative_Prolog_Debugging
 % One answer for each immediate explanation. Interval is the minimal time interval [T1,T2] including all explanation nodes (unbound on lazy mode)
 % This ASSUMES all fluent literals to be ground. When an explanation is found, others of similar origin are discarded
 % Ancestors is a list w(X),i(Y),m(Z), only for basic actions, to detect loops due to preconditions involving multiple actions, e.g. 
@@ -408,6 +461,7 @@ last_time(T) :- state(_,T), \+ (state(_,Later), Later>T), !, assert(last_time_ca
 % Declarations to unclutter the explanation from trivia:
 uninteresting_timeless(_G).
 
+% Ex: psyntax:golps('/Users/mc/git/lps_corner/examples/CLOUT_workshop/RockPaperScissorsBase.pl',[dc,make_test]), why(happens(pay(bob,2000),2,3)).
 user:why(X) :- expl_pretty(w,X).
 user:why(X,Tree) :- expl_tree(w,X,Tree). 
 user:whynot(X) :- expl_pretty(m,X).
