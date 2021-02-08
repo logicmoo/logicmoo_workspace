@@ -1,0 +1,50 @@
+
+maxRealTime(120).
+
+observe([init],2).
+
+check_winner(paper,scissors,1).
+check_winner(scissors,paper,0).
+check_winner(rock,scissors,0).
+check_winner(scissors,rock,1).
+check_winner(rock,paper,1).
+check_winner(paper,rock,0).
+check_winner(_7876,_7876,draw).
+
+events
+    [init,player_input(_7876,_7878,_7880),send(_7884,_7886)].
+
+actions
+    [send(_7876,_7878)].
+
+fluents
+    [reward(_7876),played(_7880,_7882),earned(_7886,_7888)].
+
+initiated(happens(init,_7960,_7966),reward(0),[]).
+
+d_pre([happens(init,_7920,_7926),holds(reward(_7876),_7920)]).
+
+initiated(happens(player_input(_7876,_7878,_7880),_8008,_8014),played(_7876,_7878),[]).
+
+updated(happens(player_input(_7876,_7878,_7880),_8158,_8164),reward(_7884),_7884-_7886,[_7886 is _7884+_7880]).
+
+l_int(holds(num_players(_7876),_7882),[holds(findall(_7886,[holds(played(_7886,_7888),_7882)],_7896),_7882),length(_7896,_7876)]).
+
+d_pre([happens(player_input(_7876,_7878,_7880),_7966,_7972),_7880\==1000]).
+d_pre([happens(player_input(_7876,_7878,_7880),_7966,_7972),holds(played(_7876,_7886),_7966)]).
+d_pre([happens(player_input(_7876,_7878,_7880),_7884,_7886),holds(num_players(_7896),_7886),_7896>2]).
+
+reactive_rule([holds(num_players(2),_7974),holds(reward(_7880),_8016),_7880>0],[happens(finalize,_7908,_8128)]).
+
+l_events(happens(finalize,_7884,_7940),[holds(played(_7876,_7878),_7884),holds(played(_7888,_7890),_7884),_7876\==_7888,_7876@<_7888,check_winner(_7878,_7890,_7916),holds(reward(_7920),_7884),happens(send_rewards(_7916,_7876,_7888),_7884,_7940)]).
+l_events(happens(finalize,_7918,_7924),[holds(reward(0),_7918)]).
+l_events(happens(send_rewards(0,_7878,_7880),_7884,_7886),[holds(reward(_7896),_7884),happens(send(_7878,_7896),_7884,_7886)]).
+l_events(happens(send_rewards(1,_7878,_7880),_7884,_7886),[holds(reward(_7896),_7884),happens(send(_7880,_7896),_7884,_7886)]).
+l_events(happens(send_rewards(draw,_7878,_7880),_7890,_7924),[holds(reward(_7884),_7890),holds(num_players(_7894),_7890),_7910 is _7884/2,happens(send(_7878,_7910),_7890,_7924),happens(send(_7880,_7910),_7890,_7924)]).
+
+updated(happens(send(_7876,_7878),_8130,_8136),reward(_7882),_7882-_7884,[_7884 is _7882-_7878]).
+
+initiated(happens(send(_7876,_7878),_7994,_8000),earned(_7876,_7878),[]).
+
+d_pre([happens(send(_7876,_7878),_7882,_7884),holds(reward(_7894),_7882),_7878>_7894]).
+d_pre([happens(send(_7876,0),_7916,_7922)]).

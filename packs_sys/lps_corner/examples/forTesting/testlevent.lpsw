@@ -1,0 +1,51 @@
+% Example submitted by Fariba, showing backtracking
+% Deprecated, depends on reactive rules with priority
+
+event(start_game(_)).
+action(moveperson(_,_,_)).
+action(genbelief(_,_)).
+event(newbelief).
+fluent(fact(_)).
+fluent(belief(_,_)).
+fluent(object(_,_)).
+fluent(position(_,_,_)).
+
+initial_state([
+	fact(unit1),
+	position(unit1,1,1),
+	belief(2,1),
+	object(3,1)
+]).
+
+l_timeless(increment(X, X1), [X1 is X + 1]).
+
+terminated(happens(moveperson(Unit,_X, _Y), _T1, _T2), position(Unit,_X1,_Y1), []).
+initiated(happens(moveperson(Unit,X, Y), _T1, _T2), position(Unit,X,Y), []).
+
+terminated(happens(genbelief(_X, _Y), _T1, _T2), belief(_X1,_Y1), []).
+initiated(happens(genbelief(X, Y), _T1, _T2), belief(X,Y), []).
+
+reactive_rule([ happens(start_game(_Unit), _T1, T2)],[
+	happens(newbelief, T3, _T4), tc(T2 =< T3)]
+	,95).
+
+
+l_events( happens(newbelief, T1, T2), [
+	holds(belief(X,Y),T1),
+	increment(X,X1),
+	holds(not(object(X1,Y)),T1),
+	happens(genbelief(X1,Y),T1,T2)
+	]).
+
+l_events( happens(newbelief, T1, T2), [
+	%holds(fact(unit1), T1),
+	holds(belief(X,Y),T1),
+	increment(Y,Y1),
+	holds(not(object(X,Y1)),T1),
+	happens(genbelief(X,Y1),T1,T2)
+	]).
+
+observe([start_game(unit1)], 2).
+observe([], 3).
+observe([], 4).
+observe([], 5).

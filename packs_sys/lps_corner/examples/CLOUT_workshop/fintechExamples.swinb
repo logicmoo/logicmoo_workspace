@@ -1,0 +1,52 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Fintech examples
+
+This notebook introduces some examples of logical contracts related to financial technology.
+
+
+- *Banking* In this toy example, fariba and bob alternate between transfering money to one another, until fariba runs out of money.
+  Most of the code is in the causal laws, which update bank balances and prevent concurrent transfers that would complicate the computation of updated bank balances. In conventional database programming languages the code for transfering money incorporates implementation details that are catered for in LPS by its general-purpose engine. 
+	- [Bank transfers](example/bankTransfer.pl)
+    
+- *Ethereum blockchain* How to manage a game of "Rock, Paper, Scissors" for real (**well, Rostnet testnet**) blockchain coins? 
+The first example simulates a game so we fully understand it, by seeing its logic over time in a fluents/events timeline, 
+and understanding why contract decisions are made (try the second example query to see a preliminary explanation/auditing for a payment). 
+
+The second changes a couple of lines to consider real blockchain events and actions. 
+It is a fully working Ethereum agent, whose real transactions can be observed on https://ropsten.etherscan.io . Notice how the timestamped logic of LPS
+dispenses with complex concurrent programming.
+	 - [Rock, Paper, Scissors](example/RockPaperScissorsBase.pl)
+	 	- [Same, in Formal English](example/RockPaperScissorsBaseEN.pl). Preliminary demonstration of executable formal English.
+	 - _Our Ethereum node is available by appointment only, so the following will not execute at this point:_
+	 - [Rock, Paper, Scissors "gambling" on Ethereum](example/RockPaperScissorsEthereum.pl) testnet. Read the comments (%) to understand the differences.
+	 	- [Same, in Formal English](example/RockPaperScissorsEthereumFEn.pl). 
+
+- *Simplified Loan Agreement* This example is based on the loan agreement in Flood and Goodenough, March 2017, [Contract as automaton: the computational representation of financial agreements](https://www.financialresearch.gov/working-papers/files/OFRwp-2015-04_Contract-as-Automaton-The-Computational-Representation-of-Financial-Agreements.pdf):
+ 
+	- [Simplified Loan](example/loan.swinb) Explanatory notebook, start here
+	- _Earlier versions_:
+		- [_Two-payment loan contract_](example/loanAgreementPostConditionsRT.pl). _Uses simulated calendar time_
+		- [_Variant with cycle time only_](example/loanAgreementPostConditions.pl). 
+
+
+	
+- *Delayed delivery* This example taken from the [Accord Template Specification](https://docs.google.com/document/d/1UacA_r2KGcBA2D4voDgGE8jqid-Uh4Dt09AE-shBKR0/edit#) comes from the [Accord project](https://www.accordproject.org/):
+
+In case of delayed delivery, the Seller shall pay to the Buyer, for every duration of delay, a penalty amounting to a percentage of the total value of the Equipment whose delivery has been delayed. Any fractional part of the duration is to be considered a full part. The total amount of penalty shall not however exceed a percentage of the total value of the Equipment involved in late delivery.  If the delay is more than a certain date, the Buyer is entitled to terminate this Contract.
+
+	- [Delayed delivery](example/deliveryDelay.pl)
+
+- *Generic contract representation* In [A Formal Language for Analyzing Contracts](https://nakamotoinstitute.org/contract-language/) Nick Szabo designed a language to represent legal contracts, illustrated with some examples. That language can be mapped directly to a subset of LPS, with contracts represented as composite events, and non compliance as (negation as) failure.
+
+	- [Insurance](example/SzaboLanguage_insurance_base.pl) A simple shipping insurance contract. To run it, use the following links, that inject world events into the contract for specific scenarios:
+		- [Insurance](example/SzaboLanguage_insurance_normal_claim.pl) All parties behaving normally
+		- [Foreclosing](example/SzaboLanguage_insurance_foreclosing.pl) The insurer failed to honor the claim, so the holder uses his power to foreclose the insurer's goods.
+		- [Non compliant](example/SzaboLanguage_insurance_noncompliant.pl) The insurer failed to honor the claim, but somehow the holder did not foreclose. Contract is non compliant (it fails).
+		- Try different scenarios by pasting observations into the [base contract](example/SzaboLanguage_insurance_base.pl).
+		
+	- [Futures](example/SzaboLanguage_futures.pl) A minimal futures contract.
+</div>
+
+</div>

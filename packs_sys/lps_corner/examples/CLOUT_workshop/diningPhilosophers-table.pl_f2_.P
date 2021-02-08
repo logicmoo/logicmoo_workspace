@@ -1,0 +1,19 @@
+
+maxRealTime(180).
+
+minCycleTime(0.01).
+
+fluents
+    [available(_6404)].
+
+events
+    [pickup(_6404,_6406),putdown(_6410,_6412)].
+
+initial_state([available(fork1),available(fork2),available(fork3),available(fork4),available(fork5)]).
+
+terminated(happens(pickup(_6404,_6406),_6524,_6530),available(_6406),[]).
+
+initiated(happens(putdown(_6404,_6406),_6524,_6530),available(_6406),[]).
+
+d_pre([happens(pickup(_6404,_6406),_6482,_6488),holds(not available(_6406),_6482)]).
+d_pre([happens(pickup(_6404,_6406),_6504,_6510),happens(pickup(_6410,_6406),_6504,_6510),_6404\=_6410]).

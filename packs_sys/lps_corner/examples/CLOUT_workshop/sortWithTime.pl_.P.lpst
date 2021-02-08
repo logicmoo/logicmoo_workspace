@@ -1,0 +1,463 @@
+/*
+  LPS test results file generated on 2019-3-20 at 9:29:30
+  on Prolog swi(8,1,1,[]) for program file:
+  /Users/mc/git/lps_corner/examples/CLOUT_workshop/sortWithTime.pl_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,0).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,0).
+lps_test_result(events,2,11).
+lps_test_result(fluents,2,10).
+lps_test_result(events,3,5).
+lps_test_result(fluents,3,14).
+lps_test_result(events,4,3).
+lps_test_result(fluents,4,16).
+lps_test_result(events,5,2).
+lps_test_result(fluents,5,17).
+lps_test_result(events,6,2).
+lps_test_result(fluents,6,19).
+lps_test_result(events,7,10).
+lps_test_result(fluents,7,19).
+lps_test_result(events,8,5).
+lps_test_result(fluents,8,20).
+lps_test_result(events,9,2).
+lps_test_result(fluents,9,20).
+lps_test_result(events,10,1).
+lps_test_result(fluents,10,20).
+lps_test_result(events,11,2).
+lps_test_result(fluents,11,20).
+lps_test_result(events,12,0).
+lps_test_result(fluents,12,20).
+lps_test_result(events,13,1).
+lps_test_result(fluents,13,20).
+lps_test_result(events,14,1).
+lps_test_result(fluents,14,21).
+lps_test_result(events,15,0).
+lps_test_result(fluents,15,21).
+lps_test_result(events,16,0).
+lps_test_result(fluents,16,21).
+lps_test_result(events,17,0).
+lps_test_result(fluents,17,21).
+lps_test_result(events,18,0).
+lps_test_result(fluents,18,21).
+lps_test_result(events,19,1).
+lps_test_result(fluents,19,21).
+lps_test_result(events,20,0).
+lps_test_result(fluents,20,21).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(events,2,initiate sorted('Red Star Belgrade',1)).
+lps_test_result_item(events,2,initiate sorted('PSV Eindhoven',1)).
+lps_test_result_item(events,2,initiate sorted('Feyenoord',1)).
+lps_test_result_item(events,2,initiate sorted('Borussia Dortmund',1)).
+lps_test_result_item(events,2,initiate sorted('Steaua Bucuresti',1)).
+lps_test_result_item(events,2,initiate sorted('Hamburg',1)).
+lps_test_result_item(events,2,initiate sorted('Celtic',1)).
+lps_test_result_item(events,2,initiate sorted('Aston Villa',1)).
+lps_test_result_item(events,2,initiate sorted('Chelsea',1)).
+lps_test_result_item(events,2,initiate sorted('Marseille',1)).
+lps_test_result_item(events,2,writeln(1)).
+lps_test_result_item(fluents,2,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,2,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,2,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,2,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,2,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,2,sorted('Hamburg',1)).
+lps_test_result_item(fluents,2,sorted('Celtic',1)).
+lps_test_result_item(fluents,2,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,2,sorted('Chelsea',1)).
+lps_test_result_item(fluents,2,sorted('Marseille',1)).
+lps_test_result_item(events,3,writeln(2)).
+lps_test_result_item(events,3,initiate sorted('Benfica',2)).
+lps_test_result_item(events,3,initiate sorted('Porto',2)).
+lps_test_result_item(events,3,initiate sorted('Nottingham Forest',2)).
+lps_test_result_item(events,3,initiate sorted('Juventus',2)).
+lps_test_result_item(fluents,3,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,3,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,3,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,3,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,3,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,3,sorted('Hamburg',1)).
+lps_test_result_item(fluents,3,sorted('Celtic',1)).
+lps_test_result_item(fluents,3,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,3,sorted('Chelsea',1)).
+lps_test_result_item(fluents,3,sorted('Marseille',1)).
+lps_test_result_item(fluents,3,sorted('Benfica',2)).
+lps_test_result_item(fluents,3,sorted('Porto',2)).
+lps_test_result_item(fluents,3,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,3,sorted('Juventus',2)).
+lps_test_result_item(events,4,initiate sorted('Inter Milan',3)).
+lps_test_result_item(events,4,initiate sorted('Manchester United',3)).
+lps_test_result_item(events,4,writeln(3)).
+lps_test_result_item(fluents,4,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,4,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,4,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,4,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,4,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,4,sorted('Hamburg',1)).
+lps_test_result_item(fluents,4,sorted('Celtic',1)).
+lps_test_result_item(fluents,4,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,4,sorted('Chelsea',1)).
+lps_test_result_item(fluents,4,sorted('Marseille',1)).
+lps_test_result_item(fluents,4,sorted('Benfica',2)).
+lps_test_result_item(fluents,4,sorted('Porto',2)).
+lps_test_result_item(fluents,4,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,4,sorted('Juventus',2)).
+lps_test_result_item(fluents,4,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,4,sorted('Manchester United',3)).
+lps_test_result_item(events,5,writeln(4)).
+lps_test_result_item(events,5,initiate sorted('Ajax',4)).
+lps_test_result_item(fluents,5,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,5,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,5,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,5,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,5,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,5,sorted('Hamburg',1)).
+lps_test_result_item(fluents,5,sorted('Celtic',1)).
+lps_test_result_item(fluents,5,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,5,sorted('Chelsea',1)).
+lps_test_result_item(fluents,5,sorted('Marseille',1)).
+lps_test_result_item(fluents,5,sorted('Benfica',2)).
+lps_test_result_item(fluents,5,sorted('Porto',2)).
+lps_test_result_item(fluents,5,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,5,sorted('Juventus',2)).
+lps_test_result_item(fluents,5,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,5,sorted('Manchester United',3)).
+lps_test_result_item(fluents,5,sorted('Ajax',4)).
+lps_test_result_item(events,6,initiate sorted('Bayern Munich',5)).
+lps_test_result_item(events,6,initiate sorted('Barcelona',5)).
+lps_test_result_item(fluents,6,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,6,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,6,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,6,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,6,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,6,sorted('Hamburg',1)).
+lps_test_result_item(fluents,6,sorted('Celtic',1)).
+lps_test_result_item(fluents,6,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,6,sorted('Chelsea',1)).
+lps_test_result_item(fluents,6,sorted('Marseille',1)).
+lps_test_result_item(fluents,6,sorted('Benfica',2)).
+lps_test_result_item(fluents,6,sorted('Porto',2)).
+lps_test_result_item(fluents,6,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,6,sorted('Juventus',2)).
+lps_test_result_item(fluents,6,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,6,sorted('Manchester United',3)).
+lps_test_result_item(fluents,6,sorted('Ajax',4)).
+lps_test_result_item(fluents,6,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,6,sorted('Barcelona',5)).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Marseille',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Chelsea',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Aston Villa',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Celtic',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Hamburg',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Steaua Bucuresti',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Borussia Dortmund',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Feyenoord',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['PSV Eindhoven',1])).
+lps_test_result_item(events,7,format("~w won ~w times~n",['Red Star Belgrade',1])).
+lps_test_result_item(fluents,7,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,7,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,7,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,7,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,7,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,7,sorted('Hamburg',1)).
+lps_test_result_item(fluents,7,sorted('Celtic',1)).
+lps_test_result_item(fluents,7,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,7,sorted('Chelsea',1)).
+lps_test_result_item(fluents,7,sorted('Marseille',1)).
+lps_test_result_item(fluents,7,sorted('Benfica',2)).
+lps_test_result_item(fluents,7,sorted('Porto',2)).
+lps_test_result_item(fluents,7,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,7,sorted('Juventus',2)).
+lps_test_result_item(fluents,7,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,7,sorted('Manchester United',3)).
+lps_test_result_item(fluents,7,sorted('Ajax',4)).
+lps_test_result_item(fluents,7,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,7,sorted('Barcelona',5)).
+lps_test_result_item(events,8,initiate sorted('AC Milan',7)).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Juventus',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Nottingham Forest',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Porto',2])).
+lps_test_result_item(events,8,format("~w won ~w times~n",['Benfica',2])).
+lps_test_result_item(fluents,8,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,8,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,8,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,8,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,8,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,8,sorted('Hamburg',1)).
+lps_test_result_item(fluents,8,sorted('Celtic',1)).
+lps_test_result_item(fluents,8,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,8,sorted('Chelsea',1)).
+lps_test_result_item(fluents,8,sorted('Marseille',1)).
+lps_test_result_item(fluents,8,sorted('Benfica',2)).
+lps_test_result_item(fluents,8,sorted('Porto',2)).
+lps_test_result_item(fluents,8,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,8,sorted('Juventus',2)).
+lps_test_result_item(fluents,8,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,8,sorted('Manchester United',3)).
+lps_test_result_item(fluents,8,sorted('Ajax',4)).
+lps_test_result_item(fluents,8,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,8,sorted('Barcelona',5)).
+lps_test_result_item(fluents,8,sorted('AC Milan',7)).
+lps_test_result_item(events,9,format("~w won ~w times~n",['Manchester United',3])).
+lps_test_result_item(events,9,format("~w won ~w times~n",['Inter Milan',3])).
+lps_test_result_item(fluents,9,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,9,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,9,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,9,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,9,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,9,sorted('Hamburg',1)).
+lps_test_result_item(fluents,9,sorted('Celtic',1)).
+lps_test_result_item(fluents,9,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,9,sorted('Chelsea',1)).
+lps_test_result_item(fluents,9,sorted('Marseille',1)).
+lps_test_result_item(fluents,9,sorted('Benfica',2)).
+lps_test_result_item(fluents,9,sorted('Porto',2)).
+lps_test_result_item(fluents,9,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,9,sorted('Juventus',2)).
+lps_test_result_item(fluents,9,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,9,sorted('Manchester United',3)).
+lps_test_result_item(fluents,9,sorted('Ajax',4)).
+lps_test_result_item(fluents,9,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,9,sorted('Barcelona',5)).
+lps_test_result_item(fluents,9,sorted('AC Milan',7)).
+lps_test_result_item(events,10,format("~w won ~w times~n",['Ajax',4])).
+lps_test_result_item(fluents,10,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,10,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,10,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,10,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,10,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,10,sorted('Hamburg',1)).
+lps_test_result_item(fluents,10,sorted('Celtic',1)).
+lps_test_result_item(fluents,10,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,10,sorted('Chelsea',1)).
+lps_test_result_item(fluents,10,sorted('Marseille',1)).
+lps_test_result_item(fluents,10,sorted('Benfica',2)).
+lps_test_result_item(fluents,10,sorted('Porto',2)).
+lps_test_result_item(fluents,10,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,10,sorted('Juventus',2)).
+lps_test_result_item(fluents,10,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,10,sorted('Manchester United',3)).
+lps_test_result_item(fluents,10,sorted('Ajax',4)).
+lps_test_result_item(fluents,10,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,10,sorted('Barcelona',5)).
+lps_test_result_item(fluents,10,sorted('AC Milan',7)).
+lps_test_result_item(events,11,format("~w won ~w times~n",['Barcelona',5])).
+lps_test_result_item(events,11,format("~w won ~w times~n",['Bayern Munich',5])).
+lps_test_result_item(fluents,11,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,11,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,11,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,11,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,11,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,11,sorted('Hamburg',1)).
+lps_test_result_item(fluents,11,sorted('Celtic',1)).
+lps_test_result_item(fluents,11,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,11,sorted('Chelsea',1)).
+lps_test_result_item(fluents,11,sorted('Marseille',1)).
+lps_test_result_item(fluents,11,sorted('Benfica',2)).
+lps_test_result_item(fluents,11,sorted('Porto',2)).
+lps_test_result_item(fluents,11,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,11,sorted('Juventus',2)).
+lps_test_result_item(fluents,11,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,11,sorted('Manchester United',3)).
+lps_test_result_item(fluents,11,sorted('Ajax',4)).
+lps_test_result_item(fluents,11,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,11,sorted('Barcelona',5)).
+lps_test_result_item(fluents,11,sorted('AC Milan',7)).
+lps_test_result_item(fluents,12,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,12,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,12,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,12,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,12,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,12,sorted('Hamburg',1)).
+lps_test_result_item(fluents,12,sorted('Celtic',1)).
+lps_test_result_item(fluents,12,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,12,sorted('Chelsea',1)).
+lps_test_result_item(fluents,12,sorted('Marseille',1)).
+lps_test_result_item(fluents,12,sorted('Benfica',2)).
+lps_test_result_item(fluents,12,sorted('Porto',2)).
+lps_test_result_item(fluents,12,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,12,sorted('Juventus',2)).
+lps_test_result_item(fluents,12,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,12,sorted('Manchester United',3)).
+lps_test_result_item(fluents,12,sorted('Ajax',4)).
+lps_test_result_item(fluents,12,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,12,sorted('Barcelona',5)).
+lps_test_result_item(fluents,12,sorted('AC Milan',7)).
+lps_test_result_item(events,13,format("~w won ~w times~n",['AC Milan',7])).
+lps_test_result_item(fluents,13,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,13,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,13,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,13,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,13,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,13,sorted('Hamburg',1)).
+lps_test_result_item(fluents,13,sorted('Celtic',1)).
+lps_test_result_item(fluents,13,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,13,sorted('Chelsea',1)).
+lps_test_result_item(fluents,13,sorted('Marseille',1)).
+lps_test_result_item(fluents,13,sorted('Benfica',2)).
+lps_test_result_item(fluents,13,sorted('Porto',2)).
+lps_test_result_item(fluents,13,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,13,sorted('Juventus',2)).
+lps_test_result_item(fluents,13,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,13,sorted('Manchester United',3)).
+lps_test_result_item(fluents,13,sorted('Ajax',4)).
+lps_test_result_item(fluents,13,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,13,sorted('Barcelona',5)).
+lps_test_result_item(fluents,13,sorted('AC Milan',7)).
+lps_test_result_item(events,14,initiate sorted('Real Madrid',13)).
+lps_test_result_item(fluents,14,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,14,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,14,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,14,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,14,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,14,sorted('Hamburg',1)).
+lps_test_result_item(fluents,14,sorted('Celtic',1)).
+lps_test_result_item(fluents,14,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,14,sorted('Chelsea',1)).
+lps_test_result_item(fluents,14,sorted('Marseille',1)).
+lps_test_result_item(fluents,14,sorted('Benfica',2)).
+lps_test_result_item(fluents,14,sorted('Porto',2)).
+lps_test_result_item(fluents,14,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,14,sorted('Juventus',2)).
+lps_test_result_item(fluents,14,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,14,sorted('Manchester United',3)).
+lps_test_result_item(fluents,14,sorted('Ajax',4)).
+lps_test_result_item(fluents,14,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,14,sorted('Barcelona',5)).
+lps_test_result_item(fluents,14,sorted('AC Milan',7)).
+lps_test_result_item(fluents,14,sorted('Real Madrid',13)).
+lps_test_result_item(fluents,15,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,15,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,15,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,15,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,15,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,15,sorted('Hamburg',1)).
+lps_test_result_item(fluents,15,sorted('Celtic',1)).
+lps_test_result_item(fluents,15,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,15,sorted('Chelsea',1)).
+lps_test_result_item(fluents,15,sorted('Marseille',1)).
+lps_test_result_item(fluents,15,sorted('Benfica',2)).
+lps_test_result_item(fluents,15,sorted('Porto',2)).
+lps_test_result_item(fluents,15,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,15,sorted('Juventus',2)).
+lps_test_result_item(fluents,15,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,15,sorted('Manchester United',3)).
+lps_test_result_item(fluents,15,sorted('Ajax',4)).
+lps_test_result_item(fluents,15,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,15,sorted('Barcelona',5)).
+lps_test_result_item(fluents,15,sorted('AC Milan',7)).
+lps_test_result_item(fluents,15,sorted('Real Madrid',13)).
+lps_test_result_item(fluents,16,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,16,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,16,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,16,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,16,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,16,sorted('Hamburg',1)).
+lps_test_result_item(fluents,16,sorted('Celtic',1)).
+lps_test_result_item(fluents,16,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,16,sorted('Chelsea',1)).
+lps_test_result_item(fluents,16,sorted('Marseille',1)).
+lps_test_result_item(fluents,16,sorted('Benfica',2)).
+lps_test_result_item(fluents,16,sorted('Porto',2)).
+lps_test_result_item(fluents,16,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,16,sorted('Juventus',2)).
+lps_test_result_item(fluents,16,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,16,sorted('Manchester United',3)).
+lps_test_result_item(fluents,16,sorted('Ajax',4)).
+lps_test_result_item(fluents,16,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,16,sorted('Barcelona',5)).
+lps_test_result_item(fluents,16,sorted('AC Milan',7)).
+lps_test_result_item(fluents,16,sorted('Real Madrid',13)).
+lps_test_result_item(fluents,17,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,17,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,17,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,17,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,17,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,17,sorted('Hamburg',1)).
+lps_test_result_item(fluents,17,sorted('Celtic',1)).
+lps_test_result_item(fluents,17,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,17,sorted('Chelsea',1)).
+lps_test_result_item(fluents,17,sorted('Marseille',1)).
+lps_test_result_item(fluents,17,sorted('Benfica',2)).
+lps_test_result_item(fluents,17,sorted('Porto',2)).
+lps_test_result_item(fluents,17,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,17,sorted('Juventus',2)).
+lps_test_result_item(fluents,17,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,17,sorted('Manchester United',3)).
+lps_test_result_item(fluents,17,sorted('Ajax',4)).
+lps_test_result_item(fluents,17,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,17,sorted('Barcelona',5)).
+lps_test_result_item(fluents,17,sorted('AC Milan',7)).
+lps_test_result_item(fluents,17,sorted('Real Madrid',13)).
+lps_test_result_item(fluents,18,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,18,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,18,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,18,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,18,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,18,sorted('Hamburg',1)).
+lps_test_result_item(fluents,18,sorted('Celtic',1)).
+lps_test_result_item(fluents,18,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,18,sorted('Chelsea',1)).
+lps_test_result_item(fluents,18,sorted('Marseille',1)).
+lps_test_result_item(fluents,18,sorted('Benfica',2)).
+lps_test_result_item(fluents,18,sorted('Porto',2)).
+lps_test_result_item(fluents,18,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,18,sorted('Juventus',2)).
+lps_test_result_item(fluents,18,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,18,sorted('Manchester United',3)).
+lps_test_result_item(fluents,18,sorted('Ajax',4)).
+lps_test_result_item(fluents,18,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,18,sorted('Barcelona',5)).
+lps_test_result_item(fluents,18,sorted('AC Milan',7)).
+lps_test_result_item(fluents,18,sorted('Real Madrid',13)).
+lps_test_result_item(events,19,format("~w won ~w times~n",['Real Madrid',13])).
+lps_test_result_item(fluents,19,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,19,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,19,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,19,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,19,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,19,sorted('Hamburg',1)).
+lps_test_result_item(fluents,19,sorted('Celtic',1)).
+lps_test_result_item(fluents,19,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,19,sorted('Chelsea',1)).
+lps_test_result_item(fluents,19,sorted('Marseille',1)).
+lps_test_result_item(fluents,19,sorted('Benfica',2)).
+lps_test_result_item(fluents,19,sorted('Porto',2)).
+lps_test_result_item(fluents,19,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,19,sorted('Juventus',2)).
+lps_test_result_item(fluents,19,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,19,sorted('Manchester United',3)).
+lps_test_result_item(fluents,19,sorted('Ajax',4)).
+lps_test_result_item(fluents,19,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,19,sorted('Barcelona',5)).
+lps_test_result_item(fluents,19,sorted('AC Milan',7)).
+lps_test_result_item(fluents,19,sorted('Real Madrid',13)).
+lps_test_result_item(fluents,20,sorted('Red Star Belgrade',1)).
+lps_test_result_item(fluents,20,sorted('PSV Eindhoven',1)).
+lps_test_result_item(fluents,20,sorted('Feyenoord',1)).
+lps_test_result_item(fluents,20,sorted('Borussia Dortmund',1)).
+lps_test_result_item(fluents,20,sorted('Steaua Bucuresti',1)).
+lps_test_result_item(fluents,20,sorted('Hamburg',1)).
+lps_test_result_item(fluents,20,sorted('Celtic',1)).
+lps_test_result_item(fluents,20,sorted('Aston Villa',1)).
+lps_test_result_item(fluents,20,sorted('Chelsea',1)).
+lps_test_result_item(fluents,20,sorted('Marseille',1)).
+lps_test_result_item(fluents,20,sorted('Benfica',2)).
+lps_test_result_item(fluents,20,sorted('Porto',2)).
+lps_test_result_item(fluents,20,sorted('Nottingham Forest',2)).
+lps_test_result_item(fluents,20,sorted('Juventus',2)).
+lps_test_result_item(fluents,20,sorted('Inter Milan',3)).
+lps_test_result_item(fluents,20,sorted('Manchester United',3)).
+lps_test_result_item(fluents,20,sorted('Ajax',4)).
+lps_test_result_item(fluents,20,sorted('Bayern Munich',5)).
+lps_test_result_item(fluents,20,sorted('Barcelona',5)).
+lps_test_result_item(fluents,20,sorted('AC Milan',7)).
+lps_test_result_item(fluents,20,sorted('Real Madrid',13)).
+% lps_test_action_ancestor(Call,T1,T2)

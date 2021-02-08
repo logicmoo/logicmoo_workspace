@@ -1,0 +1,59 @@
+/*
+  LPS test results file generated on 2018-2-28 at 16:57:45
+  on Prolog swi(7,7,2,[]) for program file:
+  /Users/mc/git/logicalcontracts/examples/forTesting/prisoners-dilemma-latest.lpsw_.P
+*/
+
+:-dynamic lps_test_result/3,lps_test_result_item/3,lps_test_action_ancestor/3,lps_test_options/1.
+
+% LPS options prior to the test:
+lps_test_options([dc]).
+
+% lps_test_result(Stage,Cycle,TestTerm)
+lps_test_result(fluents,0,2).
+lps_test_result(events,1,0).
+lps_test_result(fluents,1,2).
+lps_test_result(events,2,2).
+lps_test_result(fluents,2,2).
+lps_test_result(events,3,4).
+lps_test_result(fluents,3,2).
+lps_test_result(events,4,4).
+lps_test_result(fluents,4,2).
+lps_test_result(events,5,4).
+lps_test_result(fluents,5,2).
+lps_test_result(events,6,4).
+lps_test_result(fluents,6,2).
+% lps_test_result_item(Stage,Cycle,TestTerm)
+lps_test_result_item(fluents,0,total_years_in_jail(me,0)).
+lps_test_result_item(fluents,0,total_years_in_jail(you,0)).
+lps_test_result_item(fluents,1,total_years_in_jail(me,0)).
+lps_test_result_item(fluents,1,total_years_in_jail(you,0)).
+lps_test_result_item(events,2,refuses(you)).
+lps_test_result_item(events,2,bears_witness(me)).
+lps_test_result_item(fluents,2,total_years_in_jail(me,0)).
+lps_test_result_item(fluents,2,total_years_in_jail(you,0)).
+lps_test_result_item(events,3,gets(me,0)).
+lps_test_result_item(events,3,gets(you,3)).
+lps_test_result_item(events,3,refuses(me)).
+lps_test_result_item(events,3,bears_witness(you)).
+lps_test_result_item(fluents,3,total_years_in_jail(me,0)).
+lps_test_result_item(fluents,3,total_years_in_jail(you,3)).
+lps_test_result_item(events,4,bears_witness(me)).
+lps_test_result_item(events,4,refuses(you)).
+lps_test_result_item(events,4,gets(you,0)).
+lps_test_result_item(events,4,gets(me,3)).
+lps_test_result_item(fluents,4,total_years_in_jail(you,3)).
+lps_test_result_item(fluents,4,total_years_in_jail(me,3)).
+lps_test_result_item(events,5,gets(me,0)).
+lps_test_result_item(events,5,gets(you,3)).
+lps_test_result_item(events,5,refuses(me)).
+lps_test_result_item(events,5,bears_witness(you)).
+lps_test_result_item(fluents,5,total_years_in_jail(me,3)).
+lps_test_result_item(fluents,5,total_years_in_jail(you,6)).
+lps_test_result_item(events,6,bears_witness(me)).
+lps_test_result_item(events,6,refuses(you)).
+lps_test_result_item(events,6,gets(you,0)).
+lps_test_result_item(events,6,gets(me,3)).
+lps_test_result_item(fluents,6,total_years_in_jail(you,6)).
+lps_test_result_item(fluents,6,total_years_in_jail(me,6)).
+% lps_test_action_ancestor(Call,T1,T2)

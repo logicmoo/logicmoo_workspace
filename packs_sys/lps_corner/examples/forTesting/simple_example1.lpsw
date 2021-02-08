@@ -1,0 +1,30 @@
+% Simple example in LPS framework (from Stephen ASP paper):
+% By Fariba Sadri
+reactive_rule( 
+	% Current limitation: lps_inc(..) must be before holds(condition, T3)
+	% ...otherwise T3 will be eagerly bound by a bogus holds(...) solution
+	[happens(event1, _T1, T2), lps_inc(T2, T3), holds(condition, T3)], 
+	[happens(action, _T4, T5), tc(T3<T5) ] ).
+
+l_timeless(lps_inc(X, X1), [X1 is X + 1]).
+
+initiated( happens(event1, T1, _T2), 
+	condition, 
+	[holds(not(condition), T1) ]).
+terminated( happens(event2, T1, _T2), 
+	condition, 
+	[holds(condition, T1) ]).
+
+d_pre([ happens(action, T1, _T2), holds(not(condition), T1) ]).
+
+initial_state([]).
+observe([event1], 2).  
+observe([ ], 3).  
+observe([ ], 4).  
+observe([ ], 5).  
+observe([event2], 6).  
+
+fluent(condition).
+event(event1).
+event(event2).
+action(action).

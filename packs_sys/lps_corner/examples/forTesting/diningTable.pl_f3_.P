@@ -1,0 +1,19 @@
+
+maxRealTime(120).
+
+minCycleTime(0.01).
+
+fluents
+    [available(_2516)].
+
+events
+    [pickup(_2516,_2518),putdown(_2522,_2524)].
+
+initial_state([available(fork1),available(fork2),available(fork3),available(fork4),available(fork5)]).
+
+terminated(happens(pickup(_2516,_2518),_2636,_2642),available(_2518),[]).
+
+initiated(happens(putdown(_2516,_2518),_2636,_2642),available(_2518),[]).
+
+d_pre([happens(pickup(_2516,_2518),_2594,_2600),holds(not available(_2518),_2594)]).
+d_pre([happens(pickup(_2516,_2518),_2616,_2622),happens(pickup(_2522,_2518),_2616,_2622),_2516\=_2522]).
