@@ -95,7 +95,7 @@ gojson(File,Options,Results,JSON,DFAgraph) :-
 	visualization_options(SD),
 	subtract(Options,SD,Options_),
 	( go(File,[make_test,swish|Options_],Results) -> true ; print_message(warning,'PROGRAM FAILED')), 
-	print_message(informational,"Preparing visualization..."),
+	print_message(informational,"Preparing visualization..."-[]),
 	visual(File,Options,JSON,DFAgraph).
 
 

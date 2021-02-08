@@ -232,7 +232,6 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 	clause_property(Ref,line_count(LineNumber)).
 
 :- multifile prolog:message//1.
-prolog:message(X) --> {atomic(X)}, ['~w'-[X]].
 prolog:message(S-Args) --> {atomic(S),is_list(Args)},[S-Args].
 prolog:message(lps_error(accepting_declared_observations_even_with_preconditions_referring_next_state(E,C),_)) --> 
 	['Accepting ~w even though some conditions refer the next state, e.g. ~w'-[E,C]].

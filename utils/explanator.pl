@@ -125,7 +125,7 @@ happens(E,T1,T2) :- lps_test_result_item((events),T2,E), T1 is T2-1 ; lps_test_r
 % Load test (postmortem) data from our server cache
 init_lps_swish :- 
 	check_lps_program_swish_module, 
-	catch(check_load_postmortem, must_execute_program_first, (print_message(informational,'Executing program first..'),godc(_))),
+	catch(check_load_postmortem, must_execute_program_first, (print_message(informational,'Executing program first..'-[]),godc(_))),
 	% reconstruct system fluents not part of the stored state:
 	retractall(reconstructed_fluent(_,_)),
 	((simulatedRealTimeBeginning(SB), parse_time(SB, SBNow), setof(T,F^state(F,T),Cycles)) -> 
