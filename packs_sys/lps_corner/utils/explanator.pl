@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
+
 :- if(current_module(swish)).
 			
 % Running the explanator on Swish without re-running the whole LPS program 
@@ -78,7 +79,15 @@ lps_program_module(M) :- interpreter:lps_program_module(M).
 % Explanation renderer
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
+
+:- if(true). % exists_source(swish(lib/render))
+:- user:ensure_loaded(library('../swish/user_module_base')).
+%:- use_module(/packs_web/swish/lib/render.plswish(lib/render)).
+:- use_module('/opt/logicmoo_workspace/packs_web/swish/lib/render').
+:- else.
 :- use_module('../../swish/lib/render').
+:- endif.
+
 :- register_renderer(explanator, "Indented LPS explanation").
 :- discontiguous(term_rendering/5).
 term_rendering(lpsExplanation(HTML), _Vars, _Options) --> 

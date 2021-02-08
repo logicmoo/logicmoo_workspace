@@ -177,8 +177,8 @@ type_functor(event, h(spatial, held_by,agent, list(inst))).
 type_functor(event, destroyed(inst)).
 type_functor(event, did(action)).
 type_functor(event, percept(agent, sense, depth, props)).
-type_functor(event, percept(agent, exit_list(domain, fn, in, dest, list(exit)))). % paths noticable
-type_functor(event, percept(agent, child_list(domain, dest, domrel, depth, list(inst)))).
+type_functor(event, percept(agent, fn_list(domain, fn, in, dest, list(exit)))). % paths noticable
+type_functor(event, percept(agent, child_list(domain, dest, domrel, list(inst)))).
 type_functor(event, failed(action, msg)). % some action has failed
 type_functor(event, transformed(inst, inst2)). % inst1 got derezed and rerezed as inst2
 

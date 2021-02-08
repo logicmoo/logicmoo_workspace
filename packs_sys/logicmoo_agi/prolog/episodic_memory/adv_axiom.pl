@@ -103,13 +103,21 @@ aXiom_p1( Action) ==>>
 
 aXiom_p2(Action, S, E) ::=
   append_termlist(Action, [S, E], ActionSE),
-  current_predicate(_, mu:ActionSE), !,
+  current_predicate(_, mu:ActionSE),
+  adv_safe_to_call(ActionSE),
+  !,
   call(Action, S, E).
 
 aXiom_p2(Action, S, E) ::=
   current_predicate(_, mu:Action), !,
+  adv_safe_to_call(Action),
   call(Action), S=E.
 
+adv_safe_to_call(Action):- 
+ (predicate_property(Action,imported_from(M));(clause(Action,_,Cl),clause_property(Cl,module(M)))), !, nop(M), fail.
+
+ 
+  
 
 aXiom_p1( Action) ==>>
  action_doer(Action, Agent),

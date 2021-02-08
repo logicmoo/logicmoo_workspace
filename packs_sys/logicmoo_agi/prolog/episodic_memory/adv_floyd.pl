@@ -108,10 +108,10 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 
 % An unexplored exit here, go that way.
-autonomous_decide_unexplored_fn(exit, Agent, Mem0, Mem2) :-
+autonomous_decide_unexplored_fn(Exit, Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(spatial, fn(exit, Prev), There, '<mystery>'(exit, _, _)), ModelData),
- in_agent_model(Agent, h(spatial, fn(exit, Dir), Here, There), ModelData),
+ in_agent_model(Agent, h(spatial, fn(Exit, Prev), There, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial, fn(Exit, Dir), Here, There), ModelData),
  in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Prev])), Mem1, Mem2).

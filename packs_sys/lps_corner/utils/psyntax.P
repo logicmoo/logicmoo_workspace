@@ -112,14 +112,14 @@ set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; uns
 :- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
 	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0,
-	print_error_notices/1, date_stamp/1, must_lps_program_module/1]). %DMILES added must_lps_program_module for debugging
+	print_error_notices/1, date_stamp/1]).
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
 :- dynamic(their_lps_exactly/0).
 their_lps_exactly :- fail.
 % Surface syntax .pl
-:- if(\+ their_lps_exactly)).
+:- if(\+ their_lps_exactly).
 % Surface syntax .pl
 :- use_module(library(lps_syntax)).
 :- else.

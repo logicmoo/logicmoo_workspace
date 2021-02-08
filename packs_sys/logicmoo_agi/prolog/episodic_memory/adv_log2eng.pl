@@ -199,7 +199,7 @@ logic2eng(_Context, percept(_Agent, see, Depth, props(Object, [shape=What])), []
 logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), 
    extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
 
-logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Spatially, Exit, Relation, Here, Exits)), ['s'(Exit),'ly'(Spatially), Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
+logic2eng(Context, percept(_Agent, _, _Depth, fn_list(Spatially, Exit, Relation, Here, Exits)), ['s'(Exit),'ly'(Spatially), Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
 
 logic2eng(_Context, percept(_Agent, Sense, Depth, h(_Spatial, Prep, '<mystery>'(Closed, _, _), Object)), 
    extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
@@ -216,7 +216,7 @@ logic2eng(Context, percept( Agent, Sense, _Depth, h(_Spatial, Prep, Nearby, Here
 
 logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
 
-logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
+logic2eng(Context, percept(_Agent, _, _Depth, fn_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
 
 logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Spatially, Object, Prep, '<mystery>'(Closed, _, _))), extra_verbose_eng([Object, aux(be), ly(Spatially), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
 logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Spatially, Object, Prep, [])), extra_verbose_eng([nothing, ly(Sense), ly(Spatially), Prep, Object]) ):- Depth \= 1.
