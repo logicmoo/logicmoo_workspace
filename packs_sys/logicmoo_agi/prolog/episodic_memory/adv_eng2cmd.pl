@@ -726,7 +726,7 @@ txt2goto(Doer, Walk, [ Prep, Dest], (act3('go__prep_obj', Doer, [ Walk, Prep, Wh
 txt2goto(Doer, Walk, [ ExitName], (act3('go__dir', Doer, [ Walk, ExitName])), M) :-
  in_agent_model(Doer, h(spatial, fn(exit, ExitName), _, _), M).
 % go escape
-txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
+txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);(escape_rel(Escape),Dir==Escape)), !.
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.
 % go [out, in, ..]
 txt2goto(Doer, Walk, [ Prep], (act3('go__dir', Doer, [ Walk, Prep])), _Mem) :- domain_prep(spatial, Prep).

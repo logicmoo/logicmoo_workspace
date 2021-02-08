@@ -109,6 +109,7 @@ in( x(rock, 2), garden),    % xformed:  in(rock_X2, garden).
 % in({atLeast(2)}/in(a(rock), garden)).
                          %
 in(fountain, garden),
+in(water, fountain),
 in(mushroom, garden),
 in(shovel, basement), % FYI shovel has no type_props (this is a lttle test to see what happens)
 in(videocamera, living_room),

@@ -242,7 +242,7 @@ logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, e
   logic2eng(Context, Info, What).
 
 
-logic2eng(Context, h(_Spatial, held_by,Agent, Items),
+logic2eng(Context, h(_Spatial, held_by, Agent, Items),
    [cap(subj(Agent)), 'held_by:'|Text]) :-
  list2eng(Context, Items, Text).
 

@@ -125,7 +125,7 @@ oper_db(_Knower, ( act3('go__dir',Agent,[ Manner, Escape])),
         % implies believe(Agent, ~h(spatial, in, Agent, Object)),
  percept_local(FromLoc, event3('arrive', [ IntoDest, Agent, FromLoc], [Manner, EscapedObject]))
         % implies, believe(Agent, h(spatial, in, Agent, FromLoc))
-     ]) :- Escape = escape, EscapedObject = escaped, \+ only_goto.
+     ]) :- escape_rel(Escape), EscapedObject = escaped, \+ only_goto.
 
 
 % Looking causes Percepts
