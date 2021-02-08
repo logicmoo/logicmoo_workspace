@@ -125,7 +125,7 @@ happens(E,T1,T2) :- lps_test_result_item((events),T2,E), T1 is T2-1 ; lps_test_r
 % Load test (postmortem) data from our server cache
 init_lps_swish :- 
 	check_lps_program_swish_module, 
-	catch(check_load_postmortem, must_execute_program_first, (writeln('EXECUTING PROGRAM FIRST..'),godc(_))),
+	catch(check_load_postmortem, must_execute_program_first, (print_message(informational,'Executing program first..'),godc(_))),
 	% reconstruct system fluents not part of the stored state:
 	retractall(reconstructed_fluent(_,_)),
 	((simulatedRealTimeBeginning(SB), parse_time(SB, SBNow), setof(T,F^state(F,T),Cycles)) -> 
@@ -180,7 +180,7 @@ explanationTreeHTML(Node,Tree) :-
 		X=holds(_,_) -> Style="color: #1A1A1A; background: #D7DCF5;";
 		Type=clause -> Style="font-style: italic;";
 		Style=""),
-	Tree = [li(span([style=Style], "~a: ~w"-[Type,Label])) | UL],
+	Tree = [li(span([style=Style,title="~w"-[X]], "~a: ~w"-[Type,Label])) | UL],
 	explanationTreeHTML(Children,CH),
 	(CH==[]->UL=[];UL=[ul(CH)]).
 

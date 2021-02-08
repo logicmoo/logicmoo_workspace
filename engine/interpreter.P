@@ -232,6 +232,8 @@ lps_source_position(Term,FileWithExt,file(FileWithExt,LineNumber,_One,_Char),Var
 	clause_property(Ref,line_count(LineNumber)).
 
 :- multifile prolog:message//1.
+prolog:message(X) --> {atomic(X)}, ['~w'-[X]].
+prolog:message(S-Args) --> {atomic(S),is_list(Args)},[S-Args].
 prolog:message(lps_error(accepting_declared_observations_even_with_preconditions_referring_next_state(E,C),_)) --> 
 	['Accepting ~w even though some conditions refer the next state, e.g. ~w'-[E,C]].
 prolog:message(lps_error(rejected_observations1(Events,Conditions),_)) --> 
@@ -1941,6 +1943,8 @@ write_test_file_(ProgramName,ToFile) :-
 	writeln('% lps_test_action_ancestor(Call,T1,T2)'),
 	(lps_test_action_ancestor(S,C,T), writeq(lps_test_action_ancestor(S,C,T)), writeln('.'), fail ; true),
 	told, tell(Old), !.
+write_test_file_(_,F) :- 
+	print_message(error,'Failed to write ~a'-[F]).
 
 % test_filename(+ProgramFile,-TestFile)
 % Names the test file as the programs's plus '.lpst' (LPS test file)
