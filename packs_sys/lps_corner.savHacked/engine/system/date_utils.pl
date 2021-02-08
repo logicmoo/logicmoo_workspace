@@ -1,6 +1,5 @@
 
-%
-:- include(library(lps_syntax)).
+% :- include(library(lps_syntax)).
 
 %%% LPS "system library"; some of these predicates have special handling in interpreter.pl
 real_date(Y/M/D) at T if 

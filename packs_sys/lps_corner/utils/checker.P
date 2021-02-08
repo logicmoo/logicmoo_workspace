@@ -38,6 +38,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	check_js_compliance/1, lps_literals/1
 	]).
 
+% DMILES ADDED
+:- meta_predicate lps_literals(*,0).
 :- use_module('../engine/interpreter.P').
 
 % check_js_compliance(-Notices)  
@@ -96,7 +98,8 @@ check_js_compliance(Notices) :-
 		NegComparators),	
 	findall( notice(error,ET,Pos), (
 		lps_literals(L,Clause), member(Lit,L), 
-		( Lit = (A =< B), Remedy = (A<=B) ),
+		% DMILES: dont count on this as an op yet
+		( Lit = (A =< B), Remedy = '<='(A,B) ),
 		source_position(Clause,F,Pos,Vars),
 		format(atom(Msg)," cannot use ~w, use ~w instead",[Lit,Remedy]),
 		buildError(Lit,Vars,Msg,ET)

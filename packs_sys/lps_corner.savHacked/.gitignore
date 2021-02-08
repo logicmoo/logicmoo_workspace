@@ -12,3 +12,4 @@ passwd
 engine/logs
 swish/web/lps/redis-5.0.7*
 swish/extensions
+data

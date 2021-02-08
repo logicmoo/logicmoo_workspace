@@ -27,12 +27,11 @@
 	file_generator_name/2, may_clear_hints/0,term_colours/2,timeless_ref/1, set_top_term/1, dumploaded/2
 	]).
 
-%:- meta_predicate dumploaded(0,*).
-
 :- if(\+ current_prolog_flag(dialect, swi)).
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
+% DMILES Deal with Zero-Arity compounds
 unswi_functor(P,F,A):- \+ compound(P),!,functor(P,F,A).
 unswi_functor(P,F,A):- compound_name_arity(P,F,A).
 guarded_univ(P =.. L):- compound(P),!,compound_name_arguments(P,F,Args),L=[F|Args].
@@ -52,10 +51,10 @@ dumploaded(External,Translator) :-
 	check_translator(Translator),
 	% TODO: warn about generated clauses (e.g. from English) than will not appear here
 	lps_swish_clause(H,Body,Vars),
-	(External -> 
+	(External==true -> (
 		(Body==true -> InternalTerm=H ; InternalTerm=(H:-Body)),
 		catch( syntax2p(Clause,Vars,Translator,_,InternalTerm), Ex, (print_message(error,Ex),fail))
-		; 
+		) ; 
 		Clause = (H:-Body)),
 	% bindAllVars(Vars),
 	% term_variables((H:-Body),VarValues),    _Vars: [Name1=VarValue1,...]
@@ -103,22 +102,68 @@ dumploaded(_,_).
 clear_timeless_refs :- retractall(timeless_ref(_)).
 
 may_add_timeless_ref(G) :- 
+    % DMILES unswi_functor/3 Deal with Zero-Arity compounds
 	unswi_functor(G,F,N), ( current_top_term(F/N); timeless_ref(F/N) ; assert(timeless_ref(F/N))), !.
 
+% DMILES unswi_functor/3 Deal with Zero-Arity compounds
 set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; unswi_functor(T,F,N)), assert(current_top_term(F/N)).
 
 
 :- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
 	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0,
-	print_error_notices/1, date_stamp/1, must_lps_program_module/1]).
+	print_error_notices/1, date_stamp/1, must_lps_program_module/1]). %DMILES added must_lps_program_module for debugging
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
-%:- asserta(user:file_search_path(lps, lps_engine_directory('../utils/'))).
+:- dynamic(their_lps_exactly/0).
+their_lps_exactly :- fail.
+% Surface syntax .pl
+:- if(\+ their_lps_exactly)).
 % Surface syntax .pl
 :- use_module(library(lps_syntax)).
+:- else.
 user:'<='(A,B) :- A=<B.
+:- op(900,fy,user:(not)). 
+:- op(1200,xfx,user:(then)).
+:- op(1185,fx,user:(if)).
+:- op(1190,xfx,user:(if)).
+% the following is for "conditional expressions", (if C then T else E)
+% this maybe slightly confusing versus (if Antecedent then Consequent) rules, 
+% and other choices would be possible, e.g. Python's or C et.al... but this still feels
+% easier on newcomers, hoping that context (and the obligation to use parenthesis) helps:
+:- op(1100,xfy,user:else). 
+:- op(1050,xfx,user:(terminates)).
+:- op(1050,xfx,user:(initiates)).
+:- op(1050,xfx,user:(updates)).
+% Rejected:-( :- op(1050,fx,impossible). 
+:- op(1050,fx,user:(observe)).
+:- op(1050,fx,user:(false)).
+:- op(1050,fx,user:initially).
+:- op(1050,fx,user:fluents).
+:- op(1050,fx,user:events).
+:- op(1050,fx,user:prolog_events).
+:- op(1050,fx,user:actions).
+:- op(1050,fx,user:unserializable).
+% notice ',' has priority 1000
+:- op(999,fx,user:update).
+:- op(999,fx,user:initiate).
+:- op(999,fx,user:terminate).
+:- op(997,xfx,user:in).
+:- op(995,xfx,user:at).
+:- op(995,xfx,user:during).
+:- op(995,xfx,user:from). 
+:- op(994,xfx,user:to). % from's priority higher
+:- op(1050,xfy,::).
+
+% lps.js syntax extras
+:- op(1200,xfx,user:(<-)).
+:- op(1050,fx,user:(<-)).
+% -> is already defined as 1050, xfy, which will do given that lps.js does not support if-then-elses
+:- op(700,xfx,user:(<=)).
+
+user:(A<=B) :- A=<B.
+:- endif.
 
 :- use_module('checker.P',[check_js_compliance/1]).
 
@@ -172,6 +217,8 @@ functor_arityze([F/A|TOFAL],[G|FAL]) :- unswi_functor(G,F,A), !, functor_arityze
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
 functor_arityze([],[]).
 
+:- dynamic untimed_are_relaxed/0.
+untimed_are_relaxed. % Bob's preference
 
 % Convert a file in LPS (new syntax) into Wei syntax and execute it 
 golps(LPSP_file,Options,Results) :-
@@ -182,15 +229,16 @@ golps(LPSP_file,Options,Results) :-
 	syntax2p_file(LPSP_file,Pfile,lps2p,true),
 	go(Pfile,Options,Results).
 
-golps(LPSP_file,Options) :- golps(LPSP_file,Options,[]).
+golps(LPSP_file,Options) :- 
+	golps(LPSP_file,Options,[]).
 
 golps(LPSP_file) :- golps(LPSP_file,[dc]).
 
 % Support for lps.js
 dumpjs(F,Options) :- 
-	(member(swish,Options) 
-	 -> interpreter:go(F,[initialize_only|Options])
-	 ;  golps(F,[initialize_only|Options])),
+	(member(swish,Options) -> 
+	 interpreter:go(F,[initialize_only|Options]); 
+	 golps(F,[initialize_only|Options])),
 	check_js_compliance(Notices),
 	print_error_notices(Notices),
 	date_stamp(D),
@@ -207,15 +255,13 @@ dumpjs(F) :- dumpjs(F,[dc]).
 % [46,108,112,115,119] .lpsw
 % [95,46,80] _.P
 % [46,108,112,115] .lps
-% generate_file(FilenameCodes)
-generate_file(Fcodes) :- 
-	% _.P or .lpsw?
-	(append(SourceCodes,[95,46,80],Fcodes) ; append(SourceCodes,[46,108,112,115,119],Fcodes)),
+% generate_file(Filename)
+generate_file(F) :- 
+	(sub_atom(F,_,Nchars,0,'_.P') ; sub_atom(F,_,Nchars,0,'.lpsw')),
 	!,
-	(append(_,[46,108,112,115],SourceCodes) ; append(_,[46,112,108],SourceCodes)), % a LPS or pl file
-	atom_codes(Source,SourceCodes),
+	sub_atom(F,0,_,Nchars,Source),
+	(sub_atom(Source,_,_,0,'.lps'); sub_atom(Source,_,_,0,'.pl')),
 	file_exists(Source),
-	atom_codes(F,Fcodes),
 	syntax2p_file(Source,F,lps2p,true).
 
 file_generator_name(F,FG) :- atom_codes(F,Codes), file_generator_name_(Codes,FG).
@@ -237,7 +283,7 @@ check_translator(Translator) :-
 		; throw('Bad syntax translator:'(Translator))).
 
 % Main file to file syntax converter
-% syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a unswi_functor for a predicate Translate(Term,Vars,NewTerm)
+% syntax2p_file(+OtherSyntaxFile,+P_Wei_file,+Translator,+ToWei) Translator is a functor for a predicate Translate(Term,Vars,NewTerm)
 % If ToWei==true it generates a .P (internal syntax) file from the first file, else vice-versa
 syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	check_translator(Translator),
@@ -546,20 +592,24 @@ syntax2p_sequence(NS,_,_,_,_,_,_,W) :- var(NS), var(W), !, fail.
 syntax2p_sequence((L1,L2),Vars,Translator,[T1,T6],IT, ET, delimiter-[Spec1,Spec2],[PT1|PT2]) :- PT2 \== [], !,
 	syntax2p_literal(L1,Vars,Translator,[T2,T3], ETL, Spec1, PT1), 
 	syntax2p_sequence(L2,Vars,Translator,[T4,T5],IT,ETS,Spec2, PT2),
-	% if no explicit time arguments, the literals are assumed in timely sequence with neighbors
 	 % 'single' too strict, should probably reflect into a tc(...) ???
 	( (ETL == (false), ETS == (false)) -> ET= (false) ; ET = true),
 
-	(IT==single -> 
+	(IT==single ->  % this sequence must span over a single transition, two consecutive cycles (e.g post condition, precondition)
 		(
 			% we need to be careful inadvertently binding event end times with fluents bound to a previous time 
-			((T2==T3,ETL==false) /* fluent or timeless */ -> T2=T1 ; PT1=happens(_,_,_) -> T1=T2,T6=T3 ; true /* fluent with explicit time */),
-			((T4==T5,ETL==false) -> T4=T1, (T2==T3 -> T5=T6; true) ; memberchk(happens(_,_,_),PT2) -> T1=T4,T6=T5 ; true)
-			% (PT1=happens(_,_,_),ETL==true) -> T3=T6 ; T1=T4,T3=T6
+			((T2==T3,ETL==false) /* L1 is a fluent without explicit time, or a timeless */ -> T1=T2 ; 
+				PT1=happens(_,_,_) -> (T1=T2,T6=T3) /* ..an event */ ; 
+				true /* ...a fluent with explicit time */),
+			((T4==T5,ETS==false) -> (T4=T1, (T2==T3 -> T5=T6; true)) /* L2 is a fluent without explicit time, or a timeless*/ ; 
+				memberchk(happens(_,_,_),PT2) -> (T1=T4,T6=T5) /* ..an event */ ;
+			 	true /* ...a fluent with explicit time */)
 		)
-		; 
-		( (ETL == (false), ETS == (false)) -> T4=T3 ; true),
+		; (
+			( (ET== (false),\+ catch(untimed_are_relaxed,_,fail) ) -> T4=T3 ; % no explicit time and no single transition imposed: make the two literals adjacent in time 
+				true),
 		T1=T2, T6=T5
+		)
 	).
 syntax2p_sequence(true,_,_TT,[T,T],_,false,classify,[]) :- !.
 syntax2p_sequence(L,Vars,Translator,Interval,_,ET,Spec,[PT]) :- syntax2p_literal(L,Vars,Translator,Interval,ET,Spec,PT).
@@ -612,23 +662,26 @@ syntax2p_literal(update(in(to(Old,New),LT)),_Vars,lps2p,[T1,T2],ET,event-[delimi
 	NL=L, 
 	simple_fluent_colour(L,EF),
 	remember_fluent_hint(L). 
-syntax2p_literal(LT,_Vars,_Tran,[T1,T2],true,delimiter-[EC,classify],happens(NL,T1,T2)) :- 
+syntax2p_literal(LT,_Vars,_Tran,[T1,T2],true,delimiter-[RealEC,classify],happens(RealNL,T1,T2)) :- 
 	nonvar(LT), 
 	% tricky handling to avoid infinite terms in the first branch:
 	( LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_; LT = (L to T2), (var(T2);is_some_time(T2)); LT = (L from T1 to T2) ; LT = (L during [T1,T2])),
 	nonvar(L),
 	!,
-	simple_event_colour(L,EC),
-	remember_event_hint(L),
+	(L=not(RealL) -> (RealNL=not(RealL), RealEC=lps_delimiter-[EC]) ; (L=RealL, RealNL=NL, RealEC=EC)),
+	simple_event_colour(RealL,EC),
+	remember_event_hint(RealL),
 	NL=L.
 syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- % to allow "meta eventing"
 	nonvar(LT), LT=happens(NL,T1,T2), 
 	!,
 	simple_event_colour(LT,EC).
-syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,EC,happens(NL,T1,T2)) :- 
-	nonvar(LT), ( head_hint(LT,event) ; head_hint(LT,action) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
+syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,RealEC,happens(NL,T1,T2)) :- 
+	nonvar(LT), 
+	(LT=not(RealLT) -> RealEC=lps_delimiter-[EC]; (LT=RealLT,RealEC=EC)),
+	( head_hint(RealLT,event) ; head_hint(RealLT,action) /* too strong, due to external_predicate_for_lps/1:  system_action(LT)*/ ),
 	!,
-	simple_event_colour(LT,EC),
+	simple_event_colour(RealLT,EC),
 	NL=LT.
 syntax2p_literal(LT_,_Vars,js2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	nonvar(LT_), guarded_univ(LT_=..[F|Args_]), append(Args,[T1,T2],Args_), guarded_univ(LT=..[F|Args]),
@@ -643,8 +696,8 @@ syntax2p_literal(L,_Vars,_Tran,[T1,T2],true,null,happens(NL,T1,T2)) :-
 syntax2p_literal(L,_Vars,js2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
 	var(L),
 	!,
-	guarded_univ(NL=..[F|Args]), append(Args,[T1,T2],Args_),
-	guarded_univ(L=..[F|Args_]). */
+	NL=..[F|Args], append(Args,[T1,T2],Args_),
+	L=..[F|Args_]. */
 
 % ... now on to fluents...
 syntax2p_literal(LT,_Vars,Tran,[T1,T2],ET,Spec,holds(not(NL),T)) :- % not(fluent) at T is the preferred form, but 2 others available

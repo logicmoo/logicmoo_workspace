@@ -21,11 +21,11 @@
 :- use_module(library(lists)).
 :- use_module('../engine/interpreter.P',[
 	go/3, my_term_to_atom/2, abstract_numbers/2, endTime/1, d_event/1, l_int/2, print_error/3, action_/1, (observe)/2, lps_test_result_item/3, lps_test_action_ancestor/3,
-	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, u_swiclause/3, d/2
+	beginningOfSimulatedRealTime/1, simulatedRealTimePerCycle/1, u_swiclause/3, display/2
 	]).
 
 % Notice that this is only valid in the LPS program thread:
-has_d_clauses :- u_swiclause(d(_,_),_,_), !.
+has_d_clauses :- u_swiclause(display(_,_),_,_), !.
 
 :- prolog_load_context(directory, Dir), asserta(user:file_search_path(lpsUtils, Dir)).
 :- use_module(lpsUtils('psyntax.P'),[
@@ -234,8 +234,8 @@ collect_display_specs_lazy([],[]).
 
 % op_for_one_lazy(+Term,-Operation)
 op_for_one_lazy(t(X,Type), TheProps) :-
-	% This is accessing d/2 via the interpreter... should be the same as done by the eager version. TODO: cleanup
-	once(interpreter:d(X,Props1)),
+	% This is accessing display/2 via the interpreter... should be the same as done by the eager version. TODO: cleanup
+	once(interpreter:display(X,Props1)),
 	ensure_all_colons(Props1,Props2),
 	(X==timeless -> enforce_property(Props2,timeless:true,Props3) ; Props2=Props3),
 	(member(id:ID,Props3)->true;(member(PP,Props3), member(id:ID,PP))->true;ID=X),
@@ -358,7 +358,7 @@ collect_display_specs_for([],_ID,_Mode,[],[]).
 
 % op_for_one_enter(+ID,+Cycle,+FluentOrEvent,+Mode,-Props,-Operation)
 op_for_one_enter(ID,T,X,Mode,Props,Op) :-
-	once(d(X,Props_)), % TODO later: delay to evaluate id_props!
+	once(display(X,Props_)), % TODO later: delay to evaluate id_props!
 	%( (member(Prop1,Props_), member(id:ID1,Prop1), member(Prop1,Props_), member(id:ID2,Prop1), ID1 \= ID2) -> 
 	%	print_error(error,'Different display ID in display object parts'(ID1),null), fail
 	% ; true),	
@@ -391,7 +391,7 @@ ensure_all_colons([],[]).
 % prepare_item_ids(+Tuples,-Items) Each Item is ID-di(T1-T2,FluentOrEvent,Group), easy to order by id and time range; 
 % ID is extracted from props, or generated - right now it's the whole term, 
 % for more compactness it could be an int key into a term dictionary instead
-prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- d(X,Props), !, % displayable item 
+prepare_item_ids([t(X,T1-T2,G)|Items], [ID-di(T1-T2,X,G)|WithIds]) :- display(X,Props), !, % displayable item 
 	% TODO later: DELAY previous to support id_props??
 	(member(id:ID,Props)->true;((member(PP,Props), member(id:ID,PP))->true;ID=X)), prepare_item_ids(Items,WithIds).
 prepare_item_ids([_|Items], WithIds) :- !, 
@@ -510,10 +510,11 @@ dfa_graph(L,AbstractNumbers,NonReflexive,dot(digraph(Statements))) :-
 	findall(T-[],(between(First,Last,T),\+ member(T-_,StateHistory)),EmptyStates),
 	append(StateHistory,EmptyStates,StateHistory_),
 	(setof(State-Times, setof(T,member(T-State,StateHistory_),Times), AbstractStates) -> true ; AbstractStates=[]), % our nodes
-	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line]), (
+	findall(node(Times,[label=State_,fillcolor='#D7DCF5',style=filled,color=Line|PenWidth]), (
 		member(State-Times,AbstractStates),
 		findall(Fl_,(member(Fl,State),term_string(Fl,Fl_)),Tuples), atomic_list_concat(Tuples,"\n",State_), % format(string(State__),"<span>~s</span>",[State_]),
-		(member(First,Times)->Line=black;Line='#D7DCF5') % indicate the initial state
+		Line=black,
+		(member(First,Times)->PenWidth=[penwidth=2];PenWidth=[]) % indicate the initial state
 		), Nodes),
 	( setof(edge((Times1->Times2),[label=Ev_,color=Color]), G^T1^T2^State1^State2^Ev^(
 		member(t(Ev,T1-T2,G),L), (G==event, Color='#E19735'; G==action, Color=forestgreen),

@@ -288,7 +288,7 @@ Sometimes it's useful to poll some state (or call some builtin function) in the 
 Example:
 
 ```
-events random(X).
+prolog_events random(X).
 fluents dice(_Turn,_Face).
 random(X) from _ to T2 initiates dice(T2,Face) if Face is round(X*6+0.5).
 ```
@@ -310,7 +310,9 @@ if polling then callprolog(P), P.
 ```
 Again, the Prolog generated events are injected/checked/etc with observations and web events at each LPS cycle.
 
-# Other misc LPS engine improvements #
+**NOTE**: internal observations and prolog_events are checked together against preconditions, and rejected or accepted altogether; web events are injected afterwards, and are accepted/rejected altogether but independently of the previous.
+
+# Other misc LPS engine improvements 
 
 * Generic replace/update post conditions, e.g. transfer(From, To, Amount) updates Old to New in balance(From, Old) if New is Old – Amount. Old/New can be (structurally similar) lists of variables.
 * More flexible preconditions/constraints, referring both the current and the next states. For example, the goat cannot be left alone with the cabbage and the goat cannot be left alone with the wolf.
@@ -421,6 +423,10 @@ Timeline is rendered graphicall, showing fluent states as blue ranges and atomic
 	go(Timeline,[composites]).
 
 Same, but also includes some composite events in the timeline: those that span more than 2 states, and are either completed macro actions that include atomic actions, or composite events that trigger post conditions; other composites are not shown.
+
+	go(Timeline, [sample(ListOfFluentTemplates)]) .
+
+The selected intensional fluents are "sampled" at each cycle, and displayed together with extensional fluents.
 
 	go(Timeline,[stacked_fluents]).
 

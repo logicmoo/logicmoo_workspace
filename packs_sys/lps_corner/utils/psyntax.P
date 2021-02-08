@@ -31,6 +31,12 @@
 :- writeln("LPS requires SWI-Prolog"), throw(swi_prolog_required).
 :- endif.
 
+% DMILES Deal with Zero-Arity compounds
+unswi_functor(P,F,A):- \+ compound(P),!,functor(P,F,A).
+unswi_functor(P,F,A):- compound_name_arity(P,F,A).
+guarded_univ(P =.. L):- compound(P),!,compound_name_arguments(P,F,Args),L=[F|Args].
+guarded_univ(P =.. L):- catch(P =.. L,E,(throw(error(guarded_univ(P =.. L),E)))).
+
 :- if(current_module(swish)). 
 % first, SWISH specific; see comments in interpreter.P
 
@@ -96,19 +102,28 @@ dumploaded(_,_).
 clear_timeless_refs :- retractall(timeless_ref(_)).
 
 may_add_timeless_ref(G) :- 
-	functor(G,F,N), ( current_top_term(F/N); timeless_ref(F/N) ; assert(timeless_ref(F/N))), !.
+    % DMILES unswi_functor/3 Deal with Zero-Arity compounds
+	unswi_functor(G,F,N), ( current_top_term(F/N); timeless_ref(F/N) ; assert(timeless_ref(F/N))), !.
 
-set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; functor(T,F,N)), assert(current_top_term(F/N)).
+% DMILES unswi_functor/3 Deal with Zero-Arity compounds
+set_top_term(T) :- retractall(current_top_term(_)), (var(T)->F=var, N = -1 ; unswi_functor(T,F,N)), assert(current_top_term(F/N)).
 
 
 :- use_module('../engine/interpreter.P',[go/3, print_error/2, is_some_time/1,
 	uassert/1, uretractall/1, collect_guessed_declarations/1,bindAllVars/1,intensional/1,
 	macroaction/1,system_fluent/1,system_action/1, get_lps_program_module/1, cleanup_program/0,
-	print_error_notices/1, date_stamp/1]).
+	print_error_notices/1, date_stamp/1, must_lps_program_module/1]). %DMILES added must_lps_program_module for debugging
 :- use_module(library(dialect/sicstus/system),[file_exists/1]).
 my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 
+:- dynamic(their_lps_exactly/0).
+their_lps_exactly :- fail.
 % Surface syntax .pl
+:- if(\+ their_lps_exactly)).
+% Surface syntax .pl
+:- use_module(library(lps_syntax)).
+:- else.
+user:'<='(A,B) :- A=<B.
 :- op(900,fy,user:(not)). 
 :- op(1200,xfx,user:(then)).
 :- op(1185,fx,user:(if)).
@@ -148,6 +163,7 @@ my_file_read(Stream,Term,Vars) :- read_term(Stream,Term,[variable_names(Vars)]).
 :- op(700,xfx,user:(<=)).
 
 user:(A<=B) :- A=<B.
+:- endif.
 
 :- use_module('checker.P',[check_js_compliance/1]).
 
@@ -197,7 +213,7 @@ spec_for_one(_One,SC,SC-classify).
 
 % functor_arityze(+TemplatesOrFA,-TemplatesList) replaces term functor/arities by their templates; 
 % bidirectional (albeit losing information of course)
-functor_arityze([F/A|TOFAL],[G|FAL]) :- functor(G,F,A), !, functor_arityze(TOFAL,FAL).
+functor_arityze([F/A|TOFAL],[G|FAL]) :- unswi_functor(G,F,A), !, functor_arityze(TOFAL,FAL).
 functor_arityze([T|TOFAL],[T|FAL]) :- !, functor_arityze(TOFAL,FAL).
 functor_arityze([],[]).
 
@@ -220,7 +236,9 @@ golps(LPSP_file) :- golps(LPSP_file,[dc]).
 
 % Support for lps.js
 dumpjs(F,Options) :- 
-	(member(swish,Options) -> go(F,[initialize_only|Options]); golps(F,[initialize_only|Options])),
+	(member(swish,Options) -> 
+	 interpreter:go(F,[initialize_only|Options]); 
+	 golps(F,[initialize_only|Options])),
 	check_js_compliance(Notices),
 	print_error_notices(Notices),
 	date_stamp(D),
@@ -274,11 +292,11 @@ syntax2p_file(Lfile,Pfile,Translator,ToWei) :-
 	(ToWei==true -> 
 		(file_exists(Lfile)->true;throw(non_existing_file(Lfile))), 
 		open(Lfile,read,IStr), open(Pfile,write,OStr), 
-		Convert =.. [Translator,Term,Vars,NewTerm]
+		guarded_univ(Convert =.. [Translator,Term,Vars,NewTerm])
 		; 
 		(file_exists(Pfile)->true;throw(non_existing_file(Pfile))), 
 		open(Pfile,read,IStr), open(Lfile,write,OStr),
-		Convert =.. [Translator,NewTerm,Vars,Term]
+		guarded_univ(Convert =.. [Translator,NewTerm,Vars,Term])
 		),
 	% IStr >= 0, OStr>=0,
 	nonvar(IStr), nonvar(OStr),
@@ -334,6 +352,8 @@ term_in_stream(In, Included, Term, Vars) :-
 %  a fact means that some head was read before and tagged as Sort
 %  used only when transforming from some nicer to Wei syntax 
 %  Declared is 'true' if a declaration (not just usage) was detected
+
+head_hint(_,_):- current_prolog_flag(lps_translation_only,true),!,fail.
 head_hint(X,Sort) :- head_hint(X,Sort,_), !.
 head_hint(X,fluent) :- intensional(X).
 head_hint(X,event) :- macroaction(X).
@@ -341,7 +361,7 @@ head_hint(X,event) :- macroaction(X).
 remember_hint(Type,H) :- 
 	nonvar(Type), nonvar(H),
 	member(Type,[fluent,event,action,timeless]),
-	functor(H,F,N), functor(HH,F,N),
+	unswi_functor(H,F,N), unswi_functor(HH,F,N),
 	( head_hint(HH,Type,_) ->  true; add_head_hint(HH,Type,false) ).
 
 remember_timeless_hint(TL) :- remember_hint(timeless,TL).
@@ -362,7 +382,7 @@ remember_fluent_hint(TL) :- remember_hint(fluent,TL).
 remember_declaration(Type,H) :- 
 	nonvar(Type), nonvar(H),
 	member(Type,[fluent,event,action,timeless]),
-	functor(H,F,N), functor(HH,F,N),
+	unswi_functor(H,F,N), unswi_functor(HH,F,N),
 	( head_hint(HH,Type,true) ->  true; clear_head_hint(HH,Type,_), add_head_hint(HH,Type,true) ).
 	
 % remember_hints(Type,LiteralOrList)
@@ -411,7 +431,7 @@ syntax2p((initially States),_Vars,lps2p, lps_delimiter - [Specs] , initial_state
 	comma_to_list(States,fluent,Specs,StatesList).
 syntax2p(initially(States),_Vars,js2p, null , initial_state(States)) :- !.
 % observe o1, o2, o3 from ... to ...:
-syntax2p((observe Obs),_Vars,lps2p,lps_delimiter - [Specs],observe([O1,O2|On],T2)) :- (nonvar(Obs)-> functor(Obs,',',2) ; true), !,
+syntax2p((observe Obs),_Vars,lps2p,lps_delimiter - [Specs],observe([O1,O2|On],T2)) :- (nonvar(Obs)-> unswi_functor(Obs,',',2) ; true), !,
 	((syntax2p_observations(Obs,CT2,[O1,O2|On],T2,Specs), T2=CT2, nonvar(T2)) -> true
 		% cannot use comma_to_list, which assumes DECLARATIONS, e.g. NOT usage with time variables and their auxiliary functors
 	; 
@@ -495,7 +515,7 @@ syntax2p(H,Vars,Tran,Spec,PT) :- %
 	simple_fluent_colour(Fluent,FC),
 	syntax2p_sequence(Event,Vars,Tran,[_T1,_T2],single,_ET,SpecE,[NB1|NBn]).
 syntax2p(L,Vars,Tran,null,PT) :-
-	var(L), PT=..[F,NB1,Fluent,NBn], 
+	var(L), guarded_univ(PT=..[F,NB1,Fluent,NBn]), 
 	((F==terminated), L_ = (Event_ terminates Fluent) ; (F==initiated), L_ = (Event_ initiates Fluent)), 
 	!,
 	syntax2p_sequence(Conditions,Vars,Tran,[_T1,_T2],single,_ET,_,[NB1|NBn]),
@@ -541,7 +561,7 @@ syntax2p(Head,Vars,lps2p,Spec,l_events(WHead,[])) :-
 syntax2p(Term, _, _Translator, classify,Term).  % pass through for Wei terms or other Prolog facts
 
 % syntax2p_observations(ObsCommaList,CommaT2,ObsList,ListT2,-ColourSpec) CommaT2 must be unique
-syntax2p_observations(CL,CommaT2,[E],CommonT2,Spec) :- (nonvar(CL)-> \+ functor(CL,',',2) ; true), !, 
+syntax2p_observations(CL,CommaT2,[E],CommonT2,Spec) :- (nonvar(CL)-> \+ unswi_functor(CL,',',2) ; true), !, 
 	syntax2p_one_obsservation(CL,CommaT2,E,CommonT2,Spec).
 syntax2p_observations((Ob,CL),CommaT2,[E|L],CommonT2,delimiter-[Spec1,Specs]) :-
 	syntax2p_one_obsservation(Ob,CommaT2,E,CommonT2,Spec1),
@@ -615,7 +635,7 @@ syntax2p_literal((if Cond then Then),Vars,Translator,Interval,ET,lps_delimiter-[
 	syntax2p_literal((if Cond then Then else true),Vars,Translator,Interval,ET,lps_delimiter-[lps_delimiter-[NiceC],lps_delimiter-[NiceT,_NiceE]],(CondW->ThenW;[true])).
 % event cases first...
 syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :- 
-	(nonvar(NT) -> ToInternal=true, NT=..[EA,LT] ; ToInternal=(false), NEA=..[EA,NL]),
+	(nonvar(NT) -> ToInternal=true, guarded_univ(NT=..[EA,LT]) ; ToInternal=(false), guarded_univ(NEA=..[EA,NL])),
 	(EA=initiate ; EA = terminate),
 	% tricky handling to avoid infinite terms in the first branch:
 	( ToInternal, LT = (L from T1_), (var(T1_);is_some_time(T1_)), T1=T1_, ET=true, NC=[delimiter-[EF,classify]] ; 
@@ -628,7 +648,7 @@ syntax2p_literal(NT,_Vars,lps2p,[T1,T2],ET,event-NC,happens(NEA,T1,T2)) :-
 	NL=L, 
 	simple_fluent_colour(L,EF),
 	remember_fluent_hint(L),
-	(ToInternal -> NEA=..[EA,NL] ; NT =..[EA,LT]). 
+	(ToInternal -> guarded_univ(NEA=..[EA,NL]) ; guarded_univ(NT =..[EA,LT])). 
 syntax2p_literal(update(in(to(Old,New),LT)),_Vars,lps2p,[T1,T2],ET,event-[delimiter-[classify,NC]],happens(update(Old-New,NL),T1,T2)) :- 
 	(nonvar(LT) -> ToInternal=true ; ToInternal=(false)),
 	% tricky handling to avoid infinite terms in the first branch:
@@ -664,7 +684,7 @@ syntax2p_literal(LT,_Vars,lps2p,[T1,T2],false,RealEC,happens(NL,T1,T2)) :-
 	simple_event_colour(RealLT,EC),
 	NL=LT.
 syntax2p_literal(LT_,_Vars,js2p,[T1,T2],true,null,happens(NL,T1,T2)) :- 
-	nonvar(LT_), LT_=..[F|Args_], append(Args,[T1,T2],Args_), LT=..[F|Args],
+	nonvar(LT_), guarded_univ(LT_=..[F|Args_]), append(Args,[T1,T2],Args_), guarded_univ(LT=..[F|Args]),
 	( head_hint(LT,event) ; head_hint(LT,action)  ),
 	!,
 	NL=LT.
@@ -685,7 +705,7 @@ syntax2p_literal(LT,_Vars,Tran,[T1,T2],ET,Spec,holds(not(NL),T)) :- % not(fluent
 		LT= (not(F) at T), (var(T);is_some_time(T)), Spec = delimiter - [delimiter-[EF],classify], ET=true ; 
 		LT= not(F at T), (var(T);is_some_time(T)), Spec = delimiter - [delimiter - [EF,classify]], ET=true ; 
 		Tran=lps2p, LT= not(F), head_hint(F,fluent), Spec = delimiter - [EF], ET=false ;
-		Tran=js2p, LT= not(F_), nonvar(F_), F_ =.. [Fun|Args_], append(Args,[T],Args_), F=..[Fun|Args], head_hint(F,fluent), Spec = null, ET=true
+		Tran=js2p, LT= not(F_), nonvar(F_), guarded_univ(F_ =.. [Fun|Args_]), append(Args,[T],Args_), guarded_univ(F=..[Fun|Args]), head_hint(F,fluent), Spec = null, ET=true
 		),
 	!,
 	simple_fluent_colour(F,EF),
@@ -719,7 +739,7 @@ syntax2p_literal(F,_Vars,lps2p,[T1,T2],false,EF,holds(NL,T)) :-
 	NL=F, T=T1, T=T2.
 syntax2p_literal(F_,_Vars,js2p,[T1,T2],false,null,holds(NL,T)) :- 
 	nonvar(F_), 
-	F_=..[Fun|Args_], append(Args,[T],Args_), F=..[Fun|Args],
+	guarded_univ(F_=..[Fun|Args_]), append(Args,[T],Args_), guarded_univ(F=..[Fun|Args]),
 	( head_hint(F,fluent) ; system_fluent(F)),
 	!,
 	NL=F, T=T1, T=T2.
@@ -801,7 +821,7 @@ my_write_js_literal(S,X,Vars) :- var(X), !, write_term(S,X,[variable_names(Vars)
 my_write_js_literal(S,X,_Vars) :- atomic(X), !, write_term(S,X,[]).
 my_write_js_literal(S,X,Vars) :- is_list(X), !, write_term(S,X,[quoted(true),variable_names(Vars)]). % can only happen in direction lps -> .P
 my_write_js_literal(S,X,Vars) :- 
-	X=..[F|Args], 
+	guarded_univ(X=..[F|Args]), 
 	atom_codes(F,[C1|_]),
 	(between(97,122,C1) -> % lower case start
 		my_write_js_literal_args(Args,Vars,Args_), 
@@ -833,7 +853,7 @@ pretty_write((H <- B),Translator,I,Vars,S) :- !,
 pretty_write((<- B),Translator,I,Vars,S) :- !, 
 	my_tab(S,I), writeln(S,'<- '), 
 	my_tab(S,I), NI is I+4, pretty_write(B,Translator,NI,Vars,S).
-pretty_write(Declaration,Translator,I,Vars,S) :- Declaration=..[Op,C], member(Op,[false,initially,fluents,events,prolog_events,actions]), !,
+pretty_write(Declaration,Translator,I,Vars,S) :- guarded_univ(Declaration=..[Op,C]), member(Op,[false,initially,fluents,events,prolog_events,actions]), !,
 	my_tab(S,I), write(S,Op), 
 	(Translator\==js2p -> writeln(S,''), NI is I+4 ; NI=I),
 	(Translator==js2p -> write(S,'(' ); true),
@@ -870,8 +890,8 @@ my_tab(S,I) :- I>0, write(S,' '), NI is I-1, my_tab(S,NI).
 
 % predicate_for(Term,Spec)
 predicate_for(V,none) :- var(V), !.
-predicate_for((H:-_),F/A) :- !, functor(H,F,A).
-predicate_for(H,F/A) :- functor(H,F,A).
+predicate_for((H:-_),F/A) :- !, unswi_functor(H,F,A).
+predicate_for(H,F/A) :- unswi_functor(H,F,A).
 
 init_definition_newliner :- set_currently_defining(none).
 

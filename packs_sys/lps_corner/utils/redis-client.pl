@@ -6,7 +6,7 @@
     ]).
 :- use_module(library(process)).
 
-:- dynamic client(_PID,_OutputStream,_InputStream).
+:- dynamic client/3. % (_PID,_OutputStream,_InputStream).
 
 % create redis-cli instance, keeping a pair of streams for it; as a Prolog thread
 create(Server,Password) :- 

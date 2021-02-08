@@ -84,7 +84,7 @@ lps_literal(Literals,Lit) :-
 
 % neg_free(Literal,JuicyLiteral) Strip negation of simple literals only
 neg_free(G,_) :- var(G), !, throw(weird_var_goal).
-neg_free(holds(not Fl,T),holds(Fl,T)) :- !.
+neg_free(holds(not(Fl),T),holds(Fl,T)) :- !.
 neg_free(not(G),NF) :- !, neg_free(G,NF).
 neg_free(G,G).
 
@@ -134,14 +134,14 @@ bind_with_time(happens(_,T1,T2),_T) :- ground(T1-T2), !.
 bind_with_time(happens(_,T1,T2),T) :- ground(T1), !, T2=T.
 bind_with_time(happens(_,T1,T2),T) :- ground(T2), !, T1=T.
 bind_with_time(happens(E,T1,T2),_) :- throw(weird_happenning(happens(E,T1,T2))).
-bind_with_time(holds(not Fl,T),Time) :- !, bind_with_time(holds(Fl,T),Time) .
-bind_with_time(not G,T) :- !, bind_with_time(G,T).
+bind_with_time(holds(not(Fl),T),Time) :- !, bind_with_time(holds(Fl,T),Time) .
+bind_with_time(not(G),T) :- !, bind_with_time(G,T).
 bind_with_time(_,_).
 
 % TODO: deal properly with non user predicates!!!: 
 system_literal(G) :- predicate_property(G,built_in).
 
-thread_local phb_tuple/1. % preliminary Herbrand base
+:- thread_local phb_tuple/1. % preliminary Herbrand base
 
 % time(T) :- between(0,10,T). % time window
 

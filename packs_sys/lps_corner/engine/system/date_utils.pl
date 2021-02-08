@@ -1,3 +1,6 @@
+
+% :- include(library(lps_syntax)).
+
 %%% LPS "system library"; some of these predicates have special handling in interpreter.pl
 real_date(Y/M/D) at T if 
 	real_time(Now) at T, stamp_date_time(Now,date(Y,M,D,_,_,_,_,_,_),local).

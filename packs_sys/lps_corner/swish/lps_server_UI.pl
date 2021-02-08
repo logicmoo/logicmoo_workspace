@@ -35,24 +35,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 :- module(lps_server_UI, [ check_user_server_usage/0, lps_user_is_super/0, user_is_known/0, check_powerful_user/1, term_rendering//3]).
 
+
+:- multifile(lps_server_UI:term_rendering/5).
+
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
 :- use_module(library(http/js_write)).
 :- use_module(library(http/http_json)).
 :- use_module(library(http/http_parameters)).
-:- use_module('../../swish/lib/render').
+
+:- if(exists_source(swish(lib/render))).
+:- use_module(swish(lib/render)).
+:- endif.
 
 % explicit imports below, commenting this to avoid "weak imports" warnings 
-% :- use_module('../engine/interpreter.P').
-:- use_module('../utils/visualizer.P').
+% :- use_module(library('../engine/interpreter.P')).
+:- use_module(library('../utils/visualizer.P')).
 
 :- multifile sandbox:safe_primitive/1.
 
+:- if(exists_source(swish(lib/render))).
 :- register_renderer(lps_server_UI, "Access to a LPS server execution").
+:- endif.
 
 :- discontiguous(lps_server_UI:term_rendering/5).
 
-term_rendering(lpsServer(LPS_ID,Has2d,MinCT), _Vars, _Options) -->
+
+lps_server_UI:term_rendering(lpsServer(LPS_ID,Has2d,MinCT), _Vars, _Options) -->
 	{Has2d==true-> twoDviewElements(LPS_ID,MinCT,false,_,Script,Canvas), Displayer=[Canvas,Script] ; Displayer=[]},
 	html(div(['data-render'('As LPS Server')],[
 		p('See this LPS server\'s status, state and inject events from:'),
@@ -72,7 +81,8 @@ tt:- threadutil:threads. % ...BUT STILL No permission to call sandboxed threadut
 % swipl -l user_module_file.pl -l ../../swish/server.pl -g "assert(lps_server_UI:allow_anonymous_powerful_ops)" -g server:server
 :- dynamic allow_anonymous_powerful_ops/0.
 % allow_anonymous_powerful_ops.
-
+:- use_module(library(http/http_wrapper),[http_current_request/1]).
+allow_anonymous_powerful_ops:- \+ http_current_request(_).
 
 % call this before every potentially dangerous operation:
 check_powerful_user(serve_ethereum) :- user_is_known, !. %TODO: move out of open source
@@ -86,10 +96,11 @@ user_is_known :- allow_anonymous_powerful_ops -> true ; lps_user(User), User\=un
 
 lps_user_is_super :- allow_anonymous_powerful_ops -> true ; (lps_user(User), super_user(User)).
 
-any_call(G) :- check_powerful_user(sudo), G.
+any_call(G) :- check_powerful_user(sudo), call(G).
 
 sandbox:safe_primitive(lps_server_UI:any_call(G)) :- nonvar(G).
 
+:- meta_predicate user:sudo(0).
 user:sudo(G) :- any_call(G).
 
 % mechanism to load all Prolog files in the directory, to be used with care!
@@ -191,6 +202,46 @@ lps_serve_manager(Request) :-
 	lps_user(User,Email),
 	member(path_info(LPS_ID),Request),
 	background_execution(LPS_ID,RealTimeBeginning,MaxRealT,MaxCycles, MinCycleTime,FinalState,Status), % user is checked here
+	get_time(Now), Elapsed is Now - RealTimeBeginning,
+	header_style(Style),
+	format(atom(LogURL),"/lps_server/log/~w",[LPS_ID]),
+	(Status==running ->
+		interpreter:get_rtb_fluent_event_templates(LPS_ID,Cycle,Beginning,Fluents,Events), % TODO: nicer failure reporting, please
+		format_time(atom(RTB),'%a, %d %b %Y %T %Z',Beginning),
+		(select(lps_terminate,Events,UserEvents) -> true; UserEvents=Events),
+		format(atom(SaveURL),"/lps_server/events/~w?events=[]&fluents=[lps_saved_state(_,_,_,_,_,_,_,_)]&after=true",[LPS_ID]),
+		format(atom(KillURL),"/lps_server/events/~w?events=[lps_terminate]",[LPS_ID]),
+		format(atom(SaveFinishURL),"/lps_server/events/~w?events=[lps_terminate]&fluents=[lps_saved_state(_,_,_,_,_,_,_,_)]&after=true",[LPS_ID]),
+		reply_html_page(title([LPS_ID,' manager']), [ % overkill, too many styles AND messes with simple scrolling: swish_page : \swish_css,
+			h2([Style],['LPS manager for ',LPS_ID]),
+			p("Hello ~w"-[User/Email]),
+			p([ "Status: ", b("~w"-[Status]), " Cycle: ~w"-[Cycle], " ", a([href=LogURL,target='_blank'],"See execution log") ]),
+			p("~1f seconds elapsed after ~s."-[Elapsed,RTB]),
+			p("maxRealTime ~w seconds, maxCycles ~w, cycle sleep ~w"-[MaxRealT,MaxCycles,MinCycleTime]),
+			h3('Fluents'), p('Please click to sample their state:'), ul(\fluentLinks(Fluents,LPS_ID)),
+			h3('Events'), \eventsForm(LPS_ID,UserEvents),
+			h3('Commands'),
+			p(a([href=SaveURL],'See snapshot of execution state')),
+			p(a([href=SaveFinishURL],'Save execution state and Kill')),
+			p(a([href=KillURL],'Kill'))
+		])
+		;
+		reply_html_page(title([LPS_ID,' manager']), [ % swish_page: \swish_css,
+			h2([Style],['LPS manager for ',LPS_ID]),
+			p(["Status: ~w"-[Status], ' (FINISHED) ', a([href=LogURL,target='_blank'],"See execution log")]),
+			p("~1f seconds elapsed."-[Elapsed]),
+			p("maxRealTime ~w seconds, maxCycles ~w, cycle sleep ~w"-[MaxRealT,MaxCycles,MinCycleTime]),
+			h2('Final state:'), p("~w"-[FinalState])
+		])
+	).
+
+
+:- http_handler('/lps_server/manager_d/', lps_serve_manager_debug, [prefix]). % .../lps_server/manager_d/lps1
+lps_serve_manager_debug(Request) :-
+   
+	lps_user(User,Email),
+	member(path_info(LPS_ID),Request),
+	ignore(background_execution(LPS_ID,RealTimeBeginning,MaxRealT,MaxCycles, MinCycleTime,FinalState,Status)), % user is checked here
 	get_time(Now), Elapsed is Now - RealTimeBeginning,
 	header_style(Style),
 	format(atom(LogURL),"/lps_server/log/~w",[LPS_ID]),
@@ -455,7 +506,8 @@ twoD(Request) :-
 
 % twoDviewElements(+LPS_ID,+WaitForWindowLoading,-CommonResources,-Script,-Canvas)
 twoDviewElements(LPS_ID, MinCT, WaitForWindow, [
-	script(src("/bower_components/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
+	script(src("/node_modules/jquery/dist/jquery.min.js"),[]), % use require as SWISH does...??
+	% script(src("/bower_components/jquery/dist/jquery.min.js"),[]),
 	script(src("/lps/2dWorld.js"),[]), 
 	script(src("/lps/2dWorld_lazy.js"),[]) ], 
 	\js_script({|javascript(LPS_ID,MY_SELECTOR,MinCT,WaitForWindow)||

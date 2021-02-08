@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %% All LPS engine state persists here
 %% The local predicate definitions MUST NOT be dynamic, see note in copy_from_module below 
 
-:- module(db, [ d/2,
+:- module(db, [ display/2,
 	lps_goal_id_counter/1,
 	action/1,
 	current_goal/1,
@@ -93,7 +93,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 :- endif.
 
 :- thread_local lps_goal_id_counter/1.
-:- thread_local d/2.
+:- thread_local display/2.
 :- thread_local action/1.
 :- thread_local current_goal/1.
 :- thread_local current_time/1.
@@ -143,7 +143,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % TODO: somehow runing tests a second time still originates "Clauses of interpreter:terminated/3 , etc. are not together..."
 % It may be necessary to inject these declarations in the Wei syntax file...
 :- discontiguous( ((initiated) /3, (terminated)/3, updated/4, l_events/2, reactive_rule/3, reactive_rule/2, l_int/2, l_timeless/2,
-	action/1, fluent/1, event/1, d_pre/1, happens/3, d/2 )).
+	action/1, fluent/1, event/1, d_pre/1, happens/3, display/2 )).
 
 :- use_module(library(lists), [append/3,member/2]).
 

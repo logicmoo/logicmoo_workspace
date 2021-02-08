@@ -2,8 +2,6 @@
 	  [ term_rendering//3			% +Term, +Vars, +Options
 	  ]).
 
-
-
 :- use_module(library(http/html_write)).
 :- use_module(library(http/term_html)).
 :- use_module(library(http/js_write)).

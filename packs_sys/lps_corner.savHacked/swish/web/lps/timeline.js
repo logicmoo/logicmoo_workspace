@@ -137,7 +137,7 @@ function drawTimeline(T) {
 				var T2 = displayedToLPStime(item.start);
 				literal = "happens("+item.content+","+(T2-1)+","+ T2 +")";
 			}
-			$(".prolog-query").queryEditor("setQuery","why("+literal+").");
+			$(".prolog-query").queryEditor("setQuery","why("+literal+",Explanation).");
 			properties.event.preventDefault();
 	  	});
 	  });

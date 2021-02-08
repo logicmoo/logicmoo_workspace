@@ -5,6 +5,10 @@ This notebook uses the LPS profile. This is an example LPS program:
 </div>
 
 <div class="nb-cell program">
+% :- notrace(use_module(library(logicmoo_common))).
+
+:- expects_dialect(lps).
+
 % Let it rain!
 maxTime(8).
 actions rain(_).

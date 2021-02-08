@@ -38,6 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	check_js_compliance/1, lps_literals/1
 	]).
 
+% DMILES ADDED
 :- meta_predicate lps_literals(*,0).
 :- use_module('../engine/interpreter.P').
 
@@ -77,9 +78,9 @@ check_js_compliance(Notices) :-
 		buildError(Lit,Vars,' an event or fluent cannot be a free variable ',ET)
 		),
 		Meta),	
-	% warn about ignored d/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
+	% warn about ignored display/2 declarations; e.g. examples/CLOUT_workshop/burning.pl
 	findall( notice(warning,ET,Pos), (
-		Head=d(_,_),
+		Head=display(_,_),
 		interpreter:user_prolog_clause(Head,Body),
 		(Body==true -> Clause=Head; Clause=(Head:-Body)),
 		source_position(Clause,F,Pos,Vars),
@@ -96,7 +97,8 @@ check_js_compliance(Notices) :-
 		),
 		NegComparators),	
 	findall( notice(error,ET,Pos), (
-		lps_literals(L,Clause), member(Lit,L), 
+		lps_literals(L,Clause), member(Lit,L),
+		% DMILES: dont count on this as an op yet
 		( Lit = (A =< B), Remedy = '<='(A,B) ),
 		source_position(Clause,F,Pos,Vars),
 		format(atom(Msg)," cannot use ~w, use ~w instead",[Lit,Remedy]),
