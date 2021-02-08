@@ -179,7 +179,7 @@ apply_forall(Forall, Apply, S0, S1):-
 
 findall(E, Goal, L, S0, S2):- apply_state(call, findall(E, Goal, L), S0, S2).
 
-map_apply_findall(Goal, M1, M2):- call(Goal, M1, M2).
+apply_to_goal(Goal, M1, M2):- call(Goal, M1, M2).
 
 
 %unless(G, Else, S0, S2):- apply_state(Z, unless(G, Else), S0, S2).

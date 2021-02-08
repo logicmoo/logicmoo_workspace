@@ -118,7 +118,7 @@ autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
 autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
  agent_thought_model(Agent, ModelData, Mem0),
  in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
- in_agent_model(Agent, h(spatial,exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial, exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
 
 % An unexplored object!

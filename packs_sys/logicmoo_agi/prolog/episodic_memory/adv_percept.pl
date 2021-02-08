@@ -229,7 +229,17 @@ process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 process_percept_do_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
 
 % Auto examine room items
-process_percept_do_auto(Agent, percept(Agent, Sense, Depth, h(spatial, _Prep, _Here, Objects)), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(Spatially, _Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
+ agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
+ % getprop(Agent, model_depth = ModelDepth, advstate),
+ DepthLess is Depth - 1,
+ findall( act3('examine__D5',Agent,[ Sense, child, Obj, DepthLess]),
+   ( member(Obj, Objects),
+      Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
+   Actions),
+ percept_intent( Agent, Actions, Mem0, Mem2).
+ 
+ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, h(spatial, _Prep, _Here, Objects)), _Stamp, Mem0, Mem2) :-
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
