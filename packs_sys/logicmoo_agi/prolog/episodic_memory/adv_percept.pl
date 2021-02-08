@@ -63,7 +63,7 @@ can_sense(Agent, Sense, Thing, S0, S9):- can_sense(Agent, Sense, Thing, S0), S9=
 can_sense(_Agent, _See, Star, _State) :- is_star(Star), !.
 can_sense(Agent, Sense, Thing, S0) :- Agent == Thing, !, can_sense_here(Agent, Sense, S0).
 can_sense(_Agent, Sense, Here, S0) :- fail,
-  getprop(Here, has_rel(exit(_), t), S0),
+  getprop(Here, has_rel(fn(exit, _), t), S0),
   sense_here0(Sense, in, Here, S0), !.
 
 can_sense(Agent, Sense, Thing, S0) :-
@@ -163,6 +163,15 @@ sensory_verb(taste, taste).
 sensory_verb(smell, smell).
 sensory_verb(touch, feel).
 
+sensible_pred(_Sense, _At).
+sense_to_domain(_Sense, Spatially):-  spatial_domain(Spatially).
+pred_to_domain(P, Spatially):- is_spatial_rel(P),!, spatial_domain(Spatially).
+verb_to_domain(_Verb, Spatially):-  spatial_domain(Spatially).
+domain_to_default_fn(_,exit).
+
+:- defn_state_none(spatial_domain(-domain)).
+spatial_domain(spatial).
+
 
 action_sensory(Action, Sense):-
  compound(Action),
@@ -229,7 +238,7 @@ process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
 process_percept_do_auto(Agent, Percept, _Stamp, M0, M0) :- was_own_self(Agent, Percept), !.
 
 % Auto examine room items
-process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(Spatially, _Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
+process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(_Spatially, _Here, _Prep, Objects)), _Stamp, Mem0, Mem2) :-
  agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
  % getprop(Agent, model_depth = ModelDepth, advstate),
  DepthLess is Depth - 1,
@@ -239,15 +248,6 @@ process_percept_do_auto(Agent, percept(Agent, Sense, Depth, child_list(Spatially
    Actions),
  percept_intent( Agent, Actions, Mem0, Mem2).
  
- process_percept_do_auto(Agent, percept(Agent, Sense, Depth, h(spatial, _Prep, _Here, Objects)), _Stamp, Mem0, Mem2) :-
- agent_thought_model(Agent, _ModelData, Mem0), Depth > 1,
- % getprop(Agent, model_depth = ModelDepth, advstate),
- DepthLess is Depth - 1,
- findall( act3('examine__D5',Agent,[ Sense, child, Obj, DepthLess]),
-   ( member(Obj, Objects),
-      Obj \== Agent), % ( \+ member(props(Obj, _), ModelData); true),
-   Actions),
- percept_intent( Agent, Actions, Mem0, Mem2).
 
 process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inherited(autonomous), M0), !.
 

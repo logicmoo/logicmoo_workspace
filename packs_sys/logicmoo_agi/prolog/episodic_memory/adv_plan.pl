@@ -129,13 +129,13 @@ sequenced(_Self,
   \+ in_state(~(open), Here),
   \+ in_state(~(open), Dir),
   reverse_dir(Dir, RDir),
-  h(spatial,exit(Dir), Here, There), % path(Here, There)
+  h(spatial, fn(exit, Dir), Here, There), % path(Here, There)
   % %Action:
  did( Self, act3('go__dir',Self,[ Walk, Dir])),
   %PostConds:
   ~h(spatial, WasRel, Self, Here),
   notice(Here, leaves(Self, Here, WasRel)),
-  notice(Self, msg([cap(subj(actor(Self))), does(Walk), from(place(Here)), via(exit(Dir)) , Rel, to(place(There))])),
+  notice(Self, msg([cap(subj(actor(Self))), does(Walk), from(place(Here)), via(fn(exit, Dir)) , Rel, to(place(There))])),
   h(spatial, Rel, Self, There),
   notice(There, enters(Self, There, RDir))]).
 
@@ -648,7 +648,7 @@ generate_plan(Knower, Agent, FullPlan, Mem0) :-
 
 
 path2dir1(Doer, Here, There,  act3('go__dir',Doer,[ _Walk, Dir]), ModelData):-
- in_model(h(spatial,exit(Dir), Here, There), ModelData).
+ in_model(h(spatial, fn(exit, Dir), Here, There), ModelData).
 path2dir1(Doer, Here, There,  act3('go__obj',Doer,[ _Walk, There]), ModelData) :-
  in_model(h(spatial, descended, Here, There), ModelData).
 

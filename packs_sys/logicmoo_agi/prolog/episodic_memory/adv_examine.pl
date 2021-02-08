@@ -38,18 +38,18 @@ add_exit_percepts(Spatially, Sense, Agent, PrepFrom, Depth, Object, S2, S3):-
 
 sense_object_exitnames(_Spatial, _Sense, _Depth, child, _Object, [], _S0) :- !.
 sense_object_exitnames(Spatially, _Sense, _Depth, in, Object, Exits, S0) :-
-  Info = h(Spatially,exit(Dir), Object,'<mystery>'(exit,Dir,Object)),  
-  findall(Info, g_h(Spatially,exit(Dir), Object, _, S0), Exits), Exits\==[], !.
+  Info = h(Spatially, fn(exit, Dir), Object,'<mystery>'(exit,Dir,Object)),  
+  findall(Info, g_h(Spatially, fn(exit, Dir), Object, _, S0), Exits), Exits\==[], !.
 sense_object_exitnames(Spatially, _Sense, _Depth, In, Object, [Info], _S0) :-
   Dir = escape(In), !,
-  Info = h(Spatially,exit(Dir),Object,'<mystery>'(exit,Dir,Object)).
+  Info = h(Spatially, fn(exit, Dir),Object,'<mystery>'(exit,Dir,Object)).
  
 
 /*
 prep_object_exitnames(_Sense, _Depth, in, Object, Exits, S0) :-
-  findall(h(Spatially,exit(Direction), Object, _), g_h(Spatially,exit(Direction), Object, _, S0), Exits), Exits\==[], !.
-prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(Spatially,exit(escape), Object, _)], _S0) :- member(InOnUnderAt, [in, on, under, at]), !.
-prep_object_exitnames(_Sense, _Depth, Direction, _Object, [h(Spatially,exit(reverse(Direction)), Object, _)], _S0) :- !.
+  findall(h(Spatially, fn(exit, Direction), Object, _), g_h(Spatially, fn(exit, Direction), Object, _, S0), Exits), Exits\==[], !.
+prep_object_exitnames(_Sense, _Depth, InOnUnderAt, Object, [h(Spatially, fn(exit, escape), Object, _)], _S0) :- member(InOnUnderAt, [in, on, under, at]), !.
+prep_object_exitnames(_Sense, _Depth, Direction, _Object, [h(Spatially, fn(exit, reverse(Direction)), Object, _)], _S0) :- !.
 %prep_object_exitnames(_Sense, _Depth, Other, _Object, [reverse(Other)], _S0).
 */
 
@@ -117,7 +117,6 @@ is_prop_accessable_at(action, 5, oper).
 is_prop_accessable_at(action, 5, cant_go).
 is_prop_accessable_at(_, N, P):- var(N), compound(P), safe_functor(P, F, _), is_prop_accessable_at(action, 5, F), !, N = 5.
 
-
 is_prop_accessable_at(_, _, P):- \+ compound(P), !, fail.
 is_prop_accessable_at(S, N, F = _):- !, is_prop_accessable_at(S, N, F).
 is_prop_accessable_at(S, N, P):- safe_functor(P, F, _), is_prop_accessable_at(S, N, F).
@@ -159,35 +158,37 @@ add_prop_percepts(Sense, Agent, _PrepFrom, Depth, Object, S1, S2):-
 
 findall_set2(T, G, L):-findall(T, G, S), list_to_set(S, L).
 
-get_relation_list(Object, RelationSet, S1) :-
+get_relation_list(Sense, Object, RelationSet, S1) :-
+  sense_to_domain(Sense, Spatially),
   findall_set2(At,
-     ((getprop(Object, has_rel(At, t), S1);
-      (declared(h(_Spatial, At, _, Object), S1))),
-     At\=exit(_)), RelationSet).
+     (((getprop(Object, has_rel(At, t), S1), sensible_pred(Sense, At));
+      (declared(h(Spatially, At, _, Object), S1),sensible_pred(Sense, At))),
+     At\=fn(exit, _)), RelationSet).
 
 % add_child_percepts(_Sense, _Agent, _PrepIn, Depth, _Object, S1, S1):- Depth > 2, !.
 add_child_percepts(Sense, Agent, PrepIn, Depth, Object, S1, S2):-
- get_relation_list(Object, RelationSet, S1),
+ get_relation_list(Sense, Object, RelationSet, S1),
  (member(PrepIn, RelationSet) -> UseRelationSet = [PrepIn] ; UseRelationSet= RelationSet),
- % dmsg(get_relation_list(Object, RelationSet)),
+ % dmsg(get_relation_list(Sense, Object, RelationSet)),
  findall(percept(Agent, Sense, Depth, child_list(Spatially, Object, At, Children)),
      ((member(At, UseRelationSet),
+       pred_to_domain(At,Spatially),
        child_percepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent, PreceptS, S1, S2).
 
 add_child_percepts_new(Sense, Agent, PrepFrom, Depth, Object, S1, S2):-
- get_relation_list(Object, RelationSet, S1),
+ get_relation_list(Sense, Object, RelationSet, S1),
  (member(PrepFrom, RelationSet) -> UseRelationSet = [PrepFrom] ; UseRelationSet= RelationSet),
- % dmsg(get_relation_list(Object, RelationSet)),
+ % dmsg(get_relation_list(Sense, Object, RelationSet)),
  findall(percept(Agent, Sense, Depth, h(_Spatial, At, Children, Object)),
      ((member(At, UseRelationSet),
        child_percepts(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),
  queue_agent_percept(Agent, PreceptS, S1, S2).
 
 add_child_percepts_new_2(Sense, Agent, PrepFrom, Depth, Object, S1, S2):-
- get_relation_list(Object, RelationSet, S1),
+ get_relation_list(Sense, Object, RelationSet, S1),
  (member(PrepFrom, RelationSet) -> UseRelationSet = [PrepFrom] ; UseRelationSet= RelationSet),
- % dmsg(get_relation_list(Object, RelationSet)),
+ % dmsg(get_relation_list(Sense, Object, RelationSet)),
  findall(percept(Agent, Sense, Depth, Children),
      ((member(At, UseRelationSet),
        child_percepts_h(Agent, Sense, Object, At, Depth, Children, S1))), PreceptS),

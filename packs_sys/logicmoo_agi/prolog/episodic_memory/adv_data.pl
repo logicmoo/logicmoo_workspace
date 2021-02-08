@@ -453,7 +453,7 @@ type_props(screendoor, [
     precond(h(spatial, child, $agent, Thing), ["dont have"]), % precond(Test, FailureMessage)
     body( ( act3('take', $agent,[ Thing, in, $self])))), % body(clause)
    % inherit(container),
-   has_rel(exit(_))
+   has_rel(fn(exit,_))
   ]),
 
  type_props(container, [

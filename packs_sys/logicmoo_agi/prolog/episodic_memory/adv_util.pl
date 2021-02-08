@@ -78,7 +78,7 @@ defn_get_set_wrapper(Getter, M, F, A, _, 2):-
    asserta_if_undef(M, PP,
     with_mutex(Mutex, (call(Getter, S0), M:PPS0, call(Setter, S9)))).
   %asserta_if_undef(M, PP,
-   %with_mutex(Mutex, (pprint(enter(PP), trace), call(Getter, S0), M:PPS0, call(Setter, S9), pprint(exit(PP), trace)))).
+   %with_mutex(Mutex, (pprint(enter(PP), trace), call(Getter, S0), M:PPS0, call(Setter, S9), pprint(fn(exit, PP), trace)))).
 
 getter_to_setter(get_advstate, set_advstate).
 getter_to_setter(get_memory(A), set_memory(A)).

@@ -45,7 +45,11 @@ make_orphan(Spatially, Orphan, _Timestamp, M0, M2) :-
  model_remove(h(Spatially, OldPrep, Orphan, OldParent), M0, M1),
  model_prepend([h(Spatially, OldPrep, Orphan, '<mystery>'(removed, OldPrep, OldParent))], M1, M2).
 make_orphan(_Spatially, _Orphan, _Timestamp, M0, M0).
- 
+
+remove_child(Spatially, Child, _Timestamp, M0, M2) :-
+ model_remove(h(Spatially, _OldPrep, Child, _OldParent), M0, M2), !.
+remove_child(_Spatially, _Child, _Timestamp, M0, M0).
+
 
 remove_old_children(Spatially, Prep, Parent, RetainedChildren, Timestamp, M0, M3) :-
  in_model(h(Spatially, Prep, OldChild, Parent), M0, M1),
@@ -73,40 +77,42 @@ add_children(Spatially, PrepNew, NewParent, [Item|Tail], Timestamp, M0, M2) :-
  add_children(Spatially, PrepNew, NewParent, Tail, Timestamp, M1, M2).
 
 add_child(Spatially, Prep, Object, Child, Timestamp, M0, M2):- 
-  make_orphan(Spatially, Child,  Timestamp, M0, M1),
+  remove_child(Spatially, Child,  Timestamp, M0, M1),
   model_prepend([h(Spatially, Prep, Child, Object)], M1, M2).
 
 
 % If dynamic topology needs storing, use
-%  h(Spatially,exit(E), Here, [There1|ThereTail], Timestamp)
+%  h(Spatially, fn(Fn, E), Here, [There1|ThereTail], Timestamp)
 
-realize_model_exit(Spatially, At, From, _Timestamp, M0, M2) :-
- model_recent(h(Spatially, exit(At), From, _To), M0, M2), !.
-/*realize_model_exit(Spatially, At, From, _Timestamp, M0, M2) :-
- model_remove_if((h(exit(At), From, To)), M0, M1), !,
- model_prepend([(h(exit(At), From, To))], M1, M2).
+realize_model_fn(Fn, Spatially, Value, From, _Timestamp, M0, M2) :-
+ model_recent(h(Spatially, fn(Fn, Value), From, _To), M0, M2), !.
+/*realize_model_fn(Exit,Fn, Spatially, Value, From, _Timestamp, M0, M2) :-
+ model_remove_if((h(fn(Fn, Value), From, To)), M0, M1), !,
+ model_prepend([(h(fn(Fn, Value), From, To))], M1, M2).
 */
-realize_model_exit(Spatially, At, From, _Timestamp, M0, M1) :-
- model_prepend([(h(Spatially, exit(At), From, '<mystery>'(exit, At, From)))], M0, M1), !.
+realize_model_fn(Fn, Spatially, Value, From, _Timestamp, M0, M1) :-
+ model_prepend([(h(Spatially, fn(Fn, Value), From, '<mystery>'(Fn, Value, From)))], M0, M1), !.
 
-update_model_exit(Spatially, At, From, To, _Timestamp, M0, M2) :-
- model_recent((h(Spatially, exit(At), From, _To)), M0, M1),
- model_prepend([(h(Spatially, exit(At), From, To))], M1, M2).
+update_model_fn(Fn, Spatially, Value, From, To, _Timestamp, M0, M2) :-
+ model_recent((h(Spatially, fn(Fn, Value), From, _To)), M0, M1),
+ model_prepend([(h(Spatially, fn(Fn, Value), From, To))], M1, M2).
 
 
 % Model exits from Here.
-update_model_exits(_Spatial, [], _From, _T, M, M).
-update_model_exits(Spatially, [Exit|Tail], From, Timestamp, M0, M2) :-
- realize_model_exit(Spatially, Exit, From, Timestamp, M0, M1),
- update_model_exits(Spatially, Tail, From, Timestamp, M1, M2).
+update_model_fns(_Fn,_Spatial, [], _From, _T, M, M).
+update_model_fns(Fn, Spatially, [Value|Tail], From, Timestamp, M0, M2) :-
+ realize_model_fn(Fn, Spatially, Value, From, Timestamp, M0, M1),
+ update_model_fns(Fn, Spatially, Tail, From, Timestamp, M1, M2).
 
 
 dumpST_break:- dumpST, break.
 
-update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
-   \+ in_model(h(_Spatial,exit(ExitNameReversed), Here, _There), M0),
-   realize_model_exit(spatial, ExitNameReversed, Here, Timestamp, M0, M1),
- update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
+update_model(Knower, event3('arrive',Doer,[ In, Here, Verb, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
+   verb_to_domain(Verb, Spatially),
+   domain_to_default_fn(Spatially, Fn),
+   \+ in_model(h(Spatially, fn(Fn, ExitNameReversed), Here, _There), M0),
+   realize_model_fn(Fn, Spatially, ExitNameReversed, Here, Timestamp, M0, M1),
+ update_model(Knower, event3('arrive',Doer,[ In, Here, Verb, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
 % Match only the most recent Figment in Memory.
 %last_thought(Figment, Memory) :- % or member1(F, M), or memberchk(Term, List)
@@ -114,31 +120,32 @@ update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), 
 % model_prepend(RecentMemory, [Figment|_Tail], Memory),
 % \+ member(FreshFigment, RecentMemory).
 
-update_model(Knower, event3('arrive',Doer,[ At, Here, _, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
+update_model(Knower, event3('arrive',Doer,[ At, Here, Verb, ExitNameReversed]), Timestamp, Mem, M0, M2) :- Knower == Doer,
+  must_mw(verb_to_domain(Verb, Spatially)),
   % According to model, where was I?
   must_mw(in_model(h(_Was, Doer, There), M0)),
   % TODO: Handle goto(Doer, walk, on, table)
   % reverse_dir(ExitNameReversed, ExitName, advstate),
   % How did I get Here?
- model_prepend(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
+ append(RecentMem, [ attempts(Doer, ( act3('go__dir',Doer,[ _, ExitName])))| OlderMem], Mem),
     % find figment
  \+ member( attempts(Doer,  act3('go__dir',Doer,[ _, _])), RecentMem), % guarrantee recentness
   memberchk(timestamp(_T1, _OldNow), OlderMem), % get associated stamp
   %player_format(Doer, '~p moved: goto(Doer, walk, ~p, ~p) from ~p leads to ~p~n', 
   %       [Doer, AtGo, Dest, There, Here]),
-  Spatially = spatial,
-  update_model_exit(Spatially, ExitName, There, Here, Timestamp, M0, M11), % Model the path.
-  update_model_exit(Spatially, ExitNameReversed, Here, There, Timestamp, M11, M1),
+  domain_to_default_fn(Spatially, Fn),  
+  update_model_fn(Fn, Spatially, ExitName, There, Here, Timestamp, M0, M11), % Model the path.
+  update_model_fn(Fn, Spatially, ExitNameReversed, Here, There, Timestamp, M11, M1),
   add_child(Spatially, At, Here, Doer, Timestamp, M1, M2), !. % And update location.
 
-update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
-  Spatially = spatial,
+update_model(Knower, event3('arrive',Doer,[ In, Here, Verb, ExitNameReversed]), Timestamp, Mem, M0, M2) :-
+   must_mw(verb_to_domain(Verb, Spatially)),
    \+ in_model(h(Spatially, In, Doer, Here), M0),
    update_children(Spatially,  In, [Doer], Here, Timestamp, M0, M1),
- update_model(Knower, event3('arrive',Doer,[ In, Here, Walk, ExitNameReversed]), Timestamp, Mem, M1, M2).
+ update_model(Knower, event3('arrive',Doer,[ In, Here, Verb, ExitNameReversed]), Timestamp, Mem, M1, M2).
 
-update_model(_Knower, event3('moved', _Doer, [ _How, Object, _From, At, To]), Timestamp, _Mem, M0, M1) :-
-  Spatially = spatial,
+update_model(_Knower, event3('moved', _Doer, [ How, Object, _From, At, To]), Timestamp, _Mem, M0, M1) :-
+  must_mw(verb_to_domain(How, Spatially)),
   update_children(Spatially, At, Object, To, Timestamp, M0, M1).
 
 /*
@@ -149,13 +156,9 @@ update_model(Knower, Event, Timestamp, Memory, M0, M2) :- fail,
     update_model(Knower, Event, Timestamp, Memory, M1, M2).
 */
 
-update_model(_Knower, carrying(Doer, Objects), Timestamp, _Memory, M0, M1) :- 
-  Spatially = spatial, 
-  update_children(Spatially,  held_by, Doer, Objects, Timestamp, M0, M1).
-
-update_model(_Knower, wearing(Doer, Objects), Timestamp, _Memory, M0, M1) :- 
-  Spatially = spatial, 
-  update_children(Spatially,  worn_by, Doer, Objects, Timestamp, M0, M1).
+update_model(_Knower, h(Spatially, Prep, Child, Object), Timestamp, _Memory, M0, M1) :-
+  Prep \= fn(_,_),
+  add_child(Spatially, Prep, Object, Child, Timestamp, M0, M1).
 
 update_model(_Knower, percept_props(_Doer, _Sense, Object, _Depth, PropList), _Stamp, _Mem, M0, M2) :-
  apply_mapl_rest_state(updateprop_from_create(Object), PropList, [], M0, M2).
@@ -166,9 +169,8 @@ update_model(_Knower, props(Object, PropList), _Stamp, _Mem, M0, M2) :-
 % Wrong Doer !
 update_model(Knower, percept(Doer2, _, _, _Info), _Timestamp, _Mem, M0, M0):- Knower \=@= Doer2, !.
 % Model exits from Here.
-update_model(Knower, percept(Doer, _, _, exit_list(in, Here, ExitRelations)), Timestamp, _Mem, M0, M4) :- must_be_same(Knower, Doer),
-  Spatially = spatial, 
-  update_model_exits(Spatially, ExitRelations, Here, Timestamp, M0, M4).
+update_model(Knower, percept(Doer, _, _, exit_list(Spatially, Exit, in, Here, Functions)), Timestamp, _Mem, M0, M4) :- must_be_same(Knower, Doer),
+  update_model_fns(Exit, Spatially, Functions, Here, Timestamp, M0, M4).
 
 % Model objects seen Here.. This is no longer used right?
 update_model(Knower, percept(Doer, _Sense, child_list(Spatially, _Depth, There, Prep, Objects)), Timestamp, _Mem, M0, M3):- must_be_same(Knower, Doer),

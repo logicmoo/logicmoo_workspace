@@ -199,7 +199,7 @@ logic2eng(_Context, percept(_Agent, see, Depth, props(Object, [shape=What])), []
 logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), 
    extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
 
-logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
+logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Spatially, Exit, Relation, Here, Exits)), ['s'(Exit),'ly'(Spatially), Relation, Here, ' are:', ExitText, '\n']):-   list2eng(Context, Exits, ExitText).
 
 logic2eng(_Context, percept(_Agent, Sense, Depth, h(_Spatial, Prep, '<mystery>'(Closed, _, _), Object)), 
    extra_verbose_eng([Object, aux(be), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
@@ -214,6 +214,20 @@ logic2eng(Context, percept( Agent, Sense, _Depth, h(_Spatial, Prep, Nearby, Here
 logic2eng(Context, percept( Agent, Sense, _Depth, h(_Spatial, Prep, Nearby, Here)),
  [cap(subj(Agent)), person(Sense, es(Sense)), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
+logic2eng(_Context, percept(Agent, see, Depth, props(Object, [shape=What])), extra_verbose_logic(percept(Agent, see, Depth, props(Object, [has_shape=What])))).
+
+logic2eng(Context, percept(_Agent, _, _Depth, exit_list(Relation, Here, Exits)), ['Exits', Relation, Here, ' are:', ExitText, '\n']):-  list2eng(Context, Exits, ExitText).
+
+logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Spatially, Object, Prep, '<mystery>'(Closed, _, _))), extra_verbose_eng([Object, aux(be), ly(Spatially), Closed, from, ing(Sense), cap(Prep)]) ):- Depth \= depth(3).
+logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Spatially, Object, Prep, [])), extra_verbose_eng([nothing, ly(Sense), ly(Spatially), Prep, Object]) ):- Depth \= 1.
+logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Spatially, Here, Prep, Nearby)),
+    [cap(subj(Agent)), es(Sense), ly(Spatially), Prep, Here, ':'  | SeeText]):-
+ select_from(Agent, Nearby, OthersNearby), !, list2eng(Context, OthersNearby, SeeText).
+
+logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)),
+ [cap(subj(Agent)), person(Sense, es(Sense)), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
+
+
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_logic(notices(Agent, How, Depth, What))):-  Depth=1,
   logic2eng(Context, Info, What).
 
@@ -222,9 +236,9 @@ logic2eng(Context, percept(Agent, How, _, Info), notices(Agent, How, What)):-
 
 % (...verbose...: percept(_Player_1, see, 2, props(shovel_X1, [shape=shovel])) )
 % {{ percept(_Player_1, see, 2, props(cabinate_X1, [shape=cabinate, opened=f, has rel(in, t), has rel(on, t)])) }}
-% {{ percept(_Player_1, see, 3, props(kitchen, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t), desc='cooking happens here'])) }}
+% {{ percept(_Player_1, see, 3, props(kitchen, [volume capacity=10000, has rel(in, t), has rel(fn(exit, D2), t), desc='cooking happens here'])) }}
 % {{ percept(_Player_1, see, 2, props(crate_X1, [shape=crate, opened=f, has rel(in, t)])) }}
-% {{ percept(_Player_1, see, 3, props(living room, [volume capacity=10000, has rel(in, t), has rel(exit(D2), t)])) }}
+% {{ percept(_Player_1, see, 3, props(living room, [volume capacity=10000, has rel(in, t), has rel(fn(exit, D2), t)])) }}
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_eng([Agent, es(How), What])):- (Depth == 2;Depth == 3),
   logic2eng(Context, Info, What).
 
@@ -299,7 +313,7 @@ logic2eng(_Obj, ago(Time), [MinutesSecs, ago]):-
   ; format(atom(MinutesSecs), '~ws', [USecs])).
 
 
-logic2eng(_Obj, h(_Spatial,exit(West), From , To), [To, 'is', West, 'of', From]):- !.
+logic2eng(_Obj, h(_Spatial, fn(exit, West), From , To), [To, 'is', West, 'of', From]):- !.
 logic2eng(_Obj, h(_Spatial, ExitDown, Object, Speaker), [the(Object), 'has', Exit, Down, 'to', Speaker]):-
  compound(ExitDown),
  ExitDown=..[Exit, Down].
@@ -348,7 +362,7 @@ logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(on), ['has a surface']).
 logic2eng(_Obj, has_rel(worn_by), ['can be dressed up']).
 logic2eng(_Obj, has_rel(held_by), ['can hold objects']).
-logic2eng(_Obj, has_rel(exit(_)), ['can have exits']).
+logic2eng(_Obj, has_rel(fn(exit, _)), ['can have exits']).
 %logic2eng(_Obj, can_be(eat, t), ['looks tasty ', '!']).
 %logic2eng(_Obj, can_be(take), ['can be taken!']).
 %logic2eng(_Obj, can_be(take, f), ['cannot be taken!']).

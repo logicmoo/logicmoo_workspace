@@ -426,8 +426,8 @@ reverse_dir(south, north, _):-!.
 reverse_dir(reverse(ExitName), ExitName, _) :- nonvar(ExitName), !.
 reverse_dir(Dir, RDir, S0):- 
  spatial_domain(Spatially),
- h(Spatially,exit(Dir), Here, There, S0),
- h(Spatially,exit(RDir), There, Here, S0), !.
+ h(Spatially, fn(exit, Dir), Here, There, S0),
+ h(Spatially, fn(exit, RDir), There, Here, S0), !.
 
 reverse_dir(Dir, RDir, S0):-
  h(Spatially, Dir, Here, There, S0),

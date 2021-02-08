@@ -94,7 +94,7 @@ autonomous_decide_action(Agent, Mem0, Mem1) :-
  random_permutation([
  autonomous_create_new_goal(Agent, Mem0, Mem1),
  autonomous_decide_unexplored_object(Agent, Mem0, Mem1),
- autonomous_decide_unexplored_exit(Agent, Mem0, Mem1),
+ autonomous_decide_unexplored_fn(exit, Agent, Mem0, Mem1),
  autonomous_decide_follow_player(Agent, Mem0, Mem1),
  autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1)
  ], Premute),
@@ -108,17 +108,17 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 
 % An unexplored exit here, go that way.
-autonomous_decide_unexplored_exit(Agent, Mem0, Mem2) :-
+autonomous_decide_unexplored_fn(exit, Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(spatial,exit(Prev), There, '<mystery>'(exit, _, _)), ModelData),
- in_agent_model(Agent, h(spatial,exit(Dir), Here, There), ModelData),
+ in_agent_model(Agent, h(spatial, fn(exit, Prev), There, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial, fn(exit, Dir), Here, There), ModelData),
  in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Prev])), Mem1, Mem2).
-autonomous_decide_unexplored_exit(Agent, Mem0, Mem1) :-
+autonomous_decide_unexplored_fn(exit, Agent, Mem0, Mem1) :-
  agent_thought_model(Agent, ModelData, Mem0),
  in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
- in_agent_model(Agent, h(spatial, exit(Dir), Here, '<mystery>'(exit, _, _)), ModelData),
+ in_agent_model(Agent, h(spatial, fn(exit, Dir), Here, '<mystery>'(exit, _, _)), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
 
 % An unexplored object!
@@ -143,7 +143,7 @@ autonomous_decide_follow_player(Agent, Mem0, Mem1) :- % 1 is random(2),
  in_agent_model(Agent, h(spatial, _, Agent, Here), ModelData))),
  dif(Agent, Player), mu_current_agent(Player),
  in_agent_model(Agent, h(spatial, _, Player, There), ModelData),
- in_agent_model(Agent, h(spatial,exit(Dir), Here, There), ModelData),
+ in_agent_model(Agent, h(spatial, fn(exit, Dir), Here, There), ModelData),
  add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
 
 autonomous_decide_silly_emoter_action(Agent, Mem0, Mem1) :-

@@ -702,9 +702,9 @@ parse_imperative_movement(Doer, [Prep], Logic, M) :- domain_prep(spatial, Prep),
 parse_imperative_movement(Doer, [go|Info], Logic, M):- !, must_mw1(txt2goto(Doer, walk, Info, Logic, M)).
 % outside
 parse_imperative_movement(Doer, [ExitName], Logic, M) :-
- in_agent_model(Doer, h(spatial,exit(ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
+ in_agent_model(Doer, h(spatial, fn(exit, ExitName), _, _), M), txt2goto(Doer, walk, [ExitName], Logic, M), !.
 parse_imperative_movement(Doer, [ ExitName], (act3('go__dir', Doer, [ walk, ExitName])), M) :-
-  in_agent_model(Doer, h(spatial,exit(ExitName), _Place, _), M).
+  in_agent_model(Doer, h(spatial, fn(exit, ExitName), _Place, _), M).
 
 
 parse_imperative_movement(Doer, [get, Prep| More], Logic, M) :- domain_prep(spatial, Prep), !, must_mw1(txt2goto(Doer, walk, [Prep| More], Logic, M)).
@@ -724,7 +724,7 @@ txt2goto(Doer, Walk, [ Prep, Dest], (act3('go__prep_obj', Doer, [ Walk, Prep, Wh
 
 % go north
 txt2goto(Doer, Walk, [ ExitName], (act3('go__dir', Doer, [ Walk, ExitName])), M) :-
- in_agent_model(Doer, h(spatial,exit(ExitName), _, _), M).
+ in_agent_model(Doer, h(spatial, fn(exit, ExitName), _, _), M).
 % go escape
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- ( compass_direction(Dir);Dir==escape), !.
 txt2goto(Doer, Walk, [ Dir], (act3('go__dir', Doer, [ Walk, Dir])), _Mem) :- (Dir=down;Dir==up), !.

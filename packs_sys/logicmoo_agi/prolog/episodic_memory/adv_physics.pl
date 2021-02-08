@@ -72,7 +72,7 @@ same_rel(Rel, Prep):- subrelation(Rel, Prep).
 :- defn_state_getter(prep_to_rel(target, preprel, -domrel)).
 prep_to_rel(Target, Prep, Rel, S0):- has_rel(Rel, Target, S0), same_rel(Rel, Prep), !.
 prep_to_rel(Target, Prep, Rel, S0):- in_model(h(_Spatial, Rel, Target, _), S0), same_rel(Rel, Prep), !.
-prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target,exit(Prep), Rel, S0), !.
+prep_to_rel(Target, Prep, Rel, S0):- atom(Prep), prep_to_rel(Target, fn(exit, Prep), Rel, S0), !.
 prep_to_rel(Target, _Prep, Rel, S0):- default_rel(Rel, Target, S0).
 
 :- defn_state_getter(has_rel(domrel, inst)).
@@ -148,16 +148,16 @@ g_h(Spatially, inside, X, Z, S0) :- g_h(Spatially, in, X, Z, S0).
 g_h(Spatially, inside, X, Z, S0) :- g_h(Spatially, in, Y, Z, S0),
           g_h(Spatially, descended, X, Y, S0).
 
-g_h(Spatially,exit(Out), Inner, Outer, S0) :- in_out(In, Out),
+g_h(Spatially, fn(exit, Out), Inner, Outer, S0) :- in_out(In, Out),
   g_h(Spatially, child, Inner, Outer, S0),
   has_rel(In, Inner, S0),
   has_rel(child, Outer, S0),
   \+ is_closed(In, Inner, S0), !.
-g_h(Spatially,exit(Off), Inner, Outer, S0) :- on_off(On, Off),
+g_h(Spatially, fn(exit, Off), Inner, Outer, S0) :- on_off(On, Off),
   g_h(Spatially, child, Inner, Outer, S0),
   has_rel(On, Inner, S0),
   has_rel(child, Outer, S0), !.
-g_h(Spatially,exit(Escape), Inner, Outer, S0) :- escape_rel(Escape),
+g_h(Spatially, fn(exit, Escape), Inner, Outer, S0) :- escape_rel(Escape),
   g_h(Spatially, child, Inner, Outer, S0),
   has_rel(child, Inner, S0),
   has_rel(child, Outer, S0), !.
@@ -210,7 +210,7 @@ open_traverse(Thing, Here, S0):-
 :- defn_state_getter(applied_direction(start, source, prep, domrel, target)).
 applied_direction(Start, Here, Dir, Relation, End, S0):-
  g_h(Spatially, _Relation, Start, Here, S0),
- g_h(Spatially,exit(Dir), Here, End, S0),
+ g_h(Spatially, fn(exit, Dir), Here, End, S0),
  has_rel(Relation, End, S0).
 
 

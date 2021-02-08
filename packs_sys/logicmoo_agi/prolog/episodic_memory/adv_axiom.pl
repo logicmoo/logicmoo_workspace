@@ -182,12 +182,12 @@ axiom_Recalc_e( try(Agent, act3('go__obj',Agent,[ Walk, Object])), RECALC) ==>>
 %  GOTO PANTRY
 % ==============
 aXiom_p1( try(Agent, act3('go__loc',Agent,[ _Walk, There]))) ==>> % go some room
-  has_rel(exit(_), There),
+  has_rel(fn(exit, _), There),
   eVent(Agent, make_true(Agent, h(spatial, in, Agent, There))).
 
 aXiom_p1(make_true(Doer, h(spatial, in, Agent, There))) ==>>
   {Doer==Agent},
-  has_rel(exit(_), There),
+  has_rel(fn(exit, _), There),
   from_loc(Agent, Here),
   agent_thought_model(Agent, ModelData),
   {find_path(Doer, Here, There, Route, ModelData)}, !,

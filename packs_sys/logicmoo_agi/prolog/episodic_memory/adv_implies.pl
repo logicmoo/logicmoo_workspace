@@ -60,8 +60,8 @@ oper_db(_Knower, ( act3('put__via', Doer, [Manner, Mover, IntoDest, Dest])),
 
    [ FromLoc \= Mover, Dest \= Mover, % FromLoc \= Dest,
     h(spatial, FromPrep, Mover, FromLoc) % must be hhh/3 ?
-    %h(spatial,exit(ExitName), FromLoc, Dest), h(spatial,exit(ReverseExit), Dest, FromLoc),
-    %b(exit(ExitName), FromLoc, _),    
+    %h(spatial, fn(exit, ExitName), FromLoc, Dest), h(spatial, fn(exit, ReverseExit), Dest, FromLoc),
+    %b(fn(exit, ExitName), FromLoc, _),    
     %ReverseExit \= ExitName,
     ],
    [ event( event3('depart', [ FromPrep, Mover, FromLoc], [Manner, Doer])),
@@ -84,17 +84,17 @@ oper_db(_Knower, event3('arrive', [ IntoDest, Mover, Dest], Details),
 oper_db(_Knower, ( act3('go__dir',Mover,[ Manner, ExitName])),
    [ FromLoc \= Mover, Dest \= Mover, % FromLoc \= Dest,
     h(spatial, IntoDest, Mover, FromLoc), % must be hhh/3 ?
-    h(spatial,exit(ExitName), FromLoc, Dest),
-    h(spatial,exit(ReverseExit), Dest, FromLoc),
-    b(exit(ExitName), FromLoc, _),    
+    h(spatial, fn(exit, ExitName), FromLoc, Dest),
+    h(spatial, fn(exit, ReverseExit), Dest, FromLoc),
+    b(fn(exit, ExitName), FromLoc, _),    
     ReverseExit \= ExitName,
     []],
    [
      % implies believe(Mover, ~h(spatial, in, Mover, FromLoc)),
   event( event3('depart', [ IntoDest, Mover, FromLoc], [Manner, ExitName])),
  %~h(spatial, IntoDest, Mover, FromLoc),
-   b(exit(ExitName), FromLoc, Dest),
-   b(exit(ReverseExit), Dest, FromLoc),
+   b(fn(exit, ExitName), FromLoc, Dest),
+   b(fn(exit, ReverseExit), Dest, FromLoc),
    % implies, believe(Mover, h(spatial, in, Mover, Dest)),
   %h(spatial, IntoDest, Mover, Dest),
    event( event3('arrive', [ IntoDest, Mover, Dest], [Manner, ExitName]))
@@ -106,7 +106,7 @@ oper_db(_Knower, ( act3('go__dir',Mover,[ Manner, ExitName])),
 % Return an operator after substituting Agent for Agent.
 oper_db(_Knower, ( act3('go__dir',Agent,[ _Manner, ExitName])),
      [ b(in, Agent, FromLoc),
-       b(exit(ExitName), FromLoc, Dest),
+       b(fn(exit, ExitName), FromLoc, Dest),
        FromLoc \= Agent, Dest \= Agent, FromLoc \= Dest
        ], % path(FromLoc, Dest)
      [ ~b(in, Agent, FromLoc),
@@ -154,7 +154,7 @@ oper_db(_Knower, percept(Agent, event3('depart',[ IntoDest, Mover, FromLoc], [Ma
  [ did(Mover, ( act3('go__dir', Mover, [ Manner, ExitName]))),
        prop(Agent, inherited(deducer)),
        h(spatial, IntoDest, Agent, FromLoc) ],
-     [ believe(Agent, h(spatial,exit(ExitName), FromLoc, _)),
+     [ believe(Agent, h(spatial, fn(exit, ExitName), FromLoc, _)),
        believe(Agent, prop(Mover, inherited(actor)))]):- \+ only_goto.
 
 % deducer Agents who preceive arivers from some entrance believe the entry location is an exit
@@ -163,7 +163,7 @@ oper_db(_Knower, percept(Agent, event3('arrive',[ IntoDest, Mover, FromLoc], [Ma
        prop(Agent, inherited(deducer)),
        believe(Agent, h(spatial, IntoDest, Agent, FromLoc)) ],
 
-     [ believe(Agent, h(spatial,exit(ExitName), FromLoc, _)),
+     [ believe(Agent, h(spatial, fn(exit, ExitName), FromLoc, _)),
  believe(Agent, did(Mover, ( act3('go__dir', Mover, [ Manner, ExitName])))), % also belive someone did soething to make it happen
        believe(Agent, h(spatial, IntoDest, Mover, FromLoc)),
        believe(Agent, prop(Mover, inherited(actor)))]):- \+ only_goto.
@@ -176,7 +176,7 @@ oper_db(_Knower, percept(Agent, event3('arrive', [ IntoDest, Mover, FromLoc],[ M
  [ percept_local(Dest, event3('depart', [IntoDest, Mover, Dest],[Manner, EnterName])),
                 in(Agent, FromLoc)]) ],
      [ b(Agent,
-                [exit(ExitName, FromLoc, Dest),
+                [fn(exit, ExitName, FromLoc, Dest),
       did(Mover, ( act3('go__dir', Mover, [ Manner, EnterName]))),
                 in(Mover, FromLoc),
                 isa(Mover, actor)])]):- \+ only_goto.
