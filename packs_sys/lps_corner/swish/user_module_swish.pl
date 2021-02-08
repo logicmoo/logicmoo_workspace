@@ -11,45 +11,56 @@
 % sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 % can not print output as usual, would interfere with http responses; uncomment the following for a log:
 
-/*
+:- dynamic(their_lps_exactly/0).
+their_lps_exactly :- fail.
+
+:- if(their_lps_exactly).
 :- open('mylog.txt',write,S), assert(mylogFile(S)).
 mylog(M) :- mylogFile(S), thread_self(T), writeln(S,T:M), flush_output(S).
 % :- asserta((prolog:message(A,B,C) :-  mylog(message-A), fail)).
-sandbox:safe_primitive(user:mylog(_M)). 
-*/
+sandbox:safe_primitive(user:mylog(_M)).
+:- endif.
+
 :- use_module(library(settings)).
 %:- use_module(library(http/http_log)). % uncomment to produce httpd.log
 %:- set_setting_default(http:logfile, 'data/httpd.log'). % swish's writable sub directory
 
 :- multifile swish_config:config/2.
-:- dynamic swish_config:config/2.
-% swish_config:config(show_beware,false).
-% swish_config:config(community_examples,true).
+:- if(their_lps_exactly).
+swish_config:config(show_beware,true).
+swish_config:config(community_examples,false).
 % don't see the point: swish_config:config(public_access,true). % HACK here
-% swish_config:config(chat,false).
+swish_config:config(chat,false).
+:- else.
+:- dynamic swish_config:config/2.
+swish_config:config(public_access,true). % HACK here
+swish_config:config(community_examples,true).
+:- endif.
 % Forcing SWISH to accept both of the following as legitimate; 
 % only the first will get to the Javascript side, I think... but no harm done (apparently):
 swish_config:config(include_alias,	example).
 swish_config:config(include_alias,	system).
 % the above facts must come before this...:
-
-:- if(exists_source(swish(swish))).
- :- use_module(swish(swish)).
+:- if(their_lps_exactly).
+:- use_module('../../swish/swish').
 :- else.
- :- if(exists_source(library('swish/swish.pl'))).
-  :- use_module(library('swish/swish.pl')).
- :- else.
-  :- if(exists_source('../../swish/swish.pl')).
-   :- use_module('../../swish/swish.pl').
-  :- endif.
- :- endif.
+	:- if(exists_source(swish(swish))).
+	 :- use_module(swish(swish)).
+	:- else.
+	 :- if(exists_source(library('swish/swish.pl'))).
+	  :- use_module(library('swish/swish.pl')).
+	 :- else.
+	  :- if(exists_source('../../swish/swish.pl')).  % DMILES (for cases we are not using SWISH)
+	   :- use_module('../../swish/swish.pl').
+	  :- endif.
+	 :- endif.
+	:- endif.
 :- endif.
 
-
-:- if(exists_source(swish(lib/render))).
+:- if(exists_source(swish(lib/render))).   % DMILES (for cases we are not using SWISH)
 :- use_module(swish(lib/render)).
-
-:- use_module(library(http/http_dispatch)). % ,except([extend/3])).
+:- use_module(library(http/http_dispatch)). 
+% ,except([extend/3])).
 :- use_module(swish(lib/plugin/login)).
 :- use_module(swish(lib/authenticate)).
 :- use_module(library(settings)).
@@ -57,29 +68,40 @@ swish_config:config(include_alias,	system).
 % LPS visualizations will appear courtesy of either of two SWISH answer renderers:
 :- use_module(lps_2d_renderer,[]). % need not and can not import the rendering predicate into here
 :- use_module(lps_timeline_renderer,[]).
-:- multifile(user:'swish renderer'/2). % to avoid SWISH warnings in other files
+:- multifile user:'swish renderer'/2. % to avoid SWISH warnings in other files
+% DMILES
 :- dynamic(user:'swish renderer'/2). % to avoid SWISH warnings in other files
-
 :- use_rendering(lps_2d). % this will be the preferred... if available for the current visualization
 :- use_rendering(lps_timeline).
 :- use_rendering(graphviz). % for state/transition diagrams
 
+
 :- endif.
 
 :- multifile pengines:prepare_module/3.
-pengines:prepare_module(Module, swish, Options) :- 
-	style_check(-discontiguous), style_check(-singleton),       
-        asserta(Module:swish_options([swish_module=Module|Options])).
-
-        
+pengines:prepare_module(_Module, swish, _Options) :- 
+	style_check(-discontiguous), style_check(-singleton).
 
 % If you consider refactoring this out to somewhere else: somehow these must be after use_module('../../swish/swish'):
+
+:- if(their_lps_exactly ; true).
+:- use_module('../utils/visualizer.P'). % this loads LPS
+:- use_module('../utils/psyntax.P',[
+	syntax2p/4,dumploaded/2,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
+	]).
+:- use_module('../utils/states_explorer.pl',[explore/2]).
+:- use_module('../utils/redis-client.pl').
+:- use_module('../utils/explanator').
+
+:- else.
 :- use_module(library('../utils/visualizer.P')). % this loads LPS
 :- use_module(library('../utils/psyntax.P'),[
 	syntax2p/4,dumploaded/2,term_colours/2,may_clear_hints/0,timeless_ref/1,set_top_term/1
 	]).
 :- use_module(library('../utils/states_explorer.pl'),[explore/2]).
 :- use_module(library('../utils/redis-client.pl')).
+:- use_module('../utils/explanator').
+:- endif.
 
 % This will be useful below, as file searching handling of relative paths differs from what's used
 % by use_module and friends.
@@ -102,12 +124,16 @@ sandbox:safe_primitive(redisclient:get_keys(_)).
 sandbox:safe_primitive(redisclient:get_channels(_)).
 sandbox:safe_primitive(redisclient:kill_all).
 
+% For debugging:
+% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
+% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
 sandbox:safe_primitive(system:b_setval(_,_)).
 sandbox:safe_primitive(system:trace).
 sandbox:safe_primitive(system:notrace).
 sandbox:safe_primitive(system:tracing).
 sandbox:safe_primitive(edinburgh:debug).
 sandbox:safe_primitive(system:deterministic(_)).
+
 
 /*
 The following could be used to prevent pengines (remote goal) access... but bear in mind that swish (user) browsers communicate directly
@@ -228,9 +254,11 @@ user:file_search_path(swish_help, lps_resources(help)).
 % PATCH to swish to avoid duplicate example and help menu and profile entries on Linux
 % list_without_duplicates(+L,-NL) 
 % Remove duplicates from list L, but keeping first occurrences in their original order
-list_without_duplicates([X|L],[X|NL]) :- select(X,L,LL), !, list_without_duplicates(LL,NL).
-list_without_duplicates([X|L],[X|NL]) :- !, list_without_duplicates(L,NL).
+list_without_duplicates([X|L],[X|NL]) :- remove_all(L,X,LL), !, list_without_duplicates(LL,NL).
 list_without_duplicates([],[]).
+remove_all(L,T,NL) :- select(T,L,LL), !, remove_all(LL,T,NL).
+remove_all(L,_,L).
+
 :- dynamic(swish_help:help_files/1). % Needed in SWI Prolog 8.1.1... who knows for how long this will be admissible ;-)
 :- asserta((
 swish_help:help_files(AllExamples) :-
@@ -287,7 +315,7 @@ serve_lps_resources(Request) :- % http://localhost:3050/lps/foo/Gruntfile.js wor
         http_reply_file(lps_resources(Info), [], Request).
 
 % hack SWISH to inject our CSS and Google Analytics fragment...
-:- if(exists_source(swish(lib/page))).
+:- if(exists_source(swish(lib/page))).  % DMILES (for cases we are not using SWISH)
 :- use_module(swish(lib/page)).
 :- endif.
 :- use_module(library(http/html_write)).
@@ -369,11 +397,6 @@ sandbox:safe_primitive(interpreter:uasserta(_)).
 sandbox:safe_primitive(interpreter:uassertz(_)). 
 sandbox:safe_primitive(interpreter:uretract(_)). 
 sandbox:safe_primitive(interpreter:uretractall(_)). 
-
-% For debugging:
-% sandbox:safe_primitive(swish_highlight:server_tokens(_)).  % swish_highlight:server_tokens(source).
-% sandbox:safe_primitive(swish_highlight:show_mirror(_)).
-
 
 /** 
 	system_fluent(Fluent) is det 

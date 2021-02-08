@@ -192,9 +192,10 @@ user:file_search_path(lps_resources, lps_engine_dir('../swish/web')).
 % PATCH to swish to avoid duplicate example and help menu and profile entries on Linux
 % list_without_duplicates(+L,-NL) 
 % Remove duplicates from list L, but keeping first occurrences in their original order
-list_without_duplicates([X|L],[X|NL]) :- select(X,L,LL), !, list_without_duplicates(LL,NL).
-list_without_duplicates([X|L],[X|NL]) :- !, list_without_duplicates(L,NL).
+list_without_duplicates([X|L],[X|NL]) :- remove_all(L,X,LL), !, list_without_duplicates(LL,NL).
 list_without_duplicates([],[]).
+remove_all(L,T,NL) :- select(T,L,LL), !, remove_all(LL,T,NL).
+remove_all(L,_,L).
 
 % Stubs for system actions
 % Redundancy here with db.P:

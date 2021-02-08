@@ -44,5 +44,3 @@ VOLUME ${SWISH_DATA}
 WORKDIR ${SWISH_DATA}
 
 ENTRYPOINT ["/entry.sh"]
-
-
