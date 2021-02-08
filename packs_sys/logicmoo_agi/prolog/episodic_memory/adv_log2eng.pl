@@ -223,9 +223,8 @@ logic2eng(_Context, percept(_Agent, Sense, Depth, child_list(Spatially, Object, 
 logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Spatially, Here, Prep, Nearby)),
     [cap(subj(Agent)), es(Sense), ly(Spatially), Prep, Here, ':'  | SeeText]):-
  select_from(Agent, Nearby, OthersNearby), !, list2eng(Context, OthersNearby, SeeText).
-
-logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Here, Prep, Nearby)),
- [cap(subj(Agent)), person(Sense, es(Sense)), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
+logic2eng(Context, percept( Agent, Sense, _Depth, child_list(Spatially, Here, Prep, Nearby)),
+ [cap(subj(Agent)), person(Sense, es(Sense)),  ly(Spatially), Prep, Here, ':', SeeText]):-  list2eng(Context, Nearby, SeeText).
 
 
 logic2eng(Context, percept(Agent, How, Depth, Info), extra_verbose_logic(notices(Agent, How, Depth, What))):-  Depth=1,
