@@ -172,10 +172,15 @@ explanationTreeHTML(Node,[]) :-
 	!.
 explanationTreeHTML(Node,Tree) :- 
 	%???? Used=..[Type,X], assert(explanation_tree_used(Used)),
-	node_type(Node,Type,_,RelaxedNode),
+	node_type(Node,Type,X,RelaxedNode),
 	once( explanation_tree_relation(RelaxedNode,Label,Children) ), % pick the first, TODO: should pick the smallest
 	assert(explanation_tree_used(Node)),
-	Tree = [li([],"~a: ~w"-[Type,Label]) | UL],
+	% cf. colours in lps_corner/swish/web/lps/lps.css
+	(X=happens(_,_,_) -> Style="color: #E19735;";
+		X=holds(_,_) -> Style="color: #1A1A1A; background: #D7DCF5;";
+		Type=clause -> Style="font-style: italic;";
+		Style=""),
+	Tree = [li(span([style=Style], "~a: ~w"-[Type,Label])) | UL],
 	explanationTreeHTML(Children,CH),
 	(CH==[]->UL=[];UL=[ul(CH)]).
 
@@ -274,7 +279,9 @@ remove_variants([X|L],NL) :- member(XX,L), variant(X,XX), !, remove_variants(L,N
 remove_variants([X|L],[X|NL]) :- remove_variants(L,NL).
 remove_variants([],[]).
 
-pretty_explanation(E,PE) :- once(syntax2p(PE,[],lps2p,E)).
+pretty_explanation(E,PE) :- syntax2p(PE,[],lps2p,E), PE\=E, !.
+pretty_explanation(E,PE) :- syntax2p_literal(PE,[],lps2p,[_,_], _ETL, _, E), PE\=E, !.
+pretty_explanation(E,E).
 
 
 % w(+Goal,+Ancestors,-Explanation,-Interval) Why is (ground) Fluent true. Or why is the answer "wrong". 

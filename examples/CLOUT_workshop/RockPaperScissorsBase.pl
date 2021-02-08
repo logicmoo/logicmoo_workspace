@@ -40,5 +40,5 @@ then initiate gameOver from T1, reward(Prize) at T1, Half is Prize/2, pay(P0,Hal
 /** <examples>
 ?- go(Timeline).
 ?- dumpen.
-?- why(happens(pay(bob,2000),2,3)).
+?- why(happens(pay(bob,2000),2,3),Explanation).
 */
