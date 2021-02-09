@@ -125,7 +125,7 @@ type_functor(maction, recall(agent, prop, inst2)).
 type_functor(maction, print_(agent, msg)). % for debug and agent feedback
 type_functor(maction, auto(agent)).
 type_functor(maction, inspect(agent, getprop(inst, nv))).
-type_functor(maction, try(agent, act3)).
+type_functor(maction, attempts(agent, act3)).
 
 
 type_functor(action,X):- type_functor(act3,X).

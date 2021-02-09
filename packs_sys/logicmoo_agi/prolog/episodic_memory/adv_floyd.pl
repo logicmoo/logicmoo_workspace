@@ -54,7 +54,7 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
 % is not yet time to do something
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem0) :-
  notrace( \+ invoke_autonomous_cycle(Agent)), !.
-% try to run the ( act3('auto',Agent,[])) command
+% attempts to run the ( act3('auto',Agent,[])) command
 maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :-
  add_intent( Agent, ( act3('auto',Agent,[])), Mem0, Mem1).
 
@@ -79,7 +79,7 @@ autonomous_decide_action(Agent, Mem0, _) :-
  nonvar(Here))),
  fail.
 
-% If goals exist, try to solve them.
+% If goals exist, attempts to solve them.
 autonomous_decide_action(Agent, Mem0, Mem1) :-
  thought_check(Agent, current_goals(Agent, [_|_]), Mem0),
  action_invoke_goals(Agent, Mem0, Mem1), !.
@@ -163,7 +163,7 @@ consider_text(Speaker, _EmoteType, Agent, Words, Mem0, Mem1):-
  eng2cmd(Agent, Words, Action, Mem0) ->
  consider_request(Speaker, Agent, Action, Mem0, Mem1).
 
-% For now, agents will attempt to satisfy all commands.
+% For now, agents will attempts to satisfy all commands.
 consider_request(Requester, Agent, Action, _M0, _M1) :-
  dbug(autonomous, '~w: considering request from: ~w.~n', [Requester, Agent, Action]),
  fail.

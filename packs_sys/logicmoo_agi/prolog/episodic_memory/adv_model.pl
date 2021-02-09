@@ -62,7 +62,7 @@ orphan_old_children(Spatially, Prep, Parent, RetainedChildren, Timestamp, M0, M2
  in_model(h(Spatially, Prep, OldChild, Parent), M0),
  \+ member(OldChild,RetainedChildren), !,
  make_orphan(Spatially, OldChild, Timestamp, M0, M1), 
- orphan_old_children(Spatially, Prep, Parent, Timestamp, M1, M2).
+ orphan_old_children(Spatially, Prep, Parent, RetainedChildren, Timestamp, M1, M2).
 orphan_old_children(_Spatial, _Prep, _Parent, _RetainedChildren, _Timestamp, M0, M0).
 
 

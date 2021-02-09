@@ -351,18 +351,22 @@ declare_list(HasList, State, [NewFront|NewState]) :-
 declare_list(Fact, State, NewState) :- append([Fact], State, NewState).
 
 
-maybe_undeclare(Fact, State, NewState):- declared(Fact, State), NewState=State.
-%maybe_undeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
-
 append_toplevel_props(perceptq(Agent, Events), S0, S2):-
  must_mw1((
- maybe_undeclare(perceptq(Agent, Queue), S0, S1),
+ pre_redeclare(perceptq(Agent, Queue), S0, S1),
  append(Queue, Events, NewQueue),
- replace_declare(perceptq(Agent, NewQueue), S1, S2),
+ redeclare(perceptq(Agent, NewQueue), S1, S2),
  declared(perceptq(Agent, RQueue), S0, _),
  is_list(RQueue))).
 
-replace_declare(Fact, State, NewState):-
+
+:- defn_state_setter( pre_redeclare( + fact)).
+pre_redeclare(Fact, State, NewState):- declared(Fact, State),!, NewState=State.
+pre_redeclare(Fact, State, NewState):- must_mw1(functor(Fact,_,Arg)), ignore(arg(Arg,Fact,[])), NewState=[Fact|State],!.
+%pre_redeclare(Fact, State, NewState):- undeclare(Fact, State, NewState).
+
+:- defn_state_setter( redeclare( + fact)).
+redeclare(Fact, State, NewState):-
  must_mw1((old_figment(Fact, _F, A, Old),
  (undeclare(Old, State, MidState);(State=MidState, ignore(arg(A, Old, [])))),
  nop(episodic_mem($agent, replace(Old, Fact))),

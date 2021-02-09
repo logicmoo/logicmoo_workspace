@@ -101,7 +101,7 @@ is_prop_accessable_at(know, 4, can_be).
 
 is_prop_accessable_at(see, 5, co(_)).
 
-% action = try it to find out
+% action = attempts it to find out
 is_prop_accessable_at(action, 3, move).
 is_prop_accessable_at(action, 5, effect).
 is_prop_accessable_at(action, 5, after).

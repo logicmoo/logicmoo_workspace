@@ -41,7 +41,7 @@ with_agents( Pred1, Agent):- with_agent_console(Agent, must(call(Pred1, Agent)))
 
 run_perceptq(Agent) :-
  declared(perceptq(Agent, PerceptQ)),
- set_advstate(perceptq(Agent, [])),
+ redeclare(perceptq(Agent, [])),
  invoke_percept_list(Agent, PerceptQ), !.
 run_perceptq(_Agent) :- !.
 
@@ -122,7 +122,7 @@ add_goals(_Agent, Goals, Mem0, Mem2) :-
  append(Goals, OldGoals, NewGoals),
  replace_thought(Agent, current_goals(Agent, NewGoals), Mem0, Mem2).
 
-add_intent( Agent, try(Doer, Action), Mem0, Mem2):-  Agent==Doer,
+add_intent( Agent, attempts(Doer, Action), Mem0, Mem2):-  Agent==Doer,
   add_intent( Agent, Action, Mem0, Mem2).
   
 add_intent( Agent, Action, Mem0, Mem2):- 
@@ -149,7 +149,7 @@ add_intent_all(Agent, [Action|Rest], Mem0, Mem2) :-
 
 :- defn_state_getter( invoke_introspect(agent, action, result)).
 
-invoke_introspect(Agent, try(Other,Command), Answer, M0) :- Other == Agent, !,
+invoke_introspect(Agent, attempts(Other,Command), Answer, M0) :- Other == Agent, !,
   invoke_introspect(Agent, Command, Answer, M0).
 
 invoke_introspect(Agent, path(There), Answer, M0) :- !,
@@ -301,7 +301,7 @@ decide_action(_Agent, Mem, Mem) :-
 decide_action(_Agent, Mem0, Mem0) :- !.
 
 decide_action(Agent, Mem0, Mem0) :-
- set_last_action(Agent, [ try(Agent, act3('auto',Agent,[]))]),
+ set_last_action(Agent, attempts(Agent, act3('auto',Agent,[]))),
  nop(dbug(decide_action, 'decide_action(~w) FAILED!~n', [Agent])).
 
 

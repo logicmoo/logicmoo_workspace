@@ -46,14 +46,14 @@ cmd_workarround_l(ObjS, ObjS2):- fail,
  append(Left, [L, R, M|More], ObjS), atom(L), atom(R),
  current_atom(Atom), atomic_list_concat([L, RR], Atom, '_'), RR==R,
  append(Left, [Atom, M|More], ObjS2).
-% try(Agent, act3('look',Agent,[ spatial])) at screen door
+% attempts(Agent, act3('look',Agent,[ spatial])) at screen door
 cmd_workarround_l( ObjS1, ObjS2):- append(L,[Verb1|R],ObjS1), verb_alias(Verb1, Verb2), append(L,[Verb2|R],ObjS2).
 
 cmd_workarround_l([Verb, Agent,ObjS], WA ):- is_list(ObjS),flatten([Verb, Agent,ObjS],WA).
-cmd_workarround_l([act3, Verb, Agent, ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):- !.
+cmd_workarround_l([act3, Verb, Agent, ObjS], [attempts,Agent,act3(Verb,Agent,ObjS)]):- !.
 % look listen, smell ...
-cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
-cmd_workarround_l([Verb, Agent|ObjS], [try,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==try.
+cmd_workarround_l([Verb, Agent|ObjS], [attempts,Agent,act3('examine',Agent,[Sense|ObjS])]):-  sensory_verb(Sense, Verb),!.
+cmd_workarround_l([Verb, Agent|ObjS], [attempts,Agent,act3(Verb,Agent,ObjS)]):-  Verb\==attempts.
 
 is_ignorable(Var):- var(Var), !, fail.
 is_ignorable(at). is_ignorable(in). is_ignorable(to). is_ignorable(the). is_ignorable(a). is_ignorable(spatial).
@@ -115,7 +115,7 @@ proper_requires_spatially(A, C) :-
 
 maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input], _, 0) ; true).
 
-invoke_command(Requester, try(Agent, Action)) ==>>  
+invoke_command(Requester, attempts(Agent, Action)) ==>>  
  {Requester==Agent},
  invoke_command(Agent, Action), !.
 invoke_command(Agent, Action) ==>>
@@ -142,9 +142,9 @@ invoke_intents( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
  {member( intent(Agent, []), Mem0)}, !.
 invoke_intents( Agent, S0, S9) :-
- maybe_undeclare(memories(Agent, Mem0), S0, S1),
+ pre_redeclare(memories(Agent, Mem0), S0, S1),
  thought_check(Agent, intent(Agent, OldToDo), Mem0), append([Action], NewToDo, OldToDo), replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
- replace_declare(memories(Agent, Mem2), S1, S2),
+ redeclare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  invoke_command(Agent, Action, S2, S9).
 invoke_intents( _Agent, S0, S0).
@@ -177,13 +177,13 @@ invoke_intents( _Agent, S0, S0).
 agent_try_action(Agent, Action, S0, S3) :-
  quietly_must((
  set_last_action(Agent, Action),
- maybe_undeclare(memories(Agent, Mem0), S0, S1),
+ pre_redeclare(memories(Agent, Mem0), S0, S1),
  memorize_attempting(Agent, Action, Mem0, Mem1),
- replace_declare(memories(Agent, Mem1), S1, S2))),
+ redeclare(memories(Agent, Mem1), S1, S2))),
  into_attempt(Agent, Action, AgentAction),
  once(show_failure(raise_aXiom_events( AgentAction, S2, S3));(S2=S3, dumpST)), !.
 
-into_attempt(Agent, Action, try(Agent,Action)):- \+ functor(Action, try, 2), !.
+into_attempt(Agent, Action, attempts(Agent,Action)):- \+ functor(Action, attempts, 2), !.
 into_attempt(_Agent, Action, AgentAction):- Action = AgentAction.
 
 %memorize_attempting(_Agent, Action, Mem0, Mem0):- has_depth(Action), !.
@@ -230,7 +230,7 @@ trival_act(V):- \+ callable(V), !, fail.
 %trival_act(Action):- has_depth(Action).
 trival_act(V):- \+ compound(V), !, fail.
 trival_act(_):- !, fail.
-trival_act( try(_, X)):- !, trival_act( X).
+trival_act( attempts(_, X)):- !, trival_act( X).
 trival_act( act3('wait',_,[])).
 
 exclude_failures(X,Y):- apply:exclude((=(failed(_))),X,Y).
@@ -269,9 +269,9 @@ satisfy_each1(_Ctxt, exists(Ex)) ==>> !, {ground(Ex)}.
 
 
 satisfy_each1(Context, believe(Beliver, Cond)) ==>>
-   maybe_undeclare(memories(Beliver, Memory)),
+   pre_redeclare(memories(Beliver, Memory)),
    {satisfy_each_always(Context, Cond, Memory, NewMemory)}, !,
-   replace_declare(memories(Beliver, NewMemory)).
+   redeclare(memories(Beliver, NewMemory)).
 
 satisfy_each1(Context, believe(_Beliver, Cond)) ==>> !, satisfy_each(Context, Cond), !.
    
@@ -447,18 +447,18 @@ add_agent_intent( Agent, Action):-
 :- defn_state_setter(add_agent_intent( agent, action)).
 
 add_agent_intent( Agent, Action, S0, S9) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   add_intent( Agent, Action, Mem0, Mem1),
-  replace_declare(memories(Agent, Mem1), S1, S9).
+  redeclare(memories(Agent, Mem1), S1, S9).
 
 add_agent_goal(Agent, Action, S0, S9) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   add_goal(Agent, Action, Mem0, Mem1),
-  replace_declare(memories(Agent, Mem1), S1, S9).
+  redeclare(memories(Agent, Mem1), S1, S9).
 
 add_intent_look(Agent) ==>>
   h(spatial, inside, Agent, _Somewhere),
-  add_agent_intent( Agent, try(Agent, act3('look',Agent,[]))).
+  add_agent_intent( Agent, attempts(Agent, act3('look',Agent,[]))).
 
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).

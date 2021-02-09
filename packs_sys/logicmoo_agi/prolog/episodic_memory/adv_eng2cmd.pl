@@ -146,7 +146,7 @@ is_english(Eng):- english_directve(Eng), !.
 is_english(Eng):- \+ is_logic(Eng), !.
 
 nl_context(Name, Value, Else, Frame ):- declared(Name, Value, Frame)-> true; (Else\=='$fail', Else = Value).
-set_nl_context(Name, Value, Frame):- append_term(Name, Value, Prop), replace_declare(Prop, Frame, _NewFrame).
+set_nl_context(Name, Value, Frame):- append_term(Name, Value, Prop), redeclare(Prop, Frame, _NewFrame).
 
 
 parse2state(Text, State):- % reframed_call( Pred, Term, Logic).

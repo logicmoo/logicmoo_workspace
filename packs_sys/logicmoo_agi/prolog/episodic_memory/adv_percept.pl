@@ -69,7 +69,7 @@ can_sense(_Agent, Sense, Here, S0) :- fail,
 can_sense(Agent, Sense, Thing, S0) :-
   can_sense_here(Agent, Sense, S0),
   from_loc(Agent, Here, S0),
-  (Thing=Here;  open_traverse(Thing, Here, S0)), !.
+  (Thing=Here;  open_traverse(Thing, Here, S0)).
 /*can_sense(Agent, Sense, Thing, S0) :-
  % get_open_traverse(_Open, Sense, _Traverse, Sense),
  can_sense_here(Agent, Sense, S0),
@@ -107,10 +107,10 @@ send_percept(Agent, Event, S0, S2) :-
 invoke_percept_list(_Agent, [], S0, S0):-!.
 % invoke_percept_list(Agent, Events, _S0, _S2) :- dmsg( invoke_percept_list(Agent, Events)), fail.
 invoke_percept_list(Agent, Events, S0, S2) :-
-  maybe_undeclare(memories(Agent, Mem0), S0, S1),
+  pre_redeclare(memories(Agent, Mem0), S0, S1),
   agent_clock_time_prev(Agent, timestamp(Stamp, _OldNow), Events),
   with_agent_console(Agent, process_percept_list(Agent, Events, Stamp, Mem0, Mem3)),
-  replace_declare(memories(Agent, Mem3), S1, S2).
+  redeclare(memories(Agent, Mem3), S1, S2).
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CODE FILE SECTION
@@ -228,7 +228,10 @@ percept_intent( Agent, Actions, Mem0, Mem2):- add_intent_all(Agent, Actions, Mem
 %process_percept_do_auto(Agent, with_msg(Percept, _Msg), Timestamp, M0, M2) :- !,
 % process_percept_do_auto(Agent, Percept, Timestamp, M0, M2).
 
+must_be_args_bound(Cmpd):- arg(_,Cmpd,E),var(E),!,dumpST,dbug1(not_args_bound(Cmpd)),trace_or_throw(not_args_bound(Cmpd)).
+
 :- defn_mem_setter(process_percept_auto//3).
+process_percept_do_auto(Agent, Percept, Stamp, M0, M0) :- must_be_args_bound(process_percept_do_auto(Agent, Percept, Stamp, M0)).
 process_percept_do_auto(_Agent, msg(_), _Stamp, M0, M0) :- !.
 process_percept_do_auto(_Agent, [], _Stamp, M0, M0) :- !.
 process_percept_do_auto(Agent, [Percept|Tail], Stamp, M0, M9) :-
@@ -253,7 +256,7 @@ process_percept_do_auto(_Agent, _Percept, _Timestamp, M0, M0):-  \+ declared(inh
 
 % Auto Answer
 process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Agent, Words]), _Stamp, Mem0, Mem1) :-
- trace, consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
+  consider_text(Speaker, EmoteType, Agent, Words, Mem0, Mem1).
 process_percept_do_auto(Agent, act3('emote',Speaker,[ EmoteType, Star, WordsIn]), _Stamp, Mem0, Mem1) :- is_star(Star),
  addressing_whom(WordsIn, Whom, Words),
  Whom == Agent,
@@ -278,7 +281,7 @@ addressing_whom(List, Agent, Words):- Words = [_|_], append(_, [Agent|Words], Li
 
 %was_own_self(Agent, say(Agent, _)).
 was_own_self(Agent, (act3('emote',Agent,[ _, _Targ, _]))).
-was_own_self(Agent, try(Agent, act3('emote',Agent,[ _, _Targ, _]))).
+was_own_self(Agent, attempts(Agent, act3('emote',Agent,[ _, _Targ, _]))).
 was_own_self(Agent, act3('emote',Agent,[ _, _Targ, _])).
 % was_own_self(Agent, Action):- action_doer(Action, Was), Was == Agent.
 

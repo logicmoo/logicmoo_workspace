@@ -132,7 +132,7 @@ bug(_) :- debugging(adv(unknown), YN), !, YN.
 :- thread_local(pretty_tl:in_pretty_tree_rec/0).
 
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree, !,
-  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), print_tree(Term), erase(Ref)).
+  setup_call_cleanup(asserta(pretty_tl:in_pretty_tree, Ref), \+ \+ print_tree(Term), erase(Ref)).
 prolog_pprint_tree(Term):- \+ pretty_tl:in_pretty_tree_rec, !,
   setup_call_cleanup(asserta(pretty_tl:in_pretty_tree_rec, Ref), prolog_pprint(Term, [portray_goal(print_tree)]), erase(Ref)).
 prolog_pprint_tree(Term):-  prolog_pprint(Term), !.
@@ -147,8 +147,7 @@ term_to_pretty_string(L, LinePrefix, SO):-
 :- export(prolog_pprint/2).
 prolog_pprint(Term):- prolog_pprint(Term, []).
 prolog_pprint(Term, Options):-
-   \+ \+ (portray_vars:pretty_numbervars(Term, Term2),
-     prolog_pprint_0(Term2, Options)), !.
+   \+ \+ ((portray_vars:pretty_numbervars(Term, Term2), prolog_pprint_0(Term2, Options))), !.
 
 
 % prolog_pprint_0(Term, Options):- Options ==[], pprint_ecp_cmt(blue, Term), !.
@@ -200,13 +199,13 @@ bugout4(_, _, _, _).
 pprint(Term):- xnotrace(pprint_2(Term, always)).
 pprint(Term, When):- xnotrace(pprint_2(Term, When)).
 
-pprint_2(Term, When) :-
+pprint_2(Term, When):- ignore(\+ pprint_3(Term, When)).
+pprint_3(Term, When) :-
  bug(When),
  setup_call_cleanup(
   flag('english', ELevel, ELevel+0), % put a little English on it
   player_format('~N~@~N', [mu:prolog_pprint_tree(Term)]),
   flag('english', _, ELevel)), !.
-pprint_2(_, _).
 
 
 :- export(stdio_player/1).

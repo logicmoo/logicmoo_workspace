@@ -167,7 +167,7 @@ my_ttyflush:-
    flush_output_s(current_error),
    !)).
 
-main_once:-
+each_pre_clean_up:-
   nop(( my_ttyflush,
    sleep(0.005),
    set_prolog_flag(gc, true),
@@ -176,7 +176,10 @@ main_once:-
    garbage_collect_clauses,
    garbage_collect,
    set_prolog_flag(gc, false),
-   my_ttyflush)),
+   my_ttyflush)).
+
+main_once:-
+   each_pre_clean_up,
    update_network_connections,
    get_live_agents(LiveAgents),
    my_ttyflush, !,
@@ -239,7 +242,6 @@ telnet_decide_action(Agent, Mem, Mem) :-
 %:- initialization(adventure, main).
 %:- endif.
 
-% TODO: try converting this to a true "repeat" loop.
 /*main_loop(State) :-
  declared(quit, State), !.
 main_loop(State) :-

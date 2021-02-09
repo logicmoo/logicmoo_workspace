@@ -22,7 +22,7 @@
 
 :- discontiguous(implications/4).
 
-implications(Knower, try(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Knower, Action, Preconds, Effects).
+implications(Knower, attempts(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Knower, Action, Preconds, Effects).
 implications(Knower, did(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Knower, Action, Preconds, Effects).
 implications(Knower, doing(_Agent, Action), Preconds, Effects):- nonvar(Action), !, implications(Knower, Action, Preconds, Effects).
 
@@ -34,7 +34,7 @@ only_goto:- fail, true.
 % oper_db(_Knower, Action, Preconds, Effects)
 
 % used by oper_splitk/4
-oper_db(Knower, try(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
+oper_db(Knower, attempts(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
 oper_db(Knower, did(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
 oper_db(Knower, doing(Agent, Action), Preconds, Effects):- nonvar(Action), !, ignore(Knower=Agent), oper_db(Agent, Action, Preconds, Effects).
 
