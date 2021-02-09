@@ -142,8 +142,10 @@ invoke_intents( Agent) ==>>
  sg(declared(memories(Agent, Mem0))),
  {member( intent(Agent, []), Mem0)}, !.
 invoke_intents( Agent, S0, S9) :-
- pre_redeclare(memories(Agent, Mem0), S0, S1),
- thought_check(Agent, intent(Agent, OldToDo), Mem0), append([Action], NewToDo, OldToDo), replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
+ declared(memories(Agent, Mem0), S0, S1),
+ thought_check(Agent, intent(Agent, OldToDo), Mem0), 
+    append([Action], NewToDo, OldToDo), 
+ replace_thought(Agent, intent(Agent, NewToDo), Mem0, Mem2),
  redeclare(memories(Agent, Mem2), S1, S2),
  set_last_action(Agent, Action),
  invoke_command(Agent, Action, S2, S9).

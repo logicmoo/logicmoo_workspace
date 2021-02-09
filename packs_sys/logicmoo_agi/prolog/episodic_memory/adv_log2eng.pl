@@ -279,7 +279,8 @@ logic2eng(_Agent, perceptq(Object, PropList), ['\n\n', the(Object), ' notices:\n
 logic2eng(_Context, event3('depart', [ In, Actor, Where], [How, Dir]), [ Actor, was, In, Where, but, left, ing(How), Dir] ) :- !.
 logic2eng(_Context, event3('arrive', [ In, Actor, Where], [How, Dir]), [ Actor, came, ing(How), Dir, In, Where] ) :- !.
 
-logic2eng(Context, did(Action), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
+logic2eng(Context, did(Action
+ ), ['did happen: '|English] ) :- !, logic2eng(Context, Action, English ).
 
 logic2eng(Context, act3('emote',Speaker,[ EmoteType, Audience, Eng]), [ 'happened: '| Rest]) :- !,
  logic2eng(Context, act3('emote',Speaker,[ EmoteType, Audience, Eng]), Rest).

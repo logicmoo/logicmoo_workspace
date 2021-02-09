@@ -242,7 +242,7 @@ decide_action(Agent) :-
  declared(memories(Agent, Mem0)),
  must_mw1(decide_action(Agent, Mem0, Mem2)),
  Mem0 \== Mem2, !,
- set_advstate(memories(Agent, Mem2)).
+ redeclare(memories(Agent, Mem2)).
 decide_action(_Agent) :- !.
 
 :- defn_mem_setter(run_perceptq(+agent)).

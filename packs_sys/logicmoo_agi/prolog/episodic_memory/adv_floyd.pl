@@ -62,7 +62,7 @@ maybe_autonomous_decide_goal_action(Agent, Mem0, Mem1) :-
 
 % If cleanup old goals
 autonomous_decide_action(Agent, Mem0, Mem2):-
-  forget_satisfied_goals(Agent, Mem0, Mem1), !,
+  once(forget_satisfied_goals(Agent, Mem0, Mem1)), Mem0 \== Mem1, !,
   autonomous_decide_action(Agent, Mem1, Mem2).
 
 % If actions are queued, no further thinking required.
@@ -108,27 +108,34 @@ autonomous_decide_action(Agent, Mem0, Mem0) :-
 autonomous_create_new_goal(_Agent, _Mem0, _Mem1) :- fail.
 
 % An unexplored exit here, go that way.
+autonomous_decide_unexplored_fn(Exit, Agent, Mem0, Mem1) :-
+ agent_thought_model(Agent, ModelData, Mem0),
+ in_agent_model(Agent, h(Spatial, _Prep, Agent, Here), Mem0),
+ in_agent_model(Agent, h(Spatial, fn(exit, Dir), Here, '<mystery>'(Exit, _, _)), ModelData),
+ add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
+% An unexplored exit here, go that way.
+ /*
 autonomous_decide_unexplored_fn(Exit, Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(spatial, fn(Exit, Prev), There, '<mystery>'(exit, _, _)), ModelData),
- in_agent_model(Agent, h(spatial, fn(Exit, Dir), Here, There), ModelData),
- in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
- add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1),
- add_intent(Agent, ( act3('go__dir',Agent,[ walk, Prev])), Mem1, Mem2).
-autonomous_decide_unexplored_fn(exit, Agent, Mem0, Mem1) :-
- agent_thought_model(Agent, ModelData, Mem0),
- in_agent_model(Agent, h(spatial, in, Agent, Here), ModelData),
- in_agent_model(Agent, h(spatial, fn(exit, Dir), Here, '<mystery>'(exit, _, _)), ModelData),
- add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem1).
+ in_agent_model(Agent, h(Spatial, _Prep, Agent, Here), Mem0),
+ in_agent_model(Agent, h(Spatial, fn(Exit, Dir), Here, '<mystery>'(Exit, _, _)), ModelData),
+ in_agent_model(Agent, h(Spatial, fn(Exit, Dir), Here, There), ModelData),
 
+ add_intent(Agent, ( act3('go__dir',Agent,[ walk, Dir])), Mem0, Mem2),!.
+ % add_intent(Agent, ( act3('go__dir',Agent,[ walk, Prev])), Mem1, Mem2).
+*/
 % An unexplored object!
 autonomous_decide_unexplored_object(Agent, Mem0, Mem2) :-
  agent_thought_model(Agent, ModelData, Mem0),
+ g_h(spatial, touchable, Agent, Object, Mem0),
+ Agent\= Object,
+ can_sense(Agent, _, Object, Mem0),
  in_agent_model(Agent, h(spatial, _, '<mystery>'(closed, _, _), Object), ModelData),
- in_agent_model(Agent, h(spatial, Prep, Object, Here), ModelData),
- in_agent_model(Agent, h(spatial, Prep, Agent, Here), ModelData),
+ % in_agent_model(Agent, h(spatial, Prep, Object, Here), ModelData),
+ % in_agent_model(Agent, h(spatial, Prep, Agent, Here), ModelData),
+ % getprop(Object, can_be(open, t), Mem0), 
  add_intent( Agent, ( act3('open',Agent,[ Object])), Mem0, Mem1),
- add_intent( Agent, ( act3('examine',Agent,[ see, Object])), Mem1, Mem2).
+ add_intent( Agent, ( act3('examine',Agent,[ see, Object])), Mem1, Mem2), !.
 
 autonomous_decide_unexplored_object(Agent, Mem0, Mem1) :-  fail,
  agent_thought_model(Agent, ModelData, Mem0),

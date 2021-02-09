@@ -114,7 +114,7 @@ update_running(StateInfo):-
 % update_running(_StateInfo).
 
 
-set_advstate(StateRef):- notrace((from_ref(StateRef, State), set_advstate_0(State))).
+set_advstate(StateRef):- must_mw1(quietly((from_ref(StateRef, State), set_advstate_0(State)))).
 
 set_advstate_0(State):-
   with_mutex(get_advstate, ((get_advstate_varname(Var), nb_current(Var, PreState), PreState\==[]) ->
@@ -234,26 +234,28 @@ forget_ always(Agent, Figment0, M0, M1) :-   agent_mem(Agent, M0, M1, A0, A1),
 must_unlistify(Figment0, Figment):- is_list(Figment0), !, must_mw1(Figment0=[Figment]).
 must_unlistify(Figment, Figment).
 
-in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
+in_agent_model(Agent, Fact, State):- in_model(Fact, State)*-> true ; 
+  (agent_thought_model(Agent, ModelData, State), in_model(Fact, ModelData)).
 
-in_model(E, L):- quietly(in_model0(E, L)).
+in_model(E, L):- in_model0(E, L).
 
 in_model0(E, L):- \+ is_list(L), declared_link(declared, E, L).
 in_model0(E, L):- compound(E), E = holds_at(_, _), !, member(E, L).
-in_model0(E, L):- member(EE, L), same_element(EE, E).
+in_model0(E, L):- member(EE, L), same_h_element(EE, EO),E=EO.
 
-same_element(E, E) :- !.
-same_element(holds_at(E, T), E):- nonvar(T).
+same_h_element(E, E) :- !.
+same_h_element(holds_at(E, T), E):- nonvar(T).
 
 agent_mem(_Agent, Mem0, Mem1, AMem0, AMem1):- Mem0=AMem0, Mem1=AMem1.
 agent_mem(_Agent, Mem0, AMem0):- Mem0=AMem0.
 
 :- defn_state_getter(agent_thought_model(agent, model)).
-agent_thought_model(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
-agent_thought_model(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
-agent_thought_model(Agent, ModelData, M0) :- memberchk(propOf(memories, Agent), M0), ModelData = M0, !.
-agent_thought_model(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !,
-  agent_thought_model(Agent, ModelData, M1).
+agent_thought_model(Agent, ModelData, M0):- agent_thought_model_0(Agent, ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0):- var(M0), get_advstate(State), !, member(memories(Agent, M0), State), agent_thought_model(Agent, ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0):- \+ is_list(M0), !, declared_link(agent_thought_model(Agent), ModelData, M0).
+agent_thought_model_0(Agent, ModelData, M0) :- memberchk(propOf(memories, Agent), M0), ModelData = M0, !.
+agent_thought_model_0(Agent, ModelData, M0):- declared(memories(Agent, M1), M0), !,
+  agent_thought_model_0(Agent, ModelData, M1).
 
 
 :- export(declare/3).
@@ -298,7 +300,7 @@ select_always(Item, List, ListWithoutItem) :- select_from(Item, List, ListWithou
 :- export(declare/3).
 :- defn_state_setter(declare(fact)).
 
-declare(h(A,B,C), State, NewState):- dbug1(declare(h(A,B,C), State, NewState)),!,dumpST,break.
+declare(h(A,B,C), State, NewState):- dbug1(bad_arity_declare(h(A,B,C), State, NewState)),!,dumpST,break.
 declare(Fact, State, NewState):- must_mw1(declare_0(Fact, State, NewState)).
 
 declare_0(Fact, State, NewState) :- notrace((assertion(var(NewState)), is_list(State))), !, notrace(declare_list(Fact, State, NewState)).
@@ -483,7 +485,7 @@ state_prop_0(OP, Fact, Pred1Name, OUT):- is_pred1_state(Pred1Name), append_term(
    append_term(Pred1Name, NewState, DBPredNewState), asserta(DBPredNewState),
    store_op(Pred1Name,NewState,OUT).   
 
-state_prop_0(OP, Fact, Object, Object):- throw(unsupported_state_prop(OP, Fact, Object, Object)).
+state_prop_0(OP, Fact, Object, Object):- dumpST, throw(unsupported_state_prop(OP, Fact, Object, Object)).
 
 state_prop_0(_OP, Fact, Object, Object):- callable(Fact), !, Fact=..[F|List],
   Call=..[F, NewArg|List],
