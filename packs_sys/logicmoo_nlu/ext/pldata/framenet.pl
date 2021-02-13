@@ -39,7 +39,6 @@ frels(Relation_type, Frame1, Frame2, FE_frame1, FE_frame2).
 :- consult('Prolog_FNet/frame_to_frame.txt'). % frel/3
 :- consult('Prolog_FNet/fe_to_fe.txt'). % frels/5
 
-
 %fn_verb_frame1(Doer,Verb,ISA, fnpattern(Verb, _, ISA, [ Arg1Type : Arg1, Arg2Type: Arg2]).
 
 %fn_verb_frame1(Doer,Verb,ISA, fnpattern(Verb, _, ISA, [ 'agent' : Doer, Arg2Type: Arg2]).

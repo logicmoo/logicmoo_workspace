@@ -229,6 +229,42 @@
 					Refilter="0"
 					Excludes=""/>
 			</Folder>
+			<Folder Name="logicmoo_nlu">
+				<Folder Name="ext">
+					<Folder Name="pldata">
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/abbreviations.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/ac_xnl_7166.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/ac_xnl_7166_nlkb.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/ac_xnl_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/clex_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/framenet.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/kb_0988.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/kb_7166.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/kb_7166_supports.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/mworld0_declpreds.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nl_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nldata_BRN_WSJ_LEXICON.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nldata_colloc_pdat.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nldata_cycl_pos0.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nldata_dictionary_some01.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/nldata_freq_pdat.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/posm_cached_data2.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/propbank_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/talk_db.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/tiny_kb.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/trans_header.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/transform_dump.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/tt0_00022_cycl.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/tt0_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/verbnet_candc_boxer.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/verbnet_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/verbs.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/vnsmall.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/wn30_iface.pl"/>
+						<F N="packs_sys/logicmoo_nlu/ext/pldata/wn_iface.pl"/>
+					</Folder>
+				</Folder>
+			</Folder>
 		</Folder>
 		<Folder Name="packs_web">
 			<Folder Name="logicmoo_webui">

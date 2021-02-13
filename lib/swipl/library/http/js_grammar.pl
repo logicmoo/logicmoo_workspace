@@ -43,7 +43,7 @@
 
 This file provides a tokenizer for   JavaScript  (EcmaScript). This code
 supports  the  quasi  quotation   syntax    =javascript=,   defined   in
-library(http/js_write).
+library(http/jsg_write).
 
 @see    http://tomcopeland.blogs.com/EcmaScript.html is used for the
         high-level syntax.
@@ -51,302 +51,302 @@ library(http/js_write).
         implementing the tokenization code.
 */
 
-%!  js_token(-TokenType)//
+%!  jsg_token(-TokenType)//
 %
-%   Matches and classifies the next JavaScript token.
+%   Matches and classifies the next JavaScript jsg_token.
 
 js_token(Type) -->
-    token(Type).
+    jsg_token(Type).
 
-%!  token(-Type) is semidet.
+%!  jsg_token(-Type) is semidet.
 %
-%   Get the next token from the   input. Fails when encountering the
+%   Get the next jsg_token from the   input. Fails when encountering the
 %   end of the input.
 %
 %   @error syntax_error(Culprit)
 
-token(comment)        --> comment, !.
-token(string)         --> string_literal, !.
-token(number)         --> numeric_literal, !.
-token(identifier(Id)) --> identifier_name(Id), !.
-token(regex)          --> regex_literal, !.
-token(ws)             --> blank, !, blanks.
-token(punct(Char))    --> source_char(Code), { char_code(Char, Code) }.
+jsg_token(comment)        --> jsg_comment, !.
+jsg_token(string)         --> jsg_string_literal, !.
+jsg_token(number)         --> jsg_numeric_literal, !.
+jsg_token(identifier(Id)) --> jsg_identifier_name(Id), !.
+jsg_token(regex)          --> jsg_regex_literal, !.
+jsg_token(ws)             --> dcg_basics:blank, !, dcg_basics:blanks.
+jsg_token(punct(Char))    --> jsg_source_char(Code), { char_code(Char, Code) }.
 
-%!  comment// is semidet.
+%!  jsg_comment// is semidet.
 
-comment -->
+jsg_comment -->
     `/*`,
     !,
-    (   string(_), `*/`
+    (   dcg_basics:string(_), `*/`
     ->  []
     ;   syntax_error(eof_in_comment)
     ).
-comment -->
+jsg_comment -->
     `//`,
     !,
-    (   string(_), js_eol
+    (   dcg_basics:string(_), jsg_eol
     ->  []
-    ;   string(_), js_eof
+    ;   dcg_basics:string(_), jsg_eof
     ->  []
     ).
 
 
-%!  string_literal// is semidet.
+%!  jsg_string_literal// is semidet.
 %
 %   Matches a string literal
 
-string_literal -->
+jsg_string_literal -->
     `"`,
     !,
-    (   q_codes, `"`
+    (   jsg_q_codes, `"`
     ->  []
     ;   syntax_error(eof_in_string)
     ).
-string_literal -->
+jsg_string_literal -->
     `'`,
     !,
-    (   q_codes, `'`
+    (   jsg_q_codes, `'`
     ->  []
     ;   syntax_error(eof_in_string)
     ).
 
 
-%!  numeric_literal//
+%!  jsg_numeric_literal//
 %
 %   Matches JavaScript notion of a numeric constant
 
-numeric_literal -->
-    (   decimal_literal
+jsg_numeric_literal -->
+    (   jsg_decimal_literal
     ->  []
-    ;   hex_integer
+    ;   jsg_hex_integer
     ),
-    (   (   decimal_digit
-        ;   js_id_start(_)
+    (   (   jsg_decimal_digit
+        ;   jsg_id_start(_)
         )
     ->  syntax_error(js(illegal_number))
     ;   []
     ).
 
-decimal_literal -->
-    decimal_integer, `.`, opt_decimal_digits, opt_exponent.
-decimal_literal -->
-    `.`, decimal_digits, opt_exponent.
-decimal_literal -->
-    decimal_integer,
-    opt_exponent.
+jsg_decimal_literal -->
+    jsg_decimal_integer, `.`, jsg_opt_decimal_digits, jsg_opt_jsg_exponent.
+jsg_decimal_literal -->
+    `.`, jsg_decimal_digits, jsg_opt_jsg_exponent.
+jsg_decimal_literal -->
+    jsg_decimal_integer,
+    jsg_opt_jsg_exponent.
 
-decimal_integer -->
+jsg_decimal_integer -->
     `0`,
     !.
-decimal_integer -->
-    non_zero_digit, opt_decimal_digits.
+jsg_decimal_integer -->
+    jsg_non_zero_digit, jsg_opt_decimal_digits.
 
-decimal_digits -->
-    decimal_digit,
+jsg_decimal_digits -->
+    jsg_decimal_digit,
     !,
-    opt_decimal_digits.
+    jsg_opt_decimal_digits.
 
-opt_decimal_digits -->
-    decimal_digit,
+jsg_opt_decimal_digits -->
+    jsg_decimal_digit,
     !,
-    opt_decimal_digits.
-opt_decimal_digits -->
+    jsg_opt_decimal_digits.
+jsg_opt_decimal_digits -->
     [].
 
-decimal_digit --> source_char(C), { code_type(C, digit) }.
-non_zero_digit --> source_char(C), { code_type(C, digit), [C] \== `0` }.
+jsg_decimal_digit --> jsg_source_char(C), { code_type(C, digit) }.
+jsg_non_zero_digit --> jsg_source_char(C), { code_type(C, digit), [C] \== `0` }.
 
-opt_exponent -->
-    exponent,
+jsg_opt_jsg_exponent -->
+    jsg_exponent,
     !.
-opt_exponent -->
+jsg_opt_jsg_exponent -->
     [].
 
-exponent -->
-    exponent_indictor,
-    signed_integer.
+jsg_exponent -->
+    jsg_exponent_indictor,
+    jsg_signed_integer.
 
-exponent_indictor --> `e`, !.
-exponent_indictor --> `E`.
+jsg_exponent_indictor --> `e`, !.
+jsg_exponent_indictor --> `E`.
 
-signed_integer --> `+`, !, decimal_digits.
-signed_integer --> `-`, !, decimal_digits.
-signed_integer -->         decimal_digits.
+jsg_signed_integer --> `+`, !, jsg_decimal_digits.
+jsg_signed_integer --> `-`, !, jsg_decimal_digits.
+jsg_signed_integer -->         jsg_decimal_digits.
 
-hex_integer --> `0`, x, hex_digit, hex_digits.
+jsg_hex_integer --> `0`, jsg_x, jsg_hex_digit, jsg_hex_digits.
 
-x --> `x`.
-x --> `X`.
+jsg_x --> `x`.
+jsg_x --> `X`.
 
 
-%!  regex_literal// is semidet.
+%!  jsg_regex_literal// is semidet.
 %
 %   Matches regex expression /.../flags
 
-regex_literal -->
-    `/`, regex_body, `/`, !, regex_flags.
+jsg_regex_literal -->
+    `/`, jsg_regex_body, `/`, !, jsg_regex_flags.
 
-regex_body -->
-    regex_first_char,
-    regex_chars.
+jsg_regex_body -->
+    jsg_regex_first_char,
+    jsg_regex_chars.
 
-regex_chars --> regex_char, !, regex_chars.
-regex_chars --> [].
+jsg_regex_chars --> jsg_regex_char, !, jsg_regex_chars.
+jsg_regex_chars --> [].
 
-regex_first_char -->
-    regex_non_terminator(C),
+jsg_regex_first_char -->
+    jsg_regex_non_terminator(C),
     !,
     { \+ memberchk(C, `*\\/[`) }.
-regex_first_char -->
-    regex_backslash_sequence.
-regex_first_char -->
-    regex_class.
+jsg_regex_first_char -->
+    jsg_regex_backslash_sequence.
+jsg_regex_first_char -->
+    jsg_regex_class.
 
-regex_char -->
-    regex_non_terminator(C),
+jsg_regex_char -->
+    jsg_regex_non_terminator(C),
     !,
     { \+ memberchk(C, `\\/[`) }.
-regex_char -->
-    regex_backslash_sequence.
-regex_char -->
-    regex_class.
+jsg_regex_char -->
+    jsg_regex_backslash_sequence.
+jsg_regex_char -->
+    jsg_regex_class.
 
-regex_backslash_sequence -->
-    `\\`, !, regex_non_terminator(_).
+jsg_regex_backslash_sequence -->
+    `\\`, !, jsg_regex_non_terminator(_).
 
-regex_class -->
-    `[`, regex_class_chars, `]`.
+jsg_regex_class -->
+    `[`, jsg_regex_class_chars, `]`.
 
-regex_class_chars --> regex_class_char, !, regex_class_chars.
-regex_class_chars --> ``.
+jsg_regex_class_chars --> jsg_regex_class_char, !, jsg_regex_class_chars.
+jsg_regex_class_chars --> ``.
 
-regex_class_char -->
-    regex_non_terminator(C),
+jsg_regex_class_char -->
+    jsg_regex_non_terminator(C),
     !,
     { \+ memberchk(C, `]\\`) }.
 
-regex_non_terminator(_) -->
-    js_eol, !, {fail}.
-regex_non_terminator(C) -->
-    source_char(C).
+jsg_regex_non_terminator(_) -->
+    jsg_eol, !, {fail}.
+jsg_regex_non_terminator(C) -->
+    jsg_source_char(C).
 
-regex_flags -->
-    js_id_conts(_).
+jsg_regex_flags -->
+    jsg_id_conts(_).
 
-source_char(CC) -->
+jsg_source_char(CC) -->
     [C],{C>=0, !, CC=C}.
 
 
-%!  q_codes//
+%!  jsg_q_codes//
 %
 %   Shortest list of quoted characters.
 
-q_codes --> [] ; q_code, q_codes.
+jsg_q_codes --> [] ; jsg_q_code, jsg_q_codes.
 
-q_code --> `\\`, !, char_esc.
-q_code --> js_eol, !, {fail}.
-q_code --> source_char(_).
+jsg_q_code --> `\\`, !, jsg_char_esc.
+jsg_q_code --> jsg_eol, !, {fail}.
+jsg_q_code --> jsg_source_char(_).
 
-char_esc --> single_escape_char, !.
-char_esc --> `x`, !, hex_digit, hex_digit.
-char_esc --> `u`, !, hex_digit, hex_digit, hex_digit, hex_digit.
-char_esc --> js_eol, !.
+jsg_char_esc --> jsg_single_escape_char, !.
+jsg_char_esc --> `x`, !, jsg_hex_digit, jsg_hex_digit.
+jsg_char_esc --> `u`, !, jsg_hex_digit, jsg_hex_digit, jsg_hex_digit, jsg_hex_digit.
+jsg_char_esc --> jsg_eol, !.
 
-hex_digits --> hex_digit, !, hex_digits.
-hex_digits --> [].
+jsg_hex_digits --> jsg_hex_digit, !, jsg_hex_digits.
+jsg_hex_digits --> [].
 
-hex_digit --> source_char(C), {code_type(C, xdigit(_))}.
+jsg_hex_digit --> jsg_source_char(C), {code_type(C, xdigit(_))}.
 
-single_escape_char --> `'`.
-single_escape_char --> `"`.
-single_escape_char --> `\\`.
-single_escape_char --> `b`.
-single_escape_char --> `f`.
-single_escape_char --> `n`.
-single_escape_char --> `r`.
-single_escape_char --> `t`.
-single_escape_char --> `v`.
+jsg_single_escape_char --> `'`.
+jsg_single_escape_char --> `"`.
+jsg_single_escape_char --> `\\`.
+jsg_single_escape_char --> `b`.
+jsg_single_escape_char --> `f`.
+jsg_single_escape_char --> `n`.
+jsg_single_escape_char --> `r`.
+jsg_single_escape_char --> `t`.
+jsg_single_escape_char --> `v`.
 
-js_eol --> `\r\n`, !.
-js_eol --> `\n`, !.
-js_eol --> `\r`.
+jsg_eol --> `\r\n`, !.
+jsg_eol --> `\n`, !.
+jsg_eol --> `\r`.
 
-js_eof -->
+jsg_eof -->
     \+ [_].
 
 
-%       js_identifier classification. Now  based  on   Prolog.  This  is
+%       jsg_identifier classification. Now  based  on   Prolog.  This  is
 %       pretty close, but I'm afraid there are corner cases.
 
-identifier_name(Id) -->
-    js_id_start(C0),
+jsg_identifier_name(Id) -->
+    jsg_id_start(C0),
     !,
-    js_id_conts(Rest),
+    jsg_id_conts(Rest),
     { atom_codes(Id, [C0|Rest]),
-      (   keyword(Id)
+      (   jsg_keyword(Id)
       ->  fail, syntax_error(reserved(Id))
       ;   true
       )
     }.
 
 
-js_id_start(C) --> source_char(C), {js_id_start(C)}.
+jsg_id_start(C) --> jsg_source_char(C), {jsg_id_start(C)}.
 
-js_id_start(C) :- code_type(C, prolog_var_start), !.
-js_id_start(C) :- code_type(C, prolog_atom_start), !.
-js_id_start(C) :- [C] == `$`,!.
+jsg_id_start(C) :- code_type(C, prolog_var_start), !.
+jsg_id_start(C) :- code_type(C, prolog_atom_start), !.
+jsg_id_start(C) :- [C] == `$`,!.
 
-js_id_conts([H|T]) --> js_id_cont(H), !, js_id_conts(T).
-js_id_conts([]) --> [].
+jsg_id_conts([H|T]) --> jsg_id_cont(H), !, jsg_id_conts(T).
+jsg_id_conts([]) --> [].
 
-js_id_cont(C) --> source_char(C), {js_id_cont(C)}.
+jsg_id_cont(C) --> jsg_source_char(C), {jsg_id_cont(C)}.
 
-js_id_cont(C) :- code_type(C, prolog_identifier_continue), !.
-js_id_cont(C) :- [C] == `$`,!.
+jsg_id_cont(C) :- code_type(C, prolog_identifier_continue), !.
+jsg_id_cont(C) :- [C] == `$`,!.
 
 
-keyword(break).                         % standard keywords
-keyword(do).
-keyword(instanceof).
-keyword(typeof).
-keyword(case).
-keyword(else).
-keyword(new).
-keyword(var).
-keyword(catch).
-keyword(finally).
-keyword(return).
-keyword(void).
-keyword(continue).
-keyword(for).
-keyword(switch).
-keyword(while).
-keyword(debugger).
-keyword(function).
-keyword(this).
-keyword(with).
-keyword(default).
-keyword(if).
-keyword(throw).
-keyword(delete).
-keyword(in).
-keyword(try).
+jsg_keyword(break).                         % standard jsg_keywords
+jsg_keyword(do).
+jsg_keyword(instanceof).
+jsg_keyword(typeof).
+jsg_keyword(case).
+jsg_keyword(else).
+jsg_keyword(new).
+jsg_keyword(var).
+jsg_keyword(catch).
+jsg_keyword(finally).
+jsg_keyword(return).
+jsg_keyword(void).
+jsg_keyword(continue).
+jsg_keyword(for).
+jsg_keyword(switch).
+jsg_keyword(while).
+jsg_keyword(debugger).
+jsg_keyword(function).
+jsg_keyword(this).
+jsg_keyword(with).
+jsg_keyword(default).
+jsg_keyword(if).
+jsg_keyword(throw).
+jsg_keyword(delete).
+jsg_keyword(in).
+jsg_keyword(try).
 
-keyword(class).                         % reserved keywords
-keyword(enum).
-keyword(extends).
-keyword(super).
-keyword(const).
-keyword(export).
-keyword(import).
+jsg_keyword(class).                         % reserved keywords
+jsg_keyword(enum).
+jsg_keyword(extends).
+jsg_keyword(super).
+jsg_keyword(const).
+jsg_keyword(export).
+jsg_keyword(import).
 
-keyword(implements).                    % future reserved keywords
-keyword(let).
-keyword(private).
-keyword(public).
-keyword(yield).
-keyword(interface).
-keyword(package).
-keyword(protected).
-keyword(static).
+jsg_keyword(implements).                    % future reserved keywords
+jsg_keyword(let).
+jsg_keyword(private).
+jsg_keyword(public).
+jsg_keyword(yield).
+jsg_keyword(interface).
+jsg_keyword(package).
+jsg_keyword(protected).
+jsg_keyword(static).

@@ -167,13 +167,16 @@ remove_undef_srch:- remove_undef_search.
 
 :- before_boot(remove_undef_srch).
 
+add_hist(X):- nop(add_history(X)).
+:- baseKB:import(add_hist/1).
+
 do_setup_history:-!.
 do_setup_history:-  
  ((
   current_input(S),
   ignore(catch(prolog:history(S, load), _, true)),  
   logicmoo_startup:((
-  add_history([
+  add_hist([
   (mpred_why(mudIsa(iCoffeeCup7, tSpatialThing))),
   (make:make_no_trace),
   (update_changed_files),
@@ -207,7 +210,7 @@ do_setup_history:-
   (lar),
   (lst)]),
   
-  maplist(add_history, [ 
+  maplist(add_hist, [ 
    mud_baseKB,
    % rtrace,
    load_nomic_mu,% autoload_all([verbose(true)]), 
@@ -219,7 +222,10 @@ do_setup_history:-
    % adventure,
    % lar,
    baseKB:listing(mudAtLoc)]),
-  add_history((+ 1 = _Y)))))),
+   add_hist(try_zebra),
+   add_hist(start_all),
+   add_hist(qsave_logicmoo),
+  add_hist((+ 1 = _Y)))))),
   !.
 
 :- before_boot(do_setup_history).
@@ -233,15 +239,15 @@ zebra00:- [(pack(logicmoo_base/t/examples/fol/'einstein_simpler_04.pfc'))].
 %load_lpn :- prolog_load_context(directory,D), cd('/home/prologmud_server/lpn/www'),user:[server],cd(D).
 try_zebra:- mpred_trace_all, zebra00, 
  forall(trait(P),listing(P)),
- add_history(clif_show),
- add_history(listing(person)),
+ add_hist(clif_show),
+ add_hist(listing(person)),
  clif_show.
 
 load_nomic_mu:- 
   % set_prolog_flag(cant_qsave_logicmoo,true),
   mud_baseKB,
   baseKB:ensure_loaded(library(nomic_mu)),
-  add_history(srv_mu_main),
+  add_hist(srv_mu_main),
   add_history(mu:srv_mu),
   !.
 
@@ -305,7 +311,7 @@ load_before_compile:-
     \+ exists_directory('/tmp/tempDir/') -> catch(shell('./PreStartMUD.sh'),_,true))),
    %ignore(( exists_directory('/tmp/tempDir') -> cd('/tmp/tempDir'))),
    webui_load_swish_and_clio,   
-   add_history(start_network).
+   add_hist(start_network).
 
 %start_network:- 
 %   load_before_compile,!.
@@ -327,27 +333,28 @@ load_rest:-
    load_rest2,
    !.
 
-load_rest2:- gethostname('logicmoo.org'), !.
+% for when dmiles is doing fast testing
+% load_rest2:- gethostname('logicmoo.org'), !.
 load_rest2:-
+   locally(set_prolog_flag(verbose_load,true),load_rest3).
+
+load_rest3:-   
+   baseKB:ensure_loaded(library(logicmoo_cg)),
+   baseKB:ensure_loaded(library(logicmoo_ec)),
    baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(narsese)),
    baseKB:ensure_loaded(library(logicmoo_clif)),
    baseKB:ensure_loaded(library('logicmoo/common_logic/common_logic_sumo.pfc')),   
-   add_history(try_zebra),
-   add_history(start_all),
-   add_history(qsave_logicmoo),
    system:reexport(pldata(kb_0988)),
    (current_prolog_flag(gui_tracer,true)->noguitracer;true),
    % run_before_qsave,
    do_setup_history,
    nodebug,
    baseKB:ensure_loaded(library(logicmoo_mud)),
-   baseKB:ensure_loaded(library(logicmoo_cg)),
-   baseKB:ensure_loaded(library(logicmoo_ec)),
    finish_processing_world,
   !.
 
-:- add_history(load_before_compile).
+%:- add_hist(load_before_compile).
 
 :- dynamic(lmconfig:has_import_module/2).
 normalize_imports(M):- 
@@ -362,7 +369,7 @@ qsave_logicmoo :-
    set_prolog_flag(lisp_repl_goal,true),
    current_prolog_flag(stack_limit,Stack_limit),
    qsave_program(logicmoo_server,
-   [   class(development), 
+     [ class(development), 
        verbose(true),
        stack_limit(Stack_limit),
        toplevel(prolog),
@@ -668,7 +675,7 @@ start_all :- start_network, start_rest.
 
 % :- prolog. 
 
-:- add_history((mmake, autodoc_test)).
+:- add_hist((mmake, autodoc_test)).
 
 end_of_file.
 
