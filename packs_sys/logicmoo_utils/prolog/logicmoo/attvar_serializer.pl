@@ -87,8 +87,8 @@ deserialize_attvars(Vs,Dict,V):- is_dict(Dict,M),!,dict_pairs(Dict,M,Pairs),
    (atom(M)->find_or_create_var(Vs,V,M);V=M),
    put_dyn_attrs_1(V,Pairs).
 deserialize_attvars(Vs,'$VAR'(N),V):- !, find_or_create_var(Vs,'$VAR'(N),V),put_dyn_attrs(V,N).
-deserialize_attvars(Vs,'avar'(N),V):- !, find_or_create_var(Vs,N,V),put_dyn_attrs(V,N).
-deserialize_attvars(Vs,'avar'(N,S),V):- !, find_or_create_var(Vs,N,V),put_dyn_attrs(V,N),put_dyn_attrs(V,S),!.
+deserialize_attvars(Vs,'aVar'(N),V):- !, find_or_create_var(Vs,N,V),put_dyn_attrs(V,N).
+deserialize_attvars(Vs,'aVar'(N,S),V):- !, find_or_create_var(Vs,N,V),put_dyn_attrs(V,N),put_dyn_attrs(V,S),!.
 deserialize_attvars(Vs,C,A):- compound_name_arguments(C,F,Args),
   maplist(deserialize_attvars(Vs),Args,OArgs),compound_name_arguments(A,F,OArgs).
 
@@ -182,7 +182,7 @@ serialize_attvar_term_now(A,C,E):- attvar(E),!,get_put_attr_serial(E,New),setarg
 serialize_attvar_term_now(_,C,E):- compound(E)->serialize_attvar_term_now(C);true.
 
 get_put_attr_serial(E,New):- get_attr(E,'$$sv$$',New),!.
-get_put_attr_serial(E,Next):- serialize_3(E,Name,Atts),MyCopy =_, replace_subst4as(Atts,E,MyCopy,NewAtts),Next=avar(Name,att('$linkval',MyCopy,NewAtts)),del_attrs(E),put_attr(E,'$$sv$$',Next),!.
+get_put_attr_serial(E,Next):- serialize_3(E,Name,Atts),MyCopy =_, replace_subst4as(Atts,E,MyCopy,NewAtts),Next='aVar'(Name,att('$linkval',MyCopy,NewAtts)),del_attrs(E),put_attr(E,'$$sv$$',Next),!.
 
 replace_subst4as( T1, S1, S2, T2 ) :-
     segment_subst4as( T1, Pre, S1, Post ),
@@ -202,10 +202,10 @@ append_subst4as( [H|T], L, [H|T1] ) :-
 
 
 serialize_1v(V,'$VAR'(Name)):- get_attrs(V, att(vn, Name, [])),!.
-serialize_1v(V,avar('$VAR'(N),SO)):- get_attrs(V, S),variable_name_or_ref(V,N),put_attrs(TEMP,S),
+serialize_1v(V,'aVar'('$VAR'(N),SO)):- get_attrs(V, S),variable_name_or_ref(V,N),put_attrs(TEMP,S),
    del_attr(TEMP,vn),!,remove_attrs(TEMP, SO),!.
 serialize_1v(V,'$VAR'(N)):-  variable_name_or_ref(V,N).
-serialize_1v(V,avar(S)):- remove_attrs(V, S),!.
+serialize_1v(V,'aVar'(S)):- remove_attrs(V, S),!.
 serialize_1v(V,V).
 
 
@@ -241,8 +241,8 @@ holds_attrs(V):-verbatum_var(V),!.
 % move to logicmoo_utils_common.pl? 
 verbatum_var(Var):-var(Var),!,fail.
 verbatum_var('$VAR'(_)).
-verbatum_var('avar'(_)).
-verbatum_var('avar'(_,_)).
+verbatum_var('aVar'(_)).
+verbatum_var('aVar'(_,_)).
 
 
 

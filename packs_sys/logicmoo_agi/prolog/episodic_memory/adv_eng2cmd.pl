@@ -14,7 +14,7 @@
 % Main file.
 %
 */
-
+:- '$set_source_module'(mu).
 %:- rtrace.
 
 % % %:- listing(user:prolog_load_file/2).

@@ -10,6 +10,7 @@ cd $LOGICMOO_WS
 #mkdir -p bin/
 #mkdir .local/share/swi-prolog/pack -p
 #chmod 555 .local/share/swi-prolog/pack
+find packs_* -name "*.qlf" -delete
 
 git clone https://github.com/SWI-Prolog/swipl-devel.git swipl-devel
 

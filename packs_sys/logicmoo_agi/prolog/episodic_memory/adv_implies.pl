@@ -16,6 +16,7 @@
 %
 %
 */
+:- '$set_source_module'(mu).
 :- op(500, fx, ~).
 
 

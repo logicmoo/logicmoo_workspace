@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 /*
 nearby_objs(Agent, Here, Nearby, S0):-

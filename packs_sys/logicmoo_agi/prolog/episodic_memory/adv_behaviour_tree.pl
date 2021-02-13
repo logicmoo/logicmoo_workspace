@@ -14,7 +14,7 @@
 %
 */
 
-
+:- '$set_source_module'(mu).
 
 load_bt_file(File):-
   asserta(is_bt_file(File)),

@@ -1014,7 +1014,7 @@ not_ftCompound(A):- \+ is_ftCompound(A).
 is_ftVar(V):- zotrace(is_ftVar0(V)).
 is_ftVar0(V):- \+ compound(V),!,var(V).
 is_ftVar0('$VAR'(_)).
-is_ftVar0('avar'(_,_)).
+is_ftVar0('aVar'(_,_)).
 %:- mpred_trace_nochilds(is_ftVar/1).
 
 

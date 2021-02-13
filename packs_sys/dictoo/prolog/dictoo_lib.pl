@@ -71,8 +71,8 @@ oo_put_attr(MVar,Attr,Value):- notrace((strip_module(MVar,M,Var),oo_put_dict(M,A
 oo_get_attrs(V,Att3s):- var(V),!,get_attrs(V,Att3s),!.
 oo_get_attrs('$VAR'(Name),_):- atom(Name),!,fail.
 oo_get_attrs('$VAR'(Att3s),Att3):-!,Att3s=Att3.
-oo_get_attrs('avar'(Att3s),Att3):-!,Att3s=Att3.
-oo_get_attrs('avar'(_,Att3s),Att3):-!,Att3s=Att3.
+oo_get_attrs('aVar'(Att3s),Att3):-!,Att3s=Att3.
+oo_get_attrs('aVar'(_,Att3s),Att3):-!,Att3s=Att3.
 % oo_get_attrs(V,Value):- trace_or_throw(oo_get_attrs(V,Value)).
 
 
@@ -86,8 +86,8 @@ oo_put_attrs(V,Attrs):- must_be(nonvar,Attrs),is_list(Attrs),!,put_atts_list(Att
 oo_put_attrs(V,Att3s):- var(V),!,put_attrs(V,Att3s),!.
 oo_put_attrs(VAR,Att3s):- VAR='$VAR'(Name), atom(Name),!,setarg(1,VAR, att(vn, Name, Att3s)).
 oo_put_attrs(VAR,Att3s):- VAR='$VAR'(_Att3),!,setarg(1,VAR, Att3s).
-oo_put_attrs(VAR,Att3s):- VAR='avar'(_Att3),!,setarg(1,VAR, Att3s).
-oo_put_attrs(VAR,Att3s):- VAR='avar'(_,_),!,setarg(2,VAR, Att3s).
+oo_put_attrs(VAR,Att3s):- VAR='aVar'(_Att3),!,setarg(1,VAR, Att3s).
+oo_put_attrs(VAR,Att3s):- VAR='aVar'(_,_),!,setarg(2,VAR, Att3s).
 oo_put_attrs(V,Att3s):- trace_or_throw(oo_put_attrs(V,Att3s)).
 
 
@@ -167,14 +167,14 @@ oo_set(UDT,Key,Value):- fail_on_missing(jpl_is_ref(UDT)),fail_on_missing(jpl_set
 
 oo_nb_set_varholder('$VAR',Name,[],UDT,Key,Value):- atom(Name),!,nb_setarg(1,UDT,att(vn, Name, att(Key,Value, []))).
 oo_nb_set_varholder('$VAR',Att3,[],UDT,Key,Value):- nb_setarg(1,UDT,att(Key,Value,Att3)).
-oo_nb_set_varholder('avar',Att3,[],UDT,Key,Value):- nb_setarg(1,UDT,att(Key,Value,Att3)).
-oo_nb_set_varholder('avar',_D,[Att3],UDT,Key,Value):- nb_setarg(2,UDT,att(Key,Value,Att3)).
+oo_nb_set_varholder('aVar',Att3,[],UDT,Key,Value):- nb_setarg(1,UDT,att(Key,Value,Att3)).
+oo_nb_set_varholder('aVar',_D,[Att3],UDT,Key,Value):- nb_setarg(2,UDT,att(Key,Value,Att3)).
 oo_nb_set_varholder('att',_D,_T,UDT,Key,Value):- !,nb_setattr(UDT,Key,Value).
 
 oo_b_set_varholder('$VAR',Name,[],UDT,Key,Value):- atom(Name),!,setarg(1,UDT,att(vn, Name, att(Key,Value, []))).
 oo_b_set_varholder('$VAR',Att3,[],UDT,Key,Value):- setarg(1,UDT,att(Key,Value,Att3)).
-oo_b_set_varholder('avar',Att3,[],UDT,Key,Value):- setarg(1,UDT,att(Key,Value,Att3)).
-oo_b_set_varholder('avar',_D,[Att3],UDT,Key,Value):- setarg(2,UDT,att(Key,Value,Att3)).
+oo_b_set_varholder('aVar',Att3,[],UDT,Key,Value):- setarg(1,UDT,att(Key,Value,Att3)).
+oo_b_set_varholder('aVar',_D,[Att3],UDT,Key,Value):- setarg(2,UDT,att(Key,Value,Att3)).
 oo_b_set_varholder('att',_D,_T,UDT,Key,Value):- !,b_setattr(UDT,Key,Value).
 
 
@@ -285,8 +285,8 @@ oo_call(M,Self,Memb,Value):- var(Self),!, % trace,
 
 oo_call(_M,'$VAR'(Name),N,V):- atom(Name),!,N=vn,V=Name.
 oo_call(_M,'$VAR'(Att3),A,Value):- !, put_attrs(NewVar,Att3),get_attr(NewVar,A,Value).
-oo_call(_M,'avar'(Att3),A,Value):- !, put_attrs(NewVar,Att3),get_attr(NewVar,A,Value).
-oo_call(_M,'avar'(_,Att3),A,Value):- !, put_attrs(NewVar,Att3),get_attr(NewVar,A,Value).
+oo_call(_M,'aVar'(Att3),A,Value):- !, put_attrs(NewVar,Att3),get_attr(NewVar,A,Value).
+oo_call(_M,'aVar'(_,Att3),A,Value):- !, put_attrs(NewVar,Att3),get_attr(NewVar,A,Value).
 oo_call(M,Map,Key,Value):-is_dict(Map),!,(get_dict(Key,Map,Value)->true;(oo_get_extender(Map,Ext),oo_call(M,Ext,Key,Value))).
 oo_call(M,Map,Key,Value):-is_rbtree(Map),!,(rb_in(Key,Value,Map)->true;(oo_get_extender(Map,Ext),oo_call(M,Ext,Key,Value))).
 oo_call(M,Map,Key,Value):-is_assoc(Map),!,(get_assoc(Key,Value,Map)->true;(oo_get_extender(Map,Ext),oo_call(M,Ext,Key,Value))).

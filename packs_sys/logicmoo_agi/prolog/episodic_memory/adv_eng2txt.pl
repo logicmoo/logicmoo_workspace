@@ -1,5 +1,7 @@
 
 
+:- '$set_source_module'(mu).
+
 % Inform notation
 % 'c'  character)
 % "string" string

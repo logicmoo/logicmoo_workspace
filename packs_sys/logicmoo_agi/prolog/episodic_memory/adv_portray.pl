@@ -2,6 +2,7 @@
 % Our user:portray(Logic) English helpers
 % %%%%%%%%%%%%%%%
 
+:- '$set_source_module'(mu).
 
 :- use_module(library(logicmoo/portray_vars)).
 

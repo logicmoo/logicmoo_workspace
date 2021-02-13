@@ -371,16 +371,16 @@ fdmsg(M):- logicmoo_util_catch:ddmsg(failed_fdmsg(M)).
 
 :-export(simplify_goal_printed/2).
 
-%= 	 	 
+
 printable_variable_name(Var, Name) :- nonvar(Name),!,must(printable_variable_name(Var, NameO)),!,Name=NameO.
-printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(_),format(atom(Name),"~w_",Var).
-printable_variable_name(Var, Name) :- nonvar(Var),format(atom(Name),"(_~q_)",Var).
+printable_variable_name(Var, Name) :- nonvar(Var),Var='$VAR'(Named), (nonvar(Named)-> Name=Named ; format(atom(Name),"~w_",[Var])).
+printable_variable_name(Var, Name) :- nonvar(Var),format(atom(Name),"(_~q_)",[Var]).
 printable_variable_name(Var,Name):- (get_attr(Var, vn, Name1);
   get_attr(Var, varnames, Name1)),
  (var_property(Var,name(Name2))-> 
    (Name1==Name2-> atom_concat(Name1,'_VN',Name) ; Name=(Name1:Name2)); 
     (atom(Name1)->atom_concat('?',Name1,Name);
-   format(atom(Name),"'$VaR'(~q)",Var))),!.
+   format(atom(Name),"'$VaR'(~q)",[Var]))),!.
 printable_variable_name(Var,Name):- v_name1(Var,Name),!.
 printable_variable_name(Var,Name):- v_name2(Var,Name),!. % ,atom_concat(Name1,'_TL',Name).
 
@@ -404,16 +404,17 @@ attrs_to_list(_ATTRS,[]).
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
 
-simplify_var_printed(Var,'$avar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
-simplify_var_printed(Var,'$VAR'(Name)):- get_attrs(Var,att(vn, _, [])),printable_variable_name(Var, Name),!.
-simplify_var_printed(Var,'$avar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
-simplify_var_printed(Var,'$avar'(Dict)):- get_attrs(Var,ATTRS),must(printable_variable_name(Var,Name)),attrs_to_list(ATTRS,List),
+simplify_var_printed(Var,'aVar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
+simplify_var_printed(Var,'$VAR'(Name)):-  get_attrs(Var,att(vn, _, [])),printable_variable_name(Var, Name),!.
+simplify_var_printed(Var,'aVar'('$VAR'(Name))):- tlbugger:plain_attvars,must(printable_variable_name(Var,Name)),!.
+simplify_var_printed(Var,'aVar'(Dict)):- get_attrs(Var,ATTRS),must(printable_variable_name(Var,Name)),attrs_to_list(ATTRS,List),
                          dict_create(Dict,'$VAR'(Name),List).
 simplify_var_printed(Var,'$VAR'(Name)):- is_ftVar(Var),!,printable_variable_name(Var, Name).
 
 simplify_goal_printed(Var,Printed):- nonvar(Printed),!,simplify_goal_printed(Var,UnPrinted),ignore(Printed=UnPrinted),!.
-simplify_goal_printed(Var,Name):-is_ftVar(Var),\+ current_prolog_flag(variable_names_bad,true),simplify_var_printed(Var,Name),!.
-simplify_goal_printed(Var,VarO):-var(Var),!,VarO=Var.
+% simplify_goal_printed(Var,Name):-is_ftVar(Var), \+ current_prolog_flag(variable_names_bad,true), simplify_var_printed(Var,Name),!.
+simplify_goal_printed(Var,VarO):- var(Var),!,VarO=Var.
+simplify_goal_printed(Var,VarO):- is_ftVar(Var),!,VarO=Var.
 simplify_goal_printed(Var,Name):-cyclic_term(Var),!,Name=Var.
 simplify_goal_printed(setup_call_catcher_cleanup,sccc).
 % simplify_goal_printed(existence_error(X,Y),existence_error(X,Y)):-nl,writeq(existence_error(X,Y)),nl,fail.

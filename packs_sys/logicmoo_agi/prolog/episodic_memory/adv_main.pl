@@ -19,6 +19,7 @@
 %:- use_module(library(pfc)).
 
 :- use_module(library(logicmoo_common)).
+:- '$set_source_module'(mu).
 
 
 /*

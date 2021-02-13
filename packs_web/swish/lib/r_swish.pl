@@ -127,8 +127,10 @@ plot(Term, _Options) --> !,
 %		but this does not seem to work!?
 %	@bug	When generalised, this could move into runner.js.
 
-pan_zoom -->
-	html(\js_script({|javascript||
+find_svg(\['\nvar svg  = node.node().find("svg");\nvar data = { w0: svg.width(),\n\t     h0: svg.height()\n\t   };\nvar pan;\n\nfunction fixIDs(node, prefix1) {\n  var i=0;\n  node.each(function() {\n    var prefix = prefix1+(i++)+"_";\n    var img = $(this);\n    var hprefix = "#"+prefix;\n    var re = /(url\\()#([^)]*)(\\))/;\n\n    img.find("[id]").each(function() {\n      var elem = $(this);\n      elem.attr("id", prefix+elem.attr("id"));\n    });\n    img.find("use").each(function() {\n      var elem = $(this);\n      var r = elem.attr("xlink:href");\n      if ( r.charAt(0) == "#" )\n\telem.attr("xlink:href", hprefix+r.slice(1));\n    });\n    img.find("[clip-path]").each(function() {\n      var elem = $(this);\n      var r = elem.attr("clip-path").match(re);\n      if ( r.length == 4 )\n\telem.attr("clip-path", r[1]+hprefix+r[2]+r[3]);\n    });\n  });\n}\n\nfixIDs(svg, "N"+node.unique_id()+"_");\n\nfunction updateSize() {\n  var w = svg.closest("div.Rplots").innerWidth();\n  console.log(data.w0, w);\n\n  function reactive() {\n    if ( !data.reactive ) {\n      var div = svg.closest("div.reactive-size");\n      data.reactive = true;\n      div.on("reactive-resize", updateSize);\n    }\n  }\n\n  reactive();\n  w = Math.max(w*0.95, 100);\n  if ( w < data.w0 ) {\n    svg.width(w);\n    svg.height(w = Math.max(w*data.h0/data.w0, w/4));\n    if ( pan ) {\n      pan.resize();\n      pan.fit();\n      pan.center();\n    }\n  }\n}\n\nrequire(["svg-pan-zoom"], function(svgPanZoom) {\n  updateSize()\n  pan = svgPanZoom(svg[0], {\n    maxZoom: 50\n  });\n});\n\t\t      ']).
+/*
+find_svg(X):- 
+X = {|javascript||
 var svg  = node.node().find("svg");
 var data = { w0: svg.width(),
 	     h0: svg.height()
@@ -195,7 +197,15 @@ require(["svg-pan-zoom"], function(svgPanZoom) {
     maxZoom: 50
   });
 });
-		      |})).
+		      |}.
+
+:- find_svg(X), writeq(X).
+:- break.
+*/
+
+pan_zoom -->
+  {find_svg(X)},
+	html(\js_script(X)).
 
 
 %%	r_download

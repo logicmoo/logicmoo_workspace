@@ -18,6 +18,7 @@
 %
 */
 
+:- '$set_source_module'(mu).
 
 :- meta_predicate with_agent_console(*, 0).
 /*

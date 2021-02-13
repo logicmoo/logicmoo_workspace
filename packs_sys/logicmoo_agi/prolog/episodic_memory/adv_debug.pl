@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 %:- system:use_module(library(console_input)).
 %:- system:use_module(library(date)).
@@ -50,11 +51,13 @@ simply_debug_opts([len=5]).
 
 get_zoption(Z, N, V, E):- member(N=V, Z)->true;V=E.
 
-simplify_dbug(G, GG):- notrace((simply_debug_opts(Z),simplify_dbug(Z, G, GG))).
+simplify_dbug(G, GG):- quietly((simply_debug_opts(Z),simplify_dbug(Z, G, GG))).
 
-simplify_dbug(Z, G, GG):- notrace((simplify_dbug_3(Z, G, GP),simplify_goal_printed(GP,GG))).
+simplify_dbug(Z, G, GG):- quietly((simplify_dbug_3(Z, G, GP),simplify_goal_printed(GP,GG))).
 
-simplify_dbug_3(_, G, GG):- \+ compound(G), !, GG=G.
+simplify_dbug_3(Z, G, GG):- nonvar(GG),!, simplify_dbug_3(Z, G, GGG),!, GGG=GG.
+simplify_dbug_3(_, G, G):- \+ compound(G).
+simplify_dbug_3(_, '$VAR'(G), '$VAR'(G)):- !.
 simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(X), debug_var(['Not', X], Y),!.
 simplify_dbug_3(_, (X \= Y), (X \= Y)):- atom(Y), debug_var(['Not', X], Y),!.
 simplify_dbug_3(_, List, '.|.|.'(O)):-  simplify_memlists(List, O),!.

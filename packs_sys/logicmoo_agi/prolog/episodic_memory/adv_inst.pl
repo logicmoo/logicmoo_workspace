@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 % :- ensure_loaded(adv_naming).
 
 create_new_unlocated(Type, Inst, S0, S2):-

@@ -25,6 +25,7 @@
 lock_vars(Term):-lock_vars(lockable_vars:just_fail,Term).
 
 just_fail(_):-fail.
+skip_varlocks:- !.
 skip_varlocks:- current_prolog_flag(skip_varlocks , TF),!,TF==true.
 skip_varlocks:- current_prolog_flag(unsafe_speedups , true) ,!.
 
@@ -47,7 +48,7 @@ lock_these_vars_now(_,_,[],_).
 
 vl:attr_unify_hook(InSLock,Value):- InSLock = slock(InLock,Else,Sorted),!,
   check_slock(InLock,Else,InSLock,Sorted,Value).
-vl:attr_unify_hook(A,B):- trace, vlauh(A,B),!.
+vl:attr_unify_hook(A,B):- vlauh(A,B),!.
 
 vlauh(when_rest(Notify,N,_Var,VVs),VarValue):- 
     arg(NN,VVs,Was),Was==VarValue,
@@ -76,8 +77,8 @@ vlauh(_,VarValue):- locking_verbatum_var(VarValue),!,variable_name_or_ref(VarVal
 % move to logicmoo_utils_common.pl? 
 locking_verbatum_var(Var):-var(Var),!,fail.
 locking_verbatum_var('$VAR'(_)).
-locking_verbatum_var('avar'(_)).
-locking_verbatum_var('avar'(_,_)).
+locking_verbatum_var('aVar'(_)).
+locking_verbatum_var('aVar'(_,_)).
 
 :- thread_local(t_l:varname_lock/1).
 
@@ -121,10 +122,11 @@ with_vars_locked_old(_Notify,_Vs,Goal):- notrace(skip_varlocks),!,Goal.
 with_vars_locked_old(Notify,Vs0,Goal):- term_variables(Vs0,Vs),with_vars_locked_trusted(Notify,Vs,Goal).
 
 :- meta_predicate(with_vars_locked_trusted(1,?,:)).
+with_vars_locked_trusted(_Notify,_Vs,Goal):- notrace(skip_varlocks),!,Goal.
 with_vars_locked_trusted(Notify,Vs,Goal):- set_prolog_flag(access_level,system),
  trusted_redo_call_cleanup(
    lock_vars(Notify,Vs),
-      (trace,Goal),
+      (nop(trace),Goal),
      maplist(delete_vl,Vs)).
 
 

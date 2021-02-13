@@ -17,6 +17,7 @@
 %
 */
 % Marty's Tokenizer/Scanner/Lexer, written in Prolog.
+:- '$set_source_module'(mu).
 /*
 :- module(adv_io, [
  read_line_to_tokens/4,
@@ -164,7 +165,7 @@ prolog_pprint_0(Term, Options):- prolog_pretty_print:print_term(Term, [output(cu
 dbug1(_):- notrace(current_prolog_flag(dmsg_level, never)), !.
 dbug1(Fmt) :- compound(Fmt), compound_name_arity(Fmt,F,_), debugging(F,false), !.
 dbug1(Fmt) :-
- notrace(( \+ \+
+ quietly(( \+ \+
    ((guess_varnames(Fmt),
      mu:simplify_dbug(Fmt, FmtSS),     
      portray_vars:pretty_numbervars(FmtSS, FmtS),

@@ -18,7 +18,7 @@ else
 
  # apt-get update
  # second line is BiocManager requirements
- apt-get install build-essential cmake ninja-build pkg-config \
+ apt-get install -y build-essential cmake ninja-build pkg-config \
     libxml2-dev libudunits2-dev libgeos++-dev libtiff-dev libopenmpi-dev \
     git curl wget \
     r-base r-base-dev r-cran-rserve r-cran-devtools libffi-dev gdebi-core r-cran-bit64 \
@@ -46,6 +46,7 @@ else
   apt install -y python3-pip python-pip
   pip3 install tornado asyncio butterfly
   echo "Maybe: apt install openjdk-11-jdk openjdk-11-jdk-headless"
+
 )
 
 fi

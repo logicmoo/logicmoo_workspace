@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 :- dynamic(mu_tmp:no_autostart/0).
 :- volatile(mu_tmp:no_autostart/0).

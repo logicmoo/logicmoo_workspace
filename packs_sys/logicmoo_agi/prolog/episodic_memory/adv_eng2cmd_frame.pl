@@ -5,6 +5,7 @@
 :- discontiguous(verb_frame1/4).
 
 
+:- '$set_source_module'(mu).
 
 /*
    Take the sentence:
@@ -262,6 +263,7 @@ cont_parse_dataframe([FrameArg| FrameArgS], Text, Action, Frame):-
   cont_parse_dataframe(FrameArgS, Right, Action, Frame).
 
 
+:- op(700, fx, ('~')).
 
 % _Player_1 give sally love
 verb_frame1(Action, Give,

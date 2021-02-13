@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 %:- nop(ensure_loaded('adv_chat80')).
 %:- ensure_loaded(adv_main).

@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 must_be_same(X, Y):- must_mw1(X==Y).
 model_prepend(X, Y, Z):- append(X, Y, Z).

@@ -16,6 +16,8 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
+
 
 
 % get_all_props(Object, AllProps, S0):- findall(Prop, getprop(Object, Prop, S0), AllProps).
@@ -316,6 +318,7 @@ negate_prop(UnNegated, Negated):-
   append(Left, [NegLast], NewArgs),
   Negated=..[F|NewArgs], !.
 
+:- op(700, fx, ('~')).
 
 correct_prop(NC, NO):- var(NC), !, NC = NO.
 correct_prop(NC, nc(NC)):- var(NC), throw(correct_prop(NC, nc(NC))), !.

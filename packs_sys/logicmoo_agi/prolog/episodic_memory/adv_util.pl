@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 :- op(700, xfx, (univ_safe)).
 
 

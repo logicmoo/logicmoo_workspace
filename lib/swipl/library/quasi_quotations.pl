@@ -175,7 +175,7 @@ phrase_from_quasi_quotation(Grammar, Content) :-
         close(Stream)).
 
 phrase_quasi_quotation(Grammar, Stream) :-
-    set_stream(Stream, buffer_size(512)),
+    set_stream(Stream, buffer_size(51200)),
     stream_to_lazy_list(Stream, List),
     phrase(Grammar, List),
     !.

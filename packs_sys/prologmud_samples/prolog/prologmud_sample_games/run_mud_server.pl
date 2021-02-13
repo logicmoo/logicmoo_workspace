@@ -322,9 +322,12 @@ load_rest:-
    nodebug,
    load_nomic_mu,   
    load_before_compile,
+   use_module(library(instant_prolog_docs)),
+   add_history((mmake, autodoc_test)),
    load_rest2,
    !.
 
+load_rest2:- gethostname('logicmoo.org'), !.
 load_rest2:-
    baseKB:ensure_loaded(library(logicmoo_nlu)),
    baseKB:ensure_loaded(library(narsese)),
@@ -665,6 +668,7 @@ start_all :- start_network, start_rest.
 
 % :- prolog. 
 
+:- add_history((mmake, autodoc_test)).
 
 end_of_file.
 

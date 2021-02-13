@@ -31,6 +31,7 @@ push_frame(named_graph(Name,[H|List]), Frame):- fail, nonvar(H),!,
  push_frame(named_graph(Name,H), Frame),
  push_frame(named_graph(Name,List), Frame).
 
+push_frame(Info, call(Frame)):- !,call(Frame,Info),!.
 push_frame(Info, cg(Frame)):- !, push_frame(Info, Frame),!.
 push_frame(Info, _Frame):- Info==[],!.
 push_frame([I1|I2], Frame):- !, push_frame(I1, Frame), push_frame(I2, Frame).

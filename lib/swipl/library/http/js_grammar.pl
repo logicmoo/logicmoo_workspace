@@ -19,7 +19,7 @@
        distribution.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    `AS IS` AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
     COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -71,23 +71,23 @@ token(number)         --> numeric_literal, !.
 token(identifier(Id)) --> identifier_name(Id), !.
 token(regex)          --> regex_literal, !.
 token(ws)             --> blank, !, blanks.
-token(punct(Char))    --> [Code], { char_code(Char, Code) }.
+token(punct(Char))    --> source_char(Code), { char_code(Char, Code) }.
 
 %!  comment// is semidet.
 
 comment -->
-    "/*",
+    `/*`,
     !,
-    (   string(_), "*/"
+    (   string(_), `*/`
     ->  []
     ;   syntax_error(eof_in_comment)
     ).
 comment -->
-    "//",
+    `//`,
     !,
-    (   string(_), eol
+    (   string(_), js_eol
     ->  []
-    ;   string(_), eof
+    ;   string(_), js_eof
     ->  []
     ).
 
@@ -97,16 +97,16 @@ comment -->
 %   Matches a string literal
 
 string_literal -->
-    "\"",
+    `"`,
     !,
-    (   q_codes, "\""
+    (   q_codes, `"`
     ->  []
     ;   syntax_error(eof_in_string)
     ).
 string_literal -->
-    "\'",
+    `'`,
     !,
-    (   q_codes, "\'"
+    (   q_codes, `'`
     ->  []
     ;   syntax_error(eof_in_string)
     ).
@@ -129,15 +129,15 @@ numeric_literal -->
     ).
 
 decimal_literal -->
-    decimal_integer, ".", opt_decimal_digits, opt_exponent.
+    decimal_integer, `.`, opt_decimal_digits, opt_exponent.
 decimal_literal -->
-    ".", decimal_digits, opt_exponent.
+    `.`, decimal_digits, opt_exponent.
 decimal_literal -->
     decimal_integer,
     opt_exponent.
 
 decimal_integer -->
-    "0",
+    `0`,
     !.
 decimal_integer -->
     non_zero_digit, opt_decimal_digits.
@@ -154,8 +154,8 @@ opt_decimal_digits -->
 opt_decimal_digits -->
     [].
 
-decimal_digit --> [C], { code_type(C, digit) }.
-non_zero_digit --> [C], { code_type(C, digit), C \== 0'0 }.
+decimal_digit --> source_char(C), { code_type(C, digit) }.
+non_zero_digit --> source_char(C), { code_type(C, digit), [C] \== `0` }.
 
 opt_exponent -->
     exponent,
@@ -167,17 +167,17 @@ exponent -->
     exponent_indictor,
     signed_integer.
 
-exponent_indictor --> "e", !.
-exponent_indictor --> "E".
+exponent_indictor --> `e`, !.
+exponent_indictor --> `E`.
 
-signed_integer --> "+", !, decimal_digits.
-signed_integer --> "-", !, decimal_digits.
+signed_integer --> `+`, !, decimal_digits.
+signed_integer --> `-`, !, decimal_digits.
 signed_integer -->         decimal_digits.
 
-hex_integer --> "0", x, hex_digit, hex_digits.
+hex_integer --> `0`, x, hex_digit, hex_digits.
 
-x --> "x".
-x --> "X".
+x --> `x`.
+x --> `X`.
 
 
 %!  regex_literal// is semidet.
@@ -185,7 +185,7 @@ x --> "X".
 %   Matches regex expression /.../flags
 
 regex_literal -->
-    "/", regex_body, "/", !, regex_flags.
+    `/`, regex_body, `/`, !, regex_flags.
 
 regex_body -->
     regex_first_char,
@@ -197,7 +197,7 @@ regex_chars --> [].
 regex_first_char -->
     regex_non_terminator(C),
     !,
-    { \+ memberchk(C, "*\\/[") }.
+    { \+ memberchk(C, `*\\/[`) }.
 regex_first_char -->
     regex_backslash_sequence.
 regex_first_char -->
@@ -206,36 +206,36 @@ regex_first_char -->
 regex_char -->
     regex_non_terminator(C),
     !,
-    { \+ memberchk(C, "\\/[") }.
+    { \+ memberchk(C, `\\/[`) }.
 regex_char -->
     regex_backslash_sequence.
 regex_char -->
     regex_class.
 
 regex_backslash_sequence -->
-    "\\", !, regex_non_terminator(_).
+    `\\`, !, regex_non_terminator(_).
 
 regex_class -->
-    "[", regex_class_chars, "]".
+    `[`, regex_class_chars, `]`.
 
 regex_class_chars --> regex_class_char, !, regex_class_chars.
-regex_class_chars --> "".
+regex_class_chars --> ``.
 
 regex_class_char -->
     regex_non_terminator(C),
     !,
-    { \+ memberchk(C, "]\\") }.
+    { \+ memberchk(C, `]\\`) }.
 
 regex_non_terminator(_) -->
-    eol, !, {fail}.
+    js_eol, !, {fail}.
 regex_non_terminator(C) -->
     source_char(C).
 
 regex_flags -->
     js_id_conts(_).
 
-source_char(C) -->
-    [C].
+source_char(CC) -->
+    [C],{C>=0, !, CC=C}.
 
 
 %!  q_codes//
@@ -244,35 +244,35 @@ source_char(C) -->
 
 q_codes --> [] ; q_code, q_codes.
 
-q_code --> "\\", !, char_esc.
-q_code --> eol, !, {fail}.
-q_code --> [_].
+q_code --> `\\`, !, char_esc.
+q_code --> js_eol, !, {fail}.
+q_code --> source_char(_).
 
 char_esc --> single_escape_char, !.
-char_esc --> "x", !, hex_digit, hex_digit.
-char_esc --> "u", !, hex_digit, hex_digit, hex_digit, hex_digit.
-char_esc --> eol, !.
+char_esc --> `x`, !, hex_digit, hex_digit.
+char_esc --> `u`, !, hex_digit, hex_digit, hex_digit, hex_digit.
+char_esc --> js_eol, !.
 
 hex_digits --> hex_digit, !, hex_digits.
 hex_digits --> [].
 
-hex_digit --> [C], {code_type(C, xdigit(_))}.
+hex_digit --> source_char(C), {code_type(C, xdigit(_))}.
 
-single_escape_char --> "'".
-single_escape_char --> "\"".
-single_escape_char --> "\\".
-single_escape_char --> "b".
-single_escape_char --> "f".
-single_escape_char --> "n".
-single_escape_char --> "r".
-single_escape_char --> "t".
-single_escape_char --> "v".
+single_escape_char --> `'`.
+single_escape_char --> `"`.
+single_escape_char --> `\\`.
+single_escape_char --> `b`.
+single_escape_char --> `f`.
+single_escape_char --> `n`.
+single_escape_char --> `r`.
+single_escape_char --> `t`.
+single_escape_char --> `v`.
 
-eol --> "\r\n", !.
-eol --> "\n", !.
-eol --> "\r".
+js_eol --> `\r\n`, !.
+js_eol --> `\n`, !.
+js_eol --> `\r`.
 
-eof -->
+js_eof -->
     \+ [_].
 
 
@@ -291,19 +291,19 @@ identifier_name(Id) -->
     }.
 
 
-js_id_start(C) --> [C], {js_id_start(C)}.
+js_id_start(C) --> source_char(C), {js_id_start(C)}.
 
 js_id_start(C) :- code_type(C, prolog_var_start), !.
 js_id_start(C) :- code_type(C, prolog_atom_start), !.
-js_id_start(0'$).
+js_id_start(C) :- [C] == `$`,!.
 
 js_id_conts([H|T]) --> js_id_cont(H), !, js_id_conts(T).
 js_id_conts([]) --> [].
 
-js_id_cont(C) --> [C], {js_id_cont(C)}.
+js_id_cont(C) --> source_char(C), {js_id_cont(C)}.
 
 js_id_cont(C) :- code_type(C, prolog_identifier_continue), !.
-js_id_cont(0'$) :- !.
+js_id_cont(C) :- [C] == `$`,!.
 
 
 keyword(break).                         % standard keywords

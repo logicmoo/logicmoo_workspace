@@ -10,6 +10,7 @@ else
 (
 stty sane
 . ./logicmoo_env.sh
+
 export LOGICMOO_GAMES=$LOGICMOO_WS/packs_sys/prologmud_samples/prolog/prologmud_sample_games
 ( cd $LOGICMOO_GAMES
 ( ./PreStartMUD.sh > /dev/null 2>&1 )
@@ -34,6 +35,11 @@ chown prologmud_server $LOGICMOO_GAMES/completion_*
 chown prologmud_server $LOGICMOO_GAMES/history_*
 touch $LOGICMOO_GAMES/nohup.out
 chown prologmud_server $LOGICMOO_GAMES/nohup.out
+chown -R prologmud_server /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/
+# in case of symlinking
+chown -R prologmud_server /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/
+chown -R prologmud_server /opt/logicmoo_workspace/packs_sys/logicmoo_nlu/ext/pldata/plkb0988/src~/
+
 #chown -R prologmud_server $LOGICMOO_WS/packs_web/butterfly
 
 mkdir -p /tmp/tempDir/

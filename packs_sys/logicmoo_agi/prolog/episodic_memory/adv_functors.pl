@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 % Some Inform properties:
 % light - rooms that have light in them

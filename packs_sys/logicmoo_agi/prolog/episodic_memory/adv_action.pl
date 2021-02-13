@@ -16,7 +16,12 @@
 % Main file.
 %
 */
-*/
+
+:- '$set_source_module'(mu).
+
+:- op(1200, xfy, ('==>>')).
+:- op(1200, xfy, ('::=')).
+:- op(700, fx, ('~')).
 
 :- ensure_loaded(adv_axiom).
 
@@ -32,6 +37,10 @@ set_last_action(Agent, Action):-
 
 
 
+%! cmd_workarround( +VerbObj, -VerbObj2) is semidet.
+%
+% Cmd Workarround.
+%
 cmd_workarround(VerbObj, VerbObj2):-
  VerbObj=..VerbObjL,
  quietly(cmd_workarround_l(VerbObjL, VerbObjL2)),
@@ -118,6 +127,7 @@ maybe_pause(Agent):- stdio_player(CP), (Agent==CP -> wait_for_input([user_input]
 invoke_command(Requester, attempts(Agent, Action)) ==>>  
  {Requester==Agent},
  invoke_command(Agent, Action), !.
+
 invoke_command(Agent, Action) ==>>
  invoke_metacmd(Agent, Action),
   {overwrote_prompt(Agent)}, !.
@@ -462,13 +472,26 @@ add_intent_look(Agent) ==>>
   h(spatial, inside, Agent, _Somewhere),
   add_agent_intent( Agent, attempts(Agent, act3('look',Agent,[]))).
 
+% assert_if_new(arginfo_for(
+%                  ':-'(
+%                     uses_default_doer(Action),
+%                     (safe_functor(Action,Verb,_216776) ,
+%                      verbatum_anon(Verb))),
+%                  mfl4(Mfl4P_Num4_V, mu,
+%                     /.../(episodic_memory,'adv_action.pl'), 482),
+%                  [ uses_default_doer(Action),
+%                    verbatum_anon(Verb),
+%                    safe_functor(Action,Verb,_216776) ])).
 
 uses_default_doer(Action):- safe_functor(Action, Verb, _), verbatum_anon(Verb).
 uses_default_doer(Action):- \+ compound(Action).
+
 :- defn_state_none(action_doer(action, -agent)).
 action_doer(Action, Agent):- uses_default_doer(Action), !, must_mw1(mu_current_agent(Agent)), !.
 action_doer(Action, Agent):- arg(_, Action, Agent), nonvar(Agent), is_x_instance(Agent), !.
+
 action_doer(Action, Agent):- action_verb_agent_args(Action, _Verb, Agent, _Thing),!.
+
 action_doer(Action, Agent):- mu_current_agent(Agent), !, must_mw1(Action == Agent).
 action_doer(Action, Agent):- trace, throw(missing(action_doer(Action, Agent))).
 

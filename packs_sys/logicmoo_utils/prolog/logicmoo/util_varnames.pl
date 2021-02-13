@@ -219,7 +219,7 @@
 :- use_module(library(readutil)).
 :- abolish(system:time/1).
 :- use_module(library(statistics)).
-:- use_module(library(codesio)).
+%:- use_module(library(codesio)).
 :- use_module(library(charsio)).
 :- use_module(library(ssl)).
 :- use_module(library(prolog_codewalk)).
@@ -296,8 +296,8 @@ get_var_name1('$VAR'(Name),Name):- atom(Name),!.
 get_var_name1('$VAR'(Int),Name):- integer(Int),format(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
 get_var_name1('$VAR'(Var),Name):- (var(Var)->get_var_name0(Var,Name);Name=Var),!.
 get_var_name1('$VAR'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('avar'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('avar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('avar'(Att3),Value).
+get_var_name1('aVar'(Att3),Name):- !, get_var_name1(Att3,Name).
+get_var_name1('aVar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('aVar'(Att3),Value).
 get_var_name1(att(vn,Name,_),Name):- !.
 get_var_name1(att(_,_,Rest),Name):- Rest\==[],get_var_name1(Rest,Name).
 get_var_name1(Var,Name):- get_attr(Var, vn, Name),!. % ground(Name),!.
@@ -426,12 +426,13 @@ vmust(G):-!,call(G).
 %
 dcall_when(P,In,Out):- must(call(P,In,Out)),ignore((In\=@=Out,dmsg((dcall_when(P) :- (In,Out))))).
 
-:- create_prolog_flag(source_variables, false, [type(boolean)]).
+:- create_prolog_flag(source_variables, false, [type(boolean),keep(true)]).
 :- thread_local(t_l:dont_varname/0).
 :- thread_local(t_l:dont_varname_te/0).
 :- thread_local(t_l:try_varname_clause_next/1).
 
 
+% :- use_module('./redo_locally').
 %=
 
 %% no_varnaming( :GoalG) is semidet.
@@ -955,7 +956,8 @@ save_to_clause_ref(ClauseRef,Vs,Why):- ain00(names(ClauseRef,Vs)),ain00(names_wh
 save_clause_vars(M,H,MB,B,Vs,Why:_):-atom(Why),!,save_clause_vars(M,H,MB,B,Vs,Why).
 save_clause_vars(M,H,MB,B,Vs,Why):- fail, locate_clause_ref(M,H,MB,B,ClauseRef),clause_ref_vars(ClauseRef,Was),
    ((Was=Vs) -> fail ; save_to_clause_ref(ClauseRef,Vs,Why)),!.
-save_clause_vars(_M,H,_MB,B,Vs,Why):- ain00(varname_cache:varname_info(H,B,Vs,Why)).
+save_clause_vars(_M,H,_MB,B,Vs,Why):- 
+  ain00(varname_cache:varname_info(H,B,Vs,Why)).
 
 
 %=
@@ -1519,7 +1521,7 @@ listing_vars_file.
 % Hook To [user:term_expansion/2] For Module Logicmoo_varnames.
 % Term Expansion.
 %
-%user:term_expansion(HB,_):- current_prolog_flag(source_variables,true),term_expansion_save_vars(HB),fail.
+system:term_expansion((H:-B),_):- current_prolog_flag(source_variables,true),term_expansion_save_vars((H:-B)),fail.
 
 % % % % OFF :- system:use_module(library(logicmoo_utils_all)).
 :- fixup_exports.

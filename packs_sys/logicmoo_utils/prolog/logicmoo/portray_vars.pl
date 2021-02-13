@@ -20,7 +20,7 @@
 
 
 :- use_module(library(backcomp)).
-:- use_module(library(codesio)).
+%:- use_module(library(codesio)).
 :- use_module(library(charsio)).
 :- use_module(library(debug)).
 :- use_module(library(check)).
@@ -159,19 +159,25 @@ afix_ordered_varname(Left,Right,_Var):- atom_contains(Right,Left),!.
 afix_ordered_varname(Left,Right, Var):- atomic_list_concat([Left,'_',Right],New),
   add_var_to_env_trimed(New,Var).
 
-add_var_to_env_trimed(New,Var):- atom_length(New,Len), Len < 2, !, add_var_to_env(New,Var).
+add_var_to_env_trimed(New,Var):- atom_length(New,Len), Len < 2, !, add_var_to_env_now(New,Var).
 add_var_to_env_trimed(New,Var):- atom_concat_w_blobs(NewNew,'_',New),add_var_to_env_trimed(NewNew,Var).
 add_var_to_env_trimed(New,Var):- atom_concat_w_blobs(NewNew,'_v',New),add_var_to_env_trimed(NewNew,Var).
 add_var_to_env_trimed(New,Var):- atom_concat_w_blobs('_',NewNew,New),add_var_to_env_trimed(NewNew,Var).
 add_var_to_env_trimed(New,Var):- atom_concat_w_blobs('?',NewNew,New),add_var_to_env_trimed(NewNew,Var).
-add_var_to_env_trimed(New,Var):- add_var_to_env(New,Var).
+add_var_to_env_trimed(New,Var):- add_var_to_env_now(New,Var).
 %afix_ordered_varname(UP,_Prev,Var):- add_var_to_env_trimed(UP,Var).
 
-check_varname(UP):- name(UP,[C|_]),(char_type(C,digit)->throw(check_varname(UP));true).
-                        
-to_var_or_atom(L,LL):- var(L)->LL=L;(atom(L)->LL=L ; format(atom(LL),"~w",L)).
+add_var_to_env_now(New,Var):- check_varname(New),add_var_to_env(New,Var).
 
-atom_concat_w_blobs(L,R,LR):- to_var_or_atom(L,LL),to_var_or_atom(R,RR),to_var_or_atom(LR,LLRR),
+check_varname(UP):- name(UP,[C|_]),(\+ char_type(C,prolog_var_start)->throw(check_varname(UP));true).
+
+to_var_or_name(L,LL):- var(L),!,LL=L.
+to_var_or_name('~','Not').
+to_var_or_name('\\+','Fail').
+to_var_or_name(L,LL):- atom(L),!,LL=L.
+to_var_or_name(L,LL):- format(atom(LL),"~w",[L]).
+
+atom_concat_w_blobs(L,R,LR):- to_var_or_name(L,LL),to_var_or_name(R,RR),to_var_or_name(LR,LLRR),
   atom_concat(LL,RR,LLRR).
 
 resolve_char_codes('','_').
@@ -312,8 +318,9 @@ may_debug_var(_,V):- var(V), variable_name(V,IsGood),is_good_name(IsGood),!.
 %may_debug_var(R,V):- var(V), variable_name(V,_), atom(R), \+ is_good_name(R).
 may_debug_var(R,V):- debug_var(R,V).
 
-pretty_enough(H):- ground(H), !.
+pretty_enough(H):- var(H), prolog_load_context(variable_names, Vs), member(N=V,Vs), V==H, maybe_debug_var(N, H),!.
 pretty_enough(H):- \+ compound(H),!. % may_debug_var(F,'_Call',H).
+pretty_enough(H):- ground(H), !.
 pretty_enough(H):- compound_name_arity(H,_,0), !.
 
 name_one(V,R):- var(V), ground(R), debug_var(R,V).
@@ -367,6 +374,9 @@ arg_type_decl_name(EC23,2,2,time_at):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,2,time_from):- ec_timed(EC23).
 arg_type_decl_name(EC23,3,3,time_until):- ec_timed(EC23).
 arg_type_decl_name(at,2,2,tloc).
+arg_type_decl_name(satisfy_each1,2,1,ctx).
+arg_type_decl_name('~',1,1,neg).
+arg_type_decl_name('\\+',1,1,failure).
 arg_type_decl_name(h,3,1,prep).
 arg_type_decl_name(h,3,2,source).
 arg_type_decl_name(h,3,3,target).

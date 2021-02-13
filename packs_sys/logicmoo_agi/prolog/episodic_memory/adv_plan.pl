@@ -16,6 +16,7 @@
 % Main file.
 %
 */
+:- '$set_source_module'(mu).
 
 action_invoke_goals(Agent, Mem0, Mem0):-
   \+ thought_check(Agent, current_goals(Agent, [_|_]), Mem0), !,
