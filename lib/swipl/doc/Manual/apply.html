@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,7 +243,8 @@ Apply predicates on a list</span></a></h2>
 <dd>
 - <code>apply_macros.pl</code> provides compile-time expansion for part 
 of this library. <br>
-- <a class="url" href="http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm">http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm</a>
+- <a class="url" href="http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm">http://www.cs.otago.ac.nz/staffpriv/ok/pllib.htm</a> <br>
+- Unit test code in <code>src/Tests/library/test_apply.pl</code>
 </dd>
 <dt class="tag">To be done</dt>
 <dd>
@@ -253,6 +254,14 @@ Add <span class="pred-ext">include/4</span>, <span class="pred-ext">include/5</s
 
 <p>This module defines meta-predicates that apply a predicate on all 
 members of a list.
+
+<p>All predicates support partial application in the Goal argument. This 
+means that these calls are identical:
+
+<pre class="code">
+?- maplist(=, [foo, foo], [X, Y]).
+?- maplist(=(foo), [X, Y]).
+</pre>
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="include/3"><strong>include</strong>(<var>:Goal, 
@@ -265,6 +274,10 @@ succeeds.
 <dl class="tags">
 <dt class="tag">See also</dt>
 <dd>
+<a class="pred" href="apply.html#exclude/3">exclude/3</a>, <a class="pred" href="apply.html#partition/4">partition/4</a>, <a class="pred" href="apply.html#convlist/3">convlist/3</a>.
+</dd>
+<dt class="tag">Compatibility</dt>
+<dd>
 Older versions of SWI-Prolog had <span class="pred-ext">sublist/3</span> 
 with the same arguments and semantics.
 </dd>
@@ -276,13 +289,31 @@ with the same arguments and semantics.
 <dd class="defbody">
 Filter elements for which <var>Goal</var> fails. True if <var>List2</var> 
 contains those elements Xi of <var>List1</var> for which <code>call(Goal, Xi)</code> 
-fails.</dd>
+fails.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="apply.html#include/3">include/3</a>, <a class="pred" href="apply.html#partition/4">partition/4</a>
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="partition/4"><strong>partition</strong>(<var>:Pred, 
 +List, ?Included, ?Excluded</var>)</a></dt>
 <dd class="defbody">
 Filter elements of <var>List</var> according to <var>Pred</var>. True if <var>Included</var> 
 contains all elements for which <code>call(Pred, X)</code> succeeds and
-<var>Excluded</var> contains the remaining elements.</dd>
+<var>Excluded</var> contains the remaining elements.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="apply.html#include/3">include/3</a>, <a class="pred" href="apply.html#exclude/3">exclude/3</a>, <a class="pred" href="apply.html#partition/5">partition/5</a>.
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="partition/5"><strong>partition</strong>(<var>:Pred, 
 +List, ?Less, ?Equal, ?Greater</var>)</a></dt>
 <dd class="defbody">
@@ -290,7 +321,16 @@ Filter <var>List</var> according to <var>Pred</var> in three sets. For
 each element Xi of <var>List</var>, its destination is determined by <code>call(Pred, Xi, Place)</code>, 
 where Place must be unified to one of <code>&lt;</code>, <code>=</code> 
 or <code>&gt;</code>.
-<var>Pred</var> must be deterministic.</dd>
+<var>Pred</var> must be deterministic.
+
+<dl class="tags">
+<dt class="tag">See also</dt>
+<dd>
+<a class="pred" href="apply.html#partition/4">partition/4</a>
+</dd>
+</dl>
+
+</dd>
 <dt class="pubdef"><a id="maplist/2"><strong>maplist</strong>(<var>:Goal, 
 ?List1</var>)</a></dt>
 <dt class="pubdef"><a id="maplist/3"><strong>maplist</strong>(<var>:Goal, 
@@ -304,10 +344,14 @@ True if <var>Goal</var> is successfully applied on all matching elements
 of the list. The maplist family of predicates is defined as:
 
 <pre class="code">
-maplist(P, [X11,...,X1n], ..., [Xm1,...,Xmn]) :-
-    P(X11, ..., Xm1),
-    ...
-    P(X1n, ..., Xmn).
+maplist(G, [X_11, ..., X_1n],
+           [X_21, ..., X_2n],
+           ...,
+           [X_m1, ..., X_mn]) :-
+   call(G, X_11, ..., X_m1),
+   call(G, X_12, ..., X_m2),
+   ...
+   call(G, X_1n, ..., X_mn).
 </pre>
 
 <p>This family of predicates is deterministic iff <var>Goal</var> is 
@@ -322,7 +366,7 @@ omitted from <var>ListOut</var>. For example (using <code>library(yall)</code>):
 
 <pre class="code">
 ?- convlist([X,Y]&gt;&gt;(integer(X), Y is X^2),
-            [3, 5, 4.4, 2], L).
+            [3, 5, foo, 2], L).
 L = [9, 25, 4].
 </pre>
 
@@ -344,17 +388,28 @@ Also appears in YAP <code>library(maplist)</code> and SICStus
 <dt class="pubdef"><a id="foldl/7"><strong>foldl</strong>(<var>:Goal, 
 +List1, +List2, +List3, +List4, +V0, -V</var>)</a></dt>
 <dd class="defbody">
-Fold a list, using arguments of the list as left argument. The foldl 
-family of predicates is defined by:
+Fold an ensemble of <i>m</i> (0 <code>&lt;=</code> <i>m</i> <code>&lt;=</code> 
+4) lists of length <i>n</i> head-to-tail ("fold-left"), using columns of <i>m</i> 
+list elements as arguments for <var>Goal</var>. The <code>foldl</code> 
+family of predicates is defined as follows, with <var>V0</var> an 
+initial value and <var>V</var> the final value of the folding operation:
 
 <pre class="code">
-foldl(P, [X11,...,X1n], ..., [Xm1,...,Xmn], V0, Vn) :-
-      P(X11, ..., Xm1, V0, V1),
-      ...
-      P(X1n, ..., Xmn, V', Vn).
+foldl(G, [X_11, ..., X_1n],
+         [X_21, ..., X_2n],
+         ...,
+         [X_m1, ..., X_mn], V0, V) :-
+   call(G, X_11, ..., X_m1, V0, V1),
+   call(G, X_12, ..., X_m2, V1, V2),
+   ...
+   call(G, X_1n, ..., X_mn, V&lt;n-1&gt;, V).
 </pre>
 
-</dd>
+<p>No implementation for a corresponding <code>foldr</code> is given. A <code>foldr</code> 
+implementation would consist in first calling <a class="pred" href="lists.html#reverse/2">reverse/2</a> 
+on each of the <i>m</i> input lists, then applying the appropriate <code>foldl</code>. 
+This is actually more efficient than using a properly programmed-out 
+recursive algorithm that cannot be tail-call optimized.</dd>
 <dt class="pubdef"><a id="scanl/4"><strong>scanl</strong>(<var>:Goal, 
 +List, +V0, -Values</var>)</a></dt>
 <dt class="pubdef"><a id="scanl/5"><strong>scanl</strong>(<var>:Goal, 
@@ -364,18 +419,28 @@ foldl(P, [X11,...,X1n], ..., [Xm1,...,Xmn], V0, Vn) :-
 <dt class="pubdef"><a id="scanl/7"><strong>scanl</strong>(<var>:Goal, 
 +List1, +List2, +List3, +List4, +V0, -Values</var>)</a></dt>
 <dd class="defbody">
-Left scan of list. The scanl family of higher order list operations is 
-defined by:
+Scan an ensemble of <i>m</i> (0 <code>&lt;=</code> <i>m</i> <code>&lt;=</code> 
+4) lists of length <i>n</i> head-to-tail ("scan-left"), using columns of <i>m</i> 
+list elements as arguments for <var>Goal</var>. The <code>scanl</code> 
+family of predicates is defined as follows, with <var>V0</var> an 
+initial value and <var>V</var> the final value of the scanning 
+operation:
 
 <pre class="code">
-scanl(P, [X11,...,X1n], ..., [Xm1,...,Xmn], V0,
-      [V0,V1,...,Vn]) :-
-      P(X11, ..., Xm1, V0, V1),
-      ...
-      P(X1n, ..., Xmn, V', Vn).
+scanl(G, [X_11, ..., X_1n],
+         [X_21, ..., X_2n],
+         ...,
+         [X_m1, ..., X_mn], V0, [V0, V1, ..., Vn] ) :-
+   call(G, X_11, ..., X_m1, V0, V1),
+   call(G, X_12, ..., X_m2, V1, V2),
+   ...
+   call(G, X_1n, ..., X_mn, V&lt;n-1&gt;, Vn).
 </pre>
 
-<p></dd>
+<p><code>scanl</code> behaves like a <code>foldl</code> that collects 
+the sequence of values taken on by the <var>Vx</var> accumulator into a 
+list.
+</dd>
 </dl>
 
 <p></body></html>

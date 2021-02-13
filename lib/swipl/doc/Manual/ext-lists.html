@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 5.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 5.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,51 +240,66 @@ are special</span></a></h2>
 
 <p>As of version&nbsp;7, SWI-Prolog lists can be distinguished 
 unambiguously at runtime from <code><code>.</code>/2</code> terms and 
-the atom <code>&rsquo;[]'</code>. The constant <code>[]</code> is 
-special constant that is not an atom. It has the following properties:
+the atom <code>&rsquo;[]'</code>.
 
 <pre class="code">
-?- atom([]).
-false.
-?- atomic([]).
-true.
-?- [] == '[]'.
-false.
-?- [] == [].
-true.
+   Traditional list               SWI-Prolog 7 list
+
+       '.'                              '[|]'
+      /   \                             /   \
+     1    '.'                          1   '[|]'
+         /   \                             /   \
+        2    '.'                          2   '[|]'
+            /   \                             /   \
+           3   '[]'                          3     []
+
+           terminated with                   terminated with
+           the atom '[]',                    a special constant
+           indistinguishable from text       which is printed as []
 </pre>
 
-<p>The&lsquo;cons' operator for creating list cells has changed from the 
-pretty atom <code>'.'</code> to the ugly atom <code>'[|]'</code>, so we 
-can use the
-<code>'.'</code> for other purposes. See <a class="sec" href="bidicts.html#sec:5.4.1">section 
+<p>The constant <code><code>[]</code></code> is special constant that is 
+not an atom. It has the following properties:
+
+<pre class="code">
+atom([]).        fails
+atomic([]).      succeeds
+[] == '[]'.      fails
+[] == [].        succeeds
+</pre>
+
+<p>The&lsquo;cons' operator for creating <em>list cells</em> has changed 
+from the pretty atom&lsquo;<code>.</code>&rsquo;to the ugly atom&lsquo;<code>[|]</code>&rsquo;, 
+so we can use the&lsquo;<code>.</code>&rsquo;for other purposes, notably 
+functional notation on <em>dicts</em>. See <a class="sec" href="bidicts.html#sec:5.4.1">section 
 5.4.1</a>.
 
 <p>This modification has minimal impact on typical Prolog code. It does 
 affect foreign code (see <a class="sec" href="foreign.html#sec:12">section 
 12</a>) that uses the normal atom and compound term interface for 
-manipulation lists. In most cases this can be avoided by using the 
+manipulating lists. In most cases this can be avoided by using the 
 dedicated list functions. For convenience, the macros <code>ATOM_nil</code> 
 and <code>ATOM_dot</code> are provided by
 <code>SWI-Prolog.h</code>.
 
-<p>Another place that is affected is <a id="idx:writecanonical1:1793"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
-Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1794"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+<p>Another place that is affected is <a id="idx:writecanonical1:1775"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
+Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1776"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
 and
-<a id="idx:writeterm2:1795"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:writeterm2:1777"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 support the option <code>dotlists(true)</code>, which causes
-<a id="idx:readterm2:1796"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
-to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1797"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:readterm2:1778"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1779"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 to write <code>[a]</code> as <code>.(a,[])</code>.
 
-<p><h3 id="sec:ext-list-motivation"><a id="sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&rsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
+<p><h3 id="sec:ext-list-motivation"><a id="sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&lsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
 for lists</span></a></h3>
 
 <a id="sec:ext-list-motivation"></a>
 
 <p>Representing lists the conventional way using <code><code>.</code>/2</code> 
-as cons-cell and&rsquo;[]' as list terminator both (independently) poses 
-conflicts, while these conflicts are easily avoided.
+as list cell and the atom <code>'[]'</code> as list terminator both 
+(independently) pose conflicts, while these conflicts are easily 
+avoided.
 
 <p>
 <ul class="latex">
@@ -296,25 +311,27 @@ on dicts as described in
 <a class="sec" href="bidicts.html#sec:5.4.1">section 5.4.1</a>.
 
 <p>
-<li>Using <code>'[]'</code> as list terminator prevents dynamic 
-distinction between atoms and lists. As a result, we cannot use type 
-polymorphism that involve both atoms and lists. For example, we cannot 
-use
-<em>multi lists</em> (arbitrary deeply nested lists) of atoms. Multi 
-lists of atoms are in some situations a good representation of a flat 
-list that is assembled from sub sequences. The alternative, using 
-difference lists or DCGs is often less natural and sometimes demands for&lsquo;opening' 
-proper lists (i.e., copying the list while replacing the terminating 
-empty list with a variable) that have to be added to the sequence. The 
-ambiguity of atom and list is particularly painful when mapping external 
-data representations that do not suffer from this ambiguity.
+<li>Using the atom <code>'[]'</code> as list terminator prevents dynamic 
+distinction between atoms and the empty list. As a result, we cannot use 
+type polymorphism that involve both atoms and lists. For example, we 
+cannot use <em>multi lists</em> (arbitrary deeply nested lists) of 
+atoms. Multi lists of atoms are in some situations a good representation 
+of a flat list that is assembled from sub sequences. The alternative, 
+using difference lists or DCGs, is often less natural and sometimes 
+requires&lsquo;opening' proper lists (i.e., copying the list while 
+replacing the terminating atom <code>'[]'</code> with a variable) that 
+have to be added to the sequence. The ambiguity of atom and list is 
+particularly painful when mapping external data representations that do 
+not suffer from this ambiguity.
 
-<p>At the same time, avoiding <code>'[]'</code> as a list terminator 
-makes the various text representations unambiguous, which allows us to 
-write predicates that require a textual argument to accept both atoms, 
-strings, and lists of character codes or one-character atoms. 
-Traditionally, the empty list can be interpreted both as the string "[]" 
-and "".
+<p>At the same time, avoiding atom <code>'[]'</code> as a list 
+terminator makes the various text representations unambiguous, which 
+allows us to write predicates that require a textual argument to accept 
+any of atoms, strings, lists of character codes or characters. 
+Traditionally, the empty list, as an atom, is afflicted with an 
+ambiguous interpretation as it can stand for any of the strings <code>"[]"</code> 
+and
+<code>""</code>.
 </ul>
 
 <p></body></html>

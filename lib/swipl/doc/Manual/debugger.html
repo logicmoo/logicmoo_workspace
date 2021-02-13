@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.39</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.39</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,24 +243,24 @@ more use-oriented overview of the debugger is in <a class="sec" href="debugoverv
 2.10</a>.
 
 <p>If you have installed XPCE, you can use the graphical front-end of 
-the tracer. This front-end is installed using the predicate <a id="idx:guitracer0:1737"></a><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a>.
+the tracer. This front-end is installed using the predicate <a id="idx:guitracer0:1719"></a><a class="pred" href="guitracer.html#guitracer/0">guitracer/0</a>.
 
 <dl class="latex">
 <dt class="pubdef"><a id="trace/0"><strong>trace</strong></a></dt>
 <dd class="defbody">
-Start the tracer. <a id="idx:trace0:1738"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+Start the tracer. <a id="idx:trace0:1720"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
 itself cannot be seen in the tracer. Note that the Prolog top level 
-treats <a id="idx:trace0:1739"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+treats <a id="idx:trace0:1721"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
 special; it means&lsquo;trace the next goal'.
 </dd>
 <dt class="pubdef"><a id="tracing/0"><strong>tracing</strong></a></dt>
 <dd class="defbody">
-True if the tracer is currently switched on. <a id="idx:tracing0:1740"></a><a class="pred" href="debugger.html#tracing/0">tracing/0</a> 
+True if the tracer is currently switched on. <a id="idx:tracing0:1722"></a><a class="pred" href="debugger.html#tracing/0">tracing/0</a> 
 itself cannot be seen in the tracer.
 </dd>
 <dt class="pubdef"><a id="notrace/0"><strong>notrace</strong></a></dt>
 <dd class="defbody">
-Stop the tracer. <a id="idx:notrace0:1741"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a> 
+Stop the tracer. <a id="idx:notrace0:1723"></a><a class="pred" href="debugger.html#notrace/0">notrace/0</a> 
 itself cannot be seen in the tracer.
 </dd>
 <dt class="pubdef"><a id="trace/1"><strong>trace</strong>(<var>+Pred</var>)</a></dt>
@@ -277,10 +277,10 @@ specification
 refers to all ports. If the port is preceded by a <code><code>-</code></code> 
 sign, the trace point is cleared for the port. If it is preceded by a <code><code>+</code></code>, 
 the trace point is set. Tracing a predicate is achieved by
-<em>wrapping</em> the predicate using <a id="idx:wrappredicate4:1742"></a><span class="pred-ext">wrap_predicate/4</span>.
+<em>wrapping</em> the predicate using <a id="idx:wrappredicate4:1724"></a><span class="pred-ext">wrap_predicate/4</span>.
 
 <p>Each time a port (of the 4-port model) is passed that has a trace 
-point set, the goal is printed. Unlike <a id="idx:trace0:1743"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>, 
+point set, the goal is printed. Unlike <a id="idx:trace0:1725"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>, 
 however, the execution is continued without asking for further 
 information. Examples:
 
@@ -296,8 +296,8 @@ in any module. </td></tr>
 <dd class="defbody">
 Call <var>Goal</var>, but suspend the debugger while <var>Goal</var> is 
 executing. The current implementation cuts the choice points of <var>Goal</var> 
-after successful completion. See <a id="idx:once1:1744"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
-Later implementations may have the same semantics as <a id="idx:call1:1745"></a><a class="pred" href="metacall.html#call/1">call/1</a>.</dd>
+after successful completion. See <a id="idx:once1:1726"></a><a class="pred" href="metacall.html#once/1">once/1</a>. 
+Later implementations may have the same semantics as <a id="idx:call1:1727"></a><a class="pred" href="metacall.html#call/1">call/1</a>.</dd>
 <dt class="pubdef"><a id="debug/0"><strong>debug</strong></a></dt>
 <dd class="defbody">
 Start debugger. In debug mode, Prolog stops at spy and break points, 
@@ -309,14 +309,14 @@ Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>.
 enlarged to 8&nbsp;K cells if debugging is switched off in order to 
 avoid excessive GC. GC complicates tracing because it renames the <i>_&lt;<var>NNN</var>&gt;</i> 
 variables and replaces unreachable variables with the atom
-<code>&lt;garbage_collected&gt;</code>. Calling <a id="idx:nodebug0:1746"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
+<code>&lt;garbage_collected&gt;</code>. Calling <a id="idx:nodebug0:1728"></a><a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
 does <em>not</em> reset the initial free-margin because several parts of 
 the top level and debugger disable debugging of system code regions. See 
-also <a id="idx:setprologstack2:1747"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a>.</dd>
+also <a id="idx:setprologstack2:1729"></a><a class="pred" href="memory.html#set_prolog_stack/2">set_prolog_stack/2</a>.</dd>
 <dt class="pubdef"><a id="nodebug/0"><strong>nodebug</strong></a></dt>
 <dd class="defbody">
 Stop debugger. Implemented by the Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>. 
-See also <a id="idx:debug0:1748"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+See also <a id="idx:debug0:1730"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
 <dt class="pubdef"><a id="debugging/0"><strong>debugging</strong></a></dt>
 <dd class="defbody">
 Print debug status and spy points on current output stream. See also the 
@@ -355,7 +355,7 @@ ports,
 port.</dd>
 <dt class="pubdef"><a id="visible/1"><strong>visible</strong>(<var>+Ports</var>)</a></dt>
 <dd class="defbody">
-Set the ports shown by the debugger. See <a id="idx:leash1:1749"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
+Set the ports shown by the debugger. See <a id="idx:leash1:1731"></a><a class="pred" href="debugger.html#leash/1">leash/1</a> 
 for a description of the <var>Ports</var> specification. Default is <code>full</code>.</dd>
 <dt class="pubdef"><a id="unknown/2"><strong>unknown</strong>(<var>-Old, 
 +New</var>)</a></dt>
@@ -365,7 +365,7 @@ flag <a class="flag" href="flags.html#flag:unknown">unknown</a>. Values
 are <code>trace</code> (meaning <code>error</code>) and <code>fail</code>. 
 If the <a class="flag" href="flags.html#flag:unknown">unknown</a> flag 
 is set to
-<code>warning</code>, <a id="idx:unknown2:1750"></a><a class="pred" href="debugger.html#unknown/2">unknown/2</a> 
+<code>warning</code>, <a id="idx:unknown2:1732"></a><a class="pred" href="debugger.html#unknown/2">unknown/2</a> 
 reports the value as <code>trace</code>.</dd>
 <dt class="pubdef"><a id="style_check/1"><strong>style_check</strong>(<var>+Spec</var>)</a></dt>
 <dd class="defbody">
@@ -380,7 +380,7 @@ below or a list of these.
 is unbound, all active style check options are returned on backtracking.
 </ul>
 
-<p>Loading a file using <a id="idx:loadfiles2:1751"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+<p>Loading a file using <a id="idx:loadfiles2:1733"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
 or one of its derived predicates reset the style checking options to 
 their value before loading the file, scoping the option to the remainder 
 of the file and all files loaded
@@ -389,7 +389,7 @@ of the file and all files loaded
 <dl class="latex">
 <dt><strong>singleton</strong>(<var>true</var>)</dt>
 <dd class="defbody">
-The predicate <a id="idx:readclause3:1752"></a><a class="pred" href="termrw.html#read_clause/3">read_clause/3</a> 
+The predicate <a id="idx:readclause3:1734"></a><a class="pred" href="termrw.html#read_clause/3">read_clause/3</a> 
 (used by the compiler to read source code) warns on variables appearing 
 only once in a term (clause) which have a name not starting with an 
 underscore. See <a class="sec" href="syntax.html#sec:2.16.1.10">section 
@@ -442,7 +442,7 @@ might be enhanced with a deeper analysis to be more precise.</dd>
 <dd class="defbody">
 Warn if the clauses for a predicate are not together in the same source 
 file. It is advised to disable the warning for discontiguous predicates 
-using the <a id="idx:discontiguous1:1753"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+using the <a id="idx:discontiguous1:1735"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
 directive.</dd>
 <dt><strong>charset</strong>(<var>false</var>)</dt>
 <dd class="defbody">

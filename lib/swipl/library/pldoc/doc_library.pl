@@ -113,3 +113,4 @@ blocked('/commons.pl').
 blocked('/swipl-lfr.pl').
 blocked('/dcg_basics.pl').              % deprecated file
 blocked('/readline.pl').                % conflicts with editline.pl
+blocked('/win_menu.pl').                % Leads to warnings without a console.

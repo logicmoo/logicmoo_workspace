@@ -145,9 +145,8 @@ take_block(Lines, BaseIndent, List, Rest) :-
     ).
 take_block([N-['|'|RL1]|LT], _, Table, Rest) :-
     phrase(row(R0), RL1),
-    rest_table(LT, N, RL, Rest),
-    !,
-    Table = table(class=wiki, [tr(R0)|RL]).
+    take_table(LT, N, R0, Table, Rest),
+    !.
 take_block([0-[-,-|More]|LT], _, Block, LT) :-  % separation line
     maplist(=(-), More),
     !,
@@ -407,29 +406,81 @@ face_token(=) --> [=].
 face_token(*) --> [*].
 face_token('_') --> ['_'].
 
-rest_table([N-Line|LT], N, RL, Rest) :-
-    md_table_structure_line(Line),
+take_table(Lines, Indent, Row0, Table, Rest) :-
+    rest_table(Lines, Indent, Rows, Rest),
+    (   Rows = [align(Align)|Rows1]
+    ->  maplist(align_row(Align), Rows1, Rows2),
+        (   maplist(=(td([])), Row0)        % empty header
+        ->  Table = table(class=wiki, Rows2)
+        ;   maplist(td_to_th, Row0, Header),
+            Table = table(class=wiki, [tr(Header)|Rows2])
+        )
+    ;   Table = table(class=wiki, [tr(Row0)|Rows])
+    ).
+
+td_to_th(td(X), th(X)) :- !.
+td_to_th(X, X).
+
+align_row(Align, tr(Row0), tr(Row)) :-
+    align_cells(Align, Row0, Row).
+
+align_cells([Align|AT], [Cell0|T0], [Cell|T]) :-
+    align_cell(Align, Cell0, Cell),
+    align_cells(AT, T0, T).
+align_cells(_, Cells, Cells).
+
+align_cell(Align, td(Content), td(class=Align, Content)).
+
+%!  rest_table(+Lines, +Indent, -Rows, -RestLines).
+
+rest_table([N-Line|LT], N, [align(Align)|RL], Rest) :-
+    phrase(column_alignment(Align), Line),
     !,
-    rest_table(LT, N, RL, Rest).
-rest_table([N-['|'|RL1]|LT], N, [tr(R0)|RL], Rest) :-
+    rest_table2(LT, N, RL, Rest).
+rest_table(Lines, N, RL, Rest) :-
+    rest_table2(Lines, N, RL, Rest).
+
+rest_table2([N-['|'|RL1]|LT], N, [tr(R0)|RL], Rest) :-
     !,
     phrase(row(R0), RL1),
-    rest_table(LT, N, RL, Rest).
-rest_table(Rest, _, [], Rest).
+    rest_table2(LT, N, RL, Rest).
+rest_table2(Rest, _, [], Rest).
 
-%!  md_table_structure_line(+Chars)
+%!  column_alignment(-Alignment) is semidet.
 %
-%   True if Chars represents Markdown  table structure. We currently
-%   ignore the structure information.
+%   Process an alignment line.
 
-md_table_structure_line(Line) :-
-    forall(member(Char, Line),
-           md_table_structure_char(Char)).
+column_alignment([H|T]) -->
+    ['|'],
+    (   colspec(H)
+    ->  column_alignment(T)
+    ;   {T=[]}
+    ).
 
-md_table_structure_char(' ').
-md_table_structure_char('-').
-md_table_structure_char('|').
-md_table_structure_char(':').
+colspec(Align) -->
+    ws_tokens, [':'], dashes3,
+    (   [':']
+    ->  {Align = center}
+    ;   {Align = left}
+    ),
+    ws_tokens.
+colspec(Align) -->
+    ws_tokens, dashes3,
+    (   [':']
+    ->  {Align = right}
+    ;   {Align = left}
+    ),
+    ws_tokens.
+
+dashes3 -->
+    [-,-,-],
+    dashes.
+
+dashes --> [-], !, dashes.
+dashes --> [].
+
+ws_tokens --> [' '], !, ws_tokens.
+ws_tokens --> [].
 
 %!  rest_par(+Lines, -Par,
 %!           +BaseIndent, +MaxI0, -MaxI, -RestLines) is det.
@@ -761,6 +812,7 @@ structure_term(\include(What,Type,Opts), include(What,Type,Opts), []) :- !.
 structure_term(dl(Att, Args), dl(Att), [Args]) :- !.
 structure_term(dt(Att, Args), dt(Att), [Args]) :- !.
 structure_term(table(Att, Args), table(Att), [Args]) :- !.
+structure_term(td(Att, Args), td(Att), [Args]) :- !.
 structure_term(h1(Att, Args), h1(Att), [Args]) :- !.
 structure_term(h2(Att, Args), h2(Att), [Args]) :- !.
 structure_term(h3(Att, Args), h3(Att), [Args]) :- !.
@@ -788,6 +840,7 @@ structure_tag(dd).
 structure_tag(table).
 structure_tag(tr).
 structure_tag(td).
+structure_tag(th).
 structure_tag(blockquote).
 structure_tag(center).
 
@@ -854,9 +907,13 @@ wiki_faces_int(WithFaces, ArgNames) -->
 
 wiki_faces_int([], _, _) -->
     [].
-wiki_faces_int([H|T], ArgNames, Options) -->
+wiki_faces_int(List, ArgNames, Options) -->
     wiki_face(H, ArgNames, Options),
     !,
+    {   is_list(H)
+    ->  append(H, T, List)
+    ;   List = [H|T]
+    },
     wiki_faces(T, ArgNames, Options).
 wiki_faces_int([Before,EmphTerm|T], ArgNames, Options) -->
     emphasis_before(Before),
@@ -914,6 +971,16 @@ wiki_face(code(Code), _, _) -->
 wiki_face(code(Code), _, _) -->
     [=,'|'], wiki_words(Code), ['|',=],
     !.
+wiki_face(PredRef, _, _) -->
+    ['`'], take_predref(PredRef), ['`'],
+    !.
+wiki_face(\nopredref(Pred), _, _) -->
+    ['`', '`'], take_predref(\predref(Pred)), ['`', '`'],
+    !.
+wiki_face([flag, ' ', \flagref(Flag)], _, _) -->
+    [ w('flag'), ' ', '`', w(Flag), '`' ],
+    { current_prolog_flag(Flag, _) },
+    !.
 wiki_face(code(Code), _, _) -->
     ['`','`'], wiki_words(Code), ['`','`'],
     !.
@@ -944,32 +1011,11 @@ wiki_face(_, _, Options) -->
       !,
       fail
     }.
-wiki_face(\predref(Name/Arity), _, _) -->
-    [ w(Name), '/' ], arity(Arity),
-    { functor_name(Name)
-    },
+wiki_face(PredRef, _, _) -->
+    take_predref(PredRef),
     !.
-wiki_face(\predref(Module:(Name/Arity)), _, _) -->
-    [ w(Module), ':', w(Name), '/' ], arity(Arity),
-    { functor_name(Name)
-    },
-    !.
-wiki_face(\predref(Name/Arity), _, _) -->
-    prolog_symbol_char(S0),
-    symbol_string(SRest), [ '/' ], arity(Arity),
-    !,
-    { atom_chars(Name, [S0|SRest])
-    }.
-wiki_face(\predref(Name//Arity), _, _) -->
-    [ w(Name), '/', '/' ], arity(Arity),
-    { functor_name(Name)
-    },
-    !.
-wiki_face(\predref(Module:(Name//Arity)), _, _) -->
-    [ w(Module), ':', w(Name), '/', '/' ], arity(Arity),
-    { functor_name(Name)
-    },
-    !.
+wiki_face(\cite(Citations), _, _) -->
+    ['['], citations(Citations), [']'].
 wiki_face(\include(Name, Type, Options), _, _) -->
     ['[','['], file_name(Base, Ext), [']',']'],
     { autolink_extension(Ext, Type),
@@ -1245,6 +1291,29 @@ image_label(\include(Name, image, Options)) -->
     },
     file_options(RestOptions).
 
+
+take_predref(\predref(Name/Arity)) -->
+    [ w(Name), '/' ], arity(Arity),
+    { functor_name(Name)
+    }.
+take_predref(\predref(Module:(Name/Arity))) -->
+    [ w(Module), ':', w(Name), '/' ], arity(Arity),
+    { functor_name(Name)
+    }.
+take_predref(\predref(Name/Arity)) -->
+    prolog_symbol_char(S0),
+    symbol_string(SRest), [ '/' ], arity(Arity),
+    !,
+    { atom_chars(Name, [S0|SRest])
+    }.
+take_predref(\predref(Name//Arity)) -->
+    [ w(Name), '/', '/' ], arity(Arity),
+    { functor_name(Name)
+    }.
+take_predref(\predref(Module:(Name//Arity))) -->
+    [ w(Module), ':', w(Name), '/', '/' ], arity(Arity),
+    { functor_name(Name)
+    }.
 
 %!  file_options(-Options) is det.
 %
@@ -1563,6 +1632,34 @@ autolink_extension(svg, image).
 autolink_file('README', wiki).
 autolink_file('TODO', wiki).
 autolink_file('ChangeLog', wiki).
+
+%!  citations(-List)//
+%
+%   Parse @cite1[;@cite2]* into a list of citations.
+
+citations([H|T]) -->
+    citation(H),
+    (   [';']
+    ->  citations(T)
+    ;   {T=[]}
+    ).
+
+citation(Atom) -->
+    [@], wiki_words(Atoms),
+    { length(Atoms, Len),
+      Len > 10, !,
+      fail
+    ; true
+    },
+    end_citation,
+    !,
+    { atomic_list_concat(Atoms, Atom)
+    }.
+
+end_citation, [';'] --> [';'].
+end_citation, ['@'] --> ['@'].
+end_citation, [']'] --> [']'].
+
 
                  /*******************************
                  *           SECTIONS           *

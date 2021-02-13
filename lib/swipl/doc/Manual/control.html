@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,9 +239,9 @@ Predicates</span></a></h2>
 <a id="sec:control"></a>
 
 <p>The predicates of this section implement control structures. Normally 
-the constructs in this section, except for <a id="idx:repeat0:719"></a><a class="pred" href="control.html#repeat/0">repeat/0</a>, 
+the constructs in this section, except for <a id="idx:repeat0:697"></a><a class="pred" href="control.html#repeat/0">repeat/0</a>, 
 are translated by the compiler. Please note that complex goals passed as 
-arguments to meta-predicates such as <a id="idx:findall3:720"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+arguments to meta-predicates such as <a id="idx:findall3:698"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 below cause the goal to be compiled to a temporary location before 
 execution. It is faster to define a sub-predicate (i.e. one_character_atoms/1 
 in the example below) and make a call to this simple predicate.
@@ -254,7 +254,7 @@ one_character_atoms(As) :-
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="fail/0"><strong>fail</strong></a></dt>
 <dd class="defbody">
-Always fail. The predicate <a id="idx:fail0:721"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+Always fail. The predicate <a id="idx:fail0:699"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
 is translated into a single virtual machine instruction.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="false/0"><strong>false</strong></a></dt>
@@ -263,7 +263,7 @@ Same as fail, but the name has a more declarative connotation.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="true/0"><strong>true</strong></a></dt>
 <dd class="defbody">
-Always succeed. The predicate <a id="idx:true0:722"></a><a class="pred" href="control.html#true/0">true/0</a> 
+Always succeed. The predicate <a id="idx:true0:700"></a><a class="pred" href="control.html#true/0">true/0</a> 
 is translated into a single virtual machine instruction.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="repeat/0"><strong>repeat</strong></a></dt>
@@ -276,7 +276,7 @@ which the cut appears. In other words, <em>commit</em> to the clause in
 which the cut appears <em>and</em> discard choice points that have been 
 created by goals to the left of the cut in the current clause. Meta 
 calling is opaque to the cut. This implies that cuts that appear in a 
-term that is subject to meta-calling (<a id="idx:call1:723"></a><a class="pred" href="metacall.html#call/1">call/1</a>) 
+term that is subject to meta-calling (<a id="idx:call1:701"></a><a class="pred" href="metacall.html#call/1">call/1</a>) 
 only affect choice points created by the meta-called term. The following 
 control structures are transparent to the cut: <a class="pred" href="control.html#;/2">;/2</a>, <a class="pred" href="control.html#->/2">-&gt;/2</a> 
 and
@@ -351,15 +351,15 @@ individual constructs, i.e., the semantics of
 <a class="pred" href="control.html#->/2">-&gt;/2</a> <em>changes</em> 
 when embedded in <a class="pred" href="control.html#;/2">;/2</a>. See 
 also
-<a id="idx:once1:724"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
+<a id="idx:once1:702"></a><a class="pred" href="metacall.html#once/1">once/1</a>.</dd>
 <dt class="pubdef"><a id="*->/2"><var>:Condition</var> <strong>*-&gt;</strong> <var>:Action 
 ; :Else</var></a></dt>
 <dd class="defbody">
 This construct implements the so-called&lsquo;soft-cut'. The control is 
 defined as follows: If <var>Condition</var> succeeds at least once, the 
 semantics is the same as (<code>call(Condition)</code>,
-<var>Action</var>).<sup class="fn">69<span class="fn-text">Note that the <var>Condition</var> 
-is wrapped in <a id="idx:call1:725"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+<var>Action</var>).<sup class="fn">70<span class="fn-text">Note that the <var>Condition</var> 
+is wrapped in <a id="idx:call1:703"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
 limiting the scope of the cut (<a class="pred" href="control.html#!/0">!/0</a></span></sup> 
 If
 <var>Condition</var> does not succeed, the semantics is that of (<code>\+</code>
@@ -396,9 +396,9 @@ True if&lsquo;Goal' cannot be proven (mnemonic: <code><code>+</code></code>
 refers to <em>provable</em> and the backslash (<code><code>\</code></code>) 
 is normally used to indicate negation in Prolog).
 
-<p>Many Prolog implementations (including SWI-Prolog) provide <a id="idx:not1:726"></a><a class="pred" href="metacall.html#not/1">not/1</a>. 
+<p>Many Prolog implementations (including SWI-Prolog) provide <a id="idx:not1:704"></a><a class="pred" href="metacall.html#not/1">not/1</a>. 
 The
-<a id="idx:not1:727"></a><a class="pred" href="metacall.html#not/1">not/1</a> 
+<a id="idx:not1:705"></a><a class="pred" href="metacall.html#not/1">not/1</a> 
 alternative is deprecated due to its strong link to logical negation.
 
 <p></dd>

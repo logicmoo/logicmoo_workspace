@@ -780,6 +780,11 @@ may provide additional details or may be unbound.
 </dl>
 
 </dd>
+<dt class="multidef"><span class="pred-tag">[multifile]</span><a id="map_method/2"><strong>map_method</strong>(<var>+MethodID, 
+-Method</var>)</a></dt>
+<dd class="defbody">
+Support additional <code>METHOD</code> keywords. Default are the 
+official HTTP methods as defined by the various RFCs.</dd>
 <dt class="multidef"><span class="pred-tag">[semidet,multifile]</span><a id="http:disable_encoding_filter/1"><span class="module">http</span>:<strong>disable_encoding_filter</strong>(<var>+ContentType</var>)</a></dt>
 <dd class="defbody">
 Do not use the <code>Content-encoding</code> as <code>Transfer-encoding</code> 
@@ -6344,7 +6349,7 @@ to realise a websocket inside the HTTP server infrastructure and
 as a layer over <a class="pred" href="#http_open/3">http_open/3</a> to 
 realise a client connection. After establishing a connection, <a class="pred" href="#ws_send/2">ws_send/2</a> 
 and <a class="pred" href="#ws_receive/2">ws_receive/2</a> can be used to 
-send and receive messages. The predicate <span class="pred-ext">ws_close/2</span> 
+send and receive messages. The predicate <a class="pred" href="#ws_close/3">ws_close/3</a> 
 is provided to perform the closing handshake and dispose of the stream 
 objects.
 
@@ -6355,7 +6360,8 @@ objects.
 Establish a client websocket connection. This predicate calls
 <a class="pred" href="#http_open/3">http_open/3</a> with additional 
 headers to negotiate a websocket connection. In addition to the options 
-processed by http_open, the following options are recognised:
+processed by <a class="pred" href="#http_open/3">http_open/3</a>, the 
+following options are recognised:
 
 <dl class="latex">
 <dt><strong>subprotocols</strong>(<var>+List</var>)</dt>
@@ -6365,6 +6371,17 @@ protocol is available as ws_property(<var>WebSocket</var>,
 <code>subprotocol(Protocol)</code>.
 </dd>
 </dl>
+
+<p>Note that clients often provide an <var>Origin</var> header and some 
+servers require this field. See RFC 6455 for details. By default this 
+predicate does not set <var>Origin</var>. It may be set using the
+<code>request_header</code> option of <a class="pred" href="#http_open/3">http_open/3</a>, 
+e.g. by passing this in the
+<var>Options</var> list:
+
+<pre class="code">
+request_header('Origin' = 'https://www.swi-prolog.org')
+</pre>
 
 <p>The following example exchanges a message with the 
 html5rocks.websocket.org echo service:
@@ -8082,6 +8099,7 @@ relevant. The XPCE based server is considered obsolete.
 <dt><a class="idx" href="#json_write_dict/2">json_write_dict/2</a></dt>
 <dt><a class="idx" href="#json_write_dict/3">json_write_dict/3</a></dt>
 <dt><a class="idx" href="#json_write_hook/4">json_write_hook/4</a></dt>
+<dt><a class="idx" href="#map_method/2">map_method/2</a></dt>
 <dt><a class="idx" href="#mime_include//2">mime_include//2</a></dt>
 <dt><a class="idx" href="#mime_pack/3">mime_pack/3</a></dt>
 <dt>mime_type_encoding/2</dt>

@@ -1,9 +1,10 @@
 /*  Part of XPCE --- The SWI-Prolog GUI toolkit
 
     Author:        Jan Wielemaker and Anjo Anjewierden
-    E-mail:        jan@swi.psy.uva.nl
-    WWW:           http://www.swi.psy.uva.nl/projects/xpce/
-    Copyright (c)  1985-2002, University of Amsterdam
+    E-mail:        jan@swi-prolog.org
+    WWW:           https://www.swi-prolog.org
+    Copyright (c)  1985-2020, University of Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -35,10 +36,14 @@
 :- module(emacs_text_mode, []).
 :- use_module(library(pce)).
 
-:- emacs_begin_mode(text, fundamental,
-                    "Edit plain text (sets fillmode",
+:- emacs_begin_mode(text, language,
+                    "Edit plain text (sets fillmode)",
         [],
-        []).
+        [ '"'  = string_quote('\\'),
+          '''' = string_quote('\\'),
+          '>'  = comment_start,         % use comment-region for quoting
+          '\n' + comment_end
+        ]).
 
 setup_mode(E) :->
     "Switch editor into fill-mode"::

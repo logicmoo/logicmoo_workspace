@@ -663,6 +663,14 @@ method(Options, MNAME) :-
     ;   domain_error(method, M)
     ).
 
+%!  map_method(+MethodID, -Method)
+%
+%   Support additional ``METHOD`` keywords.  Default   are  the official
+%   HTTP methods as defined by the various RFCs.
+
+:- multifile
+    map_method/2.
+
 map_method(delete,  'DELETE').
 map_method(get,     'GET').
 map_method(head,    'HEAD').

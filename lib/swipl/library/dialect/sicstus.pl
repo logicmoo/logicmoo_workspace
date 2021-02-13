@@ -44,6 +44,7 @@
 	    bb_delete/2,		% :Key, -Value
 	    bb_update/3,		% :Key, -Old, +New
 
+	    is_mutable/1,		% @Term
 	    create_mutable/2,		% ?Value, -Mutable
 	    get_mutable/2,		% ?Value, +Mutable
 	    update_mutable/2,		% ?Value, !Mutable
@@ -58,7 +59,12 @@
 	    prolog_flag/3,		% +Flag, -Old, +New
 	    prolog_flag/2,		% +Flag, -Value
 
-	    op(1150, fx, (block))
+	    statistics/2,		% ?Key, ?Value
+
+	    op(1150, fx, (block)),
+	    op(1150, fx, (mode)),
+	    op(900, fy, (spy)),
+	    op(900, fy, (nospy))
 	  ]).
 
 :- use_module(sicstus/block).
@@ -69,19 +75,29 @@
 :- use_module(library(arithmetic)).
 
 
-/** <module> SICStus compatibility library
+/** <module> SICStus 3 compatibility library
 
 This library is intended to be activated   using  the directive below in
-files that are designed for use with  SICStus Prolog. The changes are in
-effect until the end of the file and in each file loaded from this file.
+files that are designed for use with   SICStus Prolog 3. The changes are
+in effect until the end of the file   and  in each file loaded from this
+file.
 
     ==
     :- expects_dialect(sicstus).
     ==
 
+This library only provides  compatibility  with   version  3  of SICStus
+Prolog.     For     SICStus     Prolog      4     compatibility,     use
+library(dialect/sicstus4) instead.
+
 @tbd	The dialect-compatibility packages are developed in a
 	`demand-driven' fashion.  Please contribute to this package.
 */
+
+% SICStus built-in operators that SWI doesn't declare by default.
+:- op(1150, fx, user:(mode)).
+:- op(900, fy, user:(spy)).
+:- op(900, fy, user:(nospy)).
 
 :- multifile
 	system:goal_expansion/2.
@@ -113,20 +129,35 @@ push_sicstus_library :-
 :- push_sicstus_library.
 
 
+in_sicstus_dialect :-
+	(   prolog_load_context(dialect, sicstus)
+	->  true
+	;   prolog_load_context(dialect, sicstus4)
+	).
+
+
 		 /*******************************
 		 *	      OPERATORS		*
 		 *******************************/
 
 %	declare all operators globally
 
-system:goal_expansion(op(Pri,Ass,Name),
-		      op(Pri,Ass,user:Name)) :-
+user:goal_expansion(op(Pri,Ass,Name),
+		    op(Pri,Ass,user:Name)) :-
 	\+ qualified(Name),
-	prolog_load_context(dialect, sicstus).
+	in_sicstus_dialect.
 
 qualified(Var) :- var(Var), !, fail.
 qualified(_:_).
 
+% Import all operators from a module, even when using an explicit list
+% of imports. This simulates the SICStus behavior, where operators are
+% not module-sensitive and don't need to be listed in import lists.
+
+user:goal_expansion(use_module(Module,Imports),
+		    use_module(Module,[op(_,_,_)|Imports])) :-
+	% Prevent infinite recursion.
+	\+ memberchk(op(_,_,_),Imports).
 
 %%	setup_dialect
 %
@@ -144,7 +175,7 @@ setup_dialect.
 
 system:goal_expansion(if(If,Then,Else),
 		      (If *-> Then ; Else)) :-
-	prolog_load_context(dialect, sicstus),
+	in_sicstus_dialect,
 	\+ (sub_term(X, [If,Then,Else]), X == !).
 
 %%	if(:If, :Then, :Else)
@@ -240,7 +271,7 @@ system:term_expansion(
 	   [ (:- module(Name, Exports))
 	   | Declarations
 	   ]) :-
-	prolog_load_context(dialect, sicstus),
+	(prolog_load_context(dialect, sicstus) ; prolog_load_context(dialect, sicstus4)),
 	phrase(sicstus_module_decls(Options), Declarations).
 
 sicstus_module_decls([]) --> [].
@@ -317,6 +348,16 @@ bb_update(Key, Old, New) :-
 		 /*******************************
 		 *	     MUTABLES		*
 		 *******************************/
+
+%%	is_mutable(@Term) is det.
+%
+%	True if Term is bound to a mutable term.
+%
+%	@compat sicstus
+
+is_mutable(Term) :-
+	nonvar(Term),
+	functor(Term, '$mutable', 2).
 
 %%	create_mutable(?Value, -Mutable) is det.
 %
@@ -444,6 +485,31 @@ sicstus_flag(Name, Value) :-
 	current_prolog_flag(Name, Value).
 
 
+% As of SICStus 3.2.11, the following statistics/2 keys are still missing:
+% * choice
+
+statistics(heap, Stats) :- !, system:statistics(program, Stats).
+statistics(garbage_collection, [Count, Freed, Time]) :- !,
+	% Remove fourth list element (SWI extension).
+	system:statistics(garbage_collection, [Count, Freed, Time|_]).
+statistics(atoms, [H|T]) :- !,
+	% SWI natively provides two different values under the atoms key:
+	% the number of atoms as a single integer,
+	% and a Quintus/SICStus-compatible list of atom usage statistics.
+	% Which value is returned when calling statistics(atoms, X)
+	% depends on the value of X before the call:
+	% if X is unbound, the single integer is returned,
+	% but if X is already bound to a (usually non-ground) list,
+	% the list of statistics is returned instead.
+
+	% Here we just force the list to be returned in all cases
+	% if SICStus emulation is active, by forcing the second argument
+	% to be bound to a list.
+	system:statistics(atoms, [H|T]).
+
+statistics(Keyword, Value) :- system:statistics(Keyword, Value).
+
+
 		 /*******************************
 		 *	     ARITHMETIC		*
 		 *******************************/
@@ -453,14 +519,11 @@ sicstus_flag(Name, Value) :-
 % could also consider adding # internally, but not turning it into an
 % operator.
 
-:- op(500, yfx, #).
+:- op(500, yfx, user:(#)).
 
 :- arithmetic_function(user:(#)/2).
-:- arithmetic_function(user:(\)/2).
 
-user:(#(X,Y,R)) :-				% SICStus 3
-	R is xor(X,Y).
-user:(\(X,Y,R)) :-				% SICStus 4
+user:(#(X,Y,R)) :-
 	R is xor(X,Y).
 
 

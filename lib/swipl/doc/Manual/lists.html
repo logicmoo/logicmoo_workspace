@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.21</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.21</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -542,6 +542,26 @@ possible through grammar rules for optimal readability.
 <dt class="tag">See also</dt>
 <dd>
 <a class="pred" href="lists.html#append/2">append/2</a>
+</dd>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="clumped/2"><strong>clumped</strong>(<var>+Items, 
+-Pairs</var>)</a></dt>
+<dd class="defbody">
+<var>Pairs</var> is a list of <code>Item-Count</code> pairs that 
+represents the <i>run length encoding</i> of <var>Items</var>. For 
+example:
+
+<pre class="code">
+?- clumped([a,a,b,a,a,a,a,c,c,c], R).
+R = [a-2, b-1, a-4, c-3].
+</pre>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+SICStus
 </dd>
 </dl>
 

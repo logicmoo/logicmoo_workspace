@@ -95,6 +95,9 @@ translate_message2(error(resource_error(stack), Context)) -->
 translate_message2(error(resource_error(tripwire(Wire, Context)), _)) -->
     !,
     tripwire_message(Wire, Context).
+translate_message2(error(existence_error(reset, Ball), SWI)) -->
+    swi_location(SWI),
+    tabling_existence_error(Ball, SWI).
 translate_message2(error(ISO, SWI)) -->
     swi_location(SWI),
     term_message(ISO),
@@ -153,6 +156,8 @@ iso_message(existence_error(procedure, Proc)) -->
     unknown_proc_msg(Proc).
 iso_message(existence_error(answer_variable, Var)) -->
     [ '$~w was not bound by a previous query'-[Var] ].
+iso_message(existence_error(matching_rule, Goal)) -->
+    [ 'No rule matches ~p'-[Goal] ].
 iso_message(existence_error(Type, Object)) -->
     [ '~w `~p'' does not exist'-[Type, Object] ].
 iso_message(existence_error(Type, Object, In)) --> % not ISO
@@ -324,6 +329,25 @@ domain(range(Low,High)) -->
     ['[~q..~q]'-[Low,High] ].
 domain(Domain) -->
     ['`~w\''-[Domain] ].
+
+%!  tabling_existence_error(+Ball, +Context)//
+%
+%   Called on invalid shift/1  calls.  Track   those  that  result  from
+%   tabling errors.
+
+tabling_existence_error(Ball, Context) -->
+    { table_shift_ball(Ball) },
+    [ 'Tabling dependency error' ],
+    swi_extra(Context).
+
+table_shift_ball(dependency(_Head)).
+table_shift_ball(dependency(_Skeleton, _Trie, _Mono)).
+table_shift_ball(call_info(_Skeleton, _Status)).
+table_shift_ball(call_info(_GenSkeleton, _Skeleton, _Status)).
+
+%!  dwim_predicates(+PI, -Dwims)
+%
+%   Find related predicate indicators.
 
 dwim_predicates(Module:Name/_Arity, Dwims) :-
     !,
@@ -1603,7 +1627,7 @@ tripwire_message(Wire, Context) -->
     tripwire_context(Wire, Context).
 
 tripwire_context(_, ATrie) -->
-    { '$is_answer_trie'(ATrie),
+    { '$is_answer_trie'(ATrie, _),
       !,
       '$tabling':atrie_goal(ATrie, QGoal),
       user_predicate_indicator(QGoal, Goal)

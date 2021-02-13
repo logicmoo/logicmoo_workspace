@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2006-2018, University of Amsterdam
+    Copyright (c)  2006-2020, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
     All rights reserved.
@@ -46,7 +46,8 @@
 
 :- autoload(doc_html,
 	    [ object_tree/5, private/2, object_page_header/4, objects/4,
-	      object_href/2, object_synopsis/4, object_page_footer/4,
+	      object_href/2, object_synopsis/4, object_footer/4,
+              object_page_footer/4,
 	      object_ref/4, object_page/4,
               object_source_button//2
 	    ]).
@@ -54,7 +55,7 @@
 :- autoload(doc_search,[search_form/3]).
 :- autoload(doc_util,[atom_to_object/2,atom_pi/2]).
 :- autoload(man_index,[manual_object/5]).
-:- autoload(library(apply),[maplist/2,maplist/3]).
+:- autoload(library(apply),[maplist/2,maplist/3,convlist/3]).
 :- autoload(library(debug),[assertion/1,debug/3]).
 :- autoload(library(error),[permission_error/3,existence_error/2]).
 :- autoload(library(filesex),
@@ -753,8 +754,10 @@ man_match(packages, packages, _) -->
 man_match(root, root, _) -->
     !,
     man_overview([]).
-man_match((Parent+Path)-(Obj+[element(dt,A,C0)|DD]), Obj, Options) -->
+man_match((Parent+Path)-(Obj+DOM), Obj, Options) -->
     { \+ option(synopsis(false), Options),
+      DOM = [element(dt,A,C0)|DD],
+      convlist(dt_obj, DOM, Objs),
       option(link_source(Link), Options, true),
       man_qualified_object(Obj, Parent, LibOpt, QObj, Section),
       !,
@@ -766,10 +769,14 @@ man_match((Parent+Path)-(Obj+[element(dt,A,C0)|DD]), Obj, Options) -->
     dom_list([ element(dt,[],[\man_synopsis(QObj, Section, LibOpt)]),
                element(dt,A,C)
              | DD
-             ], Path, Options).
+             ], Path, Options),
+    object_footer(Objs, Options).
 man_match((_Parent+Path)-(Obj+DOM), Obj, Options) -->
     dom_list(DOM, Path, Options).
 
+dt_obj(element(dt,_,C), Obj) :-
+    xpath(C, //a(@id=Atom), _),
+    atom_to_object(Atom, Obj).
 
 :- html_meta
     dom_list(html, +, +, ?, ?).

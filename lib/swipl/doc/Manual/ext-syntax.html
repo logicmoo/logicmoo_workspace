@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 5.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 5.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -234,7 +234,7 @@ table.frame-box
 <a class="nav" href="bidicts.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:ext-syntax"><a id="sec:5.3"><span class="sec-nr">5.3</span> <span class="sec-title">Syntax 
-changes</span></a></h2>
+changes since SWI-Prolog&nbsp;7</span></a></h2>
 
 <a id="sec:ext-syntax"></a>
 
@@ -246,7 +246,7 @@ and quoted atoms</span></a></h3>
 <p>As of SWI-Prolog version&nbsp;7, quoted atoms lose their operator 
 property. This means that expressions such as <code>A = 'dynamic'/1</code> 
 are valid syntax, regardless of the operator definitions. From questions 
-on the mailinglist this is what people expect.<sup class="fn">156<span class="fn-text">We 
+on the mailinglist this is what people expect.<sup class="fn">158<span class="fn-text">We 
 believe that most users expect an operator declaration to define a new 
 token, which would explain why the operator name is often quoted in the 
 declaration, but not while the operator is used. We are afraid that 
@@ -255,8 +255,8 @@ development environments are based on tokenization. Having dynamic
 tokenization due to operator declarations would make it hard to support 
 Prolog in such editors.</span></sup> To accommodate for real quoted 
 operators, a quoted atom that <em>needs</em> quotes can still act as an 
-operator.<sup class="fn">157<span class="fn-text">Suggested by Joachim 
-Schimpf.</span></sup> A good use-case for this is a unit library<sup class="fn">158<span class="fn-text"><a class="url" href="https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ">https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ</a></span></sup>, 
+operator.<sup class="fn">159<span class="fn-text">Suggested by Joachim 
+Schimpf.</span></sup> A good use-case for this is a unit library<sup class="fn">160<span class="fn-text"><a class="url" href="https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ">https://groups.google.com/d/msg/comp.lang.prolog/ozqdzI-gi_g/2G16GYLIS0IJ</a></span></sup>, 
 which allows for expressions such as below.
 
 <pre class="code">
@@ -273,14 +273,14 @@ terms with zero arguments</span></a></h3>
 that have no arguments. This implies that e.g., <code>name()</code> is 
 valid syntax. This extension aims at functions on dicts (see <a class="sec" href="bidicts.html#sec:5.4">section 
 5.4</a>) as well as the implementation of domain specific languages 
-(DSLs). To minimise the consequences, the classic predicates <a id="idx:functor3:1832"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+(DSLs). To minimise the consequences, the classic predicates <a id="idx:functor3:1815"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
 and <a class="pred" href="manipterm.html#=../2">=../2</a> have not been 
-modified. The predicates <a id="idx:compoundnamearity3:1833"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+modified. The predicates <a id="idx:compoundnamearity3:1816"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
 and
-<a id="idx:compoundnamearguments3:1834"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+<a id="idx:compoundnamearguments3:1817"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
 have been added. These predicates operate only on compound terms and 
 behave consistently for compounds with zero arguments. Code that <em>generalises</em> 
-a term using the sequence below should generally be changed to use <a id="idx:compoundnamearity3:1835"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.
+a term using the sequence below should generally be changed to use <a id="idx:compoundnamearity3:1818"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a>.
 
 <pre class="code">
     ...,
@@ -290,7 +290,7 @@ a term using the sequence below should generally be changed to use <a id="idx:co
 </pre>
 
 <p>Replacement of <a class="pred" href="manipterm.html#=../2">=../2</a> 
-by <a id="idx:compoundnamearguments3:1836"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
+by <a id="idx:compoundnamearguments3:1819"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a> 
 is typically needed to deal with code that follow the skeleton below.
 
 <pre class="code">
@@ -333,7 +333,7 @@ operators</span></a></h3>
 
 <a id="sec:ext-blockop"></a>
 
-<p>Introducing curly bracket and array subscripting.<sup class="fn">159<span class="fn-text">Introducing 
+<p>Introducing curly bracket and array subscripting.<sup class="fn">161<span class="fn-text">Introducing 
 block operators was proposed by Jose Morales. It was discussed in the 
 Prolog standardization mailing list, but there were too many conflicts 
 with existing extensions (ECLiPSe and B-Prolog) and doubt about their 

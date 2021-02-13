@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.35</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.35</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -247,7 +247,7 @@ libraries from the <code>clib</code> package, notably library <code>library(proc
 <dl class="latex">
 <dt class="pubdef"><a id="shell/1"><strong>shell</strong>(<var>+Command</var>)</a></dt>
 <dd class="defbody">
-Equivalent to&lsquo;<code>shell(Command, 0)</code>&rsquo;. See <a id="idx:shell2:1638"></a><a class="pred" href="system.html#shell/2">shell/2</a> 
+Equivalent to&lsquo;<code>shell(Command, 0)</code>&rsquo;. See <a id="idx:shell2:1619"></a><a class="pred" href="system.html#shell/2">shell/2</a> 
 for details.</dd>
 <dt class="pubdef"><a id="shell/2"><strong>shell</strong>(<var>+Command, 
 -Status</var>)</a></dt>
@@ -256,13 +256,13 @@ Execute <var>Command</var> on the operating system. <var>Command</var>
 is given to the Bourne shell (/bin/sh). <var>Status</var> is unified 
 with the exit status of the command.
 
-<p>On Windows, <a id="idx:shell12:1639"></a><a class="pred" href="system.html#shell/1">shell/[1,2]</a> 
+<p>On Windows, <a id="idx:shell12:1620"></a><a class="pred" href="system.html#shell/1">shell/[1,2]</a> 
 executes the command using the CreateProcess() API and waits for the 
 command to terminate. If the command ends with a
 <code>&amp;</code> sign, the command is handed to the WinExec() API, 
-which does not wait for the new task to terminate. See also <a id="idx:winexec2:1640"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
+which does not wait for the new task to terminate. See also <a id="idx:winexec2:1621"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
 and
-<a id="idx:winshell2:1641"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a>. 
+<a id="idx:winshell2:1622"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a>. 
 Please note that the CreateProcess() API does <b>not</b> imply the 
 Windows command interpreter (<b>cmd.exe</b> and therefore commands that 
 are built in the command interpreter can only be activated using the 
@@ -275,13 +275,13 @@ below.
 
 <p>Note that many of the operations that can be achieved using the shell 
 built-in commands can easily be achieved using Prolog primitives. See
-<a id="idx:makedirectory1:1642"></a><a class="pred" href="files.html#make_directory/1">make_directory/1</a>, <a id="idx:deletefile1:1643"></a><a class="pred" href="files.html#delete_file/1">delete_file/1</a>, <a id="idx:renamefile2:1644"></a><a class="pred" href="files.html#rename_file/2">rename_file/2</a>, 
+<a id="idx:makedirectory1:1623"></a><a class="pred" href="files.html#make_directory/1">make_directory/1</a>, <a id="idx:deletefile1:1624"></a><a class="pred" href="files.html#delete_file/1">delete_file/1</a>, <a id="idx:renamefile2:1625"></a><a class="pred" href="files.html#rename_file/2">rename_file/2</a>, 
 etc. The clib package provides <code>library(filesex)</code>, 
-implementing various high level file operations such as <a id="idx:copyfile2:1645"></a><span class="pred-ext">copy_file/2</span>. 
+implementing various high level file operations such as <a id="idx:copyfile2:1626"></a><span class="pred-ext">copy_file/2</span>. 
 Using Prolog primitives instead of shell commands improves the 
 portability of your program.
 
-<p>The library <code>library(process)</code> provides <a id="idx:processcreate3:1646"></a><span class="pred-ext">process_create/3</span> 
+<p>The library <code>library(process)</code> provides <a id="idx:processcreate3:1627"></a><span class="pred-ext">process_create/3</span> 
 and several related primitives that support more fine-grained 
 interaction with processes, including I/O redirection and management of 
 asynchronous processes.</dd>
@@ -296,18 +296,18 @@ systems and case-insensitive on Windows.</dd>
 <dd class="defbody">
 Set an environment variable. <var>Name</var> and <var>Value</var> must 
 be instantiated to atoms or integers. The environment variable will be 
-passed to shell/[0-2] and can be requested using <a id="idx:getenv2:1647"></a><a class="pred" href="system.html#getenv/2">getenv/2</a>. 
-They also influence <a id="idx:expandfilename2:1648"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a>. 
+passed to shell/[0-2] and can be requested using <a id="idx:getenv2:1628"></a><a class="pred" href="system.html#getenv/2">getenv/2</a>. 
+They also influence <a id="idx:expandfilename2:1629"></a><a class="pred" href="files.html#expand_file_name/2">expand_file_name/2</a>. 
 Environment variables are shared between threads. Depending on the 
-underlying C library, <a id="idx:setenv2:1649"></a><a class="pred" href="system.html#setenv/2">setenv/2</a> 
-and <a id="idx:unsetenv1:1650"></a><a class="pred" href="system.html#unsetenv/1">unsetenv/1</a> 
+underlying C library, <a id="idx:setenv2:1630"></a><a class="pred" href="system.html#setenv/2">setenv/2</a> 
+and <a id="idx:unsetenv1:1631"></a><a class="pred" href="system.html#unsetenv/1">unsetenv/1</a> 
 may not be thread-safe and may cause memory leaks. Only changing the 
 environment once and before starting threads is safe in all versions of 
 SWI-Prolog.</dd>
 <dt class="pubdef"><a id="unsetenv/1"><strong>unsetenv</strong>(<var>+Name</var>)</a></dt>
 <dd class="defbody">
 Remove an environment variable from the environment. Some systems lack 
-the underlying unsetenv() library function. On these systems <a id="idx:unsetenv1:1651"></a><a class="pred" href="system.html#unsetenv/1">unsetenv/1</a> 
+the underlying unsetenv() library function. On these systems <a id="idx:unsetenv1:1632"></a><a class="pred" href="system.html#unsetenv/1">unsetenv/1</a> 
 sets the variable to the empty string.</dd>
 <dt class="pubdef"><a id="setlocale/3"><strong>setlocale</strong>(<var>+Category, 
 -Old, +New</var>)</a></dt>
@@ -318,12 +318,12 @@ interpret text files, write numbers, dates, etc. Category is one of
 <code>monetary</code>, <code>numeric</code> or <code>time</code>. For 
 details, please consult the C library locale documentation. See also <a class="sec" href="widechars.html#sec:2.19.1">section 
 2.19.1</a>. Please note that the locale is shared between all threads 
-and thread-safe usage of <a id="idx:setlocale3:1652"></a><a class="pred" href="system.html#setlocale/3">setlocale/3</a> 
+and thread-safe usage of <a id="idx:setlocale3:1633"></a><a class="pred" href="system.html#setlocale/3">setlocale/3</a> 
 is in general not possible. Do locale operations before starting threads 
 or thoroughly study threading aspects of locale support in your 
 environment before using in multithreaded environments. Locale settings 
-are used by <a id="idx:formattime3:1653"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>, <a id="idx:collationkey2:1654"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
-and <a id="idx:localesort2:1655"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a>.
+are used by <a id="idx:formattime3:1634"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>, <a id="idx:collationkey2:1635"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
+and <a id="idx:localesort2:1636"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a>.
 </dd>
 </dl>
 
@@ -334,11 +334,11 @@ Operating System Interaction</span></a></h3>
 
 <p>The predicates in this section are only available on the Windows 
 version of SWI-Prolog. Their use is discouraged if there are portable 
-alternatives. For example, <a id="idx:winexec2:1656"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
-and <a id="idx:winshell2:1657"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a> 
-can often be replaced by the more portable <a id="idx:shell2:1658"></a><a class="pred" href="system.html#shell/2">shell/2</a> 
+alternatives. For example, <a id="idx:winexec2:1637"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
+and <a id="idx:winshell2:1638"></a><a class="pred" href="system.html#win_shell/2">win_shell/2</a> 
+can often be replaced by the more portable <a id="idx:shell2:1639"></a><a class="pred" href="system.html#shell/2">shell/2</a> 
 or the more powerful
-<a id="idx:processcreate3:1659"></a><span class="pred-ext">process_create/3</span>.
+<a id="idx:processcreate3:1640"></a><span class="pred-ext">process_create/3</span>.
 
 <dl class="latex">
 <dt class="pubdef"><a id="win_exec/2"><strong>win_exec</strong>(<var>+Command, 
@@ -368,10 +368,10 @@ Windows only. Opens the document <var>File</var> using the Windows shell
 rules for doing so. <var>Operation</var> is one of <code>open</code>,
 <code>print</code> or <code>explore</code> or another operation 
 registered with the shell for the given document type. On modern systems 
-it is also possible to pass a <a id="idx:URL:1660"></a>URL as <var>File</var>, 
+it is also possible to pass a <a id="idx:URL:1641"></a>URL as <var>File</var>, 
 opening the URL in Windows default browser. This call interfaces to the 
 Win32 API ShellExecute(). The <var>Show</var> argument determines the 
-initial state of the opened window (if any). See <a id="idx:winexec2:1661"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
+initial state of the opened window (if any). See <a id="idx:winexec2:1642"></a><a class="pred" href="system.html#win_exec/2">win_exec/2</a> 
 for defined values.</dd>
 <dt class="pubdef"><a id="win_shell/2"><strong>win_shell</strong>(<var>+Operation, 
 +File</var>)</a></dt>
@@ -425,19 +425,19 @@ MyDocuments = 'C:/Documents and Settings/jan/My Documents'
 <dt class="pubdef"><a id="win_add_dll_directory/1"><strong>win_add_dll_directory</strong>(<var>+AbsDir</var>)</a></dt>
 <dd class="defbody">
 This predicate adds a directory to the search path for dependent DLL 
-files. If possible, this is achieved with <a id="idx:winadddlldirectory2:1662"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>. 
+files. If possible, this is achieved with <a id="idx:winadddlldirectory2:1643"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>. 
 Otherwise, <code>%PATH%</code> is extended with the provided directory.
 <var>AbsDir</var> may be specified in the Prolog canonical syntax. See
-<a id="idx:prologtoosfilename2:1663"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a>. 
-Note that <a id="idx:useforeignlibrary1:1664"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+<a id="idx:prologtoosfilename2:1644"></a><a class="pred" href="files.html#prolog_to_os_filename/2">prolog_to_os_filename/2</a>. 
+Note that <a id="idx:useforeignlibrary1:1645"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
 passes an absolute path to the DLL if the destination DLL can be located 
-from the specification using <a id="idx:absolutefilename3:1665"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>.</dd>
+from the specification using <a id="idx:absolutefilename3:1646"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>.</dd>
 <dt class="pubdef"><a id="win_add_dll_directory/2"><strong>win_add_dll_directory</strong>(<var>+AbsDir, 
 -Cookie</var>)</a></dt>
 <dd class="defbody">
 This predicate adds a directory to the search path for dependent DLL 
 files. If the call is successful it unifies <var>Cookie</var> with a 
-handle that must be passed to <a id="idx:winremovedlldirectory1:1666"></a><a class="pred" href="system.html#win_remove_dll_directory/1">win_remove_dll_directory/1</a> 
+handle that must be passed to <a id="idx:winremovedlldirectory1:1647"></a><a class="pred" href="system.html#win_remove_dll_directory/1">win_remove_dll_directory/1</a> 
 to remove the directory from the search path. Error conditions:
 
 <p>
@@ -451,18 +451,30 @@ systems and later.
 or the underlying Windows API returns an error.
 </ul>
 
-<p>If <a id="idx:opensharedobject2:1667"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
+<p>If <a id="idx:opensharedobject2:1648"></a><a class="pred" href="foreignlink.html#open_shared_object/2">open_shared_object/2</a> 
 is passed an <em>absolute</em> path to a DLL on a Windows installation 
-that supports AddDllDirectory() and friends,<sup class="fn">136<span class="fn-text">Windows&nbsp;7 
+that supports AddDllDirectory() and friends,<sup class="fn">138<span class="fn-text">Windows&nbsp;7 
 with up-to-date patches or Windows&nbsp;8.</span></sup> SWI-Prolog uses 
 LoadLibraryEx() with the flags
 <code>LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR</code> and
 <code>LOAD_LIBRARY_SEARCH_DEFAULT_DIRS</code>. In this scenario, 
 directories from <code>%PATH%</code> and <em>not</em> searched. 
-Additional directories can be added using <a id="idx:winadddlldirectory2:1668"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>.</dd>
+Additional directories can be added using <a id="idx:winadddlldirectory2:1649"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>.</dd>
 <dt class="pubdef"><a id="win_remove_dll_directory/1"><strong>win_remove_dll_directory</strong>(<var>-Cookie</var>)</a></dt>
 <dd class="defbody">
-Remove a DLL search directory installed using <a id="idx:winadddlldirectory2:1669"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>.
+Remove a DLL search directory installed using <a id="idx:winadddlldirectory2:1650"></a><a class="pred" href="system.html#win_add_dll_directory/2">win_add_dll_directory/2</a>.</dd>
+<dt class="pubdef"><a id="win_process_modules/1"><strong>win_process_modules</strong>(<var>-FileNames</var>)</a></dt>
+<dd class="defbody">
+This predicate is a wrapper around EnumProcessModules(). <var>FileNames</var> 
+is unified with a list of absolute paths for all <em>modules</em> of the 
+Windows process. Modules are the main executable file and all DLLs 
+loaded into the process, <em>except</em> <em>data DLLs</em>. The 
+returned file names are in canonical Prolog representation. This 
+predicate may be used to debug loading a DLL from an unexpected location 
+and as a helper for packaging all dependencies when creating a 
+distribution. According to the Windows documentation this API may return 
+incorrect results if DLLs are loaded or unloaded while 
+EnumProcessModules() is in progress. See also <a id="idx:qsaveprogram2:1651"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.
 </dd>
 </dl>
 
@@ -497,7 +509,7 @@ with a large but finite time interval at constant resolution. In our
 opinion, using a floating point number is a more natural choice as we 
 can use a natural unit and the interface does not need to be changed if 
 a higher resolution is required in the future. Our unit of choice is the 
-second as it is the scientific unit.<sup class="fn">137<span class="fn-text">Using 
+second as it is the scientific unit.<sup class="fn">139<span class="fn-text">Using 
 Julian days is a choice made by the Eclipse team. As conversion to dates 
 is needed for a human readable notation of time and Julian days cannot 
 deal naturally with leap seconds, we decided for the second as our unit.</span></sup> 
@@ -530,7 +542,7 @@ integers expressing the year, month (1..12), day (1..31), hour (0..23)
 and minute (0..59). The <var>S</var> field holds the seconds as a 
 floating point number between 0.0 and 60.0. <var>Off</var> is an integer 
 representing the offset relative to UTC in seconds, where positive 
-values are west of Greenwich. If converted from local time (see <a id="idx:stampdatetime3:1670"></a><a class="pred" href="system.html#stamp_date_time/3">stamp_date_time/3</a>),
+values are west of Greenwich. If converted from local time (see <a id="idx:stampdatetime3:1652"></a><a class="pred" href="system.html#stamp_date_time/3">stamp_date_time/3</a>),
 <var>TZ</var> holds the name of the local timezone. If the timezone is 
 not known, <var>TZ</var> is the atom <code><code>-</code></code>. <var>DST</var> 
 is <code>true</code> if daylight saving time applies to the current 
@@ -540,11 +552,11 @@ has no daylight saving time.</dd>
 <dt><strong>date</strong>(<var>Y,M,D</var>)</dt>
 <dd class="defbody">
 Date using the same values as described above. Extracted using
-<a id="idx:datetimevalue3:1671"></a><a class="pred" href="system.html#date_time_value/3">date_time_value/3</a>.</dd>
+<a id="idx:datetimevalue3:1653"></a><a class="pred" href="system.html#date_time_value/3">date_time_value/3</a>.</dd>
 <dt><strong>time</strong>(<var>H,Mn,S</var>)</dt>
 <dd class="defbody">
 Time using the same values as described above. Extracted using
-<a id="idx:datetimevalue3:1672"></a><a class="pred" href="system.html#date_time_value/3">date_time_value/3</a>.
+<a id="idx:datetimevalue3:1654"></a><a class="pred" href="system.html#date_time_value/3">date_time_value/3</a>.
 </dd>
 </dl>
 
@@ -574,7 +586,7 @@ time or an integer describing the seconds west of Greenwich.</dd>
 Compute the timestamp from a date/9 term. Values for month, day, hour, 
 minute or second need not be normalized. This flexibility allows for 
 easy computation of the time at any given number of these units from a 
-given timestamp. Normalization can be achieved following this call with <a id="idx:stampdatetime3:1673"></a><a class="pred" href="system.html#stamp_date_time/3">stamp_date_time/3</a>. 
+given timestamp. Normalization can be achieved following this call with <a id="idx:stampdatetime3:1655"></a><a class="pred" href="system.html#stamp_date_time/3">stamp_date_time/3</a>. 
 This example computes the date 200 days after 2006-07-14:
 
 <pre class="code">
@@ -645,9 +657,9 @@ if dst is in effect </td></tr>
 +Format, +StampOrDateTime</var>)</a></dt>
 <dd class="defbody">
 Modelled after POSIX strftime(), using GNU extensions. <var>Out</var> is 
-a destination as specified with <a id="idx:withoutputto2:1674"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>. <var>Format</var> 
+a destination as specified with <a id="idx:withoutputto2:1656"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>. <var>Format</var> 
 is an atom or string with the following conversions. Conversions start 
-with a percent (%) character.<sup class="fn">138<span class="fn-text">Descriptions 
+with a percent (%) character.<sup class="fn">140<span class="fn-text">Descriptions 
 taken from Linux Programmer's Manual</span></sup>
 <var>StampOrDateTime</var> is either a numeric time-stamp, a term
 <code>date(Y,M,D,H,M,S,O,TZ,DST)</code> or a term <code>date(Y,M,D)</code>.
@@ -656,19 +668,19 @@ taken from Linux Programmer's Manual</span></sup>
 <ul class="latex">
 <li><code>a</code><br>
 The abbreviated weekday name according to the current locale. Use
-<a id="idx:formattime4:1675"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
+<a id="idx:formattime4:1657"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
 for POSIX locale.
 <li><code>A</code><br>
 The full weekday name according to the current locale. Use
-<a id="idx:formattime4:1676"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
+<a id="idx:formattime4:1658"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
 for POSIX locale.
 <li><code>b</code><br>
 The abbreviated month name according to the current locale. Use
-<a id="idx:formattime4:1677"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
+<a id="idx:formattime4:1659"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
 for POSIX locale.
 <li><code>B</code><br>
 The full month name according to the current locale. Use
-<a id="idx:formattime4:1678"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
+<a id="idx:formattime4:1660"></a><a class="pred" href="system.html#format_time/4">format_time/4</a> 
 for POSIX locale.
 <li><code>c</code><br>
 The preferred date and time representation for the current locale.
@@ -730,7 +742,7 @@ Modifier to select locale-specific output. Not implemented.
 <li><code>p</code><br>
 Either&lsquo;AM' or&lsquo;PM' according to the given time value, or the 
 corresponding strings for the current locale. Noon is treated as&lsquo;pm' 
-and midnight as&lsquo;am'.<sup class="fn">139<span class="fn-text">Despite 
+and midnight as&lsquo;am'.<sup class="fn">141<span class="fn-text">Despite 
 the above claim, some locales yield <code>am</code> or <code>pm</code> 
 in lower case.</span></sup>
 <li><code>P</code><br>
@@ -791,7 +803,7 @@ A literal&lsquo;%&rsquo;character.
 
 <p>The table below gives some format strings for popular time 
 representations. RFC1123 is used by HTTP. The full implementation of
-<a id="idx:httptimestamp2:1679"></a><span class="pred-ext">http_timestamp/2</span> 
+<a id="idx:httptimestamp2:1661"></a><span class="pred-ext">http_timestamp/2</span> 
 as available from <code>library(http/http_header)</code> is here.
 
 <pre class="code">
@@ -824,7 +836,7 @@ time-stamps such as RFC1123.</dd>
 <dt class="pubdef"><a id="parse_time/2"><strong>parse_time</strong>(<var>+Text, 
 -Stamp</var>)</a></dt>
 <dd class="defbody">
-Same as <code>parse_time(Text, _Format, Stamp)</code>. See <a id="idx:parsetime3:1680"></a><a class="pred" href="system.html#parse_time/3">parse_time/3</a>.</dd>
+Same as <code>parse_time(Text, _Format, Stamp)</code>. See <a id="idx:parsetime3:1662"></a><a class="pred" href="system.html#parse_time/3">parse_time/3</a>.</dd>
 <dt class="pubdef"><a id="parse_time/3"><strong>parse_time</strong>(<var>+Text, 
 ?Format, -Stamp</var>)</a></dt>
 <dd class="defbody">
@@ -924,8 +936,8 @@ or
 GetSysColor().</dd>
 <dt class="pubdef"><a id="win_has_menu/0"><strong>win_has_menu</strong></a></dt>
 <dd class="defbody">
-True if <a id="idx:wininsertmenu2:1681"></a><a class="pred" href="system.html#win_insert_menu/2">win_insert_menu/2</a> 
-and <a id="idx:wininsertmenuitem4:1682"></a><a class="pred" href="system.html#win_insert_menu_item/4">win_insert_menu_item/4</a> 
+True if <a id="idx:wininsertmenu2:1663"></a><a class="pred" href="system.html#win_insert_menu/2">win_insert_menu/2</a> 
+and <a id="idx:wininsertmenuitem4:1664"></a><a class="pred" href="system.html#win_insert_menu_item/4">win_insert_menu_item/4</a> 
 are present.</dd>
 <dt class="pubdef"><a id="win_insert_menu/2"><strong>win_insert_menu</strong>(<var>+Label, 
 +Before</var>)</a></dt>
@@ -947,7 +959,7 @@ win_insert_menu('&amp;Application', '&amp;Help')
 +Label, +Before, :Goal</var>)</a></dt>
 <dd class="defbody">
 Add an item to the named <var>Pulldown</var> menu. <var>Label</var> and
-<var>Before</var> are handled as in <a id="idx:wininsertmenu2:1683"></a><a class="pred" href="system.html#win_insert_menu/2">win_insert_menu/2</a>, 
+<var>Before</var> are handled as in <a id="idx:wininsertmenu2:1665"></a><a class="pred" href="system.html#win_insert_menu/2">win_insert_menu/2</a>, 
 but the label <code><code>-</code></code> inserts a <em>separator</em>. <var>Goal</var> 
 is called if the user selects the item.
 </dd>

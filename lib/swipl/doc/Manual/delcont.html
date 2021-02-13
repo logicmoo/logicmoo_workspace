@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.9</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.9</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,20 +238,20 @@ continuations</span></a></h2>
 
 <a id="sec:delcont"></a>
 
-<p>The predicates <a id="idx:reset3:759"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
-and <a id="idx:shift1:760"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+<p>The predicates <a id="idx:reset3:737"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+and <a id="idx:shift1:738"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
 implement <em>delimited continuations</em> for Prolog. Delimited 
-continuation for Prolog is described in <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/SchrijversDDW13">Schrijvers <em>et 
-al.</em>, 2013</a></cite> (<a class="url" href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf">preprint 
+continuations for Prolog are described in <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/SchrijversDDW13">Schrijvers <em>et 
+al.</em>, 2013</a></cite> (<a class="url" href="https://www.swi-prolog.org/download/publications/iclp2013.pdf">preprint 
 PDF</a>). The mechanism allows for proper <em>coroutines</em>, two or 
 more routines whose execution is interleaved, while they exchange data. 
 Note that coroutines in this sense differ from coroutines realised using 
 attributed variables as described in <a class="sec" href="clp.html#sec:8">chapter 
 8</a>.
 
-<p>Note that <a id="idx:shift1:761"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+<p>Note that <a id="idx:shift1:739"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
 captures the <em>forward continuation</em>. It notably does not capture 
-choicepoints. Choicepoints created before the continuation is captures 
+choicepoints. Choicepoints created before the continuation is captured 
 remain open, while choicepoints created when the continuation is 
 executed live their normal life. Unfortunately the consequences for <em>committing</em> 
 a choicepoint is complicated. In general a cut (<a class="pred" href="control.html#!/0">!/0</a>) 
@@ -349,13 +349,13 @@ gassert :-
 </pre>
 
 <p>Now, t3/0 succeeds <em>twice</em>. This is because n/0 shifts, so the 
-commit to the <a id="idx:fail0:762"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
-branch is not executed and the <a id="idx:true0:763"></a><a class="pred" href="control.html#true/0">true/0</a> 
+commit to the <a id="idx:fail0:740"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+branch is not executed and the <a id="idx:true0:741"></a><a class="pred" href="control.html#true/0">true/0</a> 
 branch is evaluated normally. Calling the continuation later using c3/0 
 fails because the choicepoint that realised the if-then-else does not 
 exist in the continuation and thus the effective continuation is the 
 remainder of n/0 and
-<a id="idx:fail0:764"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
+<a id="idx:fail0:742"></a><a class="pred" href="control.html#fail/0">fail/0</a> 
 in gassert/0 .
 
 <pre class="code">
@@ -378,30 +378,30 @@ here</a>). See <a class="sec" href="tabling.html#sec:7">section 7</a>.
 <dt class="pubdef"><a id="reset/3"><strong>reset</strong>(<var>:Goal, 
 ?Ball, -Continuation</var>)</a></dt>
 <dd class="defbody">
-Call <var>Goal</var>. If <var>Goal</var> calls <a id="idx:shift1:765"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
-and the argument of <a id="idx:shift1:766"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
-can be unified with <var>Ball</var>,<sup class="fn">73<span class="fn-text">The 
+Call <var>Goal</var>. If <var>Goal</var> calls <a id="idx:shift1:743"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+and the argument of <a id="idx:shift1:744"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+can be unified with <var>Ball</var>,<sup class="fn">74<span class="fn-text">The 
 argument order described in <cite><a class="cite" href="Bibliography.html#DBLP:journals/tplp/SchrijversDDW13">Schrijvers <em>et 
 al.</em>, 2013</a></cite> is <code>reset(Goal,Continuation,Ball)</code>. 
-We swapped the argument order for compatibility with <a id="idx:catch3:767"></a><a class="pred" href="exception.html#catch/3">catch/3</a></span></sup> <a id="idx:shift1:768"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
-causes <a id="idx:reset3:769"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+We swapped the argument order for compatibility with <a id="idx:catch3:745"></a><a class="pred" href="exception.html#catch/3">catch/3</a></span></sup> <a id="idx:shift1:746"></a><a class="pred" href="delcont.html#shift/1">shift/1</a> 
+causes <a id="idx:reset3:747"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
 to return, unifying
 <var>Continuation</var> with a goal that represents the <em>continuation</em> 
-after <a id="idx:shift1:770"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>. 
+after <a id="idx:shift1:748"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>. 
 In other words, meta-calling <var>Continuation</var> completes the 
-execution where shift left it. If <var>Goal</var> does not call <a id="idx:shift1:771"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>,
+execution where shift left it. If <var>Goal</var> does not call <a id="idx:shift1:749"></a><a class="pred" href="delcont.html#shift/1">shift/1</a>,
 <var>Continuation</var> are unified with the integer <code>0</code> 
-(zero).<sup class="fn">74<span class="fn-text">Note that older versions 
+(zero).<sup class="fn">75<span class="fn-text">Note that older versions 
 also unify <var>Ball</var> with <code>0</code>. Testing whether or not 
 shift happened on <var>Ball</var> however is <em>always</em> ambiguous.</span></sup></dd>
 <dt class="pubdef"><a id="shift/1"><strong>shift</strong>(<var>+Ball</var>)</a></dt>
 <dd class="defbody">
 Abandon the execution of the current goal, returning control to just
-<em>after</em> the matching <a id="idx:reset3:772"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
-call. This is similar to <a id="idx:throw1:773"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+<em>after</em> the matching <a id="idx:reset3:750"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+call. This is similar to <a id="idx:throw1:751"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
 except that (1) nothing is&lsquo;undone' and (2) the 3th argument of
-<a id="idx:reset3:774"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
-is unified with the <em>continuation</em>, which allows the code calling <a id="idx:reset3:775"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+<a id="idx:reset3:752"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
+is unified with the <em>continuation</em>, which allows the code calling <a id="idx:reset3:753"></a><a class="pred" href="delcont.html#reset/3">reset/3</a> 
 to <em>resume</em> the current goal.
 </dd>
 </dl>

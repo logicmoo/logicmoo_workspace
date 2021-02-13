@@ -278,7 +278,7 @@ expand_path(Term, D) :-
 :- pce_group(indent).
 
 :- pce_global(@prolog_neck_regex,
-              new(regex(':-|:->|:<-|-->'))).
+              new(regex(':-|:->|:<-|-->|=>|\\?=>'))).
 :- pce_global(@prolog_full_stop,
               new(regex('[^-#$&*+./:<=>?@\\\\^`~]\\.($|\\s)'))).
 :- pce_global(@prolog_decl_regex,

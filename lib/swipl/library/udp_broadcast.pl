@@ -801,8 +801,15 @@ mk_subnet(Var, IP, Subnet) :-
 mk_subnet(Subnet, _, Subnet4) :-
     to_ip4(Subnet, Subnet4).
 
+%!  default_subnet(+IP, -NetWork)
+%
+%   Determine the default network address from an IP address. This
+%   classifies the network as class A, B or C.
+%
+%   @see https://docs.oracle.com/cd/E19504-01/802-5753/planning3-78185/index.html
+
 default_subnet(ip(A,_,_,_), ip(A,0,0,0)) :-
-    between(1,126, A), !.
+    between(0,127, A), !.
 default_subnet(ip(A,B,_,_), ip(A,B,0,0)) :-
     between(128,191, A), !.
 default_subnet(ip(A,B,C,_), ip(A,B,C,0)) :-

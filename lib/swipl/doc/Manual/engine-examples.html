@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 11.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 11.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -263,10 +263,10 @@ using engines</span></a></h3>
 
 <p>Engines can be used to reason about solutions produced by a goal 
 through backtracking. In this scenario we create an engine with the goal 
-we wish to backtrack over and we enumerate all its solution using <a id="idx:enginenext2:2281"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>. 
-This usage scenario competes with the all solution predicates (<a id="idx:findall3:2282"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:bagof3:2283"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
+we wish to backtrack over and we enumerate all its solution using <a id="idx:enginenext2:2278"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>. 
+This usage scenario competes with the all solution predicates (<a id="idx:findall3:2279"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>, <a id="idx:bagof3:2280"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, 
 etc.) and the predicates from library
-<code>library(aggregate)</code>. Below we implement <a id="idx:findall3:2284"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+<code>library(aggregate)</code>. Below we implement <a id="idx:findall3:2281"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 using engines.
 
 <pre class="code">
@@ -284,15 +284,15 @@ get_answers(_, []).
 
 <p>The above is not a particularly attractive alternative for the 
 built-in
-<a id="idx:findall3:2285"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>. 
+<a id="idx:findall3:2282"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>. 
 It is mostly slower due to time required to create and destroy the 
-engine as well as the (currently<sup class="fn">187<span class="fn-text">The 
+engine as well as the (currently<sup class="fn">191<span class="fn-text">The 
 current implementation of engines is built on top of primitives that are 
 not optimal for the engine use case. There is considerable opportunity 
 to reduce the overhead.</span></sup>) higher overhead of copying terms 
 between engines than the overhead required by the dedicated 
 representation used by
-<a id="idx:findall3:2286"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>.
+<a id="idx:findall3:2283"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>.
 
 <p>It gets more interesting if we wish to combine answers from multiple 
 backtracking predicates. Assume we have two predicates that, on 
@@ -380,16 +380,16 @@ accumulation using engines</span></a></h3>
 
 <p>Applications that need to manage a state can do so by passing the 
 state around in an additional argument, storing it in a global variable 
-or update it in the dynamic database using <a id="idx:assertz1:2287"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
-and <a id="idx:retract1:2288"></a><a class="pred" href="db.html#retract/1">retract/1</a>. 
-Both using an additional argument and a global variable (see <a id="idx:bsetval2:2289"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>), 
+or update it in the dynamic database using <a id="idx:assertz1:2284"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+and <a id="idx:retract1:2285"></a><a class="pred" href="db.html#retract/1">retract/1</a>. 
+Both using an additional argument and a global variable (see <a id="idx:bsetval2:2286"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a>), 
 make the state subject to backtracking. This may or may not be 
 desirable. If having a state is that subject to backtracking is 
 required, using an additional argument or backtrackable global variable 
-is the right approach. Otherwise, non-backtrackable global variables (<a id="idx:nbsetval2:2290"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>) 
+is the right approach. Otherwise, non-backtrackable global variables (<a id="idx:nbsetval2:2287"></a><a class="pred" href="gvar.html#nb_setval/2">nb_setval/2</a>) 
 and dynamic database come into the picture, where global variables are 
 always local to a thread and the dynamic database may or may not be 
-shared between threads (see <a id="idx:threadlocal1:2291"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>).
+shared between threads (see <a id="idx:threadlocal1:2288"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>).
 
 <p>Engines bring an alternative that packages a state inside the engine 
 where it is typically represented in a (threaded) Prolog variable. The 
@@ -401,9 +401,9 @@ has the following advantages:
 <p>
 <ul class="latex">
 <li>The programming style needed inside the engine is much more&lsquo;Prolog 
-friendly', using <a id="idx:enginefetch1:2292"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
+friendly', using <a id="idx:enginefetch1:2289"></a><a class="pred" href="engine-predicates.html#engine_fetch/1">engine_fetch/1</a> 
 to read a request and
-<a id="idx:engineyield1:2293"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+<a id="idx:engineyield1:2290"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
 to reply to it.
 <li>The state is packaged and subject to (atom) garbage collection.
 <li>The state may be accessed from multiple threads. Access to the state 
@@ -415,7 +415,7 @@ is synchronized without the need for explicit locks.
 typical update loop for maintaining state inside an engine: fetch a 
 command, update the state, yield with the reply and call the updater 
 recursively. The update step is guarded against failure. For robustness 
-one may also guard it against exceptions using <a id="idx:catch3:2294"></a><a class="pred" href="exception.html#catch/3">catch/3</a>. 
+one may also guard it against exceptions using <a id="idx:catch3:2291"></a><a class="pred" href="exception.html#catch/3">catch/3</a>. 
 Note that heap_get/3 passes the <var>Priority</var> and <var>Key</var> 
 it wishes to delete from the heap such that if the unification fails, 
 the heap remains unchanged.
@@ -462,9 +462,9 @@ many-agent applications</span></a></h3>
 <p>The final application area we touch are agent systems were we wish to 
 capture an agent in a Prolog goal. Such systems can be implemented using 
 threads (see <a class="sec" href="threads.html#sec:10">section 10</a>) 
-that use <a id="idx:threadsendmessage2:2295"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a> 
+that use <a id="idx:threadsendmessage2:2292"></a><a class="pred" href="threadcom.html#thread_send_message/2">thread_send_message/2</a> 
 and
-<a id="idx:threadgetmessage1:2296"></a><a class="pred" href="threadcom.html#thread_get_message/1">thread_get_message/1</a> 
+<a id="idx:threadgetmessage1:2293"></a><a class="pred" href="threadcom.html#thread_get_message/1">thread_get_message/1</a> 
 to communicate. The main problem is that each thread is associated by an 
 operating system thread. OS threads are, depending on the OS, relatively 
 expensive. Scalability of this design typically ends, depending on OS 
@@ -473,8 +473,8 @@ and hardware, somewhere between 1,000 and 100,000 agents.
 <p>Engines provide an alternative. A detached Prolog engine currently 
 requires approximately 20&nbsp;Kbytes memory on 64&nbsp;bit hardware, 
 growing with the size of the Prolog stacks. The Prolog stacks may be 
-minimised by calling <a id="idx:garbagecollect0:2297"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
-followed by <a id="idx:trimstacks0:2298"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a>, 
+minimised by calling <a id="idx:garbagecollect0:2294"></a><a class="pred" href="memory.html#garbage_collect/0">garbage_collect/0</a> 
+followed by <a id="idx:trimstacks0:2295"></a><a class="pred" href="memory.html#trim_stacks/0">trim_stacks/0</a>, 
 providing a
 <em>deep sleep</em> mode. The set of agents, each represented by an 
 engine can be controlled by a static or dynamic pool of threads. 
@@ -484,7 +484,7 @@ application.
 <blockquote> This section needs an example. Preferably something that 
 fits on one page and would not scale using threads. Engines might work 
 nice to implement <i>Antrank: An ant colony algorithm for ranking web 
-pages</i>.<sup class="fn">188<span class="fn-text"><a class="url" href="http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf">http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf</a></span></sup>
+pages</i>.<sup class="fn">192<span class="fn-text"><a class="url" href="http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf">http://www.ijettcs.org/Volume3Issue2/IJETTCS-2014-04-23-113.pdf</a></span></sup>
 </blockquote>
 
 <p></body></html>

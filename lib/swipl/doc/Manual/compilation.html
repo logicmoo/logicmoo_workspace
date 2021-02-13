@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.11</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 2.11</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -245,8 +245,8 @@ program development</span></a></h3>
 <p>During program development, programs are normally loaded using the 
 list abbreviation (<code>?- [load].</code>). It is common practice to 
 organise a project as a collection of source files and a <em>load file</em>, 
-a Prolog file containing only <a id="idx:usemodule12:81"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a> 
-or <a id="idx:ensureloaded1:82"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a> 
+a Prolog file containing only <a id="idx:usemodule12:60"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a> 
+or <a id="idx:ensureloaded1:61"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a> 
 directives, possibly with a definition of the <em>entry point</em> of 
 the program, the predicate that is normally used to start the program. 
 This file is often called <code>load.pl</code>. If the entry point is 
@@ -289,7 +289,7 @@ PrologScript</span></a></h4>
 <p>A Prolog source file can be used directly as a Unix program using the 
 Unix <code>#!</code> magic start. The Unix <code>#!</code> magic is 
 allowed because if the first letter of a Prolog file is <code>#</code>, 
-the first line is treated as a comment.<sup class="fn">13<span class="fn-text">The <code>#</code>-sign 
+the first line is treated as a comment.<sup class="fn">12<span class="fn-text">The <code>#</code>-sign 
 can be the legal start of a normal Prolog clause. In the unlikely case 
 this is required, leave the first line blank or add a header comment.</span></sup> 
 To create a Prolog script, use one of the two alternatives below as 
@@ -309,12 +309,12 @@ Neither the executable path, nor the argument shall use quotes or
 spaces. When started this way, the Prolog flag <a class="flag" href="flags.html#flag:argv">argv</a> 
 contains the command line arguments that follow the script invocation.
 
-<p>Starting with version 7.5.8, <a id="idx:initialization2:83"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+<p>Starting with version 7.5.8, <a id="idx:initialization2:62"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
 support the <var>When</var> options <code>program</code> and <code>main</code>, 
 allowing for the following definition of a Prolog script that evaluates 
-an arithmetic expression on the command line. Note that <a id="idx:main0:84"></a><a class="pred" href="main.html#main/0">main/0</a> 
+an arithmetic expression on the command line. Note that <a id="idx:main0:63"></a><a class="pred" href="main.html#main/0">main/0</a> 
 is defined lib the library
-<code>library(main)</code>. It calls <a id="idx:main1:85"></a><span class="pred-ext">main/1</span> 
+<code>library(main)</code>. It calls <a id="idx:main1:64"></a><span class="pred-ext">main/1</span> 
 with the command line arguments after disabling signal handling.
 
 <pre class="code">
@@ -364,7 +364,7 @@ swipl -t prolog eval 1+1
 ?-
 </pre>
 
-<p>The Windows version simply ignores the <code>#!</code> line.<sup class="fn">14<span class="fn-text">Older 
+<p>The Windows version simply ignores the <code>#!</code> line.<sup class="fn">13<span class="fn-text">Older 
 versions extracted command line arguments from the <em>HashBang</em> 
 line. As of version 5.9 all relevant setup can be achieved using <em>directives</em>. 
 Due to the compatibility issues around <em>HashBang</em> line 
@@ -416,9 +416,9 @@ a saved state</span></a></h4>
 <p>For larger programs, as well as for programs that are required to run 
 on systems that do not have the SWI-Prolog development system installed, 
 creating a saved state is the best solution. A saved state is created 
-using <a id="idx:qsaveprogram12:86"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
+using <a id="idx:qsaveprogram12:65"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
 or the <strong>-c</strong> command line option. A saved state is a file 
-containing machine-independent<sup class="fn">15<span class="fn-text">The 
+containing machine-independent<sup class="fn">14<span class="fn-text">The 
 saved state does not depend on the CPU instruction set or endianness. 
 Saved states for 32- and 64-bits are not compatible. Typically, saved 
 states only run on the same version of Prolog on which they have been 
@@ -433,17 +433,17 @@ using the -c command line option</span></a></h4>
 <a id="sec:cmdlinecomp"></a>
 
 <p>This mechanism loads a series of Prolog source files and then creates 
-a saved state as <a id="idx:qsaveprogram2:87"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+a saved state as <a id="idx:qsaveprogram2:66"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 does. The command syntax is:
 
 <pre class="code">
 % swipl [option ...] [-o output] -c file.pl ...
 </pre>
 
-<p>The <var>options</var> argument are options to <a id="idx:qsaveprogram2:88"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+<p>The <var>options</var> argument are options to <a id="idx:qsaveprogram2:67"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 written in the format below. The option names and their values are 
 described with
-<a id="idx:qsaveprogram2:89"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.
+<a id="idx:qsaveprogram2:68"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>.
 <blockquote>
 <code>--</code><em>option-name</em><code>=</code><em>option-value
 </em></blockquote>

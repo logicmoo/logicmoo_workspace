@@ -360,8 +360,6 @@ for executables. E.g. the following finds the executable for <code>ls</code>:
 OS process id, this implementation does not make this distinction. This 
 implies that <a class="pred" href="#is_process/1">is_process/1</a> is 
 incomplete and unreliable.
-<li>SICStus only supports ISO 8859-1 (latin-1). This implementation 
-supports arbitrary OS multibyte interaction using the default locale.
 <li>It is unclear what the <code>detached(true)</code> option is 
 supposed to do. Disable signals in the child? Use <code>setsid()</code> 
 to detach from the session? The current implementation uses <code>setsid()</code> 
@@ -400,10 +398,11 @@ properly quoted if needed.
 Bind the standard streams of the new process. <var>Spec</var> is one of 
 the terms below. If <code>pipe(Pipe)</code> is used, the Prolog stream 
 is a stream in text-mode using the encoding of the default locale. The 
-encoding can be changed using <span class="pred-ext">set_stream/2</span>. 
-The options <code>stdout</code> and <code>stderr</code> may use the same 
-stream, in which case both output streams are connected to the same 
-Prolog stream.
+encoding can be changed using <span class="pred-ext">set_stream/2</span>, 
+or by using the two-argument form of <code>pipe</code>, which accepts an
+<code>encoding(Encoding)</code> option. The options <code>stdout</code> 
+and <code>stderr</code> may use the same stream, in which case both 
+output streams are connected to the same Prolog stream.
 
 <dl class="latex">
 <dt><strong>std</strong></dt>
@@ -418,8 +417,17 @@ Bind to a <i>null</i> stream. Reading from such a stream returns
 end-of-file, writing produces no output
 </dd>
 <dt><strong>pipe</strong>(<var>-Stream</var>)</dt>
+<dt><strong>pipe</strong>(<var>-Stream, +StreamOptions</var>)</dt>
 <dd class="defbody">
-Attach input and/or output to a Prolog stream.
+Attach input and/or output to a Prolog stream. The optional <var>StreamOptions</var> 
+argument is a list of options that affect the stream. Currently only the 
+options
+<code>type(+Type)</code> and <code>encoding(+Encoding)</code> are 
+supported, which have the same meaning as the stream properties of the 
+same name (see <span class="pred-ext">stream_property/2</span>).
+<var>StreamOptions</var> is provided mainly for SICStus compatibility - 
+the SWI-Prolog predicate <span class="pred-ext">set_stream/2</span> can 
+be used for the same purpose.
 </dd>
 <dt><strong>stream</strong>(<var>+Stream</var>)</dt>
 <dd class="defbody">

@@ -122,9 +122,9 @@ CQL is a Prolog interface to SQL databases. There are two modes: _|fully
 compiled|_ and _|runtime|_. The _|fully compiled|_   mode should be used
 if possible due to the far greater compile time checking it provides.
 
-## Warnings {#cql-warnings}
+## Warnings from CQL {#cql-warnings}
 
-### Comparisons with NULL {#cql-compare-null}
+### CQL Comparisons with NULL {#cql-compare-null}
 
 CQLv2  correctly  compiles  equality  comparisons  with  NULL  into  the
 appropriate expression at runtime. In CQLv1, executing
@@ -141,7 +141,7 @@ WHERE a = ?|=
 See the section _|Removing null comparisions|_  for the dealing with the
 common requirement to ignore comparisons with null.
 
-### Avoid setof/3 and bagof/3 {#cql-and-setof}
+### Avoid setof/3 and bagof/3 in CQL queries {#cql-and-setof}
 
 It is generally not a good  idea  to   wrap  CQL  inside  a setof/3 or a
 bagof/3 ... unless you are prepared  to   declare  all the CQL variables
@@ -150,7 +150,7 @@ want to sort, use findall/3 followed by   sort/2. Note that sort/2 (like
 setof/3) removes duplicates. If you don't want to remove duplicates, use
 msort/2.
 
-## Retrieved nulls have special logic to handle outer joins {#cql-null-outer-jpin}
+## CQL: Retrieved nulls have special logic to handle outer joins {#cql-null-outer-jpin}
 
 In the course of executing a select query, the following rules are applied:
 
@@ -169,7 +169,7 @@ Assume x.a binds A to a non-null value.   If there is no matching row in
 never succeed. By not binding  the   variable  associated with `y.a` the
 query can succeed ( rule 1) and `A` will be bound to the value in `x.a`.
 
-## Getting Started Quickly {#cql-quickstart}
+## CQL: Getting Started Quickly {#cql-quickstart}
 
 Here is a simple example of a SQL SELECT from the table `se_lt_x`
 
@@ -210,7 +210,7 @@ comparisons (they just translate to SQL  `=`   and  `<>`, so in fact you
 could use them for string comparisons)
 
 
-## Debugging {#cql-debugging}
+## Debugging CQL queries {#cql-debugging}
 
 You can debug CQL using the meta-predicates ?/1, ??/2 and ???/3:
 
@@ -260,7 +260,7 @@ You can debug CQL using the meta-predicates ?/1, ??/2 and ???/3:
     ==
 
 
-## Prolog Variables {#cql-prolog-vars}
+## Prolog Variables in CQL queries {#cql-prolog-vars}
 
 A Prolog variable  can  be  simultaneously   a  _|SELECT|_  variable,  a
 _|JOIN|_ variable and a _|WHERE|_ variable  as   A  is  in the following
@@ -314,7 +314,7 @@ FIXME: Is this still the case?
   true ;
   ==
 
-## Special Attributes {#cql-special-attrs}
+## CQL Special Attributes {#cql-special-attrs}
 
 The following attributes are automatically provided i.e if the attribute
 is present in the table, CQL will automatically fill in the value:
@@ -339,19 +339,19 @@ is present in the table, CQL will automatically fill in the value:
 All  the  special  attributes  can  be    overridden  by  supplying  the
 attribute-value pair explicitly.
 
-## Examples {#cql-examples}
+## CQL Examples {#cql-examples}
 
 Rather than provide an abstract description of CQL syntax here is a set of
 examples that show how to use it.
 
-### Simple INSERT {#cql-insert}
+### CQL Simple INSERT {#cql-insert}
 
   ==
   {[],
    insert(se_lt_x, [a-'A', b-'B', c-100])}
   ==
 
-### Simple INSERT with retrieval of identity of the inserted {#cql-insert2}
+### CQL Simple INSERT with retrieval of identity of the inserted {#cql-insert2}
 
 ==
 {[],
@@ -359,7 +359,7 @@ examples that show how to use it.
  identity(I)}
 ==
 
-### Simple DELETE {#cql-delete}
+### CQL Simple DELETE {#cql-delete}
 
   ==
   {[],
@@ -374,7 +374,7 @@ are to be deleted). This seems  like   overkill  because a delete can in
 fact refer to only one table  anyway   i.e.  you  can't identify rows to
 delete via a JOIN.
 
-### Simple SELECT {#cql-select}
+### CQL Simple SELECT {#cql-select}
 
   ==
   {[],
@@ -396,7 +396,7 @@ This query will either:
    * If `A` and `B` are both unbound, bind `A` and `B` to each of
      the tuples in `se_lt_x`
 
-### Simple UPDATE {#cql-update}
+### CQL Simple UPDATE {#cql-update}
 
   ==
   {[],
@@ -409,7 +409,7 @@ This corresponds to =|UPDATE se_lt_x   SET c=100 WHERE se_lt_x.a='A1'|=.
 The '@' is a special alias referring to the table that is being updated.
 The row_count/1 term gives the number or rows updated.
 
-### WHERE with arithmetic comparison {#cql-where-arith}
+### CQL WHERE with arithmetic comparison {#cql-where-arith}
 
   ==
   {[],
@@ -417,7 +417,7 @@ The row_count/1 term gives the number or rows updated.
    C > 10}
   ==
 
-### Simple INNER JOIN {#cql-inner-join}
+### CQL Simple INNER JOIN {#cql-inner-join}
 
   ==
   {[],
@@ -430,7 +430,7 @@ The join is `se_lt_x.a = se_lt_y.d` because of the shared variable `J1`.
 `se_lt_x.c` will be returned in `C` and  `se_lt_y.f` will be returned in
 `F`
 
-### Arithmetic UPDATE with an INNER JOIN and a WHERE restriction {#cql-update-join-where}
+### CQL Arithmetic UPDATE with an INNER JOIN and a WHERE restriction {#cql-update-join-where}
 
 ==
 {[],
@@ -443,13 +443,13 @@ This joins the table being updated  (table `se_lt_x`) on table `se_lt_y`
 where `se_lt_x.a = se_lt_y.a` and where   `se_lt_x.c < 200` then updates
 each identified row `se_lt_x.c` with the specified expression.
 
-### Confirm row does not exist {#cql-not-exists}
+### CQL: Confirm row does not exist {#cql-not-exists}
 
   ==
   \+ exists {[], se_lt_x :: [a-'Z']}
   ==
 
-### Aggregation - Count {#cql-count}
+### CQL: Aggregation - Count {#cql-count}
 
   ==
   {[],
@@ -458,7 +458,7 @@ each identified row `se_lt_x.c` with the specified expression.
 
 This will count the rows in table se_lt_x
 
-### Aggregation - Sum {#cql-sum}
+### CQL: Aggregation - Sum {#cql-sum}
 
   ==
   {[],
@@ -467,7 +467,7 @@ This will count the rows in table se_lt_x
 
 Sum the values of attribute c in table se_lt_x
 
-### Aggregation - Average {#cql-avg}
+### CQL: Aggregation - Average {#cql-avg}
 
   ==
   {[],
@@ -476,7 +476,7 @@ Sum the values of attribute c in table se_lt_x
 
 Calculate the mean of the values of attribute c in table se_lt_x
 
-### Maximum Value {#cql-max}
+### CQL: Maximum Value {#cql-max}
 
   ==
   {[],
@@ -485,7 +485,7 @@ Calculate the mean of the values of attribute c in table se_lt_x
 
 Calculate the maximum of the values of attribute c in table se_lt_x
 
-### Minimum Value {#cql-min}
+### CQL: Minimum Value {#cql-min}
 
   ==
   {[],
@@ -494,7 +494,7 @@ Calculate the maximum of the values of attribute c in table se_lt_x
 
 Calculate the minimum of the values of attribute c in table se_lt_x
 
-### Aggregation requiring GROUP BY {#cql-group-by}
+### CQL: Aggregation requiring GROUP BY {#cql-group-by}
 
   ==
   {[],
@@ -505,7 +505,7 @@ Calculate the minimum of the values of attribute c in table se_lt_x
 This will generate the =|GROUP BY  SQL|=   and  sum `se_lt_z.i` for each
 value of `se_lt_z.g`
 
-### INNER JOIN with an aggregation sub-query where the sub-query is constrained by a shared variable from the main query {#cql-agg-subquery}
+### CQL: INNER JOIN with an aggregation sub-query where the sub-query is constrained by a shared variable from the main query {#cql-agg-subquery}
 
   ==
   {[],
@@ -526,7 +526,7 @@ The main query and the sub-query share variable Z. The generated SQL is:
     z4.i > (SELECT min(y11.f) FROM se_lt_y y11 WHERE z4.g=y11.d)
   ==
 
-### INNER JOIN in an aggregation sub-query {#cql-join-subquery}
+### CQL: INNER JOIN in an aggregation sub-query {#cql-join-subquery}
 
   ==
   {[],
@@ -537,7 +537,7 @@ The main query and the sub-query share variable Z. The generated SQL is:
 	   se_lt_z :: [h-J1, i-I])}
   ==
 
-### Negation {#cql-negation}
+### CQL: Negation {#cql-negation}
 
   ==
   {[],
@@ -555,7 +555,7 @@ The generated SQL is:
    WHERE NOT EXISTS (SELECT * FROM se_lt_y y13 WHERE x39.a = y13.d)
   ==
 
-### EXISTS {#cql-exists}
+### CQL: EXISTS {#cql-exists}
 
 An exists restriction translates to a =|WHERE|= sub-query and is used to
 say that "each row  returned  in  the   main  query  must  satisfy  some
@@ -580,7 +580,7 @@ compiles to:
     EXISTS (SELECT * FROM se_lt_y WHERE x.a = y.d)
   ==
 
-### Left Outer Join {#cql-left-outer-join}
+### CQL: Left Outer Join {#cql-left-outer-join}
 
   ==
   se_lt_x :: [a-J1, b-B]
@@ -588,7 +588,7 @@ compiles to:
   se_lt_y :: [d-J1, e-E]}
   ==
 
-### List-based Restrictions {#cql-list-restrictions}
+### CQL: List-based Restrictions {#cql-list-restrictions}
 
 CQL supports query restrictions based on lists.  Note that in both cases
 *|\== [] and  ==  []  are   equivalent|*  despite  the  obvious  logical
@@ -610,7 +610,7 @@ both do *exactly* the same thing  -   they  will  not restrict the query
 based on Bar. The second case  seems   to  be logically consistent - all
 things are not in the empty list.
 
-### Compile time in-list constraint {#cql-list-compilation}
+### CQL: Compile time in-list constraint {#cql-list-compilation}
 
 If your list is bound at compile-time,  you   can  simply  use it as the
 attribute value in CQL, for example:
@@ -655,7 +655,7 @@ generated i.e.
   {[], se_lt_x :: [b-B}
   ==
 
-### Disjunction resulting in OR in WHERE clause {#cql-disjunction}
+### CQL: Disjunction resulting in OR in WHERE clause {#cql-disjunction}
 
   ==
   {[],
@@ -674,7 +674,7 @@ The generated SQL is:
     ((x.b = ? AND x.c < ?) OR x.c = ?)
   ==
 
-### Disjunction resulting in different joins (implemented as a SQL UNION) {#cql-disj-diff-joins}
+### CQL: Disjunction resulting in different joins (implemented as a SQL UNION) {#cql-disj-diff-joins}
 
   ==
   {[],
@@ -699,7 +699,7 @@ The generated SQL is:
     (se_lt_x x44 INNER JOIN se_lt_y y16 ON x44.a=y16.d AND y16.d=x44.a)
   ==
 
-### Disjunction resulting in different SELECT attributes (implemented as separate ODBC queries) {#cql-disj-attrs}
+### CQL: Disjunction resulting in different SELECT attributes (implemented as separate ODBC queries) {#cql-disj-attrs}
 
   ==
   {[],
@@ -711,7 +711,7 @@ The generated SQL is:
 The output variable  A  is  bound  to   the  value  from  two  different
 attributes and so the query is implemented as two separate ODBC queries
 
-### ORDER BY {#cql-order-by}
+### CQL: ORDER BY {#cql-order-by}
 
 ==
 {[],
@@ -722,7 +722,7 @@ attributes and so the query is implemented as two separate ODBC queries
 The order_by specification is a list  of "signed" variables. The example
 above will order by se_lt_z.g descending
 
-### DISTINCT {#cql-distinct}
+### CQL: DISTINCT {#cql-distinct}
 
 Use distinct(ListOfVars) to specify which  attributes   you  want  to be
 distinct:
@@ -745,7 +745,7 @@ distinct:
   ==
 
 
-### SELECT with NOT NULL restriction {#cql-select-not-null}
+### CQL: SELECT with NOT NULL restriction {#cql-select-not-null}
 
   ==
   {[],
@@ -753,7 +753,7 @@ distinct:
    J \== {null}}
   ==
 
-### First N {#cql-top}
+### CQL: First N {#cql-top}
 
   ==
   {[],
@@ -767,7 +767,7 @@ This generates a TOP  clause  in  SQL   Server,  and  LIMIT  clauses for
 PostgreSQL and SQLite
 
 
-### Self JOIN {#cql-self-join}
+### CQL: Self JOIN {#cql-self-join}
 
   ==
   {[],
@@ -778,7 +778,7 @@ PostgreSQL and SQLite
   ==
 
 
-### Removing null comparisions {#cql-no-null-compare}
+### CQL: Removing null comparisions {#cql-no-null-compare}
 
 Use the ignore_if_null wrapper in your CQL   to  'filter out' null input
 values. This is a useful extension for creating user-designed searches.
@@ -815,7 +815,7 @@ _succeed_, which means the disjunction  would   always  succeed i.e. the
 query would contain no restriction, which   is  clearly not the intended
 result. FIXME: Mike, what is this all about?
 
-### Three table JOIN {#cql-three-table-join}
+### CQL: Three table JOIN {#cql-three-table-join}
 
   ==
   {[],
@@ -829,7 +829,7 @@ result. FIXME: Mike, what is this all about?
 The shared variable A joins `se_lt_x` and `se_lt_y`; the shared variable
 `F` joins `se_lt_y` and `se_lt_z`
 
-### Three table JOIN with NOLOCK locking hint {#cql-three-nolock}
+### CQL: Three table JOIN with NOLOCK locking hint {#cql-three-nolock}
 
   ==
   {[],
@@ -842,7 +842,7 @@ The shared variable A joins `se_lt_x` and `se_lt_y`; the shared variable
 
 The hash operator indicates the table that should be accessed WITH (NOLOCK)
 
-### SELECT with LIKE {#cql-like}
+### CQL: SELECT with LIKE {#cql-like}
 
   ==
   {[],
@@ -852,7 +852,7 @@ The hash operator indicates the table that should be accessed WITH (NOLOCK)
 
 The operator =~ means LIKE. If you are using PostgreSQL, it means ILIKE.
 
-### Writing exceptions directly to the database {#cql-write}
+### CQL: Writing exceptions directly to the database {#cql-write}
 
 You can write an exception term directly to a varchar-type column in the
 database. Note that it will be rendered  as text using ~p, and truncated
@@ -870,7 +870,7 @@ get an exception! Example code:
 
 FIXME: This code is specific to my usage of CQL
 
-### TOP N is Parametric {#cql-top-n-parametric}
+### CQL: TOP N is Parametric {#cql-top-n-parametric}
 
 You can pass the  "N"  is  TOP  N   as  a  parameter  (Subject  to  DBMS
 compatibility. This works in SQL Server 2005 and later, and PostgreSQL 9
@@ -885,7 +885,7 @@ compatibility. This works in SQL Server 2005 and later, and PostgreSQL 9
   ==
 
 
-### Using compile_time_goal/1 {#cql-compile-time-goal}
+### CQL: Using compile_time_goal/1 {#cql-compile-time-goal}
 
 You can include compile_time_goal(Goal) in your   CQL.  If you specify a
 module, it will be used,  otherwise  the   goal  will  be  called in the
@@ -918,7 +918,7 @@ them.
    FavouriteColour == Colours}
   ==
 
-### ON {#cql-on}
+### CQL: ON {#cql-on}
 
 CQL supports both constant and shared variable join specifications. This
 is particularly useful when specifying outer joins.
@@ -949,7 +949,7 @@ For example:
    se_lt_x :: [c-J1, a-A, b-B] on A \== 'A1'},
   ==
 
-### Expressions In Where Restrictions {#cql-expr-in-where}
+### CQL: Expressions In Where Restrictions {#cql-expr-in-where}
 
 Expressions in WHERE restrictions are supported, for example:
 
@@ -960,7 +960,7 @@ Expressions in WHERE restrictions are supported, for example:
   ==
 
 
-### Explicitly avoid the "No WHERE restriction" message {#cql-no-where}
+### CQL: Explicitly avoid the "No WHERE restriction" message {#cql-no-where}
 
 To avoid accidentally deleting or  updating  all   rows  in  a table CQL
 raises an exception if there is no WHERE restriction.
@@ -980,7 +980,7 @@ example:
 	  absence_of_where_restriction_is_deliberate}
   ==
 
-### HAVING {#cql-having}
+### CQL: HAVING {#cql-having}
 
 HAVING restrictions can be specified.  For example:
 
@@ -1002,7 +1002,7 @@ against the _|groups and/or aggregates  specified   in  the SQL GROUP BY
 clause and/or the SQL SELECT column list|_.
 
 
-### INSERT and UPDATE value in-line formatting {#cql-inst-update-value}
+### CQL: INSERT and UPDATE value in-line formatting {#cql-inst-update-value}
 
 INSERT and UPDATE values can be formatted in-line at runtime.  For example:
 
@@ -1015,7 +1015,7 @@ INSERT and UPDATE values can be formatted in-line at runtime.  For example:
 
 will insert 'EGG_NOGG' into attribute 'd'.
 
-### Negations in WHERE Clauses {#cql-neg-where}
+### CQL: Negations in WHERE Clauses {#cql-neg-where}
 
 You can specify negations in CQL WHERE clauses e.g.
 
@@ -1028,7 +1028,7 @@ You can specify negations in CQL WHERE clauses e.g.
 Note that, just like  in  Prolog,  \+   is  a  unary  operator hence the
 "double" brackets in the example above.
 
-### Predicate-generated Attribute Values {#cql-gen-att-values}
+### CQL: Predicate-generated Attribute Values {#cql-gen-att-values}
 
 It  is  possible  to  generate  *|compile  time|*  attribute  values  by
 specifying a _predicate_ which is  executed   when  the CQL statement is
@@ -1063,7 +1063,7 @@ There is not much point using   predicate-generated  attribute values in
 compile-at-runtime CQL as you can always  call the predicate to generate
 the required values _outside_ the CQL statement.
 
-### INSERT from SELECT {#cql-insert-from-select}
+### CQL: INSERT from SELECT {#cql-insert-from-select}
 
 INSERT from SELECT is supported:
 
@@ -1086,12 +1086,12 @@ Note the use of the `as(d)` construct in   the SELECT part of the CQL to
 make the constant *|'MIKE'|* appear to come from the SELECT thus setting
 `lt_x1.d` to *|'MIKE'|* in every row inserted.
 
-## Hooks {#cql-hooks}
+## CQL: Hooks {#cql-hooks}
 
 CQL provides a large number of hooks   to  fine-tune behaviour and allow
 for customization. These are:
 
-### Generated Code Hooks {#cql-code-hooks}
+### CQL: Generated Code Hooks {#cql-code-hooks}
 
    * cql:cql_dependency_hook(+EntitySet, +Module) can be defined to be
      notified when a given Module references a list of database
@@ -1105,7 +1105,7 @@ for customization. These are:
      interested in proposed indices for your schema. Note that this is
      not very mature (yet)
 
-### Data Representation Hooks {#cql-represent-hooks}
+### CQL: Data Representation Hooks {#cql-represent-hooks}
 
    * cql:cql_atomic_value_check_hook(+Value) can be defined to declare
      new 'atomic' types (That is, types which can be written directly to
@@ -1121,7 +1121,7 @@ for customization. These are:
    * cql:odbc_value_to_application_value_hook(+OdbcDataType, +Schema,
      +TableName, +ColumnName, +Domain, +OdbcValue, -ApplicationValue).
 
-### Application Integration {#cql-appl-hooks}
+### CQL: Application Integration {#cql-appl-hooks}
 
    * cql:cql_access_token_hook(+AccessToken, -UserId) can be defined to
      map the generic 'AccessToken' passed to cql_transaction/3 to a user
@@ -1171,14 +1171,14 @@ for customization. These are:
      information on a per-transaction level. This can be recovered via
      database_transaction_query_info(?ThreadId, ?Goal, ?Info).
 
-### Inline values {#cql-inline-hooks}
+### CQL: Inline values {#cql-inline-hooks}
 
    * cql:cql_inline_domain_value_hook(+DomainName, +Value)
      can be defined if you want the given value to be 'inlined' into the
      CQL (ie not supplied as a parameter). Great care must be taken to
      avoid SQL injection attacks if this is used.
 
-### Schema {#cql-shema-hook}
+### CQL: Schema {#cql-shema-hook}
 
 These define the  schema.  You  MUST   either  define  them,  or include
 library(cql/cql_autoschema) and add two directives   to build the schema
@@ -1210,7 +1210,7 @@ schema.
    * cql:routine_return_type(+Schema, +RoutineName, +OdbcDataType).
    * cql:database_constraint(+Schema, +EntityName, +ConstraintName, +Constraint).
 
-### Event Processing and History {#cql-events-and-history}
+### CQL: Event Processing and History {#cql-events-and-history}
 
 CQL provides hooks for  maintaining  detailed   history  of  data in the
 database.
@@ -1236,7 +1236,7 @@ For example
    row_count(RowCount)}
   ==
 
-### Statistical Hooks {#cql-statistics-hooks}
+### CQL: Statistical Hooks {#cql-statistics-hooks}
 
 CQL has hooks to enable in-memory statistics  to be tracked for database
 tables. Using this hook, it's possible to  monitor the number of rows in

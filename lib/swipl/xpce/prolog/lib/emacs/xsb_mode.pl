@@ -85,12 +85,6 @@ prolog_colour:goal_colours(import(Preds from Module),
                                ]) :-
     xsb_module_file(Module, File),
     xsb_imports(Preds, File, Imports).
-prolog_colour:goal_colours(dynamic(_Preds as Options),
-                           xsb-[ keyword(as)-[ predicates,
-                                               OptColours
-                                             ]
-                               ]) :-
-    dyn_option_colours(Options, OptColours).
 
 xsb_module_file(usermod, module(user)) :-
     !.
@@ -124,20 +118,6 @@ xsb_imports((A,B), From, functor-[CA, CB]) :-
     xsb_imports(A, From, CA),
     xsb_imports(B, From, CB).
 xsb_imports(_, file(Path), import(Path)).
-
-dyn_option_colours(Var, error(instantiation_error)) :-
-    var(Var),
-    !.
-dyn_option_colours((A,B), functor-[CA, CB]) :-
-    dyn_option_colours(A, CA),
-    dyn_option_colours(B, CB).
-dyn_option_colours(Opt, identifier) :-
-    valid_dyn_option(Opt),
-    !.
-dyn_option_colours(_Opt, error(type_error(xsb_dynamic_option))).
-
-valid_dyn_option(incremental).
-valid_dyn_option(abstract(_)).
 
 prolog_colour:style(goal(xsb, _), [colour(blue), underline(true)]).
 

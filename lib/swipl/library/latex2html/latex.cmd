@@ -25,6 +25,7 @@
 % Environments
 
 {tabular}{-}
+{tabulary}{-}{-}
 {array}{-}
 {tabbing}
 {minipage}{-}

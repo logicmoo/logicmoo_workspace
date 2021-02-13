@@ -571,7 +571,7 @@ walk_called(Closure, _, _, _) :-
     '$get_predicate_attribute'(Module:Head, defined, 1).
 walk_called(ClosureCall, _, _, _) :-
     compound(ClosureCall),
-    functor(ClosureCall, Closure, _),
+    compound_name_arity(ClosureCall, Closure, _),
     blob(Closure, closure),
     !,
     '$closure_predicate'(Closure, Module:Name/Arity),
@@ -1046,6 +1046,7 @@ predicate_in_module(Module, PI) :-
 
 
 hidden_predicate(Name, _) :-
+    atom(Name),                         % []/N is not hidden
     sub_atom(Name, 0, _, _, '$wrap$').
 
 

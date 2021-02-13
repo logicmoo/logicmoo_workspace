@@ -541,8 +541,13 @@ process_equality(Left, upper_case(Right)) :-
     !,
     upcase_atom(Left, Right).
 process_equality(Left, Right) :-
-    Left = Right.
-
+    Left = Right,
+    !.
+process_equality(Left, Right) :-
+    atom(Left),
+    atomic(Right),
+    \+ atom(Left),
+    atom_string(Left, Right).
 
 var_or_function(Arg, _, Arg) :-
     var(Arg),

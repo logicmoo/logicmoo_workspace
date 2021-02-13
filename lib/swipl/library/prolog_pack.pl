@@ -68,7 +68,7 @@
 The library(prolog_pack) provides the SWI-Prolog   package manager. This
 library lets you inspect installed   packages,  install packages, remove
 packages, etc. It is complemented by   the  built-in attach_packs/0 that
-makes installed packages available as libaries.
+makes installed packages available as libraries.
 
 @see    Installed packages can be inspected using =|?- doc_browser.|=
 @tbd    Version logic
@@ -2493,9 +2493,10 @@ message(server_reply(exception(E))) -->
     [ 'Server reported the following error:'-[], nl ],
     '$messages':translate_message(E).
 message(cannot_create_dir(Alias)) -->
-    { setof(PackDir,
-            absolute_file_name(Alias, PackDir, [solutions(all)]),
-            PackDirs)
+    { findall(PackDir,
+              absolute_file_name(Alias, PackDir, [solutions(all)]),
+              PackDirs0),
+      sort(PackDirs0, PackDirs)
     },
     [ 'Cannot find a place to create a package directory.'-[],
       'Considered:'-[]

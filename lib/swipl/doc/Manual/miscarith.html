@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.28</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.28</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -266,8 +266,8 @@ A = 5.
 </dd>
 <dt><strong>state</strong>(<var>+State</var>)</dt>
 <dd class="defbody">
-Set the generator to a state fetched using the state property of <a id="idx:randomproperty1:1538"></a><a class="pred" href="miscarith.html#random_property/1">random_property/1</a>. 
-Using other values may lead to undefined behaviour.<sup class="fn">123<span class="fn-text">The 
+Set the generator to a state fetched using the state property of <a id="idx:randomproperty1:1519"></a><a class="pred" href="miscarith.html#random_property/1">random_property/1</a>. 
+Using other values may lead to undefined behaviour.<sup class="fn">125<span class="fn-text">The 
 limitations of the underlying (GMP) library are unknown, which makes it 
 impossible to validate the <var>State</var>.</span></sup>
 </dd>
@@ -286,7 +286,7 @@ predicate is not present on systems where the state is inaccessible.
 Describes the current state of the random generator. State is a normal 
 Prolog term that can be asserted or written to a file. Applications 
 should make no other assumptions about its representation. The only 
-meaningful operation is to use as argument to <a id="idx:setrandom1:1539"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
+meaningful operation is to use as argument to <a id="idx:setrandom1:1520"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
 using the
 <code>state(State)</code> option.<sup class="fn">bug<span class="fn-text">GMP 
 provides no portable mechanism to fetch and restore the state. The 

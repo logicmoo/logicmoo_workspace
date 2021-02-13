@@ -479,6 +479,7 @@ status_reply(Status, Out, Options) :-
 status_has_content(created(_Location)).
 status_has_content(moved(_To)).
 status_has_content(moved_temporary(_To)).
+status_has_content(gone(_URL)).
 status_has_content(see_other(_To)).
 status_has_content(bad_request(_ErrorTerm)).
 status_has_content(authorise(_Method)).
@@ -585,6 +586,16 @@ status_page_hook(moved_temporary(To), html_tokens(HTML), _Options) :-
                 [ h1('Moved Temporary'),
                   p(['The document is currently ',
                      a(href(To), ' Here')
+                    ]),
+                  \address
+                ]),
+           HTML).
+status_page_hook(gone(URL), html_tokens(HTML), _Options) :-
+    phrase(page([ title('410 Resource Gone')
+                ],
+                [ h1('Resource Gone'),
+                  p(['The document has been removed ',
+                     a(href(URL), ' from here')
                     ]),
                   \address
                 ]),
@@ -1316,6 +1327,7 @@ status_reply_headers(moved(To, Body), Body,
                      [ location(To) ]).
 status_reply_headers(moved_temporary(To, Body), Body,
                      [ location(To) ]).
+status_reply_headers(gone(_URL, Body), Body, []).
 status_reply_headers(see_other(To, Body), Body,
                      [ location(To) ]).
 status_reply_headers(authorise(Method, Body), Body,
@@ -2437,9 +2449,16 @@ cookie_value(Value) -->
     { atom_codes(Value, Chars)
     }.
 
+chars_to_semicolon_or_blank([]), ";" -->
+    ";",
+    !.
+chars_to_semicolon_or_blank([]) -->
+    " ",
+    blanks,
+    eos,
+    !.
 chars_to_semicolon_or_blank([H|T]) -->
     [H],
-    { H \== 32, H \== 0'; },
     !,
     chars_to_semicolon_or_blank(T).
 chars_to_semicolon_or_blank([]) -->

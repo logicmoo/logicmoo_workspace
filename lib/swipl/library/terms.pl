@@ -3,8 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2008-2016, University of Amsterdam, VU University Amsterdam
-    All rights reserved.
+    Copyright (c) 2008-2020, University of Amsterdam,
+                             VU University
+                             SWI-Prolog Solutions b.v.
+    Amsterdam All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions
@@ -44,8 +46,16 @@
             cyclic_term/1,              % @Term
             acyclic_term/1,             % @Term
             term_subsumer/3,            % +Special1, +Special2, -General
-            term_factorized/3           % +Term, -Skeleton, -Subsitution
+            term_factorized/3,          % +Term, -Skeleton, -Subsitution
+            mapargs/3,                  % :Goal, ?Term1, ?Term2
+            same_functor/2,             % ?Term1, ?Term2
+            same_functor/3,             % ?Term1, ?Term2, -Arity
+            same_functor/4              % ?Term1, ?Term2, ?Name, ?Arity
           ]).
+
+:- meta_predicate
+    mapargs(2,?,?).
+
 :- autoload(library(rbtrees),
 	    [ rb_empty/1,
 	      rb_lookup/3,
@@ -55,6 +65,7 @@
 	      ord_list_to_rbtree/2,
 	      rb_update/5
 	    ]).
+:- autoload(library(error), [instantiation_error/1]).
 
 
 /** <module> Term manipulation
@@ -292,3 +303,56 @@ mk_subst([Val0-Var|T0], [Var=Val|T], Subst) :-
     functor(Val,  Name, Arity),
     insert_arg_vars(1, Val0, Val, Subst),
     mk_subst(T0, T, Subst).
+
+
+%!  mapargs(:Goal, ?Term1, ?Term2)
+%
+%   Term1 and Term2 have the  same   functor  (name/arity)  and for each
+%   matching pair of arguments call(Goal, A1, A2) is true.
+
+mapargs(Goal, Term1, Term2) :-
+    same_functor(Term1, Term2, Arity),
+    mapargs_(1, Arity, Goal, Term1, Term2).
+
+mapargs_(I, Arity, Goal, Term1, Term2) :-
+    I =< Arity,
+    !,
+    arg(I, Term1, A1),
+    arg(I, Term2, A2),
+    call(Goal, A1, A2),
+    I2 is I+1,
+    mapargs_(I2, Arity, Goal, Term1, Term2).
+mapargs_(_, _, _, _, _).
+
+
+%!  same_functor(?Term1, ?Term2) is semidet.
+%!  same_functor(?Term1, ?Term2, -Arity) is semidet.
+%!  same_functor(?Term1, ?Term2, ?Name, ?Arity) is semidet.
+%
+%   True when Term1 and Term2 are  compound   terms  that  have the same
+%   functor   (Name/Arity).   The   arguments   must   be   sufficiently
+%   instantiated, which means either Term1  or   Term2  must be bound or
+%   both Name and Arity must be bound.
+%
+%   @compat SICStus
+
+same_functor(Term1, Term2) :-
+    same_functor(Term1, Term2, _Name, _Arity).
+
+same_functor(Term1, Term2, Arity) :-
+    same_functor(Term1, Term2, _Name, Arity).
+
+same_functor(Term1, Term2, Name, Arity) :-
+    (   nonvar(Term1)
+    ->  compound_name_arity(Term1, Name, Arity),
+        compound_name_arity(Term2, Name, Arity)
+    ;   nonvar(Term2)
+    ->  compound_name_arity(Term2, Name, Arity),
+        compound_name_arity(Term1, Name, Arity)
+    ;   nonvar(Name),
+        nonvar(Arity)
+    ->  compound_name_arity(Term1, Name, Arity),
+        compound_name_arity(Term2, Name, Arity)
+    ;   instantiation_error(Term1)
+    ).
+

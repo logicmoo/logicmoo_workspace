@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 12.5</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 12.5</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -309,7 +309,7 @@ appended to the kernel using <code>cat &lt;<var>kernel</var>&gt; &lt;<var>state<
 <dt><strong>-shared</strong> <var></var></dt>
 <dd class="defbody">
 Link C, C++ or object files into a shared object (DLL) that can be 
-loaded by the <a id="idx:loadforeignlibrary1:2412"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a> 
+loaded by the <a id="idx:loadforeignlibrary1:2409"></a><a class="pred" href="foreignlink.html#load_foreign_library/1">load_foreign_library/1</a> 
 predicate. If used with
 <strong>-c</strong> it sets the proper options to compile a C or C++ 
 file ready for linking into a shared object.</dd>
@@ -417,7 +417,7 @@ calc(Atom) :-
 <p>The C part of the application parses the command line options, 
 initialises the Prolog engine, locates the <code>calc/1</code> predicate 
 and calls it. The coder is in <a class="fig" href="plld.html#fig:calc">figure 
-9</a>.
+8</a>.
 
 <pre class="code">
 #include &lt;stdio.h&gt;
@@ -469,7 +469,7 @@ main(int argc, char **argv)
 }
 </pre>
 
-<div class="caption"><b>Figure 9 : </b>C source for the calc application</div>
+<div class="caption"><b>Figure 8 : </b>C source for the calc application</div>
 <a id="fig:calc"></a>
 
 <p>The application is now created using the command line below. The 

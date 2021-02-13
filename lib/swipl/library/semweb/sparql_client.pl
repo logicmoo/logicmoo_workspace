@@ -477,8 +477,9 @@ row_values([Var|VarT], DOM, [Value|ValueT]) :-
     ),
     row_values(VarT, DOM, ValueT).
 
-value([element(sparql:literal, Att, Content)], literal(Lit)) :-
+value([element(sparql:literal, Att, Content)|Rest], literal(Lit)) :-
     !,
+    white(Rest),
     lit_value(Content, Value),
     (   memberchk(datatype=Type, Att)
     ->  Lit = type(Type, Value)
@@ -486,12 +487,24 @@ value([element(sparql:literal, Att, Content)], literal(Lit)) :-
     ->  Lit = lang(Lang, Value)
     ;   Lit = Value
     ).
-value([element(sparql:uri, [], [URI])], URI) :- !.
-value([element(sparql:bnode, [], [NodeID])], URI) :-
+value([element(sparql:uri, [], [URI])|Rest], URI) :- !,
+    white(Rest).
+value([element(sparql:bnode, [], [NodeID])|Rest], URI) :-
     !,
+    white(Rest),
     bnode(NodeID, URI).
-value([element(sparql:unbound, [], [])], '$null$').
+value([element(sparql:unbound, [], [])|Rest], '$null$') :-
+    !,
+    white(Rest).
+value([CDATA|Rest], Value) :-
+    atomic(CDATA),
+    value(Rest, Value).
 
+
+white([]).
+white([CDATA|T]) :-
+    atomic(CDATA),
+    white(T).
 
 lit_value([], '').
 lit_value([Value], Value).

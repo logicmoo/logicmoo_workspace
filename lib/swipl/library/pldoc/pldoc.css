@@ -58,6 +58,10 @@ table.arglist td,table.paramlist td
 { font-weight: bold;
 }
 
+span.nopredref
+{ font-weight: bold;
+}
+
 span.pred-tag
 { float: right;
   font-style: italic;
@@ -142,6 +146,10 @@ table.wiki td
   padding: 3px;
   vertical-align: top;
 }
+
+table.wiki td.left   { text-align: left; }
+table.wiki td.center { text-align: center; }
+table.wiki td.right  { text-align: right; }
 
 img.icon
 { border: 0;

@@ -5,6 +5,6 @@ includedir=/opt/logicmoo_workspace/lib/swipl/include
 
 Name: swipl
 Description: ISO/Edinburgh-style Prolog compiler
-Version: 8.3.11
+Version: 8.3.19
 Libs: -L${libdir} -lswipl
 Cflags: -I${includedir}

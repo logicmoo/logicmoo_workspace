@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
 <link rel="previous" href="coroutining.html">
-<link rel="next" href="chrintro.html">
+<link rel="next" href="chr-intro.html">
 
 <style type="text/css">
 
@@ -231,7 +231,7 @@ table.frame-box
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
 <a class="nav" href="coroutining.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="chrintro.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="chr-intro.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h1 id="sec:chr"><a id="sec:9"><span class="sec-nr">9</span> <span class="sec-title">CHR: 
 Constraint Handling Rules</span></a></h1>
@@ -267,36 +267,43 @@ you can find more related papers, references and example programs.
 </div>
 <hr>
 <div class="toc">
-<div class="toc-h2"><a class="sec" href="chrintro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction</span></a></div>
-<div class="toc-h2"><a class="sec" href="SyntaxAndSemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">Syntax 
-and Semantics</span></a></div>
-<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
+<div class="toc-h2"><a class="sec" href="chr-intro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction 
+to CHR</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-syntaxandsemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">CHR 
+Syntax and Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-syntaxandsemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
 of CHR rules</span></a></div>
-<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-syntaxandsemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics 
+of CHR</span></a></div>
 <div class="toc-h2"><a class="sec" href="practical.html"><span class="sec-nr">9.3</span> <span class="sec-title">CHR 
 in SWI-Prolog Programs</span></a></div>
 <div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.1"><span class="sec-nr">9.3.1</span> <span class="sec-title">Embedding 
-in Prolog Programs</span></a></div>
-<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">Constraint 
-declaration</span></a></div>
-<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">Compilation</span></a></div>
-<div class="toc-h2"><a class="sec" href="debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">Ports</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
+CHR in Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">CHR 
+Constraint declaration</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">CHR 
+Compilation</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging 
+CHR programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">CHR 
+debug ports</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing 
+CHR programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
 Debugging Predicates</span></a></div>
-<div class="toc-h2"><a class="sec" href="examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">Examples</span></a></div>
-<div class="toc-h2"><a class="sec" href="sicstus-chr.html"><span class="sec-nr">9.6</span> <span class="sec-title">Backwards 
-Compatibility</span></a></div>
-<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
+<div class="toc-h2"><a class="sec" href="chr-examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">CHR 
+Examples</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-compatibility.html"><span class="sec-nr">9.6</span> <span class="sec-title">CHR 
+compatibility</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-compatibility.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
 Old SICStus CHR implementation</span></a></div>
-<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
+<div class="toc-h3"><a class="sec" href="chr-compatibility.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
 Old ECLiPSe CHR implementation</span></a></div>
-<div class="toc-h2"><a class="sec" href="guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">Programming 
-Tips and Tricks</span></a></div>
-<div class="toc-h2"><a class="sec" href="errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">Compiler 
-Errors and Warnings</span></a></div>
-<div class="toc-h3"><a class="sec" href="errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
+<div class="toc-h2"><a class="sec" href="chr-guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">CHR 
+Programming Tips and Tricks</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-warnings-and-errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">CHR 
+Compiler Errors and Warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-warnings-and-errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
 Compiler Errors</span></a></div>
 </div>
 </body></html>

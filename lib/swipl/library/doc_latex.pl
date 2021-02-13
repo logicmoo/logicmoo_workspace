@@ -773,6 +773,28 @@ predref(Name/Arity) -->
 predref(Name//Arity) -->
     latex(cmd(dcgref(Name, Arity))).
 
+%!  nopredref(+PI)//
+%
+%   Called from ``name/arity``.
+
+nopredref(Name/Arity) -->
+    latex(cmd(nopredref(Name, Arity))).
+
+%!  flagref(+Flag)//
+%
+%   Reference to a Prolog flag
+
+flagref(Flag) -->
+    latex(cmd(prologflag(Flag))).
+
+%!  cite(+Citations) is det.
+%
+%   Emit a ``\cite{Citations}`` command
+
+cite(Citations) -->
+    { atomic_list_concat(Citations, ',', Atom) },
+    latex(cmd(cite(Atom))).
+
 %!  tags(+Tags:list(Tag)) is det.
 %
 %   Emit tag list produced by the   Wiki processor from the @keyword
@@ -1276,30 +1298,56 @@ termitem_with_args(Functor, Args) -->
 %   Emit a table in LaTeX.
 
 latex_table(_Attrs, Content) -->
-    { max_columns(Content, 0, N),
-      make_frame(N, l, List),
-      atom_chars(Format, ['|'|List])
+    { max_columns(Content, 0, _, -, Wittness),
+      col_align(Wittness, 1, Content, Align),
+      atomics_to_string(Align, '|', S0),
+      atomic_list_concat(['|',S0,'|'], Format)
     },
 %       latex(cmd(begin(table, opt(h)))),
     latex(cmd(begin(quote))),
-    latex(cmd(begin(tabular, no_escape(Format)))),
+    latex(cmd(begin(tabulary,
+                    no_escape('0.9\\textwidth'),
+                    no_escape(Format)))),
     latex(cmd(hline)),
     rows(Content),
     latex(cmd(hline)),
-    latex(cmd(end(tabular))),
+    latex(cmd(end(tabulary))),
     latex(cmd(end(quote))).
 %       latex(cmd(end(table))).
 
-max_columns([], C, C).
-max_columns([tr(List)|T], C0, C) :-
+max_columns([], C, C, W, W).
+max_columns([tr(List)|T], C0, C, _, W) :-
     length(List, C1),
-    C2 is max(C0, C1),
-    max_columns(T, C2, C).
+    C1 >= C0,		% take last as wittness to avoid getting the header
+    !,
+    max_columns(T, C1, C, List, W).
+max_columns([_|T], C0, C, W0, W) :-
+    max_columns(T, C0, C, W0, W).
 
-make_frame(0, _, []) :- !.
-make_frame(N, C, [C,'|'|T]) :-
-    N2 is N - 1,
-    make_frame(N2, C, T).
+col_align([], _, _, []).
+col_align([CH|CT], Col, Rows, [AH|AT]) :-
+    (   member(tr(Cells), Rows),
+        nth1(Col, Cells, Cell),
+        auto_par(Cell)
+    ->  Wrap = auto
+    ;   Wrap = false
+    ),
+    col_align(CH, Wrap, AH),
+    Col1 is Col+1,
+    col_align(CT, Col1, Rows, AT).
+
+col_align(td(class=Class,_), Wrap, Align) :-
+    align_class(Class, Wrap, Align),
+    !.
+col_align(_, auto, 'L') :- !.
+col_align(_, false, 'l').
+
+align_class(left,   auto, 'L').
+align_class(center, auto, 'C').
+align_class(right,  auto, 'R').
+align_class(left,   false, 'l').
+align_class(center, false, 'c').
+align_class(right,  false, 'r').
 
 rows([]) -->
     [].
@@ -1309,6 +1357,9 @@ rows([tr(Content)|T]) -->
 
 row([]) -->
     [ latex(' \\\\'), nl(1) ].
+row([td(_Attrs, Content)|T]) -->
+    !,
+    row([td(Content)|T]).
 row([td(Content)|T]) -->
     latex(Content),
     (   {T == []}
@@ -1316,6 +1367,47 @@ row([td(Content)|T]) -->
     ;   [ latex(' & ') ]
     ),
     row(T).
+row([th(Content)|T]) -->
+    latex(cmd(textbf(Content))),
+    (   {T == []}
+    ->  []
+    ;   [ latex(' & ') ]
+    ),
+    row(T).
+
+%!  auto_par(+Content) is semidet.
+%
+%   True when cell Content is a good candidate for auto-wrapping.
+
+auto_par(Content) :-
+    phrase(html_text(Content), Words),
+    length(Words, WC),
+    WC > 1,
+    atomics_to_string(Words, Text),
+    string_length(Text, Width),
+    Width > 15.
+
+html_text([]) -->
+    !.
+html_text([H|T]) -->
+    !,
+    html_text(H),
+    html_text(T).
+html_text(\predref(Name/Arity)) -->
+    !,
+    { format(string(S), '~q/~q', [Name, Arity]) },
+    [S].
+html_text(Compound) -->
+    { compound(Compound),
+      !,
+      functor(Compound, _Name, Arity),
+      arg(Arity, Compound, Content)
+    },
+    html_text(Content).
+html_text(Word) -->
+    [Word].
+
+
 
 
                  /*******************************

@@ -52,7 +52,7 @@
             git_show/4,                 % +Dir, +Hash, -Commit, +Options
             git_commit_data/3           % +Field, +Record, -Value
           ]).
-:- use_module(library(record),[record/1,current_record/2, op(_,_,record)]).
+:- use_module(library(record),[(record)/1,current_record/2, op(_,_,record)]).
 
 :- autoload(library(apply),[maplist/3]).
 :- autoload(library(error),[must_be/2,existence_error/2]).
@@ -309,7 +309,14 @@ is_git_directory(Directory) :-
           directory(Directory)
         ]),
     Status == exit(0),
-    string_codes(".\n", Codes).
+    string_codes(GitDir0, Codes),
+    split_string(GitDir0, "", " \n", [GitDir]),
+    sub_string(GitDir, B, _, A, "/.git/modules/"),
+    !,
+    sub_string(GitDir, 0, B, _, Main),
+    sub_string(GitDir, _, A, 0, Below),
+    directory_file_path(Main, Below, Dir),
+    same_file(Dir, Directory).
 
 %!  git_describe(-Version, +Options) is semidet.
 %

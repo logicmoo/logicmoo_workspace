@@ -213,6 +213,7 @@ non_terminal(Spec)       :- '$set_pattr'(Spec, pred, non_terminal(true)).
 
 '$attr_option'(incremental, [incremental(true),opaque(false)]).
 '$attr_option'(monotonic, monotonic(true)).
+'$attr_option'(lazy, lazy(true)).
 '$attr_option'(opaque, [incremental(false),opaque(true)]).
 '$attr_option'(abstract(Level0), abstract(Level)) :-
     '$table_option'(Level0, Level).
@@ -306,6 +307,8 @@ non_terminal(Spec)       :- '$set_pattr'(Spec, pred, non_terminal(true)).
     ;   var(Goal)
     ->  (   Arity == 0
         ->  (   atom(Name)
+            ->  Goal = Name
+            ;   Name == []
             ->  Goal = Name
             ;   blob(Name, closure)
             ->  Goal = Name
@@ -800,7 +803,7 @@ initialization(Goal, When) :-
 '$clear_source_admin'(File) :-
     retractall('$init_goal'(_, _, File:_)),
     retractall('$load_context_module'(File, _, _)),
-    retractall('$resolved_source_path'(_, File)).
+    retractall('$resolved_source_path_db'(_, _, File)).
 
 
                  /*******************************
@@ -903,9 +906,12 @@ default_module(Me, Super) :-
 
 '$loading'(Library) :-
     current_prolog_flag(threads, true),
-    '$loading_file'(FullFile, _Queue, _LoadThread),
-    file_name_extension(Library, _, FullFile),
-    !.
+    (   '$loading_file'(Library, _Queue, _LoadThread)
+    ->  true
+    ;   '$loading_file'(FullFile, _Queue, _LoadThread),
+        file_name_extension(Library, _, FullFile)
+    ->  true
+    ).
 
 %        handle debugger 'w', 'p' and <N> depth options.
 
@@ -1076,6 +1082,7 @@ user:file_search_path(user_profile, app_preferences('.')).
     ;   Dirs = Defaults
     ),
     '$member'(Dir, Dirs),
+    Dir \== '',
     exists_directory(Dir).
 
 '$path_sep'(Char) :-
@@ -1088,6 +1095,7 @@ user:file_search_path(user_profile, app_preferences('.')).
     exists_directory(Dir),
     !.
 '$make_config_dir'(Dir) :-
+    nb_current('$create_search_directories', true),
     file_directory_name(Dir, Parent),
     '$my_file'(Parent),
     catch(make_directory(Dir), _, fail).
@@ -1098,6 +1106,19 @@ user:file_search_path(user_profile, app_preferences('.')).
     ;   atom_concat(Dir, /, DirS)
     ).
 
+
+%!  '$expand_file_search_path'(+Spec, -Expanded, +Cond) is nondet.
+
+'$expand_file_search_path'(Spec, Expanded, Cond) :-
+    '$option'(access(Access), Cond),
+    memberchk(Access, [write,append]),
+    !,
+    setup_call_cleanup(
+        nb_setval('$create_search_directories', true),
+        expand_file_search_path(Spec, Expanded),
+        nb_delete('$create_search_directories')).
+'$expand_file_search_path'(Spec, Expanded, _Cond) :-
+    expand_file_search_path(Spec, Expanded).
 
 %!  expand_file_search_path(+Spec, -Expanded) is nondet.
 %
@@ -1374,8 +1395,9 @@ user:prolog_file_type(dylib,    executable) :-
 
 '$chk_alias_file'(Spec, Exts, Cond, true, CWD, FullFile) :-
     !,
-    findall(Exp, expand_file_search_path(Spec, Exp), Expansions),
-    Cache = cache(Exts, Cond, CWD, Expansions),
+    findall(Exp, '$expand_file_search_path'(Spec, Exp, Cond), Expansions),
+    current_prolog_flag(emulated_dialect, Dialect),
+    Cache = cache(Exts, Cond, CWD, Expansions, Dialect),
     variant_sha1(Spec+Cache, SHA1),
     get_time(Now),
     current_prolog_flag(file_search_cache_time, TimeOut),
@@ -1394,7 +1416,7 @@ user:prolog_file_type(dylib,    executable) :-
         )
     ).
 '$chk_alias_file'(Spec, Exts, Cond, false, _CWD, FullFile) :-
-    expand_file_search_path(Spec, Expanded),
+    '$expand_file_search_path'(Spec, Expanded, Cond),
     '$extend_file'(Expanded, Exts, LibFile),
     '$file_conditions'(Cond, LibFile),
     '$absolute_file_name'(LibFile, FullFile).
@@ -2279,7 +2301,7 @@ load_files(Module:Files, Options) :-
 %       * The file is already loaded.
 
 :- dynamic
-    '$resolved_source_path'/2.                  % ?Spec, ?Path
+    '$resolved_source_path_db'/3.                % ?Spec, ?Dialect, ?Path
 
 '$load_file'(File, Module, Options) :-
     \+ memberchk(stream(_), Options),
@@ -2302,7 +2324,8 @@ load_files(Module:Files, Options) :-
 %   True when File has already been resolved to an absolute path.
 
 '$resolved_source_path'(File, FullFile, Options) :-
-    '$resolved_source_path'(File, FullFile),
+    current_prolog_flag(emulated_dialect, Dialect),
+    '$resolved_source_path_db'(File, Dialect, FullFile),
     (   '$source_file_property'(FullFile, from_state, true)
     ;   '$source_file_property'(FullFile, resource, true)
     ;   '$option'(if(If), Options, true),
@@ -2324,13 +2347,14 @@ load_files(Module:Files, Options) :-
 
 
 '$register_resolved_source_path'(File, FullFile) :-
-    '$resolved_source_path'(File, FullFile),
-    !.
-'$register_resolved_source_path'(File, FullFile) :-
-    compound(File),
-    !,
-    asserta('$resolved_source_path'(File, FullFile)).
-'$register_resolved_source_path'(_, _).
+    (   compound(File)
+    ->  current_prolog_flag(emulated_dialect, Dialect),
+        (   '$resolved_source_path_db'(File, Dialect, FullFile)
+        ->  true
+        ;   asserta('$resolved_source_path_db'(File, Dialect, FullFile))
+        )
+    ;   true
+    ).
 
 %!  '$translated_source'(+Old, +New) is det.
 %
@@ -2338,8 +2362,8 @@ load_files(Module:Files, Options) :-
 
 :- public '$translated_source'/2.
 '$translated_source'(Old, New) :-
-    forall(retract('$resolved_source_path'(File, Old)),
-           assertz('$resolved_source_path'(File, New))).
+    forall(retract('$resolved_source_path_db'(File, Dialect, Old)),
+           assertz('$resolved_source_path_db'(File, Dialect, New))).
 
 %!  '$register_resource_file'(+FullFile) is det.
 %
@@ -2401,18 +2425,18 @@ load_files(Module:Files, Options) :-
 '$mt_load_file'(File, FullFile, Module, Options) :-
     current_prolog_flag(threads, true),
     !,
-    setup_call_cleanup(
-        with_mutex('$load_file',
-                   '$mt_start_load'(FullFile, Loading, Options)),
-        '$mt_do_load'(Loading, File, FullFile, Module, Options),
-        '$mt_end_load'(Loading)).
+    '$sig_atomic'(setup_call_cleanup(
+                      with_mutex('$load_file',
+                                 '$mt_start_load'(FullFile, Loading, Options)),
+                      '$mt_do_load'(Loading, File, FullFile, Module, Options),
+                      '$mt_end_load'(Loading))).
 '$mt_load_file'(File, FullFile, Module, Options) :-
     '$option'(if(If), Options, true),
     '$noload'(If, FullFile, Options),
     !,
     '$already_loaded'(File, FullFile, Module, Options).
 '$mt_load_file'(File, FullFile, Module, Options) :-
-    '$qdo_load_file'(File, FullFile, Module, Options).
+    '$sig_atomic'('$qdo_load_file'(File, FullFile, Module, Options)).
 
 '$mt_start_load'(FullFile, queue(Queue), _) :-
     '$loading_file'(FullFile, Queue, LoadThread),
@@ -3068,6 +3092,7 @@ load_files(Module:Files, Options) :-
     source_location(_File, Line),
     '$option'(redefine_module(Action), Options, false),
     '$module_class'(File, Class, Super),
+    '$reset_dialect'(File, Class),
     '$redefine_module'(Module, File, Action),
     '$declare_module'(Module, Class, Super, File, Line, false),
     '$export_list'(Public, Module, Ops),
@@ -3075,6 +3100,17 @@ load_files(Module:Files, Options) :-
     '$export_ops'(Ops, Module, File),
     '$qset_dialect'(State),
     nb_setarg(3, State, end_module).
+
+%!  '$reset_dialect'(+File, +Class) is det.
+%
+%   Load .pl files from the SWI-Prolog distribution _always_ in
+%   `swi` dialect.
+
+'$reset_dialect'(File, library) :-
+    file_name_extension(_, pl, File),
+    !,
+    set_prolog_flag(emulated_dialect, swi).
+'$reset_dialect'(_, _).
 
 
 %!  '$module3'(+Spec) is det.
@@ -3605,6 +3641,11 @@ load_files(Module:Files, Options) :-
     !,
     print_message(error, cannot_redefine_comma),
     fail.
+'$store_clause'((Pre => Body), _Layout, File, SrcLoc) :-
+    nonvar(Pre),
+    Pre = (Head,Cond),
+    !,
+    '$store_clause'(?=>(Head,(Cond,!,Body)), _Layout, File, SrcLoc).
 '$store_clause'(Clause, _Layout, File, SrcLoc) :-
     '$valid_clause'(Clause),
     !,

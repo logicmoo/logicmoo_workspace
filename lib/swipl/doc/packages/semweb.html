@@ -513,7 +513,7 @@ Prolog string. If type is known, the Prolog representations from the
 table below are used.
 <blockquote>
 <table class="latex frame-box">
-<tr><td><b>Datatype IRI</b> </td><td><b>Prolog term</b> </td></tr>
+<tr><td><b><b>Datatype IRI</b></b> </td><td><b><b>Prolog term</b></b> </td></tr>
 <tr><td>xsd:float</td><td>float </td></tr>
 <tr><td>xsd:double</td><td>float </td></tr>
 <tr><td>xsd:decimal</td><td>float (1) </td></tr>
@@ -826,7 +826,7 @@ Transform a relaxed literal specification as allowed for
 form. The following Prolog terms are translated:
 <blockquote>
 <table class="latex frame-box">
-<tr><td><b>Prolog Term</b> </td><td><b>Datatype IRI</b> </td></tr>
+<tr><td><b><b>Prolog Term</b></b> </td><td><b><b>Datatype IRI</b></b> </td></tr>
 <tr><td>float</td><td>xsd:double </td></tr>
 <tr><td>integer</td><td>xsd:integer </td></tr>
 <tr><td>string</td><td>xsd:string </td></tr>
@@ -3762,6 +3762,11 @@ for processing RDF data.
 +Stream, :Options</var>)</a></dt>
 <dd class="defbody">
 (Turtle clauses)</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save RDF using ntriples format. The ntriples format is a subset of 
+Turtle, writing each triple fully qualified on its own line.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_trig/2"><strong>rdf_save_canonical_trig</strong>(<var>+Spec, 
 :Options</var>)</a></dt>
 <dd class="defbody">
@@ -3929,12 +3934,6 @@ triple_in(RDF, S,P,O,_G) :-
 <tr><td><var>Out</var> </td><td>is one of <code>stream(Stream)</code>, a 
 stream handle, a file-URL or an atom that denotes a filename. </td></tr>
 </table>
-</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save RDF using ntriples format. The ntriples format is a subset of 
-Turtle, writing each triple fully qualified on its own line.
 </dd>
 </dl>
 

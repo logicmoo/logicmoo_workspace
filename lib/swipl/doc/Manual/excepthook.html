@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section B.5</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section B.5</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ context to errors: prolog_exception_hook</span></a></h2>
 
 <a id="sec:excepthook"></a>
 
-<p>The hook <a id="idx:prologexceptionhook4:2559"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a> 
+<p>The hook <a id="idx:prologexceptionhook4:2555"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a> 
 has been introduced in SWI-Prolog 5.6.5 to provide dedicated exception 
 handling facilities for application frameworks, for example 
 non-interactive server applications that wish to provide extensive 
@@ -251,14 +251,14 @@ context for exceptions for offline debugging.
 This hook predicate, if defined in the module <code>user</code>, is 
 between raising an exception and handling it. It is intended to allow a 
 program adding additional context to an exception to simplify diagnosing 
-the problem. <var>ExceptionIn</var> is the exception term as raised by <a id="idx:throw1:2560"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
+the problem. <var>ExceptionIn</var> is the exception term as raised by <a id="idx:throw1:2556"></a><a class="pred" href="exception.html#throw/1">throw/1</a> 
 or one of the built-in predicates. The output argument <var>ExceptionOut</var> 
 describes the exception that is actually raised. <var>Frame</var> is the 
-innermost frame. See <a id="idx:prologframeattribute3:2561"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
+innermost frame. See <a id="idx:prologframeattribute3:2557"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a> 
 and the library
 <code>library(prolog_stack)</code> for getting information from this.
 <var>CatcherFrame</var> is a reference to the frame calling the matching
-<a id="idx:catch3:2562"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, <code>none</code> 
+<a id="idx:catch3:2558"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, <code>none</code> 
 if the exception is not caught or <code>&rsquo;C'</code> if the 
 exception is caught in C calling Prolog using the flag
 <code>PL_Q_CATCH_EXCEPTION</code>.
@@ -269,7 +269,7 @@ is used for further processing. The hook is <em>never</em> called
 recursively. The hook is <em>not</em> allowed to modify <var>ExceptionOut</var> 
 in such a way that it no longer unifies with the catching frame.
 
-<p>Typically, <a id="idx:prologexceptionhook4:2563"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a> 
+<p>Typically, <a id="idx:prologexceptionhook4:2559"></a><a class="pred" href="excepthook.html#prolog_exception_hook/4">prolog_exception_hook/4</a> 
 is used to fill the second argument of <code>error(Formal, Context)</code> 
 exceptions. <var>Formal</var> is defined by the ISO standard, while 
 SWI-Prolog defines <var>Context</var> as a term <code>context(Location, 
@@ -281,11 +281,11 @@ calling context, such as a full stack trace.
 a quick test of the environment before starting expensive gathering 
 information on the state of the program.
 
-<p>The hook can call <a id="idx:trace0:2564"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
+<p>The hook can call <a id="idx:trace0:2560"></a><a class="pred" href="debugger.html#trace/0">trace/0</a> 
 to enter trace mode immediately. For example, imagine an application 
 performing an unwanted division by zero while all other errors are 
 expected and handled. We can force the debugger using the hook 
-definition below. Run the program in debug mode (see <a id="idx:debug0:2565"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>) 
+definition below. Run the program in debug mode (see <a id="idx:debug0:2561"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>) 
 to preserve as much as possible of the error context.
 
 <pre class="code">

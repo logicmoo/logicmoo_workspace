@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section F.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section F.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -279,13 +279,21 @@ omitted from ListOut.</td></tr>
 <tr><td><a class="pred" href="apply.html#exclude/3">exclude/3</a></td><td>Filter 
 elements for which Goal fails.</td></tr>
 <tr><td><a class="pred" href="apply.html#foldl/4">foldl/4</a></td><td>Fold 
-a list, using arguments of the list as left argument.</td></tr>
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("fold-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
 <tr><td><a class="pred" href="apply.html#foldl/5">foldl/5</a></td><td>Fold 
-a list, using arguments of the list as left argument.</td></tr>
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("fold-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
 <tr><td><a class="pred" href="apply.html#foldl/6">foldl/6</a></td><td>Fold 
-a list, using arguments of the list as left argument.</td></tr>
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("fold-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
 <tr><td><a class="pred" href="apply.html#foldl/7">foldl/7</a></td><td>Fold 
-a list, using arguments of the list as left argument.</td></tr>
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("fold-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
 <tr><td><a class="pred" href="apply.html#include/3">include/3</a></td><td>Filter 
 elements for which Goal succeeds.</td></tr>
 <tr><td><a class="pred" href="apply.html#maplist/2">maplist/2</a></td><td>True 
@@ -300,14 +308,22 @@ if Goal is successfully applied on all matching elements of the list.</td></tr>
 elements of List according to Pred.</td></tr>
 <tr><td><a class="pred" href="apply.html#partition/5">partition/5</a></td><td>Filter 
 List according to Pred in three sets.</td></tr>
-<tr><td><a class="pred" href="apply.html#scanl/4">scanl/4</a></td><td>Left 
-scan of list.</td></tr>
-<tr><td><a class="pred" href="apply.html#scanl/5">scanl/5</a></td><td>Left 
-scan of list.</td></tr>
-<tr><td><a class="pred" href="apply.html#scanl/6">scanl/6</a></td><td>Left 
-scan of list.</td></tr>
-<tr><td><a class="pred" href="apply.html#scanl/7">scanl/7</a></td><td>Left 
-scan of list.</td></tr>
+<tr><td><a class="pred" href="apply.html#scanl/4">scanl/4</a></td><td>Scan 
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("scan-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
+<tr><td><a class="pred" href="apply.html#scanl/5">scanl/5</a></td><td>Scan 
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("scan-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
+<tr><td><a class="pred" href="apply.html#scanl/6">scanl/6</a></td><td>Scan 
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("scan-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
+<tr><td><a class="pred" href="apply.html#scanl/7">scanl/7</a></td><td>Scan 
+an ensemble of _m_ (0 <code>&lt;=</code> _m_ <code>&lt;=</code> 4) lists 
+of length _n_ head-to-tail ("scan-left"), using columns of _m_ list 
+elements as arguments for Goal.</td></tr>
 </table>
 
 <p><h3 id="sec:summary-lib-assoc"><a id="sec:F.2.4"><span class="sec-nr">F.2.4</span> <span class="sec-title">library(assoc)</span></a></h3>
@@ -842,6 +858,9 @@ on the current output stream.</td></tr>
 a list of lists.</td></tr>
 <tr><td><a class="pred" href="lists.html#append/3">append/3</a></td><td>List1AndList2 
 is the concatenation of List1 and List2.</td></tr>
+<tr><td><a class="pred" href="lists.html#clumped/2">clumped/2</a></td><td>Pairs 
+is a list of&lsquo;Item-Count` pairs that represents the _run length 
+encoding_ of Items.</td></tr>
 <tr><td><a class="pred" href="lists.html#delete/3">delete/3</a></td><td>Delete 
 matching elements from a list.</td></tr>
 <tr><td><a class="pred" href="lists.html#flatten/2">flatten/2</a></td><td>Is 
@@ -932,6 +951,9 @@ the number of SubTerms in Term.</td></tr>
 the number of SubTerms in Term.</td></tr>
 <tr><td><a class="pred" href="occurs.html#sub_term/2">sub_term/2</a></td><td>Generates 
 (on backtracking) all subterms of Term.</td></tr>
+<tr><td><a class="pred" href="occurs.html#sub_term_shared_variables/3">sub_term_shared_variables/3</a></td><td>If 
+Sub is a sub term of Term, Vars is bound to the list of variables in Sub 
+that also appear outside Sub in Term.</td></tr>
 <tr><td><a class="pred" href="occurs.html#sub_var/2">sub_var/2</a></td><td>Generates 
 (on backtracking) all subterms (<code>==</code>) of Term.</td></tr>
 </table>
@@ -1294,7 +1316,11 @@ transportation problem</td></tr>
 value of variable in solved state</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-ugraphs"><a id="sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(ugraphs)</span></a></h3>
+<p><h3 id="sec:summary-lib-terms"><a id="sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(terms)</span></a></h3>
+
+<a id="sec:summary-lib-terms"></a>
+
+<p><h3 id="sec:summary-lib-ugraphs"><a id="sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(ugraphs)</span></a></h3>
 
 <a id="sec:summary-lib-ugraphs"></a>
 <table>
@@ -1333,7 +1359,7 @@ all reachable vertices</td></tr>
 of two graphs</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-url"><a id="sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(url)</span></a></h3>
+<p><h3 id="sec:summary-lib-url"><a id="sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(url)</span></a></h3>
 
 <a id="sec:summary-lib-url"></a>
 <table>
@@ -1359,7 +1385,7 @@ between a URL, encoding in US-ASCII and an IRI.</td></tr>
 to/from application/x-www-form-encoded.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-www_browser"><a id="sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(www_browser)</span></a></h3>
+<p><h3 id="sec:summary-lib-www_browser"><a id="sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(www_browser)</span></a></h3>
 
 <a id="sec:summary-lib-www_browser"></a>
 <table>
@@ -1367,7 +1393,7 @@ to/from application/x-www-form-encoded.</td></tr>
 a web-page in a browser</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-solution_sequences"><a id="sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(solution_sequences)</span></a></h3>
+<p><h3 id="sec:summary-lib-solution_sequences"><a id="sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(solution_sequences)</span></a></h3>
 
 <a id="sec:summary-lib-solution_sequences"></a>
 <table>
@@ -1395,7 +1421,7 @@ to distinct/1, but does not guarantee unique results in return for using
 a limited amount of memory.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-thread"><a id="sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(thread)</span></a></h3>
+<p><h3 id="sec:summary-lib-thread"><a id="sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(thread)</span></a></h3>
 
 <a id="sec:summary-lib-thread"></a>
 <table>
@@ -1421,7 +1447,7 @@ version of maplist/2.</td></tr>
 alternative solvers concurrently, returning the first answer.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-thread_pool"><a id="sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(thread_pool)</span></a></h3>
+<p><h3 id="sec:summary-lib-thread_pool"><a id="sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(thread_pool)</span></a></h3>
 
 <a id="sec:summary-lib-thread_pool"></a>
 <table>
@@ -1439,7 +1465,7 @@ the thread pool named Name.</td></tr>
 if Property is a property of thread pool Name.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-varnumbers"><a id="sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(varnumbers)</span></a></h3>
+<p><h3 id="sec:summary-lib-varnumbers"><a id="sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(varnumbers)</span></a></h3>
 
 <a id="sec:summary-lib-varnumbers"></a>
 <table>
@@ -1458,7 +1484,7 @@ replaced by a fresh variable and Bindings is a list&lsquo;X = Var`,
 relating the&lsquo;X` terms with the variable it is mapped to.</td></tr>
 </table>
 
-<p><h3 id="sec:summary-lib-yall"><a id="sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(yall)</span></a></h3>
+<p><h3 id="sec:summary-lib-yall"><a id="sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(yall)</span></a></h3>
 
 <a id="sec:summary-lib-yall"></a>
 <table>

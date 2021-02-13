@@ -3,9 +3,10 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org/projects/xpce/
-    Copyright (c)  2011-2020, University of Amsterdam
+    Copyright (c)  2011-2021, University of Amsterdam
                               VU University Amsterdam
                               CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -481,7 +482,7 @@ colourise_query(QueryString, TB) :-
 %   Colourise    the    next     term      on     Stream.     Unlike
 %   prolog_colourise_stream/3, this predicate assumes  it is reading
 %   a single term rather than the   entire stream. This implies that
-%   it cannot adjust syntax according to directives that preceed it.
+%   it cannot adjust syntax according to directives that precede it.
 %
 %   Options:
 %
@@ -629,11 +630,24 @@ colourise_term(Term, TB, Pos) :-
     colour_item(term, TB, F-T),     % TBD: Allow specifying by term_colours/2?
     specified_item(FuncSpec, Term, TB, FF-FT),
     specified_items(ArgSpecs, Term, TB, ArgPos).
-colourise_term((Head :- Body), TB,
-               term_position(F,T,FF,FT,[HP,BP])) :-
+colourise_term((Pre=>Body), TB,
+               term_position(F,T,FF,FT,[PP,BP])) :-
+    nonvar(Pre),
+    Pre = (Head,Cond),
+    PP = term_position(_HF,_HT,_HFF,_HFT,[HP,CP]),
     !,
     colour_item(clause,         TB, F-T),
-    colour_item(neck(clause),   TB, FF-FT),
+    colour_item(neck(=>),       TB, FF-FT),
+    colourise_clause_head(Head, TB, HP),
+    colour_item(rule_condition, TB, CP),
+    colourise_body(Cond, Head,  TB, CP),
+    colourise_body(Body, Head,  TB, BP).
+colourise_term(Term, TB,
+               term_position(F,T,FF,FT,[HP,BP])) :-
+    neck(Term, Head, Body, Neck),
+    !,
+    colour_item(clause,         TB, F-T),
+    colour_item(neck(Neck),     TB, FF-FT),
     colourise_clause_head(Head, TB, HP),
     colourise_body(Body, Head,  TB, BP).
 colourise_term(((Head,RHC) --> Body), TB,
@@ -645,28 +659,28 @@ colourise_term(((Head,RHC) --> Body), TB,
     colour_item(grammar_rule,       TB, F-T),
     colour_item(dcg_right_hand_ctx, TB, RHCP),
     colourise_term_arg(RHC, TB, RHCP),
-    colour_item(neck(grammar_rule), TB, FF-FT),
+    colour_item(neck(-->),          TB, FF-FT),
     colourise_extended_head(Head, 2, TB, HP),
     colourise_dcg(Body, Head,       TB, BP).
 colourise_term((Head --> Body), TB,                     % TBD: expansion!
                term_position(F,T,FF,FT,[HP,BP])) :-
     !,
     colour_item(grammar_rule,       TB, F-T),
-    colour_item(neck(grammar_rule), TB, FF-FT),
+    colour_item(neck(-->),          TB, FF-FT),
     colourise_extended_head(Head, 2, TB, HP),
     colourise_dcg(Body, Head,       TB, BP).
 colourise_term(:->(Head, Body), TB,
                term_position(F,T,FF,FT,[HP,BP])) :-
     !,
     colour_item(method,             TB, F-T),
-    colour_item(neck(method(send)), TB, FF-FT),
+    colour_item(neck(:->), TB, FF-FT),
     colour_method_head(send(Head),  TB, HP),
     colourise_method_body(Body,     TB, BP).
 colourise_term(:<-(Head, Body), TB,
                term_position(F,T,FF,FT,[HP,BP])) :-
     !,
     colour_item(method,            TB, F-T),
-    colour_item(neck(method(get)), TB, FF-FT),
+    colour_item(neck(:<-), TB, FF-FT),
     colour_method_head(get(Head),  TB, HP),
     colourise_method_body(Body,    TB, BP).
 colourise_term((:- Directive), TB, Pos) :-
@@ -683,6 +697,10 @@ colourise_term(Fact, TB, Pos) :-
     !,
     colour_item(clause, TB, Pos),
     colourise_clause_head(Fact, TB, Pos).
+
+neck((Head  :- Body), Head, Body, :-).
+neck((Head  => Body), Head, Body, =>).
+neck(?=>(Head, Body), Head, Body, ?=>).
 
 %!  colourise_extended_head(+Head, +ExtraArgs, +TB, +Pos) is det.
 %
@@ -1787,7 +1805,7 @@ var_or_nonneg(X) :- var(X), !.
 var_or_nonneg(X) :- integer(X), X >= 0, !.
 
 pi_to_term(Name/Arity, Term) :-
-    atom(Name), integer(Arity), Arity >= 0,
+    (atom(Name)->true;Name==[]), integer(Arity), Arity >= 0,
     !,
     functor(Term, Name, Arity).
 pi_to_term(Name//Arity0, Term) :-
@@ -1976,6 +1994,7 @@ valid_decl_option(variant,             table).
 valid_decl_option(incremental,         table).
 valid_decl_option(monotonic,           table).
 valid_decl_option(opaque,              table).
+valid_decl_option(lazy,                table).
 valid_decl_option(monotonic,           dynamic).
 valid_decl_option(incremental,         dynamic).
 valid_decl_option(abstract(_),         dynamic).
@@ -2442,6 +2461,8 @@ def_style(goal(not_callable,_),    [background(orange)]).
 def_style(option_name,             [colour('#3434ba')]).
 def_style(no_option_name,          [colour(red)]).
 
+def_style(neck(_),		   [bold(true)]).
+
 def_style(head(exported,_),        [colour(blue), bold(true)]).
 def_style(head(public(_),_),       [colour('#016300'), bold(true)]).
 def_style(head(extern(_),_),       [colour(blue), bold(true)]).
@@ -2457,6 +2478,7 @@ def_style(head(iso,_),             [background(orange), bold(true)]).
 def_style(head(def_iso,_),         [colour(blue), bold(true)]).
 def_style(head(def_swi,_),         [colour(blue), bold(true)]).
 def_style(head(_,_),               [bold(true)]).
+def_style(rule_condition,	   [background('#d4ffe3')]).
 
 def_style(module(_),               [colour(dark_slate_blue)]).
 def_style(comment(_),              [colour(dark_green)]).
@@ -2544,12 +2566,12 @@ syntax_colour(Class, Attributes) :-
 term_colours((?- Directive), Colours) :-
     term_colours((:- Directive), Colours).
 term_colours((prolog:Head --> _),
-             neck(grammar_rule) - [ expanded - [ module(prolog),
-                                                 hook(message) - [ identifier
-                                                                 ]
-                                               ],
-                                    dcg_body(prolog:Head)
-                                  ]) :-
+             neck(-->) - [ expanded - [ module(prolog),
+                                        hook(message) - [ identifier
+                                                        ]
+                                      ],
+                           dcg_body(prolog:Head)
+                         ]) :-
     prolog_message_hook(Head).
 
 prolog_message_hook(message(_)).
@@ -2978,6 +3000,12 @@ syntax_message(decl_option(_Opt)) -->
     [ 'Predicate property' ].
 syntax_message(rational(Value)) -->
     [ 'Rational number ~w'-[Value] ].
+syntax_message(rule_condition) -->
+    [ 'Guard' ].
+syntax_message(neck(=>)) -->
+    [ 'Rule' ].
+syntax_message(neck(-->)) -->
+    [ 'Grammar rule' ].
 
 goal_message(meta, _) -->
     [ 'Meta call' ].

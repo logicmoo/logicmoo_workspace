@@ -1238,6 +1238,7 @@ bindings(B, Bindings:prolog) :->
         Constraints = []
     ;   copy_term(Bindings, Plain, Constraints)
     ),
+    debug(gtrace(bindings), 'Plain = ~p, Constraints = ~p', [Plain, Constraints]),
     bind_vars(Plain),
     cycles(Plain, Template, Cycles, Plain),
     send(B, background, ?(B, class_variable_value, background_active)),
@@ -1257,8 +1258,11 @@ bindings(B, Bindings:prolog) :->
 bind_vars([]).
 bind_vars([Vars=Value|T]) :-
     (   var(Value)
-    ->  Vars = [Name:_|_],
-        Value = '$VAR'(Name)
+    ->  (   Vars = [Name:_|_]       % clustered
+        ->  Value = '$VAR'(Name)
+        ;   Vars = Name:_           % non-clustered
+        ->  Value = '$VAR'(Name)
+        )
     ;   true
     ),
     bind_vars(T).
@@ -1299,7 +1303,10 @@ name_cycle_vars([H|T], I, Bindings) :-
 append_binding(B, Names0:prolog, ValueTerm:prolog, Fd:prolog) :->
     "Add a binding to the browser"::
     ValueTerm = value(Value0),      % protect :=, ?, etc.
-    (   Value0 = '$VAR'(Name), Names0 = [Name:_]
+    (   Value0 = '$VAR'(Name),
+        (   Names0 = [Name:_]
+        ;   Names0 = Name:_
+        )
     ->  (   setting(show_unbound, false)
         ->  true
         ;   format(Fd, '~w\t= _~n', [Name])

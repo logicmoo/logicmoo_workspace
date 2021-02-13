@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section B.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section B.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,14 +243,14 @@ manipulated with the library <code>library(prolog_breakpoints)</code>.
 Setting a breakpoint replaces a virtual machine instruction with the <code>D_BREAK</code> 
 instruction. If the virtual machine executes a <code>D_BREAK</code>, it 
 performs a callback to decide on the action to perform. This section 
-describes this callback, called <a id="idx:prologbreakhook6:2552"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a>.
+describes this callback, called <a id="idx:prologbreakhook6:2548"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a>.
 
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[hook,semidet]</span><a id="prolog:break_hook/6"><strong>prolog:break_hook</strong>(<var>+Clause, 
 +PC, +FR, +BFR, +Expression, -Action</var>)</a></dt>
 <dd class="defbody">
 <em>Experimental</em> This hook is called if the virtual machine 
-executes a <code>D_BREAK</code>, set using <a id="idx:setbreakpoint4:2553"></a><span class="pred-ext">set_breakpoint/4</span>. <var>Clause</var> 
+executes a <code>D_BREAK</code>, set using <a id="idx:setbreakpoint4:2549"></a><span class="pred-ext">set_breakpoint/4</span>. <var>Clause</var> 
 and <var>PC</var> identify the breakpoint. <var>FR</var> and <var>BFR</var> 
 provide the environment frame and current choicepoint. <var>Expression</var> 
 identifies the action that is interrupted, and is one of the following:
@@ -285,14 +285,14 @@ last-call optimisation.</dd>
 <dd class="defbody">
 The breakpoint is on the completion of an in-lined unification while the 
 system is not in debug mode. If the system is in debug mode, inlined 
-unification is returned as call(Var=Term).<sup class="fn">208<span class="fn-text">This 
+unification is returned as call(Var=Term).<sup class="fn">212<span class="fn-text">This 
 hack will disappear if we find a good solution for applying D_BREAK to 
 inlined unification. Only option might be to place the break on both the 
 unification start and end instructions.</span></sup>
 </dd>
 </dl>
 
-<p>If <a id="idx:prologbreakhook6:2554"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a> 
+<p>If <a id="idx:prologbreakhook6:2550"></a><a class="pred" href="breakpoint.html#prolog:break_hook/6">prolog:break_hook/6</a> 
 succeeds, it must unify <var>Action</var> with a value that describes 
 how execution must continue. Possible values for
 <var>Action</var> are:
@@ -303,14 +303,14 @@ how execution must continue. Possible values for
 Just continue as if no breakpoint was present.</dd>
 <dt><strong>debug</strong></dt>
 <dd class="defbody">
-Continue in <em>debug mode</em>. See <a id="idx:debug0:2555"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
+Continue in <em>debug mode</em>. See <a id="idx:debug0:2551"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>.</dd>
 <dt><strong>trace</strong></dt>
 <dd class="defbody">
-Continue in <em>trace mode</em>. See <a id="idx:trace0:2556"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>.</dd>
+Continue in <em>trace mode</em>. See <a id="idx:trace0:2552"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>.</dd>
 <dt><strong>call</strong>(<var>Goal</var>)</dt>
 <dd class="defbody">
 Execute <var>Goal</var> instead of the goal that would be executed.
-<var>Goal</var> is executed as <a id="idx:call1:2557"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
+<var>Goal</var> is executed as <a id="idx:call1:2553"></a><a class="pred" href="metacall.html#call/1">call/1</a>, 
 preserving (non-)determinism and exceptions.
 </dd>
 </dl>
@@ -334,7 +334,7 @@ before deciding the return <code>trace</code>.
 binding of these variables can be monitored using <em>attributed 
 variables</em>, see <a class="sec" href="attvar.html#sec:8.1">section 
 8.1</a>.
-<li>Dynamically add <em>assertions</em> on variables using <a id="idx:assertion1:2558"></a><a class="pred" href="debug.html#assertion/1">assertion/1</a>.
+<li>Dynamically add <em>assertions</em> on variables using <a id="idx:assertion1:2554"></a><a class="pred" href="debug.html#assertion/1">assertion/1</a>.
 <li>Wrap the <var>Goal</var> into a meta-call that traces progress of 
 the <var>Goal</var>.
 </ul>

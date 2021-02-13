@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 3.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 3.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,7 +243,7 @@ relations between source files, finds calls to non-existing predicates
 and predicates for which no callers can be found. Cross-referencing is 
 useful during program development, reorganisation, clean-up, porting and 
 other program maintenance tasks. The dynamic nature of Prolog makes the 
-task non-trivial. Goals can be created dynamically using <a id="idx:call1:388"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+task non-trivial. Goals can be created dynamically using <a id="idx:call1:365"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
 after construction of a goal term. Abstract interpretation can find some 
 of these calls, but they can also come from external communication, 
 making it impossible to predict the callee. In other words, the 
@@ -270,16 +270,16 @@ application.
 </dl>
 
 <p><a id="fig:xrefchatfile"></a><div style="text-align:center"><img src="xrefchatfile.png"></div>
-<div class="caption"><b>Figure 3 : </b>File info for <code>chattop.pl</code>, 
+<div class="caption"><b>Figure 2 : </b>File info for <code>chattop.pl</code>, 
 part of CHAT80</div>
 
 <p>The <b>left window</b> (see <a class="fig" href="xref.html#fig:xrefchatfile">figure 
-3</a>) provides browsers for loaded files and predicates. To avoid long 
+2</a>) provides browsers for loaded files and predicates. To avoid long 
 file paths, the file hierarchy has three main branches. The first is the 
 current directory holding the sources. The second is marked <code>alias</code>, 
-and below it are the file-search-path aliases (see <a id="idx:filesearchpath2:389"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+and below it are the file-search-path aliases (see <a id="idx:filesearchpath2:366"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 and
-<a id="idx:absolutefilename3:390"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>). 
+<a id="idx:absolutefilename3:367"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a>). 
 Here you find files loaded from the system as well as modules of the 
 program loaded from other locations using the file search path. All 
 loaded files that fall outside these categories are below the last 
@@ -296,7 +296,7 @@ predicate is indicated with a blue underlined number. A left-click will
 open a list and allow editing the calling predicate.
 
 <p>The <b>Dependencies</b> (see <a class="fig" href="xref.html#fig:xrefchatdep">figure 
-4</a>) window displays a graphical overview of dependencies between 
+3</a>) window displays a graphical overview of dependencies between 
 files. Using the background menu a complete graph of the project can be 
 created. It is also possible to drag files onto the graph window and use 
 the menu on the nodes to incrementally expand the graph. The underlined 
@@ -305,7 +305,7 @@ file. Left-clicking opens a menu to open the definition or select one of
 the callers.
 
 <p><a id="fig:xrefchatdep"></a><div style="text-align:center"><img src="xrefchatdep.png"></div>
-<div class="caption"><b>Figure 4 : </b>Dependencies between source files 
+<div class="caption"><b>Figure 3 : </b>Dependencies between source files 
 of CHAT80</div>
 
 <p><b>Module and non-module files</b> 

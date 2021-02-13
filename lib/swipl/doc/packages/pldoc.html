@@ -242,7 +242,7 @@ manual</a>.
 
 <p>Version&nbsp;2 of PlDoc extends the syntax with
 <a class="url" href="http://en.wikipedia.org/wiki/Markdown">Markdown</a> 
-markup as specified by <a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Docygen</a>. 
+markup as specified by <a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>. 
 Based on experience with version&nbsp;1, PlDoc&nbsp;2 both tightens some 
 rules to avoid misinterpretations and relaxes others that were 
 considered too conservative.
@@ -926,7 +926,15 @@ creating links.
 
 <p><table class="latex frame-box center">
 <tr><td><code>name/arity</code></td><td>Create a link to a predicate </td></tr>
+<tr><td><code>`name/arity`</code> </td><td>Create a link to a predicate </td></tr>
+<tr><td><code>``name/arity``</code> </td><td>Predicate indicator that 
+does not create a link </td></tr>
 <tr><td><code>name//arity</code></td><td>Create a link to a DCG rule </td></tr>
+<tr><td><code>`name//arity`</code> </td><td>Create a link to a DCG rule </td></tr>
+<tr><td><code>``name//arity``</code> </td><td>DCG indicator that does 
+not create a link </td></tr>
+<tr><td>flag <code>`name`</code> </td><td>Create a link to the Prolog 
+flag <var>name</var> if this flag exists. </td></tr>
 <tr><td><code>name.ext</code></td><td>If &lt;<var>name</var>&gt;.&lt;<var>ext</var>&gt; 
 is the name of an existing file and &lt;<var>ext</var>&gt; is one of <code>.pl</code>, <code>.txt</code>,
 <code>.md</code>, <code>.png</code>, <code>.gif</code>, <code>.jpeg</code>,
@@ -947,6 +955,10 @@ More arguments are separated by commas. &lt;<var>link</var>&gt; must be
 a filename as above or a url. </td></tr>
 <tr><td><code><code>[</code>label<code>](</code>link<code>)</code> </code></td><td>The 
 markdown version of the above. </td></tr>
+<tr><td><code><code>[</code>@cite<code>]</code> </code></td><td>Include 
+LaTeX citation. Multiple citations can be saparated using <code><code>;</code></code>. 
+No white space is allowed.
+</td></tr>
 </table>
 <div class="caption"><b>Table 2 : </b>Wiki constructs that create links</div>
 <a id="tab:links"></a>
@@ -1566,7 +1578,7 @@ and standards</span></a></h2>
 is a wiki syntax that is widely accepted and not tied to a single 
 system. In PlDoc&nbsp;2, we have adopted markdown, including many of the 
 limitations and extensions introduced by
-<a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Docygen</a>. 
+<a class="url" href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>. 
 Limitations are needed to avoid ambiguities due to the common use of 
 symbol charaters in programming languages. Extensions are desirable to 
 make use of already existing conventions and to support requirements of 

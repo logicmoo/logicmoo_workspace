@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.6</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 10.6</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,7 +240,7 @@ mixed C and Prolog applications</span></a></h2>
 
 <p>All foreign code linked to the multithreading version of SWI-Prolog 
 should be thread-safe (<em>reentrant</em>) or guarded in Prolog using
-<a id="idx:withmutex2:2269"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
+<a id="idx:withmutex2:2266"></a><a class="pred" href="threadsync.html#with_mutex/2">with_mutex/2</a> 
 from simultaneous access from multiple Prolog threads. If you want to 
 write mixed multithreaded C and Prolog applications you should first 
 familiarise yourself with writing multithreaded applications in C (C++).
@@ -289,7 +289,7 @@ Creates a new Prolog engine in the calling thread. If the calling thread
 already has an engine the reference count of the engine is incremented. 
 The <var>attr</var> argument can be <code>NULL</code> to create a thread 
 with default attributes. Otherwise it is a pointer to a structure with 
-the definition below.<sup class="fn">186<span class="fn-text">The 
+the definition below.<sup class="fn">190<span class="fn-text">The 
 structure layout changed in version 7.7.14.</span></sup> For any field 
 with value&lsquo;0', the default is used. The
 <code>cancel</code> field may be filled with a pointer to a function 
@@ -351,7 +351,7 @@ handler is installed
 <em>for all threads</em>. Globally installed handlers are executed after 
 the thread-local handlers. If the handler is installed local for the 
 current thread only (<var>global</var> == <code>FALSE</code>) it is 
-stored in the same FIFO queue as used by <a id="idx:threadatexit1:2270"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a>.
+stored in the same FIFO queue as used by <a id="idx:threadatexit1:2267"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a>.
 </dd>
 </dl>
 

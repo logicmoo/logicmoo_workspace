@@ -200,6 +200,8 @@ default_emacs_mode('.*\\.idl$',                    cpp).
 default_emacs_mode('.*\\.yaml~?$',                 yaml).
 default_emacs_mode('.*\\.cmake~?$|CMakeLists.txt', cmake).
 default_emacs_mode('.*\\.txt~?$',                  text).
+default_emacs_mode('.*\\.md~?$',                   text).
+default_emacs_mode('.*\\.eml~?$',                  text).
 default_emacs_mode('[Cc]ompose|README|\\.article', text).
 default_emacs_mode(Pattern, prolog) :-
     user:prolog_file_type(Ext, prolog),

@@ -32,7 +32,6 @@ index((tipc_paxos_get), 1, tipc_paxos, tipc_paxos).
 index((tipc_paxos_get), 2, tipc_paxos, tipc_paxos).
 index((tipc_paxos_set), 1, tipc_paxos, tipc_paxos).
 index((tipc_paxos_set), 2, tipc_paxos, tipc_paxos).
-index((tipc_paxos_replicate), 1, tipc_paxos, tipc_paxos).
 index((tipc_paxos_on_change), 2, tipc_paxos, tipc_paxos).
 index((tipc_initialize), 0, tipc_paxos, tipc_paxos).
 index((tipc_socket), 2, tipc, tipc).

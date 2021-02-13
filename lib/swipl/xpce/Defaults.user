@@ -82,9 +82,10 @@
 
 ! How to add a new set of dependencies for ->update_dependencies
 ! (^c^d).  Possible values are autoload/1, autoload/2, use_module/1
-! and use_module/2.
+! and use_module/2.  Note that the value must be quoted to avoid
+! parsing as a `/` object.
 
-!emacs_prolog_mode.dependency_directive: autoload/2
+!emacs_prolog_mode.dependency_directive: "autoload/2"
 
 ! Comment column for M-; This may be refined by mode (e.g. emacs_prolog_mode,
 ! etc.)

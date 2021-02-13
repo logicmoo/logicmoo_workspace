@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.48</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.49</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -233,65 +233,38 @@ table.frame-box
 <a class="nav" href="threadpool.html"><img src="prev.gif" alt="Previous"></a>
 <a class="nav" href="url.html"><img src="next.gif" alt="Next"></a>
 </div>
-<h2 id="sec:ugraphs"><a id="sec:A.48"><span class="sec-nr">A.48</span> <span class="sec-title">library(ugraphs): 
-Unweighted Graphs</span></a></h2>
+<h2 id="sec:ugraphs"><a id="sec:A.49"><span class="sec-nr">A.49</span> <span class="sec-title">library(ugraphs): 
+Graph manipulation library</span></a></h2>
 
-<a id="sec:ugraphs"></a>
-<a id="sec:lib:ugraphs"></a> Authors: <em>Richard O'Keefe &amp; Vitor 
-Santos Costa</em>
-<blockquote><i>Implementation and documentation are copied from YAP 
-5.0.1. The
-<code>library(ugraph)</code> library is based on code originally written 
-by Richard O'Keefe. The code was then extended to be compatible with the 
-SICStus Prolog ugraphs library. Code and documentation have been cleaned 
-and style has been changed to be more in line with the rest of 
-SWI-Prolog.</i>
+<p><a id="sec:ugraphs"></a>
 
-<p><i>The ugraphs library was originally released in the public domain. 
-The YAP version is covered by the Perl Artistic license, version 2.0. 
-This code is dual-licensed under the modified GPL as used for all 
-SWI-Prolog libraries or the Perl Artistic license, version 2.0.
-</i>
-</blockquote>
+<dl class="tags">
+<dt class="mtag">author</dt>
+<dd>
+- R.A.O'Keefe <br>
+- Vitor Santos Costa <br>
+- Jan Wielemaker
+</dd>
+<dt class="tag">license</dt>
+<dd>
+BSD-2 or Artistic 2.0
+</dd>
+</dl>
 
-<p>The routines assume directed graphs; undirected graphs may be 
-implemented by using two edges.
+<p>The S-representation of a graph is a list of (vertex-neighbours) 
+pairs, where the pairs are in standard order (as produced by keysort) 
+and the neighbours of each vertex are also in standard order (as 
+produced by sort). This form is convenient for many calculations.
 
-<p>Originally graphs were represented in two formats. The SICStus 
-library and this version of <code>library(ugraphs.pl)</code> only use 
-the
-<em>S-representation</em>. The S-representation of a graph is a list of 
-(vertex-neighbors) pairs, where the pairs are in standard order (as 
-produced by keysort) and the neighbors of each vertex are also in 
-standard order (as produced by sort). This form is convenient for many 
-calculations. Each vertex appears in the S-representation, even if it 
-has no neighbors.
+<p>A new UGraph from raw data can be created using
+<a class="pred" href="ugraphs.html#vertices_edges_to_ugraph/3">vertices_edges_to_ugraph/3</a>.
+
+<p>Adapted to support some of the functionality of the SICStus ugraphs 
+library by Vitor Santos Costa.
+
+<p>Ported from YAP 5.0.1 to SWI-Prolog by Jan Wielemaker.
 
 <dl class="latex">
-<dt class="pubdef"><a id="vertices_edges_to_ugraph/3"><strong>vertices_edges_to_ugraph</strong>(<var>+Vertices, 
-+Edges, -Graph</var>)</a></dt>
-<dd class="defbody">
-Given a graph with a set of <var>Vertices</var> and a set of <var>Edges</var>,
-<var>Graph</var> must unify with the corresponding S-representation. 
-Note that vertices without edges will appear in <var>Vertices</var> but 
-not in
-<var>Edges</var>. Moreover, it is sufficient for a vertex to appear in
-<var>Edges</var>.
-
-<pre class="code">
-?- vertices_edges_to_ugraph([],[1-3,2-4,4-5,1-5], L).
-L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[]]
-</pre>
-
-<p>In this case all vertices are defined implicitly. The next example 
-shows three unconnected vertices:
-
-<pre class="code">
-?- vertices_edges_to_ugraph([6,7,8],[1-3,2-4,4-5,1-5], L).
-L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[], 6-[], 7-[], 8-[]] ?
-</pre>
-
-</dd>
 <dt class="pubdef"><a id="vertices/2"><strong>vertices</strong>(<var>+Graph, 
 -Vertices</var>)</a></dt>
 <dd class="defbody">
@@ -304,15 +277,26 @@ L = [1, 2, 3, 4, 5]
 </pre>
 
 </dd>
-<dt class="pubdef"><a id="edges/2"><strong>edges</strong>(<var>+Graph, 
--Edges</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="vertices_edges_to_ugraph/3"><strong>vertices_edges_to_ugraph</strong>(<var>+Vertices, 
++Edges, -UGraph</var>)</a></dt>
 <dd class="defbody">
-Unify <var>Edges</var> with all edges appearing in <var>Graph</var>. 
-Example:
+Create a <var>UGraph</var> from <var>Vertices</var> and edges. Given a 
+graph with a set of <var>Vertices</var> and a set of <var>Edges</var>, 
+Graph must unify with the corresponding S-representation. Note that the 
+vertices without edges will appear in <var>Vertices</var> but not in <var>Edges</var>. 
+Moreover, it is sufficient for a vertice to appear in <var>Edges</var>.
 
 <pre class="code">
-?- edges([1-[3,5],2-[4],3-[],4-[5],5-[]], L).
-L = [1-3, 1-5, 2-4, 4-5]
+?- vertices_edges_to_ugraph([],[1-3,2-4,4-5,1-5], L).
+L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[]]
+</pre>
+
+<p>In this case all vertices are defined implicitly. The next example 
+shows three unconnected vertices:
+
+<pre class="code">
+?- vertices_edges_to_ugraph([6,7,8],[1-3,2-4,4-5,1-5], L).
+L = [1-[3,5], 2-[4], 3-[], 4-[5], 5-[], 6-[], 7-[], 8-[]]
 </pre>
 
 </dd>
@@ -329,29 +313,37 @@ NG = [0-[], 1-[3,5], 2-[], 9-[]]
 </pre>
 
 </dd>
-<dt class="pubdef"><a id="del_vertices/3"><strong>del_vertices</strong>(<var>+Graph, 
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="del_vertices/3"><strong>del_vertices</strong>(<var>+Graph, 
 +Vertices, -NewGraph</var>)</a></dt>
 <dd class="defbody">
 Unify <var>NewGraph</var> with a new graph obtained by deleting the list 
 of
-<var>Vertices</var> and all edges that start from or go to a vertex in
-<var>Vertices</var> from <var>Graph</var>. Example:
+<var>Vertices</var> and all the edges that start from or go to a vertex 
+in
+<var>Vertices</var> to the <var>Graph</var>. Example:
 
 <pre class="code">
-?- del_vertices([2,1],
-                [1-[3,5],2-[4],3-[],4-[5],
-                 5-[],6-[],7-[2,6],8-[]],
+?- del_vertices([1-[3,5],2-[4],3-[],4-[5],5-[],6-[],7-[2,6],8-[]],
+                [2,1],
                 NL).
 NL = [3-[],4-[5],5-[],6-[],7-[6],8-[]]
 </pre>
+
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+Upto 5.6.48 the argument order was (+<var>Vertices</var>, +<var>Graph</var>, 
+-<var>NewGraph</var>). Both YAP and SWI-Prolog have changed the argument 
+order for compatibility with recent SICStus as well as consistency with <a class="pred" href="ugraphs.html#del_edges/3">del_edges/3</a>.
+</dd>
+</dl>
 
 </dd>
 <dt class="pubdef"><a id="add_edges/3"><strong>add_edges</strong>(<var>+Graph, 
 +Edges, -NewGraph</var>)</a></dt>
 <dd class="defbody">
 Unify <var>NewGraph</var> with a new graph obtained by adding the list 
-of
-<var>Edges</var> to <var>Graph</var>. Example:
+of <var>Edges</var> to <var>Graph</var>. Example:
 
 <pre class="code">
 ?- add_edges([1-[3,5],2-[4],3-[],4-[5],
@@ -360,6 +352,18 @@ of
              NL).
 NL = [1-[3,5,6], 2-[3,4], 3-[2], 4-[5],
       5-[7], 6-[], 7-[], 8-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="ugraph_union/3"><strong>ugraph_union</strong>(<var>+Graph1, 
++Graph2, -NewGraph</var>)</a></dt>
+<dd class="defbody">
+<var>NewGraph</var> is the union of <var>Graph1</var> and <var>Graph2</var>. 
+Example:
+
+<pre class="code">
+?- ugraph_union([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
+L = [1-[2], 2-[3,4], 3-[1,2,4]]
 </pre>
 
 </dd>
@@ -379,25 +383,91 @@ NL = [1-[5],2-[4],3-[],4-[],5-[],6-[],7-[],8-[]]
 </pre>
 
 </dd>
-<dt class="pubdef"><a id="transpose_ugraph/2"><strong>transpose_ugraph</strong>(<var>+Graph, 
--NewGraph</var>)</a></dt>
+<dt class="pubdef"><a id="edges/2"><strong>edges</strong>(<var>+Graph, 
+-Edges</var>)</a></dt>
+<dd class="defbody">
+Unify <var>Edges</var> with all edges appearing in <var>Graph</var>. 
+Example:
+
+<pre class="code">
+?- edges([1-[3,5],2-[4],3-[],4-[5],5-[]], L).
+L = [1-3, 1-5, 2-4, 4-5]
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="transitive_closure/2"><strong>transitive_closure</strong>(<var>+Graph, 
+-Closure</var>)</a></dt>
+<dd class="defbody">
+Generate the graph <var>Closure</var> as the transitive closure of <var>Graph</var>. 
+Example:
+
+<pre class="code">
+?- transitive_closure([1-[2,3],2-[4,5],4-[6]],L).
+L = [1-[2,3,4,5,6], 2-[4,5,6], 4-[6]]
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="transpose_ugraph/2"><strong>transpose_ugraph</strong>(<var>Graph, 
+NewGraph</var>)</a></dt>
 <dd class="defbody">
 Unify <var>NewGraph</var> with a new graph obtained from <var>Graph</var> 
 by replacing all edges of the form V1-V2 by edges of the form V2-V1. The 
-cost is <var>O(|V|^2)</var>. Notice that an undirected graph is its own 
-transpose. Example:
+cost is O(<code>|</code>V<code>|</code>*log(<code>|</code>V<code>|</code>)). 
+Notice that an undirected graph is its own transpose. Example:
 
 <pre class="code">
-?- transpose_ugraph([1-[3,5],2-[4],3-[],4-[5],
+?- transpose([1-[3,5],2-[4],3-[],4-[5],
               5-[],6-[],7-[],8-[]], NL).
 NL = [1-[],2-[],3-[1],4-[2],5-[1,4],6-[],7-[],8-[]]
 </pre>
 
+<dl class="tags">
+<dt class="tag">Compatibility</dt>
+<dd>
+This predicate used to be known as <span class="pred-ext">transpose/2</span>. 
+Following SICStus 4, we reserve <span class="pred-ext">transpose/2</span> 
+for matrix transposition and renamed ugraph transposition to
+<a class="pred" href="ugraphs.html#transpose_ugraph/2">transpose_ugraph/2</a>.
 </dd>
-<dt class="pubdef"><a id="neighbours/3"><strong>neighbours</strong>(<var>+Vertex, 
-+Graph, -Vertices</var>)</a></dt>
+</dl>
+
+</dd>
+<dt class="pubdef"><a id="compose/3"><strong>compose</strong>(<var>+LeftGraph, 
++RightGraph, -NewGraph</var>)</a></dt>
 <dd class="defbody">
-Unify <var>Vertices</var> with the list of neighbours of vertex <var>Vertex</var> 
+Compose <var>NewGraph</var> by connecting the <i>drains</i> of <var>LeftGraph</var> 
+to the
+<i>sources</i> of <var>RightGraph</var>. Example:
+
+<pre class="code">
+?- compose([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
+L = [1-[4], 2-[1,2,4], 3-[]]
+</pre>
+
+</dd>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="top_sort/2"><strong>top_sort</strong>(<var>+Graph, 
+-Sorted</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="top_sort/3"><strong>top_sort</strong>(<var>+Graph, 
+-Sorted, ?Tail</var>)</a></dt>
+<dd class="defbody">
+<var>Sorted</var> is a topological sorted list of nodes in <var>Graph</var>. 
+A toplogical sort is possible if the graph is connected and acyclic. In 
+the example we show how topological sorting works for a linear graph:
+
+<pre class="code">
+?- top_sort([1-[2], 2-[3], 3-[]], L).
+L = [1, 2, 3]
+</pre>
+
+<p>The predicate <a class="pred" href="ugraphs.html#top_sort/3">top_sort/3</a> 
+is a difference list version of
+<a class="pred" href="ugraphs.html#top_sort/2">top_sort/2</a>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="neighbors/3"><strong>neighbors</strong>(<var>+Vertex, 
++Graph, -Neigbours</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="neighbours/3"><strong>neighbours</strong>(<var>+Vertex, 
++Graph, -Neigbours</var>)</a></dt>
+<dd class="defbody">
+<var>Neigbours</var> is a sorted list of the neighbours of <var>Vertex</var> 
 in <var>Graph</var>. Example:
 
 <pre class="code">
@@ -407,15 +477,35 @@ NL = [1,2,7,5]
 </pre>
 
 </dd>
-<dt class="pubdef"><a id="neighbors/3"><strong>neighbors</strong>(<var>+Vertex, 
-+Graph, -Vertices</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="connect_ugraph/3"><strong>connect_ugraph</strong>(<var>+UGraphIn, 
+-Start, -UGraphOut</var>)</a></dt>
 <dd class="defbody">
-American version of <a id="idx:neighbours3:2529"></a><a class="pred" href="ugraphs.html#neighbours/3">neighbours/3</a>.</dd>
-<dt class="pubdef"><a id="complement/2"><strong>complement</strong>(<var>+Graph, 
--NewGraph</var>)</a></dt>
+Adds <var>Start</var> as an additional vertex that is connected to all 
+vertices in <var>UGraphIn</var>. This can be used to create an 
+topological sort for a not connected graph. <var>Start</var> is before 
+any vertex in <var>UGraphIn</var> in the standard order of terms. No 
+vertex in <var>UGraphIn</var> can be a variable.
+
+<p>Can be used to order a not-connected graph as follows:
+
+<pre class="code">
+top_sort_unconnected(Graph, Vertices) :-
+    (   top_sort(Graph, Vertices)
+    -&gt;  true
+    ;   connect_ugraph(Graph, Start, Connected),
+        top_sort(Connected, Ordered0),
+        Ordered0 = [Start|Vertices]
+    ).
+</pre>
+
+</dd>
+<dt class="pubdef"><a id="complement/2"><strong>complement</strong>(<var>+UGraphIn, 
+-UGraphOut</var>)</a></dt>
 <dd class="defbody">
-Unify <var>NewGraph</var> with the graph complementary to <var>Graph</var>. 
-Example:
+<var>UGraphOut</var> is a ugraph with an edge between all vertices that 
+are
+<i>not</i> connected in <var>UGraphIn</var> and all edges from <var>UGraphIn</var> 
+removed. Example:
 
 <pre class="code">
 ?- complement([1-[3,5],2-[4],3-[],
@@ -425,67 +515,19 @@ NL = [1-[2,4,6,7,8],2-[1,3,5,6,7,8],3-[1,2,4,5,6,7,8],
       7-[1,2,3,4,5,6,8],8-[1,2,3,4,5,6,7]]
 </pre>
 
+<dl class="tags">
+<dt class="tag">To be done</dt>
+<dd>
+Simple two-step algorithm. You could be smarter, I suppose.
 </dd>
-<dt class="pubdef"><a id="compose/3"><strong>compose</strong>(<var>+LeftGraph, 
-+RightGraph, -NewGraph</var>)</a></dt>
-<dd class="defbody">
-Compose <var>NewGraph</var> by connecting the <em>drains</em> of <var>LeftGraph</var> 
-to the <em>sources</em> of <var>RightGraph</var>. Example:
-
-<pre class="code">
-?- compose([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
-L = [1-[4], 2-[1,2,4], 3-[]]
-</pre>
-
-</dd>
-<dt class="pubdef"><a id="ugraph_union/3"><strong>ugraph_union</strong>(<var>+Graph1, 
-+Graph2, -NewGraph</var>)</a></dt>
-<dd class="defbody">
-<var>NewGraph</var> is the union of <var>Graph1</var> and <var>Graph2</var>. 
-Example:
-
-<pre class="code">
-?- ugraph_union([1-[2],2-[3]],[2-[4],3-[1,2,4]],L).
-L = [1-[2], 2-[3,4], 3-[1,2,4]]
-</pre>
-
-</dd>
-<dt class="pubdef"><a id="top_sort/2"><strong>top_sort</strong>(<var>+Graph, 
--Sort</var>)</a></dt>
-<dd class="defbody">
-Generate the set of nodes <var>Sort</var> as a topological sorting of
-<var>Graph</var>, if one is possible. A toplogical sort is possible if 
-the graph is connected and acyclic. In the example we show how 
-topological sorting works for a linear graph:
-
-<pre class="code">
-?- top_sort([1-[2], 2-[3], 3-[]], L).
-L = [1, 2, 3]
-</pre>
-
-</dd>
-<dt class="pubdef"><a id="top_sort/3"><strong>top_sort</strong>(<var>+Graph, 
--Sort0, -Sort</var>)</a></dt>
-<dd class="defbody">
-Generate the difference list Sort-Sort0 as a topological sorting of
-<var>Graph</var>, if one is possible.</dd>
-<dt class="pubdef"><a id="transitive_closure/2"><strong>transitive_closure</strong>(<var>+Graph, 
--Closure</var>)</a></dt>
-<dd class="defbody">
-Generate the graph Closure as the transitive closure of
-<var>Graph</var>. Example:
-
-<pre class="code">
- ?- transitive_closure([1-[2,3],2-[4,5],4-[6]],L).
-L = [1-[2,3,4,5,6], 2-[4,5,6], 4-[6]]
-</pre>
+</dl>
 
 </dd>
 <dt class="pubdef"><a id="reachable/3"><strong>reachable</strong>(<var>+Vertex, 
-+Graph, -Vertices</var>)</a></dt>
++UGraph, -Vertices</var>)</a></dt>
 <dd class="defbody">
-Unify <var>Vertices</var> with the set of all vertices in <var>Graph</var> 
-that are reachable from <var>Vertex</var>. Example:
+True when <var>Vertices</var> is an ordered set of vertices reachable in
+<var>UGraph</var>, including <var>Vertex</var>. Example:
 
 <pre class="code">
 ?- reachable(1,[1-[3,5],2-[4],3-[],4-[5],5-[]],V).

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -302,6 +302,31 @@ line history</span></a></div>
 of top-level bindings</span></a></div>
 <div class="toc-h2"><a class="sec" href="debugoverview.html"><span class="sec-nr">2.10</span> <span class="sec-title">Overview 
 of the Debugger</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.1"><span class="sec-nr">2.10.1</span> <span class="sec-title">The 
+Byrd Box Model And Ports</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.2"><span class="sec-nr">2.10.2</span> <span class="sec-title">Trace 
+Mode Example</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.3"><span class="sec-nr">2.10.3</span> <span class="sec-title">Trace 
+Mode Options: leash/1 and visible/1</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.4"><span class="sec-nr">2.10.4</span> <span class="sec-title">Trace 
+Mode Commands When Paused</span></a></div>
+<div class="toc-h4"><a class="sec" href="debugoverview.html#sec:2.10.4.1"><span class="sec-nr">2.10.4.1</span> <span class="sec-title">Control 
+Flow Commands</span></a></div>
+<div class="toc-h4"><a class="sec" href="debugoverview.html#sec:2.10.4.2"><span class="sec-nr">2.10.4.2</span> <span class="sec-title">Informational 
+Commands</span></a></div>
+<div class="toc-h4"><a class="sec" href="debugoverview.html#sec:2.10.4.3"><span class="sec-nr">2.10.4.3</span> <span class="sec-title">Formatting 
+Commands</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.5"><span class="sec-nr">2.10.5</span> <span class="sec-title">Trace 
+Mode vs. Trace Point</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.6"><span class="sec-nr">2.10.6</span> <span class="sec-title">Spy 
+Points and Debug Mode</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.7"><span class="sec-nr">2.10.7</span> <span class="sec-title">Breakpoints</span></a></div>
+<div class="toc-h3"><a class="sec" href="debugoverview.html#sec:2.10.8"><span class="sec-nr">2.10.8</span> <span class="sec-title">Command 
+Line Debugger Summary</span></a></div>
+<div class="toc-h4"><a class="sec" href="debugoverview.html#sec:2.10.8.1"><span class="sec-nr">2.10.8.1</span> <span class="sec-title">Trace 
+Mode</span></a></div>
+<div class="toc-h4"><a class="sec" href="debugoverview.html#sec:2.10.8.2"><span class="sec-nr">2.10.8.2</span> <span class="sec-title">Trace 
+Points</span></a></div>
 <div class="toc-h2"><a class="sec" href="compilation.html"><span class="sec-nr">2.11</span> <span class="sec-title">Compilation</span></a></div>
 <div class="toc-h3"><a class="sec" href="compilation.html#sec:2.11.1"><span class="sec-nr">2.11.1</span> <span class="sec-title">During 
 program development</span></a></div>
@@ -642,20 +667,22 @@ server mode</span></a></div>
 extensions</span></a></div>
 <div class="toc-h2"><a class="sec" href="ext-lists.html"><span class="sec-nr">5.1</span> <span class="sec-title">Lists 
 are special</span></a></div>
-<div class="toc-h3"><a class="sec" href="ext-lists.html#sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&rsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
+<div class="toc-h3"><a class="sec" href="ext-lists.html#sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&lsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
 for lists</span></a></div>
 <div class="toc-h2"><a class="sec" href="string.html"><span class="sec-nr">5.2</span> <span class="sec-title">The 
 string type and its double quoted syntax</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Predicates 
-that operate on strings</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Representing 
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Representing 
 text: strings, atoms and code lists</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Adapting 
-code for double quoted strings</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Why 
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Predicates 
+that operate on strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Why 
 has the representation of double quoted text changed?</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Adapting 
+code for double quoted strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.5"><span class="sec-nr">5.2.5</span> <span class="sec-title">Predicates 
+to support adapting code for double quoted strings</span></a></div>
 <div class="toc-h2"><a class="sec" href="ext-syntax.html"><span class="sec-nr">5.3</span> <span class="sec-title">Syntax 
-changes</span></a></div>
+changes since SWI-Prolog&nbsp;7</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.1"><span class="sec-nr">5.3.1</span> <span class="sec-title">Operators 
 and quoted atoms</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.2"><span class="sec-nr">5.3.2</span> <span class="sec-title">Compound 
@@ -692,7 +719,13 @@ strings and XML</span></a></div>
 strings and JSON</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.5"><span class="sec-nr">5.5.5</span> <span class="sec-title">Dicts, 
 strings and HTTP</span></a></div>
-<div class="toc-h2"><a class="sec" href="ext-issues.html"><span class="sec-nr">5.6</span> <span class="sec-title">Remaining 
+<div class="toc-h2"><a class="sec" href="ssu.html"><span class="sec-nr">5.6</span> <span class="sec-title">Single 
+Sided Unification rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="ssu.html#sec:5.6.1"><span class="sec-nr">5.6.1</span> <span class="sec-title">Consequenses 
+of <code>=&gt;</code> single sided unification rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="ssu.html#sec:5.6.2"><span class="sec-nr">5.6.2</span> <span class="sec-title">SSU: 
+Future considerations</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-issues.html"><span class="sec-nr">5.7</span> <span class="sec-title">Remaining 
 issues</span></a></div>
 <div class="toc-h1"><a class="sec" href="modules.html"><span class="sec-nr">6</span> <span class="sec-title">Modules</span></a></div>
 <div class="toc-h2"><a class="sec" href="whymodules.html"><span class="sec-nr">6.1</span> <span class="sec-title">Why 
@@ -749,6 +782,10 @@ founded semantics and the toplevel</span></a></div>
 tabling</span></a></div>
 <div class="toc-h2"><a class="sec" href="tabling-monotonic.html"><span class="sec-nr">7.8</span> <span class="sec-title">Monotonic 
 tabling</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-monotonic.html#sec:7.8.1"><span class="sec-nr">7.8.1</span> <span class="sec-title">Eager 
+and lazy monotonic tabling</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-monotonic.html#sec:7.8.2"><span class="sec-nr">7.8.2</span> <span class="sec-title">Tracking 
+new answers to monotonic tables</span></a></div>
 <div class="toc-h2"><a class="sec" href="tabling-shared.html"><span class="sec-nr">7.9</span> <span class="sec-title">Shared 
 tabling</span></a></div>
 <div class="toc-h3"><a class="sec" href="tabling-shared.html#sec:7.9.1"><span class="sec-nr">7.9.1</span> <span class="sec-title">Abolishing 
@@ -784,36 +821,43 @@ purpose predicates for attributes</span></a></div>
 <div class="toc-h2"><a class="sec" href="coroutining.html"><span class="sec-nr">8.2</span> <span class="sec-title">Coroutining</span></a></div>
 <div class="toc-h1"><a class="sec" href="chr.html"><span class="sec-nr">9</span> <span class="sec-title">CHR: 
 Constraint Handling Rules</span></a></div>
-<div class="toc-h2"><a class="sec" href="chrintro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction</span></a></div>
-<div class="toc-h2"><a class="sec" href="SyntaxAndSemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">Syntax 
-and Semantics</span></a></div>
-<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
+<div class="toc-h2"><a class="sec" href="chr-intro.html"><span class="sec-nr">9.1</span> <span class="sec-title">Introduction 
+to CHR</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-syntaxandsemantics.html"><span class="sec-nr">9.2</span> <span class="sec-title">CHR 
+Syntax and Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-syntaxandsemantics.html#sec:9.2.1"><span class="sec-nr">9.2.1</span> <span class="sec-title">Syntax 
 of CHR rules</span></a></div>
-<div class="toc-h3"><a class="sec" href="SyntaxAndSemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-syntaxandsemantics.html#sec:9.2.2"><span class="sec-nr">9.2.2</span> <span class="sec-title">Semantics 
+of CHR</span></a></div>
 <div class="toc-h2"><a class="sec" href="practical.html"><span class="sec-nr">9.3</span> <span class="sec-title">CHR 
 in SWI-Prolog Programs</span></a></div>
 <div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.1"><span class="sec-nr">9.3.1</span> <span class="sec-title">Embedding 
-in Prolog Programs</span></a></div>
-<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">Constraint 
-declaration</span></a></div>
-<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">Compilation</span></a></div>
-<div class="toc-h2"><a class="sec" href="debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">Ports</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing</span></a></div>
-<div class="toc-h3"><a class="sec" href="debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
+CHR in Prolog Programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">CHR 
+Constraint declaration</span></a></div>
+<div class="toc-h3"><a class="sec" href="practical.html#sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">CHR 
+Compilation</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-debugging.html"><span class="sec-nr">9.4</span> <span class="sec-title">Debugging 
+CHR programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.1"><span class="sec-nr">9.4.1</span> <span class="sec-title">CHR 
+debug ports</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.2"><span class="sec-nr">9.4.2</span> <span class="sec-title">Tracing 
+CHR programs</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-debugging.html#sec:9.4.3"><span class="sec-nr">9.4.3</span> <span class="sec-title">CHR 
 Debugging Predicates</span></a></div>
-<div class="toc-h2"><a class="sec" href="examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">Examples</span></a></div>
-<div class="toc-h2"><a class="sec" href="sicstus-chr.html"><span class="sec-nr">9.6</span> <span class="sec-title">Backwards 
-Compatibility</span></a></div>
-<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
+<div class="toc-h2"><a class="sec" href="chr-examples.html"><span class="sec-nr">9.5</span> <span class="sec-title">CHR 
+Examples</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-compatibility.html"><span class="sec-nr">9.6</span> <span class="sec-title">CHR 
+compatibility</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-compatibility.html#sec:9.6.1"><span class="sec-nr">9.6.1</span> <span class="sec-title">The 
 Old SICStus CHR implementation</span></a></div>
-<div class="toc-h3"><a class="sec" href="sicstus-chr.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
+<div class="toc-h3"><a class="sec" href="chr-compatibility.html#sec:9.6.2"><span class="sec-nr">9.6.2</span> <span class="sec-title">The 
 Old ECLiPSe CHR implementation</span></a></div>
-<div class="toc-h2"><a class="sec" href="guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">Programming 
-Tips and Tricks</span></a></div>
-<div class="toc-h2"><a class="sec" href="errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">Compiler 
-Errors and Warnings</span></a></div>
-<div class="toc-h3"><a class="sec" href="errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
+<div class="toc-h2"><a class="sec" href="chr-guidelines.html"><span class="sec-nr">9.7</span> <span class="sec-title">CHR 
+Programming Tips and Tricks</span></a></div>
+<div class="toc-h2"><a class="sec" href="chr-warnings-and-errors.html"><span class="sec-nr">9.8</span> <span class="sec-title">CHR 
+Compiler Errors and Warnings</span></a></div>
+<div class="toc-h3"><a class="sec" href="chr-warnings-and-errors.html#sec:9.8.1"><span class="sec-nr">9.8.1</span> <span class="sec-title">CHR 
 Compiler Errors</span></a></div>
 <div class="toc-h1"><a class="sec" href="threads.html"><span class="sec-nr">10</span> <span class="sec-title">Multithreaded 
 applications</span></a></div>
@@ -1224,17 +1268,19 @@ LPs with special structure</span></a></div>
 Modify solution sequences</span></a></div>
 <div class="toc-h2"><a class="sec" href="tables.html"><span class="sec-nr">A.45</span> <span class="sec-title">library(tables): 
 XSB interface to tables</span></a></div>
-<div class="toc-h2"><a class="sec" href="thread.html"><span class="sec-nr">A.46</span> <span class="sec-title">library(thread): 
+<div class="toc-h2"><a class="sec" href="terms.html"><span class="sec-nr">A.46</span> <span class="sec-title">library(terms): 
+Term manipulation</span></a></div>
+<div class="toc-h2"><a class="sec" href="thread.html"><span class="sec-nr">A.47</span> <span class="sec-title">library(thread): 
 High level thread primitives</span></a></div>
-<div class="toc-h2"><a class="sec" href="threadpool.html"><span class="sec-nr">A.47</span> <span class="sec-title">library(thread_pool): 
+<div class="toc-h2"><a class="sec" href="threadpool.html"><span class="sec-nr">A.48</span> <span class="sec-title">library(thread_pool): 
 Resource bounded thread management</span></a></div>
-<div class="toc-h2"><a class="sec" href="ugraphs.html"><span class="sec-nr">A.48</span> <span class="sec-title">library(ugraphs): 
-Unweighted Graphs</span></a></div>
-<div class="toc-h2"><a class="sec" href="url.html"><span class="sec-nr">A.49</span> <span class="sec-title">library(url): 
+<div class="toc-h2"><a class="sec" href="ugraphs.html"><span class="sec-nr">A.49</span> <span class="sec-title">library(ugraphs): 
+Graph manipulation library</span></a></div>
+<div class="toc-h2"><a class="sec" href="url.html"><span class="sec-nr">A.50</span> <span class="sec-title">library(url): 
 Analysing and constructing URL</span></a></div>
-<div class="toc-h2"><a class="sec" href="varnumbers.html"><span class="sec-nr">A.50</span> <span class="sec-title">library(varnumbers): 
+<div class="toc-h2"><a class="sec" href="varnumbers.html"><span class="sec-nr">A.51</span> <span class="sec-title">library(varnumbers): 
 Utilities for numbered terms</span></a></div>
-<div class="toc-h2"><a class="sec" href="yall.html"><span class="sec-nr">A.51</span> <span class="sec-title">library(yall): 
+<div class="toc-h2"><a class="sec" href="yall.html"><span class="sec-nr">A.52</span> <span class="sec-title">library(yall): 
 Lambda expressions</span></a></div>
 <div class="toc-h1"><a class="sec" href="hack.html"><span class="sec-nr">B</span> <span class="sec-title">Hackers 
 corner</span></a></div>
@@ -1327,14 +1373,15 @@ predicates</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.40"><span class="sec-nr">F.2.40</span> <span class="sec-title">library(registry)</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.41"><span class="sec-nr">F.2.41</span> <span class="sec-title">library(settings)</span></a></div>
 <div class="toc-h3"><a class="sec" href="library.html#sec:F.2.42"><span class="sec-nr">F.2.42</span> <span class="sec-title">library(simplex)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(ugraphs)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(url)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(www_browser)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(solution_sequences)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(thread)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(thread_pool)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(varnumbers)</span></a></div>
-<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(yall)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.43"><span class="sec-nr">F.2.43</span> <span class="sec-title">library(terms)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.44"><span class="sec-nr">F.2.44</span> <span class="sec-title">library(ugraphs)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.45"><span class="sec-nr">F.2.45</span> <span class="sec-title">library(url)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.46"><span class="sec-nr">F.2.46</span> <span class="sec-title">library(www_browser)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.47"><span class="sec-nr">F.2.47</span> <span class="sec-title">library(solution_sequences)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.48"><span class="sec-nr">F.2.48</span> <span class="sec-title">library(thread)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.49"><span class="sec-nr">F.2.49</span> <span class="sec-title">library(thread_pool)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.50"><span class="sec-nr">F.2.50</span> <span class="sec-title">library(varnumbers)</span></a></div>
+<div class="toc-h3"><a class="sec" href="library.html#sec:F.2.51"><span class="sec-nr">F.2.51</span> <span class="sec-title">library(yall)</span></a></div>
 <div class="toc-h2"><a class="sec" href="funcsummary.html"><span class="sec-nr">F.3</span> <span class="sec-title">Arithmetic 
 Functions</span></a></div>
 <div class="toc-h2"><a class="sec" href="opsummary.html"><span class="sec-nr">F.4</span> <span class="sec-title">Operators</span></a></div>

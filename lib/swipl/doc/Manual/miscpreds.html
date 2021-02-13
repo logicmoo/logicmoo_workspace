@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.44</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.44</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -258,7 +258,7 @@ fileExists)
 <dt class="pubdef"><a id="dwim_match/3"><strong>dwim_match</strong>(<var>+Atom1, 
 +Atom2, -Difference</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:dwimmatch2:1789"></a><a class="pred" href="miscpreds.html#dwim_match/2">dwim_match/2</a>, 
+Equivalent to <a id="idx:dwimmatch2:1771"></a><a class="pred" href="miscpreds.html#dwim_match/2">dwim_match/2</a>, 
 but unifies <var>Difference</var> with an atom identifying the 
 difference between <var>Atom1</var> and <var>Atom2</var>. The return 
 values are (in the same order as above): <code>equal</code>,
@@ -294,7 +294,7 @@ comma-separated list between the braces.</td></tr>
 true.
 </pre>
 
-<p>The <a id="idx:wildcardmatch3:1790"></a><a class="pred" href="miscpreds.html#wildcard_match/3">wildcard_match/3</a> 
+<p>The <a id="idx:wildcardmatch3:1772"></a><a class="pred" href="miscpreds.html#wildcard_match/3">wildcard_match/3</a> 
 version processes the following option:
 
 <dl class="latex">
@@ -314,7 +314,7 @@ system's timer granularity. A negative time causes the timer to return
 immediately. On most non-realtime operating systems we can only ensure 
 execution is suspended for <b>at least</b> <var>Time</var> seconds.
 
-<p>On Unix systems the <a id="idx:sleep1:1791"></a><a class="pred" href="miscpreds.html#sleep/1">sleep/1</a> 
+<p>On Unix systems the <a id="idx:sleep1:1773"></a><a class="pred" href="miscpreds.html#sleep/1">sleep/1</a> 
 predicate is realised ---in order of preference--- by nanosleep(), 
 usleep(), select() if the time is below 1 minute, or sleep(). On Windows 
 systems Sleep() is used.

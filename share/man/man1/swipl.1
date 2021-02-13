@@ -1,7 +1,7 @@
 .\" -*- nroff -*-
 .TH swipl 1 "Oct 10, 2020" "SWI-Prolog 8"
 .SH NAME
-swipl \- SWI-Prolog 8.3.11
+swipl \- SWI-Prolog 8.3.19
 .SH SYNOPSIS
 .B swipl
 .RB [ \-\-help | \-\-version | \-\-arch | \-\-dump\-runtime\-variables ]
@@ -262,6 +262,10 @@ Disable generating code that can be debugged using
 .IR spy/1 ,
 etc.
 .TP
+.BR \-\-debug\-on\-interrupt [=bool]
+Immediately start handling SIGINT (Control-C) to start the debugger.
+By default this is enabled when the interactive toplevel is entered.
+.TP
 .BI \-g " goal"
 .I Goal
 is executed just before entering the top level. This option may appear
@@ -428,35 +432,35 @@ to find the local installation directory of SWI-Prolog.
 Personal initialisation files consulted by SWI-Prolog on startup.
 The exact location depends on the OS.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/bin//
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/bin//
 Location for the executables.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/include/
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/include/
 Location for the include files.  If writable, SWI-Prolog.h is also
 copied to /opt/logicmoo_workspace/include/SWI-Prolog.h.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/library/
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/library/
 SWI-Prolog user libraries.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/boot/
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/boot/
 SWI-Prolog kernel parts written in Prolog.  The startup file
-/opt/logicmoo_workspace/lib/swipl-8.3.11/ may be recreated using
-the command from the directory /opt/logicmoo_workspace/lib/swipl-8.3.11:
+/opt/logicmoo_workspace/lib/swipl-8.3.19/ may be recreated using
+the command from the directory /opt/logicmoo_workspace/lib/swipl-8.3.19:
 .RS
 .TP
 bin//swipl \-O \-o  \-b boot/init.pl
 .RE
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/doc/packages
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/doc/packages
 HTML and/or PDF documentation on the installed add-ons.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/
 Default startup file.  This is a `intermediate code' file containing
 precompiled code from the boot directory.  The
 .BI \-x bootfile
 option may be used to select a different file.
 .TP
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/runtime//libpl.a
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/runtime//libpl.a
 SWI-Prolog library for embedding.  See also
 .I plld(1).
 .SH SEE ALSO
@@ -469,7 +473,7 @@ Jan\ Wielemaker
 .I http://www.swi-prolog.org/pldoc/index.html
 .PP
 Documentation on the add-on packages in
-.I /opt/logicmoo_workspace/lib/swipl-8.3.11/boot/doc
+.I /opt/logicmoo_workspace/lib/swipl-8.3.19/boot/doc
 .PP
 William\ F.\ Clocksin & Christopher\ S.\ Mellish,
 .IR "Programming in Prolog" ,

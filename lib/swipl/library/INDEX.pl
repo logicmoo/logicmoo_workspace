@@ -196,11 +196,6 @@ index((list_strings), 1, check, check).
 index((list_rationals), 0, check, check).
 index((list_rationals), 1, check, check).
 index((check_old_select), 0, checkselect, checkselect).
-index((chr_show_store), 1, chr, chr).
-index((find_chr_constraint), 1, chr, chr).
-index((chr_trace), 0, chr, chr).
-index((chr_notrace), 0, chr, chr).
-index((chr_leash), 1, chr, chr).
 index((format_to_codes), 3, codesio, codesio).
 index((format_to_codes), 4, codesio, codesio).
 index((write_to_codes), 2, codesio, codesio).
@@ -529,6 +524,7 @@ index((same_length), 2, lists, lists).
 index((reverse), 2, lists, lists).
 index((permutation), 2, lists, lists).
 index((flatten), 2, lists, lists).
+index((clumped), 2, lists, lists).
 index((max_member), 2, lists, lists).
 index((min_member), 2, lists, lists).
 index((sum_list), 2, lists, lists).
@@ -582,6 +578,7 @@ index((occurrences_of_term), 3, occurs, occurs).
 index((occurrences_of_var), 3, occurs, occurs).
 index((sub_term), 2, occurs, occurs).
 index((sub_var), 2, occurs, occurs).
+index((sub_term_shared_variables), 3, occurs, occurs).
 index((odbc_connect), 3, odbc, odbc).
 index((odbc_driver_connect), 3, odbc, odbc).
 index((odbc_disconnect), 1, odbc, odbc).
@@ -783,6 +780,7 @@ index((predicate_label), 2, prolog_code, prolog_code).
 index((predicate_sort_key), 2, prolog_code, prolog_code).
 index((is_control_goal), 1, prolog_code, prolog_code).
 index((is_predicate_indicator), 1, prolog_code, prolog_code).
+index((body_term_calls), 2, prolog_code, prolog_code).
 index((prolog_walk_code), 1, prolog_codewalk, prolog_codewalk).
 index((prolog_program_clause), 2, prolog_codewalk, prolog_codewalk).
 index((prolog_colourise_stream), 3, prolog_colour, prolog_colour).
@@ -1271,6 +1269,10 @@ index((cyclic_term), 1, terms, terms).
 index((acyclic_term), 1, terms, terms).
 index((term_subsumer), 3, terms, terms).
 index((term_factorized), 3, terms, terms).
+index((mapargs), 3, terms, terms).
+index((same_functor), 2, terms, terms).
+index((same_functor), 3, terms, terms).
+index((same_functor), 4, terms, terms).
 index((show_coverage), 1, prolog_cover, test_cover).
 index((show_coverage), 2, prolog_cover, test_cover).
 index((make_tests), 3, test_wizard, test_wizard).

@@ -45,6 +45,7 @@
     prolog:doc_search_field//1,     % +Options
     prolog:doc_places_menu//1,      % +Dir
     prolog:doc_directory/1,         % ?Dir
+    prolog:doc_object_footer//2,    % +Object, +Options
     prolog:doc_object_page_footer//2, % +Object, +Options
     prolog:doc_page_header//2,      % +File, +Options
     prolog:doc_links//2,            % +Directory, +Options

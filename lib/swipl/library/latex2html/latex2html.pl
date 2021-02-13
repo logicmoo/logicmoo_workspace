@@ -878,6 +878,8 @@ env(titlepage(_, _Page), []) :-
     ).
 env(tabular([{Format}], Tokens), HTML) :-
     translate_table(Format, Tokens, HTML).
+env(tabulary([_Width, {Format}], Tokens), HTML) :-
+    translate_table(Format, Tokens, HTML).
 env(array([{Format}], Tokens), HTML) :-
     translate_table(Format, Tokens, HTML).
 env(table(_, Tokens), Table) :-
@@ -2286,10 +2288,19 @@ table_columns([],      Ncols, Ncols, []).
 table_columns([0'l|T], NC0,   NC,    [[]|TH]) :-
     NC1 is NC0 + 1,
     table_columns(T, NC1, NC, TH).
+table_columns([0'L|T], NC0,   NC,    [[]|TH]) :-
+    NC1 is NC0 + 1,
+    table_columns(T, NC1, NC, TH).
 table_columns([0'c|T], NC0,   NC,    [[align=center]|TH]) :-
     NC1 is NC0 + 1,
     table_columns(T, NC1, NC, TH).
+table_columns([0'C|T], NC0,   NC,    [[align=center]|TH]) :-
+    NC1 is NC0 + 1,
+    table_columns(T, NC1, NC, TH).
 table_columns([0'r|T], NC0,   NC,    [[align=right]|TH]) :-
+    NC1 is NC0 + 1,
+    table_columns(T, NC1, NC, TH).
+table_columns([0'R|T], NC0,   NC,    [[align=right]|TH]) :-
     NC1 is NC0 + 1,
     table_columns(T, NC1, NC, TH).
 table_columns([0'p|T0], NC0,   NC,   [Col|TH]) :-

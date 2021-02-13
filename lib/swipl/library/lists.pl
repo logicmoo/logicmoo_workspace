@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker and Richard O'Keefe
     E-mail:        J.Wielemaker@cs.vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2002-2016, University of Amsterdam
+    Copyright (c)  2002-2020, University of Amsterdam
                               VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -55,6 +56,7 @@
           reverse/2,                    % +List, -Reversed
           permutation/2,                % ?List, ?Permutation
           flatten/2,                    % +Nested, -Flat
+          clumped/2,                    % +Items,-Pairs
 
                                         % Ordered operations
           max_member/2,                 % -Max, +List
@@ -494,6 +496,38 @@ flatten([Hd|Tl], Tail, List) :-
 flatten(NonList, Tl, [NonList|Tl]).
 
 
+		 /*******************************
+		 *            CLUMPS		*
+		 *******************************/
+
+%!  clumped(+Items, -Pairs)
+%
+%   Pairs is a list  of  `Item-Count`   pairs  that  represents the _run
+%   length encoding_ of Items.  For example:
+%
+%   ```
+%   ?- clumped([a,a,b,a,a,a,a,c,c,c], R).
+%   R = [a-2, b-1, a-4, c-3].
+%   ```
+%
+%   @compat SICStus
+
+clumped(Items, Counts) :-
+    clump(Items, Counts).
+
+clump([], []).
+clump([H|T0], [H-C|T]) :-
+    ccount(T0, H, T1, 1, C),
+    clump(T1, T).
+
+ccount([H|T0], E, T, C0, C) :-
+    E == H,
+    !,
+    C1 is C0+1,
+    ccount(T0, E, T, C1, C).
+ccount(List, _, List, C, C).
+
+
                  /*******************************
                  *       ORDER OPERATIONS       *
                  *******************************/
@@ -509,8 +543,9 @@ flatten(NonList, Tl, [NonList|Tl]).
 max_member(Max, [H|T]) :-
     max_member_(T, H, Max).
 
-max_member_([], Max, Max).
-max_member_([H|T], Max0, Max) :-
+max_member_([], Max0, Max) =>
+    Max = Max0.
+max_member_([H|T], Max0, Max) =>
     (   H @=< Max0
     ->  max_member_(T, Max0, Max)
     ;   max_member_(T, H, Max)
@@ -528,8 +563,9 @@ max_member_([H|T], Max0, Max) :-
 min_member(Min, [H|T]) :-
     min_member_(T, H, Min).
 
-min_member_([], Min, Min).
-min_member_([H|T], Min0, Min) :-
+min_member_([], Min0, Min) =>
+    Min = Min0.
+min_member_([H|T], Min0, Min) =>
     (   H @>= Min0
     ->  min_member_(T, Min0, Min)
     ;   min_member_(T, H, Min)
@@ -547,8 +583,9 @@ min_member_([H|T], Min0, Min) :-
 sum_list(Xs, Sum) :-
     sum_list(Xs, 0, Sum).
 
-sum_list([], Sum, Sum).
-sum_list([X|Xs], Sum0, Sum) :-
+sum_list([], Sum0, Sum) =>
+    Sum = Sum0.
+sum_list([X|Xs], Sum0, Sum) =>
     Sum1 is Sum0 + X,
     sum_list(Xs, Sum1, Sum).
 
@@ -562,8 +599,9 @@ sum_list([X|Xs], Sum0, Sum) :-
 max_list([H|T], Max) :-
     max_list(T, H, Max).
 
-max_list([], Max, Max).
-max_list([H|T], Max0, Max) :-
+max_list([], Max0, Max) =>
+    Max = Max0.
+max_list([H|T], Max0, Max) =>
     Max1 is max(H, Max0),
     max_list(T, Max1, Max).
 
@@ -578,8 +616,9 @@ max_list([H|T], Max0, Max) :-
 min_list([H|T], Min) :-
     min_list(T, H, Min).
 
-min_list([], Min, Min).
-min_list([H|T], Min0, Min) :-
+min_list([], Min0, Min) =>
+    Min = Min0.
+min_list([H|T], Min0, Min) =>
     Min1 is min(H, Min0),
     min_list(T, Min1, Min).
 
@@ -675,15 +714,14 @@ remove_same_key(L, _, L).
 %
 %   @see ord_intersection/3.
 
-intersection([], _, []) :- !.
-intersection([X|T], L, Intersect) :-
-    memberchk(X, L),
-    !,
-    Intersect = [X|R],
-    intersection(T, L, R).
-intersection([_|T], L, R) :-
-    intersection(T, L, R).
-
+intersection([], _, Set) =>
+    Set = [].
+intersection([X|T], L, Intersect) =>
+    (   memberchk(X, L)
+    ->  Intersect = [X|R],
+        intersection(T, L, R)
+    ;   intersection(T, L, Intersect)
+    ).
 
 %!  union(+Set1, +Set2, -Set3) is det.
 %
@@ -694,14 +732,14 @@ intersection([_|T], L, R) :-
 %
 %   @see ord_union/3
 
-union([], L, L) :- !.
-union([H|T], L, R) :-
-    memberchk(H, L),
-    !,
-    union(T, L, R).
-union([H|T], L, [H|R]) :-
-    union(T, L, R).
-
+union([], L0, L) =>
+    L = L0.
+union([H|T], L, Union) =>
+    (   memberchk(H, L)
+    ->  union(T, L, Union)
+    ;   Union = [H|R],
+        union(T, L, R)
+    ).
 
 %!  subset(+SubSet, +Set) is semidet.
 %
@@ -712,8 +750,8 @@ union([H|T], L, [H|R]) :-
 %
 %   @see ord_subset/2.
 
-subset([], _) :- !.
-subset([E|R], Set) :-
+subset([], _) => true.
+subset([E|R], Set) =>
     memberchk(E, Set),
     subset(R, Set).
 
@@ -727,10 +765,11 @@ subset([E|R], Set) :-
 %
 %   @see ord_subtract/3.
 
-subtract([], _, []) :- !.
-subtract([E|T], D, R) :-
-    memberchk(E, D),
-    !,
-    subtract(T, D, R).
-subtract([H|T], D, [H|R]) :-
-    subtract(T, D, R).
+subtract([], _, R) =>
+    R = [].
+subtract([E|T], D, R) =>
+    (   memberchk(E, D)
+    ->  subtract(T, D, R)
+    ;   R = [E|R1],
+        subtract(T, D, R1)
+    ).

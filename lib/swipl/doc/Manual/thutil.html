@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 10.5</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 10.5</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -251,13 +251,13 @@ Lists all current threads and their status.</dd>
 Join all terminated threads. For normal applications, dealing with 
 terminated threads must be part of the application logic, either 
 detaching the thread before termination or making sure it will be 
-joined. The predicate <a id="idx:jointhreads0:2253"></a><a class="pred" href="thutil.html#join_threads/0">join_threads/0</a> 
+joined. The predicate <a id="idx:jointhreads0:2250"></a><a class="pred" href="thutil.html#join_threads/0">join_threads/0</a> 
 is intended for interactive sessions to reclaim resources from threads 
 that died unexpectedly during development.</dd>
 <dt class="pubdef"><a id="interactor/0"><strong>interactor</strong></a></dt>
 <dd class="defbody">
 Create a new console and run the Prolog top level in this new console. 
-See also <a id="idx:attachconsole0:2254"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>. 
+See also <a id="idx:attachconsole0:2251"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>. 
 In the Windows version a new interactor can also be created from the <b>Run/New 
 thread</b> menu.
 </dd>
@@ -271,12 +271,12 @@ threads</span></a></h3>
 <p>Support for debugging threads is still very limited. Debug and trace 
 mode are flags that are local to each thread. Individual threads can be 
 debugged either using the graphical debugger described in
-<a class="sec" href="guitracer.html#sec:3.5">section 3.5</a> (see <a id="idx:tspy1:2255"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
+<a class="sec" href="guitracer.html#sec:3.5">section 3.5</a> (see <a id="idx:tspy1:2252"></a><a class="pred" href="thutil.html#tspy/1">tspy/1</a> 
 and friends) or by attaching a console to the thread and running the 
 traditional command line debugger (see
-<a id="idx:attachconsole0:2256"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>). 
+<a id="idx:attachconsole0:2253"></a><a class="pred" href="thutil.html#attach_console/0">attach_console/0</a>). 
 When using the graphical debugger, the debugger must be <em>loaded</em> 
-from the main thread (for example using guitracer) before <a id="idx:gtrace0:2257"></a><a class="pred" href="guitracer.html#gtrace/0">gtrace/0</a> 
+from the main thread (for example using guitracer) before <a id="idx:gtrace0:2254"></a><a class="pred" href="guitracer.html#gtrace/0">gtrace/0</a> 
 can be called from a thread.
 
 <dl class="latex">
@@ -302,14 +302,14 @@ running, the following sequence starts the tracer on this thread:
 <dd class="defbody">
 Prepare <var>ThreadId</var> for debugging using the graphical tracer. 
 This implies installing the tracer hooks in the thread and switching the 
-thread to debug mode using <a id="idx:debug0:2258"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>. 
-The call is injected into the thread using <a id="idx:threadsignal2:2259"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
+thread to debug mode using <a id="idx:debug0:2255"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>. 
+The call is injected into the thread using <a id="idx:threadsignal2:2256"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
 We refer to the documentation of this predicate for asynchronous 
 interaction with threads. New threads created inherit their debug mode 
 from the thread that created them.</dd>
 <dt class="pubdef"><a id="tdebug/0"><strong>tdebug</strong></a></dt>
 <dd class="defbody">
-Call <a id="idx:tdebug1:2260"></a><a class="pred" href="thutil.html#tdebug/1">tdebug/1</a> 
+Call <a id="idx:tdebug1:2257"></a><a class="pred" href="thutil.html#tdebug/1">tdebug/1</a> 
 in all running threads.</dd>
 <dt class="pubdef"><a id="tnodebug/1"><strong>tnodebug</strong>(<var>+ThreadId</var>)</a></dt>
 <dd class="defbody">
@@ -320,19 +320,19 @@ Disable debugging in all threads.</dd>
 <dt class="pubdef"><a id="tspy/2"><strong>tspy</strong>(<var>:Spec, 
 +ThreadId</var>)</a></dt>
 <dd class="defbody">
-Set a spy point as <a id="idx:spy1:2261"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+Set a spy point as <a id="idx:spy1:2258"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
 and enable the thread for debugging using
-<a id="idx:tdebug1:2262"></a><a class="pred" href="thutil.html#tdebug/1">tdebug/1</a>. 
+<a id="idx:tdebug1:2259"></a><a class="pred" href="thutil.html#tdebug/1">tdebug/1</a>. 
 Note that a spy point is a global flag on a predicate that is visible 
 from all threads. Spy points are honoured in all threads that are in 
 debug mode and ignored in threads that are in nodebug mode.</dd>
 <dt class="pubdef"><a id="tspy/1"><strong>tspy</strong>(<var>:Spec</var>)</a></dt>
 <dd class="defbody">
-Set a spy point as <a id="idx:spy1:2263"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
+Set a spy point as <a id="idx:spy1:2260"></a><a class="pred" href="debugger.html#spy/1">spy/1</a> 
 and enable debugging in all threads using
-<a id="idx:tdebug0:2264"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a>. 
-Note that removing spy points can be done using <a id="idx:nospy1:2265"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>. 
-Disabling spy points in a specific thread is achieved by <a id="idx:tnodebug1:2266"></a><a class="pred" href="thutil.html#tnodebug/1">tnodebug/1</a>.
+<a id="idx:tdebug0:2261"></a><a class="pred" href="thutil.html#tdebug/0">tdebug/0</a>. 
+Note that removing spy points can be done using <a id="idx:nospy1:2262"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>. 
+Disabling spy points in a specific thread is achieved by <a id="idx:tnodebug1:2263"></a><a class="pred" href="thutil.html#tnodebug/1">tnodebug/1</a>.
 </dd>
 </dl>
 
@@ -342,8 +342,8 @@ threads</span></a></h3>
 <a id="sec:tprofile"></a>
 
 <p>In the current implementation, at most one thread can be profiled at 
-any moment. Any thread can call <a id="idx:profile1:2267"></a><a class="pred" href="profile.html#profile/1">profile/1</a> 
-to profile the execution of some part of its code. The predicate <a id="idx:tprofile1:2268"></a><a class="pred" href="thutil.html#tprofile/1">tprofile/1</a> 
+any moment. Any thread can call <a id="idx:profile1:2264"></a><a class="pred" href="profile.html#profile/1">profile/1</a> 
+to profile the execution of some part of its code. The predicate <a id="idx:tprofile1:2265"></a><a class="pred" href="thutil.html#tprofile/1">tprofile/1</a> 
 allows for profiling the execution of another thread until the user 
 stops collecting profile data.
 

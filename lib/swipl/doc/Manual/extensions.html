@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,8 +239,8 @@ extensions</span></a></h1>
 <a id="sec:extensions"></a>
 
 <p>This chapter describes extensions to the Prolog language introduced 
-with SWI-Prolog version&nbsp;7. The changes bring more modern 
-syntactical conventions to Prolog such as key-value maps, called <em>dicts</em> 
+with SWI-Prolog version&nbsp;7 in 2014. The changes bring more modern 
+syntactical conventions to Prolog such as key-value maps, called <em>dicts</em>, 
 as primary citizens and a restricted form of <em>functional notation</em>. 
 They also extend Prolog basic types with strings, providing a natural 
 notation to textual material as opposed to identifiers (atoms) and 
@@ -251,9 +251,11 @@ simplify the integration of domain specific languages (DSLs) and
 facilitate a more natural Prolog representation for popular exchange 
 languages such as XML and JSON.
 
-<p>While many programs run unmodified in SWI-Prolog version&nbsp;7, 
-especially those that pass double quoted strings to general purpose list 
-processing predicates require modifications. We provide a tool (<a id="idx:liststrings0:1792"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>) 
+<p>While many programs run unmodified in SWI-Prolog version&nbsp;7, some 
+require modifications, especially those that pass double quoted strings 
+to general purpose list processing predicates. See <a class="sec" href="string.html#sec:5.2.4">section 
+5.2.4</a> and <a class="sec" href="string.html#sec:5.2.5">section 5.2.5</a> 
+for information and tools on porting. We provide a tool (<a id="idx:liststrings0:1774"></a><a class="pred" href="string.html#list_strings/0">list_strings/0</a>) 
 that we used to port a huge code base in half a day.
 
 <p>
@@ -267,20 +269,22 @@ that we used to port a huge code base in half a day.
 <div class="toc">
 <div class="toc-h2"><a class="sec" href="ext-lists.html"><span class="sec-nr">5.1</span> <span class="sec-title">Lists 
 are special</span></a></div>
-<div class="toc-h3"><a class="sec" href="ext-lists.html#sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&rsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
+<div class="toc-h3"><a class="sec" href="ext-lists.html#sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&lsquo;<code>[|]</code>&rsquo;and <code>[]</code> 
 for lists</span></a></div>
 <div class="toc-h2"><a class="sec" href="string.html"><span class="sec-nr">5.2</span> <span class="sec-title">The 
 string type and its double quoted syntax</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Predicates 
-that operate on strings</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Representing 
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.1"><span class="sec-nr">5.2.1</span> <span class="sec-title">Representing 
 text: strings, atoms and code lists</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Adapting 
-code for double quoted strings</span></a></div>
-<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Why 
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.2"><span class="sec-nr">5.2.2</span> <span class="sec-title">Predicates 
+that operate on strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.3"><span class="sec-nr">5.2.3</span> <span class="sec-title">Why 
 has the representation of double quoted text changed?</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.4"><span class="sec-nr">5.2.4</span> <span class="sec-title">Adapting 
+code for double quoted strings</span></a></div>
+<div class="toc-h3"><a class="sec" href="string.html#sec:5.2.5"><span class="sec-nr">5.2.5</span> <span class="sec-title">Predicates 
+to support adapting code for double quoted strings</span></a></div>
 <div class="toc-h2"><a class="sec" href="ext-syntax.html"><span class="sec-nr">5.3</span> <span class="sec-title">Syntax 
-changes</span></a></div>
+changes since SWI-Prolog&nbsp;7</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.1"><span class="sec-nr">5.3.1</span> <span class="sec-title">Operators 
 and quoted atoms</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-syntax.html#sec:5.3.2"><span class="sec-nr">5.3.2</span> <span class="sec-title">Compound 
@@ -317,7 +321,13 @@ strings and XML</span></a></div>
 strings and JSON</span></a></div>
 <div class="toc-h3"><a class="sec" href="ext-integration.html#sec:5.5.5"><span class="sec-nr">5.5.5</span> <span class="sec-title">Dicts, 
 strings and HTTP</span></a></div>
-<div class="toc-h2"><a class="sec" href="ext-issues.html"><span class="sec-nr">5.6</span> <span class="sec-title">Remaining 
+<div class="toc-h2"><a class="sec" href="ssu.html"><span class="sec-nr">5.6</span> <span class="sec-title">Single 
+Sided Unification rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="ssu.html#sec:5.6.1"><span class="sec-nr">5.6.1</span> <span class="sec-title">Consequenses 
+of <code>=&gt;</code> single sided unification rules</span></a></div>
+<div class="toc-h3"><a class="sec" href="ssu.html#sec:5.6.2"><span class="sec-nr">5.6.2</span> <span class="sec-title">SSU: 
+Future considerations</span></a></div>
+<div class="toc-h2"><a class="sec" href="ext-issues.html"><span class="sec-nr">5.7</span> <span class="sec-title">Remaining 
 issues</span></a></div>
 </div>
 </body></html>

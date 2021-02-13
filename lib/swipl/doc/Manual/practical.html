@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 9.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 9.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
-<link rel="previous" href="SyntaxAndSemantics.html">
-<link rel="next" href="debugging.html">
+<link rel="previous" href="chr-syntaxandsemantics.html">
+<link rel="next" href="chr-debugging.html">
 
 <style type="text/css">
 
@@ -230,15 +230,15 @@ table.frame-box
 <a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
-<a class="nav" href="SyntaxAndSemantics.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="debugging.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="chr-syntaxandsemantics.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="chr-debugging.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:practical"><a id="sec:9.3"><span class="sec-nr">9.3</span> <span class="sec-title">CHR 
 in SWI-Prolog Programs</span></a></h2>
 
 <a id="sec:practical"></a>
 <h3 id="sec:chr-embedding"><a id="sec:9.3.1"><span class="sec-nr">9.3.1</span> <span class="sec-title">Embedding 
-in Prolog Programs</span></a></h3>
+CHR in Prolog Programs</span></a></h3>
 
 <a id="sec:chr-embedding"></a>
 
@@ -246,8 +246,8 @@ in Prolog Programs</span></a></h3>
 with a module. The default module is <code>user</code>. One should never 
 load different <code>.pl</code> files with the same CHR module name.
 
-<p><h3 id="sec:chr-declarations"><a id="sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">Constraint 
-declaration</span></a></h3>
+<p><h3 id="sec:chr-declarations"><a id="sec:9.3.2"><span class="sec-nr">9.3.2</span> <span class="sec-title">CHR 
+Constraint declaration</span></a></h3>
 
 <a id="sec:chr-declarations"></a>
 
@@ -255,7 +255,7 @@ declaration</span></a></h3>
 <dt class="pubdef"><a id="chr_constraint/1">:- <strong>chr_constraint</strong>(<var>+Specifier</var>)</a></dt>
 <dd class="defbody">
 Every constraint used in CHR rules has to be declared with a
-<a id="idx:chrconstraint1:2099"></a><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
+<a id="idx:chrconstraint1:2096"></a><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
 declaration by the <em>constraint specifier</em>. For convenience 
 multiple constraints may be declared at once with the same
 <a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
@@ -357,7 +357,7 @@ have any type. This is the default value.
 <dd class="defbody">
 User-defined types are algebraic data types, similar to those in Haskell 
 or the discriminated unions in Mercury. An algebraic data type is 
-defined using <a id="idx:chrtype1:2100"></a><a class="pred" href="practical.html#chr_type/1">chr_type/1</a>:
+defined using <a id="idx:chrtype1:2097"></a><a class="pred" href="practical.html#chr_type/1">chr_type/1</a>:
 
 <pre class="code">
 :- chr_type type ---&gt; body.
@@ -491,9 +491,10 @@ tracks types throughout the whole program.
 runtime overhead.
 </ol>
 
-<p><h3 id="sec:chr-compilation"><a id="sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">Compilation</span></a></h3>
+<p><h3 id="sec:chr-compilation"><a id="sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">CHR 
+Compilation</span></a></h3>
 
-<a id="sec:chr-compilation"></a> The SWI-Prolog CHR compiler exploits <a id="idx:termexpansion2:2101"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+<a id="sec:chr-compilation"></a> The SWI-Prolog CHR compiler exploits <a id="idx:termexpansion2:2098"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
 rules to translate the constraint handling rules to plain Prolog. These 
 rules are loaded from the library <code>library(chr)</code>. They are 
 activated if the compiled file has the <code>.chr</code> extension or 

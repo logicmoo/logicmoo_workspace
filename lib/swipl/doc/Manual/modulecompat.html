@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.16</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 6.16</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -241,13 +241,13 @@ of the Module System</span></a></h2>
 <p>The SWI-Prolog module system is largely derived from the Quintus 
 Prolog module system, which is also adopted by SICStus, Ciao and YAP. 
 Originally, the mechanism for defining meta-predicates in SWI-Prolog was 
-based on the <a id="idx:moduletransparent1:1979"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a> 
-directive and <a id="idx:stripmodule3:1980"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
-Since 5.7.4 it supports the de-facto standard <a id="idx:metapredicate1:1981"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+based on the <a id="idx:moduletransparent1:1975"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a> 
+directive and <a id="idx:stripmodule3:1976"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
+Since 5.7.4 it supports the de-facto standard <a id="idx:metapredicate1:1977"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 directive for implementing meta-predicates, providing much better 
 compatibility.
 
-<p>The support for the <a id="idx:metapredicate1:1982"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+<p>The support for the <a id="idx:metapredicate1:1978"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 mechanism, however, is considerably different. On most systems, the <em>caller</em> 
 of a meta-predicate is compiled differently to provide the required &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt; 
 qualification. This implies that the meta-declaration must be available 
@@ -259,7 +259,7 @@ restrictions on meta-predicates:
 <ul class="latex">
 <li>Modules that provide meta-predicates for a module to be compiled 
 must be loaded explicitly by that module.
-<li>The meta-predicate directives of exported predicates must follow the <a id="idx:module2:1983"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
+<li>The meta-predicate directives of exported predicates must follow the <a id="idx:module2:1979"></a><a class="pred" href="defmodule.html#module/2">module/2</a> 
 directive immediately.
 <li>After changing a meta-declaration, all modules that <em>call</em> 
 the modified predicates need to be recompiled.
@@ -281,8 +281,8 @@ rules.
 user-defined module is the <code>user</code> module. In turn, the
 <code>user</code> module imports from the module <code>system</code> 
 that provides all built-in predicates. The auto-import hierarchy can be 
-changed using <a id="idx:addimportmodule3:1984"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
-and <a id="idx:deleteimportmodule2:1985"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.
+changed using <a id="idx:addimportmodule3:1980"></a><a class="pred" href="importmodule.html#add_import_module/3">add_import_module/3</a> 
+and <a id="idx:deleteimportmodule2:1981"></a><a class="pred" href="importmodule.html#delete_import_module/2">delete_import_module/2</a>.
 
 <p>This mechanism can be used to realise a simple object-oriented system 
 or a hierarchical module system.

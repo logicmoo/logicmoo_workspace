@@ -45,7 +45,10 @@ implementation through a coroutining primitive   (typically  when/2, but
 freeze/2 for simple cases).
 
 @tbd	This emulation is barely tested.
+@see	https://sicstus.sics.se/sicstus/docs/3.12.11/html/sicstus/Block-Declarations.html
 */
+
+:- op(1150, fx, user:(block)).
 
 :- multifile
 	user:term_expansion/2,

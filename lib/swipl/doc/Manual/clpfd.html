@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.9</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.9</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -427,7 +427,7 @@ division </td></tr>
 <p>where <var>Expr</var> again denotes an arithmetic expression.
 
 <p>The bitwise operations <code>(\)/1</code>, <code>(/\)/2</code>, <code>(\/)/2</code>, <code>(&gt;&gt;)/2</code>,
-<code>(&lt;&lt;)/2</code>, <code>lsb/1</code>, <code>msb/1</code>, <code>popcount/1</code> 
+<code>(&lt;&lt;)/2</code>, <span class="pred-ext">lsb/1</span>, <span class="pred-ext">msb/1</span>, <span class="pred-ext">popcount/1</span> 
 and <code>(xor)/2</code> are also supported.
 
 <p><h3 id="sec:clpfd-integer-arith"><a id="sec:A.9.3"><span class="sec-nr">A.9.3</span> <span class="sec-title">Declarative 
@@ -487,7 +487,7 @@ should therefore be deferred to more advanced lectures.
 
 <p>For supported expressions, CLP(FD) constraints are drop-in 
 replacements of these low-level arithmetic predicates, often yielding 
-more general programs. See <code>n_factorial/2</code> (<a class="sec" href="clpfd.html#sec:A.9.4">section 
+more general programs. See <span class="pred-ext">n_factorial/2</span> (<a class="sec" href="clpfd.html#sec:A.9.4">section 
 A.9.4</a>) for an example.
 
 <p>This library uses <a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
@@ -531,7 +531,7 @@ Factorial relation</span></a></h3>
 <p>We illustrate the benefit of using <a class="pred" href="clpfd.html##=/2">#=/2</a> 
 for more generality with a simple example.
 
-<p>Consider first a rather conventional definition of <code>n_factorial/2</code>, 
+<p>Consider first a rather conventional definition of <span class="pred-ext">n_factorial/2</span>, 
 relating each natural number <i>N</i> to its factorial <i>F</i>:
 
 <pre class="code">
@@ -865,11 +865,11 @@ column, and which are subject to certain constraints.
 puzzle</i>, which is obtained by replacing 8 by <i>N</i> everywhere it 
 occurs in the above description. We implement the above considerations 
 in the
-<b>core relation</b> <code>n_queens/2</code>, where the first argument 
-is the number of queens (which is identical to the number of rows and 
-columns of the generalized chessboard), and the second argument is a 
-list of <i>N</i> integers that represents a solution in the form 
-described above.
+<b>core relation</b> <span class="pred-ext">n_queens/2</span>, where the 
+first argument is the number of queens (which is identical to the number 
+of rows and columns of the generalized chessboard), and the second 
+argument is a list of <i>N</i> integers that represents a solution in 
+the form described above.
 
 <pre class="code">
 n_queens(N, Qs) :-
@@ -926,18 +926,19 @@ respectively.
 
 <p>Again, to easily try different labeling options in connection with 
 optimisation, we recommend to introduce a dedicated predicate for 
-posting constraints, and to use <code>labeling/2</code> in a separate 
-goal. This way, we can observe properties of the core relation in 
-isolation, and try different labeling options without recompiling our 
-code.
+posting constraints, and to use <a class="pred" href="clpfd.html#labeling/2">labeling/2</a> 
+in a separate goal. This way, we can observe properties of the core 
+relation in isolation, and try different labeling options without 
+recompiling our code.
 
-<p>If necessary, we can use <code>once/1</code> to commit to the first 
-optimal solution. However, it is often very valuable to see alternative 
-solutions that are <i>also</i> optimal, so that we can choose among 
-optimal solutions by other criteria. For the sake of
+<p>If necessary, we can use <a class="pred" href="metacall.html#once/1">once/1</a> 
+to commit to the first optimal solution. However, it is often very 
+valuable to see alternative solutions that are <i>also</i> optimal, so 
+that we can choose among optimal solutions by other criteria. For the 
+sake of
 <a class="url" href="https://www.metalevel.at/prolog/purity"><b>purity</b></a> 
-and completeness, we recommend to avoid <code>once/1</code> and other 
-constructs that lead to impurities in CLP(FD) programs.
+and completeness, we recommend to avoid <a class="pred" href="metacall.html#once/1">once/1</a> 
+and other constructs that lead to impurities in CLP(FD) programs.
 
 <p>Related to optimisation with CLP(FD) constraints are
 <a class="url" href="http://eu.swi-prolog.org/man/simplex.html"><code>library(simplex)</code></a> 
@@ -992,8 +993,8 @@ X = 1+1.
 <p>This behaviour is highly problematic from a logical point of view, 
 and it may render declarative debugging techniques inapplicable.
 
-<p>Set the Prolog flag <code>clpfd_monotonic</code> to <code>true</code> 
-to make CLP(FD)
+<p>Set the Prolog flag <b>clpfd_monotonic</b> to <code>true</code> to 
+make CLP(FD)
 <b>monotonic</b>: This means that <i>adding</i> new constraints <i>cannot</i> 
 yield new solutions. When this flag is <code>true</code>, we must wrap 
 variables that occur in arithmetic expressions with the functor <code>(?)/1</code> 

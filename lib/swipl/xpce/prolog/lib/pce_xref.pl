@@ -3,7 +3,8 @@
     Author:        Jan Wielemaker and Anjo Anjewierden
     E-mail:        wielemak@science.uva.nl
     WWW:           http://www.swi-prolog.org/packages/xpce/
-    Copyright (c)  2006-2015, University of Amsterdam
+    Copyright (c)  2006-2020, University of Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -70,7 +71,8 @@
 	     format_time/3,
 	     maplist/3,
 	     strip_module/3,
-	     xref_called/4
+	     xref_called/4,
+             head_name_arity/3
 	   ]).
 
 gxref_version('0.1.1').
@@ -1920,7 +1922,7 @@ predicate_indicator(Module:Goal, PI) :-
 predicate_indicator(Goal, Name/Arity) :-
     callable(Goal),
     !,
-    functor(Goal, Name, Arity).
+    head_name_arity(Goal, Name, Arity).
 predicate_indicator(Goal, Goal).
 
 hidden_module(user) :- !.
@@ -2105,7 +2107,7 @@ not_called(File, NotCalled) :-          % non-module version
        ).
 
 generated_callable(M:Term) :-
-    functor(Term, Name, Arity),
+    head_name_arity(Term, Name, Arity),
     prolog:generated_predicate(M:Name/Arity).
 
 %!  xref_called(?Source, ?Callable) is nondet.

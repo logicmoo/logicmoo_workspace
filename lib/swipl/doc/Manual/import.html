@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 6.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 6.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -245,8 +245,8 @@ defined predicate, although its implementation remains part of the
 module in which it has been defined.
 
 <p>Importing the predicates from another module is achieved using the 
-directives <a id="idx:usemodule1:1872"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
-or <a id="idx:usemodule2:1873"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
+directives <a id="idx:usemodule1:1868"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+or <a id="idx:usemodule2:1869"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>. 
 Note that both directives take
 <var>filename(s)</var> as arguments. That is, modules are imported based 
 on their filename rather than their module name.
@@ -254,10 +254,10 @@ on their filename rather than their module name.
 <dl class="latex">
 <dt class="pubdef"><a id="use_module/1"><strong>use_module</strong>(<var>+Files</var>)</a></dt>
 <dd class="defbody">
-Load the file(s) specified with <var>Files</var> just like <a id="idx:ensureloaded1:1874"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>. 
+Load the file(s) specified with <var>Files</var> just like <a id="idx:ensureloaded1:1870"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>. 
 The files must all be module files. All exported predicates from the 
 loaded files are imported into the module from which this predicate is 
-called. This predicate is equivalent to <a id="idx:ensureloaded1:1875"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>, 
+called. This predicate is equivalent to <a id="idx:ensureloaded1:1871"></a><a class="pred" href="consulting.html#ensure_loaded/1">ensure_loaded/1</a>, 
 except that it raises an error if <var>Files</var> are not module files.
 
 <p>The imported predicates act as <em>weak symbols</em> in the module 
@@ -265,7 +265,7 @@ into which they are imported. This implies that a local definition of a
 predicate overrides (clobbers) the imported definition. If the flag
 <a class="flag" href="flags.html#flag:warn_override_implicit_import">warn_override_implicit_import</a> 
 is <code>true</code> (default), a warning is printed. Below is an 
-example of a module that uses library(lists), but redefines <a id="idx:flatten2:1876"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>, 
+example of a module that uses library(lists), but redefines <a id="idx:flatten2:1872"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>, 
 giving it a totally different meaning:
 
 <pre class="code">
@@ -284,12 +284,12 @@ Warning: /home/janw/Bugs/Import/t.pl:5:
         overrides weak import from lists
 </pre>
 
-<p>This warning can be avoided by (1) using <a id="idx:usemodule2:1877"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+<p>This warning can be avoided by (1) using <a id="idx:usemodule2:1873"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 to only import the predicates from the <code>lists</code> library that 
-are actually used in the&lsquo;shapes' module, (2) using the <code>except([<a id="idx:flatten2:1878"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>])</code> 
-option of <a id="idx:usemodule2:1879"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>, 
+are actually used in the&lsquo;shapes' module, (2) using the <code>except([<a id="idx:flatten2:1874"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>])</code> 
+option of <a id="idx:usemodule2:1875"></a><a class="pred" href="import.html#use_module/2">use_module/2</a>, 
 (3) use
-<code>:- abolish(<a id="idx:flatten2:1880"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>).</code> 
+<code>:- abolish(<a id="idx:flatten2:1876"></a><a class="pred" href="lists.html#flatten/2">flatten/2</a>).</code> 
 before the local definition or (4) setting
 <a class="flag" href="flags.html#flag:warn_override_implicit_import">warn_override_implicit_import</a> 
 to <code>false</code>. Globally disabling this warning is only 
@@ -297,9 +297,9 @@ recommended if overriding imported predicates is common as a result of
 design choices or the program is ported from a system that silently 
 overrides imported predicates.
 
-<p>Note that it is always an error to import two modules with <a id="idx:usemodule1:1881"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+<p>Note that it is always an error to import two modules with <a id="idx:usemodule1:1877"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
 that export the same predicate. Such conflicts must be resolved with
-<a id="idx:usemodule2:1882"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+<a id="idx:usemodule2:1878"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 as described above.</dd>
 <dt class="pubdef"><a id="use_module/2"><strong>use_module</strong>(<var>+File, 
 +ImportList</var>)</a></dt>
@@ -310,12 +310,12 @@ is a list of predicate indicators specifying the predicates that will be
 imported from the loaded module. <var>ImportList</var> also allows for 
 renaming or import-everything-except. See also the <code>import</code> 
 option of
-<a id="idx:loadfiles2:1883"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
-The first example below loads <a id="idx:member2:1884"></a><a class="pred" href="lists.html#member/2">member/2</a> 
-from the <code>lists</code> library and <a id="idx:append2:1885"></a><a class="pred" href="lists.html#append/2">append/2</a> 
+<a id="idx:loadfiles2:1879"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>. 
+The first example below loads <a id="idx:member2:1880"></a><a class="pred" href="lists.html#member/2">member/2</a> 
+from the <code>lists</code> library and <a id="idx:append2:1881"></a><a class="pred" href="lists.html#append/2">append/2</a> 
 under the name <code>list_concat</code>, which is how this predicate is 
 named in YAP. The second example loads all exports from library <code>option</code> 
-except for <a id="idx:metaoptions3:1886"></a><a class="pred" href="option.html#meta_options/3">meta_options/3</a>. 
+except for <a id="idx:metaoptions3:1882"></a><a class="pred" href="option.html#meta_options/3">meta_options/3</a>. 
 These renaming facilities are generally used to deal with portability 
 issues with as few changes as possible to the actual code. See also <a class="sec" href="dialect.html#sec:C">section 
 C</a> and
@@ -333,15 +333,15 @@ C</a> and
 
 <p>In most cases a module is imported because some of its predicates are 
 being used. However, sometimes a module is imported for other reasons, 
-e.g., for its declarations. In such cases it is best practice to use <a id="idx:usemodule2:1887"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+e.g., for its declarations. In such cases it is best practice to use <a id="idx:usemodule2:1883"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 with empty ImportList. This distinguishes an imported module that is 
 used, although not for its predicates, from a module that is needlessly 
 imported.
 
-<p>The <a id="idx:module2:1888"></a><a class="pred" href="defmodule.html#module/2">module/2</a>, <a id="idx:usemodule1:1889"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
-and <a id="idx:usemodule2:1890"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
+<p>The <a id="idx:module2:1884"></a><a class="pred" href="defmodule.html#module/2">module/2</a>, <a id="idx:usemodule1:1885"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+and <a id="idx:usemodule2:1886"></a><a class="pred" href="import.html#use_module/2">use_module/2</a> 
 directives are sufficient to partition a simple Prolog program into 
-modules. The SWI-Prolog graphical cross-referencing tool <a id="idx:gxref0:1891"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
+modules. The SWI-Prolog graphical cross-referencing tool <a id="idx:gxref0:1887"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
 can be used to analyse the dependencies between non-module files and 
 propose module declarations for each file.
 

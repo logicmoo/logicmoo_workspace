@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 2.18</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 2.18</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,10 +238,10 @@ clause indexing</span></a></h2>
 
 <a id="sec:jitindex"></a>
 
-<p><a id="idx:jitindex:310"></a><a id="idx:indexingjiti:311"></a>SWI-Prolog 
-provides&lsquo;just-in-time' indexing over multiple arguments.<sup class="fn">32<span class="fn-text">JIT 
+<p><a id="idx:jitindex:287"></a><a id="idx:indexingjiti:288"></a>SWI-Prolog 
+provides&lsquo;just-in-time' indexing over multiple arguments.<sup class="fn">33<span class="fn-text">JIT 
 indexing was added in version 5.11.29 (Oct. 2011).</span></sup> &lsquo;Just-in-time' 
-means that clause indexes are not built by the compiler (or <a id="idx:asserta1:312"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
+means that clause indexes are not built by the compiler (or <a id="idx:asserta1:289"></a><a class="pred" href="db.html#asserta/1">asserta/1</a> 
 for dynamic predicates), but on the first call to such a predicate where 
 an index might help (i.e., a call where at least one argument is 
 instantiated). This section describes the rules used by the indexing 
@@ -269,7 +269,7 @@ argument. An indexing key is either a constant or a functor (name/arity
 reference). Calls with an instantiated first argument and less than 10 
 clauses perform a linear scan for a possible matching clause using this 
 index key. If the result is deterministic it is used. Otherwise the 
-system looks for better indexes.<sup class="fn">33<span class="fn-text">Up 
+system looks for better indexes.<sup class="fn">34<span class="fn-text">Up 
 to 7.7.2 this result was used also when non-deterministic.</span></sup>.
 
 <p>
@@ -280,7 +280,7 @@ is found with acceptable characteristics, it is used. Otherwise it
 assesses the clauses for all instantiated arguments and selects the best 
 candidate for creating a new hash table. If there is no single argument 
 that provides an acceptable hash quality it will search for a 
-combination of arguments.<sup class="fn">34<span class="fn-text">The 
+combination of arguments.<sup class="fn">35<span class="fn-text">The 
 last step was added in SWI-Prolog 7.5.8.</span></sup> Searching for 
 index candidates is only performed on the first 254 arguments.
 
@@ -289,7 +289,7 @@ same name and arity and at least one non-variable argument, a
 <em>list index</em> is created. A subsequent query where this argument 
 is bound to a compound causes jiti indexing to be applied
 <em>recursively</em> on the arguments of the term. This is called
-<em>deep indexing</em>.<sup class="fn">35<span class="fn-text">Deep 
+<em>deep indexing</em>.<sup class="fn">36<span class="fn-text">Deep 
 indexing was added in version 7.7.4.</span></sup> See also <a class="sec" href="jitindex.html#sec:2.18.1">section 
 2.18.1</a>
 
@@ -301,7 +301,7 @@ indexing on that argument.
 <p>Disregarding variables, the suitability of an argument for hashing is 
 expressed as the number of unique indexable values divided by the 
 standard deviation of the number of duplicate values for each value plus 
-one.<sup class="fn">36<span class="fn-text">Earlier versions simply used 
+one.<sup class="fn">37<span class="fn-text">Earlier versions simply used 
 the number of unique values, but poor distribution of values makes a 
 table less suitable. This was analysed by Fabien Noth and G&uuml;nter 
 Kniesel.</span></sup>
@@ -311,13 +311,13 @@ clauses is doubled since its creation or reduced below 1/4th. The JIT
 approach will recreate a suitable index on the next call. Indexes of 
 running predicates cannot be deleted. They are added to a&lsquo;removed 
 index list' associated to the predicate. Outdated indexes of predicates 
-are reclaimed by <a id="idx:garbagecollectclauses0:313"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>. 
+are reclaimed by <a id="idx:garbagecollectclauses0:290"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a>. 
 The clause garbage collector is scheduled automatically, based on time 
-and space based heuristics. See <a id="idx:garbagecollectclauses0:314"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a> 
+and space based heuristics. See <a id="idx:garbagecollectclauses0:291"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a> 
 for details.
 </ul>
 
-<p>The library <code>library(prolog_jiti)</code> provides <a id="idx:jitilist0:315"></a><a class="pred" href="prologjiti.html#jiti_list/0">jiti_list/0</a>,1 
+<p>The library <code>library(prolog_jiti)</code> provides <a id="idx:jitilist0:292"></a><a class="pred" href="prologjiti.html#jiti_list/0">jiti_list/0</a>,1 
 to list the characteristics of all or some of the created hash tables.
 
 <p><b>Dynamic predicates</b> are indexed using the same rules as static 
@@ -332,7 +332,7 @@ indexing</span></a></h3>
 
 <a id="sec:deep-indexing"></a>
 
-<p><a id="idx:indexingdeep:316"></a>As introduced in <a class="sec" href="jitindex.html#sec:2.18">section 
+<p><a id="idx:indexingdeep:293"></a>As introduced in <a class="sec" href="jitindex.html#sec:2.18">section 
 2.18</a>, <em>deep indexing</em> creates hash tables distinguish clauses 
 that share a compound with the same name and arity. Deep indexes allow 
 for efficient lookup of arbitrary terms. Without it is advised to <em>flatten</em> 
@@ -340,12 +340,12 @@ the term, i.e., turn
 <code>F(X)</code> into two arguments for the fact, one argument denoting 
 the functor <var>F</var> and the second the argument X. This works fine 
 as long as the arity of the each of the terms is the same. Alternatively 
-we can use <a id="idx:termhash2:317"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a> 
-or <a id="idx:termhash4:318"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a> 
+we can use <a id="idx:termhash2:294"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a> 
+or <a id="idx:termhash4:295"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a> 
 to add a column holding the hash of the term. That approach can deal 
 with arbitrary arities, but requires us to know that the term is ground 
-(<a id="idx:termhash2:319"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a>) 
-or up to which depth we get sufficient selectivity (<a id="idx:termhash4:320"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a>).
+(<a id="idx:termhash2:296"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a>) 
+or up to which depth we get sufficient selectivity (<a id="idx:termhash4:297"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a>).
 
 <p>Deep indexing does not require this knowledge and leads to efficient 
 lookup regardless of the instantiation of the query and term. The 
@@ -360,7 +360,7 @@ any argument).
 <li>Currently, the depth of indexing is limited to 7 levels.
 </ul>
 
-<p><a id="idx:indexingDCG:321"></a><a id="idx:DCGindexing:322"></a>Note 
+<p><a id="idx:indexingDCG:298"></a><a id="idx:DCGindexing:299"></a>Note 
 that, when compiling DCGs (see <a class="sec" href="DCG.html#sec:4.13">section 
 4.13</a>) and the first body term is a <em>literal</em>, it is included 
 into the clause head. See for example the grammar and its plain Prolog 
@@ -414,8 +414,8 @@ and portability</span></a></h3>
 <p>The base-line functionality of Prolog implementations provides 
 indexing on constants and functor (name/arity) on the first argument. 
 This must be your assumption if wide portability of your program is 
-important. This can typically be achieved by exploiting <a id="idx:termhash2:323"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a> 
-or <a id="idx:termhash4:324"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a> 
+important. This can typically be achieved by exploiting <a id="idx:termhash2:300"></a><a class="pred" href="db.html#term_hash/2">term_hash/2</a> 
+or <a id="idx:termhash4:301"></a><a class="pred" href="db.html#term_hash/4">term_hash/4</a> 
 and/or maintaining multiple copies of a predicate with reordered 
 arguments and wrappers that update all implementations (assert/retract) 
 and selects the appropriate implementation (query).

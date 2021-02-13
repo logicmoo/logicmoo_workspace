@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -434,7 +434,7 @@ BDDs</span></a></h3>
 
 <p>By default, CLP(B) residual goals appear in (approximately) algebraic 
 normal form (ANF). This projection is often computationally expensive. 
-We can set the Prolog flag <code>clpb_residuals</code> to the value <code>bdd</code> 
+We can set the Prolog flag <b>clpb_residuals</b> to the value <code>bdd</code> 
 to see the BDD representation of all constraints. This results in faster 
 projection to residual goals, and is also useful for learning more about 
 BDDs. For example:
@@ -485,9 +485,10 @@ X = 1+0.
 and it may render <a class="url" href="https://www.metalevel.at/prolog/debugging"><b>declarative 
 debugging</b></a> techniques inapplicable.
 
-<p>Set the flag <code>clpb_monotonic</code> to <code>true</code> to make 
+<p>Set the flag <b>clpb_monotonic</b> to <code>true</code> to make 
 CLP(B) <b>monotonic</b>. If this mode is enabled, then you must wrap 
-CLP(B) variables with the functor <code>v/1</code>. For example:
+CLP(B) variables with the functor <span class="pred-ext">v/1</span>. For 
+example:
 
 <pre class="code">
 ?- set_prolog_flag(clpb_monotonic, true).
@@ -505,9 +506,9 @@ Pigeons</span></a></h3>
 <p>In this example, we are attempting to place <i>I</i> pigeons into <i>J</i> 
 holes in such a way that each hole contains at most one pigeon. One 
 interesting property of this task is that it can be formulated using 
-only <i>cardinality constraints</i> (<code>card/2</code>). Another 
-interesting aspect is that this task has no short resolution refutations 
-in general.
+only <i>cardinality constraints</i> (<span class="pred-ext">card/2</span>). 
+Another interesting aspect is that this task has no short resolution 
+refutations in general.
 
 <p>In the following, we use <a class="url" href="https://www.metalevel.at/prolog/dcg"><b>Prolog 
 DCG notation</b></a> to describe a list <var>Cs</var> of CLP(B) 

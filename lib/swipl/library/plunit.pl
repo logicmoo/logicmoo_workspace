@@ -53,12 +53,13 @@ Unit testing environment for SWI-Prolog and   SICStus Prolog. For usage,
 please visit http://www.swi-prolog.org/pldoc/package/plunit.
 */
 
-:- autoload(library(apply),[maplist/3,include/3]).
-:- autoload(library(lists),[member/2,append/2]).
-:- autoload(library(option),[option/3,option/2]).
-:- autoload(library(ordsets),[ord_intersection/3]).
-:- autoload(library(pairs),[group_pairs_by_key/2,pairs_values/2]).
-:- autoload(library(error),[must_be/2]).
+:- autoload(library(apply), [maplist/3,include/3]).
+:- autoload(library(lists), [member/2,append/2]).
+:- autoload(library(option), [option/3,option/2]).
+:- autoload(library(ordsets), [ord_intersection/3]).
+:- autoload(library(pairs), [group_pairs_by_key/2,pairs_values/2]).
+:- autoload(library(error), [must_be/2]).
+:- autoload(library(thread), [concurrent_forall/2]).
 
 :- meta_predicate valid_options(+, 1).
 
@@ -222,6 +223,11 @@ user:term_expansion((:- thread_local(PI)), (:- dynamic(PI))) :-
 %           If =true= (default =false), cleanup report at the end
 %           of run_tests/1.  Used to improve cooperation with
 %           memory debuggers such as dmalloc.
+%
+%           * concurrent(+Bool)
+%           If =true= (default =false), run all tests in a block
+%           concurrently.
+%
 
 set_test_options(Options) :-
     valid_options(Options, global_test_option),
@@ -236,6 +242,8 @@ global_test_option(silent(Bool)) :-
 global_test_option(sto(Bool)) :-
     must_be(boolean, Bool).
 global_test_option(cleanup(Bool)) :-
+    must_be(boolean, Bool).
+global_test_option(concurrent(Bool)) :-
     must_be(boolean, Bool).
 
 
@@ -544,6 +552,8 @@ test_set_option(cleanup(X)) :-
     must_be(callable, X).
 test_set_option(sto(V)) :-
     nonvar(V), member(V, [finite_trees, rational_trees]).
+test_set_option(concurrent(V)) :-
+    must_be(boolean, V).
 
 
                  /*******************************
@@ -611,9 +621,15 @@ run_unit(Spec) :-
     ->  info(plunit(blocked(unit(Unit, Reason))))
     ;   setup(Module, unit(Unit), UnitOptions)
     ->  info(plunit(begin(Spec))),
-        forall((Module:'unit test'(Name, Line, Options, Body),
-                matching_test(Name, Tests)),
-               run_test(Unit, Name, Line, Options, Body)),
+        current_test_flag(test_options, GlobalOptions),
+        (   option(concurrent(true), GlobalOptions),
+            option(concurrent(true), UnitOptions, false)
+        ->  concurrent_forall((Module:'unit test'(Name, Line, Options, Body),
+                               matching_test(Name, Tests)),
+                              run_test(Unit, Name, Line, Options, Body))
+        ;   forall((Module:'unit test'(Name, Line, Options, Body),
+                    matching_test(Name, Tests)),
+                   run_test(Unit, Name, Line, Options, Body))),
         info(plunit(end(Spec))),
         (   message_level(silent)
         ->  true

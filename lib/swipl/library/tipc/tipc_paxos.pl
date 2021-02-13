@@ -36,7 +36,6 @@
             tipc_paxos_get/2,         % ?Term, +Options
             tipc_paxos_set/1,         % ?Term
             tipc_paxos_set/2,         % ?Term, +Options
-            tipc_paxos_replicate/1,   % ?Term
             tipc_paxos_on_change/2,   % ?Term, +Goal
             tipc_initialize/0
           ]).
@@ -58,14 +57,12 @@ implementations of library(broadcast) such as library(udb_broadcast).
 %!  tipc_paxos_get(?Term) is semidet.
 %!  tipc_paxos_get(?Term, +Options) is semidet.
 %!  tipc_paxos_set(?Term, +Options) is semidet.
-%!  tipc_paxos_replicate(?Term) is det.
 %!  tipc_paxos_on_change(?Term, :Goal) is det.
 
 tipc_paxos_set(Term) :-             paxos_set(Term, []).
 tipc_paxos_set(Term, Options) :-    paxos_set(Term, Options).
 tipc_paxos_get(Term) :-             paxos_get(Term, []).
 tipc_paxos_get(Term, Options) :-    paxos_get(Term, Options).
-tipc_paxos_replicate(X) :-          paxos_replicate(X).
 tipc_paxos_on_change(Term, Goal) :- paxos_on_change(Term, Goal).
 
 :- multifile

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section 4.5</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section 4.5</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -286,7 +286,7 @@ True if <var>Term</var> is a <em>blob</em> of type <var>Type</var>. See
 True if <var>Term</var> is bound to a string. Note that string here 
 refers to the built-in atomic type string as described in <a class="sec" href="string.html#sec:5.2">section 
 5.2</a>. Starting with version&nbsp;7, the syntax for a string object is 
-text between double quotes, such as <code>"hello"</code>.<sup class="fn">61<span class="fn-text">In 
+text between double quotes, such as <code>"hello"</code>.<sup class="fn">62<span class="fn-text">In 
 traditional Prolog systems, double quoted text is often mapped to a list 
 of <em>character codes</em>.</span></sup> See also the Prolog flag
 <a class="flag" href="flags.html#flag:double_quotes">double_quotes</a>.</dd>
@@ -301,31 +301,31 @@ atomic(Term) :-
         \+ compound(Term).
 </pre>
 
-<p>SWI-Prolog defines the following atomic datatypes: atom (<a id="idx:atom1:681"></a><a class="pred" href="typetest.html#atom/1">atom/1</a>), 
-string (<a id="idx:string1:682"></a><a class="pred" href="typetest.html#string/1">string/1</a>), 
-integer (<a id="idx:integer1:683"></a><a class="pred" href="typetest.html#integer/1">integer/1</a>), 
-floating point number (<a id="idx:float1:684"></a><a class="pred" href="typetest.html#float/1">float/1</a>) 
-and blob (<a id="idx:blob2:685"></a><a class="pred" href="typetest.html#blob/2">blob/2</a>). 
+<p>SWI-Prolog defines the following atomic datatypes: atom (<a id="idx:atom1:659"></a><a class="pred" href="typetest.html#atom/1">atom/1</a>), 
+string (<a id="idx:string1:660"></a><a class="pred" href="typetest.html#string/1">string/1</a>), 
+integer (<a id="idx:integer1:661"></a><a class="pred" href="typetest.html#integer/1">integer/1</a>), 
+floating point number (<a id="idx:float1:662"></a><a class="pred" href="typetest.html#float/1">float/1</a>) 
+and blob (<a id="idx:blob2:663"></a><a class="pred" href="typetest.html#blob/2">blob/2</a>). 
 In addition, the symbol <code>[]</code> (empty list) is atomic, but not 
 an atom. See <a class="sec" href="ext-lists.html#sec:5.1">section 5.1</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="compound/1"><strong>compound</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
-True if <var>Term</var> is bound to a compound term. See also <a id="idx:functor3:686"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
-=../2, <a id="idx:compoundnamearity3:687"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
-and <a id="idx:compoundnamearguments3:688"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.</dd>
+True if <var>Term</var> is bound to a compound term. See also <a id="idx:functor3:664"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a> 
+=../2, <a id="idx:compoundnamearity3:665"></a><a class="pred" href="manipterm.html#compound_name_arity/3">compound_name_arity/3</a> 
+and <a id="idx:compoundnamearguments3:666"></a><a class="pred" href="manipterm.html#compound_name_arguments/3">compound_name_arguments/3</a>.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="callable/1"><strong>callable</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> is bound to an atom or a compound term. This was 
-intended as a type-test for arguments to <a id="idx:call1:689"></a><a class="pred" href="metacall.html#call/1">call/1</a>, <a id="idx:call2:690"></a><a class="pred" href="metacall.html#call/2">call/2</a> 
+intended as a type-test for arguments to <a id="idx:call1:667"></a><a class="pred" href="metacall.html#call/1">call/1</a>, <a id="idx:call2:668"></a><a class="pred" href="metacall.html#call/2">call/2</a> 
 etc. Note that callable only tests the <em>surface term</em>. Terms such 
-as (22,true) are considered callable, but cause <a id="idx:call1:691"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
-to raise a type error. Module-qualification of meta-argument (see <a id="idx:metapredicate1:692"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>) 
+as (22,true) are considered callable, but cause <a id="idx:call1:669"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+to raise a type error. Module-qualification of meta-argument (see <a id="idx:metapredicate1:670"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>) 
 using
 <code><code>:</code>/2</code> causes callable to succeed on any 
-meta-argument.<sup class="fn">62<span class="fn-text">We think that <a id="idx:callable1:693"></a><a class="pred" href="typetest.html#callable/1">callable/1</a> 
+meta-argument.<sup class="fn">63<span class="fn-text">We think that <a id="idx:callable1:671"></a><a class="pred" href="typetest.html#callable/1">callable/1</a> 
 should be deprecated and there should be two new predicates, one 
 performing a test for callable that is minimally module aware and 
-possibly consistent with type-checking in <a id="idx:call1:694"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+possibly consistent with type-checking in <a id="idx:call1:672"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
 and a second predicate that tests for atom or compound.</span></sup> 
 Consider the program and query below:
 
@@ -343,21 +343,21 @@ ERROR:    [6] p(user:22)
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="ground/1"><strong>ground</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
-True if <var>Term</var> holds no free variables. See also <a id="idx:nonground2:695"></a><a class="pred" href="manipterm.html#nonground/2">nonground/2</a> 
-and <a id="idx:termvariables2:696"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a>.</dd>
+True if <var>Term</var> holds no free variables. See also <a id="idx:nonground2:673"></a><a class="pred" href="manipterm.html#nonground/2">nonground/2</a> 
+and <a id="idx:termvariables2:674"></a><a class="pred" href="manipterm.html#term_variables/2">term_variables/2</a>.</dd>
 <dt class="pubdef"><a id="cyclic_term/1"><strong>cyclic_term</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> contains cycles, i.e. is an infinite term. See 
-also <a id="idx:acyclicterm1:697"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
-and <a class="sec" href="cyclic.html#sec:2.17">section 2.17</a>.<sup class="fn">63<span class="fn-text">The 
-predicates <a id="idx:cyclicterm1:698"></a><a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a> 
-and <a id="idx:acyclicterm1:699"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
+also <a id="idx:acyclicterm1:675"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
+and <a class="sec" href="cyclic.html#sec:2.17">section 2.17</a>.<sup class="fn">64<span class="fn-text">The 
+predicates <a id="idx:cyclicterm1:676"></a><a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a> 
+and <a id="idx:acyclicterm1:677"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
 are compatible with SICStus Prolog. Some Prolog systems supporting 
 cyclic terms use is_cyclic/1 .</span></sup></dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="acyclic_term/1"><strong>acyclic_term</strong>(<var>@Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> does not contain cycles, i.e. can be processed 
-recursively in finite time. See also <a id="idx:cyclicterm1:700"></a><a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a> 
+recursively in finite time. See also <a id="idx:cyclicterm1:678"></a><a class="pred" href="typetest.html#cyclic_term/1">cyclic_term/1</a> 
 and <a class="sec" href="cyclic.html#sec:2.17">section 2.17</a>.
 </dd>
 </dl>

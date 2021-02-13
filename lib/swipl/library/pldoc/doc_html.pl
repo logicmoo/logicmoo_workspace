@@ -43,6 +43,7 @@
             print_html_head/1,          % +Stream
             predref//1,                 % +PI //
             predref//2,                 % +PI, Options //
+            nopredref//1,               % +PI //
             module_info/3,              % +File, +Options0, -Options
             doc_hide_private/3,         % +Doc0, -Doc, +Options
             edit_button//2,             % +File, +Options, //
@@ -71,6 +72,7 @@
             tags//1,                    % +Tags, //
             term//3,                    % +Text, +Term, +Bindings, //
             file_header//2,             % +File, +Options, //
+            flagref//1,                 % +Flag
             objects//2,                 % +Objects, +Options, //
             object_ref//2,              % +Object, +Options, //
             object_name//2,             % +Object, +Object
@@ -79,7 +81,9 @@
             object_page//2,             % +Object, +Options, //
             object_page_header//2,      % +File, +Options, //
             object_synopsis//2,         % +Object, +Options, //
-            object_page_footer//2       % +Object, +Options, //
+            object_footer//2,           % +Object, +Options, //
+            object_page_footer//2,      % +Object, +Options, //
+            cite//1                     % +Citations
           ]).
 :- use_module(library(lists)).
 :- use_module(library(option)).
@@ -1020,13 +1024,25 @@ file_link(File) -->
     html([ div(a(href(location_by_id(pldoc_doc)+File), File))
          ]).
 
+%!  object_footer(+Obj, +Options)// is det.
+%
+%   Call the hook prolog:doc_object_footer//2. This hook will be used to
+%   deal with examples.
+
+object_footer(Obj, Options) -->
+    prolog:doc_object_footer(Obj, Options),
+    !.
+object_footer(_, _) --> [].
+
+
 %!  object_page_footer(+Obj, +Options)// is det.
 %
 %   Call the hook prolog:doc_object_page_footer//2. This hook will
 %   be used to deal with annotations.
 
 object_page_footer(Obj, Options) -->
-    prolog:doc_object_page_footer(Obj, Options).
+    prolog:doc_object_page_footer(Obj, Options),
+    !.
 object_page_footer(_, _) --> [].
 
 
@@ -1885,6 +1901,45 @@ canonical_pi(Name//Arity, Name/Arity2, [Name, //, Arity]) :-
     atom(Name), integer(Arity),
     !,
     Arity2 is Arity+2.
+
+%!  nopredref(+PI)//
+%
+%   Result of ``name/arity``, non-linking predicate indicator.
+
+nopredref(PI) -->
+    { canonical_pi(PI, _CPI, HTML)
+    },
+    !,
+    html(span(class=nopredref, HTML)).
+
+%!  flagref(+Flag)//
+%
+%   Reference to a Prolog flag.
+%
+%   @tbd generate a link to the Prolog website?
+
+flagref(Flag) -->
+    html(code(Flag)).
+
+%!  cite(+Citations)// is det.
+%
+%   Emit citations. This is indented to   allow  for [@cite1;@cite2] for
+%   generating LaTex.
+
+cite(Citations) -->
+    html('['), citations(Citations), html(']').
+
+citations([]) --> [].
+citations([H|T]) -->
+    citation(H),
+    (   {T==[]}
+    ->  []
+    ;   [';'],
+        citations(T)
+    ).
+
+citation(H) -->
+    html([@,H]).
 
 
 %!  manref(+NameArity, -HREF, +Options) is det.

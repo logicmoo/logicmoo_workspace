@@ -555,7 +555,7 @@ Set the <i>minimum</i> protocol version that can be negotiated.
 <var>Atom</var> is one of <code>sslv3</code>, <code>tlsv1</code>, <code>tlsv1_1</code>, <code>tlsv1_2</code> 
 and
 <code>tlsv1_3</code>. This option is available with OpenSSL 1.1.0 and 
-later, and should be used instead of <code>disable_ssl_methods/1</code>.
+later, and should be used instead of <span class="pred-ext">disable_ssl_methods/1</span>.
 </dd>
 <dt><strong>max_protocol_version</strong>(<var>+Atom</var>)</dt>
 <dd class="defbody">
@@ -563,7 +563,7 @@ Set the <i>maximum</i> protocol version that can be negotiated.
 <var>Atom</var> is one of <code>sslv3</code>, <code>tlsv1</code>, <code>tlsv1_1</code>, <code>tlsv1_2</code> 
 and
 <code>tlsv1_3</code>. This option is available with OpenSSL 1.1.0 and 
-later, and should be used instead of <code>disable_ssl_methods/1</code>.
+later, and should be used instead of <span class="pred-ext">disable_ssl_methods/1</span>.
 </dd>
 <dt><strong>disable_ssl_methods</strong>(<var>+List</var>)</dt>
 <dd class="defbody">
@@ -620,9 +620,9 @@ an ALPN protocol. It will be called as follows:
 <code>call(Goal, +SSLCtx0, +ListOfClientProtocols, -SSLCtx1, -SelectedProtocol)</code> 
 =<code>==</code>
 
-<p>If this option is unset and the <code>alpn_protocols/1</code> option 
-is set, then the first common protocol between client &amp; server will 
-be selected.
+<p>If this option is unset and the <span class="pred-ext">alpn_protocols/1</span> 
+option is set, then the first common protocol between client &amp; 
+server will be selected.
 </dd>
 </dl>
 
@@ -651,11 +651,11 @@ key, respectively. Using strings is preferred for security reasons.
 
 <p>This predicate allows dual-stack RSA and ECDSA servers (for example), 
 and is an alternative for using the
-<code>certificate_key_pairs/1</code> option. As of OpenSSL 1.0.2, 
-multiple certificate types with completely independent certificate 
-chains are supported. If a certificate of the same type is added 
-repeatedly to a context, the result is undefined. Currently, up to 12 
-additional certificates of different types are admissible.</dd>
+<span class="pred-ext">certificate_key_pairs/1</span> option. As of 
+OpenSSL 1.0.2, multiple certificate types with completely independent 
+certificate chains are supported. If a certificate of the same type is 
+added repeatedly to a context, the result is undefined. Currently, up to 
+12 additional certificates of different types are admissible.</dd>
 <dt class="pubdef"><a id="ssl_set_options/3"><strong>ssl_set_options</strong>(<var>+SSL0, 
 -SSL, +Options</var>)</a></dt>
 <dd class="defbody">
@@ -846,9 +846,9 @@ certificates from the OS.
 the SSL interface to be compiled with an XCode compiler, i.e., <b>not</b> 
 with native gcc.
 <li>Otherwise, certificates are loaded from a file defined by the Prolog 
-flag <code>system_cacert_filename</code>. The initial value of this flag 
-is operating system dependent. For security reasons, the flag can only 
-be set prior to using the SSL library. For example:
+flag <b>system_cacert_filename</b>. The initial value of this flag is 
+operating system dependent. For security reasons, the flag can only be 
+set prior to using the SSL library. For example:
 
 <pre class="code">
 :- use_module(library(ssl)).
@@ -1375,9 +1375,9 @@ representation of <var>Data</var> as in <a class="pred" href="#crypto_data_hash/
 </dd>
 </dl>
 
-<p>The <code>info/1</code> option can be used to generate multiple keys 
-from a single master key, using for example values such as <code>key</code> 
-and
+<p>The <span class="pred-ext">info/1</span> option can be used to 
+generate multiple keys from a single master key, using for example 
+values such as <code>key</code> and
 <code>iv</code>, or the name of a file that is to be encrypted.
 
 <p>This predicate requires OpenSSL 1.1.0 or greater.

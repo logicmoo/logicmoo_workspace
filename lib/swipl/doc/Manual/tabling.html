@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ execution (SLG resolution)</span></a></h1>
 
 <a id="sec:tabling"></a>
 
-<p><a id="idx:SLGresolution:1986"></a>This chapter describes 
+<p><a id="idx:SLGresolution:1982"></a>This chapter describes 
 SWI-Prolog's support for <em>Tabled execution</em> for one or more 
 Prolog predicates, also called <em>SLG resolution</em>. Tabling a 
 predicate provides two properties:
@@ -270,7 +270,7 @@ intermediate results. A solution is to use Datalog style bottom-up
 evaluation, i.e., applying rules on the axioms and derived facts until a 
 fixed point is reached. However, bottom-up evaluation typically derives 
 many facts that are never used. Tabling provides a <em>goal oriented</em> 
-resolution strategy for such problems and is enabled simply by adding a <a id="idx:table1:1987"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+resolution strategy for such problems and is enabled simply by adding a <a id="idx:table1:1983"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
 directive to the program.
 
 <p>
@@ -300,6 +300,10 @@ founded semantics and the toplevel</span></a></div>
 tabling</span></a></div>
 <div class="toc-h2"><a class="sec" href="tabling-monotonic.html"><span class="sec-nr">7.8</span> <span class="sec-title">Monotonic 
 tabling</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-monotonic.html#sec:7.8.1"><span class="sec-nr">7.8.1</span> <span class="sec-title">Eager 
+and lazy monotonic tabling</span></a></div>
+<div class="toc-h3"><a class="sec" href="tabling-monotonic.html#sec:7.8.2"><span class="sec-nr">7.8.2</span> <span class="sec-title">Tracking 
+new answers to monotonic tables</span></a></div>
 <div class="toc-h2"><a class="sec" href="tabling-shared.html"><span class="sec-nr">7.9</span> <span class="sec-title">Shared 
 tabling</span></a></div>
 <div class="toc-h3"><a class="sec" href="tabling-shared.html#sec:7.9.1"><span class="sec-nr">7.9.1</span> <span class="sec-title">Abolishing 

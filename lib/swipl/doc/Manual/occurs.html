@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual: Section A.25</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual: Section A.25</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -285,7 +285,19 @@ Generates (on backtracking) all subterms of <var>Term</var>.</dd>
 <dt class="pubdef"><a id="sub_var/2"><strong>sub_var</strong>(<var>-Sub, 
 +Term</var>)</a></dt>
 <dd class="defbody">
-Generates (on backtracking) all subterms (<code>==</code>) of <var>Term</var>.
+Generates (on backtracking) all subterms (<code>==</code>) of <var>Term</var>.</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="sub_term_shared_variables/3"><strong>sub_term_shared_variables</strong>(<var>+Sub, 
++Term, -Vars</var>)</a></dt>
+<dd class="defbody">
+If <var>Sub</var> is a sub term of <var>Term</var>, <var>Vars</var> is 
+bound to the list of variables in <var>Sub</var> that also appear 
+outside <var>Sub</var> in <var>Term</var>. Note that if <var>Sub</var> 
+appears twice in <var>Term</var>, its variables are all considered 
+shared.
+
+<p>An example use-case is refactoring a large clause body by introducing 
+intermediate predicates. This predicate can be used to find the 
+arguments that must be passed to the new predicate.
 </dd>
 </dl>
 

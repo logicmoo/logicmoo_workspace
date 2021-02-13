@@ -241,121 +241,132 @@ have no natural Prolog equivalent, such as outer joins, inserts, etc.
 <div class="toc">
 <div class="toc-h2"><a class="sec" href="#sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(cql/cql): 
 CQL - Constraint Query Language</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Warnings</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.1.1"><span class="sec-nr">1.1.1</span> <span class="sec-title">Comparisons 
-with NULL</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Warnings 
+from CQL</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.1.1"><span class="sec-nr">1.1.1</span> <span class="sec-title">CQL 
+Comparisons with NULL</span></a></div>
 <div class="toc-h4"><a class="sec" href="#sec:1.1.2"><span class="sec-nr">1.1.2</span> <span class="sec-title">Avoid <span class="pred-ext">setof/3</span> 
-and <span class="pred-ext">bagof/3</span></span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Retrieved 
-nulls have special logic to handle outer joins</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Getting 
-Started Quickly</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Debugging</span></a></div>
+and <span class="pred-ext">bagof/3</span> in CQL queries</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">CQL: 
+Retrieved nulls have special logic to handle outer joins</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">CQL: 
+Getting Started Quickly</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Debugging 
+CQL queries</span></a></div>
 <div class="toc-h3"><a class="sec" href="#sec:1.5"><span class="sec-nr">1.5</span> <span class="sec-title">Prolog 
-Variables</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.6"><span class="sec-nr">1.6</span> <span class="sec-title">Special 
-Attributes</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.7"><span class="sec-nr">1.7</span> <span class="sec-title">Examples</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.1"><span class="sec-nr">1.7.1</span> <span class="sec-title">Simple 
-INSERT</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.2"><span class="sec-nr">1.7.2</span> <span class="sec-title">Simple 
-INSERT with retrieval of identity of the inserted</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.3"><span class="sec-nr">1.7.3</span> <span class="sec-title">Simple 
-DELETE</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.4"><span class="sec-nr">1.7.4</span> <span class="sec-title">Simple 
-SELECT</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.5"><span class="sec-nr">1.7.5</span> <span class="sec-title">Simple 
-UPDATE</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.6"><span class="sec-nr">1.7.6</span> <span class="sec-title">WHERE 
-with arithmetic comparison</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.7"><span class="sec-nr">1.7.7</span> <span class="sec-title">Simple 
-INNER JOIN</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.8"><span class="sec-nr">1.7.8</span> <span class="sec-title">Arithmetic 
-UPDATE with an INNER JOIN and a WHERE restriction</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.9"><span class="sec-nr">1.7.9</span> <span class="sec-title">Confirm 
-row does not exist</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.10"><span class="sec-nr">1.7.10</span> <span class="sec-title">Aggregation 
-- Count</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.11"><span class="sec-nr">1.7.11</span> <span class="sec-title">Aggregation 
-- Sum</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.12"><span class="sec-nr">1.7.12</span> <span class="sec-title">Aggregation 
-- Average</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.13"><span class="sec-nr">1.7.13</span> <span class="sec-title">Maximum 
-Value</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.14"><span class="sec-nr">1.7.14</span> <span class="sec-title">Minimum 
-Value</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.15"><span class="sec-nr">1.7.15</span> <span class="sec-title">Aggregation 
-requiring GROUP BY</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.16"><span class="sec-nr">1.7.16</span> <span class="sec-title">INNER 
-JOIN with an aggregation sub-query where the sub-query is constrained by 
-a shared variable from the main query</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.17"><span class="sec-nr">1.7.17</span> <span class="sec-title">INNER 
-JOIN in an aggregation sub-query</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.18"><span class="sec-nr">1.7.18</span> <span class="sec-title">Negation</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.19"><span class="sec-nr">1.7.19</span> <span class="sec-title">EXISTS</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.20"><span class="sec-nr">1.7.20</span> <span class="sec-title">Left 
-Outer Join</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.21"><span class="sec-nr">1.7.21</span> <span class="sec-title">List-based 
-Restrictions</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.22"><span class="sec-nr">1.7.22</span> <span class="sec-title">Compile 
-time in-list constraint</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.23"><span class="sec-nr">1.7.23</span> <span class="sec-title">Disjunction 
-resulting in OR in WHERE clause</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.24"><span class="sec-nr">1.7.24</span> <span class="sec-title">Disjunction 
-resulting in different joins (implemented as a SQL UNION)</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.25"><span class="sec-nr">1.7.25</span> <span class="sec-title">Disjunction 
-resulting in different SELECT attributes (implemented as separate ODBC 
-queries)</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.26"><span class="sec-nr">1.7.26</span> <span class="sec-title">ORDER 
-BY</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.27"><span class="sec-nr">1.7.27</span> <span class="sec-title">DISTINCT</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.28"><span class="sec-nr">1.7.28</span> <span class="sec-title">SELECT 
-with NOT NULL restriction</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.29"><span class="sec-nr">1.7.29</span> <span class="sec-title">First 
-N</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.30"><span class="sec-nr">1.7.30</span> <span class="sec-title">Self 
-JOIN</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.31"><span class="sec-nr">1.7.31</span> <span class="sec-title">Removing 
-null comparisions</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.32"><span class="sec-nr">1.7.32</span> <span class="sec-title">Three 
-table JOIN</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.33"><span class="sec-nr">1.7.33</span> <span class="sec-title">Three 
-table JOIN with NOLOCK locking hint</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.34"><span class="sec-nr">1.7.34</span> <span class="sec-title">SELECT 
-with LIKE</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.35"><span class="sec-nr">1.7.35</span> <span class="sec-title">Writing 
-exceptions directly to the database</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.36"><span class="sec-nr">1.7.36</span> <span class="sec-title">TOP 
-N is Parametric</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.37"><span class="sec-nr">1.7.37</span> <span class="sec-title">Using <span class="pred-ext">compile_time_goal/1</span></span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.38"><span class="sec-nr">1.7.38</span> <span class="sec-title">ON</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.39"><span class="sec-nr">1.7.39</span> <span class="sec-title">Expressions 
-In Where Restrictions</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.40"><span class="sec-nr">1.7.40</span> <span class="sec-title">Explicitly 
-avoid the "No WHERE restriction" message</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.41"><span class="sec-nr">1.7.41</span> <span class="sec-title">HAVING</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.42"><span class="sec-nr">1.7.42</span> <span class="sec-title">INSERT 
-and UPDATE value in-line formatting</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.43"><span class="sec-nr">1.7.43</span> <span class="sec-title">Negations 
-in WHERE Clauses</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.44"><span class="sec-nr">1.7.44</span> <span class="sec-title">Predicate-generated 
-Attribute Values</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.7.45"><span class="sec-nr">1.7.45</span> <span class="sec-title">INSERT 
-from SELECT</span></a></div>
-<div class="toc-h3"><a class="sec" href="#sec:1.8"><span class="sec-nr">1.8</span> <span class="sec-title">Hooks</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.1"><span class="sec-nr">1.8.1</span> <span class="sec-title">Generated 
-Code Hooks</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.2"><span class="sec-nr">1.8.2</span> <span class="sec-title">Data 
-Representation Hooks</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.3"><span class="sec-nr">1.8.3</span> <span class="sec-title">Application 
-Integration</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.4"><span class="sec-nr">1.8.4</span> <span class="sec-title">Inline 
-values</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.5"><span class="sec-nr">1.8.5</span> <span class="sec-title">Schema</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.6"><span class="sec-nr">1.8.6</span> <span class="sec-title">Event 
-Processing and History</span></a></div>
-<div class="toc-h4"><a class="sec" href="#sec:1.8.7"><span class="sec-nr">1.8.7</span> <span class="sec-title">Statistical 
+Variables in CQL queries</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.6"><span class="sec-nr">1.6</span> <span class="sec-title">CQL 
+Special Attributes</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.7"><span class="sec-nr">1.7</span> <span class="sec-title">CQL 
+Examples</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.1"><span class="sec-nr">1.7.1</span> <span class="sec-title">CQL 
+Simple INSERT</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.2"><span class="sec-nr">1.7.2</span> <span class="sec-title">CQL 
+Simple INSERT with retrieval of identity of the inserted</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.3"><span class="sec-nr">1.7.3</span> <span class="sec-title">CQL 
+Simple DELETE</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.4"><span class="sec-nr">1.7.4</span> <span class="sec-title">CQL 
+Simple SELECT</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.5"><span class="sec-nr">1.7.5</span> <span class="sec-title">CQL 
+Simple UPDATE</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.6"><span class="sec-nr">1.7.6</span> <span class="sec-title">CQL 
+WHERE with arithmetic comparison</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.7"><span class="sec-nr">1.7.7</span> <span class="sec-title">CQL 
+Simple INNER JOIN</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.8"><span class="sec-nr">1.7.8</span> <span class="sec-title">CQL 
+Arithmetic UPDATE with an INNER JOIN and a WHERE restriction</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.9"><span class="sec-nr">1.7.9</span> <span class="sec-title">CQL: 
+Confirm row does not exist</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.10"><span class="sec-nr">1.7.10</span> <span class="sec-title">CQL: 
+Aggregation - Count</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.11"><span class="sec-nr">1.7.11</span> <span class="sec-title">CQL: 
+Aggregation - Sum</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.12"><span class="sec-nr">1.7.12</span> <span class="sec-title">CQL: 
+Aggregation - Average</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.13"><span class="sec-nr">1.7.13</span> <span class="sec-title">CQL: 
+Maximum Value</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.14"><span class="sec-nr">1.7.14</span> <span class="sec-title">CQL: 
+Minimum Value</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.15"><span class="sec-nr">1.7.15</span> <span class="sec-title">CQL: 
+Aggregation requiring GROUP BY</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.16"><span class="sec-nr">1.7.16</span> <span class="sec-title">CQL: 
+INNER JOIN with an aggregation sub-query where the sub-query is 
+constrained by a shared variable from the main query</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.17"><span class="sec-nr">1.7.17</span> <span class="sec-title">CQL: 
+INNER JOIN in an aggregation sub-query</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.18"><span class="sec-nr">1.7.18</span> <span class="sec-title">CQL: 
+Negation</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.19"><span class="sec-nr">1.7.19</span> <span class="sec-title">CQL: 
+EXISTS</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.20"><span class="sec-nr">1.7.20</span> <span class="sec-title">CQL: 
+Left Outer Join</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.21"><span class="sec-nr">1.7.21</span> <span class="sec-title">CQL: 
+List-based Restrictions</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.22"><span class="sec-nr">1.7.22</span> <span class="sec-title">CQL: 
+Compile time in-list constraint</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.23"><span class="sec-nr">1.7.23</span> <span class="sec-title">CQL: 
+Disjunction resulting in OR in WHERE clause</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.24"><span class="sec-nr">1.7.24</span> <span class="sec-title">CQL: 
+Disjunction resulting in different joins (implemented as a SQL UNION)</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.25"><span class="sec-nr">1.7.25</span> <span class="sec-title">CQL: 
+Disjunction resulting in different SELECT attributes (implemented as 
+separate ODBC queries)</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.26"><span class="sec-nr">1.7.26</span> <span class="sec-title">CQL: 
+ORDER BY</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.27"><span class="sec-nr">1.7.27</span> <span class="sec-title">CQL: 
+DISTINCT</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.28"><span class="sec-nr">1.7.28</span> <span class="sec-title">CQL: 
+SELECT with NOT NULL restriction</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.29"><span class="sec-nr">1.7.29</span> <span class="sec-title">CQL: 
+First N</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.30"><span class="sec-nr">1.7.30</span> <span class="sec-title">CQL: 
+Self JOIN</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.31"><span class="sec-nr">1.7.31</span> <span class="sec-title">CQL: 
+Removing null comparisions</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.32"><span class="sec-nr">1.7.32</span> <span class="sec-title">CQL: 
+Three table JOIN</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.33"><span class="sec-nr">1.7.33</span> <span class="sec-title">CQL: 
+Three table JOIN with NOLOCK locking hint</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.34"><span class="sec-nr">1.7.34</span> <span class="sec-title">CQL: 
+SELECT with LIKE</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.35"><span class="sec-nr">1.7.35</span> <span class="sec-title">CQL: 
+Writing exceptions directly to the database</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.36"><span class="sec-nr">1.7.36</span> <span class="sec-title">CQL: 
+TOP N is Parametric</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.37"><span class="sec-nr">1.7.37</span> <span class="sec-title">CQL: 
+Using <span class="pred-ext">compile_time_goal/1</span></span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.38"><span class="sec-nr">1.7.38</span> <span class="sec-title">CQL: 
+ON</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.39"><span class="sec-nr">1.7.39</span> <span class="sec-title">CQL: 
+Expressions In Where Restrictions</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.40"><span class="sec-nr">1.7.40</span> <span class="sec-title">CQL: 
+Explicitly avoid the "No WHERE restriction" message</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.41"><span class="sec-nr">1.7.41</span> <span class="sec-title">CQL: 
+HAVING</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.42"><span class="sec-nr">1.7.42</span> <span class="sec-title">CQL: 
+INSERT and UPDATE value in-line formatting</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.43"><span class="sec-nr">1.7.43</span> <span class="sec-title">CQL: 
+Negations in WHERE Clauses</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.44"><span class="sec-nr">1.7.44</span> <span class="sec-title">CQL: 
+Predicate-generated Attribute Values</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.7.45"><span class="sec-nr">1.7.45</span> <span class="sec-title">CQL: 
+INSERT from SELECT</span></a></div>
+<div class="toc-h3"><a class="sec" href="#sec:1.8"><span class="sec-nr">1.8</span> <span class="sec-title">CQL: 
 Hooks</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.1"><span class="sec-nr">1.8.1</span> <span class="sec-title">CQL: 
+Generated Code Hooks</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.2"><span class="sec-nr">1.8.2</span> <span class="sec-title">CQL: 
+Data Representation Hooks</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.3"><span class="sec-nr">1.8.3</span> <span class="sec-title">CQL: 
+Application Integration</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.4"><span class="sec-nr">1.8.4</span> <span class="sec-title">CQL: 
+Inline values</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.5"><span class="sec-nr">1.8.5</span> <span class="sec-title">CQL: 
+Schema</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.6"><span class="sec-nr">1.8.6</span> <span class="sec-title">CQL: 
+Event Processing and History</span></a></div>
+<div class="toc-h4"><a class="sec" href="#sec:1.8.7"><span class="sec-nr">1.8.7</span> <span class="sec-title">CQL: 
+Statistical Hooks</span></a></div>
 </div>
 
 <p><h2 id="sec:cql"><a id="sec:1"><span class="sec-nr">1</span> <span class="sec-title">library(cql/cql): 
@@ -372,12 +383,13 @@ compiled</i> and <i>runtime</i>. The <i>fully compiled</i> mode should
 be used if possible due to the far greater compile time checking it 
 provides.
 
-<p><h3 id="sec:cql-warnings"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Warnings</span></a></h3>
+<p><h3 id="sec:cql-warnings"><a id="sec:1.1"><span class="sec-nr">1.1</span> <span class="sec-title">Warnings 
+from CQL</span></a></h3>
 
 <p><a id="sec:cql-warnings"></a>
 
-<p><h4 id="sec:cql-compare-null"><a id="sec:1.1.1"><span class="sec-nr">1.1.1</span> <span class="sec-title">Comparisons 
-with NULL</span></a></h4>
+<p><h4 id="sec:cql-compare-null"><a id="sec:1.1.1"><span class="sec-nr">1.1.1</span> <span class="sec-title">CQL 
+Comparisons with NULL</span></a></h4>
 
 <p><a id="sec:cql-compare-null"></a>
 
@@ -396,7 +408,7 @@ and if A is not {null}, it will execute as <code>SELECT .... WHERE a = ?</code>
 with the common requirement to ignore comparisons with null.
 
 <p><h4 id="sec:cql-and-setof"><a id="sec:1.1.2"><span class="sec-nr">1.1.2</span> <span class="sec-title">Avoid <span class="pred-ext">setof/3</span> 
-and <span class="pred-ext">bagof/3</span></span></a></h4>
+and <span class="pred-ext">bagof/3</span> in CQL queries</span></a></h4>
 
 <p><a id="sec:cql-and-setof"></a>
 
@@ -411,8 +423,8 @@ followed by <span class="pred-ext">sort/2</span>. Note that <span class="pred-ex
 want to remove duplicates, use
 <span class="pred-ext">msort/2</span>.
 
-<p><h3 id="sec:cql-null-outer-jpin"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">Retrieved 
-nulls have special logic to handle outer joins</span></a></h3>
+<p><h3 id="sec:cql-null-outer-jpin"><a id="sec:1.2"><span class="sec-nr">1.2</span> <span class="sec-title">CQL: 
+Retrieved nulls have special logic to handle outer joins</span></a></h3>
 
 <p><a id="sec:cql-null-outer-jpin"></a>
 
@@ -440,8 +452,8 @@ was truly shared the query could never succeed. By not binding the
 variable associated with <code>y.a</code> the query can succeed ( rule 
 1) and <var>A</var> will be bound to the value in <code>x.a</code>.
 
-<p><h3 id="sec:cql-quickstart"><a id="sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">Getting 
-Started Quickly</span></a></h3>
+<p><h3 id="sec:cql-quickstart"><a id="sec:1.3"><span class="sec-nr">1.3</span> <span class="sec-title">CQL: 
+Getting Started Quickly</span></a></h3>
 
 <p><a id="sec:cql-quickstart"></a>
 
@@ -487,7 +499,8 @@ available for numerical value comparisons (they just translate to SQL <code>=</c
 and <code>&lt;&gt;</code>, so in fact you could use them for string 
 comparisons)
 
-<p><h3 id="sec:cql-debugging"><a id="sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Debugging</span></a></h3>
+<p><h3 id="sec:cql-debugging"><a id="sec:1.4"><span class="sec-nr">1.4</span> <span class="sec-title">Debugging 
+CQL queries</span></a></h3>
 
 <p><a id="sec:cql-debugging"></a>
 
@@ -551,7 +564,7 @@ Result: se_lt_x.b = {null}
 </dl>
 
 <p><h3 id="sec:cql-prolog-vars"><a id="sec:1.5"><span class="sec-nr">1.5</span> <span class="sec-title">Prolog 
-Variables</span></a></h3>
+Variables in CQL queries</span></a></h3>
 
 <p><a id="sec:cql-prolog-vars"></a>
 
@@ -607,8 +620,8 @@ sum_test :-
 true ;
 </pre>
 
-<p><h3 id="sec:cql-special-attrs"><a id="sec:1.6"><span class="sec-nr">1.6</span> <span class="sec-title">Special 
-Attributes</span></a></h3>
+<p><h3 id="sec:cql-special-attrs"><a id="sec:1.6"><span class="sec-nr">1.6</span> <span class="sec-title">CQL 
+Special Attributes</span></a></h3>
 
 <p><a id="sec:cql-special-attrs"></a>
 
@@ -635,15 +648,16 @@ an INSERT
 <p>All the special attributes can be overridden by supplying the 
 attribute-value pair explicitly.
 
-<p><h3 id="sec:cql-examples"><a id="sec:1.7"><span class="sec-nr">1.7</span> <span class="sec-title">Examples</span></a></h3>
+<p><h3 id="sec:cql-examples"><a id="sec:1.7"><span class="sec-nr">1.7</span> <span class="sec-title">CQL 
+Examples</span></a></h3>
 
 <p><a id="sec:cql-examples"></a>
 
 <p>Rather than provide an abstract description of CQL syntax here is a 
 set of examples that show how to use it.
 
-<p><h4 id="sec:cql-insert"><a id="sec:1.7.1"><span class="sec-nr">1.7.1</span> <span class="sec-title">Simple 
-INSERT</span></a></h4>
+<p><h4 id="sec:cql-insert"><a id="sec:1.7.1"><span class="sec-nr">1.7.1</span> <span class="sec-title">CQL 
+Simple INSERT</span></a></h4>
 
 <p><a id="sec:cql-insert"></a>
 
@@ -652,8 +666,8 @@ INSERT</span></a></h4>
  insert(se_lt_x, [a-'A', b-'B', c-100])}
 </pre>
 
-<p><h4 id="sec:cql-insert2"><a id="sec:1.7.2"><span class="sec-nr">1.7.2</span> <span class="sec-title">Simple 
-INSERT with retrieval of identity of the inserted</span></a></h4>
+<p><h4 id="sec:cql-insert2"><a id="sec:1.7.2"><span class="sec-nr">1.7.2</span> <span class="sec-title">CQL 
+Simple INSERT with retrieval of identity of the inserted</span></a></h4>
 
 <p><a id="sec:cql-insert2"></a>
 
@@ -663,8 +677,8 @@ INSERT with retrieval of identity of the inserted</span></a></h4>
  identity(I)}
 </pre>
 
-<p><h4 id="sec:cql-delete"><a id="sec:1.7.3"><span class="sec-nr">1.7.3</span> <span class="sec-title">Simple 
-DELETE</span></a></h4>
+<p><h4 id="sec:cql-delete"><a id="sec:1.7.3"><span class="sec-nr">1.7.3</span> <span class="sec-title">CQL 
+Simple DELETE</span></a></h4>
 
 <p><a id="sec:cql-delete"></a>
 
@@ -681,8 +695,8 @@ table where the rows are to be deleted). This seems like overkill
 because a delete can in fact refer to only one table anyway i.e. you 
 can't identify rows to delete via a JOIN.
 
-<p><h4 id="sec:cql-select"><a id="sec:1.7.4"><span class="sec-nr">1.7.4</span> <span class="sec-title">Simple 
-SELECT</span></a></h4>
+<p><h4 id="sec:cql-select"><a id="sec:1.7.4"><span class="sec-nr">1.7.4</span> <span class="sec-title">CQL 
+Simple SELECT</span></a></h4>
 
 <p><a id="sec:cql-select"></a>
 
@@ -706,8 +720,8 @@ matching rows in se_lt_x.
 and <var>B</var> to each of the tuples in <code>se_lt_x</code>
 </ul>
 
-<p><h4 id="sec:cql-update"><a id="sec:1.7.5"><span class="sec-nr">1.7.5</span> <span class="sec-title">Simple 
-UPDATE</span></a></h4>
+<p><h4 id="sec:cql-update"><a id="sec:1.7.5"><span class="sec-nr">1.7.5</span> <span class="sec-title">CQL 
+Simple UPDATE</span></a></h4>
 
 <p><a id="sec:cql-update"></a>
 
@@ -723,8 +737,8 @@ The&rsquo;@' is a special alias referring to the table that is being
 updated. The <span class="pred-ext">row_count/1</span> term gives the 
 number or rows updated.
 
-<p><h4 id="sec:cql-where-arith"><a id="sec:1.7.6"><span class="sec-nr">1.7.6</span> <span class="sec-title">WHERE 
-with arithmetic comparison</span></a></h4>
+<p><h4 id="sec:cql-where-arith"><a id="sec:1.7.6"><span class="sec-nr">1.7.6</span> <span class="sec-title">CQL 
+WHERE with arithmetic comparison</span></a></h4>
 
 <p><a id="sec:cql-where-arith"></a>
 
@@ -734,8 +748,8 @@ with arithmetic comparison</span></a></h4>
  C &gt; 10}
 </pre>
 
-<p><h4 id="sec:cql-inner-join"><a id="sec:1.7.7"><span class="sec-nr">1.7.7</span> <span class="sec-title">Simple 
-INNER JOIN</span></a></h4>
+<p><h4 id="sec:cql-inner-join"><a id="sec:1.7.7"><span class="sec-nr">1.7.7</span> <span class="sec-title">CQL 
+Simple INNER JOIN</span></a></h4>
 
 <p><a id="sec:cql-inner-join"></a>
 
@@ -752,8 +766,8 @@ variable <var>J1</var>.
 will be returned in
 <var>F</var>
 
-<p><h4 id="sec:cql-update-join-where"><a id="sec:1.7.8"><span class="sec-nr">1.7.8</span> <span class="sec-title">Arithmetic 
-UPDATE with an INNER JOIN and a WHERE restriction</span></a></h4>
+<p><h4 id="sec:cql-update-join-where"><a id="sec:1.7.8"><span class="sec-nr">1.7.8</span> <span class="sec-title">CQL 
+Arithmetic UPDATE with an INNER JOIN and a WHERE restriction</span></a></h4>
 
 <p><a id="sec:cql-update-join-where"></a>
 
@@ -769,8 +783,8 @@ table <code>se_lt_y</code> where <code>se_lt_x.a = se_lt_y.a</code> and
 where <code>se_lt_x.c &lt; 200</code> then updates each identified row <code>se_lt_x.c</code> 
 with the specified expression.
 
-<p><h4 id="sec:cql-not-exists"><a id="sec:1.7.9"><span class="sec-nr">1.7.9</span> <span class="sec-title">Confirm 
-row does not exist</span></a></h4>
+<p><h4 id="sec:cql-not-exists"><a id="sec:1.7.9"><span class="sec-nr">1.7.9</span> <span class="sec-title">CQL: 
+Confirm row does not exist</span></a></h4>
 
 <p><a id="sec:cql-not-exists"></a>
 
@@ -778,8 +792,8 @@ row does not exist</span></a></h4>
 \+ exists {[], se_lt_x :: [a-'Z']}
 </pre>
 
-<p><h4 id="sec:cql-count"><a id="sec:1.7.10"><span class="sec-nr">1.7.10</span> <span class="sec-title">Aggregation 
-- Count</span></a></h4>
+<p><h4 id="sec:cql-count"><a id="sec:1.7.10"><span class="sec-nr">1.7.10</span> <span class="sec-title">CQL: 
+Aggregation - Count</span></a></h4>
 
 <p><a id="sec:cql-count"></a>
 
@@ -790,8 +804,8 @@ row does not exist</span></a></h4>
 
 <p>This will count the rows in table se_lt_x
 
-<p><h4 id="sec:cql-sum"><a id="sec:1.7.11"><span class="sec-nr">1.7.11</span> <span class="sec-title">Aggregation 
-- Sum</span></a></h4>
+<p><h4 id="sec:cql-sum"><a id="sec:1.7.11"><span class="sec-nr">1.7.11</span> <span class="sec-title">CQL: 
+Aggregation - Sum</span></a></h4>
 
 <p><a id="sec:cql-sum"></a>
 
@@ -802,8 +816,8 @@ row does not exist</span></a></h4>
 
 <p>Sum the values of attribute c in table se_lt_x
 
-<p><h4 id="sec:cql-avg"><a id="sec:1.7.12"><span class="sec-nr">1.7.12</span> <span class="sec-title">Aggregation 
-- Average</span></a></h4>
+<p><h4 id="sec:cql-avg"><a id="sec:1.7.12"><span class="sec-nr">1.7.12</span> <span class="sec-title">CQL: 
+Aggregation - Average</span></a></h4>
 
 <p><a id="sec:cql-avg"></a>
 
@@ -814,8 +828,8 @@ row does not exist</span></a></h4>
 
 <p>Calculate the mean of the values of attribute c in table se_lt_x
 
-<p><h4 id="sec:cql-max"><a id="sec:1.7.13"><span class="sec-nr">1.7.13</span> <span class="sec-title">Maximum 
-Value</span></a></h4>
+<p><h4 id="sec:cql-max"><a id="sec:1.7.13"><span class="sec-nr">1.7.13</span> <span class="sec-title">CQL: 
+Maximum Value</span></a></h4>
 
 <p><a id="sec:cql-max"></a>
 
@@ -826,8 +840,8 @@ Value</span></a></h4>
 
 <p>Calculate the maximum of the values of attribute c in table se_lt_x
 
-<p><h4 id="sec:cql-min"><a id="sec:1.7.14"><span class="sec-nr">1.7.14</span> <span class="sec-title">Minimum 
-Value</span></a></h4>
+<p><h4 id="sec:cql-min"><a id="sec:1.7.14"><span class="sec-nr">1.7.14</span> <span class="sec-title">CQL: 
+Minimum Value</span></a></h4>
 
 <p><a id="sec:cql-min"></a>
 
@@ -838,8 +852,8 @@ Value</span></a></h4>
 
 <p>Calculate the minimum of the values of attribute c in table se_lt_x
 
-<p><h4 id="sec:cql-group-by"><a id="sec:1.7.15"><span class="sec-nr">1.7.15</span> <span class="sec-title">Aggregation 
-requiring GROUP BY</span></a></h4>
+<p><h4 id="sec:cql-group-by"><a id="sec:1.7.15"><span class="sec-nr">1.7.15</span> <span class="sec-title">CQL: 
+Aggregation requiring GROUP BY</span></a></h4>
 
 <p><a id="sec:cql-group-by"></a>
 
@@ -852,9 +866,9 @@ requiring GROUP BY</span></a></h4>
 <p>This will generate the <code>GROUP BY SQL</code> and sum <code>se_lt_z.i</code> 
 for each value of <code>se_lt_z.g</code>
 
-<p><h4 id="sec:cql-agg-subquery"><a id="sec:1.7.16"><span class="sec-nr">1.7.16</span> <span class="sec-title">INNER 
-JOIN with an aggregation sub-query where the sub-query is constrained by 
-a shared variable from the main query</span></a></h4>
+<p><h4 id="sec:cql-agg-subquery"><a id="sec:1.7.16"><span class="sec-nr">1.7.16</span> <span class="sec-title">CQL: 
+INNER JOIN with an aggregation sub-query where the sub-query is 
+constrained by a shared variable from the main query</span></a></h4>
 
 <p><a id="sec:cql-agg-subquery"></a>
 
@@ -878,8 +892,8 @@ SELECT
   z4.i &gt; (SELECT min(y11.f) FROM se_lt_y y11 WHERE z4.g=y11.d)
 </pre>
 
-<p><h4 id="sec:cql-join-subquery"><a id="sec:1.7.17"><span class="sec-nr">1.7.17</span> <span class="sec-title">INNER 
-JOIN in an aggregation sub-query</span></a></h4>
+<p><h4 id="sec:cql-join-subquery"><a id="sec:1.7.17"><span class="sec-nr">1.7.17</span> <span class="sec-title">CQL: 
+INNER JOIN in an aggregation sub-query</span></a></h4>
 
 <p><a id="sec:cql-join-subquery"></a>
 
@@ -892,7 +906,8 @@ JOIN in an aggregation sub-query</span></a></h4>
          se_lt_z :: [h-J1, i-I])}
 </pre>
 
-<p><h4 id="sec:cql-negation"><a id="sec:1.7.18"><span class="sec-nr">1.7.18</span> <span class="sec-title">Negation</span></a></h4>
+<p><h4 id="sec:cql-negation"><a id="sec:1.7.18"><span class="sec-nr">1.7.18</span> <span class="sec-title">CQL: 
+Negation</span></a></h4>
 
 <p><a id="sec:cql-negation"></a>
 
@@ -912,7 +927,8 @@ SELECT
  WHERE NOT EXISTS (SELECT * FROM se_lt_y y13 WHERE x39.a = y13.d)
 </pre>
 
-<p><h4 id="sec:cql-exists"><a id="sec:1.7.19"><span class="sec-nr">1.7.19</span> <span class="sec-title">EXISTS</span></a></h4>
+<p><h4 id="sec:cql-exists"><a id="sec:1.7.19"><span class="sec-nr">1.7.19</span> <span class="sec-title">CQL: 
+EXISTS</span></a></h4>
 
 <p><a id="sec:cql-exists"></a>
 
@@ -939,8 +955,8 @@ WHERE
   EXISTS (SELECT * FROM se_lt_y WHERE x.a = y.d)
 </pre>
 
-<p><h4 id="sec:cql-left-outer-join"><a id="sec:1.7.20"><span class="sec-nr">1.7.20</span> <span class="sec-title">Left 
-Outer Join</span></a></h4>
+<p><h4 id="sec:cql-left-outer-join"><a id="sec:1.7.20"><span class="sec-nr">1.7.20</span> <span class="sec-title">CQL: 
+Left Outer Join</span></a></h4>
 
 <p><a id="sec:cql-left-outer-join"></a>
 
@@ -950,8 +966,8 @@ se_lt_x :: [a-J1, b-B]
 se_lt_y :: [d-J1, e-E]}
 </pre>
 
-<p><h4 id="sec:cql-list-restrictions"><a id="sec:1.7.21"><span class="sec-nr">1.7.21</span> <span class="sec-title">List-based 
-Restrictions</span></a></h4>
+<p><h4 id="sec:cql-list-restrictions"><a id="sec:1.7.21"><span class="sec-nr">1.7.21</span> <span class="sec-title">CQL: 
+List-based Restrictions</span></a></h4>
 
 <p><a id="sec:cql-list-restrictions"></a>
 
@@ -977,8 +993,8 @@ quite useful, even if it is completely illogical
 query based on Bar. The second case seems to be logically consistent - 
 all things are not in the empty list.
 
-<p><h4 id="sec:cql-list-compilation"><a id="sec:1.7.22"><span class="sec-nr">1.7.22</span> <span class="sec-title">Compile 
-time in-list constraint</span></a></h4>
+<p><h4 id="sec:cql-list-compilation"><a id="sec:1.7.22"><span class="sec-nr">1.7.22</span> <span class="sec-title">CQL: 
+Compile time in-list constraint</span></a></h4>
 
 <p><a id="sec:cql-list-compilation"></a>
 
@@ -1026,8 +1042,8 @@ is the exactly the same as
 {[], se_lt_x :: [b-B}
 </pre>
 
-<p><h4 id="sec:cql-disjunction"><a id="sec:1.7.23"><span class="sec-nr">1.7.23</span> <span class="sec-title">Disjunction 
-resulting in OR in WHERE clause</span></a></h4>
+<p><h4 id="sec:cql-disjunction"><a id="sec:1.7.23"><span class="sec-nr">1.7.23</span> <span class="sec-title">CQL: 
+Disjunction resulting in OR in WHERE clause</span></a></h4>
 
 <p><a id="sec:cql-disjunction"></a>
 
@@ -1048,8 +1064,8 @@ SELECT
   ((x.b = ? AND x.c &lt; ?) OR x.c = ?)
 </pre>
 
-<p><h4 id="sec:cql-disj-diff-joins"><a id="sec:1.7.24"><span class="sec-nr">1.7.24</span> <span class="sec-title">Disjunction 
-resulting in different joins (implemented as a SQL UNION)</span></a></h4>
+<p><h4 id="sec:cql-disj-diff-joins"><a id="sec:1.7.24"><span class="sec-nr">1.7.24</span> <span class="sec-title">CQL: 
+Disjunction resulting in different joins (implemented as a SQL UNION)</span></a></h4>
 
 <p><a id="sec:cql-disj-diff-joins"></a>
 
@@ -1076,9 +1092,9 @@ SELECT
   (se_lt_x x44 INNER JOIN se_lt_y y16 ON x44.a=y16.d AND y16.d=x44.a)
 </pre>
 
-<p><h4 id="sec:cql-disj-attrs"><a id="sec:1.7.25"><span class="sec-nr">1.7.25</span> <span class="sec-title">Disjunction 
-resulting in different SELECT attributes (implemented as separate ODBC 
-queries)</span></a></h4>
+<p><h4 id="sec:cql-disj-attrs"><a id="sec:1.7.25"><span class="sec-nr">1.7.25</span> <span class="sec-title">CQL: 
+Disjunction resulting in different SELECT attributes (implemented as 
+separate ODBC queries)</span></a></h4>
 
 <p><a id="sec:cql-disj-attrs"></a>
 
@@ -1092,8 +1108,8 @@ queries)</span></a></h4>
 <p>The output variable A is bound to the value from two different 
 attributes and so the query is implemented as two separate ODBC queries
 
-<p><h4 id="sec:cql-order-by"><a id="sec:1.7.26"><span class="sec-nr">1.7.26</span> <span class="sec-title">ORDER 
-BY</span></a></h4>
+<p><h4 id="sec:cql-order-by"><a id="sec:1.7.26"><span class="sec-nr">1.7.26</span> <span class="sec-title">CQL: 
+ORDER BY</span></a></h4>
 
 <p><a id="sec:cql-order-by"></a>
 
@@ -1106,7 +1122,8 @@ BY</span></a></h4>
 <p>The order_by specification is a list of "signed" variables. The 
 example above will order by se_lt_z.g descending
 
-<p><h4 id="sec:cql-distinct"><a id="sec:1.7.27"><span class="sec-nr">1.7.27</span> <span class="sec-title">DISTINCT</span></a></h4>
+<p><h4 id="sec:cql-distinct"><a id="sec:1.7.27"><span class="sec-nr">1.7.27</span> <span class="sec-title">CQL: 
+DISTINCT</span></a></h4>
 
 <p><a id="sec:cql-distinct"></a>
 
@@ -1130,8 +1147,8 @@ CALL  : user:test_distinct/0
 EXIT  : user:test_distinct/0 (0.098133s, 0.00cpu, 1,488 inferences)
 </pre>
 
-<p><h4 id="sec:cql-select-not-null"><a id="sec:1.7.28"><span class="sec-nr">1.7.28</span> <span class="sec-title">SELECT 
-with NOT NULL restriction</span></a></h4>
+<p><h4 id="sec:cql-select-not-null"><a id="sec:1.7.28"><span class="sec-nr">1.7.28</span> <span class="sec-title">CQL: 
+SELECT with NOT NULL restriction</span></a></h4>
 
 <p><a id="sec:cql-select-not-null"></a>
 
@@ -1141,8 +1158,8 @@ with NOT NULL restriction</span></a></h4>
  J \== {null}}
 </pre>
 
-<p><h4 id="sec:cql-top"><a id="sec:1.7.29"><span class="sec-nr">1.7.29</span> <span class="sec-title">First 
-N</span></a></h4>
+<p><h4 id="sec:cql-top"><a id="sec:1.7.29"><span class="sec-nr">1.7.29</span> <span class="sec-title">CQL: 
+First N</span></a></h4>
 
 <p><a id="sec:cql-top"></a>
 
@@ -1157,8 +1174,8 @@ N</span></a></h4>
 <p>This generates a TOP clause in SQL Server, and LIMIT clauses for 
 PostgreSQL and SQLite
 
-<p><h4 id="sec:cql-self-join"><a id="sec:1.7.30"><span class="sec-nr">1.7.30</span> <span class="sec-title">Self 
-JOIN</span></a></h4>
+<p><h4 id="sec:cql-self-join"><a id="sec:1.7.30"><span class="sec-nr">1.7.30</span> <span class="sec-title">CQL: 
+Self JOIN</span></a></h4>
 
 <p><a id="sec:cql-self-join"></a>
 
@@ -1170,8 +1187,8 @@ JOIN</span></a></h4>
  I1 \== I2}
 </pre>
 
-<p><h4 id="sec:cql-no-null-compare"><a id="sec:1.7.31"><span class="sec-nr">1.7.31</span> <span class="sec-title">Removing 
-null comparisions</span></a></h4>
+<p><h4 id="sec:cql-no-null-compare"><a id="sec:1.7.31"><span class="sec-nr">1.7.31</span> <span class="sec-title">CQL: 
+Removing null comparisions</span></a></h4>
 
 <p><a id="sec:cql-no-null-compare"></a>
 
@@ -1212,8 +1229,8 @@ will fail, which is correct. If ignore_if_null was used, the test would
 the query would contain no restriction, which is clearly not the 
 intended result. FIXME: Mike, what is this all about?
 
-<p><h4 id="sec:cql-three-table-join"><a id="sec:1.7.32"><span class="sec-nr">1.7.32</span> <span class="sec-title">Three 
-table JOIN</span></a></h4>
+<p><h4 id="sec:cql-three-table-join"><a id="sec:1.7.32"><span class="sec-nr">1.7.32</span> <span class="sec-title">CQL: 
+Three table JOIN</span></a></h4>
 
 <p><a id="sec:cql-three-table-join"></a>
 
@@ -1230,8 +1247,8 @@ table JOIN</span></a></h4>
 the shared variable
 <var>F</var> joins <code>se_lt_y</code> and <code>se_lt_z</code>
 
-<p><h4 id="sec:cql-three-nolock"><a id="sec:1.7.33"><span class="sec-nr">1.7.33</span> <span class="sec-title">Three 
-table JOIN with NOLOCK locking hint</span></a></h4>
+<p><h4 id="sec:cql-three-nolock"><a id="sec:1.7.33"><span class="sec-nr">1.7.33</span> <span class="sec-title">CQL: 
+Three table JOIN with NOLOCK locking hint</span></a></h4>
 
 <p><a id="sec:cql-three-nolock"></a>
 
@@ -1247,8 +1264,8 @@ table JOIN with NOLOCK locking hint</span></a></h4>
 <p>The hash operator indicates the table that should be accessed WITH 
 (NOLOCK)
 
-<p><h4 id="sec:cql-like"><a id="sec:1.7.34"><span class="sec-nr">1.7.34</span> <span class="sec-title">SELECT 
-with LIKE</span></a></h4>
+<p><h4 id="sec:cql-like"><a id="sec:1.7.34"><span class="sec-nr">1.7.34</span> <span class="sec-title">CQL: 
+SELECT with LIKE</span></a></h4>
 
 <p><a id="sec:cql-like"></a>
 
@@ -1261,8 +1278,8 @@ with LIKE</span></a></h4>
 <p>The operator =<code>~</code> means LIKE. If you are using PostgreSQL, 
 it means ILIKE.
 
-<p><h4 id="sec:cql-write"><a id="sec:1.7.35"><span class="sec-nr">1.7.35</span> <span class="sec-title">Writing 
-exceptions directly to the database</span></a></h4>
+<p><h4 id="sec:cql-write"><a id="sec:1.7.35"><span class="sec-nr">1.7.35</span> <span class="sec-title">CQL: 
+Writing exceptions directly to the database</span></a></h4>
 
 <p><a id="sec:cql-write"></a>
 
@@ -1282,8 +1299,8 @@ catch(process_message(Message),
 
 <p>FIXME: This code is specific to my usage of CQL
 
-<p><h4 id="sec:cql-top-n-parametric"><a id="sec:1.7.36"><span class="sec-nr">1.7.36</span> <span class="sec-title">TOP 
-N is Parametric</span></a></h4>
+<p><h4 id="sec:cql-top-n-parametric"><a id="sec:1.7.36"><span class="sec-nr">1.7.36</span> <span class="sec-title">CQL: 
+TOP N is Parametric</span></a></h4>
 
 <p><a id="sec:cql-top-n-parametric"></a>
 
@@ -1299,7 +1316,8 @@ findall(I,
         L)
 </pre>
 
-<p><h4 id="sec:cql-compile-time-goal"><a id="sec:1.7.37"><span class="sec-nr">1.7.37</span> <span class="sec-title">Using <span class="pred-ext">compile_time_goal/1</span></span></a></h4>
+<p><h4 id="sec:cql-compile-time-goal"><a id="sec:1.7.37"><span class="sec-nr">1.7.37</span> <span class="sec-title">CQL: 
+Using <span class="pred-ext">compile_time_goal/1</span></span></a></h4>
 
 <p><a id="sec:cql-compile-time-goal"></a>
 
@@ -1334,7 +1352,8 @@ excellent_colours(['RED', 'BLUE']).
  FavouriteColour == Colours}
 </pre>
 
-<p><h4 id="sec:cql-on"><a id="sec:1.7.38"><span class="sec-nr">1.7.38</span> <span class="sec-title">ON</span></a></h4>
+<p><h4 id="sec:cql-on"><a id="sec:1.7.38"><span class="sec-nr">1.7.38</span> <span class="sec-title">CQL: 
+ON</span></a></h4>
 
 <p><a id="sec:cql-on"></a>
 
@@ -1367,8 +1386,8 @@ can be used in ON specifications.
  se_lt_x :: [c-J1, a-A, b-B] on A \== 'A1'},
 </pre>
 
-<p><h4 id="sec:cql-expr-in-where"><a id="sec:1.7.39"><span class="sec-nr">1.7.39</span> <span class="sec-title">Expressions 
-In Where Restrictions</span></a></h4>
+<p><h4 id="sec:cql-expr-in-where"><a id="sec:1.7.39"><span class="sec-nr">1.7.39</span> <span class="sec-title">CQL: 
+Expressions In Where Restrictions</span></a></h4>
 
 <p><a id="sec:cql-expr-in-where"></a>
 
@@ -1380,8 +1399,8 @@ In Where Restrictions</span></a></h4>
  J &gt; 10 * (K / I) + 15},
 </pre>
 
-<p><h4 id="sec:cql-no-where"><a id="sec:1.7.40"><span class="sec-nr">1.7.40</span> <span class="sec-title">Explicitly 
-avoid the "No WHERE restriction" message</span></a></h4>
+<p><h4 id="sec:cql-no-where"><a id="sec:1.7.40"><span class="sec-nr">1.7.40</span> <span class="sec-title">CQL: 
+Explicitly avoid the "No WHERE restriction" message</span></a></h4>
 
 <p><a id="sec:cql-no-where"></a>
 
@@ -1403,7 +1422,8 @@ example:
         absence_of_where_restriction_is_deliberate}
 </pre>
 
-<p><h4 id="sec:cql-having"><a id="sec:1.7.41"><span class="sec-nr">1.7.41</span> <span class="sec-title">HAVING</span></a></h4>
+<p><h4 id="sec:cql-having"><a id="sec:1.7.41"><span class="sec-nr">1.7.41</span> <span class="sec-title">CQL: 
+HAVING</span></a></h4>
 
 <p><a id="sec:cql-having"></a>
 
@@ -1426,8 +1446,8 @@ every</b> row of data, while the SQL HAVING clause condition is tested
 against the <i>groups and/or aggregates specified in the SQL GROUP BY 
 clause and/or the SQL SELECT column list</i>.
 
-<p><h4 id="sec:cql-inst-update-value"><a id="sec:1.7.42"><span class="sec-nr">1.7.42</span> <span class="sec-title">INSERT 
-and UPDATE value in-line formatting</span></a></h4>
+<p><h4 id="sec:cql-inst-update-value"><a id="sec:1.7.42"><span class="sec-nr">1.7.42</span> <span class="sec-title">CQL: 
+INSERT and UPDATE value in-line formatting</span></a></h4>
 
 <p><a id="sec:cql-inst-update-value"></a>
 
@@ -1443,8 +1463,8 @@ cql_transaction(Schema, UserId,
 
 <p>will insert&rsquo;EGG_NOGG' into attribute&rsquo;d'.
 
-<p><h4 id="sec:cql-neg-where"><a id="sec:1.7.43"><span class="sec-nr">1.7.43</span> <span class="sec-title">Negations 
-in WHERE Clauses</span></a></h4>
+<p><h4 id="sec:cql-neg-where"><a id="sec:1.7.43"><span class="sec-nr">1.7.43</span> <span class="sec-title">CQL: 
+Negations in WHERE Clauses</span></a></h4>
 
 <p><a id="sec:cql-neg-where"></a>
 
@@ -1459,8 +1479,8 @@ in WHERE Clauses</span></a></h4>
 <p>Note that, just like in Prolog, <code>\+</code> is a unary operator 
 hence the "double" brackets in the example above.
 
-<p><h4 id="sec:cql-gen-att-values"><a id="sec:1.7.44"><span class="sec-nr">1.7.44</span> <span class="sec-title">Predicate-generated 
-Attribute Values</span></a></h4>
+<p><h4 id="sec:cql-gen-att-values"><a id="sec:1.7.44"><span class="sec-nr">1.7.44</span> <span class="sec-title">CQL: 
+Predicate-generated Attribute Values</span></a></h4>
 
 <p><a id="sec:cql-gen-att-values"></a>
 
@@ -1498,8 +1518,8 @@ by specifying <span class="pred-ext">findall/2</span>.
 compile-at-runtime CQL as you can always call the predicate to generate 
 the required values <i>outside</i> the CQL statement.
 
-<p><h4 id="sec:cql-insert-from-select"><a id="sec:1.7.45"><span class="sec-nr">1.7.45</span> <span class="sec-title">INSERT 
-from SELECT</span></a></h4>
+<p><h4 id="sec:cql-insert-from-select"><a id="sec:1.7.45"><span class="sec-nr">1.7.45</span> <span class="sec-title">CQL: 
+INSERT from SELECT</span></a></h4>
 
 <p><a id="sec:cql-insert-from-select"></a>
 
@@ -1525,15 +1545,16 @@ of the CQL to make the constant <b>&rsquo;MIKE'</b> appear to come from
 the SELECT thus setting
 <code>lt_x1.d</code> to <b>&rsquo;MIKE'</b> in every row inserted.
 
-<p><h3 id="sec:cql-hooks"><a id="sec:1.8"><span class="sec-nr">1.8</span> <span class="sec-title">Hooks</span></a></h3>
+<p><h3 id="sec:cql-hooks"><a id="sec:1.8"><span class="sec-nr">1.8</span> <span class="sec-title">CQL: 
+Hooks</span></a></h3>
 
 <p><a id="sec:cql-hooks"></a>
 
 <p>CQL provides a large number of hooks to fine-tune behaviour and allow 
 for customization. These are:
 
-<p><h4 id="sec:cql-code-hooks"><a id="sec:1.8.1"><span class="sec-nr">1.8.1</span> <span class="sec-title">Generated 
-Code Hooks</span></a></h4>
+<p><h4 id="sec:cql-code-hooks"><a id="sec:1.8.1"><span class="sec-nr">1.8.1</span> <span class="sec-title">CQL: 
+Generated Code Hooks</span></a></h4>
 
 <p><a id="sec:cql-code-hooks"></a>
 
@@ -1550,8 +1571,8 @@ you are interested in proposed indices for your schema. Note that this
 is not very mature (yet)
 </ul>
 
-<p><h4 id="sec:cql-represent-hooks"><a id="sec:1.8.2"><span class="sec-nr">1.8.2</span> <span class="sec-title">Data 
-Representation Hooks</span></a></h4>
+<p><h4 id="sec:cql-represent-hooks"><a id="sec:1.8.2"><span class="sec-nr">1.8.2</span> <span class="sec-title">CQL: 
+Data Representation Hooks</span></a></h4>
 
 <p><a id="sec:cql-represent-hooks"></a>
 
@@ -1567,8 +1588,8 @@ that a value is legal
 <li>cql:<code>odbc_value_to_application_value_hook(+OdbcDataType, +Schema, +TableName, +ColumnName, +Domain, +OdbcValue, -ApplicationValue)</code>.
 </ul>
 
-<p><h4 id="sec:cql-appl-hooks"><a id="sec:1.8.3"><span class="sec-nr">1.8.3</span> <span class="sec-title">Application 
-Integration</span></a></h4>
+<p><h4 id="sec:cql-appl-hooks"><a id="sec:1.8.3"><span class="sec-nr">1.8.3</span> <span class="sec-title">CQL: 
+Application Integration</span></a></h4>
 
 <p><a id="sec:cql-appl-hooks"></a>
 
@@ -1618,8 +1639,8 @@ on a per-transaction level. This can be recovered via
 <code>database_transaction_query_info(?ThreadId, ?Goal, ?Info)</code>.
 </ul>
 
-<p><h4 id="sec:cql-inline-hooks"><a id="sec:1.8.4"><span class="sec-nr">1.8.4</span> <span class="sec-title">Inline 
-values</span></a></h4>
+<p><h4 id="sec:cql-inline-hooks"><a id="sec:1.8.4"><span class="sec-nr">1.8.4</span> <span class="sec-title">CQL: 
+Inline values</span></a></h4>
 
 <p><a id="sec:cql-inline-hooks"></a>
 
@@ -1633,7 +1654,8 @@ SQL injection attacks if this is used.
 </dd>
 </dl>
 
-<p><h4 id="sec:cql-shema-hook"><a id="sec:1.8.5"><span class="sec-nr">1.8.5</span> <span class="sec-title">Schema</span></a></h4>
+<p><h4 id="sec:cql-shema-hook"><a id="sec:1.8.5"><span class="sec-nr">1.8.5</span> <span class="sec-title">CQL: 
+Schema</span></a></h4>
 
 <p><a id="sec:cql-shema-hook"></a>
 
@@ -1679,8 +1701,8 @@ DBMS must be one of the following:
 <li>cql:<code>database_constraint(+Schema, +EntityName, +ConstraintName, +Constraint)</code>.
 </ul>
 
-<p><h4 id="sec:cql-events-and-history"><a id="sec:1.8.6"><span class="sec-nr">1.8.6</span> <span class="sec-title">Event 
-Processing and History</span></a></h4>
+<p><h4 id="sec:cql-events-and-history"><a id="sec:1.8.6"><span class="sec-nr">1.8.6</span> <span class="sec-title">CQL: 
+Event Processing and History</span></a></h4>
 
 <p><a id="sec:cql-events-and-history"></a>
 
@@ -1711,8 +1733,8 @@ _no_state_change_actions_9 directive.
  row_count(RowCount)}
 </pre>
 
-<p><h4 id="sec:cql-statistics-hooks"><a id="sec:1.8.7"><span class="sec-nr">1.8.7</span> <span class="sec-title">Statistical 
-Hooks</span></a></h4>
+<p><h4 id="sec:cql-statistics-hooks"><a id="sec:1.8.7"><span class="sec-nr">1.8.7</span> <span class="sec-title">CQL: 
+Statistical Hooks</span></a></h4>
 
 <p><a id="sec:cql-statistics-hooks"></a>
 

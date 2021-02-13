@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.3.11 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.3.19 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -237,7 +237,7 @@ table.frame-box
 Logic Programming</span></a></h1>
 
 <a id="sec:clp"></a>
-<a id="idx:CLP:2043"></a><a id="idx:constraintprogramming:2044"></a>This 
+<a id="idx:CLP:2041"></a><a id="idx:constraintprogramming:2042"></a>This 
 chapter describes the extensions primarily designed to support
 <b>constraint logic programming</b>&nbsp;(CLP), an important declarative 
 programming paradigm with countless practical applications.
@@ -245,9 +245,9 @@ programming paradigm with countless practical applications.
 <p>CLP(<var>X</var>) stands for constraint logic programming over the 
 domain&nbsp;<var>X</var>. Plain Prolog can be regarded as&nbsp;CLP(<var>H</var>), 
 where <var>H</var> stands for
-<i>Herbrand&nbsp;terms</i><a id="idx:Herbrandterm:2045"></a>. Over this 
+<i>Herbrand&nbsp;terms</i><a id="idx:Herbrandterm:2043"></a>. Over this 
 domain,
-<a class="pred" href="compare.html#=/2">=/2</a> and <a id="idx:dif2:2046"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+<a class="pred" href="compare.html#=/2">=/2</a> and <a id="idx:dif2:2044"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 are the most important constraints that express, respectively, equality 
 and disequality of&nbsp;terms. Plain Prolog can thus be regarded as a 
 special&nbsp;case of&nbsp;CLP.
@@ -288,7 +288,7 @@ entities you reason about, independent of the order in which you state
 it, both <i>before</i> and also <i>during</i> any search for concrete 
 solutions. Using available information to prune parts of the search 
 space is called constraint
-<em>propagation</em><a id="idx:propagation:2047"></a>, and it is 
+<em>propagation</em><a id="idx:propagation:2045"></a>, and it is 
 performed automatically by the available constraint solvers for their 
 respective domains. This feature can significantly increase the
 <i>performance</i> of your programs.
@@ -330,7 +330,7 @@ it has no choice but to generate and test over this infinite
 two-dimensional space.
 
 <p>Using constraints therefore makes your program more
-<em>declarative</em><a id="idx:declarative:2048"></a> in that it frees 
+<em>declarative</em><a id="idx:declarative:2046"></a> in that it frees 
 you from some procedural aspects and limitations of Prolog.
 
 <p>When working with constraints, keep in mind the following:
@@ -342,14 +342,14 @@ also destroys the declarative semantics of constraints. A cut after a
 goal that is delayed may prematurely prune the search space, because the 
 truth of delayed goals is not yet established. There are several ways to 
 avoid cuts in constraint logic programs, retaining both generality and 
-determinism of your programs. See for example <a id="idx:zcompare3:2049"></a><a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a>.
-<li>Term-copying operations (<a id="idx:assertz1:2050"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>, <a id="idx:retract1:2051"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:findall3:2052"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>,
-<a id="idx:copyterm2:2053"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, 
+determinism of your programs. See for example <a id="idx:zcompare3:2047"></a><a class="pred" href="clpfd.html#zcompare/3">zcompare/3</a>.
+<li>Term-copying operations (<a id="idx:assertz1:2048"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>, <a id="idx:retract1:2049"></a><a class="pred" href="db.html#retract/1">retract/1</a>, <a id="idx:findall3:2050"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a>,
+<a id="idx:copyterm2:2051"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, 
 etc.) generally also copy constraints. The effect varies from ok, silent 
 copying of huge constraint networks to violations of the internal 
 consistency of constraint networks. As a rule of thumb, copying terms 
 holding attributes must be deprecated. If you need to reason about a 
-term that is involved in constraints, use <a id="idx:copyterm3:2054"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
+term that is involved in constraints, use <a id="idx:copyterm3:2052"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a> 
 to obtain the constraints as Prolog goals, and use these goals for 
 further processing.
 </ul>
