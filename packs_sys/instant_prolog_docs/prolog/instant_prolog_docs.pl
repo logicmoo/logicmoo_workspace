@@ -63,6 +63,7 @@
             autodoc_pred/2,
             autodoc_files/0,
             autodoc_file/1,
+            autodoc_file_0/1,
             scan_and_list_file_preds/1,
             name_to_mode/4,
             mode_to_name/4,
@@ -603,11 +604,11 @@ autodoc_file(File):-
   autodoc_setup,
   each_call_cleanup(
    tell(user_error),
-   autodoc_file_0(File),
+   instant_prolog_docs:autodoc_file_0(File),
    told), !.
 
   
-autodoc_dbg(E):- guess_pretty(E), with_output_to(current_output,dbug1(E)).
+autodoc_dbg(E):- guess_pretty(E), with_output_to(current_output,mu:dbug1(E)).
 % autodoc_dbg(E):- with_output_to(current_output,pprint_ecp_cmt(magenta,E)).
 % autodoc_dbg(E):- with_output_to(current_output,dbug1(E)).
 %autodoc_dbg(E):- with_output_to(user_error,dbug1(E)).
@@ -783,6 +784,7 @@ user:argname_hook(F,A,N,T):-
 
 autodoc_call(Goal):- autodoc_temp:call(Goal).
 
+:- dynamic(autodoc_temp:arg_info/1).
 autodoc_assert(ArgInfo):- autodoc_temp:assert_if_new(ArgInfo), nop(autodoc_dbg(ArgInfo)).
 
 no_topvar(Arg):- \+ (arg(_,Arg, E), nonvar(E), E = '$VAR'(_)), !.
@@ -1669,7 +1671,7 @@ mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).
 autodoc_test:-
   autodoc_file(library(episodic_memory/'adv_action.pl')),
   autodoc_file(library(episodic_memory/'*.pl')),
-  %autodoc_file(library(instant_prolog_docs)),
+  autodoc_file(library(instant_prolog_docs)),
   %autodoc_file(library(logicmoo/'*.pl')),
   !.
 
