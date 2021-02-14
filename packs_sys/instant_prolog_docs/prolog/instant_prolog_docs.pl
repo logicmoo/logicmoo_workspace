@@ -375,7 +375,7 @@ module_meta_transparent(M:F/A):-must(functor(P, F, A)), !, module_meta_transpare
 module_meta_transparent(M:P):-predicate_property(M:P, meta_predicate(_)), !.
 module_meta_transparent(M:P):-predicate_property(M:P, transparent), !.
 module_meta_transparent(M:P):-functor(P, F, A), module_transparent(M:F/A), !. % ground(P), M:meta_predicate(P), !.
-% module_meta_transparent(M:P):-P=..[_|Args], maplist('='(?), Args), module_meta_transparent(M:P).
+% module_meta_transparent(M:P):-P=..[_|Args], must_maplist('='(?), Args), module_meta_transparent(M:P).
 module_meta_transparent(_).
 
 
@@ -607,7 +607,8 @@ autodoc_file(File):-
    told), !.
 
   
-autodoc_dbg(E):- with_output_to(current_output,pprint_ecp_cmt(magenta,E)).
+autodoc_dbg(E):- guess_pretty(E), with_output_to(current_output,dbug1(E)).
+% autodoc_dbg(E):- with_output_to(current_output,pprint_ecp_cmt(magenta,E)).
 % autodoc_dbg(E):- with_output_to(current_output,dbug1(E)).
 %autodoc_dbg(E):- with_output_to(user_error,dbug1(E)).
 
@@ -750,24 +751,39 @@ autodoc_on_arg_vars(M, H, B, Vs0, Why):-
   add_unnamed_vars(Vs0,Unnamed,Vs),
   %output_into_file((display(add_unnamed_vars(Vs0,Unnamed,Vs)),nl)),
   copy_term(H+B+Vs,CH+CB+CVs),
-  maplist(each_into_dollar_var,CVs),hb_to_clause(CH,CB,CHB),  
+  must_maplist(each_into_dollar_var,CVs),hb_to_clause(CH,CB,CHB),  
   autodoc_on_info(M, CHB, CH, CB, CVs, Why),
   autodoc_on_vardeps(M, CHB,  H,  B,  Vs, Why))).
 
 autodoc_on_info(_M, CHB, CH, CB, _CVs, Why):-
   ArgInfo = arginfo_for(CHB, Why, []),
  must_det_l((
+  autodoc_assert(arg_info(CH)),
   track_arg_info(b, &(ArgInfo,call(new_arg_info(CH, Why))), CB),
   track_arg_info(h, ArgInfo, CH),
   autodoc_assert(ArgInfo))).
 
 new_arg_info(_CH, _Why, Arg):- autodoc_unused_arg(Arg),!. 
-% new_arg_info(_CH, _Why, Arg):- no_topvar(Arg).
-new_arg_info(CH, Why, Arg):- 
-  ArgInfo = arg_info(CH, Why, Arg),
-  autodoc_assert(ArgInfo).
+new_arg_info(_CH, _Why, Arg):- no_topvar(Arg), !.
+new_arg_info(_CH, _Why, Arg):- 
+  % ArgInfo = arg_info(CH, Why, Arg),  
+  autodoc_assert(arg_info(Arg)).
 
-autodoc_assert(ArgInfo):- assert_if_new(ArgInfo),autodoc_dbg(ArgInfo).
+
+:- multifile(user:argname_hook/4).
+:- dynamic(user:argname_hook/4).
+
+user:argname_hook(F,A,N,T):- 
+  ground(v(F,A)),A>0,
+  F \== (=),
+  functor(P,F,A),
+  autodoc_call(arg_info(P)),
+  arg(N,P,'$VAR'(T)),
+  nonvar(T).
+
+autodoc_call(Goal):- autodoc_temp:call(Goal).
+
+autodoc_assert(ArgInfo):- autodoc_temp:assert_if_new(ArgInfo), nop(autodoc_dbg(ArgInfo)).
 
 no_topvar(Arg):- \+ (arg(_,Arg, E), nonvar(E), E = '$VAR'(_)), !.
 autodoc_unused_arg(H):- \+ compound(H), !.
@@ -776,24 +792,31 @@ autodoc_unused_arg(H):- compound_name_arity(H, '$VAR', _), !.
 autodoc_unused_arg(H):- compound_name_arity(H, 'aVar', _), !.
 % autodoc_unused_arg(H):- is_avar(H), !.
 
+compares_what(H,V1,V2):- compound(H),compound_name_arguments(H,OP,[V1,V2]), % current_op(700, xfx, OP), 
+ atom_concat(_,'=',OP),!.
+
 track_arg_info(_, _, H):- autodoc_unused_arg(H),!.
+track_arg_info(Ctx, ArgInfo, H):- compares_what(H,V1,V2),!,track_arg_info(Ctx, ArgInfo, compares(V1,V2)).
 track_arg_info(Ctx, ArgInfo, H):-   
   compound_name_arguments(H, F, Args),
   functor(H,F,A),
   must(once(is_goal_oper(F,A);push_frame_if_used(H, ArgInfo))),
-  maplist(track_arg_info((F-Ctx), ArgInfo), Args).
+  must_maplist(track_arg_info((F-Ctx), ArgInfo), Args).
 
 is_goal_oper(F,_):- upcase_atom(F,U),downcase_atom(F,U).
 
 push_frame_if_used(H, _):- no_topvar(H),!.
-push_frame_if_used(H, ArgInfo):- push_frame(H, ArgInfo).
+push_frame_if_used(H, ArgInfo):- my_push_frame(H, ArgInfo).
+
+my_push_frame(H, _):- compound(H), functor(H, push_frame, 2),!.
+my_push_frame(H, ArgInfo):- push_frame(H, ArgInfo).
   
 
 
   
 autodoc_on_vardeps(_M, CHB, H, B, Vs, Why):-
  must_det_l((
-  maplist(each_into_typedvar, Vs),
+  must_maplist(each_into_typedvar, Vs),
   UnusedHints = unused_frame_for(CHB,Vs,Why,[]),
   extract_type_hints(h, UnusedHints, H),
   extract_type_hints(b, UnusedHints, B),
@@ -801,18 +824,24 @@ autodoc_on_vardeps(_M, CHB, H, B, Vs, Why):-
   % output_into_file((display(autodoc_assert(Hints)),nl)),
   must_maplist(autodoc_interargs,Vs))).
 
-autodoc_interargs(_=Term):- get_type_hints(Term, _Name, Hints),
+autodoc_interargs(Term):- \+ compound(Term),!.
+autodoc_interargs(_=Term):- !,autodoc_interargs(Term).
+autodoc_interargs(Term):- 
+  get_type_hints(Term, _Name, Hints),
   forall((select(Infix1,Hints,Rest), member(Infix2, Rest), \+ atom(Infix1), \+ atom(Infix2)),
-   autodoc_interargs(Infix1,Infix2)).
+   autodoc_interpreds(Infix1,Infix2)).
+autodoc_interargs(_Term):-!.
 
-autodoc_interargs(Infix1,Infix2):- autodoc_assert(interargs(Infix1,Infix2)).
+autodoc_interpreds(A,B):- A@>B,!,autodoc_interpreds(B, A).
+autodoc_interpreds(argOf(FA1, N1),argOf(FA2, N2)):- autodoc_assert(interargs(FA1, N1, FA2, N2)),!.
+autodoc_interpreds(Infix1,Infix2):- autodoc_assert(interargs(Infix1,Infix2)).
   
 
 extract_type_hints(_, _, H):- autodoc_unused_arg(H),!.
 extract_type_hints(Ctx, Frame, H):-
   extract_type_hints_for_head(Ctx, H, Frame),
   compound_name_arguments(H, _, Args),
-  maplist(extract_type_hints(Ctx, Frame), Args),!.
+  must_maplist(extract_type_hints(Ctx, Frame), Args),!.
 
 
 
@@ -829,8 +858,8 @@ extract_each_arg_type_hints(N, F, A, Ctx, H, Frame):-
 extract_one_arg_type_hints(N, F, A, _Ctx, _H, E, Frame):-
   get_type_hints(E, Name, Atts),
   CallInfo=argOf(F/A, N), 
-  push_frame(CallInfo, Atts),
-  nop(push_frame(u(Name, CallInfo), Frame)).
+  my_push_frame(CallInfo, Atts),
+  nop(my_push_frame(u(Name, CallInfo), Frame)).
 extract_one_arg_type_hints(_N, _F, _A, _Ctx, _H, _E, _Frame):-!.
 
 /*
@@ -979,7 +1008,7 @@ autodoc_stream_data(Src, M, File, FromLine1-_EndingLine, Term, _Expanded, _Vs):-
 % Autodoc Stream Predicate.
 %
 autodoc_stream_pred(_, File, M:F/A):- t_l:last_source_file_help_shown(File, M:F/A, _), !.
-autodoc_stream_pred(FromLine, File, M:F/A):- !, asserta(t_l:last_source_file_help_shown(File, M:F/A, FromLine)),
+autodoc_stream_pred(FromLine, File, M:F/A):- !, autodoc_assert(t_l:last_source_file_help_shown(File, M:F/A, FromLine)),
                   functor(P, F, A), must(autodoc_pred(M, M:P)), !.
 autodoc_stream_pred(FromLine, File, M:P):-!, get_functor(P, F, A), autodoc_stream_pred(FromLine, File, M:F/A).
 autodoc_stream_pred(FromLine, File, P):-!, get_functor(P, F, A), autodoc_stream_pred(FromLine, File, _M:F/A).
@@ -999,7 +1028,7 @@ autodoc_pred(M, M:P0):- once(to_comparable_name_arity(P0, F, A)), clause(M:'$pld
 autodoc_pred(_, MP):- MP = _:end_of_file, !.
 
 autodoc_pred(M, M:P0):-
- asserta(t_l:last_predicate_help_shown(M, M, P0)),
+ autodoc_assert(t_l:last_predicate_help_shown(M, M, P0)),
  must_det_l((
    once(to_comparable_name_arity(P0, F, A)),
    functor(NameH, F, A), NameH=..[F|NameAs],
@@ -1018,9 +1047,9 @@ autodoc_pred(M, M:P0):-
    functor(DocH, F, A), DocH=..[F|DocAs],
    functor(DocM, F, A), DocM=..[F|DocAsM],
    functor(DocO, F, A), DocO=..[F|DocAsO],
-   maplist(merge_mode_and_varname, ModeAs, NameAs, DocAs),
-   maplist(merge_mode_and_varname, ModeAsM, NameAsM, DocAsM),
-   maplist(merge_mode_and_varname, ModeAsO, NameAsO, DocAsO),
+   must_maplist(merge_mode_and_varname, ModeAs, NameAs, DocAs),
+   must_maplist(merge_mode_and_varname, ModeAsM, NameAsM, DocAsM),
+   must_maplist(merge_mode_and_varname, ModeAsO, NameAsO, DocAsO),
 
    all_different_vars(['$VAR'('_')|NameAsM]),
    all_different_vars(['$VAR'('_')|NameAsO]),
@@ -1028,13 +1057,13 @@ autodoc_pred(M, M:P0):-
 
    fixup_doc_args(fixda, P, 1, DocAs, DocAsM),
 
-   % maplist(ignored_assignment(''), ModeAs),
+   % must_maplist(ignored_assignment(''), ModeAs),
 
    fixup_doc_args(fixda, P, 1, DocAsM, DocAsO),
 
    fixup_doc_args(fixda2, P, 1, DocAsM, DocAsO),
 
-   maplist(fix_doc_args_for_write, DocAsO, DocAsOW),
+   must_maplist(fix_doc_args_for_write, DocAsO, DocAsOW),
 
 
 
@@ -1046,7 +1075,7 @@ autodoc_pred(M, M:P0):-
    notes_to_better_text(autodoc_toPropercase, SummaryI, SummaryA),
    atom_string(SummaryA, Summary),
    t_l:file_loc(FileFromLine),
-   asserta(M:'$pldoc'(F/A, FileFromLine, Summary, Summary)),
+   autodoc_assert(M:'$pldoc'(F/A, FileFromLine, Summary, Summary)),
    autodoc_magic(Starter),
    format('~N~s%% ~w is semidet.\n%\n% ~w.\n%\n', [Starter, HDocAsNew, Summary]))), !.
 
@@ -1295,7 +1324,7 @@ system_pred(M2:P):-predicate_property(_:P, imported_from(system)), current_predi
 %
 % Notes Converted To Better Text.
 %
-notes_to_better_text(TextM, Text):-flatten([TextM], TextT), maplist(termw_to_atom, TextT, AtomsM), atomic_list_concat(AtomsM, ' ', Text), !.
+notes_to_better_text(TextM, Text):-flatten([TextM], TextT), must_maplist(termw_to_atom, TextT, AtomsM), atomic_list_concat(AtomsM, ' ', Text), !.
 
 
 %= 	 	
@@ -1304,7 +1333,7 @@ notes_to_better_text(TextM, Text):-flatten([TextM], TextT), maplist(termw_to_ato
 %
 % Notes Converted To Better Text.
 %
-notes_to_better_text(Pred, TextM, Text):-flatten([TextM], TextT), maplist(termw_to_atom, TextT, AtomsM), must_maplist(Pred, AtomsM, AtomsM2), atomic_list_concat(AtomsM2, ' ', Text), !.
+notes_to_better_text(Pred, TextM, Text):-flatten([TextM], TextT), must_maplist(termw_to_atom, TextT, AtomsM), must_maplist(Pred, AtomsM, AtomsM2), atomic_list_concat(AtomsM2, ' ', Text), !.
 
 
 %= 	 	
@@ -1509,7 +1538,7 @@ longer_sumry(non, 'Not').
 longer_sumry(nots, 'Negations').
 longer_sumry(o, 'Output').
 longer_sumry(op, 'Oper.').
-longer_sumry(p, 'Pred').
+longer_sumry(p, 'Test').
 longer_sumry(neg, 'Negative').
 longer_sumry(npc, 'Automatic Character').
 longer_sumry(act, 'Single Doer Action').
@@ -1638,11 +1667,13 @@ mpred_prolog_only_module(M):-atom_concat(common_logic_, _, M).
 % Autodoc Test.
 %
 autodoc_test:-
-  % autodoc_file(library(episodic_memory/'*.pl')),
   autodoc_file(library(episodic_memory/'adv_action.pl')),
+  autodoc_file(library(episodic_memory/'*.pl')),
   %autodoc_file(library(instant_prolog_docs)),
   %autodoc_file(library(logicmoo/'*.pl')),
   !.
+
+
 
 :- fixup_exports.
 

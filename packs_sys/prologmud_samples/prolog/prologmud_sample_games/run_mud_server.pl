@@ -334,7 +334,7 @@ load_rest:-
    !.
 
 % for when dmiles is doing fast testing
-% load_rest2:- gethostname('logicmoo.org'), !.
+load_rest2:- gethostname('logicmoo.org'), !.
 load_rest2:-
    locally(set_prolog_flag(verbose_load,true),load_rest3).
 

@@ -239,8 +239,9 @@ telnet_decide_action(Agent, Mem, Mem) :-
  fail.
 
 
+:- use_module(library(instant_prolog_docs),[autodoc_file/1]).
 %:- if(\+ prolog_load_context(reloading, t)).
-%:- initialization(adventure, main).
+:- autodoc_file(library(episodic_memory/'*.pl')).
 %:- endif.
 
 /*main_loop(State) :-
@@ -266,5 +267,4 @@ main_loop(S0) :-
 main_loop(_) :-
  dbug(general, 'main_loop() FAILED!~n').
 */
-
 

@@ -892,7 +892,8 @@ grab_varnames2([AttV|AttVS],Vs2):-
      (get_attr(AttV,vn,Name) -> Vs2 = [Name=AttV|VsMid] ; VsMid=       Vs2),!.
    
 
-dzotrace(G):- notrace(G).
+% dzotrace(G):- notrace(G).
+dzotrace(G):- call(G).
 
 %= 	 	 
 

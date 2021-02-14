@@ -186,7 +186,7 @@ is_output_lang(_).
 
 :- export(pprint_ecp_cmt/2).
 pprint_ecp_cmt(C, P):-
- notrace((echo_format('~N'),  
+ quietly((echo_format('~N'),  
   print_e_to_string(P, S0),
   into_space_cmt(S0,S),
   to_ansi(C, C0),
@@ -196,7 +196,7 @@ pprint_ecp_cmt(C, P):-
 pprint_ecp(C, P):- \+ is_output_lang(C), !, pprint_ecp_cmt(C, P).
 pprint_ecp(C, P):-
   maybe_mention_s_l(1),
-  notrace((echo_format('~N'),
+  quietly((echo_format('~N'),
   pprint_ec_and_f(C, P, '.~n'))).
 
 pprint_ec_and_f(C, P, AndF):-
@@ -257,9 +257,9 @@ into_space_cmt(S0,O):-
 in_space_cmt(Goal):- 
    with_output_to(string(S0),Goal),
    into_space_cmt(S0,S),
-   real_format('~s', [S]).
+   real_format('~s', [S]), !.
 
-in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /* ', []), Goal, echo_format('~N */~n', [])).
+in_space_cmt(Goal):- setup_call_cleanup(echo_format('~N /*\n ', []), Goal, echo_format('~N */~n', [])).
 
 
 read_line_to_string_echo(S, String):- read_line_to_string(S, String), ttyflush, real_ansi_format([bold, hfg(black)], '~s~N',[String]),
@@ -413,7 +413,7 @@ any_line_count(_,0).
 :- export(print_tree_cmt/3).
 print_tree_cmt(Info,C,P):-
  mention_o_s_l,
- notrace((echo_format('~N'),  
+ quietly((echo_format('~N'),  
   with_output_to(string(S), in_cmt((
     format('~N~w: \n\n',[Info]),
     print_tree(P)))),
@@ -422,7 +422,7 @@ print_tree_cmt(Info,C,P):-
 
 :- export(in_color/2).
 in_color(C,P):-
- notrace((
+ quietly((
   with_output_to(string(S), ((    
     call(P)))), to_ansi(C, C0),
   real_ansi_format(C0, '~s', [S]))).

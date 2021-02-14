@@ -44,6 +44,14 @@ clock_time(T):- statistics(walltime, [X, _]), T is ('//'(X , 100))/10.
 :- dynamic(is_state_pred/2).
 is_state_pred(F, N):- atom(F), !, is_state_pred(P, N), safe_functor(P, F, _).
 
+:- multifile(user:argname_hook/4).
+:- dynamic(user:argname_hook/4).
+user:argname_hook(F,_,N,T):- 
+  is_state_pred(P,_),
+  functor(P,F,Short),
+  once(arg(N,P,T);(OneorTwo is T - Short, nth1(OneorTwo,['StateIn','StateOut'],T))),
+  nonvar(T).
+
 defn_state_pred(Getter, '//'(F, A), N):- !, functor(P, F, A), !, defn_state_pred(Getter, P, N).
 defn_state_pred(get_advstate, P, N):- is_state_pred(P, N), !.
 defn_state_pred(Getter, P, N):- asserta(is_state_pred(P, N)),

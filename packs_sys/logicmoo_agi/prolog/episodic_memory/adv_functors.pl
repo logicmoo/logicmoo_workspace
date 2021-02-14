@@ -128,7 +128,6 @@ type_functor(maction, auto(agent)).
 type_functor(maction, inspect(agent, getprop(inst, nv))).
 type_functor(maction, attempts(agent, act3)).
 
-
 type_functor(action,X):- type_functor(act3,X).
 
 type_functor(act3, emote(agent, emotype, dest, statement)).
@@ -201,7 +200,6 @@ type_functor(nv, desc(sv(text))).
 type_functor(nv, prefix(sv(text))).
 type_functor(nv, door_to(inst)).
 type_functor(nv, effect(verb_targeted, script)). %
-type_functor(nv, breaks_into = type).
 type_functor(nv, has_rel(domrel, tf)).
 type_functor(nv, has_sense(sense)).
 type_functor(nv, can_be(verb, tf)).
@@ -211,14 +209,28 @@ type_functor(nv, has_sense(sense)).
 type_functor(nv, isnt(type)). % stops inheritance into some type
 type_functor(nv, inherit(type, tf)).
 type_functor(nv, inherited(type)).
-type_functor(nv, default_rel=type).
 type_functor(nv, inst(sv(term))).
-type_functor(nv, name = (sv(text))).
 type_functor(nv, oper(action, preconds, postconds)).
 type_functor(nv, emitting(sense, type)).
-% type_functor(nv, domrel=value).
+type_functor(nv, domrel=value).
+type_functor(nv, breaks_into = type).
+type_functor(nv, default_rel=type).
+type_functor(nv, name = (sv(text))).
+
 
 type_functor(Sen,Atom):- atom(Sen),atom_concat(is_,Sen,Sense), current_predicate(Sense/1),!,call(Sense,Atom),atom(Atom).
+
+:- multifile(user:argname_hook/4).
+:- dynamic(user:argname_hook/4).
+
+user:argname_hook(F,A,N,T):- 
+  ground(v(F,A)),A>0,
+  F \== (=),
+  type_functor(_,P),
+  functor(P,F,A),
+  arg(N,P,T),
+  nonvar(T).
+
 
 remember_arity(T, P):- safe_functor(P, F, A), asserta(type_functor_arity(T, F, A)).
 :- forall(type_functor(T, P), remember_arity(T, P)).

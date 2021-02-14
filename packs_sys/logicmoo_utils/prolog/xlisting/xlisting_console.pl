@@ -1437,14 +1437,14 @@ portray_hbr(M:P,M:predicate_property(P,Props),_):- (atom(P);compound(P)),
        NEWH = Props,
        in_cmt(portray_one_line(NEWH)),!.
 
-portray_hbr(H,B,R):- var(R), clause_u_here(H,B,R), nonvar(R),!, portray_hbr(H,B,R).
+portray_hbr(H,B,Ref):- var(Ref), clause_u_here(H,B,Ref), nonvar(Ref),!, portray_hbr(H,B,Ref).
 portray_hbr(H,B,in_cmt(NV)):- in_cmt(portray_hbr(H,B,NV)),!.
-portray_hbr(H,B,R):- nonvar(R),catch(clause_property(R,module(M)),_,fail),
-  (((prolog_listing:list_clause(M:H,B,R,_Soure,[source(true)])));
-     ((prolog_listing:list_clause(_,_,R,_Soure,[source(true)])))),!.
-portray_hbr(H,B,R):- portray_refinfo(R),portray_hb1(H,B).
+portray_hbr(H,B,Ref):- nonvar(Ref),catch(clause_property(Ref,module(M)),_,fail),
+  (((prolog_listing:list_clause((M:(H:-B)),Ref,_Soure,[source(true)])));
+     ((prolog_listing:list_clause(_,Ref,_Soure,[source(true)])))),!.
+portray_hbr(H,B,Ref):- portray_refinfo(Ref),portray_hb1(H,B).
 
-clause_u_here(H,B,R):- catch(call(call,clause_u(H,B,R)),_,clause(H,B,R)).
+clause_u_here(H,B,Ref):- catch(call(call,clause_u(H,B,Ref)),_,clause(H,B,Ref)).
 
 portray_refinfo(R):- (var(R) ; R == 0),!.
 portray_refinfo(R):- \+ catch(clause_property(R,module(_)),_,fail), in_cmt(format('Ref: ~p',[R])),!.
@@ -1466,6 +1466,9 @@ portray_hb(H,B):- portray_hb1(H,B).
 portray_hb1(H,B):- B==true, !, format('~N'), portray_one_line(H),format('~N').
 portray_hb1(H,B):- format('~N'), portray_one_line((H:-B)), format('~N').
 
+
+prolog_listing:list_clause(Head, Body, Ref, Source, Options):-
+  prolog_listing:list_clause((Head :- Body), Ref, Source, Options).
 /*
 prolog_listing:list_clause(M:H, B, R, Source, Options).
 
